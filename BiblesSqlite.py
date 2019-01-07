@@ -14,7 +14,7 @@ class BiblesSqlite:
         t = (b, c, v)
         query = "SELECT Scripture FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(query, t)
-        textVerse = self.cursor.fetchone()[0]+"\n"
+        textVerse = self.cursor.fetchone()[0].strip()+"\n"
         return textVerse
 
     def readOriginal(self, b, c, v):
