@@ -1,7 +1,8 @@
 """
 Reading data from bibles.sqlite
 """
-import os, sqlite3, re
+import os, sqlite3
+from BibleVerseParser import BibleVerseParser
 
 class BiblesSqlite:
 
@@ -12,16 +13,18 @@ class BiblesSqlite:
 
     def readTextVerse(self, text, b, c, v):
         t = (b, c, v)
-        query = "SELECT Scripture FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
+        query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(query, t)
-        textVerse = self.cursor.fetchone()[0].strip()+"\n"
+        textVerse = self.cursor.fetchone()
         return textVerse
 
     def readOriginal(self, b, c, v):
-        return self.readTextVerse("original", b, c, v)
+        verse = self.readTextVerse("original", b, c, v)[3].strip()+"\n"
+        return verse
 
     def readLXX(self, b, c, v):
-        return self.readTextVerse("LXX", b, c, v)
+        verse = self.readTextVerse("LXX", b, c, v)[3].strip()+"\n"
+        return verse
 
     def readTranslations(self, b, c, v):
         t = ("table",)
@@ -33,11 +36,13 @@ class BiblesSqlite:
             excludeList = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
             text = translation[0]
             if not text in excludeList:
-                verses += self.readTextVerse(text, b, c, v)
+                verses += self.readTextVerse(text, b, c, v)[3].strip()+"\n"
         return verses
 
     def compareVerse(self, b, c, v):
-        comparison = ""
+        parser = BibleVerseParser("YES")
+        verseReferenceString = parser.bcvToVerseReference(b, c, v)
+        comparison = "Compare "+verseReferenceString+"\n"
         comparison += self.readOriginal(b, c, v)
         comparison += self.readLXX(b, c, v)
         comparison += self.readTranslations(b, c, v)
