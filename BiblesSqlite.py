@@ -48,7 +48,37 @@ class BiblesSqlite:
         comparison += self.readTranslations(b, c, v)
         return comparison
 
+    def searchBible(self, text, mode, searchString):
+        query = "SELECT * FROM "+text+" WHERE "
+        if mode == "BASIC":
+            t = ("%"+searchString+"%",)
+            query += "Scripture LIKE ? ORDER BY Book ASC, Chapter ASC, Verse ASC"
+        elif mode == "ADVANCED":
+            query += searchString
+            query += " ORDER BY Book ASC, Chapter ASC, Verse ASC"
+        self.cursor.execute(query)
+        verses = self.cursor.fetchall()
+        formatedText = ""
+        for verse in verses:
+            b = verse[0]
+            c = verse[1]
+            v = verse[2]
+            verseText = verse[3].strip()
+            parser = BibleVerseParser("YES")
+            verseReferenceString = parser.bcvToVerseReference(b, c, v)
+            formatedText += "("+verseReferenceString+") "+verseText+"\n"
+        return formatedText
+
 if __name__ == '__main__':
     bibles = BiblesSqlite()
-    text = bibles.compareVerse(1,1,1)
-    print(text)
+
+    # test verse comparison
+    print(bibles.compareVerse(1,1,1))
+
+    # test search bible - BASIC
+    # searchString = input("Search Bible [Basic]\nSearch for: ")
+    # print(bibles.searchBible("NET", "BASIC", searchString))
+
+    # test search bible - ADVANCED
+    # searchString = input("Search Bible [Advanced]\nFilter for search: ")
+    # print(bibles.searchBible("NET", "ADVANCED", searchString))
