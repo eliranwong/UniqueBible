@@ -5,9 +5,17 @@ from PySide2.QtWidgets import QApplication
 from PySide2.QtWebEngineWidgets import QWebEngineView
 from PySide2.QtCore import QUrl
 
+def finishLoading():
+    print("loadFinished")
+    print(type(view.page()))
+
 app = QApplication([])
 
 view = QWebEngineView()
+
+view.loadStarted.connect(print("loadStarted"))
+view.loadProgress.connect(print("loadProgress"))
+view.loadFinished.connect(finishLoading)
 
 # content in unicode html format - Content larger than 2 MB cannot be displayed
 html = "<h1>Heading</h1><p>paragraph</p><p><img src='marvel.png' alt='Marvel.Bible icon'></p>"
