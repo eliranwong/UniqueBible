@@ -11,6 +11,13 @@ class BiblesSqlite:
     connection = sqlite3.connect(database)
     cursor = connection.cursor()
 
+    def readTextChapter(self, text, b, c):
+        t = (b, c)
+        query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, t)
+        textChapter = self.cursor.fetchall()
+        return textChapter
+
     def readTextVerse(self, text, b, c, v):
         t = (b, c, v)
         query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
@@ -40,45 +47,116 @@ class BiblesSqlite:
         return verses
 
     def compareVerse(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReferenceString = parser.bcvToVerseReference(b, c, v)
+        Parser = BibleVerseParser("YES")
+        verseReferenceString = Parser.bcvToVerseReference(b, c, v)
         comparison = "Compare "+verseReferenceString+"\n"
         comparison += self.readOriginal(b, c, v)
         comparison += self.readLXX(b, c, v)
         comparison += self.readTranslations(b, c, v)
+        del Parser
         return comparison
 
     def searchBible(self, text, mode, searchString):
         query = "SELECT * FROM "+text+" WHERE "
         if mode == "BASIC":
             t = ("%"+searchString+"%",)
-            query += "Scripture LIKE ? ORDER BY Book ASC, Chapter ASC, Verse ASC"
+            query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
+            t = ()
             query += searchString
-            query += " ORDER BY Book ASC, Chapter ASC, Verse ASC"
-        self.cursor.execute(query)
+        query += " ORDER BY Book ASC, Chapter ASC, Verse ASC"
+        self.cursor.execute(query, t)
         verses = self.cursor.fetchall()
         formatedText = ""
+        Parser = BibleVerseParser("YES")
         for verse in verses:
             b = verse[0]
             c = verse[1]
             v = verse[2]
             verseText = verse[3].strip()
-            parser = BibleVerseParser("YES")
-            verseReferenceString = parser.bcvToVerseReference(b, c, v)
+            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
             formatedText += "("+verseReferenceString+") "+verseText+"\n"
+        del Parser
         return formatedText
 
+    def searchMorphology(self, mode, searchString):
+        query = "SELECT * FROM morphology WHERE "
+        if mode == "LexicalEntry":
+            t = ("%"+searchString+",%",)
+            query += "LexicalEntry LIKE ?"
+        elif mode == "MorphologyCode":
+            searchList = searchString.split(',')
+            t = ("%"+searchList[0]+",%", searchList[1])
+            query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
+        elif mode == "ADVANCED":
+            t = ()
+            query += searchString
+        query += " ORDER BY Book ASC, Chapter ASC, Verse ASC, WordID"
+        self.cursor.execute(query, t)
+        words = self.cursor.fetchall()
+        formatedText = ""
+        Parser = BibleVerseParser("YES")
+        for word in words:
+            wordID = word[0]
+            clauseID = word[1]
+            b = word[2]
+            c = word[3]
+            v = word[4]
+            textWord = word[5]
+            lexicalEntry = word[6]
+            morphologyCode = word[7]
+            morphology = word[8]
+            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
+            formatedText += "("+verseReferenceString+") "+textWord+" "+morphologyCode+"\n"
+        del Parser
+        return formatedText
+
+    def plainVerseChapter(self, b, c):
+        print("pending")
+
+    def parallelVertical(self, b, c):
+        print("pending")
+
+    def parallelHorizontal(self, b, c):
+        print("pending")
+
+    def addInterlinearInSearchResult(self, b, c, v):
+        print("pending")
+
+    def openMultipleVerses(self, verseList):
+        print("pending")
+
+    def openVerseCrossReferences(self, b, c, v):
+        print("pending")
+
 if __name__ == '__main__':
-    bibles = BiblesSqlite()
+    Bibles = BiblesSqlite()
 
     # test verse comparison
-    print(bibles.compareVerse(1,1,1))
+    print(Bibles.compareVerse(1,1,1))
 
     # test search bible - BASIC
     # searchString = input("Search Bible [Basic]\nSearch for: ")
-    # print(bibles.searchBible("NET", "BASIC", searchString))
+    # print(Bibles.searchBible("NET", "BASIC", searchString))
 
     # test search bible - ADVANCED
+    # e.g. Scripture LIKE '%God%' AND Scripture LIKE '%love%'
     # searchString = input("Search Bible [Advanced]\nFilter for search: ")
-    # print(bibles.searchBible("NET", "ADVANCED", searchString))
+    # print(Bibles.searchBible("NET", "ADVANCED", searchString))
+
+    # test search morphology - lexicalEntry
+    # e.g. H7225
+    # searchString = input("Search Morphology [Lexical Entry]\nSearch for: ")
+    # print(Bibles.searchMorphology("LexicalEntry", searchString))
+
+    # test search morphology - MorphologyCode
+    # e.g. E70020,verb.qal.wayq.p1.u.sg
+    # searchString = input("Search Morphology [Morphology Code]\nFilter for search: ")
+    # print(Bibles.searchMorphology("MorphologyCode", searchString))
+
+    # test search morphology - ADVANCED
+    # e.g. LexicalEntry LIKE '%E70020,%' AND Morphology LIKE '%third person%' AND (Book = 9 OR Book = 10)
+    # searchString = input("Search Morphology [ADVANCED]\nFilter for search: ")
+    # print(Bibles.searchMorphology("ADVANCED", searchString))
+
+    del Bibles

@@ -33,6 +33,7 @@ Any answers other than "YES" [case-insensitive] skip the standarisation.
 
 # import modules, which are ESSENTIAL for running BibleVerseParser
 import re, glob, os
+from ast import literal_eval
 
 """
 START - class BibleVerseParser
@@ -896,6 +897,7 @@ class BibleVerseParser:
             self.workingIndicator = 0
         else:
             self.workingIndicator += 1
+
     # function for converting b c v integers to verse reference string
     def bcvToVerseReference(self, b, c, v):
         abbreviation = self.standardAbbreviation[str(b)]
@@ -917,7 +919,7 @@ class BibleVerseParser:
 
     def parseText(self, text):
         # search for books; mark them with book numbers, used by https://marvel.bible
-        taggedText = text
+        taggedText = text+" "
         for book in self.marvelBibleBookNo:
             self.updateWorkingIndicator()
             # get the string of book name
@@ -963,7 +965,16 @@ class BibleVerseParser:
         self.updateWorkingIndicator()
         taggedText = re.sub('『[0-9]+?|([^\n『』]*?)』', r'\1', taggedText)
         taggedText = re.sub('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1', taggedText)
+        taggedText = taggedText[:-1]
         return taggedText
+
+    def extractAllReferences(self, text):
+        taggedText = self.parseText(text)
+        verseList = []
+        for m in re.findall('bcv\([0-9]+?,[0-9]+?,[0-9]+?\)', taggedText):
+            bcv = literal_eval(m[3:])
+            verseList.append(bcv)
+        return verseList
 
     def parseFile(self, inputFile):
         # set output filename here
@@ -1032,8 +1043,8 @@ if __name__ == '__main__':
     standardisation = input("Do you want to standardise the format of all bible verse references? [YES/NO] ")
 
     # create an instance of BibleVerseParser
-    parser = BibleVerseParser(standardisation)
+    Parser = BibleVerseParser(standardisation)
     # start parsing
-    parser.startParsing(inputName)
+    Parser.startParsing(inputName)
     # delete object
-    del parser
+    del Parser
