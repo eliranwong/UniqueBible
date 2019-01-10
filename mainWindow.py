@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addWidget(self.ubCommandLineEdit)
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        html = "<h1>Heading</h1><p><ref onclick=\"document.title='UniqueBible - New Title';window.open('https://UniqueBible.app')\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
+        html = "<h1>Heading</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';window.open('https://UniqueBible.app')\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
 
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
         # e.g. put all local files linked by html's content in folder "htmlResources"
@@ -73,7 +73,7 @@ class WebEngineView(QWebEngineView):
     def runUbCommand(self, ubCommand):
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        html = "<h1>Heading</h1><p><ref onclick=\"document.title='UniqueBible - New Title';window.open('https://UniqueBible.app')\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
+        html = "Unique Bible Command: "+ubCommand
 
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
         # e.g. put all local files linked by html's content in folder "htmlResources"
