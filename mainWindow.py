@@ -96,7 +96,6 @@ class CentralWidget(QWidget):
 
         self.layout.addWidget(self.webEngineView)
         self.layout.addWidget(self.webEngineView2)
-        #self.setLayout(layout)
 
         self.setLayout(self.layout)
 
