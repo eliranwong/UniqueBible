@@ -31,24 +31,27 @@ class MainWindow(QMainWindow):
         self.ubCommandLineEdit.returnPressed.connect(self.runUbCommand)
         self.toolBar.addWidget(self.ubCommandLineEdit)
 
-        # content in unicode html format - Content larger than 2 MB cannot be displayed
-        html = "<h1>Heading</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';window.open('https://UniqueBible.app')\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
-
+        # baseUrl
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
         # e.g. put all local files linked by html's content in folder "htmlResources"
         relativePath = os.path.join("htmlResources", "UniqueBible.png")
         absolutePath = os.path.abspath(relativePath)
-        baseUrl = QUrl.fromLocalFile(absolutePath)
+        self.baseUrl = QUrl.fromLocalFile(absolutePath)
 
-        self.webEngineView = WebEngineView()
+        # content in unicode html format - Content larger than 2 MB cannot be displayed
+        html = "<h1>Heading</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';window.open('https://UniqueBible.app')\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
+
+        self.webEngineView = WebEngineView(self.baseUrl)
         self.setCentralWidget(self.webEngineView)
-        self.webEngineView.setHtml(html, baseUrl)
+        self.webEngineView.setHtml(html, self.baseUrl)
 
         self.page = self.webEngineView.page()
 
     def runUbCommand(self):
         ubCommand = self.ubCommandLineEdit.text()
-        print("Run command: "+ubCommand)
+        print("Unique Bible Command: "+ubCommand) # develop further from here to handle Unique Bible Command
+        html = ubCommand # develop further from here to handle Unique Bible Command
+        self.webEngineView.setHtml(html)
 
     def back(self):
         print("Back")
@@ -58,8 +61,9 @@ class MainWindow(QMainWindow):
 
 
 class WebEngineView(QWebEngineView):
-    def __init__(self):
+    def __init__(self, baseUrl):
         super().__init__()
+        self.baseUrl = baseUrl
 
     def createWindow(self, windowType):
         # an example: https://stackoverflow.com/questions/47897467/qwebengine-open-createwindow-if-target-blank
@@ -73,16 +77,11 @@ class WebEngineView(QWebEngineView):
     def runUbCommand(self, ubCommand):
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        html = "Unique Bible Command: "+ubCommand
-
-        # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
-        # e.g. put all local files linked by html's content in folder "htmlResources"
-        relativePath = os.path.join("htmlResources", "UniqueBible.png")
-        absolutePath = os.path.abspath(relativePath)
-        baseUrl = QUrl.fromLocalFile(absolutePath)
+        print("Unique Bible Command: "+ubCommand) # develop further from here to handle Unique Bible Command
+        html = ubCommand # develop further from here to handle Unique Bible Command
         
         self.webEngineViewPopover = WebEngineViewPopover()
-        self.webEngineViewPopover.setHtml(html, baseUrl)
+        self.webEngineViewPopover.setHtml(html, self.baseUrl)
         self.webEngineViewPopover.show()
         
 
