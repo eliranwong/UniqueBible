@@ -6,16 +6,18 @@ from BibleVerseParser import BibleVerseParser
 
 class BiblesSqlite:
 
-    # connect bibles.sqlite
-    database = os.path.join("marvelData", "bibles.sqlite")
-    connection = sqlite3.connect(database)
-    cursor = connection.cursor()
+    def __init__(self):
+        # connect bibles.sqlite
+        self.database = os.path.join("marvelData", "bibles.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
 
     def readTextChapter(self, text, b, c):
         t = (b, c)
         query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, t)
         textChapter = self.cursor.fetchall()
+        # return a list of tuple
         return textChapter
 
     def readTextVerse(self, text, b, c, v):
@@ -23,6 +25,7 @@ class BiblesSqlite:
         query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(query, t)
         textVerse = self.cursor.fetchone()
+        # return a tuple
         return textVerse
 
     def readOriginal(self, b, c, v):
@@ -123,10 +126,36 @@ class BiblesSqlite:
     def addInterlinearInSearchResult(self, b, c, v):
         print("pending")
 
-    def openMultipleVerses(self, verseList):
-        print("pending")
+    def readMultipleVerses(self, verseList):
+        verses = ""
+        Parser = BibleVerseParser("YES")
+        for verse in verseList:
+            b = verse[0]
+            c = verse[1]
+            v = verse[2]
+            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
+            verses += "("+verseReferenceString+") "+self.readTextVerse("NET", b, c, v)[3] # use "NET" for testing only
+            verses += "<br>"
+        del Parser
+        return verses
 
-    def openVerseCrossReferences(self, b, c, v):
+    def readPlainChapter(self, verse):
+        # expect bcv is a tuple
+        b = verse[0]
+        c = verse[1]
+        v = verse[2]
+        Parser = BibleVerseParser("YES")
+        chapterReferenceString = Parser.bcvToVerseReference(b, c, v)
+        del Parser
+        chapterReferenceString = chapterReferenceString.split(":", 1)[0]
+        chapter = "<h2>"+chapterReferenceString+"</h2>"
+        verseList = self.readTextChapter("NET", b, c) # use "NET" for testing only
+        for verse in verseList:
+            chapter += verse[3]
+            chapter += "<br>"
+        return chapter
+
+    def readVerseCrossReferences(self, b, c, v):
         print("pending")
 
 if __name__ == '__main__':

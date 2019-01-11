@@ -909,10 +909,10 @@ class BibleVerseParser:
     def standardReference(self, text):
         standardisedText = text
 
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
 
         for booknumber in self.standardAbbreviation:
-            self.updateWorkingIndicator()
+            #self.updateWorkingIndicator()
             abbreviation = self.standardAbbreviation[booknumber]
             standardisedText = re.sub('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>', standardisedText)
         return standardisedText
@@ -921,7 +921,7 @@ class BibleVerseParser:
         # search for books; mark them with book numbers, used by https://marvel.bible
         taggedText = text+" "
         for book in self.marvelBibleBookNo:
-            self.updateWorkingIndicator()
+            #self.updateWorkingIndicator()
             # get the string of book name
             bookString = book
             # make dot "." optional for an abbreviation
@@ -936,24 +936,24 @@ class BibleVerseParser:
             taggedText = re.sub('('+bookString+') ([0-9])', '『'+booknumber+r'｜\1』 \2', taggedText)
         
         # add first set of taggings:
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
         taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref>\5', taggedText)
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
         taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref>\4', taggedText)
         
         # fix references without verse numbers
         # fix books with chapter 1 ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
         taggedText = re.sub('<ref onclick="bcv\((31|57|63|64|65|72|73|75|79|85),([0-9]+?),\)">', r'<ref onclick="bcv(\1,1,\2)">', taggedText)
         # fix references of chapters without verse number; assign verse number 1 in taggings
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
         taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊', taggedText)
         
         # check if verses following tagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         p = re.compile('</ref>[,-–;][ ]*?[0-9]', flags=re.M)
         s = p.search(taggedText)
         while s:
-            self.updateWorkingIndicator()
+            #self.updateWorkingIndicator()
             taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(.*?)</ref>([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref>\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref>\8', taggedText)
             taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊].*?)</ref>([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref>\5<ref onclick="bcv(\1,\2,\6)">\6</ref>\7', taggedText)
             taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊].*?)</ref>([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref>\5<ref onclick="bcv(\1,\2,\6)">\6</ref>:\7', taggedText)
@@ -962,7 +962,7 @@ class BibleVerseParser:
             s = p.search(taggedText)
         
         # clear special markers
-        self.updateWorkingIndicator()
+        #self.updateWorkingIndicator()
         taggedText = re.sub('『[0-9]+?|([^\n『』]*?)』', r'\1', taggedText)
         taggedText = re.sub('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1', taggedText)
         taggedText = taggedText[:-1]
