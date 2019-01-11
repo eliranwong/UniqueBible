@@ -40,6 +40,13 @@ class MainWindow(QMainWindow):
         self.ubCommandLineEdit.returnPressed.connect(self.runUbCommand)
         self.toolBar.addWidget(self.ubCommandLineEdit)
 
+        self.parallelMode = 0 # hide parallel view by default
+        self.parallelButton = QPushButton()
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        self.parallelButton.setIcon(QIcon(parallelButtonFile))
+        self.parallelButton.clicked.connect(self.parallel)
+        self.toolBar.addWidget(self.parallelButton)
+
     def setupBaseUrl(self):
         # baseUrl
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
@@ -57,6 +64,14 @@ class MainWindow(QMainWindow):
 
     def displayUbCommand(self):
         self.ubCommandLineEdit.setText(self.page.title())
+
+    def parallel(self):
+        if self.parallelMode == 1:
+            self.centralWidget.webEngineView2.hide()
+            self.parallelMode = 0
+        elif self.parallelMode == 0:
+            self.centralWidget.webEngineView2.show()
+            self.parallelMode = 1
 
     def runUbCommand(self):
         ubCommand = self.ubCommandLineEdit.text()
@@ -76,7 +91,8 @@ class CentralWidget(QWidget):
         self.webEngineView = WebEngineView()
         self.webEngineView.setHtml(self.html, baseUrl)
         self.webEngineView2 = WebEngineView()
-        self.webEngineView2.setHtml("Parallel Window", baseUrl)
+        self.webEngineView2.setHtml("Parallel View", baseUrl)
+        self.webEngineView2.hide() # hide parallel view by default
 
         self.layout.addWidget(self.webEngineView)
         self.layout.addWidget(self.webEngineView2)
