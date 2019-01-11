@@ -126,7 +126,7 @@ class BiblesSqlite:
     def addInterlinearInSearchResult(self, b, c, v):
         print("pending")
 
-    def readMultipleVerses(self, verseList):
+    def readMultipleVerses(self, text, verseList):
         verses = ""
         Parser = BibleVerseParser("YES")
         for verse in verseList:
@@ -134,12 +134,12 @@ class BiblesSqlite:
             c = verse[1]
             v = verse[2]
             verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-            verses += "("+verseReferenceString+") "+self.readTextVerse("NET", b, c, v)[3] # use "NET" for testing only
+            verses += "("+verseReferenceString+") "+self.readTextVerse(text, b, c, v)[3]
             verses += "<br>"
         del Parser
         return verses
 
-    def readPlainChapter(self, verse):
+    def readPlainChapter(self, text, verse):
         # expect bcv is a tuple
         b = verse[0]
         c = verse[1]
@@ -149,7 +149,7 @@ class BiblesSqlite:
         del Parser
         chapterReferenceString = chapterReferenceString.split(":", 1)[0]
         chapter = "<h2>"+chapterReferenceString+"</h2>"
-        verseList = self.readTextChapter("NET", b, c) # use "NET" for testing only
+        verseList = self.readTextChapter(text, b, c)
         for verse in verseList:
             chapter += verse[3]
             chapter += "<br>"

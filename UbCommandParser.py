@@ -1,4 +1,4 @@
-import re
+import re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 
@@ -46,14 +46,16 @@ class UbCommandParser:
     def ubPlainBible(self, verseList):
         # expect verseList is a list of tuples
         biblesSqlite = BiblesSqlite()
-        verses = biblesSqlite.readMultipleVerses(verseList)
+        text = config.mainText
+        verses = biblesSqlite.readMultipleVerses(text, verseList)
         del biblesSqlite
         return verses
 
     def ubFormattedBible(self, verse):
         # expect verse is a tuple
         biblesSqlite = BiblesSqlite() # use plain bibles database temporarily; for testing; will use bibles in marvelData/bibles instead
-        chapter = biblesSqlite.readPlainChapter(verse)
+        text = config.mainText
+        chapter = biblesSqlite.readPlainChapter(text, verse)
         del biblesSqlite
         return chapter # pending further development
 

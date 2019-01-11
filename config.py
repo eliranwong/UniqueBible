@@ -1,0 +1,1 @@
+mainText = 'KJV'
