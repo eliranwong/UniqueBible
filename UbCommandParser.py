@@ -35,17 +35,20 @@ class UbCommandParser:
         commandList = re.split('[ ]*?:::[ ]*?', command, 1)
         return commandList
 
+    def invalidCommand(self):
+        return ("main", "INVALID_COMMAND_ENTERED")
+
     def ubBibleVerseParser(self, command):
         Parser = BibleVerseParser("YES")
         verseList = Parser.extractAllReferences(command)
         del Parser
         numberOfVersesFound = len(verseList)
         if numberOfVersesFound == 0:
-            return "No verse reference is found."
+            return self.invalidCommand()
         elif numberOfVersesFound == 1:
-            return self.ubFormattedBible(verseList[0])
+            return ("main", self.ubFormattedBible(verseList[0]))
         else:
-            return self.ubPlainBible(verseList)
+            return ("main", self.ubPlainBible(verseList))
 
     def ubBible(self, command):
         biblesSqlite = BiblesSqlite()
@@ -56,7 +59,7 @@ class UbCommandParser:
         if text in bibleList and len(commandList) == 2:
             config.mainText = text
             return self.ubBibleVerseParser(commandList[1])
-        return "No verse reference is found."
+        return self.invalidCommand()
 
     def ubPlainBible(self, verseList):
         # expect verseList is a list of tuples

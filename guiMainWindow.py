@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, config
 from PySide2.QtCore import QUrl
 from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QApplication, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
@@ -10,6 +10,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.ubCommandParser = UbCommandParser()
+
         self.setWindowTitle('Unique Bible App')
         
         appIconFile = os.path.join("htmlResources", "UniqueBible.png")
@@ -20,8 +22,9 @@ class MainWindow(QMainWindow):
         self.setupBaseUrl()
         
         self.centralWidget = CentralWidget(self)
-        self.webEngineView = self.centralWidget.webEngineView
-        self.page = self.webEngineView.page()
+        self.mainView = self.centralWidget.mainView
+        self.parallelView = self.centralWidget.parallelView
+        self.page = self.mainView.page()
         self.page.titleChanged.connect(self.displayUbCommand)
         self.setCentralWidget(self.centralWidget)
 
@@ -42,7 +45,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addWidget(self.forwardButton)
 
         self.ubCommandLineEdit = QLineEdit()
-        self.ubCommandLineEdit.setText("[Enter command here]")
+        #self.ubCommandLineEdit.setText("[Enter command here]")
         self.ubCommandLineEdit.returnPressed.connect(self.runUbCommand)
         self.toolBar.addWidget(self.ubCommandLineEdit)
 
@@ -63,15 +66,28 @@ class MainWindow(QMainWindow):
         baseUrl = QUrl.fromLocalFile(absolutePath)
 
     def back(self):
-        print("Back")
+        mainCurrentRecord = config.currentRecord["main"]
+        if not mainCurrentRecord == 0:
+            mainCurrentRecord = mainCurrentRecord - 1
+            config.currentRecord["main"] = mainCurrentRecord
+            ubCommand = config.history["main"][mainCurrentRecord]
+            self.ubCommandLineEdit.setText(ubCommand)
+            self.runUbCommand(False)
 
     def forward(self):
-        print("Forward")
+        mainCurrentRecord = config.currentRecord["main"]
+        if not mainCurrentRecord == (len(config.history["main"]) - 1):
+            mainCurrentRecord = mainCurrentRecord + 1
+            config.currentRecord["main"] = mainCurrentRecord
+            ubCommand = config.history["main"][mainCurrentRecord]
+            self.ubCommandLineEdit.setText(ubCommand)
+            self.runUbCommand(False)
 
     def displayUbCommand(self):
         title = self.page.title()
-        if not title == "about:blank":
+        if not (title == self.ubCommandLineEdit.text() or title == "about:blank" or title.startswith("data:text/html;")):
             self.ubCommandLineEdit.setText(title)
+            self.runUbCommand()
 
     def parallel(self):
         parallelRatio = {
@@ -82,20 +98,42 @@ class MainWindow(QMainWindow):
         }
         if self.parallelMode == 3:
             self.parallelMode = 0
-            self.centralWidget.webEngineView2.hide()
+            self.centralWidget.parallelView.hide()
         else:
             self.parallelMode += 1
-            self.centralWidget.webEngineView2.show()
+            self.centralWidget.parallelView.show()
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(1, ratio[0])
         self.centralWidget.layout.setColumnStretch(2, ratio[1])
 
-    def runUbCommand(self):
+    def runUbCommand(self, addRecord=True):
         ubCommand = self.ubCommandLineEdit.text()
-        commandParser = UbCommandParser()
-        html = commandParser.parser(ubCommand)
-        del commandParser
-        self.webEngineView.setHtml(html)
+        result = self.ubCommandParser.parser(ubCommand)
+        view = result[0]
+        content = result[1]
+        if content == "INVALID_COMMAND_ENTERED":
+            pass
+        else:
+            html = "<!DOCTYPE html><html><head><title>"+ubCommand+"</title></head><body>"
+            html += content
+            html += "</body></html>"
+            views = {
+                "main": self.mainView,
+                "parallel": self.parallelView,
+            }
+            views[view].setHtml(html)
+            if addRecord == True:
+                self.addHistoryRecord(view, ubCommand)
+
+    def addHistoryRecord(self, view, ubCommand):
+        viewhistory = config.history[view]
+        if not viewhistory[len(viewhistory) - 1] == ubCommand:
+            viewhistory.append(ubCommand)
+            # set maximum number of history records for each view here
+            if len(viewhistory) > 20:
+                viewhistory = viewhistory[-20:]
+            config.history[view] = viewhistory
+            config.currentRecord[view] = len(viewhistory) - 1
 
 
 class CentralWidget(QWidget):
@@ -106,14 +144,14 @@ class CentralWidget(QWidget):
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
         self.html = "<h1>UniqueBible.app</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">development in progress</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
-        self.webEngineView = WebEngineView()
-        self.webEngineView.setHtml(self.html, baseUrl)
-        self.webEngineView2 = WebEngineView()
-        self.webEngineView2.setHtml("Parallel View", baseUrl)
-        self.webEngineView2.hide() # hide parallel view by default
+        self.mainView = WebEngineView()
+        self.mainView.setHtml(self.html, baseUrl)
+        self.parallelView = WebEngineView()
+        self.parallelView.setHtml("Parallel View", baseUrl)
+        self.parallelView.hide() # hide parallel view by default
 
-        self.layout.addWidget(self.webEngineView, 0, 1)
-        self.layout.addWidget(self.webEngineView2, 0, 2)
+        self.layout.addWidget(self.mainView, 0, 1)
+        self.layout.addWidget(self.parallelView, 0, 2)
 
         self.layout.setColumnStretch(1, 1)
         self.layout.setColumnStretch(2, 0)
@@ -140,9 +178,9 @@ class WebEngineView(QWebEngineView):
         print("Unique Bible Command: "+ubCommand) # develop further from here to handle Unique Bible Command
         html = ubCommand # develop further from here to handle Unique Bible Command
 
-        self.webEngineViewPopover = WebEngineViewPopover()
-        self.webEngineViewPopover.setHtml(html, baseUrl)
-        self.webEngineViewPopover.show()
+        self.popoverView = WebEngineViewPopover()
+        self.popoverView.setHtml(html, baseUrl)
+        self.popoverView.show()
 
 
 class WebEngineViewPopover(QWebEngineView):
