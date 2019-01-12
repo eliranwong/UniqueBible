@@ -1,6 +1,6 @@
 import os, sys
 from PySide2.QtCore import QUrl
-from PySide2.QtGui import QIcon
+from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QApplication, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from UbCommandParser import UbCommandParser
@@ -11,6 +11,11 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle('Unique Bible App')
+        
+        appIconFile = os.path.join("htmlResources", "UniqueBible.png")
+        appIcon = QIcon(appIconFile)
+        QGuiApplication.setWindowIcon(appIcon)
+        
         self.setupToolBar()
         self.setupBaseUrl()
         
