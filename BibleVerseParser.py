@@ -1046,5 +1046,11 @@ if __name__ == '__main__':
     Parser = BibleVerseParser(standardisation)
     # start parsing
     Parser.startParsing(inputName)
+
+    # example of using extractAllReferences(text)
+    # text = input("Enter text containing verse references: ")
+    # verseReferences = Parser.extractAllReferences(text)
+    # print(verseReferences)
+
     # delete object
     del Parser
