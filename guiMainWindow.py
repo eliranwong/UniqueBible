@@ -105,7 +105,7 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        self.html = "<h1>Heading</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">paragraph</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
+        self.html = "<h1>UniqueBible.app</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">development in progress</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
         self.webEngineView = WebEngineView()
         self.webEngineView.setHtml(self.html, baseUrl)
         self.webEngineView2 = WebEngineView()
