@@ -6,7 +6,7 @@ class UbCommandParser:
 
     def parser(self, ubCommad):
         interpreters = {
-            "bible": self.ubFormattedBible,
+            "bible": self.ubBible,
             "verse": self.ubVerseData,
             "word": self.ubWordData,
             "commentary": self.ubCommentary,
@@ -20,16 +20,20 @@ class UbCommandParser:
             "encyclopedia": self.ubEncyclopedia,
             "crossreference": self.ubCrossReference,
         } # add more later
-        commandList = re.split('[ ]*?:::[ ]*?', ubCommad, 1)
+        commandList = self.splitCommand(ubCommad)
         if len(commandList) == 1:
             return self.ubBibleVerseParser(ubCommad)
         else:
             resourceType = commandList[0].lower()
             command = commandList[1]
-            if resourceType in switcher:
+            if resourceType in interpreters:
                 return interpreters[resourceType](command)
             else:
                 return self.ubBibleVerseParser(ubCommad)
+
+    def splitCommand(self, command):
+        commandList = re.split('[ ]*?:::[ ]*?', command, 1)
+        return commandList
 
     def ubBibleVerseParser(self, command):
         Parser = BibleVerseParser("YES")
@@ -42,6 +46,17 @@ class UbCommandParser:
             return self.ubFormattedBible(verseList[0])
         else:
             return self.ubPlainBible(verseList)
+
+    def ubBible(self, command):
+        biblesSqlite = BiblesSqlite()
+        bibleList = biblesSqlite.getBibleList()
+        del biblesSqlite
+        commandList = self.splitCommand(command)
+        text = commandList[0]
+        if text in bibleList and len(commandList) == 2:
+            config.mainText = text
+            return self.ubBibleVerseParser(commandList[1])
+        return "No verse reference is found."
 
     def ubPlainBible(self, verseList):
         # expect verseList is a list of tuples

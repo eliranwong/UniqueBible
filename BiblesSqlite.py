@@ -36,17 +36,31 @@ class BiblesSqlite:
         verse = self.readTextVerse("LXX", b, c, v)[3].strip()+"\n"
         return verse
 
+    def getBibleList(self):
+        t = ("table",)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        self.cursor.execute(query, t)
+        names = self.cursor.fetchall()
+        excludeList = ["Details", "lexicalEntry", "morphology", "original"]
+        bibleList = []
+        for name in names:
+            bible = name[0]
+            if not bible in excludeList:
+                bibleList.append(bible)
+        return bibleList
+
     def readTranslations(self, b, c, v):
         t = ("table",)
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
-        translations = self.cursor.fetchall()
+        names = self.cursor.fetchall()
+        excludeList = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
         verses = ""
-        for translation in translations:
-            excludeList = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
-            text = translation[0]
+        for name in names:
+            text = name[0]
             if not text in excludeList:
-                verses += self.readTextVerse(text, b, c, v)[3].strip()+"\n"
+                verses += self.readTextVerse(text, b, c, v)[3].strip()
+                verses += "<br>"
         return verses
 
     def compareVerse(self, b, c, v):
