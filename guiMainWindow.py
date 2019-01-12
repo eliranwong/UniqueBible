@@ -28,6 +28,9 @@ class MainWindow(QMainWindow):
         self.page.titleChanged.connect(self.displayUbCommand)
         self.setCentralWidget(self.centralWidget)
 
+    def __del__(self):
+        del self.ubCommandParser
+
     def setupToolBar(self):
         self.toolBar = QToolBar()
         self.addToolBar(self.toolBar)
@@ -85,7 +88,8 @@ class MainWindow(QMainWindow):
 
     def displayUbCommand(self):
         title = self.page.title()
-        if not (title == self.ubCommandLineEdit.text() or title == "about:blank" or title.startswith("data:text/html;")):
+        exceptionTuple = (self.ubCommandLineEdit.text(), "UniqueBible.app", "about:blank")
+        if not (title.startswith("data:text/html;") or title in exceptionTuple):
             self.ubCommandLineEdit.setText(title)
             self.runUbCommand()
 
@@ -114,7 +118,7 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>"+ubCommand+"</title></head><body>"
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title></head><body style='font-size: "+str(config.fontSize)+"%;'>"
             html += content
             html += "</body></html>"
             views = {

@@ -1,7 +1,7 @@
 """
 Reading data from bibles.sqlite
 """
-import os, sqlite3
+import os, sqlite3, config
 from BibleVerseParser import BibleVerseParser
 
 class BiblesSqlite:
@@ -12,11 +12,16 @@ class BiblesSqlite:
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
+    def __del__(self):
+        self.connection.close()
+
     def readTextChapter(self, text, b, c):
         t = (b, c)
         query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, t)
         textChapter = self.cursor.fetchall()
+        if not textChapter:
+            return [(b, c, 1, "")]
         # return a list of tuple
         return textChapter
 
@@ -25,15 +30,19 @@ class BiblesSqlite:
         query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(query, t)
         textVerse = self.cursor.fetchone()
+        if not textVerse:
+            return (b, c, v, "")
         # return a tuple
         return textVerse
 
     def readOriginal(self, b, c, v):
-        verse = self.readTextVerse("original", b, c, v)[3].strip()+"\n"
+        verse = "<sup style='color: brown;'>MOB</sup> "+self.readTextVerse("original", b, c, v)[3].strip()
+        verse += "<br>"
         return verse
 
     def readLXX(self, b, c, v):
-        verse = self.readTextVerse("LXX", b, c, v)[3].strip()+"\n"
+        verse = "<sup style='color: brown;'>LXX</sup> "+self.readTextVerse("LXX", b, c, v)[3].strip()
+        verse += "<br>"
         return verse
 
     def getBibleList(self):
@@ -49,7 +58,37 @@ class BiblesSqlite:
                 bibleList.append(bible)
         return bibleList
 
-    def readTranslations(self, b, c, v):
+    def getBookList(self, text=config.mainText):
+        query = "SELECT DISTINCT Book FROM "+text+" ORDER BY Book"
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
+    def getChapterList(self, b, text=config.mainText):
+        t = (b)
+        query = "SELECT DISTINCT Chapter FROM "+text+" WHERE Book=? ORDER BY Chapter"
+        self.cursor.execute(query, t)
+        return self.cursor.fetchall()
+
+    def getVerseList(self, b, c, text=config.mainText):
+        t = (b, c)
+        query = "SELECT DISTINCT Verse FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, t)
+        return self.cursor.fetchall()
+
+    def readTranslations(self, b, c, v, texts):
+        bibleList = self.getBibleList()
+        Parser = BibleVerseParser("YES")
+        verseReferenceString = Parser.bcvToVerseReference(b, c, v)
+        del Parser
+        verses = "<h2>"+verseReferenceString+"</h2>"
+        for text in texts:
+            if text in bibleList:
+                verses += "<sup style='color: brown;'>"+text+"</sup> "
+                verses += self.readTextVerse(text, b, c, v)[3].strip()
+                verses += "<br>"
+        return verses
+
+    def readAllTranslations(self, b, c, v):
         t = ("table",)
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
@@ -59,6 +98,7 @@ class BiblesSqlite:
         for name in names:
             text = name[0]
             if not text in excludeList:
+                verses += "<sup style='color: brown;'>"+text+"</sup> "
                 verses += self.readTextVerse(text, b, c, v)[3].strip()
                 verses += "<br>"
         return verses
@@ -66,12 +106,53 @@ class BiblesSqlite:
     def compareVerse(self, b, c, v):
         Parser = BibleVerseParser("YES")
         verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-        comparison = "Compare "+verseReferenceString+"\n"
+        del Parser
+        comparison = "<h2>"+verseReferenceString+"</h2>"
         comparison += self.readOriginal(b, c, v)
         comparison += self.readLXX(b, c, v)
-        comparison += self.readTranslations(b, c, v)
-        del Parser
+        comparison += self.readAllTranslations(b, c, v)
         return comparison
+
+    def compareChapterVerse(self, b, c, v, texts):
+        #highlightVerse == v
+        verseList = self.getVerseList(b, c, texts[0])
+        Parser = BibleVerseParser("YES")
+        chapterReferenceString = Parser.bcvToVerseReference(b, c, v)
+        del Parser
+        chapterReferenceString = chapterReferenceString.split(":", 1)[0]
+        chapter = "<h2>"+chapterReferenceString+"</h2><table style='width: 100%;'>"
+        for verse in verseList:
+            verseNumber = verse[0]
+            row = 0
+            for text in texts:
+                row = row + 1
+                if row % 2 == 0:
+                    chapter += "<tr>"
+                else:
+                    chapter += "<tr style='background-color: #f2f2f2;'>"
+                chapter += "<td style='vertical-align: text-top;'><sup style='color: brown;'>"+str(verseNumber)+"</sup></td><td><sup>("+text+")</sup></td><td>"
+                chapter += self.readTextVerse(text, b, c, verseNumber)[3]
+                chapter += "</td></tr>"
+        chapter += "</table>"
+        return chapter
+
+    def compareVerseList(self, verseList, texts=["ALL"]):
+        verses = ""
+        if len(verseList) == 1 and not texts == ["ALL"]:
+            b = verseList[0][0]
+            c = verseList[0][1]
+            v = verseList[0][2]
+            return self.compareChapterVerse(b, c, v, texts)
+        else:
+            for verse in verseList:
+                b = verse[0]
+                c = verse[1]
+                v = verse[2]
+                if texts == ["ALL"]:
+                    verses += self.compareVerse(b, c, v)
+                else:
+                    verses += self.readTranslations(b, c, v, texts)
+        return verses
 
     def searchBible(self, text, mode, searchString):
         query = "SELECT * FROM "+text+" WHERE "
@@ -165,6 +246,7 @@ class BiblesSqlite:
         chapter = "<h2>"+chapterReferenceString+"</h2>"
         verseList = self.readTextChapter(text, b, c)
         for verse in verseList:
+            chapter += "<sup style='color: brown;'>"+str(verse[2])+"</sup> "
             chapter += verse[3]
             chapter += "<br>"
         return chapter

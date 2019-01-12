@@ -23,7 +23,8 @@ def setCurrentRecord():
 
 def saveDataOnExit():
     fileObj = open("config.py", "w")
-    fileObj.write("mainText = "+pprint.pformat(config.mainText))
+    fileObj.write("fontSize = "+pprint.pformat(config.fontSize))
+    fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nhistory = "+pprint.pformat(config.history))
     currentRecord = {'main': 0, 'parallel': 0}
     fileObj.write("\ncurrentRecord = "+pprint.pformat(currentRecord))
