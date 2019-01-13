@@ -60,7 +60,7 @@ class UbCommandParser:
         text = commandList[0]
         if text in bibleList and len(commandList) == 2:
             config.mainText = text
-            return self.ubBibleVerseParser(commandList[1])
+            return self.ubBibleVerseParser(commandList[1], text)
         return self.invalidCommand()
 
     def ubCompare(self, command):
