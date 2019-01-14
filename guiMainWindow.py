@@ -157,7 +157,6 @@ class CentralWidget(QWidget):
         self.html = "<h1>UniqueBible.app</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">development in progress</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
         self.mainView = WebEngineView()
         self.mainView.setHtml(self.html, baseUrl)
-        #self.mainView.page.runJavaScript()
         self.parallelView = WebEngineView()
         self.parallelView.setHtml("Parallel View", baseUrl)
         self.parallelView.hide() # hide parallel view by default

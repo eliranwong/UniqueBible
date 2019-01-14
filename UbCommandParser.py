@@ -44,13 +44,14 @@ class UbCommandParser:
         pass
 
     def ubChapter(self, command):
-        biblesSqlite = BiblesSqlite()
-        chapterList = biblesSqlite.getChapterList(config.mainB)
-        del biblesSqlite
-        chapters = ""
-        for chapter in chapterList:
-            chapters += "{} ".format(chapter)
+        chapters = self.getChapters()
         return ("main", chapters)
+
+    def getChapters(self, b=config.mainB, text=config.mainText):
+        biblesSqlite = BiblesSqlite()
+        chapters = biblesSqlite.getChapters(b, text)
+        del biblesSqlite
+        return chapters
 
     def ubVerse(self):
         pass
@@ -108,10 +109,13 @@ class UbCommandParser:
             return self.invalidCommand()
         else:
             self.setMainVerse(text, verseList[0])
+            chapters = self.getChapters()
             if len(verseList) == 1:
-                return ("main", self.ubFormattedBible(verseList[0], text))
+                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.ubFormattedBible(verseList[0], text))
+                return ("main", content)
             else:
-                return ("main", self.ubPlainBible(verseList, text))
+                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.ubPlainBible(verseList, text))
+                return ("main", content)
 
     def ubBible(self, command):
         commandList = self.splitCommand(command)

@@ -21,6 +21,10 @@ class BiblesSqlite:
         del Parser
         return verseReference
 
+    def formVidTagCrossRefLink(self, b, c, v, text=config.mainText):
+        verseReference = self.bcvToVerseReference(b, c, v)
+        return "<vid id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"'>".format(b, c, v, text, verseReference)
+
     def readTextChapter(self, text, b, c):
         t = (b, c)
         query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
@@ -54,11 +58,18 @@ class BiblesSqlite:
         self.cursor.execute(query)
         return [book[0] for book in self.cursor.fetchall()]
 
-    def getChapterList(self, b, text=config.mainText):
+    def getChapterList(self, b=config.mainB, text=config.mainText):
         t = (b,)
         query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
         self.cursor.execute(query, t)
         return [chapter[0] for chapter in self.cursor.fetchall()]
+
+    def getChapters(self, b=config.mainB, text=config.mainText):
+        chapterList = self.getChapterList(b, text)
+        chapters = ""
+        for chapter in chapterList:
+            chapters += "{0}{1}</vid> ".format(self.formVidTagCrossRefLink(b, chapter, 1, text), chapter)
+        return chapters
 
     def getVerseList(self, b, c, text=config.mainText):
         t = (b, c)
@@ -89,7 +100,7 @@ class BiblesSqlite:
                 else:
                     chapter += "<tr style='background-color: #f2f2f2;'>"
                 if row == 1:
-                    chapter += "<td style='vertical-align: text-top;'><vid id='v{0}.{1}.{2}' onclick='luV({2})'>{2}</vid> ".format(b, c, verse)
+                    chapter += "<td style='vertical-align: text-top;'>{0}{1}</vid> ".format(self.formVidTagCrossRefLink(b, c, verse, text), verse)
                 else:
                     chapter += "<td>"
                 chapter += "</td><td><sup>({0})</sup></td><td>{1}</td></tr>".format(text, self.readTextVerse(text, b, c, verse)[3])
@@ -107,7 +118,7 @@ class BiblesSqlite:
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-            verses += "({0}) {1}<br>".format(text, verseText.strip())
+            verses += "({0}{1}</vid>) {2}<br>".format(self.formVidTagCrossRefLink(b, c, v, text), text, verseText.strip())
         return verses
 
     def searchBible(self, text, mode, searchString):
@@ -174,7 +185,7 @@ class BiblesSqlite:
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
-            chapter += "<vid id='v{0}.{1}.{2}' onclick='luV({2})'>{2}</vid> {3}<br>".format(b, c, v, verseText)
+            chapter += "{0}{1}</vid> {2}<br>".format(self.formVidTagCrossRefLink(b, c, v, text), v, verseText)
         return chapter
 
     def readVerseCrossReferences(self, b, c, v):
