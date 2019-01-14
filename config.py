@@ -1,4 +1,8 @@
 fontSize = 120
-mainText = 'KJV'
-history = {'main': ['BIBLE:::KJV:::John 3:16'], 'parallel': []}
+mainText = 'CUV'
+mainB = 43
+mainC = 3
+mainV = 16
+historyRecordAllowed = 20
 currentRecord = {'main': 0, 'parallel': 0}
+history = {'main': ['John 3:16'], 'parallel': []}

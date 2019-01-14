@@ -1,4 +1,4 @@
-import re, config
+import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 
@@ -40,17 +40,48 @@ class UbCommandParser:
     def invalidCommand(self):
         return ("main", "INVALID_COMMAND_ENTERED")
 
-    def ubBibleVerseParser(self, command, text=config.mainText):
+    def extractAllVerses(self, text):
         Parser = BibleVerseParser("YES")
-        verseList = Parser.extractAllReferences(command)
+        verseList = Parser.extractAllReferences(text)
         del Parser
-        numberOfVersesFound = len(verseList)
-        if numberOfVersesFound == 0:
-            return self.invalidCommand()
-        elif numberOfVersesFound == 1:
-            return ("main", self.ubFormattedBible(verseList[0], text))
+        return verseList
+
+    def setMainVerse(self, text, bcvTuple):
+        config.mainText = text
+        config.mainB = bcvTuple[0]
+        config.mainC = bcvTuple[1]
+        config.mainV = bcvTuple[2]
+
+    def ubPlainBible(self, verseList, text=config.mainText):
+        # expect verseList is a list of tuples
+        biblesSqlite = BiblesSqlite()
+        verses = biblesSqlite.readMultipleVerses(text, verseList)
+        del biblesSqlite
+        return verses
+
+    def ubFormattedBible(self, verse, text=config.mainText):
+        chapter = ""
+        formattedBiblesFolder = os.path.join("marvelData", "bibles")
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
+        if text in formattedBibles:
+            return "[pending revision here]"
         else:
-            return ("main", self.ubPlainBible(verseList, text))
+            # expect verse is a tuple
+            biblesSqlite = BiblesSqlite() # use plain bibles database when corresponding formatted version is not available
+            chapter += biblesSqlite.readPlainChapter(text, verse)
+            del biblesSqlite
+            return chapter # pending further development
+
+    def ubBibleVerseParser(self, command, text=config.mainText):
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            self.setMainVerse(text, verseList[0])
+            if len(verseList) == 1:
+                return ("main", self.ubFormattedBible(verseList[0], text))
+            else:
+                return ("main", self.ubPlainBible(verseList, text))
 
     def ubBible(self, command):
         biblesSqlite = BiblesSqlite()
@@ -59,7 +90,6 @@ class UbCommandParser:
         commandList = self.splitCommand(command)
         text = commandList[0]
         if text in bibleList and len(commandList) == 2:
-            config.mainText = text
             return self.ubBibleVerseParser(commandList[1], text)
         return self.invalidCommand()
 
@@ -69,24 +99,22 @@ class UbCommandParser:
         if len(commandList) == 2:
             texts = commandList[0].split("_")
             commandText = commandList[1]
-            Parser = BibleVerseParser("YES")
-            verseList = Parser.extractAllReferences(commandText)
-            del Parser
+            verseList = self.extractAllVerses(commandText)
             if not texts or not verseList:
                 return self.invalidCommand()
             else:
+                self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
                 biblesSqlite = BiblesSqlite()
                 verses = biblesSqlite.compareVerseList(verseList, texts)
                 del biblesSqlite
                 return ("main", verses)
         elif len(commandList) == 1:
             commandText = commandList[0]
-            Parser = BibleVerseParser("YES")
-            verseList = Parser.extractAllReferences(commandText)
-            del Parser
+            verseList = self.extractAllVerses(commandText)
             if not verseList:
                 return self.invalidCommand()
             else:
+                self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
                 biblesSqlite = BiblesSqlite()
                 verses = biblesSqlite.compareVerseList(verseList)
                 del biblesSqlite
@@ -102,8 +130,14 @@ class UbCommandParser:
             verses = "<tr>"
             bibles = commandList[0]
             texts = bibles.split("_")
+            textsConfirmed = []
             for text in texts:
                 if text in bibleList:
+                    textsConfirmed.append(text)
+            if not textsConfirmed:
+                return self.invalidCommand()
+            else:
+                for text in textsConfirmed:
                     titles += "<th>"+text+"</th>"
                     verses += "<td style='vertical-align: text-top;'>"+self.ubBibleVerseParser(commandList[1], text)[1]+"</td>"
             titles += "</tr>"
@@ -111,21 +145,6 @@ class UbCommandParser:
             return ("main", "<table style='width:100%'>"+titles+verses+"</table>")
         else:
             return self.invalidCommand()
-            
-
-    def ubPlainBible(self, verseList, text=config.mainText):
-        # expect verseList is a list of tuples
-        biblesSqlite = BiblesSqlite()
-        verses = biblesSqlite.readMultipleVerses(text, verseList)
-        del biblesSqlite
-        return verses
-
-    def ubFormattedBible(self, verse, text=config.mainText):
-        # expect verse is a tuple
-        biblesSqlite = BiblesSqlite() # use plain bibles database temporarily; for testing; will use bibles in marvelData/bibles instead
-        chapter = biblesSqlite.readPlainChapter(text, verse)
-        del biblesSqlite
-        return chapter # pending further development
 
     def ubVerseData(self, command):
         return command # pending further development

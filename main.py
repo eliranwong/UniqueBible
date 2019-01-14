@@ -25,9 +25,12 @@ def saveDataOnExit():
     fileObj = open("config.py", "w")
     fileObj.write("fontSize = "+pprint.pformat(config.fontSize))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
+    fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
+    fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
+    fileObj.write("\nmainV = "+pprint.pformat(config.mainV))
+    fileObj.write("\nhistoryRecordAllowed = "+pprint.pformat(config.historyRecordAllowed))
+    fileObj.write("\ncurrentRecord = {'main': 0, 'parallel': 0}")
     fileObj.write("\nhistory = "+pprint.pformat(config.history))
-    currentRecord = {'main': 0, 'parallel': 0}
-    fileObj.write("\ncurrentRecord = "+pprint.pformat(currentRecord))
     fileObj.close()
 
 app = QApplication(sys.argv)

@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
     def displayUbCommand(self):
         title = self.page.title()
         exceptionTuple = (self.ubCommandLineEdit.text(), "UniqueBible.app", "about:blank")
-        if not (title.startswith("data:text/html;") or title in exceptionTuple):
+        if not (title.startswith("data:text/html;") or title.startswith("file:///") or title in exceptionTuple):
             self.ubCommandLineEdit.setText(title)
             self.runUbCommand()
 
@@ -118,14 +118,15 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title></head><body style='font-size: "+str(config.fontSize)+"%;'>"
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'></head><body style='font-size: "+str(config.fontSize)+"%;'>"
             html += content
+            html += "<script>activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }</script>"
             html += "</body></html>"
             views = {
                 "main": self.mainView,
                 "parallel": self.parallelView,
             }
-            views[view].setHtml(html)
+            views[view].setHtml(html, baseUrl)
             if addRecord == True:
                 self.addHistoryRecord(view, ubCommand)
 
@@ -134,8 +135,9 @@ class MainWindow(QMainWindow):
         if not viewhistory[len(viewhistory) - 1] == ubCommand:
             viewhistory.append(ubCommand)
             # set maximum number of history records for each view here
-            if len(viewhistory) > 20:
-                viewhistory = viewhistory[-20:]
+            historyRecordAllowed = config.historyRecordAllowed
+            if len(viewhistory) > historyRecordAllowed:
+                viewhistory = viewhistory[-historyRecordAllowed:]
             config.history[view] = viewhistory
             config.currentRecord[view] = len(viewhistory) - 1
 

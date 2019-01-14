@@ -50,11 +50,11 @@ class BiblesSqlite:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         names = self.cursor.fetchall()
-        excludeList = ["Details", "lexicalEntry", "morphology", "original"]
+        exclude = ["Details", "lexicalEntry", "morphology", "original"]
         bibleList = []
         for name in names:
             bible = name[0]
-            if not bible in excludeList:
+            if not bible in exclude:
                 bibleList.append(bible)
         return bibleList
 
@@ -77,14 +77,25 @@ class BiblesSqlite:
 
     def readTranslations(self, b, c, v, texts):
         bibleList = self.getBibleList()
+        if texts == ["ALL"]:
+            texts = ["original", "LXX"]
+            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB")
+            for bible in bibleList:
+                if not bible in exclude:
+                    texts.append(bible)
         Parser = BibleVerseParser("YES")
         verseReferenceString = Parser.bcvToVerseReference(b, c, v)
         del Parser
         verses = "<h2>"+verseReferenceString+"</h2>"
         for text in texts:
             if text in bibleList:
-                verses += "<sup style='color: brown;'>"+text+"</sup> "
-                verses += self.readTextVerse(text, b, c, v)[3].strip()
+                verseTuple = self.readTextVerse(text, b, c, v)
+                book = str(verseTuple[0])
+                chapter = str(verseTuple[1])
+                verse = str(verseTuple[2])
+                scripture = verseTuple[3].strip()
+                verses += "<vid id='v"+book+"."+chapter+"."+verse+"' onclick='luV("+verse+")'>"+verse+"</vid> "
+                verses += scripture
                 verses += "<br>"
         return verses
 
@@ -93,11 +104,11 @@ class BiblesSqlite:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         names = self.cursor.fetchall()
-        excludeList = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
+        exclude = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
         verses = ""
         for name in names:
             text = name[0]
-            if not text in excludeList:
+            if not text in exclude:
                 verses += "<sup style='color: brown;'>"+text+"</sup> "
                 verses += self.readTextVerse(text, b, c, v)[3].strip()
                 verses += "<br>"
@@ -130,7 +141,11 @@ class BiblesSqlite:
                     chapter += "<tr>"
                 else:
                     chapter += "<tr style='background-color: #f2f2f2;'>"
-                chapter += "<td style='vertical-align: text-top;'><sup style='color: brown;'>"+str(verseNumber)+"</sup></td><td><sup>("+text+")</sup></td><td>"
+                if row == 1:
+                    chapter += "<td style='vertical-align: text-top;'><vid id='v"+str(b)+"."+str(c)+"."+str(verseNumber)+"' onclick='luV("+str(verseNumber)+")'>"+str(verseNumber)+"</vid> "
+                else:
+                    chapter += "<td>"
+                chapter += "</td><td><sup>("+text+")</sup></td><td>"
                 chapter += self.readTextVerse(text, b, c, verseNumber)[3]
                 chapter += "</td></tr>"
         chapter += "</table>"
@@ -150,6 +165,7 @@ class BiblesSqlite:
                 v = verse[2]
                 if texts == ["ALL"]:
                     verses += self.compareVerse(b, c, v)
+                    #verses += self.readTranslations(b, c, v, texts)
                 else:
                     verses += self.readTranslations(b, c, v, texts)
         return verses
@@ -245,9 +261,11 @@ class BiblesSqlite:
         chapterReferenceString = chapterReferenceString.split(":", 1)[0]
         chapter = "<h2>"+chapterReferenceString+"</h2>"
         verseList = self.readTextChapter(text, b, c)
-        for verse in verseList:
-            chapter += "<sup style='color: brown;'>"+str(verse[2])+"</sup> "
-            chapter += verse[3]
+        for verseTuple in verseList:
+            verseNumber = str(verseTuple[2])
+            scripture = verseTuple[3]
+            chapter += "<vid id='v"+str(b)+"."+str(c)+"."+verseNumber+"' onclick='luV("+verseNumber+")'>"+verseNumber+"</vid> "
+            chapter += scripture
             chapter += "<br>"
         return chapter
 
