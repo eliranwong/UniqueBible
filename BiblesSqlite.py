@@ -15,9 +15,15 @@ class BiblesSqlite:
     def __del__(self):
         self.connection.close()
 
+    def bcvToVerseReference(self, b, c, v):
+        Parser = BibleVerseParser("YES")
+        verseReference = Parser.bcvToVerseReference(b, c, v)
+        del Parser
+        return verseReference
+
     def readTextChapter(self, text, b, c):
         t = (b, c)
-        query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
+        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
         self.cursor.execute(query, t)
         textChapter = self.cursor.fetchall()
         if not textChapter:
@@ -27,7 +33,7 @@ class BiblesSqlite:
 
     def readTextVerse(self, text, b, c, v):
         t = (b, c, v)
-        query = "SELECT * FROM "+text+" WHERE Book=? AND Chapter=? AND Verse=?"
+        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
         self.cursor.execute(query, t)
         textVerse = self.cursor.fetchone()
         if not textVerse:
@@ -39,87 +45,42 @@ class BiblesSqlite:
         t = ("table",)
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
-        names = self.cursor.fetchall()
-        exclude = ["Details", "lexicalEntry", "morphology", "original"]
-        bibleList = [name[0] for name in names if not name[0] in exclude]
-        return bibleList
+        versions = self.cursor.fetchall()
+        exclude = ("Details", "lexicalEntry", "morphology", "original")
+        return [version[0] for version in versions if not version[0] in exclude]
 
     def getBookList(self, text=config.mainText):
-        query = "SELECT DISTINCT Book FROM "+text+" ORDER BY Book"
+        query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
         self.cursor.execute(query)
-        return self.cursor.fetchall()
+        return [book[0] for book in self.cursor.fetchall()]
 
     def getChapterList(self, b, text=config.mainText):
-        t = (b)
-        query = "SELECT DISTINCT Chapter FROM "+text+" WHERE Book=? ORDER BY Chapter"
+        t = (b,)
+        query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
         self.cursor.execute(query, t)
-        return self.cursor.fetchall()
+        return [chapter[0] for chapter in self.cursor.fetchall()]
 
     def getVerseList(self, b, c, text=config.mainText):
         t = (b, c)
-        query = "SELECT DISTINCT Verse FROM "+text+" WHERE Book=? AND Chapter=? ORDER BY Verse"
+        query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
         self.cursor.execute(query, t)
-        return self.cursor.fetchall()
+        return [verse[0] for verse in self.cursor.fetchall()]
 
-    def readTranslations(self, b, c, v, texts):
-        bibleList = self.getBibleList()
-        if texts == ["ALL"]:
-            texts = ["original", "LXX"]
-            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB")
-            for bible in bibleList:
-                if not bible in exclude:
-                    texts.append(bible)
-        Parser = BibleVerseParser("YES")
-        verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-        del Parser
-        verses = "<h2>"+verseReferenceString+"</h2>"
-        for text in texts:
-            if text in bibleList:
-                verseTuple = self.readTextVerse(text, b, c, v)
-                book = str(verseTuple[0])
-                chapter = str(verseTuple[1])
-                verse = str(verseTuple[2])
-                scripture = verseTuple[3].strip()
-                verses += "<vid id='v"+book+"."+chapter+"."+verse+"' onclick='luV("+verse+")'>"+verse+"</vid> "
-                verses += scripture
-                verses += "<br>"
-        return verses
+    def compareVerse(self, verseList, texts=["ALL"]):
+        if len(verseList) == 1 and not texts == ["ALL"]:
+            b, c, v = verseList[0]
+            return self.compareVerseChapter(b, c, v, texts)
+        else:
+            verses = ""
+            for verse in verseList:
+                b, c, v = verse
+                verses += self.readTranslations(b, c, v, texts)
+            return verses
 
-    def readAllTranslations(self, b, c, v):
-        t = ("table",)
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        self.cursor.execute(query, t)
-        names = self.cursor.fetchall()
-        exclude = ["Details", "LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "lexicalEntry", "morphology", "original"]
-        verses = ""
-        for name in names:
-            text = name[0]
-            if not text in exclude:
-                verses += "<sup style='color: brown;'>"+text+"</sup> "
-                verses += self.readTextVerse(text, b, c, v)[3].strip()
-                verses += "<br>"
-        return verses
-
-    def compareVerse(self, b, c, v):
-        Parser = BibleVerseParser("YES")
-        verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-        del Parser
-        comparison = "<h2>"+verseReferenceString+"</h2>"
-        comparison += "<sup style='color: brown;'>MOB</sup> "+self.readTextVerse("original", b, c, v)[3].strip()+"<br>"
-        comparison += "<sup style='color: brown;'>LXX</sup> "+self.readTextVerse("LXX", b, c, v)[3].strip()+"<br>"
-        comparison += self.readAllTranslations(b, c, v)
-        return comparison
-
-    def compareChapterVerse(self, b, c, v, texts):
-        #highlightVerse == v
+    def compareVerseChapter(self, b, c, v, texts):
         verseList = self.getVerseList(b, c, texts[0])
-        Parser = BibleVerseParser("YES")
-        chapterReferenceString = Parser.bcvToVerseReference(b, c, v)
-        del Parser
-        chapterReferenceString = chapterReferenceString.split(":", 1)[0]
-        chapter = "<h2>"+chapterReferenceString+"</h2><table style='width: 100%;'>"
+        chapter = "<h2>{0}</h2><table style='width: 100%;'>".format(self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         for verse in verseList:
-            verseNumber = verse[0]
             row = 0
             for text in texts:
                 row = row + 1
@@ -128,38 +89,31 @@ class BiblesSqlite:
                 else:
                     chapter += "<tr style='background-color: #f2f2f2;'>"
                 if row == 1:
-                    chapter += "<td style='vertical-align: text-top;'><vid id='v"+str(b)+"."+str(c)+"."+str(verseNumber)+"' onclick='luV("+str(verseNumber)+")'>"+str(verseNumber)+"</vid> "
+                    chapter += "<td style='vertical-align: text-top;'><vid id='v{0}.{1}.{2}' onclick='luV({2})'>{2}</vid> ".format(b, c, verse)
                 else:
                     chapter += "<td>"
-                chapter += "</td><td><sup>("+text+")</sup></td><td>"
-                chapter += self.readTextVerse(text, b, c, verseNumber)[3]
-                chapter += "</td></tr>"
+                chapter += "</td><td><sup>({0})</sup></td><td>{1}</td></tr>".format(text, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
         return chapter
 
-    def compareVerseList(self, verseList, texts=["ALL"]):
-        verses = ""
-        if len(verseList) == 1 and not texts == ["ALL"]:
-            b = verseList[0][0]
-            c = verseList[0][1]
-            v = verseList[0][2]
-            return self.compareChapterVerse(b, c, v, texts)
-        else:
-            for verse in verseList:
-                b = verse[0]
-                c = verse[1]
-                v = verse[2]
-                if texts == ["ALL"]:
-                    verses += self.compareVerse(b, c, v)
-                    #verses += self.readTranslations(b, c, v, texts)
-                else:
-                    verses += self.readTranslations(b, c, v, texts)
+    def readTranslations(self, b, c, v, texts):
+        if texts == ["ALL"]:
+            bibleList = self.getBibleList()
+            texts = ["original", "LXX"]
+            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB")
+            for bible in bibleList:
+                if not bible in exclude:
+                    texts.append(bible)
+        verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+        for text in texts:
+            book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
+            verses += "({0}) {1}<br>".format(text, verseText.strip())
         return verses
 
     def searchBible(self, text, mode, searchString):
-        query = "SELECT * FROM "+text+" WHERE "
+        query = "SELECT * FROM {0} WHERE ".format(text)
         if mode == "BASIC":
-            t = ("%"+searchString+"%",)
+            t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
             t = ()
@@ -168,25 +122,19 @@ class BiblesSqlite:
         self.cursor.execute(query, t)
         verses = self.cursor.fetchall()
         formatedText = ""
-        Parser = BibleVerseParser("YES")
         for verse in verses:
-            b = verse[0]
-            c = verse[1]
-            v = verse[2]
-            verseText = verse[3].strip()
-            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-            formatedText += "("+verseReferenceString+") "+verseText+"\n"
-        del Parser
+            b, c, v, verseText = verse
+            formatedText += "({0}) {1}<br>".format(self.bcvToVerseReference(b, c, v), verseText.strip())
         return formatedText
 
     def searchMorphology(self, mode, searchString):
         query = "SELECT * FROM morphology WHERE "
         if mode == "LexicalEntry":
-            t = ("%"+searchString+",%",)
+            t = ("%{0},%".format(searchString),)
             query += "LexicalEntry LIKE ?"
         elif mode == "MorphologyCode":
             searchList = searchString.split(',')
-            t = ("%"+searchList[0]+",%", searchList[1])
+            t = ("%{0},%".format(searchList[0]), searchList[1])
             query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
         elif mode == "ADVANCED":
             t = ()
@@ -195,20 +143,9 @@ class BiblesSqlite:
         self.cursor.execute(query, t)
         words = self.cursor.fetchall()
         formatedText = ""
-        Parser = BibleVerseParser("YES")
         for word in words:
-            wordID = word[0]
-            clauseID = word[1]
-            b = word[2]
-            c = word[3]
-            v = word[4]
-            textWord = word[5]
-            lexicalEntry = word[6]
-            morphologyCode = word[7]
-            morphology = word[8]
-            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-            formatedText += "("+verseReferenceString+") "+textWord+" "+morphologyCode+"\n"
-        del Parser
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
+            formatedText += "({0}) {1} {2}<br>".format(self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
         return formatedText
 
     def plainVerseChapter(self, b, c):
@@ -225,44 +162,26 @@ class BiblesSqlite:
 
     def readMultipleVerses(self, text, verseList):
         verses = ""
-        Parser = BibleVerseParser("YES")
         for verse in verseList:
-            b = verse[0]
-            c = verse[1]
-            v = verse[2]
-            verseReferenceString = Parser.bcvToVerseReference(b, c, v)
-            verses += "("+verseReferenceString+") "+self.readTextVerse(text, b, c, v)[3]
-            verses += "<br>"
-        del Parser
+            b, c, v = verse
+            verses += "({0}) {1}<br>".format(self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
         return verses
 
     def readPlainChapter(self, text, verse):
         # expect bcv is a tuple
-        b = verse[0]
-        c = verse[1]
-        v = verse[2]
-        Parser = BibleVerseParser("YES")
-        chapterReferenceString = Parser.bcvToVerseReference(b, c, v)
-        del Parser
-        chapterReferenceString = chapterReferenceString.split(":", 1)[0]
-        chapter = "<h2>"+chapterReferenceString+"</h2>"
+        b, c, v = verse
+        chapter = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
-            verseNumber = str(verseTuple[2])
-            scripture = verseTuple[3]
-            chapter += "<vid id='v"+str(b)+"."+str(c)+"."+verseNumber+"' onclick='luV("+verseNumber+")'>"+verseNumber+"</vid> "
-            chapter += scripture
-            chapter += "<br>"
+            b, c, v, verseText = verseTuple
+            chapter += "<vid id='v{0}.{1}.{2}' onclick='luV({2})'>{2}</vid> {3}<br>".format(b, c, v, verseText)
         return chapter
 
     def readVerseCrossReferences(self, b, c, v):
         print("pending")
 
-if __name__ == '__main__':
-    Bibles = BiblesSqlite()
-
-    # test verse comparison
-    print(Bibles.compareVerse(1,1,1))
+#if __name__ == '__main__':
+    # Bibles = BiblesSqlite()
 
     # test search bible - BASIC
     # searchString = input("Search Bible [Basic]\nSearch for: ")
@@ -288,4 +207,4 @@ if __name__ == '__main__':
     # searchString = input("Search Morphology [ADVANCED]\nFilter for search: ")
     # print(Bibles.searchMorphology("ADVANCED", searchString))
 
-    del Bibles
+    # del Bibles

@@ -6,6 +6,10 @@ class UbCommandParser:
 
     def parser(self, ubCommad):
         interpreters = {
+            "text": self.ubText,
+            "book": self.ubBook,
+            "chapter": self.ubChapter,
+            "verse": self.ubVerse,
             "bible": self.ubBible,
             "compare": self.ubCompare,
             "parallel": self.ubParallel,
@@ -33,18 +37,44 @@ class UbCommandParser:
             else:
                 return self.ubBibleVerseParser(ubCommad)
 
+    def ubText(self):
+        pass
+
+    def ubBook(self):
+        pass
+
+    def ubChapter(self, command):
+        biblesSqlite = BiblesSqlite()
+        chapterList = biblesSqlite.getChapterList(config.mainB)
+        del biblesSqlite
+        chapters = ""
+        for chapter in chapterList:
+            chapters += "{} ".format(chapter)
+        return ("main", chapters)
+
+    def ubVerse(self):
+        pass
+
     def splitCommand(self, command):
         commandList = re.split('[ ]*?:::[ ]*?', command, 1)
         return commandList
 
-    def invalidCommand(self):
-        return ("main", "INVALID_COMMAND_ENTERED")
+    def getConfirmedTexts(self, texts):
+        biblesSqlite = BiblesSqlite()
+        bibleList = biblesSqlite.getBibleList()
+        del biblesSqlite
+        texts = texts.split("_")
+        confirmedTexts = [text for text in texts if text in bibleList]
+        return confirmedTexts
 
     def extractAllVerses(self, text):
         Parser = BibleVerseParser("YES")
         verseList = Parser.extractAllReferences(text)
         del Parser
         return verseList
+
+    def invalidCommand(self):
+        return ("main", "INVALID_COMMAND_ENTERED")
 
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
@@ -84,62 +114,45 @@ class UbCommandParser:
                 return ("main", self.ubPlainBible(verseList, text))
 
     def ubBible(self, command):
-        biblesSqlite = BiblesSqlite()
-        bibleList = biblesSqlite.getBibleList()
-        del biblesSqlite
         commandList = self.splitCommand(command)
-        text = commandList[0]
-        if text in bibleList and len(commandList) == 2:
-            return self.ubBibleVerseParser(commandList[1], text)
-        return self.invalidCommand()
+        texts = self.getConfirmedTexts(commandList[0])
+        if not len(commandList) == 2 or not texts:
+            return self.invalidCommand()
+        else:
+            return self.ubBibleVerseParser(commandList[1], texts[0])
 
     def ubCompare(self, command):
         commandText = ""
         commandList = self.splitCommand(command)
         if len(commandList) == 2:
-            texts = commandList[0].split("_")
-            commandText = commandList[1]
-            verseList = self.extractAllVerses(commandText)
-            if not texts or not verseList:
-                return self.invalidCommand()
-            else:
-                self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
-                biblesSqlite = BiblesSqlite()
-                verses = biblesSqlite.compareVerseList(verseList, texts)
-                del biblesSqlite
-                return ("main", verses)
+            confirmedTexts = self.getConfirmedTexts(commandList[0])
+            verseList = self.extractAllVerses(commandList[1])
         elif len(commandList) == 1:
-            commandText = commandList[0]
-            verseList = self.extractAllVerses(commandText)
-            if not verseList:
-                return self.invalidCommand()
-            else:
-                self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
-                biblesSqlite = BiblesSqlite()
-                verses = biblesSqlite.compareVerseList(verseList)
-                del biblesSqlite
-                return ("main", verses)
+            confirmedTexts = ["ALL"]
+            verseList = self.extractAllVerses(commandList[0])
+        if not confirmedTexts or not verseList:
+            return self.invalidCommand()
+        else:
+            self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
+            biblesSqlite = BiblesSqlite()
+            verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
+            del biblesSqlite
+            return ("main", verses)
 
     def ubParallel(self, command):
-        biblesSqlite = BiblesSqlite()
-        bibleList = biblesSqlite.getBibleList()
-        del biblesSqlite
         commandList = self.splitCommand(command)
         if len(commandList) == 2:
-            titles = "<tr>"
-            verses = "<tr>"
-            bibles = commandList[0]
-            texts = bibles.split("_")
-            textsConfirmed = [text for text in texts if text in bibleList]
-            if not textsConfirmed:
+            texts = commandList[0]
+            confirmedTexts = self.getConfirmedTexts(texts)
+            if not confirmedTexts:
                 return self.invalidCommand()
             else:
-                for text in textsConfirmed:
-                    titles += "<th>"+text+"</th>"
-                    verses += "<td style='vertical-align: text-top;'>"+self.ubBibleVerseParser(commandList[1], text)[1]+"</td>"
-            titles += "</tr>"
-            verses += "</tr>"
-            return ("main", "<table style='width:100%'>"+titles+verses+"</table>")
+                titles = ""
+                verses = ""
+                for text in confirmedTexts:
+                    titles += "<th>{0}</th>".format(text)
+                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.ubBibleVerseParser(commandList[1], text)[1])
+            return ("main", "<table style='width:100%'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
         else:
             return self.invalidCommand()
 
