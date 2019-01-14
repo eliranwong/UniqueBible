@@ -23,9 +23,11 @@ class MainWindow(QMainWindow):
         
         self.centralWidget = CentralWidget(self)
         self.mainView = self.centralWidget.mainView
+        self.mainPage = self.mainView.page()
+        self.mainPage.titleChanged.connect(self.displayUbCommand)
+        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
         self.parallelView = self.centralWidget.parallelView
-        self.page = self.mainView.page()
-        self.page.titleChanged.connect(self.displayUbCommand)
+        self.parallelPage = self.parallelView.page()
         self.setCentralWidget(self.centralWidget)
 
     def __del__(self):
@@ -68,6 +70,10 @@ class MainWindow(QMainWindow):
         absolutePath = os.path.abspath(relativePath)
         baseUrl = QUrl.fromLocalFile(absolutePath)
 
+    def finishMainViewLoading(self):
+        # scroll to the main verse
+        self.mainPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }")
+
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
         if not mainCurrentRecord == 0:
@@ -87,7 +93,7 @@ class MainWindow(QMainWindow):
             self.runUbCommand(False)
 
     def displayUbCommand(self):
-        title = self.page.title()
+        title = self.mainPage.title()
         exceptionTuple = (self.ubCommandLineEdit.text(), "UniqueBible.app", "about:blank")
         if not (title.startswith("data:text/html;") or title.startswith("file:///") or title in exceptionTuple):
             self.ubCommandLineEdit.setText(title)
@@ -120,7 +126,6 @@ class MainWindow(QMainWindow):
         else:
             html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'></head><body style='font-size: "+str(config.fontSize)+"%;'>"
             html += content
-            html += "<script>activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }</script>"
             html += "</body></html>"
             views = {
                 "main": self.mainView,

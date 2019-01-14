@@ -35,16 +35,6 @@ class BiblesSqlite:
         # return a tuple
         return textVerse
 
-    def readOriginal(self, b, c, v):
-        verse = "<sup style='color: brown;'>MOB</sup> "+self.readTextVerse("original", b, c, v)[3].strip()
-        verse += "<br>"
-        return verse
-
-    def readLXX(self, b, c, v):
-        verse = "<sup style='color: brown;'>LXX</sup> "+self.readTextVerse("LXX", b, c, v)[3].strip()
-        verse += "<br>"
-        return verse
-
     def getBibleList(self):
         t = ("table",)
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
@@ -115,8 +105,8 @@ class BiblesSqlite:
         verseReferenceString = Parser.bcvToVerseReference(b, c, v)
         del Parser
         comparison = "<h2>"+verseReferenceString+"</h2>"
-        comparison += self.readOriginal(b, c, v)
-        comparison += self.readLXX(b, c, v)
+        comparison += "<sup style='color: brown;'>MOB</sup> "+self.readTextVerse("original", b, c, v)[3].strip()+"<br>"
+        comparison += "<sup style='color: brown;'>LXX</sup> "+self.readTextVerse("LXX", b, c, v)[3].strip()+"<br>"
         comparison += self.readAllTranslations(b, c, v)
         return comparison
 
