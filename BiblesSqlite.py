@@ -51,11 +51,7 @@ class BiblesSqlite:
         self.cursor.execute(query, t)
         names = self.cursor.fetchall()
         exclude = ["Details", "lexicalEntry", "morphology", "original"]
-        bibleList = []
-        for name in names:
-            bible = name[0]
-            if not bible in exclude:
-                bibleList.append(bible)
+        bibleList = [name[0] for name in names if not name[0] in exclude]
         return bibleList
 
     def getBookList(self, text=config.mainText):

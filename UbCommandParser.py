@@ -130,10 +130,7 @@ class UbCommandParser:
             verses = "<tr>"
             bibles = commandList[0]
             texts = bibles.split("_")
-            textsConfirmed = []
-            for text in texts:
-                if text in bibleList:
-                    textsConfirmed.append(text)
+            textsConfirmed = [text for text in texts if text in bibleList]
             if not textsConfirmed:
                 return self.invalidCommand()
             else:
