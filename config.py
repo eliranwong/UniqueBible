@@ -1,5 +1,5 @@
 fontSize = 120
-mainText = 'CUV'
+mainText = 'KJV'
 mainB = 43
 mainC = 3
 mainV = 16
