@@ -4,10 +4,11 @@ from BiblesSqlite import BiblesSqlite
 
 class TextCommandParser:
 
-    def parser(self, textCommad):
+    def parser(self, textCommad, source="main"):
         interpreters = {
             "_menu": self.textMenu,
             "bible": self.textBible,
+            "study": self.textStudy,
             "compare": self.textCompare,
             "parallel": self.textParallel,
             "verse": self.textVerseData,
@@ -30,11 +31,11 @@ class TextCommandParser:
             resourceType = commandList[0].lower()
             command = commandList[1]
             if resourceType in interpreters:
-                return interpreters[resourceType](command)
+                return interpreters[resourceType](command, source)
             else:
                 return self.textBibleVerseParser(textCommad)        
 
-    def textMenu(self, command):
+    def textMenu(self, command, source="main"):
         biblesSqlite = BiblesSqlite()
         mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         menu = "&lt;&lt;&lt; <ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>Go back to {1}</ref>".format(config.mainText, mainVerseReference)
@@ -58,7 +59,7 @@ class TextCommandParser:
                     menu += "<hr><b>Selected chapter:</b> {0}".format(bcList[1])
                     menu += "<hr><b>Verses:</b> {0}".format(biblesSqlite.getVerses(bcList[0], bcList[1], text))
         del biblesSqlite
-        return ("main", menu)
+        return (source, menu)
 
     def getChaptersMenu(self, b=config.mainB, text=config.mainText):
         biblesSqlite = BiblesSqlite()
@@ -84,14 +85,20 @@ class TextCommandParser:
         del Parser
         return verseList
 
-    def invalidCommand(self):
-        return ("main", "INVALID_COMMAND_ENTERED")
+    def invalidCommand(self, source="main"):
+        return (source, "INVALID_COMMAND_ENTERED")
 
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
         config.mainB = bcvTuple[0]
         config.mainC = bcvTuple[1]
         config.mainV = bcvTuple[2]
+
+    def setStudyVerse(self, text, bcvTuple):
+        config.studyText = text
+        config.studyB = bcvTuple[0]
+        config.studyC = bcvTuple[1]
+        config.studyV = bcvTuple[2]
 
     def textPlainBible(self, verseList, text=config.mainText):
         # expect verseList is a list of tuples
@@ -113,34 +120,46 @@ class TextCommandParser:
             del biblesSqlite
             return chapter # pending further development
 
-    def textBibleVerseParser(self, command, text=config.mainText, chapterMenu=True):
+    def textBibleVerseParser(self, command, text=config.mainText, chapterMenu=True, view="main"):
         verseList = self.extractAllVerses(command)
         if not verseList:
             return self.invalidCommand()
         else:
-            self.setMainVerse(text, verseList[0])
+            views = {
+                "main": self.setMainVerse,
+                "study": self.setStudyVerse,
+            }
+            views[view](text, verseList[0])
             chapterMenuTop = ""
             chapterMenuBottom = ""
-            if chapterMenu:
+            if chapterMenu == True:
                 chapters = self.getChaptersMenu()
                 chapterMenuTop = chapters+"<hr>"
                 chapterMenuBottom = "<hr>"+chapters
             if len(verseList) == 1:
                 content = "{0}{1}{2}".format(chapterMenuTop, self.textFormattedBible(verseList[0], text), chapterMenuBottom)
-                return ("main", content)
+                return (view, content)
             else:
                 content = "{0}{1}{2}".format(chapterMenuTop, self.textPlainBible(verseList, text), chapterMenuBottom)
-                return ("main", content)
+                return (view, content)
 
-    def textBible(self, command):
+    def textBible(self, command, source="main"):
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(commandList[1], texts[0])
+            return self.textBibleVerseParser(commandList[1], texts[0], True, source)
 
-    def textCompare(self, command):
+    def textStudy(self, command, source):
+        commandList = self.splitCommand(command)
+        texts = self.getConfirmedTexts(commandList[0])
+        if not len(commandList) == 2 or not texts:
+            return self.invalidCommand()
+        else:
+            return self.textBibleVerseParser(commandList[1], texts[0], True, "study")
+
+    def textCompare(self, command, source="main"):
         commandText = ""
         commandList = self.splitCommand(command)
         if len(commandList) == 2:
@@ -152,13 +171,17 @@ class TextCommandParser:
         if not confirmedTexts or not verseList:
             return self.invalidCommand()
         else:
-            self.setMainVerse(config.mainText, verseList[len(verseList) - 1])
+            views = {
+                "main": self.setMainVerse,
+                "study": self.setStudyVerse,
+            }
+            views[source](config.mainText, verseList[len(verseList) - 1])
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             del biblesSqlite
-            return ("main", verses)
+            return (source, verses)
 
-    def textParallel(self, command):
+    def textParallel(self, command, source="main"):
         commandList = self.splitCommand(command)
         if len(commandList) == 2:
             texts = commandList[0]
@@ -173,8 +196,8 @@ class TextCommandParser:
                 verses = ""
                 for text in confirmedTexts:
                     titles += "<th><ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{0}</ref></th>".format(text, mainVerseReference)
-                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1], False)
-            return ("main", "<table style='width:100%'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
+                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text, chapterMenu=False)[1])
+            return (source, "<table style='width:100%'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
         else:
             return self.invalidCommand()
 

@@ -24,10 +24,12 @@ class MainWindow(QMainWindow):
         self.centralWidget = CentralWidget(self)
         self.mainView = self.centralWidget.mainView
         self.mainPage = self.mainView.page()
-        self.mainPage.titleChanged.connect(self.textCommandChanged)
+        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
-        self.parallelView = self.centralWidget.parallelView
-        self.parallelPage = self.parallelView.page()
+        self.studyView = self.centralWidget.studyView
+        self.studyPage = self.studyView.page()
+        self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
+        self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.setCentralWidget(self.centralWidget)
 
     def __del__(self):
@@ -54,7 +56,7 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.toolBar.addWidget(self.textCommandLineEdit)
 
-        self.parallelMode = 0 # hide parallel view by default
+        self.parallelMode = 1 # default parallel mode
         self.parallelButton = QPushButton()
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
         self.parallelButton.setIcon(QIcon(parallelButtonFile))
@@ -74,6 +76,10 @@ class MainWindow(QMainWindow):
         # scroll to the main verse
         self.mainPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }")
 
+    def finishStudyViewLoading(self):
+        # scroll to the study verse
+        self.studyPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }")
+
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
         if not mainCurrentRecord == 0:
@@ -92,22 +98,31 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setText(textCommand)
             self.runTextCommand(textCommand, False)
 
-    def textCommandChanged(self):
-        newTextCommand = self.mainPage.title()
+    def mainTextCommandChanged(self, newTextCommand):
+        self.textCommandChanged(newTextCommand, "main")
+
+    def studyTextCommandChanged(self, newTextCommand):
+        self.textCommandChanged(newTextCommand, "study")
+
+    # change of text command detected via change of document.title
+    def textCommandChanged(self, newTextCommand, source="main"):
+        print(source)
+        #newTextCommand = self.mainPage.title()
         exceptionTuple = (self.textCommandLineEdit.text(), "UniqueBible.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             self.textCommandLineEdit.setText(newTextCommand)
             if newTextCommand.startswith("_"):
-                self.runTextCommand(newTextCommand, False)
+                self.runTextCommand(newTextCommand, False, source)
             else:
-                self.runTextCommand(newTextCommand, True)
+                self.runTextCommand(newTextCommand, True, source)
 
-    def textCommandEntered(self):
+    # change of text command detected via user input
+    def textCommandEntered(self, source="main"):
         newTextCommand = self.textCommandLineEdit.text()
-        self.runTextCommand(newTextCommand, True)
+        self.runTextCommand(newTextCommand, True, source)
 
-    def runTextCommand(self, textCommand, addRecord=True):
-        result = self.textCommandParser.parser(textCommand)
+    def runTextCommand(self, textCommand, addRecord=True, source="main"):
+        result = self.textCommandParser.parser(textCommand, source)
         view = result[0]
         content = result[1]
         if content == "INVALID_COMMAND_ENTERED":
@@ -118,7 +133,7 @@ class MainWindow(QMainWindow):
             html += "</body></html>"
             views = {
                 "main": self.mainView,
-                "parallel": self.parallelView,
+                "study": self.studyView,
             }
             views[view].setHtml(html, baseUrl)
             if addRecord == True:
@@ -144,10 +159,10 @@ class MainWindow(QMainWindow):
         }
         if self.parallelMode == 3:
             self.parallelMode = 0
-            self.centralWidget.parallelView.hide()
+            self.centralWidget.studyView.hide()
         else:
             self.parallelMode += 1
-            self.centralWidget.parallelView.show()
+            self.centralWidget.studyView.show()
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(1, ratio[0])
         self.centralWidget.layout.setColumnStretch(2, ratio[1])
@@ -163,15 +178,15 @@ class CentralWidget(QWidget):
         self.html = "<h1>UniqueBible.app</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">development in progress</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
         self.mainView = WebEngineView()
         self.mainView.setHtml(self.html, baseUrl)
-        self.parallelView = WebEngineView()
-        self.parallelView.setHtml("Parallel View", baseUrl)
-        self.parallelView.hide() # hide parallel view by default
+        self.studyView = WebEngineView()
+        self.studyView.setHtml("Study View", baseUrl)
+        #self.studyView.hide() # hide parallel view by default
 
         self.layout.addWidget(self.mainView, 0, 1)
-        self.layout.addWidget(self.parallelView, 0, 2)
+        self.layout.addWidget(self.studyView, 0, 2)
 
-        self.layout.setColumnStretch(1, 1)
-        self.layout.setColumnStretch(2, 0)
+        self.layout.setColumnStretch(1, 2)
+        self.layout.setColumnStretch(2, 1)
 
         self.setLayout(self.layout)
 

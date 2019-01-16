@@ -11,14 +11,15 @@ def setupMainWindow():
     mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
-def executeInitialTextCommand(textCommand):
-    mainWindow.textCommandLineEdit.setText(textCommand)
-    mainWindow.runTextCommand(textCommand)
+def executeInitialTextCommand(textCommand, source="main"):
+    if source == "main":
+        mainWindow.textCommandLineEdit.setText(textCommand)
+    mainWindow.runTextCommand(textCommand, True, source)
 
 def setCurrentRecord():
     mainRecordPosition = len(config.history["main"]) - 1
-    parallelRecordPosition = len(config.history["parallel"]) - 1
-    currentRecord = {'main': mainRecordPosition, 'parallel': parallelRecordPosition}
+    studyRecordPosition = len(config.history["study"]) - 1
+    currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
     config.currentRecord = currentRecord
 
 def saveDataOnExit():
@@ -28,8 +29,12 @@ def saveDataOnExit():
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
     fileObj.write("\nmainV = "+pprint.pformat(config.mainV))
+    fileObj.write("\nstudyText = "+pprint.pformat(config.studyText))
+    fileObj.write("\nstudyB = "+pprint.pformat(config.studyB))
+    fileObj.write("\nstudyC = "+pprint.pformat(config.studyC))
+    fileObj.write("\nstudyV = "+pprint.pformat(config.studyV))
     fileObj.write("\nhistoryRecordAllowed = "+pprint.pformat(config.historyRecordAllowed))
-    fileObj.write("\ncurrentRecord = {'main': 0, 'parallel': 0}")
+    fileObj.write("\ncurrentRecord = {'main': 0, 'study': 0}")
     fileObj.write("\nhistory = "+pprint.pformat(config.history))
     fileObj.close()
 
@@ -39,11 +44,17 @@ app.aboutToQuit.connect(saveDataOnExit)
 mainWindow = MainWindow()
 setupMainWindow()
 
-initial_textCommand = " ".join(sys.argv[1:])
-if not initial_textCommand:
-    historyMain = config.history["main"]
-    initial_textCommand = historyMain[len(historyMain) - 1]
-executeInitialTextCommand(initial_textCommand)
+# execute initial command in main view
+initial_mainTextCommand = " ".join(sys.argv[1:])
+if not initial_mainTextCommand:
+    mainHistory = config.history["main"]
+    initial_mainTextCommand = mainHistory[len(mainHistory) - 1]
+executeInitialTextCommand(initial_mainTextCommand)
+
+# execute initial command in study view
+studyHistory = config.history["study"]
+initial_studyTextCommand = studyHistory[len(studyHistory) - 1]
+executeInitialTextCommand(initial_studyTextCommand, "study")
 
 setCurrentRecord()
 
