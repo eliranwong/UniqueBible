@@ -141,7 +141,7 @@ class BiblesSqlite:
                     chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
                     chapter += "<td>"
-                chapter += "</td><td><sup>({0})</sup></td><td>{1}</td></tr>".format(text, self.readTextVerse(text, b, c, verse)[3])
+                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td><td>{2}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
         return chapter
 
@@ -156,7 +156,7 @@ class BiblesSqlite:
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-            verses += "(<vid>{0}{1}</ref></vid>) {2}<br>".format(self.formVerseTag(b, c, v, text), text, verseText.strip())
+            verses += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
     def searchBible(self, text, mode, searchString):
@@ -173,7 +173,7 @@ class BiblesSqlite:
         formatedText = ""
         for verse in verses:
             b, c, v, verseText = verse
-            formatedText += "({0}) {1}<br>".format(self.bcvToVerseReference(b, c, v), verseText.strip())
+            formatedText += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
         return formatedText
 
     def searchMorphology(self, mode, searchString):
@@ -194,26 +194,17 @@ class BiblesSqlite:
         formatedText = ""
         for word in words:
             wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
-            formatedText += "({0}) {1} {2}<br>".format(self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
+            formatedText += "({0}{1}</ref>) {2} {3}<br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
         return formatedText
 
-    def plainVerseChapter(self, b, c):
-        print("pending")
-
-    def parallelVertical(self, b, c):
-        print("pending")
-
-    def parallelHorizontal(self, b, c):
-        print("pending")
-
     def addInterlinearInSearchResult(self, b, c, v):
-        print("pending")
+        pass
 
     def readMultipleVerses(self, text, verseList):
         verses = ""
         for verse in verseList:
             b, c, v = verse
-            verses += "({0}) {1}<br>".format(self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
+            verses += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
         return verses
 
     def readPlainChapter(self, text, verse):

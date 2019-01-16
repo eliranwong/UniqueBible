@@ -113,18 +113,23 @@ class TextCommandParser:
             del biblesSqlite
             return chapter # pending further development
 
-    def textBibleVerseParser(self, command, text=config.mainText):
+    def textBibleVerseParser(self, command, text=config.mainText, chapterMenu=True):
         verseList = self.extractAllVerses(command)
         if not verseList:
             return self.invalidCommand()
         else:
             self.setMainVerse(text, verseList[0])
-            chapters = self.getChaptersMenu()
+            chapterMenuTop = ""
+            chapterMenuBottom = ""
+            if chapterMenu:
+                chapters = self.getChaptersMenu()
+                chapterMenuTop = chapters+"<hr>"
+                chapterMenuBottom = "<hr>"+chapters
             if len(verseList) == 1:
-                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(verseList[0], text))
+                content = "{0}{1}{2}".format(chapterMenuTop, self.textFormattedBible(verseList[0], text), chapterMenuBottom)
                 return ("main", content)
             else:
-                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textPlainBible(verseList, text))
+                content = "{0}{1}{2}".format(chapterMenuTop, self.textPlainBible(verseList, text), chapterMenuBottom)
                 return ("main", content)
 
     def textBible(self, command):
@@ -168,7 +173,7 @@ class TextCommandParser:
                 verses = ""
                 for text in confirmedTexts:
                     titles += "<th><ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{0}</ref></th>".format(text, mainVerseReference)
-                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1])
+                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1], False)
             return ("main", "<table style='width:100%'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
         else:
             return self.invalidCommand()
