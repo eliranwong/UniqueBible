@@ -971,11 +971,7 @@ class BibleVerseParser:
 
     def extractAllReferences(self, text):
         taggedText = self.parseText(text)
-        verseList = []
-        for m in re.findall('bcv\([0-9]+?,[0-9]+?,[0-9]+?\)', taggedText):
-            bcv = literal_eval(m[3:])
-            verseList.append(bcv)
-        return verseList
+        return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[0-9]+?,[0-9]+?\))', taggedText)] # return a list of tuples (b, c, v)
 
     def parseFile(self, inputFile):
         # set output filename here

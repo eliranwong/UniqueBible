@@ -16,8 +16,11 @@ class TextCommandParser:
             "commentary": self.textCommentary,
             "lexicon": self.textLexicon,
             "discourse": self.textDiscourse,
-            "searchbible": self.textSearchBible,
-            "searchmorphology": self.textSearchMorphology,
+            "search": self.textSearchBasic,
+            "advancedsearch": self.textSearchAdvanced,
+            "lemma": self.textLemma,
+            "morphologycode": self.textMorphologyCode,
+            "morphology": self.textMorphology,
             "searchbook": self.textSearchBook,
             "exlb": self.textEXLB,
             "dictionary": self.textDictionary,
@@ -120,7 +123,7 @@ class TextCommandParser:
             del biblesSqlite
             return chapter # pending further development
 
-    def textBibleVerseParser(self, command, text=config.mainText, chapterMenu=True, view="main"):
+    def textBibleVerseParser(self, command, text=config.mainText, view="main"):
         verseList = self.extractAllVerses(command)
         if not verseList:
             return self.invalidCommand()
@@ -130,17 +133,14 @@ class TextCommandParser:
                 "study": self.setStudyVerse,
             }
             views[view](text, verseList[0])
-            chapterMenuTop = ""
-            chapterMenuBottom = ""
-            if chapterMenu == True:
+            if len(verseList) == 1:
                 chapters = self.getChaptersMenu()
                 chapterMenuTop = chapters+"<hr>"
                 chapterMenuBottom = "<hr>"+chapters
-            if len(verseList) == 1:
                 content = "{0}{1}{2}".format(chapterMenuTop, self.textFormattedBible(verseList[0], text), chapterMenuBottom)
                 return (view, content)
             else:
-                content = "{0}{1}{2}".format(chapterMenuTop, self.textPlainBible(verseList, text), chapterMenuBottom)
+                content = self.textPlainBible(verseList, text)
                 return (view, content)
 
     def textBible(self, command, source="main"):
@@ -149,7 +149,7 @@ class TextCommandParser:
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(commandList[1], texts[0], True, source)
+            return self.textBibleVerseParser(commandList[1], texts[0], source)
 
     def textStudy(self, command, source):
         commandList = self.splitCommand(command)
@@ -157,7 +157,7 @@ class TextCommandParser:
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(commandList[1], texts[0], True, "study")
+            return self.textBibleVerseParser(commandList[1], texts[0], "study")
 
     def textCompare(self, command, source="main"):
         commandText = ""
@@ -196,7 +196,7 @@ class TextCommandParser:
                 verses = ""
                 for text in confirmedTexts:
                     titles += "<th><ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{0}</ref></th>".format(text, mainVerseReference)
-                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text, chapterMenu=False)[1])
+                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1])
             return (source, "<table style='width:100%'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
         else:
             return self.invalidCommand()
@@ -216,11 +216,37 @@ class TextCommandParser:
     def textDiscourse(self, command):
         return command # pending further development
 
-    def textSearchBible(self, command):
-        return command # pending further development
+    def textSearchBasic(self, command, source):
+        return self.textSearch(command, source, "BASIC")
 
-    def textSearchMorphology(self, command):
-        return command # pending further development
+    def textSearchAdvanced(self, command, source):
+        return self.textSearch(command, source, "ADVANCED")
+
+    def textSearch(self, command, source, mode):
+        commandList = self.splitCommand(command)
+        texts = self.getConfirmedTexts(commandList[0])
+        if not len(commandList) == 2 or not texts:
+            return self.invalidCommand()
+        else:
+            biblesSqlite = BiblesSqlite()
+            searchResult = biblesSqlite.searchBible(texts[0], mode, commandList[1])
+            del biblesSqlite
+            return ("study", searchResult)
+
+    def textLemma(self, command, source):
+        return self.textSearchMorphology(command, source, "LEMMA")
+
+    def textMorphologyCode(self, command, source):
+        return self.textSearchMorphology(command, source, "CODE")
+
+    def textMorphology(self, command, source):
+        return self.textSearchMorphology(command, source, "ADVANCED")
+
+    def textSearchMorphology(self, command, source, mode):
+        biblesSqlite = BiblesSqlite()
+        searchResult = biblesSqlite.searchMorphology(mode, command)
+        del biblesSqlite
+        return ("study", searchResult)
 
     def textSearchBook(self, command):
         return command # pending further development

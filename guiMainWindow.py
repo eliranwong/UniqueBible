@@ -74,11 +74,11 @@ class MainWindow(QMainWindow):
 
     def finishMainViewLoading(self):
         # scroll to the main verse
-        self.mainPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }")
+        self.mainPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
         # scroll to the study verse
-        self.studyPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; }")
+        self.studyPage.runJavaScript("activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
@@ -106,7 +106,6 @@ class MainWindow(QMainWindow):
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        print(source)
         #newTextCommand = self.mainPage.title()
         exceptionTuple = (self.textCommandLineEdit.text(), "UniqueBible.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
@@ -128,7 +127,7 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'></head><body style='font-size: {0}%;'>".format(config.fontSize)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>".format(config.fontSize)
             html += content
             html += "</body></html>"
             views = {

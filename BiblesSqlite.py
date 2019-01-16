@@ -1,7 +1,7 @@
 """
 Reading data from bibles.sqlite
 """
-import os, sqlite3, config
+import os, sqlite3, config, re
 from BibleVerseParser import BibleVerseParser
 
 class BiblesSqlite:
@@ -141,7 +141,11 @@ class BiblesSqlite:
                     chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
                     chapter += "<td>"
-                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td><td>{2}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, self.readTextVerse(text, b, c, verse)[3])
+                textTdTag = "<td>"
+                rtlText = ["original", "MOB", "MAB", "MTB", "MIB", "MPB"]
+                if b < 40 and text in rtlText:
+                    textTdTag = "<td style='direction: rtl;'>"
+                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}{3}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
         return chapter
 
@@ -174,14 +178,21 @@ class BiblesSqlite:
         for verse in verses:
             b, c, v, verseText = verse
             formatedText += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
+        if mode == "BASIC":
+            formatedText = re.sub("("+searchString+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
+        elif mode == "ADVANCED":
+            searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
+            print(searchWords)
+            for searchword in searchWords:
+                formatedText = re.sub("("+searchword+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         return formatedText
 
     def searchMorphology(self, mode, searchString):
         query = "SELECT * FROM morphology WHERE "
-        if mode == "LexicalEntry":
+        if mode == "LEMMA":
             t = ("%{0},%".format(searchString),)
             query += "LexicalEntry LIKE ?"
-        elif mode == "MorphologyCode":
+        elif mode == "CODE":
             searchList = searchString.split(',')
             t = ("%{0},%".format(searchList[0]), searchList[1])
             query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
@@ -194,11 +205,10 @@ class BiblesSqlite:
         formatedText = ""
         for word in words:
             wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
+            if b < 40:
+                textWord = "<heb>{0}</heb>".format(textWord)
             formatedText += "({0}{1}</ref>) {2} {3}<br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
         return formatedText
-
-    def addInterlinearInSearchResult(self, b, c, v):
-        pass
 
     def readMultipleVerses(self, text, verseList):
         verses = ""
@@ -235,12 +245,12 @@ class BiblesSqlite:
     # test search morphology - lexicalEntry
     # e.g. H7225
     # searchString = input("Search Morphology [Lexical Entry]\nSearch for: ")
-    # print(Bibles.searchMorphology("LexicalEntry", searchString))
+    # print(Bibles.searchMorphology("LEMMA", searchString))
 
     # test search morphology - MorphologyCode
     # e.g. E70020,verb.qal.wayq.p1.u.sg
     # searchString = input("Search Morphology [Morphology Code]\nFilter for search: ")
-    # print(Bibles.searchMorphology("MorphologyCode", searchString))
+    # print(Bibles.searchMorphology("CODE", searchString))
 
     # test search morphology - ADVANCED
     # e.g. LexicalEntry LIKE '%E70020,%' AND Morphology LIKE '%third person%' AND (Book = 9 OR Book = 10)
