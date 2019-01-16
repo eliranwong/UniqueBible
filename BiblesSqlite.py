@@ -21,9 +21,18 @@ class BiblesSqlite:
         del Parser
         return verseReference
 
-    def formVidTagCrossRefLink(self, b, c, v, text=config.mainText):
+    def formTextTag(self, text=config.mainText):
+        return "<ref onclick='document.title=\"_MENU:::{0}\"'>".format(text)
+
+    def formBookTag(self, b, text=config.mainText):
+        return "<ref onclick='document.title=\"_MENU:::{0}.{1}\"'>".format(text, b)
+
+    def formChapterTag(self, b, c, text=config.mainText):
+        return "<ref onclick='document.title=\"_MENU:::{0}.{1}.{2}\"'>".format(text, b, c)
+
+    def formVerseTag(self, b, c, v, text=config.mainText):
         verseReference = self.bcvToVerseReference(b, c, v)
-        return "<vid id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"'>".format(b, c, v, text, verseReference)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"'>".format(b, c, v, text, verseReference)
 
     def readTextChapter(self, text, b, c):
         t = (b, c)
@@ -53,10 +62,25 @@ class BiblesSqlite:
         exclude = ("Details", "lexicalEntry", "morphology", "original")
         return [version[0] for version in versions if not version[0] in exclude]
 
+    def getTexts(self):
+        textList = self.getBibleList()
+        texts = ""
+        for text in textList:
+            texts += "{0}{1}</ref> ".format(self.formTextTag(text), text)
+        return texts
+
     def getBookList(self, text=config.mainText):
         query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
         self.cursor.execute(query)
         return [book[0] for book in self.cursor.fetchall()]
+
+    def getBooks(self, text=config.mainText):
+        bookList = self.getBookList(text)
+        books = ""
+        for book in bookList:
+            bookName = self.bcvToVerseReference(book, 1, 1)[:-4]
+            books += "{0}{1}</ref> ".format(self.formBookTag(book, text), bookName)
+        return books
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
         t = (b,)
@@ -68,7 +92,14 @@ class BiblesSqlite:
         chapterList = self.getChapterList(b, text)
         chapters = ""
         for chapter in chapterList:
-            chapters += "{0}{1}</vid> ".format(self.formVidTagCrossRefLink(b, chapter, 1, text), chapter)
+            chapters += "{0}{1}</ref> ".format(self.formChapterTag(b, chapter, text), chapter)
+        return chapters
+
+    def getChaptersMenu(self, b=config.mainB, text=config.mainText):
+        chapterList = self.getChapterList(b, text)
+        chapters = ""
+        for chapter in chapterList:
+            chapters += "{0}{1}</ref> ".format(self.formVerseTag(b, chapter, 1, text), chapter)
         return chapters
 
     def getVerseList(self, b, c, text=config.mainText):
@@ -76,6 +107,13 @@ class BiblesSqlite:
         query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
         self.cursor.execute(query, t)
         return [verse[0] for verse in self.cursor.fetchall()]
+
+    def getVerses(self, b=config.mainB, c=config.mainC, text=config.mainText):
+        verseList = self.getVerseList(b, c, text)
+        verses = ""
+        for verse in verseList:
+            verses += "{0}{1}</ref> ".format(self.formVerseTag(b, c, verse, text), verse)
+        return verses
 
     def compareVerse(self, verseList, texts=["ALL"]):
         if len(verseList) == 1 and not texts == ["ALL"]:
@@ -100,7 +138,7 @@ class BiblesSqlite:
                 else:
                     chapter += "<tr style='background-color: #f2f2f2;'>"
                 if row == 1:
-                    chapter += "<td style='vertical-align: text-top;'>{0}{1}</vid> ".format(self.formVidTagCrossRefLink(b, c, verse, text), verse)
+                    chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
                     chapter += "<td>"
                 chapter += "</td><td><sup>({0})</sup></td><td>{1}</td></tr>".format(text, self.readTextVerse(text, b, c, verse)[3])
@@ -118,7 +156,7 @@ class BiblesSqlite:
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-            verses += "({0}{1}</vid>) {2}<br>".format(self.formVidTagCrossRefLink(b, c, v, text), text, verseText.strip())
+            verses += "(<vid>{0}{1}</ref></vid>) {2}<br>".format(self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
     def searchBible(self, text, mode, searchString):
@@ -181,11 +219,11 @@ class BiblesSqlite:
     def readPlainChapter(self, text, verse):
         # expect bcv is a tuple
         b, c, v = verse
-        chapter = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
-            chapter += "{0}{1}</vid> {2}<br>".format(self.formVidTagCrossRefLink(b, c, v, text), v, verseText)
+            chapter += "<vid>{0}{1}</ref></vid> {2}<br>".format(self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
 
     def readVerseCrossReferences(self, b, c, v):

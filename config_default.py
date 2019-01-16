@@ -1,8 +1,8 @@
 fontSize = 120
-mainText = 'CUV'
-mainB = 43
-mainC = 3
-mainV = 16
+mainText = 'KJV'
+mainB = 1
+mainC = 1
+mainV = 1
 historyRecordAllowed = 30
 currentRecord = {'main': 0, 'parallel': 0}
-history = {'main': ['John 3:16'], 'parallel': []}
+history = {'main': ['Genesis 1:1'], 'parallel': []}

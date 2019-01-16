@@ -11,9 +11,9 @@ def setupMainWindow():
     mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
-def executeInitialUbCommand(ubCommand):
-    mainWindow.ubCommandLineEdit.setText(ubCommand)
-    mainWindow.runUbCommand()
+def executeInitialTextCommand(textCommand):
+    mainWindow.textCommandLineEdit.setText(textCommand)
+    mainWindow.runTextCommand(textCommand)
 
 def setCurrentRecord():
     mainRecordPosition = len(config.history["main"]) - 1
@@ -39,11 +39,11 @@ app.aboutToQuit.connect(saveDataOnExit)
 mainWindow = MainWindow()
 setupMainWindow()
 
-initial_ubCommand = " ".join(sys.argv[1:])
-if not initial_ubCommand:
+initial_textCommand = " ".join(sys.argv[1:])
+if not initial_textCommand:
     historyMain = config.history["main"]
-    initial_ubCommand = historyMain[len(historyMain) - 1]
-executeInitialUbCommand(initial_ubCommand)
+    initial_textCommand = historyMain[len(historyMain) - 1]
+executeInitialTextCommand(initial_textCommand)
 
 setCurrentRecord()
 
