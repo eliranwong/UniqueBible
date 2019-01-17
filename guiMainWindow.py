@@ -162,7 +162,7 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='thetextapp.js'></script><script src='w3.js'></script><script>var mainText = '{0}'; var studyText = '{1}'</script></head><body style='font-size: {2}%;'><span id='v0.0.0'></span>".format(config.mainText, config.studyText, config.fontSize)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='UniqueBible.js'></script><script src='w3.js'></script><script>var mainText = '{0}'; var studyText = '{1}'</script></head><body style='font-size: {2}%;'><span id='v0.0.0'></span>".format(config.mainText, config.studyText, config.fontSize)
             html += content
             html += "</body></html>"
             views = {
