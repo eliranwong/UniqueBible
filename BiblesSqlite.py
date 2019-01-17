@@ -193,6 +193,16 @@ class BiblesSqlite:
                 formatedText = re.sub("("+searchword+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         return formatedText
 
+    def instantMorphology(self, book, wordId):
+        t = (book, wordId)
+        print(t)
+        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        print(word)
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
+        return textWord+" "+morphology
+
     def searchMorphology(self, mode, searchString):
         query = "SELECT * FROM morphology WHERE "
         if mode == "LEMMA":
@@ -238,6 +248,7 @@ class BiblesSqlite:
                 divTag = "<div style='direction: rtl;'>"
             chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
+
 
 class BibleSqlite:
 

@@ -30,6 +30,7 @@ class MainWindow(QMainWindow):
         self.studyPage = self.studyView.page()
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
         self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
+        self.instantView = self.centralWidget.instantView
         self.setCentralWidget(self.centralWidget)
 
     def __del__(self):
@@ -74,6 +75,13 @@ class MainWindow(QMainWindow):
         self.parallelButton.setIcon(QIcon(parallelButtonFile))
         self.parallelButton.clicked.connect(self.parallel)
         self.toolBar.addWidget(self.parallelButton)
+        
+        self.instantMode = 0 # default parallel mode
+        self.instantButton = QPushButton()
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        self.instantButton.setIcon(QIcon(instantButtonFile))
+        self.instantButton.clicked.connect(self.instant)
+        self.toolBar.addWidget(self.instantButton)
 
     def setupBaseUrl(self):
         # baseUrl
@@ -162,12 +170,18 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='UniqueBible.js'></script><script src='w3.js'></script><script>var mainText = '{0}'; var studyText = '{1}'</script></head><body style='font-size: {2}%;'><span id='v0.0.0'></span>".format(config.mainText, config.studyText, config.fontSize)
+            activeBCVsettings = ""
+            if view == "main":
+                activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+            elif view == "study":
+                activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='UniqueBible.js'></script><script src='w3.js'></script>{0}</head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
             html += content
             html += "</body></html>"
             views = {
                 "main": self.mainView,
                 "study": self.studyView,
+                "instant": self.instantView,
             }
             views[view].setHtml(html, baseUrl)
             if addRecord == True:
@@ -184,6 +198,18 @@ class MainWindow(QMainWindow):
             config.history[view] = viewhistory
             config.currentRecord[view] = len(viewhistory) - 1
 
+    def instant(self):
+        if self.instantMode == 0:
+            self.instantMode = 1
+            self.instantView.show()
+            self.centralWidget.layout.setRowStretch(0, 10)
+            self.centralWidget.layout.setRowStretch(1, 1)
+        elif self.instantMode == 1:
+            self.instantMode = 0
+            self.centralWidget.layout.setRowStretch(0, 10)
+            self.centralWidget.layout.setRowStretch(1, 0)
+            self.instantView.hide()
+
     def parallel(self):
         parallelRatio = {
             0: (1, 0),
@@ -193,10 +219,10 @@ class MainWindow(QMainWindow):
         }
         if self.parallelMode == 3:
             self.parallelMode = 0
-            self.centralWidget.studyView.hide()
+            self.studyView.hide()
         else:
             self.parallelMode += 1
-            self.centralWidget.studyView.show()
+            self.studyView.show()
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(1, ratio[0])
         self.centralWidget.layout.setColumnStretch(2, ratio[1])
@@ -209,18 +235,24 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        self.html = "<h1>UniqueBible.app</h1><p><ref onclick=\"document.title='TESTING IN PROGRESS';\">development in progress</ref></p><p><a href=\"https://UniqueBible.app\"><img src='UniqueBible.png' alt='Marvel.Bible icon'></a></p>"
+        self.html = "<h1>UniqueBible.app</h1><p>UniqueBible.app</p>"
         self.mainView = WebEngineView()
         self.mainView.setHtml(self.html, baseUrl)
         self.studyView = WebEngineView()
         self.studyView.setHtml("Study View", baseUrl)
-        #self.studyView.hide() # hide parallel view by default
+        self.instantView = WebEngineView()
+        self.instantView.setHtml("Quick Information", baseUrl)
+        self.instantView.hide()
 
         self.layout.addWidget(self.mainView, 0, 1)
         self.layout.addWidget(self.studyView, 0, 2)
+        self.layout.addWidget(self.instantView, 1, 1, 1, 2)
 
         self.layout.setColumnStretch(1, 2)
         self.layout.setColumnStretch(2, 1)
+
+        self.layout.setRowStretch(0, 10)
+        self.layout.setRowStretch(1, 0)
 
         self.setLayout(self.layout)
 

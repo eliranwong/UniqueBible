@@ -7,6 +7,7 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
+            "_instant": self.instant,
             "_menu": self.textMenu,
             "bible": self.textBible,
             "study": self.textStudy,
@@ -27,7 +28,7 @@ class TextCommandParser:
             "dictionary": self.textDictionary,
             "encyclopedia": self.textEncyclopedia,
             "crossreference": self.textCrossReference,
-            "tske":self.tske
+            "tske": self.tske,
         } # add more later
         commandList = self.splitCommand(textCommad)
         if len(commandList) == 1:
@@ -156,6 +157,15 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return self.textBibleVerseParser(commandList[1], texts[0], source)
+
+    def instant(self, command, source="main"):
+        commandList = self.splitCommand(command)
+        biblesSqlite = BiblesSqlite()
+        wordID = commandList[1]
+        wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
+        info = biblesSqlite.instantMorphology(int(commandList[0]), int(wordID))
+        del biblesSqlite
+        return ("instant", info)
 
     def textStudy(self, command, source):
         commandList = self.splitCommand(command)
