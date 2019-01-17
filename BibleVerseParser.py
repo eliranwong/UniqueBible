@@ -918,8 +918,16 @@ class BibleVerseParser:
         return standardisedText
 
     def parseText(self, text):
-        # search for books; mark them with book numbers, used by https://marvel.bible
+        # add a space at the end of the text, to avoid indefinite loop in later steps
+        #this extra space will be removed when parsing is finished.
         taggedText = text+" "
+        
+        # remove bcv tags, if any, to avoid duplication of tagging in later steps
+        p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">')
+        if p.search(taggedText):
+            taggedText = re.sub('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">(.*?)</ref>', r'\1', taggedText, flags=re.M)
+
+        # search for books; mark them with book numbers, used by https://marvel.bible
         for book in self.marvelBibleBookNo:
             #self.updateWorkingIndicator()
             # get the string of book name
@@ -969,8 +977,11 @@ class BibleVerseParser:
         taggedText = taggedText[:-1]
         return taggedText
 
-    def extractAllReferences(self, text):
-        taggedText = self.parseText(text)
+    def extractAllReferences(self, text, tagged=False):
+        if not tagged:
+            taggedText = self.parseText(text)
+        else:
+            taggedText = text
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[0-9]+?,[0-9]+?\))', taggedText)] # return a list of tuples (b, c, v)
 
     def parseFile(self, inputFile):

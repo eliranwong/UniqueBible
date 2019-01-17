@@ -1,6 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite
+from BiblesSqlite import BiblesSqlite, BibleSqlite
+from ToolsSqlite import CrossReferenceSqlite
 
 class TextCommandParser:
 
@@ -26,6 +27,7 @@ class TextCommandParser:
             "dictionary": self.textDictionary,
             "encyclopedia": self.textEncyclopedia,
             "crossreference": self.textCrossReference,
+            "tske":self.tske
         } # add more later
         commandList = self.splitCommand(textCommad)
         if len(commandList) == 1:
@@ -82,9 +84,9 @@ class TextCommandParser:
         confirmedTexts = [text for text in texts if text in bibleList]
         return confirmedTexts
 
-    def extractAllVerses(self, text):
+    def extractAllVerses(self, text, tagged=False):
         Parser = BibleVerseParser("YES")
-        verseList = Parser.extractAllReferences(text)
+        verseList = Parser.extractAllReferences(text, tagged)
         del Parser
         return verseList
 
@@ -115,13 +117,17 @@ class TextCommandParser:
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
         if text in formattedBibles:
-            return "[pending revision here]"
+            # expect verse is a tuple
+            bibleSqlite = BibleSqlite(text) # use plain bibles database when corresponding formatted version is not available
+            chapter += bibleSqlite.readFormattedChapter(verse)
+            del bibleSqlite
+            return chapter
         else:
             # expect verse is a tuple
             biblesSqlite = BiblesSqlite() # use plain bibles database when corresponding formatted version is not available
             chapter += biblesSqlite.readPlainChapter(text, verse)
             del biblesSqlite
-            return chapter # pending further development
+            return chapter
 
     def textBibleVerseParser(self, command, text=config.mainText, view="main"):
         verseList = self.extractAllVerses(command)
@@ -260,7 +266,47 @@ class TextCommandParser:
     def textEncyclopedia(self, command):
         return command # pending further development
 
-    def textCrossReference(self, command):
-        return command # pending further development
+    def textCrossReference(self, command, source):
+        verseList = self.extractAllVerses(command)
+        biblesSqlite = BiblesSqlite()
+        crossReferenceSqlite = CrossReferenceSqlite()
+        content = ""
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            for verse in verseList:
+                b, c, v = verse
+                content += "<h2>Cross-reference: {0}</h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
+                crossReferenceList = self.extractAllVerses(crossReferenceSqlite.scrollMapper(verse), True)
+                if not crossReferenceList:
+                    content += "[No cross-reference is found for this verse!]"
+                else:
+                    content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
+                content += "<hr>"
+            del crossReferenceSqlite
+            del biblesSqlite
+            return ("study", content) # pending further development
 
-    # add more later
+    def tske(self, command, source):
+        verseList = self.extractAllVerses(command)
+        biblesSqlite = BiblesSqlite()
+        crossReferenceSqlite = CrossReferenceSqlite()
+        content = ""
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            for verse in verseList:
+                b, c, v = verse
+                content += "<h2>TSKE: {0}</h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
+                tskeContent = crossReferenceSqlite.tske(verse)
+                content += "<div style='margin: 10px; padding: 0px 10px; border: 1px solid gray; border-radius: 5px;'>{0}</div>".format(tskeContent)
+                crossReferenceList = self.extractAllVerses(tskeContent, False)
+                if not crossReferenceList:
+                    content += "[No content is found for this verse!]"
+                else:
+                    content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
+                content += "<hr>"
+            del crossReferenceSqlite
+            del biblesSqlite
+            return ("study", content) # pending further development
+

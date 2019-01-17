@@ -239,8 +239,30 @@ class BiblesSqlite:
             chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
 
-    def readVerseCrossReferences(self, b, c, v):
-        print("pending")
+class BibleSqlite:
+
+    def __init__(self, text):
+        # connect bibles.sqlite
+        self.text = text
+        self.database = os.path.join("marvelData", "bibles", text+".bible")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB"]
+
+    def __del__(self):
+        self.connection.close()
+
+    def readFormattedChapter(self, verse):
+        query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
+        self.cursor.execute(query, verse[:-1])
+        scripture = self.cursor.fetchone()
+        if not scripture:
+            return "[No content is found for this chapter!]"
+        else:
+            divTag = "<div>"
+            if self.text in self.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            return "{0}{1}</div>".format(divTag, scripture[0])
 
 #if __name__ == '__main__':
     # Bibles = BiblesSqlite()

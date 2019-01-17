@@ -56,6 +56,18 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.toolBar.addWidget(self.textCommandLineEdit)
 
+        self.studyBackButton = QPushButton()
+        leftButtonFile = os.path.join("htmlResources", "left.png")
+        self.studyBackButton.setIcon(QIcon(leftButtonFile))
+        self.studyBackButton.clicked.connect(self.studyBack)
+        self.toolBar.addWidget(self.studyBackButton)
+
+        self.studyForwardButton = QPushButton()
+        rightButtonFile = os.path.join("htmlResources", "right.png")
+        self.studyForwardButton.setIcon(QIcon(rightButtonFile))
+        self.studyForwardButton.clicked.connect(self.studyForward)
+        self.toolBar.addWidget(self.studyForwardButton)
+
         self.parallelMode = 1 # default parallel mode
         self.parallelButton = QPushButton()
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
@@ -98,6 +110,28 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setText(textCommand)
             self.runTextCommand(textCommand, False)
 
+    def studyBack(self):
+        if self.parallelMode == 0:
+            self.parallel()
+        studyCurrentRecord = config.currentRecord["study"]
+        if not studyCurrentRecord == 0:
+            studyCurrentRecord = studyCurrentRecord - 1
+            config.currentRecord["study"] = studyCurrentRecord
+            textCommand = config.history["study"][studyCurrentRecord]
+            #self.textCommandLineEdit.setText(textCommand)
+            self.runTextCommand(textCommand, False, "study")
+
+    def studyForward(self):
+        if self.parallelMode == 0:
+            self.parallel()
+        studyCurrentRecord = config.currentRecord["study"]
+        if not studyCurrentRecord == (len(config.history["study"]) - 1):
+            studyCurrentRecord = studyCurrentRecord + 1
+            config.currentRecord["study"] = studyCurrentRecord
+            textCommand = config.history["study"][studyCurrentRecord]
+            #self.textCommandLineEdit.setText(textCommand)
+            self.runTextCommand(textCommand, False, "study")
+
     def mainTextCommandChanged(self, newTextCommand):
         self.textCommandChanged(newTextCommand, "main")
 
@@ -109,7 +143,8 @@ class MainWindow(QMainWindow):
         #newTextCommand = self.mainPage.title()
         exceptionTuple = (self.textCommandLineEdit.text(), "UniqueBible.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
-            self.textCommandLineEdit.setText(newTextCommand)
+            if source == "main":
+                self.textCommandLineEdit.setText(newTextCommand)
             if newTextCommand.startswith("_"):
                 self.runTextCommand(newTextCommand, False, source)
             else:
@@ -127,7 +162,7 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             pass
         else:
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>".format(config.fontSize)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='thetextapp.js'></script><script src='w3.js'></script><script>var mainText = '{0}'; var studyText = '{1}'</script></head><body style='font-size: {2}%;'><span id='v0.0.0'></span>".format(config.mainText, config.studyText, config.fontSize)
             html += content
             html += "</body></html>"
             views = {
