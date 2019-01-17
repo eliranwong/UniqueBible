@@ -11,6 +11,7 @@ class BiblesSqlite:
         self.database = os.path.join("marvelData", "bibles.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
+        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB"]
 
     def __del__(self):
         self.connection.close()
@@ -142,8 +143,7 @@ class BiblesSqlite:
                 else:
                     chapter += "<td>"
                 textTdTag = "<td>"
-                rtlText = ["original", "MOB", "MAB", "MTB", "MIB", "MPB"]
-                if b < 40 and text in rtlText:
+                if b < 40 and text in self.rtlTexts:
                     textTdTag = "<td style='direction: rtl;'>"
                 chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}{3}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
@@ -160,7 +160,10 @@ class BiblesSqlite:
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-            verses += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), text, verseText.strip())
+            divTag = "<div>"
+            if b < 40 and text in self.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
     def searchBible(self, text, mode, searchString):
@@ -177,7 +180,10 @@ class BiblesSqlite:
         formatedText = ""
         for verse in verses:
             b, c, v, verseText = verse
-            formatedText += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
+            divTag = "<div>"
+            if b < 40 and text in self.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
         if mode == "BASIC":
             formatedText = re.sub("("+searchString+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
@@ -214,7 +220,10 @@ class BiblesSqlite:
         verses = ""
         for verse in verseList:
             b, c, v = verse
-            verses += "({0}{1}</ref>) {2}<br>".format(self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
+            divTag = "<div>"
+            if b < 40 and text in self.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
         return verses
 
     def readPlainChapter(self, text, verse):
@@ -224,7 +233,10 @@ class BiblesSqlite:
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
-            chapter += "<vid>{0}{1}</ref></vid> {2}<br>".format(self.formVerseTag(b, c, v, text), v, verseText)
+            divTag = "<div>"
+            if b < 40 and text in self.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
 
     def readVerseCrossReferences(self, b, c, v):
