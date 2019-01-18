@@ -2,12 +2,12 @@ import re
 
 def func(match):
     value = match.group()
-    if value == 'a':
-        return 'A'
-    elif value == 'A':
-        return 'a'
+    if value.islower():
+        return value.upper()
+    elif value.isupper():
+        return value.lower()
     return value
 
-p = re.compile('[aA]')
-newText = p.sub(func, 'Testing AaAaAaAaAaAa')
+p = re.compile('[a-zA-Z]')
+newText = p.sub(func, input("Enter a string here: "))
 print(newText)
