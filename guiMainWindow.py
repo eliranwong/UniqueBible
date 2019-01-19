@@ -1,7 +1,7 @@
 import os, sys, config
 from PySide2.QtCore import QUrl
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QApplication, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
+from PySide2.QtWidgets import (QAction, QApplication, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 
@@ -12,12 +12,13 @@ class MainWindow(QMainWindow):
 
         self.textCommandParser = TextCommandParser()
 
-        self.setWindowTitle('Unique Bible App')
+        self.setWindowTitle('The Text App')
         
         appIconFile = os.path.join("htmlResources", "TheText.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
         
+        self.create_menu()
         self.setupToolBar()
         self.setupBaseUrl()
         
@@ -35,6 +36,14 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    def create_menu(self):
+        appIconFile = os.path.join("htmlResources", "TheText.png")
+        appIcon = QIcon(appIconFile)
+        menu1 = self.menuBar().addMenu("&TheText.app")
+        quit_action = QAction(appIcon, "E&xit",
+                             self, shortcut = "Ctrl+Q", triggered=qApp.quit)
+        menu1.addAction(quit_action)
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -265,7 +274,7 @@ class WebEngineView(QWebEngineView):
     def createWindow(self, windowType):
         # an example: https://stackoverflow.com/questions/47897467/qwebengine-open-createwindow-if-target-blank
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:
-            print("testing open new window1")
+            print("Testing new window 1")
             # read textCommand, placed in document.title with javascript
             textCommand = self.title()
             self.runTextCommand(textCommand)
@@ -274,8 +283,8 @@ class WebEngineView(QWebEngineView):
     def runTextCommand(self, textCommand):
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        print("Unique Bible Command: "+textCommand) # develop further from here to handle Unique Bible Command
-        html = textCommand # develop further from here to handle Unique Bible Command
+        print("Text Command: "+textCommand) # develop further from here to handle text command
+        html = textCommand # develop further from here to handle text command
 
         self.popoverView = WebEngineViewPopover()
         self.popoverView.setHtml(html, baseUrl)
@@ -288,7 +297,7 @@ class WebEngineViewPopover(QWebEngineView):
 
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserTab:
-            print("testing open new window2")
+            print("Testing new window 2")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
