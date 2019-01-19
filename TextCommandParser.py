@@ -10,6 +10,7 @@ class TextCommandParser:
             "_instantverse": self.instantVerse,
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
+            "_info": self.textInfo,
             "main": self.textAnotherView,
             "study": self.textAnotherView,
             "bible": self.textBible,
@@ -21,6 +22,7 @@ class TextCommandParser:
             "lexicon": self.textLexicon,
             "discourse": self.textDiscourse,
             "search": self.textSearchBasic,
+            "isearch": self.textISearchBasic,
             "advancedsearch": self.textSearchAdvanced,
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
@@ -42,6 +44,9 @@ class TextCommandParser:
                 return interpreters[resourceType](command, source)
             else:
                 return self.textBibleVerseParser(textCommad)        
+
+    def textInfo(self, command, source="main"):
+        return ("instant", command)
 
     def textMenu(self, command, source="main"):
         biblesSqlite = BiblesSqlite()
@@ -79,14 +84,12 @@ class TextCommandParser:
                     versions = biblesSqlite.getBibleList()
                     menu += "<hr><b>Compare with:</b> "
                     for version in versions:
-                        menu += "{0} <input type='checkbox' id='compare{0}'> ".format(version)
+                        menu += "<div style='display: inline-block'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                         menu += "<script>versionList.push('{0}');</script>".format(version)
-                        #menu += "<ref onclick='document.title=\"COMPARE:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
                     menu += "<button type='button' onclick='checkCompare();'>Start Comparison</button>"
                     menu += "<hr><b>Parallel with:</b> "
                     for version in versions:
-                        menu += "{0} <input type='checkbox' id='parallel{0}'> ".format(version)
-                        #menu += "<ref onclick='document.title=\"PARALLEL:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
+                        menu += "<div style='display: inline-block'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
                     menu += "<button type='button' onclick='checkParallel();'>Start Parallel Reading</button>"
         del biblesSqlite
         return (source, menu)
@@ -271,17 +274,20 @@ class TextCommandParser:
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC")
 
+    def textISearchBasic(self, command, source):
+        return self.textSearch(command, source, "BASIC", True)
+
     def textSearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED")
 
-    def textSearch(self, command, source, mode):
+    def textSearch(self, command, source, mode, interlinear=False):
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = biblesSqlite.searchBible(texts[0], mode, commandList[1])
+            searchResult = biblesSqlite.searchBible(texts[0], mode, commandList[1], interlinear)
             del biblesSqlite
             return ("study", searchResult)
 

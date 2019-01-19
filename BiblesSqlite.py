@@ -23,10 +23,11 @@ class BiblesSqlite:
         return verseReference
 
     def formTextTag(self, text=config.mainText):
-        return "<ref onclick='document.title=\"_menu:::{0}\"'>".format(text)
+        return "<ref onclick='document.title=\"_menu:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
 
     def formBookTag(self, b, text=config.mainText):
-        return "<ref onclick='document.title=\"_menu:::{0}.{1}\"'>".format(text, b)
+        bookAbb = self.bcvToVerseReference(b, 1, 1)[:-4]
+        return "<ref onclick='document.title=\"_menu:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(text, b, bookAbb)
 
     def formChapterTag(self, b, c, text=config.mainText):
         return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"'>".format(text, b, c)
@@ -60,7 +61,7 @@ class BiblesSqlite:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         versions = self.cursor.fetchall()
-        exclude = ("Details", "lexicalEntry", "morphology", "original")
+        exclude = ("Details", "lexicalEntry", "morphology", "original", "title")
         return [version[0] for version in versions if not version[0] in exclude]
 
     def getTexts(self):
@@ -166,7 +167,7 @@ class BiblesSqlite:
             verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
-    def searchBible(self, text, mode, searchString):
+    def searchBible(self, text, mode, searchString, interlinear=False):
         query = "SELECT * FROM {0} WHERE ".format(text)
         if mode == "BASIC":
             t = ("%{0}%".format(searchString),)
@@ -184,6 +185,12 @@ class BiblesSqlite:
             if b < 40 and text in self.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
+            if interlinear:
+                if b < 40:
+                    divTag = "<div style='direction: rtl;'>"
+                else:
+                    divTag = "<div>"
+                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse("OHGB", b, c, v)[3])
         if mode == "BASIC":
             formatedText = re.sub("("+searchString+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
@@ -263,12 +270,17 @@ class BiblesSqlite:
         # expect bcv is a tuple
         b, c, v = verse
         chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
             divTag = "<div>"
             if b < 40 and text in self.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
+            if v in titleList:
+                if not v == 1:
+                    chapter += "<br>"
+                chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
             chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
 

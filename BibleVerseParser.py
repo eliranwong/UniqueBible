@@ -1,6 +1,6 @@
 """
 Previously uploaded at https://github.com/eliranwong/bible-verse-parser
-Modified for integration into UniqueBible.app
+Modified for integration into TheText.app
 
 A python parser to parse bible verse references from a text.
 
