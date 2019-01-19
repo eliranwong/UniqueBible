@@ -64,3 +64,31 @@ function luV(v) {
 function luW(v,wid,cl,lex,morph,bdb) {
     
 }
+
+function checkCompare() {
+    versionList.forEach(addCompare);
+    var compareTexts = compareList.join("_");
+    var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+    document.title = "COMPARE:::"+compareTexts+":::"+verseReference;
+}
+
+function addCompare(value) {
+    var checkBox = document.getElementById("compare"+value);
+    if (checkBox.checked == true){
+        compareList.push(value);
+    }
+}
+
+function checkParallel() {
+    versionList.forEach(addParallel);
+    var parallelTexts = parallelList.join("_");
+    var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+    document.title = "PARALLEL:::"+parallelTexts+":::"+verseReference;
+}
+
+function addParallel(value) {
+    var checkBox = document.getElementById("parallel"+value);
+    if (checkBox.checked == true){
+        parallelList.push(value);
+    }
+}
