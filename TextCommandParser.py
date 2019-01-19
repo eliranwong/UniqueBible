@@ -73,7 +73,7 @@ class TextCommandParser:
                         anotherView = "<ref onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on Main View</ref>".format(text, mainVerseReference)
                     menu += "<hr><b>Selected verse:</b> {0} [{1}]".format(bcList[2], anotherView)
                     menu += "<hr>"
-                    menu += "<ref onclick='document.title=\"COMPARE:::{0}\"'>Compare</ref> | ".format(mainVerseReference)
+                    menu += "<ref onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</ref> | ".format(mainVerseReference)
                     menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
                     menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
@@ -82,12 +82,12 @@ class TextCommandParser:
                         menu += "{0} <input type='checkbox' id='compare{0}'> ".format(version)
                         menu += "<script>versionList.push('{0}');</script>".format(version)
                         #menu += "<ref onclick='document.title=\"COMPARE:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
-                    menu += "<button type='button' onclick='checkCompare();'>Go!</button>"
+                    menu += "<button type='button' onclick='checkCompare();'>Start Comparison</button>"
                     menu += "<hr><b>Parallel with:</b> "
                     for version in versions:
                         menu += "{0} <input type='checkbox' id='parallel{0}'> ".format(version)
                         #menu += "<ref onclick='document.title=\"PARALLEL:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
-                    menu += "<button type='button' onclick='checkParallel();'>Go!</button>"
+                    menu += "<button type='button' onclick='checkParallel();'>Start Parallel Reading</button>"
         del biblesSqlite
         return (source, menu)
 

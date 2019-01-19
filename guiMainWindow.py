@@ -151,7 +151,7 @@ class MainWindow(QMainWindow):
         #newTextCommand = self.mainPage.title()
         exceptionTuple = (self.textCommandLineEdit.text(), "UniqueBible.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
-            if source == "main":
+            if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
             if newTextCommand.startswith("_"):
                 self.runTextCommand(newTextCommand, False, source)
