@@ -30,7 +30,7 @@ function hl1(id, cl, sn) {
             document.getElementById('w'+id).style.background='#C9CFFF';
         }
     }
-    document.title = "_INSTANT:::"+activeB+":::"+id;
+    document.title = "_instantWord:::"+activeB+":::"+id;
 }
 
 function hl0(id, cl, sn) {
@@ -46,6 +46,14 @@ function hl0(id, cl, sn) {
             document.getElementById('w'+id).style.background='';
         }
     }
+}
+
+function qV(v) {
+    document.title = "_instantVerse:::"+activeText+":::"+activeB+"."+activeC+"."+v;
+}
+
+function mV(v) {
+    document.title = "_menu:::"+activeText+"."+activeB+"."+activeC+"."+v;
 }
 
 function luV(v) {
