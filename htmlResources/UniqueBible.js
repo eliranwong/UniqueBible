@@ -67,9 +67,13 @@ function luW(v,wid,cl,lex,morph,bdb) {
 
 function checkCompare() {
     versionList.forEach(addCompare);
-    var compareTexts = compareList.join("_");
-    var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
-    document.title = "COMPARE:::"+compareTexts+":::"+verseReference;
+    if (compareList.length == 0) {
+        alert("You didn't select any versions for comparison.");
+    } else {
+        var compareTexts = compareList.join("_");
+        var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+        document.title = "COMPARE:::"+compareTexts+":::"+verseReference;
+    }
 }
 
 function addCompare(value) {
@@ -81,9 +85,13 @@ function addCompare(value) {
 
 function checkParallel() {
     versionList.forEach(addParallel);
-    var parallelTexts = parallelList.join("_");
-    var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
-    document.title = "PARALLEL:::"+parallelTexts+":::"+verseReference;
+    if (parallelList.length == 0) {
+        alert("You didn't select any versions for parallel reading.");
+    } else {
+        var parallelTexts = parallelList.join("_");
+        var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+        document.title = "PARALLEL:::"+parallelTexts+":::"+verseReference;
+    }
 }
 
 function addParallel(value) {
