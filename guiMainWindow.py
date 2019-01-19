@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         self.parallelButton.clicked.connect(self.parallel)
         self.toolBar.addWidget(self.parallelButton)
         
-        self.instantMode = 0 # default parallel mode
+        self.instantMode = 1 # default parallel mode
         self.instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
         self.instantButton.setIcon(QIcon(instantButtonFile))
@@ -188,22 +188,23 @@ class MainWindow(QMainWindow):
                 self.addHistoryRecord(view, textCommand)
 
     def addHistoryRecord(self, view, textCommand):
-        viewhistory = config.history[view]
-        if not (viewhistory[len(viewhistory) - 1] == textCommand or textCommand.startswith("_")):
-            viewhistory.append(textCommand)
-            # set maximum number of history records for each view here
-            historyRecordAllowed = config.historyRecordAllowed
-            if len(viewhistory) > historyRecordAllowed:
-                viewhistory = viewhistory[-historyRecordAllowed:]
-            config.history[view] = viewhistory
-            config.currentRecord[view] = len(viewhistory) - 1
+        if not textCommand.startswith("_"):
+            viewhistory = config.history[view]
+            if not (viewhistory[len(viewhistory) - 1] == textCommand):
+                viewhistory.append(textCommand)
+                # set maximum number of history records for each view here
+                historyRecordAllowed = config.historyRecordAllowed
+                if len(viewhistory) > historyRecordAllowed:
+                    viewhistory = viewhistory[-historyRecordAllowed:]
+                config.history[view] = viewhistory
+                config.currentRecord[view] = len(viewhistory) - 1
 
     def instant(self):
         if self.instantMode == 0:
             self.instantMode = 1
             self.instantView.show()
             self.centralWidget.layout.setRowStretch(0, 10)
-            self.centralWidget.layout.setRowStretch(1, 1)
+            self.centralWidget.layout.setRowStretch(1, 2)
         elif self.instantMode == 1:
             self.instantMode = 0
             self.centralWidget.layout.setRowStretch(0, 10)
@@ -242,7 +243,7 @@ class CentralWidget(QWidget):
         self.studyView.setHtml("Study View", baseUrl)
         self.instantView = WebEngineView()
         self.instantView.setHtml("Quick Information", baseUrl)
-        self.instantView.hide()
+        #self.instantView.hide()
 
         self.layout.addWidget(self.mainView, 0, 1)
         self.layout.addWidget(self.studyView, 0, 2)
@@ -252,7 +253,7 @@ class CentralWidget(QWidget):
         self.layout.setColumnStretch(2, 1)
 
         self.layout.setRowStretch(0, 10)
-        self.layout.setRowStretch(1, 0)
+        self.layout.setRowStretch(1, 2)
 
         self.setLayout(self.layout)
 

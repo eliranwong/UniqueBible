@@ -23,17 +23,17 @@ class BiblesSqlite:
         return verseReference
 
     def formTextTag(self, text=config.mainText):
-        return "<ref onclick='document.title=\"_MENU:::{0}\"'>".format(text)
+        return "<ref onclick='document.title=\"_menu:::{0}\"'>".format(text)
 
     def formBookTag(self, b, text=config.mainText):
-        return "<ref onclick='document.title=\"_MENU:::{0}.{1}\"'>".format(text, b)
+        return "<ref onclick='document.title=\"_menu:::{0}.{1}\"'>".format(text, b)
 
     def formChapterTag(self, b, c, text=config.mainText):
-        return "<ref onclick='document.title=\"_MENU:::{0}.{1}.{2}\"'>".format(text, b, c)
+        return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"'>".format(text, b, c)
 
     def formVerseTag(self, b, c, v, text=config.mainText):
         verseReference = self.bcvToVerseReference(b, c, v)
-        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"'>".format(b, c, v, text, verseReference)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
     def readTextChapter(self, text, b, c):
         t = (b, c)
@@ -152,8 +152,8 @@ class BiblesSqlite:
     def readTranslations(self, b, c, v, texts):
         if texts == ["ALL"]:
             bibleList = self.getBibleList()
-            texts = ["original", "LXX"]
-            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB")
+            texts = ["OHGB", "LXX"]
+            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "OHGB")
             for bible in bibleList:
                 if not bible in exclude:
                     texts.append(bible)
@@ -174,7 +174,7 @@ class BiblesSqlite:
         elif mode == "ADVANCED":
             t = ()
             query += searchString
-        query += " ORDER BY Book ASC, Chapter ASC, Verse ASC"
+        query += " ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, t)
         verses = self.cursor.fetchall()
         formatedText = ""
@@ -193,15 +193,36 @@ class BiblesSqlite:
                 formatedText = re.sub("("+searchword+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         return formatedText
 
-    def instantMorphology(self, book, wordId):
+    def instantVerse(self, text, bcvList):
+        query = "SELECT * FROM morphology WHERE Book = ? AND Chapter = ? AND Verse = ? ORDER BY WordID"
+        self.cursor.execute(query, bcvList)
+        words = self.cursor.fetchall()
+        interlinearVerse = ""
+        for word in words:
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
+            if b < 40:
+                textWord = "<heb>{0}</heb>".format(textWord)
+            else:
+                textWord = "<grk>{0}</grk>".format(textWord)
+            interlinearVerse += "{0}<gloss>{1}</gloss> ".format(textWord, interlinear)
+        if bcvList[0] < 40:
+            interlinearVerse = "<div style='direction: rtl;'>{0}</div>".format(interlinearVerse)
+        return interlinearVerse
+
+    def instantWord(self, book, wordId):
         t = (book, wordId)
-        print(t)
         query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
         self.cursor.execute(query, t)
         word = self.cursor.fetchone()
-        print(word)
-        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
-        return textWord+" "+morphology
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
+        morphology = morphology.replace(",", ", ")
+        if b < 40:
+            textWord = "<heb>{0}</heb>".format(textWord)
+            lexeme = "<heb>{0}</heb>".format(lexeme)
+        else:
+            textWord = "<grk>{0}</grk>".format(textWord)
+            lexeme = "<grk>{0}</grk>".format(lexeme)
+        return "{0} <span style='color: gray'>{1}</span> {2} {3} <span style='color: brown'>{4}</span> <span style='color: blue'>{5}</span>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
 
     def searchMorphology(self, mode, searchString):
         query = "SELECT * FROM morphology WHERE "
@@ -215,14 +236,16 @@ class BiblesSqlite:
         elif mode == "ADVANCED":
             t = ()
             query += searchString
-        query += " ORDER BY Book ASC, Chapter ASC, Verse ASC, WordID"
+        query += " ORDER BY Book, Chapter, Verse, WordID"
         self.cursor.execute(query, t)
         words = self.cursor.fetchall()
         formatedText = ""
         for word in words:
-            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology = word
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
             if b < 40:
-                textWord = "<heb>{0}</heb>".format(textWord)
+                textWord = "<heb>{0}</grk>".format(textWord)
+            else:
+                textWord = "<grk>{0}</heb>".format(textWord)
             formatedText += "({0}{1}</ref>) {2} {3}<br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
         return formatedText
 
@@ -264,16 +287,21 @@ class BibleSqlite:
         self.connection.close()
 
     def readFormattedChapter(self, verse):
+        b, c, v = verse
+        biblesSqlite = BiblesSqlite()
+        chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        del biblesSqlite
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[:-1])
         scripture = self.cursor.fetchone()
+        chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
         if not scripture:
             return "[No content is found for this chapter!]"
         else:
             divTag = "<div>"
-            if self.text in self.rtlTexts:
+            if self.text in self.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
-            return "{0}{1}</div>".format(divTag, scripture[0])
+            return "{0}{1}</div>".format(divTag, chapter)
 
 #if __name__ == '__main__':
     # Bibles = BiblesSqlite()

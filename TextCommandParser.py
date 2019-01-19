@@ -7,10 +7,12 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
-            "_instant": self.instant,
+            "_instantverse": self.instantVerse,
+            "_instantword": self.instantWord,
             "_menu": self.textMenu,
+            "main": self.textAnotherView,
+            "study": self.textAnotherView,
             "bible": self.textBible,
-            "study": self.textStudy,
             "compare": self.textCompare,
             "parallel": self.textParallel,
             "verse": self.textVerseData,
@@ -44,7 +46,7 @@ class TextCommandParser:
     def textMenu(self, command, source="main"):
         biblesSqlite = BiblesSqlite()
         mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        menu = "&lt;&lt;&lt; <ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>Go back to {1}</ref>".format(config.mainText, mainVerseReference)
+        menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go back to {1}</ref>".format(config.mainText, mainVerseReference)
         menu += "<hr><b>Texts:</b> {0}".format(biblesSqlite.getTexts())
         #menu = biblesSqlite.getTexts()
         items = command.split(".", 3)
@@ -60,10 +62,27 @@ class TextCommandParser:
                     # i.e. book specified; add chapter menu
                     menu += "<hr><b>Selected book:</b> {0}".format(biblesSqlite.bcvToVerseReference(bcList[0], 1, 1)[:-4])
                     menu += "<hr><b>Chapters:</b> {0}".format(biblesSqlite.getChapters(bcList[0], text))
-                if check == 2:
+                if check >= 2:
                     # i.e. both book and chapter specified; add verse menu
                     menu += "<hr><b>Selected chapter:</b> {0}".format(bcList[1])
                     menu += "<hr><b>Verses:</b> {0}".format(biblesSqlite.getVerses(bcList[0], bcList[1], text))
+                if check == 3:
+                    if source == "main":
+                        anotherView = "<ref onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on Study View</ref>".format(text, mainVerseReference)
+                    elif source == "study":
+                        anotherView = "<ref onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on Main View</ref>".format(text, mainVerseReference)
+                    menu += "<hr><b>Selected verse:</b> {0} [{1}]".format(bcList[2], anotherView)
+                    menu += "<hr>"
+                    menu += "<ref onclick='document.title=\"COMPARE:::{0}\"'>Compare</ref> | ".format(mainVerseReference)
+                    menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
+                    menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref>".format(mainVerseReference)
+                    versions = biblesSqlite.getBibleList()
+                    menu += "<hr>Compare with "
+                    for version in versions:
+                        menu += "<ref onclick='document.title=\"COMPARE:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
+                    menu += "<hr>Parallel with "
+                    for version in versions:
+                        menu += "<ref onclick='document.title=\"PARALLEL:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
         del biblesSqlite
         return (source, menu)
 
@@ -158,22 +177,34 @@ class TextCommandParser:
         else:
             return self.textBibleVerseParser(commandList[1], texts[0], source)
 
-    def instant(self, command, source="main"):
+    def instantVerse(self, command, source="main"):
+        commandList = self.splitCommand(command)
+        biblesSqlite = BiblesSqlite()
+        bcvList = [int(i) for i in commandList[1].split(".")]
+        info = biblesSqlite.instantVerse(commandList[0], bcvList)
+        del biblesSqlite
+        return ("instant", info)
+
+    def instantWord(self, command, source="main"):
         commandList = self.splitCommand(command)
         biblesSqlite = BiblesSqlite()
         wordID = commandList[1]
         wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
-        info = biblesSqlite.instantMorphology(int(commandList[0]), int(wordID))
+        info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
         del biblesSqlite
         return ("instant", info)
 
-    def textStudy(self, command, source):
+    def textAnotherView(self, command, source):
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(commandList[1], texts[0], "study")
+            anotherView = {
+                "main": "study",
+                "study": "main",
+            }
+            return self.textBibleVerseParser(commandList[1], texts[0], anotherView[source])
 
     def textCompare(self, command, source="main"):
         commandText = ""
