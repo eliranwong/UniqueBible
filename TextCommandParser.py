@@ -22,8 +22,9 @@ class TextCommandParser:
             "lexicon": self.textLexicon,
             "discourse": self.textDiscourse,
             "search": self.textSearchBasic,
-            "isearch": self.textISearchBasic,
             "advancedsearch": self.textSearchAdvanced,
+            "isearch": self.textISearchBasic,
+            "advancedisearch": self.textISearchAdvanced,
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
@@ -188,8 +189,8 @@ class TextCommandParser:
     def instantVerse(self, command, source="main"):
         commandList = self.splitCommand(command)
         biblesSqlite = BiblesSqlite()
-        bcvList = [int(i) for i in commandList[1].split(".")]
-        info = biblesSqlite.instantVerse(commandList[0], bcvList)
+        b, c, v = [int(i) for i in commandList[1].split(".")]
+        info = biblesSqlite.instantVerse("interlinear", b, c, v)
         del biblesSqlite
         return ("instant", info)
 
@@ -279,6 +280,9 @@ class TextCommandParser:
 
     def textSearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED")
+
+    def textISearchAdvanced(self, command, source):
+        return self.textSearch(command, source, "ADVANCED", True)
 
     def textSearch(self, command, source, mode, interlinear=False):
         commandList = self.splitCommand(command)

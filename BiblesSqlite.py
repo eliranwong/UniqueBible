@@ -61,7 +61,7 @@ class BiblesSqlite:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         versions = self.cursor.fetchall()
-        exclude = ("Details", "lexicalEntry", "morphology", "original", "title")
+        exclude = ("Details", "lexicalEntry", "morphology", "original", "title", "interlinear")
         return [version[0] for version in versions if not version[0] in exclude]
 
     def getTexts(self):
@@ -181,39 +181,32 @@ class BiblesSqlite:
         formatedText = ""
         for verse in verses:
             b, c, v, verseText = verse
-            divTag = "<div>"
             if b < 40 and text in self.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
+            else:
+                divTag = "<div>"
             formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
             if interlinear:
                 if b < 40:
-                    divTag = "<div style='direction: rtl;'>"
+                    divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 else:
-                    divTag = "<div>"
+                    divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse("OHGB", b, c, v)[3])
         if mode == "BASIC":
             formatedText = re.sub("("+searchString+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
-            print(searchWords)
             for searchword in searchWords:
                 formatedText = re.sub("("+searchword+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
         return formatedText
 
-    def instantVerse(self, text, bcvList):
-        query = "SELECT * FROM morphology WHERE Book = ? AND Chapter = ? AND Verse = ? ORDER BY WordID"
-        self.cursor.execute(query, bcvList)
-        words = self.cursor.fetchall()
-        interlinearVerse = ""
-        for word in words:
-            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
-            if b < 40:
-                textWord = "<heb>{0}</heb>".format(textWord)
-            else:
-                textWord = "<grk>{0}</grk>".format(textWord)
-            interlinearVerse += "{0}<gloss>{1}</gloss> ".format(textWord, interlinear)
-        if bcvList[0] < 40:
-            interlinearVerse = "<div style='direction: rtl;'>{0}</div>".format(interlinearVerse)
+    def instantVerse(self, text, b, c, v):
+        interlinearVerse = self.readTextVerse("interlinear", b, c, v)[3]
+        if b < 40:
+            divTag = "<div style='direction: rtl;'>"
+        else:
+            divTag = "<div>"
+        interlinearVerse = "{0}{1}</div>".format(divTag, interlinearVerse)
         return interlinearVerse
 
     def instantWord(self, book, wordId):
