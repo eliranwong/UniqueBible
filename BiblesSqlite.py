@@ -243,9 +243,9 @@ class BiblesSqlite:
         for word in words:
             wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
             if b < 40:
-                textWord = "<heb>{0}</grk>".format(textWord)
+                textWord = "<heb>{0}</heb>".format(textWord)
             else:
-                textWord = "<grk>{0}</heb>".format(textWord)
+                textWord = "<grk>{0}</grk>".format(textWord)
             formatedText += "({0}{1}</ref>) {2} {3}<br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
         return formatedText
 
