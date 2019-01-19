@@ -77,12 +77,17 @@ class TextCommandParser:
                     menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
                     menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
-                    menu += "<hr>Compare with "
+                    menu += "<hr><b>Compare with:</b> "
                     for version in versions:
-                        menu += "<ref onclick='document.title=\"COMPARE:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
-                    menu += "<hr>Parallel with "
+                        menu += "{0} <input type='checkbox' id='compare{0}'> ".format(version)
+                        menu += "<script>versionList.push('{0}');</script>".format(version)
+                        #menu += "<ref onclick='document.title=\"COMPARE:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
+                    menu += "<button type='button' onclick='checkCompare();'>Go!</button>"
+                    menu += "<hr><b>Parallel with:</b> "
                     for version in versions:
-                        menu += "<ref onclick='document.title=\"PARALLEL:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
+                        menu += "{0} <input type='checkbox' id='parallel{0}'> ".format(version)
+                        #menu += "<ref onclick='document.title=\"PARALLEL:::{0}_{1}:::{2}\"'>{1}</ref> ".format(text, version, mainVerseReference)
+                    menu += "<button type='button' onclick='checkParallel();'>Go!</button>"
         del biblesSqlite
         return (source, menu)
 
