@@ -44,6 +44,7 @@ function getFullTextName(abbreviation) {
         tNRS: "New Revised Standard Version",
         tNTW: "N.T. Wright's New Testament",
         tOHGB: "Open Hebrew-Greek Bible",
+        tOHGBi: "Open Hebrew-Greek Bible [interlinear]",
         tRCUV: "Revised Chinese Union Version",
         tRSV: "Revised Standard Version",
         tTNK: "Tanak",
@@ -211,6 +212,14 @@ function hl0(id, cl, sn) {
     }
 }
 
+function w(book, wordID) {
+    document.title = "WORD:::"+book+":::"+wordID;
+}
+
+function iw(book, wordID) {
+    document.title = "_instantWord:::"+book+":::"+wordID;
+}
+
 function qV(v) {
     document.title = "_instantVerse:::"+activeText+":::"+activeB+"."+activeC+"."+v;
 }
@@ -225,7 +234,7 @@ function luV(v) {
 }
 
 function luW(v,wid,cl,lex,morph,bdb) {
-    
+    document.title = "WORD:::"+activeB+":::"+wid;
 }
 
 function checkCompare() {
@@ -235,7 +244,7 @@ function checkCompare() {
     } else {
         var compareTexts = compareList.join("_");
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
-        document.title = "COMPARE:::"+compareTexts+":::"+verseReference;
+        document.title = "COMPARE:::"+activeText+"_"+compareTexts+":::"+verseReference;
     }
 }
 
@@ -253,7 +262,7 @@ function checkParallel() {
     } else {
         var parallelTexts = parallelList.join("_");
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
-        document.title = "PARALLEL:::"+parallelTexts+":::"+verseReference;
+        document.title = "PARALLEL:::"+activeText+"_"+parallelTexts+":::"+verseReference;
     }
 }
 
@@ -262,4 +271,16 @@ function addParallel(value) {
     if (checkBox.checked == true){
         parallelList.push(value);
     }
+}
+
+function searchLexicalEntry(lexicalEntry) {
+    document.title = "LEMMA:::"+lexicalEntry;
+}
+
+function searchMorphologyCode(lexicalEntry, morphologyCode) {
+    document.title = "MORPHOLOGYCODE:::"+lexicalEntry+","+morphologyCode;
+}
+
+function searchMorphologyItem(lexicalEntry, morphologyItem) {
+    document.title = "MORPHOLOGY:::LexicalEntry LIKE '%"+lexicalEntry+",%' AND Morphology LIKE '%"+morphologyItem+"%'";
 }
