@@ -7,4 +7,4 @@ Please visit <a href="https://BibleTools.app" target="_blank">https://BibleTools
 
 # Screenshot:
 
-<img src="Screenshot/screenshot.png">
+<img src="screenshot.png">
