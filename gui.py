@@ -239,8 +239,8 @@ class MainWindow(QMainWindow):
             self.parallelMode += 1
             self.studyView.show()
         ratio = parallelRatio[self.parallelMode]
-        self.centralWidget.layout.setColumnStretch(1, ratio[0])
-        self.centralWidget.layout.setColumnStretch(2, ratio[1])
+        self.centralWidget.layout.setColumnStretch(0, ratio[0])
+        self.centralWidget.layout.setColumnStretch(1, ratio[1])
 
 
 class CentralWidget(QWidget):
@@ -259,12 +259,12 @@ class CentralWidget(QWidget):
         self.instantView.setHtml("Instant Information", baseUrl)
         #self.instantView.hide()
 
-        self.layout.addWidget(self.mainView, 0, 1)
-        self.layout.addWidget(self.studyView, 0, 2)
-        self.layout.addWidget(self.instantView, 1, 1, 1, 2)
+        self.layout.addWidget(self.mainView, 0, 0)
+        self.layout.addWidget(self.studyView, 0, 1)
+        self.layout.addWidget(self.instantView, 1, 0, 1, 2)
 
-        self.layout.setColumnStretch(1, 2)
-        self.layout.setColumnStretch(2, 1)
+        self.layout.setColumnStretch(0, 2)
+        self.layout.setColumnStretch(1, 1)
 
         self.layout.setRowStretch(0, 10)
         self.layout.setRowStretch(1, 2)
