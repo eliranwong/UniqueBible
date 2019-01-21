@@ -12,9 +12,9 @@ class MainWindow(QMainWindow):
 
         self.textCommandParser = TextCommandParser()
 
-        self.setWindowTitle('The Text App')
+        self.setWindowTitle('THE TEXT APP')
         
-        appIconFile = os.path.join("htmlResources", "TheText.png")
+        appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
         
@@ -40,9 +40,9 @@ class MainWindow(QMainWindow):
         del self.textCommandParser
 
     def create_menu(self):
-        appIconFile = os.path.join("htmlResources", "TheText.png")
+        appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
-        menu1 = self.menuBar().addMenu("&TheText.app")
+        menu1 = self.menuBar().addMenu("&theText.app")
         quit_action = QAction(appIcon, "E&xit",
                              self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
         # e.g. put all local files linked by html's content in folder "htmlResources"
         global baseUrl
-        relativePath = os.path.join("htmlResources", "TheText.png")
+        relativePath = os.path.join("htmlResources", "theText.png")
         absolutePath = os.path.abspath(relativePath)
         baseUrl = QUrl.fromLocalFile(absolutePath)
 
@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
         #newTextCommand = self.mainPage.title()
-        exceptionTuple = (self.textCommandLineEdit.text(), "TheText.app", "about:blank")
+        exceptionTuple = (self.textCommandLineEdit.text(), "theText.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
@@ -189,7 +189,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>TheText.app</title><link rel='stylesheet' type='text/css' href='bible.css'><script src='TheText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
+            html = "<!DOCTYPE html><html><head><title>theText.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
             html += content
             html += "</body></html>"
             views = {
@@ -250,7 +250,7 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        self.html = "<h1>TheText.app</h1><p>TheText.app</p>"
+        self.html = "<h1>theText.app</h1><p>theText.app</p>"
         self.mainView = WebEngineView()
         self.mainView.setHtml(self.html, baseUrl)
         self.studyView = WebEngineView()

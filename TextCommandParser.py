@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, BibleSqlite
-from ToolsSqlite import CrossReferenceSqlite
+from ToolsSqlite import CrossReferenceSqlite, LexiconData, ImageSqlite
 
 class TextCommandParser:
 
@@ -83,13 +83,13 @@ class TextCommandParser:
                     menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
                     menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
-                    menu += "<hr><b>Compare <span style='color: brown;'>{0}</span> with:</b> ".format(text)
+                    menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b> ".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                             menu += "<script>versionList.push('{0}');</script>".format(version)
                     menu += "<button type='button' onclick='checkCompare();'>Start Comparison</button>"
-                    menu += "<hr><b>Parallel <span style='color: brown;'>{0}</span> with:</b> ".format(text)
+                    menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b> ".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
@@ -272,8 +272,17 @@ class TextCommandParser:
     def textCommentary(self, command):
         return command # pending further development
 
-    def textLexicon(self, command):
-        return command # pending further development
+    def textLexicon(self, command, source):
+        commandList = self.splitCommand(command)
+        lexicon = commandList[0]
+        entry = commandList[1]
+        if not len(commandList) == 2 or not lexicon or not entry:
+            return self.invalidCommand()
+        else:
+            lexiconData = LexiconData()
+            content = lexiconData.lexicon(lexicon, entry)
+            del lexiconData
+            return ("study", content)
 
     def textDiscourse(self, command):
         return command # pending further development

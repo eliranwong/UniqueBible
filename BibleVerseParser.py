@@ -1,6 +1,6 @@
 """
 Previously uploaded at https://github.com/eliranwong/bible-verse-parser
-Modified for integration into TheText.app
+Modified for integration into theText.app
 
 A python parser to parse bible verse references from a text.
 
