@@ -1,7 +1,7 @@
 import os, sys, config
 from PySide2.QtCore import QUrl
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QApplication, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
+from PySide2.QtWidgets import (QAction, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 
@@ -32,6 +32,8 @@ class MainWindow(QMainWindow):
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
         self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.instantView = self.centralWidget.instantView
+        self.instantPage = self.instantView.page()
+        self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         self.setCentralWidget(self.centralWidget)
 
     def __del__(self):
@@ -155,6 +157,9 @@ class MainWindow(QMainWindow):
     def studyTextCommandChanged(self, newTextCommand):
         self.textCommandChanged(newTextCommand, "study")
 
+    def instantTextCommandChanged(self, newTextCommand):
+        self.textCommandChanged(newTextCommand, "instant")
+
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
         #newTextCommand = self.mainPage.title()
@@ -251,7 +256,7 @@ class CentralWidget(QWidget):
         self.studyView = WebEngineView()
         self.studyView.setHtml("Study View", baseUrl)
         self.instantView = WebEngineView()
-        self.instantView.setHtml("Quick Information", baseUrl)
+        self.instantView.setHtml("Instant Information", baseUrl)
         #self.instantView.hide()
 
         self.layout.addWidget(self.mainView, 0, 1)
@@ -299,14 +304,4 @@ class WebEngineViewPopover(QWebEngineView):
         if windowType == QWebEnginePage.WebBrowserTab:
             print("Testing new window 2")
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    mainWindow = MainWindow()
-    
-    # set full screen size
-    availableGeometry = app.desktop().availableGeometry(mainWindow)
-    mainWindow.resize(availableGeometry.width(), availableGeometry.height())
-    
-    mainWindow.show()
 
-    sys.exit(app.exec_())

@@ -11,7 +11,7 @@ class BiblesSqlite:
         self.database = os.path.join("marvelData", "bibles.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
-        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB"]
+        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 
     def __del__(self):
         self.connection.close()
@@ -30,7 +30,7 @@ class BiblesSqlite:
         return "<ref onclick='document.title=\"_menu:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(text, b, bookAbb)
 
     def formChapterTag(self, b, c, text=config.mainText):
-        return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"'>".format(text, b, c)
+        return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
 
     def formVerseTag(self, b, c, v, text=config.mainText):
         verseReference = self.bcvToVerseReference(b, c, v)
@@ -153,8 +153,8 @@ class BiblesSqlite:
     def readTranslations(self, b, c, v, texts):
         if texts == ["ALL"]:
             bibleList = self.getBibleList()
-            texts = ["OHGB", "LXX"]
-            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "OHGB")
+            texts = ["OHGB", "OHGBi", "LXX"]
+            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "OHGB", "OHGBi")
             for bible in bibleList:
                 if not bible in exclude:
                     texts.append(bible)
@@ -214,7 +214,7 @@ class BiblesSqlite:
         query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
         self.cursor.execute(query, t)
         word = self.cursor.fetchone()
-        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         morphology = morphology.replace(",", ", ")
         if b < 40:
             textWord = "<heb>{0}</heb>".format(textWord)
@@ -224,29 +224,58 @@ class BiblesSqlite:
             lexeme = "<grk>{0}</grk>".format(lexeme)
         return "{0} <span style='color: gray'>{1}</span> {2} {3} <span style='color: brown'>{4}</span> <span style='color: blue'>{5}</span>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
 
+    def wordData(self, book, wordId):
+        t = (book, wordId)
+        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+        verseReference = self.bcvToVerseReference(b, c, v)
+        firstLexicalEntry = lexicalEntry.split(",")[0]
+        lexicalEntry = "{0}".format(lexicalEntry[:-1].replace(",", ", "))
+        morphologyCode = "<ref onclick='searchMorphologyCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
+        #morphology = morphology[:-1].replace(",", ", ")
+        morphologyList = morphology[:-1].split(",")
+        morphology = ""
+        for counter, morphologyItem in enumerate(morphologyList):
+            morphology += "<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem)
+            if not counter == len(morphologyList) - 1:
+                morphology += ", "
+        if b < 40:
+            textWord = "<heb>{0}</heb>".format(textWord)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref>".format(firstLexicalEntry, lexeme)
+        else:
+            textWord = "<grk>{0}</grk>".format(textWord)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>".format(firstLexicalEntry, lexeme)
+        return "<h2>Word Data</h2><p><b>Verse:</b> {0}<br><b>Clause id:</b> {11}<br><b>Word id:</b> {12}<br><br><b>Word:</b> {1}<br><b>Transliteration:</b> {2}<br><b>Pronuciation:</b> {3}<br><br><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<br><br><b>Gloss:</b> {7}<br><b>Interlinear:</b> {8}<br><b>Translation:</b> {9}<br><b>Lexical entry:</b> {10}</p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID)
+
     def searchMorphology(self, mode, searchString):
+        formatedText = ""
         query = "SELECT * FROM morphology WHERE "
         if mode == "LEMMA":
+            formatedText += "<p>LEMMA:::{0}</p>".format(searchString)
             t = ("%{0},%".format(searchString),)
             query += "LexicalEntry LIKE ?"
         elif mode == "CODE":
+            formatedText += "<p>MORPHOLOGYCODE:::{0}</p>".format(searchString)
             searchList = searchString.split(',')
             t = ("%{0},%".format(searchList[0]), searchList[1])
             query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
         elif mode == "ADVANCED":
+            formatedText += "<p>MORPHOLOGY:::{0}</p>".format(searchString)
             t = ()
             query += searchString
         query += " ORDER BY Book, Chapter, Verse, WordID"
         self.cursor.execute(query, t)
         words = self.cursor.fetchall()
-        formatedText = ""
         for word in words:
-            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation = word
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+            firstLexicalEntry = lexicalEntry.split(",")[0]
             if b < 40:
-                textWord = "<heb>{0}</heb>".format(textWord)
+                textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
             else:
-                textWord = "<grk>{0}</grk>".format(textWord)
-            formatedText += "({0}{1}</ref>) {2} {3}<br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode)
+                textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
+            formatedText += "({0}{1}</ref>) {2} <ref onclick='searchMorphologyCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
         return formatedText
 
     def readMultipleVerses(self, text, verseList):
@@ -286,7 +315,7 @@ class BibleSqlite:
         self.database = os.path.join("marvelData", "bibles", text+".bible")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
-        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB"]
+        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 
     def __del__(self):
         self.connection.close()
