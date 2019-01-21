@@ -4,7 +4,7 @@
 
 import sys, config, pprint
 from PySide2.QtWidgets import QApplication
-from guiMainWindow import MainWindow
+from gui import MainWindow
 
 def setupMainWindow():
     # set full screen size
