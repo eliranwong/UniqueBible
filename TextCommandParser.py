@@ -171,7 +171,7 @@ class TextCommandParser:
             }
             views[view](text, verseList[0])
             if len(verseList) == 1:
-                chapters = self.getChaptersMenu()
+                chapters = self.getChaptersMenu(verseList[0][0], text)
                 chapterMenuTop = chapters+"<hr>"
                 chapterMenuBottom = "<hr>"+chapters
                 content = "{0}{1}{2}".format(chapterMenuTop, self.textFormattedBible(verseList[0], text), chapterMenuBottom)
@@ -314,7 +314,7 @@ class TextCommandParser:
         return self.textSearchMorphology(command, source, "LEMMA")
 
     def textMorphologyCode(self, command, source):
-        return self.textSearchMorphology(command, source, "CODE")
+        return self.textSearchMorphology(command, source, "MORPHOLOGYCODE")
 
     def textMorphology(self, command, source):
         return self.textSearchMorphology(command, source, "ADVANCED")

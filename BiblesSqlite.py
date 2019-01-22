@@ -168,24 +168,33 @@ class BiblesSqlite:
         return verses
 
     def searchBible(self, text, mode, searchString, interlinear=False):
+        formatedText = ""
         query = "SELECT * FROM {0} WHERE ".format(text)
         if mode == "BASIC":
+            searchCommand = "SEARCH"
+            if interlinear:
+                searchCommand = "ISEARCH"
+            formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
+            searchCommand = "ADVANCEDSEARCH"
+            if interlinear:
+                searchCommand = "ADVANCEDISEARCH"
+            formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
             t = ()
             query += searchString
         query += " ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, t)
         verses = self.cursor.fetchall()
-        formatedText = ""
+        formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(verses))
         for verse in verses:
             b, c, v, verseText = verse
             if b < 40 and text in self.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             else:
                 divTag = "<div>"
-            formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
+            formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
             if interlinear:
                 if b < 40:
                     divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
@@ -256,7 +265,7 @@ class BiblesSqlite:
             formatedText += "<p>LEMMA:::{0}</p>".format(searchString)
             t = ("%{0},%".format(searchString),)
             query += "LexicalEntry LIKE ?"
-        elif mode == "CODE":
+        elif mode == "MORPHOLOGYCODE":
             formatedText += "<p>MORPHOLOGYCODE:::{0}</p>".format(searchString)
             searchList = searchString.split(',')
             t = ("%{0},%".format(searchList[0]), searchList[1])
@@ -268,6 +277,7 @@ class BiblesSqlite:
         query += " ORDER BY Book, Chapter, Verse, WordID"
         self.cursor.execute(query, t)
         words = self.cursor.fetchall()
+        formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(words))
         for word in words:
             wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
             firstLexicalEntry = lexicalEntry.split(",")[0]
@@ -275,7 +285,7 @@ class BiblesSqlite:
                 textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
             else:
                 textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
-            formatedText += "({0}{1}</ref>) {2} <ref onclick='searchMorphologyCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchMorphologyCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
         return formatedText
 
     def readMultipleVerses(self, text, verseList):
