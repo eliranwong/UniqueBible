@@ -1,5 +1,8 @@
 ::selection {
-background: #ffb7b7;
+background: #ffb7b7; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+background: #ffb7b7; /* Gecko Browsers */
 }
 /* css for Greek data */
 @font-face {
@@ -35,7 +38,7 @@ direction: rtl;
 external {
 font-size: 80%;
 }
-red {
+red, sw {
 color: red;
 }
 blu {
