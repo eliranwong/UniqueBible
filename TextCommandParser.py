@@ -274,17 +274,28 @@ class TextCommandParser:
 
     def textLexicon(self, command, source):
         commandList = self.splitCommand(command)
-        lexicon = commandList[0]
-        entry = commandList[1]
-        if not len(commandList) == 2 or not lexicon or not entry:
-            return self.invalidCommand()
-        else:
+        if len(commandList) == 2:
             lexiconData = LexiconData()
-            content = lexiconData.lexicon(lexicon, entry)
+            content = lexiconData.lexicon(commandList[0], commandList[1])
             del lexiconData
             return ("study", content)
+        elif len(commandList) == 1:
+            type = commandList[0][0]
+            defaultLexicon = {
+                "H": "TBESH",
+                "G": "TBESG",
+                "E": "ConcordanceMorphology",
+                "L": "LXX",
+            }
+            defaultLexicon = defaultLexicon[type]
+            lexiconData = LexiconData()
+            content = lexiconData.lexicon(defaultLexicon, commandList[0])
+            del lexiconData
+            return ("study", content)
+        else:
+            return self.invalidCommand()
 
-    def textDiscourse(self, command):
+    def textDiscourse(self, command, source):
         return command # pending further development
 
     def textSearchBasic(self, command, source):

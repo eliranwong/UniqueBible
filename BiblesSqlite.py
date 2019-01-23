@@ -241,7 +241,8 @@ class BiblesSqlite:
         wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         verseReference = self.bcvToVerseReference(b, c, v)
         firstLexicalEntry = lexicalEntry.split(",")[0]
-        lexicalEntry = "{0}".format(lexicalEntry[:-1].replace(",", ", "))
+        #lexicalEntry = "{0}".format(lexicalEntry[:-1].replace(",", ", "))
+        lexicalEntry = ', '.join(["<ref onclick='lex(\"{0}\")'>{0}</ref>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchMorphologyCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         #morphology = morphology[:-1].replace(",", ", ")
         morphologyList = morphology[:-1].split(",")

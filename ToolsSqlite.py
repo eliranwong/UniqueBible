@@ -46,11 +46,28 @@ class LexiconData:
     def __del__(self):
         self.connection.close()
 
+    def getLexiconList(self):
+        t = ("table",)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        self.cursor.execute(query, t)
+        versions = self.cursor.fetchall()
+        exclude = ("Details",)
+        return [version[0] for version in versions if not version[0] in exclude]
+
+    def getSelectForm(self, lexiconList, entry):
+        selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
+        for lexicon in lexiconList:
+            selectForm += '<option value="{0}">{0}</option>'.format(lexicon)
+        selectForm += '</select></form></p>'
+        return selectForm
+
     def lexicon(self, module, entry):
         query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
-        contentText = information[0]
+        contentText = "<h2>{0} - {1}</h2>".format(module, entry)
+        contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
+        contentText += information[0]
         imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
         if imageList:
             imageSqlite = ImageSqlite()
