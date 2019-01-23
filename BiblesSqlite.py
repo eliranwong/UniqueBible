@@ -202,11 +202,16 @@ class BiblesSqlite:
                     divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse("OHGB", b, c, v)[3])
         if mode == "BASIC":
-            formatedText = re.sub("("+searchString+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
+            formatedText = re.sub("("+searchString+")", r"<sw>\1</sw>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
             for searchword in searchWords:
-                formatedText = re.sub("("+searchword+")", r"<span style='color:red;'>\1</span>", formatedText, flags=re.IGNORECASE)
+                formatedText = re.sub("("+searchword+")", r"<sw>\1</sw>", formatedText, flags=re.IGNORECASE)
+        p = re.compile("(<[^<>]*?)<sw>(.*?)</sw>", flags=re.M)
+        s = p.search(formatedText)
+        while s:
+            formatedText = re.sub(p, r"\1\2", formatedText)
+            s = p.search(formatedText)
         return formatedText
 
     def instantVerse(self, text, b, c, v):
@@ -241,7 +246,6 @@ class BiblesSqlite:
         wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         verseReference = self.bcvToVerseReference(b, c, v)
         firstLexicalEntry = lexicalEntry.split(",")[0]
-        #lexicalEntry = "{0}".format(lexicalEntry[:-1].replace(",", ", "))
         lexicalEntry = ', '.join(["<ref onclick='lex(\"{0}\")'>{0}</ref>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchMorphologyCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         #morphology = morphology[:-1].replace(",", ", ")

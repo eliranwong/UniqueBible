@@ -197,7 +197,16 @@ class MainWindow(QMainWindow):
                 "study": self.studyView,
                 "instant": self.instantView,
             }
-            views[view].setHtml(html, baseUrl)
+            if view == "study":
+                # save html in a separate file
+                outputFile = os.path.join("htmlResources", "study.html")
+                f = open(outputFile,'w')
+                f.write(html)
+                f.close()
+                fullOutputPath = os.path.abspath(outputFile)
+                self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
+            else:
+                views[view].setHtml(html, baseUrl)
             if addRecord == True:
                 self.addHistoryRecord(view, textCommand)
 
