@@ -17,9 +17,9 @@ class BiblesSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        Parser = BibleVerseParser("YES")
-        verseReference = Parser.bcvToVerseReference(b, c, v)
-        del Parser
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
         return verseReference
 
     def formTextTag(self, text=config.mainText):

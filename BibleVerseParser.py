@@ -1051,9 +1051,9 @@ if __name__ == '__main__':
     standardisation = input("Do you want to standardise the format of all bible verse references? [YES/NO] ")
 
     # create an instance of BibleVerseParser
-    Parser = BibleVerseParser(standardisation)
+    parser = BibleVerseParser(standardisation)
     # start parsing
-    Parser.startParsing(inputName)
+    parser.startParsing(inputName)
 
     # example of using extractAllReferences(text)
     # text = input("Enter text containing verse references: ")
@@ -1061,4 +1061,4 @@ if __name__ == '__main__':
     # print(verseReferences)
 
     # delete object
-    del Parser
+    del parser

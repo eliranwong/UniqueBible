@@ -12,9 +12,9 @@ class CrossReferenceSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        Parser = BibleVerseParser("YES")
-        verseReference = Parser.bcvToVerseReference(b, c, v)
-        del Parser
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
         return verseReference
 
     def scrollMapper(self, bcvTuple):
@@ -34,6 +34,37 @@ class CrossReferenceSqlite:
             return ""
         else:
             return information[0]
+
+
+class ImageSqlite:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "images.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def exportImage(self, module, entry):
+        query = "SELECT image FROM {0} WHERE path = ?".format(module)
+        entry = "{0}_{1}".format(module, entry)
+        self.cursor.execute(query, (entry,))
+        information = self.cursor.fetchone()
+        if information:
+            htmlImageFolder = os.path.join("htmlResources", "images")
+            if not os.path.isdir(htmlImageFolder):
+                os.mkdir(htmlImageFolder)
+            imageFolder = os.path.join(htmlImageFolder, module)
+            if not os.path.isdir(imageFolder):
+                os.mkdir(imageFolder)
+            imageFilePath = os.path.join(imageFolder, entry)
+            if not os.path.isfile(imageFilePath):
+                imagefile = open(imageFilePath, "wb")
+                imagefile.write(information[0])
+                imagefile.close()
+
 
 class LexiconData:
 
@@ -80,31 +111,37 @@ class LexiconData:
         else:
             return contentText
 
-class ImageSqlite:
+
+class DictionaryData:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "images.sqlite")
+        self.database = os.path.join("marvelData", "data", "dictionary.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
         self.connection.close()
 
-    def exportImage(self, module, entry):
-        query = "SELECT image FROM {0} WHERE path = ?".format(module)
-        entry = "{0}_{1}".format(module, entry)
+    def getContent(self, entry):
+        query = "SELECT content FROM Dictionary WHERE path = ?"
         self.cursor.execute(query, (entry,))
-        information = self.cursor.fetchone()
-        if information:
-            htmlImageFolder = os.path.join("htmlResources", "images")
-            if not os.path.isdir(htmlImageFolder):
-                os.mkdir(htmlImageFolder)
-            imageFolder = os.path.join(htmlImageFolder, module)
-            if not os.path.isdir(imageFolder):
-                os.mkdir(imageFolder)
-            imageFilePath = os.path.join(imageFolder, entry)
-            if not os.path.isfile(imageFilePath):
-                imagefile = open(imageFilePath, "wb")
-                imagefile.write(information[0])
-                imagefile.close()
+        content = self.cursor.fetchone()[0]
+        return content
+
+class EncyclopediaData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "encyclopedia.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, module, entry):
+        query = "SELECT content FROM {0} WHERE path = ?".format(module)
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()[0]
+        return content

@@ -1,9 +1,10 @@
 import os, sys, config
-from PySide2.QtCore import QUrl
+from PySide2.QtCore import QUrl, Qt
 from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QAction, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
+from BibleVerseParser import BibleVerseParser
 
 class MainWindow(QMainWindow):
 
@@ -162,7 +163,6 @@ class MainWindow(QMainWindow):
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        #newTextCommand = self.mainPage.title()
         exceptionTuple = (self.textCommandLineEdit.text(), "theText.app", "about:blank")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
@@ -254,17 +254,18 @@ class MainWindow(QMainWindow):
 
 class CentralWidget(QWidget):
 
-    def __init__(self, parent):        
+    def __init__(self, parent):
         super().__init__()
+        self.parent = parent
         self.layout = QGridLayout()
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
         self.html = "<h1>theText.app</h1><p>theText.app</p>"
-        self.mainView = WebEngineView()
+        self.mainView = WebEngineView(self, "main")
         self.mainView.setHtml(self.html, baseUrl)
-        self.studyView = WebEngineView()
+        self.studyView = WebEngineView(self, "study")
         self.studyView.setHtml("Study View", baseUrl)
-        self.instantView = WebEngineView()
+        self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("Instant Information", baseUrl)
         #self.instantView.hide()
 
@@ -282,8 +283,85 @@ class CentralWidget(QWidget):
 
 
 class WebEngineView(QWebEngineView):
-    def __init__(self):
+
+    def __init__(self, parent, name):
         super().__init__()
+        self.parent = parent
+        self.name = name
+        self.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.selectionChanged.connect(self.updateContextMenu)
+        self.addMenuActions();
+
+    def updateContextMenu(self):
+        text = self.getText()
+        parser = BibleVerseParser("YES")
+        book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
+        del parser
+        self.searchText.setText("Search in {0}".format(text))
+        self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
+        self.iSearchText.setText("iSearch in {0}".format(text))
+        self.iSearchTextInBook.setText("iSearch in {0} > {1}".format(text, book))
+
+    def getText(self):
+        text = {
+            "main": config.mainText,
+            "study": config.studyText,
+            "instant": config.mainText,
+        }
+        return text[self.name]
+
+    def getBook(self):
+        book = {
+            "main": config.mainB,
+            "study": config.studyB,
+            "instant": config.mainB,
+        }
+        return book[self.name]
+
+    def addMenuActions(self):
+        copyText = QAction(self)
+        copyText.setText("Copy")
+        copyText.triggered.connect(self.copySelectedText)
+        self.addAction(copyText)
+        
+        self.searchText = QAction(self)
+        self.searchText.setText("Search")
+        self.searchText.triggered.connect(self.searchSelectedText)
+        self.addAction(self.searchText)
+
+        self.searchTextInBook = QAction(self)
+        self.searchTextInBook.setText("Search in Book")
+        self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
+        self.addAction(self.searchTextInBook)
+
+        self.iSearchText = QAction(self)
+        self.iSearchText.setText("iSearch")
+        self.iSearchText.triggered.connect(self.iSearchSelectedText)
+        self.addAction(self.iSearchText)
+
+        self.iSearchTextInBook = QAction(self)
+        self.iSearchTextInBook.setText("iSearch in Book")
+        self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
+        self.addAction(self.iSearchTextInBook)
+
+    def copySelectedText(self):
+        self.page().triggerAction(self.page().Copy)
+
+    def searchSelectedText(self):
+        searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+        self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchSelectedTextInBook(self):
+        searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+        self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def iSearchSelectedText(self):
+        searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+        self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def iSearchSelectedTextInBook(self):
+        searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+        self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def createWindow(self, windowType):
         # an example: https://stackoverflow.com/questions/47897467/qwebengine-open-createwindow-if-target-blank

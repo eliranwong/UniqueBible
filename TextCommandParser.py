@@ -11,8 +11,8 @@ class TextCommandParser:
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
             "_info": self.textInfo,
-            "main": self.textAnotherView,
-            "study": self.textAnotherView,
+            "main": self.textMain,
+            "study": self.textStudy,
             "bible": self.textBible,
             "compare": self.textCompare,
             "parallel": self.textParallel,
@@ -116,9 +116,9 @@ class TextCommandParser:
         return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):
-        Parser = BibleVerseParser("YES")
-        verseList = Parser.extractAllReferences(text, tagged)
-        del Parser
+        parser = BibleVerseParser("YES")
+        verseList = parser.extractAllReferences(text, tagged)
+        del parser
         return verseList
 
     def invalidCommand(self, source="main"):
@@ -181,6 +181,8 @@ class TextCommandParser:
                 return (view, content)
 
     def textBible(self, command, source="main"):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
@@ -205,17 +207,21 @@ class TextCommandParser:
         del biblesSqlite
         return ("instant", info)
 
-    def textAnotherView(self, command, source):
+    def textMain(self, command, source):
+        return self.textAnotherView(command, "main")
+
+    def textStudy(self, command, source):
+        return self.textAnotherView(command, "study")
+
+    def textAnotherView(self, command, target):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
-            anotherView = {
-                "main": "study",
-                "study": "main",
-            }
-            return self.textBibleVerseParser(commandList[1], texts[0], anotherView[source])
+            return self.textBibleVerseParser(commandList[1], texts[0], target)
 
     def textCompare(self, command, source="main"):
         commandText = ""
@@ -247,9 +253,9 @@ class TextCommandParser:
             if not confirmedTexts:
                 return self.invalidCommand()
             else:
-                biblesSqlite = BiblesSqlite()
-                mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-                del biblesSqlite
+                parser = BibleVerseParser("YES")
+                mainVerseReference = parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+                del parser
                 titles = ""
                 verses = ""
                 for text in confirmedTexts:
@@ -311,6 +317,8 @@ class TextCommandParser:
         return self.textSearch(command, source, "ADVANCED", True)
 
     def textSearch(self, command, source, mode, interlinear=False):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
         if not len(commandList) == 2 or not texts:
