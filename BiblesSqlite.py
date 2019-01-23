@@ -247,7 +247,7 @@ class BiblesSqlite:
         verseReference = self.bcvToVerseReference(b, c, v)
         firstLexicalEntry = lexicalEntry.split(",")[0]
         lexicalEntry = ', '.join(["<ref onclick='lex(\"{0}\")'>{0}</ref>".format(entry) for entry in lexicalEntry[:-1].split(",")])
-        morphologyCode = "<ref onclick='searchMorphologyCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
+        morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         #morphology = morphology[:-1].replace(",", ", ")
         morphologyList = morphology[:-1].split(",")
         morphology = ""
@@ -290,7 +290,7 @@ class BiblesSqlite:
                 textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
             else:
                 textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
-            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchMorphologyCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
         return formatedText
 
     def readMultipleVerses(self, text, verseList):
