@@ -284,3 +284,11 @@ function searchMorphologyCode(lexicalEntry, morphologyCode) {
 function searchMorphologyItem(lexicalEntry, morphologyItem) {
     document.title = "MORPHOLOGY:::LexicalEntry LIKE '%"+lexicalEntry+",%' AND Morphology LIKE '%"+morphologyItem+"%'";
 }
+
+function lexicon(module, entry) {
+    document.title = "LEXICON:::"+module+":::"+entry;
+}
+
+function lex(entry) {
+    document.title = "LEXICON:::"+entry;
+}
