@@ -277,6 +277,10 @@ function searchLexicalEntry(lexicalEntry) {
     document.title = "LEMMA:::"+lexicalEntry;
 }
 
+function searchCode(lexicalEntry, morphologyCode) {
+    document.title = "MORPHOLOGYCODE:::"+lexicalEntry+","+morphologyCode;
+}
+
 function searchMorphologyCode(lexicalEntry, morphologyCode) {
     document.title = "MORPHOLOGYCODE:::"+lexicalEntry+","+morphologyCode;
 }
