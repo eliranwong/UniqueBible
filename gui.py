@@ -178,11 +178,12 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
-        result = self.textCommandParser.parser(textCommand, source)
-        view = result[0]
-        content = result[1]
+        view, content = self.textCommandParser.parser(textCommand, source)
         if content == "INVALID_COMMAND_ENTERED":
             pass
+            #self.mainPage.runJavaScript("alert('Invalid command entered.')")
+        elif view == "command":
+            self.textCommandLineEdit.setText(content)
         else:
             activeBCVsettings = ""
             if view == "main":
@@ -207,8 +208,6 @@ class MainWindow(QMainWindow):
                 self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
             elif view == "popover":
                 self.mainView.openPopover(html=html)
-            elif view == "command":
-                pass
             else:
                 views[view].setHtml(html, baseUrl)
             if addRecord == True:

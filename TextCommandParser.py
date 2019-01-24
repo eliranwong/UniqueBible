@@ -12,6 +12,7 @@ class TextCommandParser:
             "_menu": self.textMenu,
             "_info": self.textInfo,
             "_image": self.textImage,
+            "_command": self.textCommand,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -50,6 +51,9 @@ class TextCommandParser:
                 return interpreters[resourceType](command, source)
             else:
                 return self.textBibleVerseParser(textCommad)        
+
+    def textCommand(self, command, source="main"):
+        return ("command", command)
 
     def textInfo(self, command, source="main"):
         return ("instant", command)
