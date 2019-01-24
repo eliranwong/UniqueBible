@@ -1,3 +1,4 @@
+myGoogleApiKey = ''
 fontSize = 120
 mainText = 'KJV'
 mainB = 1
