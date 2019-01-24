@@ -333,3 +333,7 @@ function exlbp(entry) {
 function exlbt(entry) {
     document.title = "EXLB:::exlbt:::"+entry;
 }
+
+function openImage(module, entry) {
+    document.title = "_image:::"+module+":::"+entry;
+}
