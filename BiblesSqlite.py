@@ -167,13 +167,38 @@ class BiblesSqlite:
             verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
+    def countSearchBible(self, text, searchString, interlinear=False):
+        if interlinear:
+            content = "ISEARCH:::{0}:::{1}".format(text, searchString)
+            showCommand = "SHOWISEARCH"
+            searchFunction = "iSearchBibleBook"
+        else:
+            content = "SEARCH:::{0}:::{1}".format(text, searchString)
+            showCommand = "SHOWSEARCH"
+            searchFunction = "searchBibleBook"
+        bookList = self.getBookList(text)
+        bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
+        content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}.</p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
+        for counter, bookCount in enumerate(bookCountList):
+            book = bookList[counter]
+            bookAbb = self.bcvToVerseReference(book, 1, 1)[:-4]
+            content += "<tr><td><ref onclick='tbcv(\"{0}\", {1}, 1, 1)' onmouseover='bookName(\"{2}\")'>{2}</ref></td><td><ref onclick='{5}(\"{0}\", \"{1}\", \"{3}\")'>{4}</ref></td></tr>".format(text, book, bookAbb, searchString, bookCount, searchFunction)
+        content += "</table>"
+        return content
+    
+    def countSearchBook(self, text, book, searchString):
+        query = "SELECT Verse FROM {0} WHERE Book = ? AND Scripture LIKE ?".format(text)
+        t = (book, "%{0}%".format(searchString))
+        self.cursor.execute(query, t)
+        return len(self.cursor.fetchall())
+
     def searchBible(self, text, mode, searchString, interlinear=False):
         formatedText = ""
         query = "SELECT * FROM {0} WHERE ".format(text)
         if mode == "BASIC":
-            searchCommand = "SEARCH"
+            searchCommand = "SHOWSEARCH"
             if interlinear:
-                searchCommand = "ISEARCH"
+                searchCommand = "SHOWISEARCH"
             formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
@@ -187,7 +212,7 @@ class BiblesSqlite:
         query += " ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, t)
         verses = self.cursor.fetchall()
-        formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(verses))
+        formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
         for verse in verses:
             b, c, v, verseText = verse
             if b < 40 and text in self.rtlTexts:

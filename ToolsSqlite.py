@@ -66,6 +66,39 @@ class ImageSqlite:
                 imagefile.close()
 
 
+class IndexesSqlite:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "indexes.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getAllIndexes(self, bcvTuple):
+        indexList = ["exlbp", "exlbl", "exlbt", "dictionaries", "encyclopedia"]
+        indexHeading = ["Characters", "Locations", "Topics", "Dictionaries", "Encyclopedia"]
+        content = ""
+        for counter, index in enumerate(indexList):
+            content += "<h2>{0}</h2>".format(indexHeading[counter])
+            content += self.getContent(index, bcvTuple)
+        return content
+
+    def getContent(self, table, bcvTuple):
+        query = "SELECT Information FROM {0} WHERE Book = ? AND Chapter = ? AND Verse = ?".format(table)
+        self.cursor.execute(query, bcvTuple)
+        content = self.cursor.fetchone()
+        if not content:
+            return "[N/A]"
+        else:
+            if table == "dictionaries" or table == "encyclopedia":
+                return "<table>{0}</table>".format(content[0])
+            else:
+                return content[0]
+
+
 class LexiconData:
 
     def __init__(self):
@@ -126,8 +159,12 @@ class DictionaryData:
     def getContent(self, entry):
         query = "SELECT content FROM Dictionary WHERE path = ?"
         self.cursor.execute(query, (entry,))
-        content = self.cursor.fetchone()[0]
-        return content
+        content = self.cursor.fetchone()
+        if not content:
+            return ""
+        else:
+            return content[0]
+
 
 class EncyclopediaData:
 
@@ -143,5 +180,8 @@ class EncyclopediaData:
     def getContent(self, module, entry):
         query = "SELECT content FROM {0} WHERE path = ?".format(module)
         self.cursor.execute(query, (entry,))
-        content = self.cursor.fetchone()[0]
-        return content
+        content = self.cursor.fetchone()
+        if not content:
+            return ""
+        else:
+            return content[0]

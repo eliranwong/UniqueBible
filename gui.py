@@ -344,24 +344,42 @@ class WebEngineView(QWebEngineView):
         self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
         self.addAction(self.iSearchTextInBook)
 
+    def messageNoSelection(self):
+        self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
+
     def copySelectedText(self):
-        self.page().triggerAction(self.page().Copy)
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            self.page().triggerAction(self.page().Copy)
 
     def searchSelectedText(self):
-        searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
-        self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedTextInBook(self):
-        searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
-        self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def iSearchSelectedText(self):
-        searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
-        self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def iSearchSelectedTextInBook(self):
-        searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
-        self.parent.parent.textCommandChanged(searchCommand, self.name)
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def createWindow(self, windowType):
         # an example: https://stackoverflow.com/questions/47897467/qwebengine-open-createwindow-if-target-blank

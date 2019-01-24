@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, BibleSqlite
-from ToolsSqlite import CrossReferenceSqlite, LexiconData, ImageSqlite
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData
 
 class TextCommandParser:
 
@@ -21,14 +21,17 @@ class TextCommandParser:
             "commentary": self.textCommentary,
             "lexicon": self.textLexicon,
             "discourse": self.textDiscourse,
-            "search": self.textSearchBasic,
+            "search": self.textCountSearch,
+            "showsearch": self.textSearchBasic,
             "advancedsearch": self.textSearchAdvanced,
-            "isearch": self.textISearchBasic,
+            "isearch": self.textCountISearch,
+            "showisearch": self.textISearchBasic,
             "advancedisearch": self.textISearchAdvanced,
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
             "searchbook": self.textSearchBook,
+            "index": self.textIndex,
             "exlb": self.textEXLB,
             "dictionary": self.textDictionary,
             "encyclopedia": self.textEncyclopedia,
@@ -81,7 +84,8 @@ class TextCommandParser:
                     menu += "<hr>"
                     menu += "<ref onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</ref> | ".format(mainVerseReference)
                     menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
-                    menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref>".format(mainVerseReference)
+                    menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref> | ".format(mainVerseReference)
+                    menu += "<ref onclick='document.title=\"INDEX:::{0}\"'>Indexes</ref>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b> ".format(text)
                     for version in versions:
@@ -304,6 +308,25 @@ class TextCommandParser:
     def textDiscourse(self, command, source):
         return command # pending further development
 
+    def textCountSearch(self, command, source):
+        return self.textCount(command, False)
+
+    def textCountISearch(self, command, source):
+        return self.textCount(command, True)
+
+    def textCount(self, command, interlinear):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.mainText, command)
+        commandList = self.splitCommand(command)
+        texts = self.getConfirmedTexts(commandList[0])
+        if not len(commandList) == 2 or not texts:
+            return self.invalidCommand()
+        else:
+            biblesSqlite = BiblesSqlite()
+            searchResult = biblesSqlite.countSearchBible(texts[0], commandList[1], interlinear)
+            del biblesSqlite
+            return ("study", searchResult)
+
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC")
 
@@ -350,11 +373,25 @@ class TextCommandParser:
     def textEXLB(self, command):
         return command # pending further development
 
-    def textDictionary(self, command):
-        return command # pending further development
+    def textDictionary(self, command, source):
+        dictionaryData = DictionaryData()
+        content = dictionaryData.getContent(command)
+        if not content:
+            return self.invalidCommand("study")
+        else:
+            return ("study", content)
 
-    def textEncyclopedia(self, command):
-        return command # pending further development
+    def textEncyclopedia(self, command, source):
+        commandList = self.splitCommand(command)
+        if commandList and len(commandList) == 2:
+            encyclopediaData = EncyclopediaData()
+            content = encyclopediaData.getContent(commandList[0], commandList[1])
+            if not content:
+                return self.invalidCommand("study")
+            else:
+                return ("study", content)
+        else:
+            return self.invalidCommand("study")
 
     def textCrossReference(self, command, source):
         verseList = self.extractAllVerses(command)
@@ -373,9 +410,9 @@ class TextCommandParser:
                 else:
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-            del crossReferenceSqlite
-            del biblesSqlite
-            return ("study", content) # pending further development
+        del crossReferenceSqlite
+        del biblesSqlite
+        return ("study", content)
 
     def tske(self, command, source):
         verseList = self.extractAllVerses(command)
@@ -396,7 +433,23 @@ class TextCommandParser:
                 else:
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-            del crossReferenceSqlite
-            del biblesSqlite
-            return ("study", content) # pending further development
+        del crossReferenceSqlite
+        del biblesSqlite
+        return ("study", content)
 
+    def textIndex(self, command, source):
+        verseList = self.extractAllVerses(command)
+        parser = BibleVerseParser("YES")
+        indexesSqlite = IndexesSqlite()
+        content = ""
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            for verse in verseList:
+                b, c, v = verse
+                content += "<h2>Indexes: {0}</h2>".format(parser.bcvToVerseReference(b, c, v))
+                content += indexesSqlite.getAllIndexes(verse)
+                content += "<hr>"
+        del indexesSqlite
+        del parser
+        return ("study", content)
