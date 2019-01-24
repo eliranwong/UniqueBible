@@ -337,3 +337,23 @@ function exlbt(entry) {
 function openImage(module, entry) {
     document.title = "_image:::"+module+":::"+entry;
 }
+
+function searchDict(module) {
+    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+}
+
+function searchEncyc(module) {
+    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+}
+
+function rmac(entry) {
+    document.title = "SEARCHTOOL:::mRMAC:::"+entry;
+}
+
+function etcbcmorph(entry) {
+    document.title = "SEARCHTOOL:::mETCBC:::"+entry;
+}
+
+function lxxmorph(entry) {
+    document.title = "SEARCHTOOL:::mLXX:::"+entry;
+}
