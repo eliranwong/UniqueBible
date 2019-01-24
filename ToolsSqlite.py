@@ -1,4 +1,4 @@
-import os, sqlite3, re
+import os, sqlite3, re, config
 
 class CrossReferenceSqlite:
 
@@ -91,12 +91,42 @@ class IndexesSqlite:
         self.cursor.execute(query, bcvTuple)
         content = self.cursor.fetchone()
         if not content:
-            return "[N/A]"
+            return "[not applicable]"
         else:
             if table == "dictionaries" or table == "encyclopedia":
                 return "<table>{0}</table>".format(content[0])
             else:
                 return content[0]
+
+
+class SearchSqlite:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "search.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, module, entry):
+        query = "SELECT link FROM {0} WHERE EntryID = ?".format(module)
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return content[0]
+
+    def getSimilarContent(self, module, entry):
+        query = "SELECT link FROM {0} WHERE EntryID LIKE ? AND EntryID != ?".format(module)
+        self.cursor.execute(query, ("%{0}%".format(entry), entry))
+        contentList = [m[0] for m in self.cursor.fetchall()]
+        if not contentList:
+            return "[not found]"
+        else:
+            return "<br>".join(contentList)
 
 
 class LexiconData:
@@ -206,4 +236,8 @@ class ExlbData:
         if not content:
             return ""
         else:
-            return re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
+            if module == "exlbl":
+                content = re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
+                return content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
+            else:
+                return content[0]

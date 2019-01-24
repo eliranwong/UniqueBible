@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, BibleSqlite
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite
 
 class TextCommandParser:
 
@@ -28,6 +28,7 @@ class TextCommandParser:
             "isearch": self.textCountISearch,
             "showisearch": self.textISearchBasic,
             "advancedisearch": self.textISearchAdvanced,
+            "searchtool": self.textSearchTool,
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
@@ -194,6 +195,14 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return self.textBibleVerseParser(commandList[1], texts[0], source)
+
+    def textSearchTool(self, command, source="main"):
+        module, entry = self.splitCommand(command)
+        searchSqlite = SearchSqlite()
+        exactMatch = searchSqlite.getContent(module, entry)
+        similarMatch = searchSqlite.getSimilarContent(module, entry)
+        del searchSqlite
+        return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}</b>".format(module, entry, exactMatch, similarMatch))
 
     def textImage(self, command, source):
         module, entry = self.splitCommand(command)

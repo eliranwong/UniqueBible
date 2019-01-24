@@ -1,4 +1,4 @@
-#! /Users/eliranwong/Desktop/venv/venv/bin/python
+#! /Users/Eliran/Desktop/venv/venv/bin/python
 # development in progress
 # visit https://BibleTools.app for more information
 
@@ -25,7 +25,8 @@ def setCurrentRecord():
 
 def saveDataOnExit():
     fileObj = open("config.py", "w")
-    fileObj.write("fontSize = "+pprint.pformat(config.fontSize))
+    fileObj.write("myGoogleApiKey = "+pprint.pformat(config.myGoogleApiKey))
+    fileObj.write("\nfontSize = "+pprint.pformat(config.fontSize))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))

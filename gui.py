@@ -207,6 +207,8 @@ class MainWindow(QMainWindow):
                 self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
             elif view == "popover":
                 self.mainView.openPopover(html=html)
+            elif view == "command":
+                pass
             else:
                 views[view].setHtml(html, baseUrl)
             if addRecord == True:
