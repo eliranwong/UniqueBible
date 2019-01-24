@@ -205,6 +205,8 @@ class MainWindow(QMainWindow):
                 f.close()
                 fullOutputPath = os.path.abspath(outputFile)
                 self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
+            elif view == "popover":
+                self.mainView.openPopover(html=html)
             else:
                 views[view].setHtml(html, baseUrl)
             if addRecord == True:
@@ -382,31 +384,21 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def createWindow(self, windowType):
-        # an example: https://stackoverflow.com/questions/47897467/qwebengine-open-createwindow-if-target-blank
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:
-            print("Testing new window 1")
-            # read textCommand, placed in document.title with javascript
-            textCommand = self.title()
-            self.runTextCommand(textCommand)
+            self.openPopover()
         return super().createWindow(windowType)
 
-    def runTextCommand(self, textCommand):
-
-        # content in unicode html format - Content larger than 2 MB cannot be displayed
-        print("Text Command: "+textCommand) # develop further from here to handle text command
-        html = textCommand # develop further from here to handle text command
-
-        self.popoverView = WebEngineViewPopover()
+    def openPopover(self, name="popover", html="theText.app"):
+        self.popoverView = WebEngineViewPopover(self, name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
 
 
 class WebEngineViewPopover(QWebEngineView):
-    def __init__(self):
+    def __init__(self, parent, name):
         super().__init__()
+        self.parent = parent
+        self.name = name
 
-    def createWindow(self, windowType):
-        if windowType == QWebEnginePage.WebBrowserTab:
-            print("Testing new window 2")
 
 

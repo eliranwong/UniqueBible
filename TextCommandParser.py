@@ -11,6 +11,7 @@ class TextCommandParser:
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
             "_info": self.textInfo,
+            "_image": self.textImage,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -193,6 +194,14 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return self.textBibleVerseParser(commandList[1], texts[0], source)
+
+    def textImage(self, command, source):
+        module, entry = self.splitCommand(command)
+        imageSqlite = ImageSqlite()
+        imageSqlite.exportImage(module, entry)
+        del imageSqlite
+        content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
+        return ("popover", content)
 
     def instantVerse(self, command, source="main"):
         commandList = self.splitCommand(command)

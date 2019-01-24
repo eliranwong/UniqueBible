@@ -132,11 +132,12 @@ class LexiconData:
         contentText = "<h2>{0} - {1}</h2>".format(module, entry)
         contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
         contentText += information[0]
+        # deal with images
         imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
         if imageList:
             imageSqlite = ImageSqlite()
             for (module, entry) in imageList:
-                content = imageSqlite.exportImage(module, entry)
+                imageSqlite.exportImage(module, entry)
             del imageSqlite
         contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
         if not information:
@@ -205,4 +206,4 @@ class ExlbData:
         if not content:
             return ""
         else:
-            return content[0]
+            return re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
