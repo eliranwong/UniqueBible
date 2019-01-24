@@ -321,3 +321,15 @@ function searchBibleBook(text, book, searchString) {
 function iSearchBibleBook(text, book, searchString) {
     document.title = "ADVANCEDISEARCH:::"+text+":::Book = "+book+" AND Scripture LIKE '%"+searchString+"%'";
 }
+
+function exlbl(entry) {
+    document.title = "EXLB:::exlbl:::"+entry;
+}
+
+function exlbp(entry) {
+    document.title = "EXLB:::exlbp:::"+entry;
+}
+
+function exlbt(entry) {
+    document.title = "EXLB:::exlbt:::"+entry;
+}
