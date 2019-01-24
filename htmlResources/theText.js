@@ -171,6 +171,11 @@ function mbbcvToVerseRefence(b,c,v) {
     return abb+" "+c+":"+v;
 }
 
+function tbcv(text,b,c,v) {
+    var verseReference = bcvToVerseRefence(b,c,v);
+    document.title = "BIBLE:::"+text+":::"+verseReference;
+}
+
 function bcv(b,c,v) {
     var verseReference = bcvToVerseRefence(b,c,v);
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
@@ -295,4 +300,24 @@ function lexicon(module, entry) {
 
 function lex(entry) {
     document.title = "LEXICON:::"+entry;
+}
+
+function encyclopedia(module, entry) {
+    document.title = "ENCYCLOPEDIA:::"+module+":::"+entry;
+}
+
+function bibleDict(entry) {
+    document.title = "DICTIONARY:::"+entry;
+}
+
+function exlbt(entry) {
+    document.title = "TOPIC:::"+entry;
+}
+
+function searchBibleBook(text, book, searchString) {
+    document.title = "ADVANCEDSEARCH:::"+text+":::Book = "+book+" AND Scripture LIKE '%"+searchString+"%'";
+}
+
+function iSearchBibleBook(text, book, searchString) {
+    document.title = "ADVANCEDISEARCH:::"+text+":::Book = "+book+" AND Scripture LIKE '%"+searchString+"%'";
 }
