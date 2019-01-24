@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, BibleSqlite
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData
 
 class TextCommandParser:
 
@@ -32,7 +32,7 @@ class TextCommandParser:
             "morphology": self.textMorphology,
             "searchbook": self.textSearchBook,
             "index": self.textIndex,
-            "exlb": self.textEXLB,
+            "exlb": self.textExlb,
             "dictionary": self.textDictionary,
             "encyclopedia": self.textEncyclopedia,
             "crossreference": self.textCrossReference,
@@ -367,15 +367,27 @@ class TextCommandParser:
         del biblesSqlite
         return ("study", searchResult)
 
-    def textSearchBook(self, command):
+    def textSearchBook(self, command, source):
         return command # pending further development
 
-    def textEXLB(self, command):
-        return command # pending further development
+    def textExlb(self, command, source):
+        commandList = self.splitCommand(command)
+        if commandList and len(commandList) == 2:
+            exlbData = ExlbData()
+            content = exlbData.getContent(commandList[0], commandList[1])
+            del exlbData
+            if not content:
+                return self.invalidCommand("study")
+            else:
+                return ("study", content)
+        else:
+            return self.invalidCommand("study")
+
 
     def textDictionary(self, command, source):
         dictionaryData = DictionaryData()
         content = dictionaryData.getContent(command)
+        del dictionaryData
         if not content:
             return self.invalidCommand("study")
         else:
@@ -386,6 +398,7 @@ class TextCommandParser:
         if commandList and len(commandList) == 2:
             encyclopediaData = EncyclopediaData()
             content = encyclopediaData.getContent(commandList[0], commandList[1])
+            del encyclopediaData
             if not content:
                 return self.invalidCommand("study")
             else:

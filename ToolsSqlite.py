@@ -185,3 +185,24 @@ class EncyclopediaData:
             return ""
         else:
             return content[0]
+
+
+class ExlbData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "exlb.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, module, entry):
+        query = "SELECT content FROM {0} WHERE path = ?".format(module)
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return ""
+        else:
+            return content[0]
