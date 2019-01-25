@@ -566,3 +566,7 @@ color: gray;
 direction: ltr;
 display: inline-block;
 }
+button.feature {
+background-color: #515790;
+color: white;
+}
