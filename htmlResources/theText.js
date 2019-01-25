@@ -245,7 +245,7 @@ function luW(v,wid,cl,lex,morph,bdb) {
 function checkCompare() {
     versionList.forEach(addCompare);
     if (compareList.length == 0) {
-        alert("You didn't select any versions for comparison.");
+        alert("No version is selected for comparison.");
     } else {
         var compareTexts = compareList.join("_");
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
@@ -263,7 +263,7 @@ function addCompare(value) {
 function checkParallel() {
     versionList.forEach(addParallel);
     if (parallelList.length == 0) {
-        alert("You didn't select any versions for parallel reading.");
+        alert("No version is selected for parallel reading.");
     } else {
         var parallelTexts = parallelList.join("_");
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
@@ -343,6 +343,10 @@ function searchDict(module) {
 }
 
 function searchEncyc(module) {
+    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+}
+
+function searchEncyclopedia(module) {
     document.title = "_command:::SEARCHTOOL:::"+module+":::";
 }
 
