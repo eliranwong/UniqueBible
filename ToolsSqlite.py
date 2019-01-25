@@ -94,12 +94,12 @@ class IndexesSqlite:
         return content
 
     def searchCharacters(self):
-        content = "<button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>Search for a character</button>".format('"')
-        content += "<br><button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>Search for a name & its meaning</button>".format('"')
+        content = "<button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>search for a character</button>".format('"')
+        content += "<br><button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>search for a name & its meaning</button>".format('"')
         return content
 
     def searchLocations(self):
-        return "<button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>Search for a location</button>".format('"')
+        return "<button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>search for a location</button>".format('"')
 
     def searchTopics(self):
         action = "searchResource(this.value)"
@@ -226,20 +226,20 @@ class LexiconData:
         query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
-        contentText = "<h2>{0} - {1}</h2>".format(module, entry)
-        contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
-        contentText += information[0]
-        # deal with images
-        imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
-        if imageList:
-            imageSqlite = ImageSqlite()
-            for (module, entry) in imageList:
-                imageSqlite.exportImage(module, entry)
-            del imageSqlite
-        contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
         if not information:
             return ""
         else:
+            contentText = "<h2>{0} - {1}</h2>".format(module, entry)
+            contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
+            contentText += information[0]
+            # deal with images
+            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            if imageList:
+                imageSqlite = ImageSqlite()
+                for (module, entry) in imageList:
+                    imageSqlite.exportImage(module, entry)
+                del imageSqlite
+            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
             return contentText
 
 

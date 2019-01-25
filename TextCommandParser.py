@@ -88,22 +88,22 @@ class TextCommandParser:
                         anotherView = "<ref onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on Main View</ref>".format(text, mainVerseReference)
                     menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> [{4}]".format(text, bcList[0], bcList[1], bcList[2], anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
-                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
-                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
-                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
-                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                             menu += "<script>versionList.push('{0}');</script>".format(version)
-                    menu += "<br><button type='button' onclick='checkCompare();' style='background-color: #515790; color: white;'>Start Comparison</button>"
+                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>Start Comparison</button>"
                     menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkParallel();' style='background-color: #515790; color: white;'>Start Parallel Reading</button>"
+                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
         del biblesSqlite
         return (source, menu)
 
