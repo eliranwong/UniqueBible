@@ -94,21 +94,64 @@ class IndexesSqlite:
         return content
 
     def searchCharacters(self):
-        content = "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>Search for a character</ref>".format('"')
-        content += "<br><ref onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>Search for a name & its meaning</ref>".format('"')
+        content = "<button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>Search for a character</button>".format('"')
+        content += "<br><button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>Search for a name & its meaning</button>".format('"')
         return content
 
     def searchLocations(self):
-        return "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>Search for a location</ref>".format('"')
+        return "<button style='background-color: #515790; color: white;' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>Search for a location</button>".format('"')
 
     def searchTopics(self):
-        return "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBT:::{0}'>Search for a topic</ref>".format('"')
+        action = "searchResource(this.value)"
+        optionList = [
+            ("HIT", "Hitchcock's New and Complete Analysis of the Bible"),
+            ("NAV", "Nave's Topical Bible"),
+            ("TCR", "Thompson Chain References"),
+            ("TNT", "Torrey's New Topical Textbook"),
+            ("TOP", "Topical Bible"),
+            ("EXLBT", "Search ALL above")
+        ]
+        return self.formatSelectList(action, optionList)
 
     def searchDictionaries(self):
-        return ""
+        action = "searchResource(this.value)"
+        optionList = [
+            ("AMT", "American Tract Society Dictionary"),
+            ("BBD", "Bridgeway Bible Dictionary"),
+            ("BMC", "Freeman's Handbook of Bible Manners and Customs"),
+            ("BUC", "Buck's A Theological Dictionary"),
+            ("CBA", "Companion Bible Appendices"),
+            ("DRE", "Dictionary Of Religion And Ethics"),
+            ("EAS", "Easton's Illustrated Bible Dictionary"),
+            ("FAU", "Fausset's Bible Dictionary"),
+            ("FOS", "Bullinger's Figures of Speech"),
+            ("HBN", "Hitchcock's Bible Names Dictionary"),
+            ("MOR", "Morrish's Concise Bible Dictionary"),
+            ("PMD", "Poor Man's Dictionary"),
+            ("SBD", "Smith's Bible Dictionary"),
+            ("USS", "Annals of the World"),
+            ("VNT", "Vine's Expository Dictionary of New Testament Words")
+        ]
+        return self.formatSelectList(action, optionList)
 
     def searchEncyclopedia(self):
-        return ""
+        action = "searchResource(this.value)"
+        optionList = [
+            ("DAC", "Hasting's Dictionary of the Apostolic Church"),
+            ("DCG", "Hasting's Dictionary Of Christ And The Gospels"),
+            ("HAS", "Hasting's Dictionary of the Bible"),
+            ("ISB", "International Standard Bible Encyclopedia"),
+            ("KIT", "Kitto's Cyclopedia of Biblical Literature"),
+            ("MSC", "McClintock & Strong's Cyclopedia of Biblical Literature")
+        ]
+        return self.formatSelectList(action, optionList)
+
+    def formatSelectList(self, action, optionList):
+        selectForm = "<select onchange='{0}'>".format(action)
+        for value, description in optionList:
+            selectForm += "<option value='{0}'>{1}</option>".format(value, description)
+        selectForm += "</select>"
+        return selectForm
 
     def getContent(self, table, bcvTuple):
         query = "SELECT Information FROM {0} WHERE Book = ? AND Chapter = ? AND Verse = ?".format(table)
