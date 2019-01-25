@@ -338,16 +338,24 @@ function openImage(module, entry) {
     document.title = "_image:::"+module+":::"+entry;
 }
 
+function searchResource(tool) {
+    document.title = "_command:::SEARCHTOOL:::"+tool+":::";
+}
+
 function searchDict(module) {
-    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+    searchResource(module);
+}
+
+function searchDictionary(module) {
+    searchResource(module);
 }
 
 function searchEncyc(module) {
-    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+    searchResource(module);
 }
 
 function searchEncyclopedia(module) {
-    document.title = "_command:::SEARCHTOOL:::"+module+":::";
+    searchResource(module);
 }
 
 function rmac(entry) {
