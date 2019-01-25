@@ -79,12 +79,36 @@ class IndexesSqlite:
 
     def getAllIndexes(self, bcvTuple):
         indexList = ["exlbp", "exlbl", "exlbt", "dictionaries", "encyclopedia"]
-        indexHeading = ["Characters", "Locations", "Topics", "Dictionaries", "Encyclopedia"]
+        indexItems = [
+            ("Characters", self.searchCharacters()),
+            ("Locations", self.searchLocations()),
+            ("Topics", self.searchTopics()),
+            ("Dictionaries", self.searchDictionaries()),
+            ("Encyclopedia", self.searchEncyclopedia())
+        ]
         content = ""
         for counter, index in enumerate(indexList):
-            content += "<h2>{0}</h2>".format(indexHeading[counter])
+            content += "<h2>{0}</h2>".format(indexItems[counter][0])
             content += self.getContent(index, bcvTuple)
+            content += "<p>{0}</p>".format(indexItems[counter][1])
         return content
+
+    def searchCharacters(self):
+        content = "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>Search for a character</ref>".format('"')
+        content += "<br><ref onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>Search for a name & its meaning</ref>".format('"')
+        return content
+
+    def searchLocations(self):
+        return "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>Search for a location</ref>".format('"')
+
+    def searchTopics(self):
+        return "<ref onclick='document.title={0}_command:::SEARCHTOOL:::EXLBT:::{0}'>Search for a topic</ref>".format('"')
+
+    def searchDictionaries(self):
+        return ""
+
+    def searchEncyclopedia(self):
+        return ""
 
     def getContent(self, table, bcvTuple):
         query = "SELECT Information FROM {0} WHERE Book = ? AND Chapter = ? AND Verse = ?".format(table)
