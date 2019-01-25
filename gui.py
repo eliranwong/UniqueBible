@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        exceptionTuple = (self.textCommandLineEdit.text(), "theText.app", "about:blank")
+        exceptionTuple = (self.textCommandLineEdit.text(), "theText.app", "about:blank", "study.html")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
@@ -180,8 +180,7 @@ class MainWindow(QMainWindow):
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
         view, content = self.textCommandParser.parser(textCommand, source)
         if content == "INVALID_COMMAND_ENTERED":
-            pass
-            #self.mainPage.runJavaScript("alert('Invalid command entered.')")
+            self.mainPage.runJavaScript("alert('Invalid command entered.')")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
         else:

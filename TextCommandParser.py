@@ -43,14 +43,14 @@ class TextCommandParser:
         } # add more later
         commandList = self.splitCommand(textCommad)
         if len(commandList) == 1:
-            return self.textBibleVerseParser(textCommad)
+            return self.textBibleVerseParser(textCommad, config.mainText)
         else:
             resourceType = commandList[0].lower()
             command = commandList[1]
             if resourceType in interpreters:
                 return interpreters[resourceType](command, source)
             else:
-                return self.textBibleVerseParser(textCommad)        
+                return self.textBibleVerseParser(textCommad, config.mainText)        
 
     def textCommand(self, command, source="main"):
         return ("command", command)
@@ -88,10 +88,10 @@ class TextCommandParser:
                         anotherView = "<ref onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on Main View</ref>".format(text, mainVerseReference)
                     menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> [{4}]".format(text, bcList[0], bcList[1], bcList[2], anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
-                    menu += "<ref onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</ref> | ".format(mainVerseReference)
-                    menu += "<ref onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</ref> | ".format(mainVerseReference)
-                    menu += "<ref onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</ref> | ".format(mainVerseReference)
-                    menu += "<ref onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</ref>".format(mainVerseReference)
+                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
+                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
+                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
+                    menu += "<button style='background-color: #515790; color: white;' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
                     versions = biblesSqlite.getBibleList()
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
@@ -170,7 +170,7 @@ class TextCommandParser:
             del biblesSqlite
             return chapter
 
-    def textBibleVerseParser(self, command, text=config.mainText, view="main"):
+    def textBibleVerseParser(self, command, text, view="main"):
         verseList = self.extractAllVerses(command)
         if not verseList:
             return self.invalidCommand()
@@ -286,7 +286,7 @@ class TextCommandParser:
                 verses = ""
                 for text in confirmedTexts:
                     titles += "<th><ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{0}</ref></th>".format(text, mainVerseReference)
-                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1])
+                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1], source)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
         else:
             return self.invalidCommand()
