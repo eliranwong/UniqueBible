@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite, BibleSqlite
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite
+from BiblesSqlite import BiblesSqlite, Bible
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary
 
 class TextCommandParser:
 
@@ -164,7 +164,7 @@ class TextCommandParser:
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
         if text in formattedBibles:
             # expect verse is a tuple
-            bibleSqlite = BibleSqlite(text) # use plain bibles database when corresponding formatted version is not available
+            bibleSqlite = Bible(text) # use plain bibles database when corresponding formatted version is not available
             chapter += bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
             return chapter
@@ -204,6 +204,21 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return self.textBibleVerseParser(commandList[1], texts[0], source)
+
+    def textCommentary(self, command, source):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format("cCPBST", command)
+        commandList = self.splitCommand(command)
+        verseList = self.extractAllVerses(commandList[1])
+        if not len(commandList) == 2 or not verseList:
+            return self.invalidCommand()
+        else:
+            bcvTuple = verseList[0]
+            self.setStudyVerse(config.studyText, bcvTuple)
+            commentary = Commentary(commandList[0])
+            content =  commentary.getContent(bcvTuple)
+            del commentary
+            return ("study", content)
 
     def textSearchTool(self, command, source="main"):
         module, entry = self.splitCommand(command)
@@ -305,9 +320,6 @@ class TextCommandParser:
         info = biblesSqlite.wordData(int(commandList[0]), int(commandList[1]))
         del biblesSqlite
         return ("study", info)
-
-    def textCommentary(self, command):
-        return command # pending further development
 
     def textLexicon(self, command, source):
         commandList = self.splitCommand(command)

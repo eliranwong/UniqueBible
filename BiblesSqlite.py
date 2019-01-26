@@ -347,7 +347,7 @@ class BiblesSqlite:
         return chapter
 
 
-class BibleSqlite:
+class Bible:
 
     def __init__(self, text):
         # connect bibles.sqlite

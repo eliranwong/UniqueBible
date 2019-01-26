@@ -1,4 +1,5 @@
 import os, sqlite3, re, config
+from BiblesSqlite import BiblesSqlite
 
 class CrossReferenceSqlite:
 
@@ -323,3 +324,30 @@ class ExlbData:
                 return content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
             else:
                 return content[0]
+
+
+class Commentary:
+
+    def __init__(self, text):
+        # connect bibles.sqlite
+        self.text = text
+        self.database = os.path.join("marvelData", "commentaries", text+".commentary")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, verse):
+        b, c, v = verse
+        biblesSqlite = BiblesSqlite()
+        chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, config.studyText), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        del biblesSqlite
+        query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
+        self.cursor.execute(query, verse[:-1])
+        scripture = self.cursor.fetchone()
+        chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
+        if not scripture:
+            return "[No content is found for this chapter!]"
+        else:
+            return "<div>{0}</div>".format(chapter)

@@ -21,6 +21,8 @@ class MainWindow(QMainWindow):
         
         self.create_menu()
         self.setupToolBar()
+        self.setupMainToolBar()
+        self.setupStudyToolBar()
         self.setupPlusToolBar()
         self.setupBaseUrl()
         
@@ -88,41 +90,50 @@ class MainWindow(QMainWindow):
         self.studyForwardButton.clicked.connect(self.studyForward)
         self.toolBar.addWidget(self.studyForwardButton)
 
-        self.parallelMode = 1 # default parallel mode
-        self.parallelButton = QPushButton()
-        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        self.parallelButton.setIcon(QIcon(parallelButtonFile))
-        self.parallelButton.clicked.connect(self.parallel)
-        self.toolBar.addWidget(self.parallelButton)
-
-        self.instantMode = 1 # default parallel mode
-        self.instantButton = QPushButton()
-        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        self.instantButton.setIcon(QIcon(instantButtonFile))
-        self.instantButton.clicked.connect(self.instant)
-        self.toolBar.addWidget(self.instantButton)
-
         #self.plusMode = 0 # default parallel mode
         #self.plusButton = QPushButton()
         #plusButtonFile = os.path.join("htmlResources", "plus.png")
         #self.plusButton.setIcon(QIcon(plusButtonFile))
         #self.plusButton.clicked.connect(self.plus)
         #self.toolBar.addWidget(self.plusButton)
-
-    def setupPlusToolBar(self):
-        self.addToolBarBreak()
-        self.plusToolBar = QToolBar()
-        self.addToolBar(self.plusToolBar)
         
+        self.addToolBarBreak()
+
+    def setupMainToolBar(self):
+        self.mainToolBar = QToolBar()
+        self.addToolBar(self.mainToolBar)
+
         self.mainRefButton = QPushButton(self.verseReference("main"))
         self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
-        self.plusToolBar.addWidget(self.mainRefButton)
+        self.mainToolBar.addWidget(self.mainRefButton)
+
+    def setupStudyToolBar(self):
+        self.studyToolBar = QToolBar()
+        self.addToolBar(self.studyToolBar)
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
         self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.plusToolBar.addWidget(self.studyRefButton)
+        self.studyToolBar.addWidget(self.studyRefButton)
+
+    def setupPlusToolBar(self):
+        self.plusToolBar = QToolBar()
+        self.addToolBar(self.plusToolBar)
+
+        self.instantMode = 1 # default parallel mode
+        self.instantButton = QPushButton()
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        self.instantButton.setIcon(QIcon(instantButtonFile))
+        self.instantButton.clicked.connect(self.instant)
+        self.plusToolBar.addWidget(self.instantButton)
+
+        self.parallelMode = 1 # default parallel mode
+        self.parallelButton = QPushButton()
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        self.parallelButton.setIcon(QIcon(parallelButtonFile))
+        self.parallelButton.clicked.connect(self.parallel)
+        self.plusToolBar.addWidget(self.parallelButton)
 
     def mainRefButtonClicked(self):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
@@ -136,7 +147,7 @@ class MainWindow(QMainWindow):
         self.mainRefButton.setText(self.verseReference("main"))
 
     def updateStudyRefButton(self):
-        self.mainRefButton.setText(self.verseReference("study"))
+        self.studyRefButton.setText(self.verseReference("study"))
 
     def verseReference(self, view):
         if view == "main":
