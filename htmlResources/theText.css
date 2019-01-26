@@ -1,3 +1,9 @@
+select:active, select:hover {
+  outline-color: none;
+}
+option:checked, option:hover, option:checked: after {
+background: #ffb7b7;
+}
 ::selection {
 background: #ffb7b7; /* WebKit/Blink Browsers */
 }
