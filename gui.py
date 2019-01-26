@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.textCommandParser = TextCommandParser()
+        self.textCommandParser = TextCommandParser(self)
 
         self.setWindowTitle('THE TEXT APP')
         
@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         
         self.create_menu()
         self.setupToolBar()
+        self.setupPlusToolBar()
         self.setupBaseUrl()
         
         self.centralWidget = CentralWidget(self)
@@ -39,6 +40,12 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    def bcvToVerseReference(self, b, c, v):
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
+        return verseReference
 
     def create_menu(self):
         appIconFile = os.path.join("htmlResources", "theText.png")
@@ -87,13 +94,55 @@ class MainWindow(QMainWindow):
         self.parallelButton.setIcon(QIcon(parallelButtonFile))
         self.parallelButton.clicked.connect(self.parallel)
         self.toolBar.addWidget(self.parallelButton)
-        
+
         self.instantMode = 1 # default parallel mode
         self.instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
         self.instantButton.setIcon(QIcon(instantButtonFile))
         self.instantButton.clicked.connect(self.instant)
         self.toolBar.addWidget(self.instantButton)
+
+        #self.plusMode = 0 # default parallel mode
+        #self.plusButton = QPushButton()
+        #plusButtonFile = os.path.join("htmlResources", "plus.png")
+        #self.plusButton.setIcon(QIcon(plusButtonFile))
+        #self.plusButton.clicked.connect(self.plus)
+        #self.toolBar.addWidget(self.plusButton)
+
+    def setupPlusToolBar(self):
+        self.addToolBarBreak()
+        self.plusToolBar = QToolBar()
+        self.addToolBar(self.plusToolBar)
+        
+        self.mainRefButton = QPushButton(self.verseReference("main"))
+        self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
+        self.plusToolBar.addWidget(self.mainRefButton)
+
+        self.studyRefButton = QPushButton(self.verseReference("study"))
+        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.plusToolBar.addWidget(self.studyRefButton)
+
+    def mainRefButtonClicked(self):
+        newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
+        self.runTextCommand(newTextCommand, False, "main")
+
+    def studyRefButtonClicked(self):
+        newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.studyText, config.studyB, config.studyC, config.studyV)
+        self.runTextCommand(newTextCommand, False, "study")
+
+    def updateMainRefButton(self):
+        self.mainRefButton.setText(self.verseReference("main"))
+
+    def updateStudyRefButton(self):
+        self.mainRefButton.setText(self.verseReference("study"))
+
+    def verseReference(self, view):
+        if view == "main":
+            return self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        elif view == "study":
+            return self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
 
     def setupBaseUrl(self):
         # baseUrl
@@ -224,6 +273,14 @@ class MainWindow(QMainWindow):
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
 
+    def plus(self):
+        if self.plusMode == 0:
+            self.plusMode = 1
+            self.plusToolBar.show()
+        elif self.plusMode == 1:
+            self.plusMode = 0
+            self.plusToolBar.hide()
+
     def instant(self):
         if self.instantMode == 0:
             self.instantMode = 1
@@ -296,9 +353,7 @@ class WebEngineView(QWebEngineView):
 
     def updateContextMenu(self):
         text = self.getText()
-        parser = BibleVerseParser("YES")
-        book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
-        del parser
+        book = self.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
         self.iSearchText.setText("iSearch in {0}".format(text))

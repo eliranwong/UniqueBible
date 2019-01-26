@@ -5,6 +5,9 @@ from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, Encycl
 
 class TextCommandParser:
 
+    def __init__(self, parent):
+        self.parent = parent
+
     def parser(self, textCommad, source="main"):
         interpreters = {
             "_instantverse": self.instantVerse,
@@ -139,12 +142,14 @@ class TextCommandParser:
         config.mainB = bcvTuple[0]
         config.mainC = bcvTuple[1]
         config.mainV = bcvTuple[2]
+        self.parent.updateMainRefButton()
 
     def setStudyVerse(self, text, bcvTuple):
         config.studyText = text
         config.studyB = bcvTuple[0]
         config.studyC = bcvTuple[1]
         config.studyV = bcvTuple[2]
+        self.parent.updateStudyRefButton()
 
     def textPlainBible(self, verseList, text=config.mainText):
         # expect verseList is a list of tuples

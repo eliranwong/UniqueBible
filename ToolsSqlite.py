@@ -22,7 +22,7 @@ class CrossReferenceSqlite:
         self.cursor.execute(query, bcvTuple)
         information = self.cursor.fetchone()
         if not information:
-            return ""
+            return "[not applicable]"
         else:
             return information[0]
 
@@ -31,7 +31,7 @@ class CrossReferenceSqlite:
         self.cursor.execute(query, bcvTuple)
         information = self.cursor.fetchone()
         if not information:
-            return ""
+            return "[not applicable]"
         else:
             return information[0]
 
@@ -212,13 +212,28 @@ class LexiconData:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         versions = self.cursor.fetchall()
-        exclude = ("Details",)
+        exclude = ("Details", "LGNTDF")
         return [version[0] for version in versions if not version[0] in exclude]
 
     def getSelectForm(self, lexiconList, entry):
+        lexiconName = {
+            "SECE": "Strong's Exhaustive Concordance [Enhanced]",
+            "BDB": "Brown-Driver-Briggs Hebrew-English Lexicon",
+            "LSJ": "Liddell-Scott-Jones Greek-English Lexicon",
+            "TBESH": "Tyndale Brief lexicon of Extended Strongs for Hebrew",
+            "TBESG": "Tyndale Brief lexicon of Extended Strongs for Greek",
+            "MGLNT": "Manual Greek Lexicon of the New Testament",
+            "Mounce": "Mounce Concise Greek-English Dictionary",
+            "Thayer": "Thayer's Greek-English Lexicon",
+            "LXX": "LXX Lexicon",
+            "LCT": "新舊約字典彙編",
+            "Morphology": "Morphology",
+            "ConcordanceBook": "Concordance (sorted by book)",
+            "ConcordanceMorphology": "Concordance (sorted by morphology)",
+        }
         selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
         for lexicon in lexiconList:
-            selectForm += '<option value="{0}">{0}</option>'.format(lexicon)
+            selectForm += '<option value="{0}">{1}</option>'.format(lexicon, lexiconName[lexicon])
         selectForm += '</select></form></p>'
         return selectForm
 
@@ -227,7 +242,7 @@ class LexiconData:
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
         if not information:
-            return ""
+            return "[not applicable]"
         else:
             contentText = "<h2>{0} - {1}</h2>".format(module, entry)
             contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
@@ -259,7 +274,7 @@ class DictionaryData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return ""
+            return "[not applicable]"
         else:
             return content[0]
 
@@ -280,7 +295,7 @@ class EncyclopediaData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return ""
+            return "[not applicable]"
         else:
             return content[0]
 
@@ -301,7 +316,7 @@ class ExlbData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return ""
+            return "[not applicable]"
         else:
             if module == "exlbl":
                 content = re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
