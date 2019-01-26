@@ -35,6 +35,10 @@ def saveDataOnExit():
     fileObj.write("\nstudyB = "+pprint.pformat(config.studyB))
     fileObj.write("\nstudyC = "+pprint.pformat(config.studyC))
     fileObj.write("\nstudyV = "+pprint.pformat(config.studyV))
+    fileObj.write("\ncommentaryText = "+pprint.pformat(config.commentaryText))
+    fileObj.write("\ncommentaryB = "+pprint.pformat(config.commentaryB))
+    fileObj.write("\ncommentaryC = "+pprint.pformat(config.commentaryC))
+    fileObj.write("\ncommentaryV = "+pprint.pformat(config.commentaryV))
     fileObj.write("\nhistoryRecordAllowed = "+pprint.pformat(config.historyRecordAllowed))
     fileObj.write("\ncurrentRecord = {'main': 0, 'study': 0}")
     fileObj.write("\nhistory = "+pprint.pformat(config.history))
@@ -50,12 +54,12 @@ setupMainWindow()
 initial_mainTextCommand = " ".join(sys.argv[1:])
 if not initial_mainTextCommand:
     mainHistory = config.history["main"]
-    initial_mainTextCommand = mainHistory[len(mainHistory) - 1]
+    initial_mainTextCommand = mainHistory[-1]
 executeInitialTextCommand(initial_mainTextCommand)
 
 # execute initial command in study view
 studyHistory = config.history["study"]
-initial_studyTextCommand = studyHistory[len(studyHistory) - 1]
+initial_studyTextCommand = studyHistory[-1]
 executeInitialTextCommand(initial_studyTextCommand, "study")
 
 setCurrentRecord()

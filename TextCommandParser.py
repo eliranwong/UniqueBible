@@ -8,11 +8,18 @@ class TextCommandParser:
     def __init__(self, parent):
         self.parent = parent
 
+    def bcvToVerseReference(self, b, c, v):
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
+        return verseReference
+
     def parser(self, textCommad, source="main"):
         interpreters = {
             "_instantverse": self.instantVerse,
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
+            "_commentary": self.textCommentaryMenu,
             "_info": self.textInfo,
             "_image": self.textImage,
             "_command": self.textCommand,
@@ -63,15 +70,18 @@ class TextCommandParser:
 
     def textMenu(self, command, source="main"):
         biblesSqlite = BiblesSqlite()
-        mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go back to {1}</ref>".format(config.mainText, mainVerseReference)
-        menu += "<hr><b>Texts:</b> {0}".format(biblesSqlite.getTexts())
-        #menu = biblesSqlite.getTexts()
+        if source == "main":
+            mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.mainText, mainVerseReference)
+        elif source == "study":
+            mainVerseReference = biblesSqlite.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
+        menu += "<hr><b>Bibles:</b> {0}".format(biblesSqlite.getTexts())
         items = command.split(".", 3)
         text = items[0]
         if not text == "":
             # i.e. text specified; add book menu
-            menu += "<hr><b>Selected Text:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(text)
+            menu += "<hr><b>Selected Bible:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open {1} in {0}</button>".format(text, mainVerseReference)
             menu += "<hr><b>Books:</b> {0}".format(biblesSqlite.getBooks(text))
             bcList = [int(i) for i in items[1:]]
             if bcList:
@@ -86,10 +96,10 @@ class TextCommandParser:
                     menu += "<hr><b>Verses:</b> {0}".format(biblesSqlite.getVerses(bcList[0], bcList[1], text))
                 if check == 3:
                     if source == "main":
-                        anotherView = "<ref onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on Study View</ref>".format(text, mainVerseReference)
+                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on \"study\" view</button>".format(text, mainVerseReference)
                     elif source == "study":
-                        anotherView = "<ref onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on Main View</ref>".format(text, mainVerseReference)
-                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> [{4}]".format(text, bcList[0], bcList[1], bcList[2], anotherView)
+                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on \"main\" view</button>".format(text, mainVerseReference)
+                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5}".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
                     menu += "<button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
                     menu += "<button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
@@ -109,6 +119,13 @@ class TextCommandParser:
                     menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
         del biblesSqlite
         return (source, menu)
+
+    def textCommentaryMenu(self, command, source):
+        text, *_ = command.split(".")
+        commentary = Commentary(text)
+        commentaryMenu = commentary.getMenu(command)
+        del commentary
+        return ("study", commentaryMenu)
 
     def getChaptersMenu(self, b=config.mainB, text=config.mainText):
         biblesSqlite = BiblesSqlite()
@@ -139,16 +156,21 @@ class TextCommandParser:
 
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
-        config.mainB = bcvTuple[0]
-        config.mainC = bcvTuple[1]
-        config.mainV = bcvTuple[2]
+        config.mainB, config.mainC, config.mainV = bcvTuple
         self.parent.updateMainRefButton()
 
     def setStudyVerse(self, text, bcvTuple):
         config.studyText = text
-        config.studyB = bcvTuple[0]
-        config.studyC = bcvTuple[1]
-        config.studyV = bcvTuple[2]
+        config.studyB, config.studyC, config.studyV = bcvTuple
+        self.parent.updateStudyRefButton()
+        config.commentaryB, config.commentaryC, config.commentaryV = bcvTuple
+        self.parent.updateCommentaryRefButton()
+
+    def setCommentaryVerse(self, text, bcvTuple):
+        config.commentaryText = text
+        config.commentaryB, config.commentaryC, config.commentaryV = bcvTuple
+        self.parent.updateCommentaryRefButton()
+        config.studyB, config.studyC, config.studyV = bcvTuple
         self.parent.updateStudyRefButton()
 
     def textPlainBible(self, verseList, text=config.mainText):
@@ -207,16 +229,18 @@ class TextCommandParser:
 
     def textCommentary(self, command, source):
         if command.count(":::") == 0:
-            command = "{0}:::{1}".format("cCPBST", command)
+            command = "{0}:::{1}".format(config.commentaryText, command)
         commandList = self.splitCommand(command)
         verseList = self.extractAllVerses(commandList[1])
         if not len(commandList) == 2 or not verseList:
             return self.invalidCommand()
         else:
             bcvTuple = verseList[0]
-            self.setStudyVerse(config.studyText, bcvTuple)
-            commentary = Commentary(commandList[0])
+            module = commandList[0]
+            commentary = Commentary(module)
             content =  commentary.getContent(bcvTuple)
+            if not content == "INVALID_COMMAND_ENTERED":
+                self.setCommentaryVerse(module, bcvTuple)
             del commentary
             return ("study", content)
 
@@ -285,7 +309,7 @@ class TextCommandParser:
                 "main": self.setMainVerse,
                 "study": self.setStudyVerse,
             }
-            views[source](config.mainText, verseList[len(verseList) - 1])
+            views[source](config.mainText, verseList[-1])
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             del biblesSqlite

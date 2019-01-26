@@ -1,5 +1,6 @@
 import os, sqlite3, re, config
 from BiblesSqlite import BiblesSqlite
+from BibleVerseParser import BibleVerseParser
 
 class CrossReferenceSqlite:
 
@@ -329,25 +330,119 @@ class ExlbData:
 class Commentary:
 
     def __init__(self, text):
-        # connect bibles.sqlite
         self.text = text
-        self.database = os.path.join("marvelData", "commentaries", text+".commentary")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
+        if self.text in self.getCommentaryList():
+            self.database = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(text))
+            self.connection = sqlite3.connect(self.database)
+            self.cursor = self.connection.cursor()
 
     def __del__(self):
         self.connection.close()
 
-    def getContent(self, verse):
-        b, c, v = verse
+    def bcvToVerseReference(self, b, c, v):
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
+        return verseReference
+
+    def formCommentaryTag(self, commentary):
+        return "<ref onclick='document.title=\"_commentary:::{0}\"' onmouseover='commentaryName(\"{0}\")'>".format(commentary)
+
+    def formBookTag(self, b):
+        bookAbb = self.bcvToVerseReference(b, 1, 1)[:-4]
+        return "<ref onclick='document.title=\"_commentary:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(self.text, b, bookAbb)
+
+    def formChapterTag(self, b, c):
+        return "<ref onclick='document.title=\"_commentary:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(self.text, b, c)
+
+    def formVerseTag(self, b, c, v):
+        verseReference = self.bcvToVerseReference(b, c, v)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"COMMENTARY:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_commentary:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, self.text, verseReference)
+
+    def getCommentaryList(self):
+        commentaryFolder = os.path.join("marvelData", "commentaries")
+        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary")]
+        return commentaryList
+
+    def getCommentaries(self):
+        commentaryList = self.getCommentaryList()
+        commentaries = " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formCommentaryTag(commentary), commentary) for commentary in commentaryList])
+        return commentaries
+
+    def getBookList(self):
+        query = "SELECT DISTINCT Book FROM Commentary ORDER BY Book"
+        self.cursor.execute(query)
+        return [book[0] for book in self.cursor.fetchall()]
+
+    def getBooks(self):
+        bookList = self.getBookList()
+        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book), self.bcvToVerseReference(book, 1, 1)[:-4]) for book in bookList])
+
+    def getChapterList(self, b=config.commentaryB):
+        t = (b,)
+        query = "SELECT DISTINCT Chapter FROM Commentary WHERE Book=? ORDER BY Chapter"
+        self.cursor.execute(query, t)
+        return [chapter[0] for chapter in self.cursor.fetchall()]
+
+    def getChapters(self, b=config.commentaryB):
+        chapterList = self.getChapterList(b)
+        return " ".join(["{0}{1}</ref>".format(self.formChapterTag(b, chapter), chapter) for chapter in chapterList])
+
+    def getChaptersMenu(self, b=config.commentaryB, text=config.commentaryText):
+        chapterList = self.getChapterList(b, text)
+        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1), chapter) for chapter in chapterList])
+
+    def getVerseList(self, b, c):
         biblesSqlite = BiblesSqlite()
-        chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, config.studyText), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        verseList = biblesSqlite.getVerseList(b, c, "KJV")
         del biblesSqlite
-        query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
-        self.cursor.execute(query, verse[:-1])
-        scripture = self.cursor.fetchone()
-        chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
-        if not scripture:
-            return "[No content is found for this chapter!]"
+        return verseList
+
+    def getVerses(self, b=config.commentaryB, c=config.commentaryC):
+        verseList = self.getVerseList(b, c)
+        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, c, verse), verse) for verse in verseList])
+
+    def getMenu(self, command):
+        if self.text in self.getCommentaryList():
+            mainVerseReference = self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
+            menu = "<ref onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.commentaryText, mainVerseReference)
+            menu += "<hr><b>Commentaries:</b> {0}".format(self.getCommentaries())
+            items = command.split(".", 3)
+            text = items[0]
+            if not text == "":
+                # i.e. text specified; add book menu
+                menu += "<hr><b>Selected Commentary:</b> <span style='color: brown;' onmouseover='commentaryName(\"{0}\")'>{0}</span>  <button class='feature' onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>open {1} in {0}</button>".format(self.text, mainVerseReference)
+                menu += "<hr><b>Books:</b> {0}".format(self.getBooks())
+                bcList = [int(i) for i in items[1:]]
+                if bcList:
+                    check = len(bcList)
+                    if check >= 1:
+                        # i.e. book specified; add chapter menu
+                        menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4])
+                        menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0]))
+                    if check >= 2:
+                        # i.e. both book and chapter specified; add verse menu
+                        menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>".format(bcList[1])
+                        menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1]))
+                    if check == 3:
+                        menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"COMMENTARY:::{0}:::{4}\"'>open HERE</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference)
+            return menu
         else:
-            return "<div>{0}</div>".format(chapter)
+            return "INVALID_COMMAND_ENTERED"
+
+    def getContent(self, verse):
+        if self.text in self.getCommentaryList():
+            b, c, v = verse
+            biblesSqlite = BiblesSqlite()
+            chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, config.studyText), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+            del biblesSqlite
+            query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
+            self.cursor.execute(query, verse[:-1])
+            scripture = self.cursor.fetchone()
+            chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
+            if not scripture:
+                return "[No content is found for this chapter!]"
+            else:
+                return "<div>{0}</div>".format(chapter)
+        else:
+            return "INVALID_COMMAND_ENTERED"

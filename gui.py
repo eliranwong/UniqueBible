@@ -22,8 +22,8 @@ class MainWindow(QMainWindow):
         self.create_menu()
         self.setupToolBar()
         self.setupMainToolBar()
-        self.setupStudyToolBar()
         self.setupPlusToolBar()
+        self.setupStudyToolBar()
         self.setupBaseUrl()
         
         self.centralWidget = CentralWidget(self)
@@ -90,13 +90,7 @@ class MainWindow(QMainWindow):
         self.studyForwardButton.clicked.connect(self.studyForward)
         self.toolBar.addWidget(self.studyForwardButton)
 
-        #self.plusMode = 0 # default parallel mode
-        #self.plusButton = QPushButton()
-        #plusButtonFile = os.path.join("htmlResources", "plus.png")
-        #self.plusButton.setIcon(QIcon(plusButtonFile))
-        #self.plusButton.clicked.connect(self.plus)
-        #self.toolBar.addWidget(self.plusButton)
-        
+        # put other tool bars below the main one
         self.addToolBarBreak()
 
     def setupMainToolBar(self):
@@ -107,15 +101,6 @@ class MainWindow(QMainWindow):
         self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.mainToolBar.addWidget(self.mainRefButton)
-
-    def setupStudyToolBar(self):
-        self.studyToolBar = QToolBar()
-        self.addToolBar(self.studyToolBar)
-
-        self.studyRefButton = QPushButton(self.verseReference("study"))
-        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
-        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.studyToolBar.addWidget(self.studyRefButton)
 
     def setupPlusToolBar(self):
         self.plusToolBar = QToolBar()
@@ -135,6 +120,20 @@ class MainWindow(QMainWindow):
         self.parallelButton.clicked.connect(self.parallel)
         self.plusToolBar.addWidget(self.parallelButton)
 
+    def setupStudyToolBar(self):
+        self.studyToolBar = QToolBar()
+        self.addToolBar(self.studyToolBar)
+
+        self.studyRefButton = QPushButton(self.verseReference("study"))
+        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.studyToolBar.addWidget(self.studyRefButton)
+
+        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
+        self.studyToolBar.addWidget(self.commentaryRefButton)
+
     def mainRefButtonClicked(self):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
         self.runTextCommand(newTextCommand, False, "main")
@@ -143,17 +142,26 @@ class MainWindow(QMainWindow):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.studyText, config.studyB, config.studyC, config.studyV)
         self.runTextCommand(newTextCommand, False, "study")
 
+    def commentaryRefButtonClicked(self):
+        newTextCommand = "_commentary:::{0}.{1}.{2}.{3}".format(config.commentaryText, config.commentaryB, config.commentaryC, config.commentaryV)
+        self.runTextCommand(newTextCommand, False, "study")
+
     def updateMainRefButton(self):
         self.mainRefButton.setText(self.verseReference("main"))
 
     def updateStudyRefButton(self):
         self.studyRefButton.setText(self.verseReference("study"))
 
+    def updateCommentaryRefButton(self):
+        self.commentaryRefButton.setText(self.verseReference("commentary"))
+
     def verseReference(self, view):
         if view == "main":
-            return self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+            return "{0} - {1}".format(config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         elif view == "study":
-            return self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+            return "{0} - {1}".format(config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
+        elif view == "commentary":
+            return "{0} - {1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
 
     def setupBaseUrl(self):
         # baseUrl
@@ -223,7 +231,7 @@ class MainWindow(QMainWindow):
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        exceptionTuple = (self.textCommandLineEdit.text(), "theText.app", "about:blank", "study.html")
+        exceptionTuple = ("theText.app", "about:blank", "study.html")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
@@ -275,7 +283,7 @@ class MainWindow(QMainWindow):
     def addHistoryRecord(self, view, textCommand):
         if not textCommand.startswith("_"):
             viewhistory = config.history[view]
-            if not (viewhistory[len(viewhistory) - 1] == textCommand):
+            if not (viewhistory[-1] == textCommand):
                 viewhistory.append(textCommand)
                 # set maximum number of history records for each view here
                 historyRecordAllowed = config.historyRecordAllowed
@@ -283,14 +291,6 @@ class MainWindow(QMainWindow):
                     viewhistory = viewhistory[-historyRecordAllowed:]
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
-
-    def plus(self):
-        if self.plusMode == 0:
-            self.plusMode = 1
-            self.plusToolBar.show()
-        elif self.plusMode == 1:
-            self.plusMode = 0
-            self.plusToolBar.hide()
 
     def instant(self):
         if self.instantMode == 0:
@@ -364,7 +364,7 @@ class WebEngineView(QWebEngineView):
 
     def updateContextMenu(self):
         text = self.getText()
-        book = self.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
+        book = self.parent.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
         self.iSearchText.setText("iSearch in {0}".format(text))

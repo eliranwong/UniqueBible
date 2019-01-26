@@ -68,7 +68,7 @@ class BiblesSqlite:
         textList = self.getBibleList()
         texts = ""
         for text in textList:
-            texts += "{0}{1}</ref> ".format(self.formTextTag(text), text)
+            texts += "{0}<button class='feature'>{1}</button></ref> ".format(self.formTextTag(text), text)
         return texts
 
     def getBookList(self, text=config.mainText):
@@ -81,7 +81,7 @@ class BiblesSqlite:
         books = ""
         for book in bookList:
             bookName = self.bcvToVerseReference(book, 1, 1)[:-4]
-            books += "{0}{1}</ref> ".format(self.formBookTag(book, text), bookName)
+            books += "{0}<button class='feature'>{1}</button></ref> ".format(self.formBookTag(book, text), bookName)
         return books
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
