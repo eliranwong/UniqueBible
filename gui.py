@@ -248,7 +248,7 @@ class MainWindow(QMainWindow):
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
         view, content = self.textCommandParser.parser(textCommand, source)
         if content == "INVALID_COMMAND_ENTERED":
-            self.mainPage.runJavaScript("alert('Invalid command entered.')")
+            self.mainPage.runJavaScript("alert('Invalid command not processed.')")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
         else:
