@@ -377,6 +377,7 @@ function exlbt(entry) {
 
 function openImage(module, entry) {
     document.title = "_image:::"+module+":::"+entry;
+    document.title = "theText.app";
 }
 
 function searchResource(tool) {
