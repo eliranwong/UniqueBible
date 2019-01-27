@@ -200,11 +200,26 @@ class TextCommandParser:
 
     def textSearchTool(self, command, source="main"):
         module, entry = self.splitCommand(command)
-        searchSqlite = SearchSqlite()
-        exactMatch = searchSqlite.getContent(module, entry)
-        similarMatch = searchSqlite.getSimilarContent(module, entry)
-        del searchSqlite
-        return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}</b>".format(module, entry, exactMatch, similarMatch))
+        indexes = IndexesSqlite()
+        toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
+        if module in dict(toolList[1:]).keys():
+            action = "searchItem(this.value, \"{0}\")".format(entry)
+            selectList = indexes.formatSelectList(action, toolList)
+            if module in dict(indexes.topicList).keys():
+                config.topic = module
+            elif module in dict(indexes.dictionaryList).keys() and not module == "HBN":
+                config.dictionary = module
+            elif module in dict(indexes.encyclopediaList).keys():
+                config.encyclopedia = module
+            del indexes
+            searchSqlite = SearchSqlite()
+            exactMatch = searchSqlite.getContent(module, entry)
+            similarMatch = searchSqlite.getSimilarContent(module, entry)
+            del searchSqlite
+            return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}</b>".format(module, entry, exactMatch, similarMatch, selectList))
+        else:
+            del indexes
+            return self.invalidCommand()
 
     def textImage(self, command, source):
         module, entry = self.splitCommand(command)
@@ -390,35 +405,49 @@ class TextCommandParser:
     def textExlb(self, command, source):
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
-            exlbData = ExlbData()
-            content = exlbData.getContent(commandList[0], commandList[1])
-            del exlbData
-            if not content:
-                return self.invalidCommand("study")
-            else:
+            module, entry = commandList
+            if module in ["exlbl", "exlbp", "exlbt"]:
+                if module == "exlbt":
+                    config.topic = "exlbt"
+                exlbData = ExlbData()
+                content = exlbData.getContent(commandList[0], commandList[1])
+                del exlbData
                 return ("study", content)
+            else:
+                return self.invalidCommand("study")
         else:
             return self.invalidCommand("study")
 
     def textDictionary(self, command, source):
-        dictionaryData = DictionaryData()
-        content = dictionaryData.getContent(command)
-        del dictionaryData
-        if not content:
-            return self.invalidCommand("study")
-        else:
+        indexes = IndexesSqlite()
+        dictionaryList = dict(indexes.dictionaryList).keys()
+        del indexes
+        module = command[:3]
+        if module in dictionaryList:
+            if not module == "HBN":
+                config.dictionary = module
+            dictionaryData = DictionaryData()
+            content = dictionaryData.getContent(command)
+            del dictionaryData
             return ("study", content)
+        else:
+            return self.invalidCommand("study")
 
     def textEncyclopedia(self, command, source):
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
-            encyclopediaData = EncyclopediaData()
-            content = encyclopediaData.getContent(commandList[0], commandList[1])
-            del encyclopediaData
-            if not content:
-                return self.invalidCommand("study")
-            else:
+            module, entry = commandList
+            indexes = IndexesSqlite()
+            encyclopediaList = dict(indexes.encyclopediaList).keys()
+            del indexes
+            if module in encyclopediaList:
+                config.encyclopedia = module
+                encyclopediaData = EncyclopediaData()
+                content = encyclopediaData.getContent(module, entry)
+                del encyclopediaData
                 return ("study", content)
+            else:
+                return self.invalidCommand("study")
         else:
             return self.invalidCommand("study")
 

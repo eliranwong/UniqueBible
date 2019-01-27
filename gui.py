@@ -364,11 +364,16 @@ class WebEngineView(QWebEngineView):
 
     def updateContextMenu(self):
         text = self.getText()
-        book = self.parent.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
+        parser = BibleVerseParser("YES")
+        book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
+        del parser
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
         self.iSearchText.setText("iSearch in {0}".format(text))
         self.iSearchTextInBook.setText("iSearch in {0} > {1}".format(text, book))
+        self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
+        self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
+        self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
 
     def getText(self):
         text = {
@@ -398,7 +403,7 @@ class WebEngineView(QWebEngineView):
         self.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
-        self.searchTextInBook.setText("Search in Book")
+        self.searchTextInBook.setText("Search in Current Book")
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
 
@@ -408,9 +413,39 @@ class WebEngineView(QWebEngineView):
         self.addAction(self.iSearchText)
 
         self.iSearchTextInBook = QAction(self)
-        self.iSearchTextInBook.setText("iSearch in Book")
+        self.iSearchTextInBook.setText("iSearch in Current Book")
         self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
         self.addAction(self.iSearchTextInBook)
+
+        searchBibleCharacter = QAction(self)
+        searchBibleCharacter.setText("Bible Character")
+        searchBibleCharacter.triggered.connect(self.searchCharacter)
+        self.addAction(searchBibleCharacter)
+
+        searchBibleName = QAction(self)
+        searchBibleName.setText("Bible Name")
+        searchBibleName.triggered.connect(self.searchName)
+        self.addAction(searchBibleName)
+
+        searchBibleLocation = QAction(self)
+        searchBibleLocation.setText("Bible Location")
+        searchBibleLocation.triggered.connect(self.searchLocation)
+        self.addAction(searchBibleLocation)
+
+        self.searchBibleTopic = QAction(self)
+        self.searchBibleTopic.setText("Bible Topic")
+        self.searchBibleTopic.triggered.connect(self.searchTopic)
+        self.addAction(self.searchBibleTopic)
+
+        self.searchBibleDictionary = QAction(self)
+        self.searchBibleDictionary.setText("Bible Dictionary")
+        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
+        self.addAction(self.searchBibleDictionary)
+
+        self.searchBibleEncyclopedia = QAction(self)
+        self.searchBibleEncyclopedia.setText("Bible Encyclopedia")
+        self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
+        self.addAction(self.searchBibleEncyclopedia)
 
     def messageNoSelection(self):
         self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
@@ -422,32 +457,62 @@ class WebEngineView(QWebEngineView):
             self.page().triggerAction(self.page().Copy)
 
     def searchSelectedText(self):
-        if not self.selectedText():
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedTextInBook(self):
-        if not self.selectedText():
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+            searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def iSearchSelectedText(self):
-        if not self.selectedText():
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), self.selectedText())
+            searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def iSearchSelectedTextInBook(self):
-        if not self.selectedText():
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), self.selectedText())
+            searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchResource(self, module):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHTOOL:::{0}:::{1}".format(module, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchCharacter(self):
+        self.searchResource("EXLBP")
+
+    def searchName(self):
+        self.searchResource("HBN")
+
+    def searchLocation(self):
+        self.searchResource("EXLBL")
+
+    def searchTopic(self):
+        self.searchResource(config.topic)
+
+    def searchDictionary(self):
+        self.searchResource(config.dictionary)
+
+    def searchEncyclopedia(self):
+        self.searchResource(config.encyclopedia)
 
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:

@@ -75,9 +75,45 @@ class IndexesSqlite:
         self.database = os.path.join("marvelData", "indexes.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
+        self.setResourceList()
 
     def __del__(self):
         self.connection.close()
+
+    def setResourceList(self):
+        self.topicList = [
+            ("HIT", "Hitchcock's New and Complete Analysis of the Bible"),
+            ("NAV", "Nave's Topical Bible"),
+            ("TCR", "Thompson Chain References"),
+            ("TNT", "Torrey's New Topical Textbook"),
+            ("TOP", "Topical Bible"),
+            ("EXLBT", "Search ALL Topical References")
+        ]
+        self.dictionaryList = [
+            ("AMT", "American Tract Society Dictionary"),
+            ("BBD", "Bridgeway Bible Dictionary"),
+            ("BMC", "Freeman's Handbook of Bible Manners and Customs"),
+            ("BUC", "Buck's A Theological Dictionary"),
+            ("CBA", "Companion Bible Appendices"),
+            ("DRE", "Dictionary Of Religion And Ethics"),
+            ("EAS", "Easton's Illustrated Bible Dictionary"),
+            ("FAU", "Fausset's Bible Dictionary"),
+            ("FOS", "Bullinger's Figures of Speech"),
+            ("HBN", "Hitchcock's Bible Names Dictionary"),
+            ("MOR", "Morrish's Concise Bible Dictionary"),
+            ("PMD", "Poor Man's Dictionary"),
+            ("SBD", "Smith's Bible Dictionary"),
+            ("USS", "Annals of the World"),
+            ("VNT", "Vine's Expository Dictionary of New Testament Words")
+        ]
+        self.encyclopediaList = [
+            ("DAC", "Hasting's Dictionary of the Apostolic Church"),
+            ("DCG", "Hasting's Dictionary Of Christ And The Gospels"),
+            ("HAS", "Hasting's Dictionary of the Bible"),
+            ("ISB", "International Standard Bible Encyclopedia"),
+            ("KIT", "Kitto's Cyclopedia of Biblical Literature"),
+            ("MSC", "McClintock & Strong's Cyclopedia of Biblical Literature")
+        ]
 
     def getAllIndexes(self, bcvTuple):
         indexList = ["exlbp", "exlbl", "exlbt", "dictionaries", "encyclopedia"]
@@ -105,47 +141,17 @@ class IndexesSqlite:
 
     def searchTopics(self):
         action = "searchResource(this.value)"
-        optionList = [
-            ("HIT", "Hitchcock's New and Complete Analysis of the Bible"),
-            ("NAV", "Nave's Topical Bible"),
-            ("TCR", "Thompson Chain References"),
-            ("TNT", "Torrey's New Topical Textbook"),
-            ("TOP", "Topical Bible"),
-            ("EXLBT", "Search ALL above")
-        ]
+        optionList = [("", "[search a topical reference]")] + self.topicList
         return self.formatSelectList(action, optionList)
 
     def searchDictionaries(self):
         action = "searchResource(this.value)"
-        optionList = [
-            ("AMT", "American Tract Society Dictionary"),
-            ("BBD", "Bridgeway Bible Dictionary"),
-            ("BMC", "Freeman's Handbook of Bible Manners and Customs"),
-            ("BUC", "Buck's A Theological Dictionary"),
-            ("CBA", "Companion Bible Appendices"),
-            ("DRE", "Dictionary Of Religion And Ethics"),
-            ("EAS", "Easton's Illustrated Bible Dictionary"),
-            ("FAU", "Fausset's Bible Dictionary"),
-            ("FOS", "Bullinger's Figures of Speech"),
-            ("HBN", "Hitchcock's Bible Names Dictionary"),
-            ("MOR", "Morrish's Concise Bible Dictionary"),
-            ("PMD", "Poor Man's Dictionary"),
-            ("SBD", "Smith's Bible Dictionary"),
-            ("USS", "Annals of the World"),
-            ("VNT", "Vine's Expository Dictionary of New Testament Words")
-        ]
+        optionList = [("", "[search a dictionary]")] + self.dictionaryList
         return self.formatSelectList(action, optionList)
 
     def searchEncyclopedia(self):
         action = "searchResource(this.value)"
-        optionList = [
-            ("DAC", "Hasting's Dictionary of the Apostolic Church"),
-            ("DCG", "Hasting's Dictionary Of Christ And The Gospels"),
-            ("HAS", "Hasting's Dictionary of the Bible"),
-            ("ISB", "International Standard Bible Encyclopedia"),
-            ("KIT", "Kitto's Cyclopedia of Biblical Literature"),
-            ("MSC", "McClintock & Strong's Cyclopedia of Biblical Literature")
-        ]
+        optionList = [("", "[search an encyclopeida]")] + self.encyclopediaList
         return self.formatSelectList(action, optionList)
 
     def formatSelectList(self, action, optionList):
@@ -240,24 +246,28 @@ class LexiconData:
         return selectForm
 
     def lexicon(self, module, entry):
-        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
-        self.cursor.execute(query, (entry,))
-        information = self.cursor.fetchone()
-        if not information:
-            return "[not applicable]"
+        lexiconList = self.getLexiconList()
+        if module in lexiconList:
+            query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
+            self.cursor.execute(query, (entry,))
+            information = self.cursor.fetchone()
+            if not information:
+                return "[not found]"
+            else:
+                contentText = "<h2>{0} - {1}</h2>".format(module, entry)
+                contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in lexiconList if not m == module], entry))
+                contentText += information[0]
+                # deal with images
+                imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+                if imageList:
+                    imageSqlite = ImageSqlite()
+                    for (module, entry) in imageList:
+                        imageSqlite.exportImage(module, entry)
+                    del imageSqlite
+                contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+                return contentText
         else:
-            contentText = "<h2>{0} - {1}</h2>".format(module, entry)
-            contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in self.getLexiconList() if not m == module], entry))
-            contentText += information[0]
-            # deal with images
-            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
-            if imageList:
-                imageSqlite = ImageSqlite()
-                for (module, entry) in imageList:
-                    imageSqlite.exportImage(module, entry)
-                del imageSqlite
-            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-            return contentText
+            return "INVALID_COMMAND_ENTERED"
 
 
 class DictionaryData:
@@ -276,7 +286,7 @@ class DictionaryData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return "[not applicable]"
+            return "[not found]"
         else:
             return content[0]
 
@@ -297,7 +307,7 @@ class EncyclopediaData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return "[not applicable]"
+            return "[not found]"
         else:
             return content[0]
 
@@ -318,7 +328,7 @@ class ExlbData:
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
-            return "[not applicable]"
+            return "[not found]"
         else:
             if module == "exlbl":
                 content = re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
