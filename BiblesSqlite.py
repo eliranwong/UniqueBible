@@ -22,6 +22,56 @@ class BiblesSqlite:
         del parser
         return verseReference
 
+    def getMenu(self, command, source="main"):
+        if source == "main":
+            mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.mainText, mainVerseReference)
+        elif source == "study":
+            mainVerseReference = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
+        menu += "<hr><b>Bibles:</b> {0}".format(self.getTexts())
+        items = command.split(".", 3)
+        text = items[0]
+        if not text == "":
+            # i.e. text specified; add book menu
+            menu += "<hr><b>Selected Bible:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open {1} in {0}</button>".format(text, mainVerseReference)
+            menu += "<hr><b>Books:</b> {0}".format(self.getBooks(text))
+            bcList = [int(i) for i in items[1:]]
+            if bcList:
+                check = len(bcList)
+                if check >= 1:
+                    # i.e. book specified; add chapter menu
+                    menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4])
+                    menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0], text))
+                if check >= 2:
+                    # i.e. both book and chapter specified; add verse menu
+                    menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>".format(bcList[1])
+                    menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1], text))
+                if check == 3:
+                    if source == "main":
+                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on \"study\" view</button>".format(text, mainVerseReference)
+                    elif source == "study":
+                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on \"main\" view</button>".format(text, mainVerseReference)
+                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5}".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
+                    menu += "<hr><b>Special Features:</b><br>"
+                    menu += "<button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
+                    menu += "<button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
+                    versions = self.getBibleList()
+                    menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
+                    for version in versions:
+                        if not version == text:
+                            menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
+                            menu += "<script>versionList.push('{0}');</script>".format(version)
+                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>Start Comparison</button>"
+                    menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
+                    for version in versions:
+                        if not version == text:
+                            menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
+                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
+        return menu
+
     def formTextTag(self, text=config.mainText):
         return "<ref onclick='document.title=\"_menu:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
 
@@ -37,9 +87,8 @@ class BiblesSqlite:
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
     def readTextChapter(self, text, b, c):
-        t = (b, c)
         query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
-        self.cursor.execute(query, t)
+        self.cursor.execute(query, (b, c))
         textChapter = self.cursor.fetchall()
         if not textChapter:
             return [(b, c, 1, "")]
@@ -47,9 +96,8 @@ class BiblesSqlite:
         return textChapter
 
     def readTextVerse(self, text, b, c, v):
-        t = (b, c, v)
         query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
-        self.cursor.execute(query, t)
+        self.cursor.execute(query, (b, c, v))
         textVerse = self.cursor.fetchone()
         if not textVerse:
             return (b, c, v, "")
@@ -57,19 +105,15 @@ class BiblesSqlite:
         return textVerse
 
     def getBibleList(self):
-        t = ("table",)
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        self.cursor.execute(query, t)
+        self.cursor.execute(query, ("table",))
         versions = self.cursor.fetchall()
         exclude = ("Details", "lexicalEntry", "morphology", "original", "title", "interlinear")
         return [version[0] for version in versions if not version[0] in exclude]
 
     def getTexts(self):
         textList = self.getBibleList()
-        texts = ""
-        for text in textList:
-            texts += "{0}<button class='feature'>{1}</button></ref> ".format(self.formTextTag(text), text)
-        return texts
+        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
 
     def getBookList(self, text=config.mainText):
         query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
@@ -78,55 +122,36 @@ class BiblesSqlite:
 
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
-        books = ""
-        for book in bookList:
-            bookName = self.bcvToVerseReference(book, 1, 1)[:-4]
-            books += "{0}<button class='feature'>{1}</button></ref> ".format(self.formBookTag(book, text), bookName)
-        return books
+        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book, text), self.bcvToVerseReference(book, 1, 1)[:-4]) for book in bookList])
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
-        t = (b,)
         query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
-        self.cursor.execute(query, t)
+        self.cursor.execute(query, (b,))
         return [chapter[0] for chapter in self.cursor.fetchall()]
 
     def getChapters(self, b=config.mainB, text=config.mainText):
         chapterList = self.getChapterList(b, text)
-        chapters = ""
-        for chapter in chapterList:
-            chapters += "{0}{1}</ref> ".format(self.formChapterTag(b, chapter, text), chapter)
-        return chapters
+        return " ".join(["{0}{1}</ref>".format(self.formChapterTag(b, chapter, text), chapter) for chapter in chapterList])
 
     def getChaptersMenu(self, b=config.mainB, text=config.mainText):
         chapterList = self.getChapterList(b, text)
-        chapters = ""
-        for chapter in chapterList:
-            chapters += "{0}{1}</ref> ".format(self.formVerseTag(b, chapter, 1, text), chapter)
-        return chapters
+        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter) for chapter in chapterList])
 
     def getVerseList(self, b, c, text=config.mainText):
-        t = (b, c)
         query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
-        self.cursor.execute(query, t)
+        self.cursor.execute(query, (b, c))
         return [verse[0] for verse in self.cursor.fetchall()]
 
     def getVerses(self, b=config.mainB, c=config.mainC, text=config.mainText):
         verseList = self.getVerseList(b, c, text)
-        verses = ""
-        for verse in verseList:
-            verses += "{0}{1}</ref> ".format(self.formVerseTag(b, c, verse, text), verse)
-        return verses
+        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, c, verse, text), verse) for verse in verseList])
 
     def compareVerse(self, verseList, texts=["ALL"]):
         if len(verseList) == 1 and not texts == ["ALL"]:
             b, c, v = verseList[0]
             return self.compareVerseChapter(b, c, v, texts)
         else:
-            verses = ""
-            for verse in verseList:
-                b, c, v = verse
-                verses += self.readTranslations(b, c, v, texts)
-            return verses
+            return "".join([self.readTranslations(b, c, v, texts) for b, c, v in verseList])
 
     def compareVerseChapter(self, b, c, v, texts):
         verseList = self.getVerseList(b, c, texts[0])
@@ -320,8 +345,7 @@ class BiblesSqlite:
 
     def readMultipleVerses(self, text, verseList):
         verses = ""
-        for verse in verseList:
-            b, c, v = verse
+        for b, c, v in verseList:
             divTag = "<div>"
             if b < 40 and text in self.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"

@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
 
         self.textCommandParser = TextCommandParser(self)
 
-        self.setWindowTitle('THE TEXT APP')
+        self.setWindowTitle('Unique Bible App')
         
         appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
     def create_menu(self):
         appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
-        menu1 = self.menuBar().addMenu("&theText.app")
+        menu1 = self.menuBar().addMenu("&UniqueBible.app")
         quit_action = QAction(appIcon, "E&xit",
                              self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.mainToolBar)
 
         self.mainRefButton = QPushButton(self.verseReference("main"))
-        self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.mainToolBar.addWidget(self.mainRefButton)
 
@@ -125,12 +125,12 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.studyToolBar)
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
-        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
         self.studyToolBar.addWidget(self.studyRefButton)
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: red;} QPushButton:pressed { background-color: blue; }')
+        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.studyToolBar.addWidget(self.commentaryRefButton)
 
@@ -231,7 +231,7 @@ class MainWindow(QMainWindow):
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        exceptionTuple = ("theText.app", "about:blank", "study.html")
+        exceptionTuple = ("UniqueBible.app", "about:blank", "study.html")
         if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
@@ -257,7 +257,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>theText.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
             html += content
             html += "</body></html>"
             views = {
@@ -330,7 +330,7 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         # content in unicode html format - Content larger than 2 MB cannot be displayed
-        self.html = "<h1>theText.app</h1><p>theText.app</p>"
+        self.html = "<h1>UniqueBible.app</h1><p>UniqueBible.app</p>"
         self.mainView = WebEngineView(self, "main")
         self.mainView.setHtml(self.html, baseUrl)
         self.studyView = WebEngineView(self, "study")
@@ -454,7 +454,7 @@ class WebEngineView(QWebEngineView):
             self.openPopover()
         return super().createWindow(windowType)
 
-    def openPopover(self, name="popover", html="theText.app"):
+    def openPopover(self, name="popover", html="UniqueBible.app"):
         self.popoverView = WebEngineViewPopover(self, name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()

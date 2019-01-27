@@ -433,9 +433,7 @@ class Commentary:
     def getContent(self, verse):
         if self.text in self.getCommentaryList():
             b, c, v = verse
-            biblesSqlite = BiblesSqlite()
-            chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, config.studyText), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
-            del biblesSqlite
+            chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, verse[:-1])
             scripture = self.cursor.fetchone()

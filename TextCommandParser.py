@@ -50,7 +50,7 @@ class TextCommandParser:
             "encyclopedia": self.textEncyclopedia,
             "crossreference": self.textCrossReference,
             "tske": self.tske,
-        } # add more later
+        }
         commandList = self.splitCommand(textCommad)
         if len(commandList) == 1:
             return self.textBibleVerseParser(textCommad, config.mainText)
@@ -70,53 +70,7 @@ class TextCommandParser:
 
     def textMenu(self, command, source="main"):
         biblesSqlite = BiblesSqlite()
-        if source == "main":
-            mainVerseReference = biblesSqlite.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.mainText, mainVerseReference)
-        elif source == "study":
-            mainVerseReference = biblesSqlite.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
-            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
-        menu += "<hr><b>Bibles:</b> {0}".format(biblesSqlite.getTexts())
-        items = command.split(".", 3)
-        text = items[0]
-        if not text == "":
-            # i.e. text specified; add book menu
-            menu += "<hr><b>Selected Bible:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open {1} in {0}</button>".format(text, mainVerseReference)
-            menu += "<hr><b>Books:</b> {0}".format(biblesSqlite.getBooks(text))
-            bcList = [int(i) for i in items[1:]]
-            if bcList:
-                check = len(bcList)
-                if check >= 1:
-                    # i.e. book specified; add chapter menu
-                    menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>".format(biblesSqlite.bcvToVerseReference(bcList[0], 1, 1)[:-4])
-                    menu += "<hr><b>Chapters:</b> {0}".format(biblesSqlite.getChapters(bcList[0], text))
-                if check >= 2:
-                    # i.e. both book and chapter specified; add verse menu
-                    menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>".format(bcList[1])
-                    menu += "<hr><b>Verses:</b> {0}".format(biblesSqlite.getVerses(bcList[0], bcList[1], text))
-                if check == 3:
-                    if source == "main":
-                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on \"study\" view</button>".format(text, mainVerseReference)
-                    elif source == "study":
-                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on \"main\" view</button>".format(text, mainVerseReference)
-                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5}".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
-                    menu += "<hr><b>Special Features:</b><br>"
-                    menu += "<button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
-                    versions = biblesSqlite.getBibleList()
-                    menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
-                    for version in versions:
-                        if not version == text:
-                            menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
-                            menu += "<script>versionList.push('{0}');</script>".format(version)
-                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>Start Comparison</button>"
-                    menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
-                    for version in versions:
-                        if not version == text:
-                            menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
+        menu = biblesSqlite.getMenu(command, source)
         del biblesSqlite
         return (source, menu)
 
@@ -445,7 +399,6 @@ class TextCommandParser:
                 return ("study", content)
         else:
             return self.invalidCommand("study")
-
 
     def textDictionary(self, command, source):
         dictionaryData = DictionaryData()
