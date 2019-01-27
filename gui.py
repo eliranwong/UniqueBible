@@ -106,6 +106,18 @@ class MainWindow(QMainWindow):
         self.plusToolBar = QToolBar()
         self.addToolBar(self.plusToolBar)
 
+        self.fontMinusButton = QPushButton()
+        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
+        self.fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+        self.fontMinusButton.clicked.connect(self.smallerFont)
+        self.plusToolBar.addWidget(self.fontMinusButton)
+
+        self.fontPlusButton = QPushButton()
+        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
+        self.fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+        self.fontPlusButton.clicked.connect(self.largerFont)
+        self.plusToolBar.addWidget(self.fontPlusButton)
+
         self.instantMode = 1 # default parallel mode
         self.instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
@@ -133,6 +145,24 @@ class MainWindow(QMainWindow):
         self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.studyToolBar.addWidget(self.commentaryRefButton)
+
+    def smallerFont(self):
+        if not config.fontSize == 10:
+            config.fontSize = config.fontSize - 5
+            self.reloadCurrentRecord()
+
+    def largerFont(self):
+        config.fontSize = config.fontSize + 5
+        self.reloadCurrentRecord()
+
+    def reloadCurrentRecord(self):
+        views = {
+            "main": self.mainView,
+            "study": self.studyView
+        }
+        for view in views.keys():
+            textCommand = config.history[view][config.currentRecord[view]]
+            self.runTextCommand(textCommand, False, view)
 
     def mainRefButtonClicked(self):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
