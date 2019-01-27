@@ -1,9 +1,11 @@
+/*
 select:active, select:hover {
   outline-color: none;
 }
 option:checked, option:hover, option:checked: after {
 background: #ffb7b7;
 }
+*/
 ::selection {
 background: #ffb7b7; /* WebKit/Blink Browsers */
 }
@@ -573,6 +575,13 @@ direction: ltr;
 display: inline-block;
 }
 button.feature {
+cursor: pointer;
 background-color: #515790;
 color: white;
+}
+button.feature:hover {
+background-color: #333972;
+}
+button.feature:active {
+background-color: #151B54;
 }
