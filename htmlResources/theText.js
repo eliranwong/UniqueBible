@@ -381,7 +381,9 @@ function openImage(module, entry) {
 }
 
 function searchResource(tool) {
-    document.title = "_command:::SEARCHTOOL:::"+tool+":::";
+    if (tool != "") {
+        document.title = "_command:::SEARCHTOOL:::"+tool+":::";
+    }
 }
 
 function searchDict(module) {
@@ -400,14 +402,18 @@ function searchEncyclopedia(module) {
     searchResource(module);
 }
 
+function searchItem(module, entry) {
+    document.title = "SEARCHTOOL:::"+module+":::"+entry;
+}
+
 function rmac(entry) {
-    document.title = "SEARCHTOOL:::mRMAC:::"+entry;
+    searchItem("mRMAC", entry);
 }
 
 function etcbcmorph(entry) {
-    document.title = "SEARCHTOOL:::mETCBC:::"+entry;
+    searchItem("mETCBC", entry);
 }
 
 function lxxmorph(entry) {
-    document.title = "SEARCHTOOL:::mLXX:::"+entry;
+    searchItem("mLXX", entry);
 }
