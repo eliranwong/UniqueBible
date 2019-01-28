@@ -22,9 +22,7 @@ class MainWindow(QMainWindow):
         
         self.create_menu()
         self.setupToolBar()
-        self.setupMainToolBar()
-        self.setupPlusToolBar()
-        self.setupStudyToolBar()
+        self.setupSecondToolBar()
         self.setupBaseUrl()
         
         self.centralWidget = CentralWidget(self)
@@ -60,6 +58,8 @@ class MainWindow(QMainWindow):
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
+        self.toolBar.setWindowTitle("Text Command")
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.toolBar)
 
         self.backButton = QPushButton()
@@ -94,58 +94,56 @@ class MainWindow(QMainWindow):
         # put other tool bars below the main one
         self.addToolBarBreak()
 
-    def setupMainToolBar(self):
-        self.mainToolBar = QToolBar()
-        self.addToolBar(self.mainToolBar)
+    def setupSecondToolBar(self):
+        self.secondToolBar = QToolBar()
+        self.secondToolBar.setWindowTitle("Special Features")
+        self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.secondToolBar)
 
         self.mainRefButton = QPushButton(self.verseReference("main"))
         self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
-        self.mainToolBar.addWidget(self.mainRefButton)
-
-    def setupPlusToolBar(self):
-        self.plusToolBar = QToolBar()
-        self.addToolBar(self.plusToolBar)
+        self.secondToolBar.addWidget(self.mainRefButton)
+        
+        self.secondToolBar.addSeparator()
 
         self.fontMinusButton = QPushButton()
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
         self.fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
         self.fontMinusButton.clicked.connect(self.smallerFont)
-        self.plusToolBar.addWidget(self.fontMinusButton)
+        self.secondToolBar.addWidget(self.fontMinusButton)
 
         self.fontPlusButton = QPushButton()
         fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
         self.fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
         self.fontPlusButton.clicked.connect(self.largerFont)
-        self.plusToolBar.addWidget(self.fontPlusButton)
+        self.secondToolBar.addWidget(self.fontPlusButton)
 
         self.instantMode = 1 # default parallel mode
         self.instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
         self.instantButton.setIcon(QIcon(instantButtonFile))
         self.instantButton.clicked.connect(self.instant)
-        self.plusToolBar.addWidget(self.instantButton)
+        self.secondToolBar.addWidget(self.instantButton)
 
         self.parallelMode = 1 # default parallel mode
         self.parallelButton = QPushButton()
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
         self.parallelButton.setIcon(QIcon(parallelButtonFile))
         self.parallelButton.clicked.connect(self.parallel)
-        self.plusToolBar.addWidget(self.parallelButton)
-
-    def setupStudyToolBar(self):
-        self.studyToolBar = QToolBar()
-        self.addToolBar(self.studyToolBar)
+        self.secondToolBar.addWidget(self.parallelButton)
+        
+        self.secondToolBar.addSeparator()
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
         self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.studyToolBar.addWidget(self.studyRefButton)
+        self.secondToolBar.addWidget(self.studyRefButton)
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
         self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
-        self.studyToolBar.addWidget(self.commentaryRefButton)
+        self.secondToolBar.addWidget(self.commentaryRefButton)
 
     def smallerFont(self):
         if not config.fontSize == 10:
@@ -302,11 +300,12 @@ class MainWindow(QMainWindow):
                 f.close()
                 fullOutputPath = os.path.abspath(outputFile)
                 self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
-            elif view == "popover":
-                self.mainView.openPopover(html=html)
+            elif view.startswith("popover"):
+                view = view.split(".")[1]
+                views[view].openPopover(html=html)
             else:
                 views[view].setHtml(html, baseUrl)
-            if addRecord == True:
+            if addRecord == True and view in ("main", "study"):
                 self.addHistoryRecord(view, textCommand)
 
     def addHistoryRecord(self, view, textCommand):
@@ -553,10 +552,13 @@ class WebEngineView(QWebEngineView):
         parser = BibleVerseParser("YES")
         verseList = parser.extractAllReferences(selectedText, False)
         del parser
-        biblesSqlite = BiblesSqlite()
-        verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
-        del biblesSqlite
-        self.openPopover(html=verses)
+        if not verseList:
+            self.page().runJavaScript("alert('No bible verse reference is found from the text you selected.')")
+        else:
+            biblesSqlite = BiblesSqlite()
+            verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
+            del biblesSqlite
+            self.openPopover(html=verses)
 
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:
@@ -575,6 +577,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.parent = parent
         self.name = name
         self.source = source
+        self.setWindowTitle('Unique Bible App - Popover')
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
     def popoverTextCommandChanged(self, newTextCommand):

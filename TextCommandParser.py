@@ -227,7 +227,7 @@ class TextCommandParser:
         imageSqlite.exportImage(module, entry)
         del imageSqlite
         content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
-        return ("popover", content)
+        return ("popover.{0}".format(source), content)
 
     def instantVerse(self, command, source="main"):
         commandList = self.splitCommand(command)
