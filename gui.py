@@ -5,6 +5,7 @@ from PySide2.QtWidgets import (QAction, QDesktopWidget, QGridLayout, QLineEdit, 
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
+from BiblesSqlite import BiblesSqlite
 
 class MainWindow(QMainWindow):
 
@@ -287,9 +288,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>".format(activeBCVsettings, config.fontSize)
-            html += content
-            html += "</body></html>"
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, content)
             views = {
                 "main": self.mainView,
                 "study": self.studyView,
@@ -477,6 +476,11 @@ class WebEngineView(QWebEngineView):
         self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
         self.addAction(self.searchBibleEncyclopedia)
 
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText("Extract All Bible References")
+        searchBibleReferences.triggered.connect(self.extractAllReferences)
+        self.addAction(searchBibleReferences)
+
     def messageNoSelection(self):
         self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
 
@@ -544,22 +548,36 @@ class WebEngineView(QWebEngineView):
     def searchEncyclopedia(self):
         self.searchResource(config.encyclopedia)
 
+    def extractAllReferences(self):
+        selectedText = self.selectedText()
+        parser = BibleVerseParser("YES")
+        verseList = parser.extractAllReferences(selectedText, False)
+        del parser
+        biblesSqlite = BiblesSqlite()
+        verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
+        del biblesSqlite
+        self.openPopover(html=verses)
+
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:
             self.openPopover()
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
-        self.popoverView = WebEngineViewPopover(self, name)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
 
-
 class WebEngineViewPopover(QWebEngineView):
-    def __init__(self, parent, name):
+    def __init__(self, parent, name, source):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.source = source
+        self.titleChanged.connect(self.popoverTextCommandChanged)
 
+    def popoverTextCommandChanged(self, newTextCommand):
+        self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
 
