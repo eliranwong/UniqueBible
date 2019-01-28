@@ -113,6 +113,24 @@ class MainWindow(QMainWindow):
         
         self.secondToolBar.addSeparator()
 
+        self.studyRefButton = QPushButton(self.verseReference("study"))
+        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.secondToolBar.addWidget(self.studyRefButton)
+
+        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
+        self.secondToolBar.addWidget(self.commentaryRefButton)
+
+        studyHistoryButton = QPushButton()
+        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
+        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
+        self.secondToolBar.addWidget(studyHistoryButton)
+
+        self.secondToolBar.addSeparator()
+
         fontMinusButton = QPushButton()
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
         fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
@@ -138,24 +156,6 @@ class MainWindow(QMainWindow):
         parallelButton.setIcon(QIcon(parallelButtonFile))
         parallelButton.clicked.connect(self.parallel)
         self.secondToolBar.addWidget(parallelButton)
-
-        self.secondToolBar.addSeparator()
-
-        self.studyRefButton = QPushButton(self.verseReference("study"))
-        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
-        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.secondToolBar.addWidget(self.studyRefButton)
-
-        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
-        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
-        self.secondToolBar.addWidget(self.commentaryRefButton)
-
-        studyHistoryButton = QPushButton()
-        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
-        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
-        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
-        self.secondToolBar.addWidget(studyHistoryButton)
 
         self.secondToolBar.addSeparator()
 
