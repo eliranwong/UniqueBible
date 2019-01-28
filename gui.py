@@ -62,34 +62,34 @@ class MainWindow(QMainWindow):
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.toolBar)
 
-        self.backButton = QPushButton()
+        backButton = QPushButton()
         leftButtonFile = os.path.join("htmlResources", "left.png")
-        self.backButton.setIcon(QIcon(leftButtonFile))
-        self.backButton.clicked.connect(self.back)
-        self.toolBar.addWidget(self.backButton)
+        backButton.setIcon(QIcon(leftButtonFile))
+        backButton.clicked.connect(self.back)
+        self.toolBar.addWidget(backButton)
 
-        self.forwardButton = QPushButton()
+        forwardButton = QPushButton()
         rightButtonFile = os.path.join("htmlResources", "right.png")
-        self.forwardButton.setIcon(QIcon(rightButtonFile))
-        self.forwardButton.clicked.connect(self.forward)
-        self.toolBar.addWidget(self.forwardButton)
+        forwardButton.setIcon(QIcon(rightButtonFile))
+        forwardButton.clicked.connect(self.forward)
+        self.toolBar.addWidget(forwardButton)
 
         self.textCommandLineEdit = QLineEdit()
         #self.textCommandLineEdit.setText("[Enter command here]")
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.toolBar.addWidget(self.textCommandLineEdit)
 
-        self.studyBackButton = QPushButton()
+        studyBackButton = QPushButton()
         leftButtonFile = os.path.join("htmlResources", "left.png")
-        self.studyBackButton.setIcon(QIcon(leftButtonFile))
-        self.studyBackButton.clicked.connect(self.studyBack)
-        self.toolBar.addWidget(self.studyBackButton)
+        studyBackButton.setIcon(QIcon(leftButtonFile))
+        studyBackButton.clicked.connect(self.studyBack)
+        self.toolBar.addWidget(studyBackButton)
 
-        self.studyForwardButton = QPushButton()
+        studyForwardButton = QPushButton()
         rightButtonFile = os.path.join("htmlResources", "right.png")
-        self.studyForwardButton.setIcon(QIcon(rightButtonFile))
-        self.studyForwardButton.clicked.connect(self.studyForward)
-        self.toolBar.addWidget(self.studyForwardButton)
+        studyForwardButton.setIcon(QIcon(rightButtonFile))
+        studyForwardButton.clicked.connect(self.studyForward)
+        self.toolBar.addWidget(studyForwardButton)
 
         # put other tool bars below the main one
         self.addToolBarBreak()
@@ -104,35 +104,41 @@ class MainWindow(QMainWindow):
         self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.secondToolBar.addWidget(self.mainRefButton)
+
+        mainHistoryButton = QPushButton()
+        mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
+        mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
+        self.secondToolBar.addWidget(mainHistoryButton)
         
         self.secondToolBar.addSeparator()
 
-        self.fontMinusButton = QPushButton()
+        fontMinusButton = QPushButton()
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
-        self.fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
-        self.fontMinusButton.clicked.connect(self.smallerFont)
-        self.secondToolBar.addWidget(self.fontMinusButton)
+        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+        fontMinusButton.clicked.connect(self.smallerFont)
+        self.secondToolBar.addWidget(fontMinusButton)
 
-        self.fontPlusButton = QPushButton()
+        fontPlusButton = QPushButton()
         fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
-        self.fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
-        self.fontPlusButton.clicked.connect(self.largerFont)
-        self.secondToolBar.addWidget(self.fontPlusButton)
+        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+        fontPlusButton.clicked.connect(self.largerFont)
+        self.secondToolBar.addWidget(fontPlusButton)
 
         self.instantMode = 1 # default parallel mode
-        self.instantButton = QPushButton()
+        instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        self.instantButton.setIcon(QIcon(instantButtonFile))
-        self.instantButton.clicked.connect(self.instant)
-        self.secondToolBar.addWidget(self.instantButton)
+        instantButton.setIcon(QIcon(instantButtonFile))
+        instantButton.clicked.connect(self.instant)
+        self.secondToolBar.addWidget(instantButton)
 
         self.parallelMode = 1 # default parallel mode
-        self.parallelButton = QPushButton()
+        parallelButton = QPushButton()
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        self.parallelButton.setIcon(QIcon(parallelButtonFile))
-        self.parallelButton.clicked.connect(self.parallel)
-        self.secondToolBar.addWidget(self.parallelButton)
-        
+        parallelButton.setIcon(QIcon(parallelButtonFile))
+        parallelButton.clicked.connect(self.parallel)
+        self.secondToolBar.addWidget(parallelButton)
+
         self.secondToolBar.addSeparator()
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
@@ -144,6 +150,25 @@ class MainWindow(QMainWindow):
         self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
+
+        studyHistoryButton = QPushButton()
+        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
+        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
+        self.secondToolBar.addWidget(studyHistoryButton)
+
+        self.secondToolBar.addSeparator()
+
+    def mainHistoryButtonClicked(self):
+        self.mainView.setHtml(self.getHistory("main"), baseUrl)
+
+    def studyHistoryButtonClicked(self):
+        self.studyView.setHtml(self.getHistory("study"), baseUrl)
+
+    def getHistory(self, view):
+        html = "<br>".join(["<button class='feature' onclick='document.title=\"{0}\"'>{0}</button>".format(record) for record in reversed(config.history[view])])
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        return html
 
     def smallerFont(self):
         if not config.fontSize == 10:

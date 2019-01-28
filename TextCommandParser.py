@@ -23,6 +23,7 @@ class TextCommandParser:
             "_info": self.textInfo,
             "_image": self.textImage,
             "_command": self.textCommand,
+            "_history": self.textHistory,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -61,6 +62,12 @@ class TextCommandParser:
                 return interpreters[resourceType](command, source)
             else:
                 return self.textBibleVerseParser(textCommad, config.mainText)        
+
+    def textHistory(self, command, source="main"):
+        if command in ("main", "study"):
+            return (command, self.parent.getHistory(command))
+        else:
+            return self.invalidCommand()
 
     def textCommand(self, command, source="main"):
         return ("command", command)
