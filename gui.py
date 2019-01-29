@@ -1,7 +1,7 @@
 import os, sys, config
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QDesktopWidget, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
+from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
