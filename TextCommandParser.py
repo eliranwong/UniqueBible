@@ -239,24 +239,37 @@ class TextCommandParser:
             versions, verses = zip(*tableList)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
+    # _info:::
+    def textInfo(self, command, source):
+        if config.instantInformationEnabled == 1:
+            return ("instant", command)
+        else:
+            return ("", "")
+
     # _instantverse:::
     def instantVerse(self, command, source):
-        commandList = self.splitCommand(command)
-        biblesSqlite = BiblesSqlite()
-        b, c, v = [int(i) for i in commandList[1].split(".")]
-        info = biblesSqlite.instantVerse("interlinear", b, c, v)
-        del biblesSqlite
-        return ("instant", info)
+        if config.instantInformationEnabled == 1:
+            commandList = self.splitCommand(command)
+            biblesSqlite = BiblesSqlite()
+            b, c, v = [int(i) for i in commandList[1].split(".")]
+            info = biblesSqlite.instantVerse("interlinear", b, c, v)
+            del biblesSqlite
+            return ("instant", info)
+        else:
+            return ("", "")
 
     # _instantword:::
     def instantWord(self, command, source):
-        commandList = self.splitCommand(command)
-        biblesSqlite = BiblesSqlite()
-        wordID = commandList[1]
-        wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
-        info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
-        del biblesSqlite
-        return ("instant", info)
+        if config.instantInformationEnabled == 1:
+            commandList = self.splitCommand(command)
+            biblesSqlite = BiblesSqlite()
+            wordID = commandList[1]
+            wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
+            info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
+            del biblesSqlite
+            return ("instant", info)
+        else:
+            return ("", "")
 
     # _menu:::
     def textMenu(self, command, source):
@@ -283,10 +296,6 @@ class TextCommandParser:
     # _command:::
     def textCommand(self, command, source):
         return ("command", command)
-
-    # _info:::
-    def textInfo(self, command, source):
-        return ("instant", command)
 
     # _image:::
     def textImage(self, command, source):

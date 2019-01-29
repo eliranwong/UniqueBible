@@ -1,4 +1,5 @@
 myGoogleApiKey = ''
+instantInformationEnabled = 1
 fontSize = 120
 mainText = 'KJV'
 mainB = 1

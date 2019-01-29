@@ -42,6 +42,12 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_0 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 1:
+            config.instantInformationEnabled = 0
+        elif event.key() == Qt.Key_1 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 0:
+            config.instantInformationEnabled = 1
+
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser("YES")
         verseReference = parser.bcvToVerseReference(b, c, v)
@@ -113,6 +119,13 @@ class MainWindow(QMainWindow):
         
         self.secondToolBar.addSeparator()
 
+        self.parallelMode = 1 # default parallel mode
+        parallelButton = QPushButton()
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        parallelButton.setIcon(QIcon(parallelButtonFile))
+        parallelButton.clicked.connect(self.parallel)
+        self.secondToolBar.addWidget(parallelButton)
+
         studyHistoryButton = QPushButton()
         studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
         studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
@@ -130,6 +143,20 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(self.commentaryRefButton)
 
         self.secondToolBar.addSeparator()
+        
+        self.instantMode = 1 # default parallel mode
+        instantButton = QPushButton()
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        instantButton.setIcon(QIcon(instantButtonFile))
+        instantButton.clicked.connect(self.instant)
+        self.secondToolBar.addWidget(instantButton)
+
+        self.enableInstantButton = QPushButton(self.getInstantInformation())
+        self.enableInstantButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+        self.secondToolBar.addWidget(self.enableInstantButton)
+
+        self.secondToolBar.addSeparator()
 
         fontMinusButton = QPushButton()
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
@@ -143,21 +170,20 @@ class MainWindow(QMainWindow):
         fontPlusButton.clicked.connect(self.largerFont)
         self.secondToolBar.addWidget(fontPlusButton)
 
-        self.instantMode = 1 # default parallel mode
-        instantButton = QPushButton()
-        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        instantButton.setIcon(QIcon(instantButtonFile))
-        instantButton.clicked.connect(self.instant)
-        self.secondToolBar.addWidget(instantButton)
-
-        self.parallelMode = 1 # default parallel mode
-        parallelButton = QPushButton()
-        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        parallelButton.setIcon(QIcon(parallelButtonFile))
-        parallelButton.clicked.connect(self.parallel)
-        self.secondToolBar.addWidget(parallelButton)
-
         self.secondToolBar.addSeparator()
+
+    def getInstantInformation(self):
+        if config.instantInformationEnabled == 0:
+            return "DISABLED"
+        elif config.instantInformationEnabled == 1:
+            return "ENABLED"
+
+    def enableInstantButtonClicked(self):
+        if config.instantInformationEnabled == 0:
+            config.instantInformationEnabled = 1
+        elif config.instantInformationEnabled == 1:
+            config.instantInformationEnabled = 0
+        self.enableInstantButton.setText(self.getInstantInformation())
 
     def mainHistoryButtonClicked(self):
         self.mainView.setHtml(self.getHistory("main"), baseUrl)
@@ -303,6 +329,8 @@ class MainWindow(QMainWindow):
         view, content = self.textCommandParser.parser(textCommand, source)
         if content == "INVALID_COMMAND_ENTERED":
             self.mainPage.runJavaScript("alert('Invalid command not processed.')")
+        elif view == "":
+            pass
         elif view == "command":
             self.textCommandLineEdit.setText(content)
         else:
