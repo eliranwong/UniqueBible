@@ -355,6 +355,8 @@ class MainWindow(QMainWindow):
                 f.close()
                 fullOutputPath = os.path.abspath(outputFile)
                 self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
+                if self.parallelMode == 0:
+                    self.parallel()
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)
