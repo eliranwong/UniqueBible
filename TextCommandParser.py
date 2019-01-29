@@ -8,12 +8,6 @@ class TextCommandParser:
     def __init__(self, parent):
         self.parent = parent
 
-    def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
-
     def parser(self, textCommad, source="main"):
         interpreters = {
             "_instantverse": self.instantVerse,
@@ -21,12 +15,13 @@ class TextCommandParser:
             "_menu": self.textMenu,
             "_commentary": self.textCommentaryMenu,
             "_info": self.textInfo,
-            "_image": self.textImage,
             "_command": self.textCommand,
             "_history": self.textHistory,
+            "_image": self.textImage,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
+            "text": self.textText,
             "compare": self.textCompare,
             "parallel": self.textParallel,
             "verse": self.textVerseData,
@@ -53,67 +48,33 @@ class TextCommandParser:
             "tske": self.tske,
         }
         commandList = self.splitCommand(textCommad)
+        updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
-            return self.textBibleVerseParser(textCommad, config.mainText)
+            return self.textBibleVerseParser(textCommad, viewText, source)
         else:
             resourceType = commandList[0].lower()
             command = commandList[1]
             if resourceType in interpreters:
                 return interpreters[resourceType](command, source)
             else:
-                return self.textBibleVerseParser(textCommad, config.mainText)        
+                return self.textBibleVerseParser(textCommad, viewText, source)        
 
-    def textHistory(self, command, source="main"):
-        if command in ("main", "study"):
-            return (command, self.parent.getHistory(command))
-        else:
-            return self.invalidCommand()
+    # return invalid command
+    def invalidCommand(self, source="main"):
+        return (source, "INVALID_COMMAND_ENTERED")
 
-    def textCommand(self, command, source="main"):
-        return ("command", command)
-
-    def textInfo(self, command, source="main"):
-        return ("instant", command)
-
-    def textMenu(self, command, source="main"):
-        biblesSqlite = BiblesSqlite()
-        menu = biblesSqlite.getMenu(command, source)
-        del biblesSqlite
-        return (source, menu)
-
-    def textCommentaryMenu(self, command, source):
-        text, *_ = command.split(".")
-        commentary = Commentary(text)
-        commentaryMenu = commentary.getMenu(command)
-        del commentary
-        return ("study", commentaryMenu)
-
-    def getChaptersMenu(self, b=config.mainB, text=config.mainText):
-        biblesSqlite = BiblesSqlite()
-        chapters = biblesSqlite.getChaptersMenu(b, text)
-        del biblesSqlite
-        return chapters
-
+    # sort out keywords from a single line command
     def splitCommand(self, command):
         commandList = re.split('[ ]*?:::[ ]*?', command, 1)
         return commandList
 
-    def getConfirmedTexts(self, texts):
-        biblesSqlite = BiblesSqlite()
-        bibleList = biblesSqlite.getBibleList()
-        del biblesSqlite
-        texts = texts.split("_")
-        confirmedTexts = [text for text in texts if text in bibleList]
-        return confirmedTexts
-
-    def extractAllVerses(self, text, tagged=False):
-        parser = BibleVerseParser("YES")
-        verseList = parser.extractAllReferences(text, tagged)
-        del parser
-        return verseList
-
-    def invalidCommand(self, source="main"):
-        return (source, "INVALID_COMMAND_ENTERED")
+    # shared functions about config
+    def getViewConfig(self, view):
+        views = {
+            "main": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
+            "study": (self.setStudyVerse, config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV), config.studyB, config.studyC, config.studyV),
+        }
+        return views[view]
 
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
@@ -134,60 +95,209 @@ class TextCommandParser:
         config.studyB, config.studyC, config.studyV = bcvTuple
         self.parent.updateStudyRefButton()
 
-    def textPlainBible(self, verseList, text=config.mainText):
-        # expect verseList is a list of tuples
+    # shared functions about bible text
+    def getConfirmedTexts(self, texts):
+        biblesSqlite = BiblesSqlite()
+        bibleList = biblesSqlite.getBibleList()
+        del biblesSqlite
+        confirmedTexts = [text for text in texts.split("_") if text in bibleList]
+        return confirmedTexts
+
+    def extractAllVerses(self, text, tagged=False):
+        parser = BibleVerseParser("YES")
+        verseList = parser.extractAllReferences(text, tagged)
+        del parser
+        return verseList
+
+    def bcvToVerseReference(self, b, c, v):
+        parser = BibleVerseParser("YES")
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
+        return verseReference
+
+    # default function if no special keyword is specified
+    def textBibleVerseParser(self, command, text, view):
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            if len(verseList) == 1:
+                # i.e. only one verse reference is specified
+                bcvTuple = verseList[0]
+                chapters = self.getChaptersMenu(bcvTuple[0], text)
+                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text))
+            else:
+                # i.e. when more than one verse reference is found
+                content = self.textPlainBible(verseList, text)
+                bcvTuple = verseList[-1]
+            updateViewConfig, *_ = self.getViewConfig(view)
+            updateViewConfig(text, bcvTuple)
+            return (view, content)
+
+    def getChaptersMenu(self, b, text):
+        biblesSqlite = BiblesSqlite()
+        chapters = biblesSqlite.getChaptersMenu(b, text)
+        del biblesSqlite
+        return chapters
+
+    # access to formatted chapter or plain verses of a bible text, called by textBibleVerseParser
+    def textPlainBible(self, verseList, text):
         biblesSqlite = BiblesSqlite()
         verses = biblesSqlite.readMultipleVerses(text, verseList)
         del biblesSqlite
         return verses
 
-    def textFormattedBible(self, verse, text=config.mainText):
-        chapter = ""
+    def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
         if text in formattedBibles:
-            # expect verse is a tuple
-            bibleSqlite = Bible(text) # use plain bibles database when corresponding formatted version is not available
-            chapter += bibleSqlite.readFormattedChapter(verse)
+            bibleSqlite = Bible(text)
+            chapter = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
-            return chapter
         else:
-            # expect verse is a tuple
-            biblesSqlite = BiblesSqlite() # use plain bibles database when corresponding formatted version is not available
-            chapter += biblesSqlite.readPlainChapter(text, verse)
+            # use plain bibles database when corresponding formatted version is not available
+            biblesSqlite = BiblesSqlite()
+            chapter = biblesSqlite.readPlainChapter(text, verse)
             del biblesSqlite
-            return chapter
+        return chapter
 
-    def textBibleVerseParser(self, command, text, view="main"):
-        verseList = self.extractAllVerses(command)
-        if not verseList:
-            return self.invalidCommand()
-        else:
-            views = {
-                "main": self.setMainVerse,
-                "study": self.setStudyVerse,
-            }
-            views[view](text, verseList[0])
-            if len(verseList) == 1:
-                chapters = self.getChaptersMenu(verseList[0][0], text)
-                chapterMenuTop = chapters+"<hr>"
-                chapterMenuBottom = "<hr>"+chapters
-                content = "{0}{1}{2}".format(chapterMenuTop, self.textFormattedBible(verseList[0], text), chapterMenuBottom)
-                return (view, content)
-            else:
-                content = self.textPlainBible(verseList, text)
-                return (view, content)
-
-    def textBible(self, command, source="main"):
+    # functions about bible
+    # BIBLE:::
+    def textBible(self, command, source):
         if command.count(":::") == 0:
-            command = "{0}:::{1}".format(config.mainText, command)
-        commandList = self.splitCommand(command)
-        texts = self.getConfirmedTexts(commandList[0])
-        if not len(commandList) == 2 or not texts:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts)
+        if not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(commandList[1], texts[0], source)
+            return self.textBibleVerseParser(references, texts[0], source)
 
+    # TEXT:::
+    def textText(self, command, source):
+        texts = self.getConfirmedTexts(command)
+        if not texts:
+            return self.invalidCommand()
+        else:
+            updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
+            return self.textBibleVerseParser(viewReference, texts[0], source)
+
+    # MAIN:::
+    def textMain(self, command, source):
+        return self.textAnotherView(command, source, "main")
+
+    # STUDY:::
+    def textStudy(self, command, source):
+        return self.textAnotherView(command, source, "study")
+
+    # called by MAIN::: & STUDY:::
+    def textAnotherView(self, command, source, target):
+        if command.count(":::") == 0:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts)
+        if not texts:
+            return self.invalidCommand()
+        else:
+            return self.textBibleVerseParser(references, texts[0], target)
+
+    # COMPARE:::
+    def textCompare(self, command, source):
+        if command.count(":::") == 0:
+            confirmedTexts = ["ALL"]
+            verseList = self.extractAllVerses(command)
+        else:
+            texts, references = self.splitCommand(command)
+            confirmedTexts = self.getConfirmedTexts(texts)
+            verseList = self.extractAllVerses(references)
+        if not confirmedTexts or not verseList:
+            return self.invalidCommand()
+        else:
+            biblesSqlite = BiblesSqlite()
+            verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
+            del biblesSqlite
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            if confirmedTexts == ["ALL"]:
+                updateViewConfig(viewText, verseList[-1])
+            else:
+                updateViewConfig(confirmedTexts[-1], verseList[-1])
+            return (source, verses)
+
+    # PARALLEL:::
+    def textParallel(self, command, source):
+        updateViewConfig, viewText, *_ = self.getViewConfig(source)
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        confirmedTexts = self.getConfirmedTexts(texts)
+        if not confirmedTexts:
+            return self.invalidCommand()
+        else:
+            tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
+            versions, verses = zip(*tableList)
+            return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+
+    # _instantverse:::
+    def instantVerse(self, command, source):
+        commandList = self.splitCommand(command)
+        biblesSqlite = BiblesSqlite()
+        b, c, v = [int(i) for i in commandList[1].split(".")]
+        info = biblesSqlite.instantVerse("interlinear", b, c, v)
+        del biblesSqlite
+        return ("instant", info)
+
+    # _instantword:::
+    def instantWord(self, command, source):
+        commandList = self.splitCommand(command)
+        biblesSqlite = BiblesSqlite()
+        wordID = commandList[1]
+        wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
+        info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
+        del biblesSqlite
+        return ("instant", info)
+
+    # _menu:::
+    def textMenu(self, command, source):
+        biblesSqlite = BiblesSqlite()
+        menu = biblesSqlite.getMenu(command, source)
+        del biblesSqlite
+        return (source, menu)
+
+    # _commentary:::
+    def textCommentaryMenu(self, command, source):
+        text, *_ = command.split(".")
+        commentary = Commentary(text)
+        commentaryMenu = commentary.getMenu(command)
+        del commentary
+        return ("study", commentaryMenu)
+
+    # _history:::
+    def textHistory(self, command, source):
+        if command in ("main", "study"):
+            return (command, self.parent.getHistory(command))
+        else:
+            return self.invalidCommand()
+
+    # _command:::
+    def textCommand(self, command, source):
+        return ("command", command)
+
+    # _info:::
+    def textInfo(self, command, source):
+        return ("instant", command)
+
+    # _image:::
+    def textImage(self, command, source):
+        module, entry = self.splitCommand(command)
+        imageSqlite = ImageSqlite()
+        imageSqlite.exportImage(module, entry)
+        del imageSqlite
+        content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
+        return ("popover.{0}".format(source), content)
+
+    # COMMENTARY:::
     def textCommentary(self, command, source):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.commentaryText, command)
@@ -205,7 +315,8 @@ class TextCommandParser:
             del commentary
             return ("study", content)
 
-    def textSearchTool(self, command, source="main"):
+    # SEARCHTOOL:::
+    def textSearchTool(self, command, source):
         module, entry = self.splitCommand(command)
         indexes = IndexesSqlite()
         toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
@@ -228,92 +339,7 @@ class TextCommandParser:
             del indexes
             return self.invalidCommand()
 
-    def textImage(self, command, source):
-        module, entry = self.splitCommand(command)
-        imageSqlite = ImageSqlite()
-        imageSqlite.exportImage(module, entry)
-        del imageSqlite
-        content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
-        return ("popover.{0}".format(source), content)
-
-    def instantVerse(self, command, source="main"):
-        commandList = self.splitCommand(command)
-        biblesSqlite = BiblesSqlite()
-        b, c, v = [int(i) for i in commandList[1].split(".")]
-        info = biblesSqlite.instantVerse("interlinear", b, c, v)
-        del biblesSqlite
-        return ("instant", info)
-
-    def instantWord(self, command, source="main"):
-        commandList = self.splitCommand(command)
-        biblesSqlite = BiblesSqlite()
-        wordID = commandList[1]
-        wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
-        info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
-        del biblesSqlite
-        return ("instant", info)
-
-    def textMain(self, command, source):
-        return self.textAnotherView(command, "main")
-
-    def textStudy(self, command, source):
-        return self.textAnotherView(command, "study")
-
-    def textAnotherView(self, command, target):
-        if command.count(":::") == 0:
-            command = "{0}:::{1}".format(config.mainText, command)
-        commandList = self.splitCommand(command)
-        texts = self.getConfirmedTexts(commandList[0])
-        if not len(commandList) == 2 or not texts:
-            return self.invalidCommand()
-        else:
-            return self.textBibleVerseParser(commandList[1], texts[0], target)
-
-    def textCompare(self, command, source="main"):
-        commandText = ""
-        commandList = self.splitCommand(command)
-        if len(commandList) == 2:
-            confirmedTexts = self.getConfirmedTexts(commandList[0])
-            verseList = self.extractAllVerses(commandList[1])
-        elif len(commandList) == 1:
-            confirmedTexts = ["ALL"]
-            verseList = self.extractAllVerses(commandList[0])
-        if not confirmedTexts or not verseList:
-            return self.invalidCommand()
-        else:
-            views = {
-                "main": self.setMainVerse,
-                "study": self.setStudyVerse,
-            }
-            views[source](config.mainText, verseList[-1])
-            biblesSqlite = BiblesSqlite()
-            verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
-            del biblesSqlite
-            return (source, verses)
-
-    def textParallel(self, command, source="main"):
-        commandList = self.splitCommand(command)
-        if len(commandList) == 2:
-            texts = commandList[0]
-            confirmedTexts = self.getConfirmedTexts(texts)
-            if not confirmedTexts:
-                return self.invalidCommand()
-            else:
-                parser = BibleVerseParser("YES")
-                mainVerseReference = parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-                del parser
-                titles = ""
-                verses = ""
-                for text in confirmedTexts:
-                    titles += "<th><ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{0}</ref></th>".format(text, mainVerseReference)
-                    verses += "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(commandList[1], text)[1], source)
-            return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format(titles, verses))
-        else:
-            return self.invalidCommand()
-
-    def textVerseData(self, command):
-        return command # pending further development
-
+    # WORD:::
     def textWordData(self, command, source):
         commandList = self.splitCommand(command)
         biblesSqlite = BiblesSqlite()
@@ -321,6 +347,7 @@ class TextCommandParser:
         del biblesSqlite
         return ("study", info)
 
+    # LEXICON:::
     def textLexicon(self, command, source):
         commandList = self.splitCommand(command)
         if len(commandList) == 2:
@@ -344,15 +371,15 @@ class TextCommandParser:
         else:
             return self.invalidCommand()
 
-    def textDiscourse(self, command, source):
-        return command # pending further development
-
+    # SEARCH:::
     def textCountSearch(self, command, source):
         return self.textCount(command, False)
 
+    # ISEARCH:::
     def textCountISearch(self, command, source):
         return self.textCount(command, True)
 
+    # called by SEARCH::: & ISEARCH:::
     def textCount(self, command, interlinear):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
@@ -366,18 +393,23 @@ class TextCommandParser:
             del biblesSqlite
             return ("study", searchResult)
 
+    # SHOWSEARCH:::
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC")
 
+    # SHOWISEARCH:::
     def textISearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC", True)
 
+    # ADVANCEDSEARCH:::
     def textSearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED")
 
+    # ADVANCEDISEARCH:::
     def textISearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED", True)
 
+    # called by SHOWSEARCH::: & SHOWISEARCH::: & ADVANCEDSEARCH::: & ADVANCEDISEARCH:::
     def textSearch(self, command, source, mode, interlinear=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
@@ -391,24 +423,26 @@ class TextCommandParser:
             del biblesSqlite
             return ("study", searchResult)
 
+    # LEMMA:::
     def textLemma(self, command, source):
         return self.textSearchMorphology(command, source, "LEMMA")
 
+    # MORPHOLOGYCODE:::
     def textMorphologyCode(self, command, source):
         return self.textSearchMorphology(command, source, "MORPHOLOGYCODE")
 
+    # MORPHOLOGY:::
     def textMorphology(self, command, source):
         return self.textSearchMorphology(command, source, "ADVANCED")
 
+    # called by LEMMA::: & MORPHOLOGYCODE::: & MORPHOLOGY:::
     def textSearchMorphology(self, command, source, mode):
         biblesSqlite = BiblesSqlite()
         searchResult = biblesSqlite.searchMorphology(mode, command)
         del biblesSqlite
         return ("study", searchResult)
 
-    def textSearchBook(self, command, source):
-        return command # pending further development
-
+    # EXLB:::
     def textExlb(self, command, source):
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
@@ -425,6 +459,7 @@ class TextCommandParser:
         else:
             return self.invalidCommand("study")
 
+    # DICTIONARY:::
     def textDictionary(self, command, source):
         indexes = IndexesSqlite()
         dictionaryList = dict(indexes.dictionaryList).keys()
@@ -440,6 +475,7 @@ class TextCommandParser:
         else:
             return self.invalidCommand("study")
 
+    # ENCYCLOPEDIA:::
     def textEncyclopedia(self, command, source):
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
@@ -458,6 +494,7 @@ class TextCommandParser:
         else:
             return self.invalidCommand("study")
 
+    # CROSSREFERENCE:::
     def textCrossReference(self, command, source):
         verseList = self.extractAllVerses(command)
         biblesSqlite = BiblesSqlite()
@@ -479,6 +516,7 @@ class TextCommandParser:
         del biblesSqlite
         return ("study", content)
 
+    # TSKE:::
     def tske(self, command, source):
         verseList = self.extractAllVerses(command)
         biblesSqlite = BiblesSqlite()
@@ -502,19 +540,26 @@ class TextCommandParser:
         del biblesSqlite
         return ("study", content)
 
+    # INDEX:::
     def textIndex(self, command, source):
         verseList = self.extractAllVerses(command)
-        parser = BibleVerseParser("YES")
-        indexesSqlite = IndexesSqlite()
-        content = ""
         if not verseList:
             return self.invalidCommand()
         else:
+            parser = BibleVerseParser("YES")
+            indexesSqlite = IndexesSqlite()
             for verse in verseList:
                 b, c, v = verse
-                content += "<h2>Indexes: {0}</h2>".format(parser.bcvToVerseReference(b, c, v))
-                content += indexesSqlite.getAllIndexes(verse)
-                content += "<hr>"
-        del indexesSqlite
-        del parser
-        return ("study", content)
+                content = "<h2>Indexes: {0}</h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
+            del indexesSqlite
+            del parser
+            return ("study", content)
+
+    def textVerseData(self, command, source):
+        return (source, "") # pending further development
+
+    def textDiscourse(self, command, source):
+        return (source, "") # pending further development
+
+    def textSearchBook(self, command, source):
+        return (source, "") # pending further development
