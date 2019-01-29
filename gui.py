@@ -45,8 +45,10 @@ class MainWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_0 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 1:
             config.instantInformationEnabled = 0
+            self.enableInstantButton.setText(self.getInstantInformation())
         elif event.key() == Qt.Key_1 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 0:
             config.instantInformationEnabled = 1
+            self.enableInstantButton.setText(self.getInstantInformation())
 
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser("YES")
