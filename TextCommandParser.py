@@ -330,7 +330,7 @@ class TextCommandParser:
         module, entry = self.splitCommand(command)
         indexes = IndexesSqlite()
         toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
-        if module in dict(toolList[1:]).keys():
+        if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
             action = "searchItem(this.value, \"{0}\")".format(entry)
             selectList = indexes.formatSelectList(action, toolList)
             if module in dict(indexes.topicList).keys():
@@ -359,27 +359,22 @@ class TextCommandParser:
 
     # LEXICON:::
     def textLexicon(self, command, source):
-        commandList = self.splitCommand(command)
-        if len(commandList) == 2:
-            lexiconData = LexiconData()
-            content = lexiconData.lexicon(commandList[0], commandList[1])
-            del lexiconData
-            return ("study", content)
-        elif len(commandList) == 1:
-            type = commandList[0][0]
+        if command.count(":::") == 0:
             defaultLexicon = {
                 "H": "TBESH",
                 "G": "TBESG",
                 "E": "ConcordanceMorphology",
                 "L": "LXX",
             }
-            defaultLexicon = defaultLexicon[type]
-            lexiconData = LexiconData()
-            content = lexiconData.lexicon(defaultLexicon, commandList[0])
-            del lexiconData
-            return ("study", content)
-        else:
+            command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
+        module, entries = self.splitCommand(command)
+        lexiconData = LexiconData()
+        content = "<hr>".join([lexiconData.lexicon(module, entry) for entry in entries.split("_")])
+        del lexiconData
+        if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
+        else:
+            return ("study", content)
 
     # SEARCH:::
     def textCountSearch(self, command, source):
