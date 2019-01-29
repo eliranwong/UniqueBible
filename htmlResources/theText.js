@@ -343,6 +343,10 @@ function lex(entry) {
     document.title = "LEXICON:::"+entry;
 }
 
+function bdbid(entry) {
+    document.title = "LEXICON:::BDB:::"+entry;
+}
+
 function encyclopedia(module, entry) {
     document.title = "ENCYCLOPEDIA:::"+module+":::"+entry;
 }
