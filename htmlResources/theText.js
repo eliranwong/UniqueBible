@@ -365,18 +365,13 @@ function encyclopedia(module, entry) {
 
 function cl(entry) {
 	if (typeof activeB !== 'undefined' || activeB !== null) {
-    	var testament = '';
-    	if (activeB <= 40) {
-    		testament = 'OT';
-    	} else {
-    		testament = 'NT';
-    	}
-    	clause(testament, entry);
+    	var bcv = activeB+'.'+activeC+'.'+activeV;
+    	clause(bcv, entry);
 	}
 }
 
-function clause(testament, entry) {
-    document.title = "CLAUSE:::"+testament+":::"+entry;
+function clause(bcv, entry) {
+    document.title = "CLAUSE:::"+bcv+":::"+entry;
 }
 
 function bibleDict(entry) {
