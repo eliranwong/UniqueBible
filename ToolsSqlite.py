@@ -274,11 +274,11 @@ class LexiconData:
             query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
             self.cursor.execute(query, (entry,))
             information = self.cursor.fetchone()
+            contentText = "<h2>{0} - {1}</h2>".format(module, entry)
+            contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in lexiconList if not m == module], entry))
             if not information:
-                return "[not found]"
+                return contentText+"[not found]"
             else:
-                contentText = "<h2>{0} - {1}</h2>".format(module, entry)
-                contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in lexiconList if not m == module], entry))
                 contentText += information[0]
                 # deal with images
                 imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
