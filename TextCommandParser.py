@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData
 
 class TextCommandParser:
 
@@ -27,6 +27,7 @@ class TextCommandParser:
             "verse": self.textVerseData,
             "word": self.textWordData,
             "commentary": self.textCommentary,
+            "clause": self.textClause,
             "lexicon": self.textLexicon,
             "discourse": self.textDiscourse,
             "search": self.textCountSearch,
@@ -351,9 +352,9 @@ class TextCommandParser:
 
     # WORD:::
     def textWordData(self, command, source):
-        commandList = self.splitCommand(command)
+        book, wordId = self.splitCommand(command)
         biblesSqlite = BiblesSqlite()
-        info = biblesSqlite.wordData(int(commandList[0]), int(commandList[1]))
+        info = biblesSqlite.wordData(int(book), int(wordId))
         del biblesSqlite
         return ("study", info)
 
@@ -461,6 +462,17 @@ class TextCommandParser:
                 return ("study", content)
             else:
                 return self.invalidCommand("study")
+        else:
+            return self.invalidCommand("study")
+
+    # CLAUSE:::
+    def textClause(self, command, source):
+        if command.count(":::") == 1:
+            testament, entry = self.splitCommand(command)
+            clauseData = ClauseData()
+            content = clauseData.getContent(testament, entry)
+            del clauseData
+            return ("study", content)
         else:
             return self.invalidCommand("study")
 
