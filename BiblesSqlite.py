@@ -315,7 +315,7 @@ class BiblesSqlite:
         else:
             textWord = "<grk>{0}</grk>".format(textWord)
             lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>".format(firstLexicalEntry, lexeme)
-        return "<h2>Word Data</h2><p><b>Verse:</b> {0}<br><b>Clause id:</b> {11}<br><b>Word id:</b> {12}<br><br><b>Word:</b> {1}<br><b>Transliteration:</b> {2}<br><b>Pronuciation:</b> {3}<br><br><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<br><br><b>Gloss:</b> {7}<br><b>Interlinear:</b> {8}<br><b>Translation:</b> {9}<br><b>Lexical entry:</b> {10}</p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID)
+        return ((b, c, v), "<h2>Word Data</h2><p><b>Verse:</b> <ref onclick='document.title=\"{0}\"'>{0}</ref><br><b>Clause id:</b> <ref onclick='cl(\"{11}\")'>{11}</ref><br><b>Word id:</b> {12}<br><br><b>Word:</b> {1}<br><b>Transliteration:</b> <transliteration>{2}</transliteration><br><b>Pronuciation:</b> <transliteration>{3}</transliteration><br><br><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<br><br><b>Gloss:</b> {7}<br><b>Interlinear:</b> {8}<br><b>Translation:</b> {9}<br><b>Lexical entry:</b> {10}</p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID))
 
     def searchMorphology(self, mode, searchString):
         formatedText = ""

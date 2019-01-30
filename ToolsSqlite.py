@@ -259,6 +259,8 @@ class LexiconData:
             "Morphology": "Hebrew & Greek Analytical Lexicon",
             "ConcordanceBook": "Concordance (sorted by book)",
             "ConcordanceMorphology": "Concordance (sorted by morphology)",
+            "BDAG": "BDAG (3rd ed.)",
+            "LN": "Louw-Nida Greek Lexicon",
         }
         selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
         for lexicon in lexiconList:
@@ -326,6 +328,31 @@ class EncyclopediaData:
     def getContent(self, module, entry):
         query = "SELECT content FROM {0} WHERE path = ?".format(module)
         self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return content[0]
+
+
+class WordData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "word.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, testament, entry):
+        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
+        if testament == "NT":
+            entryID = "{0:06d}".format(int(entry))
+        else:
+            entryID = entry
+        self.cursor.execute(query, (entryID,))
         content = self.cursor.fetchone()
         if not content:
             return "[not found]"

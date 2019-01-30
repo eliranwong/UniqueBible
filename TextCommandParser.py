@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData, VerseData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData, VerseData, WordData
 
 class TextCommandParser:
 
@@ -406,10 +406,18 @@ class TextCommandParser:
     # WORD:::
     def textWordData(self, command, source):
         book, wordId = self.splitCommand(command)
+        bNo = int(book)
         biblesSqlite = BiblesSqlite()
-        info = biblesSqlite.wordData(int(book), int(wordId))
+        bcvTuple, content = biblesSqlite.wordData(bNo, int(wordId))
         del biblesSqlite
-        return ("study", info)
+
+        # extra data for Greek words
+        if bNo > 40:
+            wordData = WordData()
+            content += re.sub('^.*?<br><br><b><i>TBESG', '<b><i>TBESG', wordData.getContent("NT", wordId))
+
+        self.setStudyVerse(config.studyText, bcvTuple)
+        return ("study", content)
 
     # LEXICON:::
     def textLexicon(self, command, source):
@@ -419,6 +427,8 @@ class TextCommandParser:
                 "G": "TBESG",
                 "E": "ConcordanceMorphology",
                 "L": "LXX",
+                "g": "BDAG",
+                "l": "LN",
             }
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
