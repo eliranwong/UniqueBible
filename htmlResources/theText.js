@@ -351,6 +351,10 @@ function bdbid(entry) {
     document.title = "LEXICON:::BDB:::"+entry;
 }
 
+function lgntdf(entry) {
+    document.title = "LEXICON:::LGNTDF:::"+entry;
+}
+
 function gk(entry) {
     document.title = "LEXICON:::gk"+entry;
 }
