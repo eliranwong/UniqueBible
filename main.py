@@ -1,4 +1,4 @@
-#! /Users/Eliran/Desktop/venv/venv/bin/python
+#! /Users/eliranwong/Desktop/venv/venv/bin/python
 # development in progress
 # visit https://BibleTools.app for more information
 

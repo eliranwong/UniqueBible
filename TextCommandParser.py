@@ -42,7 +42,6 @@ class TextCommandParser:
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
-            "searchbook": self.textSearchBook,
             "index": self.textIndex,
             "exlb": self.textExlb,
             "dictionary": self.textDictionary,
@@ -352,33 +351,6 @@ class TextCommandParser:
             del indexes
             return self.invalidCommand()
 
-    # WORD:::
-    def textWordData(self, command, source):
-        book, wordId = self.splitCommand(command)
-        biblesSqlite = BiblesSqlite()
-        info = biblesSqlite.wordData(int(book), int(wordId))
-        del biblesSqlite
-        return ("study", info)
-
-    # LEXICON:::
-    def textLexicon(self, command, source):
-        if command.count(":::") == 0:
-            defaultLexicon = {
-                "H": "TBESH",
-                "G": "TBESG",
-                "E": "ConcordanceMorphology",
-                "L": "LXX",
-            }
-            command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
-        module, entries = self.splitCommand(command)
-        lexiconData = LexiconData()
-        content = "<hr>".join([lexiconData.lexicon(module, entry) for entry in entries.split("_")])
-        del lexiconData
-        if not content or content == "INVALID_COMMAND_ENTERED":
-            return self.invalidCommand()
-        else:
-            return ("study", content)
-
     # SEARCH:::
     def textCountSearch(self, command, source):
         return self.textCount(command, False)
@@ -430,6 +402,33 @@ class TextCommandParser:
             searchResult = biblesSqlite.searchBible(texts[0], mode, commandList[1], interlinear)
             del biblesSqlite
             return ("study", searchResult)
+
+    # WORD:::
+    def textWordData(self, command, source):
+        book, wordId = self.splitCommand(command)
+        biblesSqlite = BiblesSqlite()
+        info = biblesSqlite.wordData(int(book), int(wordId))
+        del biblesSqlite
+        return ("study", info)
+
+    # LEXICON:::
+    def textLexicon(self, command, source):
+        if command.count(":::") == 0:
+            defaultLexicon = {
+                "H": "TBESH",
+                "G": "TBESG",
+                "E": "ConcordanceMorphology",
+                "L": "LXX",
+            }
+            command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
+        module, entries = self.splitCommand(command)
+        lexiconData = LexiconData()
+        content = "<hr>".join([lexiconData.lexicon(module, entry) for entry in entries.split("_")])
+        del lexiconData
+        if not content or content == "INVALID_COMMAND_ENTERED":
+            return self.invalidCommand()
+        else:
+            return ("study", content)
 
     # LEMMA:::
     def textLemma(self, command, source):
@@ -516,48 +515,50 @@ class TextCommandParser:
     # CROSSREFERENCE:::
     def textCrossReference(self, command, source):
         verseList = self.extractAllVerses(command)
-        biblesSqlite = BiblesSqlite()
-        crossReferenceSqlite = CrossReferenceSqlite()
-        content = ""
         if not verseList:
             return self.invalidCommand()
         else:
+            biblesSqlite = BiblesSqlite()
+            crossReferenceSqlite = CrossReferenceSqlite()
+            content = ""
             for verse in verseList:
                 b, c, v = verse
-                content += "<h2>Cross-reference: {0}</h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
+                content += "<h2>Cross-reference: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
                 crossReferenceList = self.extractAllVerses(crossReferenceSqlite.scrollMapper(verse), True)
                 if not crossReferenceList:
                     content += "[No cross-reference is found for this verse!]"
                 else:
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-        del crossReferenceSqlite
-        del biblesSqlite
-        return ("study", content)
+            del crossReferenceSqlite
+            del biblesSqlite
+            self.setStudyVerse(config.studyText, verseList[-1])
+            return ("study", content)
 
     # TSKE:::
     def tske(self, command, source):
         verseList = self.extractAllVerses(command)
-        biblesSqlite = BiblesSqlite()
-        crossReferenceSqlite = CrossReferenceSqlite()
-        content = ""
         if not verseList:
             return self.invalidCommand()
         else:
+            biblesSqlite = BiblesSqlite()
+            crossReferenceSqlite = CrossReferenceSqlite()
+            content = ""
             for verse in verseList:
                 b, c, v = verse
-                content += "<h2>TSKE: {0}</h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
+                content += "<h2>TSKE: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
                 tskeContent = crossReferenceSqlite.tske(verse)
                 content += "<div style='margin: 10px; padding: 0px 10px; border: 1px solid gray; border-radius: 5px;'>{0}</div>".format(tskeContent)
                 crossReferenceList = self.extractAllVerses(tskeContent, False)
                 if not crossReferenceList:
-                    content += "[No content is found for this verse!]"
+                    content += "[No cross-reference is found for this verse!]"
                 else:
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-        del crossReferenceSqlite
-        del biblesSqlite
-        return ("study", content)
+            del crossReferenceSqlite
+            del biblesSqlite
+            self.setStudyVerse(config.studyText, verseList[-1])
+            return ("study", content)
 
     # COMBO:::
     def textCombo(self, command, source):
@@ -578,16 +579,17 @@ class TextCommandParser:
     # called by TRANSLATION::: & WORDS::: & DISCOURSE::: & COMBO:::
     def textVerseData(self, command, source, filename):
         verseList = self.extractAllVerses(command)
-        biblesSqlite = BiblesSqlite()
-        verseData = VerseData(filename)
         if not verseList:
             return self.invalidCommand()
         else:
+            biblesSqlite = BiblesSqlite()
+            verseData = VerseData(filename)
             feature = "{0}{1}".format(filename[0].upper(), filename[1:])
-            content = "<hr>".join(["<h2>{0}: {1}</h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
-        del verseData
-        del biblesSqlite
-        return content
+            content = "<hr>".join(["<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
+            del verseData
+            del biblesSqlite
+            self.setStudyVerse(config.studyText, verseList[-1])
+            return content
 
     # INDEX:::
     def textIndex(self, command, source):
@@ -599,10 +601,8 @@ class TextCommandParser:
             indexesSqlite = IndexesSqlite()
             for verse in verseList:
                 b, c, v = verse
-                content = "<h2>Indexes: {0}</h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
+                content = "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
             del indexesSqlite
             del parser
+            self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content)
-
-    def textSearchBook(self, command, source):
-        return (source, "") # pending further development
