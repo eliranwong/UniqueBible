@@ -486,7 +486,7 @@ class TextCommandParser:
                 testament = "OT"
             else:
                 testament = "NT"
-            content = clauseData.getContent(testament, entry)
+            content = "<h2>Clause id: c{0}</h2>{1}".format(entry, clauseData.getContent(testament, entry))
             del clauseData
             self.setStudyVerse(config.studyText, (b, c, v))
             return ("study", content)

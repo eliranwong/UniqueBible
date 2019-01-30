@@ -302,13 +302,7 @@ class BiblesSqlite:
         firstLexicalEntry = lexicalEntry.split(",")[0]
         lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
-        #morphology = morphology[:-1].replace(",", ", ")
-        morphologyList = morphology[:-1].split(",")
-        morphology = ""
-        for counter, morphologyItem in enumerate(morphologyList):
-            morphology += "<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem)
-            if not counter == len(morphologyList) - 1:
-                morphology += ", "
+        morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
         if b < 40:
             testament = "OT"
             textWord = "<heb>{0}</heb>".format(textWord)

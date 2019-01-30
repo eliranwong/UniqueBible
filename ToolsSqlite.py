@@ -241,7 +241,7 @@ class LexiconData:
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         self.cursor.execute(query, t)
         versions = self.cursor.fetchall()
-        exclude = ("Details", "LGNTDF")
+        exclude = ("Details")
         return [version[0] for version in versions if not version[0] in exclude]
 
     def getSelectForm(self, lexiconList, entry):
@@ -261,6 +261,7 @@ class LexiconData:
             "ConcordanceMorphology": "Concordance (sorted by morphology)",
             "BDAG": "BDAG (3rd ed.)",
             "LN": "Louw-Nida Greek Lexicon",
+            "LGNTDF": "Levinsohn's Greek New Testament Discourse Features",
         }
         selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
         for lexicon in lexiconList:
