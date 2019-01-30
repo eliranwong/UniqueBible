@@ -360,27 +360,6 @@ class WordData:
             return content[0]
 
 
-class ClauseData:
-
-    def __init__(self):
-        # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "clause.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getContent(self, testament, entry):
-        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
-        self.cursor.execute(query, ("c{0}".format(entry),))
-        content = self.cursor.fetchone()
-        if not content:
-            return "[not found]"
-        else:
-            return content[0]
-
-
 class ExlbData:
 
     def __init__(self):

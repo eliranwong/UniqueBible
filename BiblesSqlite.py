@@ -300,7 +300,7 @@ class BiblesSqlite:
         wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         verseReference = self.bcvToVerseReference(b, c, v)
         firstLexicalEntry = lexicalEntry.split(",")[0]
-        lexicalEntry = ', '.join(["<ref onclick='lex(\"{0}\")'>{0}</ref>".format(entry) for entry in lexicalEntry[:-1].split(",")])
+        lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         #morphology = morphology[:-1].replace(",", ", ")
         morphologyList = morphology[:-1].split(",")
@@ -310,12 +310,17 @@ class BiblesSqlite:
             if not counter == len(morphologyList) - 1:
                 morphology += ", "
         if b < 40:
+            testament = "OT"
             textWord = "<heb>{0}</heb>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref>".format(firstLexicalEntry, lexeme)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
         else:
+            testament = "NT"
             textWord = "<grk>{0}</grk>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>".format(firstLexicalEntry, lexeme)
-        return ((b, c, v), "<h2>Word Data</h2><p><b>Verse:</b> <ref onclick='document.title=\"{0}\"'>{0}</ref><br><b>Clause id:</b> <ref onclick='cl(\"{11}\")'>{11}</ref><br><b>Word id:</b> {12}<br><br><b>Word:</b> {1}<br><b>Transliteration:</b> <transliteration>{2}</transliteration><br><b>Pronuciation:</b> <transliteration>{3}</transliteration><br><br><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<br><br><b>Gloss:</b> {7}<br><b>Interlinear:</b> {8}<br><b>Translation:</b> {9}<br><b>Lexical entry:</b> {10}</p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID))
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
+        clauseData = ClauseData()
+        clauseContent = clauseData.getContent(testament, clauseID)
+        del clauseData
+        return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
 
     def searchMorphology(self, mode, searchString):
         formatedText = ""
@@ -373,6 +378,27 @@ class BiblesSqlite:
                 chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
             chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
         return chapter
+
+
+class ClauseData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "clause.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, testament, entry):
+        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
+        self.cursor.execute(query, ("c{0}".format(entry),))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return content[0]
 
 
 class Bible:

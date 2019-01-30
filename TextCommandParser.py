@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite, Bible
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData, VerseData, WordData
+from BiblesSqlite import BiblesSqlite, Bible, ClauseData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData
 
 class TextCommandParser:
 
@@ -479,10 +479,16 @@ class TextCommandParser:
     # CLAUSE:::
     def textClause(self, command, source):
         if command.count(":::") == 1:
-            testament, entry = self.splitCommand(command)
+            bcv, entry = self.splitCommand(command)
+            b, c, v = [int(i) for i in bcv.split(".")]
             clauseData = ClauseData()
+            if b < 40:
+                testament = "OT"
+            else:
+                testament = "NT"
             content = clauseData.getContent(testament, entry)
             del clauseData
+            self.setStudyVerse(config.studyText, (b, c, v))
             return ("study", content)
         else:
             return self.invalidCommand("study")
