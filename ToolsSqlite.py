@@ -2,6 +2,27 @@ import os, sqlite3, re, config
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
 
+class VerseData:
+
+    def __init__(self, filename):
+        # connect bibles.sqlite
+        self.database = os.path.join("marvelData", "data", "{0}.data".format(filename))
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, bcvTuple):
+        query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, bcvTuple)
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not applicable]"
+        else:
+            return content[0]
+
+
 class CrossReferenceSqlite:
 
     def __init__(self):
@@ -235,7 +256,7 @@ class LexiconData:
             "Thayer": "Thayer's Greek-English Lexicon",
             "LXX": "LXX Lexicon",
             "LCT": "新舊約字典彙編",
-            "Morphology": "Morphology",
+            "Morphology": "Hebrew & Greek Analytical Lexicon",
             "ConcordanceBook": "Concordance (sorted by book)",
             "ConcordanceMorphology": "Concordance (sorted by morphology)",
         }

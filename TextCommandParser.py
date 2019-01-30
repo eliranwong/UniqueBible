@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, ClauseData, VerseData
 
 class TextCommandParser:
 
@@ -24,12 +24,14 @@ class TextCommandParser:
             "text": self.textText,
             "compare": self.textCompare,
             "parallel": self.textParallel,
-            "verse": self.textVerseData,
             "word": self.textWordData,
             "commentary": self.textCommentary,
             "clause": self.textClause,
-            "lexicon": self.textLexicon,
+            "combo": self.textCombo,
+            "translation": self.textTranslation,
             "discourse": self.textDiscourse,
+            "words": self.textWords,
+            "lexicon": self.textLexicon,
             "search": self.textCountSearch,
             "showsearch": self.textSearchBasic,
             "advancedsearch": self.textSearchAdvanced,
@@ -557,6 +559,36 @@ class TextCommandParser:
         del biblesSqlite
         return ("study", content)
 
+    # COMBO:::
+    def textCombo(self, command, source):
+        return ("study", "".join([self.textVerseData(command, source, feature) for feature in ("translation", "discourse", "words")]))
+
+    # TRANSLATION:::
+    def textTranslation(self, command, source):
+        return ("study", self.textVerseData(command, source, "translation"))
+
+    # DISCOURSE:::
+    def textDiscourse(self, command, source):
+        return ("study", self.textVerseData(command, source, "discourse"))
+
+    # WORDS:::
+    def textWords(self, command, source):
+        return ("study", self.textVerseData(command, source, "words"))
+
+    # called by TRANSLATION::: & WORDS::: & DISCOURSE::: & COMBO:::
+    def textVerseData(self, command, source, filename):
+        verseList = self.extractAllVerses(command)
+        biblesSqlite = BiblesSqlite()
+        verseData = VerseData(filename)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            feature = "{0}{1}".format(filename[0].upper(), filename[1:])
+            content = "<hr>".join(["<h2>{0}: {1}</h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
+        del verseData
+        del biblesSqlite
+        return content
+
     # INDEX:::
     def textIndex(self, command, source):
         verseList = self.extractAllVerses(command)
@@ -571,12 +603,6 @@ class TextCommandParser:
             del indexesSqlite
             del parser
             return ("study", content)
-
-    def textVerseData(self, command, source):
-        return (source, "") # pending further development
-
-    def textDiscourse(self, command, source):
-        return (source, "") # pending further development
 
     def textSearchBook(self, command, source):
         return (source, "") # pending further development
