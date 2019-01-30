@@ -240,7 +240,9 @@ function hl1(id, cl, sn) {
             document.getElementById('w'+id).style.background='#C9CFFF';
         }
     }
-    document.title = "_instantWord:::"+activeB+":::"+id;
+    if (id != '') {
+        document.title = "_instantWord:::"+activeB+":::"+id;
+    }
 }
 
 function hl0(id, cl, sn) {
@@ -263,7 +265,9 @@ function w(book, wordID) {
 }
 
 function iw(book, wordID) {
-    document.title = "_instantWord:::"+book+":::"+wordID;
+    if (book != '' && wordID != '') {
+        document.title = "_instantWord:::"+book+":::"+wordID;
+    }
 }
 
 function qV(v) {
@@ -349,6 +353,22 @@ function bdbid(entry) {
 
 function encyclopedia(module, entry) {
     document.title = "ENCYCLOPEDIA:::"+module+":::"+entry;
+}
+
+function cl(entry) {
+	if (typeof activeB !== 'undefined' || activeB !== null) {
+    	var testament = '';
+    	if (activeB <= 40) {
+    		testament = 'OT';
+    	} else {
+    		testament = 'NT';
+    	}
+    	clause(testament, entry);
+	}
+}
+
+function clause(testament, entry) {
+    document.title = "CLAUSE:::"+testament+":::"+entry;
 }
 
 function bibleDict(entry) {
