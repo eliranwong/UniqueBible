@@ -1,6 +1,6 @@
-import os, sys, config
-from PySide2.QtCore import QUrl, Qt
-from PySide2.QtGui import QIcon, QGuiApplication, QScreen
+import os, sys, config, webbrowser
+from PySide2.QtCore import QUrl, Qt, QEvent
+from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
@@ -42,6 +42,12 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
+    def event(self, event):
+        if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
+            self.textCommandLineEdit.setFocus()
+            return True
+        return QWidget.event(self, event)
+
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser("YES")
         verseReference = parser.bcvToVerseReference(b, c, v)
@@ -62,17 +68,44 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
-        menu3 = self.menuBar().addMenu("&Window")
-        menu3.addAction(QAction("&Study [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
-        menu3.addAction(QAction("&Lightning [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
+        menu3 = self.menuBar().addMenu("&Layout")
+        menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
+        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
+        menu3.addSeparator()
+        menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, shortcut = "Ctrl+M", triggered=self.hideShowToolBar))
+        menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, shortcut = "Ctrl+N", triggered=self.hideShowSecondToolBar))
 
-        menu4 = self.menuBar().addMenu("&Lightning")
-        menu4.addAction(QAction("&Enabled", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
-        menu4.addAction(QAction("&Disabled", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
+        menu4 = self.menuBar().addMenu("&Display")
+        menu4.addAction(QAction("&Enabled Lightning", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
+        menu4.addAction(QAction("&Disabled Lightning", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
+        menu4.addSeparator()
+        menu4.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
+        menu4.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
 
-        menu5 = self.menuBar().addMenu("&Font")
-        menu5.addAction(QAction("&Increase", self, shortcut = "Ctrl++", triggered=self.largerFont))
-        menu5.addAction(QAction("&Decrease", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
+        menu5 = self.menuBar().addMenu("&History")
+        menu5.addAction(QAction("&Main", self, shortcut = "Ctrl+;", triggered=self.mainHistoryButtonClicked))
+        menu5.addAction(QAction("&Back", self, shortcut = "Ctrl+[", triggered=self.back))
+        menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+]", triggered=self.forward))
+        menu5.addSeparator()
+        menu5.addAction(QAction("&Study", self, shortcut = "Ctrl+'", triggered=self.studyHistoryButtonClicked))
+        menu5.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
+        menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
+
+        menu6 = self.menuBar().addMenu("&About")
+        menu6.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
+        menu6.addAction(QAction("&UniqueBible.app", self, triggered=self.openUniqueBible))
+        menu6.addAction(QAction("&Marvel.bible", self, triggered=self.openMarvelBible))
+        menu6.addAction(QAction("&BibleBento.com", self, triggered=self.openBibleBento))
+        menu6.addAction(QAction("&OpenGNT.com", self, triggered=self.openOpenGNT))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&GitHub Repositories", self, triggered=self.openSource))
+        menu6.addAction(QAction("&Unique Bible", self, triggered=self.openUniqueBibleSource))
+        menu6.addAction(QAction("&Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
+        menu6.addAction(QAction("&Open Greek New Testament", self, triggered=self.openOpenGNTSource))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&Credits", self, triggered=self.openCredits))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -202,6 +235,53 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(fontPlusButton)
 
         self.secondToolBar.addSeparator()
+
+    # Actions - hide / show tool bars
+    def hideShowToolBar(self):
+        if self.toolBar.isVisible():
+            self.toolBar.hide()
+        else:
+            self.toolBar.show()
+
+    def hideShowSecondToolBar(self):
+        if self.secondToolBar.isVisible():
+            self.secondToolBar.hide()
+        else:
+            self.secondToolBar.show()
+
+    # Actions - open urls
+    def openBibleTools(self):
+        webbrowser.open("https://bibletools.app")
+
+    def openUniqueBible(self):
+        webbrowser.open("https://uniquebible.app")
+
+    def openMarvelBible(self):
+        webbrowser.open("https://marvel.bible")
+
+    def openBibleBento(self):
+        webbrowser.open("https://biblebento.com")
+        
+    def openOpenGNT(self):
+        webbrowser.open("https://opengnt.com")
+
+    def openSource(self):
+        webbrowser.open("https://github.com/eliranwong/")
+
+    def openUniqueBibleSource(self):
+        webbrowser.open("https://github.com/eliranwong/UniqueBible")
+
+    def openHebrewBibleSource(self):
+        webbrowser.open("https://github.com/eliranwong/OpenHebrewBible")
+
+    def openOpenGNTSource(self):
+        webbrowser.open("https://github.com/eliranwong/OpenGNT")
+
+    def openCredits(self):
+        webbrowser.open("https://marvel.bible/resource.php")
+
+    def contactEliranWong(self):
+        webbrowser.open("https://marvel.bible/contact/contactform.php")
 
     # Actions - resize the main window
     def fullsizeWindow(self):
