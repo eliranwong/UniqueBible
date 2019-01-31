@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         
         menu2 = self.menuBar().addMenu("&View")
         menu2.addAction(QAction("&Full Screen", self, shortcut = "Ctrl+F", triggered=self.fullsizeWindow))
-        menu2.addAction(QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.resizeWindow))
+        menu2.addAction(QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.twoThirdWindow))
         menu2.addSeparator()
         menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
@@ -205,20 +205,20 @@ class MainWindow(QMainWindow):
 
     # Actions - resize the main window
     def fullsizeWindow(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width(), availableGeometry.height())
+        self.resizeWindow(1, 1)
 
-    def resizeWindow(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * 2/3, availableGeometry.height() * 2/3)
+    def twoThirdWindow(self):
+        self.resizeWindow(2/3, 2/3)
 
     def halfScreenHeight(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width(), availableGeometry.height() * 1/2)
+        self.resizeWindow(1, 1/2)
 
     def halfScreenWidth(self):
+        self.resizeWindow(1/2, 1)
+
+    def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * 1/2, availableGeometry.height())
+        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
     # Actions - hide / show / resize study & lightning views
     def instant(self):
