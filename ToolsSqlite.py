@@ -525,7 +525,7 @@ class BookData:
             topicList = self.getTopicList(module)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
             config.book = module
-            return "<p>{0}</p><p>{1}</p>".format(books, topics)
+            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
 
@@ -549,7 +549,7 @@ class BookData:
             topicList = self.getSearchedTopicList(module, searchString)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
             config.book = module
-            return "<p>{0}</p><p>{1}</p>".format(books, topics)
+            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
 
