@@ -114,11 +114,17 @@ class MainWindow(QMainWindow):
         mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
         self.secondToolBar.addWidget(mainHistoryButton)
 
+        searchBibleButton = QPushButton()
+        searchBibleButtonFile = os.path.join("htmlResources", "search.png")
+        searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
+        searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
+        self.secondToolBar.addWidget(searchBibleButton)
+
         self.mainRefButton = QPushButton(self.verseReference("main"))
         self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.secondToolBar.addWidget(self.mainRefButton)
-        
+
         self.secondToolBar.addSeparator()
 
         self.parallelMode = 1 # default parallel mode
@@ -174,16 +180,28 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
-        bookButton = QPushButton()
-        bookButtonFile = os.path.join("htmlResources", "book.png")
-        bookButton.setIcon(QIcon(bookButtonFile))
-        bookButton.clicked.connect(self.openBookMenu)
-        self.secondToolBar.addWidget(bookButton)
+        searchBookButton = QPushButton()
+        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+        self.secondToolBar.addWidget(searchBookButton)
+
+        self.bookButton = QPushButton(config.book)
+        self.bookButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.bookButton.clicked.connect(self.openBookMenu)
+        self.secondToolBar.addWidget(self.bookButton)
 
         self.secondToolBar.addSeparator()
 
     def openBookMenu(self):
         self.runTextCommand("_book:::", False, "main")
+
+    def displaySearchBibleCommand(self):
+        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+
+    def displaySearchBookCommand(self):
+        config.bookSearchString = ""
+        self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
 
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:

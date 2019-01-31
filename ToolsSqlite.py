@@ -519,11 +519,12 @@ class BookData:
     def getMenu(self, module=""):
         bookList = self.getBookList()
         if module == "":
-            module = bookList[0][0]
+            module = config.book
         if module in dict(bookList).keys():
             books = self.formatSelectList("listBookTopic(this.value)", bookList, module)
             topicList = self.getTopicList(module)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            config.book = module
             return "<p>{0}</p><p>{1}</p>".format(books, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
@@ -539,6 +540,23 @@ class BookData:
     def getTopicList(self, module):
         query = "SELECT DISTINCT Topic FROM {0} ORDER BY Topic".format(module)
         self.cursor.execute(query)
+        return [topic[0] for topic in self.cursor.fetchall()]
+
+    def getSearchedMenu(self, module, searchString):
+        bookList = self.getBookList()
+        if module in dict(bookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", bookList, module)
+            topicList = self.getSearchedTopicList(module, searchString)
+            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            config.book = module
+            return "<p>{0}</p><p>{1}</p>".format(books, topics)
+        else:
+            return "INVALID_COMMAND_ENTERED"
+
+    def getSearchedTopicList(self, module, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT DISTINCT Topic FROM {0} WHERE Topic LIKE ? OR Note LIKE ? ORDER BY Topic".format(module)
+        self.cursor.execute(query, (searchString, searchString))
         return [topic[0] for topic in self.cursor.fetchall()]
 
     def formatSelectList(self, action, optionList, default):
@@ -558,4 +576,13 @@ class BookData:
         if not content:
             return "[not applicable]"
         else:
-            return content[0]
+            config.book = module
+            content = content[0]
+            if config.bookSearchString:
+                content = re.sub("("+config.bookSearchString+")", r"<sw>\1</sw>", content, flags=re.IGNORECASE)
+                p = re.compile("(<[^<>]*?)<sw>(.*?)</sw>", flags=re.M)
+                s = p.search(content)
+                while s:
+                    content = re.sub(p, r"\1\2", content)
+                    s = p.search(content)
+            return content

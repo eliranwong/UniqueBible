@@ -28,6 +28,7 @@ class TextCommandParser:
             "word": self.textWordData,
             "commentary": self.textCommentary,
             "book": self.textBook,
+            "searchbook": self.textSearchBook,
             "clause": self.textClause,
             "combo": self.textCombo,
             "translation": self.textTranslation,
@@ -296,6 +297,7 @@ class TextCommandParser:
         bookData = BookData()
         bookMenu = bookData.getMenu(command)
         del bookData
+        self.parent.bookButton.setText(config.book)
         return ("study", bookMenu)
 
     # _history:::
@@ -548,9 +550,28 @@ class TextCommandParser:
             if not content:
                 return self.invalidCommand("study")
             else:
+                self.parent.bookButton.setText(config.book)
                 return ("study", content)
         else:
             return self.invalidCommand("study")
+
+    # SEARCHBOOK:::
+    def textSearchBook(self, command, source):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.book, command)
+        module, searchString = self.splitCommand(command)
+        if not searchString:
+            return self.invalidCommand("study")
+        else:
+            config.bookSearchString = searchString
+            bookData = BookData()
+            content = bookData.getSearchedMenu(module, searchString)
+            del bookData
+            if not content:
+                return self.invalidCommand("study")
+            else:
+                self.parent.bookButton.setText(config.book)
+                return ("study", content)
 
     # CROSSREFERENCE:::
     def textCrossReference(self, command, source):
