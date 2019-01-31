@@ -151,7 +151,20 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(self.commentaryRefButton)
 
         self.secondToolBar.addSeparator()
-        
+
+        searchBookButton = QPushButton()
+        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+        self.secondToolBar.addWidget(searchBookButton)
+
+        self.bookButton = QPushButton(config.book)
+        self.bookButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.bookButton.clicked.connect(self.openBookMenu)
+        self.secondToolBar.addWidget(self.bookButton)
+
+        self.secondToolBar.addSeparator()
+
         self.instantMode = 1 # default parallel mode
         instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
@@ -177,19 +190,6 @@ class MainWindow(QMainWindow):
         fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
         fontPlusButton.clicked.connect(self.largerFont)
         self.secondToolBar.addWidget(fontPlusButton)
-
-        self.secondToolBar.addSeparator()
-
-        searchBookButton = QPushButton()
-        searchBookButtonFile = os.path.join("htmlResources", "search.png")
-        searchBookButton.setIcon(QIcon(searchBookButtonFile))
-        searchBookButton.clicked.connect(self.displaySearchBookCommand)
-        self.secondToolBar.addWidget(searchBookButton)
-
-        self.bookButton = QPushButton(config.book)
-        self.bookButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
-        self.bookButton.clicked.connect(self.openBookMenu)
-        self.secondToolBar.addWidget(self.bookButton)
 
         self.secondToolBar.addSeparator()
 
