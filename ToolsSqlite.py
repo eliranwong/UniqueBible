@@ -503,3 +503,59 @@ class Commentary:
                 return "<div>{0}</div>".format(chapter)
         else:
             return "INVALID_COMMAND_ENTERED"
+
+
+class BookData:
+
+    def __init__(self):
+        # connect book.data
+        self.database = os.path.join("marvelData", "data", "book.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getMenu(self, module=""):
+        bookList = self.getBookList()
+        if module == "":
+            module = bookList[0][0]
+        if module in dict(bookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", bookList, module)
+            topicList = self.getTopicList(module)
+            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            return "<p>{0}</p><p>{1}</p>".format(books, topics)
+        else:
+            return "INVALID_COMMAND_ENTERED"
+
+    def getBookList(self):
+        t = ("table",)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        self.cursor.execute(query, t)
+        versions = self.cursor.fetchall()
+        exclude = ("Details")
+        return [(version[0], version[0]) for version in versions if not version[0] in exclude]
+
+    def getTopicList(self, module):
+        query = "SELECT DISTINCT Topic FROM {0} ORDER BY Topic".format(module)
+        self.cursor.execute(query)
+        return [topic[0] for topic in self.cursor.fetchall()]
+
+    def formatSelectList(self, action, optionList, default):
+        selectForm = "<select onchange='{0}'>".format(action)
+        for value, description in optionList:
+            if value == default:
+                selectForm += "<option value='{0}' selected='selected'>{1}</option>".format(value, description)
+            else:
+                selectForm += "<option value='{0}'>{1}</option>".format(value, description)
+        selectForm += "</select>"
+        return selectForm
+
+    def getContent(self, module, entry):
+        query = "SELECT Note FROM {0} WHERE Topic=?".format(module)
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not applicable]"
+        else:
+            return content[0]

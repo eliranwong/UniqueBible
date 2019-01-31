@@ -1,7 +1,7 @@
 import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
 
 class TextCommandParser:
 
@@ -14,6 +14,7 @@ class TextCommandParser:
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
             "_commentary": self.textCommentaryMenu,
+            "_book": self.textBookMenu,
             "_info": self.textInfo,
             "_command": self.textCommand,
             "_history": self.textHistory,
@@ -26,6 +27,7 @@ class TextCommandParser:
             "parallel": self.textParallel,
             "word": self.textWordData,
             "commentary": self.textCommentary,
+            "book": self.textBook,
             "clause": self.textClause,
             "combo": self.textCombo,
             "translation": self.textTranslation,
@@ -289,6 +291,13 @@ class TextCommandParser:
         del commentary
         return ("study", commentaryMenu)
 
+    # _book:::
+    def textBookMenu(self, command, source):
+        bookData = BookData()
+        bookMenu = bookData.getMenu(command)
+        del bookData
+        return ("study", bookMenu)
+
     # _history:::
     def textHistory(self, command, source):
         if command in ("main", "study"):
@@ -525,6 +534,21 @@ class TextCommandParser:
                 return ("study", content)
             else:
                 return self.invalidCommand("study")
+        else:
+            return self.invalidCommand("study")
+
+    # BOOK:::
+    def textBook(self, command, source):
+        commandList = self.splitCommand(command)
+        if commandList and len(commandList) == 2:
+            module, entry = commandList
+            bookData = BookData()
+            content = bookData.getContent(module, entry)
+            del bookData
+            if not content:
+                return self.invalidCommand("study")
+            else:
+                return ("study", content)
         else:
             return self.invalidCommand("study")
 

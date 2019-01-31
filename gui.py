@@ -174,6 +174,17 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        bookButton = QPushButton()
+        bookButtonFile = os.path.join("htmlResources", "book.png")
+        bookButton.setIcon(QIcon(bookButtonFile))
+        bookButton.clicked.connect(self.openBookMenu)
+        self.secondToolBar.addWidget(bookButton)
+
+        self.secondToolBar.addSeparator()
+
+    def openBookMenu(self):
+        self.runTextCommand("_book:::", False, "main")
+
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:
             return "DISABLED"
