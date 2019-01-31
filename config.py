@@ -16,6 +16,7 @@ commentaryV = 16
 topic = 'EXLBT'
 dictionary = 'EAS'
 encyclopedia = 'ISB'
+book = 'Boyce'
 bookSearchString = ''
 historyRecordAllowed = 50
 currentRecord = {'main': 0, 'study': 0}
