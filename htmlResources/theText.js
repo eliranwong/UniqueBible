@@ -448,3 +448,7 @@ function etcbcmorph(entry) {
 function lxxmorph(entry) {
     searchItem("mLXX", entry);
 }
+
+function listBookTopic(module) {
+    document.title = "_book:::"+module;
+}
