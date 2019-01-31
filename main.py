@@ -1,5 +1,4 @@
 #! /Users/eliranwong/Desktop/venv/venv/bin/python
-# development in progress
 # visit https://BibleTools.app for more information
 
 import sys, config, pprint
@@ -7,7 +6,7 @@ from PySide2.QtWidgets import QApplication
 from gui import MainWindow
 
 def setupMainWindow():
-    # set full screen size
+    # set full screen size by default
     availableGeometry = app.desktop().availableGeometry(mainWindow)
     mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()

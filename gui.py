@@ -51,74 +51,28 @@ class MainWindow(QMainWindow):
     def create_menu(self):
         
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
-        
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
         quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
         
         menu2 = self.menuBar().addMenu("&View")
-
-        fullsize_action = QAction("&Full Screen", self, shortcut = "Ctrl+F", triggered=self.fullsizeWindow)
-        menu2.addAction(fullsize_action)
-        
-        resize_action = QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.resizeWindow)
-        menu2.addAction(resize_action)
-
+        menu2.addAction(QAction("&Full Screen", self, shortcut = "Ctrl+F", triggered=self.fullsizeWindow))
+        menu2.addAction(QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.resizeWindow))
         menu2.addSeparator()
-
-        topHalf_action = QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight)
-        menu2.addAction(topHalf_action)
-
-        leftHalf_action = QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth)
-        menu2.addAction(leftHalf_action)
+        menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
+        menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Window")
-
-        parallelView_action = QAction("&Study [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel)
-        menu3.addAction(parallelView_action)
-
-        instantView_action = QAction("&Lightning [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant)
-        menu3.addAction(instantView_action)
+        menu3.addAction(QAction("&Study [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
+        menu3.addAction(QAction("&Lightning [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
 
         menu4 = self.menuBar().addMenu("&Lightning")
-
-        increaseFont_action = QAction("&Enabled", self, shortcut = "Ctrl+1", triggered=self.enableLightning)
-        menu4.addAction(increaseFont_action)
-
-        decreaseFont_action = QAction("&Disabled", self, shortcut = "Ctrl+0", triggered=self.disableLightning)
-        menu4.addAction(decreaseFont_action)
+        menu4.addAction(QAction("&Enabled", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
+        menu4.addAction(QAction("&Disabled", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
 
         menu5 = self.menuBar().addMenu("&Font")
-
-        increaseFont_action = QAction("&Increase", self, shortcut = "Ctrl++", triggered=self.largerFont)
-        menu5.addAction(increaseFont_action)
-
-        decreaseFont_action = QAction("&Decrease", self, shortcut = "Ctrl+-", triggered=self.smallerFont)
-        menu5.addAction(decreaseFont_action)
-
-    def fullsizeWindow(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width(), availableGeometry.height())
-
-    def resizeWindow(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * 2/3, availableGeometry.height() * 2/3)
-
-    def halfScreenHeight(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width(), availableGeometry.height() * 1/2)
-
-    def halfScreenWidth(self):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * 1/2, availableGeometry.height())
-
-    def enableLightning(self):
-        config.instantInformationEnabled = 1
-        self.enableInstantButton.setText(self.getInstantInformation())
-
-    def disableLightning(self):
-        config.instantInformationEnabled = 0
-        self.enableInstantButton.setText(self.getInstantInformation())
+        menu5.addAction(QAction("&Increase", self, shortcut = "Ctrl++", triggered=self.largerFont))
+        menu5.addAction(QAction("&Decrease", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -249,15 +203,61 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
-    def openBookMenu(self):
-        self.runTextCommand("_book:::", False, "main")
+    # Actions - resize the main window
+    def fullsizeWindow(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width(), availableGeometry.height())
 
-    def displaySearchBibleCommand(self):
-        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+    def resizeWindow(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * 2/3, availableGeometry.height() * 2/3)
 
-    def displaySearchBookCommand(self):
-        config.bookSearchString = ""
-        self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
+    def halfScreenHeight(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width(), availableGeometry.height() * 1/2)
+
+    def halfScreenWidth(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * 1/2, availableGeometry.height())
+
+    # Actions - hide / show / resize study & lightning views
+    def instant(self):
+        if self.instantMode == 0:
+            self.instantMode = 1
+            self.instantView.show()
+            self.centralWidget.layout.setRowStretch(0, 10)
+            self.centralWidget.layout.setRowStretch(1, 2)
+        elif self.instantMode == 1:
+            self.instantMode = 0
+            self.centralWidget.layout.setRowStretch(0, 10)
+            self.centralWidget.layout.setRowStretch(1, 0)
+            self.instantView.hide()
+
+    def parallel(self):
+        parallelRatio = {
+            0: (1, 0),
+            1: (2, 1),
+            2: (1, 1),
+            3: (1, 2),
+        }
+        if self.parallelMode == 3:
+            self.parallelMode = 0
+            self.studyView.hide()
+        else:
+            self.parallelMode += 1
+            self.studyView.show()
+        ratio = parallelRatio[self.parallelMode]
+        self.centralWidget.layout.setColumnStretch(0, ratio[0])
+        self.centralWidget.layout.setColumnStretch(1, ratio[1])
+
+    # Actions - enable or disable lightning feature
+    def enableLightning(self):
+        config.instantInformationEnabled = 1
+        self.enableInstantButton.setText(self.getInstantInformation())
+
+    def disableLightning(self):
+        config.instantInformationEnabled = 0
+        self.enableInstantButton.setText(self.getInstantInformation())
 
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:
@@ -272,17 +272,15 @@ class MainWindow(QMainWindow):
             config.instantInformationEnabled = 0
         self.enableInstantButton.setText(self.getInstantInformation())
 
-    def mainHistoryButtonClicked(self):
-        self.mainView.setHtml(self.getHistory("main"), baseUrl)
+    # Actions - book features
+    def openBookMenu(self):
+        self.runTextCommand("_book:::", False, "main")
 
-    def studyHistoryButtonClicked(self):
-        self.studyView.setHtml(self.getHistory("study"), baseUrl)
+    def displaySearchBookCommand(self):
+        config.bookSearchString = ""
+        self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
 
-    def getHistory(self, view):
-        html = "<br>".join(["<button class='feature' onclick='document.title=\"{0}\"'>{0}</button>".format(record) for record in reversed(config.history[view])])
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
-        return html
-
+    # Actions - change font size
     def smallerFont(self):
         if not config.fontSize == 10:
             config.fontSize = config.fontSize - 5
@@ -301,6 +299,23 @@ class MainWindow(QMainWindow):
             textCommand = config.history[view][config.currentRecord[view]]
             self.runTextCommand(textCommand, False, view)
 
+    # Actions - access history records
+    def mainHistoryButtonClicked(self):
+        self.mainView.setHtml(self.getHistory("main"), baseUrl)
+
+    def studyHistoryButtonClicked(self):
+        self.studyView.setHtml(self.getHistory("study"), baseUrl)
+
+    def getHistory(self, view):
+        html = "<br>".join(["<button class='feature' onclick='document.title=\"{0}\"'>{0}</button>".format(record) for record in reversed(config.history[view])])
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        return html
+
+    # Action - search main view bible
+    def displaySearchBibleCommand(self):
+        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+
+    # Actions - recently opened bibles & commentary
     def mainRefButtonClicked(self):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
         self.runTextCommand(newTextCommand, False, "main")
@@ -330,6 +345,7 @@ class MainWindow(QMainWindow):
         elif view == "commentary":
             return "{0} - {1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
 
+    # root folder for webViewEngine
     def setupBaseUrl(self):
         # baseUrl
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
@@ -339,6 +355,7 @@ class MainWindow(QMainWindow):
         absolutePath = os.path.abspath(relativePath)
         baseUrl = QUrl.fromLocalFile(absolutePath)
 
+    # finish view loading
     def finishMainViewLoading(self):
         # scroll to the main verse
         self.mainPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
@@ -347,6 +364,7 @@ class MainWindow(QMainWindow):
         # scroll to the study verse
         self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
 
+    # navigation between history records
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
         if not mainCurrentRecord == 0:
@@ -387,6 +405,7 @@ class MainWindow(QMainWindow):
             #self.textCommandLineEdit.setText(textCommand)
             self.runTextCommand(textCommand, False, "study")
 
+    # change of unique bible commands
     def mainTextCommandChanged(self, newTextCommand):
         self.textCommandChanged(newTextCommand, "main")
 
@@ -434,6 +453,7 @@ class MainWindow(QMainWindow):
             }
             if view == "study":
                 # save html in a separate file
+                # reason: setHTML does not work with content larger than 2 MB
                 outputFile = os.path.join("htmlResources", "study.html")
                 f = open(outputFile,'w')
                 f.write(html)
@@ -450,6 +470,7 @@ class MainWindow(QMainWindow):
             if addRecord == True and view in ("main", "study"):
                 self.addHistoryRecord(view, textCommand)
 
+    # add a history record
     def addHistoryRecord(self, view, textCommand):
         if not textCommand.startswith("_"):
             viewhistory = config.history[view]
@@ -462,35 +483,6 @@ class MainWindow(QMainWindow):
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
 
-    def instant(self):
-        if self.instantMode == 0:
-            self.instantMode = 1
-            self.instantView.show()
-            self.centralWidget.layout.setRowStretch(0, 10)
-            self.centralWidget.layout.setRowStretch(1, 2)
-        elif self.instantMode == 1:
-            self.instantMode = 0
-            self.centralWidget.layout.setRowStretch(0, 10)
-            self.centralWidget.layout.setRowStretch(1, 0)
-            self.instantView.hide()
-
-    def parallel(self):
-        parallelRatio = {
-            0: (1, 0),
-            1: (2, 1),
-            2: (1, 1),
-            3: (1, 2),
-        }
-        if self.parallelMode == 3:
-            self.parallelMode = 0
-            self.studyView.hide()
-        else:
-            self.parallelMode += 1
-            self.studyView.show()
-        ratio = parallelRatio[self.parallelMode]
-        self.centralWidget.layout.setColumnStretch(0, ratio[0])
-        self.centralWidget.layout.setColumnStretch(1, ratio[1])
-
 
 class CentralWidget(QWidget):
 
@@ -499,7 +491,6 @@ class CentralWidget(QWidget):
         self.parent = parent
         self.layout = QGridLayout()
 
-        # content in unicode html format - Content larger than 2 MB cannot be displayed
         self.html = "<h1>UniqueBible.app</h1><p>UniqueBible.app</p>"
         self.mainView = WebEngineView(self, "main")
         self.mainView.setHtml(self.html, baseUrl)
@@ -507,7 +498,6 @@ class CentralWidget(QWidget):
         self.studyView.setHtml("Study View", baseUrl)
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("Instant Information", baseUrl)
-        #self.instantView.hide()
 
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
@@ -713,6 +703,7 @@ class WebEngineView(QWebEngineView):
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
 
+
 class WebEngineViewPopover(QWebEngineView):
     def __init__(self, parent, name, source):
         super().__init__()
@@ -724,5 +715,3 @@ class WebEngineViewPopover(QWebEngineView):
 
     def popoverTextCommandChanged(self, newTextCommand):
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
-
-
