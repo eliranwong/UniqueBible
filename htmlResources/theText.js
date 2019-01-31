@@ -452,3 +452,7 @@ function lxxmorph(entry) {
 function listBookTopic(module) {
     document.title = "_book:::"+module;
 }
+
+function openHistoryRecord(recordNo) {
+    document.title = "_historyrecord:::"+recordNo;
+}
