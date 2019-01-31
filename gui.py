@@ -1,6 +1,6 @@
 import os, sys, config
 from PySide2.QtCore import QUrl, Qt
-from PySide2.QtGui import QIcon, QGuiApplication
+from PySide2.QtGui import QIcon, QGuiApplication, QScreen
 from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
@@ -42,14 +42,6 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_0 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 1:
-            config.instantInformationEnabled = 0
-            self.enableInstantButton.setText(self.getInstantInformation())
-        elif event.key() == Qt.Key_1 and event.modifiers() == Qt.ControlModifier and config.instantInformationEnabled == 0:
-            config.instantInformationEnabled = 1
-            self.enableInstantButton.setText(self.getInstantInformation())
-
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser("YES")
         verseReference = parser.bcvToVerseReference(b, c, v)
@@ -57,12 +49,76 @@ class MainWindow(QMainWindow):
         return verseReference
 
     def create_menu(self):
-        appIconFile = os.path.join("htmlResources", "theText.png")
-        appIcon = QIcon(appIconFile)
+        
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
-        quit_action = QAction(appIcon, "E&xit",
-                             self, shortcut = "Ctrl+Q", triggered=qApp.quit)
+        
+        appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
+        quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
+        
+        menu2 = self.menuBar().addMenu("&View")
+
+        fullsize_action = QAction("&Full Screen", self, shortcut = "Ctrl+F", triggered=self.fullsizeWindow)
+        menu2.addAction(fullsize_action)
+        
+        resize_action = QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.resizeWindow)
+        menu2.addAction(resize_action)
+
+        menu2.addSeparator()
+
+        topHalf_action = QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight)
+        menu2.addAction(topHalf_action)
+
+        leftHalf_action = QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth)
+        menu2.addAction(leftHalf_action)
+
+        menu3 = self.menuBar().addMenu("&Window")
+
+        parallelView_action = QAction("&Study [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel)
+        menu3.addAction(parallelView_action)
+
+        instantView_action = QAction("&Lightning [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant)
+        menu3.addAction(instantView_action)
+
+        menu4 = self.menuBar().addMenu("&Lightning")
+
+        increaseFont_action = QAction("&Enabled", self, shortcut = "Ctrl+1", triggered=self.enableLightning)
+        menu4.addAction(increaseFont_action)
+
+        decreaseFont_action = QAction("&Disabled", self, shortcut = "Ctrl+0", triggered=self.disableLightning)
+        menu4.addAction(decreaseFont_action)
+
+        menu5 = self.menuBar().addMenu("&Font")
+
+        increaseFont_action = QAction("&Increase", self, shortcut = "Ctrl++", triggered=self.largerFont)
+        menu5.addAction(increaseFont_action)
+
+        decreaseFont_action = QAction("&Decrease", self, shortcut = "Ctrl+-", triggered=self.smallerFont)
+        menu5.addAction(decreaseFont_action)
+
+    def fullsizeWindow(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width(), availableGeometry.height())
+
+    def resizeWindow(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * 2/3, availableGeometry.height() * 2/3)
+
+    def halfScreenHeight(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width(), availableGeometry.height() * 1/2)
+
+    def halfScreenWidth(self):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * 1/2, availableGeometry.height())
+
+    def enableLightning(self):
+        config.instantInformationEnabled = 1
+        self.enableInstantButton.setText(self.getInstantInformation())
+
+    def disableLightning(self):
+        config.instantInformationEnabled = 0
+        self.enableInstantButton.setText(self.getInstantInformation())
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
