@@ -299,18 +299,6 @@ class MainWindow(QMainWindow):
             textCommand = config.history[view][config.currentRecord[view]]
             self.runTextCommand(textCommand, False, view)
 
-    # Actions - access history records
-    def mainHistoryButtonClicked(self):
-        self.mainView.setHtml(self.getHistory("main"), baseUrl)
-
-    def studyHistoryButtonClicked(self):
-        self.studyView.setHtml(self.getHistory("study"), baseUrl)
-
-    def getHistory(self, view):
-        html = "<br>".join(["<button class='feature' onclick='document.title=\"{0}\"'>{0}</button>".format(record) for record in reversed(config.history[view])])
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
-        return html
-
     # Action - search main view bible
     def displaySearchBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
@@ -345,6 +333,55 @@ class MainWindow(QMainWindow):
         elif view == "commentary":
             return "{0} - {1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
 
+    # Actions - access history records
+    def mainHistoryButtonClicked(self):
+        self.mainView.setHtml(self.getHistory("main"), baseUrl)
+
+    def studyHistoryButtonClicked(self):
+        self.studyView.setHtml(self.getHistory("study"), baseUrl)
+
+    def getHistory(self, view):
+        historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
+        html = "<br>".join(["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        return html
+
+    # navigation between history records
+    def openHistoryRecord(self, view, recordNumber):
+        config.currentRecord[view] = recordNumber
+        textCommand = config.history[view][recordNumber]
+        if view == "main":
+            self.textCommandLineEdit.setText(textCommand)
+        self.runTextCommand(textCommand, False, view)
+    
+    def back(self):
+        mainCurrentRecord = config.currentRecord["main"]
+        if not mainCurrentRecord == 0:
+            mainCurrentRecord = mainCurrentRecord - 1
+            self.openHistoryRecord("main", mainCurrentRecord)
+
+    def forward(self):
+        mainCurrentRecord = config.currentRecord["main"]
+        if not mainCurrentRecord == (len(config.history["main"]) - 1):
+            mainCurrentRecord = mainCurrentRecord + 1
+            self.openHistoryRecord("main", mainCurrentRecord)
+
+    def studyBack(self):
+        if self.parallelMode == 0:
+            self.parallel()
+        studyCurrentRecord = config.currentRecord["study"]
+        if not studyCurrentRecord == 0:
+            studyCurrentRecord = studyCurrentRecord - 1
+            self.openHistoryRecord("study", studyCurrentRecord)
+
+    def studyForward(self):
+        if self.parallelMode == 0:
+            self.parallel()
+        studyCurrentRecord = config.currentRecord["study"]
+        if not studyCurrentRecord == (len(config.history["study"]) - 1):
+            studyCurrentRecord = studyCurrentRecord + 1
+            self.openHistoryRecord("study", studyCurrentRecord)
+
     # root folder for webViewEngine
     def setupBaseUrl(self):
         # baseUrl
@@ -363,47 +400,6 @@ class MainWindow(QMainWindow):
     def finishStudyViewLoading(self):
         # scroll to the study verse
         self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
-
-    # navigation between history records
-    def back(self):
-        mainCurrentRecord = config.currentRecord["main"]
-        if not mainCurrentRecord == 0:
-            mainCurrentRecord = mainCurrentRecord - 1
-            config.currentRecord["main"] = mainCurrentRecord
-            textCommand = config.history["main"][mainCurrentRecord]
-            self.textCommandLineEdit.setText(textCommand)
-            self.runTextCommand(textCommand, False)
-
-    def forward(self):
-        mainCurrentRecord = config.currentRecord["main"]
-        if not mainCurrentRecord == (len(config.history["main"]) - 1):
-            mainCurrentRecord = mainCurrentRecord + 1
-            config.currentRecord["main"] = mainCurrentRecord
-            textCommand = config.history["main"][mainCurrentRecord]
-            self.textCommandLineEdit.setText(textCommand)
-            self.runTextCommand(textCommand, False)
-
-    def studyBack(self):
-        if self.parallelMode == 0:
-            self.parallel()
-        studyCurrentRecord = config.currentRecord["study"]
-        if not studyCurrentRecord == 0:
-            studyCurrentRecord = studyCurrentRecord - 1
-            config.currentRecord["study"] = studyCurrentRecord
-            textCommand = config.history["study"][studyCurrentRecord]
-            #self.textCommandLineEdit.setText(textCommand)
-            self.runTextCommand(textCommand, False, "study")
-
-    def studyForward(self):
-        if self.parallelMode == 0:
-            self.parallel()
-        studyCurrentRecord = config.currentRecord["study"]
-        if not studyCurrentRecord == (len(config.history["study"]) - 1):
-            studyCurrentRecord = studyCurrentRecord + 1
-            config.currentRecord["study"] = studyCurrentRecord
-            textCommand = config.history["study"][studyCurrentRecord]
-            #self.textCommandLineEdit.setText(textCommand)
-            self.runTextCommand(textCommand, False, "study")
 
     # change of unique bible commands
     def mainTextCommandChanged(self, newTextCommand):

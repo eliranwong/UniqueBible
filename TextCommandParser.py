@@ -18,6 +18,7 @@ class TextCommandParser:
             "_info": self.textInfo,
             "_command": self.textCommand,
             "_history": self.textHistory,
+            "_historyrecord": self.textHistoryRecord,
             "_image": self.textImage,
             "main": self.textMain,
             "study": self.textStudy,
@@ -304,6 +305,14 @@ class TextCommandParser:
     def textHistory(self, command, source):
         if command in ("main", "study"):
             return (command, self.parent.getHistory(command))
+        else:
+            return self.invalidCommand()
+
+    # _historyrecord:::
+    def textHistoryRecord(self, command, source):
+        if source in ("main", "study"):
+            self.parent.openHistoryRecord(source, int(command))
+            return ("", "")
         else:
             return self.invalidCommand()
 
