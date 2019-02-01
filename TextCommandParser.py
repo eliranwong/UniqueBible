@@ -2,6 +2,7 @@ import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
+from thirdParty import ThirdPartyDictionary
 
 class TextCommandParser:
 
@@ -52,6 +53,8 @@ class TextCommandParser:
             "encyclopedia": self.textEncyclopedia,
             "crossreference": self.textCrossReference,
             "tske": self.tske,
+            "searchthirddictionary": self.thirdDictionarySearch,
+            "thirddictionary": self.thirdDictionaryOpen,
         }
         commandList = self.splitCommand(textCommad)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -366,7 +369,7 @@ class TextCommandParser:
             exactMatch = searchSqlite.getContent(module, entry)
             similarMatch = searchSqlite.getSimilarContent(module, entry)
             del searchSqlite
-            return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}</b>".format(module, entry, exactMatch, similarMatch, selectList))
+            return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList))
         else:
             del indexes
             return self.invalidCommand()
@@ -675,4 +678,30 @@ class TextCommandParser:
             del indexesSqlite
             del parser
             self.setStudyVerse(config.studyText, verseList[-1])
+            return ("study", content)
+
+    # SEARCHTHIRDDICTIONARY:::
+    def thirdDictionarySearch(self, command, source):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.thirdDictionary, command)
+        module, entry = self.splitCommand(command)
+        if not entry:
+            return self.invalidCommand("study")
+        else:
+            thirdPartyDictionary = ThirdPartyDictionary(module)
+            content = thirdPartyDictionary.search(entry)
+            del thirdPartyDictionary
+            return ("study", content)
+
+    # THIRDDICTIONARY:::
+    def thirdDictionaryOpen(self, command, source):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.thirdDictionary, command)
+        module, entry = self.splitCommand(command)
+        if not entry:
+            return self.invalidCommand("study")
+        else:
+            thirdPartyDictionary = ThirdPartyDictionary(module)
+            content = thirdPartyDictionary.getData(entry)
+            del thirdPartyDictionary
             return ("study", content)

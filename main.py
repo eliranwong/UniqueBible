@@ -1,4 +1,4 @@
-#! /Users/Eliran/Desktop/venv/venv/bin/python
+#! /Users/eliranwong/Desktop/venv/venv/bin/python
 # visit https://BibleTools.app for more information
 
 import sys, config, pprint
@@ -44,6 +44,7 @@ def saveDataOnExit():
     fileObj.write("\nencyclopedia = "+pprint.pformat(config.encyclopedia))
     fileObj.write("\nbook = "+pprint.pformat(config.book))
     fileObj.write("\nbookSearchString = "+pprint.pformat(config.bookSearchString))
+    fileObj.write("\nthirdDictionary = "+pprint.pformat(config.thirdDictionary))
     fileObj.write("\nhistoryRecordAllowed = "+pprint.pformat(config.historyRecordAllowed))
     fileObj.write("\ncurrentRecord = {'main': 0, 'study': 0}")
     fileObj.write("\nhistory = "+pprint.pformat(config.history))

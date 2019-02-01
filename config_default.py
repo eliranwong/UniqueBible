@@ -18,6 +18,7 @@ dictionary = 'EAS'
 encyclopedia = 'ISB'
 book = 'Simpson_But_God'
 bookSearchString = ''
+thirdDictionary = 'wordnet'
 historyRecordAllowed = 50
 currentRecord = {'main': 0, 'study': 0}
 history = {'main': ['Genesis 1:1'], 'study': ['BIBLE:::NET:::John 3:16']}
