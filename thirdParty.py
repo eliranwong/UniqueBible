@@ -1,4 +1,4 @@
-import os, sqlite3, config
+import os, sqlite3, config, re
 
 class ThirdPartyDictionary:
 
@@ -71,4 +71,5 @@ class ThirdPartyDictionary:
                 optionList = [(m, m) for m in self.moduleList]
                 selectList = self.formatSelectList(action, optionList)
                 config.thirdDictionary = self.module
-                return "<p>{0}</p><p>{1}</p>".format(selectList, content[0])
+                content = re.sub("<a href='#([^\n<>]*?)'>(.*?)</a>", r"<ref onclick='openThirdDictionary(\"{0}\", \"\1\")'>\2</ref>".format(self.module), content[0])
+                return "<p>{0}</p><p>{1}</p>".format(selectList, content)
