@@ -611,6 +611,7 @@ class WebEngineView(QWebEngineView):
         self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
         self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
         self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
+        self.searchThirdDictionary.setText("3rd Party Dictionary > {0}".format(config.thirdDictionary))
 
     def getText(self):
         text = {
@@ -684,6 +685,11 @@ class WebEngineView(QWebEngineView):
         self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
         self.addAction(self.searchBibleEncyclopedia)
 
+        self.searchThirdDictionary = QAction(self)
+        self.searchThirdDictionary.setText("3rd Party Dictionary")
+        self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
+        self.addAction(self.searchThirdDictionary)
+
         searchBibleReferences = QAction(self)
         searchBibleReferences.setText("Extract All Bible References")
         searchBibleReferences.triggered.connect(self.extractAllReferences)
@@ -755,6 +761,14 @@ class WebEngineView(QWebEngineView):
 
     def searchEncyclopedia(self):
         self.searchResource(config.encyclopedia)
+
+    def searchThirdPartyDictionary(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def extractAllReferences(self):
         selectedText = self.selectedText()

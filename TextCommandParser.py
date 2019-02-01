@@ -2,7 +2,7 @@ import os, re, config
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
-from thirdParty import ThirdPartyDictionary
+from ThirdParty import ThirdPartyDictionary
 
 class TextCommandParser:
 
