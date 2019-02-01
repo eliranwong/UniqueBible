@@ -145,7 +145,7 @@ class MainWindow(QMainWindow):
         self.addToolBarBreak()
 
     def setupSecondToolBar(self):
-        textButtonStyle = "QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }"
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790; }"
         
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Special Features")
