@@ -560,13 +560,14 @@ direction: ltr;
 display: inline-block;
 }
 button.feature {
+font-size: 70%;
 cursor: pointer;
-background-color: #515790;
+background-color: #151B54;
 color: white;
 }
 button.feature:hover {
 background-color: #333972;
 }
 button.feature:active {
-background-color: #151B54;
+background-color: #515790;
 }
