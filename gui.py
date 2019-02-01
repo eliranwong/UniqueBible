@@ -69,11 +69,11 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Layout")
-        menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
-        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
-        menu3.addSeparator()
         menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, shortcut = "Ctrl+M", triggered=self.hideShowToolBar))
         menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, shortcut = "Ctrl+N", triggered=self.hideShowSecondToolBar))
+        menu3.addSeparator()
+        menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
+        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
 
         menu4 = self.menuBar().addMenu("&Display")
         menu4.addAction(QAction("&Enabled Lightning", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
