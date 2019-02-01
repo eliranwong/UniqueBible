@@ -1,11 +1,11 @@
 """
-Previously uploaded at https://github.com/eliranwong/bible-verse-parser
-Modified for integration into UniqueBible.app
+A python utility to parse bible verse references.
+It is both useful for tagging and extracting bible verse references from a text.
 
-A python parser to parse bible verse references from a text.
+This was originally created to format resources <a href="https://marvel.bible">https://marvel.bible</a>.
+(The original version is available at https://github.com/eliranwong/bible-verse-parser)
 
-This was originally created to tag resources for building <a href="https://marvel.bible">https://marvel.bible</a>.<br>
-The script is now modified for general use.
+This is now integrated into UniqueBible.app as a core utility.
 
 Features:
 1. Search for verse references from text file(s)
@@ -16,9 +16,10 @@ Features:
 6. Support chapter references [references without verse number specified], e.g. Gen 1, 3-4; 8, 9-10.
 7. Support standardisation of book abbreviations and verse reference format.
 8. Support parsing multiple files in one go.
+9. Support extracting all references in a text.
 
-Usage:
-Command line: python bible-verse-parser.py
+Usage [standalone]:
+Command line: python BibleVerseParser.py
 
 User Interaction:
 Prompting question (1) "Enter a file / folder name here: "<br>
@@ -40,12 +41,6 @@ START - class BibleVerseParser
 """
 
 class BibleVerseParser:
-
-    # variable to capture user preference on standardisation
-    standardisation = ""
-
-    # set a simple indicator
-    workingIndicator = 0
 
     # SBL-style abbreviations
     standardAbbreviation = {
@@ -878,16 +873,8 @@ class BibleVerseParser:
     def __init__(self, standardisation):
         # set preference of standardisation
         self.standardisation = standardisation
-
-        # sort dictionary by alphabet of keys
-        marvelBibleBookNoTemp = {}
-        for book in sorted(self.marvelBibleBookNo.keys()) :
-            marvelBibleBookNoTemp[book] = self.marvelBibleBookNo[book]
-
-        # sort dictionary by length of keys
-        self.marvelBibleBookNo = {}
-        for book in sorted(marvelBibleBookNoTemp, key=len, reverse=True):
-            self.marvelBibleBookNo[book] = marvelBibleBookNoTemp[book]
+        # setup a simple indicator for telling progress
+        self.workingIndicator = 0
 
     # function for indicating working status
     def updateWorkingIndicator(self):
@@ -928,7 +915,10 @@ class BibleVerseParser:
             taggedText = re.sub('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">(.*?)</ref>', r'\1', taggedText, flags=re.M)
 
         # search for books; mark them with book numbers, used by https://marvel.bible
-        for book in self.marvelBibleBookNo:
+        # sorting books by alphabet, then by length
+        sortedBooks = sorted(self.marvelBibleBookNo.keys())
+        sortedBooks = sorted(sortedBooks, key=len, reverse=True)
+        for book in sortedBooks:
             #self.updateWorkingIndicator()
             # get the string of book name
             bookString = book

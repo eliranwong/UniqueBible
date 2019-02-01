@@ -76,11 +76,11 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
 
         menu4 = self.menuBar().addMenu("&Display")
-        menu4.addAction(QAction("&Enabled Lightning", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
-        menu4.addAction(QAction("&Disabled Lightning", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
-        menu4.addSeparator()
         menu4.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu4.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
+        menu4.addSeparator()
+        menu4.addAction(QAction("&Enabled Lightning", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
+        menu4.addAction(QAction("&Disabled Lightning", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
 
         menu5 = self.menuBar().addMenu("&History")
         menu5.addAction(QAction("&Main", self, shortcut = "Ctrl+;", triggered=self.mainHistoryButtonClicked))
@@ -126,7 +126,6 @@ class MainWindow(QMainWindow):
         self.toolBar.addWidget(forwardButton)
 
         self.textCommandLineEdit = QLineEdit()
-        #self.textCommandLineEdit.setText("[Enter command here]")
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.toolBar.addWidget(self.textCommandLineEdit)
 
@@ -142,10 +141,12 @@ class MainWindow(QMainWindow):
         studyForwardButton.clicked.connect(self.studyForward)
         self.toolBar.addWidget(studyForwardButton)
 
-        # put other tool bars below the main one
+        # put the secondary toolbar below the main one
         self.addToolBarBreak()
 
     def setupSecondToolBar(self):
+        textButtonStyle = "QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }"
+        
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Special Features")
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -164,7 +165,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(searchBibleButton)
 
         self.mainRefButton = QPushButton(self.verseReference("main"))
-        self.mainRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.secondToolBar.addWidget(self.mainRefButton)
 
@@ -184,12 +185,12 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(studyHistoryButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
-        self.studyRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.studyRefButton.setStyleSheet(textButtonStyle)
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
         self.secondToolBar.addWidget(self.studyRefButton)
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.commentaryRefButton.setStyleSheet(textButtonStyle)
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
 
@@ -202,7 +203,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(searchBookButton)
 
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
@@ -216,7 +217,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(instantButton)
 
         self.enableInstantButton = QPushButton(self.getInstantInformation())
-        self.enableInstantButton.setStyleSheet('QPushButton {background-color: #515790; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #151B54; }')
+        self.enableInstantButton.setStyleSheet(textButtonStyle)
         self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
         self.secondToolBar.addWidget(self.enableInstantButton)
 
