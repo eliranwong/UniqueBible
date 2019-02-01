@@ -456,3 +456,11 @@ function listBookTopic(module) {
 function openHistoryRecord(recordNo) {
     document.title = "_historyrecord:::"+recordNo;
 }
+
+function searchThirdDictionary(module, entry) {
+    document.title = "SEARCHTHIRDDICTIONARY:::"+module+":::"+entry;
+}
+
+function openThirdDictionary(module, entry) {
+    document.title = "THIRDDICTIONARY:::"+module+":::"+entry;
+}
