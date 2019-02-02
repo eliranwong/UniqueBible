@@ -457,7 +457,10 @@ class Commentary:
         return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1), chapter) for chapter in chapterList])
 
     def getVerseList(self, b, c):
-        return BiblesSqlite().getVerseList(b, c, "KJV")
+        biblesSqlite = BiblesSqlite()
+        verseList = biblesSqlite.getVerseList(b, c, "KJV")
+        del biblesSqlite
+        return verseList
 
     def getVerses(self, b=config.commentaryB, c=config.commentaryC):
         verseList = self.getVerseList(b, c)
@@ -581,8 +584,8 @@ class BookData:
             config.book = module
             content = content[0]
             if config.bookSearchString:
-                content = re.sub("("+config.bookSearchString+")", r"<sw>\1</sw>", content, flags=re.IGNORECASE)
-                p = re.compile("(<[^<>]*?)<sw>(.*?)</sw>", flags=re.M)
+                content = re.sub("("+config.bookSearchString+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
+                p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
                 s = p.search(content)
                 while s:
                     content = re.sub(p, r"\1\2", content)

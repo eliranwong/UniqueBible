@@ -40,7 +40,11 @@ class TextCommandParser:
             "search": self.textCountSearch,
             "showsearch": self.textSearchBasic,
             "advancedsearch": self.textSearchAdvanced,
+            "andsearch": self.textAndSearch,
+            "orsearch": self.textOrSearch,
             "isearch": self.textCountISearch,
+            "andisearch": self.textAndISearch,
+            "orisearch": self.textOrISearch,
             "showisearch": self.textISearchBasic,
             "advancedisearch": self.textISearchAdvanced,
             "searchtool": self.textSearchTool,
@@ -139,11 +143,17 @@ class TextCommandParser:
             return (view, content)
 
     def getChaptersMenu(self, b, text):
-        return BiblesSqlite().getChaptersMenu(b, text)
+        biblesSqlite = BiblesSqlite()
+        chapteruMenu = biblesSqlite.getChaptersMenu(b, text)
+        del biblesSqlite
+        return chapteruMenu
 
     # access to formatted chapter or plain verses of a bible text, called by textBibleVerseParser
     def textPlainBible(self, verseList, text):
-        return BiblesSqlite().readMultipleVerses(text, verseList)
+        biblesSqlite = BiblesSqlite()
+        verses = biblesSqlite.readMultipleVerses(text, verseList)
+        del biblesSqlite
+        return verses
 
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
@@ -398,6 +408,34 @@ class TextCommandParser:
 
     # ADVANCEDISEARCH:::
     def textISearchAdvanced(self, command, source):
+        return self.textSearch(command, source, "ADVANCED", True)
+
+    # ANDSEARCH:::
+    def textAndSearch(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        command = "".join(commandList)
+        return self.textSearch(command, source, "ADVANCED")
+
+    # ANDISEARCH:::
+    def textAndISearch(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        command = "".join(commandList)
+        return self.textSearch(command, source, "ADVANCED", True)
+
+    # ORSEARCH:::
+    def textOrSearch(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        command = "".join(commandList)
+        return self.textSearch(command, source, "ADVANCED")
+
+    # ORISEARCH:::
+    def textOrISearch(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        command = "".join(commandList)
         return self.textSearch(command, source, "ADVANCED", True)
 
     # called by SHOWSEARCH::: & SHOWISEARCH::: & ADVANCEDSEARCH::: & ADVANCEDISEARCH:::
