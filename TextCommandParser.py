@@ -51,6 +51,7 @@ class TextCommandParser:
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
+            "searchmorphology": self.textComboMorphology,
             "index": self.textIndex,
             "exlb": self.textExlb,
             "dictionary": self.textDictionary,
@@ -413,28 +414,28 @@ class TextCommandParser:
     # ANDSEARCH:::
     def textAndSearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = "".join(commandList)
         return self.textSearch(command, source, "ADVANCED")
 
     # ANDISEARCH:::
     def textAndISearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = "".join(commandList)
         return self.textSearch(command, source, "ADVANCED", True)
 
     # ORSEARCH:::
     def textOrSearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = "".join(commandList)
         return self.textSearch(command, source, "ADVANCED")
 
     # ORISEARCH:::
     def textOrISearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split(",")])
+        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = "".join(commandList)
         return self.textSearch(command, source, "ADVANCED", True)
 
@@ -501,7 +502,19 @@ class TextCommandParser:
     def textMorphology(self, command, source):
         return self.textSearchMorphology(command, source, "ADVANCED")
 
-    # called by LEMMA::: & MORPHOLOGYCODE::: & MORPHOLOGY:::
+    # SEARCHMORPHOLOGY:::
+    def textComboMorphology(self, command, source):
+        #﻿LexicalEntry LIKE '%E70746,%' AND 
+        if not command.count(":::") == 1:
+            return self.invalidCommand("study")
+        else:
+            lexicalEntry, morphology = command.split(":::")
+            lexicalEntry = "LexicalEntry LIKE '%{0},%'".format(lexicalEntry)
+            morphology = " OR ".join(['Morphology LIKE "%{0}%"'.format(m.strip()) for m in morphology.split("|")])
+            command = "{0} AND ({1})".format(lexicalEntry, morphology)
+            return self.textSearchMorphology(command, source, "ADVANCED")
+
+    # called by LEMMA::: & MORPHOLOGYCODE::: & MORPHOLOGY::: & # SEARCHMORPHOLOGY:::
     def textSearchMorphology(self, command, source, mode):
         biblesSqlite = BiblesSqlite()
         searchResult = biblesSqlite.searchMorphology(mode, command)
