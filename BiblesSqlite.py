@@ -17,10 +17,7 @@ class BiblesSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
+        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
 
     def getMenu(self, command, source="main"):
         if source == "main":
@@ -260,7 +257,7 @@ class BiblesSqlite:
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
             searchWords = [m.split("%") for m in searchWords]
-            searchWords = [y for x in searchWords for y in x]
+            searchWords = [m2 for m1 in searchWords for m2 in m1]
             for searchword in searchWords:
                 formatedText = re.sub("("+searchword+")", r"<sw>\1</sw>", formatedText, flags=re.IGNORECASE)
         p = re.compile("(<[^<>]*?)<sw>(.*?)</sw>", flags=re.M)

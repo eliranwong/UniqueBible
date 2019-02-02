@@ -114,16 +114,10 @@ class TextCommandParser:
         return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):
-        parser = BibleVerseParser("YES")
-        verseList = parser.extractAllReferences(text, tagged)
-        del parser
-        return verseList
+        return BibleVerseParser("YES").extractAllReferences(text, tagged)
 
     def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
+        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
 
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view):
@@ -145,17 +139,11 @@ class TextCommandParser:
             return (view, content)
 
     def getChaptersMenu(self, b, text):
-        biblesSqlite = BiblesSqlite()
-        chapters = biblesSqlite.getChaptersMenu(b, text)
-        del biblesSqlite
-        return chapters
+        return BiblesSqlite().getChaptersMenu(b, text)
 
     # access to formatted chapter or plain verses of a bible text, called by textBibleVerseParser
     def textPlainBible(self, verseList, text):
-        biblesSqlite = BiblesSqlite()
-        verses = biblesSqlite.readMultipleVerses(text, verseList)
-        del biblesSqlite
-        return verses
+        return BiblesSqlite().readMultipleVerses(text, verseList)
 
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")

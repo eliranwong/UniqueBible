@@ -35,10 +35,7 @@ class CrossReferenceSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
+        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
 
     def scrollMapper(self, bcvTuple):
         query = "SELECT Information FROM ScrollMapper WHERE Book=? AND Chapter=? AND Verse=?"
@@ -312,7 +309,10 @@ class DictionaryData:
         if not content:
             return "[not found]"
         else:
-            return content[0]
+            abb = entry[:3]
+            moduleName = dict(IndexesSqlite().dictionaryList)[abb]
+            searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(abb)
+            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, content[0])
 
 
 class EncyclopediaData:
@@ -333,7 +333,9 @@ class EncyclopediaData:
         if not content:
             return "[not found]"
         else:
-            return content[0]
+            moduleName = dict(IndexesSqlite().encyclopediaList)[module]
+            searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
+            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, content[0])
 
 
 class WordData:
@@ -383,7 +385,13 @@ class ExlbData:
                 content = re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
                 return content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
             else:
-                return content[0]
+                moduleName = {
+                    "exlbp": "Exhaustive Library of Bible People",
+                    "exlbl": "Exhaustive Library of Bible Locations",
+                    "exlbt": "Exhaustive Library of Bible Topics",
+                }
+                searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
+                return "<p><b>{0}</b> {1}</p>{2}".format(moduleName[module], searchButton, content[0])
 
 
 class Commentary:
@@ -399,10 +407,7 @@ class Commentary:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
+        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
 
     def formCommentaryTag(self, commentary):
         return "<ref onclick='document.title=\"_commentary:::{0}\"' onmouseover='commentaryName(\"{0}\")'>".format(commentary)
@@ -452,10 +457,7 @@ class Commentary:
         return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1), chapter) for chapter in chapterList])
 
     def getVerseList(self, b, c):
-        biblesSqlite = BiblesSqlite()
-        verseList = biblesSqlite.getVerseList(b, c, "KJV")
-        del biblesSqlite
-        return verseList
+        return BiblesSqlite().getVerseList(b, c, "KJV")
 
     def getVerses(self, b=config.commentaryB, c=config.commentaryC):
         verseList = self.getVerseList(b, c)
