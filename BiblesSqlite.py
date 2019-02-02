@@ -259,6 +259,8 @@ class BiblesSqlite:
             formatedText = re.sub("("+searchString+")", r"<sw>\1</sw>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
+            searchWords = [m.split("%") for m in searchWords]
+            searchWords = [y for x in searchWords for y in x]
             for searchword in searchWords:
                 formatedText = re.sub("("+searchword+")", r"<sw>\1</sw>", formatedText, flags=re.IGNORECASE)
         p = re.compile("(<[^<>]*?)<sw>(.*?)</sw>", flags=re.M)
