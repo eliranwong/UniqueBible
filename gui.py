@@ -74,13 +74,15 @@ class MainWindow(QMainWindow):
         menu3.addSeparator()
         menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
         menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
+        menu3.addSeparator()
+        menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
+        menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
 
-        menu4 = self.menuBar().addMenu("&Display")
-        menu4.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
-        menu4.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
-        menu4.addSeparator()
+        menu4 = self.menuBar().addMenu("&Quick Access")
         menu4.addAction(QAction("&Enabled Lightning", self, shortcut = "Ctrl+1", triggered=self.enableLightning))
         menu4.addAction(QAction("&Disabled Lightning", self, shortcut = "Ctrl+0", triggered=self.disableLightning))
+        menu4.addSeparator()
+        menu4.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+*", triggered=self.pasteFromClipboard))
 
         menu5 = self.menuBar().addMenu("&History")
         menu5.addAction(QAction("&Main", self, shortcut = "Ctrl+;", triggered=self.mainHistoryButtonClicked))
@@ -330,6 +332,13 @@ class MainWindow(QMainWindow):
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(0, ratio[0])
         self.centralWidget.layout.setColumnStretch(1, ratio[1])
+
+    # Action - paste text from clipboard into study view
+    def pasteFromClipboard(self):
+        clipboardText = qApp.clipboard().text()
+        # note: use qApp.clipboard().setText to set text in clipboard
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, clipboardText)
+        self.studyView.setHtml(html, baseUrl)
 
     # Actions - enable or disable lightning feature
     def enableLightning(self):
