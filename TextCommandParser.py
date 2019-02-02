@@ -415,28 +415,28 @@ class TextCommandParser:
     def textAndSearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = "".join(commandList)
+        command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED")
 
     # ANDISEARCH:::
     def textAndISearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = "".join(commandList)
+        command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", True)
 
     # ORSEARCH:::
     def textOrSearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = "".join(commandList)
+        command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED")
 
     # ORISEARCH:::
     def textOrISearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = "".join(commandList)
+        command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", True)
 
     # called by SHOWSEARCH::: & SHOWISEARCH::: & ADVANCEDSEARCH::: & ADVANCEDISEARCH:::
