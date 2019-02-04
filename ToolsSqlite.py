@@ -35,7 +35,7 @@ class CrossReferenceSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     def scrollMapper(self, bcvTuple):
         query = "SELECT Information FROM ScrollMapper WHERE Book=? AND Chapter=? AND Verse=?"
@@ -407,7 +407,7 @@ class Commentary:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     def formCommentaryTag(self, commentary):
         return "<ref onclick='document.title=\"_commentary:::{0}\"' onmouseover='commentaryName(\"{0}\")'>".format(commentary)

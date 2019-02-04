@@ -51,7 +51,7 @@ class TextCommandParser:
             "lemma": self.textLemma,
             "morphologycode": self.textMorphologyCode,
             "morphology": self.textMorphology,
-            "searchmorphology": self.textComboMorphology,
+            "searchmorphology": self.textSearchMorphology,
             "index": self.textIndex,
             "exlb": self.textExlb,
             "dictionary": self.textDictionary,
@@ -119,10 +119,10 @@ class TextCommandParser:
         return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):
-        return BibleVerseParser("YES").extractAllReferences(text, tagged)
+        return BibleVerseParser(config.parserStandarisation).extractAllReferences(text, tagged)
 
     def bcvToVerseReference(self, b, c, v):
-        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view):
@@ -492,18 +492,18 @@ class TextCommandParser:
 
     # LEMMA:::
     def textLemma(self, command, source):
-        return self.textSearchMorphology(command, source, "LEMMA")
+        return self.textMorphologyFeature(command, source, "LEMMA")
 
     # MORPHOLOGYCODE:::
     def textMorphologyCode(self, command, source):
-        return self.textSearchMorphology(command, source, "MORPHOLOGYCODE")
+        return self.textMorphologyFeature(command, source, "MORPHOLOGYCODE")
 
     # MORPHOLOGY:::
     def textMorphology(self, command, source):
-        return self.textSearchMorphology(command, source, "ADVANCED")
+        return self.textMorphologyFeature(command, source, "ADVANCED")
 
     # SEARCHMORPHOLOGY:::
-    def textComboMorphology(self, command, source):
+    def textSearchMorphology(self, command, source):
         #﻿LexicalEntry LIKE '%E70746,%' AND 
         if not command.count(":::") == 1:
             return self.invalidCommand("study")
@@ -512,10 +512,10 @@ class TextCommandParser:
             lexicalEntry = "LexicalEntry LIKE '%{0},%'".format(lexicalEntry)
             morphology = " OR ".join(['Morphology LIKE "%{0}%"'.format(m.strip()) for m in morphology.split("|")])
             command = "{0} AND ({1})".format(lexicalEntry, morphology)
-            return self.textSearchMorphology(command, source, "ADVANCED")
+            return self.textMorphologyFeature(command, source, "ADVANCED")
 
     # called by LEMMA::: & MORPHOLOGYCODE::: & MORPHOLOGY::: & # SEARCHMORPHOLOGY:::
-    def textSearchMorphology(self, command, source, mode):
+    def textMorphologyFeature(self, command, source, mode):
         biblesSqlite = BiblesSqlite()
         searchResult = biblesSqlite.searchMorphology(mode, command)
         del biblesSqlite
@@ -709,7 +709,7 @@ class TextCommandParser:
         if not verseList:
             return self.invalidCommand()
         else:
-            parser = BibleVerseParser("YES")
+            parser = BibleVerseParser(config.parserStandarisation)
             indexesSqlite = IndexesSqlite()
             for verse in verseList:
                 b, c, v = verse

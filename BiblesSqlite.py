@@ -17,7 +17,7 @@ class BiblesSqlite:
         self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
-        return BibleVerseParser("YES").bcvToVerseReference(b, c, v)
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     def getMenu(self, command, source="main"):
         if source == "main":

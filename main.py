@@ -25,6 +25,7 @@ def setCurrentRecord():
 def saveDataOnExit():
     fileObj = open("config.py", "w")
     fileObj.write("myGoogleApiKey = "+pprint.pformat(config.myGoogleApiKey))
+    fileObj.write("\nparserStandarisation = "+pprint.pformat(config.parserStandarisation))
     fileObj.write("\ninstantInformationEnabled = "+pprint.pformat(config.instantInformationEnabled))
     fileObj.write("\nfontSize = "+pprint.pformat(config.fontSize))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))

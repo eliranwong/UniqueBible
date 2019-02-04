@@ -1,7 +1,7 @@
 import os, sys, config, webbrowser
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget)
+from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -39,6 +39,18 @@ class MainWindow(QMainWindow):
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         self.setCentralWidget(self.centralWidget)
 
+        # variables to work with dialog
+
+        frameStyle = QFrame.Sunken | QFrame.Panel
+
+        self.openFileNameLabel = QLabel()
+        self.openFileNameLabel.setFrameStyle(frameStyle)
+        
+        self.openFilesPath = ""
+        
+        self.directoryLabel = QLabel()
+        self.directoryLabel.setFrameStyle(frameStyle)
+
     def __del__(self):
         del self.textCommandParser
 
@@ -49,7 +61,7 @@ class MainWindow(QMainWindow):
         return QWidget.event(self, event)
 
     def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser("YES")
+        parser = BibleVerseParser(config.parserStandarisation)
         verseReference = parser.bcvToVerseReference(b, c, v)
         del parser
         return verseReference
@@ -92,7 +104,11 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
         menu6 = self.menuBar().addMenu("&Advanced")
-        menu6.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+*", triggered=self.pasteFromClipboard))
+        menu6.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&Tag references in a file", self, shortcut = "Ctrl+%", triggered=self.setOpenFileName))
+        menu6.addAction(QAction("&Tag references in multiple files", self, shortcut = "Ctrl+&", triggered=self.setOpenFileNames))
+        menu6.addAction(QAction("&Tag references in a folder", self, shortcut = "Ctrl+*", triggered=self.setExistingDirectory))
 
         menu7 = self.menuBar().addMenu("&About")
         menu7.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
@@ -109,6 +125,45 @@ class MainWindow(QMainWindow):
         menu7.addAction(QAction("&Credits", self, triggered=self.openCredits))
         menu7.addSeparator()
         menu7.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
+
+    def setOpenFileName(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.openFileNameLabel.text(),
+                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+        if fileName:
+            parser = BibleVerseParser(config.parserStandarisation)
+            parser.startParsing(fileName)
+            del parser
+            self.mainPage.runJavaScript("alert('Tagging completed.')")
+
+    def setOpenFileNames(self):
+        options = QFileDialog.Options()
+        files, filtr = QFileDialog.getOpenFileNames(self,
+                "QFileDialog.getOpenFileNames()", self.openFilesPath,
+                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+        if files:
+            parser = BibleVerseParser(config.parserStandarisation)
+            for file in files:
+                parser.startParsing(file)
+            del parser
+            self.mainPage.runJavaScript("alert('Tagging completed.')")
+
+    def setExistingDirectory(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "QFileDialog.getExistingDirectory()",
+                self.directoryLabel.text(), options)
+        if directory:
+            print(directory)
+            path, file = os.path.split(directory)
+            outputFile = os.path.join(path, "output_{0}".format(file))
+            print(outputFile)
+            parser = BibleVerseParser(config.parserStandarisation)
+            parser.startParsing(directory)
+            del parser
+            self.mainPage.runJavaScript("alert('Tagging completed.')")
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -611,7 +666,7 @@ class WebEngineView(QWebEngineView):
 
     def updateContextMenu(self):
         text = self.getText()
-        parser = BibleVerseParser("YES")
+        parser = BibleVerseParser(config.parserStandarisation)
         book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         del parser
         self.searchText.setText("Search in {0}".format(text))
@@ -782,7 +837,7 @@ class WebEngineView(QWebEngineView):
 
     def extractAllReferences(self):
         selectedText = self.selectedText()
-        parser = BibleVerseParser("YES")
+        parser = BibleVerseParser(config.parserStandarisation)
         verseList = parser.extractAllReferences(selectedText, False)
         del parser
         if not verseList:

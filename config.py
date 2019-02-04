@@ -1,4 +1,5 @@
 myGoogleApiKey = ''
+parserStandarisation = 'YES'
 instantInformationEnabled = 1
 fontSize = 120
 mainText = 'KJV'

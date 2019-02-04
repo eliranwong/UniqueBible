@@ -976,7 +976,8 @@ class BibleVerseParser:
 
     def parseFile(self, inputFile):
         # set output filename here
-        outputFile = 'output_' + inputFile
+        path, file = os.path.split(inputFile)
+        outputFile = os.path.join(path, "output_{0}".format(file))
         
         # open file and read input text
         try:
@@ -1003,19 +1004,20 @@ class BibleVerseParser:
         f = open(outputFile,'w')
         f.write(newData)
         f.close()
-        print("Output file is saved as \""+outputFile+"\"")
+        #print("Output file is saved as \""+outputFile+"\"")
 
     def parseFilesInFolder(self, folder):
         # create an output directory
-        outputFolder = "output_"+folder
-        if not os.path.isdir(outputFolder):
-            os.mkdir(outputFolder)
+        #path, directory = os.path.split(folder)
+        #outputFolder = os.path.join(path, "output_{0}".format(directory))
+        #if not os.path.isdir(outputFolder):
+            #os.mkdir(outputFolder)
         # loop through the directory, running parsing on file(s) only
         fileList = glob.glob(folder+"/*")
         for file in fileList:
             if os.path.isfile(file):
                 self.parseFile(file)
-        print("All output files are saved in folder", "\""+outputFolder+"\"")
+        #print("All output files are saved in folder", "\""+outputFolder+"\"")
 
     def startParsing(self, inputName):
         # check if user's input is a file or a folder
