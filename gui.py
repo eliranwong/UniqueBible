@@ -1,4 +1,4 @@
-import os, sys, config, webbrowser
+import os, sys, re, config, webbrowser
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame)
@@ -6,6 +6,7 @@ from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
+from TextFileReader import TextFileReader
 
 class MainWindow(QMainWindow):
 
@@ -104,11 +105,12 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
         menu6 = self.menuBar().addMenu("&Advanced")
+        menu6.addAction(QAction("&Open Text File", self, shortcut = "Ctrl+O", triggered=self.openTextFile))
         menu6.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
         menu6.addSeparator()
-        menu6.addAction(QAction("&Tag references in a file", self, shortcut = "Ctrl+%", triggered=self.setOpenFileName))
-        menu6.addAction(QAction("&Tag references in multiple files", self, shortcut = "Ctrl+&", triggered=self.setOpenFileNames))
-        menu6.addAction(QAction("&Tag references in a folder", self, shortcut = "Ctrl+*", triggered=self.setExistingDirectory))
+        menu6.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
+        menu6.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
+        menu6.addAction(QAction("&Tag References in a Folder", self, shortcut = "Ctrl+*", triggered=self.tagFolder))
 
         menu7 = self.menuBar().addMenu("&About")
         menu7.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
@@ -125,45 +127,6 @@ class MainWindow(QMainWindow):
         menu7.addAction(QAction("&Credits", self, triggered=self.openCredits))
         menu7.addSeparator()
         menu7.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
-
-    def setOpenFileName(self):
-        options = QFileDialog.Options()
-        fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
-                self.openFileNameLabel.text(),
-                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
-        if fileName:
-            parser = BibleVerseParser(config.parserStandarisation)
-            parser.startParsing(fileName)
-            del parser
-            self.mainPage.runJavaScript("alert('Tagging completed.')")
-
-    def setOpenFileNames(self):
-        options = QFileDialog.Options()
-        files, filtr = QFileDialog.getOpenFileNames(self,
-                "QFileDialog.getOpenFileNames()", self.openFilesPath,
-                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
-        if files:
-            parser = BibleVerseParser(config.parserStandarisation)
-            for file in files:
-                parser.startParsing(file)
-            del parser
-            self.mainPage.runJavaScript("alert('Tagging completed.')")
-
-    def setExistingDirectory(self):
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
-        directory = QFileDialog.getExistingDirectory(self,
-                "QFileDialog.getExistingDirectory()",
-                self.directoryLabel.text(), options)
-        if directory:
-            print(directory)
-            path, file = os.path.split(directory)
-            outputFile = os.path.join(path, "output_{0}".format(file))
-            print(outputFile)
-            parser = BibleVerseParser(config.parserStandarisation)
-            parser.startParsing(directory)
-            del parser
-            self.mainPage.runJavaScript("alert('Tagging completed.')")
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -295,6 +258,88 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+    # Actions - open text from external sources
+    def htmlWrapper(self, text):
+        searchReplace = (("\n", "<br>"), ("\t", "&emsp;&emsp;"))
+        for search, replace in searchReplace:
+            text = text.replace(search, replace)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, text)
+        return text
+
+    def pasteFromClipboard(self):
+        clipboardText = self.htmlWrapper(qApp.clipboard().text())
+        # note: use qApp.clipboard().setText to set text in clipboard
+        self.studyView.setHtml(self.htmlWrapper(clipboardText), baseUrl)
+
+    def openTextFile(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.openFileNameLabel.text(),
+                "Text Files (*.txt);;PDF Files (*.pdf);;Word Documents (*.docx);;All Files (*)", "", options)
+        if fileName:
+            functions = {
+                "pdf": self.openPdfFile,
+                "docx": self.openDocxFile,
+            }
+            function = functions.get(fileName.split(".")[-1].lower(), self.openTxtFile)
+            function(fileName)
+
+    def openTxtFile(self, fileName):
+        if fileName:
+            text = TextFileReader().readTxtFile(fileName)
+            text = self.htmlWrapper(text)
+            self.studyView.setHtml(text, baseUrl)
+
+    def openPdfFile(self, fileName):
+        if fileName:
+            text = TextFileReader().readPdfFile(fileName)
+            text = self.htmlWrapper(text)
+            self.studyView.setHtml(text, baseUrl)
+
+    def openDocxFile(self, fileName):
+        if fileName:
+            text = TextFileReader().readDocxFile(fileName)
+            text = self.htmlWrapper(text)
+            self.studyView.setHtml(text, baseUrl)
+
+    def onTaggingCompleted(self):
+        self.mainPage.runJavaScript("alert('Tagging completed.')")
+
+    # Actions - tag files with BibleVerseParser
+    def tagFile(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.openFileNameLabel.text(),
+                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+        if fileName:
+            BibleVerseParser(config.parserStandarisation).startParsing(fileName)
+            self.onTaggingCompleted()
+
+    def tagFiles(self):
+        options = QFileDialog.Options()
+        files, filtr = QFileDialog.getOpenFileNames(self,
+                "QFileDialog.getOpenFileNames()", self.openFilesPath,
+                "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+        if files:
+            parser = BibleVerseParser(config.parserStandarisation)
+            for file in files:
+                parser.startParsing(file)
+            del parser
+            self.onTaggingCompleted()
+
+    def tagFolder(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "QFileDialog.getExistingDirectory()",
+                self.directoryLabel.text(), options)
+        if directory:
+            path, file = os.path.split(directory)
+            outputFile = os.path.join(path, "output_{0}".format(file))
+            BibleVerseParser(config.parserStandarisation).startParsing(directory)
+            self.onTaggingCompleted()
+
     # Actions - hide / show tool bars
     def hideShowToolBar(self):
         if self.toolBar.isVisible():
@@ -388,13 +433,6 @@ class MainWindow(QMainWindow):
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(0, ratio[0])
         self.centralWidget.layout.setColumnStretch(1, ratio[1])
-
-    # Action - paste text from clipboard into study view
-    def pasteFromClipboard(self):
-        clipboardText = qApp.clipboard().text()
-        # note: use qApp.clipboard().setText to set text in clipboard
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, clipboardText)
-        self.studyView.setHtml(html, baseUrl)
 
     # Actions - enable or disable lightning feature
     def enableLightning(self):
