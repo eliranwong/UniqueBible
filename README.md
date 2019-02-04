@@ -5,6 +5,12 @@ A cross-platform bible application, integrated with high-quality resources and u
 
 Please visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
 
+# Install Dependencies
+
+pip3 install PySide2
+pip3 install PyPDF2
+pip3 install python-docx
+
 # Screenshot:
 
 <img src="screenshot.png">
