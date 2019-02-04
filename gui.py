@@ -258,6 +258,20 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+    # Open text on studyView
+    def openTextOnStudyView(self, text):
+        # write text in a text file
+        # reason: setHTML does not work with content larger than 2 MB
+        outputFile = os.path.join("htmlResources", "study.html")
+        fileObject = open(outputFile,'w')
+        fileObject.write(text)
+        fileObject.close()
+        # open the text file with webview
+        fullOutputPath = os.path.abspath(outputFile)
+        self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
+        if self.parallelMode == 0:
+            self.parallel()
+
     # Actions - open text from external sources
     def htmlWrapper(self, text):
         searchReplace = (("\n", "<br>"), ("\t", "&emsp;&emsp;"))
@@ -269,7 +283,7 @@ class MainWindow(QMainWindow):
     def pasteFromClipboard(self):
         clipboardText = self.htmlWrapper(qApp.clipboard().text())
         # note: use qApp.clipboard().setText to set text in clipboard
-        self.studyView.setHtml(self.htmlWrapper(clipboardText), baseUrl)
+        self.openTextOnStudyView(self.htmlWrapper(clipboardText))
 
     def openTextFile(self):
         options = QFileDialog.Options()
@@ -289,19 +303,19 @@ class MainWindow(QMainWindow):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text)
-            self.studyView.setHtml(text, baseUrl)
+            self.openTextOnStudyView(text)
 
     def openPdfFile(self, fileName):
         if fileName:
             text = TextFileReader().readPdfFile(fileName)
             text = self.htmlWrapper(text)
-            self.studyView.setHtml(text, baseUrl)
+            self.openTextOnStudyView(text)
 
     def openDocxFile(self, fileName):
         if fileName:
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text)
-            self.studyView.setHtml(text, baseUrl)
+            self.openTextOnStudyView(text)
 
     def onTaggingCompleted(self):
         self.mainPage.runJavaScript("alert('Tagging completed.')")
@@ -634,14 +648,7 @@ class MainWindow(QMainWindow):
             if view == "study":
                 # save html in a separate file
                 # reason: setHTML does not work with content larger than 2 MB
-                outputFile = os.path.join("htmlResources", "study.html")
-                f = open(outputFile,'w')
-                f.write(html)
-                f.close()
-                fullOutputPath = os.path.abspath(outputFile)
-                self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
-                if self.parallelMode == 0:
-                    self.parallel()
+                self.openTextOnStudyView(html)
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)

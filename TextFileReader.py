@@ -19,7 +19,7 @@ class TextFileReader:
         try:
             pdfObject = open(fileName,'rb')
             pdfReader = PyPDF2.PdfFileReader(pdfObject)
-            text = "\n\n".join([pdfReader.getPage(pageNum).extractText() for pageNum in range(1, pdfReader.numPages)])
+            text = "\n\n".join([pdfReader.getPage(pageNum).extractText() for pageNum in range(0, pdfReader.numPages)])
             pdfObject.close()
             return text
         except:
