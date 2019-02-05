@@ -104,8 +104,11 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
         menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
-        menu6 = self.menuBar().addMenu("&Advanced")
-        menu6.addAction(QAction("&Open Text File", self, shortcut = "Ctrl+O", triggered=self.openTextFile))
+        menu6 = self.menuBar().addMenu("&External")
+        menu6.addAction(QAction("&Open Text File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
+        menu6.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
+        menu6.addAction(QAction("R&ecent Files", self, shortcut = "Ctrl+E", triggered=self.openExternalFileHistory))
+        menu6.addSeparator()
         menu6.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
         menu6.addSeparator()
         menu6.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
@@ -258,6 +261,19 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        #openFileButton = QPushButton()
+        #openFileButtonFile = os.path.join("htmlResources", "open.png")
+        #openFileButton.setIcon(QIcon(openFileButtonFile))
+        #openFileButton.clicked.connect(self.openTextFileDialog)
+        #self.secondToolBar.addWidget(openFileButton)
+
+        self.externalFileButton = QPushButton(self.getLastExternalFileName())
+        self.externalFileButton.setStyleSheet(textButtonStyle)
+        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
+        self.secondToolBar.addWidget(self.externalFileButton)
+
+        self.secondToolBar.addSeparator()
+
     # Open text on studyView
     def openTextOnStudyView(self, text):
         # write text in a text file
@@ -286,19 +302,51 @@ class MainWindow(QMainWindow):
         # note: use qApp.clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText))
 
-    def openTextFile(self):
+    def openTextFileDialog(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
                 "Text Files (*.txt);;PDF Files (*.pdf);;Word Documents (*.docx);;All Files (*)", "", options)
         if fileName:
-            functions = {
-                "pdf": self.openPdfFile,
-                "docx": self.openDocxFile,
-            }
-            function = functions.get(fileName.split(".")[-1].lower(), self.openTxtFile)
-            function(fileName)
+            self.openTextFile(fileName)
+
+    def openTextFile(self, fileName):
+        functions = {
+            "pdf": self.openPdfFile,
+            "docx": self.openDocxFile,
+        }
+        function = functions.get(fileName.split(".")[-1].lower(), self.openTxtFile)
+        function(fileName)
+        self.addExternalFileHistory(fileName)
+        self.setExternalFileButton()
+
+    def addExternalFileHistory(self, fileName):
+        if config.history['external'] == [] or config.history['external'][-1] != fileName:
+            config.history['external'].append(fileName)
+
+    def setExternalFileButton(self):
+        self.externalFileButton.setText(self.getLastExternalFileName())
+
+    def getLastExternalFileName(self):
+        externalFileHistory = config.history["external"]
+        if externalFileHistory:
+            return os.path.split(externalFileHistory[-1])[-1]
+        else:
+            return "[open file]"
+
+    def externalFileButtonClicked(self):
+        externalFileHistory = config.history["external"]
+        if externalFileHistory:
+            self.openExternalFileHistoryRecord(-1)
+        else:
+            self.openTextFileDialog()
+
+    def openExternalFileHistoryRecord(self, record):
+        self.openTextFile(externalFileHistory[record])
+
+    def openExternalFileHistory(self):
+        self.studyView.setHtml(self.getHistory("external"), baseUrl)
 
     def openTxtFile(self, fileName):
         if fileName:
@@ -541,8 +589,11 @@ class MainWindow(QMainWindow):
 
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
-        html = "<br>".join(["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        if view == "external":
+            html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
+        else:
+            html = "<br>".join(["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
+        html = self.htmlWrapper(html)
         return html
 
     # navigation between history records

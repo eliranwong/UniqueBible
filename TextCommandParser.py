@@ -21,6 +21,7 @@ class TextCommandParser:
             "_history": self.textHistory,
             "_historyrecord": self.textHistoryRecord,
             "_image": self.textImage,
+            "_openfile": self.textOpenFile,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -247,6 +248,12 @@ class TextCommandParser:
             tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
             versions, verses = zip(*tableList)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+
+    # _openfile:::
+    def textOpenFile(self, command, source):
+        fileName = config.history["external"][int(command)]
+        if fileName:
+            self.parent.openTextFile(fileName)
 
     # _info:::
     def textInfo(self, command, source):
