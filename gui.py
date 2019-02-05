@@ -274,9 +274,10 @@ class MainWindow(QMainWindow):
 
     # Actions - open text from external sources
     def htmlWrapper(self, text):
-        searchReplace = (("\n", "<br>"), ("\t", "&emsp;&emsp;"))
+        searchReplace = (("\r\n", "<br>"), ("\r", "<br>"), ("\n", "<br>"), ("\t", "&emsp;&emsp;"))
         for search, replace in searchReplace:
             text = text.replace(search, replace)
+        text = BibleVerseParser(config.parserStandarisation).parseText(text)
         text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, text)
         return text
 
