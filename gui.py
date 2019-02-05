@@ -289,25 +289,30 @@ class MainWindow(QMainWindow):
             self.parallel()
 
     # Actions - open text from external sources
-    def htmlWrapper(self, text):
+    def htmlWrapper(self, text, parsing=False, view="study"):
         searchReplace = (("\r\n", "<br>"), ("\r", "<br>"), ("\n", "<br>"), ("\t", "&emsp;&emsp;"))
         for search, replace in searchReplace:
             text = text.replace(search, replace)
-        text = BibleVerseParser(config.parserStandarisation).parseText(text)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, text)
+        if parsing:
+            text = BibleVerseParser(config.parserStandarisation).parseText(text)
+        if view == "main":
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+        elif view == "study":
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, text)
         return text
 
     def pasteFromClipboard(self):
-        clipboardText = self.htmlWrapper(qApp.clipboard().text())
+        clipboardText = qApp.clipboard().text()
         # note: use qApp.clipboard().setText to set text in clipboard
-        self.openTextOnStudyView(self.htmlWrapper(clipboardText))
+        self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "Text Files (*.txt);;PDF Files (*.pdf);;Word Documents (*.docx);;All Files (*)", "", options)
+                "Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)", "", options)
         if fileName:
             self.openTextFile(fileName)
 
@@ -322,8 +327,11 @@ class MainWindow(QMainWindow):
         self.setExternalFileButton()
 
     def addExternalFileHistory(self, fileName):
-        if config.history['external'] == [] or config.history['external'][-1] != fileName:
-            config.history['external'].append(fileName)
+        externalFileHistory = config.history['external']
+        if externalFileHistory == [] or externalFileHistory[-1] != fileName:
+            if fileName in externalFileHistory:
+                externalFileHistory.remove(fileName)
+            externalFileHistory.append(fileName)
 
     def setExternalFileButton(self):
         self.externalFileButton.setText(self.getLastExternalFileName())
@@ -351,19 +359,19 @@ class MainWindow(QMainWindow):
     def openTxtFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
-            text = self.htmlWrapper(text)
+            text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
 
     def openPdfFile(self, fileName):
         if fileName:
             text = TextFileReader().readPdfFile(fileName)
-            text = self.htmlWrapper(text)
+            text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
 
     def openDocxFile(self, fileName):
         if fileName:
             text = TextFileReader().readDocxFile(fileName)
-            text = self.htmlWrapper(text)
+            text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
 
     def onTaggingCompleted(self):
