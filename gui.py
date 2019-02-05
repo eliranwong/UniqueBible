@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
             self.openTextFileDialog()
 
     def openExternalFileHistoryRecord(self, record):
-        self.openTextFile(externalFileHistory[record])
+        self.openTextFile(config.history["external"][record])
 
     def openExternalFileHistory(self):
         self.studyView.setHtml(self.getHistory("external"), baseUrl)
