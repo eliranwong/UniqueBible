@@ -457,6 +457,10 @@ function openHistoryRecord(recordNo) {
     document.title = "_historyrecord:::"+recordNo;
 }
 
+function openExternalRecord(recordNo) {
+    document.title = "_openfile:::"+recordNo;
+}
+
 function searchThirdDictionary(module, entry) {
     document.title = "SEARCHTHIRDDICTIONARY:::"+module+":::"+entry;
 }
