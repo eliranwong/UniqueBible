@@ -590,6 +590,7 @@ class MainWindow(QMainWindow):
     def displaySearchBookCommand(self):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
+        self.textCommandLineEdit.setFocus()
 
     # Actions - change font size
     def smallerFont(self):
@@ -613,9 +614,11 @@ class MainWindow(QMainWindow):
     # Action - search bible
     def displaySearchBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+        self.textCommandLineEdit.setFocus()
 
     def displaySearchStudyBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
+        self.textCommandLineEdit.setFocus()
 
     # Actions - recently opened bibles & commentary
     def mainRefButtonClicked(self):
@@ -752,6 +755,7 @@ class MainWindow(QMainWindow):
             pass
         elif view == "command":
             self.textCommandLineEdit.setText(content)
+            self.textCommandLineEdit.setFocus()
         else:
             activeBCVsettings = ""
             if view == "main":
