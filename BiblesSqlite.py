@@ -252,14 +252,15 @@ class BiblesSqlite:
                 else:
                     divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse("OHGB", b, c, v)[3])
-        if mode == "BASIC":
+        if mode == "BASIC" and not searchString == "z":
             formatedText = re.sub("("+searchString+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
             searchWords = [m.split("%") for m in searchWords]
             searchWords = [m2 for m1 in searchWords for m2 in m1]
             for searchword in searchWords:
-                formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
+                if not searchword == "z":
+                    formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
         p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
         s = p.search(formatedText)
         while s:

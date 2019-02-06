@@ -317,6 +317,9 @@ class MainWindow(QMainWindow):
     def openMainChapterNote(self):
         self.openChapterNote(config.mainB, config.mainC)
 
+    def openMainVerseNote(self):
+        self.openVerseNote(config.mainB, config.mainC, config.mainV)
+
     def openChapterNote(self, b, c):
         reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, 1)
         config.studyB, config.studyC, config.studyV = b, c, 1
@@ -328,9 +331,6 @@ class MainWindow(QMainWindow):
         del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
-
-    def openMainVerseNote(self):
-        self.openVerseNote(config.mainB, config.mainC, config.mainV)
 
     def openVerseNote(self, b, c, v):
         reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)

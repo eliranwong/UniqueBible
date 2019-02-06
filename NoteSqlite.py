@@ -1,4 +1,4 @@
-import os, sqlite3
+import os, re, sqlite3, config
 
 class NoteSqlite:
 
@@ -16,7 +16,7 @@ class NoteSqlite:
         self.cursor.execute(query, bcTuple)
         content = self.cursor.fetchone()
         if content:
-            return content[0]
+            return self.highlightSearch(content[0])
         else:
             return "[empty]"
 
@@ -25,7 +25,7 @@ class NoteSqlite:
         self.cursor.execute(query, bcvTuple)
         content = self.cursor.fetchone()
         if content:
-            return content[0]
+            return self.highlightSearch(content[0])
         else:
             return "[empty]"
 
@@ -48,3 +48,20 @@ class NoteSqlite:
             insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note) VALUES (?, ?, ?, ?)"
             self.cursor.execute(insert, bcvNoteTuple)
             self.connection.commit()
+
+    def getSearchedChapterList(self, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT DISTINCT Book, Chapter FROM ChapterNote WHERE Note LIKE ? ORDER BY Book, Chapter"
+        self.cursor.execute(query, (searchString,))
+        return [chapter for chapter in self.cursor.fetchall()]
+
+    def highlightSearch(self, content):
+        highlight = config.noteSearchString
+        if highlight and not highlight == "z":
+            content = re.sub("("+highlight+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
+            p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
+            s = p.search(content)
+            while s:
+                content = re.sub(p, r"\1\2", content)
+                s = p.search(content)
+        return content

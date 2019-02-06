@@ -23,6 +23,8 @@ class TextCommandParser:
             "_image": self.textImage,
             "_editchapternote": self.editChapterNote,
             "_editversenote": self.editVerseNote,
+            "_openchapternote": self.openChapterNote,
+            "_openversenote": self.openVerseNote,
             "_openfile": self.textOpenFile,
             "main": self.textMain,
             "study": self.textStudy,
@@ -250,6 +252,20 @@ class TextCommandParser:
             tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
             versions, verses = zip(*tableList)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+
+    # _openchapternote:::
+    def openChapterNote(self, command, source):
+        b, c = command.split(".")
+        b, c = int(b), int(c)
+        self.parent.openChapterNote(b, c)
+        return ("", "")
+
+    # _openversenote:::
+    def openVerseNote(self, command, source):
+        b, c, v = command.split(".")
+        b, c, v = int(b), int(c), int(v)
+        self.parent.openVerseNote(b, c, v)
+        return ("", "")
 
     # _editchapternote:::
     def editChapterNote(self, command, source):

@@ -583,7 +583,7 @@ class BookData:
         else:
             config.book = module
             content = content[0]
-            if config.bookSearchString:
+            if config.bookSearchString and not config.bookSearchString == "z":
                 content = re.sub("("+config.bookSearchString+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
                 p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
                 s = p.search(content)
