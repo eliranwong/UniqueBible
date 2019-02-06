@@ -191,7 +191,7 @@ class MainWindow(QMainWindow):
         self.addToolBarBreak()
 
     def setupSecondToolBar(self):
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790; }"
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
         
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Special Features")
@@ -212,13 +212,13 @@ class MainWindow(QMainWindow):
         openChapterNoteButton = QPushButton()
         openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
-        openChapterNoteButton.clicked.connect(self.openChapterNote)
+        openChapterNoteButton.clicked.connect(self.openMainChapterNote)
         self.secondToolBar.addWidget(openChapterNoteButton)
 
         openVerseNoteButton = QPushButton()
         openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
-        openVerseNoteButton.clicked.connect(self.openVerseNote)
+        openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.secondToolBar.addWidget(openVerseNoteButton)
 
         self.secondToolBar.addSeparator()
@@ -310,25 +310,37 @@ class MainWindow(QMainWindow):
             self.parallel()
 
     # Actions - chapter / verse note
-    def openChapterNote(self):
-        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(config.mainB, config.mainC, 1)
-        config.studyB, config.studyC, config.studyV = config.mainB, config.mainC, 1
-        self.updateStudyRefButton()
-        config.commentaryB, config.commentaryC, config.commentaryV = config.mainB, config.mainC, 1
-        self.updateCommentaryRefButton()
-        note = "<p><b>Note on {0}</b></p>{1}".format(reference[:-2], NoteSqlite().getChapterNote((config.mainB, config.mainC)))
-        note = self.htmlWrapper(note, True)
-        self.openTextOnStudyView(note)
-        self.noteEditor = NoteEditor(self)
+    def openNoteEditor(self, noteType):
+        self.noteEditor = NoteEditor(self, noteType)
         self.noteEditor.show()
 
-    def openVerseNote(self):
-        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        config.studyB, config.studyC, config.studyV = config.mainB, config.mainC, config.mainV
+    def openMainChapterNote(self):
+        self.openChapterNote(config.mainB, config.mainC)
+
+    def openChapterNote(self, b, c):
+        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, 1)
+        config.studyB, config.studyC, config.studyV = b, c, 1
         self.updateStudyRefButton()
-        config.commentaryB, config.commentaryC, config.commentaryV = config.mainB, config.mainC, config.mainV
+        config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
-        note = "<p><b>Note on {0}</b></p>{1}".format(reference, NoteSqlite().getVerseNote((config.mainB, config.mainC, config.mainV)))
+        noteSqlite = NoteSqlite()
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>Edit</button></p>{1}".format(reference[:-2], noteSqlite.getChapterNote((b, c)))
+        del noteSqlite
+        note = self.htmlWrapper(note, True)
+        self.openTextOnStudyView(note)
+
+    def openMainVerseNote(self):
+        self.openVerseNote(config.mainB, config.mainC, config.mainV)
+
+    def openVerseNote(self, b, c, v):
+        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
+        config.studyB, config.studyC, config.studyV = b, c, v
+        self.updateStudyRefButton()
+        config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
+        self.updateCommentaryRefButton()
+        noteSqlite = NoteSqlite()
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>Edit</button></p>{1}".format(reference, noteSqlite.getVerseNote((b, c, v)))
+        del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
 
@@ -1024,20 +1036,49 @@ class WebEngineViewPopover(QWebEngineView):
     def popoverTextCommandChanged(self, newTextCommand):
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
+
 class NoteEditor(QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent, noteType):
         super().__init__()
-        self.parent = parent
-        self.layout = QGridLayout()
+        self.parent, self.noteType = parent, noteType
+        self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
+        self.setWindowTitle("Unique Bible App - Note Editor")
 
-        self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle("Note Editor")
-        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.layout.addWidget(self.toolBar, 0, 0)
+        #self.toolBar = QToolBar()
+        #self.toolBar.setWindowTitle("Note Editor")
+        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+
+        saveButton = QPushButton("SAVE")
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed {background-color: #515790;}"
+        saveButton.setStyleSheet(textButtonStyle)
+        saveButton.clicked.connect(self.saveNote)
+        #self.toolBar.addWidget(saveButton)
 
         self.editor = QTextEdit()
+        
+        self.layout = QGridLayout()
+        self.layout.addWidget(saveButton, 0, 0)
         self.layout.addWidget(self.editor, 1, 0)
-
         self.setLayout(self.layout)
+        
+        self.openNote()
 
+    def openNote(self):
+        noteSqlite = NoteSqlite()
+        if self.noteType == "chapter":
+            note = noteSqlite.getChapterNote((self.b, self.c))
+        elif self.noteType == "verse":
+            note = noteSqlite.getVerseNote((self.b, self.c, self.v))
+        del noteSqlite
+        self.editor.setPlainText(note)
+
+    def saveNote(self):
+        noteSqlite = NoteSqlite()
+        if self.noteType == "chapter":
+            noteSqlite.saveChapterNote((self.b, self.c, self.editor.toPlainText()))
+            self.parent.openChapterNote(self.b, self.c)
+        elif self.noteType == "verse":
+            noteSqlite.saveVerseNote((self.b, self.c, self.v, self.editor.toPlainText()))
+            self.parent.openVerseNote(self.b, self.c, self.v)
+        del noteSqlite

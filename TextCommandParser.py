@@ -21,6 +21,8 @@ class TextCommandParser:
             "_history": self.textHistory,
             "_historyrecord": self.textHistoryRecord,
             "_image": self.textImage,
+            "_editchapternote": self.editChapterNote,
+            "_editversenote": self.editVerseNote,
             "_openfile": self.textOpenFile,
             "main": self.textMain,
             "study": self.textStudy,
@@ -249,11 +251,22 @@ class TextCommandParser:
             versions, verses = zip(*tableList)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
+    # _editchapternote:::
+    def editChapterNote(self, command, source):
+        self.parent.openNoteEditor("chapter")
+        return ("", "")
+
+    # _editversenote:::
+    def editVerseNote(self, command, source):
+        self.parent.openNoteEditor("verse")
+        return ("", "")
+
     # _openfile:::
     def textOpenFile(self, command, source):
         fileName = config.history["external"][int(command)]
         if fileName:
             self.parent.openTextFile(fileName)
+        return ("", "")
 
     # _info:::
     def textInfo(self, command, source):

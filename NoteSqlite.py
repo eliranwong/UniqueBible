@@ -18,7 +18,7 @@ class NoteSqlite:
         if content:
             return content[0]
         else:
-            return "[not found]"
+            return "[empty]"
 
     def getVerseNote(self, bcvTuple):
         query = "SELECT Note FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
@@ -27,14 +27,14 @@ class NoteSqlite:
         if content:
             return content[0]
         else:
-            return "[not found]"
+            return "[empty]"
 
     def saveChapterNote(self, bcNoteTuple):
         b, c, note = bcNoteTuple
         delete = "DELETE FROM ChapterNote WHERE Book=? AND Chapter=?"
         self.cursor.execute(delete, (b, c))
         self.connection.commit()
-        if note:
+        if note and note != "[empty]":
             insert = "INSERT INTO ChapterNote (Book, Chapter, Note) VALUES (?, ?, ?)"
             self.cursor.execute(insert, bcNoteTuple)
             self.connection.commit()
@@ -44,7 +44,7 @@ class NoteSqlite:
         delete = "DELETE FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(delete, (b, c, v))
         self.connection.commit()
-        if note:
+        if note and note != "[empty]":
             insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note) VALUES (?, ?, ?, ?)"
             self.cursor.execute(insert, bcvNoteTuple)
             self.connection.commit()
