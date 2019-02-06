@@ -1109,12 +1109,14 @@ class NoteEditor(QWidget):
         #self.toolBar.addWidget(saveButton)
 
         self.editor = QTextEdit()
-        
+
         self.layout = QGridLayout()
         self.layout.addWidget(saveButton, 0, 0)
         self.layout.addWidget(self.editor, 1, 0)
         self.setLayout(self.layout)
-        
+
+        self.resizeWindow(2/3, 2/3)
+
         self.openNote()
 
     def openNote(self):
@@ -1135,3 +1137,7 @@ class NoteEditor(QWidget):
             noteSqlite.saveVerseNote((self.b, self.c, self.v, self.editor.toPlainText()))
             self.parent.openVerseNote(self.b, self.c, self.v)
         del noteSqlite
+
+    def resizeWindow(self, widthFactor, heightFactor):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
