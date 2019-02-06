@@ -29,6 +29,20 @@ class TextFileReader:
         try:
             document = docx.Document(fileName)
             paragraphs = document.paragraphs
-            return "\n".join([paragraph.text for paragraph in paragraphs])
+            text = []
+            for paragraph in paragraphs:
+                paragraphText = ""
+                for run in paragraph.runs:
+                    runText = run.text
+                    if run.bold:
+                        runText = "<b>{0}</b>".format(runText)
+                    if run.italic:
+                        runText = "<i>{0}</i>".format(runText)
+                    if run.underline:
+                        runText = "<u>{0}</u>".format(runText)
+                    paragraphText += runText
+                text.append(paragraphText)
+            text = "<br>".join(text)
+            return text
         except:
             return self.errorReadingFile(fileName)
