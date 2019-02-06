@@ -447,7 +447,7 @@ class MainWindow(QMainWindow):
             self.openTextOnStudyView(text)
 
     def onTaggingCompleted(self):
-        self.mainPage.runJavaScript("alert('Tagging completed.')")
+        self.mainPage.runJavaScript("alert('Finished. Tagged file(s) is/are named with a prefix \"tagged_\".')")
 
     # Actions - tag files with BibleVerseParser
     def tagFile(self):
