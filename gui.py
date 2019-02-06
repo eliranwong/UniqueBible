@@ -801,7 +801,10 @@ class MainWindow(QMainWindow):
         if content == "INVALID_COMMAND_ENTERED":
             self.mainPage.runJavaScript("alert('Invalid command not processed.')")
         elif view == "":
-            pass
+            if source == "main":
+                self.mainPage.runJavaScript("document.title = 'UniqueBible.app';")
+            elif source == "study":
+                self.studyPage.runJavaScript("document.title = 'UniqueBible.app';")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
