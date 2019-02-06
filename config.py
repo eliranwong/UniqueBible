@@ -19,6 +19,7 @@ dictionary = 'EAS'
 encyclopedia = 'ISB'
 book = 'Simpson_But_God'
 bookSearchString = ''
+noteSearchString = ''
 thirdDictionary = 'wordnet'
 historyRecordAllowed = 50
 currentRecord = {'main': 0, 'study': 0}
