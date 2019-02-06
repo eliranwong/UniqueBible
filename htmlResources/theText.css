@@ -1,6 +1,6 @@
 /*
 select:active, select:hover {
-outline-color: none;
+  outline-color: none;
 }
 option:checked, option:hover, option:checked: after {
 background: #ffb7b7;
@@ -43,10 +43,16 @@ bdbheb, bdbarc {
 display: inline-block;
 direction: rtl;
 }
+rtl {
+display: inline-block;
+direction: rtl;
+font-family: 'Ezra SIL';
+font-size: 130%;
+}
 external {
 font-size: 80%;
 }
-red, z {
+red, sw {
 color: red;
 }
 blu {
@@ -463,14 +469,14 @@ font-style: italic;
 }
 /* headings */
 h1.window {
-text-align: center;
-font-size: 130%;
+    text-align: center;
+    font-size: 130%;
 }
 h1, h2, h3, h4 {
-color: #010740;
+    color: #010740;
 }
 h4 {
-text-align: center;
+    text-align: center;
 }
 h4 {
 text-align: center;
