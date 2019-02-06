@@ -34,12 +34,20 @@ class TextFileReader:
                 paragraphText = ""
                 for run in paragraph.runs:
                     runText = run.text
-                    if run.bold:
+                    if run.bold or run.cs_bold:
                         runText = "<b>{0}</b>".format(runText)
-                    if run.italic:
+                    if run.italic or run.cs_italic:
                         runText = "<i>{0}</i>".format(runText)
                     if run.underline:
                         runText = "<u>{0}</u>".format(runText)
+                    if run.font.superscript:
+                        runText = "<sup>{0}</sup>".format(runText)
+                    if run.font.subscript:
+                        runText = "<sub>{0}</sub>".format(runText)
+                    if run.font.strike or run.font.double_strike:
+                        runText = "<s>{0}</s>".format(runText)
+                    if run.font.rtl:
+                        runText = "<div style='font-family:\"Ezra SIL\"; font-size:130%; display:inline-block; direction:rtl;'>{0}</div>".format(runText)
                     paragraphText += runText
                 text.append(paragraphText)
             text = "<br>".join(text)
