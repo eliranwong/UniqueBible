@@ -1,12 +1,13 @@
 import os, sys, re, config, webbrowser
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame)
+from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
+from NoteSqlite import NoteSqlite
 
 class MainWindow(QMainWindow):
 
@@ -105,7 +106,7 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
         menu6 = self.menuBar().addMenu("&External")
-        menu6.addAction(QAction("&Open Text File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
+        menu6.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
         menu6.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
         menu6.addAction(QAction("R&ecent Files", self, shortcut = "Ctrl+E", triggered=self.openExternalFileHistory))
         menu6.addSeparator()
@@ -137,6 +138,12 @@ class MainWindow(QMainWindow):
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.toolBar)
 
+        mainHistoryButton = QPushButton()
+        mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
+        mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
+        self.toolBar.addWidget(mainHistoryButton)
+
         backButton = QPushButton()
         leftButtonFile = os.path.join("htmlResources", "left.png")
         backButton.setIcon(QIcon(leftButtonFile))
@@ -165,6 +172,21 @@ class MainWindow(QMainWindow):
         studyForwardButton.clicked.connect(self.studyForward)
         self.toolBar.addWidget(studyForwardButton)
 
+        studyHistoryButton = QPushButton()
+        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
+        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
+        self.toolBar.addWidget(studyHistoryButton)
+
+        #self.toolBar.addSeparator()
+
+        self.parallelMode = 1 # default parallel mode
+        parallelButton = QPushButton()
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        parallelButton.setIcon(QIcon(parallelButtonFile))
+        parallelButton.clicked.connect(self.parallel)
+        self.toolBar.addWidget(parallelButton)
+
         # put the secondary toolbar below the main one
         self.addToolBarBreak()
 
@@ -175,12 +197,6 @@ class MainWindow(QMainWindow):
         self.secondToolBar.setWindowTitle("Special Features")
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
-
-        mainHistoryButton = QPushButton()
-        mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
-        mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
-        mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
-        self.secondToolBar.addWidget(mainHistoryButton)
 
         searchBibleButton = QPushButton()
         searchBibleButtonFile = os.path.join("htmlResources", "search.png")
@@ -193,20 +209,25 @@ class MainWindow(QMainWindow):
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.secondToolBar.addWidget(self.mainRefButton)
 
+        openChapterNoteButton = QPushButton()
+        openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
+        openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
+        openChapterNoteButton.clicked.connect(self.openChapterNote)
+        self.secondToolBar.addWidget(openChapterNoteButton)
+
+        openVerseNoteButton = QPushButton()
+        openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
+        openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
+        openVerseNoteButton.clicked.connect(self.openVerseNote)
+        self.secondToolBar.addWidget(openVerseNoteButton)
+
         self.secondToolBar.addSeparator()
 
-        self.parallelMode = 1 # default parallel mode
-        parallelButton = QPushButton()
-        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        parallelButton.setIcon(QIcon(parallelButtonFile))
-        parallelButton.clicked.connect(self.parallel)
-        self.secondToolBar.addWidget(parallelButton)
-
-        studyHistoryButton = QPushButton()
-        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
-        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
-        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
-        self.secondToolBar.addWidget(studyHistoryButton)
+        searchStudyBibleButton = QPushButton()
+        searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
+        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
+        searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
+        self.secondToolBar.addWidget(searchStudyBibleButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study"))
         self.studyRefButton.setStyleSheet(textButtonStyle)
@@ -231,6 +252,33 @@ class MainWindow(QMainWindow):
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
+        #self.secondToolBar.addSeparator()
+
+        #fontMinusButton = QPushButton()
+        #fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
+        #fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+        #fontMinusButton.clicked.connect(self.smallerFont)
+        #self.secondToolBar.addWidget(fontMinusButton)
+
+        #fontPlusButton = QPushButton()
+        #fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
+        #fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+        #fontPlusButton.clicked.connect(self.largerFont)
+        #self.secondToolBar.addWidget(fontPlusButton)
+
+        self.secondToolBar.addSeparator()
+
+        openFileButton = QPushButton()
+        openFileButtonFile = os.path.join("htmlResources", "open.png")
+        openFileButton.setIcon(QIcon(openFileButtonFile))
+        openFileButton.clicked.connect(self.openTextFileDialog)
+        self.secondToolBar.addWidget(openFileButton)
+
+        self.externalFileButton = QPushButton(self.getLastExternalFileName())
+        self.externalFileButton.setStyleSheet(textButtonStyle)
+        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
+        self.secondToolBar.addWidget(self.externalFileButton)
+
         self.secondToolBar.addSeparator()
 
         self.instantMode = 1 # default parallel mode
@@ -247,33 +295,6 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
-        fontMinusButton = QPushButton()
-        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
-        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
-        fontMinusButton.clicked.connect(self.smallerFont)
-        self.secondToolBar.addWidget(fontMinusButton)
-
-        fontPlusButton = QPushButton()
-        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
-        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
-        fontPlusButton.clicked.connect(self.largerFont)
-        self.secondToolBar.addWidget(fontPlusButton)
-
-        self.secondToolBar.addSeparator()
-
-        #openFileButton = QPushButton()
-        #openFileButtonFile = os.path.join("htmlResources", "open.png")
-        #openFileButton.setIcon(QIcon(openFileButtonFile))
-        #openFileButton.clicked.connect(self.openTextFileDialog)
-        #self.secondToolBar.addWidget(openFileButton)
-
-        self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.externalFileButton.setStyleSheet(textButtonStyle)
-        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
-        self.secondToolBar.addWidget(self.externalFileButton)
-
-        self.secondToolBar.addSeparator()
-
     # Open text on studyView
     def openTextOnStudyView(self, text):
         # write text in a text file
@@ -287,6 +308,29 @@ class MainWindow(QMainWindow):
         self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
         if self.parallelMode == 0:
             self.parallel()
+
+    # Actions - chapter / verse note
+    def openChapterNote(self):
+        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(config.mainB, config.mainC, 1)
+        config.studyB, config.studyC, config.studyV = config.mainB, config.mainC, 1
+        self.updateStudyRefButton()
+        config.commentaryB, config.commentaryC, config.commentaryV = config.mainB, config.mainC, 1
+        self.updateCommentaryRefButton()
+        note = "<p><b>Note on {0}</b></p>{1}".format(reference[:-2], NoteSqlite().getChapterNote((config.mainB, config.mainC)))
+        note = self.htmlWrapper(note, True)
+        self.openTextOnStudyView(note)
+        self.noteEditor = NoteEditor(self)
+        self.noteEditor.show()
+
+    def openVerseNote(self):
+        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        config.studyB, config.studyC, config.studyV = config.mainB, config.mainC, config.mainV
+        self.updateStudyRefButton()
+        config.commentaryB, config.commentaryC, config.commentaryV = config.mainB, config.mainC, config.mainV
+        self.updateCommentaryRefButton()
+        note = "<p><b>Note on {0}</b></p>{1}".format(reference, NoteSqlite().getVerseNote((config.mainB, config.mainC, config.mainV)))
+        note = self.htmlWrapper(note, True)
+        self.openTextOnStudyView(note)
 
     # Actions - open text from external sources
     def htmlWrapper(self, text, parsing=False, view="study"):
@@ -554,9 +598,12 @@ class MainWindow(QMainWindow):
             textCommand = config.history[view][config.currentRecord[view]]
             self.runTextCommand(textCommand, False, view)
 
-    # Action - search main view bible
+    # Action - search bible
     def displaySearchBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+
+    def displaySearchStudyBibleCommand(self):
+        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
 
     # Actions - recently opened bibles & commentary
     def mainRefButtonClicked(self):
@@ -971,8 +1018,26 @@ class WebEngineViewPopover(QWebEngineView):
         self.parent = parent
         self.name = name
         self.source = source
-        self.setWindowTitle('Unique Bible App - Popover')
+        self.setWindowTitle("Unique Bible App - Popover")
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
     def popoverTextCommandChanged(self, newTextCommand):
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
+
+class NoteEditor(QWidget):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.layout = QGridLayout()
+
+        self.toolBar = QToolBar()
+        self.toolBar.setWindowTitle("Note Editor")
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.layout.addWidget(self.toolBar, 0, 0)
+
+        self.editor = QTextEdit()
+        self.layout.addWidget(self.editor, 1, 0)
+
+        self.setLayout(self.layout)
+
