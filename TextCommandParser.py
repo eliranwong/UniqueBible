@@ -3,6 +3,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
 from ThirdParty import ThirdPartyDictionary
+from NoteSqlite import NoteSqlite
 
 class TextCommandParser:
 
@@ -36,6 +37,8 @@ class TextCommandParser:
             "commentary": self.textCommentary,
             "book": self.textBook,
             "searchbook": self.textSearchBook,
+            "searchchapternote": self.textSearchChapterNote,
+            "searchversenote": self.textSearchVerseNote,
             "clause": self.textClause,
             "combo": self.textCombo,
             "translation": self.textTranslation,
@@ -659,6 +662,28 @@ class TextCommandParser:
             else:
                 self.parent.bookButton.setText(config.book)
                 return ("study", content)
+
+    # SEARCHCHAPTERNOTE:::
+    def textSearchChapterNote(self, command, source):
+        if not command:
+            return self.invalidCommand("study")
+        else:
+            config.noteSearchString = command
+            noteSqlite = NoteSqlite()
+            chapters = noteSqlite.getSearchedChapterList(command)
+            del noteSqlite
+            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)))
+
+    # SEARCHVERSENOTE:::
+    def textSearchVerseNote(self, command, source):
+        if not command:
+            return self.invalidCommand("study")
+        else:
+            config.noteSearchString = command
+            noteSqlite = NoteSqlite()
+            verses = noteSqlite.getSearchedVerseList(command)
+            del noteSqlite
+            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)))
 
     # CROSSREFERENCE:::
     def textCrossReference(self, command, source):

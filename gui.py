@@ -76,8 +76,8 @@ class MainWindow(QMainWindow):
         menu1.addAction(quit_action)
         
         menu2 = self.menuBar().addMenu("&View")
-        menu2.addAction(QAction("&Full Screen", self, shortcut = "Ctrl+F", triggered=self.fullsizeWindow))
-        menu2.addAction(QAction("&Resize", self, shortcut = "Ctrl+R", triggered=self.twoThirdWindow))
+        menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
+        menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
         menu2.addSeparator()
         menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
@@ -105,32 +105,48 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
         menu5.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
-        menu6 = self.menuBar().addMenu("&External")
-        menu6.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
-        menu6.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
-        menu6.addAction(QAction("R&ecent Files", self, shortcut = "Ctrl+E", triggered=self.openExternalFileHistory))
+        menu6 = self.menuBar().addMenu("&Search")
+        menu6.addAction(QAction("&Last Main Bible", self, shortcut = "Ctrl+F", triggered=self.displaySearchBibleCommand))
+        menu6.addAction(QAction("&Last Study Bible", self, triggered=self.displaySearchStudyBibleCommand))
         menu6.addSeparator()
-        menu6.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
+        menu6.addAction(QAction("&Last Opened Dictionary", self, triggered=self.searchCommandBibleDictionary))
+        menu6.addAction(QAction("&Last Opened Encyclopedia", self, triggered=self.searchCommandBibleEncyclopedia))
+        menu6.addAction(QAction("&Last Opened Book", self, triggered=self.displaySearchBookCommand))
         menu6.addSeparator()
-        menu6.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
-        menu6.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
-        menu6.addAction(QAction("&Tag References in a Folder", self, shortcut = "Ctrl+*", triggered=self.tagFolder))
+        menu6.addAction(QAction("&Bible Charcters", self, triggered=self.searchCommandBibleCharacter))
+        menu6.addAction(QAction("&Bible Names", self, triggered=self.searchCommandBibleName))
+        menu6.addAction(QAction("&Bible Locations", self, triggered=self.searchCommandBibleLocation))
+        menu6.addAction(QAction("&Bible Topics", self, triggered=self.searchCommandBibleTopic))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&Notes on Chapters", self, triggered=self.searchCommandChapterNote))
+        menu6.addAction(QAction("&Notes on Verses", self, triggered=self.searchCommandVerseNote))
 
-        menu7 = self.menuBar().addMenu("&About")
-        menu7.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
-        menu7.addAction(QAction("&UniqueBible.app", self, triggered=self.openUniqueBible))
-        menu7.addAction(QAction("&Marvel.bible", self, triggered=self.openMarvelBible))
-        menu7.addAction(QAction("&BibleBento.com", self, triggered=self.openBibleBento))
-        menu7.addAction(QAction("&OpenGNT.com", self, triggered=self.openOpenGNT))
+        menu7 = self.menuBar().addMenu("&External")
+        menu7.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
+        menu7.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
+        menu7.addAction(QAction("&Recent Files", self, shortcut = "Ctrl+R", triggered=self.openExternalFileHistory))
         menu7.addSeparator()
-        menu7.addAction(QAction("&GitHub Repositories", self, triggered=self.openSource))
-        menu7.addAction(QAction("&Unique Bible", self, triggered=self.openUniqueBibleSource))
-        menu7.addAction(QAction("&Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
-        menu7.addAction(QAction("&Open Greek New Testament", self, triggered=self.openOpenGNTSource))
+        menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
         menu7.addSeparator()
-        menu7.addAction(QAction("&Credits", self, triggered=self.openCredits))
-        menu7.addSeparator()
-        menu7.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
+        menu7.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
+        menu7.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
+        menu7.addAction(QAction("&Tag References in a Folder", self, shortcut = "Ctrl+*", triggered=self.tagFolder))
+
+        menu8 = self.menuBar().addMenu("&About")
+        menu8.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
+        menu8.addAction(QAction("&UniqueBible.app", self, triggered=self.openUniqueBible))
+        menu8.addAction(QAction("&Marvel.bible", self, triggered=self.openMarvelBible))
+        menu8.addAction(QAction("&BibleBento.com", self, triggered=self.openBibleBento))
+        menu8.addAction(QAction("&OpenGNT.com", self, triggered=self.openOpenGNT))
+        menu8.addSeparator()
+        menu8.addAction(QAction("&GitHub Repositories", self, triggered=self.openSource))
+        menu8.addAction(QAction("&Unique Bible", self, triggered=self.openUniqueBibleSource))
+        menu8.addAction(QAction("&Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
+        menu8.addAction(QAction("&Open Greek New Testament", self, triggered=self.openOpenGNTSource))
+        menu8.addSeparator()
+        menu8.addAction(QAction("&Credits", self, triggered=self.openCredits))
+        menu8.addSeparator()
+        menu8.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
@@ -327,7 +343,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>Edit</button></p>{1}".format(reference[:-2], noteSqlite.getChapterNote((b, c)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.getChapterNote((b, c)))
         del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
@@ -339,7 +355,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>Edit</button></p>{1}".format(reference, noteSqlite.getVerseNote((b, c, v)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>edit</button></p>{1}".format(reference, noteSqlite.getVerseNote((b, c, v)))
         del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
@@ -480,6 +496,57 @@ class MainWindow(QMainWindow):
         else:
             self.secondToolBar.show()
 
+    # Actions - book features
+    def openBookMenu(self):
+        self.runTextCommand("_book:::", False, "main")
+
+    def displaySearchBookCommand(self):
+        config.bookSearchString = ""
+        self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
+        self.textCommandLineEdit.setFocus()
+
+    # Action - bible search commands
+    def displaySearchBibleCommand(self):
+        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
+        self.textCommandLineEdit.setFocus()
+
+    def displaySearchStudyBibleCommand(self):
+        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
+        self.textCommandLineEdit.setFocus()
+
+    # Action - other search commands
+    def searchCommandChapterNote(self):
+        self.textCommandLineEdit.setText("SEARCHCHAPTERNOTE:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandVerseNote(self):
+        self.textCommandLineEdit.setText("SEARCHVERSENOTE:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleDictionary(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.dictionary))
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleEncyclopedia(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.encyclopedia))
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleCharacter(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBP:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleName(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::HBN:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleLocation(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBL:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandBibleTopic(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBT:::")
+        self.textCommandLineEdit.setFocus()
+
     # Actions - open urls
     def openBibleTools(self):
         webbrowser.open("https://bibletools.app")
@@ -583,15 +650,6 @@ class MainWindow(QMainWindow):
             config.instantInformationEnabled = 0
         self.enableInstantButton.setText(self.getInstantInformation())
 
-    # Actions - book features
-    def openBookMenu(self):
-        self.runTextCommand("_book:::", False, "main")
-
-    def displaySearchBookCommand(self):
-        config.bookSearchString = ""
-        self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
-        self.textCommandLineEdit.setFocus()
-
     # Actions - change font size
     def smallerFont(self):
         if not config.fontSize == 10:
@@ -610,15 +668,6 @@ class MainWindow(QMainWindow):
         for view in views.keys():
             textCommand = config.history[view][config.currentRecord[view]]
             self.runTextCommand(textCommand, False, view)
-
-    # Action - search bible
-    def displaySearchBibleCommand(self):
-        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
-        self.textCommandLineEdit.setFocus()
-
-    def displaySearchStudyBibleCommand(self):
-        self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
-        self.textCommandLineEdit.setFocus()
 
     # Actions - recently opened bibles & commentary
     def mainRefButtonClicked(self):

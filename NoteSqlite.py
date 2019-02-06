@@ -1,4 +1,5 @@
 import os, re, sqlite3, config
+from BibleVerseParser import BibleVerseParser
 
 class NoteSqlite:
 
@@ -53,7 +54,13 @@ class NoteSqlite:
         searchString = "%{0}%".format(searchString)
         query = "SELECT DISTINCT Book, Chapter FROM ChapterNote WHERE Note LIKE ? ORDER BY Book, Chapter"
         self.cursor.execute(query, (searchString,))
-        return [chapter for chapter in self.cursor.fetchall()]
+        return ["<ref onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</ref>".format(book, chapter, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, 1)[:-2]) for book, chapter in self.cursor.fetchall()]
+
+    def getSearchedVerseList(self, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT DISTINCT Book, Chapter, Verse FROM VerseNote WHERE Note LIKE ? ORDER BY Book, Chapter, Verse"
+        self.cursor.execute(query, (searchString,))
+        return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]
 
     def highlightSearch(self, content):
         highlight = config.noteSearchString
