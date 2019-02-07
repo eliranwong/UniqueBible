@@ -373,7 +373,7 @@ class MainWindow(QMainWindow):
             ("\t", "&emsp;&emsp;"),
             ("<br>(<table>|<ol>|<ul>)", r"\1"),
             ("(</table>|</ol>|</ul>)<br>", r"\1"),
-            ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'), r"<a onclick='website({0}\1{0})'>".format('"')),
+            ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
