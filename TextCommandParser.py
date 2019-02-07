@@ -1,4 +1,4 @@
-import os, re, config
+import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
@@ -27,6 +27,7 @@ class TextCommandParser:
             "_openchapternote": self.openChapterNote,
             "_openversenote": self.openVerseNote,
             "_openfile": self.textOpenFile,
+            "_website": self.textWebsite,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -286,6 +287,14 @@ class TextCommandParser:
         if fileName:
             self.parent.openTextFile(fileName)
         return ("", "")
+
+    # _website:::
+    def textWebsite(self, command, source):
+        if command:
+            webbrowser.open(command)
+            return ("", "")
+        else:
+            return self.invalidCommand()
 
     # _info:::
     def textInfo(self, command, source):
