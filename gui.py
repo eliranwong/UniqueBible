@@ -343,7 +343,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.getChapterNote((b, c)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)))
         del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
@@ -355,28 +355,13 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>edit</button></p>{1}".format(reference, noteSqlite.getVerseNote((b, c, v)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)))
         del noteSqlite
         note = self.htmlWrapper(note, True)
         self.openTextOnStudyView(note)
 
     # Actions - open text from external sources
-    def customFormat(self, text):
-        text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
-        text = text.replace("</ol>\n<ol>", "")
-        text = re.sub("^\* (.*?)$", r"<ul><li>\1</li></ul>", text, flags=re.M)
-        text = text.replace("</ul>\n<ul>", "")
-        text = re.sub("^{.*?}$", self.formatHTMLTable, text, flags=re.M)
-        text = text.replace("</table>\n<table>", "")
-        return text
-
-    def formatHTMLTable(self, match):
-        row = match.group()[1:-1]
-        row = "".join(["<td>{0}</td>".format(cell) for cell in row.split("|")])
-        return "<table><tr>{0}</tr></table>".format(row)
-
     def htmlWrapper(self, text, parsing=False, view="study"):
-        text = self.customFormat(text)
         searchReplace = (
             ("\r\n|\r|\n", "<br>"),
             ("\t", "&emsp;&emsp;"),

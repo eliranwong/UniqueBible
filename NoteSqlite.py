@@ -17,7 +17,7 @@ class NoteSqlite:
         self.cursor.execute(query, bcTuple)
         content = self.cursor.fetchone()
         if content:
-            return self.highlightSearch(content[0])
+            return content[0]
         else:
             return "[empty]"
 
@@ -26,9 +26,21 @@ class NoteSqlite:
         self.cursor.execute(query, bcvTuple)
         content = self.cursor.fetchone()
         if content:
-            return self.highlightSearch(content[0])
+            return content[0]
         else:
             return "[empty]"
+
+    def displayChapterNote(self, bcTuple):
+        content = self.getChapterNote(bcTuple)
+        content = self.customFormat(content)
+        content = self.highlightSearch(content)
+        return content
+
+    def displayVerseNote(self, bcvTuple):
+        content = self.getVerseNote(bcvTuple)
+        content = self.customFormat(content)
+        content = self.highlightSearch(content)
+        return content
 
     def saveChapterNote(self, bcNoteTuple):
         b, c, note = bcNoteTuple
@@ -61,6 +73,20 @@ class NoteSqlite:
         query = "SELECT DISTINCT Book, Chapter, Verse FROM VerseNote WHERE Note LIKE ? ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, (searchString,))
         return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]
+
+    def customFormat(self, text):
+        text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
+        text = text.replace("</ol>\n<ol>", "")
+        text = re.sub("^\* (.*?)$", r"<ul><li>\1</li></ul>", text, flags=re.M)
+        text = text.replace("</ul>\n<ul>", "")
+        text = re.sub("^{.*?}$", self.formatHTMLTable, text, flags=re.M)
+        text = text.replace("</table>\n<table>", "")
+        return text
+
+    def formatHTMLTable(self, match):
+        row = match.group()[1:-1]
+        row = "".join(["<td>{0}</td>".format(cell) for cell in row.split("|")])
+        return "<table><tr>{0}</tr></table>".format(row)
 
     def highlightSearch(self, content):
         highlight = config.noteSearchString
