@@ -361,10 +361,31 @@ class MainWindow(QMainWindow):
         self.openTextOnStudyView(note)
 
     # Actions - open text from external sources
+    def customFormat(self, text):
+        text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
+        text = text.replace("</ol>\n<ol>", "")
+        text = re.sub("^\* (.*?)$", r"<ul><li>\1</li></ul>", text, flags=re.M)
+        text = text.replace("</ul>\n<ul>", "")
+        text = re.sub("^{.*?}$", self.formatHTMLTable, text, flags=re.M)
+        text = text.replace("</table>\n<table>", "")
+        return text
+
+    def formatHTMLTable(self, match):
+        row = match.group()[1:-1]
+        row = "".join(["<td>{0}</td>".format(cell) for cell in row.split("|")])
+        return "<table><tr>{0}</tr></table>".format(row)
+
     def htmlWrapper(self, text, parsing=False, view="study"):
-        searchReplace = (("\r\n", "<br>"), ("\r", "<br>"), ("\n", "<br>"), ("\t", "&emsp;&emsp;"))
+        text = self.customFormat(text)
+        searchReplace = (
+            ("\r\n|\r|\n", "<br>"),
+            ("\t", "&emsp;&emsp;"),
+            ("<br>(<table>|<ol>|<ul>)", r"\1"),
+            ("(</table>|</ol>|</ul>)<br>", r"\1")
+        )
         for search, replace in searchReplace:
-            text = text.replace(search, replace)
+            text = re.sub(search, replace, text)
+            #text = text.replace(search, replace)
         if parsing:
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
         if view == "main":

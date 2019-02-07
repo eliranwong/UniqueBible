@@ -1,4 +1,17 @@
-import PyPDF2, docx
+#! /Users/Eliran/Desktop/venv/venv/bin/python
+# source: https://github.com/python-openxml/python-docx/issues/276
+
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals
+)
+
+import PyPDF2
+from docx import Document
+from docx.document import Document as _Document
+from docx.oxml.text.paragraph import CT_P
+from docx.oxml.table import CT_Tbl
+from docx.table import _Cell, Table
+from docx.text.paragraph import Paragraph
 
 class TextFileReader:
 
@@ -25,32 +38,72 @@ class TextFileReader:
         except:
             return self.errorReadingFile(fileName)
 
+    def iter_block_items(self, parent):
+        """
+        Generate a reference to each paragraph and table child within *parent*,
+        in document order. Each returned value is an instance of either Table or
+        Paragraph. *parent* would most commonly be a reference to a main
+        Document object, but also works for a _Cell object, which itself can
+        contain paragraphs and tables.
+        """
+        if isinstance(parent, _Document):
+            parent_elm = parent.element.body
+            # print(parent_elm.xml)
+        elif isinstance(parent, _Cell):
+            parent_elm = parent._tc
+        else:
+            raise ValueError("something's not right")
+    
+        for child in parent_elm.iterchildren():
+            if isinstance(child, CT_P):
+                yield Paragraph(child, parent)
+            elif isinstance(child, CT_Tbl):
+                yield Table(child, parent)
+
+    def format_paragraph(self, paragraph):
+        #print(paragraph.style.name)
+        paragraphText = ""
+        for run in paragraph.runs:
+            #print(run.text, run.style.name)
+            runText = run.text
+            if run.bold:
+                runText = "<b>{0}</b>".format(runText)
+            if run.italic:
+                runText = "<i>{0}</i>".format(runText)
+            if run.underline:
+                runText = "<u>{0}</u>".format(runText)
+            if run.font.superscript:
+                runText = "<sup>{0}</sup>".format(runText)
+            if run.font.subscript:
+                runText = "<sub>{0}</sub>".format(runText)
+            if run.font.strike or run.font.double_strike:
+                runText = "<s>{0}</s>".format(runText)
+            if run.font.rtl:
+                runText = "<rtl>{0}</rtl>".format(runText)
+            paragraphText += runText
+        if paragraph.style.name == "List Paragraph":
+            paragraphText = "<ul><li>{0}</li></ul>".format(paragraphText)
+        else:
+            paragraphText = "<p>{0}</p>".format(paragraphText)
+        return paragraphText
+
+    def format_table(self, table):
+        tableText = "<table>"
+        for row in table.rows:
+            tableText += "<tr>"
+            for cell in row.cells:
+                for paragraph in cell.paragraphs:
+                    tableText += "<td>{0}</td>".format(self.format_paragraph(paragraph))
+            tableText += "</tr>"
+        tableText += "</table>"
+        return tableText
+
     def readDocxFile(self, fileName):
-        try:
-            document = docx.Document(fileName)
-            paragraphs = document.paragraphs
-            text = []
-            for paragraph in paragraphs:
-                paragraphText = ""
-                for run in paragraph.runs:
-                    runText = run.text
-                    if run.bold:
-                        runText = "<b>{0}</b>".format(runText)
-                    if run.italic:
-                        runText = "<i>{0}</i>".format(runText)
-                    if run.underline:
-                        runText = "<u>{0}</u>".format(runText)
-                    if run.font.superscript:
-                        runText = "<sup>{0}</sup>".format(runText)
-                    if run.font.subscript:
-                        runText = "<sub>{0}</sub>".format(runText)
-                    if run.font.strike or run.font.double_strike:
-                        runText = "<s>{0}</s>".format(runText)
-                    if run.font.rtl:
-                        runText = "<rtl>{0}</rtl>".format(runText)
-                    paragraphText += runText
-                text.append(paragraphText)
-            text = "<br>".join(text)
-            return text
-        except:
-            return self.errorReadingFile(fileName)
+        document = Document(fileName)        
+        documentText = ""
+        for block in self.iter_block_items(document):
+            if isinstance(block, Paragraph):
+                documentText += self.format_paragraph(block)
+            elif isinstance(block, Table):
+                documentText += self.format_table(block)
+        return documentText
