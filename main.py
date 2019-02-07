@@ -1,14 +1,21 @@
-#! /Users/Eliran/Desktop/venv/venv/bin/python
+#! /Users/eliranwong/Desktop/venv/venv/bin/python
 # visit https://BibleTools.app for more information
 
-import sys, config, pprint
+import sys, config, pprint, platform
 from PySide2.QtWidgets import QApplication
 from gui import MainWindow
 
 def setupMainWindow():
-    # set full screen size by default
+    # set screen size when first opened
+    # starting up with full screen size in some Linux distribution is too sticky to be resized
+    # check os with platform.system()
+    # print(platform.system())
+    # Linux / Darwin / Windows
     availableGeometry = app.desktop().availableGeometry(mainWindow)
-    mainWindow.resize(availableGeometry.width(), availableGeometry.height())
+    if platform.system() == "Linux":
+        mainWindow.resize(availableGeometry.width() * 4/5, availableGeometry.height() * 4/5)
+    else:
+        mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
 def executeInitialTextCommand(textCommand, source="main"):

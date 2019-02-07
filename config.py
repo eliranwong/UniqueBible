@@ -23,4 +23,6 @@ noteSearchString = ''
 thirdDictionary = 'wordnet'
 historyRecordAllowed = 50
 currentRecord = {'main': 0, 'study': 0}
-history = {'main': ['Genesis 1:1'], 'study': ['BIBLE:::NET:::John 3:16'], 'external': []}
+history = {'external': ['Note.docx'],
+ 'main': ['Genesis 1:1'],
+ 'study': ['BIBLE:::NET:::John 3:16']}

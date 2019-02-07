@@ -38,6 +38,17 @@ class TextFileReader:
         except:
             return self.errorReadingFile(fileName)
 
+    def readDocxFile(self, fileName):
+        document = Document(fileName)        
+        documentText = ""
+        for block in self.iter_block_items(document):
+            if isinstance(block, Paragraph):
+                documentText += self.format_paragraph(block)
+            elif isinstance(block, Table):
+                documentText += self.format_table(block)
+        documentText = self.customFormat(documentText)
+        return documentText
+
     def iter_block_items(self, parent):
         """
         Generate a reference to each paragraph and table child within *parent*,
@@ -98,12 +109,6 @@ class TextFileReader:
         tableText += "</table>"
         return tableText
 
-    def readDocxFile(self, fileName):
-        document = Document(fileName)        
-        documentText = ""
-        for block in self.iter_block_items(document):
-            if isinstance(block, Paragraph):
-                documentText += self.format_paragraph(block)
-            elif isinstance(block, Table):
-                documentText += self.format_table(block)
-        return documentText
+    def customFormat(self, text):
+        text = text.replace("</ul><ul>", "")
+        return text

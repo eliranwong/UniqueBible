@@ -1,4 +1,4 @@
-import os, sys, re, config, webbrowser
+import os, sys, re, config, webbrowser, platform, subprocess
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
@@ -124,6 +124,7 @@ class MainWindow(QMainWindow):
         menu7 = self.menuBar().addMenu("&External")
         menu7.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
         menu7.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
+        menu7.addAction(QAction("&Edit Last Opened File", self, shortcut = "Ctrl+E", triggered=self.editExternalFileButtonClicked))
         menu7.addAction(QAction("&Recent Files", self, shortcut = "Ctrl+R", triggered=self.openExternalFileHistory))
         menu7.addSeparator()
         menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
@@ -295,6 +296,11 @@ class MainWindow(QMainWindow):
         self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
         self.secondToolBar.addWidget(self.externalFileButton)
 
+        self.editExternalFileButton = QPushButton("Edit")
+        self.editExternalFileButton.setStyleSheet(textButtonStyle)
+        self.editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
+        self.secondToolBar.addWidget(self.editExternalFileButton)
+
         self.secondToolBar.addSeparator()
 
         self.instantMode = 1 # default parallel mode
@@ -428,6 +434,22 @@ class MainWindow(QMainWindow):
             self.openExternalFileHistoryRecord(-1)
         else:
             self.openTextFileDialog()
+
+    def editExternalFileButtonClicked(self):
+        externalFileHistory = config.history["external"]
+        if externalFileHistory:
+            self.editExternalFileHistoryRecord(-1)
+        else:
+            self.openTextFileDialog()
+
+    def editExternalFileHistoryRecord(self, record):
+        file = config.history["external"][record]
+        if platform.system() == "Linux":
+            subprocess.call(["xdg-open", file])
+        elif platform.system() == "Darwin":
+            os.system("open {0}".format(file))
+        elif platform.system() == "Windows":
+            os.system("start {0}".format(file))
 
     def openExternalFileHistoryRecord(self, record):
         self.openTextFile(config.history["external"][record])
