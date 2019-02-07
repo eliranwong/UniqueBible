@@ -8,7 +8,9 @@ Please visit <a href="https://BibleTools.app" target="_blank">https://BibleTools
 # Install Dependencies
 
 pip3 install PySide2
+
 pip3 install PyPDF2
+
 pip3 install python-docx
 
 # Screenshot:
