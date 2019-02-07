@@ -461,6 +461,10 @@ function openExternalRecord(recordNo) {
     document.title = "_openfile:::"+recordNo;
 }
 
+function website(link) {
+    document.title = "_website:::"+link;
+}
+
 function searchThirdDictionary(module, entry) {
     document.title = "SEARCHTHIRDDICTIONARY:::"+module+":::"+entry;
 }
