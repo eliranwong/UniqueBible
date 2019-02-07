@@ -72,7 +72,7 @@ class TextFileReader:
                 yield Table(child, parent)
 
     def format_paragraph(self, paragraph):
-        #print(paragraph.style.name)
+
         paragraphText = ""
         for run in paragraph.runs:
             #print(run.text, run.style.name)
@@ -96,6 +96,22 @@ class TextFileReader:
             paragraphText = "<ul><li>{0}</li></ul>".format(paragraphText)
         else:
             paragraphText = "<p>{0}</p>".format(paragraphText)
+        
+        # paragraph.alignment
+        # None, CENTER ([0-9]), RIGHT ([0-9]), LEFT ([0-9]), JUSTIFY ([0-9]), DISTRIBUTE ([0-9])
+        alignment, *_ = str(paragraph.alignment).split(" ")
+        alignments = {
+            "None": "",
+            "CENTER": "center",
+            "RIGHT": "right",
+            "LEFT": "left",
+            "JUSTIFY": "",
+            "DISTRIBUTE": "justify",
+        }
+        alignment = alignments.get(alignment, "")
+        if alignment:
+            paragraphText = "<div style='text-align:{0};'>{1}</div>".format(alignment, paragraphText)
+
         return paragraphText
 
     def format_table(self, table):
