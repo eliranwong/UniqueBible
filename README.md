@@ -21,6 +21,8 @@ pip3 install python-docx
 
 # Only Codes are Distributed Here
 
+All codes for running the app is shared in this repository.
+
 Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
 Please contact Eliran Wong for further information if you are interested.
 
