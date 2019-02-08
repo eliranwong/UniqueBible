@@ -461,6 +461,10 @@ function openExternalRecord(recordNo) {
     document.title = "_openfile:::"+recordNo;
 }
 
+function editExternalRecord(recordNo) {
+    document.title = "_editfile:::"+recordNo;
+}
+
 function website(link) {
     document.title = "_website:::"+link;
 }
