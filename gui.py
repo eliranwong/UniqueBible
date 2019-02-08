@@ -742,7 +742,7 @@ class MainWindow(QMainWindow):
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
         if view == "external":
-            html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
+            html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(counter, record) for counter, record in reversed(historyRecords)])
         else:
             html = "<br>".join(["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
         html = self.htmlWrapper(html)
@@ -1401,9 +1401,14 @@ class NoteEditor(QWidget):
         self.show()
 
     def openInputDialog(self):
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            hyperlink = selectedText
+        else:
+            hyperlink = "https://BibleTools.app"
         text, ok = QInputDialog.getText(self, "Add a hyperlink ...",
                 "Hyperlink:", QLineEdit.Normal,
-                "https://BibleTools.app")
+                hyperlink)
         if ok and text != '':
             self.addHyperlink(text)
 

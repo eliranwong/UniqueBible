@@ -27,6 +27,7 @@ class TextCommandParser:
             "_openchapternote": self.openChapterNote,
             "_openversenote": self.openVerseNote,
             "_openfile": self.textOpenFile,
+            "_editfile": self.textEditFile,
             "_website": self.textWebsite,
             "main": self.textMain,
             "study": self.textStudy,
@@ -286,6 +287,12 @@ class TextCommandParser:
         fileName = config.history["external"][int(command)]
         if fileName:
             self.parent.openTextFile(fileName)
+        return ("", "")
+
+    # _editfile:::
+    def textEditFile(self, command, source):
+        if command:
+            self.parent.editExternalFileHistoryRecord(int(command))
         return ("", "")
 
     # _website:::
