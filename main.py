@@ -7,9 +7,8 @@ from gui import MainWindow
 
 def setupMainWindow():
     # set screen size when first opened
-    # starting up with full screen size in some Linux distribution is too sticky to be resized
-    # check os with platform.system()
-    # print(platform.system())
+    # launching with full screen size in some Linux distributions makes the app too sticky to be resized.
+    # check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
     availableGeometry = app.desktop().availableGeometry(mainWindow)
     if platform.system() == "Linux":
