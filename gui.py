@@ -318,8 +318,11 @@ class MainWindow(QMainWindow):
         instantButton.clicked.connect(self.instant)
         self.secondToolBar.addWidget(instantButton)
 
-        self.enableInstantButton = QPushButton(self.getInstantInformation())
-        self.enableInstantButton.setStyleSheet(textButtonStyle)
+        #self.enableInstantButton = QPushButton(self.getInstantInformation())
+        #self.enableInstantButton.setStyleSheet(textButtonStyle)
+        self.enableInstantButton = QPushButton()
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
         self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
         self.secondToolBar.addWidget(self.enableInstantButton)
 
@@ -691,24 +694,30 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable lightning feature
     def enableLightning(self):
         config.instantInformationEnabled = 1
-        self.enableInstantButton.setText(self.getInstantInformation())
+        #self.enableInstantButton.setText(self.getInstantInformation())
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
     def disableLightning(self):
         config.instantInformationEnabled = 0
-        self.enableInstantButton.setText(self.getInstantInformation())
+        #self.enableInstantButton.setText(self.getInstantInformation())
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:
-            return "DISABLED"
+            return "hide.png"
         elif config.instantInformationEnabled == 1:
-            return "ENABLED"
+            return "show.png"
 
     def enableInstantButtonClicked(self):
         if config.instantInformationEnabled == 0:
             config.instantInformationEnabled = 1
         elif config.instantInformationEnabled == 1:
             config.instantInformationEnabled = 0
-        self.enableInstantButton.setText(self.getInstantInformation())
+        #self.enableInstantButton.setText(self.getInstantInformation())
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
     # Actions - change font size
     def smallerFont(self):
@@ -1435,6 +1444,11 @@ class NoteEditor(QWidget):
         text = text.replace("</ul>\n<ul>", "\n")
         text = re.sub("^{.*?}$", self.formatHTMLTable, text, flags=re.M)
         text = text.replace("</table>\n<table>", "\n")
+
+        # add style to table here
+        # please note that QTextEdit supports HTML 4, rather than HTML 5
+        # take this old reference: https://www.w3schools.com/tags/tag_table.asp
+        text = text.replace('<table>', '<table border="1" cellpadding="5">')
 
         # convert back to QTextEdit linebreak
         text = text.replace("\n", " ")
