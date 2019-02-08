@@ -1128,23 +1128,35 @@ class WebEngineViewPopover(QWebEngineView):
 
 class NoteEditor(QWidget):
 
-    def __init__(self, parent, noteType):
+    def __init__(self, parent, noteType, noteFileName=""):
         super().__init__()
         self.parent, self.noteType = parent, noteType
-        self.noteFileName = ""
-        self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
-        self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
-        self.setupInterface()
+        self.noteFileName = noteFileName
+
         self.resizeWindow(2/3, 2/3)
+        self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
+
+        self.setupInterface()
         self.html = True
-        self.openNote()
         self.showToolBar = True
+
+        if self.noteType == "file":
+            self.newNoteFile()
+        else:
+            self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
+            self.openNote()
 
     def setupInterface(self):
 
         self.menuBar = QToolBar()
         self.menuBar.setWindowTitle("Menu Bar")
         self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
+
+        newButton = QPushButton()
+        newButtonFile = os.path.join("htmlResources", "newfile.png")
+        newButton.setIcon(QIcon(newButtonFile))
+        newButton.clicked.connect(self.newNoteFile)
+        self.menuBar.addWidget(newButton)
 
         openButton = QPushButton()
         openButtonFile = os.path.join("htmlResources", "open.png")
@@ -1458,8 +1470,11 @@ class NoteEditor(QWidget):
             noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
             del noteSqlite
             self.parent.openVerseNote(self.b, self.c, self.v)
-        elif self.noteType == "file" and not self.noteFileName == "":
-            self.saveAsNote(self.noteFileName)
+        elif self.noteType == "file":
+            if self.noteFileName == "":
+                self.openSaveAsDialog()
+            else:
+                self.saveAsNote(self.noteFileName)
 
     def openFileDialog(self):
         options = QFileDialog.Options()
@@ -1483,6 +1498,15 @@ class NoteEditor(QWidget):
             self.editor.setHtml(note)
         else:
             self.editor.setPlainText(note)
+        self.hide()
+        self.show()
+
+    def newNoteFile(self):
+        self.noteType = "file"
+        self.noteFileName = ""
+        self.editor.clear()
+        self.hide()
+        self.show()
 
     def openSaveAsDialog(self):
         options = QFileDialog.Options()
