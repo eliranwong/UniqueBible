@@ -1,4 +1,4 @@
-#! /Users/eliranwong/Desktop/venv/venv/bin/python
+#! /Users/Eliran/Desktop/venv/venv/bin/python
 # visit https://BibleTools.app for more information
 
 import sys, config, pprint, platform

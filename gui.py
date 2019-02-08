@@ -76,15 +76,15 @@ class MainWindow(QMainWindow):
         menu1.addAction(quit_action)
         
         menu2 = self.menuBar().addMenu("&View")
-        menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
+        menu2.addAction(QAction("&Full Screen", self, shortcut = "Ctrl+M", triggered=self.fullsizeWindow))
         menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
         menu2.addSeparator()
         menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Layout")
-        menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, shortcut = "Ctrl+M", triggered=self.hideShowToolBar))
-        menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, shortcut = "Ctrl+N", triggered=self.hideShowSecondToolBar))
+        menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, triggered=self.hideShowToolBar))
+        menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
         menu3.addSeparator()
         menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
         menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
@@ -122,6 +122,8 @@ class MainWindow(QMainWindow):
         menu6.addAction(QAction("&Notes on Verses", self, triggered=self.searchCommandVerseNote))
 
         menu7 = self.menuBar().addMenu("&External")
+        menu7.addAction(QAction("&Create New File", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
+        menu7.addSeparator()
         menu7.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
         menu7.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
         menu7.addAction(QAction("&Edit Last Opened File", self, shortcut = "Ctrl+E", triggered=self.editExternalFileButtonClicked))
@@ -285,6 +287,12 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        newFileButton = QPushButton()
+        newFileButtonFile = os.path.join("htmlResources", "newfile.png")
+        newFileButton.setIcon(QIcon(newFileButtonFile))
+        newFileButton.clicked.connect(self.createNewNoteFile)
+        self.secondToolBar.addWidget(newFileButton)
+
         openFileButton = QPushButton()
         openFileButtonFile = os.path.join("htmlResources", "open.png")
         openFileButton.setIcon(QIcon(openFileButtonFile))
@@ -331,7 +339,11 @@ class MainWindow(QMainWindow):
         if self.parallelMode == 0:
             self.parallel()
 
-    # Actions - chapter / verse note
+    # Actions - chapter / verse / new file note
+    def createNewNoteFile(self):
+        self.noteEditor = NoteEditor(self, "file")
+        self.noteEditor.show()
+
     def openNoteEditor(self, noteType):
         self.noteEditor = NoteEditor(self, noteType)
         self.noteEditor.show()
@@ -401,7 +413,7 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)", "", options)
+                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)", "", options)
         if fileName:
             self.openTextFile(fileName)
 
@@ -409,6 +421,9 @@ class MainWindow(QMainWindow):
         functions = {
             "pdf": self.openPdfFile,
             "docx": self.openDocxFile,
+            "uba": self.openUbaFile,
+            "html": self.openUbaFile,
+            "htm": self.openUbaFile,
         }
         function = functions.get(fileName.split(".")[-1].lower(), self.openTxtFile)
         function(fileName)
@@ -448,12 +463,18 @@ class MainWindow(QMainWindow):
 
     def editExternalFileHistoryRecord(self, record):
         file = config.history["external"][record]
-        if platform.system() == "Linux":
-            subprocess.call(["xdg-open", file])
-        elif platform.system() == "Darwin":
-            os.system("open {0}".format(file))
-        elif platform.system() == "Windows":
-            os.system("start {0}".format(file))
+        fileExtension = file.split(".")[-1].lower()
+        directEdit = ("uba", "html", "htm")
+        if fileExtension in directEdit:
+            self.noteEditor = NoteEditor(self, "file", file)
+            self.noteEditor.show()
+        else:
+            if platform.system() == "Linux":
+                subprocess.call(["xdg-open", file])
+            elif platform.system() == "Darwin":
+                os.system("open {0}".format(file))
+            elif platform.system() == "Windows":
+                os.system("start {0}".format(file))
 
     def openExternalFileHistoryRecord(self, record):
         self.openTextFile(config.history["external"][record])
@@ -465,6 +486,12 @@ class MainWindow(QMainWindow):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True)
+            self.openTextOnStudyView(text)
+
+    def openUbaFile(self, fileName):
+        if fileName:
+            text = TextFileReader().readTxtFile(fileName)
+            text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text)
 
     def openPdfFile(self, fileName):
@@ -1141,7 +1168,10 @@ class NoteEditor(QWidget):
         self.showToolBar = True
 
         if self.noteType == "file":
-            self.newNoteFile()
+            if self.noteFileName:
+                self.openNoteFile(self.noteFileName)
+            else:
+                self.newNoteFile()
         else:
             self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
             self.openNote()
@@ -1481,7 +1511,7 @@ class NoteEditor(QWidget):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.parent.openFileNameLabel.text(),
-                "UniqueBible.app Files (*.uba);;HTML Files (*.html);;All Files (*)", "", options)
+                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
             self.openNoteFile(fileName)
 
@@ -1513,7 +1543,7 @@ class NoteEditor(QWidget):
         fileName, filtr = QFileDialog.getSaveFileName(self,
                 "QFileDialog.getSaveFileName()",
                 "notes.uba",
-                "UniqueBible.app Files (*.uba);;HTML Files (*.html);;All Files (*)", "", options)
+                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
             self.saveAsNote(fileName)
 
@@ -1526,6 +1556,8 @@ class NoteEditor(QWidget):
         f.write(note)
         f.close()
         self.noteFileName = fileName
+        self.parent.addExternalFileHistory(fileName)
+        self.parent.setExternalFileButton()
 
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = qApp.desktop().availableGeometry()
