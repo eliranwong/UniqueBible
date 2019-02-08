@@ -1,5 +1,5 @@
 # UniqueBible
-A cross-platform bible application, integrated with high-quality resources and unique features.
+A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
 <b>Tested in:</b> Windows, macOS and Linux (Ubuntu & Mint)
 
