@@ -1,7 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess
-from PySide2.QtCore import QUrl, Qt, QEvent
+from PySide2.QtCore import QUrl, Qt, QEvent, QDir
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QBoxLayout, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
+from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -1132,7 +1132,7 @@ class NoteEditor(QWidget):
         super().__init__()
         self.parent, self.noteType = parent, noteType
         self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
-        self.setWindowTitle("Unique Bible App - Note Editor")
+        self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
         self.setupInterface()
         self.resizeWindow(2/3, 2/3)
         self.html = True
@@ -1178,6 +1178,14 @@ class NoteEditor(QWidget):
 
         self.toolBar.addSeparator()
 
+        customButton = QPushButton()
+        customButtonFile = os.path.join("htmlResources", "custom.png")
+        customButton.setIcon(QIcon(customButtonFile))
+        customButton.clicked.connect(self.format_custom)
+        self.toolBar.addWidget(customButton)
+
+        self.toolBar.addSeparator()
+
         leftButton = QPushButton()
         leftButtonFile = os.path.join("htmlResources", "align_left.png")
         leftButton.setIcon(QIcon(leftButtonFile))
@@ -1212,11 +1220,25 @@ class NoteEditor(QWidget):
 
         self.toolBar.addSeparator()
 
+        hyperlinkButton = QPushButton()
+        hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
+        hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
+        hyperlinkButton.clicked.connect(self.openInputDialog)
+        self.toolBar.addWidget(hyperlinkButton)
+
+        imageButton = QPushButton()
+        imageButtonFile = os.path.join("htmlResources", "gallery.png")
+        imageButton.setIcon(QIcon(imageButtonFile))
+        imageButton.clicked.connect(self.openImageDialog)
+        self.toolBar.addWidget(imageButton)
+
+        self.toolBar.addSeparator()
+
         self.editor = QTextEdit()
 
         self.layout = QGridLayout()
-        self.layout.addWidget(self.toolBar, 0, 0)
-        self.layout.addWidget(self.editor, 1, 0)
+        self.layout.setMenuBar(self.toolBar)
+        self.layout.addWidget(self.editor, 0, 0)
 
         self.setLayout(self.layout)
 
@@ -1225,19 +1247,22 @@ class NoteEditor(QWidget):
             note = self.editor.toHtml()
             self.editor.setPlainText(note)
             self.html = False
+            self.setWindowTitle("UniqueBible.app Note Editor - Plain Mode")
         else:
             note = self.editor.toPlainText()
             self.editor.setHtml(note)
             self.html = True
+            self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
+        # without this hide / show command below, textedit does not update the text in some devices
+        self.hide()
+        self.show()
 
     def reloadNote(self):
         if self.html:
             note = self.editor.toHtml()
-            
             self.editor.setHtml(note)
         else:
             note = self.editor.toPlainText()
-            
             self.editor.setPlainText(note)
 
     def openNote(self):
@@ -1257,48 +1282,130 @@ class NoteEditor(QWidget):
         else:
             selectedText = re.sub("<[^\n<>]*?>", "", selectedText)
             self.editor.insertPlainText(selectedText)
+        self.hide()
+        self.show()
 
     def format_bold(self):
         if self.html:
             self.editor.setFontWeight(75)
         else:
             self.editor.insertPlainText("<b>{0}</b>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_italic(self):
         if self.html:
             self.editor.setFontItalic(True)
         else:
             self.editor.insertPlainText("<i>{0}</i>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_underline(self):
         if self.html:
             self.editor.setFontUnderline(True)
         else:
             self.editor.insertPlainText("<u>{0}</u>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_center(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignCenter)
         else:
             self.editor.insertPlainText("<div style='text-align:center;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_justify(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignJustify)
         else:
             self.editor.insertPlainText("<div style='text-align:justify;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_left(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignLeft)
         else:
             self.editor.insertPlainText("<div style='text-align:left;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
 
     def format_right(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignRight)
         else:
             self.editor.insertPlainText("<div style='text-align:right;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
+
+    def format_custom(self):
+        selectedText = self.editor.textCursor().selectedText()
+        selectedText = self.customFormat(selectedText)
+        if self.html:
+            self.editor.insertHtml(selectedText)
+        else:
+            self.editor.insertPlainText(selectedText)
+        self.hide()
+        self.show()
+
+    def customFormat(self, text):
+        # QTextEdit's line break character by pressing ENTER in plain & html mode " "
+        # please note that " " is not an empty string
+        text = text.replace(" ", "\n")
+
+        text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
+        text = text.replace("</ol>\n<ol>", "\n")
+        text = re.sub("^\* (.*?)$", r"<ul><li>\1</li></ul>", text, flags=re.M)
+        text = text.replace("</ul>\n<ul>", "\n")
+        text = re.sub("^{.*?}$", self.formatHTMLTable, text, flags=re.M)
+        text = text.replace("</table>\n<table>", "\n")
+
+        # convert back to QTextEdit linebreak
+        text = text.replace("\n", " ")
+
+        return text
+
+    def formatHTMLTable(self, match):
+        row = match.group()[1:-1]
+        row = "".join(["<td>{0}</td>".format(cell) for cell in row.split("|")])
+        return "<table><tr>{0}</tr></table>".format(row)
+
+    def addImage(self, fileName):
+        imageTag = '<img src="{0}" alt="UniqueBible.app">'.format(fileName)
+        if self.html:
+            self.editor.insertHtml(imageTag)
+        else:
+            self.editor.insertPlainText(imageTag)
+        self.hide()
+        self.show()
+
+    def openImageDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.parent.openFileNameLabel.text(),
+                "JPG Files (*.jpg);;JPEG Files (*.jpeg);;PNG Files (*.png);;GIF Files (*.gif);;BMP Files (*.bmp);;All Files (*)", "", options)
+        if fileName:
+            self.addImage(fileName)
+
+    def addHyperlink(self, hyperlink):
+        hyperlink = '<a href="{0}">{0}</a>'.format(hyperlink)
+        if self.html:
+            self.editor.insertHtml(hyperlink)
+        else:
+            self.editor.insertPlainText(hyperlink)
+        self.hide()
+        self.show()
+
+    def openInputDialog(self):
+        text, ok = QInputDialog.getText(self, "Add a hyperlink ...",
+                "Hyperlink:", QLineEdit.Normal,
+                "https://BibleTools.app")
+        if ok and text != '':
+            self.addHyperlink(text)
 
     def saveNote(self):
         if self.html:
