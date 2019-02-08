@@ -1,7 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
+from PySide2.QtWidgets import (QAction, QBoxLayout, QGridLayout, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -351,7 +351,7 @@ class MainWindow(QMainWindow):
         noteSqlite = NoteSqlite()
         note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)))
         del noteSqlite
-        note = self.htmlWrapper(note, True)
+        note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
 
     def openVerseNote(self, b, c, v):
@@ -363,21 +363,25 @@ class MainWindow(QMainWindow):
         noteSqlite = NoteSqlite()
         note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)))
         del noteSqlite
-        note = self.htmlWrapper(note, True)
+        note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
 
     # Actions - open text from external sources
-    def htmlWrapper(self, text, parsing=False, view="study"):
-        searchReplace = (
+    def htmlWrapper(self, text, parsing=False, view="study", linebreak=True):
+        searchReplace1 = (
             ("\r\n|\r|\n", "<br>"),
             ("\t", "&emsp;&emsp;"),
+        )
+        searchReplace2 = (
             ("<br>(<table>|<ol>|<ul>)", r"\1"),
             ("(</table>|</ol>|</ul>)<br>", r"\1"),
             ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
         )
-        for search, replace in searchReplace:
+        if linebreak:
+            for search, replace in searchReplace1:
+                text = re.sub(search, replace, text)        
+        for search, replace in searchReplace2:
             text = re.sub(search, replace, text)
-            #text = text.replace(search, replace)
         if parsing:
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
         if view == "main":
@@ -1129,27 +1133,112 @@ class NoteEditor(QWidget):
         self.parent, self.noteType = parent, noteType
         self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
         self.setWindowTitle("Unique Bible App - Note Editor")
+        self.setupInterface()
+        self.resizeWindow(2/3, 2/3)
+        self.html = True
+        self.openNote()
 
-        #self.toolBar = QToolBar()
-        #self.toolBar.setWindowTitle("Note Editor")
-        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+    def setupInterface(self):
 
-        saveButton = QPushButton("SAVE")
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed {background-color: #515790;}"
-        saveButton.setStyleSheet(textButtonStyle)
+        self.toolBar = QToolBar()
+        self.toolBar.setWindowTitle("HTML Format")
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+
+        switchButton = QPushButton()
+        switchButtonFile = os.path.join("htmlResources", "switch.png")
+        switchButton.setIcon(QIcon(switchButtonFile))
+        switchButton.clicked.connect(self.switchMode)
+        self.toolBar.addWidget(switchButton)
+
+        saveButton = QPushButton()
+        saveButtonFile = os.path.join("htmlResources", "save.png")
+        saveButton.setIcon(QIcon(saveButtonFile))
         saveButton.clicked.connect(self.saveNote)
-        #self.toolBar.addWidget(saveButton)
+        self.toolBar.addWidget(saveButton)
+
+        self.toolBar.addSeparator()
+
+        boldButton = QPushButton()
+        boldButtonFile = os.path.join("htmlResources", "bold.png")
+        boldButton.setIcon(QIcon(boldButtonFile))
+        boldButton.clicked.connect(self.format_bold)
+        self.toolBar.addWidget(boldButton)
+
+        italicButton = QPushButton()
+        italicButtonFile = os.path.join("htmlResources", "italic.png")
+        italicButton.setIcon(QIcon(italicButtonFile))
+        italicButton.clicked.connect(self.format_italic)
+        self.toolBar.addWidget(italicButton)
+
+        underlineButton = QPushButton()
+        underlineButtonFile = os.path.join("htmlResources", "underline.png")
+        underlineButton.setIcon(QIcon(underlineButtonFile))
+        underlineButton.clicked.connect(self.format_underline)
+        self.toolBar.addWidget(underlineButton)
+
+        self.toolBar.addSeparator()
+
+        leftButton = QPushButton()
+        leftButtonFile = os.path.join("htmlResources", "align_left.png")
+        leftButton.setIcon(QIcon(leftButtonFile))
+        leftButton.clicked.connect(self.format_left)
+        self.toolBar.addWidget(leftButton)
+
+        centerButton = QPushButton()
+        centerButtonFile = os.path.join("htmlResources", "align_center.png")
+        centerButton.setIcon(QIcon(centerButtonFile))
+        centerButton.clicked.connect(self.format_center)
+        self.toolBar.addWidget(centerButton)
+
+        rightButton = QPushButton()
+        rightButtonFile = os.path.join("htmlResources", "align_right.png")
+        rightButton.setIcon(QIcon(rightButtonFile))
+        rightButton.clicked.connect(self.format_right)
+        self.toolBar.addWidget(rightButton)
+
+        justifyButton = QPushButton()
+        justifyButtonFile = os.path.join("htmlResources", "align_justify.png")
+        justifyButton.setIcon(QIcon(justifyButtonFile))
+        justifyButton.clicked.connect(self.format_justify)
+        self.toolBar.addWidget(justifyButton)
+
+        self.toolBar.addSeparator()
+
+        clearButton = QPushButton()
+        clearButtonFile = os.path.join("htmlResources", "clearFormat.png")
+        clearButton.setIcon(QIcon(clearButtonFile))
+        clearButton.clicked.connect(self.format_clear)
+        self.toolBar.addWidget(clearButton)
+
+        self.toolBar.addSeparator()
 
         self.editor = QTextEdit()
 
         self.layout = QGridLayout()
-        self.layout.addWidget(saveButton, 0, 0)
+        self.layout.addWidget(self.toolBar, 0, 0)
         self.layout.addWidget(self.editor, 1, 0)
+
         self.setLayout(self.layout)
 
-        self.resizeWindow(2/3, 2/3)
+    def switchMode(self):
+        if self.html:
+            note = self.editor.toHtml()
+            self.editor.setPlainText(note)
+            self.html = False
+        else:
+            note = self.editor.toPlainText()
+            self.editor.setHtml(note)
+            self.html = True
 
-        self.openNote()
+    def reloadNote(self):
+        if self.html:
+            note = self.editor.toHtml()
+            
+            self.editor.setHtml(note)
+        else:
+            note = self.editor.toPlainText()
+            
+            self.editor.setPlainText(note)
 
     def openNote(self):
         noteSqlite = NoteSqlite()
@@ -1158,15 +1247,70 @@ class NoteEditor(QWidget):
         elif self.noteType == "verse":
             note = noteSqlite.getVerseNote((self.b, self.c, self.v))
         del noteSqlite
-        self.editor.setPlainText(note)
+        #self.editor.setPlainText(note)
+        self.editor.setHtml(note)
+
+    def format_clear(self):
+        selectedText = self.editor.textCursor().selectedText()
+        if self.html:
+            self.editor.insertHtml(selectedText)
+        else:
+            selectedText = re.sub("<[^\n<>]*?>", "", selectedText)
+            self.editor.insertPlainText(selectedText)
+
+    def format_bold(self):
+        if self.html:
+            self.editor.setFontWeight(75)
+        else:
+            self.editor.insertPlainText("<b>{0}</b>".format(self.editor.textCursor().selectedText()))
+
+    def format_italic(self):
+        if self.html:
+            self.editor.setFontItalic(True)
+        else:
+            self.editor.insertPlainText("<i>{0}</i>".format(self.editor.textCursor().selectedText()))
+
+    def format_underline(self):
+        if self.html:
+            self.editor.setFontUnderline(True)
+        else:
+            self.editor.insertPlainText("<u>{0}</u>".format(self.editor.textCursor().selectedText()))
+
+    def format_center(self):
+        if self.html:
+            self.editor.setAlignment(Qt.AlignCenter)
+        else:
+            self.editor.insertPlainText("<div style='text-align:center;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+
+    def format_justify(self):
+        if self.html:
+            self.editor.setAlignment(Qt.AlignJustify)
+        else:
+            self.editor.insertPlainText("<div style='text-align:justify;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+
+    def format_left(self):
+        if self.html:
+            self.editor.setAlignment(Qt.AlignLeft)
+        else:
+            self.editor.insertPlainText("<div style='text-align:left;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+
+    def format_right(self):
+        if self.html:
+            self.editor.setAlignment(Qt.AlignRight)
+        else:
+            self.editor.insertPlainText("<div style='text-align:right;'>{0}</div>".format(self.editor.textCursor().selectedText()))
 
     def saveNote(self):
+        if self.html:
+            note = self.editor.toHtml()
+        else:
+            note = self.editor.toPlainText()
         noteSqlite = NoteSqlite()
         if self.noteType == "chapter":
-            noteSqlite.saveChapterNote((self.b, self.c, self.editor.toPlainText()))
+            noteSqlite.saveChapterNote((self.b, self.c, note))
             self.parent.openChapterNote(self.b, self.c)
         elif self.noteType == "verse":
-            noteSqlite.saveVerseNote((self.b, self.c, self.v, self.editor.toPlainText()))
+            noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
             self.parent.openVerseNote(self.b, self.c, self.v)
         del noteSqlite
 
