@@ -1131,32 +1131,62 @@ class NoteEditor(QWidget):
     def __init__(self, parent, noteType):
         super().__init__()
         self.parent, self.noteType = parent, noteType
+        self.noteFileName = ""
         self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
         self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
         self.setupInterface()
         self.resizeWindow(2/3, 2/3)
         self.html = True
         self.openNote()
+        self.showToolBar = True
 
     def setupInterface(self):
 
-        self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle("HTML Format")
-        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.menuBar = QToolBar()
+        self.menuBar.setWindowTitle("Menu Bar")
+        self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
 
-        switchButton = QPushButton()
-        switchButtonFile = os.path.join("htmlResources", "switch.png")
-        switchButton.setIcon(QIcon(switchButtonFile))
-        switchButton.clicked.connect(self.switchMode)
-        self.toolBar.addWidget(switchButton)
+        openButton = QPushButton()
+        openButtonFile = os.path.join("htmlResources", "open.png")
+        openButton.setIcon(QIcon(openButtonFile))
+        openButton.clicked.connect(self.openFileDialog)
+        self.menuBar.addWidget(openButton)
+
+        self.menuBar.addSeparator()
 
         saveButton = QPushButton()
         saveButtonFile = os.path.join("htmlResources", "save.png")
         saveButton.setIcon(QIcon(saveButtonFile))
         saveButton.clicked.connect(self.saveNote)
-        self.toolBar.addWidget(saveButton)
+        self.menuBar.addWidget(saveButton)
 
-        self.toolBar.addSeparator()
+        saveAsButton = QPushButton()
+        saveAsButtonFile = os.path.join("htmlResources", "saveas.png")
+        saveAsButton.setIcon(QIcon(saveAsButtonFile))
+        saveAsButton.clicked.connect(self.openSaveAsDialog)
+        self.menuBar.addWidget(saveAsButton)
+
+        self.menuBar.addSeparator()
+
+        toolBarButton = QPushButton()
+        toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
+        toolBarButton.setIcon(QIcon(toolBarButtonFile))
+        toolBarButton.clicked.connect(self.toogleToolbar)
+        self.menuBar.addWidget(toolBarButton)
+
+        self.menuBar.addSeparator()
+
+        switchButton = QPushButton()
+        switchButtonFile = os.path.join("htmlResources", "switch.png")
+        switchButton.setIcon(QIcon(switchButtonFile))
+        switchButton.clicked.connect(self.switchMode)
+        self.menuBar.addWidget(switchButton)
+
+        self.menuBar.addSeparator()
+
+        self.toolBar = QToolBar()
+        self.toolBar.setWindowTitle("Tool Bar")
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
 
         boldButton = QPushButton()
         boldButtonFile = os.path.join("htmlResources", "bold.png")
@@ -1237,10 +1267,19 @@ class NoteEditor(QWidget):
         self.editor = QTextEdit()
 
         self.layout = QGridLayout()
-        self.layout.setMenuBar(self.toolBar)
-        self.layout.addWidget(self.editor, 0, 0)
+        self.layout.setMenuBar(self.menuBar)
+        self.layout.addWidget(self.toolBar, 0, 0)
+        self.layout.addWidget(self.editor, 1, 0)
 
         self.setLayout(self.layout)
+
+    def toogleToolbar(self):
+        if self.showToolBar:
+            self.toolBar.hide()
+            self.showToolBar = False
+        else:
+            self.toolBar.show()
+            self.showToolBar = True
 
     def switchMode(self):
         if self.html:
@@ -1256,14 +1295,6 @@ class NoteEditor(QWidget):
         # without this hide / show command below, textedit does not update the text in some devices
         self.hide()
         self.show()
-
-    def reloadNote(self):
-        if self.html:
-            note = self.editor.toHtml()
-            self.editor.setHtml(note)
-        else:
-            note = self.editor.toPlainText()
-            self.editor.setPlainText(note)
 
     def openNote(self):
         noteSqlite = NoteSqlite()
@@ -1417,14 +1448,60 @@ class NoteEditor(QWidget):
             note = self.editor.toHtml()
         else:
             note = self.editor.toPlainText()
-        noteSqlite = NoteSqlite()
         if self.noteType == "chapter":
+            noteSqlite = NoteSqlite()
             noteSqlite.saveChapterNote((self.b, self.c, note))
+            del noteSqlite
             self.parent.openChapterNote(self.b, self.c)
         elif self.noteType == "verse":
+            noteSqlite = NoteSqlite()
             noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
+            del noteSqlite
             self.parent.openVerseNote(self.b, self.c, self.v)
-        del noteSqlite
+        elif self.noteType == "file" and not self.noteFileName == "":
+            self.saveAsNote(self.noteFileName)
+
+    def openFileDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.parent.openFileNameLabel.text(),
+                "UniqueBible.app Files (*.uba);;HTML Files (*.html);;All Files (*)", "", options)
+        if fileName:
+            self.openNoteFile(fileName)
+
+    def openNoteFile(self, fileName):
+        try:
+            f = open(fileName,'r')
+        except:
+            print("Failed to open '{0}'".format(fileName))
+        note = f.read()
+        f.close()
+        self.noteType = "file"
+        self.noteFileName = fileName
+        if self.html:
+            self.editor.setHtml(note)
+        else:
+            self.editor.setPlainText(note)
+
+    def openSaveAsDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                "QFileDialog.getSaveFileName()",
+                "notes.uba",
+                "UniqueBible.app Files (*.uba);;HTML Files (*.html);;All Files (*)", "", options)
+        if fileName:
+            self.saveAsNote(fileName)
+
+    def saveAsNote(self, fileName):
+        if self.html:
+            note = self.editor.toHtml()
+        else:
+            note = self.editor.toPlainText()
+        f = open(fileName,'w')
+        f.write(note)
+        f.close()
+        self.noteFileName = fileName
 
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = qApp.desktop().availableGeometry()
