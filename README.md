@@ -19,6 +19,10 @@ pip3 install PyPDF2
 
 pip3 install python-docx
 
+# Run UniqueBible.app
+
+python3 main.py
+
 # Only Codes are Distributed Here
 
 All codes for running the app is shared in this repository.
