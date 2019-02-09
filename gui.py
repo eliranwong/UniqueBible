@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         menu1.addAction(quit_action)
         
         menu2 = self.menuBar().addMenu("&View")
-        menu2.addAction(QAction("&Full Screen", self, shortcut = "Ctrl+M", triggered=self.fullsizeWindow))
+        menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
         menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
         menu2.addSeparator()
         menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
         menu3.addSeparator()
         menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
-        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+I", triggered=self.instant))
+        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+G", triggered=self.instant))
 
         menu4 = self.menuBar().addMenu("&Display")
         menu4.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
@@ -127,10 +127,10 @@ class MainWindow(QMainWindow):
         menu7 = self.menuBar().addMenu("&External")
         menu7.addAction(QAction("&New Note File", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
         menu7.addSeparator()
-        menu7.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
-        menu7.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
-        menu7.addAction(QAction("&Edit Last Opened File", self, shortcut = "Ctrl+E", triggered=self.editExternalFileButtonClicked))
-        menu7.addAction(QAction("&Recent Files", self, shortcut = "Ctrl+R", triggered=self.openExternalFileHistory))
+        menu7.addAction(QAction("&Open Document File", self, triggered=self.openTextFileDialog))
+        menu7.addAction(QAction("&Last Opened File", self, triggered=self.externalFileButtonClicked))
+        menu7.addAction(QAction("&Edit Last Opened File", self, triggered=self.editExternalFileButtonClicked))
+        menu7.addAction(QAction("&Recent Files", self, shortcut = "Ctrl+E", triggered=self.openExternalFileHistory))
         menu7.addSeparator()
         menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
         menu7.addSeparator()
@@ -1235,8 +1235,18 @@ class NoteEditor(QWidget):
 
     # re-implement keyPressEvent, control+S for saving file
     def keyPressEvent(self, event):
-        if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_S:
-            self.saveNote()
+        keys = {
+            Qt.Key_O: self.openFileDialog,
+            Qt.Key_S: self.saveNote,
+            Qt.Key_B: self.format_bold,
+            Qt.Key_I: self.format_italic,
+            Qt.Key_U: self.format_underline,
+            Qt.Key_M: self.format_custom,
+            Qt.Key_R: self.format_clear,
+        }
+        key = event.key()
+        if event.modifiers() == Qt.ControlModifier and key in keys:
+            keys[key]()
 
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):
@@ -1255,7 +1265,7 @@ class NoteEditor(QWidget):
                 title, *_ = title.split(":")
         mode = {True: "rich", False: "plain"}
         notModified = {True: "", False: " [modified]"}
-        self.setWindowTitle("Note Editor [{1}] - {0}{2}".format(title, mode[self.html], notModified[self.parent.noteSaved]))
+        self.setWindowTitle("Note Editor ({1} mode) - {0}{2}".format(title, mode[self.html], notModified[self.parent.noteSaved]))
 
     # switching between "rich" & "plain" mode
     def switchMode(self):
