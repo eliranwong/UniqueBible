@@ -1,7 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
+from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
         menu6.addAction(QAction("&Notes on Verses", self, triggered=self.searchCommandVerseNote))
 
         menu7 = self.menuBar().addMenu("&External")
-        menu7.addAction(QAction("&Create New File", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
+        menu7.addAction(QAction("&New Note File", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
         menu7.addSeparator()
         menu7.addAction(QAction("&Open Document File", self, shortcut = "Ctrl+O", triggered=self.openTextFileDialog))
         menu7.addAction(QAction("&Last Opened File", self, shortcut = "Ctrl+U", triggered=self.externalFileButtonClicked))
@@ -304,10 +304,11 @@ class MainWindow(QMainWindow):
         self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
         self.secondToolBar.addWidget(self.externalFileButton)
 
-        self.editExternalFileButton = QPushButton("Edit")
-        self.editExternalFileButton.setStyleSheet(textButtonStyle)
-        self.editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
-        self.secondToolBar.addWidget(self.editExternalFileButton)
+        editExternalFileButton = QPushButton()
+        editExternalFileButtonFile = os.path.join("htmlResources", "edit.png")
+        editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
+        editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
+        self.secondToolBar.addWidget(editExternalFileButton)
 
         self.secondToolBar.addSeparator()
 
@@ -1169,24 +1170,66 @@ class NoteEditor(QWidget):
         self.parent, self.noteType = parent, noteType
         self.noteFileName = noteFileName
 
-        self.resizeWindow(2/3, 2/3)
-        self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
+        # default - "Rich" mode for editing
+        self.html = True
+        # default - show toolbar with formatting items
+        self.showToolBar = True
+        # default - text is not modified; no need for saving new content
+        self.saved = True
 
+        # specify window size
+        self.resizeWindow(2/3, 2/3)
+
+        # setup interface
         self.setupMenuBar()
         self.setupToolBar()
         self.setupLayout()
+        
+        # display content when first launched
+        self.displayInitialContent()
 
-        self.html = True
-        self.showToolBar = True
+        # specify window title
+        self.updateWindowTitle()
 
+    # re-implement keyPressEvent, control+S for saving file
+    def keyPressEvent(self, event):
+        if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_S:
+            self.saveNote()
+
+    # window appearance
+    def resizeWindow(self, widthFactor, heightFactor):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+
+    def updateWindowTitle(self):
         if self.noteType == "file":
             if self.noteFileName:
-                self.openNoteFile(self.noteFileName)
+                *_, title = os.path.split(self.noteFileName)
             else:
-                self.newNoteFile()
+                title = "NEW"
         else:
-            self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
-            self.openBibleNote()
+            title = self.parent.bcvToVerseReference(self.b, self.c, self.v)
+            if self.noteType == "chapter":
+                title, *_ = title.split(":")
+        mode = {True: "rich", False: "plain"}
+        notModified = {True: "", False: " [modified]"}
+        self.setWindowTitle("Note Editor [{1}] - {0}{2}".format(title, mode[self.html], notModified[self.saved]))
+
+    # switching between "rich" & "plain" mode
+    def switchMode(self):
+        if self.html:
+            note = self.editor.toHtml()
+            self.editor.setPlainText(note)
+            self.html = False
+            self.updateWindowTitle()
+        else:
+            note = self.editor.toPlainText()
+            self.editor.setHtml(note)
+            self.html = True
+            self.updateWindowTitle()
+        # without this hide / show command below, QTextEdit does not update the text in some devices
+        self.hide()
+        self.show()
 
     def setupMenuBar(self):
 
@@ -1243,6 +1286,14 @@ class NoteEditor(QWidget):
         #self.menuBar.addWidget(self.searchLineEdit)
 
         #self.menuBar.addSeparator()
+
+    def toogleToolbar(self):
+        if self.showToolBar:
+            self.toolBar.hide()
+            self.showToolBar = False
+        else:
+            self.toolBar.show()
+            self.showToolBar = True
 
     def setupToolBar(self):
 
@@ -1329,6 +1380,7 @@ class NoteEditor(QWidget):
     def setupLayout(self):
 
         self.editor = QTextEdit()
+        self.editor.textChanged.connect(self.textChanged)
 
         self.layout = QGridLayout()
         self.layout.setMenuBar(self.menuBar)
@@ -1337,36 +1389,23 @@ class NoteEditor(QWidget):
 
         self.setLayout(self.layout)
 
-    def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+    # track if the text being modified
+    def textChanged(self):
+        if self.saved:
+            self.saved = False
+            self.updateWindowTitle()
 
-    def keyPressEvent(self, event):
-        if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_S:
-            self.saveNote()
-
-    def toogleToolbar(self):
-        if self.showToolBar:
-            self.toolBar.hide()
-            self.showToolBar = False
+    # display content when first launched
+    def displayInitialContent(self):
+        if self.noteType == "file":
+            if self.noteFileName:
+                self.openNoteFile(self.noteFileName)
+            else:
+                self.newNoteFile()
         else:
-            self.toolBar.show()
-            self.showToolBar = True
-
-    def switchMode(self):
-        if self.html:
-            note = self.editor.toHtml()
-            self.editor.setPlainText(note)
-            self.html = False
-            self.setWindowTitle("UniqueBible.app Note Editor - Plain Mode")
-        else:
-            note = self.editor.toPlainText()
-            self.editor.setHtml(note)
-            self.html = True
-            self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
-        # without this hide / show command below, textedit does not update the text in some devices
-        self.hide()
-        self.show()
+            self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
+            self.openBibleNote()
+        self.saved = True
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
@@ -1380,10 +1419,25 @@ class NoteEditor(QWidget):
         self.editor.setHtml(note)
 
     # File I / O
+    def warningNotSaved(self):
+        msgBox = QMessageBox(QMessageBox.Warning,
+                "QMessageBox.warning()", "Notes have been modified without saving.  Do you want to continue?",
+                QMessageBox.NoButton, self)
+        msgBox.addButton("Cancel", QMessageBox.AcceptRole)
+        msgBox.addButton("&Continue", QMessageBox.RejectRole)
+        if msgBox.exec_() == QMessageBox.AcceptRole:
+            # Cancel
+            return False
+        else:
+            # Continue
+            return True
+
     def newNoteFile(self):
         self.noteType = "file"
         self.noteFileName = ""
         self.editor.clear()
+        self.saved = True
+        self.updateWindowTitle()
         self.hide()
         self.show()
 
@@ -1409,6 +1463,8 @@ class NoteEditor(QWidget):
             self.editor.setHtml(note)
         else:
             self.editor.setPlainText(note)
+        self.saved = True
+        self.updateWindowTitle()
         self.hide()
         self.show()
 
@@ -1422,11 +1478,15 @@ class NoteEditor(QWidget):
             noteSqlite.saveChapterNote((self.b, self.c, note))
             del noteSqlite
             self.parent.openChapterNote(self.b, self.c)
+            self.saved = True
+            self.updateWindowTitle()
         elif self.noteType == "verse":
             noteSqlite = NoteSqlite()
             noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
             del noteSqlite
             self.parent.openVerseNote(self.b, self.c, self.v)
+            self.saved = True
+            self.updateWindowTitle()
         elif self.noteType == "file":
             if self.noteFileName == "":
                 self.openSaveAsDialog()
@@ -1453,6 +1513,8 @@ class NoteEditor(QWidget):
         self.noteFileName = fileName
         self.parent.addExternalFileHistory(fileName)
         self.parent.setExternalFileButton()
+        self.saved = True
+        self.updateWindowTitle()
 
     # formatting styles
     def format_clear(self):
@@ -1596,8 +1658,3 @@ class NoteEditor(QWidget):
                 hyperlink)
         if ok and text != '':
             self.addHyperlink(text)
-
-    #def searchLineEntered(self):
-        #self.editor.setFocus()
-        #searchString = self.searchLineEdit.text()
-        #print(searchString)
