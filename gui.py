@@ -1,5 +1,5 @@
 import os, sys, re, config, webbrowser, platform, subprocess
-from PySide2.QtCore import QUrl, Qt, QEvent, QDir
+from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
@@ -1172,7 +1172,10 @@ class NoteEditor(QWidget):
         self.resizeWindow(2/3, 2/3)
         self.setWindowTitle("UniqueBible.app Note Editor - Rich Mode")
 
-        self.setupInterface()
+        self.setupMenuBar()
+        self.setupToolBar()
+        self.setupLayout()
+
         self.html = True
         self.showToolBar = True
 
@@ -1183,9 +1186,9 @@ class NoteEditor(QWidget):
                 self.newNoteFile()
         else:
             self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
-            self.openNote()
+            self.openBibleNote()
 
-    def setupInterface(self):
+    def setupMenuBar(self):
 
         self.menuBar = QToolBar()
         self.menuBar.setWindowTitle("Menu Bar")
@@ -1234,6 +1237,14 @@ class NoteEditor(QWidget):
         self.menuBar.addWidget(switchButton)
 
         self.menuBar.addSeparator()
+
+        #self.searchLineEdit = QLineEdit()
+        #self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
+        #self.menuBar.addWidget(self.searchLineEdit)
+
+        #self.menuBar.addSeparator()
+
+    def setupToolBar(self):
 
         self.toolBar = QToolBar()
         self.toolBar.setWindowTitle("Tool Bar")
@@ -1304,7 +1315,7 @@ class NoteEditor(QWidget):
         hyperlinkButton = QPushButton()
         hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
         hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
-        hyperlinkButton.clicked.connect(self.openInputDialog)
+        hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
         self.toolBar.addWidget(hyperlinkButton)
 
         imageButton = QPushButton()
@@ -1315,6 +1326,8 @@ class NoteEditor(QWidget):
 
         self.toolBar.addSeparator()
 
+    def setupLayout(self):
+
         self.editor = QTextEdit()
 
         self.layout = QGridLayout()
@@ -1323,6 +1336,14 @@ class NoteEditor(QWidget):
         self.layout.addWidget(self.editor, 1, 0)
 
         self.setLayout(self.layout)
+
+    def resizeWindow(self, widthFactor, heightFactor):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+
+    def keyPressEvent(self, event):
+        if event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_S:
+            self.saveNote()
 
     def toogleToolbar(self):
         if self.showToolBar:
@@ -1347,7 +1368,8 @@ class NoteEditor(QWidget):
         self.hide()
         self.show()
 
-    def openNote(self):
+    # load chapter / verse notes from sqlite database
+    def openBibleNote(self):
         noteSqlite = NoteSqlite()
         if self.noteType == "chapter":
             note = noteSqlite.getChapterNote((self.b, self.c))
@@ -1357,6 +1379,82 @@ class NoteEditor(QWidget):
         #self.editor.setPlainText(note)
         self.editor.setHtml(note)
 
+    # File I / O
+    def newNoteFile(self):
+        self.noteType = "file"
+        self.noteFileName = ""
+        self.editor.clear()
+        self.hide()
+        self.show()
+
+    def openFileDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.parent.openFileNameLabel.text(),
+                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
+        if fileName:
+            self.openNoteFile(fileName)
+
+    def openNoteFile(self, fileName):
+        try:
+            f = open(fileName,'r')
+        except:
+            print("Failed to open '{0}'".format(fileName))
+        note = f.read()
+        f.close()
+        self.noteType = "file"
+        self.noteFileName = fileName
+        if self.html:
+            self.editor.setHtml(note)
+        else:
+            self.editor.setPlainText(note)
+        self.hide()
+        self.show()
+
+    def saveNote(self):
+        if self.html:
+            note = self.editor.toHtml()
+        else:
+            note = self.editor.toPlainText()
+        if self.noteType == "chapter":
+            noteSqlite = NoteSqlite()
+            noteSqlite.saveChapterNote((self.b, self.c, note))
+            del noteSqlite
+            self.parent.openChapterNote(self.b, self.c)
+        elif self.noteType == "verse":
+            noteSqlite = NoteSqlite()
+            noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
+            del noteSqlite
+            self.parent.openVerseNote(self.b, self.c, self.v)
+        elif self.noteType == "file":
+            if self.noteFileName == "":
+                self.openSaveAsDialog()
+            else:
+                self.saveAsNote(self.noteFileName)
+
+    def openSaveAsDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                "QFileDialog.getSaveFileName()",
+                "notes.uba",
+                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
+        if fileName:
+            self.saveAsNote(fileName)
+
+    def saveAsNote(self, fileName):
+        if self.html:
+            note = self.editor.toHtml()
+        else:
+            note = self.editor.toPlainText()
+        f = open(fileName,'w')
+        f.write(note)
+        f.close()
+        self.noteFileName = fileName
+        self.parent.addExternalFileHistory(fileName)
+        self.parent.setExternalFileButton()
+
+    # formatting styles
     def format_clear(self):
         selectedText = self.editor.textCursor().selectedText()
         if self.html:
@@ -1487,7 +1585,7 @@ class NoteEditor(QWidget):
         self.hide()
         self.show()
 
-    def openInputDialog(self):
+    def openHyperlinkDialog(self):
         selectedText = self.editor.textCursor().selectedText()
         if selectedText:
             hyperlink = selectedText
@@ -1499,80 +1597,7 @@ class NoteEditor(QWidget):
         if ok and text != '':
             self.addHyperlink(text)
 
-    def saveNote(self):
-        if self.html:
-            note = self.editor.toHtml()
-        else:
-            note = self.editor.toPlainText()
-        if self.noteType == "chapter":
-            noteSqlite = NoteSqlite()
-            noteSqlite.saveChapterNote((self.b, self.c, note))
-            del noteSqlite
-            self.parent.openChapterNote(self.b, self.c)
-        elif self.noteType == "verse":
-            noteSqlite = NoteSqlite()
-            noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
-            del noteSqlite
-            self.parent.openVerseNote(self.b, self.c, self.v)
-        elif self.noteType == "file":
-            if self.noteFileName == "":
-                self.openSaveAsDialog()
-            else:
-                self.saveAsNote(self.noteFileName)
-
-    def openFileDialog(self):
-        options = QFileDialog.Options()
-        fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
-                self.parent.openFileNameLabel.text(),
-                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
-        if fileName:
-            self.openNoteFile(fileName)
-
-    def openNoteFile(self, fileName):
-        try:
-            f = open(fileName,'r')
-        except:
-            print("Failed to open '{0}'".format(fileName))
-        note = f.read()
-        f.close()
-        self.noteType = "file"
-        self.noteFileName = fileName
-        if self.html:
-            self.editor.setHtml(note)
-        else:
-            self.editor.setPlainText(note)
-        self.hide()
-        self.show()
-
-    def newNoteFile(self):
-        self.noteType = "file"
-        self.noteFileName = ""
-        self.editor.clear()
-        self.hide()
-        self.show()
-
-    def openSaveAsDialog(self):
-        options = QFileDialog.Options()
-        fileName, filtr = QFileDialog.getSaveFileName(self,
-                "QFileDialog.getSaveFileName()",
-                "notes.uba",
-                "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
-        if fileName:
-            self.saveAsNote(fileName)
-
-    def saveAsNote(self, fileName):
-        if self.html:
-            note = self.editor.toHtml()
-        else:
-            note = self.editor.toPlainText()
-        f = open(fileName,'w')
-        f.write(note)
-        f.close()
-        self.noteFileName = fileName
-        self.parent.addExternalFileHistory(fileName)
-        self.parent.setExternalFileButton()
-
-    def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = qApp.desktop().availableGeometry()
-        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+    #def searchLineEntered(self):
+        #self.editor.setFocus()
+        #searchString = self.searchLineEdit.text()
+        #print(searchString)
