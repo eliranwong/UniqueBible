@@ -29,6 +29,7 @@ class TextCommandParser:
             "_openfile": self.textOpenFile,
             "_editfile": self.textEditFile,
             "_website": self.textWebsite,
+            "_uba": self.textUba,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -310,6 +311,17 @@ class TextCommandParser:
             return ("", "")
         else:
             return self.invalidCommand()
+
+    # _uba:::
+    def textUba(self, command, source):
+        if command:
+            pathItems = command[8:].split("/")
+            file = os.path.join(*pathItems)
+            config.history["external"].append(file)
+            self.parent.openExternalFileHistoryRecord(-1)
+            return ("", "")
+        else:
+            return self.invalidCommand() 
 
     # _info:::
     def textInfo(self, command, source):

@@ -415,6 +415,7 @@ class MainWindow(QMainWindow):
             ("<br>(<table>|<ol>|<ul>)", r"\1"),
             ("(</table>|</ol>|</ul>)<br>", r"\1"),
             ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
+            ("onclick='website\({0}([^\n<>]*?).uba{0}\)'".format('"'), r"onclick='uba({0}\1.uba{0})'".format('"'))
         )
         if linebreak:
             for search, replace in searchReplace1:
