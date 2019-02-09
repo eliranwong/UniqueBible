@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
         menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
-        menu9 = self.menuBar().addMenu("&Builder")
+        menu9 = self.menuBar().addMenu("&Build")
         menu9.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
         menu9.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
         menu9.addAction(QAction("&Tag References in a Folder", self, shortcut = "Ctrl+*", triggered=self.tagFolder))
