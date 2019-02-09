@@ -274,12 +274,20 @@ class TextCommandParser:
 
     # _editchapternote:::
     def editChapterNote(self, command, source):
-        self.parent.openNoteEditor("chapter")
+        if self.parent.noteSaved:
+            self.parent.openNoteEditor("chapter")
+        elif self.parent.warningNotSaved():
+            self.parent.openNoteEditor("chapter")
         return ("", "")
 
     # _editversenote:::
     def editVerseNote(self, command, source):
-        self.parent.openNoteEditor("verse")
+        if self.parent.noteSaved:
+            self.parent.openNoteEditor("verse")
+        elif self.parent.warningNotSaved():
+            self.parent.openNoteEditor("verse")
+        else:
+            self.parent.noteEditor.raise_()
         return ("", "")
 
     # _openfile:::

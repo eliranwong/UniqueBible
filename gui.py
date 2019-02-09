@@ -41,6 +41,9 @@ class MainWindow(QMainWindow):
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         self.setCentralWidget(self.centralWidget)
 
+        # variable to check if notes in editor been modified
+        self.noteSaved = True
+
         # variables to work with dialog
 
         frameStyle = QFrame.Sunken | QFrame.Panel
@@ -343,10 +346,30 @@ class MainWindow(QMainWindow):
         if self.parallelMode == 0:
             self.parallel()
 
+    # warning for next action without saving modified notes
+    def warningNotSaved(self):
+        msgBox = QMessageBox(QMessageBox.Warning,
+                "QMessageBox.warning()", "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
+                QMessageBox.NoButton, self)
+        msgBox.addButton("Cancel", QMessageBox.AcceptRole)
+        msgBox.addButton("&Continue", QMessageBox.RejectRole)
+        if msgBox.exec_() == QMessageBox.AcceptRole:
+            # Cancel
+            return False
+        else:
+            # Continue
+            return True
+
     # Actions - chapter / verse / new file note
     def createNewNoteFile(self):
-        self.noteEditor = NoteEditor(self, "file")
-        self.noteEditor.show()
+        if self.noteSaved:
+            self.noteEditor = NoteEditor(self, "file")
+            self.noteEditor.show()
+        elif self.warningNotSaved():
+            self.noteEditor = NoteEditor(self, "file")
+            self.noteEditor.show()
+        else:
+            self.noteEditor.raise_()
 
     def openNoteEditor(self, noteType):
         self.noteEditor = NoteEditor(self, noteType)
@@ -470,8 +493,14 @@ class MainWindow(QMainWindow):
         fileExtension = file.split(".")[-1].lower()
         directEdit = ("uba", "html", "htm")
         if fileExtension in directEdit:
-            self.noteEditor = NoteEditor(self, "file", file)
-            self.noteEditor.show()
+            if self.noteSaved:
+                self.noteEditor = NoteEditor(self, "file", file)
+                self.noteEditor.show()
+            elif self.warningNotSaved():
+                self.noteEditor = NoteEditor(self, "file", file)
+                self.noteEditor.show()
+            else:
+                self.noteEditor.raise_()
         else:
             if platform.system() == "Linux":
                 subprocess.call(["xdg-open", file])
@@ -1175,7 +1204,7 @@ class NoteEditor(QWidget):
         # default - show toolbar with formatting items
         self.showToolBar = True
         # default - text is not modified; no need for saving new content
-        self.saved = True
+        self.parent.noteSaved = True
 
         # specify window size
         self.resizeWindow(2/3, 2/3)
@@ -1190,6 +1219,19 @@ class NoteEditor(QWidget):
 
         # specify window title
         self.updateWindowTitle()
+        
+        #self.close.connect(self.closingEditor)
+
+    # re-implementing close event, when users close this widget
+    def closeEvent(self, event):
+        if self.parent.noteSaved:
+            event.accept()
+        else:
+            if self.parent.warningNotSaved():
+                self.parent.noteSaved = True
+                event.accept()
+            else:
+                event.ignore()
 
     # re-implement keyPressEvent, control+S for saving file
     def keyPressEvent(self, event):
@@ -1213,7 +1255,7 @@ class NoteEditor(QWidget):
                 title, *_ = title.split(":")
         mode = {True: "rich", False: "plain"}
         notModified = {True: "", False: " [modified]"}
-        self.setWindowTitle("Note Editor [{1}] - {0}{2}".format(title, mode[self.html], notModified[self.saved]))
+        self.setWindowTitle("Note Editor [{1}] - {0}{2}".format(title, mode[self.html], notModified[self.parent.noteSaved]))
 
     # switching between "rich" & "plain" mode
     def switchMode(self):
@@ -1391,8 +1433,8 @@ class NoteEditor(QWidget):
 
     # track if the text being modified
     def textChanged(self):
-        if self.saved:
-            self.saved = False
+        if self.parent.noteSaved:
+            self.parent.noteSaved = False
             self.updateWindowTitle()
 
     # display content when first launched
@@ -1405,7 +1447,7 @@ class NoteEditor(QWidget):
         else:
             self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
             self.openBibleNote()
-        self.saved = True
+        self.parent.noteSaved = True
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
@@ -1419,29 +1461,28 @@ class NoteEditor(QWidget):
         self.editor.setHtml(note)
 
     # File I / O
-    def warningNotSaved(self):
-        msgBox = QMessageBox(QMessageBox.Warning,
-                "QMessageBox.warning()", "Notes have been modified without saving.  Do you want to continue?",
-                QMessageBox.NoButton, self)
-        msgBox.addButton("Cancel", QMessageBox.AcceptRole)
-        msgBox.addButton("&Continue", QMessageBox.RejectRole)
-        if msgBox.exec_() == QMessageBox.AcceptRole:
-            # Cancel
-            return False
-        else:
-            # Continue
-            return True
-
     def newNoteFile(self):
+        if self.parent.noteSaved:
+            self.newNoteFileAction()
+        elif self.parent.warningNotSaved():
+            self.newNoteFileAction()
+
+    def newNoteFileAction(self):
         self.noteType = "file"
         self.noteFileName = ""
         self.editor.clear()
-        self.saved = True
+        self.parent.noteSaved = True
         self.updateWindowTitle()
         self.hide()
         self.show()
 
     def openFileDialog(self):
+        if self.parent.noteSaved:
+            self.openFileDialogAction()
+        elif self.parent.warningNotSaved():
+            self.openFileDialogAction()
+
+    def openFileDialogAction(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
@@ -1463,7 +1504,7 @@ class NoteEditor(QWidget):
             self.editor.setHtml(note)
         else:
             self.editor.setPlainText(note)
-        self.saved = True
+        self.parent.noteSaved = True
         self.updateWindowTitle()
         self.hide()
         self.show()
@@ -1478,14 +1519,14 @@ class NoteEditor(QWidget):
             noteSqlite.saveChapterNote((self.b, self.c, note))
             del noteSqlite
             self.parent.openChapterNote(self.b, self.c)
-            self.saved = True
+            self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
             noteSqlite = NoteSqlite()
             noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
             del noteSqlite
             self.parent.openVerseNote(self.b, self.c, self.v)
-            self.saved = True
+            self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "file":
             if self.noteFileName == "":
@@ -1513,7 +1554,7 @@ class NoteEditor(QWidget):
         self.noteFileName = fileName
         self.parent.addExternalFileHistory(fileName)
         self.parent.setExternalFileButton()
-        self.saved = True
+        self.parent.noteSaved = True
         self.updateWindowTitle()
 
     # formatting styles
