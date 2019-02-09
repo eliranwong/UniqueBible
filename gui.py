@@ -8,6 +8,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
+from shutil import copyfile
 
 class MainWindow(QMainWindow):
 
@@ -563,8 +564,22 @@ class MainWindow(QMainWindow):
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
 
+    # import 3rd party modules
     def importModules(self):
-        pass
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()",
+                self.openFileNameLabel.text(),
+                "MySword Dictionaries (*.dct.mybible)", "", options)
+        if fileName:
+            print(fileName)
+            *_, name = os.path.split(fileName)
+            destination = os.path.join("thirdParty", "dictionaries", name)
+            try:
+                copyfile(fileName, destination)
+                self.mainPage.runJavaScript("alert('3rd Party Module Installed.')")
+            except:
+                print("Failed to copy '{0}'.".format(fileName))
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
@@ -1572,10 +1587,14 @@ class NoteEditor(QWidget):
                 self.saveAsNote(self.noteFileName)
 
     def openSaveAsDialog(self):
+        if self.noteFileName:
+            *_, defaultName = os.path.split(self.noteFileName)
+        else:
+            defaultName = "new.uba"
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getSaveFileName(self,
                 "QFileDialog.getSaveFileName()",
-                "new.uba",
+                defaultName,
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
             self.saveAsNote(fileName)

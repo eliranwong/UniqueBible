@@ -1202,7 +1202,6 @@ class BibleVerseParser:
             f = open(inputFile,'r')
         except:
             print("File note found! Please make sure if you enter filename correctly and try again.")
-            exit()
         newData = f.read()
         f.close()
         
