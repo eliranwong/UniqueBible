@@ -476,3 +476,7 @@ function searchThirdDictionary(module, entry) {
 function openThirdDictionary(module, entry) {
     document.title = "THIRDDICTIONARY:::"+module+":::"+entry;
 }
+
+function uba(file) {
+    document.title = "_uba:::"+file;
+}
