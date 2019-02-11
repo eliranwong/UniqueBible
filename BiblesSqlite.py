@@ -77,14 +77,19 @@ class BiblesSqlite:
                         anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on \"main\" view</button>".format(text, mainVerseReference)
                     menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>notes</button>".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
-                    menu += "<button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare All Versions</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>Scroll Mapper</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSK (Enhanced)</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"TRANSLATION:::{0}\"'>Translations</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"DISCOURSE:::{0}\"'>Discourse</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"WORDS:::{0}\"'>Words</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW Combo</button> ".format(mainVerseReference)
-                    menu += "<button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Smart Indexes</button>".format(mainVerseReference)
+                    features = (
+                        ("COMPARE", "Compare All Versions"),
+                        ("CROSSREFERENCE", "Scroll Mapper"),
+                        ("TSKE", "TSK (Enhanced)"),
+                        ("TRANSLATION", "Translations"),
+                        ("DISCOURSE", "Discourse"),
+                        ("WORDS", "Words"),
+                        ("COMBO", "TDW Combo"),
+                        ("COMMENTARY", "Commentary"),
+                        ("INDEX", "Smart Indexes"),
+                    )
+                    for keyword, description in features:
+                        menu += "<button class='feature' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
                     versions = self.getBibleList()
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
@@ -165,11 +170,10 @@ class BiblesSqlite:
         chaptersMenu = []
         for chapter in chapterList:
             if chapter == c:
-                chaptersMenu.append("<b>{0}</b>".format(chapter))
+                chaptersMenu.append("<b style='font-size: 95%;'>{0}</b>".format(chapter))
             else:
                 chaptersMenu.append("{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter))
         return " ".join(chaptersMenu)
-        #return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter) for chapter in chapterList])
 
     def getVerseList(self, b, c, text=config.mainText):
         query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
