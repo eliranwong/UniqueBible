@@ -1,4 +1,152 @@
 import os, sqlite3, config, re
+from BiblesSqlite import BiblesSqlite
+from BibleVerseParser import BibleVerseParser
+
+class Converter:
+
+    def importMySwordBible(self, file):
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+        
+        query = "SELECT Description, Abbreviation FROM Details"
+        cursor.execute(query)
+        description, abbreviation = cursor.fetchone()
+        query = "SELECT * FROM Bible"
+        cursor.execute(query)
+        verses = cursor.fetchall()
+        connection.close()
+        
+        abbreviation = abbreviation.replace("+", "s")
+        self.mySwordBibleToPlainFormat(description, abbreviation, verses)
+        self.mySwordBibleToRichFormat(description, abbreviation, verses)
+
+    def mySwordBibleToPlainFormat(self, description, abbreviation, verses):
+        verses = [(book, chapter, verse, self.stripMySwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
+        biblesSqlite = BiblesSqlite()
+        biblesSqlite.importBible(description, abbreviation, verses)
+        del biblesSqlite
+
+    def mySwordBibleToRichFormat(self, description, abbreviation, verses):
+        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        if os.path.isfile(formattedBible):
+            os.remove(formattedBible)
+        connection = sqlite3.connect(formattedBible)
+        cursor = connection.cursor()
+        
+        statements = (
+            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+        )
+        for create in statements:
+            cursor.execute(create)
+            connection.commit()
+        
+        for book, chapter, verse, scripture in verses:
+            scripture, notes = self.convertMySwordBibleTags(scripture)
+            
+            if notes:
+                insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
+                for counter, note in enumerate(notes):
+                    cursor.execute(insert, (book, chapter, verse, str(counter), note))
+                connection.commit()
+
+            if scripture:
+
+                # fix bible note links
+                scripture = re.sub("｛([0-9]+?)｝", r"{0}, {1}, {2}, \1".format(book, chapter, verse), scripture)
+                # verse number formatting
+                scripture = self.formatVerseNumber(book, chapter, verse, scripture)
+
+                query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
+                cursor.execute(query, (book, chapter))
+                chapterText = cursor.fetchone()
+
+                if chapterText:
+                    chapterText = chapterText[0] + scripture
+                    update = "UPDATE Bible SET Scripture=? WHERE Book=? AND Chapter=?"
+                    cursor.execute(update, (chapterText, book, chapter))
+                    connection.commit()
+                else:
+                    insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+                    cursor.execute(insert, (book, chapter, scripture))
+                    connection.commit()
+
+        connection.close()
+
+    def formatVerseNumber(self, book, chapter, verse, text):
+        text = '<vid id="v{0}.{1}.{2}" onclick="luV({2})">{2}</vid> {3}'.format(book, chapter, verse, text)
+        p = re.compile("(<vid .*?</vid> )(<u><b>.*?</b></u>|<br>|&emsp;|&ensp;| )")
+        s = p.search(text)
+        while s:
+            text = p.sub(r"\2\1", text)
+            s = p.search(text)
+        text = text.strip()
+        text = "<verse>{0}</verse> ".format(text)
+        return text
+
+    def stripMySwordBibleTags(self, text):
+        searchReplace = (
+            ("<CM>|<CL>|<PI[0-9]*?>|<PF[0-9]*?>|<TS[0-9]*?>.*?<Ts>", " "),
+            ("<sup><a.*?</a></sup>|<RF[^\n<>]*?>.*?<Rf>|<[^\n<>]*?>", ""),
+            (" [ ]+?([^ ])", r" \1"),
+        )
+        text = text.strip()
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        return text
+
+    def convertMySwordBibleTags(self, text):
+        searchReplace = (
+            ("<CI>(<CL>|<CM>)", r"\1"),
+            ("(<CL>|<CM>)<CI>", r"\1"),
+            ("<CI>", " "),
+            ("<CL><CM>|<CM><CL>|<CM>", "<br><br>"),
+            ("<CL>", "<br>"),
+            ("<PI[0-9]*?><PF[0-9]*?>|<PF[0-9]*?><PI[0-9]*?>|<PF[0-9]*?>|<PI[0-9]*?>", "<br>&emsp;&emsp;"),
+            ("<TS[0-9]*?>(.*?)<Ts>", r"<u><b>\1</b></u><br><br>"),
+            ("[ ]+?<br>", "<br>"),
+            ("<br><br><br><br><br>|<br><br><br><br>|<br><br><br>", "<br><br>"),
+            ("</b></u><br><br><u><b>", "</b></u><br><u><b>"),
+            ("<FI>", "<i>"),
+            ("<Fi>", "</i>"),
+            ("<FO>", "<ot>"),
+            ("<Fo>", "</ot>"),
+            ("<FR>", "<woj>"),
+            ("<Fr>", "</woj>"),
+            ("<FU>", "<u>"),
+            ("<Fu>", "</u>"),
+            ("<W([GH][0-9]+?[a-z]*?)>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("<WT([^\n<>]*?)>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)>", r"『\1｜\2｜\3』"),
+            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?>", r"『\1｜\2｜\3』"),
+            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?:[0-9]+?>", r"『\1｜\2｜\3』"),
+            ("『([0-9]+?)｜([0-9]+?)｜([0-9]+?)』", self.convertMySwordRxTag),
+            ("<sup>(<RF[^\n<>]*?>)|(<RF[^\n<>]*?>)<sup>", r"\1"),
+            ("<Rf></sup>|</sup><Rf>", "<Rf>"),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        text, notes = self.convertMySwordRfTag(text)
+        text = re.sub("</ref><ref", "</ref>; <ref", text)
+        text = re.sub("</ref></sup><sup><ref", "</ref> <ref", text)
+        text = text.strip()
+        return (text, notes)
+
+    def convertMySwordRxTag(self, match):
+        b, c, v = match.group()[1:-1].split("｜")
+        bookName = BibleVerseParser(config.parserStandarisation).standardAbbreviation[b]
+        return '<ref onclick="bcv({0},{1},{2})">{3} {1}:{2}</ref>'.format(b, c, v, bookName)
+
+    def convertMySwordRfTag(self, text):
+        notes = [m for m in re.findall("<RF[^\n<>]*?>(.*?)<Rf>", text)]
+        p = re.compile("<RF[^\n<>]*?>.*?<Rf>")
+        s = p.search(text)
+        noteID = 0
+        while s:
+            text = p.sub("<sup><ref onclick='bn(｛{0}｝)'>&oplus;</ref></sup>".format(noteID), text)
+            noteID += 1
+            s = p.search(text)
+        return (text, notes)
 
 class ThirdPartyDictionary:
 

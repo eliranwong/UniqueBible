@@ -8,6 +8,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
+from ThirdParty import Converter
 from shutil import copyfile
 
 class MainWindow(QMainWindow):
@@ -570,16 +571,28 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "MySword Dictionaries (*.dct.mybible)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Dictionaries (*.dct.mybible)", "", options)
         if fileName:
-            print(fileName)
-            *_, name = os.path.split(fileName)
-            destination = os.path.join("thirdParty", "dictionaries", name)
-            try:
-                copyfile(fileName, destination)
-                self.mainPage.runJavaScript("alert('3rd Party Module Installed.')")
-            except:
-                print("Failed to copy '{0}'.".format(fileName))
+            if fileName.endswith(".dct.mybible"):
+                self.importMySwordDictionary(fileName)
+            elif fileName.endswith(".bbl.mybible"):
+                self.importMySwordBible(fileName)
+
+    def importMySwordDictionary(self, fileName):
+        *_, name = os.path.split(fileName)
+        destination = os.path.join("thirdParty", "dictionaries", name)
+        try:
+            copyfile(fileName, destination)
+            self.completeImport()
+        except:
+            print("Failed to copy '{0}'.".format(fileName))
+
+    def importMySwordBible(self, fileName):
+        Converter().importMySwordBible(fileName)
+        self.completeImport()
+
+    def completeImport(self):
+        self.mainPage.runJavaScript("alert('3rd Party Module Installed.')")
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):

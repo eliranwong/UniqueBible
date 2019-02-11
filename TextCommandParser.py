@@ -18,6 +18,7 @@ class TextCommandParser:
             "_commentary": self.textCommentaryMenu,
             "_book": self.textBookMenu,
             "_info": self.textInfo,
+            "_bibleinfo": self.textBibleInfo,
             "_command": self.textCommand,
             "_history": self.textHistory,
             "_historyrecord": self.textHistoryRecord,
@@ -30,6 +31,7 @@ class TextCommandParser:
             "_editfile": self.textEditFile,
             "_website": self.textWebsite,
             "_uba": self.textUba,
+            "_biblenote": self.textBiblenote,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -259,6 +261,20 @@ class TextCommandParser:
             versions, verses = zip(*tableList)
             return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
+    # _biblenote:::
+    def textBiblenote(self, command, source):
+        texts = {
+            "main": config.mainText,
+            "study": config.studyText,
+        }
+        if source in texts:
+            bible = Bible(texts[source])
+            note = bible.readBiblenote(command)
+            del bible
+            return ("study", note)
+        else:
+            return ("", "")
+
     # _openchapternote:::
     def openChapterNote(self, command, source):
         b, c = command.split(".")
@@ -321,7 +337,7 @@ class TextCommandParser:
             self.parent.openExternalFileHistoryRecord(-1)
             return ("", "")
         else:
-            return self.invalidCommand() 
+            return self.invalidCommand()
 
     # _info:::
     def textInfo(self, command, source):
@@ -354,6 +370,19 @@ class TextCommandParser:
             return ("instant", info)
         else:
             return ("", "")
+
+    # _bibleinfo:::
+    def textBibleInfo(self, command, source):
+        if self.getConfirmedTexts(command):
+            biblesSqlite = BiblesSqlite()
+            info = biblesSqlite.bibleInfo(command)
+            del biblesSqlite
+            if info:
+                return ("instant", info)
+            else:
+                return ("", "")
+        else:
+            return self.invalidCommand()
 
     # _menu:::
     def textMenu(self, command, source):

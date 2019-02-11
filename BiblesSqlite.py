@@ -16,6 +16,32 @@ class BiblesSqlite:
     def __del__(self):
         self.connection.close()
 
+    def bibleInfo(self, text):
+        query = "SELECT Scripture FROM {0} WHERE Book=0 AND Chapter=0 AND Verse=0".format(text)
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return ""
+
+    def importBible(self, description, abbreviation, verses):
+        query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
+        self.cursor.execute(query, (abbreviation,))
+        table = self.cursor.fetchone()
+        if table:
+            delete = "DELETE from {0}".format(abbreviation)
+            self.cursor.execute(delete)
+        else:
+            create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
+            self.cursor.execute(create)
+        self.connection.commit()
+        verses.append((0, 0, 0, description))
+        insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
+        for verse in verses:
+            self.cursor.execute(insert, verse)
+        self.connection.commit()
+
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
@@ -119,7 +145,7 @@ class BiblesSqlite:
     def getBookList(self, text=config.mainText):
         query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
         self.cursor.execute(query)
-        return [book[0] for book in self.cursor.fetchall()]
+        return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
 
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
@@ -424,6 +450,15 @@ class Bible:
             if self.text in self.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
             return "{0}{1}</div>".format(divTag, chapter)
+
+    def readBiblenote(self, bcvi):
+        b, c, v, i = bcvi.split(".")
+        query = "Select Note FROM Notes WHERE Book=? AND Chapter=? AND Verse=? AND ID=?"
+        self.cursor.execute(query, (int(b), int(c), int(v), i))
+        note = self.cursor.fetchone()
+        if note:
+            note = note[0]
+        return note
 
 #if __name__ == '__main__':
     # Bibles = BiblesSqlite()
