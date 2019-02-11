@@ -548,3 +548,6 @@ background-color: #333972;
 button.feature:active {
 background-color: #515790;
 }
+tag {
+cursor: pointer;
+}

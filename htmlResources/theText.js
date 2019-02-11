@@ -1,6 +1,7 @@
 function textName(name) {
-    var fullname = getFullTextName(name);
-    document.title = "_info:::"+fullname;
+    //var fullname = getFullTextName(name);
+    //document.title = "_info:::"+fullname;
+    document.title = "_bibleinfo:::"+name;
 }
 
 function getFullTextName(abbreviation) {
@@ -479,4 +480,8 @@ function openThirdDictionary(module, entry) {
 
 function uba(file) {
     document.title = "_uba:::"+file;
+}
+
+function bn(b, c, v, n) {
+    document.title = "_biblenote:::"+b+"."+c+"."+v+"."+n;
 }
