@@ -154,7 +154,7 @@ class TextCommandParser:
             if len(verseList) == 1:
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
-                chapters = self.getChaptersMenu(bcvTuple[0], text)
+                chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
                 content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text))
             else:
                 # i.e. when more than one verse reference is found
@@ -164,9 +164,9 @@ class TextCommandParser:
             updateViewConfig(text, bcvTuple)
             return (view, content)
 
-    def getChaptersMenu(self, b, text):
+    def getChaptersMenu(self, b, c, text):
         biblesSqlite = BiblesSqlite()
-        chapteruMenu = biblesSqlite.getChaptersMenu(b, text)
+        chapteruMenu = biblesSqlite.getChaptersMenu(b, c, text)
         del biblesSqlite
         return chapteruMenu
 

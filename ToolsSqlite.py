@@ -452,10 +452,6 @@ class Commentary:
         chapterList = self.getChapterList(b)
         return " ".join(["{0}{1}</ref>".format(self.formChapterTag(b, chapter), chapter) for chapter in chapterList])
 
-    def getChaptersMenu(self, b=config.commentaryB, text=config.commentaryText):
-        chapterList = self.getChapterList(b, text)
-        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1), chapter) for chapter in chapterList])
-
     def getVerseList(self, b, c):
         biblesSqlite = BiblesSqlite()
         verseList = biblesSqlite.getVerseList(b, c, "KJV")

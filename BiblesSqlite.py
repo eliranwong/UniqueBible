@@ -160,9 +160,16 @@ class BiblesSqlite:
         chapterList = self.getChapterList(b, text)
         return " ".join(["{0}{1}</ref>".format(self.formChapterTag(b, chapter, text), chapter) for chapter in chapterList])
 
-    def getChaptersMenu(self, b=config.mainB, text=config.mainText):
+    def getChaptersMenu(self, b=config.mainB, c=config.mainC, text=config.mainText):
         chapterList = self.getChapterList(b, text)
-        return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter) for chapter in chapterList])
+        chaptersMenu = []
+        for chapter in chapterList:
+            if chapter == c:
+                chaptersMenu.append("<b>{0}</b>".format(chapter))
+            else:
+                chaptersMenu.append("{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter))
+        return " ".join(chaptersMenu)
+        #return " ".join(["{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter) for chapter in chapterList])
 
     def getVerseList(self, b, c, text=config.mainText):
         query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
