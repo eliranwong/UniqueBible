@@ -86,6 +86,14 @@ class TextCommandParser:
             else:
                 return self.textBibleVerseParser(textCommad, viewText, source)        
 
+    # check if a particular database is installed
+    def isDatabaseInstalled(self, file):
+        if os.path.isfile(file):
+            return True
+        else:
+            self.parent.mainPage.runJavaScript("alert('Database required for this feature is not installed.')")
+            return False
+
     # return invalid command
     def invalidCommand(self, source="main"):
         return (source, "INVALID_COMMAND_ENTERED")
