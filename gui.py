@@ -89,28 +89,45 @@ class MainWindow(QMainWindow):
 
         menu3 = self.menuBar().addMenu("&Display")
         menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, triggered=self.hideShowToolBar))
-        menu3.addAction(QAction("Seco&nd Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
+        menu3.addAction(QAction("&Action Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Study Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
-        menu3.addAction(QAction("L&ightning Window [Hide / Show]", self, shortcut = "Ctrl+G", triggered=self.instant))
+        menu3.addAction(QAction("&Secondary Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
+        menu3.addAction(QAction("Li&ghtning Window [Hide / Show]", self, shortcut = "Ctrl+G", triggered=self.instant))
+        menu3.addSeparator()
+        menu3.addAction(QAction("L&ightning [On / Off]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
         menu3.addSeparator()
         menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
-        
-        menu4 = self.menuBar().addMenu("&Features")
-        menu4.addAction(QAction("&Main Verse Features", self, triggered=self.mainRefButtonClicked))
-        menu4.addAction(QAction("&Study Verse Features", self, triggered=self.studyRefButtonClicked))
+
+        menu8 = self.menuBar().addMenu("&History")
+        menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
+        menu8.addAction(QAction("&Back", self, shortcut = "Ctrl+[", triggered=self.back))
+        menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+]", triggered=self.forward))
+        menu8.addSeparator()
+        menu8.addAction(QAction("&Secondary", self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
+        menu8.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
+        menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
+
+        menu4 = self.menuBar().addMenu("&Study")
+        menu4.addAction(QAction("Smart Indexes", self, triggered=self.runINDEX))
+        menu4.addAction(QAction("Commentary", self, triggered=self.runCOMMENTARY))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Lightning [On / Off]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
+        menu4.addAction(QAction("Translations", self, triggered=self.runTRANSLATION))
+        menu4.addAction(QAction("Discourse", self, triggered=self.runDISCOURSE))
+        menu4.addAction(QAction("Words", self, triggered=self.runWORDS))
+        menu4.addAction(QAction("TDW Combo", self, triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Commentaries", self, triggered=self.commentaryRefButtonClicked))
-        menu4.addAction(QAction("&Books", self, triggered=self.openBookMenu))
+        menu4.addAction(QAction("Scroll Mapper", self, triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction("TSK (Enhanced)", self, triggered=self.runTSKE))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Note Editor", self, triggered=self.createNewNoteFile))
+        menu4.addAction(QAction("Compare All Versions", self, triggered=self.runCOMPARE))
+        menu4.addAction(QAction("Compare with ...", self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction("Parallel with ...", self, triggered=self.mainRefButtonClicked))
+        menu4.addSeparator()
 
         menu5 = self.menuBar().addMenu("&Search")
         menu5.addAction(QAction("&Last Main Bible", self, shortcut = "Ctrl+1", triggered=self.displaySearchBibleCommand))
-        menu5.addAction(QAction("&Last Study Bible", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5.addAction(QAction("&Last Secondary Bible", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
         menu5.addAction(QAction("&Last Opened Dictionary", self, shortcut = "Ctrl+3", triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction("&Last Opened Encyclopedia", self, shortcut = "Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
@@ -123,12 +140,11 @@ class MainWindow(QMainWindow):
 
         menu6 = self.menuBar().addMenu("&Notes")
         menu6.addAction(QAction("&Note on Main Chapter", self, triggered=self.openMainChapterNote))
-        menu6.addAction(QAction("&Note on Main Verse", self, triggered=self.openMainVerseNote))
-        menu6.addSeparator()
-        menu6.addAction(QAction("&Note on Study Chapter", self, triggered=self.openStudyChapterNote))
-        menu6.addAction(QAction("&Note on Study Verse", self, triggered=self.openStudyVerseNote))
-        menu6.addSeparator()
+        menu6.addAction(QAction("&Note on Secondary Chapter", self, triggered=self.openStudyChapterNote))
         menu6.addAction(QAction("&Search Notes on Chapters", self, triggered=self.searchCommandChapterNote))
+        menu6.addSeparator()
+        menu6.addAction(QAction("&Note on Main Verse", self, triggered=self.openMainVerseNote))
+        menu6.addAction(QAction("&Note on Secondary Verse", self, triggered=self.openStudyVerseNote))
         menu6.addAction(QAction("&Search Notes on Verses", self, triggered=self.searchCommandVerseNote))
 
         menu7 = self.menuBar().addMenu("&Topics")
@@ -141,23 +157,14 @@ class MainWindow(QMainWindow):
         menu7.addSeparator()
         menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
 
-        menu8 = self.menuBar().addMenu("&History")
-        menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
-        menu8.addAction(QAction("&Back", self, shortcut = "Ctrl+[", triggered=self.back))
-        menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+]", triggered=self.forward))
-        menu8.addSeparator()
-        menu8.addAction(QAction("&Study", self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
-        menu8.addAction(QAction("&Back", self, shortcut = "Ctrl+{", triggered=self.studyBack))
-        menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
-
-        menu9 = self.menuBar().addMenu("&Build")
+        menu9 = self.menuBar().addMenu("&Resources")
+        menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
+        menu9.addSeparator()
         menu9.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
         menu9.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
         menu9.addAction(QAction("&Tag References in a Folder", self, shortcut = "Ctrl+*", triggered=self.tagFolder))
-        menu9.addSeparator()
-        menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
 
-        menu10 = self.menuBar().addMenu("&About")
+        menu10 = self.menuBar().addMenu("&Information")
         menu10.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
         menu10.addAction(QAction("&UniqueBible.app", self, triggered=self.openUniqueBible))
         menu10.addAction(QAction("&Marvel.bible", self, triggered=self.openMarvelBible))
@@ -334,20 +341,18 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        self.enableInstantButton = QPushButton()
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+        self.secondToolBar.addWidget(self.enableInstantButton)
+
         self.instantMode = 1 # default parallel mode
         instantButton = QPushButton()
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
         instantButton.setIcon(QIcon(instantButtonFile))
         instantButton.clicked.connect(self.instant)
         self.secondToolBar.addWidget(instantButton)
-
-        #self.enableInstantButton = QPushButton(self.getInstantInformation())
-        #self.enableInstantButton.setStyleSheet(textButtonStyle)
-        self.enableInstantButton = QPushButton()
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
-        self.secondToolBar.addWidget(self.enableInstantButton)
 
         self.secondToolBar.addSeparator()
 
@@ -923,6 +928,39 @@ class MainWindow(QMainWindow):
     def finishStudyViewLoading(self):
         # scroll to the study verse
         self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
+
+    # running specific commands
+    def runFeature(self, keyword):
+        mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        newTextCommand = "{0}:::{1}".format(keyword, mainVerseReference)
+        self.textCommandChanged(newTextCommand, "main")
+
+    def runCOMPARE(self):
+        self.runFeature("COMPARE")
+
+    def runCROSSREFERENCE(self):
+        self.runFeature("CROSSREFERENCE")
+
+    def runTSKE(self):
+        self.runFeature("TSKE")
+
+    def runTRANSLATION(self):
+        self.runFeature("TRANSLATION")
+
+    def runDISCOURSE(self):
+        self.runFeature("DISCOURSE")
+
+    def runWORDS(self):
+        self.runFeature("WORDS")
+
+    def runCOMBO(self):
+        self.runFeature("COMBO")
+
+    def runCOMMENTARY(self):
+        self.runFeature("COMMENTARY")
+
+    def runINDEX(self):
+        self.runFeature("INDEX")
 
     # change of unique bible commands
     def mainTextCommandChanged(self, newTextCommand):

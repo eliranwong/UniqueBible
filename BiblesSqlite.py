@@ -68,14 +68,14 @@ class BiblesSqlite:
                     menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0], text))
                 if check >= 2:
                     # i.e. both book and chapter specified; add verse menu
-                    menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>notes</button>".format(bcList[0], bcList[1])
+                    menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>chapter note</button>".format(bcList[0], bcList[1])
                     menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1], text))
                 if check == 3:
                     if source == "main":
-                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on \"study\" view</button>".format(text, mainVerseReference)
+                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>go to secondary window</button>".format(text, mainVerseReference)
                     elif source == "study":
-                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on \"main\" view</button>".format(text, mainVerseReference)
-                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>notes</button>".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
+                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>go to main window</button>".format(text, mainVerseReference)
+                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>verse note</button>".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
                     features = (
                         ("COMPARE", "Compare All Versions"),
