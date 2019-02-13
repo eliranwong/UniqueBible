@@ -669,7 +669,7 @@ class TextCommandParser:
         del biblesSqlite
 
         # extra data for Greek words
-        if bNo > 40:
+        if bNo >= 40:
             wordData = WordData()
             content += re.sub('^.*?<br><br><b><i>TBESG', '<b><i>TBESG', wordData.getContent("NT", wordId))
 
