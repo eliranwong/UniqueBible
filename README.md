@@ -45,12 +45,16 @@ To run UniqueBible.app and its features, several database files are required.  T
 
 # 3rd Party Resources
 
-UniqueBible.app has a built-in converter, supporting conversion of 3rd modules.<br>
+UniqueBible.app has a built-in converter, supporting conversion of some 3rd modules.<br>
 Currently, we support the following modules:
 
 * MySword Bible Modules (<a href="https://mysword.info/download-mysword/bibles">https://mysword.info/download-mysword/bibles</a>)
 
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
+
+Users need to download 3rd party modules separately.
+Built-in converter can be accessed via our menu bar:
+Go to menu "Resources" > "Import 3rd Party Modules"
 
 # Donations:
 
