@@ -18,6 +18,10 @@ pip3 install PySide2
 pip3 install PyPDF2
 
 pip3 install python-docx
+<br>(python-docx is required for reading *.doxc documents.)
+
+pip3 install gdown
+<br>(gdown is required for downloading database files stored in google drive.)
 
 # Run UniqueBible.app
 
