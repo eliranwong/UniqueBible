@@ -164,6 +164,7 @@ class MainWindow(QMainWindow):
         menu9 = self.menuBar().addMenu("&Resources")
         menu9.addAction(QAction("&Install Formatted Bibles", self, triggered=self.installMarvelBibles))
         menu9.addAction(QAction("&Install Bible Commentaries", self, triggered=self.installMarvelCommentaries))
+        menu9.addAction(QAction("&Install Marvel.bible Datasets", self, triggered=self.installMarvelDatasets))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
         menu9.addSeparator()
@@ -389,10 +390,10 @@ class MainWindow(QMainWindow):
         }
         items = [bible for bible in bibles.keys() if not os.path.isfile(os.path.join(*bibles[bible][0]))]
         if not items:
-            items = ["All Installed"]
+            items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
                 "Available Modules:", items, 0, False)
-        if ok and item and not item == "All Installed":
+        if ok and item and not item == "[All Installed]":
             self.downloadHelper(bibles[item])
 
     def installMarvelCommentaries(self):
@@ -430,11 +431,39 @@ class MainWindow(QMainWindow):
         }
         items = [commentary for commentary in commentaries.keys() if not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
         if not items:
-            items = ["All Installed"]
-        item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
+            items = ["[All Installed]"]
+        item, ok = QInputDialog.getItem(self, "Install Bible Commentaries",
                 "Available Modules:", items, 0, False)
-        if ok and item and not item == "All Installed":
+        if ok and item and not item == "[All Installed]":
             self.downloadHelper(commentaries[item])
+
+    def installMarvelDatasets(self):
+        datasets = {
+            "Core Datasets": (("marvelData", "bibles.sqlite"), "1w5cChadLpfJ51y9BBUdotV31PqVPbkWf"),
+            "Search Engine": (("marvelData", "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
+            "Smart Indexes": (("marvelData", "indexes.sqlite"), "1Fdq3C9hyoyBX7riniByyZdW9mMoMe6EX"),
+            "Chapter & Verse Notes": (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),
+            "Bible Background Data": (("marvelData", "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
+            "Bible Topics Data": (("marvelData", "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
+            "Cross-reference Data": (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My"),
+            "Dictionaries": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
+            "Encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
+            "Lexicons": (("marvelData", "data", "lexicon.data"), "1GFNnI1PtmPGhoEy6jfBP5U2Gi17Zr6fs"),
+            "Book Modules": (("marvelData", "data", "book.data"), "1Oc5kt9V_zq-RgEwY-E_eQVVPoaqJujGm"),
+            "Word Data": (("marvelData", "data", "word.data"), "1SN8fr2isJ4FtmvYVvBrO67TB-POmc2ta"),
+            "Words Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "Clause Data": (("marvelData", "data", "clause.data"), "19LQlHw9c3V64AWZMr2_70loXfvNNN3JY"),
+            "Translation Data": (("marvelData", "data", "translation.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "Discourse Data": (("marvelData", "data", "discourse.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "TDW Combo Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+        }
+        items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(*datasets[dataset][0]))]
+        if not items:
+            items = ["[All Installed]"]
+        item, ok = QInputDialog.getItem(self, "Install Marvel.bible Datasets",
+                "Available Modules:", items, 0, False)
+        if ok and item and not item == "[All Installed]":
+            self.downloadHelper(datasets[item])
 
     # Open text on studyView
     def openTextOnStudyView(self, text):
