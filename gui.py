@@ -1,7 +1,7 @@
-import os, sys, re, config, webbrowser, platform, subprocess
+import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QTextEdit)
+from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -66,6 +66,10 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setFocus()
             return True
         return QWidget.event(self, event)
+
+    def downloadHelper(self, databaseInfo):
+        self.downloader = Downloader(self, databaseInfo)
+        self.downloader.show()
 
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser(config.parserStandarisation)
@@ -1045,13 +1049,13 @@ class CentralWidget(QWidget):
         self.parent = parent
         self.layout = QGridLayout()
 
-        self.html = "<h1>UniqueBible.app</h1><p>UniqueBible.app</p>"
+        self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Main Window</b>'.</p>"
         self.mainView = WebEngineView(self, "main")
         self.mainView.setHtml(self.html, baseUrl)
         self.studyView = WebEngineView(self, "study")
-        self.studyView.setHtml("Study View", baseUrl)
+        self.studyView.setHtml("This is '<b>Secondary Window</b>'.", baseUrl)
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<u><b>Lightning Features</b></u><br>This small window is designed for viewing instant information, with mouse hovering over verse numbers, special words and links.", baseUrl)
+        self.instantView.setHtml("<u><b>Lightning Window</b></u><br>This small window is designed for viewing instant information, with mouse hovering over verse numbers, special words and links.", baseUrl)
 
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
@@ -1273,6 +1277,7 @@ class WebEngineView(QWebEngineView):
 
 
 class WebEngineViewPopover(QWebEngineView):
+
     def __init__(self, parent, name, source):
         super().__init__()
         self.parent = parent
@@ -1806,3 +1811,57 @@ class NoteEditor(QWidget):
                 hyperlink)
         if ok and text != '':
             self.addHyperlink(text)
+
+
+class Downloader(QDialog):
+
+    def __init__(self, parent, databaseInfo):
+        super().__init__()
+        self.parent = parent
+        self.setWindowTitle("Download Helper")
+        self.setModal(True)
+        
+        fileItems, cloudID = databaseInfo
+        self.cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
+        self.localFile = "{0}.zip".format(os.path.join(*fileItems))
+        self.filename = fileItems[-1]
+        
+        self.setupLayout()
+
+    def setupLayout(self):
+
+        #self.setupProgressBar()
+
+        message = QLabel("File '{0}' is required for running the feature you selected.".format(self.filename))
+
+        downloadButton = QPushButton("Download + Install")
+        downloadButton.clicked.connect(self.downloadFile)
+        
+        cancelButton = QPushButton("Cancel")
+        cancelButton.clicked.connect(self.close)
+
+        remarks = QLabel("Remarks: Larger files takes longer time to be downloaded.")
+
+        self.layout = QGridLayout()
+        #self.layout.addWidget(self.progressBar, 0, 0)
+        self.layout.addWidget(message, 0, 0)
+        self.layout.addWidget(downloadButton, 1, 0)
+        self.layout.addWidget(cancelButton, 2, 0)
+        self.layout.addWidget(remarks, 3, 0)
+        self.setLayout(self.layout)
+
+    def setupProgressBar(self):
+        self.progressBar = QProgressBar()
+        self.progressBar.setMinimum(0)
+        self.progressBar.setMaximum(100)
+        self.progressBar.setValue(0)
+
+    def downloadFile(self):
+        gdown.download(self.cloudFile, self.localFile, quiet=True)
+        if self.localFile.endswith(".zip"):
+            zip = zipfile.ZipFile(self.localFile, "r")
+            path, *_ = os.path.split(self.localFile)
+            zip.extractall(path)
+            zip.close()
+            os.remove(self.localFile)
+        self.close()

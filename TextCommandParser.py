@@ -77,22 +77,117 @@ class TextCommandParser:
         commandList = self.splitCommand(textCommad)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
-            return self.textBibleVerseParser(textCommad, viewText, source)
-        else:
-            resourceType = commandList[0].lower()
-            command = commandList[1]
-            if resourceType in interpreters:
-                return interpreters[resourceType](command, source)
+            if self.isDatabaseInstalled("bible"):
+                return self.textBibleVerseParser(textCommad, viewText, source)
             else:
-                return self.textBibleVerseParser(textCommad, viewText, source)        
+                return self.databaseNotInstalled("bible")
+        else:
+            keyword, command = commandList
+            keyword = keyword.lower()
+            if keyword in interpreters:
+                if self.isDatabaseInstalled(keyword):
+                    return interpreters[keyword](command, source)
+                else:
+                    return self.databaseNotInstalled(keyword)
+            else:
+                if self.isDatabaseInstalled("bible"):
+                    return self.textBibleVerseParser(textCommad, viewText, source)
+                else:
+                    return self.databaseNotInstalled("bible")
 
     # check if a particular database is installed
-    def isDatabaseInstalled(self, file):
-        if os.path.isfile(file):
-            return True
+    def databaseInfo(self):
+        return {
+            "_menu": self.getCoreBiblesInfo(),
+            "_instantverse": self.getCoreBiblesInfo(),
+            "_instantword": self.getCoreBiblesInfo(),
+            "_bibleinfo": self.getCoreBiblesInfo(),
+            "main": self.getCoreBiblesInfo(),
+            "study": self.getCoreBiblesInfo(),
+            "bible": self.getCoreBiblesInfo(),
+            "text": self.getCoreBiblesInfo(),
+            "compare": self.getCoreBiblesInfo(),
+            "parallel": self.getCoreBiblesInfo(),
+            "search": self.getCoreBiblesInfo(),
+            "showsearch": self.getCoreBiblesInfo(),
+            "advancedsearch": self.getCoreBiblesInfo(),
+            "andsearch": self.getCoreBiblesInfo(),
+            "orsearch": self.getCoreBiblesInfo(),
+            "isearch": self.getCoreBiblesInfo(),
+            "andisearch": self.getCoreBiblesInfo(),
+            "orisearch": self.getCoreBiblesInfo(),
+            "showisearch": self.getCoreBiblesInfo(),
+            "advancedisearch": self.getCoreBiblesInfo(),
+            "lemma": self.getCoreBiblesInfo(),
+            "morphologycode": self.getCoreBiblesInfo(),
+            "morphology": self.getCoreBiblesInfo(),
+            "searchmorphology": self.getCoreBiblesInfo(),
+            "_commentary": self.getLastCommentaryInfo(),
+            "commentary": self.getLastCommentaryInfo(),
+            "_openchapternote": self.getBibleNoteInfo(),
+            "_openversenote": self.getBibleNoteInfo(),
+            "_editchapternote": self.getBibleNoteInfo(),
+            "_editversenote": self.getBibleNoteInfo(),
+            "searchchapternote": self.getBibleNoteInfo(),
+            "searchversenote": self.getBibleNoteInfo(),
+            "_book": self.getBookInfo(),
+            "book": self.getBookInfo(),
+            "searchbook": self.getBookInfo(),
+            "crossreference": self.getXRefInfo(),
+            "tske": self.getXRefInfo(),
+            "_image": (("marvelData", "images.sqlite"), "1_fo1CzhzT6h0fEHS_6R0JGDjf9uLJd3r"),
+            "index": (("marvelData", "indexes.sqlite"), "1Fdq3C9hyoyBX7riniByyZdW9mMoMe6EX"),
+            "searchtool": (("marvelData", "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
+            "word": (("marvelData", "data", "word.data"), "1SN8fr2isJ4FtmvYVvBrO67TB-POmc2ta"),
+            "clause": (("marvelData", "data", "clause.data"), "19LQlHw9c3V64AWZMr2_70loXfvNNN3JY"),
+            "translation": (("marvelData", "data", "translation.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "discourse": (("marvelData", "data", "discourse.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "words": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "combo": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "lexicon": (("marvelData", "data", "lexicon.data"), "1GFNnI1PtmPGhoEy6jfBP5U2Gi17Zr6fs"),
+            "exlb": (("marvelData", "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
+            "dictionary": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
+            "encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
+        }
+
+    def getCoreBiblesInfo(self):
+        return (("marvelData", "bibles.sqlite"), "1YVDnZjYT8rRhRudXYHOClsSY9s0sztBt")
+
+    def getBibleNoteInfo(self):
+        return (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
+
+    def getBookInfo(self):
+        return (("marvelData", "data", "book.data"), "1Oc5kt9V_zq-RgEwY-E_eQVVPoaqJujGm")
+
+    def getXRefInfo(self):
+        return (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My")
+
+    def getLastCommentaryInfo(self):
+        return (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
+
+    def getCommentaryCloudID(self, commentary):
+        cloudIDs = {
+            "CBSC": "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6",
+        }
+        if commentary in cloudIDs:
+            return cloudIDs[commentary]
         else:
-            self.parent.mainPage.runJavaScript("alert('Database required for this feature is not installed.')")
-            return False
+            return ""
+
+    def isDatabaseInstalled(self, keyword):
+        if keyword in self.databaseInfo():
+            fileItems = self.databaseInfo()[keyword][0]
+            if os.path.isfile(os.path.join(*fileItems)):
+                return True
+            else:
+                return False
+        else:
+            return True
+
+    def databaseNotInstalled(self, keyword):
+        databaseInfo = self.databaseInfo()[keyword]
+        self.parent.downloadHelper(databaseInfo)
+        return ("", "")
 
     # return invalid command
     def invalidCommand(self, source="main"):
