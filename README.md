@@ -37,6 +37,8 @@ Github has restrictions on upload size.  For this reason, full set of database f
 
 To run UniqueBible.app and its features, several database files are required.  "Download Helper" comes up automatically, when a file is needed for running a particaular feature in UniqueBible.app.
 
+<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 246MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
+
 # Screenshot:
 
 <img src="screenshot.png">
