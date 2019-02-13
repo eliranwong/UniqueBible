@@ -167,7 +167,36 @@ class TextCommandParser:
 
     def getCommentaryCloudID(self, commentary):
         cloudIDs = {
-            "CBSC": "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6",
+            "cBarnes": "13uxButnFH2NRUV-YuyRZYCeh1GzWqO5J",
+            "cBenson": "1MSRUHGDilogk7_iZHVH5GWkPyf8edgjr",
+            "cBI": "1DUATP_0M7SwBqsjf20YvUDblg3_sOt2F",
+            "cBrooks": "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm",
+            "cCalvin": "1FUZGK9n54aXvqMAi3-2OZDtRSz9iZh-j",
+            "cCBSC": "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6",
+            "cCECNT": "1MpBx7z6xyJYISpW_7Dq-Uwv0rP8_Mi-r",
+            "cCGrk": "1Jf51O0R911Il0V_SlacLQDNPaRjumsbD",
+            "cCHP": "1dygf2mz6KN_ryDziNJEu47-OhH8jK_ff",
+            "cClarke": "1ZVpLAnlSmBaT10e5O7pljfziLUpyU4Dq",
+            "cCPBST": "14zueTf0ioI-AKRo_8GK8PDRKael_kB1U",
+            "cEBC": "1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r",
+            "cECER": "1sCJc5xuxqDDlmgSn2SFWTRbXnHSKXeh_",
+            "cEGNT": "1ZvbWnuy2wwllt-s56FUfB2bS2_rZoiPx",
+            "cGCT": "1vK53UO2rggdcfcDjH6mWXAdYti4UbzUt",
+            "cGill": "1O5jnHLsmoobkCypy9zJC-Sw_Ob-3pQ2t",
+            "cHenry": "1m-8cM8uZPN-fLVcC-a9mhL3VXoYJ5Ku9",
+            "cHH": "1RwKN1igd1RbN7phiJDiLPhqLXdgOR0Ms",
+            "cICCNT": "1QxrzeeZYc0-GNwqwdDe91H4j1hGSOG6t",
+            "cJFB": "1NT02QxoLeY3Cj0uA_5142P5s64RkRlpO",
+            "cKD": "1rFFDrdDMjImEwXkHkbh7-vX3g4kKUuGV",
+            "cLange": "1_PrTT71aQN5LJhbwabx-kjrA0vg-nvYY",
+            "cMacL": "1p32F9MmQ2wigtUMdCU-biSrRZWrFLWJR",
+            "cPHC": "1xTkY_YFyasN7Ks9me3uED1HpQnuYI8BW",
+            "cPulpit": "1briSh0oDhUX7QnW1g9oM3c4VWiThkWBG",
+            "cRob": "17VfPe4wsnEzSbxL5Madcyi_ubu3iYVkx",
+            "cSpur": "1OVsqgHVAc_9wJBCcz6PjsNK5v9GfeNwp",
+            "cVincent": "1ZZNnCo5cSfUzjdEaEvZ8TcbYa4OKUsox",
+            "cWesley": "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5",
+            "cWhedon": "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9",
         }
         if commentary in cloudIDs:
             return cloudIDs[commentary]

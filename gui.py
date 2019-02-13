@@ -162,7 +162,8 @@ class MainWindow(QMainWindow):
         menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
 
         menu9 = self.menuBar().addMenu("&Resources")
-        menu9.addAction(QAction("&Import Formatted Bibles", self, triggered=self.installMarvelBibles))
+        menu9.addAction(QAction("&Install Formatted Bibles", self, triggered=self.installMarvelBibles))
+        menu9.addAction(QAction("&Install Bible Commentaries", self, triggered=self.installMarvelCommentaries))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
         menu9.addSeparator()
@@ -396,7 +397,36 @@ class MainWindow(QMainWindow):
 
     def installMarvelCommentaries(self):
         commentaries = {
+            "Notes on the Old and New Testaments (Barnes) [26 vol.]": (("marvelData", "commentaries", "cBarnes.commentary"), "13uxButnFH2NRUV-YuyRZYCeh1GzWqO5J"),
+            "Commentary on the Old and New Testaments (Benson) [5 vol.]": (("marvelData", "commentaries", "cBenson.commentary"), "1MSRUHGDilogk7_iZHVH5GWkPyf8edgjr"),
+            "Biblical Illustrator (Exell) [58 vol.]": (("marvelData", "commentaries", "cBI.commentary"), "1DUATP_0M7SwBqsjf20YvUDblg3_sOt2F"),
+            "Complete Summary of the Bible (Brooks) [2 vol.]": (("marvelData", "commentaries", "cBrooks.commentary"), "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm"),
+            "John Calvin's Commentaries (Calvin) [22 vol.]": (("marvelData", "commentaries", "cCalvin.commentary"), "1FUZGK9n54aXvqMAi3-2OZDtRSz9iZh-j"),
             "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]": (("marvelData", "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
+            "Critical And Exegetical Commentary on the NT (Meyer) [20 vol.]": (("marvelData", "commentaries", "cCECNT.commentary"), "1MpBx7z6xyJYISpW_7Dq-Uwv0rP8_Mi-r"),
+            "Cambridge Greek Testament for Schools and Colleges (Cambridge) [21 vol.]": (("marvelData", "commentaries", "cCGrk.commentary"), "1Jf51O0R911Il0V_SlacLQDNPaRjumsbD"),
+            "Church Pulpit Commentary (Nisbet) [12 vol.]": (("marvelData", "commentaries", "cCHP.commentary"), "1dygf2mz6KN_ryDziNJEu47-OhH8jK_ff"),
+            "Commentary on the Bible (Clarke) [6 vol.]": (("marvelData", "commentaries", "cClarke.commentary"), "1ZVpLAnlSmBaT10e5O7pljfziLUpyU4Dq"),
+            "College Press Bible Study Textbook Series (College) [59 vol.]": (("marvelData", "commentaries", "cCPBST.commentary"), "14zueTf0ioI-AKRo_8GK8PDRKael_kB1U"),
+            "Expositor's Bible Commentary (Nicoll) [49 vol.]": (("marvelData", "commentaries", "cEBC.commentary"), "1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r"),
+            "Commentary for English Readers (Ellicott) [8 vol.]": (("marvelData", "commentaries", "cECER.commentary"), "1sCJc5xuxqDDlmgSn2SFWTRbXnHSKXeh_"),
+            "Expositor's Greek New Testament (Nicoll) [5 vol.]": (("marvelData", "commentaries", "cEGNT.commentary"), "1ZvbWnuy2wwllt-s56FUfB2bS2_rZoiPx"),
+            "Greek Testament Commentary (Alford) [4 vol.]": (("marvelData", "commentaries", "cGCT.commentary"), "1vK53UO2rggdcfcDjH6mWXAdYti4UbzUt"),
+            "Exposition of the Entire Bible (Gill) [9 vol.]": (("marvelData", "commentaries", "cGill.commentary"), "1O5jnHLsmoobkCypy9zJC-Sw_Ob-3pQ2t"),
+            "Exposition of the Old and New Testaments (Henry) [6 vol.]": (("marvelData", "commentaries", "cHenry.commentary"), "1m-8cM8uZPN-fLVcC-a9mhL3VXoYJ5Ku9"),
+            "Horæ Homileticæ (Simeon) [21 vol.]": (("marvelData", "commentaries", "cHH.commentary"), "1RwKN1igd1RbN7phiJDiLPhqLXdgOR0Ms"),
+            "International Critical Commentary, NT (1896-1929) [16 vol.]": (("marvelData", "commentaries", "cICCNT.commentary"), "1QxrzeeZYc0-GNwqwdDe91H4j1hGSOG6t"),
+            "Jamieson, Fausset, and Brown Commentary (JFB) [6 vol.]": (("marvelData", "commentaries", "cJFB.commentary"), "1NT02QxoLeY3Cj0uA_5142P5s64RkRlpO"),
+            "Commentary on the Old Testament (Keil & Delitzsch) [10 vol.]": (("marvelData", "commentaries", "cKD.commentary"), "1rFFDrdDMjImEwXkHkbh7-vX3g4kKUuGV"),
+            "Commentary on the Holy Scriptures: Critical, Doctrinal, and Homiletical (Lange) [25 vol.]": (("marvelData", "commentaries", "cLange.commentary"), "1_PrTT71aQN5LJhbwabx-kjrA0vg-nvYY"),
+            "Expositions of Holy Scripture (MacLaren) [32 vol.]": (("marvelData", "commentaries", "cMacL.commentary"), "1p32F9MmQ2wigtUMdCU-biSrRZWrFLWJR"),
+            "Preacher's Complete Homiletical Commentary (Exell) [37 vol.]": (("marvelData", "commentaries", "cPHC.commentary"), "1xTkY_YFyasN7Ks9me3uED1HpQnuYI8BW"),
+            "Pulpit Commentary (Spence) [23 vol.]": (("marvelData", "commentaries", "cPulpit.commentary"), "1briSh0oDhUX7QnW1g9oM3c4VWiThkWBG"),
+            "Word Pictures in the New Testament (Robertson) [6 vol.]": (("marvelData", "commentaries", "cRob.commentary"), "17VfPe4wsnEzSbxL5Madcyi_ubu3iYVkx"),
+            "Spurgeon's Expositions on the Bible (Spurgeon) [3 vol.]": (("marvelData", "commentaries", "cSpur.commentary"), "1OVsqgHVAc_9wJBCcz6PjsNK5v9GfeNwp"),
+            "Word Studies in the New Testament (Vincent) [4 vol.]": (("marvelData", "commentaries", "cVincent.commentary"), "1ZZNnCo5cSfUzjdEaEvZ8TcbYa4OKUsox"),
+            "John Wesley's Notes on the Whole Bible (Wesley) [3 vol.]": (("marvelData", "commentaries", "cWesley.commentary"), "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5"),
+            "Commentary on the Old and New Testaments (Whedon) [14 vol.]": (("marvelData", "commentaries", "cWhedon.commentary"), "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9"),
         }
         items = [commentary for commentary in commentaries.keys() if not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
         if not items:
@@ -404,7 +434,7 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
                 "Available Modules:", items, 0, False)
         if ok and item and not item == "All Installed":
-            self.downloadHelper(bibles[item])
+            self.downloadHelper(commentaries[item])
 
     # Open text on studyView
     def openTextOnStudyView(self, text):
