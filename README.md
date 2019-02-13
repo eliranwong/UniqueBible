@@ -52,8 +52,8 @@ Currently, we support the following modules:
 
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
 
-Users need to download 3rd party modules separately.
-Built-in converter can be accessed via our menu bar:
+Users need to download 3rd party modules separately.<br>
+Built-in converter can be accessed via our menu bar:<br>
 Go to menu "Resources" > "Import 3rd Party Modules"
 
 # Donations:
