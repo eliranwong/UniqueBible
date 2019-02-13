@@ -332,6 +332,10 @@ class TextCommandParser:
                 "MIB": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
                 "MPB": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
                 "MTB": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
+                "LXX1": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
+                "LXX2": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
+                "LXX1i": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
+                "LXX2i": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
             }
             text = texts[0]
             if text in marvelBibles:
