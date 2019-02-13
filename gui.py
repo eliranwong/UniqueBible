@@ -162,6 +162,8 @@ class MainWindow(QMainWindow):
         menu7.addAction(QAction("&Paste from Clipboard", self, shortcut = "Ctrl+^", triggered=self.pasteFromClipboard))
 
         menu9 = self.menuBar().addMenu("&Resources")
+        menu9.addAction(QAction("&Import Formatted Bibles", self, triggered=self.installMarvelBibles))
+        menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
         menu9.addSeparator()
         menu9.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
@@ -359,6 +361,50 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addWidget(instantButton)
 
         self.secondToolBar.addSeparator()
+
+    # install marvel data
+    def installMarvelBibles(self):
+        bibles = {
+            "American Standard Version": (("marvelData", "bibles", "ASV.bible"), "1psDvIqtxjaE0ax0ewyPIF-ueah1I8RG1"),
+            "Berean Study Bible": (("marvelData", "bibles", "BSB.bible"), "1dVnS6sFqxVSUAZZXwCUhecK2gy7T5Ung"),
+            "Chinese Union Version (Traditional Chinese)": (("marvelData", "bibles", "CUV.bible"), "1m1ml4xt2zjFoY5CQ6rmqXhvLzP6uq-mg"),
+            "Chinese Union Version (Simplified Chinese)": (("marvelData", "bibles", "CUVs.bible"), "1feAuYDpbw_wDgFecyfg4lycpiIJhchEE"),
+            "International Standard Version": (("marvelData", "bibles", "ISV.bible"), "141o3qUOOeDLh0T5QDTbDynn86CDqkRG3"),
+            "King James Version": (("marvelData", "bibles", "KJV.bible"), "1Nd3cPu43tOUzIXgpCG_IrR6spAgt9PIQ"),
+            "Lexhame English Bible": (("marvelData", "bibles", "LEB.bible"), "1gN3HOe57EdsSTbZ3qeUlwj9lrMw2ZBy6"),
+            "Septuagint / LXX [main]": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
+            "Septuagint / LXX [alternate]": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
+            "Septuagint / LXX interlinear [main]": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
+            "Septuagint / LXX interlinear [alternate]": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
+            "Marvel Original Bible": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
+            "Marvel Annotated Bible": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
+            "Marvel Interlinear Bible": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
+            "Marvel Parallel Bible": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
+            "Marvel Trilingual Bible": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
+            "New English Translation": (("marvelData", "bibles", "NET.bible"), "10FcyT81ZCci7VEB4_ejUn6u2hDkHmfuA"),
+            "unfoldingWord Literal Text": (("marvelData", "bibles", "ULT.bible"), "1i6upSEbtskX6P-hplZHa91EW8XU1yFPR"),
+            "unfoldingWord Simplified Text": (("marvelData", "bibles", "UST.bible"), "1TPUIiCHefsDO2nuTW_Dr6GeeQbdJQOrJ"),
+            "World English Bible": (("marvelData", "bibles", "WEB.bible"), "1QiA9NjTK5TLpbft3zaLnkKHjRHjDFGy5"),
+        }
+        items = [bible for bible in bibles.keys() if not os.path.isfile(os.path.join(*bibles[bible][0]))]
+        if not items:
+            items = ["All Installed"]
+        item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
+                "Available Modules:", items, 0, False)
+        if ok and item and not item == "All Installed":
+            self.downloadHelper(bibles[item])
+
+    def installMarvelCommentaries(self):
+        commentaries = {
+            "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]": (("marvelData", "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
+        }
+        items = [commentary for commentary in commentaries.keys() if not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
+        if not items:
+            items = ["All Installed"]
+        item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
+                "Available Modules:", items, 0, False)
+        if ok and item and not item == "All Installed":
+            self.downloadHelper(bibles[item])
 
     # Open text on studyView
     def openTextOnStudyView(self, text):
