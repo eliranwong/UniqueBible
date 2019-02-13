@@ -14,7 +14,7 @@ Install python (version 3.6+)
 # Install Dependencies
 
 pip3 install PySide2
-<br>(PySide2 is required for graphical user interface for UniqueBible.app.)
+<br>(PySide2 is required for graphical user interface, used by UniqueBible.app.)
 
 pip3 install PyPDF2
 <br>(PyPDF2 is required for reading text from *.pdf documents.)
@@ -40,3 +40,9 @@ To run UniqueBible.app and its features, several database files are required.  "
 # Screenshot:
 
 <img src="screenshot.png">
+
+# Donations:
+
+Please consider a donation via our PayPal account:
+<a href="https://www.paypal.me/MarvelBible">https://www.paypal.me/MarvelBible</a>
+
