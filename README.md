@@ -14,11 +14,13 @@ Install python (version 3.6+)
 # Install Dependencies
 
 pip3 install PySide2
+<br>(PySide2 is required for graphical user interface for UniqueBible.app.)
 
 pip3 install PyPDF2
+<br>(PyPDF2 is required for reading text from *.pdf documents.)
 
 pip3 install python-docx
-<br>(python-docx is required for reading *.doxc documents.)
+<br>(python-docx is required for reading text from *.docx documents.)
 
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
@@ -32,7 +34,8 @@ python3 main.py
 All codes for running the app is shared in this repository.
 
 Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
-Please contact Eliran Wong for further information if you are interested.
+
+To run UniqueBible.app and its features, several database files are required.  "Download Helper" comes up automatically, when a file is needed for running a particaular feature in UniqueBible.app.
 
 # Screenshot:
 
