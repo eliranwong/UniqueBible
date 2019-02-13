@@ -326,7 +326,24 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(references, texts[0], source)
+            marvelBibles = {
+                "MOB": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
+                "MAB": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
+                "MIB": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
+                "MPB": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
+                "MTB": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
+            }
+            text = texts[0]
+            if text in marvelBibles:
+                fileItems = marvelBibles[text][0]
+                if os.path.isfile(os.path.join(*fileItems)):
+                    return self.textBibleVerseParser(references, text, source)
+                else:
+                    databaseInfo = marvelBibles[text]
+                    self.parent.downloadHelper(databaseInfo)
+                    return ("", "")
+            else:
+                return self.textBibleVerseParser(references, text, source)
 
     # TEXT:::
     def textText(self, command, source):
