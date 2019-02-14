@@ -163,8 +163,6 @@ class TextCommandParser:
         return (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My")
 
     def getLastCommentaryInfo(self):
-        test = (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
-        print (test)
         return (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
 
     def getCommentaryCloudID(self, commentary):
@@ -307,7 +305,8 @@ class TextCommandParser:
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
-        if text in formattedBibles:
+        marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
+        if text in formattedBibles and text not in marvelBibles and config.readFormattedBibles:
             bibleSqlite = Bible(text)
             chapter = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite

@@ -92,10 +92,12 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
+        menu3.addAction(QAction("Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.displayBiblesInParagraphs))
+        menu3.addSeparator()
         menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, triggered=self.hideShowToolBar))
         menu3.addAction(QAction("&Action Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Secondary Window [Hide / Resize]", self, shortcut = "Ctrl+P", triggered=self.parallel))
+        menu3.addAction(QAction("Secon&dary Window [Hide / Resize]", self, shortcut = "Ctrl+D", triggered=self.parallel))
         menu3.addAction(QAction("Li&ghtning Window [Hide / Show]", self, shortcut = "Ctrl+G", triggered=self.instant))
         menu3.addSeparator()
         menu3.addAction(QAction("L&ightning [On / Off]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
@@ -890,6 +892,14 @@ class MainWindow(QMainWindow):
         self.centralWidget.layout.setColumnStretch(0, ratio[0])
         self.centralWidget.layout.setColumnStretch(1, ratio[1])
 
+    # Action - display bibles in paragraphs / verses
+    def displayBiblesInParagraphs(self):
+        if config.readFormattedBibles:
+            config.readFormattedBibles = False
+        else:
+            config.readFormattedBibles = True
+        self.reloadCurrentRecord()
+    
     # Actions - enable or disable lightning feature
     def enableLightning(self):
         config.instantInformationEnabled = 1
