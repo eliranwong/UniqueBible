@@ -317,6 +317,19 @@ class TextCommandParser:
         return chapter
 
     # functions about bible
+    def getMarvelBibles(self):
+        return {
+            "MOB": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
+            "MAB": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
+            "MIB": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
+            "MPB": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
+            "MTB": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
+            "LXX1": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
+            "LXX2": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
+            "LXX1i": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
+            "LXX2i": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
+        }
+
     # BIBLE:::
     def textBible(self, command, source):
         if command.count(":::") == 0:
@@ -327,17 +340,7 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
-            marvelBibles = {
-                "MOB": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
-                "MAB": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
-                "MIB": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
-                "MPB": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
-                "MTB": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
-                "LXX1": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
-                "LXX2": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
-                "LXX1i": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
-                "LXX2i": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
-            }
+            marvelBibles = self.getMarvelBibles()
             text = texts[0]
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
@@ -356,8 +359,20 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
-            updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
-            return self.textBibleVerseParser(viewReference, texts[0], source)
+            marvelBibles = self.getMarvelBibles()
+            text = texts[0]
+            if text in marvelBibles:
+                fileItems = marvelBibles[text][0]
+                if os.path.isfile(os.path.join(*fileItems)):
+                    updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
+                    return self.textBibleVerseParser(viewReference, texts[0], source)
+                else:
+                    databaseInfo = marvelBibles[text]
+                    self.parent.downloadHelper(databaseInfo)
+                    return ("", "")
+            else:
+                updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
+                return self.textBibleVerseParser(viewReference, texts[0], source)
 
     # MAIN:::
     def textMain(self, command, source):
@@ -377,7 +392,18 @@ class TextCommandParser:
         if not texts:
             return self.invalidCommand()
         else:
-            return self.textBibleVerseParser(references, texts[0], target)
+            marvelBibles = self.getMarvelBibles()
+            text = texts[0]
+            if text in marvelBibles:
+                fileItems = marvelBibles[text][0]
+                if os.path.isfile(os.path.join(*fileItems)):
+                    return self.textBibleVerseParser(references, texts[0], target)
+                else:
+                    databaseInfo = marvelBibles[text]
+                    self.parent.downloadHelper(databaseInfo)
+                    return ("", "")
+            else:
+                return self.textBibleVerseParser(references, texts[0], target)
 
     # COMPARE:::
     def textCompare(self, command, source):
@@ -411,9 +437,16 @@ class TextCommandParser:
         if not confirmedTexts:
             return self.invalidCommand()
         else:
-            tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
-            versions, verses = zip(*tableList)
-            return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+            marvelBibles = self.getMarvelBibles()
+            missingMarvelTexts = [text for text in confirmedTexts if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0]))]
+            if missingMarvelTexts:
+                databaseInfo = marvelBibles[missingMarvelTexts[0]]
+                self.parent.downloadHelper(databaseInfo)
+                return ("", "")
+            else:
+                tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
+                versions, verses = zip(*tableList)
+                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
     # _biblenote:::
     def textBiblenote(self, command, source):

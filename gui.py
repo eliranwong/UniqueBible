@@ -19,16 +19,16 @@ class MainWindow(QMainWindow):
         self.textCommandParser = TextCommandParser(self)
 
         self.setWindowTitle('Unique Bible App')
-        
+
         appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
-        
+
         self.create_menu()
         self.setupToolBar()
         self.setupSecondToolBar()
         self.setupBaseUrl()
-        
+
         self.centralWidget = CentralWidget(self)
         self.mainView = self.centralWidget.mainView
         self.mainPage = self.mainView.page()
@@ -52,9 +52,9 @@ class MainWindow(QMainWindow):
 
         self.openFileNameLabel = QLabel()
         self.openFileNameLabel.setFrameStyle(frameStyle)
-        
+
         self.openFilesPath = ""
-        
+
         self.directoryLabel = QLabel()
         self.directoryLabel.setFrameStyle(frameStyle)
 
@@ -82,12 +82,12 @@ class MainWindow(QMainWindow):
         return verseReference
 
     def create_menu(self):
-        
+
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
         quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
-        
+
         menu2 = self.menuBar().addMenu("&View")
         menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
         menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow):
 
     def setupSecondToolBar(self):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
-        
+
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Special Features")
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -835,7 +835,7 @@ class MainWindow(QMainWindow):
 
     def openBibleBento(self):
         webbrowser.open("https://biblebento.com")
-        
+
     def openOpenGNT(self):
         webbrowser.open("https://opengnt.com")
 
@@ -903,7 +903,7 @@ class MainWindow(QMainWindow):
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(0, ratio[0])
         self.centralWidget.layout.setColumnStretch(1, ratio[1])
-    
+
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:
@@ -1010,7 +1010,7 @@ class MainWindow(QMainWindow):
         if view == "main":
             self.textCommandLineEdit.setText(textCommand)
         self.runTextCommand(textCommand, False, view)
-    
+
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
         if not mainCurrentRecord == 0:
@@ -1240,7 +1240,7 @@ class WebEngineView(QWebEngineView):
         copyText.setText("Copy")
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
-        
+
         self.searchText = QAction(self)
         self.searchText.setText("Search")
         self.searchText.triggered.connect(self.searchSelectedText)
@@ -1300,6 +1300,11 @@ class WebEngineView(QWebEngineView):
         searchBibleReferences.setText("Extract All Bible References")
         searchBibleReferences.triggered.connect(self.extractAllReferences)
         self.addAction(searchBibleReferences)
+
+        runAsCommandLine = QAction(self)
+        runAsCommandLine.setText("Run as Command")
+        runAsCommandLine.triggered.connect(self.runAsCommand)
+        self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
         self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
@@ -1389,6 +1394,10 @@ class WebEngineView(QWebEngineView):
             del biblesSqlite
             self.openPopover(html=verses)
 
+    def runAsCommand(self):
+        selectedText = self.selectedText()
+        self.parent.parent.textCommandChanged(selectedText, "main")
+
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:
             self.openPopover()
@@ -1436,13 +1445,13 @@ class NoteEditor(QWidget):
         self.setupMenuBar()
         self.setupToolBar()
         self.setupLayout()
-        
+
         # display content when first launched
         self.displayInitialContent()
 
         # specify window title
         self.updateWindowTitle()
-        
+
         #self.close.connect(self.closingEditor)
 
     # re-implementing close event, when users close this widget
@@ -1945,12 +1954,12 @@ class Downloader(QDialog):
         self.parent = parent
         self.setWindowTitle("Download Helper")
         self.setModal(True)
-        
+
         fileItems, cloudID = databaseInfo
         self.cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         self.localFile = "{0}.zip".format(os.path.join(*fileItems))
         self.filename = fileItems[-1]
-        
+
         self.setupLayout()
 
     def setupLayout(self):
@@ -1961,7 +1970,7 @@ class Downloader(QDialog):
 
         downloadButton = QPushButton("Download + Install")
         downloadButton.clicked.connect(self.downloadFile)
-        
+
         cancelButton = QPushButton("Cancel")
         cancelButton.clicked.connect(self.close)
 
