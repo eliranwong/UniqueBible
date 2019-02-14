@@ -1945,7 +1945,7 @@ class Downloader(QDialog):
         cancelButton = QPushButton("Cancel")
         cancelButton.clicked.connect(self.close)
 
-        remarks = QLabel("Remarks: Larger files takes longer time to be downloaded.")
+        remarks = QLabel("Remarks: Larger files take longer time to be downloaded.")
 
         self.layout = QGridLayout()
         #self.layout.addWidget(self.progressBar, 0, 0)
