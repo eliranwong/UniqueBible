@@ -282,10 +282,11 @@ class LexiconData:
                 imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
                 if imageList:
                     imageSqlite = ImageSqlite()
-                    for (module, entry) in imageList:
-                        imageSqlite.exportImage(module, entry)
+                    for (imgModule, imgEntry) in imageList:
+                        imageSqlite.exportImage(imgModule, imgEntry)
                     del imageSqlite
                 contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+                contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
                 return contentText
         else:
             return "INVALID_COMMAND_ENTERED"
@@ -309,10 +310,22 @@ class DictionaryData:
         if not content:
             return "[not found]"
         else:
+            contentText = content[0]
+
+            # deal with images
+            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            if imageList:
+                imageSqlite = ImageSqlite()
+                for (imgModule, imgEntry) in imageList:
+                    imageSqlite.exportImage(imgModule, imgEntry)
+                del imageSqlite
+            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+
             abb = entry[:3]
             moduleName = dict(IndexesSqlite().dictionaryList)[abb]
             searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(abb)
-            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, content[0])
+            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, contentText)
 
 
 class EncyclopediaData:
@@ -333,9 +346,21 @@ class EncyclopediaData:
         if not content:
             return "[not found]"
         else:
+            contentText = content[0]
+
+            # deal with images
+            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            if imageList:
+                imageSqlite = ImageSqlite()
+                for (imgModule, imgEntry) in imageList:
+                    imageSqlite.exportImage(imgModule, imgEntry)
+                del imageSqlite
+            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+
             moduleName = dict(IndexesSqlite().encyclopediaList)[module]
             searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
-            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, content[0])
+            return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, contentText)
 
 
 class WordData:
