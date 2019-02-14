@@ -71,6 +71,10 @@ class MainWindow(QMainWindow):
         self.downloader = Downloader(self, databaseInfo)
         self.downloader.show()
 
+    def moduleInstalled(self, file):
+        self.downloader.close()
+        self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", file))
+
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser(config.parserStandarisation)
         verseReference = parser.bcvToVerseReference(b, c, v)
@@ -103,7 +107,7 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
         menu3.addSeparator()
-        menu3.addAction(QAction("Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu3.addAction(QAction("&Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
 
         menu8 = self.menuBar().addMenu("&History")
         menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -1961,7 +1965,7 @@ class Downloader(QDialog):
         cancelButton = QPushButton("Cancel")
         cancelButton.clicked.connect(self.close)
 
-        remarks = QLabel("Remarks: Larger files take longer time to be downloaded.")
+        remarks = QLabel("Remarks: It takes time for large files to be downloaded.")
 
         self.layout = QGridLayout()
         #self.layout.addWidget(self.progressBar, 0, 0)
@@ -1985,4 +1989,4 @@ class Downloader(QDialog):
             zip.extractall(path)
             zip.close()
             os.remove(self.localFile)
-        self.close()
+        self.parent.moduleInstalled(self.filename)
