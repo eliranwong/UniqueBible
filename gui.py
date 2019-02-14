@@ -92,8 +92,6 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
-        menu3.addAction(QAction("Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.displayBiblesInParagraphs))
-        menu3.addSeparator()
         menu3.addAction(QAction("&Main Toolbar [Hide / Show]", self, triggered=self.hideShowToolBar))
         menu3.addAction(QAction("&Action Toolbar [Hide / Show]", self, triggered=self.hideShowSecondToolBar))
         menu3.addSeparator()
@@ -104,6 +102,8 @@ class MainWindow(QMainWindow):
         menu3.addSeparator()
         menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
+        menu3.addSeparator()
+        menu3.addAction(QAction("Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
 
         menu8 = self.menuBar().addMenu("&History")
         menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -278,6 +278,14 @@ class MainWindow(QMainWindow):
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.secondToolBar.addWidget(openVerseNoteButton)
+
+        self.secondToolBar.addSeparator()
+
+        self.enableParagraphButton = QPushButton()
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.secondToolBar.addWidget(self.enableParagraphButton)
 
         self.secondToolBar.addSeparator()
 
@@ -891,28 +899,8 @@ class MainWindow(QMainWindow):
         ratio = parallelRatio[self.parallelMode]
         self.centralWidget.layout.setColumnStretch(0, ratio[0])
         self.centralWidget.layout.setColumnStretch(1, ratio[1])
-
-    # Action - display bibles in paragraphs / verses
-    def displayBiblesInParagraphs(self):
-        if config.readFormattedBibles:
-            config.readFormattedBibles = False
-        else:
-            config.readFormattedBibles = True
-        self.reloadCurrentRecord()
     
     # Actions - enable or disable lightning feature
-    def enableLightning(self):
-        config.instantInformationEnabled = 1
-        #self.enableInstantButton.setText(self.getInstantInformation())
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-
-    def disableLightning(self):
-        config.instantInformationEnabled = 0
-        #self.enableInstantButton.setText(self.getInstantInformation())
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-
     def getInstantInformation(self):
         if config.instantInformationEnabled == 0:
             return "hide.png"
@@ -924,9 +912,27 @@ class MainWindow(QMainWindow):
             config.instantInformationEnabled = 1
         elif config.instantInformationEnabled == 1:
             config.instantInformationEnabled = 0
-        #self.enableInstantButton.setText(self.getInstantInformation())
         enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+
+    # Actions - enable or disable paragraphs feature
+    def displayBiblesInParagraphs(self):
+        if config.readFormattedBibles:
+            config.readFormattedBibles = False
+        else:
+            config.readFormattedBibles = True
+        self.reloadCurrentRecord()
+
+    def getReadFormattedBibles(self):
+        if config.readFormattedBibles:
+            return "paragraph.png"
+        else:
+            return "line.png"
+
+    def enableParagraphButtonClicked(self):
+        self.displayBiblesInParagraphs()
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
 
     # Actions - change font size
     def smallerFont(self):

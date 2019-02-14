@@ -306,7 +306,7 @@ class TextCommandParser:
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
         marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
-        if text in formattedBibles and text not in marvelBibles and config.readFormattedBibles:
+        if text in formattedBibles and (text in marvelBibles or (text not in marvelBibles and config.readFormattedBibles)):
             bibleSqlite = Bible(text)
             chapter = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
