@@ -382,6 +382,10 @@ function searchItem(module, entry) {
     document.title = "SEARCHTOOL:::"+module+":::"+entry;
 }
 
+function searchEntry(module, entry) {
+    document.title = "SEARCHTOOL:::"+module+":::"+entry;
+}
+
 function rmac(entry) {
     searchItem("mRMAC", entry);
 }
