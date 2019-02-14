@@ -260,6 +260,14 @@ class MainWindow(QMainWindow):
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
+        self.enableParagraphButton = QPushButton()
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.secondToolBar.addWidget(self.enableParagraphButton)
+
+        self.secondToolBar.addSeparator()
+
         searchBibleButton = QPushButton()
         searchBibleButtonFile = os.path.join("htmlResources", "search.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
@@ -282,14 +290,6 @@ class MainWindow(QMainWindow):
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.secondToolBar.addWidget(openVerseNoteButton)
-
-        self.secondToolBar.addSeparator()
-
-        self.enableParagraphButton = QPushButton()
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-        self.secondToolBar.addWidget(self.enableParagraphButton)
 
         self.secondToolBar.addSeparator()
 
