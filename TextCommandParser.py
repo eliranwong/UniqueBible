@@ -163,6 +163,8 @@ class TextCommandParser:
         return (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My")
 
     def getLastCommentaryInfo(self):
+        test = (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
+        print (test)
         return (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
 
     def getCommentaryCloudID(self, commentary):
@@ -198,6 +200,7 @@ class TextCommandParser:
             "cWesley": "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5",
             "cWhedon": "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9",
         }
+        commentary = "c{0}".format(commentary)
         if commentary in cloudIDs:
             return cloudIDs[commentary]
         else:
