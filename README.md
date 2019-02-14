@@ -29,15 +29,16 @@ pip3 install gdown
 
 python3 main.py
 
-# Codes are Distributed Here, but where are the Database Files?
+# Where are the Database Files?
 
 All codes for running the app is shared in this repository.
 
 Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
 
-To run UniqueBible.app and its features, several database files are required.  To help you about installing particular datasets, "Download Helper" comes up automatically, when a database file is needed for a particular feature.
+To run UniqueBible.app and its features, several database files are required.  To help you about installing particular datasets, <b>"Download Helper"</b> comes up automatically, when a database file is needed for a particular feature.
 
-You can also manually install "ALL" https://marvel.bible datasets via our menu bar.  Go to "Resources" > "Install Marvel.bible Datasets"
+You can also manually install <b>"ALL"</b> https://marvel.bible datasets via our menu bar.<br>
+Go to "Resources" > "Install Marvel.bible Datasets"
 
 <i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 246MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
 
