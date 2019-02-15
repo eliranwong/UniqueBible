@@ -573,7 +573,7 @@ class MainWindow(QMainWindow):
         )
         if linebreak:
             for search, replace in searchReplace1:
-                text = re.sub(search, replace, text)        
+                text = re.sub(search, replace, text)
         for search, replace in searchReplace2:
             text = re.sub(search, replace, text)
         if parsing:
@@ -1425,8 +1425,35 @@ class WebEngineViewPopover(QWebEngineView):
         self.setWindowTitle("Unique Bible App - Popover")
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
+        self.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.addMenuActions();
+
     def popoverTextCommandChanged(self, newTextCommand):
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
+
+    def addMenuActions(self):
+        copyText = QAction(self)
+        copyText.setText("Copy")
+        copyText.triggered.connect(self.copySelectedText)
+        self.addAction(copyText)
+
+        runAsCommandLine = QAction(self)
+        runAsCommandLine.setText("Run as Command")
+        runAsCommandLine.triggered.connect(self.runAsCommand)
+        self.addAction(runAsCommandLine)
+
+    def messageNoSelection(self):
+        self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
+
+    def copySelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            self.page().triggerAction(self.page().Copy)
+
+    def runAsCommand(self):
+        selectedText = self.selectedText()
+        self.parent.parent.parent.textCommandChanged(selectedText, "main")
 
 
 class NoteEditor(QWidget):
@@ -2011,7 +2038,7 @@ class ImportSettings(QDialog):
 
     def setupLayout(self):
         titleBibles = QLabel("Bibles:")
-        
+
         self.linebreak = QCheckBox()
         self.linebreak.setText("Additional linebreak for each verse")
         self.linebreak.setChecked(config.importAddVerseLinebreak)

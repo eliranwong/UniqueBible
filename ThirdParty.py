@@ -7,7 +7,7 @@ class Converter:
     def importMySwordBible(self, file):
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
-        
+
         query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
@@ -15,7 +15,7 @@ class Converter:
         cursor.execute(query)
         verses = cursor.fetchall()
         connection.close()
-        
+
         abbreviation = abbreviation.replace("+", "s")
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         self.mySwordBibleToRichFormat(description, abbreviation, verses)
@@ -32,7 +32,7 @@ class Converter:
             os.remove(formattedBible)
         connection = sqlite3.connect(formattedBible)
         cursor = connection.cursor()
-        
+
         statements = (
             "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
             "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
@@ -40,10 +40,10 @@ class Converter:
         for create in statements:
             cursor.execute(create)
             connection.commit()
-        
+
         for book, chapter, verse, scripture in verses:
             scripture, notes = self.convertMySwordBibleTags(scripture)
-            
+
             if notes:
                 insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
                 for counter, note in enumerate(notes):

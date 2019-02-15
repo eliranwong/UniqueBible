@@ -248,7 +248,7 @@ class BiblesSqlite:
             content += "<tr><td><ref onclick='tbcv(\"{0}\", {1}, 1, 1)' onmouseover='bookName(\"{2}\")'>{2}</ref></td><td><ref onclick='{5}(\"{0}\", \"{1}\", \"{3}\")'>{4}</ref></td></tr>".format(text, book, bookAbb, searchString, bookCount, searchFunction)
         content += "</table>"
         return content
-    
+
     def countSearchBook(self, text, book, searchString):
         query = "SELECT Verse FROM {0} WHERE Book = ? AND Scripture LIKE ?".format(text)
         t = (book, "%{0}%".format(searchString))

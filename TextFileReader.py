@@ -39,7 +39,7 @@ class TextFileReader:
             return self.errorReadingFile(fileName)
 
     def readDocxFile(self, fileName):
-        document = Document(fileName)        
+        document = Document(fileName)
         documentText = ""
         for block in self.iter_block_items(document):
             if isinstance(block, Paragraph):
@@ -64,7 +64,7 @@ class TextFileReader:
             parent_elm = parent._tc
         else:
             raise ValueError("something's not right")
-    
+
         for child in parent_elm.iterchildren():
             if isinstance(child, CT_P):
                 yield Paragraph(child, parent)
@@ -96,7 +96,7 @@ class TextFileReader:
             paragraphText = "<ul><li>{0}</li></ul>".format(paragraphText)
         else:
             paragraphText = "<p>{0}</p>".format(paragraphText)
-        
+
         # paragraph.alignment
         # None, CENTER ([0-9]), RIGHT ([0-9]), LEFT ([0-9]), JUSTIFY ([0-9]), DISTRIBUTE ([0-9])
         alignment, *_ = str(paragraph.alignment).split(" ")

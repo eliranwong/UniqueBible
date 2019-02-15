@@ -795,7 +795,7 @@ class TextCommandParser:
 
     # SEARCHMORPHOLOGY:::
     def textSearchMorphology(self, command, source):
-        #﻿LexicalEntry LIKE '%E70746,%' AND 
+        #﻿LexicalEntry LIKE '%E70746,%' AND
         if not command.count(":::") == 1:
             return self.invalidCommand("study")
         else:

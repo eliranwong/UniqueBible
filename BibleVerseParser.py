@@ -1126,7 +1126,7 @@ class BibleVerseParser:
         # add a space at the end of the text, to avoid indefinite loop in later steps
         #this extra space will be removed when parsing is finished.
         taggedText = text+" "
-        
+
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
         p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">')
         if p.search(taggedText):
@@ -1150,13 +1150,13 @@ class BibleVerseParser:
             booknumber = self.marvelBibleBookNo[book]
             # search & replace for marking book
             taggedText = re.sub('('+bookString+') ([0-9])', '『'+booknumber+r'｜\1』 \2', taggedText)
-        
+
         # add first set of taggings:
         #self.updateWorkingIndicator()
         taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5', taggedText)
         #self.updateWorkingIndicator()
         taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref｝\4', taggedText)
-        
+
         # fix references without verse numbers
         # fix books with chapter 1 ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
         #self.updateWorkingIndicator()
@@ -1164,7 +1164,7 @@ class BibleVerseParser:
         # fix references of chapters without verse number; assign verse number 1 in taggings
         #self.updateWorkingIndicator()
         taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊', taggedText)
-        
+
         # check if verses following tagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         p = re.compile('</ref｝[,-–;][ ]*?[0-9]', flags=re.M)
         s = p.search(taggedText)
@@ -1176,7 +1176,7 @@ class BibleVerseParser:
             taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7', taggedText)
             taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7', taggedText)
             s = p.search(taggedText)
-        
+
         # clear special markers
         #self.updateWorkingIndicator()
         taggedText = re.sub('『[0-9]+?|([^\n『』]*?)』', r'\1', taggedText)
@@ -1196,7 +1196,7 @@ class BibleVerseParser:
         # set output filename here
         path, file = os.path.split(inputFile)
         outputFile = os.path.join(path, "tagged_{0}".format(file))
-        
+
         # open file and read input text
         try:
             f = open(inputFile,'r')
@@ -1204,11 +1204,11 @@ class BibleVerseParser:
             print("File note found! Please make sure if you enter filename correctly and try again.")
         newData = f.read()
         f.close()
-        
+
         # parse the opened text
         newData = self.parseText(newData)
         print("Finished parsing file", "\""+inputFile+"\".")
-        
+
         # standardise the format of bible verse references
         # standardisation is running only if user's answer is 'YES' [case-insensitive]
         if self.standardisation.lower() == 'yes':
