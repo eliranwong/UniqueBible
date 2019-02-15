@@ -82,6 +82,8 @@ class Converter:
             s = p.search(text)
         text = text.strip()
         text = "<verse>{0}</verse> ".format(text)
+        if config.importAddVerseLinebreak:
+            text = text.replace("</verse>", "</verse><br>")
         return text
 
     def stripMySwordBibleTags(self, text):

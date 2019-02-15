@@ -1,7 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication
-from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar)
+from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("&Install Marvel.bible Datasets", self, triggered=self.installMarvelDatasets))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
+        menu9.addAction(QAction("&Import Settings", self, triggered=self.importSettingsDialog))
         menu9.addSeparator()
         menu9.addAction(QAction("&Tag References in a File", self, shortcut = "Ctrl+%", triggered=self.tagFile))
         menu9.addAction(QAction("&Tag References in Multiple Files", self, shortcut = "Ctrl+&", triggered=self.tagFiles))
@@ -694,6 +695,10 @@ class MainWindow(QMainWindow):
             self.openTextOnStudyView(text)
 
     # import 3rd party modules
+    def importSettingsDialog(self):
+        self.importSettings = ImportSettings(self)
+        self.importSettings.show()
+
     def importModules(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
@@ -1690,14 +1695,15 @@ class NoteEditor(QWidget):
 
     # adjustment of note editor font size
     def increaseNoteEditorFontSize(self):
-        self.editor.selectAll()
-        config.noteEditorFontSize += 1
-        self.editor.setFontPointSize(config.noteEditorFontSize)
-        self.hide()
-        self.show()
+        if self.html:
+            self.editor.selectAll()
+            config.noteEditorFontSize += 1
+            self.editor.setFontPointSize(config.noteEditorFontSize)
+            self.hide()
+            self.show()
 
     def decreaseNoteEditorFontSize(self):
-        if not config.noteEditorFontSize == 0:
+        if self.html and not config.noteEditorFontSize == 0:
             self.editor.selectAll()
             config.noteEditorFontSize -= 1
             self.editor.setFontPointSize(config.noteEditorFontSize)
@@ -1976,6 +1982,45 @@ class NoteEditor(QWidget):
                 hyperlink)
         if ok and text != '':
             self.addHyperlink(text)
+
+
+class ImportSettings(QDialog):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.setModal(True)
+
+        self.setWindowTitle("Import settings")
+
+        self.setupLayout()
+
+    def setupLayout(self):
+        titleBibles = QLabel("Bibles:")
+        
+        self.linebreak = QCheckBox()
+        self.linebreak.setText("Additional linebreak for each verse")
+        self.linebreak.setChecked(config.importAddVerseLinebreak)
+
+        saveButton = QPushButton("Save")
+        saveButton.clicked.connect(self.saveSettings)
+
+        cancelButton = QPushButton("Cancel")
+        cancelButton.clicked.connect(self.close)
+
+        self.layout = QGridLayout()
+        self.layout.addWidget(titleBibles, 0, 0)
+        self.layout.addWidget(self.linebreak, 1, 0)
+        self.layout.addWidget(saveButton, 2, 0)
+        self.layout.addWidget(cancelButton, 3, 0)
+        self.setLayout(self.layout)
+
+    def saveSettings(self):
+        if self.linebreak.isChecked():
+            config.importAddVerseLinebreak = True
+        else:
+            config.importAddVerseLinebreak = False
+        self.close()
 
 
 class Downloader(QDialog):

@@ -36,6 +36,7 @@ def saveDataOnExit():
     fileObj.write("\nfontSize = "+pprint.pformat(config.fontSize))
     fileObj.write("\nnoteEditorFontSize = "+pprint.pformat(config.noteEditorFontSize))
     fileObj.write("\nreadFormattedBibles = "+pprint.pformat(config.readFormattedBibles))
+    fileObj.write("\nimportAddVerseLinebreak = "+pprint.pformat(config.importAddVerseLinebreak))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
