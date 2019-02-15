@@ -147,6 +147,8 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Bible Names", self, shortcut = "Ctrl+7", triggered=self.searchCommandBibleName))
         menu5.addAction(QAction("&Bible Locations", self, shortcut = "Ctrl+8", triggered=self.searchCommandBibleLocation))
         menu5.addAction(QAction("&Bible Topics", self, shortcut = "Ctrl+9", triggered=self.searchCommandBibleTopic))
+        menu5.addSeparator()
+        menu5.addAction(QAction("&Hebrew / Greek Lexicons", self, shortcut = "Ctrl+0", triggered=self.searchCommandLexicon))
 
         menu6 = self.menuBar().addMenu("&Notes")
         menu6.addAction(QAction("&Note on Main Chapter", self, triggered=self.openMainChapterNote))
@@ -160,8 +162,8 @@ class MainWindow(QMainWindow):
         menu7 = self.menuBar().addMenu("&Topics")
         menu7.addAction(QAction("&Create a Topical Note", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
         menu7.addSeparator()
-        menu7.addAction(QAction("&Open Note Files", self, shortcut = "Ctrl+F", triggered=self.openTextFileDialog))
-        menu7.addAction(QAction("&Recent Files", self, shortcut = "Ctrl+E", triggered=self.openExternalFileHistory))
+        menu7.addAction(QAction("&Open Note Files", self, shortcut = "Ctrl+E", triggered=self.openTextFileDialog))
+        menu7.addAction(QAction("&Recent Files", self, triggered=self.openExternalFileHistory))
         menu7.addAction(QAction("&Read Last Opened File", self, triggered=self.externalFileButtonClicked))
         menu7.addAction(QAction("&Edit Last Opened File", self, triggered=self.editExternalFileButtonClicked))
         menu7.addSeparator()
@@ -828,6 +830,10 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBT:::")
         self.textCommandLineEdit.setFocus()
 
+    def searchCommandLexicon(self):
+        self.textCommandLineEdit.setText("LEXICON:::")
+        self.textCommandLineEdit.setFocus()
+
     # Actions - open urls
     def openBibleTools(self):
         webbrowser.open("https://bibletools.app")
@@ -1266,6 +1272,11 @@ class WebEngineView(QWebEngineView):
         self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
         self.addAction(self.iSearchTextInBook)
 
+        self.searchLexicon = QAction(self)
+        self.searchLexicon.setText("Hebrew / Greek Lexicons")
+        self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
+        self.addAction(self.searchLexicon)
+
         searchBibleCharacter = QAction(self)
         searchBibleCharacter.setText("Bible Character")
         searchBibleCharacter.triggered.connect(self.searchCharacter)
@@ -1286,15 +1297,15 @@ class WebEngineView(QWebEngineView):
         self.searchBibleTopic.triggered.connect(self.searchTopic)
         self.addAction(self.searchBibleTopic)
 
-        self.searchBibleDictionary = QAction(self)
-        self.searchBibleDictionary.setText("Bible Dictionary")
-        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
-        self.addAction(self.searchBibleDictionary)
-
         self.searchBibleEncyclopedia = QAction(self)
         self.searchBibleEncyclopedia.setText("Bible Encyclopedia")
         self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
         self.addAction(self.searchBibleEncyclopedia)
+
+        self.searchBibleDictionary = QAction(self)
+        self.searchBibleDictionary.setText("Bible Dictionary")
+        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
+        self.addAction(self.searchBibleDictionary)
 
         self.searchThirdDictionary = QAction(self)
         self.searchThirdDictionary.setText("3rd Party Dictionary")
@@ -1350,6 +1361,14 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchHebrewGreekLexicon(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "LEXICON:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchResource(self, module):
@@ -1612,6 +1631,7 @@ class NoteEditor(QWidget):
         self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setMaximumWidth(300)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
 
