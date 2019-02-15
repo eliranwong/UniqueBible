@@ -25,7 +25,13 @@ pip3 install python-docx
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
 
-# Run UniqueBible.app
+# Download & Run UniqueBible.app
+
+Use the download button on this page to download a zip copy.
+
+<img src="downloadButton.png">
+
+Unzip your folder and run the following command in command prompt:
 
 python3 main.py
 
