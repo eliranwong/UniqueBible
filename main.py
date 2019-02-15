@@ -1,4 +1,4 @@
-#! /Users/eliranwong/Desktop/venv/venv/bin/python
+#! /Users/Eliran/Desktop/venv/venv/bin/python
 # visit https://BibleTools.app for more information
 
 import sys, config, pprint, platform
@@ -34,6 +34,7 @@ def saveDataOnExit():
     fileObj.write("\nparserStandarisation = "+pprint.pformat(config.parserStandarisation))
     fileObj.write("\ninstantInformationEnabled = "+pprint.pformat(config.instantInformationEnabled))
     fileObj.write("\nfontSize = "+pprint.pformat(config.fontSize))
+    fileObj.write("\nnoteEditorFontSize = "+pprint.pformat(config.noteEditorFontSize))
     fileObj.write("\nreadFormattedBibles = "+pprint.pformat(config.readFormattedBibles))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))

@@ -1565,6 +1565,20 @@ class NoteEditor(QWidget):
 
         self.menuBar.addSeparator()
 
+        decreaseFontSizeButton = QPushButton()
+        decreaseFontSizeButtonFile = os.path.join("htmlResources", "fontMinus.png")
+        decreaseFontSizeButton.setIcon(QIcon(decreaseFontSizeButtonFile))
+        decreaseFontSizeButton.clicked.connect(self.decreaseNoteEditorFontSize)
+        self.menuBar.addWidget(decreaseFontSizeButton)
+
+        increaseFontSizeButton = QPushButton()
+        increaseFontSizeButtonFile = os.path.join("htmlResources", "fontPlus.png")
+        increaseFontSizeButton.setIcon(QIcon(increaseFontSizeButtonFile))
+        increaseFontSizeButton.clicked.connect(self.increaseNoteEditorFontSize)
+        self.menuBar.addWidget(increaseFontSizeButton)
+
+        self.menuBar.addSeparator()
+
         #self.searchLineEdit = QLineEdit()
         #self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         #self.menuBar.addWidget(self.searchLineEdit)
@@ -1664,6 +1678,7 @@ class NoteEditor(QWidget):
     def setupLayout(self):
 
         self.editor = QTextEdit()
+        self.editor.setFontPointSize(config.noteEditorFontSize)
         self.editor.textChanged.connect(self.textChanged)
 
         self.layout = QGridLayout()
@@ -1672,6 +1687,22 @@ class NoteEditor(QWidget):
         self.layout.addWidget(self.editor, 1, 0)
 
         self.setLayout(self.layout)
+
+    # adjustment of note editor font size
+    def increaseNoteEditorFontSize(self):
+        self.editor.selectAll()
+        config.noteEditorFontSize += 1
+        self.editor.setFontPointSize(config.noteEditorFontSize)
+        self.hide()
+        self.show()
+
+    def decreaseNoteEditorFontSize(self):
+        if not config.noteEditorFontSize == 0:
+            self.editor.selectAll()
+            config.noteEditorFontSize -= 1
+            self.editor.setFontPointSize(config.noteEditorFontSize)
+            self.hide()
+            self.show()
 
     # track if the text being modified
     def textChanged(self):

@@ -2,6 +2,7 @@ myGoogleApiKey = ''
 parserStandarisation = 'YES'
 instantInformationEnabled = 1
 fontSize = 120
+noteEditorFontSize = 14
 readFormattedBibles = True
 mainText = 'KJV'
 mainB = 1
