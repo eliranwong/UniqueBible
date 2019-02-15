@@ -81,9 +81,10 @@ class Converter:
             text = p.sub(r"\2\1", text)
             s = p.search(text)
         text = text.strip()
-        text = "<verse>{0}</verse> ".format(text)
         if config.importAddVerseLinebreak:
-            text = text.replace("</verse>", "</verse><br>")
+            text = "<verse>{0}</verse><br>".format(text)
+        else:
+            text = "<verse>{0}</verse> ".format(text)
         return text
 
     def stripMySwordBibleTags(self, text):
@@ -95,6 +96,7 @@ class Converter:
         text = text.strip()
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
+        text = text.strip()
         return text
 
     def convertMySwordBibleTags(self, text):
