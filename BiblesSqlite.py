@@ -79,7 +79,7 @@ class BiblesSqlite:
                     menu += "<hr><b>Special Features:</b><br>"
                     features = (
                         ("COMPARE", "Compare All Versions"),
-                        ("CROSSREFERENCE", "Scroll Mapper"),
+                        ("CROSSREFERENCE", "Cross References"),
                         ("TSKE", "TSK (Enhanced)"),
                         ("TRANSLATION", "Translations"),
                         ("DISCOURSE", "Discourse"),

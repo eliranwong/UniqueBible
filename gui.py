@@ -1,6 +1,6 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown
-from PySide2.QtCore import QUrl, Qt, QEvent
-from PySide2.QtGui import QIcon, QGuiApplication
+from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
+from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
@@ -127,7 +127,7 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction("Words", self, triggered=self.runWORDS))
         menu4.addAction(QAction("TDW Combo", self, triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction("Scroll Mapper", self, triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction("Cross References", self, triggered=self.runCROSSREFERENCE))
         menu4.addAction(QAction("TSK (Enhanced)", self, triggered=self.runTSKE))
         menu4.addSeparator()
         menu4.addAction(QAction("Compare All Versions", self, triggered=self.runCOMPARE))
@@ -1584,11 +1584,11 @@ class NoteEditor(QWidget):
 
         self.menuBar.addSeparator()
 
-        #self.searchLineEdit = QLineEdit()
-        #self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
-        #self.menuBar.addWidget(self.searchLineEdit)
+        self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
+        self.menuBar.addWidget(self.searchLineEdit)
 
-        #self.menuBar.addSeparator()
+        self.menuBar.addSeparator()
 
     def toogleToolbar(self):
         if self.showToolBar:
@@ -1683,7 +1683,6 @@ class NoteEditor(QWidget):
     def setupLayout(self):
 
         self.editor = QTextEdit()
-        self.editor.setFontPointSize(config.noteEditorFontSize)
         self.editor.textChanged.connect(self.textChanged)
 
         self.layout = QGridLayout()
@@ -1710,6 +1709,16 @@ class NoteEditor(QWidget):
             self.hide()
             self.show()
 
+    # search field entered
+    def searchLineEntered(self):
+        searchString = self.searchLineEdit.text()
+        if searchString:
+            cursor = self.editor.document().find(searchString, self.editor.textCursor())
+        if cursor:
+            self.editor.setTextCursor(cursor)
+        self.hide()
+        self.show()
+
     # track if the text being modified
     def textChanged(self):
         if self.parent.noteSaved:
@@ -1726,6 +1735,11 @@ class NoteEditor(QWidget):
         else:
             self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
             self.openBibleNote()
+
+        self.editor.selectAll()
+        self.editor.setFontPointSize(config.noteEditorFontSize)
+        self.editor.moveCursor(QTextCursor.Start, QTextCursor.MoveAnchor)
+
         self.parent.noteSaved = True
 
     # load chapter / verse notes from sqlite database
