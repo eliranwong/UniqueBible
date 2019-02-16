@@ -431,6 +431,15 @@ class Commentary:
     def __del__(self):
         self.connection.close()
 
+    def commentaryInfo(self):
+        query = "SELECT title FROM Details"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return ""
+
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 

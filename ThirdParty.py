@@ -160,9 +160,9 @@ class Converter:
         cursor = connection.cursor()
 
         # process 3 tables: details, commentary, data (mainly contain images)
-        query = "SELECT title, abbreviation FROM details"
+        query = "SELECT title, abbreviation, description FROM details"
         cursor.execute(query)
-        title, abbreviation = cursor.fetchone()
+        title, abbreviation, description = cursor.fetchone()
         query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
         cursor.execute(query)
         chapters = cursor.fetchall()
@@ -181,7 +181,10 @@ class Converter:
         for create in statements:
             ubFileCursor.execute(create)
             ubFileConnection.commit()
-        
+        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
+        ubFileConnection.commit()
+
         for chapter in chapters:
             b, c = chapter
             biblesSqlite = BiblesSqlite()
@@ -205,7 +208,6 @@ class Converter:
                 else:
                     item.append(verseContent)
 
-            #print(verseDict.keys())
             sortedVerses = sorted(verseDict.keys())
             
             chapterText = ""
@@ -222,9 +224,24 @@ class Converter:
 
     def formatCommentaryVerse(self, text):
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\2</b></u>", r"<u><b>\1:\2</b></u>", text)
-        # convert bible reference <a class='bible' href='#b1.1.1'>
+        text = self.formatNonBibleModule(text)
+        return text
+
+    def formatNonBibleModule(self, text):
+        # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
+        text = re.sub("<a [^<>]*?href='[#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractAllReferences, text)
+        # convert bible reference tag like <a class='bible' href='#b1.1.1'>
         text = re.sub("<a [^<>]*?href='[#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
         return text
+
+    def extractAllReferences(self, match):
+        value = match.group()
+        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
+        if references:
+            b, c, v = references[0]
+            return '<a href="javascript:void(0)" onclick="bcv({0},{1},{2})">'.format(b, c, v)
+        else:
+            return value
 
 
 class ThirdPartyDictionary:
@@ -299,4 +316,5 @@ class ThirdPartyDictionary:
                 selectList = self.formatSelectList(action, optionList)
                 config.thirdDictionary = self.module
                 content = re.sub("<a href='#d([^\n<>]*?)'>(.*?)</a>", r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\1{1})'>\2</ref>".format(self.module, '"'), content[0])
+                content = Converter().formatNonBibleModule(content)
                 return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
