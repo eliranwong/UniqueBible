@@ -229,17 +229,44 @@ class Converter:
 
     def formatNonBibleModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
-        text = re.sub("<a [^<>]*?href='[#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractAllReferences, text)
+        text = re.sub("<a [^<>]*?href='[#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractBibleReferences, text)
         # convert bible reference tag like <a class='bible' href='#b1.1.1'>
         text = re.sub("<a [^<>]*?href='[#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
+
+        # convert commentary reference tag like <a href='#c-CSBC Gen 1:1'>
+        text = re.sub("<a [^<>]*?href='[#]*?c\-[^ ]+? [0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractSpecificCommentaryReferences, text)
+        # convert commentary reference tag like <a href='#cGen 1:1'>
+        text = re.sub("<a [^<>]*?href='[#]*?c[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractCommentaryReferences, text)
+        # convert commentary reference tag like <a href='#c1.1.1'>
+        text = re.sub("<a [^<>]*?href='[#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
+
         return text
 
-    def extractAllReferences(self, match):
+    def extractBibleReferences(self, match):
         value = match.group()
         references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
         if references:
             b, c, v = references[0]
             return '<a href="javascript:void(0)" onclick="bcv({0},{1},{2})">'.format(b, c, v)
+        else:
+            return value
+
+    def extractSpecificCommentaryReferences(self, match):
+        value = match.group()
+        commentary = re.sub("<a [^<>]*?href='[#]*?c\-([^ ]+?) [0-9]*?[A-Za-z]+? [0-9][^<>]*?>", r"\1", value)
+        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
+        if references:
+            b, c, v = references[0]
+            return '<a href="javascript:void(0)" onclick="ctbcv({4}{0}{4},{1},{2},{3})">'.format(commentary, b, c, v, "'")
+        else:
+            return value
+
+    def extractCommentaryReferences(self, match):
+        value = match.group()
+        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
+        if references:
+            b, c, v = references[0]
+            return '<a href="javascript:void(0)" onclick="cbcv({0},{1},{2})">'.format(b, c, v)
         else:
             return value
 
