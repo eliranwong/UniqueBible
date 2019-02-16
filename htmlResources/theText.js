@@ -3,44 +3,7 @@ function textName(name) {
 }
 
 function commentaryName(name) {
-    var fullname = getFullCommentaryName(name);
-    document.title = "_info:::"+fullname;
-}
-
-function getFullCommentaryName(abbreviation) {
-    var fullCommentaryNameObject = {
-        cBarnes: "Notes on the Old and New Testaments (Barnes) [26 vol.]",
-        cBenson: "Commentary on the Old and New Testaments (Benson) [5 vol.]",
-        cBI: "Biblical Illustrator (Exell) [58 vol.]",
-        cBrooks: "Complete Summary of the Bible (Brooks) [2 vol.]",
-        cCalvin: "John Calvin's Commentaries (Calvin) [22 vol.]",
-        cClarke: "Commentary on the Bible (Clarke) [6 vol.]",
-        cCBSC: "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]",
-        cCECNT: "Critical And Exegetical Commentary on the NT (Meyer) [20 vol.]",
-        cCGrk: "Cambridge Greek Testament for Schools and Colleges (Cambridge) [21 vol.]",
-        cCHP: "Church Pulpit Commentary (Nisbet) [12 vol.]",
-        cCPBST: "College Press Bible Study Textbook Series (College) [59 vol.]",
-        cEBC: "Expositor's Bible Commentary (Nicoll) [49 vol.]",
-        cECER: "Commentary for English Readers (Ellicott) [8 vol.]",
-        cEGNT: "Expositor's Greek New Testament (Nicoll) [5 vol.]",
-        cGCT: "Greek Testament Commentary (Alford) [4 vol.]",
-        cGill: "Exposition of the Entire Bible (Gill) [9 vol.]",
-        cHenry: "Exposition of the Old and New Testaments (Henry) [6 vol.]",
-        cHH: "Horæ Homileticæ (Simeon) [21 vol.]",
-        cICCNT: "International Critical Commentary, NT (1896-1929) [16 vol.]",
-        cJFB: "Jamieson, Fausset, and Brown Commentary (JFB) [6 vol.]",
-        cKD: "Commentary on the Old Testament (Keil & Delitzsch) [10 vol.]",
-        cLange: "Commentary on the Holy Scriptures: Critical, Doctrinal, and Homiletical (Lange) [25 vol.]",
-        cMacL: "Expositions of Holy Scripture (MacLaren) [32 vol.]",
-        cPHC: "Preacher's Complete Homiletical Commentary (Exell) [37 vol.]",
-        cPulpit: "Pulpit Commentary (Spence) [23 vol.]",
-        cRob: "Word Pictures in the New Testament (Robertson) [6 vol.]",
-        cSpur: "Spurgeon's Expositions on the Bible (Spurgeon) [3 vol.]",
-        cVincent: "Word Studies in the New Testament (Vincent) [4 vol.]",
-        cWesley: "John Wesley's Notes on the Whole Bible (Wesley) [3 vol.]",
-        cWhedon: "Commentary on the Old and New Testaments (Whedon) [14 vol.]"
-    };
-    return fullCommentaryNameObject["c"+abbreviation];
+    document.title = "_commentaryinfo:::"+name;
 }
 
 function bookName(name) {
