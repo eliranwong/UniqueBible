@@ -4,6 +4,7 @@ from BibleVerseParser import BibleVerseParser
 
 class Converter:
 
+    # Import MySword Bibles
     def importMySwordBible(self, file):
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
@@ -11,7 +12,7 @@ class Converter:
         query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
-        query = "SELECT * FROM Bible"
+        query = "SELECT * FROM Bible ORDER BY Book, Chpater, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
         connection.close()
@@ -151,6 +152,80 @@ class Converter:
             noteID += 1
             s = p.search(text)
         return (text, notes)
+
+    # Import MySword Commentaries
+    def importMySwordCommentary(self, file):
+        # connect MySword commentary
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        # process 3 tables: details, commentary, data (mainly contain images)
+        query = "SELECT title, abbreviation FROM details"
+        cursor.execute(query)
+        title, abbreviation = cursor.fetchone()
+        query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
+        cursor.execute(query)
+        chapters = cursor.fetchall()
+
+        # create an UB commentary
+        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        if os.path.isfile(ubCommentary):
+            os.remove(ubCommentary)
+        ubFileConnection = sqlite3.connect(ubCommentary)
+        ubFileCursor = ubFileConnection.cursor()
+
+        statements = (
+            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
+        )
+        for create in statements:
+            ubFileCursor.execute(create)
+            ubFileConnection.commit()
+        
+        for chapter in chapters:
+            b, c = chapter
+            biblesSqlite = BiblesSqlite()
+            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            del biblesSqlite
+            
+            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+            
+            query = "SELECT book, chapter, fromverse, toverse, data FROM commentary WHERE book=? AND chapter=? ORDER BY book, chapter, fromverse, toverse"
+            cursor.execute(query, chapter)
+            verses = cursor.fetchall()
+            
+            for verse in verses:
+                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
+                verseContent = self.formatCommentaryVerse(verseContent)
+
+                fromverse = verse[2]
+                item = verseDict.get(fromverse, "not found")
+                if item == "not found":
+                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                else:
+                    item.append(verseContent)
+
+            #print(verseDict.keys())
+            sortedVerses = sorted(verseDict.keys())
+            
+            chapterText = ""
+            for sortedVerse in sortedVerses:
+                chapterText += "<hr>".join(verseDict[sortedVerse])
+
+            # write in UB commentary file
+            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+            ubFileCursor.execute(insert, (b, c, chapterText))
+            ubFileConnection.commit()
+
+        connection.close()
+        ubFileConnection.close()
+
+    def formatCommentaryVerse(self, text):
+        text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\2</b></u>", r"<u><b>\1:\2</b></u>", text)
+        # convert bible reference <a class='bible' href='#b1.1.1'>
+        text = re.sub("<a [^<>]*?href='[#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
+        return text
+
 
 class ThirdPartyDictionary:
 

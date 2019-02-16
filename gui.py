@@ -706,12 +706,14 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "MySword Bibles (*.bbl.mybible);;MySword Dictionaries (*.dct.mybible)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible)", "", options)
         if fileName:
             if fileName.endswith(".dct.mybible"):
                 self.importMySwordDictionary(fileName)
             elif fileName.endswith(".bbl.mybible"):
                 self.importMySwordBible(fileName)
+            elif fileName.endswith(".cmt.mybible"):
+                self.importMySwordCommentary(fileName)
 
     def importMySwordDictionary(self, fileName):
         *_, name = os.path.split(fileName)
@@ -724,6 +726,10 @@ class MainWindow(QMainWindow):
 
     def importMySwordBible(self, fileName):
         Converter().importMySwordBible(fileName)
+        self.completeImport()
+
+    def importMySwordCommentary(self, fileName):
+        Converter().importMySwordCommentary(fileName)
         self.completeImport()
 
     def completeImport(self):
