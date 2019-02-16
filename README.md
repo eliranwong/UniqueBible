@@ -59,7 +59,11 @@ Currently, we support the following modules:
 
 * MySword Bible Modules (<a href="https://mysword.info/download-mysword/bibles">https://mysword.info/download-mysword/bibles</a>)
 
+* MySword Commentary Modules (<a href="https://mysword.info/download-mysword/commentaries">https://mysword.info/download-mysword/commentaries</a>)
+
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
+
+Courtesy of MySword (<a href="https://mysword.info">https://mysword.info</a>)
 
 Users need to download 3rd party modules separately.<br>
 Built-in converter can be accessed via our menu bar:<br>
