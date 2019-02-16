@@ -130,6 +130,16 @@ function bcv(b,c,v) {
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
 }
 
+function ctbcv(text,b,c,v) {
+    var verseReference = bcvToVerseRefence(b,c,v);
+    document.title = "COMMENTARY:::"+text+":::"+verseReference;
+}
+
+function cbcv(b,c,v) {
+    var verseReference = bcvToVerseRefence(b,c,v);
+    document.title = "COMMENTARY:::"+verseReference;
+}
+
 function cr(b,c,v) {
     var verseReference = mbbcvToVerseRefence(b,c,v);
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
