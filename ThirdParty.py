@@ -159,13 +159,36 @@ class Converter:
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
 
-        # process 3 tables: details, commentary, data (mainly contain images)
+        # process 2 tables: details, commentary
         query = "SELECT title, abbreviation, description FROM details"
         cursor.execute(query)
         title, abbreviation, description = cursor.fetchone()
         query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
         cursor.execute(query)
         chapters = cursor.fetchall()
+
+        # check if table "data" exists; (mainly contain images)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, ("table",))
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        if "data" in tables:
+            query = "SELECT filename, content FROM data"
+            cursor.execute(query)
+            images = cursor.fetchall()
+            if images:
+                htmlImageFolder = os.path.join("htmlResources", "images")
+                if not os.path.isdir(htmlImageFolder):
+                    os.mkdir(htmlImageFolder)
+                imageFolder = os.path.join(htmlImageFolder, abbreviation)
+                if not os.path.isdir(imageFolder):
+                    os.mkdir(imageFolder)
+                for filename, content in images:
+                    imageFilePath = os.path.join(imageFolder, filename)
+                    if not os.path.isfile(imageFilePath):
+                        imagefile = open(imageFilePath, "wb")
+                        imagefile.write(content)
+                        imagefile.close()
 
         # create an UB commentary
         ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
@@ -199,6 +222,8 @@ class Converter:
             
             for verse in verses:
                 verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
+                # convert imageTag
+                verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation), verseContent)
                 verseContent = self.formatCommentaryVerse(verseContent)
 
                 fromverse = verse[2]
@@ -229,16 +254,16 @@ class Converter:
 
     def formatNonBibleModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
-        text = re.sub("<a [^<>]*?href='[#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractBibleReferences, text)
+        text = re.sub("<a [^<>]*?href=['{0}][#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractBibleReferences, text)
         # convert bible reference tag like <a class='bible' href='#b1.1.1'>
-        text = re.sub("<a [^<>]*?href='[#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
+        text = re.sub("<a [^<>]*?href=['{0}][#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
 
         # convert commentary reference tag like <a href='#c-CSBC Gen 1:1'>
-        text = re.sub("<a [^<>]*?href='[#]*?c\-[^ ]+? [0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractSpecificCommentaryReferences, text)
+        text = re.sub("<a [^<>]*?href=['{0}][#]*?c\-[^ ]+? [0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractSpecificCommentaryReferences, text)
         # convert commentary reference tag like <a href='#cGen 1:1'>
-        text = re.sub("<a [^<>]*?href='[#]*?c[0-9]*?[A-Za-z]+? [0-9][^<>]*?>", self.extractCommentaryReferences, text)
+        text = re.sub("<a [^<>]*?href=['{0}][#]*?c[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractCommentaryReferences, text)
         # convert commentary reference tag like <a href='#c1.1.1'>
-        text = re.sub("<a [^<>]*?href='[#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>", r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
+        text = re.sub("<a [^<>]*?href=['{0}][#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
 
         return text
 
@@ -253,7 +278,7 @@ class Converter:
 
     def extractSpecificCommentaryReferences(self, match):
         value = match.group()
-        commentary = re.sub("<a [^<>]*?href='[#]*?c\-([^ ]+?) [0-9]*?[A-Za-z]+? [0-9][^<>]*?>", r"\1", value)
+        commentary = re.sub("<a [^<>]*?href=['{0}][#]*?c\-([^ ]+?) [0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), r"\1", value)
         references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
         if references:
             b, c, v = references[0]
@@ -342,6 +367,6 @@ class ThirdPartyDictionary:
                 optionList = [(m, m) for m in self.moduleList]
                 selectList = self.formatSelectList(action, optionList)
                 config.thirdDictionary = self.module
-                content = re.sub("<a href='#d([^\n<>]*?)'>(.*?)</a>", r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\1{1})'>\2</ref>".format(self.module, '"'), content[0])
+                content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
                 content = Converter().formatNonBibleModule(content)
                 return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
