@@ -992,9 +992,10 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, False, "study")
 
     def updateMainRefButton(self):
-        self.mainRefButton.setText(self.verseReference("main"))
-        self.mainView.setTabText(self.mainView.currentIndex(), self.verseReference("main"))
-        self.mainView.setTabToolTip(self.mainView.currentIndex(), self.verseReference("main"))
+        reference = self.verseReference("main")
+        self.mainRefButton.setText(reference)
+        self.mainView.setTabText(self.mainView.currentIndex(), reference)
+        self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def updateStudyRefButton(self):
         self.studyRefButton.setText(self.verseReference("study"))
@@ -1443,13 +1444,6 @@ class WebEngineView(QWebEngineView):
             searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
-    def testing(self):
-        self.tab = QTabWidget(self)
-        self.tab.addTab(WebEngineView(self, "Tab1"), "Tab1")
-        self.tab.addTab(WebEngineView(self, "Tab2"), "Tab2")
-        self.tab.addTab(WebEngineView(self, "Tab3"), "Tab3")
-        self.tab.show()
-
     def extractAllReferences(self):
         selectedText = self.selectedText()
         parser = BibleVerseParser(config.parserStandarisation)
@@ -1571,6 +1565,7 @@ class NoteEditor(QWidget):
             Qt.Key_U: self.format_underline,
             Qt.Key_M: self.format_custom,
             Qt.Key_R: self.format_clear,
+            Qt.Key_F: self.focusSearchField,
         }
         key = event.key()
         if event.modifiers() == Qt.ControlModifier and key in keys:
@@ -1810,6 +1805,9 @@ class NoteEditor(QWidget):
             self.editor.setTextCursor(cursor)
         self.hide()
         self.show()
+
+    def focusSearchField(self):
+        self.searchLineEdit.setFocus()
 
     # track if the text being modified
     def textChanged(self):
