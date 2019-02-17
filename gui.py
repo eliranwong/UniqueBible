@@ -1,7 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
-from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox)
+from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -29,11 +29,10 @@ class MainWindow(QMainWindow):
         self.setupSecondToolBar()
         self.setupBaseUrl()
 
+        self.mainView = None
         self.centralWidget = CentralWidget(self)
-        self.mainView = self.centralWidget.mainView
-        self.mainPage = self.mainView.page()
-        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
-        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
+        #self.mainView = self.centralWidget.mainView
+        self.setMainPage()
         self.studyView = self.centralWidget.studyView
         self.studyPage = self.studyView.page()
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
@@ -60,6 +59,11 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    def setMainPage(self):
+        self.mainPage = self.mainView.currentWidget().page()
+        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
+        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
 
     def event(self, event):
         if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
@@ -989,6 +993,8 @@ class MainWindow(QMainWindow):
 
     def updateMainRefButton(self):
         self.mainRefButton.setText(self.verseReference("main"))
+        self.mainView.setTabText(self.mainView.currentIndex(), self.verseReference("main"))
+        self.mainView.setTabToolTip(self.mainView.currentIndex(), self.verseReference("main"))
 
     def updateStudyRefButton(self):
         self.studyRefButton.setText(self.verseReference("study"))
@@ -1192,12 +1198,20 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Main Window</b>'.</p>"
-        self.mainView = WebEngineView(self, "main")
-        self.mainView.setHtml(self.html, baseUrl)
+        #self.mainView = WebEngineView(self, "main")
+        #self.mainView.setHtml(self.html, baseUrl)
         self.studyView = WebEngineView(self, "study")
         self.studyView.setHtml("This is '<b>Secondary Window</b>'.", baseUrl)
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<u><b>Lightning Window</b></u><br>This small window is designed for viewing instant information, with mouse hovering over verse numbers, special words and links.", baseUrl)
+
+        self.mainView = TabWidget(self, "main")
+        self.parent.mainView = self.mainView
+        self.mainView.addTab(WebEngineView(self, "main"), "Bible1")
+        self.mainView.addTab(WebEngineView(self, "main"), "Bible2")
+        self.mainView.addTab(WebEngineView(self, "main"), "Bible3")
+        self.mainView.addTab(WebEngineView(self, "main"), "Bible4")
+        self.mainView.addTab(WebEngineView(self, "main"), "Bible5")
 
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
@@ -1210,6 +1224,24 @@ class CentralWidget(QWidget):
         self.layout.setRowStretch(1, 2)
 
         self.setLayout(self.layout)
+
+
+class TabWidget(QTabWidget):
+
+    def __init__(self, parent, name):
+        super().__init__()
+        self.parent = parent
+        self.name = name
+        self.currentChanged.connect(self.tabSelected)
+        #self.tabBarClicked.connect(self.tabSelected)
+
+    def setHtml(self, html, baseUrl):
+        self.currentWidget().setHtml(html, baseUrl)
+        #self.setTabText(self.currentIndex(), "BIBLE")
+        #self.parent.parent.setMainPage()
+
+    def tabSelected(self):
+        self.parent.parent.setMainPage()
 
 
 class WebEngineView(QWebEngineView):
@@ -1410,6 +1442,13 @@ class WebEngineView(QWebEngineView):
         else:
             searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def testing(self):
+        self.tab = QTabWidget(self)
+        self.tab.addTab(WebEngineView(self, "Tab1"), "Tab1")
+        self.tab.addTab(WebEngineView(self, "Tab2"), "Tab2")
+        self.tab.addTab(WebEngineView(self, "Tab3"), "Tab3")
+        self.tab.show()
 
     def extractAllReferences(self):
         selectedText = self.selectedText()
