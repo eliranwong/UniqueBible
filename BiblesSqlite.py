@@ -38,8 +38,7 @@ class BiblesSqlite:
         self.connection.commit()
         verses.append((0, 0, 0, description))
         insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
-        for verse in verses:
-            self.cursor.execute(insert, verse)
+        self.cursor.executemany(insert, verses)
         self.connection.commit()
 
     def bcvToVerseReference(self, b, c, v):

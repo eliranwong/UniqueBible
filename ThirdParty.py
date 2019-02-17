@@ -12,7 +12,7 @@ class Converter:
         query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
-        query = "SELECT * FROM Bible ORDER BY Book, Chpater, Verse"
+        query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
         connection.close()
@@ -42,14 +42,14 @@ class Converter:
             cursor.execute(create)
             connection.commit()
 
+        noteList = []
+        formattedChapters = {}
         for book, chapter, verse, scripture in verses:
             scripture, notes = self.convertMySwordBibleTags(scripture)
-
+ 
             if notes:
-                insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
                 for counter, note in enumerate(notes):
-                    cursor.execute(insert, (book, chapter, verse, str(counter), note))
-                connection.commit()
+                    noteList.append((book, chapter, verse, str(counter), note))
 
             if scripture:
 
@@ -57,20 +57,20 @@ class Converter:
                 scripture = re.sub("｛([0-9]+?)｝", r"{0}, {1}, {2}, \1".format(book, chapter, verse), scripture)
                 # verse number formatting
                 scripture = self.formatVerseNumber(book, chapter, verse, scripture)
-
-                query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
-                cursor.execute(query, (book, chapter))
-                chapterText = cursor.fetchone()
-
-                if chapterText:
-                    chapterText = chapterText[0] + scripture
-                    update = "UPDATE Bible SET Scripture=? WHERE Book=? AND Chapter=?"
-                    cursor.execute(update, (chapterText, book, chapter))
-                    connection.commit()
+                
+                if (book, chapter) in formattedChapters:
+                    formattedChapters[(book, chapter)] = formattedChapters[(book, chapter)] + scripture
                 else:
-                    insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-                    cursor.execute(insert, (book, chapter, scripture))
-                    connection.commit()
+                    formattedChapters[(book, chapter)] = scripture
+
+        insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
+        cursor.executemany(insert, noteList)
+        connection.commit()
+
+        formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
+        insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+        cursor.executemany(insert, formattedChapters)
+        connection.commit()        
 
         connection.close()
 
