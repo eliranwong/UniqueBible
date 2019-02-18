@@ -90,9 +90,9 @@ class Converter:
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
-            re.sub("<W([GH][0-9]+?[a-z]*?)>", r" \1 ", text)
+            text = re.sub("<W([GH][0-9]+?[a-z]*?)>", r" \1 ", text)
         if config.importDoNotStripMorphCode:
-            re.sub("<WT([^\n<>]*?)>", r" \1 ", text)
+            text = re.sub("<WT([^\n<>]*?)>", r" \1 ", text)
         searchReplace = (
             ("<CM>|<CL>|<PI[0-9]*?>|<PF[0-9]*?>|<TS[0-9]*?>.*?<Ts>", " "),
             ("<sup><a.*?</a></sup>|<RF[^\n<>]*?>.*?<Rf>|<[^\n<>]*?>", ""),
