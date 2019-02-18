@@ -63,7 +63,9 @@ Currently, we support the following modules:
 
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
 
-Courtesy of MySword (<a href="https://mysword.info">https://mysword.info</a>)
+* e-Sword Commentary Modules [Apple (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
+
+More MySword / e-Sword modules are available at: <a href="http://www.biblesupport.com">http://www.biblesupport.com</a>
 
 Users need to download 3rd party modules separately.<br>
 Built-in converter can be accessed via our menu bar:<br>
