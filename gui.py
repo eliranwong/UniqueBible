@@ -2110,6 +2110,10 @@ class ImportSettings(QDialog):
         self.stripStrNo.setText("Keep Strong's numbers for search")
         self.stripStrNo.setChecked(config.importDoNotStripStrongNo)
 
+        self.stripMorphCode = QCheckBox()
+        self.stripMorphCode.setText("Keep morphology codes for search")
+        self.stripMorphCode.setChecked(config.importDoNotStripMorphCode)
+
         saveButton = QPushButton("Save")
         saveButton.clicked.connect(self.saveSettings)
 
@@ -2129,6 +2133,17 @@ class ImportSettings(QDialog):
             config.importAddVerseLinebreak = True
         else:
             config.importAddVerseLinebreak = False
+
+        if self.stripStrNo.isChecked():
+            config.importDoNotStripStrongNo = True
+        else:
+            config.importDoNotStripStrongNo = False
+
+        if self.stripMorphCode.isChecked():
+            config.importDoNotStripMorphCode = True
+        else:
+            config.importDoNotStripMorphCode = False
+
         self.close()
 
 
