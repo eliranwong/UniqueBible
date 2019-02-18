@@ -2106,6 +2106,10 @@ class ImportSettings(QDialog):
         self.linebreak.setText("Additional linebreak for each verse")
         self.linebreak.setChecked(config.importAddVerseLinebreak)
 
+        self.stripStrNo = QCheckBox()
+        self.stripStrNo.setText("Keep Strong's numbers for search")
+        self.stripStrNo.setChecked(config.importDoNotStripStrongNo)
+
         saveButton = QPushButton("Save")
         saveButton.clicked.connect(self.saveSettings)
 
@@ -2115,8 +2119,9 @@ class ImportSettings(QDialog):
         self.layout = QGridLayout()
         self.layout.addWidget(titleBibles, 0, 0)
         self.layout.addWidget(self.linebreak, 1, 0)
-        self.layout.addWidget(saveButton, 2, 0)
-        self.layout.addWidget(cancelButton, 3, 0)
+        self.layout.addWidget(self.stripStrNo, 2, 0)
+        self.layout.addWidget(saveButton, 3, 0)
+        self.layout.addWidget(cancelButton, 4, 0)
         self.setLayout(self.layout)
 
     def saveSettings(self):

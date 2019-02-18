@@ -5,6 +5,7 @@ fontSize = 120
 noteEditorFontSize = 14
 readFormattedBibles = True
 importAddVerseLinebreak = False
+importDoNotStripStrongNo = False
 mainText = 'KJV'
 mainB = 1
 mainC = 1
