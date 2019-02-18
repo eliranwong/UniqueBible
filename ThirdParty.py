@@ -410,6 +410,135 @@ class Converter:
         text = re.sub("<num>(.*?)</num>", r"<ref onclick='lex({0}\1{0})'>\1</ref>".format('"'), text)
         return text
 
+    def convertMyBibleBookNo(self, myBibleNo):
+        # UB's book numbers: https://github.com/eliranwong/bible-verse-parser/blob/master/abbreviations/SBL-style-abbreviation.xlsx
+
+        # official MyBible's references: https://mybible.zone/code-eng.php
+        # notes from Oleg
+        # 2 Ésdras (in Russian Orthodox Bible) = Έσδράς Α' (in Septuaguint) = 1 Esdras (English) 
+        # 3 Esdras (Russian) = 4 Esdras (Vulgata) = 2 Esdras (English)
+
+        # Five extra non-standard numbers in Oleg's Barach module
+        # 326 Susanna > 75
+        # 71 Judges > 7
+        # 171 Tobit > 88
+        # 235 Psalms of Solomon > 90
+        # 245 Odes > 91
+        # 341 Daniel > 71
+        # 346 Bel and Dragon > 73
+        # 61 Joshua > 6
+
+        # customised numbers used in some Eliran Wong's MyBible modules
+        # e.g. https://github.com/eliranwong/LXX-Rahlfs-1935/tree/master/11_end-users_files/MyBible
+        # Prayer of Manasseh = 469 > 85
+        # GreekEsth = 191 > 78
+        # Psalm 151 = 231 > 86
+        # Psalms of Solomon = 232 > 90
+        # Odes = 800 > 91
+
+        ubNo = {
+            10: 1,
+            20: 2,
+            30: 3,
+            40: 4,
+            50: 5,
+            60: 6,
+            61: 6, # Oleg's Barach module
+            70: 7,
+            71: 7, # Oleg's Barach module
+            80: 8,
+            90: 9,
+            100: 10,
+            110: 11,
+            120: 12,
+            130: 13,
+            140: 14,
+            150: 15,
+            160: 16,
+            190: 17,
+            220: 18,
+            230: 19,
+            240: 20,
+            250: 21,
+            260: 22,
+            290: 23,
+            300: 24,
+            310: 25,
+            330: 26,
+            340: 27,
+            350: 28,
+            360: 29,
+            370: 30,
+            380: 31,
+            390: 32,
+            400: 33,
+            410: 34,
+            420: 35,
+            430: 36,
+            440: 37,
+            450: 38,
+            460: 39,
+            470: 40,
+            480: 41,
+            490: 42,
+            500: 43,
+            510: 44,
+            520: 45,
+            530: 46,
+            540: 47,
+            550: 48,
+            560: 49,
+            570: 50,
+            580: 51,
+            590: 52,
+            600: 53,
+            610: 54,
+            620: 55,
+            630: 56,
+            640: 57,
+            650: 58,
+            660: 59,
+            670: 60,
+            680: 61,
+            690: 62,
+            700: 63,
+            710: 64,
+            720: 65,
+            730: 66,
+            165: 76,
+            468: 77,
+            170: 88,
+            171: 88, # Oleg's Barach module
+            180: 80,
+            270: 89,
+            280: 87,
+            305: 72,
+            315: 79,
+            320: 70,
+            325: 75,
+            326: 75, # Oleg's Barach module
+            345: 73,
+            346: 73, # Oleg's Barach module
+            462: 81,
+            464: 82,
+            466: 83,
+            467: 84,
+            790: 85,
+            469: 85, # Eliran's customised no.
+            191: 78, # Eliran's customised no.
+            231: 86, # Eliran's customised no.
+            232: 90, # Eliran's customised no.
+            235: 90, # Oleg's Barach module
+            800: 91, # Eliran's customised no.
+            245: 91, # Oleg's Barach module
+            341: 71, # Oleg's Barach module
+        }
+        if myBibleNo in ubNo:
+            return ubNo[myBibleNo]
+        else:
+            # use source number if a mapped number is not found.
+            return myBibleNo
+
 
 class ThirdPartyDictionary:
 
