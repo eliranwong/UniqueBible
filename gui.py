@@ -2124,8 +2124,9 @@ class ImportSettings(QDialog):
         self.layout.addWidget(titleBibles, 0, 0)
         self.layout.addWidget(self.linebreak, 1, 0)
         self.layout.addWidget(self.stripStrNo, 2, 0)
-        self.layout.addWidget(saveButton, 3, 0)
-        self.layout.addWidget(cancelButton, 4, 0)
+        self.layout.addWidget(self.stripMorphCode, 3, 0)
+        self.layout.addWidget(saveButton, 4, 0)
+        self.layout.addWidget(cancelButton, 5, 0)
         self.setLayout(self.layout)
 
     def saveSettings(self):
