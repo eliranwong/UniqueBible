@@ -167,6 +167,7 @@ class Converter:
         query = "SELECT title, abbreviation, description FROM details"
         cursor.execute(query)
         title, abbreviation, description = cursor.fetchone()
+        abbreviation = abbreviation.replace(" ", "_")
         query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
         cursor.execute(query)
         chapters = cursor.fetchall()
@@ -228,7 +229,8 @@ class Converter:
                 verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
                 # convert imageTag
                 verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation), verseContent)
-                verseContent = self.formatCommentaryVerse(verseContent)
+                # convert from MySword format
+                verseContent = self.formatMySwordCommentaryVerse(verseContent)
 
                 fromverse = verse[2]
                 item = verseDict.get(fromverse, "not found")
@@ -251,12 +253,12 @@ class Converter:
         connection.close()
         ubFileConnection.close()
 
-    def formatCommentaryVerse(self, text):
+    def formatMySwordCommentaryVerse(self, text):
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\2</b></u>", r"<u><b>\1:\2</b></u>", text)
-        text = self.formatNonBibleModule(text)
+        text = self.formatNonBibleMySwordModule(text)
         return text
 
-    def formatNonBibleModule(self, text):
+    def formatNonBibleMySwordModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
         text = re.sub("<a [^<>]*?href=['{0}][#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractBibleReferences, text)
         # convert bible reference tag like <a class='bible' href='#b1.1.1'>
@@ -298,6 +300,115 @@ class Converter:
             return '<a href="javascript:void(0)" onclick="cbcv({0},{1},{2})">'.format(b, c, v)
         else:
             return value
+
+    # Import e-Sword Commentaries
+    def importESwordCommentary(self, file):
+        # connect MySword commentary
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        # process 2 tables: details, commentary
+        query = "SELECT Title, Abbreviation, Information FROM Details"
+        cursor.execute(query)
+        title, abbreviation, description = cursor.fetchone()
+        abbreviation = abbreviation.replace(" ", "_")
+        query = "SELECT DISTINCT Book, ChapterBegin FROM VerseCommentary ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
+        cursor.execute(query)
+        chapters = cursor.fetchall()
+
+        # create an UB commentary
+        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        if os.path.isfile(ubCommentary):
+            os.remove(ubCommentary)
+        ubFileConnection = sqlite3.connect(ubCommentary)
+        ubFileCursor = ubFileConnection.cursor()
+
+        statements = (
+            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
+        )
+        for create in statements:
+            ubFileCursor.execute(create)
+            ubFileConnection.commit()
+        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
+        ubFileConnection.commit()
+
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, ("table",))
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        
+        # check if table "BookCommentary" exists
+        if "BookCommentary" in tables:
+            query = "SELECT Book, Comments FROM BookCommentary ORDER BY Book"
+            cursor.execute(query)
+            bookCommentaries = cursor.fetchall()
+            if bookCommentaries:
+                bookCommentaries = [(bookBook, 0, bookComments) for bookBook, bookComments in bookCommentaries]
+                # write in UB commentary file
+                insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+                ubFileCursor.executemany(insert, bookCommentaries)
+                ubFileConnection.commit()
+
+        for chapter in chapters:
+            b, c = chapter
+            biblesSqlite = BiblesSqlite()
+            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            del biblesSqlite
+            
+            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+            
+            query = "SELECT Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd, Comments FROM VerseCommentary WHERE Book=? AND ChapterBegin=? ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
+            cursor.execute(query, chapter)
+            verses = cursor.fetchall()
+
+            # check if table "ChapterCommentary" exists
+            if "ChapterCommentary" in tables:
+                query = "SELECT Book, Chapter, Comments FROM ChapterCommentary WHERE Book=? AND Chapter=? ORDER BY Book, Chapter"
+                cursor.execute(query, chapter)
+                chapterCommentary = cursor.fetchone()
+                if chapterCommentary:
+                    chapterBook, chapterChapter, chapterComments = chapterCommentary
+                    verses.append((chapterBook, chapterChapter, 0, chapterChapter, 0, chapterComments))
+            
+            for verse in verses:
+                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(*verse)
+
+                # convert from eSword format
+                verseContent = self.formatESwordCommentaryVerse(verseContent)
+
+                fromverse = verse[2]
+                item = verseDict.get(fromverse, "not found")
+                if item == "not found":
+                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                else:
+                    item.append(verseContent)
+
+            sortedVerses = sorted(verseDict.keys())
+            
+            chapterText = ""
+            for sortedVerse in sortedVerses:
+                chapterText += "<hr>".join(verseDict[sortedVerse])
+            
+            # write in UB commentary file
+            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+            ubFileCursor.execute(insert, (b, c, chapterText))
+            ubFileConnection.commit()
+
+        connection.close()
+        ubFileConnection.close()
+
+    def formatESwordCommentaryVerse(self, text):
+        text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
+        text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
+        text = self.formatNonBibleESwordModule(text)
+        return text
+
+    def formatNonBibleESwordModule(self, text):
+        text = re.sub("<ref>(.+?)</ref>", r"<ref onclick='document.title={0}BIBLE:::\1{0}'>\1</ref>".format('"'), text)
+        text = re.sub("<num>(.*?)</num>", r"<ref onclick='lex({0}\1{0})'>\1</ref>".format('"'), text)
+        return text
 
 
 class ThirdPartyDictionary:
@@ -372,5 +483,5 @@ class ThirdPartyDictionary:
                 selectList = self.formatSelectList(action, optionList)
                 config.thirdDictionary = self.module
                 content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
-                content = Converter().formatNonBibleModule(content)
+                content = Converter().formatNonBibleMySwordModule(content)
                 return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
