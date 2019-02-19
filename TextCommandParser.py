@@ -41,6 +41,7 @@ class TextCommandParser:
             "parallel": self.textParallel,
             "word": self.textWordData,
             "commentary": self.textCommentary,
+            "commentary2": self.textCommentary2,
             "book": self.textBook,
             "searchbook": self.textSearchBook,
             "searchchapternote": self.textSearchChapterNote,
@@ -678,6 +679,24 @@ class TextCommandParser:
             command = "{0}:::{1}".format(config.commentaryText, command)
         commandList = self.splitCommand(command)
         verseList = self.extractAllVerses(commandList[1])
+        if not len(commandList) == 2 or not verseList:
+            return self.invalidCommand()
+        else:
+            bcvTuple = verseList[0]
+            module = commandList[0]
+            commentary = Commentary(module)
+            content =  commentary.getContent(bcvTuple)
+            if not content == "INVALID_COMMAND_ENTERED":
+                self.setCommentaryVerse(module, bcvTuple)
+            del commentary
+            return ("study", content)
+
+    # COMMENTARY2:::
+    def textCommentary2(self, command, source):
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(config.commentaryText, command)
+        commandList = self.splitCommand(command)
+        verseList = [tuple([int(i) for i in commandList[1].split(".")])]
         if not len(commandList) == 2 or not verseList:
             return self.invalidCommand()
         else:

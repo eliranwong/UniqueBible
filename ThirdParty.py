@@ -491,8 +491,9 @@ class Converter:
     def formatMyBibleCommentaryVerse(self, text):
         text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
-        text = text.replace("-None:None", "")
+        text = text.replace("-None:None</b></u></ref><br>", "</b></u></ref><br>")
         text = text.replace(":0</b></u></ref><br>", "</b></u></ref><br>")
+        text = text.replace(":0-0</b></u></ref><br>", "</b></u></ref><br>")
         # deal with internal links like <a class="contents" href="C:@1002 0:0">
         text = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
         text = self.formatNonBibleMyBibleModule(text)
@@ -507,7 +508,6 @@ class Converter:
         else:
             value = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([0-9]+?):([0-9]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::\1.\2.\3{0}'>".format('"'), value)
         return value
-        
 
     def formatNonBibleMyBibleModule(self, text):
         text = re.sub("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?):([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,\3)">', text)
