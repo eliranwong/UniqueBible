@@ -48,6 +48,8 @@ Go to "Resources" > "Install Marvel.bible Datasets"
 
 <i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 246MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
 
+In ADDITION to official UniqueBible.app data, we support various <b>3rd party modules</b>.  Please see <a href="https://github.com/eliranwong/UniqueBible#3rd-party-resources">below</a> for details.
+
 # Screenshot:
 
 <img src="screenshot.png">
@@ -64,6 +66,8 @@ Currently, we support the following modules:
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
 
 * e-Sword Commentary Modules [Apple (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
+
+* MyBible Commentary Modules (<a href="http://mybible.zone">http://mybible.zone</a>)
 
 More MySword / e-Sword modules are available at: <a href="http://www.biblesupport.com">http://www.biblesupport.com</a>
 
