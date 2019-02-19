@@ -453,14 +453,17 @@ class Bible:
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[:-1])
         scripture = self.cursor.fetchone()
-        chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
-        if not scripture:
-            return "[No content is found for this chapter!]"
+        if scripture:
+            chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
+            if not scripture:
+                return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
+            else:
+                divTag = "<div>"
+                if self.text in self.rtlTexts and b < 40:
+                    divTag = "<div style='direction: rtl;'>"
+                return "{0}{1}</div>".format(divTag, chapter)
         else:
-            divTag = "<div>"
-            if self.text in self.rtlTexts and b < 40:
-                divTag = "<div style='direction: rtl;'>"
-            return "{0}{1}</div>".format(divTag, chapter)
+            return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
 
     def readBiblenote(self, bcvi):
         b, c, v, i = bcvi.split(".")

@@ -517,7 +517,7 @@ class Commentary:
                         menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0]))
                     if check >= 2:
                         # i.e. both book and chapter specified; add verse menu
-                        menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>".format(bcList[1])
+                        menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>  <button class='feature' onclick='document.title=\"COMMENTARY:::{1}:::{2}\"'>open</button>".format(bcList[1], self.text, self.bcvToVerseReference(bcList[0], bcList[1], 1)[:-2])
                         menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1]))
                     if check == 3:
                         menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"COMMENTARY:::{0}:::{4}\"'>open HERE</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference)
@@ -532,11 +532,11 @@ class Commentary:
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, verse[:-1])
             scripture = self.cursor.fetchone()
-            chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
-            if not scripture:
-                return "[No content is found for this chapter!]"
-            else:
+            if scripture:
+                chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
                 return "<div>{0}</div>".format(chapter)
+            else:
+                return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
         else:
             return "INVALID_COMMAND_ENTERED"
 
