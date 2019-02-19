@@ -423,7 +423,7 @@ class Converter:
         description = cursor.fetchone()[0]
         title = description
         *_, inputFileName = os.path.split(file)
-        abbreviation = inputFileName[:-23]
+        abbreviation = inputFileName[:-21]
         query = "SELECT DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
         cursor.execute(query)
         chapters = cursor.fetchall()
@@ -493,8 +493,21 @@ class Converter:
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
         text = text.replace("-None:None", "")
         text = text.replace(":0</b></u></ref><br>", "</b></u></ref><br>")
+        # deal with internal links like <a class="contents" href="C:@1002 0:0">
+        text = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
         text = self.formatNonBibleMyBibleModule(text)
         return text
+
+    def formatMyBibleCommentaryLink(self, match):
+        value = match.group()
+        bookNo = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), r"\1", value)
+        standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        if bookNo in standardAbbreviation:
+            value = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? ([\-0-9:]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::{1} \1{0}'>".format('"', standardAbbreviation[bookNo]), value)
+        else:
+            value = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([0-9]+?):([0-9]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::\1.\2.\3{0}'>".format('"'), value)
+        return value
+        
 
     def formatNonBibleMyBibleModule(self, text):
         text = re.sub("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?):([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,\3)">', text)

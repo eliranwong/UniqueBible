@@ -1105,10 +1105,14 @@ class BibleVerseParser:
 
     # function for converting b c v integers to verse reference string
     def bcvToVerseReference(self, b, c, v):
-        abbreviation = self.standardAbbreviation[str(b)]
-        chapter = str(c)
-        verse = str(v)
-        return abbreviation+" "+chapter+":"+verse
+        bookNo = str(b)
+        if bookNo in self.standardAbbreviation:
+            abbreviation = self.standardAbbreviation[str(b)]
+            chapter = str(c)
+            verse = str(v)
+            return abbreviation+" "+chapter+":"+verse
+        else:
+            return "BOOK 0:0"
 
     # function for standardising all verse references in a block of text; use standard set of abbreviations defined below; format references as <abbreviation> <chapter>:<verse>
     def standardReference(self, text):

@@ -474,7 +474,8 @@ class Commentary:
 
     def getBooks(self):
         bookList = self.getBookList()
-        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book), self.bcvToVerseReference(book, 1, 1)[:-4]) for book in bookList])
+        standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
     def getChapterList(self, b=config.commentaryB):
         t = (b,)

@@ -153,7 +153,8 @@ class BiblesSqlite:
 
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
-        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book, text), self.bcvToVerseReference(book, 1, 1)[:-4]) for book in bookList])
+        standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book, text), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
         query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
