@@ -67,7 +67,7 @@ Currently, we support the following modules:
 
 * e-Sword Commentary Modules [Apple (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
 
-* MyBible Commentary Modules (<a href="http://mybible.zone">http://mybible.zone</a>)
+* MyBible Commentary Modules (<a href="https://www.ph4.org/b4_my.php?k=commentaries&q=mybible">https://www.ph4.org/b4_my.php?k=commentaries&q=mybible</a>)
 
 More MySword / e-Sword modules are available at: <a href="http://www.biblesupport.com">http://www.biblesupport.com</a>
 
