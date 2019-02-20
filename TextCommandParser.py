@@ -696,18 +696,22 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.commentaryText, command)
         commandList = self.splitCommand(command)
-        verseList = [tuple([int(i) for i in commandList[1].split(".")])]
-        if not len(commandList) == 2 or not verseList:
-            return self.invalidCommand()
+        reference = commandList[1]
+        if re.search("^[0-9]+?\.[0-9]+?\.[0-9]+?$", reference):
+            verseList = [tuple([int(i) for i in reference.split(".")])]
+            if not len(commandList) == 2 or not verseList:
+                return self.invalidCommand()
+            else:
+                bcvTuple = verseList[0]
+                module = commandList[0]
+                commentary = Commentary(module)
+                content =  commentary.getContent(bcvTuple)
+                if not content == "INVALID_COMMAND_ENTERED":
+                    self.setCommentaryVerse(module, bcvTuple)
+                del commentary
+                return ("study", content)
         else:
-            bcvTuple = verseList[0]
-            module = commandList[0]
-            commentary = Commentary(module)
-            content =  commentary.getContent(bcvTuple)
-            if not content == "INVALID_COMMAND_ENTERED":
-                self.setCommentaryVerse(module, bcvTuple)
-            del commentary
-            return ("study", content)
+            return self.invalidCommand()
 
     # SEARCHTOOL:::
     def textSearchTool(self, command, source):
