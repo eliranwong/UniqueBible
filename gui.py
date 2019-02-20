@@ -63,10 +63,17 @@ class MainWindow(QMainWindow):
         request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
         if request.status_code == 200:
             if float(request.text) > config.version:
-                pass
+                self.promptUpdate(request.text)
 
     def __del__(self):
         del self.textCommandParser
+
+    def promptUpdate(self, latestVersion):
+        reply = QMessageBox.question(self, "Update is available ...",
+                "Latest version: {0}\nCurrent version: {1}\nDo you want to proceed the update?".format(latestVersion, config.version),
+                QMessageBox.Yes | QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.updateUniqueBibleApp()
 
     def updateUniqueBibleApp(self):
         file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
