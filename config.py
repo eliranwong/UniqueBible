@@ -1,12 +1,13 @@
+version = 0.1
 myGoogleApiKey = ''
 parserStandarisation = 'YES'
 instantInformationEnabled = 1
 fontSize = 120
 noteEditorFontSize = 14
 readFormattedBibles = True
-importAddVerseLinebreak = False
 importDoNotStripStrongNo = False
 importDoNotStripMorphCode = False
+importAddVerseLinebreak = False
 mainText = 'KJV'
 mainB = 1
 mainC = 1

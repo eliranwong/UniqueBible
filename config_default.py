@@ -1,3 +1,4 @@
+version = 0.1
 myGoogleApiKey = ''
 parserStandarisation = 'YES'
 instantInformationEnabled = 1

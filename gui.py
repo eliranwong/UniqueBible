@@ -16,9 +16,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        #if hasattr(config, 'mainText'):
-            #print(config.mainText)
-
         self.textCommandParser = TextCommandParser(self)
 
         self.setWindowTitle('Unique Bible App')
@@ -59,6 +56,14 @@ class MainWindow(QMainWindow):
 
         self.directoryLabel = QLabel()
         self.directoryLabel.setFrameStyle(frameStyle)
+
+        # manage latest update
+        if not hasattr(config, 'version'):
+            config.version = 0.1
+        request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
+        if request.status_code == 200:
+            if float(request.text) > config.version:
+                pass
 
     def __del__(self):
         del self.textCommandParser
