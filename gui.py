@@ -1,4 +1,4 @@
-import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown
+import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
@@ -60,7 +60,24 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
+    def updateUniqueBibleApp(self):
+        file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
+        request = requests.get(file)
+        if request.status_code == 200:
+            filename = file.split("/")[-1]        
+            with open(filename, "wb") as content:
+                content.write(request.content)
+            if filename.endswith(".zip"):
+                zip = zipfile.ZipFile(filename, "r")
+                zip.extractall(os.path.dirname(os.getcwd()))
+                zip.close()
+                os.remove(filename)
+            self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need to restart the app to apply the changes.")')
+        else:
+            self.mainPage.runJavaScript('alert("Failed to download the latest update. Please check your internet connection.")')
+
     def setMainPage(self):
+        # main page changes as tab is changed.
         self.mainPage = self.mainView.currentWidget().page()
         self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
@@ -90,6 +107,8 @@ class MainWindow(QMainWindow):
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
         quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
+        menu1.addAction(QAction("&Update UniqueBible.app", self, triggered=self.updateUniqueBibleApp))
+        menu1.addSeparator()
         menu1.addAction(quit_action)
 
         menu2 = self.menuBar().addMenu("&View")
