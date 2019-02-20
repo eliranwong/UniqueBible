@@ -58,8 +58,13 @@ class MainWindow(QMainWindow):
         self.directoryLabel.setFrameStyle(frameStyle)
 
         # manage latest update
+        # change the following 4 files for major changes of version
+        # gui.py line 67
+        # config_default.py line 1
+        # config.py line 1
+        # https://biblebento.com/UniqueBibleAppVersion.txt
         if not hasattr(config, 'version'):
-            config.version = 0.1
+            config.version = 0.2
         request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
         if request.status_code == 200:
             if float(request.text) > config.version:
@@ -70,7 +75,7 @@ class MainWindow(QMainWindow):
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
-                "Latest version: {0}\nCurrent version: {1}\nDo you want to proceed the update?".format(latestVersion, config.version),
+                "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(latestVersion, config.version),
                 QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.updateUniqueBibleApp()

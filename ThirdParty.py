@@ -237,13 +237,18 @@ class Converter:
 
     def formatNonBibleESwordModule(self, text):
         searchReplace = {
-            ("<ref>(.+?)</ref>", r"<ref onclick='document.title={0}BIBLE:::\1{0}'>\1</ref>".format('"')),
+            ("<ref>(.+?)</ref>", self.convertESwordBibleReference),
             ("<num>(.*?)</num>", r"<ref onclick='lex({0}\1{0})'>\1</ref>".format('"')),
             ("<tvm>(.*?)</tvm>", r"<ref onclick='rmac({0}\1{0})'>\1</ref>".format('"')),
         }
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
         return text
+
+    def convertESwordBibleReference(self, match):
+        value = match.group()
+        value = value.replace("_", " ")[5:-6]
+        return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value)
 
     # Import MySword Bibles
     def importMySwordBible(self, file):
