@@ -107,13 +107,102 @@ function getFullBookName(abbreviation) {
 }
 
 function bcvToVerseRefence(b,c,v) {
-    var SBLabb = ["", "Gen", "Exod", "Lev", "Num", "Deut", "Josh", "Judg", "Ruth", "1Sam", "2Sam", "1Kgs", "2Kgs", "1Chr", "2Chr", "Ezra", "Neh", "Esth", "Job", "Ps", "Prov", "Eccl", "Song", "Isa", "Jer", "Lam", "Ezek", "Dan", "Hos", "Joel", "Amos", "Obad", "Jonah", "Mic", "Nah", "Hab", "Zeph", "Hag", "Zech", "Mal", "Matt", "Mark", "Luke", "John", "Acts", "Rom", "1Cor", "2Cor", "Gal", "Eph", "Phil", "Col", "1Thess", "2Thess", "1Tim", "2Tim", "Titus", "Phlm", "Heb", "Jas", "1Pet", "2Pet", "1John", "2John", "3John", "Jude", "Rev"];
-    var abb = SBLabb[b];
+    var abbSBL = {
+        ub1: "Gen",
+        ub2: "Exod",
+        ub3: "Lev",
+        ub4: "Num",
+        ub5: "Deut",
+        ub6: "Josh",
+        ub7: "Judg",
+        ub8: "Ruth",
+        ub9: "1Sam",
+        ub10: "2Sam",
+        ub11: "1Kgs",
+        ub12: "2Kgs",
+        ub13: "1Chr",
+        ub14: "2Chr",
+        ub15: "Ezra",
+        ub16: "Neh",
+        ub17: "Esth",
+        ub18: "Job",
+        ub19: "Ps",
+        ub20: "Prov",
+        ub21: "Eccl",
+        ub22: "Song",
+        ub23: "Isa",
+        ub24: "Jer",
+        ub25: "Lam",
+        ub26: "Ezek",
+        ub27: "Dan",
+        ub28: "Hos",
+        ub29: "Joel",
+        ub30: "Amos",
+        ub31: "Obad",
+        ub32: "Jonah",
+        ub33: "Mic",
+        ub34: "Nah",
+        ub35: "Hab",
+        ub36: "Zeph",
+        ub37: "Hag",
+        ub38: "Zech",
+        ub39: "Mal",
+        ub40: "Matt",
+        ub41: "Mark",
+        ub42: "Luke",
+        ub43: "John",
+        ub44: "Acts",
+        ub45: "Rom",
+        ub46: "1Cor",
+        ub47: "2Cor",
+        ub48: "Gal",
+        ub49: "Eph",
+        ub50: "Phil",
+        ub51: "Col",
+        ub52: "1Thess",
+        ub53: "2Thess",
+        ub54: "1Tim",
+        ub55: "2Tim",
+        ub56: "Titus",
+        ub57: "Phlm",
+        ub58: "Heb",
+        ub59: "Jas",
+        ub60: "1Pet",
+        ub61: "2Pet",
+        ub62: "1John",
+        ub63: "2John",
+        ub64: "3John",
+        ub65: "Jude",
+        ub66: "Rev",
+        ub70: "Bar",
+        ub71: "AddDan",
+        ub72: "PrAzar",
+        ub73: "Bel",
+        ub75: "Sus",
+        ub76: "1Esd",
+        ub77: "2Esd",
+        ub78: "AddEsth",
+        ub79: "EpJer",
+        ub80: "Jdt",
+        ub81: "1Macc",
+        ub82: "2Macc",
+        ub83: "3Macc",
+        ub84: "4Macc",
+        ub85: "PrMan",
+        ub86: "Ps151",
+        ub87: "Sir",
+        ub88: "Tob",
+        ub89: "Wis",
+        ub90: "PssSol",
+        ub91: "Odes",
+        ub92: "EpLao"
+    };
+    var abb = abbSBL["ub"+String(b)];
     return abb+" "+c+":"+v;
 }
 
 function mbbcvToVerseRefence(b,c,v) {
-    SBLabb = {
+    var abbSBL = {
         mb10: "Gen",
         mb20: "Exod",
         mb30: "Lev",
@@ -210,7 +299,7 @@ function mbbcvToVerseRefence(b,c,v) {
         mb245: "Odes",
         mb341: "AddDan"
     };
-    var abb = SBLabb["mb"+String(b)];
+    var abb = abbSBL["mb"+String(b)];
     return abb+" "+c+":"+v;
 }
 
