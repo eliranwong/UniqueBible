@@ -65,7 +65,9 @@ Currently, we support the following modules:
 
 * MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
 
-* e-Sword Commentary Modules [Apple (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
+* e-Sword Bible Modules [Apple / macOS / iOS (*.bbli)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
+
+* e-Sword Commentary Modules [Apple / macOS / iOS (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
 
 * MyBible Commentary Modules (<a href="https://www.ph4.org/b4_my.php?k=commentaries&q=mybible">https://www.ph4.org/b4_my.php?k=commentaries&q=mybible</a>)
 
