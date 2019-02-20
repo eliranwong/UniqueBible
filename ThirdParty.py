@@ -4,6 +4,247 @@ from BibleVerseParser import BibleVerseParser
 
 class Converter:
 
+    # bible modules verse number format
+    def formatVerseNumber(self, book, chapter, verse, text):
+        text = '<vid id="v{0}.{1}.{2}" onclick="luV({2})">{2}</vid> {3}'.format(book, chapter, verse, text)
+        p = re.compile("(<vid .*?</vid> )(<u><b>.*?</b></u>|<br>|&emsp;|&ensp;| )")
+        s = p.search(text)
+        while s:
+            text = p.sub(r"\2\1", text)
+            s = p.search(text)
+        text = text.strip()
+        if config.importAddVerseLinebreak:
+            text = "<verse>{0}</verse><br>".format(text)
+        else:
+            text = "<verse>{0}</verse> ".format(text)
+        return text
+
+    # Import e-Sword Bibles [Apple / macOS / iOS]
+    def importESwordBible(self, file):
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        query = "SELECT Title, Abbreviation FROM Details"
+        cursor.execute(query)
+        description, abbreviation = cursor.fetchone()
+        query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
+        cursor.execute(query)
+        verses = cursor.fetchall()
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, ("table",))
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+
+        abbreviation = abbreviation.replace("+", "x")
+        self.eSwordBibleToPlainFormat(description, abbreviation, verses)
+        if "Notes" in tables:
+            query = "SELECT * FROM Notes"
+            cursor.execute(query)
+            notes = cursor.fetchall()
+            self.eSwordBibleToRichFormat(description, abbreviation, verses, notes)
+        else:
+            self.eSwordBibleToRichFormat(description, abbreviation, verses, [])
+        connection.close()
+
+    def eSwordBibleToPlainFormat(self, description, abbreviation, verses):
+        verses = [(book, chapter, verse, self.stripESwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
+        biblesSqlite = BiblesSqlite()
+        biblesSqlite.importBible(description, abbreviation, verses)
+        del biblesSqlite
+
+    def eSwordBibleToRichFormat(self, description, abbreviation, verses, notes):
+        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        if os.path.isfile(formattedBible):
+            os.remove(formattedBible)
+        connection = sqlite3.connect(formattedBible)
+        cursor = connection.cursor()
+
+        statements = (
+            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+        )
+        for create in statements:
+            cursor.execute(create)
+            connection.commit()
+
+        noteList = []
+        formattedChapters = {}
+        for book, chapter, verse, scripture in verses:
+            scripture = self.convertESwordBibleTags(scripture)
+
+            if scripture:
+
+                # fix bible note links
+                if notes:
+                    scripture = re.sub("<not>([^\n<>]+?)</not>", r"<sup><ref onclick='bn({0}, {1}, {2}, {3}\1{3})'>&oplus;</ref></sup>".format(book, chapter, verse, '"'), scripture)
+
+                # verse number formatting
+                scripture = self.formatVerseNumber(book, chapter, verse, scripture)
+
+                if (book, chapter) in formattedChapters:
+                    formattedChapters[(book, chapter)] = formattedChapters[(book, chapter)] + scripture
+                else:
+                    formattedChapters[(book, chapter)] = scripture
+
+        if notes:
+            insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
+            notes = [(book, chapter, cerse, id, self.formatNonBibleESwordModule(note)) for book, chapter, cerse, id, note in notes]
+            cursor.executemany(insert, notes)
+            connection.commit()
+
+        formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
+        insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+        cursor.executemany(insert, formattedChapters)
+        connection.commit()        
+
+        connection.close()
+
+    def stripESwordBibleTags(self, text):
+        if config.importDoNotStripStrongNo:
+            text = re.sub("<num>([GH][0-9]+?[a-z]*?)</num>", r" \1 ", text)
+        if config.importDoNotStripMorphCode:
+            text = re.sub("<tvm>([^\n<>]*?)</tvm>", r" \1 ", text)
+        searchReplace = (
+            ("<p>|</p>|<h[0-9]+?>|</h[0-9]+?>|<sup>", " "),
+            ("<not>.*?</not>|<[^\n<>]*?>", ""),
+            (" [ ]+?([^ ])", r" \1"),
+        )
+        text = text.strip()
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        text = text.strip()
+        return text
+
+    def convertESwordBibleTags(self, text):
+        searchReplace = (
+            ("<num>([GH][0-9]+?[a-z]*?)</num>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("<tvm>([^\n<>]*?)</tvm>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("<red>", "<woj>"),
+            ("</red>", "</woj>"),
+            ("<blu>", "<esblu>"),
+            ("</blu>", "</esblu>"),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        text = re.sub("</ref><ref", "</ref>; <ref", text)
+        text = re.sub("</ref></sup><sup><ref", "</ref> <ref", text)
+        text = text.strip()
+        return text
+
+    # Import e-Sword Commentaries
+    def importESwordCommentary(self, file):
+        # connect MySword commentary
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        # process 4 tables: Details, BookCommentary, ChapterCommentary, VerseCommentary
+        query = "SELECT Title, Abbreviation, Information FROM Details"
+        cursor.execute(query)
+        title, abbreviation, description = cursor.fetchone()
+        abbreviation = abbreviation.replace(" ", "_")
+        query = "SELECT DISTINCT Book, ChapterBegin FROM VerseCommentary ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
+        cursor.execute(query)
+        chapters = cursor.fetchall()
+
+        # create an UB commentary
+        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        if os.path.isfile(ubCommentary):
+            os.remove(ubCommentary)
+        ubFileConnection = sqlite3.connect(ubCommentary)
+        ubFileCursor = ubFileConnection.cursor()
+
+        statements = (
+            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
+        )
+        for create in statements:
+            ubFileCursor.execute(create)
+            ubFileConnection.commit()
+        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
+        ubFileConnection.commit()
+
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, ("table",))
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+
+        # check if table "BookCommentary" exists
+        if "BookCommentary" in tables:
+            query = "SELECT Book, Comments FROM BookCommentary ORDER BY Book"
+            cursor.execute(query)
+            bookCommentaries = cursor.fetchall()
+            if bookCommentaries:
+                bookCommentaries = [(bookBook, 0, bookComments) for bookBook, bookComments in bookCommentaries]
+                # write in UB commentary file
+                insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+                ubFileCursor.executemany(insert, bookCommentaries)
+                ubFileConnection.commit()
+
+        for chapter in chapters:
+            b, c = chapter
+            biblesSqlite = BiblesSqlite()
+            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            del biblesSqlite
+
+            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+
+            query = "SELECT Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd, Comments FROM VerseCommentary WHERE Book=? AND ChapterBegin=? ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
+            cursor.execute(query, chapter)
+            verses = cursor.fetchall()
+
+            # check if table "ChapterCommentary" exists
+            if "ChapterCommentary" in tables:
+                query = "SELECT Book, Chapter, Comments FROM ChapterCommentary WHERE Book=? AND Chapter=? ORDER BY Book, Chapter"
+                cursor.execute(query, chapter)
+                chapterCommentary = cursor.fetchone()
+                if chapterCommentary:
+                    chapterBook, chapterChapter, chapterComments = chapterCommentary
+                    verses.append((chapterBook, chapterChapter, 0, chapterChapter, 0, chapterComments))
+
+            for verse in verses:
+                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(*verse)
+
+                # convert from eSword format
+                verseContent = self.formatESwordCommentaryVerse(verseContent)
+
+                fromverse = verse[2]
+                item = verseDict.get(fromverse, "not found")
+                if item == "not found":
+                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                else:
+                    item.append(verseContent)
+
+            sortedVerses = sorted(verseDict.keys())
+
+            chapterText = ""
+            for sortedVerse in sortedVerses:
+                chapterText += "<hr>".join(verseDict[sortedVerse])
+
+            # write in UB commentary file
+            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+            ubFileCursor.execute(insert, (b, c, chapterText))
+            ubFileConnection.commit()
+
+        connection.close()
+        ubFileConnection.close()
+
+    def formatESwordCommentaryVerse(self, text):
+        text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
+        text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
+        text = self.formatNonBibleESwordModule(text)
+        return text
+
+    def formatNonBibleESwordModule(self, text):
+        searchReplace = {
+            ("<ref>(.+?)</ref>", r"<ref onclick='document.title={0}BIBLE:::\1{0}'>\1</ref>".format('"')),
+            ("<num>(.*?)</num>", r"<ref onclick='lex({0}\1{0})'>\1</ref>".format('"')),
+            ("<tvm>(.*?)</tvm>", r"<ref onclick='rmac({0}\1{0})'>\1</ref>".format('"')),
+        }
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        return text
+
     # Import MySword Bibles
     def importMySwordBible(self, file):
         connection = sqlite3.connect(file)
@@ -17,7 +258,7 @@ class Converter:
         verses = cursor.fetchall()
         connection.close()
 
-        abbreviation = abbreviation.replace("+", "s")
+        abbreviation = abbreviation.replace("+", "x")
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         self.mySwordBibleToRichFormat(description, abbreviation, verses)
 
@@ -46,7 +287,7 @@ class Converter:
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
             scripture, notes = self.convertMySwordBibleTags(scripture)
- 
+
             if notes:
                 for counter, note in enumerate(notes):
                     noteList.append((book, chapter, verse, str(counter), note))
@@ -57,7 +298,7 @@ class Converter:
                 scripture = re.sub("｛([0-9]+?)｝", r"{0}, {1}, {2}, \1".format(book, chapter, verse), scripture)
                 # verse number formatting
                 scripture = self.formatVerseNumber(book, chapter, verse, scripture)
-                
+
                 if (book, chapter) in formattedChapters:
                     formattedChapters[(book, chapter)] = formattedChapters[(book, chapter)] + scripture
                 else:
@@ -73,20 +314,6 @@ class Converter:
         connection.commit()        
 
         connection.close()
-
-    def formatVerseNumber(self, book, chapter, verse, text):
-        text = '<vid id="v{0}.{1}.{2}" onclick="luV({2})">{2}</vid> {3}'.format(book, chapter, verse, text)
-        p = re.compile("(<vid .*?</vid> )(<u><b>.*?</b></u>|<br>|&emsp;|&ensp;| )")
-        s = p.search(text)
-        while s:
-            text = p.sub(r"\2\1", text)
-            s = p.search(text)
-        text = text.strip()
-        if config.importAddVerseLinebreak:
-            text = "<verse>{0}</verse><br>".format(text)
-        else:
-            text = "<verse>{0}</verse> ".format(text)
-        return text
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
@@ -218,13 +445,13 @@ class Converter:
             biblesSqlite = BiblesSqlite()
             verseList = biblesSqlite.getVerseList(b, c, "KJV")
             del biblesSqlite
-            
+
             verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
-            
+
             query = "SELECT book, chapter, fromverse, toverse, data FROM commentary WHERE book=? AND chapter=? ORDER BY book, chapter, fromverse, toverse"
             cursor.execute(query, chapter)
             verses = cursor.fetchall()
-            
+
             for verse in verses:
                 verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
                 # convert imageTag
@@ -240,7 +467,7 @@ class Converter:
                     item.append(verseContent)
 
             sortedVerses = sorted(verseDict.keys())
-            
+
             chapterText = ""
             for sortedVerse in sortedVerses:
                 chapterText += "<hr>".join(verseDict[sortedVerse])
@@ -301,115 +528,6 @@ class Converter:
         else:
             return value
 
-    # Import e-Sword Commentaries
-    def importESwordCommentary(self, file):
-        # connect MySword commentary
-        connection = sqlite3.connect(file)
-        cursor = connection.cursor()
-
-        # process 4 tables: Details, BookCommentary, ChapterCommentary, VerseCommentary
-        query = "SELECT Title, Abbreviation, Information FROM Details"
-        cursor.execute(query)
-        title, abbreviation, description = cursor.fetchone()
-        abbreviation = abbreviation.replace(" ", "_")
-        query = "SELECT DISTINCT Book, ChapterBegin FROM VerseCommentary ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
-        cursor.execute(query)
-        chapters = cursor.fetchall()
-
-        # create an UB commentary
-        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
-        if os.path.isfile(ubCommentary):
-            os.remove(ubCommentary)
-        ubFileConnection = sqlite3.connect(ubCommentary)
-        ubFileCursor = ubFileConnection.cursor()
-
-        statements = (
-            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
-        )
-        for create in statements:
-            ubFileCursor.execute(create)
-            ubFileConnection.commit()
-        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
-        ubFileConnection.commit()
-
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        cursor.execute(query, ("table",))
-        tables = cursor.fetchall()
-        tables = [table[0] for table in tables]
-        
-        # check if table "BookCommentary" exists
-        if "BookCommentary" in tables:
-            query = "SELECT Book, Comments FROM BookCommentary ORDER BY Book"
-            cursor.execute(query)
-            bookCommentaries = cursor.fetchall()
-            if bookCommentaries:
-                bookCommentaries = [(bookBook, 0, bookComments) for bookBook, bookComments in bookCommentaries]
-                # write in UB commentary file
-                insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-                ubFileCursor.executemany(insert, bookCommentaries)
-                ubFileConnection.commit()
-
-        for chapter in chapters:
-            b, c = chapter
-            biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "KJV")
-            del biblesSqlite
-            
-            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
-            
-            query = "SELECT Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd, Comments FROM VerseCommentary WHERE Book=? AND ChapterBegin=? ORDER BY Book, ChapterBegin, VerseBegin, ChapterEnd, VerseEnd"
-            cursor.execute(query, chapter)
-            verses = cursor.fetchall()
-
-            # check if table "ChapterCommentary" exists
-            if "ChapterCommentary" in tables:
-                query = "SELECT Book, Chapter, Comments FROM ChapterCommentary WHERE Book=? AND Chapter=? ORDER BY Book, Chapter"
-                cursor.execute(query, chapter)
-                chapterCommentary = cursor.fetchone()
-                if chapterCommentary:
-                    chapterBook, chapterChapter, chapterComments = chapterCommentary
-                    verses.append((chapterBook, chapterChapter, 0, chapterChapter, 0, chapterComments))
-            
-            for verse in verses:
-                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(*verse)
-
-                # convert from eSword format
-                verseContent = self.formatESwordCommentaryVerse(verseContent)
-
-                fromverse = verse[2]
-                item = verseDict.get(fromverse, "not found")
-                if item == "not found":
-                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
-                else:
-                    item.append(verseContent)
-
-            sortedVerses = sorted(verseDict.keys())
-            
-            chapterText = ""
-            for sortedVerse in sortedVerses:
-                chapterText += "<hr>".join(verseDict[sortedVerse])
-            
-            # write in UB commentary file
-            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-            ubFileCursor.execute(insert, (b, c, chapterText))
-            ubFileConnection.commit()
-
-        connection.close()
-        ubFileConnection.close()
-
-    def formatESwordCommentaryVerse(self, text):
-        text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
-        text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
-        text = self.formatNonBibleESwordModule(text)
-        return text
-
-    def formatNonBibleESwordModule(self, text):
-        text = re.sub("<ref>(.+?)</ref>", r"<ref onclick='document.title={0}BIBLE:::\1{0}'>\1</ref>".format('"'), text)
-        text = re.sub("<num>(.*?)</num>", r"<ref onclick='lex({0}\1{0})'>\1</ref>".format('"'), text)
-        return text
-
     # Import MyBible Commentaries
     def importMyBibleCommentary(self, file):
         # connect MySword commentary
@@ -452,13 +570,13 @@ class Converter:
             biblesSqlite = BiblesSqlite()
             verseList = biblesSqlite.getVerseList(b, c, "KJV")
             del biblesSqlite
-            
+
             verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
-            
+
             query = "SELECT book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text FROM commentaries WHERE book_number=? AND chapter_number_from=? ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
             cursor.execute(query, chapter)
             verses = cursor.fetchall()
-            
+
             for verse in verses:
                 book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text = verse
                 book_number = self.convertMyBibleBookNo(book_number)
@@ -475,11 +593,11 @@ class Converter:
                     item.append(verseContent)
 
             sortedVerses = sorted(verseDict.keys())
-            
+
             chapterText = ""
             for sortedVerse in sortedVerses:
                 chapterText += "<hr>".join(verseDict[sortedVerse])
-            
+
             # write in UB commentary file
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
             ubFileCursor.execute(insert, (b, c, chapterText))

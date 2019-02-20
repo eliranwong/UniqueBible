@@ -26,6 +26,7 @@ class BiblesSqlite:
             return ""
 
     def importBible(self, description, abbreviation, verses):
+        print(abbreviation)
         query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
         self.cursor.execute(query, (abbreviation,))
         table = self.cursor.fetchone()

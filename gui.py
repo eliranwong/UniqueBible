@@ -710,7 +710,7 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Commentaries [Apple] (*.cmti);;MyBible Commentaries (*.commentaries.SQLite3)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;MyBible Commentaries (*.commentaries.SQLite3)", "", options)
         if fileName:
             if fileName.endswith(".dct.mybible"):
                 self.importMySwordDictionary(fileName)
@@ -718,6 +718,8 @@ class MainWindow(QMainWindow):
                 self.importMySwordBible(fileName)
             elif fileName.endswith(".cmt.mybible"):
                 self.importMySwordCommentary(fileName)
+            elif fileName.endswith(".bbli"):
+                self.importESwordBible(fileName)
             elif fileName.endswith(".cmti"):
                 self.importESwordCommentary(fileName)
             elif fileName.endswith(".commentaries.SQLite3"):
@@ -738,6 +740,10 @@ class MainWindow(QMainWindow):
 
     def importMySwordCommentary(self, fileName):
         Converter().importMySwordCommentary(fileName)
+        self.completeImport()
+
+    def importESwordBible(self, fileName):
+        Converter().importESwordBible(fileName)
         self.completeImport()
 
     def importESwordCommentary(self, fileName):
