@@ -16,6 +16,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        #if hasattr(config, 'mainText'):
+            #print(config.mainText)
+
         self.textCommandParser = TextCommandParser(self)
 
         self.setWindowTitle('Unique Bible App')
