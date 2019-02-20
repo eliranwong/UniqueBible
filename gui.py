@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
         quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
-        menu1.addAction(QAction("&Update UniqueBible.app", self, triggered=self.updateUniqueBibleApp))
+        menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         menu1.addAction(quit_action)
 
