@@ -794,8 +794,8 @@ class ThirdPartyDictionary:
         myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3")]
         moduleList = set(mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
         moduleList = sorted(list(moduleList))
-        #return moduleList
-        return mySwordDictionaries
+        return moduleList
+        #return mySwordDictionaries
 
     def search(self, entry):
         if not self.database:
@@ -824,7 +824,10 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dcti": self.getESwordDicExactWord,
+                ".lexi": self.getESwordLexExactWord,
                 ".dct.mybible": self.getMySwordExactWord,
+                ".dictionary.SQLite3": self.getMyBibleExactWord,
             }
             return getDictionaryData[self.fileExtension](entry)
 
@@ -833,7 +836,10 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dcti": self.getESwordDicSimilarWord,
+                ".lexi": self.getESwordLexSimilarWord,
                 ".dct.mybible": self.getMySwordSimilarWord,
+                ".dictionary.SQLite3": self.getMyBibleSimilarWord,
             }
             return getDictionaryData[self.fileExtension](entry)
 
@@ -842,10 +848,82 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dcti": self.getESwordDicDictionaryData,
+                ".lexi": self.getESwordLexDictionaryData,
                 ".dct.mybible": self.getMySwordDictionaryData,
+                ".dictionary.SQLite3": self.getMyBibleDictionaryData,
             }
             return getDictionaryData[self.fileExtension](entry)
 
+    # e-Sword dictionaries
+    def getESwordDicExactWord(self, entry):
+        query = "SELECT Topic FROM Dictionary WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getESwordDicSimilarWord(self, entry):
+        query = "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
+        self.cursor.execute(query, ("%{0}%".format(entry), entry))
+        contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
+        if not contentList:
+            return "[not found]"
+        else:
+            return "<br>".join(contentList)
+
+    def getESwordDicDictionaryData(self, entry):
+        query = "SELECT Definition FROM Dictionary WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
+            optionList = [(m, m) for m in self.moduleList]
+            selectList = self.formatSelectList(action, optionList)
+            config.thirdDictionary = self.module
+            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
+            content = Converter().formatNonBibleESwordModule(content)
+            return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
+
+    # e-Sword lexicon
+    def getESwordLexExactWord(self, entry):
+        query = "SELECT Topic FROM Lexicon WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getESwordLexSimilarWord(self, entry):
+        query = "SELECT Topic FROM Lexicon WHERE Topic LIKE ? AND Topic != ?"
+        self.cursor.execute(query, ("%{0}%".format(entry), entry))
+        contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
+        if not contentList:
+            return "[not found]"
+        else:
+            return "<br>".join(contentList)
+
+    def getESwordLexDictionaryData(self, entry):
+        query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
+            optionList = [(m, m) for m in self.moduleList]
+            selectList = self.formatSelectList(action, optionList)
+            config.thirdDictionary = self.module
+            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
+            content = Converter().formatNonBibleESwordModule(content)
+            return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
+
+    # MySword dictionaries
     def getMySwordExactWord(self, entry):
         query = "SELECT word FROM dictionary WHERE word = ?"
         self.cursor.execute(query, (entry,))
@@ -877,4 +955,38 @@ class ThirdPartyDictionary:
             config.thirdDictionary = self.module
             content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
             content = Converter().formatNonBibleMySwordModule(content)
+            return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
+
+    # MyBible Dictionaries
+    def getMyBibleExactWord(self, entry):
+        query = "SELECT topic FROM dictionary WHERE topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getMyBibleSimilarWord(self, entry):
+        query = "SELECT topic FROM dictionary WHERE topic LIKE ? AND topic != ?"
+        self.cursor.execute(query, ("%{0}%".format(entry), entry))
+        contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
+        if not contentList:
+            return "[not found]"
+        else:
+            return "<br>".join(contentList)
+
+    def getMyBibleDictionaryData(self, entry):
+        query = "SELECT definition FROM dictionary WHERE topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
+            optionList = [(m, m) for m in self.moduleList]
+            selectList = self.formatSelectList(action, optionList)
+            config.thirdDictionary = self.module
+            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
+            content = Converter().formatNonBibleMyBibleModule(content)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)

@@ -753,10 +753,10 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;MyBible Commentaries (*.commentaries.SQLite3)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
         if fileName:
-            if fileName.endswith(".dct.mybible"):
-                self.importMySwordDictionary(fileName)
+            if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(".lexi") or fileName.endswith(".dictionary.SQLite3"):
+                self.importThirdPartyDictionary(fileName)
             elif fileName.endswith(".bbl.mybible"):
                 self.importMySwordBible(fileName)
             elif fileName.endswith(".cmt.mybible"):
@@ -768,7 +768,7 @@ class MainWindow(QMainWindow):
             elif fileName.endswith(".commentaries.SQLite3"):
                 self.importMyBibleCommentary(fileName)
 
-    def importMySwordDictionary(self, fileName):
+    def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
         destination = os.path.join("thirdParty", "dictionaries", name)
         try:
