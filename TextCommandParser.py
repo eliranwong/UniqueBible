@@ -1105,12 +1105,21 @@ class TextCommandParser:
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content)
 
+    # Check if a third party dictionary exists:
+    def isThridPartyDictionary(self, module):
+        mySwordDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dct.mybible"))
+        if os.path.isfile(mySwordDictionary):
+            return (module, ".dct.mybible")
+        else:
+            return None
+
     # SEARCHTHIRDDICTIONARY:::
     def thirdDictionarySearch(self, command, source):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.thirdDictionary, command)
         module, entry = self.splitCommand(command)
-        if not entry:
+        module = self.isThridPartyDictionary(module)
+        if not entry or not module:
             return self.invalidCommand("study")
         else:
             thirdPartyDictionary = ThirdPartyDictionary(module)
@@ -1123,7 +1132,8 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.thirdDictionary, command)
         module, entry = self.splitCommand(command)
-        if not entry:
+        module = self.isThridPartyDictionary(module)
+        if not entry or not module:
             return self.invalidCommand("study")
         else:
             thirdPartyDictionary = ThirdPartyDictionary(module)

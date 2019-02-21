@@ -775,11 +775,11 @@ class Converter:
 
 class ThirdPartyDictionary:
 
-    def __init__(self, module):
-        self.module = module
+    def __init__(self, moduleTuple):
+        self.module, self.fileExtension = moduleTuple
         self.moduleList = self.getModuleList()
         if self.module in self.moduleList:
-            self.database = os.path.join("thirdParty", "dictionaries", "{0}.dct.mybible".format(module))
+            self.database = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
             self.connection = sqlite3.connect(self.database)
             self.cursor = self.connection.cursor()
 
@@ -788,7 +788,14 @@ class ThirdPartyDictionary:
 
     def getModuleList(self):
         moduleFolder = os.path.join("thirdParty", "dictionaries")
-        return [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible")]
+        mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible")]
+        eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti")]
+        eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi")]
+        myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3")]
+        moduleList = set(mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
+        moduleList = sorted(list(moduleList))
+        #return moduleList
+        return mySwordDictionaries
 
     def search(self, entry):
         if not self.database:
