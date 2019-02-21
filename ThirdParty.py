@@ -950,7 +950,6 @@ class ThirdPartyDictionary:
         moduleList = set(mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
         moduleList = sorted(list(moduleList))
         return moduleList
-        #return mySwordDictionaries
 
     def search(self, entry):
         if not self.database:
