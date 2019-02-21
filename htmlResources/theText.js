@@ -289,6 +289,7 @@ function mbbcvToVerseRefence(b,c,v) {
         mb464: "2Macc",
         mb466: "3Macc",
         mb467: "4Macc",
+        mb780: "EpLao",
         mb790: "PrMan",
         mb469: "PrMan",
         mb191: "AddEsth",
