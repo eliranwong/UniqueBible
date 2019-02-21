@@ -56,8 +56,8 @@ In ADDITION to official UniqueBible.app data, we support various <b>3rd party mo
 
 # 3rd Party Resources
 
-UniqueBible.app has a built-in converter, supporting conversion of some 3rd modules.<br>
-Currently, we support the following modules:
+In addition to Marvel.bible modules and datasets, UniqueBible.app has a built-in converter.<br>
+The built-in converter supports import of the following third-party modules:<br>
 
 * MySword Bible Modules (<a href="https://mysword.info/download-mysword/bibles">https://mysword.info/download-mysword/bibles</a>)
 
