@@ -31,7 +31,6 @@ class MainWindow(QMainWindow):
 
         self.mainView = None
         self.centralWidget = CentralWidget(self)
-        #self.mainView = self.centralWidget.mainView
         self.setMainPage()
         self.studyView = self.centralWidget.studyView
         self.studyPage = self.studyView.page()
@@ -56,22 +55,36 @@ class MainWindow(QMainWindow):
 
         self.directoryLabel = QLabel()
         self.directoryLabel.setFrameStyle(frameStyle)
+        
+        # check if the current version is up-to-date
+        self.checkLatestUpdate()
 
-        # manage latest update
-        # change the following 4 files for major changes of version
-        # gui.py line 67
-        # config_default.py line 1
-        # config.py line 1
+    def __del__(self):
+        del self.textCommandParser
+
+    # manage key capture
+    def event(self, event):
+        if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
+            self.textCommandLineEdit.setFocus()
+            return True
+        return QWidget.event(self, event)
+
+    # manage main page
+    def setMainPage(self):
+        # main page changes as tab is changed.
+        self.mainPage = self.mainView.currentWidget().page()
+        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
+        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
+
+    # manage latest update
+    def checkLatestUpdate(self):
+        # change the following 2 files for major changes of version
+        # main.py line 17
         # https://biblebento.com/UniqueBibleAppVersion.txt
-        if not hasattr(config, 'version'):
-            config.version = 0.2
         request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
         if request.status_code == 200:
             if float(request.text) > config.version:
                 self.promptUpdate(request.text)
-
-    def __del__(self):
-        del self.textCommandParser
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
@@ -96,18 +109,7 @@ class MainWindow(QMainWindow):
         else:
             self.mainPage.runJavaScript('alert("Failed to download the latest update. Please check your internet connection.")')
 
-    def setMainPage(self):
-        # main page changes as tab is changed.
-        self.mainPage = self.mainView.currentWidget().page()
-        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
-        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
-
-    def event(self, event):
-        if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
-            self.textCommandLineEdit.setFocus()
-            return True
-        return QWidget.event(self, event)
-
+    # manage download helper
     def downloadHelper(self, databaseInfo):
         self.downloader = Downloader(self, databaseInfo)
         self.downloader.show()
@@ -116,12 +118,7 @@ class MainWindow(QMainWindow):
         self.downloader.close()
         self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", file))
 
-    def bcvToVerseReference(self, b, c, v):
-        parser = BibleVerseParser(config.parserStandarisation)
-        verseReference = parser.bcvToVerseReference(b, c, v)
-        del parser
-        return verseReference
-
+    # setup interface
     def create_menu(self):
 
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
@@ -524,6 +521,13 @@ class MainWindow(QMainWindow):
                 "Available Modules:", items, 0, False)
         if ok and item and not item == "[All Installed]":
             self.downloadHelper(datasets[item])
+
+    # convert bible references to string
+    def bcvToVerseReference(self, b, c, v):
+        parser = BibleVerseParser(config.parserStandarisation)
+        verseReference = parser.bcvToVerseReference(b, c, v)
+        del parser
+        return verseReference
 
     # Open text on studyView
     def openTextOnStudyView(self, text):
