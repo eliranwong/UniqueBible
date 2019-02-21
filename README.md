@@ -73,7 +73,7 @@ The built-in converter supports import of the following third-party modules:<br>
 
 * e-Sword Lexicon Modules [Apple / macOS / iOS (*.lexi)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
 
-* MyBible Commentary Modules (<a href="https://www.ph4.org/b4_my.php?k=bibles&q=mybible">https://www.ph4.org/b4_my.php?k=bibles&q=mybible</a>)
+* MyBible Bible Modules (<a href="https://www.ph4.org/b4_my.php?k=bibles&q=mybible">https://www.ph4.org/b4_my.php?k=bibles&q=mybible</a>)
 
 * MyBible Commentary Modules (<a href="https://www.ph4.org/b4_my.php?k=commentaries&q=mybible">https://www.ph4.org/b4_my.php?k=commentaries&q=mybible</a>)
 
