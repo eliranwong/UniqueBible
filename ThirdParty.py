@@ -820,6 +820,33 @@ class ThirdPartyDictionary:
         return selectForm
 
     def getExactWord(self, entry):
+        if not self.database:
+            return "INVALID_COMMAND_ENTERED"
+        else:
+            getDictionaryData = {
+                ".dct.mybible": self.getMySwordExactWord,
+            }
+            return getDictionaryData[self.fileExtension](entry)
+
+    def getSimilarWord(self, entry):
+        if not self.database:
+            return "INVALID_COMMAND_ENTERED"
+        else:
+            getDictionaryData = {
+                ".dct.mybible": self.getMySwordSimilarWord,
+            }
+            return getDictionaryData[self.fileExtension](entry)
+
+    def getData(self, entry):
+        if not self.database:
+            return "INVALID_COMMAND_ENTERED"
+        else:
+            getDictionaryData = {
+                ".dct.mybible": self.getMySwordDictionaryData,
+            }
+            return getDictionaryData[self.fileExtension](entry)
+
+    def getMySwordExactWord(self, entry):
         query = "SELECT word FROM dictionary WHERE word = ?"
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
@@ -828,7 +855,7 @@ class ThirdPartyDictionary:
         else:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
-    def getSimilarWord(self, entry):
+    def getMySwordSimilarWord(self, entry):
         query = "SELECT word FROM dictionary WHERE word LIKE ? AND word != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
@@ -837,20 +864,17 @@ class ThirdPartyDictionary:
         else:
             return "<br>".join(contentList)
 
-    def getData(self, entry):
-        if not self.database:
-            return "INVALID_COMMAND_ENTERED"
+    def getMySwordDictionaryData(self, entry):
+        query = "SELECT data FROM dictionary WHERE word = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
         else:
-            query = "SELECT data FROM dictionary WHERE word = ?"
-            self.cursor.execute(query, (entry,))
-            content = self.cursor.fetchone()
-            if not content:
-                return "[not found]"
-            else:
-                action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
-                optionList = [(m, m) for m in self.moduleList]
-                selectList = self.formatSelectList(action, optionList)
-                config.thirdDictionary = self.module
-                content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
-                content = Converter().formatNonBibleMySwordModule(content)
-                return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
+            action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
+            optionList = [(m, m) for m in self.moduleList]
+            selectList = self.formatSelectList(action, optionList)
+            config.thirdDictionary = self.module
+            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
+            content = Converter().formatNonBibleMySwordModule(content)
+            return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
