@@ -27,6 +27,7 @@ class Converter:
         query = "SELECT Title, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
+        abbreviation = abbreviation.replace("+", "x")
         query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
@@ -35,7 +36,6 @@ class Converter:
         tables = cursor.fetchall()
         tables = [table[0] for table in tables]
 
-        abbreviation = abbreviation.replace("+", "x")
         self.eSwordBibleToPlainFormat(description, abbreviation, verses)
         if "Notes" in tables:
             query = "SELECT * FROM Notes"
@@ -88,7 +88,7 @@ class Converter:
 
         if notes:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
-            notes = [(book, chapter, cerse, id, self.formatNonBibleESwordModule(note)) for book, chapter, cerse, id, note in notes]
+            notes = [(book, chapter, verse, id, self.formatNonBibleESwordModule(note)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
             connection.commit()
 
@@ -102,8 +102,12 @@ class Converter:
     def stripESwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
             text = re.sub("<num>([GH][0-9]+?[a-z]*?)</num>", r" \1 ", text)
+        else:
+            text = re.sub("<num>([GH][0-9]+?[a-z]*?)</num>", "", text)
         if config.importDoNotStripMorphCode:
             text = re.sub("<tvm>([^\n<>]*?)</tvm>", r" \1 ", text)
+        else:
+            text = re.sub("<tvm>([^\n<>]*?)</tvm>", "", text)
         searchReplace = (
             ("<p>|</p>|<h[0-9]+?>|</h[0-9]+?>|<sup>", " "),
             ("<not>.*?</not>|<[^\n<>]*?>", ""),
@@ -123,17 +127,17 @@ class Converter:
             ("</red>", "</woj>"),
             ("<blu>", "<esblu>"),
             ("</blu>", "</esblu>"),
+            ("</ref><ref", "</ref>; <ref"),
+            ("</ref></sup><sup><ref", "</ref> <ref"),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
-        text = re.sub("</ref><ref", "</ref>; <ref", text)
-        text = re.sub("</ref></sup><sup><ref", "</ref> <ref", text)
         text = text.strip()
         return text
 
     # Import e-Sword Commentaries
     def importESwordCommentary(self, file):
-        # connect MySword commentary
+        # connect e-Sword commentary
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
 
@@ -258,12 +262,12 @@ class Converter:
         query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
+        abbreviation = abbreviation.replace("+", "x")
         query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
         connection.close()
 
-        abbreviation = abbreviation.replace("+", "x")
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         self.mySwordBibleToRichFormat(description, abbreviation, verses)
 
@@ -533,6 +537,153 @@ class Converter:
         else:
             return value
 
+    # Import MyBible Bibles
+    def importMyBibleBible(self, file):
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        query = "SELECT value FROM info WHERE name = 'description'"
+        cursor.execute(query)
+        description = cursor.fetchone()[0]
+        inputFilePath, inputFileName = os.path.split(file)
+        abbreviation = inputFileName[:-8]
+        abbreviation = abbreviation.replace("+", "x")
+
+        query = "SELECT value FROM info WHERE name = 'strong_numbers_prefix'"
+        cursor.execute(query)
+        strong_numbers_prefix = cursor.fetchone()
+        if strong_numbers_prefix:
+            strong_numbers_prefix = strong_numbers_prefix[0]
+        else:
+            strong_numbers_prefix = ""
+
+        query = "SELECT * FROM verses ORDER BY book_number, chapter, verse"
+        cursor.execute(query)
+        verses = cursor.fetchall()
+        if verses:
+            verses = [(self.convertMyBibleBookNo(mbBook), mbChapter, mbVerse, mbText) for mbBook, mbChapter, mbVerse, mbText in verses]
+
+        self.myBibleBibleToPlainFormat(description, abbreviation, verses, strong_numbers_prefix)
+        
+        # check if notes are available in commentary format
+        noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(abbreviation))
+        if os.path.isfile(noteFile):
+            noteConnection = sqlite3.connect(noteFile)
+            noteCursor = noteConnection.cursor()
+            
+            query = "SELECT book_number, chapter_number_from, verse_number_from, marker, text FROM commentaries"
+            noteCursor.execute(query)
+            notes = noteCursor.fetchall()
+            self.myBibleBibleToRichFormat(description, abbreviation, verses, notes, strong_numbers_prefix)
+            noteConnection.close()
+        else:
+            self.myBibleBibleToRichFormat(description, abbreviation, verses, [], strong_numbers_prefix)
+        connection.close()
+
+    def myBibleBibleToPlainFormat(self, description, abbreviation, verses, strong_numbers_prefix):
+        verses = [(book, chapter, verse, self.stripMyBibleBibleTags(scripture, book, strong_numbers_prefix)) for book, chapter, verse, scripture in verses]
+        biblesSqlite = BiblesSqlite()
+        biblesSqlite.importBible(description, abbreviation, verses)
+        del biblesSqlite
+
+    def myBibleBibleToRichFormat(self, description, abbreviation, verses, notes, strong_numbers_prefix):
+        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        if os.path.isfile(formattedBible):
+            os.remove(formattedBible)
+        connection = sqlite3.connect(formattedBible)
+        cursor = connection.cursor()
+
+        statements = (
+            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
+            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+        )
+        for create in statements:
+            cursor.execute(create)
+            connection.commit()
+
+        noteList = []
+        formattedChapters = {}
+        for book, chapter, verse, scripture in verses:
+            scripture = self.convertMyBibleBibleTags(scripture, book, strong_numbers_prefix)
+
+            if scripture:
+
+                # fix bible note links
+                if notes:
+                    scripture = re.sub("<f>([^\n<>]+?)</f>", r"<sup><ref onclick='bn({0}, {1}, {2}, {3}\1{3})'>&oplus;</ref></sup>".format(book, chapter, verse, '"'), scripture)
+
+                # verse number formatting
+                scripture = self.formatVerseNumber(book, chapter, verse, scripture)
+
+                if (book, chapter) in formattedChapters:
+                    formattedChapters[(book, chapter)] = formattedChapters[(book, chapter)] + scripture
+                else:
+                    formattedChapters[(book, chapter)] = scripture
+
+        if notes:
+            insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
+            notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note)) for book, chapter, verse, id, note in notes]
+            cursor.executemany(insert, notes)
+            connection.commit()
+
+        formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
+        insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+        cursor.executemany(insert, formattedChapters)
+        connection.commit()        
+
+        connection.close()
+
+    def stripMyBibleBibleTags(self, text, book, strong_numbers_prefix):
+        if config.importDoNotStripStrongNo:
+            if book >= 470 or strong_numbers_prefix == "G":
+                text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" G\1 ", text)
+            else:
+                text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" H\1 ", text)
+        else:
+            text = re.sub("<S>([0-9]+?[a-z]*?)</S>", "", text)
+        if config.importDoNotStripMorphCode:
+            text = re.sub("<m>([^\n<>]*?)</m>", r" \1 ", text)
+        else:
+            text = re.sub("<m>([^\n<>]*?)</m>", "", text)
+        searchReplace = (
+            ("<pb/>|<h>.*?</h>|<t>", " "),
+            ("<f>.*?</f>|<[^\n<>]*?>", ""),
+            (" [ ]+?([^ ])", r" \1"),
+        )
+        text = text.strip()
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        text = text.strip()
+        return text
+
+    def convertMyBibleBibleTags(self, text, book, strong_numbers_prefix):
+        if book >= 470 or strong_numbers_prefix == "G":
+            text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}G\1{0})'>G\1</ref></sup>".format('"'), text)
+        else:
+            text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}H\1{0})'>H\1</ref></sup>".format('"'), text)
+        searchReplace = (
+            ("<m>([^\n<>]*?)</m>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("<J>", "<woj>"),
+            ("</J>", "</woj>"),
+            ("<e>", "<mbe>"),
+            ("</e>", "</mbe>"),
+            ("<n>", "<mbn>"),
+            ("</n>", "</mbn>"),
+            ("<t>", "<br>&emsp;&emsp;"),
+            ("</t>", ""),
+            ("<h>(.*?)</h>", r"<u><b>\1</b></u><br><br>"),
+            ("<br/>", "<br>"),
+            ("[ ]+?<br>", "<br>"),
+            ("<br><br><br><br><br>|<br><br><br><br>|<br><br><br>", "<br><br>"),
+            ("</b></u><br><br><u><b>", "</b></u><br><u><b>"),
+            ("</ref><ref", "</ref>; <ref"),
+            ("</ref></sup><sup><ref", "</ref> <ref"),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        text = text.strip()
+        return text
+
     # Import MyBible Commentaries
     def importMyBibleCommentary(self, file):
         # connect MySword commentary
@@ -756,6 +907,7 @@ class Converter:
             464: 82,
             466: 83,
             467: 84,
+            780: 92,
             790: 85,
             469: 85, # Eliran's customised no.
             191: 78, # Eliran's customised no.
