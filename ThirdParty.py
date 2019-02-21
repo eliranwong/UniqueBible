@@ -19,6 +19,16 @@ class Converter:
             text = "<verse>{0}</verse> ".format(text)
         return text
 
+    def fixCommentaryScrolling(self, chapterText):
+        p = re.compile('｛｝([^｛｝]*?)(<vid id="v[0-9]+?\.[0-9]+?\.[0-9]+?"></vid>)(<vid)')
+        s = p.search(chapterText)
+        while s:
+            chapterText = p.sub(r"｛｝\2｜\1\3", chapterText)
+            s = p.search(chapterText)
+        chapterText = chapterText.replace("｛｝", "<hr>")
+        chapterText = chapterText.replace("</vid>｜", "</vid>")
+        return chapterText
+
     # Import e-Sword Bibles [Apple / macOS / iOS]
     def importESwordBible(self, file):
         connection = sqlite3.connect(file)
@@ -224,7 +234,8 @@ class Converter:
 
             chapterText = ""
             for sortedVerse in sortedVerses:
-                chapterText += "<hr>".join(verseDict[sortedVerse])
+                chapterText += "｛｝".join(verseDict[sortedVerse])
+            chapterText = self.fixCommentaryScrolling(chapterText)
 
             # write in UB commentary file
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
@@ -481,7 +492,8 @@ class Converter:
 
             chapterText = ""
             for sortedVerse in sortedVerses:
-                chapterText += "<hr>".join(verseDict[sortedVerse])
+                chapterText += "｛｝".join(verseDict[sortedVerse])
+            chapterText = self.fixCommentaryScrolling(chapterText)
 
             # write in UB commentary file
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
@@ -755,7 +767,8 @@ class Converter:
 
             chapterText = ""
             for sortedVerse in sortedVerses:
-                chapterText += "<hr>".join(verseDict[sortedVerse])
+                chapterText += "｛｝".join(verseDict[sortedVerse])
+            chapterText = self.fixCommentaryScrolling(chapterText)
 
             # write in UB commentary file
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
