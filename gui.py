@@ -270,6 +270,43 @@ class MainWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
+        fontMinusButton = QPushButton()
+        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
+        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+        fontMinusButton.clicked.connect(self.smallerFont)
+        self.toolBar.addWidget(fontMinusButton)
+
+        fontPlusButton = QPushButton()
+        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
+        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+        fontPlusButton.clicked.connect(self.largerFont)
+        self.toolBar.addWidget(fontPlusButton)
+
+        self.toolBar.addSeparator()
+
+        self.enableParagraphButton = QPushButton()
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.toolBar.addWidget(self.enableParagraphButton)
+
+        self.toolBar.addSeparator()
+
+        self.instantMode = 1 # default instant mode
+        instantButton = QPushButton()
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        instantButton.setIcon(QIcon(instantButtonFile))
+        instantButton.clicked.connect(self.instant)
+        self.toolBar.addWidget(instantButton)
+
+        self.enableInstantButton = QPushButton()
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+        self.toolBar.addWidget(self.enableInstantButton)
+
+        self.toolBar.addSeparator()
+
         studyBackButton = QPushButton()
         leftButtonFile = os.path.join("htmlResources", "left.png")
         studyBackButton.setIcon(QIcon(leftButtonFile))
@@ -296,43 +333,6 @@ class MainWindow(QMainWindow):
         parallelButton.setIcon(QIcon(parallelButtonFile))
         parallelButton.clicked.connect(self.parallel)
         self.toolBar.addWidget(parallelButton)
-
-        self.toolBar.addSeparator()
-
-        self.instantMode = 1 # default parallel mode
-        instantButton = QPushButton()
-        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        instantButton.setIcon(QIcon(instantButtonFile))
-        instantButton.clicked.connect(self.instant)
-        self.toolBar.addWidget(instantButton)
-
-        self.enableInstantButton = QPushButton()
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
-        self.toolBar.addWidget(self.enableInstantButton)
-
-        self.toolBar.addSeparator()
-
-        self.enableParagraphButton = QPushButton()
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-        self.toolBar.addWidget(self.enableParagraphButton)
-
-        self.toolBar.addSeparator()
-
-        fontMinusButton = QPushButton()
-        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
-        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
-        fontMinusButton.clicked.connect(self.smallerFont)
-        self.toolBar.addWidget(fontMinusButton)
-
-        fontPlusButton = QPushButton()
-        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
-        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
-        fontPlusButton.clicked.connect(self.largerFont)
-        self.toolBar.addWidget(fontPlusButton)
 
         # put the secondary toolbar below the main one
         self.addToolBarBreak()
