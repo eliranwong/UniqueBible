@@ -71,9 +71,9 @@ class BiblesSqlite:
                     menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1], text))
                 if check == 3:
                     if source == "main":
-                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>go to secondary window</button>".format(text, mainVerseReference)
+                        anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>go to tool window</button>".format(text, mainVerseReference)
                     elif source == "study":
-                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>go to main window</button>".format(text, mainVerseReference)
+                        anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>go to bible window</button>".format(text, mainVerseReference)
                     menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{4}\"'>open HERE</button> {5} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>verse note</button>".format(text, bcList[0], bcList[1], bcList[2], mainVerseReference, anotherView)
                     menu += "<hr><b>Special Features:</b><br>"
                     features = (
