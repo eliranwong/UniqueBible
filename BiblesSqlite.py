@@ -305,84 +305,6 @@ class BiblesSqlite:
             s = p.search(formatedText)
         return formatedText
 
-    def instantVerse(self, text, b, c, v):
-        interlinearVerse = self.readTextVerse("interlinear", b, c, v)[3]
-        if b < 40:
-            divTag = "<div style='direction: rtl;'>"
-        else:
-            divTag = "<div>"
-        interlinearVerse = "{0}{1}</div>".format(divTag, interlinearVerse)
-        return interlinearVerse
-
-    def instantWord(self, book, wordId):
-        t = (book, wordId)
-        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
-        self.cursor.execute(query, t)
-        word = self.cursor.fetchone()
-        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
-        morphology = morphology.replace(",", ", ")
-        if b < 40:
-            textWord = "<heb>{0}</heb>".format(textWord)
-            lexeme = "<heb>{0}</heb>".format(lexeme)
-        else:
-            textWord = "<grk>{0}</grk>".format(textWord)
-            lexeme = "<grk>{0}</grk>".format(lexeme)
-        return "{0} <span style='color: gray'>{1}</span> {2} {3} <span style='color: brown'>{4}</span> <span style='color: blue'>{5}</span>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
-
-    def wordData(self, book, wordId):
-        t = (book, wordId)
-        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
-        self.cursor.execute(query, t)
-        word = self.cursor.fetchone()
-        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
-        verseReference = self.bcvToVerseReference(b, c, v)
-        firstLexicalEntry = lexicalEntry.split(",")[0]
-        lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
-        morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
-        morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
-        if b < 40:
-            testament = "OT"
-            textWord = "<heb>{0}</heb>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
-        else:
-            testament = "NT"
-            textWord = "<grk>{0}</grk>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
-        clauseData = ClauseData()
-        clauseContent = clauseData.getContent(testament, clauseID)
-        del clauseData
-        return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
-
-    def searchMorphology(self, mode, searchString):
-        formatedText = ""
-        query = "SELECT * FROM morphology WHERE "
-        if mode == "LEMMA":
-            formatedText += "<p>LEMMA:::{0}</p>".format(searchString)
-            t = ("%{0},%".format(searchString),)
-            query += "LexicalEntry LIKE ?"
-        elif mode == "MORPHOLOGYCODE":
-            formatedText += "<p>MORPHOLOGYCODE:::{0}</p>".format(searchString)
-            searchList = searchString.split(',')
-            t = ("%{0},%".format(searchList[0]), searchList[1])
-            query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
-        elif mode == "ADVANCED":
-            formatedText += "<p>MORPHOLOGY:::{0}</p>".format(searchString)
-            t = ()
-            query += searchString
-        query += " ORDER BY Book, Chapter, Verse, WordID"
-        self.cursor.execute(query, t)
-        words = self.cursor.fetchall()
-        formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(words))
-        for word in words:
-            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
-            firstLexicalEntry = lexicalEntry.split(",")[0]
-            if b < 40:
-                textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
-            else:
-                textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
-            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
-        return formatedText
-
     def readMultipleVerses(self, text, verseList):
         verses = ""
         for b, c, v in verseList:
@@ -473,6 +395,112 @@ class Bible:
         if note:
             note = note[0]
         return note
+
+class MorphologySqlite:
+
+    def __init__(self):
+        # connect bibles.sqlite
+        self.database = os.path.join("marvelData", "morphology.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def bcvToVerseReference(self, b, c, v):
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
+
+    def formVerseTag(self, b, c, v, text=config.mainText):
+        verseReference = self.bcvToVerseReference(b, c, v)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
+
+    def readTextVerse(self, text, b, c, v):
+        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
+        self.cursor.execute(query, (b, c, v))
+        textVerse = self.cursor.fetchone()
+        if not textVerse:
+            return (b, c, v, "")
+        # return a tuple
+        return textVerse
+
+    def instantVerse(self, text, b, c, v):
+        interlinearVerse = self.readTextVerse("interlinear", b, c, v)[3]
+        if b < 40:
+            divTag = "<div style='direction: rtl;'>"
+        else:
+            divTag = "<div>"
+        interlinearVerse = "{0}{1}</div>".format(divTag, interlinearVerse)
+        return interlinearVerse
+
+    def instantWord(self, book, wordId):
+        t = (book, wordId)
+        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+        morphology = morphology.replace(",", ", ")
+        if b < 40:
+            textWord = "<heb>{0}</heb>".format(textWord)
+            lexeme = "<heb>{0}</heb>".format(lexeme)
+        else:
+            textWord = "<grk>{0}</grk>".format(textWord)
+            lexeme = "<grk>{0}</grk>".format(lexeme)
+        return "{0} <span style='color: gray'>{1}</span> {2} {3} <span style='color: brown'>{4}</span> <span style='color: blue'>{5}</span>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
+
+    def wordData(self, book, wordId):
+        t = (book, wordId)
+        query = "SELECT * FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+        verseReference = self.bcvToVerseReference(b, c, v)
+        firstLexicalEntry = lexicalEntry.split(",")[0]
+        lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
+        morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
+        morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
+        if b < 40:
+            testament = "OT"
+            textWord = "<heb>{0}</heb>".format(textWord)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
+        else:
+            testament = "NT"
+            textWord = "<grk>{0}</grk>".format(textWord)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
+        clauseData = ClauseData()
+        clauseContent = clauseData.getContent(testament, clauseID)
+        del clauseData
+        return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
+
+    def searchMorphology(self, mode, searchString):
+        formatedText = ""
+        query = "SELECT * FROM morphology WHERE "
+        if mode == "LEMMA":
+            formatedText += "<p>LEMMA:::{0}</p>".format(searchString)
+            t = ("%{0},%".format(searchString),)
+            query += "LexicalEntry LIKE ?"
+        elif mode == "MORPHOLOGYCODE":
+            formatedText += "<p>MORPHOLOGYCODE:::{0}</p>".format(searchString)
+            searchList = searchString.split(',')
+            t = ("%{0},%".format(searchList[0]), searchList[1])
+            query += "LexicalEntry LIKE ? AND MorphologyCode = ?"
+        elif mode == "ADVANCED":
+            formatedText += "<p>MORPHOLOGY:::{0}</p>".format(searchString)
+            t = ()
+            query += searchString
+        query += " ORDER BY Book, Chapter, Verse, WordID"
+        self.cursor.execute(query, t)
+        words = self.cursor.fetchall()
+        formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(words))
+        for word in words:
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+            firstLexicalEntry = lexicalEntry.split(",")[0]
+            if b < 40:
+                textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
+            else:
+                textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
+            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+        return formatedText
+
 
 #if __name__ == '__main__':
     # Bibles = BiblesSqlite()

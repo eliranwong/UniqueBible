@@ -638,7 +638,7 @@ class MainWindow(QMainWindow):
 
     def installMarvelDatasets(self):
         datasets = {
-            "Core Datasets": (("marvelData", "bibles.sqlite"), "1w5cChadLpfJ51y9BBUdotV31PqVPbkWf"),
+            "Core Datasets": (("marvelData", "morphology.sqlite"), "1Kr4APbw-dKyaxb6cJnaxiW3MwLJVV6an"),
             "Search Engine": (("marvelData", "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
             "Smart Indexes": (("marvelData", "indexes.sqlite"), "1Fdq3C9hyoyBX7riniByyZdW9mMoMe6EX"),
             "Chapter & Verse Notes": (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),

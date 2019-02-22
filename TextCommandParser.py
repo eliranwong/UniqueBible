@@ -1,6 +1,6 @@
 import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite, Bible, ClauseData
+from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
@@ -153,7 +153,7 @@ class TextCommandParser:
         }
 
     def getCoreBiblesInfo(self):
-        return (("marvelData", "bibles.sqlite"), "1w5cChadLpfJ51y9BBUdotV31PqVPbkWf")
+        return (("marvelData", "morphology.sqlite"), "1Kr4APbw-dKyaxb6cJnaxiW3MwLJVV6an")
 
     def getBibleNoteInfo(self):
         return (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
@@ -539,10 +539,10 @@ class TextCommandParser:
     def instantVerse(self, command, source):
         if config.instantInformationEnabled == 1:
             commandList = self.splitCommand(command)
-            biblesSqlite = BiblesSqlite()
+            morphologySqlite = MorphologySqlite()
             b, c, v = [int(i) for i in commandList[1].split(".")]
-            info = biblesSqlite.instantVerse("interlinear", b, c, v)
-            del biblesSqlite
+            info = morphologySqlite.instantVerse("interlinear", b, c, v)
+            del morphologySqlite
             return ("instant", info)
         else:
             return ("", "")
@@ -551,11 +551,11 @@ class TextCommandParser:
     def instantWord(self, command, source):
         if config.instantInformationEnabled == 1:
             commandList = self.splitCommand(command)
-            biblesSqlite = BiblesSqlite()
+            morphologySqlite = MorphologySqlite()
             wordID = commandList[1]
             wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
-            info = biblesSqlite.instantWord(int(commandList[0]), int(wordID))
-            del biblesSqlite
+            info = morphologySqlite.instantWord(int(commandList[0]), int(wordID))
+            del morphologySqlite
             return ("instant", info)
         else:
             return ("", "")
@@ -821,9 +821,9 @@ class TextCommandParser:
     def textWordData(self, command, source):
         book, wordId = self.splitCommand(command)
         bNo = int(book)
-        biblesSqlite = BiblesSqlite()
-        bcvTuple, content = biblesSqlite.wordData(bNo, int(wordId))
-        del biblesSqlite
+        morphologySqlite = MorphologySqlite()
+        bcvTuple, content = morphologySqlite.wordData(bNo, int(wordId))
+        del morphologySqlite
 
         # extra data for Greek words
         if bNo >= 40:
@@ -880,9 +880,9 @@ class TextCommandParser:
 
     # called by LEMMA::: & MORPHOLOGYCODE::: & MORPHOLOGY::: & # SEARCHMORPHOLOGY:::
     def textMorphologyFeature(self, command, source, mode):
-        biblesSqlite = BiblesSqlite()
-        searchResult = biblesSqlite.searchMorphology(mode, command)
-        del biblesSqlite
+        morphologySqlite = MorphologySqlite()
+        searchResult = morphologySqlite.searchMorphology(mode, command)
+        del morphologySqlite
         return ("study", searchResult)
 
     # EXLB:::
