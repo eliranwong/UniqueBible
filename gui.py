@@ -400,7 +400,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButtonFile = os.path.join("htmlResources", "hyperlink.png")
+        actionButtonFile = os.path.join("htmlResources", "cross_reference.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCROSSREFERENCE)
         self.secondToolBar.addWidget(actionButton)
