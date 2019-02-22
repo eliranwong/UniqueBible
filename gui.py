@@ -97,6 +97,10 @@ class MainWindow(QMainWindow):
         file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
         request = requests.get(file)
         if request.status_code == 200:
+            currentName = os.getcwd()
+            tempName = os.path.join(os.path.dirname(os.getcwd()), "UniqueBible-master")
+            if not currentName == tempName:
+                os.rename(currentName, tempName)
             filename = file.split("/")[-1]        
             with open(filename, "wb") as content:
                 content.write(request.content)
@@ -105,6 +109,8 @@ class MainWindow(QMainWindow):
                 zip.extractall(os.path.dirname(os.getcwd()))
                 zip.close()
                 os.remove(filename)
+            if not currentName == tempName:
+                os.rename(tempName, currentName)
             self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need to restart the app to apply the changes.")')
         else:
             self.mainPage.runJavaScript('alert("Failed to download the latest update. Please check your internet connection.")')
