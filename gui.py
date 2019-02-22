@@ -246,8 +246,8 @@ class MainWindow(QMainWindow):
 
     def setupToolBar(self):
         self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle("Text Command")
-        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.toolBar.setWindowTitle("Main Toolbar")
+        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.toolBar)
 
         backButton = QPushButton()
@@ -347,8 +347,8 @@ class MainWindow(QMainWindow):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
         self.secondToolBar = QToolBar()
-        self.secondToolBar.setWindowTitle("Special Features")
-        self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.secondToolBar.setWindowTitle("Second Toolbar")
+        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
         searchBibleButton = QPushButton()
@@ -398,6 +398,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Smart Indexes")
         actionButtonFile = os.path.join("htmlResources", "indexes.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runINDEX)
@@ -406,12 +407,14 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Cross References")
         actionButtonFile = os.path.join("htmlResources", "cross_reference.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCROSSREFERENCE)
         self.secondToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Treasury of Scripture Knowledge (Enhanced)")
         actionButtonFile = os.path.join("htmlResources", "treasure.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runTSKE)
@@ -420,12 +423,14 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Compare All Versions")
         actionButtonFile = os.path.join("htmlResources", "compare_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMPARE)
         self.secondToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Compare / Parallel with ...")
         actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.mainRefButtonClicked)
@@ -434,24 +439,28 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Translations")
         actionButtonFile = os.path.join("htmlResources", "translations.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runTRANSLATION)
         self.secondToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Discourse Features")
         actionButtonFile = os.path.join("htmlResources", "discourse.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runDISCOURSE)
         self.secondToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Words")
         actionButtonFile = os.path.join("htmlResources", "words.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runWORDS)
         self.secondToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Translations + Discourse Features + Words")
         actionButtonFile = os.path.join("htmlResources", "combo.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMBO)
@@ -462,8 +471,8 @@ class MainWindow(QMainWindow):
         self.addToolBarBreak()
 
         self.thirdToolBar = QToolBar()
-        self.thirdToolBar.setWindowTitle("Third Tool bar")
-        self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.thirdToolBar.setWindowTitle("Third Toolbar")
+        #self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.thirdToolBar)
 
         searchStudyBibleButton = QPushButton()
@@ -536,32 +545,36 @@ class MainWindow(QMainWindow):
         self.thirdToolBar.addWidget(self.bookButton)
 
         self.thirdToolBar.addSeparator()
-
         actionButton = QPushButton()
+        actionButton.setToolTip("Marvel Original Bible")
         actionButtonFile = os.path.join("htmlResources", "original.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMOB)
         self.thirdToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Marvel Interlinear Bible")
         actionButtonFile = os.path.join("htmlResources", "interlinear.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMIB)
         self.thirdToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButtonFile = os.path.join("htmlResources", "trilinual.png")
+        actionButton.setToolTip("Marvel Trilingual Bible")
+        actionButtonFile = os.path.join("htmlResources", "trilingual.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMTB)
         self.thirdToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Marvel Parallel Bible")
         actionButtonFile = os.path.join("htmlResources", "line.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMPB)
         self.thirdToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Marvel Annotated Bible")
         actionButtonFile = os.path.join("htmlResources", "annotated.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMAB)
