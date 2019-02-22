@@ -46,7 +46,7 @@ To run UniqueBible.app and its features, several database files are required.  T
 You can also manually install <b>"ALL"</b> https://marvel.bible datasets via our menu bar.<br>
 Go to "Resources" > "Install Marvel.bible Datasets"
 
-<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 246MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
+<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 82MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
 
 In ADDITION to official UniqueBible.app data, we support various <b>3rd party modules</b>.  Please see <a href="https://github.com/eliranwong/UniqueBible#3rd-party-resources">below</a> for details.
 
