@@ -158,7 +158,7 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Display Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu3.addAction(QAction("&Formatted / Plain Bibles", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
 
         menu8 = self.menuBar().addMenu("&History")
         menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -286,7 +286,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addSeparator()
 
         self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Display Bibles in Paragraphs / Verses (only if both formats are installed)")
+        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles (only if both versions are installed)")
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
         self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
@@ -1267,6 +1267,8 @@ class MainWindow(QMainWindow):
             mappedBibles = (
                 ("MIB", "OHGBi"),
                 ("MOB", "OHGB"),
+                ("LXX1i", "LXX1"),
+                ("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
@@ -1280,6 +1282,8 @@ class MainWindow(QMainWindow):
                 ("MPB", "OHGB"),
                 ("MTB", "OHGB"),
                 ("MAB", "OHGB"),
+                ("LXX1i", "LXX1"),
+                ("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
