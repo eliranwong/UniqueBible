@@ -87,6 +87,8 @@ class Converter:
         else:
             self.eSwordBibleToRichFormat(description, abbreviation, verses, [])
         connection.close()
+        if config.importRtlOT:
+            config.rtlTexts.append(abbreviation)
 
     def eSwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripESwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
@@ -314,6 +316,8 @@ class Converter:
 
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         self.mySwordBibleToRichFormat(description, abbreviation, verses)
+        if config.importRtlOT:
+            config.rtlTexts.append(abbreviation)
 
     def mySwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripMySwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
@@ -625,6 +629,8 @@ class Converter:
         else:
             self.myBibleBibleToRichFormat(description, abbreviation, verses, [], strong_numbers_prefix)
         connection.close()
+        if config.importRtlOT:
+            config.rtlTexts.append(abbreviation)
 
     def myBibleBibleToPlainFormat(self, description, abbreviation, verses, strong_numbers_prefix):
         verses = [(book, chapter, verse, self.stripMyBibleBibleTags(scripture, book, strong_numbers_prefix)) for book, chapter, verse, scripture in verses]

@@ -315,7 +315,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addWidget(instantButton)
 
         self.enableInstantButton = QPushButton()
-        self.enableInstantButton.setToolTip("Enable / Disable Hovering Features")
+        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
         enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
         self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
@@ -2434,6 +2434,10 @@ class ImportSettings(QDialog):
         self.stripMorphCode.setText("Keep morphology codes for search")
         self.stripMorphCode.setChecked(config.importDoNotStripMorphCode)
 
+        self.importRtlOT = QCheckBox()
+        self.importRtlOT.setText("Right-to-Left display for Old Testament")
+        self.importRtlOT.setChecked(config.importRtlOT)
+
         saveButton = QPushButton("Save")
         saveButton.clicked.connect(self.saveSettings)
 
@@ -2464,6 +2468,11 @@ class ImportSettings(QDialog):
             config.importDoNotStripMorphCode = True
         else:
             config.importDoNotStripMorphCode = False
+
+        if self.importRtlOT.isChecked():
+            config.importRtlOT = True
+        else:
+            config.importRtlOT = False
 
         self.close()
 

@@ -37,6 +37,10 @@ if not hasattr(config, 'importDoNotStripStrongNo'):
     config.importDoNotStripStrongNo = False
 if not hasattr(config, 'importDoNotStripMorphCode'):
     config.importDoNotStripMorphCode = False
+if not hasattr(config, 'importRtlOT'):
+    config.importRtlOT = False
+if not hasattr(config, 'rtlTexts'):
+    config.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 if not hasattr(config, 'mainText'):
     config.mainText = 'KJV'
 if not hasattr(config, 'mainB'):

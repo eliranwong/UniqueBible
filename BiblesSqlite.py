@@ -11,7 +11,6 @@ class BiblesSqlite:
         self.database = os.path.join("marvelData", "bibles.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
-        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 
     def __del__(self):
         self.connection.close()
@@ -207,7 +206,7 @@ class BiblesSqlite:
                 else:
                     chapter += "<td>"
                 textTdTag = "<td>"
-                if b < 40 and text in self.rtlTexts:
+                if b < 40 and text in config.rtlTexts:
                     textTdTag = "<td style='direction: rtl;'>"
                 chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}{3}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
@@ -225,7 +224,7 @@ class BiblesSqlite:
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
             divTag = "<div>"
-            if b < 40 and text in self.rtlTexts:
+            if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
@@ -278,7 +277,7 @@ class BiblesSqlite:
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
         for verse in verses:
             b, c, v, verseText = verse
-            if b < 40 and text in self.rtlTexts:
+            if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             else:
                 divTag = "<div>"
@@ -309,7 +308,7 @@ class BiblesSqlite:
         verses = ""
         for b, c, v in verseList:
             divTag = "<div>"
-            if b < 40 and text in self.rtlTexts:
+            if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
         return verses
@@ -323,7 +322,7 @@ class BiblesSqlite:
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
             divTag = "<div>"
-            if b < 40 and text in self.rtlTexts:
+            if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             if v in titleList:
                 if not v == 1:
@@ -362,7 +361,7 @@ class Bible:
         self.database = os.path.join("marvelData", "bibles", text+".bible")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
-        self.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
+        config.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 
     def __del__(self):
         self.connection.close()
@@ -381,7 +380,7 @@ class Bible:
                 return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
             else:
                 divTag = "<div>"
-                if self.text in self.rtlTexts and b < 40:
+                if self.text in config.rtlTexts and b < 40:
                     divTag = "<div style='direction: rtl;'>"
                 return "{0}{1}</div>".format(divTag, chapter)
         else:
