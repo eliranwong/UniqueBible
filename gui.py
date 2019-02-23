@@ -128,6 +128,10 @@ class MainWindow(QMainWindow):
         self.downloader.close()
         self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", file))
 
+    def moduleInstalledFailed(self, file):
+        self.downloader.close()
+        self.mainPage.runJavaScript('alert("Failed to download {0}{1}{0}. Please check your internet connection.")'.format("'", file))
+
     # setup interface
     def create_menu(self):
 
@@ -2550,11 +2554,18 @@ class Downloader(QDialog):
         self.progressBar.setValue(0)
 
     def downloadFile(self):
-        gdown.download(self.cloudFile, self.localFile, quiet=True)
-        if self.localFile.endswith(".zip"):
-            zip = zipfile.ZipFile(self.localFile, "r")
-            path, *_ = os.path.split(self.localFile)
-            zip.extractall(path)
-            zip.close()
-            os.remove(self.localFile)
-        self.parent.moduleInstalled(self.filename)
+        try:
+            gdown.download(self.cloudFile, self.localFile, quiet=True)
+            connection = True
+        except:
+            connection = False
+        if connection:
+            if self.localFile.endswith(".zip"):
+                zip = zipfile.ZipFile(self.localFile, "r")
+                path, *_ = os.path.split(self.localFile)
+                zip.extractall(path)
+                zip.close()
+                os.remove(self.localFile)
+            self.parent.moduleInstalled(self.filename)
+        else:
+            self.parent.moduleInstalledFailed(self.filename)
