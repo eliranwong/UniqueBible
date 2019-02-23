@@ -592,5 +592,5 @@ function bn(b, c, v, n) {
 }
 
 function biblenote(lxx, word) {
-    document.title = "LXXWORD:::"+lxx+":::"+word;
+    document.title = "_lxxword:::"+lxx+":::"+word;
 }
