@@ -285,6 +285,15 @@ class MainWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
+        self.enableParagraphButton = QPushButton()
+        self.enableParagraphButton.setToolTip("Display Bibles in Paragraphs / Verses (only if both formats are installed)")
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.toolBar.addWidget(self.enableParagraphButton)
+
+        self.toolBar.addSeparator()
+
         fontMinusButton = QPushButton()
         fontMinusButton.setToolTip("Smaller Font Size")
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
@@ -298,15 +307,6 @@ class MainWindow(QMainWindow):
         fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
         fontPlusButton.clicked.connect(self.largerFont)
         self.toolBar.addWidget(fontPlusButton)
-
-        self.toolBar.addSeparator()
-
-        self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Display Bibles in Paragraphs / Verses (only if both formats are installed)")
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-        self.toolBar.addWidget(self.enableParagraphButton)
 
         self.toolBar.addSeparator()
 
