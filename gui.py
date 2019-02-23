@@ -132,33 +132,33 @@ class MainWindow(QMainWindow):
     def create_menu(self):
 
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
-        appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
-        quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
+        appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
+        quit_action = QAction(appIcon, "E&xit", self, shortcut = "Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
 
         menu2 = self.menuBar().addMenu("&View")
         menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
         menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
         menu2.addSeparator()
-        menu2.addAction(QAction("&Top Half", self, triggered=self.halfScreenHeight))
-        menu2.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
+        menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
+        menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
         menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowToolBar))
         menu3.addAction(QAction("&Second Toolbar [Show / Hide]", self, triggered=self.hideShowSecondToolBar))
         menu3.addAction(QAction("&Third Toolbar [Show / Hide]", self, triggered=self.hideShowThirdToolBar))
         menu3.addSeparator()
-        menu3.addAction(QAction("Right View [Resize / Hide]", self, shortcut = "Ctrl+L", triggered=self.parallel))
-        menu3.addAction(QAction("Bottom View [Show / Hide]", self, shortcut = "Ctrl+G", triggered=self.instant))
+        menu3.addAction(QAction("&Right View [Resize / Hide]", self, shortcut = "Ctrl+R", triggered=self.parallel))
+        menu3.addAction(QAction("&Bottom View [Show / Hide]", self, shortcut = "Ctrl+E", triggered=self.instant))
         menu3.addSeparator()
-        menu3.addAction(QAction("Hovering feature [Enable / Disable]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
+        menu3.addAction(QAction("&Hovering feature [Enable / Disable]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
         menu3.addSeparator()
         menu3.addAction(QAction("&Larger Font", self, shortcut = "Ctrl++", triggered=self.largerFont))
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu3.addAction(QAction("&Display Bibles in Paragraphs / Verses", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
 
         menu8 = self.menuBar().addMenu("&History")
         menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -170,25 +170,25 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
         menu4 = self.menuBar().addMenu("&Study")
-        menu4.addAction(QAction("Smart Indexes", self, triggered=self.runINDEX))
-        menu4.addAction(QAction("Commentary", self, triggered=self.runCOMMENTARY))
+        menu4.addAction(QAction("&Smart Indexes", self, triggered=self.runINDEX))
+        menu4.addAction(QAction("&Commentary", self, triggered=self.runCOMMENTARY))
         menu4.addSeparator()
-        menu4.addAction(QAction("Translations", self, triggered=self.runTRANSLATION))
-        menu4.addAction(QAction("Discourse", self, triggered=self.runDISCOURSE))
-        menu4.addAction(QAction("Words", self, triggered=self.runWORDS))
-        menu4.addAction(QAction("TDW Combo", self, triggered=self.runCOMBO))
+        menu4.addAction(QAction("&Translations", self, triggered=self.runTRANSLATION))
+        menu4.addAction(QAction("&Discourse", self, triggered=self.runDISCOURSE))
+        menu4.addAction(QAction("&Words", self, triggered=self.runWORDS))
+        menu4.addAction(QAction("&TDW Combo", self, triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction("Cross References", self, triggered=self.runCROSSREFERENCE))
-        menu4.addAction(QAction("TSK (Enhanced)", self, triggered=self.runTSKE))
+        menu4.addAction(QAction("&Cross References", self, triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction("&TSK (Enhanced)", self, triggered=self.runTSKE))
         menu4.addSeparator()
-        menu4.addAction(QAction("Compare All Versions", triggered=self.runCOMPARE))
-        menu4.addAction(QAction("Compare with ...", self, triggered=self.mainRefButtonClicked))
-        menu4.addAction(QAction("Parallel with ...", self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction("&Compare All Versions", triggered=self.runCOMPARE))
+        menu4.addAction(QAction("&Compare with ...", self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction("&Parallel with ...", self, triggered=self.mainRefButtonClicked))
         menu4.addSeparator()
 
         menu5 = self.menuBar().addMenu("&Search")
-        menu5.addAction(QAction("&Last Main Bible", self, shortcut = "Ctrl+1", triggered=self.displaySearchBibleCommand))
-        menu5.addAction(QAction("&Last Secondary Bible", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5.addAction(QAction("&Last Opened Bible on Left View", self, shortcut = "Ctrl+1", triggered=self.displaySearchBibleCommand))
+        menu5.addAction(QAction("&Last Opened Bible on Right View", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
         menu5.addAction(QAction("&Last Opened Dictionary", self, shortcut = "Ctrl+3", triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction("&Last Opened Encyclopedia", self, shortcut = "Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
@@ -213,7 +213,7 @@ class MainWindow(QMainWindow):
         menu7 = self.menuBar().addMenu("&Topics")
         menu7.addAction(QAction("&Create a Topical Note", self, shortcut = "Ctrl+N", triggered=self.createNewNoteFile))
         menu7.addSeparator()
-        menu7.addAction(QAction("&Open Note Files", self, shortcut = "Ctrl+E", triggered=self.openTextFileDialog))
+        menu7.addAction(QAction("&Open Note Files", self, triggered=self.openTextFileDialog))
         menu7.addAction(QAction("&Recent Files", self, triggered=self.openExternalFileHistory))
         menu7.addAction(QAction("&Read Last Opened File", self, triggered=self.externalFileButtonClicked))
         menu7.addAction(QAction("&Edit Last Opened File", self, triggered=self.editExternalFileButtonClicked))
@@ -302,7 +302,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addSeparator()
 
         self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Paragaphs / Verse by Verse")
+        self.enableParagraphButton.setToolTip("Display Bibles in Paragraphs / Verses (only if both formats are installed)")
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
         self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
@@ -1244,7 +1244,11 @@ class MainWindow(QMainWindow):
             return "numbered_list.png"
 
     def enableParagraphButtonClicked(self):
-        self.displayBiblesInParagraphs()
+        self.enableParagraphButtonAction(True)
+
+    def enableParagraphButtonAction(self, display):
+        if display:
+            self.displayBiblesInParagraphs()
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
 
@@ -1259,17 +1263,24 @@ class MainWindow(QMainWindow):
         self.reloadCurrentRecord()
 
     def reloadCurrentRecord(self):
-        mappedBibles = (
-            ("MIB", "OHGBi"),
-            ("MOB", "OHGB"),
-        )
         if config.readFormattedBibles:
+            mappedBibles = (
+                ("MIB", "OHGBi"),
+                ("MOB", "OHGB"),
+            )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(plainBible, formattedBible)
                     self.runTextCommand(textCommand, False, view)
         else:
+            mappedBibles = (
+                ("MIB", "OHGBi"),
+                ("MOB", "OHGB"),
+                ("MPB", "OHGB"),
+                ("MTB", "OHGB"),
+                ("MAB", "OHGB"),
+            )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:

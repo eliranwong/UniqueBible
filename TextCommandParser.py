@@ -277,6 +277,12 @@ class TextCommandParser:
         if not verseList:
             return self.invalidCommand()
         else:
+            if text in ("MOB", "MIB", "MTB", "MPB", "MAB") and not config.readFormattedBibles:
+                config.readFormattedBibles = True
+                self.parent.enableParagraphButtonAction(False)
+            elif text in ("OHGBi", "OHGB") and config.readFormattedBibles:
+                config.readFormattedBibles = False
+                self.parent.enableParagraphButtonAction(False)
             if len(verseList) == 1:
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
