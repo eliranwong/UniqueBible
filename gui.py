@@ -1259,13 +1259,22 @@ class MainWindow(QMainWindow):
         self.reloadCurrentRecord()
 
     def reloadCurrentRecord(self):
-        views = {
-            "main": self.mainView,
-            "study": self.studyView
-        }
-        for view in views.keys():
-            textCommand = config.history[view][config.currentRecord[view]]
-            self.runTextCommand(textCommand, False, view)
+        mappedBibles = (
+            ("MIB", "OHGBi"),
+            ("MOB", "OHGB"),
+        )
+        if config.readFormattedBibles:
+            for view in ("main", "study"):
+                textCommand = config.history[view][config.currentRecord[view]]
+                for formattedBible, plainBible in mappedBibles:
+                    textCommand = textCommand.replace(plainBible, formattedBible)
+                    self.runTextCommand(textCommand, False, view)
+        else:
+            for view in ("main", "study"):
+                textCommand = config.history[view][config.currentRecord[view]]
+                for formattedBible, plainBible in mappedBibles:
+                    textCommand = textCommand.replace(formattedBible, plainBible)
+                    self.runTextCommand(textCommand, False, view)
 
     # Actions - recently opened bibles & commentary
     def mainRefButtonClicked(self):
@@ -2453,8 +2462,9 @@ class ImportSettings(QDialog):
         self.layout.addWidget(self.linebreak, 1, 0)
         self.layout.addWidget(self.stripStrNo, 2, 0)
         self.layout.addWidget(self.stripMorphCode, 3, 0)
-        self.layout.addWidget(saveButton, 4, 0)
-        self.layout.addWidget(cancelButton, 5, 0)
+        self.layout.addWidget(self.importRtlOT, 4, 0)
+        self.layout.addWidget(saveButton, 5, 0)
+        self.layout.addWidget(cancelButton, 6, 0)
         self.setLayout(self.layout)
 
     def saveSettings(self):
