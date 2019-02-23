@@ -52,6 +52,7 @@ class TextCommandParser:
             "discourse": self.textDiscourse,
             "words": self.textWords,
             "lexicon": self.textLexicon,
+            "lxxword": self.textLxxWord,
             "search": self.textCountSearch,
             "showsearch": self.textSearchBasic,
             "advancedsearch": self.textSearchAdvanced,
@@ -861,6 +862,20 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return ("study", content)
+
+    # LXXWORD:::
+    def textLxxWord(self, command, source):
+        if re.search("^(LXX1i|LXX2i|LXX1|LXX2):::", command):
+            lxx, word = self.splitCommand(command)
+            bibleSqlite = Bible(lxx)
+            data = bibleSqlite.readLXXnote(word)
+            del bibleSqlite
+            if data:
+                return ("study", data)
+            else:
+                return self.invalidCommand()
+        else:
+            return self.invalidCommand()
 
     # LEMMA:::
     def textLemma(self, command, source):
