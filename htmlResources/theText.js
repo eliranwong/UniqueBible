@@ -342,7 +342,7 @@ function hl1(id, cl, sn) {
             document.getElementById('w'+id).style.background='#C9CFFF';
         }
     }
-    if (id != '') {
+    if ((id != '') && (id.startsWith("l") != true)) {
         document.title = "_instantWord:::"+activeB+":::"+id;
     }
 }
@@ -589,4 +589,8 @@ function uba(file) {
 
 function bn(b, c, v, n) {
     document.title = "_biblenote:::"+b+"."+c+"."+v+"."+n;
+}
+
+function biblenote(lxx, word) {
+    document.title = "LXXWORD:::"+lxx+":::"+word;
 }
