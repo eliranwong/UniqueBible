@@ -1,4 +1,5 @@
 import os, sqlite3, config, re
+from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
 
@@ -28,6 +29,36 @@ class Converter:
         chapterText = chapterText.replace("｛｝", "<hr>")
         chapterText = chapterText.replace("</vid>｜", "</vid>")
         return chapterText
+
+    def importAllFilesInAFolder(self, folder):
+        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file))]
+        validFiles = [file for file in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.commentaries\.SQLite3|\.SQLite3)$', file)]
+        if validFiles:
+            for file in validFiles:
+                file = os.path.join(folder, file)
+                if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', file):
+                    self.importThirdPartyDictionary(file)
+                elif file.endswith(".bbl.mybible"):
+                    self.importMySwordBible(file)
+                elif file.endswith(".cmt.mybible"):
+                    self.importMySwordCommentary(file)
+                elif file.endswith(".bbli"):
+                    self.importESwordBible(file)
+                elif file.endswith(".cmti"):
+                    self.importESwordCommentary(file)
+                elif file.endswith(".commentaries.SQLite3"):
+                    self.importMyBibleCommentary(file)
+                elif file.endswith(".SQLite3"):
+                    self.importMyBibleBible(file)
+            return True
+
+    def importThirdPartyDictionary(self, file):
+        *_, name = os.path.split(file)
+        destination = os.path.join("thirdParty", "dictionaries", name)
+        try:
+            copyfile(file, destination)
+        except:
+            print("Failed to copy '{0}'.".format(file))
 
     # Import e-Sword Bibles [Apple / macOS / iOS]
     def importESwordBible(self, file):

@@ -226,7 +226,7 @@ class MainWindow(QMainWindow):
         menu9.addSeparator()
         menu9.addAction(QAction("&Tag References in a File", self, triggered=self.tagFile))
         menu9.addAction(QAction("&Tag References in Multiple Files", self, triggered=self.tagFiles))
-        menu9.addAction(QAction("&Tag References in a Folder", self, triggered=self.tagFolder))
+        menu9.addAction(QAction("&Tag References in All Files of a Folder", self, triggered=self.tagFolder))
 
         menu10 = self.menuBar().addMenu("&Information")
         menu10.addAction(QAction("&BibleTools.app", self, triggered=self.openBibleTools))
@@ -962,6 +962,17 @@ class MainWindow(QMainWindow):
             elif fileName.endswith(".SQLite3"):
                 self.importMyBibleBible(fileName)
 
+    def importModulesInFolder(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "QFileDialog.getExistingDirectory()",
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().importAllFilesInAFolder(directory):
+                self.mainPage.runJavaScript("alert('Multiple 3rd party modules imported.')")
+            else:
+                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
+
     def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
         destination = os.path.join("thirdParty", "dictionaries", name)
@@ -1550,8 +1561,8 @@ class WebEngineView(QWebEngineView):
         del parser
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
-        self.iSearchText.setText("iSearch in {0}".format(text))
-        self.iSearchTextInBook.setText("iSearch in {0} > {1}".format(text, book))
+        self.iSearchText.setText("Search with OHGB in {0}".format(text))
+        self.iSearchTextInBook.setText("Search with OHGB in {0} > {1}".format(text, book))
         self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
         self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
         self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
@@ -1590,12 +1601,12 @@ class WebEngineView(QWebEngineView):
         self.addAction(self.searchTextInBook)
 
         self.iSearchText = QAction(self)
-        self.iSearchText.setText("iSearch")
+        self.iSearchText.setText("Search with OHGB")
         self.iSearchText.triggered.connect(self.iSearchSelectedText)
         self.addAction(self.iSearchText)
 
         self.iSearchTextInBook = QAction(self)
-        self.iSearchTextInBook.setText("iSearch in Current Book")
+        self.iSearchTextInBook.setText("Search with OHGB in Current Book")
         self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
         self.addAction(self.iSearchTextInBook)
 
