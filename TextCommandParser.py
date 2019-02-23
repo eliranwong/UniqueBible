@@ -279,10 +279,10 @@ class TextCommandParser:
         else:
             formattedBiblesFolder = os.path.join("marvelData", "bibles")
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
-            if text in ("MOB", "MIB", "MTB", "MPB", "MAB") and not config.readFormattedBibles:
+            if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
                 self.parent.enableParagraphButtonAction(False)
-            elif (text in ("OHGBi", "OHGB") or not text in formattedBibles) and config.readFormattedBibles:
+            elif (text in ("OHGBi", "OHGB", "LXX1", "LXX2") or not text in formattedBibles) and config.readFormattedBibles:
                 config.readFormattedBibles = False
                 self.parent.enableParagraphButtonAction(False)
             if len(verseList) == 1:
