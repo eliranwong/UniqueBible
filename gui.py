@@ -222,6 +222,7 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("&Install Marvel.bible Datasets", self, triggered=self.installMarvelDatasets))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
+        menu9.addAction(QAction("&Import Supported 3rd Party Modules in a Folder", self, triggered=self.importModulesInFolder))
         menu9.addAction(QAction("&Import Settings", self, triggered=self.importSettingsDialog))
         menu9.addSeparator()
         menu9.addAction(QAction("&Tag References in a File", self, triggered=self.tagFile))
