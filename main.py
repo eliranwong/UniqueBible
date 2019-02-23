@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.43
+latest_version = 0.46
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -125,6 +125,8 @@ def saveDataOnExit():
     fileObj.write("\nimportDoNotStripStrongNo = "+pprint.pformat(config.importDoNotStripStrongNo))
     fileObj.write("\nimportDoNotStripMorphCode = "+pprint.pformat(config.importDoNotStripMorphCode))
     fileObj.write("\nimportAddVerseLinebreak = "+pprint.pformat(config.importAddVerseLinebreak))
+    fileObj.write("\nimportRtlOT = "+pprint.pformat(config.importRtlOT))
+    fileObj.write("\nrtlTexts = "+pprint.pformat(config.rtlTexts))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
