@@ -81,15 +81,19 @@ class MainWindow(QMainWindow):
         # change the following 2 files for major changes of version
         # main.py line 17
         # https://biblebento.com/UniqueBibleAppVersion.txt
-        request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
-        if request.status_code == 200:
+        try:
+            request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
+            connection = True
+        except:
+            connection = False
+        if connection and request.status_code == 200:
             if float(request.text) > config.version:
                 self.promptUpdate(request.text)
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
-                "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(latestVersion, config.version),
-                QMessageBox.Yes | QMessageBox.No)
+                    "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(latestVersion, config.version),
+                    QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.updateUniqueBibleApp()
 
