@@ -290,7 +290,7 @@ class MainWindow(QMainWindow):
         self.toolBar.addSeparator()
 
         self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles (only if both versions are installed)")
+        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
         self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
@@ -1896,7 +1896,7 @@ class NoteEditor(QWidget):
             Qt.Key_I: self.format_italic,
             Qt.Key_U: self.format_underline,
             Qt.Key_M: self.format_custom,
-            Qt.Key_R: self.format_clear,
+            Qt.Key_D: self.format_clear,
             Qt.Key_F: self.focusSearchField,
         }
         key = event.key()
@@ -1945,14 +1945,14 @@ class NoteEditor(QWidget):
         self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
 
         newButton = QPushButton()
-        newButton.setToolTip("Create a New Topical Note")
+        newButton.setToolTip("Create a New Topical Note \n[Shortcut: Ctrl/Cmd + N]")
         newButtonFile = os.path.join("htmlResources", "newfile.png")
         newButton.setIcon(QIcon(newButtonFile))
         newButton.clicked.connect(self.newNoteFile)
         self.menuBar.addWidget(newButton)
 
         openButton = QPushButton()
-        openButton.setToolTip("Open Topical Notes")
+        openButton.setToolTip("Open Topical Notes \n[Shortcut: Ctrl/Cmd + O]")
         openButtonFile = os.path.join("htmlResources", "open.png")
         openButton.setIcon(QIcon(openButtonFile))
         openButton.clicked.connect(self.openFileDialog)
@@ -1961,7 +1961,7 @@ class NoteEditor(QWidget):
         self.menuBar.addSeparator()
 
         saveButton = QPushButton()
-        saveButton.setToolTip("Save")
+        saveButton.setToolTip("Save \n[Shortcut: Ctrl/Cmd + S]")
         saveButtonFile = os.path.join("htmlResources", "save.png")
         saveButton.setIcon(QIcon(saveButtonFile))
         saveButton.clicked.connect(self.saveNote)
@@ -2011,7 +2011,7 @@ class NoteEditor(QWidget):
         self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setToolTip("Quick Search")
+        self.searchLineEdit.setToolTip("Quick Search \n[Shortcut: Ctrl/Cmd + F]")
         self.searchLineEdit.setMaximumWidth(300)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
@@ -2033,21 +2033,21 @@ class NoteEditor(QWidget):
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
 
         boldButton = QPushButton()
-        boldButton.setToolTip("Bold")
+        boldButton.setToolTip("Bold \n[Shortcut: Ctrl/Cmd + B]")
         boldButtonFile = os.path.join("htmlResources", "bold.png")
         boldButton.setIcon(QIcon(boldButtonFile))
         boldButton.clicked.connect(self.format_bold)
         self.toolBar.addWidget(boldButton)
 
         italicButton = QPushButton()
-        italicButton.setToolTip("Italic")
+        italicButton.setToolTip("Italic \n[Shortcut: Ctrl/Cmd + I]")
         italicButtonFile = os.path.join("htmlResources", "italic.png")
         italicButton.setIcon(QIcon(italicButtonFile))
         italicButton.clicked.connect(self.format_italic)
         self.toolBar.addWidget(italicButton)
 
         underlineButton = QPushButton()
-        underlineButton.setToolTip("Underline")
+        underlineButton.setToolTip("Underline \n[Shortcut: Ctrl/Cmd + U]")
         underlineButtonFile = os.path.join("htmlResources", "underline.png")
         underlineButton.setIcon(QIcon(underlineButtonFile))
         underlineButton.clicked.connect(self.format_underline)
@@ -2056,7 +2056,7 @@ class NoteEditor(QWidget):
         self.toolBar.addSeparator()
 
         customButton = QPushButton()
-        customButton.setToolTip("Format Bullet List / Numbered List / Table")
+        customButton.setToolTip("Transform Selected Text: \n[Shortcut: Ctrl/Cmd + M] \n \nBullet List, e.g.: \n* bullet one \n* bullet two \n \nNumbered List, e.g.: \n*1 numbered item one \n*2 numbered item two \n \nTable, e.g.: \n{one|two|three} \n{four|five|six}")
         customButtonFile = os.path.join("htmlResources", "custom.png")
         customButton.setIcon(QIcon(customButtonFile))
         customButton.clicked.connect(self.format_custom)
@@ -2095,7 +2095,7 @@ class NoteEditor(QWidget):
         self.toolBar.addSeparator()
 
         clearButton = QPushButton()
-        clearButton.setToolTip("Clear Formatting")
+        clearButton.setToolTip("Delete Formatting \n[Shortcut: Ctrl/Cmd + D]")
         clearButtonFile = os.path.join("htmlResources", "clearFormat.png")
         clearButton.setIcon(QIcon(clearButtonFile))
         clearButton.clicked.connect(self.format_clear)
