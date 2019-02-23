@@ -361,7 +361,6 @@ class Bible:
         self.database = os.path.join("marvelData", "bibles", text+".bible")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
-        config.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
 
     def __del__(self):
         self.connection.close()
