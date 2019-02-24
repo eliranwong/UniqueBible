@@ -84,7 +84,7 @@ if not hasattr(config, 'historyRecordAllowed'):
 if not hasattr(config, 'currentRecord'):
     config.currentRecord = {'main': 0, 'study': 0}
 if not hasattr(config, 'history'):
-    config.history = {'external': ['Note.docx'], 'main': ['Genesis 1:1'], 'study': ['BIBLE:::NET:::John 3:16']}
+    config.history = {'external': ['Note.docx'], 'main': ['BIBLE:::KJV:::Genesis 1:1'], 'study': ['BIBLE:::NET:::John 3:16']}
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
