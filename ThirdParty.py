@@ -78,7 +78,6 @@ class Converter:
         tables = cursor.fetchall()
         tables = [table[0] for table in tables]
 
-        self.eSwordBibleToPlainFormat(description, abbreviation, verses)
         if "Notes" in tables:
             query = "SELECT * FROM Notes"
             cursor.execute(query)
@@ -86,6 +85,7 @@ class Converter:
             self.eSwordBibleToRichFormat(description, abbreviation, verses, notes)
         else:
             self.eSwordBibleToRichFormat(description, abbreviation, verses, [])
+        self.eSwordBibleToPlainFormat(description, abbreviation, verses)
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
@@ -314,8 +314,8 @@ class Converter:
         verses = cursor.fetchall()
         connection.close()
 
-        self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         self.mySwordBibleToRichFormat(description, abbreviation, verses)
+        self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
 
@@ -612,8 +612,6 @@ class Converter:
         verses = cursor.fetchall()
         if verses:
             verses = [(self.convertMyBibleBookNo(mbBook), mbChapter, mbVerse, mbText) for mbBook, mbChapter, mbVerse, mbText in verses]
-
-        self.myBibleBibleToPlainFormat(description, abbreviation, verses, strong_numbers_prefix)
         
         # check if notes are available in commentary format
         noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(abbreviation))
@@ -628,6 +626,7 @@ class Converter:
             noteConnection.close()
         else:
             self.myBibleBibleToRichFormat(description, abbreviation, verses, [], strong_numbers_prefix)
+        self.myBibleBibleToPlainFormat(description, abbreviation, verses, strong_numbers_prefix)
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
