@@ -47,8 +47,9 @@ class BiblesSqlite:
         self.installKJVversification()
         plainBibleList = self.getBibleList2()
         formattedBibleList = self.getFormattedBibleList()
-        biblesWithBothVersions = list(set(plainBibleList) & set(formattedBibleList))
-        if biblesWithBothVersions:
+        return list(set(plainBibleList) & set(formattedBibleList))
+
+    def proceedMigration(self, biblesWithBothVersions):
             for bible in biblesWithBothVersions:
                 # retrieve plain verses from bibles.sqlite
                 query = "SELECT * FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
@@ -109,7 +110,7 @@ class BiblesSqlite:
             insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
             self.cursor.executemany(insert, verses)
             self.connection.commit()
-        elif abbreviation in formattedBibleList:
+        else:
             bible = Bible(abbreviation)
             bible.importPlainFormat(verses, description)
             del bible

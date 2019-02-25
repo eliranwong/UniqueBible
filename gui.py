@@ -64,14 +64,16 @@ class MainWindow(QMainWindow):
 
     # check migration
     def checkMigration(self):
-        if config.version < 0.56:
-            initialMessage = ("Migration is needed.", "It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
-            self.displayNotice(initialMessage)
+        if config.version <= 0.56:
             biblesSqlite = BiblesSqlite()
-            biblesSqlite.migratePlainFormattedBibles()
+            biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
+            if biblesWithBothVersions:
+                initialMessage = ("Migration is needed.", "It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
+                self.displayNotice(initialMessage)
+                biblesSqlite.proceedMigration(biblesWithBothVersions)
+                finishMessage = ("Migration is finished." , "Your bible files are updated. Enjoy!")
+                self.displayNotice(finishMessage)
             del biblesSqlite
-            finishMessage = ("Migration is finished." , "Your bible files are updated. Enjoy!")
-            self.displayNotice(finishMessage)
 
     def displayNotice(self, title_message):
         title, message = title_message
