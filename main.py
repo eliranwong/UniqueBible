@@ -157,7 +157,7 @@ app.aboutToQuit.connect(saveDataOnExit)
 mainWindow = MainWindow()
 setupMainWindow()
 
-# check if migration is needed for version <= 0.56
+# check if migration is needed for version >= 0.56
 mainWindow.checkMigration()
 
 # execute initial command in main view

@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
 
     # check migration
     def checkMigration(self):
-        if config.version <= 0.56:
+        if config.version >= 0.56:
             biblesSqlite = BiblesSqlite()
             biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
             if biblesWithBothVersions:
