@@ -252,7 +252,7 @@ class BiblesSqlite:
             return [chapter[0] for chapter in self.cursor.fetchall()]
         elif text in formattedBibleList:
             bible = Bible(text)
-            chapterList = bible.getBookList()
+            chapterList = bible.getChapterList(b)
             del bible
             return chapterList
 
