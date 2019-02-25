@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.55
+latest_version = 0.56
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -156,6 +156,9 @@ app.aboutToQuit.connect(saveDataOnExit)
 
 mainWindow = MainWindow()
 setupMainWindow()
+
+# check if migration is needed for version >= 0.56
+mainWindow.checkMigration()
 
 # execute initial command in main view
 initial_mainTextCommand = " ".join(sys.argv[1:])

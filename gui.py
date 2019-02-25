@@ -62,6 +62,21 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
+    # check migration
+    def checkMigration(self):
+        if config.version >= 0.56:
+            initialMessage = ("Migration is needed.", "It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
+            self.displayNotice(initialMessage)
+            biblesSqlite = BiblesSqlite()
+            biblesSqlite.migratePlainFormattedBibles()
+            del biblesSqlite
+            finishMessage = ("Migration is finished." , "Your bible files are updated. Enjoy!")
+            self.displayNotice(finishMessage)
+
+    def displayNotice(self, title_message):
+        title, message = title_message
+        reply = QMessageBox.information(self, title, message)
+
     # manage key capture
     def event(self, event):
         if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
@@ -625,26 +640,26 @@ class MainWindow(QMainWindow):
     # install marvel data
     def installMarvelBibles(self):
         bibles = {
-            "American Standard Version": (("marvelData", "bibles", "ASV.bible"), "1psDvIqtxjaE0ax0ewyPIF-ueah1I8RG1"),
-            "Berean Study Bible": (("marvelData", "bibles", "BSB.bible"), "1dVnS6sFqxVSUAZZXwCUhecK2gy7T5Ung"),
-            "Chinese Union Version (Traditional Chinese)": (("marvelData", "bibles", "CUV.bible"), "1m1ml4xt2zjFoY5CQ6rmqXhvLzP6uq-mg"),
-            "Chinese Union Version (Simplified Chinese)": (("marvelData", "bibles", "CUVs.bible"), "1feAuYDpbw_wDgFecyfg4lycpiIJhchEE"),
-            "International Standard Version": (("marvelData", "bibles", "ISV.bible"), "141o3qUOOeDLh0T5QDTbDynn86CDqkRG3"),
-            "King James Version": (("marvelData", "bibles", "KJV.bible"), "1Nd3cPu43tOUzIXgpCG_IrR6spAgt9PIQ"),
-            "Lexhame English Bible": (("marvelData", "bibles", "LEB.bible"), "1gN3HOe57EdsSTbZ3qeUlwj9lrMw2ZBy6"),
-            "Septuagint / LXX [main]": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
-            "Septuagint / LXX [alternate]": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
-            "Septuagint / LXX interlinear [main]": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
-            "Septuagint / LXX interlinear [alternate]": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
-            "Marvel Original Bible": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
-            "Marvel Annotated Bible": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
-            "Marvel Interlinear Bible": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
-            "Marvel Parallel Bible": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
-            "Marvel Trilingual Bible": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
-            "New English Translation": (("marvelData", "bibles", "NET.bible"), "10FcyT81ZCci7VEB4_ejUn6u2hDkHmfuA"),
-            "unfoldingWord Literal Text": (("marvelData", "bibles", "ULT.bible"), "1i6upSEbtskX6P-hplZHa91EW8XU1yFPR"),
-            "unfoldingWord Simplified Text": (("marvelData", "bibles", "UST.bible"), "1TPUIiCHefsDO2nuTW_Dr6GeeQbdJQOrJ"),
-            "World English Bible": (("marvelData", "bibles", "WEB.bible"), "1QiA9NjTK5TLpbft3zaLnkKHjRHjDFGy5"),
+            "American Standard Version": (("marvelData", "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr"),
+            "Berean Study Bible": (("marvelData", "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN"),
+            "Chinese Union Version (Traditional Chinese)": (("marvelData", "bibles", "CUV.bible"), "1iqsHxOWD_H-BABbjq03qIIrTu8u-UyjJ"),
+            "Chinese Union Version (Simplified Chinese)": (("marvelData", "bibles", "CUVs.bible"), "1neY4KK3tfVtmnoLQu6YVMCyIhqcFEiPZ"),
+            "International Standard Version": (("marvelData", "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
+            "King James Version": (("marvelData", "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
+            "Lexhame English Bible": (("marvelData", "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
+            "Septuagint / LXX [main]": (("marvelData", "bibles", "LXX1.bible"), "1sjPa7oP9SnsrsPyQ1JPUGbwgMT8QE8F1"),
+            "Septuagint / LXX interlinear [main]": (("marvelData", "bibles", "LXX1i.bible"), "1pxj_pg7412ZA9ojnkI1iV46c6J3_7SJ9"),
+            "Septuagint / LXX [alternate]": (("marvelData", "bibles", "LXX2.bible"), "1fK99KgtdFhEQssvYVp3fPQZNJBFBpEca"),
+            "Septuagint / LXX interlinear [alternate]": (("marvelData", "bibles", "LXX2i.bible"), "1E-i68TbbxxvDTzzzl-aFTXwmsro9LUjZ"),
+            "Marvel Annotated Bible": (("marvelData", "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT"),
+            "Marvel Interlinear Bible": (("marvelData", "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs"),
+            "Marvel Original Bible": (("marvelData", "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR"),
+            "Marvel Parallel Bible": (("marvelData", "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
+            "Marvel Trilingual Bible": (("marvelData", "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
+            "New English Translation": (("marvelData", "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
+            "unfoldingWord Literal Text": (("marvelData", "bibles", "ULT.bible"), "10Udo5ND0a26hPIcJHNOuNqJ2feZuVXjT"),
+            "unfoldingWord Simplified Text": (("marvelData", "bibles", "UST.bible"), "1OFwdXRwC9gG4PJLt5j4NHWgFs9wcgXQk"),
+            "World English Bible": (("marvelData", "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),
         }
         items = [bible for bible in bibles.keys() if not os.path.isfile(os.path.join(*bibles[bible][0]))]
         if not items:
@@ -697,7 +712,7 @@ class MainWindow(QMainWindow):
 
     def installMarvelDatasets(self):
         datasets = {
-            "Core Datasets": (("marvelData", "morphology.sqlite"), "1Kr4APbw-dKyaxb6cJnaxiW3MwLJVV6an"),
+            "Core Datasets": (("marvelData", "morphology.sqlite"), "1Vn3UXicjqDQSA41ek3_zJ7n2iAlspU_3"),
             "Search Engine": (("marvelData", "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
             "Smart Indexes": (("marvelData", "indexes.sqlite"), "1Fdq3C9hyoyBX7riniByyZdW9mMoMe6EX"),
             "Chapter & Verse Notes": (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),

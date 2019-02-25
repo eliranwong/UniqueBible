@@ -232,7 +232,7 @@ class Converter:
         for chapter in chapters:
             b, c = chapter
             biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
             del biblesSqlite
 
             verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
@@ -500,7 +500,7 @@ class Converter:
         for chapter in chapters:
             b, c = chapter
             biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
             del biblesSqlite
 
             verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
@@ -776,7 +776,7 @@ class Converter:
             b, c = chapter
             b = self.convertMyBibleBookNo(b)
             biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "KJV")
+            verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
             del biblesSqlite
 
             verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}

@@ -15,30 +15,104 @@ class BiblesSqlite:
     def __del__(self):
         self.connection.close()
 
+    # to-do list
+    # sort out download helper
+    
+    def getBibleList(self, includeMarvelBibles=True):
+        return sorted(self.getPlainBibleList() + self.getFormattedBibleList(includeMarvelBibles))
+
+    # legacy list before version 0.56
+    def getBibleList2(self):
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        self.cursor.execute(query, ("table",))
+        versions = self.cursor.fetchall()
+        exclude = ("Details", "lexicalEntry", "morphology", "original", "title", "interlinear", "kjvbcv")
+        return [version[0] for version in versions if not version[0] in exclude]
+
+    def getTwoBibleLists(self, includeMarvelBibles=True):
+        return [self.getPlainBibleList(), self.getFormattedBibleList(includeMarvelBibles)]
+
+    def getPlainBibleList(self):
+        return ["OHGB", "OHGBi", "LXX"]
+
+    def getFormattedBibleList(self, includeMarvelBibles=True):
+        formattedBiblesFolder = os.path.join("marvelData", "bibles")
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not f.startswith('.')]
+        if not includeMarvelBibles:
+            marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
+            formattedBibles = [bible for bible in formattedBibles if not bible in marvelBibles]
+        return sorted(formattedBibles)
+
+    def migratePlainFormattedBibles(self):
+        self.installKJVversification()
+        plainBibleList = self.getBibleList2()
+        formattedBibleList = self.getFormattedBibleList()
+        biblesWithBothVersions = list(set(plainBibleList) & set(formattedBibleList))
+        if biblesWithBothVersions:
+            for bible in biblesWithBothVersions:
+                # retrieve plain verses from bibles.sqlite
+                query = "SELECT * FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
+                self.cursor.execute(query)
+                verses = self.cursor.fetchall()
+                # import into formatted bible database
+                formattedBible = Bible(bible)
+                formattedBible.importPlainFormat(verses)
+                del formattedBible
+                # delete plain verses from bibles.sqlite
+                delete = "DROP TABLE {0}".format(bible)
+                self.cursor.execute(delete)
+                self.connection.commit()
+            self.connection.execute("VACUUM")
+
+    def installKJVversification(self):
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        self.cursor.execute(query, ("table",))
+        versions = self.cursor.fetchall()
+        versions = [version[0] for version in versions]
+        if "KJV" in versions and not "kjvbcv" in versions:
+            query = "SELECT * FROM KJV ORDER BY Book, Chapter, Verse"
+            self.cursor.execute(query)
+            verses = self.cursor.fetchall()
+            verses = [(b, c, v, "") for b, c, v, *_ in verses]
+            self.importBible("KJV versification", "kjvbcv", verses)
+
     def bibleInfo(self, text):
-        query = "SELECT Scripture FROM {0} WHERE Book=0 AND Chapter=0 AND Verse=0".format(text)
-        self.cursor.execute(query)
-        info = self.cursor.fetchone()
-        if info:
-            return info[0]
-        else:
-            return ""
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList:
+            query = "SELECT Scripture FROM {0} WHERE Book=0 AND Chapter=0 AND Verse=0".format(text)
+            self.cursor.execute(query)
+            info = self.cursor.fetchone()
+            if info:
+                return info[0]
+            else:
+                return ""
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            info = bible.bibleInfo()
+            del bible
+            return info
 
     def importBible(self, description, abbreviation, verses):
-        query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
-        self.cursor.execute(query, (abbreviation,))
-        table = self.cursor.fetchone()
-        if table:
-            delete = "DELETE from {0}".format(abbreviation)
-            self.cursor.execute(delete)
-        else:
-            create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
-            self.cursor.execute(create)
-        self.connection.commit()
-        verses.append((0, 0, 0, description))
-        insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
-        self.cursor.executemany(insert, verses)
-        self.connection.commit()
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if abbreviation in plainBibleList or abbreviation == "kjvbcv":
+            query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
+            self.cursor.execute(query, (abbreviation,))
+            table = self.cursor.fetchone()
+            if table:
+                delete = "DELETE from {0}".format(abbreviation)
+                self.cursor.execute(delete)
+            else:
+                create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
+                self.cursor.execute(create)
+            self.connection.commit()
+            verses.append((0, 0, 0, description))
+            insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
+            self.cursor.executemany(insert, verses)
+            self.connection.commit()
+        elif abbreviation in formattedBibleList:
+            bible = Bible(abbreviation)
+            bible.importPlainFormat(verses, description)
+            del bible
 
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
@@ -117,38 +191,52 @@ class BiblesSqlite:
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
     def readTextChapter(self, text, b, c):
-        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
-        self.cursor.execute(query, (b, c))
-        textChapter = self.cursor.fetchall()
-        if not textChapter:
-            return [(b, c, 1, "")]
-        # return a list of tuple
-        return textChapter
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList:
+            query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
+            self.cursor.execute(query, (b, c))
+            textChapter = self.cursor.fetchall()
+            if not textChapter:
+                return [(b, c, 1, "")]
+            # return a list of tuple
+            return textChapter
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            textChapter = bible.readTextChapter(b, c)
+            del bible
+            return textChapter
 
     def readTextVerse(self, text, b, c, v):
-        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
-        self.cursor.execute(query, (b, c, v))
-        textVerse = self.cursor.fetchone()
-        if not textVerse:
-            return (b, c, v, "")
-        # return a tuple
-        return textVerse
-
-    def getBibleList(self):
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        self.cursor.execute(query, ("table",))
-        versions = self.cursor.fetchall()
-        exclude = ("Details", "lexicalEntry", "morphology", "original", "title", "interlinear")
-        return [version[0] for version in versions if not version[0] in exclude]
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList or text == "title":
+            query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
+            self.cursor.execute(query, (b, c, v))
+            textVerse = self.cursor.fetchone()
+            if not textVerse:
+                return (b, c, v, "")
+            # return a tuple
+            return textVerse
+        else:
+            bible = Bible(text)
+            textVerse = bible.readTextVerse(b, c, v)
+            del bible
+            return textVerse
 
     def getTexts(self):
         textList = self.getBibleList()
         return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
 
     def getBookList(self, text=config.mainText):
-        query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
-        self.cursor.execute(query)
-        return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList:
+            query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
+            self.cursor.execute(query)
+            return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            bookList = bible.getBookList()
+            del bible
+            return bookList
 
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
@@ -156,9 +244,16 @@ class BiblesSqlite:
         return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book, text), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
-        query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
-        self.cursor.execute(query, (b,))
-        return [chapter[0] for chapter in self.cursor.fetchall()]
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList:
+            query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
+            self.cursor.execute(query, (b,))
+            return [chapter[0] for chapter in self.cursor.fetchall()]
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            chapterList = bible.getBookList()
+            del bible
+            return chapterList
 
     def getChapters(self, b=config.mainB, text=config.mainText):
         chapterList = self.getChapterList(b, text)
@@ -175,9 +270,14 @@ class BiblesSqlite:
         return " ".join(chaptersMenu)
 
     def getVerseList(self, b, c, text=config.mainText):
-        query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
-        self.cursor.execute(query, (b, c))
-        return [verse[0] for verse in self.cursor.fetchall()]
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList or text in ("kjvbcv", "title"):
+            query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
+            self.cursor.execute(query, (b, c))
+            return [verse[0] for verse in self.cursor.fetchall()]
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            return bible.getVerseList(b, c)
 
     def getVerses(self, b=config.mainB, c=config.mainC, text=config.mainText):
         verseList = self.getVerseList(b, c, text)
@@ -191,9 +291,16 @@ class BiblesSqlite:
             return "".join([self.readTranslations(b, c, v, texts) for b, c, v in verseList])
 
     def compareVerseChapter(self, b, c, v, texts):
-        verseList = self.getVerseList(b, c, texts[0])
+        # get a combined verse list without duplication
+        combinedVerseList = [self.getVerseList(b, c, text) for text in texts]
+        uniqueVerseList = []
+        for verseList in combinedVerseList:
+            for verseNo in verseList:
+                if not verseNo in uniqueVerseList:
+                    uniqueVerseList.append(verseNo)
+
         chapter = "<h2>{0}</h2><table style='width: 100%;'>".format(self.bcvToVerseReference(b, c, v).split(":", 1)[0])
-        for verse in verseList:
+        for verse in uniqueVerseList:
             row = 0
             for text in texts:
                 row = row + 1
@@ -213,13 +320,11 @@ class BiblesSqlite:
         return chapter
 
     def readTranslations(self, b, c, v, texts):
+        plainBibleList, formattedBibleList = self.getTwoBibleLists(False)
+
         if texts == ["ALL"]:
-            bibleList = self.getBibleList()
-            texts = ["OHGB", "OHGBi", "LXX"]
-            exclude = ("LXX", "LXX1", "LXX1i", "LXX2", "LXX2i", "MOB", "MAB", "MIB", "MPB", "MTB", "OHGB", "OHGBi")
-            for bible in bibleList:
-                if not bible in exclude:
-                    texts.append(bible)
+            texts = plainBibleList + formattedBibleList
+
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
         for text in texts:
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
@@ -249,14 +354,26 @@ class BiblesSqlite:
         return content
 
     def countSearchBook(self, text, book, searchString):
-        query = "SELECT Verse FROM {0} WHERE Book = ? AND Scripture LIKE ?".format(text)
-        t = (book, "%{0}%".format(searchString))
-        self.cursor.execute(query, t)
-        return len(self.cursor.fetchall())
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if text in plainBibleList:
+            query = "SELECT Verse FROM {0} WHERE Book = ? AND Scripture LIKE ?".format(text)
+            t = (book, "%{0}%".format(searchString))
+            self.cursor.execute(query, t)
+            return len(self.cursor.fetchall())
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            count = bible.countSearchBook(book, searchString)
+            del bible
+            return count
 
     def searchBible(self, text, mode, searchString, interlinear=False):
+        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        
         formatedText = ""
-        query = "SELECT * FROM {0} WHERE ".format(text)
+        if text in plainBibleList:
+            query = "SELECT * FROM {0} WHERE ".format(text)
+        elif text in formattedBibleList:
+            query = "SELECT * FROM Verses WHERE "
         if mode == "BASIC":
             searchCommand = "SHOWSEARCH"
             if interlinear:
@@ -269,11 +386,14 @@ class BiblesSqlite:
             if interlinear:
                 searchCommand = "ADVANCEDISEARCH"
             formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
-            t = ()
             query += searchString
         query += " ORDER BY Book, Chapter, Verse"
-        self.cursor.execute(query, t)
-        verses = self.cursor.fetchall()
+        if text in plainBibleList:
+            verses = self.getSearchVerses(query)
+        elif text in formattedBibleList:
+            bible = Bible(text)
+            verses = bible.getSearchVerses(query)
+            del bible
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
         for verse in verses:
             b, c, v, verseText = verse
@@ -304,6 +424,10 @@ class BiblesSqlite:
             s = p.search(formatedText)
         return formatedText
 
+    def getSearchVerses(self, query):
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def readMultipleVerses(self, text, verseList):
         verses = ""
         for b, c, v in verseList:
@@ -332,31 +456,10 @@ class BiblesSqlite:
         return chapter
 
 
-class ClauseData:
-
-    def __init__(self):
-        # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "clause.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getContent(self, testament, entry):
-        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
-        self.cursor.execute(query, ("c{0}".format(entry),))
-        content = self.cursor.fetchone()
-        if not content:
-            return "[not found]"
-        else:
-            return content[0]
-
-
 class Bible:
 
     def __init__(self, text):
-        # connect bibles.sqlite
+        # connect [text].bible
         self.text = text
         self.database = os.path.join("marvelData", "bibles", text+".bible")
         self.connection = sqlite3.connect(self.database)
@@ -364,6 +467,65 @@ class Bible:
 
     def __del__(self):
         self.connection.close()
+
+    def getBookList(self):
+        query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
+        self.cursor.execute(query)
+        return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
+
+    def getChapterList(self, b=config.mainB):
+        query = "SELECT DISTINCT Chapter FROM Verses WHERE Book=? ORDER BY Chapter"
+        self.cursor.execute(query, (b,))
+        return [chapter[0] for chapter in self.cursor.fetchall()]
+
+    def getVerseList(self, b, c):
+        query = "SELECT DISTINCT Verse FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        return [verse[0] for verse in self.cursor.fetchall()]
+
+    def bibleInfo(self):
+        query = "SELECT Scripture FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return ""
+
+    def importPlainFormat(self, verses, description=""):
+        query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
+        self.cursor.execute(query, ("Verses",))
+        table = self.cursor.fetchone()
+        if table:
+            delete = "DELETE from Verses"
+            self.cursor.execute(delete)
+        else:
+            create = "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)"
+            self.cursor.execute(create)
+        self.connection.commit()
+        if description:
+            verses.append((0, 0, 0, description))
+        insert = "INSERT INTO Verses (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)"
+        self.cursor.executemany(insert, verses)
+        self.connection.commit()
+
+    def readTextChapter(self, b, c):
+        query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        textChapter = self.cursor.fetchall()
+        if not textChapter:
+            return [(b, c, 1, "")]
+        # return a list of tuple
+        return textChapter
+
+    def readTextVerse(self, b, c, v):
+        query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
+        textVerse = self.cursor.fetchone()
+        if not textVerse:
+            return (b, c, v, "")
+        # return a tuple
+        return textVerse
 
     def readFormattedChapter(self, verse):
         b, c, v = verse
@@ -402,6 +564,38 @@ class Bible:
         if note:
             note = note[0]
         return note
+
+    def countSearchBook(self, book, searchString):
+        query = "SELECT Verse FROM Verses WHERE Book = ? AND Scripture LIKE ?"
+        t = (book, "%{0}%".format(searchString))
+        self.cursor.execute(query, t)
+        return len(self.cursor.fetchall())
+
+    def getSearchVerses(self, query):
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
+
+
+class ClauseData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "clause.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, testament, entry):
+        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
+        self.cursor.execute(query, ("c{0}".format(entry),))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return content[0]
+
 
 class MorphologySqlite:
 

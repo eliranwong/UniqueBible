@@ -154,7 +154,7 @@ class TextCommandParser:
         }
 
     def getCoreBiblesInfo(self):
-        return (("marvelData", "morphology.sqlite"), "1Kr4APbw-dKyaxb6cJnaxiW3MwLJVV6an")
+        return (("marvelData", "morphology.sqlite"), "1Vn3UXicjqDQSA41ek3_zJ7n2iAlspU_3")
 
     def getBibleNoteInfo(self):
         return (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
@@ -167,6 +167,30 @@ class TextCommandParser:
 
     def getLastCommentaryInfo(self):
         return (("marvelData", "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
+
+    def getMarvelBibles(self):
+        return {
+            "ASV": (("marvelData", "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr"),
+            "BSB": (("marvelData", "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN"),
+            "CUV": (("marvelData", "bibles", "CUV.bible"), "1iqsHxOWD_H-BABbjq03qIIrTu8u-UyjJ"),
+            "CUVs": (("marvelData", "bibles", "CUVs.bible"), "1neY4KK3tfVtmnoLQu6YVMCyIhqcFEiPZ"),
+            "ISV": (("marvelData", "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
+            "KJV": (("marvelData", "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
+            "LEB": (("marvelData", "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
+            "LXX1": (("marvelData", "bibles", "LXX1.bible"), "1sjPa7oP9SnsrsPyQ1JPUGbwgMT8QE8F1"),
+            "LXX1i": (("marvelData", "bibles", "LXX1i.bible"), "1pxj_pg7412ZA9ojnkI1iV46c6J3_7SJ9"),
+            "LXX2": (("marvelData", "bibles", "LXX2.bible"), "1fK99KgtdFhEQssvYVp3fPQZNJBFBpEca"),
+            "LXX2i": (("marvelData", "bibles", "LXX2i.bible"), "1E-i68TbbxxvDTzzzl-aFTXwmsro9LUjZ"),
+            "MAB": (("marvelData", "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT"),
+            "MIB": (("marvelData", "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs"),
+            "MOB": (("marvelData", "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR"),
+            "MPB": (("marvelData", "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
+            "MTB": (("marvelData", "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
+            "NET": (("marvelData", "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
+            "ULT": (("marvelData", "bibles", "ULT.bible"), "10Udo5ND0a26hPIcJHNOuNqJ2feZuVXjT"),
+            "UST": (("marvelData", "bibles", "UST.bible"), "1OFwdXRwC9gG4PJLt5j4NHWgFs9wcgXQk"),
+            "WEB": (("marvelData", "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),
+        }
 
     def getCommentaryCloudID(self, commentary):
         cloudIDs = {
@@ -263,7 +287,7 @@ class TextCommandParser:
         biblesSqlite = BiblesSqlite()
         bibleList = biblesSqlite.getBibleList()
         del biblesSqlite
-        confirmedTexts = [text for text in texts.split("_") if text in bibleList]
+        confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
         return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):
@@ -315,7 +339,8 @@ class TextCommandParser:
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
-        marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
+        #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
+        marvelBibles = list(self.getMarvelBibles().keys())
         if text in formattedBibles and (text in marvelBibles or (text not in marvelBibles and config.readFormattedBibles)):
             bibleSqlite = Bible(text)
             chapter = bibleSqlite.readFormattedChapter(verse)
@@ -328,18 +353,6 @@ class TextCommandParser:
         return chapter
 
     # functions about bible
-    def getMarvelBibles(self):
-        return {
-            "MOB": (("marvelData", "bibles", "MOB.bible"), "1y7Cs5MO4ONQwZOnZC52jKnFFCDk52t_a"),
-            "MAB": (("marvelData", "bibles", "MAB.bible"), "1QXCwFnHug88wy92pJwFvwZa_M5Gx1ZUX"),
-            "MIB": (("marvelData", "bibles", "MIB.bible"), "1W1VuvZMca9ruPBkVKV00F8JI-vPHodwy"),
-            "MPB": (("marvelData", "bibles", "MPB.bible"), "1co9IO4TRqFqalCTomxT-qpkeTM8hrXnA"),
-            "MTB": (("marvelData", "bibles", "MTB.bible"), "1Qp8Z24xrUBPxDZyH9tr7U3d2q4hhW83O"),
-            "LXX1": (("marvelData", "bibles", "LXX1.bible"), "1JFIQ_Ef4sF_VBQJ8PXWLxcjnk8XWgf8x"),
-            "LXX2": (("marvelData", "bibles", "LXX2.bible"), "1FaDp0qdV7Op_XlK_wwB3WyE5dN-_wPED"),
-            "LXX1i": (("marvelData", "bibles", "LXX1i.bible"), "1BpmD_I2Z_8u-xuRf8DCUYdm2AVC9EXlk"),
-            "LXX2i": (("marvelData", "bibles", "LXX2i.bible"), "19snsLLHK66Ks4tojubkUMG5MfVIv6-g7"),
-        }
 
     # BIBLE:::
     def textBible(self, command, source):
@@ -348,10 +361,10 @@ class TextCommandParser:
             command = "{0}:::{1}".format(viewText, command)
         texts, references = self.splitCommand(command)
         texts = self.getConfirmedTexts(texts)
+        marvelBibles = self.getMarvelBibles()
         if not texts:
             return self.invalidCommand()
         else:
-            marvelBibles = self.getMarvelBibles()
             text = texts[0]
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
