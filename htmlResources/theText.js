@@ -372,6 +372,10 @@ function iw(book, wordID) {
     }
 }
 
+function imv(b, c, v) {
+    document.title = "_imv:::"+b+"."+c+"."+v;
+}
+
 function qV(v) {
     document.title = "_instantVerse:::"+activeText+":::"+activeB+"."+activeC+"."+v;
 }
