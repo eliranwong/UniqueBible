@@ -578,7 +578,7 @@ class TextCommandParser:
             b, c, v, verseText = biblesSqlite.readTextVerse(config.mainText, b, c, v)
             del biblesSqlite
             info = "<hl>{0}</hl> {1}".format(self.bcvToVerseReference(b, c, v), verseText)
-            if config.mainText in config.rtlTexts:
+            if config.mainText in config.rtlTexts and b < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
             return ("instant", info)
         else:
