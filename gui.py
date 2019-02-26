@@ -1531,9 +1531,11 @@ class MainWindow(QMainWindow):
             # final touch to transform text HERE
             searchReplace = (
                 ('onclick=[{0}"]bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv(\1,\2,\3)" onmouseover="imv(\1,\2,\3)"'),
+                ('onclick=[{0}"]cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), self.convertCrLink),
             )
             for search, replace in searchReplace:
                 html = re.sub(search, replace, html)
+            # load into widget view
             if view == "study":
                 # save html in a separate file
                 # reason: setHTML does not work with content larger than 2 MB
@@ -1545,6 +1547,11 @@ class MainWindow(QMainWindow):
                 views[view].setHtml(html, baseUrl)
             if addRecord == True and view in ("main", "study"):
                 self.addHistoryRecord(view, textCommand)
+
+    def convertCrLink(self, match):
+        value = match.group()
+        bookNo = Converter().convertMyBibleBookNo(int(re.sub('onclick=[{0}"]cr\(([0-9]+?),[ ]*?[0-9]+?,[ ]*?[0-9]+?\)[{0}"]'.format("'"), r'\1', value)))
+        return re.sub('onclick=[{0}"]cr\([0-9]+?,[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv({0},\1,\2)" onmouseover="imv({0},\1,\2)"'.format(bookNo), value)
 
     # add a history record
     def addHistoryRecord(self, view, textCommand):
