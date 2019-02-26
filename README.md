@@ -81,6 +81,8 @@ The built-in converter supports import of the following third-party modules:<br>
 
 * More MySword / e-Sword modules are available at: <a href="http://www.biblesupport.com">http://www.biblesupport.com</a>
 
+<b>Disclaimer</b>: All third party modules are created by third parties.  In NO way one should suggest that UniqueBible.app endorse their views or individual content.  For issues about these third-party modules, please contact corresponding third-parties.  UniqueBible.app is NOT responsibile for any of these third-party modules in terms of their quality or content.  Users should use these modules at their own judgement and risks.
+
 Users need to download 3rd party modules separately.<br>
 Built-in converter can be accessed via our menu bar:<br>
 Go to menu "Resources" > "Import 3rd Party Modules"
