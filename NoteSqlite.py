@@ -8,6 +8,13 @@ class NoteSqlite:
         self.database = os.path.join("marvelData", "note.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
+        create = (
+            "CREATE TABLE IF NOT EXISTS ChapterNote (Book INT, Chapter INT, Note TEXT)",
+            "CREATE TABLE IF NOT EXISTS VerseNote (Book INT, Chapter INT, Verse INT, Note TEXT)",
+        )
+        for statement in create:
+            self.cursor.execute(statement)
+        self.connection.commit()
 
     def __del__(self):
         self.connection.close()
