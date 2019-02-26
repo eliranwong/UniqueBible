@@ -85,7 +85,7 @@ Users need to download 3rd party modules separately.<br>
 Built-in converter can be accessed via our menu bar:<br>
 Go to menu "Resources" > "Import 3rd Party Modules"
 
-<b>Disclaimer</b>: All third party modules are created by third parties.  In NO way one should suggest that UniqueBible.app endorse their views or individual content.  For issues about these third-party modules, please contact corresponding third-parties.  UniqueBible.app is NOT responsibile for any of these third-party modules in terms of their quality or content.  Users should use these modules at their own judgement and risks.
+<b>Disclaimer</b>: All third-party modules are created by third parties. UniqueBible.app does not endorse their views or individual content. Please contact the module creators if you have issues with their modules. UniqueBible.app is NOT responsible for any third-party modules in terms of their quality or content. Users should use these third-party modules at their own judgment and risks.
 
 # Donations:
 
