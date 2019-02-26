@@ -449,7 +449,7 @@ class BiblesSqlite:
             divTag = "<div>"
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
-            if v in titleList:
+            if v in titleList and config.addTitleToPlainChapter:
                 if not v == 1:
                     chapter += "<br>"
                 chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])

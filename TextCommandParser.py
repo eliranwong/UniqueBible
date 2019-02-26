@@ -12,6 +12,7 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
+            "_imv": self.instantMainVerse,
             "_instantverse": self.instantVerse,
             "_instantword": self.instantWord,
             "_menu": self.textMenu,
@@ -33,6 +34,7 @@ class TextCommandParser:
             "_website": self.textWebsite,
             "_uba": self.textUba,
             "_biblenote": self.textBiblenote,
+            "_lxxword": self.textLxxWord,
             "main": self.textMain,
             "study": self.textStudy,
             "bible": self.textBible,
@@ -52,7 +54,6 @@ class TextCommandParser:
             "discourse": self.textDiscourse,
             "words": self.textWords,
             "lexicon": self.textLexicon,
-            "_lxxword": self.textLxxWord,
             "search": self.textCountSearch,
             "showsearch": self.textSearchBasic,
             "advancedsearch": self.textSearchAdvanced,
@@ -565,6 +566,20 @@ class TextCommandParser:
             b, c, v = [int(i) for i in commandList[1].split(".")]
             info = morphologySqlite.instantVerse("interlinear", b, c, v)
             del morphologySqlite
+            return ("instant", info)
+        else:
+            return ("", "")
+
+    # _imv:::
+    def instantMainVerse(self, command, source):
+        if config.instantInformationEnabled == 1:
+            b, c, v = [int(i) for i in command.split(".")]
+            biblesSqlite = BiblesSqlite()
+            b, c, v, verseText = biblesSqlite.readTextVerse(config.mainText, b, c, v)
+            del biblesSqlite
+            info = "<hl>{0}</hl> {1}".format(self.bcvToVerseReference(b, c, v), verseText)
+            if config.mainText in config.rtlTexts:
+                info = "<div style='direction: rtl;'>{0}</div>".format(info)
             return ("instant", info)
         else:
             return ("", "")

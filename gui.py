@@ -705,12 +705,26 @@ class MainWindow(QMainWindow):
             "Commentary on the Old and New Testaments (Whedon) [14 vol.]": (("marvelData", "commentaries", "cWhedon.commentary"), "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9"),
         }
         items = [commentary for commentary in commentaries.keys() if not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        if not items:
+        if items:
+            commentaries["Install ALL Commentaries Listed Above"] = ""
+            items.append("Install ALL Commentaries Listed Above")
+        else:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "Install Bible Commentaries",
                 "Available Modules:", items, 0, False)
-        if ok and item and not item == "[All Installed]":
+        if ok and item and not item in ("[All Installed]", "Install ALL Commentaries Listed Above"):
             self.downloadHelper(commentaries[item])
+        elif item == "Install ALL Commentaries Listed Above":
+            self.installAllMarvelCommentaries(commentaries)
+
+    def installAllMarvelCommentaries(self, commentaries):
+        toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
+        self.mainPage.runJavaScript('alert("It takes time to install all Marvel.bible commentaries. You will receive another message when files are downloaded.")')
+        for commentary in toBeInstalled:
+            databaseInfo = commentaries[commentary]
+            downloader = Downloader(self, databaseInfo)
+            downloader.downloadFile(False)
+        self.mainPage.runJavaScript('alert("All Marvel.bible commentaries installed.")')
 
     def installMarvelDatasets(self):
         datasets = {
@@ -1514,6 +1528,12 @@ class MainWindow(QMainWindow):
                 "study": self.studyView,
                 "instant": self.instantView,
             }
+            # final touch to transform text HERE
+            searchReplace = (
+                ('onclick=[{0}"]bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv(\1,\2,\3)" onmouseover="imv(\1,\2,\3)"'),
+            )
+            for search, replace in searchReplace:
+                html = re.sub(search, replace, html)
             if view == "study":
                 # save html in a separate file
                 # reason: setHTML does not work with content larger than 2 MB
@@ -2570,7 +2590,7 @@ class Downloader(QDialog):
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(0)
 
-    def downloadFile(self):
+    def downloadFile(self, interactWithParent=True):
         try:
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
@@ -2583,6 +2603,8 @@ class Downloader(QDialog):
                 zip.extractall(path)
                 zip.close()
                 os.remove(self.localFile)
-            self.parent.moduleInstalled(self.filename)
+            if interactWithParent:
+                self.parent.moduleInstalled(self.filename)
         else:
-            self.parent.moduleInstalledFailed(self.filename)
+            if interactWithParent:
+                self.parent.moduleInstalledFailed(self.filename)

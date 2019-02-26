@@ -1,4 +1,4 @@
-#! /Users/Eliran/Desktop/venv/venv/bin/python
+#! venv/bin/python
 # visit https://BibleTools.app for more information
 
 import os
@@ -31,6 +31,8 @@ if not hasattr(config, 'noteEditorFontSize'):
     config.noteEditorFontSize = 14
 if not hasattr(config, 'readFormattedBibles'):
     config.readFormattedBibles = True
+if not hasattr(config, 'addTitleToPlainChapter'):
+    config.addTitleToPlainChapter = True
 if not hasattr(config, 'importAddVerseLinebreak'):
     config.importAddVerseLinebreak = False
 if not hasattr(config, 'importDoNotStripStrongNo'):
@@ -122,6 +124,7 @@ def saveDataOnExit():
     fileObj.write("\nfontSize = "+pprint.pformat(config.fontSize))
     fileObj.write("\nnoteEditorFontSize = "+pprint.pformat(config.noteEditorFontSize))
     fileObj.write("\nreadFormattedBibles = "+pprint.pformat(config.readFormattedBibles))
+    fileObj.write("\naddTitleToPlainChapter = "+pprint.pformat(config.addTitleToPlainChapter))
     fileObj.write("\nimportDoNotStripStrongNo = "+pprint.pformat(config.importDoNotStripStrongNo))
     fileObj.write("\nimportDoNotStripMorphCode = "+pprint.pformat(config.importDoNotStripMorphCode))
     fileObj.write("\nimportAddVerseLinebreak = "+pprint.pformat(config.importAddVerseLinebreak))
