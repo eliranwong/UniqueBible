@@ -460,7 +460,7 @@ class Commentary:
     def getCommentaryList(self):
         commentaryFolder = os.path.join("marvelData", "commentaries")
         commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary")]
-        return commentaryList
+        return sorted(commentaryList)
 
     def getCommentaries(self):
         commentaryList = self.getCommentaryList()
