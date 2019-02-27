@@ -73,11 +73,12 @@ class Converter:
         query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
+
+        # check existing table names
         query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
         cursor.execute(query, ("table",))
         tables = cursor.fetchall()
         tables = [table[0] for table in tables]
-
         if "Notes" in tables:
             query = "SELECT * FROM Notes"
             cursor.execute(query)
@@ -607,6 +608,17 @@ class Converter:
         else:
             strong_numbers_prefix = ""
 
+        # check existing table names
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, ("table",))
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        stories = []
+        if "stories" in tables:
+            query = "SELECT * FROM stories ORDER BY book_number, chapter, verse, order_if_several"
+            cursor.execute(query)
+            stories = cursor.fetchall()
+
         query = "SELECT * FROM verses ORDER BY book_number, chapter, verse"
         cursor.execute(query)
         verses = cursor.fetchall()
@@ -622,14 +634,28 @@ class Converter:
             query = "SELECT book_number, chapter_number_from, verse_number_from, marker, text FROM commentaries"
             noteCursor.execute(query)
             notes = noteCursor.fetchall()
-            self.myBibleBibleToRichFormat(description, abbreviation, verses, notes, strong_numbers_prefix)
+            self.myBibleBibleToRichFormat(description, abbreviation, verses, notes, strong_numbers_prefix, stories)
             noteConnection.close()
         else:
-            self.myBibleBibleToRichFormat(description, abbreviation, verses, [], strong_numbers_prefix)
+            self.myBibleBibleToRichFormat(description, abbreviation, verses, [], strong_numbers_prefix, stories)
         self.myBibleBibleToPlainFormat(description, abbreviation, verses, strong_numbers_prefix)
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
+
+    def storiesToTitles(self, stories):
+        titles = {}
+        for story in stories:
+            b, c, v, order, title = story
+            b = self.convertMyBibleBookNo(b)
+            title = "<u><b>{0}</b></u>".format(title)
+            item = titles.get((b, c, v), "not found")
+            if item == "not found":
+                titles[(b, c, v)] = [title]
+            else:
+                item.append(title)
+        titles = {key: "<br>".join(titles[key]) for key in titles}
+        return titles
 
     def myBibleBibleToPlainFormat(self, description, abbreviation, verses, strong_numbers_prefix):
         verses = [(book, chapter, verse, self.stripMyBibleBibleTags(scripture, book, strong_numbers_prefix)) for book, chapter, verse, scripture in verses]
@@ -637,7 +663,7 @@ class Converter:
         biblesSqlite.importBible(description, abbreviation, verses)
         del biblesSqlite
 
-    def myBibleBibleToRichFormat(self, description, abbreviation, verses, notes, strong_numbers_prefix):
+    def myBibleBibleToRichFormat(self, description, abbreviation, verses, notes, strong_numbers_prefix, stories):
         formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
@@ -652,12 +678,23 @@ class Converter:
             cursor.execute(create)
             connection.commit()
 
+        if stories:
+            stories = self.storiesToTitles(stories)
+
         noteList = []
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
-            scripture = self.convertMyBibleBibleTags(scripture, book, strong_numbers_prefix)
 
             if scripture:
+
+                # fix sub-heading(s)
+                if (book, chapter, verse) in stories:
+                    if verse == 1:
+                        scripture = "{0}<br><br>{1}".format(stories[(book, chapter, verse)], scripture)
+                    else:
+                        scripture = "<br><br>{0}<br><br>{1}".format(stories[(book, chapter, verse)], scripture)
+
+                scripture = self.convertMyBibleBibleTags(scripture, book, strong_numbers_prefix)
 
                 # fix bible note links
                 if notes:
