@@ -313,6 +313,13 @@ class MainWindow(QMainWindow):
         self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
         self.toolBar.addWidget(self.enableParagraphButton)
 
+        self.enableSubheadingButton = QPushButton()
+        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
+        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
+        self.toolBar.addWidget(self.enableSubheadingButton)
+
         self.toolBar.addSeparator()
 
         fontMinusButton = QPushButton()
@@ -1298,6 +1305,22 @@ class MainWindow(QMainWindow):
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
 
+    # Actions - enable or disable sub-heading for plain bibles
+    def getAddSubheading(self):
+        if config.addTitleToPlainChapter:
+            return "subheadingEnable.png"
+        else:
+            return "subheadingDisable.png"
+
+    def enableSubheadingButtonClicked(self):
+        if config.addTitleToPlainChapter:
+            config.addTitleToPlainChapter = False
+        else:
+            config.addTitleToPlainChapter = True
+        self.reloadCurrentRecord()
+        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+
     # Actions - change font size
     def smallerFont(self):
         if not config.fontSize == 10:
@@ -1599,7 +1622,7 @@ class CentralWidget(QWidget):
         self.studyView = WebEngineView(self, "study")
         self.studyView.setHtml("This is '<b>Right View</b>'.", baseUrl)
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words and links.", baseUrl)
+        self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
