@@ -383,6 +383,7 @@ class BiblesSqlite:
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
+            t = tuple()
             searchCommand = "ADVANCEDSEARCH"
             if interlinear:
                 searchCommand = "ADVANCEDISEARCH"
@@ -390,10 +391,10 @@ class BiblesSqlite:
             query += searchString
         query += " ORDER BY Book, Chapter, Verse"
         if text in plainBibleList:
-            verses = self.getSearchVerses(query)
+            verses = self.getSearchVerses(query, t)
         elif text in formattedBibleList:
             bible = Bible(text)
-            verses = bible.getSearchVerses(query)
+            verses = bible.getSearchVerses(query, t)
             del bible
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
         for verse in verses:
@@ -425,8 +426,8 @@ class BiblesSqlite:
             s = p.search(formatedText)
         return formatedText
 
-    def getSearchVerses(self, query):
-        self.cursor.execute(query)
+    def getSearchVerses(self, query, binding):
+        self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
     def readMultipleVerses(self, text, verseList):
@@ -572,8 +573,8 @@ class Bible:
         self.cursor.execute(query, t)
         return len(self.cursor.fetchall())
 
-    def getSearchVerses(self, query):
-        self.cursor.execute(query)
+    def getSearchVerses(self, query, binding):
+        self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
 
