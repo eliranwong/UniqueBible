@@ -88,7 +88,7 @@ For import of <b>multiple files in one go</b>:<br>
 Put 3rd party modules, which you want to import, in a folder.<br>
 Go to menu "Resources" > "Import Supported 3rd Party Modules in a Folder"
 
-<b>Disclaimer</b>: All third-party modules are created by third parties. UniqueBible.app does not endorse any particular theological views or individual contents of these 3rd-party modules. Please contact individual module creators or parties if you have issues with their content. UniqueBible.app is NOT responsible for any third-party modules in terms of their quality or content. Users should only use these third-party modules with their own judgment and at their own risks.
+<b>Disclaimer</b>: All third-party modules are created by third parties. UniqueBible.app does not endorse any particular theological views or individual content of these 3rd-party modules. Please contact individual module creators or parties if you have issues with their content. UniqueBible.app is NOT responsible for any third-party modules in terms of their quality or content. Users should only use these third-party modules with their own judgment and at their own risks.
 
 # Donations:
 
