@@ -304,7 +304,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             formattedBiblesFolder = os.path.join("marvelData", "bibles")
-            formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
+            formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
             if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
                 self.parent.enableParagraphButtonAction(False)
@@ -339,7 +339,7 @@ class TextCommandParser:
 
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
-        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible")]
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         marvelBibles = list(self.getMarvelBibles().keys())
         if text in formattedBibles and config.readFormattedBibles:

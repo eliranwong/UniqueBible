@@ -31,7 +31,7 @@ class Converter:
         return chapterText
 
     def importAllFilesInAFolder(self, folder):
-        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file))]
+        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
         validFiles = [file for file in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.commentaries\.SQLite3|\.SQLite3)$', file)]
         if validFiles:
             for file in validFiles:
@@ -1139,10 +1139,10 @@ class ThirdPartyDictionary:
 
     def getModuleList(self):
         moduleFolder = os.path.join("thirdParty", "dictionaries")
-        mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible")]
-        eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti")]
-        eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi")]
-        myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3")]
+        mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible") and not re.search("^[\._]", f)]
+        eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti") and not re.search("^[\._]", f)]
+        eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi") and not re.search("^[\._]", f)]
+        myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3") and not re.search("^[\._]", f)]
         moduleList = set(mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
         moduleList = sorted(list(moduleList))
         return moduleList
