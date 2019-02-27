@@ -459,7 +459,7 @@ class Commentary:
 
     def getCommentaryList(self):
         commentaryFolder = os.path.join("marvelData", "commentaries")
-        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary")]
+        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search("^[\._]", f)]
         return sorted(commentaryList)
 
     def getCommentaries(self):

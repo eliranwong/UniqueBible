@@ -37,7 +37,7 @@ class BiblesSqlite:
 
     def getFormattedBibleList(self, includeMarvelBibles=True):
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
-        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not f.startswith('.')]
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
         if not includeMarvelBibles:
             marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
             formattedBibles = [bible for bible in formattedBibles if not bible in marvelBibles]
