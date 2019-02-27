@@ -297,8 +297,118 @@ class Converter:
 
     def convertESwordBibleReference(self, match):
         value = match.group()
-        value = value.replace("_", " ")[5:-6]
-        return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value)
+        value = value.replace("_", " ")[5:-5]
+        reference = self.parseESwordReference(value)
+        if reference:
+            return "{0}{1}</ref>".format(reference, value[:-1])
+        else:
+            return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value[:-1])
+
+    def parseESwordReference(self, text):
+        if re.search("^([1-9A-Z][A-Za-z][a-z]) ([0-9]+?):([0-9]+?)[^0-9].*?$", text):
+            b, cv = text.split(" ", 1)
+            b = self.convertESwordBookAbb(b)
+            if b == 0:
+                return ""
+            else:
+                c, v = re.sub("^([0-9]+?):([0-9]+?)[^0-9].*?$", r"\1,\2", cv).split(",")
+                return "<ref onclick='bcv({0}, {1}, {2})'>".format(b, c, v)
+        elif re.search("^([1-9A-Z][A-Za-z][a-z]) ([0-9]+?)[^0-9].*?$", text):
+            b, c = text.split(" ", 1)
+            b = self.convertESwordBookAbb(b)
+            if b == 0:
+                return ""
+            else:
+                c = re.sub("^([0-9]+?)[^0-9].*?$", r"\1", c)
+                return "<ref onclick='bcv({0}, {1}, {2})'>".format(b, c, 1)
+        else:
+            return ""
+
+    def convertESwordBookAbb(self, eSwordAbb):
+        ubNo = {
+            "Gen": 1,
+            "Exo": 2,
+            "Lev": 3,
+            "Num": 4,
+            "Deu": 5,
+            "Jos": 6,
+            "Jdg": 7,
+            "Rth": 8,
+            "1Sa": 9,
+            "2Sa": 10,
+            "1Ki": 11,
+            "2Ki": 12,
+            "1Ch": 13,
+            "2Ch": 14,
+            "Ezr": 15,
+            "Neh": 16,
+            "Est": 17,
+            "Job": 18,
+            "Psa": 19,
+            "Pro": 20,
+            "Ecc": 21,
+            "Son": 22,
+            "Isa": 23,
+            "Jer": 24,
+            "Lam": 25,
+            "Eze": 26,
+            "Dan": 27,
+            "Hos": 28,
+            "Joe": 29,
+            "Amo": 30,
+            "Oba": 31,
+            "Jon": 32,
+            "Mic": 33,
+            "Nah": 34,
+            "Hab": 35,
+            "Zep": 36,
+            "Hag": 37,
+            "Zec": 38,
+            "Mal": 39,
+            "Mat": 40,
+            "Mar": 41,
+            "Luk": 42,
+            "Joh": 43,
+            "Act": 44,
+            "Rom": 45,
+            "1Co": 46,
+            "2Co": 47,
+            "Gal": 48,
+            "Eph": 49,
+            "Php": 50,
+            "Col": 51,
+            "1Th": 52,
+            "2Th": 53,
+            "1Ti": 54,
+            "2Ti": 55,
+            "Tit": 56,
+            "Phm": 57,
+            "Heb": 58,
+            "Jas": 59,
+            "1Pe": 60,
+            "2Pe": 61,
+            "1Jn": 62,
+            "2Jn": 63,
+            "3Jn": 64,
+            "Jud": 65,
+            "Rev": 66,
+            "1Es": 76,
+            "2Es": 77,
+            "Tob": 88,
+            "Jdt": 80,
+            "1Ma": 81,
+            "2Ma": 82,
+            "3Ma": 83,
+            "4Ma": 84,
+            "Man": 85,
+            "Wis": 89,
+            "Sir": 87,
+            "Bar": 70,
+        }
+        if eSwordAbb in ubNo:
+            return ubNo[eSwordAbb]
+        else:
+            return 0
 
     # Import MySword Bibles
     def importMySwordBible(self, file):
