@@ -247,6 +247,7 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("&Install Marvel.bible Datasets", self, triggered=self.installMarvelDatasets))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import BibleBento Plus Lexicons in a Folder", self, triggered=self.importBBPlusLexiconInAFolder))
+        menu9.addAction(QAction("&Import BibleBento Plus Dictionaries in a Folder", self, triggered=self.importBBPlusDictionaryInAFolder))
         menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
         menu9.addAction(QAction("&Import Supported 3rd Party Modules in a Folder", self, triggered=self.importModulesInFolder))
@@ -1004,6 +1005,17 @@ class MainWindow(QMainWindow):
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
                 self.mainPage.runJavaScript("alert('Multiple BibleBento Plus lexicons imported.')")
+            else:
+                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
+
+    def importBBPlusDictionaryInAFolder(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "QFileDialog.getExistingDirectory()",
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().importBBPlusDictionaryInAFolder(directory):
+                self.mainPage.runJavaScript("alert('Multiple BibleBento Plus dictionaries imported.')")
             else:
                 self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
 

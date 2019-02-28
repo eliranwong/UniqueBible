@@ -1158,12 +1158,15 @@ class TextCommandParser:
 
     # Check if a third party dictionary exists:
     def isThridPartyDictionary(self, module):
+        bibleBentoPlusLexicon = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dic.bbp"))
         eSwordLexicon = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".lexi"))
         eSwordDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dcti"))
         mySwordDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dct.mybible"))
         myBibleDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dictionary.SQLite3"))
 
-        if os.path.isfile(eSwordLexicon):
+        if os.path.isfile(bibleBentoPlusLexicon):
+            return (module, ".dic.bbp")
+        elif os.path.isfile(eSwordLexicon):
             return (module, ".lexi")
         elif os.path.isfile(eSwordDictionary):
             return (module, ".dcti")

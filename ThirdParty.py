@@ -1125,7 +1125,7 @@ class Converter:
             # use source number if a mapped number is not found.
             return myBibleNo
 
-    # Read Json File
+    # Read BibleBento Plus Json files
     def readJsonFile(self, inputFile):
         try:
             f = open(inputFile, 'r')
@@ -1136,6 +1136,54 @@ class Converter:
         except:
             print("File not found! Please make sure if you enter filename correctly and try again.")
             return []
+
+    def convertBibleBentoPlusTag(self, text):
+        searchReplace = (
+            ("href=['{0}]ref://([0-9]+?)\.([0-9]+?)\.([0-9]+?);['{0}]".format('"'), r'href="javascript:void(0)" onclick="bcv(\1,\2,\3)"'),
+            ("href=['{0}]lexi://(.*?)['{0}]".format('"'), r'href="javascript:void(0)" onclick="lex({0}\1{0})"'.format("'")),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        return text
+
+    def createDictionaryModule(self, module, content):
+        file = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
+        if os.path.isfile(file):
+            os.remove(file)
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
+        cursor.execute(create)
+        connection.commit()
+
+        insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
+        cursor.executemany(insert, content)
+        connection.commit()        
+
+        connection.close()
+
+    def importBBPlusLexiconInAFolder(self, folder):
+        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
+        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
+        if validFiles:
+            for file in validFiles:
+                module = file[4:-5]
+                jsonList = self.readJsonFile(os.path.join(folder, file))
+                jsonList = [(jsonEntry["top"], self.convertBibleBentoPlusTag(jsonEntry["def"])) for jsonEntry in jsonList]
+                self.createLexiconModule(module, jsonList)
+            return True
+
+    def importBBPlusDictionaryInAFolder(self, folder):
+        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
+        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
+        if validFiles:
+            for file in validFiles:
+                module = file[4:-5]
+                jsonList = self.readJsonFile(os.path.join(folder, file))
+                jsonList = [(jsonEntry["top"], jsonEntry["def"]) for jsonEntry in jsonList]
+                self.createDictionaryModule(module, jsonList)
+            return True
 
     # Create lexicon modules
     def createLexiconModule(self, module, content):
@@ -1174,17 +1222,6 @@ class Converter:
             self.createLexiconModule(lexicon, content)
 
         connection.close()
-
-    def importBBPlusLexiconInAFolder(self, folder):
-        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
-        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
-        if validFiles:
-            for file in validFiles:
-                module = file[4:-5]
-                jsonList = self.readJsonFile(os.path.join(folder, file))
-                jsonList = [(jsonEntry["top"], jsonEntry["def"]) for jsonEntry in jsonList]
-                self.createLexiconModule(module, jsonList)
-            return True
 
     # Create book modules
     def createBookModule(self, module, content):
@@ -1257,11 +1294,12 @@ class ThirdPartyDictionary:
 
     def getModuleList(self):
         moduleFolder = os.path.join("thirdParty", "dictionaries")
+        bbPlusDictionaries = [f[:-8] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dic.bbp") and not re.search("^[\._]", f)]
         mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible") and not re.search("^[\._]", f)]
         eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti") and not re.search("^[\._]", f)]
         eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi") and not re.search("^[\._]", f)]
         myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3") and not re.search("^[\._]", f)]
-        moduleList = set(mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
+        moduleList = set(bbPlusDictionaries + mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
         moduleList = sorted(list(moduleList))
         return moduleList
 
@@ -1292,6 +1330,7 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dic.bbp": self.getBibleBentoPlusDicExactWord,
                 ".dcti": self.getESwordDicExactWord,
                 ".lexi": self.getESwordLexExactWord,
                 ".dct.mybible": self.getMySwordExactWord,
@@ -1304,6 +1343,7 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dic.bbp": self.getBibleBentoPlusDicSimilarWord,
                 ".dcti": self.getESwordDicSimilarWord,
                 ".lexi": self.getESwordLexSimilarWord,
                 ".dct.mybible": self.getMySwordSimilarWord,
@@ -1316,12 +1356,46 @@ class ThirdPartyDictionary:
             return "INVALID_COMMAND_ENTERED"
         else:
             getDictionaryData = {
+                ".dic.bbp": self.getBibleBentoPlusDicDictionaryData,
                 ".dcti": self.getESwordDicDictionaryData,
                 ".lexi": self.getESwordLexDictionaryData,
                 ".dct.mybible": self.getMySwordDictionaryData,
                 ".dictionary.SQLite3": self.getMyBibleDictionaryData,
             }
             return getDictionaryData[self.fileExtension](entry)
+
+    # BibleBentoPlus dictionaries
+    def getBibleBentoPlusDicExactWord(self, entry):
+        query = "SELECT Topic FROM Dictionary WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
+
+    def getBibleBentoPlusDicSimilarWord(self, entry):
+        query = "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
+        self.cursor.execute(query, ("%{0}%".format(entry), entry))
+        contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
+        if not contentList:
+            return "[not found]"
+        else:
+            return "<br>".join(contentList)
+
+    def getBibleBentoPlusDicDictionaryData(self, entry):
+        query = "SELECT Definition FROM Dictionary WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
+        else:
+            action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
+            optionList = [(m, m) for m in self.moduleList]
+            selectList = self.formatSelectList(action, optionList)
+            config.thirdDictionary = self.module
+            content = Converter().convertBibleBentoPlusTag(content[0])
+            return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
     # e-Sword dictionaries
     def getESwordDicExactWord(self, entry):
@@ -1353,8 +1427,7 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList)
             config.thirdDictionary = self.module
-            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
-            content = Converter().formatNonBibleESwordModule(content)
+            content = Converter().formatNonBibleESwordModule(content[0])
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
     # e-Sword lexicon
@@ -1387,8 +1460,7 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList)
             config.thirdDictionary = self.module
-            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
-            content = Converter().formatNonBibleESwordModule(content)
+            content = Converter().formatNonBibleESwordModule(content[0])
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
     # MySword dictionaries
@@ -1421,7 +1493,8 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList)
             config.thirdDictionary = self.module
-            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
+            content = content[0]
+            content = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?[ds]([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content)
             content = Converter().formatNonBibleMySwordModule(content)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
@@ -1455,6 +1528,5 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList)
             config.thirdDictionary = self.module
-            content = re.sub(r"<a href=(['{0}])[#]*?d([^\n<>]*?)\1>(.*?)</a>".format('"'), r"<ref onclick='openThirdDictionary({1}{0}{1}, {1}\2{1})'>\3</ref>".format(self.module, '"'), content[0])
-            content = Converter().formatNonBibleMyBibleModule(content)
+            content = Converter().formatNonBibleMyBibleModule(content[0])
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)

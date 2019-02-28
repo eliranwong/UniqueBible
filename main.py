@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.73
+latest_version = 0.74
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
