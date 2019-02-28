@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.7
+latest_version = 0.71
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -74,7 +74,7 @@ if not hasattr(config, 'dictionary'):
 if not hasattr(config, 'encyclopedia'):
     config.encyclopedia = 'ISB'
 if not hasattr(config, 'book'):
-    config.book = 'Simpson_But_God'
+    config.book = 'Timelines'
 if not hasattr(config, 'bookSearchString'):
     config.bookSearchString = ''
 if not hasattr(config, 'noteSearchString'):
