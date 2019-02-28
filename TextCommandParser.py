@@ -1,7 +1,7 @@
 import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, LexiconData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData
+from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 
@@ -148,7 +148,7 @@ class TextCommandParser:
             "discourse": (("marvelData", "data", "discourse.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
             "words": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
             "combo": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
-            "lexicon": (("marvelData", "data", "lexicon.data"), "1GFNnI1PtmPGhoEy6jfBP5U2Gi17Zr6fs"),
+            "lexicon": (("marvelData", "lexicons", "SECE.lexicon"), "1unqKXyZJiARQuzFVhZrmlNN9TjgD05Fu"),
             "exlb": (("marvelData", "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
             "dictionary": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
@@ -883,9 +883,9 @@ class TextCommandParser:
             }
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
-        lexiconData = LexiconData()
-        content = "<hr>".join([lexiconData.lexicon(module, entry) for entry in entries.split("_")])
-        del lexiconData
+        lexicon = Lexicon(module)
+        content = "<hr>".join([lexicon.getContent(entry) for entry in entries.split("_")])
+        del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:

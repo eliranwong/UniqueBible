@@ -1125,6 +1125,44 @@ class Converter:
             # use source number if a mapped number is not found.
             return myBibleNo
 
+    # Create lexicon modules
+    def createLexiconModule(self, module, content):
+        book = os.path.join("marvelData", "lexicons", "{0}.lexicon".format(module))
+        if os.path.isfile(book):
+            os.remove(book)
+        connection = sqlite3.connect(book)
+        cursor = connection.cursor()
+
+        create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
+        cursor.execute(create)
+        connection.commit()
+
+        insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
+        cursor.executemany(insert, content)
+        connection.commit()        
+
+        connection.close()
+
+    def convertOldLexiconData(self):
+        database = os.path.join("marvelData", "data", "lexicon.data")
+        connection = sqlite3.connect(database)
+        cursor = connection.cursor()
+
+        t = ("table",)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, t)
+        versions = cursor.fetchall()
+        exclude = ("Details")
+        lexiconList = [version[0] for version in versions if not version[0] in exclude]
+        
+        for lexicon in lexiconList:
+            query = "SELECT EntryID, Information FROM {0}".format(lexicon)
+            cursor.execute(query)
+            content = cursor.fetchall()
+            self.createLexiconModule(lexicon, content)
+
+        connection.close()
+
     # Create book modules
     def createBookModule(self, module, content):
         book = os.path.join("marvelData", "books", "{0}.book".format(module))

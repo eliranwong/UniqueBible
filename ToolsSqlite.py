@@ -222,76 +222,6 @@ class SearchSqlite:
             return "<br>".join(contentList)
 
 
-class LexiconData:
-
-    def __init__(self):
-        # connect lexicon.data
-        self.database = os.path.join("marvelData", "data", "lexicon.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getLexiconList(self):
-        t = ("table",)
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        self.cursor.execute(query, t)
-        versions = self.cursor.fetchall()
-        exclude = ("Details")
-        return [version[0] for version in versions if not version[0] in exclude]
-
-    def getSelectForm(self, lexiconList, entry):
-        lexiconName = {
-            "SECE": "Strong's Exhaustive Concordance [Enhanced]",
-            "BDB": "Brown-Driver-Briggs Hebrew-English Lexicon",
-            "LSJ": "Liddell-Scott-Jones Greek-English Lexicon",
-            "TBESH": "Tyndale Brief lexicon of Extended Strongs for Hebrew",
-            "TBESG": "Tyndale Brief lexicon of Extended Strongs for Greek",
-            "MGLNT": "Manual Greek Lexicon of the New Testament",
-            "Mounce": "Mounce Concise Greek-English Dictionary",
-            "Thayer": "Thayer's Greek-English Lexicon",
-            "LXX": "LXX Lexicon",
-            "LCT": "新舊約字典彙編",
-            "Morphology": "Hebrew & Greek Analytical Lexicon",
-            "ConcordanceBook": "Concordance (sorted by book)",
-            "ConcordanceMorphology": "Concordance (sorted by morphology)",
-            "BDAG": "BDAG (3rd ed.)",
-            "LN": "Louw-Nida Greek Lexicon",
-            "LGNTDF": "Levinsohn's Greek New Testament Discourse Features",
-        }
-        selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
-        for lexicon in lexiconList:
-            selectForm += '<option value="{0}">{1}</option>'.format(lexicon, lexiconName[lexicon])
-        selectForm += '</select></form></p>'
-        return selectForm
-
-    def lexicon(self, module, entry):
-        lexiconList = self.getLexiconList()
-        if module in lexiconList:
-            query = "SELECT Information FROM {0} WHERE EntryID = ?".format(module)
-            self.cursor.execute(query, (entry,))
-            information = self.cursor.fetchone()
-            contentText = "<h2>{0} - {1}</h2>".format(module, entry)
-            contentText += "<p>{0}</p>".format(self.getSelectForm([m for m in lexiconList if not m == module], entry))
-            if not information:
-                return contentText+"[not found]"
-            else:
-                contentText += information[0]
-                # deal with images
-                imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
-                if imageList:
-                    imageSqlite = ImageSqlite()
-                    for (imgModule, imgEntry) in imageList:
-                        imageSqlite.exportImage(imgModule, imgEntry)
-                    del imageSqlite
-                contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-                contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
-                return contentText
-        else:
-            return "INVALID_COMMAND_ENTERED"
-
-
 class DictionaryData:
 
     def __init__(self):
@@ -539,6 +469,72 @@ class Commentary:
                 return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
         else:
             return "INVALID_COMMAND_ENTERED"
+
+
+class LexiconData:
+
+    def __init__(self):
+        self.lexiconList = self.getLexiconList()
+
+    def getLexiconList(self):
+        lexiconFolder = os.path.join("marvelData", "lexicons")
+        lexiconList = [f[:-8] for f in os.listdir(lexiconFolder) if os.path.isfile(os.path.join(lexiconFolder, f)) and f.endswith(".lexicon") and not re.search("^[\._]", f)]
+        return sorted(lexiconList)
+
+    def getSelectForm(self, entry, module=""):
+        lexiconList = [lexicon for lexicon in self.lexiconList if not lexicon == module]
+        selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
+        for lexicon in lexiconList:
+            selectForm += '<option value="{0}">{1}</option>'.format(lexicon, Lexicon(lexicon).getInfo())
+        selectForm += '</select></form></p>'
+        return selectForm
+
+
+class Lexicon:
+
+    def __init__(self, module):
+        # connect lexicon module
+        self.module = module
+
+        self.database = os.path.join("marvelData", "lexicons", "{0}.lexicon".format(module))
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getInfo(self):
+        query = "SELECT Definition FROM Lexicon WHERE Topic = 'info'"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return "[no description]"
+
+    def getContent(self, entry):
+        lexiconData = LexiconData()
+        lexiconList = lexiconData.lexiconList
+
+        query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
+        self.cursor.execute(query, (entry,))
+        information = self.cursor.fetchone()
+        contentText = "<h2>{0} - {1}</h2>".format(self.module, entry)
+        contentText += "<p>{0}</p>".format(lexiconData.getSelectForm(entry, self.module))
+        if not information:
+            return contentText+"[not found]"
+        else:
+            contentText += information[0]
+            # deal with images
+            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            if imageList:
+                imageSqlite = ImageSqlite()
+                for (imgModule, imgEntry) in imageList:
+                    imageSqlite.exportImage(imgModule, imgEntry)
+                del imageSqlite
+            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+            return contentText
 
 
 class BookData:

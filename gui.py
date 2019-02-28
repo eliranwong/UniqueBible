@@ -755,7 +755,7 @@ class MainWindow(QMainWindow):
             "Cross-reference Data": (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My"),
             "Dictionaries": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
-            "Lexicons": (("marvelData", "data", "lexicon.data"), "1GFNnI1PtmPGhoEy6jfBP5U2Gi17Zr6fs"),
+            "Lexicons": (("marvelData", "lexicons", "SECE.lexicon"), "1unqKXyZJiARQuzFVhZrmlNN9TjgD05Fu"),
             "Book Modules": (("marvelData", "books", "Simpson_But_God.book"), "10j9LBKAzDbErbM1QID9zk95yp_j56fAu"),
             "Word Data": (("marvelData", "data", "word.data"), "1veVoqijinM1cbFgynvdTueTa7kaVVPU0"),
             "Words Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
