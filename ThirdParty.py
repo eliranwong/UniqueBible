@@ -1,4 +1,4 @@
-import os, sqlite3, config, re
+import os, sqlite3, config, re, json
 from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
@@ -1125,6 +1125,18 @@ class Converter:
             # use source number if a mapped number is not found.
             return myBibleNo
 
+    # Read Json File
+    def readJsonFile(self, inputFile):
+        try:
+            f = open(inputFile, 'r')
+            newData = f.read()
+            f.close()
+            newData = json.loads(newData)
+            return newData
+        except:
+            print("File not found! Please make sure if you enter filename correctly and try again.")
+            return []
+
     # Create lexicon modules
     def createLexiconModule(self, module, content):
         book = os.path.join("marvelData", "lexicons", "{0}.lexicon".format(module))
@@ -1162,6 +1174,17 @@ class Converter:
             self.createLexiconModule(lexicon, content)
 
         connection.close()
+
+    def importBBPlusLexiconInAFolder(self, folder):
+        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
+        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
+        if validFiles:
+            for file in validFiles:
+                module = file[4:-5]
+                jsonList = self.readJsonFile(os.path.join(folder, file))
+                jsonList = [(jsonEntry["top"], jsonEntry["def"]) for jsonEntry in jsonList]
+                self.createLexiconModule(module, jsonList)
+            return True
 
     # Create book modules
     def createBookModule(self, module, content):

@@ -246,6 +246,8 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("&Install Bible Commentaries", self, triggered=self.installMarvelCommentaries))
         menu9.addAction(QAction("&Install Marvel.bible Datasets", self, triggered=self.installMarvelDatasets))
         menu9.addSeparator()
+        menu9.addAction(QAction("&Import BibleBento Plus Lexicons in a Folder", self, triggered=self.importBBPlusLexiconInAFolder))
+        menu9.addSeparator()
         menu9.addAction(QAction("&Import 3rd Party Modules", self, triggered=self.importModules))
         menu9.addAction(QAction("&Import Supported 3rd Party Modules in a Folder", self, triggered=self.importModulesInFolder))
         menu9.addAction(QAction("&Import Settings", self, triggered=self.importSettingsDialog))
@@ -992,6 +994,18 @@ class MainWindow(QMainWindow):
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
+
+    # import BibleBentoPlus modules
+    def importBBPlusLexiconInAFolder(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                "QFileDialog.getExistingDirectory()",
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().importBBPlusLexiconInAFolder(directory):
+                self.mainPage.runJavaScript("alert('Multiple BibleBento Plus lexicons imported.')")
+            else:
+                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
 
     # import 3rd party modules
     def importSettingsDialog(self):

@@ -1615,7 +1615,7 @@ class BibleVerseParser:
         try:
             f = open(inputFile,'r')
         except:
-            print("File note found! Please make sure if you enter filename correctly and try again.")
+            print("File not found! Please make sure if you enter filename correctly and try again.")
         newData = f.read()
         f.close()
 

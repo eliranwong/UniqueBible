@@ -510,7 +510,7 @@ class Lexicon:
         if info:
             return info[0]
         else:
-            return "[no description]"
+            return self.module
 
     def getContent(self, entry):
         lexiconData = LexiconData()
