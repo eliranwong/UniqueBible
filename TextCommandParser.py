@@ -161,7 +161,7 @@ class TextCommandParser:
         return (("marvelData", "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
 
     def getBookInfo(self):
-        return (("marvelData", "data", "book.data"), "1Oc5kt9V_zq-RgEwY-E_eQVVPoaqJujGm")
+        return (("marvelData", "books", "Simpson_But_God.book"), "10j9LBKAzDbErbM1QID9zk95yp_j56fAu")
 
     def getXRefInfo(self):
         return (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My")

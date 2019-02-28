@@ -756,7 +756,7 @@ class MainWindow(QMainWindow):
             "Dictionaries": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
             "Lexicons": (("marvelData", "data", "lexicon.data"), "1GFNnI1PtmPGhoEy6jfBP5U2Gi17Zr6fs"),
-            "Book Modules": (("marvelData", "data", "book.data"), "1Oc5kt9V_zq-RgEwY-E_eQVVPoaqJujGm"),
+            "Book Modules": (("marvelData", "books", "Simpson_But_God.book"), "10j9LBKAzDbErbM1QID9zk95yp_j56fAu"),
             "Word Data": (("marvelData", "data", "word.data"), "1veVoqijinM1cbFgynvdTueTa7kaVVPU0"),
             "Words Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
             "Clause Data": (("marvelData", "data", "clause.data"), "1veVoqijinM1cbFgynvdTueTa7kaVVPU0"),
@@ -1003,7 +1003,7 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 "QFileDialog.getOpenFileName()",
                 self.openFileNameLabel.text(),
-                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(".lexi") or fileName.endswith(".dictionary.SQLite3"):
                 self.importThirdPartyDictionary(fileName)
@@ -1015,6 +1015,8 @@ class MainWindow(QMainWindow):
                 self.importESwordBible(fileName)
             elif fileName.endswith(".cmti"):
                 self.importESwordCommentary(fileName)
+            elif fileName.endswith(".refi"):
+                self.importESwordBook(fileName)
             elif fileName.endswith(".commentaries.SQLite3"):
                 self.importMyBibleCommentary(fileName)
             elif fileName.endswith(".SQLite3"):
@@ -1054,6 +1056,10 @@ class MainWindow(QMainWindow):
 
     def importESwordCommentary(self, fileName):
         Converter().importESwordCommentary(fileName)
+        self.completeImport()
+
+    def importESwordBook(self, fileName):
+        Converter().importESwordBook(fileName)
         self.completeImport()
 
     def importMyBibleCommentary(self, fileName):
@@ -2618,7 +2624,7 @@ class Downloader(QDialog):
         message = QLabel("File '{0}' is required for running the feature you selected.".format(self.filename))
 
         downloadButton = QPushButton("Download + Install")
-        downloadButton.clicked.connect(self.downloadFile)
+        downloadButton.clicked.connect(self.startDownloadFile)
 
         cancelButton = QPushButton("Cancel")
         cancelButton.clicked.connect(self.close)
@@ -2638,6 +2644,9 @@ class Downloader(QDialog):
         self.progressBar.setMinimum(0)
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(0)
+
+    def startDownloadFile(self):
+        self.downloadFile(True)
 
     def downloadFile(self, interactWithParent=True):
         try:

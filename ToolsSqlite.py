@@ -544,56 +544,35 @@ class Commentary:
 class BookData:
 
     def __init__(self):
-        # connect book.data
-        self.database = os.path.join("marvelData", "data", "book.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getMenu(self, module=""):
-        bookList = self.getBookList()
-        if module == "":
-            module = config.book
-        if module in dict(bookList).keys():
-            books = self.formatSelectList("listBookTopic(this.value)", bookList, module)
-            topicList = self.getTopicList(module)
-            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
-            config.book = module
-            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
-        else:
-            return "INVALID_COMMAND_ENTERED"
+        self.bookList = self.getBookList()
 
     def getBookList(self):
-        t = ("table",)
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        self.cursor.execute(query, t)
-        versions = self.cursor.fetchall()
-        exclude = ("Details")
-        return [(version[0], version[0]) for version in versions if not version[0] in exclude]
+        bookFolder = os.path.join("marvelData", "books")
+        bookList = [f[:-5] for f in os.listdir(bookFolder) if os.path.isfile(os.path.join(bookFolder, f)) and f.endswith(".book") and not re.search("^[\._]", f)]
+        bookList = sorted(bookList)
+        return [(book, book) for book in bookList]
 
-    def getTopicList(self, module):
-        query = "SELECT DISTINCT Topic FROM {0} ORDER BY Topic".format(module)
-        self.cursor.execute(query)
-        return [topic[0] for topic in self.cursor.fetchall()]
-
-    def getSearchedMenu(self, module, searchString):
-        bookList = self.getBookList()
-        if module in dict(bookList).keys():
-            books = self.formatSelectList("listBookTopic(this.value)", bookList, module)
-            topicList = self.getSearchedTopicList(module, searchString)
+    def getMenu(self, module=""):
+        if module == "":
+            module = config.book
+        if module in dict(self.bookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
+            topicList = Book(module).getTopicList()
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
             config.book = module
             return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
 
-    def getSearchedTopicList(self, module, searchString):
-        searchString = "%{0}%".format(searchString)
-        query = "SELECT DISTINCT Topic FROM {0} WHERE Topic LIKE ? OR Note LIKE ? ORDER BY Topic".format(module)
-        self.cursor.execute(query, (searchString, searchString))
-        return [topic[0] for topic in self.cursor.fetchall()]
+    def getSearchedMenu(self, module, searchString):
+        if module in dict(self.bookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
+            topicList = Book(module).getSearchedTopicList(searchString)
+            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            config.book = module
+            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+        else:
+            return "INVALID_COMMAND_ENTERED"
 
     def formatSelectList(self, action, optionList, default):
         selectForm = "<select onchange='{0}'>".format(action)
@@ -606,13 +585,41 @@ class BookData:
         return selectForm
 
     def getContent(self, module, entry):
-        query = "SELECT Note FROM {0} WHERE Topic=?".format(module)
+        return Book(module).getContent(entry)
+
+
+class Book:
+
+    def __init__(self, module):
+        # connect book module
+        self.module = module
+
+        self.database = os.path.join("marvelData", "books", "{0}.book".format(module))
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getTopicList(self):
+        query = "SELECT DISTINCT Chapter FROM Reference ORDER BY ROWID"
+        self.cursor.execute(query)
+        return [topic[0] for topic in self.cursor.fetchall()]
+
+    def getSearchedTopicList(self, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? OR Content LIKE ? ORDER BY ROWID"
+        self.cursor.execute(query, (searchString, searchString))
+        return [topic[0] for topic in self.cursor.fetchall()]
+
+    def getContent(self, entry):
+        query = "SELECT Content FROM Reference WHERE Chapter=?"
         self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
             return "[not applicable]"
         else:
-            config.book = module
+            config.book = self.module
             content = content[0]
             if config.bookSearchString and not config.bookSearchString == "z":
                 content = re.sub("("+config.bookSearchString+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
@@ -622,3 +629,5 @@ class BookData:
                     content = re.sub(p, r"\1\2", content)
                     s = p.search(content)
             return content
+
+

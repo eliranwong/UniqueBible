@@ -46,6 +46,8 @@ class Converter:
                     self.importESwordBible(file)
                 elif file.endswith(".cmti"):
                     self.importESwordCommentary(file)
+                elif file.endswith(".refi"):
+                    self.importESwordBook(file)
                 elif file.endswith(".commentaries.SQLite3"):
                     self.importMyBibleCommentary(file)
                 elif file.endswith(".SQLite3"):
@@ -1122,6 +1124,61 @@ class Converter:
         else:
             # use source number if a mapped number is not found.
             return myBibleNo
+
+    # Create book modules
+    def createBookModule(self, module, content):
+        book = os.path.join("marvelData", "books", "{0}.book".format(module))
+        if os.path.isfile(book):
+            os.remove(book)
+        connection = sqlite3.connect(book)
+        cursor = connection.cursor()
+
+        create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
+        cursor.execute(create)
+        connection.commit()
+
+        insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
+        cursor.executemany(insert, content)
+        connection.commit()        
+
+        connection.close()
+
+    def convertOldBookData(self):
+        database = os.path.join("marvelData", "data", "book.data")
+        connection = sqlite3.connect(database)
+        cursor = connection.cursor()
+
+        t = ("table",)
+        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+        cursor.execute(query, t)
+        versions = cursor.fetchall()
+        exclude = ("Details")
+        bookList = [version[0] for version in versions if not version[0] in exclude]
+        
+        for book in bookList:
+            query = "SELECT Topic, Note FROM {0}".format(book)
+            cursor.execute(query)
+            content = cursor.fetchall()
+            self.createBookModule(book, content)
+
+        connection.close()
+
+    def importESwordBook(self, file):
+        *_, module = os.path.split(file)
+        module = module[:-5]
+        
+        # connect e-Sword *.refi file
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        query = "SELECT Chapter, Content FROM Reference"
+        cursor.execute(query)
+        content = cursor.fetchall()
+        content = [(chapter, self.formatNonBibleESwordModule(chapterContent)) for chapter, chapterContent in content]
+
+        self.createBookModule(module, content)
+
+        connection.close()
 
 
 class ThirdPartyDictionary:
