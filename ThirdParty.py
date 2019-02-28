@@ -32,7 +32,7 @@ class Converter:
 
     def importAllFilesInAFolder(self, folder):
         files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
-        validFiles = [file for file in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.commentaries\.SQLite3|\.SQLite3)$', file)]
+        validFiles = [file for file in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', file)]
         if validFiles:
             for file in validFiles:
                 file = os.path.join(folder, file)
