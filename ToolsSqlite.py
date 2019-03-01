@@ -295,21 +295,52 @@ class EncyclopediaData:
 
 class WordData:
 
+    def getContent(self, testament, entry):
+        if testament == "OT":
+            wordData = WordOTData()
+        elif testament == "NT":
+            wordData = WordNTData()
+        content = wordData.getContent(entry)
+        del wordData
+        return content
+
+
+class WordOTData:
+
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "word.data")
+        self.database = os.path.join("marvelData", "data", "wordOT.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
         self.connection.close()
 
-    def getContent(self, testament, entry):
-        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(testament)
-        if testament == "NT":
-            entryID = "{0:06d}".format(int(entry))
+    def getContent(self, entry):
+        query = "SELECT Information FROM OT WHERE EntryID = ?"
+        entryID = entry
+        self.cursor.execute(query, (entryID,))
+        content = self.cursor.fetchone()
+        if not content:
+            return "[not found]"
         else:
-            entryID = entry
+            return content[0]
+
+
+class WordNTData:
+
+    def __init__(self):
+        # connect images.sqlite
+        self.database = os.path.join("marvelData", "data", "wordNT.data")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def getContent(self, entry):
+        query = "SELECT Information FROM NT WHERE EntryID = ?"
+        entryID = "{0:06d}".format(int(entry))
         self.cursor.execute(query, (entryID,))
         content = self.cursor.fetchone()
         if not content:
