@@ -758,7 +758,7 @@ class MainWindow(QMainWindow):
             "Cross-reference Data": (("marvelData", "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My"),
             "Dictionaries": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
-            "Lexicons": (("marvelData", "lexicons", "SECE.lexicon"), "1unqKXyZJiARQuzFVhZrmlNN9TjgD05Fu"),
+            "Lexicons": (("marvelData", "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
             "Atlas, Timelines & Books": (("marvelData", "books", "Timelines.book"), "1nuhrsujL6LYYeviaT22Rhn_wk9kc6una"),
             "Word Data": (("marvelData", "data", "word.data"), "1veVoqijinM1cbFgynvdTueTa7kaVVPU0"),
             "Words Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),

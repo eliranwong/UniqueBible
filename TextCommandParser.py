@@ -148,7 +148,7 @@ class TextCommandParser:
             "discourse": (("marvelData", "data", "discourse.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
             "words": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
             "combo": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
-            "lexicon": (("marvelData", "lexicons", "SECE.lexicon"), "1unqKXyZJiARQuzFVhZrmlNN9TjgD05Fu"),
+            "lexicon": (("marvelData", "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
             "exlb": (("marvelData", "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
             "dictionary": (("marvelData", "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "encyclopedia": (("marvelData", "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
@@ -878,7 +878,7 @@ class TextCommandParser:
                 "G": "TBESG",
                 "E": "ConcordanceMorphology",
                 "L": "LXX",
-                "g": "BDAG",
+                "g": "MCGED",
                 "l": "LN",
             }
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)

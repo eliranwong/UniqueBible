@@ -548,6 +548,7 @@ class BibleVerseParser:
         "James": "59",
         "Jas.": "59",
         "JAS.": "59",
+        "Jms.": "59",
         "Jm.": "59",
         "Js.": "59",
         "1 P.": "60",
