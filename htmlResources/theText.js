@@ -462,7 +462,16 @@ function lgntdf(entry) {
 }
 
 function gk(entry) {
-    document.title = "LEXICON:::gk"+entry;
+    var initial = entry[0];
+    var number = entry.slice(1);
+    if (number.length == 1) {
+        number = "000"+number;
+    } else if (number.length == 2) {
+        number = "00"+number;
+    } else if (number.length == 3) {
+        number = "0"+number;
+    }
+    document.title = "LEXICON:::gk"+initial+"5"+number;
 }
 
 function ln(entry) {
