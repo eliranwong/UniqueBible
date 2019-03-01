@@ -337,8 +337,13 @@ class ExlbData:
             return "[not found]"
         else:
             if module == "exlbl":
-                content = re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content[0])
-                return content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
+                content = content[0]
+                if not config.myGoogleApiKey:
+                    marvelLink = 'website("https://marvel.bible/tool.php?exlbl={0}")'.format(entry)
+                    content = "[<ref onclick='{0}'>Open with https://marvel.bible</ref>]<br>{1}".format(marvelLink, content[0])
+                else:
+                    content = content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
+                return re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content)
             else:
                 moduleName = {
                     "exlbp": "Exhaustive Library of Bible People",
