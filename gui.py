@@ -191,6 +191,9 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction("&Forward", self, shortcut = "Ctrl+}", triggered=self.studyForward))
 
         menu4 = self.menuBar().addMenu("&Study")
+        menu4.addAction(QAction("&Next Chapter", self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
+        menu4.addAction(QAction("&Previous Chapter", self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
+        menu4.addSeparator()
         menu4.addAction(QAction("&Smart Indexes", self, triggered=self.runINDEX))
         menu4.addAction(QAction("&Commentary", self, triggered=self.runCOMMENTARY))
         menu4.addSeparator()
@@ -1391,6 +1394,25 @@ class MainWindow(QMainWindow):
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
                     self.runTextCommand(textCommand, False, view)
+
+    # Actions - previous / next chapter
+    def previousMainChapter(self):
+        newChapter = config.mainC - 1
+        biblesSqlite = BiblesSqlite()
+        mainChapterList = biblesSqlite.getChapterList()
+        del biblesSqlite
+        if newChapter in mainChapterList:
+            newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
+            self.textCommandChanged(newTextCommand, "main")
+
+    def nextMainChapter(self):
+        newChapter = config.mainC + 1
+        biblesSqlite = BiblesSqlite()
+        mainChapterList = biblesSqlite.getChapterList()
+        del biblesSqlite
+        if newChapter in mainChapterList:
+            newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
+            self.textCommandChanged(newTextCommand, "main")
 
     # Actions - recently opened bibles & commentary
     def mainTextMenu(self):
