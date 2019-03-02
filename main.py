@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.84
+latest_version = 0.85
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -42,7 +42,7 @@ if not hasattr(config, 'importDoNotStripMorphCode'):
 if not hasattr(config, 'importRtlOT'):
     config.importRtlOT = False
 if not hasattr(config, 'rtlTexts'):
-    config.rtlTexts = ["original", "MOB", "MAB", "MTB", "MIB", "MPB", "OHGB", "OHGBi"]
+    config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
 if not hasattr(config, 'mainText'):
     config.mainText = 'KJV'
 if not hasattr(config, 'mainB'):
