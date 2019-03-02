@@ -1143,47 +1143,6 @@ class MainWindow(QMainWindow):
             BibleVerseParser(config.parserStandarisation).startParsing(directory)
             self.onTaggingCompleted()
 
-    # Actions - hide / show / resize study & lightning views
-    def instant(self):
-        if config.instantMode == 0:
-            config.instantMode = 1
-        elif config.instantMode == 1:
-            config.instantMode = 0
-        self.resizeInstant()
-
-    def resizeInstant(self):
-        instantRatio = {
-            0: (10, 0),
-            1: (10, 2),
-        }
-        top, bottom = instantRatio[config.instantMode]
-        self.centralWidget.layout.setRowStretch(0, top)
-        self.centralWidget.layout.setRowStretch(1, bottom)
-        if config.instantMode:
-            self.instantView.show()
-        else:
-            self.instantView.hide()
-
-    def parallel(self):
-        if config.parallelMode == 3:
-            config.parallelMode = 0
-            self.studyView.hide()
-        else:
-            config.parallelMode += 1
-            self.studyView.show()
-        self.resizeParallel()
-
-    def resizeParallel(self):
-        parallelRatio = {
-            0: (1, 0),
-            1: (2, 1),
-            2: (1, 1),
-            3: (1, 2),
-        }
-        left, right = parallelRatio[config.parallelMode]
-        self.centralWidget.layout.setColumnStretch(0, left)
-        self.centralWidget.layout.setColumnStretch(1, right)
-
     # Actions - hide / show tool bars
     def hideShowToolBar(self):
         if self.toolBar.isVisible():
@@ -1682,6 +1641,49 @@ class MainWindow(QMainWindow):
                     viewhistory = viewhistory[-historyRecordAllowed:]
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
+
+    # Actions - hide / show / resize study & lightning views
+    def instant(self):
+        if config.instantMode == 0:
+            config.instantMode = 1
+        elif config.instantMode == 1:
+            config.instantMode = 0
+        self.resizeInstant()
+
+    def resizeInstant(self):
+        instantRatio = {
+            0: (10, 0),
+            1: (10, 2),
+        }
+        top, bottom = instantRatio[config.instantMode]
+        self.centralWidget.layout.setRowStretch(0, top)
+        self.centralWidget.layout.setRowStretch(1, bottom)
+        if config.instantMode:
+            self.instantView.show()
+        else:
+            self.instantView.hide()
+
+    def parallel(self):
+        if config.parallelMode == 3:
+            config.parallelMode = 0
+        else:
+            config.parallelMode += 1
+        self.resizeParallel()
+
+    def resizeParallel(self):
+        parallelRatio = {
+            0: (1, 0),
+            1: (2, 1),
+            2: (1, 1),
+            3: (1, 2),
+        }
+        left, right = parallelRatio[config.parallelMode]
+        self.centralWidget.layout.setColumnStretch(0, left)
+        self.centralWidget.layout.setColumnStretch(1, right)
+        if config.parallelMode:
+            self.studyView.show()
+        else:
+            self.studyView.hide()
 
 
 class CentralWidget(QWidget):
