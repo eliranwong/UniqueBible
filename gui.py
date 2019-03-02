@@ -1421,8 +1421,6 @@ class MainWindow(QMainWindow):
     def updateStudyRefButton(self):
         reference = self.verseReference("study")
         self.studyRefButton.setText(reference)
-        self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
-        self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
@@ -1616,6 +1614,8 @@ class MainWindow(QMainWindow):
                 # save html in a separate file
                 # reason: setHTML does not work with content larger than 2 MB
                 self.openTextOnStudyView(html)
+                self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
+                self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)
