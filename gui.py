@@ -169,16 +169,16 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Full Screen", self, triggered=self.fullsizeWindow))
         menu2.addAction(QAction("&Resize", self, triggered=self.twoThirdWindow))
         menu2.addSeparator()
-        menu2.addAction(QAction("&Top Half", self, shortcut = "Ctrl+T", triggered=self.halfScreenHeight))
-        menu2.addAction(QAction("&Left Half", self, shortcut = "Ctrl+L", triggered=self.halfScreenWidth))
+        menu2.addAction(QAction("&Top Half", self, triggered=self.halfScreenHeight))
+        menu2.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
         menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowToolBar))
         menu3.addAction(QAction("&Second Toolbar [Show / Hide]", self, triggered=self.hideShowSecondToolBar))
         menu3.addAction(QAction("&Third Toolbar [Show / Hide]", self, triggered=self.hideShowThirdToolBar))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Right View [Resize / Hide]", self, shortcut = "Ctrl+R", triggered=self.parallel))
-        menu3.addAction(QAction("&Bottom View [Show / Hide]", self, shortcut = "Ctrl+E", triggered=self.instant))
+        menu3.addAction(QAction("Right Vie&w [Resize / Hide]", self, shortcut = "Ctrl+W", triggered=self.parallel))
+        menu3.addAction(QAction("Bo&ttom View [Show / Hide]", self, shortcut = "Ctrl+T", triggered=self.instant))
         menu3.addSeparator()
         menu3.addAction(QAction("&Hovering feature [Enable / Disable]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
         menu3.addSeparator()
@@ -200,18 +200,18 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction("&Next Chapter", self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
         menu4.addAction(QAction("&Previous Chapter", self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Smart Indexes", self, triggered=self.runINDEX))
-        menu4.addAction(QAction("&Commentary", self, triggered=self.runCOMMENTARY))
+        menu4.addAction(QAction("Smar&t Indexes", self, shortcut = "Ctrl+.", triggered=self.runINDEX))
+        menu4.addAction(QAction("Commentar&y", self, shortcut = "Ctrl+Y", triggered=self.runCOMMENTARY))
         menu4.addSeparator()
         menu4.addAction(QAction("&Translations", self, triggered=self.runTRANSLATION))
         menu4.addAction(QAction("&Discourse", self, triggered=self.runDISCOURSE))
         menu4.addAction(QAction("&Words", self, triggered=self.runWORDS))
-        menu4.addAction(QAction("&TDW Combo", self, triggered=self.runCOMBO))
+        menu4.addAction(QAction("&TDW Combo", self, shortcut = "Ctrl+K", triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Cross References", self, triggered=self.runCROSSREFERENCE))
-        menu4.addAction(QAction("&TSK (Enhanced)", self, triggered=self.runTSKE))
+        menu4.addAction(QAction("C&ross References", self, shortcut = "Ctrl+R", triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction("TSK (&Enhanced)", self, shortcut = "Ctrl+E", triggered=self.runTSKE))
         menu4.addSeparator()
-        menu4.addAction(QAction("&Compare All Versions", triggered=self.runCOMPARE))
+        menu4.addAction(QAction("&Compare All Versions", self, shortcut = "Ctrl+D", triggered=self.runCOMPARE))
         menu4.addAction(QAction("&Compare with ...", self, triggered=self.mainRefButtonClicked))
         menu4.addAction(QAction("&Parallel with ...", self, triggered=self.mainRefButtonClicked))
         menu4.addSeparator()
@@ -805,6 +805,8 @@ class MainWindow(QMainWindow):
             self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
         if config.parallelMode == 0:
             self.parallel()
+        self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
+        self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
 
     # warning for next action without saving modified notes
     def warningNotSaved(self):
@@ -848,6 +850,7 @@ class MainWindow(QMainWindow):
         self.openVerseNote(config.studyB, config.studyC, config.studyV)
 
     def openChapterNote(self, b, c):
+        self.textCommandParser.lastKeyword = "note"
         reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, 1)
         config.studyB, config.studyC, config.studyV = b, c, 1
         self.updateStudyRefButton()
@@ -860,6 +863,7 @@ class MainWindow(QMainWindow):
         self.openTextOnStudyView(note)
 
     def openVerseNote(self, b, c, v):
+        self.textCommandParser.lastKeyword = "note"
         reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
         config.studyB, config.studyC, config.studyV = b, c, v
         self.updateStudyRefButton()
@@ -912,6 +916,7 @@ class MainWindow(QMainWindow):
             self.openTextFile(fileName)
 
     def openTextFile(self, fileName):
+        self.textCommandParser.lastKeyword = "file"
         functions = {
             "pdf": self.openPdfFile,
             "docx": self.openDocxFile,
@@ -1614,11 +1619,9 @@ class MainWindow(QMainWindow):
                 html = re.sub(search, replace, html)
             # load into widget view
             if view == "study":
-                # save html in a separate file
-                # reason: setHTML does not work with content larger than 2 MB
+                # save html in a separate file if text is larger than 2MB
+                # reason: setHTML does not work with content larger than 2MB
                 self.openTextOnStudyView(html)
-                self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
-                self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)
