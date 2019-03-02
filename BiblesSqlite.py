@@ -581,20 +581,18 @@ class Bible:
 class ClauseData:
 
     def getContent(self, testament, entry):
-        if testament == "OT":
-            clauseData = ClauseOTData()
-        elif testament == "NT":
-            clauseData = ClauseNTData()
+        clauseData = ClauseONTData(testament)
         content = clauseData.getContent(entry)
         del clauseData
         return content
 
 
-class ClauseOTData:
+class ClauseONTData:
 
-    def __init__(self):
+    def __init__(self, testament):
+        self.testament = testament
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "clauseOT.data")
+        self.database = os.path.join("marvelData", "data", "clause{0}.data".format(self.testament))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -602,28 +600,7 @@ class ClauseOTData:
         self.connection.close()
 
     def getContent(self, entry):
-        query = "SELECT Information FROM OT WHERE EntryID = ?"
-        self.cursor.execute(query, ("c{0}".format(entry),))
-        content = self.cursor.fetchone()
-        if not content:
-            return "[not found]"
-        else:
-            return content[0]
-
-
-class ClauseNTData:
-
-    def __init__(self):
-        # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "clauseNT.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getContent(self, entry):
-        query = "SELECT Information FROM NT WHERE EntryID = ?"
+        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(self.testament)
         self.cursor.execute(query, ("c{0}".format(entry),))
         content = self.cursor.fetchone()
         if not content:

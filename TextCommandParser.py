@@ -874,12 +874,12 @@ class TextCommandParser:
     def textLexicon(self, command, source):
         if command.count(":::") == 0:
             defaultLexicon = {
-                "H": "TBESH",
-                "G": "TBESG",
-                "E": "ConcordanceMorphology",
-                "L": "LXX",
-                "g": "MCGED",
-                "l": "LN",
+                "H": config.defaultLexiconStrongH,
+                "G": config.defaultLexiconStrongG,
+                "E": config.defaultLexiconETCBC,
+                "L": config.defaultLexiconLXX,
+                "g": config.defaultLexiconGK,
+                "l": config.defaultLexiconLN,
             }
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)

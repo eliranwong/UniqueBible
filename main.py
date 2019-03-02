@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.78
+latest_version = 0.79
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -81,6 +81,18 @@ if not hasattr(config, 'noteSearchString'):
     config.noteSearchString = ''
 if not hasattr(config, 'thirdDictionary'):
     config.thirdDictionary = 'webster'
+if not hasattr(config, 'defaultLexiconStrongH'):
+    config.defaultLexiconStrongH = 'TBESH'
+if not hasattr(config, 'defaultLexiconStrongG'):
+    config.defaultLexiconStrongG = 'TBESG'
+if not hasattr(config, 'defaultLexiconETCBC'):
+    config.defaultLexiconETCBC = 'ConcordanceMorphology'
+if not hasattr(config, 'defaultLexiconLXX'):
+    config.defaultLexiconLXX = 'LXX'
+if not hasattr(config, 'defaultLexiconGK'):
+    config.defaultLexiconGK = 'MCGED'
+if not hasattr(config, 'defaultLexiconLN'):
+    config.defaultLexiconLN = 'LN'
 if not hasattr(config, 'historyRecordAllowed'):
     config.historyRecordAllowed = 50
 if not hasattr(config, 'currentRecord'):
@@ -149,6 +161,12 @@ def saveDataOnExit():
     fileObj.write("\nbookSearchString = "+pprint.pformat(config.bookSearchString))
     fileObj.write("\nnoteSearchString = "+pprint.pformat(config.noteSearchString))
     fileObj.write("\nthirdDictionary = "+pprint.pformat(config.thirdDictionary))
+    fileObj.write("\ndefaultLexiconStrongH = "+pprint.pformat(config.defaultLexiconStrongH))
+    fileObj.write("\ndefaultLexiconStrongG = "+pprint.pformat(config.defaultLexiconStrongG))
+    fileObj.write("\ndefaultLexiconETCBC = "+pprint.pformat(config.defaultLexiconETCBC))
+    fileObj.write("\ndefaultLexiconLXX = "+pprint.pformat(config.defaultLexiconLXX))
+    fileObj.write("\ndefaultLexiconGK = "+pprint.pformat(config.defaultLexiconGK))
+    fileObj.write("\ndefaultLexiconLN = "+pprint.pformat(config.defaultLexiconLN))
     fileObj.write("\nhistoryRecordAllowed = "+pprint.pformat(config.historyRecordAllowed))
     fileObj.write("\ncurrentRecord = {'main': 0, 'study': 0}")
     fileObj.write("\nhistory = "+pprint.pformat(config.history))

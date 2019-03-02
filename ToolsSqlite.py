@@ -17,6 +17,7 @@ class VerseData:
         del verseData
         return content
 
+
 class VerseONTData:
 
     def __init__(self, filename):
@@ -311,20 +312,18 @@ class EncyclopediaData:
 class WordData:
 
     def getContent(self, testament, entry):
-        if testament == "OT":
-            wordData = WordOTData()
-        elif testament == "NT":
-            wordData = WordNTData()
+        wordData = WordONTData(testament)
         content = wordData.getContent(entry)
         del wordData
         return content
 
 
-class WordOTData:
+class WordONTData:
 
-    def __init__(self):
+    def __init__(self, testament):
+        self.testament = testament
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "wordOT.data")
+        self.database = os.path.join("marvelData", "data", "word{0}.data".format(self.testament))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -332,31 +331,10 @@ class WordOTData:
         self.connection.close()
 
     def getContent(self, entry):
-        query = "SELECT Information FROM OT WHERE EntryID = ?"
-        entryID = entry
-        self.cursor.execute(query, (entryID,))
-        content = self.cursor.fetchone()
-        if not content:
-            return "[not found]"
-        else:
-            return content[0]
-
-
-class WordNTData:
-
-    def __init__(self):
-        # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "wordNT.data")
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
-
-    def __del__(self):
-        self.connection.close()
-
-    def getContent(self, entry):
-        query = "SELECT Information FROM NT WHERE EntryID = ?"
-        entryID = "{0:06d}".format(int(entry))
-        self.cursor.execute(query, (entryID,))
+        query = "SELECT Information FROM {0} WHERE EntryID = ?".format(self.testament)
+        if self.testament == "NT":
+            entry = "{0:06d}".format(int(entry))
+        self.cursor.execute(query, (entry,))
         content = self.cursor.fetchone()
         if not content:
             return "[not found]"
