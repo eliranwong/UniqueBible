@@ -760,6 +760,7 @@ class Converter:
         for story in stories:
             b, c, v, order, title = story
             b = self.convertMyBibleBookNo(b)
+            title = re.sub("<x>.*?</x>", self.convertMyBibleXRef, title)
             title = "<u><b>{0}</b></u>".format(title)
             item = titles.get((b, c, v), "not found")
             if item == "not found":
@@ -768,6 +769,15 @@ class Converter:
                 item.append(title)
         titles = {key: "<br>".join(titles[key]) for key in titles}
         return titles
+
+    def convertMyBibleXRef(self, match):
+        value = match.group()
+        mbBookNoString, reference = value[3:-4].split(" ", 1)
+        if mbBookNoString and reference:
+            ubBookNoString = str(self.convertMyBibleBookNo(int(mbBookNoString)))
+            ubBookName = BibleVerseParser(config.parserStandarisation).standardAbbreviation[ubBookNoString]
+            value = "<ref onclick='document.title={0}{1} {2}{0}'>{1} {2}</ref>".format('"', ubBookName, reference)
+        return value
 
     def myBibleBibleToPlainFormat(self, description, abbreviation, verses, strong_numbers_prefix):
         verses = [(book, chapter, verse, self.stripMyBibleBibleTags(scripture, book, strong_numbers_prefix)) for book, chapter, verse, scripture in verses]
