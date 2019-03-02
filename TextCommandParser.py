@@ -9,6 +9,7 @@ class TextCommandParser:
 
     def __init__(self, parent):
         self.parent = parent
+        self.lastKeyword = None
 
     def parser(self, textCommad, source="main"):
         interpreters = {
@@ -82,6 +83,7 @@ class TextCommandParser:
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
             if self.isDatabaseInstalled("bible"):
+                self.lastKeyword = "bible"
                 return self.textBibleVerseParser(textCommad, viewText, source)
             else:
                 return self.databaseNotInstalled("bible")
@@ -90,11 +92,13 @@ class TextCommandParser:
             keyword = keyword.lower()
             if keyword in interpreters:
                 if self.isDatabaseInstalled(keyword):
+                    self.lastKeyword = keyword
                     return interpreters[keyword](command, source)
                 else:
                     return self.databaseNotInstalled(keyword)
             else:
                 if self.isDatabaseInstalled("bible"):
+                    self.lastKeyword = "bible"
                     return self.textBibleVerseParser(textCommad, viewText, source)
                 else:
                     return self.databaseNotInstalled("bible")

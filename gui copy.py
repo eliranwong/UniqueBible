@@ -30,13 +30,12 @@ class MainWindow(QMainWindow):
         self.setupBaseUrl()
 
         self.mainView = None
-        self.studyView = None
         self.centralWidget = CentralWidget(self)
         self.setMainPage()
-        #self.studyView = self.centralWidget.studyView
-        #self.studyPage = self.studyView.page()
-        #self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
-        #self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
+        self.studyView = self.centralWidget.studyView
+        self.studyPage = self.studyView.page()
+        self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
+        self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.instantView = self.centralWidget.instantView
         self.instantPage = self.instantView.page()
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
@@ -93,12 +92,6 @@ class MainWindow(QMainWindow):
         self.mainPage = self.mainView.currentWidget().page()
         self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
-
-    def setStudyPage(self):
-        # study page changes as tab is changed.
-        self.studyPage = self.studyView.currentWidget().page()
-        self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
-        self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
 
     # manage latest update
     def checkLatestUpdate(self):
@@ -1449,10 +1442,7 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def updateStudyRefButton(self):
-        reference = self.verseReference("study")
-        self.studyRefButton.setText(reference)
-        self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
-        self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
+        self.studyRefButton.setText(self.verseReference("study"))
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
@@ -1680,12 +1670,13 @@ class CentralWidget(QWidget):
         self.parent = parent
         self.layout = QGridLayout()
 
-        #self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Left View</b>'.</p>"
-        
+        self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Left View</b>'.</p>"
         #self.mainView = WebEngineView(self, "main")
         #self.mainView.setHtml(self.html, baseUrl)
-        #self.studyView = WebEngineView(self, "study")
-        #self.studyView.setHtml("This is '<b>Right View</b>'.", baseUrl)
+        self.studyView = WebEngineView(self, "study")
+        self.studyView.setHtml("This is '<b>Right View</b>'.", baseUrl)
+        self.instantView = WebEngineView(self, "instant")
+        self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
@@ -1694,15 +1685,6 @@ class CentralWidget(QWidget):
         self.mainView.addTab(WebEngineView(self, "main"), "Bible3")
         self.mainView.addTab(WebEngineView(self, "main"), "Bible4")
         self.mainView.addTab(WebEngineView(self, "main"), "Bible5")
-
-        self.studyView = TabWidget(self, "study")
-        self.parent.studyView = self.studyView
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool1")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool2")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool3")
-
-        self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
@@ -1724,18 +1706,15 @@ class TabWidget(QTabWidget):
         self.parent = parent
         self.name = name
         self.currentChanged.connect(self.tabSelected)
+        #self.tabBarClicked.connect(self.tabSelected)
 
     def setHtml(self, html, baseUrl):
         self.currentWidget().setHtml(html, baseUrl)
-
-    def load(self, path):
-        self.currentWidget().load(path)
+        #self.setTabText(self.currentIndex(), "BIBLE")
+        #self.parent.parent.setMainPage()
 
     def tabSelected(self):
-        if self.name == "main":
-            self.parent.parent.setMainPage()
-        elif self.name == "study":
-            self.parent.parent.setStudyPage()
+        self.parent.parent.setMainPage()
 
 
 class WebEngineView(QWebEngineView):
