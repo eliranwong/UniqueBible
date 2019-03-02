@@ -761,11 +761,11 @@ class MainWindow(QMainWindow):
             "Lexicons": (("marvelData", "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
             "Atlas, Timelines & Books": (("marvelData", "books", "Timelines.book"), "1nuhrsujL6LYYeviaT22Rhn_wk9kc6una"),
             "Word Data": (("marvelData", "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
-            "Words Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "Words Data": (("marvelData", "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Clause Data": (("marvelData", "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
-            "Translation Data": (("marvelData", "data", "translation.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
-            "Discourse Data": (("marvelData", "data", "discourse.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
-            "TDW Combo Data": (("marvelData", "data", "words.data"), "13d3QeUHhlttgOQ_U7Ag1jgawqrXzOaBq"),
+            "Translation Data": (("marvelData", "data", "translationNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
+            "Discourse Data": (("marvelData", "data", "discourseNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
+            "TDW Combo Data": (("marvelData", "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
         }
         items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(*datasets[dataset][0]))]
         if not items:

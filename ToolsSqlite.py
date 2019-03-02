@@ -5,6 +5,21 @@ from BibleVerseParser import BibleVerseParser
 class VerseData:
 
     def __init__(self, filename):
+        self.filename = filename
+
+    def getContent(self, bcvTuple):
+        b, *_ = bcvTuple
+        if b < 40:
+            verseData = VerseONTData("{0}OT".format(self.filename))
+        else:
+            verseData = VerseONTData("{0}NT".format(self.filename))
+        content = verseData.getContent(bcvTuple)
+        del verseData
+        return content
+
+class VerseONTData:
+
+    def __init__(self, filename):
         # connect bibles.sqlite
         self.database = os.path.join("marvelData", "data", "{0}.data".format(filename))
         self.connection = sqlite3.connect(self.database)
