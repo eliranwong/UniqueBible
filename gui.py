@@ -32,15 +32,14 @@ class MainWindow(QMainWindow):
         self.mainView = None
         self.studyView = None
         self.centralWidget = CentralWidget(self)
-        self.setMainPage()
-        #self.studyView = self.centralWidget.studyView
-        #self.studyPage = self.studyView.page()
-        #self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
-        #self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.instantView = self.centralWidget.instantView
         self.instantPage = self.instantView.page()
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         self.setCentralWidget(self.centralWidget)
+        self.setMainPage()
+        self.setStudyPage()
+        self.resizeParallel()
+        self.resizeInstant()
 
         # variable to check if notes in editor been modified
         self.noteSaved = True
@@ -351,7 +350,6 @@ class MainWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.instantMode = 1 # default instant mode
         instantButton = QPushButton()
         instantButton.setToolTip("Show / Hide Bottom View")
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
@@ -391,7 +389,6 @@ class MainWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.parallelMode = 1 # default parallel mode
         parallelButton = QPushButton()
         parallelButton.setToolTip("Resize / Hide Right View")
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
@@ -803,7 +800,7 @@ class MainWindow(QMainWindow):
         # open the text file with webview
         fullOutputPath = os.path.abspath(outputFile)
         self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
-        if self.parallelMode == 0:
+        if config.parallelMode == 0:
             self.parallel()
 
     # warning for next action without saving modified notes
@@ -1146,6 +1143,47 @@ class MainWindow(QMainWindow):
             BibleVerseParser(config.parserStandarisation).startParsing(directory)
             self.onTaggingCompleted()
 
+    # Actions - hide / show / resize study & lightning views
+    def instant(self):
+        if config.instantMode == 0:
+            config.instantMode = 1
+        elif config.instantMode == 1:
+            config.instantMode = 0
+        self.resizeInstant()
+
+    def resizeInstant(self):
+        instantRatio = {
+            0: (10, 0),
+            1: (10, 2),
+        }
+        top, bottom = instantRatio[config.instantMode]
+        self.centralWidget.layout.setRowStretch(0, top)
+        self.centralWidget.layout.setRowStretch(1, bottom)
+        if config.instantMode:
+            self.instantView.show()
+        else:
+            self.instantView.hide()
+
+    def parallel(self):
+        if config.parallelMode == 3:
+            config.parallelMode = 0
+            self.studyView.hide()
+        else:
+            config.parallelMode += 1
+            self.studyView.show()
+        self.resizeParallel()
+
+    def resizeParallel(self):
+        parallelRatio = {
+            0: (1, 0),
+            1: (2, 1),
+            2: (1, 1),
+            3: (1, 2),
+        }
+        left, right = parallelRatio[config.parallelMode]
+        self.centralWidget.layout.setColumnStretch(0, left)
+        self.centralWidget.layout.setColumnStretch(1, right)
+
     # Actions - hide / show tool bars
     def hideShowToolBar(self):
         if self.toolBar.isVisible():
@@ -1278,36 +1316,6 @@ class MainWindow(QMainWindow):
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = qApp.desktop().availableGeometry()
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
-
-    # Actions - hide / show / resize study & lightning views
-    def instant(self):
-        if self.instantMode == 0:
-            self.instantMode = 1
-            self.instantView.show()
-            self.centralWidget.layout.setRowStretch(0, 10)
-            self.centralWidget.layout.setRowStretch(1, 2)
-        elif self.instantMode == 1:
-            self.instantMode = 0
-            self.centralWidget.layout.setRowStretch(0, 10)
-            self.centralWidget.layout.setRowStretch(1, 0)
-            self.instantView.hide()
-
-    def parallel(self):
-        parallelRatio = {
-            0: (1, 0),
-            1: (2, 1),
-            2: (1, 1),
-            3: (1, 2),
-        }
-        if self.parallelMode == 3:
-            self.parallelMode = 0
-            self.studyView.hide()
-        else:
-            self.parallelMode += 1
-            self.studyView.show()
-        ratio = parallelRatio[self.parallelMode]
-        self.centralWidget.layout.setColumnStretch(0, ratio[0])
-        self.centralWidget.layout.setColumnStretch(1, ratio[1])
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
@@ -1505,7 +1513,7 @@ class MainWindow(QMainWindow):
             self.openHistoryRecord("main", mainCurrentRecord)
 
     def studyBack(self):
-        if self.parallelMode == 0:
+        if config.parallelMode == 0:
             self.parallel()
         studyCurrentRecord = config.currentRecord["study"]
         if not studyCurrentRecord == 0:
@@ -1513,7 +1521,7 @@ class MainWindow(QMainWindow):
             self.openHistoryRecord("study", studyCurrentRecord)
 
     def studyForward(self):
-        if self.parallelMode == 0:
+        if config.parallelMode == 0:
             self.parallel()
         studyCurrentRecord = config.currentRecord["study"]
         if not studyCurrentRecord == (len(config.history["study"]) - 1):
@@ -1710,12 +1718,6 @@ class CentralWidget(QWidget):
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
         self.layout.addWidget(self.instantView, 1, 0, 1, 2)
-
-        self.layout.setColumnStretch(0, 2)
-        self.layout.setColumnStretch(1, 1)
-
-        self.layout.setRowStretch(0, 10)
-        self.layout.setRowStretch(1, 2)
 
         self.setLayout(self.layout)
 
