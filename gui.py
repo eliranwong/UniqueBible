@@ -1445,6 +1445,9 @@ class MainWindow(QMainWindow):
     def updateMainRefButton(self):
         reference = self.verseReference("main")
         self.mainRefButton.setText(reference)
+        if self.textCommandParser.lastKeyword in ("compare", "parallel"):
+            *_, reference2 = reference.split(" - ")
+            reference = "{0} - {1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 

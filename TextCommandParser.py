@@ -414,7 +414,7 @@ class TextCommandParser:
     # called by MAIN::: & STUDY:::
     def textAnotherView(self, command, source, target):
         if command.count(":::") == 0:
-            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            updateViewConfig, viewText, *_ = self.getViewConfig(target)
             command = "{0}:::{1}".format(viewText, command)
         texts, references = self.splitCommand(command)
         texts = self.getConfirmedTexts(texts)
