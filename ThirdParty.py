@@ -142,7 +142,7 @@ class Converter:
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -481,7 +481,7 @@ class Converter:
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -736,13 +736,13 @@ class Converter:
         verses = cursor.fetchall()
         if verses:
             verses = [(self.convertMyBibleBookNo(mbBook), mbChapter, mbVerse, mbText) for mbBook, mbChapter, mbVerse, mbText in verses]
-        
+
         # check if notes are available in commentary format
         noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(abbreviation))
         if os.path.isfile(noteFile):
             noteConnection = sqlite3.connect(noteFile)
             noteCursor = noteConnection.cursor()
-            
+
             query = "SELECT book_number, chapter_number_from, verse_number_from, marker, text FROM commentaries"
             noteCursor.execute(query)
             notes = noteCursor.fetchall()
@@ -839,7 +839,7 @@ class Converter:
         formattedChapters = [(book, chapter, formattedChapters[(book, chapter)]) for book, chapter in formattedChapters]
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -1010,7 +1010,7 @@ class Converter:
 
         # official MyBible's references: https://mybible.zone/code-eng.php
         # notes from Oleg
-        # 2 Ésdras (in Russian Orthodox Bible) = Έσδράς Α' (in Septuaguint) = 1 Esdras (English) 
+        # 2 Ésdras (in Russian Orthodox Bible) = Έσδράς Α' (in Septuaguint) = 1 Esdras (English)
         # 3 Esdras (Russian) = 4 Esdras (Vulgata) = 2 Esdras (English)
 
         # Five extra non-standard numbers in Oleg's Barach module
@@ -1170,7 +1170,7 @@ class Converter:
 
         insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
         cursor.executemany(insert, content)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -1210,7 +1210,7 @@ class Converter:
 
         insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
         cursor.executemany(insert, content)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -1225,7 +1225,7 @@ class Converter:
         versions = cursor.fetchall()
         exclude = ("Details")
         lexiconList = [version[0] for version in versions if not version[0] in exclude]
-        
+
         for lexicon in lexiconList:
             query = "SELECT EntryID, Information FROM {0}".format(lexicon)
             cursor.execute(query)
@@ -1248,7 +1248,7 @@ class Converter:
 
         insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
         cursor.executemany(insert, content)
-        connection.commit()        
+        connection.commit()
 
         connection.close()
 
@@ -1263,7 +1263,7 @@ class Converter:
         versions = cursor.fetchall()
         exclude = ("Details")
         bookList = [version[0] for version in versions if not version[0] in exclude]
-        
+
         for book in bookList:
             query = "SELECT Topic, Note FROM {0}".format(book)
             cursor.execute(query)
@@ -1275,7 +1275,7 @@ class Converter:
     def importESwordBook(self, file):
         *_, module = os.path.split(file)
         module = module[:-5]
-        
+
         # connect e-Sword *.refi file
         connection = sqlite3.connect(file)
         cursor = connection.cursor()

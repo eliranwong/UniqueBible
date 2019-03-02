@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
 
         self.directoryLabel = QLabel()
         self.directoryLabel.setFrameStyle(frameStyle)
-        
+
         # check if the current version is up-to-date
         self.checkLatestUpdate()
 
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
             tempName = os.path.join(os.path.dirname(os.getcwd()), "UniqueBible-master")
             if not currentName == tempName:
                 os.rename(currentName, tempName)
-            filename = file.split("/")[-1]        
+            filename = file.split("/")[-1]
             with open(filename, "wb") as content:
                 content.write(request.content)
             if filename.endswith(".zip"):
@@ -791,15 +791,18 @@ class MainWindow(QMainWindow):
 
     # Open text on studyView
     def openTextOnStudyView(self, text):
-        # write text in a text file
-        # reason: setHTML does not work with content larger than 2 MB
-        outputFile = os.path.join("htmlResources", "study.html")
-        fileObject = open(outputFile,'w')
-        fileObject.write(text)
-        fileObject.close()
-        # open the text file with webview
-        fullOutputPath = os.path.abspath(outputFile)
-        self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
+        if sys.getsizeof(text) < 2097152:
+            self.studyView.setHtml(text, baseUrl)
+        else:
+            # write text in a text file
+            # reason: setHTML does not work with content larger than 2 MB
+            outputFile = os.path.join("htmlResources", "study.html")
+            fileObject = open(outputFile,'w')
+            fileObject.write(text)
+            fileObject.close()
+            # open the text file with webview
+            fullOutputPath = os.path.abspath(outputFile)
+            self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
         if config.parallelMode == 0:
             self.parallel()
 
@@ -1694,7 +1697,7 @@ class CentralWidget(QWidget):
         self.layout = QGridLayout()
 
         #self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Left View</b>'.</p>"
-        
+
         #self.mainView = WebEngineView(self, "main")
         #self.mainView.setHtml(self.html, baseUrl)
         #self.studyView = WebEngineView(self, "study")

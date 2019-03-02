@@ -17,7 +17,7 @@ class BiblesSqlite:
 
     # to-do list
     # sort out download helper
-    
+
     def getBibleList(self, includeMarvelBibles=True):
         return sorted(self.getPlainBibleList() + self.getFormattedBibleList(includeMarvelBibles))
 
@@ -369,7 +369,7 @@ class BiblesSqlite:
 
     def searchBible(self, text, mode, searchString, interlinear=False):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
-        
+
         formatedText = ""
         if text in plainBibleList:
             query = "SELECT * FROM {0} WHERE ".format(text)
