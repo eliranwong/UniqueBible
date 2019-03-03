@@ -557,14 +557,14 @@ class TextCommandParser:
 
     # _info:::
     def textInfo(self, command, source):
-        if config.instantInformationEnabled == 1:
+        if config.instantInformationEnabled:
             return ("instant", command)
         else:
             return ("", "")
 
     # _instantverse:::
     def instantVerse(self, command, source):
-        if config.instantInformationEnabled == 1:
+        if config.instantInformationEnabled:
             commandList = self.splitCommand(command)
             morphologySqlite = MorphologySqlite()
             b, c, v = [int(i) for i in commandList[1].split(".")]
@@ -576,7 +576,7 @@ class TextCommandParser:
 
     # _imv:::
     def instantMainVerse(self, command, source):
-        if config.instantInformationEnabled == 1:
+        if config.instantInformationEnabled:
             b, c, v = [int(i) for i in command.split(".")]
             biblesSqlite = BiblesSqlite()
             b, c, v, verseText = biblesSqlite.readTextVerse(config.mainText, b, c, v)
@@ -590,7 +590,7 @@ class TextCommandParser:
 
     # _instantword:::
     def instantWord(self, command, source):
-        if config.instantInformationEnabled == 1:
+        if config.instantInformationEnabled:
             commandList = self.splitCommand(command)
             morphologySqlite = MorphologySqlite()
             wordID = commandList[1]

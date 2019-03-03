@@ -789,7 +789,27 @@ class MainWindow(QMainWindow):
         del parser
         return verseReference
 
-    # Open text on studyView
+    # Open text on left and right view
+    def openTextOnMainView(self, text):
+        if sys.getsizeof(text) < 2097152:
+            self.mainView.setHtml(text, baseUrl)
+        else:
+            # write text in a text file
+            # reason: setHTML does not work with content larger than 2 MB
+            outputFile = os.path.join("htmlResources", "main.html")
+            fileObject = open(outputFile, 'w')
+            fileObject.write(text)
+            fileObject.close()
+            # open the text file with webview
+            fullOutputPath = os.path.abspath(outputFile)
+            self.mainView.load(QUrl.fromLocalFile(fullOutputPath))
+        reference = self.verseReference("main")
+        if self.textCommandParser.lastKeyword in ("compare", "parallel"):
+            *_, reference2 = reference.split(" - ")
+            reference = "{0} - {1}".format(self.textCommandParser.lastKeyword, reference2)
+        self.mainView.setTabText(self.mainView.currentIndex(), reference)
+        self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
+
     def openTextOnStudyView(self, text):
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
@@ -797,7 +817,7 @@ class MainWindow(QMainWindow):
             # write text in a text file
             # reason: setHTML does not work with content larger than 2 MB
             outputFile = os.path.join("htmlResources", "study.html")
-            fileObject = open(outputFile,'w')
+            fileObject = open(outputFile, 'w')
             fileObject.write(text)
             fileObject.close()
             # open the text file with webview
@@ -1286,16 +1306,16 @@ class MainWindow(QMainWindow):
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
-        if config.instantInformationEnabled == 0:
-            return "hide.png"
-        elif config.instantInformationEnabled == 1:
+        if config.instantInformationEnabled:
             return "show.png"
+        else:
+            return "hide.png"
 
     def enableInstantButtonClicked(self):
-        if config.instantInformationEnabled == 0:
-            config.instantInformationEnabled = 1
-        elif config.instantInformationEnabled == 1:
-            config.instantInformationEnabled = 0
+        if config.instantInformationEnabled:
+            config.instantInformationEnabled = False
+        else:
+            config.instantInformationEnabled = True
         enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
@@ -1418,17 +1438,10 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, False, "study")
 
     def updateMainRefButton(self):
-        reference = self.verseReference("main")
-        self.mainRefButton.setText(reference)
-        if self.textCommandParser.lastKeyword in ("compare", "parallel"):
-            *_, reference2 = reference.split(" - ")
-            reference = "{0} - {1}".format(self.textCommandParser.lastKeyword, reference2)
-        self.mainView.setTabText(self.mainView.currentIndex(), reference)
-        self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
+        self.mainRefButton.setText(self.verseReference("main"))
 
     def updateStudyRefButton(self):
-        reference = self.verseReference("study")
-        self.studyRefButton.setText(reference)
+        self.studyRefButton.setText(self.verseReference("study"))
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
@@ -1622,6 +1635,10 @@ class MainWindow(QMainWindow):
                 # save html in a separate file if text is larger than 2MB
                 # reason: setHTML does not work with content larger than 2MB
                 self.openTextOnStudyView(html)
+            elif view == "main":
+                # save html in a separate file if text is larger than 2MB
+                # reason: setHTML does not work with content larger than 2MB
+                self.openTextOnMainView(html)
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)

@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.9
+latest_version = 0.91
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -28,7 +28,7 @@ if not hasattr(config, 'parallelMode'):
 if not hasattr(config, 'instantMode'):
     config.instantMode = 1
 if not hasattr(config, 'instantInformationEnabled'):
-    config.instantInformationEnabled = 1
+    config.instantInformationEnabled = True
 if not hasattr(config, 'fontSize'):
     config.fontSize = 120
 if not hasattr(config, 'noteEditorFontSize'):
