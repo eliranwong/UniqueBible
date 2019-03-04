@@ -315,6 +315,7 @@ class MainWindow(QMainWindow):
 
         self.textCommandLineEdit = QLineEdit()
         self.textCommandLineEdit.setToolTip("Command Line")
+        self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.toolBar.addWidget(self.textCommandLineEdit)
 
@@ -792,7 +793,28 @@ class MainWindow(QMainWindow):
         return verseReference
 
     # Open text on left and right view
+    def hideLexicalEntryInBible(self, text):
+        if config.hideLexicalEntryInBible and re.search("onclick=['{0}]lex".format('"'), text):
+            p = re.compile("<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?> <[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
+            s = p.search(text)
+            while s:
+                text = p.sub(r"<ref onclick='lex({0}\1_\2{0})'>*</ref>".format('"'), text)
+                s = p.search(text)
+            searchReplace = {
+                ("<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?> <[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lmCombo({0}\1{0}, {0}rmac{0}, {0}\2{0})'>*</ref></sup>".format('"')),
+                ("<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lex({0}\1{0})'>*</ref></sup>".format('"')),
+            }
+            for search, replace in searchReplace:
+                text = re.sub(search, replace, text)
+            p = re.compile("([^\n<>]+?)<sup><ref (onclick='l[^\r<>]*?>)\*</ref></sup>")
+            s = p.search(text)
+            while s:
+                text = p.sub(r"<tag \2\1</tag>", text)
+                s = p.search(text)
+        return text
+
     def openTextOnMainView(self, text):
+        text = self.hideLexicalEntryInBible(text)
         if sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
         else:
@@ -813,6 +835,7 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
+        text = self.hideLexicalEntryInBible(text)
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
         else:

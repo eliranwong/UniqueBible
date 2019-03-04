@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.94
+latest_version = 0.95
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -39,6 +39,8 @@ if not hasattr(config, 'readFormattedBibles'):
     config.readFormattedBibles = True
 if not hasattr(config, 'addTitleToPlainChapter'):
     config.addTitleToPlainChapter = True
+if not hasattr(config, 'hideLexicalEntryInBible'):
+    config.hideLexicalEntryInBible = False
 if not hasattr(config, 'importAddVerseLinebreak'):
     config.importAddVerseLinebreak = False
 if not hasattr(config, 'importDoNotStripStrongNo'):
@@ -146,6 +148,7 @@ def saveDataOnExit():
     fileObj.write("\nnoteEditorFontSize = "+pprint.pformat(config.noteEditorFontSize))
     fileObj.write("\nreadFormattedBibles = "+pprint.pformat(config.readFormattedBibles))
     fileObj.write("\naddTitleToPlainChapter = "+pprint.pformat(config.addTitleToPlainChapter))
+    fileObj.write("\nhideLexicalEntryInBible = "+pprint.pformat(config.hideLexicalEntryInBible))
     fileObj.write("\nimportDoNotStripStrongNo = "+pprint.pformat(config.importDoNotStripStrongNo))
     fileObj.write("\nimportDoNotStripMorphCode = "+pprint.pformat(config.importDoNotStripMorphCode))
     fileObj.write("\nimportAddVerseLinebreak = "+pprint.pformat(config.importAddVerseLinebreak))
