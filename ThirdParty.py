@@ -71,6 +71,8 @@ class Converter:
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
         abbreviation = abbreviation.replace("-", "")
+        abbreviation = abbreviation.replace("'", "")
+        abbreviation = abbreviation.replace('"', "")
         abbreviation = abbreviation.replace("+", "x")
         query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
@@ -421,6 +423,8 @@ class Converter:
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
         abbreviation = abbreviation.replace("-", "")
+        abbreviation = abbreviation.replace("'", "")
+        abbreviation = abbreviation.replace('"', "")
         abbreviation = abbreviation.replace("+", "x")
         query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
@@ -710,6 +714,8 @@ class Converter:
         inputFilePath, inputFileName = os.path.split(file)
         abbreviation = inputFileName[:-8]
         abbreviation = abbreviation.replace("-", "")
+        abbreviation = abbreviation.replace("'", "")
+        abbreviation = abbreviation.replace('"', "")
         abbreviation = abbreviation.replace("+", "x")
 
         query = "SELECT value FROM info WHERE name = 'strong_numbers_prefix'"
