@@ -177,6 +177,8 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Second Toolbar [Show / Hide]", self, triggered=self.hideShowSecondToolBar))
         menu3.addAction(QAction("&Third Toolbar [Show / Hide]", self, triggered=self.hideShowThirdToolBar))
         menu3.addSeparator()
+        menu3.addAction(QAction("&Landscape / Portrait Mode", self, shortcut = "Ctrl+L", triggered=self.switchLandscapeMode))
+        menu3.addSeparator()
         menu3.addAction(QAction("Right Vie&w [Resize / Hide]", self, shortcut = "Ctrl+W", triggered=self.parallel))
         menu3.addAction(QAction("Bo&ttom View [Show / Hide]", self, shortcut = "Ctrl+T", triggered=self.instant))
         menu3.addSeparator()
@@ -1665,6 +1667,16 @@ class MainWindow(QMainWindow):
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
 
+    # switch between landscape / portrait mode
+    def switchLandscapeMode(self):
+        if config.landscapeMode:
+            config.landscapeMode = False
+        else:
+            config.landscapeMode = True
+        self.centralWidget.switchLandscapeMode()
+        self.resizeParallel()
+        self.resizeInstant()
+
     # Actions - hide / show / resize study & lightning views
     def instant(self):
         if config.instantMode == 0:
@@ -1674,13 +1686,40 @@ class MainWindow(QMainWindow):
         self.resizeInstant()
 
     def resizeInstant(self):
+        if config.landscapeMode:
+            self.resizeInstantL()
+        else:
+            self.resizeInstantP()
+
+    def resizeInstantL(self):
         instantRatio = {
-            0: (10, 0),
-            1: (10, 2),
+            0: (10, 0, 0),
+            1: (10, 0, 2),
         }
-        top, bottom = instantRatio[config.instantMode]
+        top, middle, bottom = instantRatio[config.instantMode]
         self.centralWidget.layout.setRowStretch(0, top)
-        self.centralWidget.layout.setRowStretch(1, bottom)
+        self.centralWidget.layout.setRowStretch(1, middle)
+        self.centralWidget.layout.setRowStretch(2, bottom)
+        if config.instantMode:
+            self.instantView.show()
+        else:
+            self.instantView.hide()
+
+    def resizeInstantP(self):
+        instantRatio = {
+            (0, 0): (10, 0, 0),
+            (0, 1): (10, 5, 0),
+            (0, 2): (5, 5, 0),
+            (0, 3): (5, 10, 0),
+            (1, 0): (10, 0, 2),
+            (1, 1): (10, 5, 3),
+            (1, 2): (5, 5, 2),
+            (1, 3): (5, 10, 3),
+        }
+        top, middle, bottom = instantRatio[(config.instantMode, config.parallelMode)]
+        self.centralWidget.layout.setRowStretch(0, top)
+        self.centralWidget.layout.setRowStretch(1, middle)
+        self.centralWidget.layout.setRowStretch(2, bottom)
         if config.instantMode:
             self.instantView.show()
         else:
@@ -1694,6 +1733,12 @@ class MainWindow(QMainWindow):
         self.resizeParallel()
 
     def resizeParallel(self):
+        if config.landscapeMode:
+            self.resizeParallelL()
+        else:
+            self.resizeParallelP()
+
+    def resizeParallelL(self):
         parallelRatio = {
             0: (1, 0),
             1: (2, 1),
@@ -1708,13 +1753,32 @@ class MainWindow(QMainWindow):
         else:
             self.studyView.hide()
 
+    def resizeParallelP(self):
+        parallelRatio = {
+            (0, 0): (10, 0, 0),
+            (0, 1): (10, 5, 0),
+            (0, 2): (5, 5, 0),
+            (0, 3): (5, 10, 0),
+            (1, 0): (10, 0, 2),
+            (1, 1): (10, 5, 3),
+            (1, 2): (5, 5, 2),
+            (1, 3): (5, 10, 3),
+        }
+        top, middle, bottom = parallelRatio[(config.instantMode, config.parallelMode)]
+        self.centralWidget.layout.setRowStretch(0, top)
+        self.centralWidget.layout.setRowStretch(1, middle)
+        self.centralWidget.layout.setRowStretch(2, bottom)
+        if config.parallelMode:
+            self.studyView.show()
+        else:
+            self.studyView.hide()
+
 
 class CentralWidget(QWidget):
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        self.layout = QGridLayout()
 
         #self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Left View</b>'.</p>"
 
@@ -1740,11 +1804,30 @@ class CentralWidget(QWidget):
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
+        self.layout = QGridLayout()
+        self.addWidgetToLayout()
+        self.setLayout(self.layout)
+
+    def switchLandscapeMode(self):
+        for widget in (self.mainView, self.studyView, self.instantView):
+            self.layout.removeWidget(widget)
+        self.addWidgetToLayout()
+
+    def addWidgetToLayout(self):
+        if config.landscapeMode:
+            self.addWidgetLandscape()
+        else:
+            self.addWidgetPortrait()
+
+    def addWidgetLandscape(self):
         self.layout.addWidget(self.mainView, 0, 0)
         self.layout.addWidget(self.studyView, 0, 1)
-        self.layout.addWidget(self.instantView, 1, 0, 1, 2)
+        self.layout.addWidget(self.instantView, 2, 0, 1, 2)
 
-        self.setLayout(self.layout)
+    def addWidgetPortrait(self):
+        self.layout.addWidget(self.mainView, 0, 0, 1, 2)
+        self.layout.addWidget(self.studyView, 1, 0, 1, 2)
+        self.layout.addWidget(self.instantView, 2, 0, 1, 2)
 
 
 class TabWidget(QTabWidget):

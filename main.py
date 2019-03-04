@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 0.91
+latest_version = 0.92
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -23,6 +23,8 @@ if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
 if not hasattr(config, 'parserStandarisation'):
     config.parserStandarisation = 'YES'
+if not hasattr(config, 'landscapeMode'):
+    config.landscapeMode = True
 if not hasattr(config, 'parallelMode'):
     config.parallelMode = 1
 if not hasattr(config, 'instantMode'):
@@ -136,6 +138,7 @@ def saveDataOnExit():
     fileObj.write("version = "+pprint.pformat(config.version))
     fileObj.write("\nmyGoogleApiKey = "+pprint.pformat(config.myGoogleApiKey))
     fileObj.write("\nparserStandarisation = "+pprint.pformat(config.parserStandarisation))
+    fileObj.write("\nlandscapeMode = "+pprint.pformat(config.landscapeMode))
     fileObj.write("\nparallelMode = "+pprint.pformat(config.parallelMode))
     fileObj.write("\ninstantMode = "+pprint.pformat(config.instantMode))
     fileObj.write("\ninstantInformationEnabled = "+pprint.pformat(config.instantInformationEnabled))
