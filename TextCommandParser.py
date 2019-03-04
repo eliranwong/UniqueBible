@@ -905,10 +905,10 @@ class TextCommandParser:
         if command.count(":::") == 2:
             lexicalEntry, morphologyModule, morphologyCode = command.split(":::")
             defaultLexicon = self.getDefaultLexicons()[lexicalEntry[0]]
-            self.getLexiconMorphologyContent(defaultLexicon, lexicalEntry, morphologyModule, morphologyCode)
+            return self.getLexiconMorphologyContent(defaultLexicon, lexicalEntry, morphologyModule, morphologyCode)
         elif command.count(":::") == 3:
             lexicon, lexicalEntry, morphologyModule, morphologyCode = command.split(":::")
-            self.getLexiconMorphologyContent(lexicon, lexicalEntry, morphologyModule, morphologyCode)
+            return self.getLexiconMorphologyContent(lexicon, lexicalEntry, morphologyModule, morphologyCode)
         else:
             return self.invalidCommand()
 
