@@ -445,6 +445,10 @@ function searchMorphologyItem(lexicalEntry, morphologyItem) {
     document.title = "MORPHOLOGY:::LexicalEntry LIKE '%"+lexicalEntry+",%' AND Morphology LIKE '%"+morphologyItem+"%'";
 }
 
+function lmCombo(lexicalEntry, morphologyModule, morphologyCode) {
+    document.title = "LMCOMBO:::"+lexicalEntry+":::"+morphologyModule+":::"+morphologyCode;
+}
+
 function lexicon(module, entry) {
     document.title = "LEXICON:::"+module+":::"+entry;
 }
