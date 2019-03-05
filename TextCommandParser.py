@@ -341,7 +341,7 @@ class TextCommandParser:
             }
             for search, replace in searchReplace:
                 text = re.sub(search, replace, text)
-            p = re.compile("(</woj>|</i>|</ot>|</mbe>|</mbn>)(<sup><ref onclick='l[^\r<>]*?>\*</ref></sup>)")
+            p = re.compile("(</woj>|</i>|</ot>|</mbe>|</mbn>|<sup><ref onclick='bn\([^\n\(\)]*?\)'>&oplus;</ref></sup>|<woj>⸃</woj>)(<sup><ref onclick='l[^\r<>]*?>\*</ref></sup>)")
             while p.search(text):
                 text = p.sub(r"\2\1", text)
             p = re.compile("([^\n<>]+?)<sup><ref (onclick='l[^\r<>]*?>)\*</ref></sup>")
