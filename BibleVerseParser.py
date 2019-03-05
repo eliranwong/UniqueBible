@@ -1582,21 +1582,28 @@ class BibleVerseParser:
 
         # check if verses following tagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         p = re.compile('</ref｝[,-–;][ ]*?[0-9]', flags=re.M)
-        s = p.search(taggedText)
-        while s:
+        if p.search(taggedText):
+            searchReplace = {
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
+            }
+        while p.search(taggedText):
             #self.updateWorkingIndicator()
-            taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8', taggedText)
-            taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7', taggedText)
-            taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7', taggedText)
-            taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7', taggedText)
-            taggedText = re.sub('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7', taggedText)
-            s = p.search(taggedText)
+            for search, replace in searchReplace:
+                taggedText = re.sub(search, replace, taggedText)
 
         # clear special markers
         #self.updateWorkingIndicator()
-        taggedText = re.sub('『[0-9]+?|([^\n『』]*?)』', r'\1', taggedText)
-        taggedText = re.sub('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1', taggedText)
-        taggedText = re.sub('</ref｝', '</ref>', taggedText)
+        searchReplace = {
+            ('『[0-9]+?|([^\n『』]*?)』', r'\1'),
+            ('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
+            ('</ref｝', '</ref>'),
+        }
+        for search, replace in searchReplace:
+            taggedText = re.sub(search, replace, taggedText)
         taggedText = taggedText[:-1]
         return taggedText
 

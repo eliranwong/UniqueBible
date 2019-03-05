@@ -712,7 +712,8 @@ class Converter:
         cursor.execute(query)
         description = cursor.fetchone()[0]
         inputFilePath, inputFileName = os.path.split(file)
-        abbreviation = inputFileName[:-8]
+        originalModuleName = inputFileName[:-8]
+        abbreviation = originalModuleName
         abbreviation = abbreviation.replace("-", "")
         abbreviation = abbreviation.replace("'", "")
         abbreviation = abbreviation.replace('"', "")
@@ -744,7 +745,7 @@ class Converter:
             verses = [(self.convertMyBibleBookNo(mbBook), mbChapter, mbVerse, mbText) for mbBook, mbChapter, mbVerse, mbText in verses]
 
         # check if notes are available in commentary format
-        noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(abbreviation))
+        noteFile = os.path.join(inputFilePath, "{0}.commentaries.SQLite3".format(originalModuleName))
         if os.path.isfile(noteFile):
             noteConnection = sqlite3.connect(noteFile)
             noteCursor = noteConnection.cursor()
