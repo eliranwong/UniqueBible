@@ -150,13 +150,13 @@ class Converter:
 
     def stripESwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:
-            text = re.sub("<num>([GH][0-9]+?[a-z]*?)</num>", r" \1 ", text)
+            text = re.sub("[ ]*?<num>([GH][0-9]+?[a-z]*?)</num>", r" \1 ", text)
         else:
-            text = re.sub("<num>([GH][0-9]+?[a-z]*?)</num>", "", text)
+            text = re.sub("[ ]*?<num>([GH][0-9]+?[a-z]*?)</num>", "", text)
         if config.importDoNotStripMorphCode:
-            text = re.sub("<tvm>([^\n<>]*?)</tvm>", r" \1 ", text)
+            text = re.sub("[ ]*?<tvm>([^\n<>]*?)</tvm>", r" \1 ", text)
         else:
-            text = re.sub("<tvm>([^\n<>]*?)</tvm>", "", text)
+            text = re.sub("[ ]*?<tvm>([^\n<>]*?)</tvm>", "", text)
         searchReplace = (
             ("<p>|</p>|<h[0-9]+?>|</h[0-9]+?>|<sup>", " "),
             ("<not>.*?</not>|<[^\n<>]*?>", ""),
@@ -170,14 +170,14 @@ class Converter:
 
     def convertESwordBibleTags(self, text):
         searchReplace = (
-            ("<num>([GH][0-9]+?[a-z]*?)</num>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
-            ("<tvm>([^\n<>]*?)</tvm>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("[ ]*?<num>([GH][0-9]+?[a-z]*?)</num>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
+            ("[ ]*?<tvm>([^\n<>]*?)</tvm>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
             ("<red>", "<woj>"),
             ("</red>", "</woj>"),
             ("<blu>", "<esblu>"),
             ("</blu>", "</esblu>"),
             ("</ref><ref", "</ref>; <ref"),
-            ("</ref></sup><sup><ref", "</ref> <ref"),
+            ("</ref></sup>[ ]*?<sup><ref", "</ref> <ref"),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
