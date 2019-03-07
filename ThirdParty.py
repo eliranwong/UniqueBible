@@ -538,7 +538,7 @@ class Converter:
             text = re.sub(search, replace, text)
         text, notes = self.convertMySwordRfTag(text)
         text = re.sub("</ref><ref", "</ref>; <ref", text)
-        text = re.sub("</ref></sup><sup><ref", "</ref> <ref", text)
+        text = re.sub("</ref></sup>[ ]*?<sup><ref", "</ref> <ref", text)
         text = text.strip()
         return (text, notes)
 
@@ -852,7 +852,7 @@ class Converter:
 
     def stripMyBibleBibleTags(self, text, book, strong_numbers_prefix):
         if config.importDoNotStripStrongNo:
-            if book >= 470 or strong_numbers_prefix == "G":
+            if book >= 40 or strong_numbers_prefix == "G":
                 text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" G\1 ", text)
             else:
                 text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" H\1 ", text)
@@ -874,7 +874,7 @@ class Converter:
         return text
 
     def convertMyBibleBibleTags(self, text, book, strong_numbers_prefix):
-        if book >= 470 or strong_numbers_prefix == "G":
+        if book >= 40 or strong_numbers_prefix == "G":
             text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}G\1{0})'>G\1</ref></sup>".format('"'), text)
         else:
             text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}H\1{0})'>H\1</ref></sup>".format('"'), text)
@@ -887,14 +887,14 @@ class Converter:
             ("<n>", "<mbn>"),
             ("</n>", "</mbn>"),
             ("<t>", "<br>&emsp;&emsp;"),
-            ("</t>", ""),
+            ("</t>", "<br>"),
             ("<h>(.*?)</h>", r"<u><b>\1</b></u><br><br>"),
             ("<br/>", "<br>"),
             ("[ ]+?<br>", "<br>"),
             ("<br><br><br><br><br>|<br><br><br><br>|<br><br><br>", "<br><br>"),
             ("</b></u><br><br><u><b>", "</b></u><br><u><b>"),
             ("</ref><ref", "</ref>; <ref"),
-            ("</ref></sup><sup><ref", "</ref> <ref"),
+            ("</ref></sup>[ ]*?<sup><ref", "</ref> <ref"),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
