@@ -26,7 +26,6 @@ class MainWindow(QMainWindow):
 
         self.create_menu()
         self.setupToolBar()
-        self.setupSecondToolBar()
         self.setupBaseUrl()
 
         self.mainView = None
@@ -173,9 +172,13 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
-        menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowToolBar))
-        menu3.addAction(QAction("&Second Toolbar [Show / Hide]", self, triggered=self.hideShowSecondToolBar))
-        menu3.addAction(QAction("&Third Toolbar [Show / Hide]", self, triggered=self.hideShowThirdToolBar))
+        menu3.addAction(QAction("&Show All Toolbars", self, triggered=self.showAllToolBar))
+        menu3.addAction(QAction("&Single Toolbar [On / Off]", self, shortcut = "Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        menu3.addSeparator()
+        menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
+        menu3.addAction(QAction("&Secondary Toolbar [Show / Hide]", self, triggered=self.hideShowSecondaryToolBar))
+        menu3.addAction(QAction("&Left Toolbar [Show / Hide]", self, triggered=self.hideShowLeftToolBar))
+        menu3.addAction(QAction("&Right Toolbar [Show / Hide]", self, triggered=self.hideShowRightToolBar))
         menu3.addSeparator()
         menu3.addAction(QAction("&Landscape / Portrait Mode", self, shortcut = "Ctrl+L", triggered=self.switchLandscapeMode))
         menu3.addSeparator()
@@ -188,6 +191,7 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Smaller Font", self, shortcut = "Ctrl+-", triggered=self.smallerFont))
         menu3.addSeparator()
         menu3.addAction(QAction("&Formatted / Plain Bibles", self, shortcut = "Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu3.addAction(QAction("&Add Sub-headings to Plain Bibles", self, triggered=self.enableSubheadingButtonClicked))
 
         menu8 = self.menuBar().addMenu("&History")
         menu8.addAction(QAction("&Main", self, shortcut = "Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -285,173 +289,126 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
-        self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle("Main Toolbar")
-        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.toolBar)
 
-        backButton = QPushButton()
-        backButton.setToolTip("Left View Previous History Record")
-        leftButtonFile = os.path.join("htmlResources", "left.png")
-        backButton.setIcon(QIcon(leftButtonFile))
-        backButton.clicked.connect(self.back)
-        self.toolBar.addWidget(backButton)
-
-        mainHistoryButton = QPushButton()
-        mainHistoryButton.setToolTip("Left View History")
-        mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
-        mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
-        mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
-        self.toolBar.addWidget(mainHistoryButton)
-
-        forwardButton = QPushButton()
-        forwardButton.setToolTip("Left View Next History Record")
-        rightButtonFile = os.path.join("htmlResources", "right.png")
-        forwardButton.setIcon(QIcon(rightButtonFile))
-        forwardButton.clicked.connect(self.forward)
-        self.toolBar.addWidget(forwardButton)
-
-        self.toolBar.addSeparator()
-
-        self.textCommandLineEdit = QLineEdit()
-        self.textCommandLineEdit.setToolTip("Command Line")
-        self.textCommandLineEdit.setMinimumWidth(100)
-        self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.toolBar.addWidget(self.textCommandLineEdit)
-
-        self.toolBar.addSeparator()
-
-        self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-        self.toolBar.addWidget(self.enableParagraphButton)
-
-        self.enableSubheadingButton = QPushButton()
-        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
-        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
-        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
-        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
-        self.toolBar.addWidget(self.enableSubheadingButton)
-
-        self.toolBar.addSeparator()
-
-        fontMinusButton = QPushButton()
-        fontMinusButton.setToolTip("Smaller Font Size")
-        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
-        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
-        fontMinusButton.clicked.connect(self.smallerFont)
-        self.toolBar.addWidget(fontMinusButton)
-
-        fontPlusButton = QPushButton()
-        fontPlusButton.setToolTip("Larger Font Size")
-        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
-        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
-        fontPlusButton.clicked.connect(self.largerFont)
-        self.toolBar.addWidget(fontPlusButton)
-
-        self.toolBar.addSeparator()
-
-        instantButton = QPushButton()
-        instantButton.setToolTip("Show / Hide Bottom View")
-        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        instantButton.setIcon(QIcon(instantButtonFile))
-        instantButton.clicked.connect(self.instant)
-        self.toolBar.addWidget(instantButton)
-
-        self.enableInstantButton = QPushButton()
-        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
-        self.toolBar.addWidget(self.enableInstantButton)
-
-        self.toolBar.addSeparator()
-
-        studyBackButton = QPushButton()
-        studyBackButton.setToolTip("Right View Previous History Record")
-        leftButtonFile = os.path.join("htmlResources", "left.png")
-        studyBackButton.setIcon(QIcon(leftButtonFile))
-        studyBackButton.clicked.connect(self.studyBack)
-        self.toolBar.addWidget(studyBackButton)
-
-        studyHistoryButton = QPushButton()
-        studyHistoryButton.setToolTip("Right View History")
-        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
-        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
-        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
-        self.toolBar.addWidget(studyHistoryButton)
-
-        studyForwardButton = QPushButton()
-        studyForwardButton.setToolTip("Right View Next History Record")
-        rightButtonFile = os.path.join("htmlResources", "right.png")
-        studyForwardButton.setIcon(QIcon(rightButtonFile))
-        studyForwardButton.clicked.connect(self.studyForward)
-        self.toolBar.addWidget(studyForwardButton)
-
-        self.toolBar.addSeparator()
-
-        parallelButton = QPushButton()
-        parallelButton.setToolTip("Resize / Hide Right View")
-        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        parallelButton.setIcon(QIcon(parallelButtonFile))
-        parallelButton.clicked.connect(self.parallel)
-        self.toolBar.addWidget(parallelButton)
-
-        # put the secondary toolbar below the main one
-        self.addToolBarBreak()
-
-    def setupSecondToolBar(self):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
-        self.secondToolBar = QToolBar()
-        self.secondToolBar.setWindowTitle("Second Toolbar")
-        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.secondToolBar)
+        self.firstToolBar = QToolBar()
+        self.firstToolBar.setWindowTitle("Main Toolbar")
+        #self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        #self.addToolBar(Qt.LeftToolBarArea, self.firstToolBar)
+        self.addToolBar(self.firstToolBar)
 
-        textMenuButton = QPushButton()
-        textMenuButton.setToolTip("Left View Bible Menu")
-        textMenuButtonFile = os.path.join("htmlResources", "bible.png")
-        textMenuButton.setIcon(QIcon(textMenuButtonFile))
-        textMenuButton.clicked.connect(self.mainTextMenu)
-        self.secondToolBar.addWidget(textMenuButton)
+        self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
+        self.mainTextMenuButton.setToolTip("Left View Bible Menu")
+        self.mainTextMenuButton.setStyleSheet(textButtonStyle)
+        self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
+        self.firstToolBar.addWidget(self.mainTextMenuButton)
 
-        self.mainRefButton = QPushButton(self.verseReference("main"))
+        self.mainRefButton = QPushButton(self.verseReference("main")[1])
         self.mainRefButton.setToolTip("Left View Active Verse Features")
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
-        self.secondToolBar.addWidget(self.mainRefButton)
+        self.firstToolBar.addWidget(self.mainRefButton)
 
         openChapterNoteButton = QPushButton()
         openChapterNoteButton.setToolTip("Left View Chapter Notes")
         openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
         openChapterNoteButton.clicked.connect(self.openMainChapterNote)
-        self.secondToolBar.addWidget(openChapterNoteButton)
+        self.firstToolBar.addWidget(openChapterNoteButton)
 
         openVerseNoteButton = QPushButton()
         openVerseNoteButton.setToolTip("Left View Verse Notes")
         openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
-        self.secondToolBar.addWidget(openVerseNoteButton)
+        self.firstToolBar.addWidget(openVerseNoteButton)
 
         searchBibleButton = QPushButton()
         searchBibleButton.setToolTip("Search Last Opened Bible on Left View")
         searchBibleButtonFile = os.path.join("htmlResources", "search.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
-        self.secondToolBar.addWidget(searchBibleButton)
+        self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
         searchBibleButton.setToolTip("Search Last Opened Bible on Left View with OHGB")
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displayISearchBibleCommand)
-        self.secondToolBar.addWidget(searchBibleButton)
+        self.firstToolBar.addWidget(searchBibleButton)
+
+        self.firstToolBar.addSeparator()
+
+        self.textCommandLineEdit = QLineEdit()
+        self.textCommandLineEdit.setToolTip("Command Line")
+        self.textCommandLineEdit.setMinimumWidth(100)
+        self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
+        self.firstToolBar.addWidget(self.textCommandLineEdit)
+
+        self.firstToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Show / Hide Additional Toolbars")
+        actionButtonFile = os.path.join("htmlResources", "toolbar.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.hideShowAdditionalToolBar)
+        self.firstToolBar.addWidget(actionButton)
+
+        self.addToolBarBreak()
+
+        self.secondToolBar = QToolBar()
+        self.secondToolBar.setWindowTitle("Secondary Toolbar")
+        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.secondToolBar)
+
+        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
+        self.studyTextMenuButton.setToolTip("Right View Bible Menu")
+        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
+        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
+        self.secondToolBar.addWidget(self.studyTextMenuButton)
+
+        self.studyRefButton = QPushButton(self.verseReference("study")[1])
+        self.studyRefButton.setToolTip("Right View Active Verse Features")
+        self.studyRefButton.setStyleSheet(textButtonStyle)
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.secondToolBar.addWidget(self.studyRefButton)
+
+        openChapterNoteButton = QPushButton()
+        openChapterNoteButton.setToolTip("Right View Chapter Notes")
+        openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
+        openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
+        openChapterNoteButton.clicked.connect(self.openStudyChapterNote)
+        self.secondToolBar.addWidget(openChapterNoteButton)
+
+        openVerseNoteButton = QPushButton()
+        openVerseNoteButton.setToolTip("Right View Verse Notes")
+        openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
+        openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
+        openVerseNoteButton.clicked.connect(self.openStudyVerseNote)
+        self.secondToolBar.addWidget(openVerseNoteButton)
+
+        searchStudyBibleButton = QPushButton()
+        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View")
+        searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
+        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
+        searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
+        self.secondToolBar.addWidget(searchStudyBibleButton)
+
+        searchStudyBibleButton = QPushButton()
+        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View with OHGB")
+        searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
+        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
+        searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
+        self.secondToolBar.addWidget(searchStudyBibleButton)
 
         self.secondToolBar.addSeparator()
+
+        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+        self.commentaryRefButton.setToolTip("Commentary Menu")
+        self.commentaryRefButton.setStyleSheet(textButtonStyle)
+        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
+        self.secondToolBar.addWidget(self.commentaryRefButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Commentary")
@@ -460,215 +417,288 @@ class MainWindow(QMainWindow):
         actionButton.clicked.connect(self.runCOMMENTARY)
         self.secondToolBar.addWidget(actionButton)
 
-        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setToolTip("Commentary Menu")
-        self.commentaryRefButton.setStyleSheet(textButtonStyle)
-        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
-        self.secondToolBar.addWidget(self.commentaryRefButton)
-
         self.secondToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Smart Indexes")
-        actionButtonFile = os.path.join("htmlResources", "indexes.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runINDEX)
-        self.secondToolBar.addWidget(actionButton)
-
-        self.secondToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Cross References")
-        actionButtonFile = os.path.join("htmlResources", "cross_reference.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runCROSSREFERENCE)
-        self.secondToolBar.addWidget(actionButton)
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Treasury of Scripture Knowledge (Enhanced)")
-        actionButtonFile = os.path.join("htmlResources", "treasure.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runTSKE)
-        self.secondToolBar.addWidget(actionButton)
-
-        self.secondToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Compare All Versions")
-        actionButtonFile = os.path.join("htmlResources", "compare_with.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runCOMPARE)
-        self.secondToolBar.addWidget(actionButton)
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Compare / Parallel with ...")
-        actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.mainRefButtonClicked)
-        self.secondToolBar.addWidget(actionButton)
-
-        self.secondToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Translations")
-        actionButtonFile = os.path.join("htmlResources", "translations.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runTRANSLATION)
-        self.secondToolBar.addWidget(actionButton)
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Discourse Features")
-        actionButtonFile = os.path.join("htmlResources", "discourse.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runDISCOURSE)
-        self.secondToolBar.addWidget(actionButton)
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Words")
-        actionButtonFile = os.path.join("htmlResources", "words.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runWORDS)
-        self.secondToolBar.addWidget(actionButton)
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Translations + Discourse Features + Words")
-        actionButtonFile = os.path.join("htmlResources", "combo.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runCOMBO)
-        self.secondToolBar.addWidget(actionButton)
-
-        self.secondToolBar.addSeparator()
-
-        self.addToolBarBreak()
-
-        self.thirdToolBar = QToolBar()
-        self.thirdToolBar.setWindowTitle("Third Toolbar")
-        #self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.thirdToolBar)
-
-        textMenuButton = QPushButton()
-        textMenuButton.setToolTip("Right View Bible Menu")
-        textMenuButtonFile = os.path.join("htmlResources", "bible.png")
-        textMenuButton.setIcon(QIcon(textMenuButtonFile))
-        textMenuButton.clicked.connect(self.studyTextMenu)
-        self.thirdToolBar.addWidget(textMenuButton)
-
-        self.studyRefButton = QPushButton(self.verseReference("study"))
-        self.studyRefButton.setToolTip("Right View Active Verse Features")
-        self.studyRefButton.setStyleSheet(textButtonStyle)
-        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.thirdToolBar.addWidget(self.studyRefButton)
-
-        openChapterNoteButton = QPushButton()
-        openChapterNoteButton.setToolTip("Right View Chapter Notes")
-        openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
-        openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
-        openChapterNoteButton.clicked.connect(self.openStudyChapterNote)
-        self.thirdToolBar.addWidget(openChapterNoteButton)
-
-        openVerseNoteButton = QPushButton()
-        openVerseNoteButton.setToolTip("Right View Verse Notes")
-        openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
-        openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
-        openVerseNoteButton.clicked.connect(self.openStudyVerseNote)
-        self.thirdToolBar.addWidget(openVerseNoteButton)
-
-        searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View")
-        searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
-        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
-        searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
-        self.thirdToolBar.addWidget(searchStudyBibleButton)
-
-        searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View with OHGB")
-        searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
-        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
-        searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
-        self.thirdToolBar.addWidget(searchStudyBibleButton)
-
-        self.thirdToolBar.addSeparator()
-
-        newFileButton = QPushButton()
-        newFileButton.setToolTip("Create a Topical Note")
-        newFileButtonFile = os.path.join("htmlResources", "newfile.png")
-        newFileButton.setIcon(QIcon(newFileButtonFile))
-        newFileButton.clicked.connect(self.createNewNoteFile)
-        self.thirdToolBar.addWidget(newFileButton)
-
-        openFileButton = QPushButton()
-        openFileButton.setToolTip("Open Topical Notes")
-        openFileButtonFile = os.path.join("htmlResources", "open.png")
-        openFileButton.setIcon(QIcon(openFileButtonFile))
-        openFileButton.clicked.connect(self.openTextFileDialog)
-        self.thirdToolBar.addWidget(openFileButton)
-
-        self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.externalFileButton.setToolTip("Read Topical Notes")
-        self.externalFileButton.setStyleSheet(textButtonStyle)
-        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
-        self.thirdToolBar.addWidget(self.externalFileButton)
-
-        editExternalFileButton = QPushButton()
-        editExternalFileButton.setToolTip("Edit Topical Notes")
-        editExternalFileButtonFile = os.path.join("htmlResources", "edit.png")
-        editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
-        editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
-        self.thirdToolBar.addWidget(editExternalFileButton)
-
-        self.thirdToolBar.addSeparator()
 
         self.bookButton = QPushButton(config.book)
         self.bookButton.setToolTip("Books")
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
-        self.thirdToolBar.addWidget(self.bookButton)
+        self.secondToolBar.addWidget(self.bookButton)
 
         searchBookButton = QPushButton()
         searchBookButton.setToolTip("Search Books")
         searchBookButtonFile = os.path.join("htmlResources", "search.png")
         searchBookButton.setIcon(QIcon(searchBookButtonFile))
         searchBookButton.clicked.connect(self.displaySearchBookCommand)
-        self.thirdToolBar.addWidget(searchBookButton)
+        self.secondToolBar.addWidget(searchBookButton)
 
-        self.thirdToolBar.addSeparator()
+        self.secondToolBar.addSeparator()
+
+        newFileButton = QPushButton()
+        newFileButton.setToolTip("Create a Topical Note")
+        newFileButtonFile = os.path.join("htmlResources", "newfile.png")
+        newFileButton.setIcon(QIcon(newFileButtonFile))
+        newFileButton.clicked.connect(self.createNewNoteFile)
+        self.secondToolBar.addWidget(newFileButton)
+
+        openFileButton = QPushButton()
+        openFileButton.setToolTip("Open Topical Notes")
+        openFileButtonFile = os.path.join("htmlResources", "open.png")
+        openFileButton.setIcon(QIcon(openFileButtonFile))
+        openFileButton.clicked.connect(self.openTextFileDialog)
+        self.secondToolBar.addWidget(openFileButton)
+
+        self.externalFileButton = QPushButton(self.getLastExternalFileName())
+        self.externalFileButton.setToolTip("Read Topical Notes")
+        self.externalFileButton.setStyleSheet(textButtonStyle)
+        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
+        self.secondToolBar.addWidget(self.externalFileButton)
+
+        editExternalFileButton = QPushButton()
+        editExternalFileButton.setToolTip("Edit Topical Notes")
+        editExternalFileButtonFile = os.path.join("htmlResources", "edit.png")
+        editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
+        editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
+        self.secondToolBar.addWidget(editExternalFileButton)
+
+        self.secondToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Landscape / Portrait Mode")
+        actionButtonFile = os.path.join("htmlResources", "portrait.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.switchLandscapeMode)
+        self.secondToolBar.addWidget(actionButton)
+
+        parallelButton = QPushButton()
+        parallelButton.setToolTip("Resize / Hide Right View")
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        parallelButton.setIcon(QIcon(parallelButtonFile))
+        parallelButton.clicked.connect(self.parallel)
+        self.secondToolBar.addWidget(parallelButton)
+
+        self.secondToolBar.addSeparator()
+
+#        self.addToolBarBreak()
+#
+#        self.toolBar = QToolBar()
+#        self.toolBar.setWindowTitle("Main Toolbar")
+#        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+#        self.addToolBar(self.toolBar)
+#
+#        fontPlusButton = QPushButton()
+#        fontPlusButton.setToolTip("Larger Font Size")
+#        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
+#        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+#        fontPlusButton.clicked.connect(self.largerFont)
+#        self.toolBar.addWidget(fontPlusButton)
+#
+#        fontMinusButton = QPushButton()
+#        fontMinusButton.setToolTip("Smaller Font Size")
+#        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
+#        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+#        fontMinusButton.clicked.connect(self.smallerFont)
+#        self.toolBar.addWidget(fontMinusButton)
+#
+#        self.toolBar.addSeparator()
+#
+#        self.enableParagraphButton = QPushButton()
+#        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
+#        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+#        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+#        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+#        self.toolBar.addWidget(self.enableParagraphButton)
+#
+#        self.enableSubheadingButton = QPushButton()
+#        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
+#        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
+#        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+#        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
+#        self.toolBar.addWidget(self.enableSubheadingButton)
+#
+#        self.toolBar.addSeparator()
+#
+#        instantButton = QPushButton()
+#        instantButton.setToolTip("Show / Hide Bottom View")
+#        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+#        instantButton.setIcon(QIcon(instantButtonFile))
+#        instantButton.clicked.connect(self.instant)
+#        self.toolBar.addWidget(instantButton)
+#
+#        self.enableInstantButton = QPushButton()
+#        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
+#        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+#        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+#        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+#        self.toolBar.addWidget(self.enableInstantButton)
+#
+#        self.toolBar.addSeparator()
+
+        self.leftToolBar = QToolBar()
+        self.leftToolBar.setWindowTitle("Left Toolbar")
+        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
+
+        backButton = QPushButton()
+        backButton.setToolTip("Left View Previous History Record")
+        leftButtonFile = os.path.join("htmlResources", "left.png")
+        backButton.setIcon(QIcon(leftButtonFile))
+        backButton.clicked.connect(self.back)
+        self.leftToolBar.addWidget(backButton)
+
+        mainHistoryButton = QPushButton()
+        mainHistoryButton.setToolTip("Left View History")
+        mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
+        mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
+        self.leftToolBar.addWidget(mainHistoryButton)
+
+        forwardButton = QPushButton()
+        forwardButton.setToolTip("Left View Next History Record")
+        rightButtonFile = os.path.join("htmlResources", "right.png")
+        forwardButton.setIcon(QIcon(rightButtonFile))
+        forwardButton.clicked.connect(self.forward)
+        self.leftToolBar.addWidget(forwardButton)
+
+        self.leftToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Compare All Versions")
+        actionButtonFile = os.path.join("htmlResources", "compare_with.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runCOMPARE)
+        self.leftToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Compare / Parallel with ...")
+        actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.mainRefButtonClicked)
+        self.leftToolBar.addWidget(actionButton)
+
+        self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
         actionButton.setToolTip("Marvel Original Bible")
         actionButtonFile = os.path.join("htmlResources", "original.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMOB)
-        self.thirdToolBar.addWidget(actionButton)
+        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Marvel Interlinear Bible")
         actionButtonFile = os.path.join("htmlResources", "interlinear.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMIB)
-        self.thirdToolBar.addWidget(actionButton)
+        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Marvel Trilingual Bible")
         actionButtonFile = os.path.join("htmlResources", "trilingual.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMTB)
-        self.thirdToolBar.addWidget(actionButton)
+        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Marvel Parallel Bible")
         actionButtonFile = os.path.join("htmlResources", "line.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMPB)
-        self.thirdToolBar.addWidget(actionButton)
+        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Marvel Annotated Bible")
         actionButtonFile = os.path.join("htmlResources", "annotated.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMAB)
-        self.thirdToolBar.addWidget(actionButton)
+        self.leftToolBar.addWidget(actionButton)
 
-        self.thirdToolBar.addSeparator()
+        self.leftToolBar.addSeparator()
+
+        self.rightToolBar = QToolBar()
+        self.rightToolBar.setWindowTitle("Right Toolbar")
+        #self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
+
+        studyBackButton = QPushButton()
+        studyBackButton.setToolTip("Right View Previous History Record")
+        leftButtonFile = os.path.join("htmlResources", "left.png")
+        studyBackButton.setIcon(QIcon(leftButtonFile))
+        studyBackButton.clicked.connect(self.studyBack)
+        self.rightToolBar.addWidget(studyBackButton)
+
+        studyHistoryButton = QPushButton()
+        studyHistoryButton.setToolTip("Right View History")
+        studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
+        studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
+        studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
+        self.rightToolBar.addWidget(studyHistoryButton)
+
+        studyForwardButton = QPushButton()
+        studyForwardButton.setToolTip("Right View Next History Record")
+        rightButtonFile = os.path.join("htmlResources", "right.png")
+        studyForwardButton.setIcon(QIcon(rightButtonFile))
+        studyForwardButton.clicked.connect(self.studyForward)
+        self.rightToolBar.addWidget(studyForwardButton)
+
+        self.rightToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Smart Indexes")
+        actionButtonFile = os.path.join("htmlResources", "indexes.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runINDEX)
+        self.rightToolBar.addWidget(actionButton)
+
+        self.rightToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Cross References")
+        actionButtonFile = os.path.join("htmlResources", "cross_reference.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runCROSSREFERENCE)
+        self.rightToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Treasury of Scripture Knowledge (Enhanced)")
+        actionButtonFile = os.path.join("htmlResources", "treasure.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runTSKE)
+        self.rightToolBar.addWidget(actionButton)
+
+        self.rightToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Translations")
+        actionButtonFile = os.path.join("htmlResources", "translations.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runTRANSLATION)
+        self.rightToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Discourse Features")
+        actionButtonFile = os.path.join("htmlResources", "discourse.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runDISCOURSE)
+        self.rightToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Words")
+        actionButtonFile = os.path.join("htmlResources", "words.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runWORDS)
+        self.rightToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Translations + Discourse Features + Words")
+        actionButtonFile = os.path.join("htmlResources", "combo.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runCOMBO)
+        self.rightToolBar.addWidget(actionButton)
+
+        self.rightToolBar.addSeparator()
+
+        self.setAdditionalToolBar()
 
     # install marvel data
     def installMarvelBibles(self):
@@ -806,7 +836,7 @@ class MainWindow(QMainWindow):
             # open the text file with webview
             fullOutputPath = os.path.abspath(outputFile)
             self.mainView.load(QUrl.fromLocalFile(fullOutputPath))
-        reference = self.verseReference("main")
+        reference = " - ".join(self.verseReference("main"))
         if self.textCommandParser.lastKeyword in ("compare", "parallel"):
             *_, reference2 = reference.split(" - ")
             reference = "{0} - {1}".format(self.textCommandParser.lastKeyword, reference2)
@@ -1175,23 +1205,53 @@ class MainWindow(QMainWindow):
             self.onTaggingCompleted()
 
     # Actions - hide / show tool bars
-    def hideShowToolBar(self):
-        if self.toolBar.isVisible():
-            self.toolBar.hide()
+    def hideShowMainToolBar(self):
+        if self.firstToolBar.isVisible():
+            self.firstToolBar.hide()
         else:
-            self.toolBar.show()
+            self.firstToolBar.show()
 
-    def hideShowSecondToolBar(self):
+    def hideShowSecondaryToolBar(self):
         if self.secondToolBar.isVisible():
             self.secondToolBar.hide()
         else:
             self.secondToolBar.show()
 
-    def hideShowThirdToolBar(self):
-        if self.thirdToolBar.isVisible():
-            self.thirdToolBar.hide()
+    def hideShowLeftToolBar(self):
+        if self.leftToolBar.isVisible():
+            self.leftToolBar.hide()
         else:
-            self.thirdToolBar.show()
+            self.leftToolBar.show()
+
+    def hideShowRightToolBar(self):
+        if self.rightToolBar.isVisible():
+            self.rightToolBar.hide()
+        else:
+            self.rightToolBar.show()
+
+    def hideShowAdditionalToolBar(self):
+        if config.singleToolBar:
+            config.singleToolBar = False
+        else:
+            config.singleToolBar = True
+        self.setAdditionalToolBar()
+
+    def setAdditionalToolBar(self):
+        if config.singleToolBar:
+            self.secondToolBar.show()
+            self.leftToolBar.show()
+            self.rightToolBar.show()
+        else:
+            self.secondToolBar.hide()
+            self.leftToolBar.hide()
+            self.rightToolBar.hide()
+
+    def showAllToolBar(self):
+        config.singleToolBar = True
+        self.firstToolBar.show()
+        self.secondToolBar.show()
+        self.leftToolBar.show()
+        self.rightToolBar.show()
 
     # Actions - book features
     def openBookMenu(self):
@@ -1441,19 +1501,21 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, False, "study")
 
     def updateMainRefButton(self):
-        self.mainRefButton.setText(self.verseReference("main"))
+        self.mainTextMenuButton.setText(self.verseReference("main")[0])
+        self.mainRefButton.setText(self.verseReference("main")[1])
 
     def updateStudyRefButton(self):
-        self.studyRefButton.setText(self.verseReference("study"))
+        self.studyTextMenuButton.setText(self.verseReference("study")[0])
+        self.studyRefButton.setText(self.verseReference("study")[1])
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
 
     def verseReference(self, view):
         if view == "main":
-            return "{0} - {1}".format(config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+            return (config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         elif view == "study":
-            return "{0} - {1}".format(config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
+            return (config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
         elif view == "commentary":
             return "{0} - {1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
 
