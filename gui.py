@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
 
         menu3 = self.menuBar().addMenu("&Display")
         menu3.addAction(QAction("&Show All Toolbars", self, triggered=self.showAllToolBar))
+        menu3.addAction(QAction("&Hide All Toolbars", self, triggered=self.hideAllToolBar))
         menu3.addAction(QAction("&Single Toolbar [On / Off]", self, shortcut = "Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu3.addSeparator()
         menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
@@ -1237,6 +1238,7 @@ class MainWindow(QMainWindow):
         self.setAdditionalToolBar()
 
     def setAdditionalToolBar(self):
+        self.firstToolBar.show()
         if config.singleToolBar:
             self.secondToolBar.show()
             self.leftToolBar.show()
@@ -1252,6 +1254,13 @@ class MainWindow(QMainWindow):
         self.secondToolBar.show()
         self.leftToolBar.show()
         self.rightToolBar.show()
+
+    def hideAllToolBar(self):
+        config.singleToolBar = False
+        self.firstToolBar.hide()
+        self.secondToolBar.hide()
+        self.leftToolBar.hide()
+        self.rightToolBar.hide()
 
     # Actions - book features
     def openBookMenu(self):
