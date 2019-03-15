@@ -83,6 +83,9 @@ class MainWindow(QMainWindow):
         if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
             self.textCommandLineEdit.setFocus()
             return True
+        elif event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Escape:
+            self.setNoToolBar()
+            return True
         return QWidget.event(self, event)
 
     # manage main page
@@ -172,8 +175,7 @@ class MainWindow(QMainWindow):
         menu2.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
 
         menu3 = self.menuBar().addMenu("&Display")
-        menu3.addAction(QAction("&Show All Toolbars", self, triggered=self.showAllToolBar))
-        menu3.addAction(QAction("&Hide All Toolbars", self, triggered=self.hideAllToolBar))
+        menu3.addAction(QAction("&All Toolbars [Show / Hide]", self, shortcut = "Ctrl+J", triggered=self.setNoToolBar))
         menu3.addAction(QAction("&Single Toolbar [On / Off]", self, shortcut = "Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu3.addSeparator()
         menu3.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
@@ -1239,6 +1241,7 @@ class MainWindow(QMainWindow):
 
     def setAdditionalToolBar(self):
         self.firstToolBar.show()
+        config.noToolBar = False
         if config.singleToolBar:
             self.secondToolBar.show()
             self.leftToolBar.show()
@@ -1247,6 +1250,14 @@ class MainWindow(QMainWindow):
             self.secondToolBar.hide()
             self.leftToolBar.hide()
             self.rightToolBar.hide()
+
+    def setNoToolBar(self):
+        if config.noToolBar:
+            config.noToolBar = False
+            self.showAllToolBar()
+        else:
+            config.noToolBar = True
+            self.hideAllToolBar()
 
     def showAllToolBar(self):
         config.singleToolBar = True
