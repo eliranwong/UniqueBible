@@ -1622,28 +1622,29 @@ class BibleVerseParser:
         # open file and read input text
         try:
             f = open(inputFile,'r')
+            newData = f.read()
+            f.close()
         except:
             print("File not found! Please make sure if you enter filename correctly and try again.")
-        newData = f.read()
-        f.close()
 
-        # parse the opened text
-        newData = self.parseText(newData)
-        print("Finished parsing file", "\""+inputFile+"\".")
-
-        # standardise the format of bible verse references
-        # standardisation is running only if user's answer is 'YES' [case-insensitive]
-        if self.standardisation.lower() == 'yes':
-            newData = self.standardReference(newData)
-            print("Verse reference format in file", "\""+inputFile+"\"", "had been standardised.")
-        else:
-            print("Verse reference format used in file", "\""+inputFile+"\"", "is kept.")
-
-        # save output text in a separate file
-        f = open(outputFile,'w')
-        f.write(newData)
-        f.close()
-        #print("Output file is saved as \""+outputFile+"\"")
+        if newData:
+            # parse the opened text
+            newData = self.parseText(newData)
+            print("Finished parsing file", "\""+inputFile+"\".")
+    
+            # standardise the format of bible verse references
+            # standardisation is running only if user's answer is 'YES' [case-insensitive]
+            if self.standardisation.lower() == 'yes':
+                newData = self.standardReference(newData)
+                print("Verse reference format in file", "\""+inputFile+"\"", "had been standardised.")
+            else:
+                print("Verse reference format used in file", "\""+inputFile+"\"", "is kept.")
+    
+            # save output text in a separate file
+            f = open(outputFile,'w')
+            f.write(newData)
+            f.close()
+            #print("Output file is saved as \""+outputFile+"\"")
 
     def parseFilesInFolder(self, folder):
         # create an output directory

@@ -26,6 +26,7 @@ class MainWindow(QMainWindow):
 
         self.create_menu()
         self.setupToolBar()
+        self.setAdditionalToolBar()
         self.setupBaseUrl()
 
         self.mainView = None
@@ -352,7 +353,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip("Show / Hide Additional Toolbars")
+        actionButton.setToolTip("Show / Hide Other Toolbars")
         actionButtonFile = os.path.join("htmlResources", "toolbar.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.hideShowAdditionalToolBar)
@@ -413,13 +414,6 @@ class MainWindow(QMainWindow):
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
 
-        actionButton = QPushButton()
-        actionButton.setToolTip("Commentary")
-        actionButtonFile = os.path.join("htmlResources", "commentary.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.runCOMMENTARY)
-        self.secondToolBar.addWidget(actionButton)
-
         self.secondToolBar.addSeparator()
 
         self.bookButton = QPushButton(config.book)
@@ -428,12 +422,12 @@ class MainWindow(QMainWindow):
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
-        searchBookButton = QPushButton()
-        searchBookButton.setToolTip("Search Books")
-        searchBookButtonFile = os.path.join("htmlResources", "search.png")
-        searchBookButton.setIcon(QIcon(searchBookButtonFile))
-        searchBookButton.clicked.connect(self.displaySearchBookCommand)
-        self.secondToolBar.addWidget(searchBookButton)
+#        searchBookButton = QPushButton()
+#        searchBookButton.setToolTip("Search Books")
+#        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+#        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+#        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+#        self.secondToolBar.addWidget(searchBookButton)
 
         self.secondToolBar.addSeparator()
 
@@ -463,22 +457,6 @@ class MainWindow(QMainWindow):
         editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
         editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
         self.secondToolBar.addWidget(editExternalFileButton)
-
-        self.secondToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip("Landscape / Portrait Mode")
-        actionButtonFile = os.path.join("htmlResources", "portrait.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.switchLandscapeMode)
-        self.secondToolBar.addWidget(actionButton)
-
-        parallelButton = QPushButton()
-        parallelButton.setToolTip("Resize / Hide Right View")
-        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
-        parallelButton.setIcon(QIcon(parallelButtonFile))
-        parallelButton.clicked.connect(self.parallel)
-        self.secondToolBar.addWidget(parallelButton)
 
         self.secondToolBar.addSeparator()
 
@@ -562,6 +540,29 @@ class MainWindow(QMainWindow):
         forwardButton.setIcon(QIcon(rightButtonFile))
         forwardButton.clicked.connect(self.forward)
         self.leftToolBar.addWidget(forwardButton)
+
+        self.leftToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Preivous Chapter")
+        actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.previousMainChapter)
+        self.leftToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Main Passage")
+        actionButtonFile = os.path.join("htmlResources", "bible.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.openMainChapter)
+        self.leftToolBar.addWidget(actionButton)
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Next Chapter")
+        actionButtonFile = os.path.join("htmlResources", "nextChapter.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.nextMainChapter)
+        self.leftToolBar.addWidget(actionButton)
 
         self.leftToolBar.addSeparator()
 
@@ -653,6 +654,13 @@ class MainWindow(QMainWindow):
         actionButton.clicked.connect(self.runINDEX)
         self.rightToolBar.addWidget(actionButton)
 
+        actionButton = QPushButton()
+        actionButton.setToolTip("Commentary")
+        actionButtonFile = os.path.join("htmlResources", "commentary.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.runCOMMENTARY)
+        self.rightToolBar.addWidget(actionButton)
+
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
@@ -701,7 +709,21 @@ class MainWindow(QMainWindow):
 
         self.rightToolBar.addSeparator()
 
-        self.setAdditionalToolBar()
+        actionButton = QPushButton()
+        actionButton.setToolTip("Landscape / Portrait Mode")
+        actionButtonFile = os.path.join("htmlResources", "portrait.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.switchLandscapeMode)
+        self.rightToolBar.addWidget(actionButton)
+
+        parallelButton = QPushButton()
+        parallelButton.setToolTip("Resize / Hide Right View")
+        parallelButtonFile = os.path.join("htmlResources", "parallel.png")
+        parallelButton.setIcon(QIcon(parallelButtonFile))
+        parallelButton.clicked.connect(self.parallel)
+        self.rightToolBar.addWidget(parallelButton)
+
+        self.rightToolBar.addSeparator()
 
     # install marvel data
     def installMarvelBibles(self):
@@ -1499,6 +1521,10 @@ class MainWindow(QMainWindow):
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
 
+    def openMainChapter(self):
+        newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        self.textCommandChanged(newTextCommand, "main")
+
     # Actions - recently opened bibles & commentary
     def mainTextMenu(self):
         newTextCommand = "_menu:::"
@@ -1883,6 +1909,8 @@ class CentralWidget(QWidget):
         self.studyView.addTab(WebEngineView(self, "study"), "Tool1")
         self.studyView.addTab(WebEngineView(self, "study"), "Tool2")
         self.studyView.addTab(WebEngineView(self, "study"), "Tool3")
+        self.studyView.addTab(WebEngineView(self, "study"), "Tool4")
+        self.studyView.addTab(WebEngineView(self, "study"), "Tool5")
 
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
