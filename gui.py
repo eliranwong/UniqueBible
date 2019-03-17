@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
 
         self.mainView = None
         self.studyView = None
+        self.noteEditor = None
         self.centralWidget = CentralWidget(self)
         self.instantView = self.centralWidget.instantView
         self.instantPage = self.instantView.page()
@@ -61,6 +62,17 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    def closeEvent(self, event):
+        if self.noteEditor:
+            if self.noteEditor.close():
+                event.accept()
+                qApp.quit()
+            else:
+                event.ignore()
+        else:
+            event.accept()
+            qApp.quit()
 
     # check migration
     def checkMigration(self):
@@ -1970,7 +1982,7 @@ class WebEngineView(QWebEngineView):
         self.name = name
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.selectionChanged.connect(self.updateContextMenu)
-        self.addMenuActions();
+        self.addMenuActions()
 
     def updateContextMenu(self):
         text = self.getText()
@@ -2201,7 +2213,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.addMenuActions();
+        self.addMenuActions()
 
     def popoverTextCommandChanged(self, newTextCommand):
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
