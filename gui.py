@@ -108,12 +108,14 @@ class MainWindow(QMainWindow):
         self.mainPage = self.mainView.currentWidget().page()
         self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
+        self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     def setStudyPage(self):
         # study page changes as tab is changed.
         self.studyPage = self.studyView.currentWidget().page()
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
         self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
+        self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     # manage latest update
     def checkLatestUpdate(self):
@@ -557,6 +559,15 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
+        actionButton.setToolTip("Export to PDF")
+        actionButtonFile = os.path.join("htmlResources", "pdf.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.printMainPage)
+        self.leftToolBar.addWidget(actionButton)
+
+        self.leftToolBar.addSeparator()
+
+        actionButton = QPushButton()
         actionButton.setToolTip("Preivous Chapter")
         actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
         actionButton.setIcon(QIcon(actionButtonFile))
@@ -657,6 +668,15 @@ class MainWindow(QMainWindow):
         studyForwardButton.setIcon(QIcon(rightButtonFile))
         studyForwardButton.clicked.connect(self.studyForward)
         self.rightToolBar.addWidget(studyForwardButton)
+
+        self.rightToolBar.addSeparator()
+
+        actionButton = QPushButton()
+        actionButton.setToolTip("Export to PDF")
+        actionButtonFile = os.path.join("htmlResources", "pdf.png")
+        actionButton.setIcon(QIcon(actionButtonFile))
+        actionButton.clicked.connect(self.printStudyPage)
+        self.rightToolBar.addWidget(actionButton)
 
         self.rightToolBar.addSeparator()
 
@@ -1065,12 +1085,15 @@ class MainWindow(QMainWindow):
             else:
                 self.noteEditor.raise_()
         else:
-            if platform.system() == "Linux":
-                subprocess.call(["xdg-open", file])
-            elif platform.system() == "Darwin":
-                os.system("open {0}".format(file))
-            elif platform.system() == "Windows":
-                os.system("start {0}".format(file))
+            self.openExternalFile(file)
+
+    def openExternalFile(self, file):
+        if platform.system() == "Linux":
+            subprocess.call(["xdg-open", file])
+        elif platform.system() == "Darwin":
+            os.system("open {0}".format(file))
+        elif platform.system() == "Windows":
+            os.system("start {0}".format(file))
 
     def openExternalFileHistoryRecord(self, record):
         self.openTextFile(config.history["external"][record])
@@ -1101,6 +1124,15 @@ class MainWindow(QMainWindow):
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
+
+    # Actions - export to pdf
+    def printMainPage(self):
+        file = "UniqueBible.app.pdf"
+        self.mainPage.printToPdf(file)
+
+    def printStudyPage(self):
+        file = "UniqueBible.app.pdf"
+        self.studyPage.printToPdf(file)
 
     # import BibleBentoPlus modules
     def importBBPlusLexiconInAFolder(self):
@@ -1648,6 +1680,13 @@ class MainWindow(QMainWindow):
     def finishStudyViewLoading(self):
         # scroll to the study verse
         self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
+
+    # finish pdf printing
+    def pdfPrintingFinishedAction(self, filePath, success):
+        if success:
+            self.openExternalFile(filePath)
+        else:
+            print("Failed to print pdf")
 
     # running specific commands
     def runFeature(self, keyword):
