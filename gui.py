@@ -123,13 +123,12 @@ class MainWindow(QMainWindow):
         # main.py line 17
         # https://biblebento.com/UniqueBibleAppVersion.txt
         try:
-            request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt")
-            connection = True
+            request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt", timeout=5)
+            if request.status_code == 200:
+                if float(request.text) > config.version:
+                    self.promptUpdate(request.text)
         except:
-            connection = False
-        if connection and request.status_code == 200:
-            if float(request.text) > config.version:
-                self.promptUpdate(request.text)
+            pass
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
@@ -1968,6 +1967,9 @@ class CentralWidget(QWidget):
         self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
         self.layout = QGridLayout()
+        self.layout.setContentsMargins(0, 10, 0, 3)
+        self.layout.setHorizontalSpacing(0)
+        self.layout.setVerticalSpacing(2)
         self.addWidgetToLayout()
         self.setLayout(self.layout)
 
