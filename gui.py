@@ -1980,6 +1980,8 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        
+        # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.selectionChanged.connect(self.updateContextMenu)
         self.addMenuActions()
@@ -2212,6 +2214,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.setWindowTitle("Unique Bible App - Popover")
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
+        # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
 
@@ -2243,7 +2246,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.parent.parent.parent.textCommandChanged(selectedText, "main")
 
 
-class NoteEditor(QWidget):
+class NoteEditor(QMainWindow):
 
     def __init__(self, parent, noteType, noteFileName=""):
         super().__init__()
@@ -2262,6 +2265,7 @@ class NoteEditor(QWidget):
 
         # setup interface
         self.setupMenuBar()
+        self.addToolBarBreak()
         self.setupToolBar()
         self.setupLayout()
 
@@ -2270,8 +2274,6 @@ class NoteEditor(QWidget):
 
         # specify window title
         self.updateWindowTitle()
-
-        #self.close.connect(self.closingEditor)
 
     # re-implementing close event, when users close this widget
     def closeEvent(self, event):
@@ -2340,6 +2342,9 @@ class NoteEditor(QWidget):
         self.menuBar = QToolBar()
         self.menuBar.setWindowTitle("Note Editor Menu Bar")
         self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # In QWidget, self.menuBar is treated as the menubar without the following line
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.menuBar)
 
         newButton = QPushButton()
         newButton.setToolTip("Create a New Topical Note \n[Shortcut: Ctrl/Cmd + N]")
@@ -2428,6 +2433,9 @@ class NoteEditor(QWidget):
         self.toolBar = QToolBar()
         self.toolBar.setWindowTitle("Tool Bar")
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # self.toolBar can be treated as an individual widget and positioned with a specified layout
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.toolBar)
 
         boldButton = QPushButton()
         boldButton.setToolTip("Bold \n[Shortcut: Ctrl/Cmd + B]")
@@ -2517,16 +2525,15 @@ class NoteEditor(QWidget):
         self.toolBar.addSeparator()
 
     def setupLayout(self):
-
         self.editor = QTextEdit()
         self.editor.textChanged.connect(self.textChanged)
+        self.setCentralWidget(self.editor)
 
-        self.layout = QGridLayout()
-        self.layout.setMenuBar(self.menuBar)
-        self.layout.addWidget(self.toolBar, 0, 0)
-        self.layout.addWidget(self.editor, 1, 0)
-
-        self.setLayout(self.layout)
+        #self.layout = QGridLayout()
+        #self.layout.setMenuBar(self.menuBar)
+        #self.layout.addWidget(self.toolBar, 0, 0)
+        #self.layout.addWidget(self.editor, 1, 0)
+        #self.setLayout(self.layout)
 
     # adjustment of note editor font size
     def increaseNoteEditorFontSize(self):
