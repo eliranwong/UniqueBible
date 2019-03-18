@@ -11,6 +11,7 @@ class BiblesSqlite:
         self.database = os.path.join("marvelData", "bibles.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
+        self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
 
     def __del__(self):
         self.connection.close()
@@ -39,8 +40,7 @@ class BiblesSqlite:
         formattedBiblesFolder = os.path.join("marvelData", "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
         if not includeMarvelBibles:
-            marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
-            formattedBibles = [bible for bible in formattedBibles if not bible in marvelBibles]
+            formattedBibles = [bible for bible in formattedBibles if not bible in self.marvelBibles]
         return sorted(formattedBibles)
 
     def migratePlainFormattedBibles(self):
@@ -335,6 +335,32 @@ class BiblesSqlite:
             verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
         return verses
 
+    def removeVowelAccent(self, text):
+        searchReplace = (
+            ("[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\(\)\[\]\*\־\׀\׃\׆]", ""),
+            ("[שׂשׁ]", "ש"),
+            ("[ἀἄᾄἂἆἁἅᾅἃάᾴὰᾶᾷᾳ]", "α"),
+            ("[ἈἌἎἉἍἋ]", "Α"),
+            ("[ἐἔἑἕἓέὲ]", "ε"),
+            ("[ἘἜἙἝἛ]", "Ε"),
+            ("[ἠἤᾔἢἦᾖᾐἡἥἣἧᾗᾑήῄὴῆῇῃ]", "η"),
+            ("[ἨἬἪἮἩἭἫ]", "Η"),
+            ("[ἰἴἶἱἵἳἷίὶῖϊΐῒ]", "ι"),
+            ("[ἸἼἹἽ]", "Ι"),
+            ("[ὀὄὂὁὅὃόὸ]", "ο"),
+            ("[ὈὌὉὍὋ]", "Ο"),
+            ("[ῥ]", "ρ"),
+            ("[Ῥ]", "Ρ"),
+            ("[ὐὔὒὖὑὕὓὗύὺῦϋΰῢ]", "υ"),
+            ("[ὙὝὟ]", "Υ"),
+            ("[ὠὤὢὦᾠὡὥὧᾧώῴὼῶῷῳ]", "ω"),
+            ("[ὨὬὪὮὩὭὯ]", "Ω"),
+            ("[\-\—\,\;\:\\\?\.\·\·\‘\’\‹\›\“\”\«\»\(\)\[\]\{\}\⧼\⧽\〈\〉\*\‿\᾽\⇔\¦]", ""),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        return text
+
     def countSearchBible(self, text, searchString, interlinear=False):
         if interlinear:
             content = "ISEARCH:::{0}:::{1}".format(text, searchString)
@@ -362,12 +388,17 @@ class BiblesSqlite:
             self.cursor.execute(query, t)
             return len(self.cursor.fetchall())
         elif text in formattedBibleList:
+            if text in self.marvelBibles:
+                searchString = self.removeVowelAccent(searchString)
             bible = Bible(text)
             count = bible.countSearchBook(book, searchString)
             del bible
             return count
 
     def searchBible(self, text, mode, searchString, interlinear=False):
+        if text in self.marvelBibles:
+                searchString = self.removeVowelAccent(searchString)
+
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
 
         formatedText = ""
