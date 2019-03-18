@@ -1,6 +1,7 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
+from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
@@ -2379,6 +2380,15 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         toolBarButton = QPushButton()
+        toolBarButton.setToolTip("Print")
+        toolBarButtonFile = os.path.join("htmlResources", "print.png")
+        toolBarButton.setIcon(QIcon(toolBarButtonFile))
+        toolBarButton.clicked.connect(self.printNote)
+        self.menuBar.addWidget(toolBarButton)
+
+        self.menuBar.addSeparator()
+
+        toolBarButton = QPushButton()
         toolBarButton.setToolTip("Show / Hide Toolbar")
         toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
@@ -2427,6 +2437,15 @@ class NoteEditor(QMainWindow):
         else:
             self.toolBar.show()
             self.showToolBar = True
+
+    def printNote(self):
+        #document = QTextDocument("Sample Page")
+        document = self.editor.document()
+        printer = QPrinter()
+  
+        myPrintDialog = QPrintDialog(printer, self)
+        if myPrintDialog.exec_() == QDialog.Accepted:
+            return document.print_(printer)
 
     def setupToolBar(self):
 
