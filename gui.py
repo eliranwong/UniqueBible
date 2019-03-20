@@ -1862,7 +1862,7 @@ class MainWindow(QMainWindow):
                     self.lastLoadedCommand["main"] = newCommand
             elif view.startswith("popover"):
                 view = view.split(".")[1]
-                views[view].openPopover(html=html)
+                views[view].currentWidget().openPopover(html=html)
             else:
                 views[view].setHtml(html, baseUrl)
             if addRecord == True and view in ("main", "study"):
