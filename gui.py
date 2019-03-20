@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
         menu3.addSeparator()
         menu3.addAction(QAction("&Landscape / Portrait Mode", self, shortcut = "Ctrl+L", triggered=self.switchLandscapeMode))
         menu3.addSeparator()
-        menu3.addAction(QAction("Right Vie&w [Resize / Hide]", self, shortcut = "Ctrl+W", triggered=self.parallel))
+        menu3.addAction(QAction("Study Vie&w [Resize / Hide]", self, shortcut = "Ctrl+W", triggered=self.parallel))
         menu3.addAction(QAction("Bo&ttom View [Show / Hide]", self, shortcut = "Ctrl+T", triggered=self.instant))
         menu3.addSeparator()
         menu3.addAction(QAction("&Hovering feature [Enable / Disable]", self, shortcut = "Ctrl+=", triggered=self.enableInstantButtonClicked))
@@ -247,8 +247,8 @@ class MainWindow(QMainWindow):
         menu4.addSeparator()
 
         menu5 = self.menuBar().addMenu("&Search")
-        menu5.addAction(QAction("&Last Opened Bible on Left View", self, shortcut = "Ctrl+1", triggered=self.displaySearchBibleCommand))
-        menu5.addAction(QAction("&Last Opened Bible on Right View", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5.addAction(QAction("&Last Opened Bible on Main View", self, shortcut = "Ctrl+1", triggered=self.displaySearchBibleCommand))
+        menu5.addAction(QAction("&Last Opened Bible on Study View", self, shortcut = "Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
         menu5.addAction(QAction("&Last Opened Dictionary", self, shortcut = "Ctrl+3", triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction("&Last Opened Encyclopedia", self, shortcut = "Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
@@ -323,40 +323,40 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.firstToolBar)
 
         self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
-        self.mainTextMenuButton.setToolTip("Left View Bible Menu")
+        self.mainTextMenuButton.setToolTip("Main View Bible Menu")
         self.mainTextMenuButton.setStyleSheet(textButtonStyle)
         self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
         self.firstToolBar.addWidget(self.mainTextMenuButton)
 
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
-        self.mainRefButton.setToolTip("Left View Active Verse Features")
+        self.mainRefButton.setToolTip("Main View Active Verse Features")
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
 
         openChapterNoteButton = QPushButton()
-        openChapterNoteButton.setToolTip("Left View Chapter Notes")
+        openChapterNoteButton.setToolTip("Main View Chapter Notes")
         openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
         openChapterNoteButton.clicked.connect(self.openMainChapterNote)
         self.firstToolBar.addWidget(openChapterNoteButton)
 
         openVerseNoteButton = QPushButton()
-        openVerseNoteButton.setToolTip("Left View Verse Notes")
+        openVerseNoteButton.setToolTip("Main View Verse Notes")
         openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.firstToolBar.addWidget(openVerseNoteButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip("Search Last Opened Bible on Left View")
+        searchBibleButton.setToolTip("Search Last Opened Bible on Main View")
         searchBibleButtonFile = os.path.join("htmlResources", "search.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
         self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip("Search Last Opened Bible on Left View with OHGB")
+        searchBibleButton.setToolTip("Search Last Opened Bible on Main View with OHGB")
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displayISearchBibleCommand)
@@ -381,50 +381,65 @@ class MainWindow(QMainWindow):
 
         self.addToolBarBreak()
 
+        self.studyBibleToolBar = QToolBar()
+        self.studyBibleToolBar.setWindowTitle("Bible on Study View")
+        self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.studyBibleToolBar)
+
+        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
+        self.studyTextMenuButton.setToolTip("Study View Bible Menu")
+        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
+        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
+        self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
+
+        self.studyRefButton = QPushButton(self.verseReference("study")[1])
+        self.studyRefButton.setToolTip("Study View Active Verse Features")
+        self.studyRefButton.setStyleSheet(textButtonStyle)
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.studyBibleToolBar.addWidget(self.studyRefButton)
+
+        self.openStudyChapterNoteButton = QPushButton()
+        self.openStudyChapterNoteButton.setToolTip("Study View Chapter Notes")
+        openStudyChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
+        self.openStudyChapterNoteButton.setIcon(QIcon(openStudyChapterNoteButtonFile))
+        self.openStudyChapterNoteButton.clicked.connect(self.openStudyChapterNote)
+        self.studyBibleToolBar.addWidget(self.openStudyChapterNoteButton)
+
+        self.openStudyVerseNoteButton = QPushButton()
+        self.openStudyVerseNoteButton.setToolTip("Study View Verse Notes")
+        openStudyVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
+        self.openStudyVerseNoteButton.setIcon(QIcon(openStudyVerseNoteButtonFile))
+        self.openStudyVerseNoteButton.clicked.connect(self.openStudyVerseNote)
+        self.studyBibleToolBar.addWidget(self.openStudyVerseNoteButton)
+
+        searchStudyBibleButton = QPushButton()
+        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View")
+        searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
+        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
+        searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
+        self.studyBibleToolBar.addWidget(searchStudyBibleButton)
+
+        searchStudyBibleButton = QPushButton()
+        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View with OHGB")
+        searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
+        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
+        searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
+        self.studyBibleToolBar.addWidget(searchStudyBibleButton)
+
+        if config.openBibleInMainViewOnly:
+            self.studyBibleToolBar.hide()
+
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
         #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
-        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
-        self.studyTextMenuButton.setToolTip("Right View Bible Menu")
-        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
-        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
-        self.secondToolBar.addWidget(self.studyTextMenuButton)
-
-        self.studyRefButton = QPushButton(self.verseReference("study")[1])
-        self.studyRefButton.setToolTip("Right View Active Verse Features")
-        self.studyRefButton.setStyleSheet(textButtonStyle)
-        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.secondToolBar.addWidget(self.studyRefButton)
-
-        openChapterNoteButton = QPushButton()
-        openChapterNoteButton.setToolTip("Right View Chapter Notes")
-        openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
-        openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
-        openChapterNoteButton.clicked.connect(self.openStudyChapterNote)
-        self.secondToolBar.addWidget(openChapterNoteButton)
-
-        openVerseNoteButton = QPushButton()
-        openVerseNoteButton.setToolTip("Right View Verse Notes")
-        openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
-        openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
-        openVerseNoteButton.clicked.connect(self.openStudyVerseNote)
-        self.secondToolBar.addWidget(openVerseNoteButton)
-
-        searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View")
-        searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
-        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
-        searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
-        self.secondToolBar.addWidget(searchStudyBibleButton)
-
-        searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Right View with OHGB")
-        searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
-        searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
-        searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
-        self.secondToolBar.addWidget(searchStudyBibleButton)
+        self.enableStudyBibleButton = QPushButton()
+        self.enableStudyBibleButton.setToolTip("Enable / Disable Bible Display on Study View")
+        enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
+        self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
+        self.enableStudyBibleButton.clicked.connect(self.enableStudyBibleButtonClicked)
+        self.secondToolBar.addWidget(self.enableStudyBibleButton)
 
         self.secondToolBar.addSeparator()
 
@@ -541,21 +556,21 @@ class MainWindow(QMainWindow):
         self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
 
         backButton = QPushButton()
-        backButton.setToolTip("Left View Previous History Record")
+        backButton.setToolTip("Main View Previous History Record")
         leftButtonFile = os.path.join("htmlResources", "left.png")
         backButton.setIcon(QIcon(leftButtonFile))
         backButton.clicked.connect(self.back)
         self.leftToolBar.addWidget(backButton)
 
         mainHistoryButton = QPushButton()
-        mainHistoryButton.setToolTip("Left View History")
+        mainHistoryButton.setToolTip("Main View History")
         mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
         mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
         mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
         self.leftToolBar.addWidget(mainHistoryButton)
 
         forwardButton = QPushButton()
-        forwardButton.setToolTip("Left View Next History Record")
+        forwardButton.setToolTip("Main View Next History Record")
         rightButtonFile = os.path.join("htmlResources", "right.png")
         forwardButton.setIcon(QIcon(rightButtonFile))
         forwardButton.clicked.connect(self.forward)
@@ -654,21 +669,21 @@ class MainWindow(QMainWindow):
         self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
 
         studyBackButton = QPushButton()
-        studyBackButton.setToolTip("Right View Previous History Record")
+        studyBackButton.setToolTip("Study View Previous History Record")
         leftButtonFile = os.path.join("htmlResources", "left.png")
         studyBackButton.setIcon(QIcon(leftButtonFile))
         studyBackButton.clicked.connect(self.studyBack)
         self.rightToolBar.addWidget(studyBackButton)
 
         studyHistoryButton = QPushButton()
-        studyHistoryButton.setToolTip("Right View History")
+        studyHistoryButton.setToolTip("Study View History")
         studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
         studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
         studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
         self.rightToolBar.addWidget(studyHistoryButton)
 
         studyForwardButton = QPushButton()
-        studyForwardButton.setToolTip("Right View Next History Record")
+        studyForwardButton.setToolTip("Study View Next History Record")
         rightButtonFile = os.path.join("htmlResources", "right.png")
         studyForwardButton.setIcon(QIcon(rightButtonFile))
         studyForwardButton.clicked.connect(self.studyForward)
@@ -755,7 +770,7 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addWidget(actionButton)
 
         parallelButton = QPushButton()
-        parallelButton.setToolTip("Resize / Hide Right View")
+        parallelButton.setToolTip("Resize / Hide Study View")
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
         parallelButton.setIcon(QIcon(parallelButtonFile))
         parallelButton.clicked.connect(self.parallel)
@@ -907,7 +922,7 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
-        # testing
+#        testing
 #        currentIndex = self.studyView.currentIndex()
 #        if currentIndex == 4:
 #            nextIndex = 0
@@ -1466,6 +1481,23 @@ class MainWindow(QMainWindow):
         availableGeometry = qApp.desktop().availableGeometry()
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
+    # Actions - enable or disable study bible / bible displayed on study view
+    def getStudyBibleDisplay(self):
+        if config.openBibleInMainViewOnly:
+            return "addStudyViewBible.png"
+        else:
+            return "deleteStudyViewBible.png"
+
+    def enableStudyBibleButtonClicked(self):
+        if config.openBibleInMainViewOnly:
+            config.openBibleInMainViewOnly = False
+            self.studyBibleToolBar.show()
+        else:
+            config.openBibleInMainViewOnly = True
+            self.studyBibleToolBar.hide()
+        enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
+        self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
+
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
         if config.instantInformationEnabled:
@@ -1967,12 +1999,12 @@ class CentralWidget(QWidget):
         super().__init__()
         self.parent = parent
 
-        #self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Left View</b>'.</p>"
+        #self.html = "<h1>UniqueBible.app</h1><p>This is '<b>Main View</b>'.</p>"
 
         #self.mainView = WebEngineView(self, "main")
         #self.mainView.setHtml(self.html, baseUrl)
         #self.studyView = WebEngineView(self, "study")
-        #self.studyView.setHtml("This is '<b>Right View</b>'.", baseUrl)
+        #self.studyView.setHtml("This is '<b>Study View</b>'.", baseUrl)
 
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView

@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 2.1
+latest_version = 2.2
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -56,7 +56,7 @@ if not hasattr(config, 'importRtlOT'):
 if not hasattr(config, 'rtlTexts'):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
 if not hasattr(config, 'openBibleInMainViewOnly'):
-    config.openBibleInMainViewOnly = False
+    config.openBibleInMainViewOnly = True
 if not hasattr(config, 'mainText'):
     config.mainText = 'KJV'
 if not hasattr(config, 'mainB'):
