@@ -375,7 +375,7 @@ class ExlbData:
                     "exlbl": "Exhaustive Library of Bible Locations",
                     "exlbt": "Exhaustive Library of Bible Topics",
                 }
-                searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
+                searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module.upper())
                 return "<p><b>{0}</b> {1}</p>{2}".format(moduleName[module], searchButton, content[0])
 
 
