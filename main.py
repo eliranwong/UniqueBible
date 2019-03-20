@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 2.0
+latest_version = 2.1
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -55,6 +55,8 @@ if not hasattr(config, 'importRtlOT'):
     config.importRtlOT = False
 if not hasattr(config, 'rtlTexts'):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
+if not hasattr(config, 'openBibleInMainViewOnly'):
+    config.openBibleInMainViewOnly = False
 if not hasattr(config, 'mainText'):
     config.mainText = 'KJV'
 if not hasattr(config, 'mainB'):
@@ -160,6 +162,7 @@ def saveDataOnExit():
     fileObj.write("\nimportAddVerseLinebreak = "+pprint.pformat(config.importAddVerseLinebreak))
     fileObj.write("\nimportRtlOT = "+pprint.pformat(config.importRtlOT))
     fileObj.write("\nrtlTexts = "+pprint.pformat(config.rtlTexts))
+    fileObj.write("\nopenBibleInMainViewOnly = "+pprint.pformat(config.openBibleInMainViewOnly))
     fileObj.write("\nmainText = "+pprint.pformat(config.mainText))
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))

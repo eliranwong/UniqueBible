@@ -328,7 +328,10 @@ class TextCommandParser:
             updateViewConfig, *_ = self.getViewConfig(view)
             updateViewConfig(text, bcvTuple)
             content = self.hideLexicalEntryInBible(content)
-            return (view, content)
+            if config.openBibleInMainViewOnly:
+                return ("main", content)
+            else:
+                return (view, content)
 
     def hideLexicalEntryInBible(self, text):
         if config.hideLexicalEntryInBible and re.search("onclick=['{0}]lex".format('"'), text):

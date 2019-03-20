@@ -907,6 +907,13 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
+        # testing
+#        currentIndex = self.studyView.currentIndex()
+#        if currentIndex == 4:
+#            nextIndex = 0
+#        else:
+#            nextIndex = currentIndex + 1
+#        self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
         else:
