@@ -17,6 +17,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.mainHistoryPage = [False, False, False, False, False]
+        self.studyHistoryPage = [False, False, False, False, False]
+        self.lastLoadedCommand = {"main": None, "study": None}
+
         self.textCommandParser = TextCommandParser(self)
 
         self.setWindowTitle('Unique Bible App')
@@ -105,6 +109,7 @@ class MainWindow(QMainWindow):
     # manage main page
     def setMainPage(self):
         # main page changes as tab is changed.
+        #print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
         self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
@@ -112,6 +117,7 @@ class MainWindow(QMainWindow):
 
     def setStudyPage(self):
         # study page changes as tab is changed.
+        #print(self.studyView.currentIndex())
         self.studyPage = self.studyView.currentWidget().page()
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
         self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
@@ -1617,6 +1623,10 @@ class MainWindow(QMainWindow):
         self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
+        if view == "main":
+            self.mainHistoryPage[self.mainView.currentIndex()] = True
+        elif view == "study":
+            self.studyHistoryPage[self.studyView.currentIndex()] = True
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
         if view == "external":
             html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(counter, record) for counter, record in reversed(historyRecords)])
@@ -1629,9 +1639,12 @@ class MainWindow(QMainWindow):
     def openHistoryRecord(self, view, recordNumber):
         config.currentRecord[view] = recordNumber
         textCommand = config.history[view][recordNumber]
+        self.runTextCommand(textCommand, False, view)
         if view == "main":
             self.textCommandLineEdit.setText(textCommand)
-        self.runTextCommand(textCommand, False, view)
+            self.mainHistoryPage[self.mainView.currentIndex()] = False
+        elif view == "study":
+            self.studyHistoryPage[self.studyView.currentIndex()] = False
 
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
@@ -1763,6 +1776,7 @@ class MainWindow(QMainWindow):
 
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
         view, content = self.textCommandParser.parser(textCommand, source)
+
         if content == "INVALID_COMMAND_ENTERED":
             self.mainPage.runJavaScript("alert('Invalid command not processed.')")
         elif view == "":
@@ -1796,11 +1810,17 @@ class MainWindow(QMainWindow):
             if view == "study":
                 # save html in a separate file if text is larger than 2MB
                 # reason: setHTML does not work with content larger than 2MB
-                self.openTextOnStudyView(html)
+                newCommand = (self.studyView.currentIndex(), textCommand)
+                if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+                    self.openTextOnStudyView(html)
+                    self.lastLoadedCommand["study"] = newCommand
             elif view == "main":
                 # save html in a separate file if text is larger than 2MB
                 # reason: setHTML does not work with content larger than 2MB
-                self.openTextOnMainView(html)
+                newCommand = (self.mainView.currentIndex(), textCommand)
+                if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+                    self.openTextOnMainView(html)
+                    self.lastLoadedCommand["main"] = newCommand
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].openPopover(html=html)
@@ -2002,6 +2022,10 @@ class TabWidget(QTabWidget):
         self.parent = parent
         self.name = name
         self.currentChanged.connect(self.tabSelected)
+        # notes:
+        # the first tab is indexed with 0.  the rest with 1,2,3,4,etc.
+        # to get the index of current tab, print(self.currentIndex())
+        # to change the current tab, self.setCurrentWidget(self.widget(4))
 
     def setHtml(self, html, baseUrl):
         self.currentWidget().setHtml(html, baseUrl)
