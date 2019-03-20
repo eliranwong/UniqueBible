@@ -497,56 +497,24 @@ class MainWindow(QMainWindow):
 
 #        self.addToolBarBreak()
 #
-#        self.toolBar = QToolBar()
-#        self.toolBar.setWindowTitle("Main Toolbar")
-#        #self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-#        self.addToolBar(self.toolBar)
-#
-#        fontPlusButton = QPushButton()
-#        fontPlusButton.setToolTip("Larger Font Size")
-#        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
-#        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
-#        fontPlusButton.clicked.connect(self.largerFont)
-#        self.toolBar.addWidget(fontPlusButton)
-#
-#        fontMinusButton = QPushButton()
-#        fontMinusButton.setToolTip("Smaller Font Size")
-#        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
-#        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
-#        fontMinusButton.clicked.connect(self.smallerFont)
-#        self.toolBar.addWidget(fontMinusButton)
-#
-#        self.toolBar.addSeparator()
-#
-#        self.enableParagraphButton = QPushButton()
-#        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
-#        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-#        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-#        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-#        self.toolBar.addWidget(self.enableParagraphButton)
-#
-#        self.enableSubheadingButton = QPushButton()
-#        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
-#        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
-#        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
-#        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
-#        self.toolBar.addWidget(self.enableSubheadingButton)
-#
-#        self.toolBar.addSeparator()
-#
-        self.enableInstantButton = QPushButton()
-        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
-        self.secondToolBar.addWidget(self.enableInstantButton)
+#        self.thirdToolBar = QToolBar()
+#        self.thirdToolBar.setWindowTitle("Settings")
+#        #self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+#        self.addToolBar(self.thirdToolBar)
 
-        instantButton = QPushButton()
-        instantButton.setToolTip("Show / Hide Bottom View")
-        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-        instantButton.setIcon(QIcon(instantButtonFile))
-        instantButton.clicked.connect(self.instant)
-        self.secondToolBar.addWidget(instantButton)
+        fontMinusButton = QPushButton()
+        fontMinusButton.setToolTip("Smaller Font Size")
+        fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
+        fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
+        fontMinusButton.clicked.connect(self.smallerFont)
+        self.secondToolBar.addWidget(fontMinusButton)
+
+        fontPlusButton = QPushButton()
+        fontPlusButton.setToolTip("Larger Font Size")
+        fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
+        fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
+        fontPlusButton.clicked.connect(self.largerFont)
+        self.secondToolBar.addWidget(fontPlusButton)
 
         self.secondToolBar.addSeparator()
 
@@ -663,6 +631,22 @@ class MainWindow(QMainWindow):
 
         self.leftToolBar.addSeparator()
 
+        self.enableParagraphButton = QPushButton()
+        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.leftToolBar.addWidget(self.enableParagraphButton)
+
+        self.enableSubheadingButton = QPushButton()
+        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
+        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
+        self.leftToolBar.addWidget(self.enableSubheadingButton)
+
+        self.leftToolBar.addSeparator()
+
         self.rightToolBar = QToolBar()
         self.rightToolBar.setWindowTitle("Right Toolbar")
         #self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -775,6 +759,22 @@ class MainWindow(QMainWindow):
         parallelButton.setIcon(QIcon(parallelButtonFile))
         parallelButton.clicked.connect(self.parallel)
         self.rightToolBar.addWidget(parallelButton)
+
+        self.rightToolBar.addSeparator()
+
+        self.enableInstantButton = QPushButton()
+        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+        self.rightToolBar.addWidget(self.enableInstantButton)
+
+        instantButton = QPushButton()
+        instantButton.setToolTip("Show / Hide Bottom View")
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        instantButton.setIcon(QIcon(instantButtonFile))
+        instantButton.clicked.connect(self.instant)
+        self.rightToolBar.addWidget(instantButton)
 
         self.rightToolBar.addSeparator()
 

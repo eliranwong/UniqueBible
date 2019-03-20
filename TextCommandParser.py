@@ -325,12 +325,13 @@ class TextCommandParser:
                 # i.e. when more than one verse reference is found
                 content = self.textPlainBible(verseList, text)
                 bcvTuple = verseList[-1]
-            updateViewConfig, *_ = self.getViewConfig(view)
-            updateViewConfig(text, bcvTuple)
             content = self.hideLexicalEntryInBible(content)
             if config.openBibleInMainViewOnly:
+                self.setMainVerse(text, bcvTuple)
                 return ("main", content)
             else:
+                updateViewConfig, *_ = self.getViewConfig(view)
+                updateViewConfig(text, bcvTuple)
                 return (view, content)
 
     def hideLexicalEntryInBible(self, text):
