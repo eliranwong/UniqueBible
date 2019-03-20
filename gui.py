@@ -534,21 +534,21 @@ class MainWindow(QMainWindow):
 #
 #        self.toolBar.addSeparator()
 #
-#        instantButton = QPushButton()
-#        instantButton.setToolTip("Show / Hide Bottom View")
-#        instantButtonFile = os.path.join("htmlResources", "lightning.png")
-#        instantButton.setIcon(QIcon(instantButtonFile))
-#        instantButton.clicked.connect(self.instant)
-#        self.toolBar.addWidget(instantButton)
-#
-#        self.enableInstantButton = QPushButton()
-#        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
-#        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-#        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
-#        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
-#        self.toolBar.addWidget(self.enableInstantButton)
-#
-#        self.toolBar.addSeparator()
+        self.enableInstantButton = QPushButton()
+        self.enableInstantButton.setToolTip("Enable / Disable Hovering Feature")
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
+        self.secondToolBar.addWidget(self.enableInstantButton)
+
+        instantButton = QPushButton()
+        instantButton.setToolTip("Show / Hide Bottom View")
+        instantButtonFile = os.path.join("htmlResources", "lightning.png")
+        instantButton.setIcon(QIcon(instantButtonFile))
+        instantButton.clicked.connect(self.instant)
+        self.secondToolBar.addWidget(instantButton)
+
+        self.secondToolBar.addSeparator()
 
         self.leftToolBar = QToolBar()
         self.leftToolBar.setWindowTitle("Left Toolbar")
