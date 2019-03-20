@@ -260,6 +260,8 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction("&Bible Topics", self, shortcut = "Ctrl+9", triggered=self.searchCommandBibleTopic))
         menu5.addSeparator()
         menu5.addAction(QAction("&Hebrew / Greek Lexicons", self, shortcut = "Ctrl+0", triggered=self.searchCommandLexicon))
+        menu5.addSeparator()
+        menu5.addAction(QAction("&Third Party Dictionaries", self, triggered=self.searchCommandThirdPartyDictionary))
 
         menu6 = self.menuBar().addMenu("&Notes")
         menu6.addAction(QAction("&Note on Main Chapter", self, triggered=self.openMainChapterNote))
@@ -318,8 +320,7 @@ class MainWindow(QMainWindow):
 
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle("Main Toolbar")
-        #self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        #self.addToolBar(Qt.LeftToolBarArea, self.firstToolBar)
+        self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
         self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
@@ -431,7 +432,7 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
-        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
         self.enableStudyBibleButton = QPushButton()
@@ -495,13 +496,6 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
-#        self.addToolBarBreak()
-#
-#        self.thirdToolBar = QToolBar()
-#        self.thirdToolBar.setWindowTitle("Settings")
-#        #self.thirdToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-#        self.addToolBar(self.thirdToolBar)
-
         fontMinusButton = QPushButton()
         fontMinusButton.setToolTip("Smaller Font Size")
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
@@ -520,7 +514,7 @@ class MainWindow(QMainWindow):
 
         self.leftToolBar = QToolBar()
         self.leftToolBar.setWindowTitle("Left Toolbar")
-        #self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
 
         backButton = QPushButton()
@@ -649,7 +643,7 @@ class MainWindow(QMainWindow):
 
         self.rightToolBar = QToolBar()
         self.rightToolBar.setWindowTitle("Right Toolbar")
-        #self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
 
         studyBackButton = QPushButton()
@@ -1428,6 +1422,10 @@ class MainWindow(QMainWindow):
 
     def searchCommandLexicon(self):
         self.textCommandLineEdit.setText("LEXICON:::")
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandThirdPartyDictionary(self):
+        self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::")
         self.textCommandLineEdit.setFocus()
 
     # Actions - open urls
