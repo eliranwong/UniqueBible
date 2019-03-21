@@ -1561,6 +1561,8 @@ class MainWindow(QMainWindow):
         self.reloadCurrentRecord()
 
     def reloadCurrentRecord(self):
+        self.mainHistoryPage[self.mainView.currentIndex()] = True
+        self.studyHistoryPage[self.studyView.currentIndex()] = True
         if config.readFormattedBibles:
             mappedBibles = (
                 ("MIB", "OHGBi"),
@@ -1588,6 +1590,8 @@ class MainWindow(QMainWindow):
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
                     self.runTextCommand(textCommand, False, view)
+        self.mainHistoryPage[self.mainView.currentIndex()] = False
+        self.studyHistoryPage[self.studyView.currentIndex()] = False
 
     # Actions - previous / next chapter
     def previousMainChapter(self):
