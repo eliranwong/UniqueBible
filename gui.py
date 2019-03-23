@@ -427,9 +427,6 @@ class MainWindow(QMainWindow):
         searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
-        if config.openBibleInMainViewOnly:
-            self.studyBibleToolBar.hide()
-
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -771,6 +768,12 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addWidget(instantButton)
 
         self.rightToolBar.addSeparator()
+
+    def setStudyBibleToolBar(self):
+        if config.openBibleInMainViewOnly:
+            self.studyBibleToolBar.hide()
+        else:
+            self.studyBibleToolBar.show()
 
     # install marvel data
     def installMarvelBibles(self):
@@ -1331,10 +1334,12 @@ class MainWindow(QMainWindow):
         self.firstToolBar.show()
         config.noToolBar = False
         if config.singleToolBar:
+            self.setStudyBibleToolBar()
             self.secondToolBar.show()
             self.leftToolBar.show()
             self.rightToolBar.show()
         else:
+            self.studyBibleToolBar.hide()
             self.secondToolBar.hide()
             self.leftToolBar.hide()
             self.rightToolBar.hide()
@@ -1350,6 +1355,7 @@ class MainWindow(QMainWindow):
     def showAllToolBar(self):
         config.singleToolBar = True
         self.firstToolBar.show()
+        self.setStudyBibleToolBar()
         self.secondToolBar.show()
         self.leftToolBar.show()
         self.rightToolBar.show()
@@ -1357,6 +1363,7 @@ class MainWindow(QMainWindow):
     def hideAllToolBar(self):
         config.singleToolBar = False
         self.firstToolBar.hide()
+        self.studyBibleToolBar.hide()
         self.secondToolBar.hide()
         self.leftToolBar.hide()
         self.rightToolBar.hide()
