@@ -549,6 +549,22 @@ class MainWindow(QMainWindow):
 
         self.leftToolBar.addSeparator()
 
+        self.enableParagraphButton = QPushButton()
+        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
+        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
+        self.leftToolBar.addWidget(self.enableParagraphButton)
+
+        self.enableSubheadingButton = QPushButton()
+        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
+        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
+        self.leftToolBar.addWidget(self.enableSubheadingButton)
+
+        self.leftToolBar.addSeparator()
+
         actionButton = QPushButton()
         actionButton.setToolTip("Preivous Chapter")
         actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
@@ -556,12 +572,12 @@ class MainWindow(QMainWindow):
         actionButton.clicked.connect(self.previousMainChapter)
         self.leftToolBar.addWidget(actionButton)
 
-        actionButton = QPushButton()
-        actionButton.setToolTip("Main Passage")
-        actionButtonFile = os.path.join("htmlResources", "bible.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.openMainChapter)
-        self.leftToolBar.addWidget(actionButton)
+#        actionButton = QPushButton()
+#        actionButton.setToolTip("Main Passage")
+#        actionButtonFile = os.path.join("htmlResources", "bible.png")
+#        actionButton.setIcon(QIcon(actionButtonFile))
+#        actionButton.clicked.connect(self.openMainChapter)
+#        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
         actionButton.setToolTip("Next Chapter")
@@ -622,22 +638,6 @@ class MainWindow(QMainWindow):
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMAB)
         self.leftToolBar.addWidget(actionButton)
-
-        self.leftToolBar.addSeparator()
-
-        self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip("Formatted / Plain Bibles \n(only if both versions are installed)")
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
-        self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
-        self.leftToolBar.addWidget(self.enableParagraphButton)
-
-        self.enableSubheadingButton = QPushButton()
-        self.enableSubheadingButton.setToolTip("Add Sub-headings to Plain Bibles \n(only for plain versions)")
-        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
-        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
-        self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
-        self.leftToolBar.addWidget(self.enableSubheadingButton)
 
         self.leftToolBar.addSeparator()
 
