@@ -1,0 +1,1 @@
+.\wvenv\Scripts\activate & python main.py
