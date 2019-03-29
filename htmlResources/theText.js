@@ -304,6 +304,100 @@ function mbbcvToVerseRefence(b,c,v) {
     return abb+" "+c+":"+v;
 }
 
+function bookAbbToNo(bookAbb) {
+    var bookNo = {
+        bGen: "1",
+        bExod: "2",
+        bLev: "3",
+        bNum: "4",
+        bDeut: "5",
+        bJosh: "6",
+        bJudg: "7",
+        bRuth: "8",
+        b1Sam: "9",
+        b2Sam: "10",
+        b1Kgs: "11",
+        b2Kgs: "12",
+        b1Chr: "13",
+        b2Chr: "14",
+        bEzra: "15",
+        bNeh: "16",
+        bEsth: "17",
+        bJob: "18",
+        bPs: "19",
+        bProv: "20",
+        bEccl: "21",
+        bSong: "22",
+        bIsa: "23",
+        bJer: "24",
+        bLam: "25",
+        bEzek: "26",
+        bDan: "27",
+        bHos: "28",
+        bJoel: "29",
+        bAmos: "30",
+        bObad: "31",
+        bJonah: "32",
+        bMic: "33",
+        bNah: "34",
+        bHab: "35",
+        bZeph: "36",
+        bHag: "37",
+        bZech: "38",
+        bMal: "39",
+        bMatt: "40",
+        bMark: "41",
+        bLuke: "42",
+        bJohn: "43",
+        bActs: "44",
+        bRom: "45",
+        b1Cor: "46",
+        b2Cor: "47",
+        bGal: "48",
+        bEph: "49",
+        bPhil: "50",
+        bCol: "51",
+        b1Thess: "52",
+        b2Thess: "53",
+        b1Tim: "54",
+        b2Tim: "55",
+        bTitus: "56",
+        bPhlm: "57",
+        bHeb: "58",
+        bJas: "59",
+        b1Pet: "60",
+        b2Pet: "61",
+        b1John: "62",
+        b2John: "63",
+        b3John: "64",
+        bJude: "65",
+        bRev: "66",
+        bBar: "70",
+        bAddDan: "71",
+        bPrAzar: "72",
+        bBel: "73",
+        bSus: "75",
+        b1Esd: "76",
+        b2Esd: "77",
+        bAddEsth: "78",
+        bEpJer: "79",
+        bJdt: "80",
+        b1Macc: "81",
+        b2Macc: "82",
+        b3Macc: "83",
+        b4Macc: "84",
+        bPrMan: "85",
+        bPs151: "86",
+        bSir: "87",
+        bTob: "88",
+        bWis: "89",
+        bPssSol: "90",
+        bOdes: "91",
+        bEpLao: "92"
+    };
+    return bookNo["b"+bookAbb];
+}
+
 function tbcv(text,b,c,v) {
     var verseReference = bcvToVerseRefence(b,c,v);
     document.title = "BIBLE:::"+text+":::"+verseReference;
@@ -443,6 +537,11 @@ function searchMorphologyCode(lexicalEntry, morphologyCode) {
 
 function searchMorphologyItem(lexicalEntry, morphologyItem) {
     document.title = "MORPHOLOGY:::LexicalEntry LIKE '%"+lexicalEntry+",%' AND Morphology LIKE '%"+morphologyItem+"%'";
+}
+
+function searchBook(lexicalEntry, bookName) {
+    bookNo = bookAbbToNo(bookName);
+    document.title = "MORPHOLOGY:::LexicalEntry LIKE '%"+lexicalEntry+",%' AND Book = "+bookNo;
 }
 
 function lmCombo(lexicalEntry, morphologyModule, morphologyCode) {
