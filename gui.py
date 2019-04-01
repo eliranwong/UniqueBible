@@ -316,6 +316,12 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction("&Contact Eliran Wong", self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
+        if config.toolBarIconFullSize:
+            self.setupToolBarFullIconSize()
+        else:
+            self.setupToolBarStandardIconSize()
+
+    def setupToolBarStandardIconSize(self):
 
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
@@ -337,11 +343,16 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addWidget(self.mainRefButton)
 
         openChapterNoteButton = QPushButton()
+        #openChapterNoteButton.setFixedSize(40, 40)
+        #openChapterNoteButton.setBaseSize(70, 70)
         openChapterNoteButton.setToolTip("Main View Chapter Notes")
         openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
         openChapterNoteButton.clicked.connect(self.openMainChapterNote)
         self.firstToolBar.addWidget(openChapterNoteButton)
+        #t = self.firstToolBar.addAction(QIcon(openChapterNoteButtonFile), "Main View Chapter Notes", self.openMainChapterNote)
+        #openChapterNoteButtonFile = os.path.join("htmlResources", "search.png")
+        #t.setIcon(QIcon(openChapterNoteButtonFile))
 
         openVerseNoteButton = QPushButton()
         openVerseNoteButton.setToolTip("Main View Verse Notes")
@@ -400,19 +411,19 @@ class MainWindow(QMainWindow):
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
         self.studyBibleToolBar.addWidget(self.studyRefButton)
 
-        self.openStudyChapterNoteButton = QPushButton()
-        self.openStudyChapterNoteButton.setToolTip("Study View Chapter Notes")
+        openStudyChapterNoteButton = QPushButton()
+        openStudyChapterNoteButton.setToolTip("Study View Chapter Notes")
         openStudyChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
-        self.openStudyChapterNoteButton.setIcon(QIcon(openStudyChapterNoteButtonFile))
-        self.openStudyChapterNoteButton.clicked.connect(self.openStudyChapterNote)
-        self.studyBibleToolBar.addWidget(self.openStudyChapterNoteButton)
+        openStudyChapterNoteButton.setIcon(QIcon(openStudyChapterNoteButtonFile))
+        openStudyChapterNoteButton.clicked.connect(self.openStudyChapterNote)
+        self.studyBibleToolBar.addWidget(openStudyChapterNoteButton)
 
-        self.openStudyVerseNoteButton = QPushButton()
-        self.openStudyVerseNoteButton.setToolTip("Study View Verse Notes")
+        openStudyVerseNoteButton = QPushButton()
+        openStudyVerseNoteButton.setToolTip("Study View Verse Notes")
         openStudyVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
-        self.openStudyVerseNoteButton.setIcon(QIcon(openStudyVerseNoteButtonFile))
-        self.openStudyVerseNoteButton.clicked.connect(self.openStudyVerseNote)
-        self.studyBibleToolBar.addWidget(self.openStudyVerseNoteButton)
+        openStudyVerseNoteButton.setIcon(QIcon(openStudyVerseNoteButtonFile))
+        openStudyVerseNoteButton.clicked.connect(self.openStudyVerseNote)
+        self.studyBibleToolBar.addWidget(openStudyVerseNoteButton)
 
         searchStudyBibleButton = QPushButton()
         searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View")
@@ -767,6 +778,277 @@ class MainWindow(QMainWindow):
         instantButton.setIcon(QIcon(instantButtonFile))
         instantButton.clicked.connect(self.instant)
         self.rightToolBar.addWidget(instantButton)
+
+        self.rightToolBar.addSeparator()
+
+    def setupToolBarFullIconSize(self):
+
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+
+        self.firstToolBar = QToolBar()
+        self.firstToolBar.setWindowTitle("Main Toolbar")
+        self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.firstToolBar)
+
+        self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
+        self.mainTextMenuButton.setToolTip("Main View Bible Menu")
+        self.mainTextMenuButton.setStyleSheet(textButtonStyle)
+        self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
+        self.firstToolBar.addWidget(self.mainTextMenuButton)
+
+        self.mainRefButton = QPushButton(self.verseReference("main")[1])
+        self.mainRefButton.setToolTip("Main View Active Verse Features")
+        self.mainRefButton.setStyleSheet(textButtonStyle)
+        self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
+        self.firstToolBar.addWidget(self.mainRefButton)
+
+        iconFile = os.path.join("htmlResources", "noteChapter.png")
+        self.firstToolBar.addAction(QIcon(iconFile), "Main View Chapter Notes", self.openMainChapterNote)
+
+        iconFile = os.path.join("htmlResources", "noteVerse.png")
+        self.firstToolBar.addAction(QIcon(iconFile), "Main View Verse Notes", self.openMainVerseNote)
+
+        iconFile = os.path.join("htmlResources", "search.png")
+        self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View", self.displaySearchBibleCommand)
+
+        iconFile = os.path.join("htmlResources", "search_plus.png")
+        self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View with OHGB", self.displayISearchBibleCommand)
+
+        self.firstToolBar.addSeparator()
+
+        self.textCommandLineEdit = QLineEdit()
+        self.textCommandLineEdit.setToolTip("Command Line")
+        self.textCommandLineEdit.setMinimumWidth(100)
+        self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
+        self.firstToolBar.addWidget(self.textCommandLineEdit)
+
+        self.firstToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "toolbar.png")
+        self.firstToolBar.addAction(QIcon(iconFile), "Show / Hide Other Toolbars", self.hideShowAdditionalToolBar)
+
+        self.addToolBarBreak()
+
+        self.studyBibleToolBar = QToolBar()
+        self.studyBibleToolBar.setWindowTitle("Bible on Study View")
+        self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.studyBibleToolBar)
+
+        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
+        self.studyTextMenuButton.setToolTip("Study View Bible Menu")
+        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
+        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
+        self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
+
+        self.studyRefButton = QPushButton(self.verseReference("study")[1])
+        self.studyRefButton.setToolTip("Study View Active Verse Features")
+        self.studyRefButton.setStyleSheet(textButtonStyle)
+        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
+        self.studyBibleToolBar.addWidget(self.studyRefButton)
+
+        iconFile = os.path.join("htmlResources", "noteChapter.png")
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Study View Chapter Notes", self.openStudyChapterNote)
+
+        iconFile = os.path.join("htmlResources", "noteVerse.png")
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Study View Verse Notes", self.openStudyVerseNote)
+
+        iconFile = os.path.join("htmlResources", "search.png")
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View", self.displaySearchStudyBibleCommand)
+
+        iconFile = os.path.join("htmlResources", "search_plus.png")
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View with OHGB", self.displayISearchStudyBibleCommand)
+
+        self.secondToolBar = QToolBar()
+        self.secondToolBar.setWindowTitle("Secondary Toolbar")
+        self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(self.secondToolBar)
+
+        iconFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
+        self.enableStudyBibleButton = self.secondToolBar.addAction(QIcon(iconFile), "Enable / Disable Bible Display on Study View", self.enableStudyBibleButtonClicked)
+
+        self.secondToolBar.addSeparator()
+
+        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+        self.commentaryRefButton.setToolTip("Commentary Menu")
+        self.commentaryRefButton.setStyleSheet(textButtonStyle)
+        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
+        self.secondToolBar.addWidget(self.commentaryRefButton)
+
+        self.secondToolBar.addSeparator()
+
+        self.bookButton = QPushButton(config.book)
+        self.bookButton.setToolTip("Books")
+        self.bookButton.setStyleSheet(textButtonStyle)
+        self.bookButton.clicked.connect(self.openBookMenu)
+        self.secondToolBar.addWidget(self.bookButton)
+
+#        searchBookButton = QPushButton()
+#        searchBookButton.setToolTip("Search Books")
+#        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+#        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+#        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+#        self.secondToolBar.addWidget(searchBookButton)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "newfile.png")
+        self.secondToolBar.addAction(QIcon(iconFile), "Create a Topical Note", self.createNewNoteFile)
+
+        iconFile = os.path.join("htmlResources", "open.png")
+        self.secondToolBar.addAction(QIcon(iconFile), "Open Topical Notes", self.openTextFileDialog)
+
+        self.externalFileButton = QPushButton(self.getLastExternalFileName())
+        self.externalFileButton.setToolTip("Read Topical Notes")
+        self.externalFileButton.setStyleSheet(textButtonStyle)
+        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
+        self.secondToolBar.addWidget(self.externalFileButton)
+
+        iconFile = os.path.join("htmlResources", "edit.png")
+        self.secondToolBar.addAction(QIcon(iconFile), "Edit Topical Notes", self.editExternalFileButtonClicked)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "fontMinus.png")
+        self.secondToolBar.addAction(QIcon(iconFile), "Smaller Font Size", self.smallerFont)
+
+        iconFile = os.path.join("htmlResources", "fontPlus.png")
+        self.secondToolBar.addAction(QIcon(iconFile), "Larger Font Size", self.largerFont)
+
+        self.secondToolBar.addSeparator()
+
+        self.leftToolBar = QToolBar()
+        self.leftToolBar.setWindowTitle("Left Toolbar")
+        self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
+
+        iconFile = os.path.join("htmlResources", "left.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Main View Previous History Record", self.back)
+
+        iconFile = os.path.join("htmlResources", "history.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Main View History", self.mainHistoryButtonClicked)
+
+        iconFile = os.path.join("htmlResources", "right.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Main View Next History Record", self.forward)
+
+        self.leftToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "pdf.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Export to PDF", self.printMainPage)
+
+        self.leftToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", self.getReadFormattedBibles())
+        self.enableParagraphButton = self.leftToolBar.addAction(QIcon(iconFile), "Formatted / Plain Bibles \n(only if both versions are installed)", self.enableParagraphButtonClicked)
+
+        iconFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton = self.leftToolBar.addAction(QIcon(iconFile), "Add Sub-headings to Plain Bibles \n(only for plain versions)", self.enableSubheadingButtonClicked)
+
+        self.leftToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "previousChapter.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Preivous Chapter", self.previousMainChapter)
+
+#        actionButton = QPushButton()
+#        actionButton.setToolTip("Main Passage")
+#        actionButtonFile = os.path.join("htmlResources", "bible.png")
+#        actionButton.setIcon(QIcon(actionButtonFile))
+#        actionButton.clicked.connect(self.openMainChapter)
+#        self.leftToolBar.addWidget(actionButton)
+
+        iconFile = os.path.join("htmlResources", "nextChapter.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Next Chapter", self.nextMainChapter)
+
+        self.leftToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "compare_with.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Compare All Versions", self.runCOMPARE)
+
+        iconFile = os.path.join("htmlResources", "parallel_with.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Compare / Parallel with ...", self.mainRefButtonClicked)
+
+        self.leftToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "original.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Original Bible", self.runMOB)
+
+        iconFile = os.path.join("htmlResources", "interlinear.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Interlinear Bible", self.runMIB)
+
+        iconFile = os.path.join("htmlResources", "trilingual.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Trilingual Bible", self.runMTB)
+
+        iconFile = os.path.join("htmlResources", "line.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Parallel Bible", self.runMPB)
+
+        iconFile = os.path.join("htmlResources", "annotated.png")
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Annotated Bible", self.runMAB)
+
+        self.leftToolBar.addSeparator()
+
+        self.rightToolBar = QToolBar()
+        self.rightToolBar.setWindowTitle("Right Toolbar")
+        self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
+
+        iconFile = os.path.join("htmlResources", "left.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Study View Previous History Record", self.studyBack)
+
+        iconFile = os.path.join("htmlResources", "history.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Study View History", self.studyHistoryButtonClicked)
+
+        iconFile = os.path.join("htmlResources", "right.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Study View Next History Record", self.studyForward)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "pdf.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Export to PDF", self.printStudyPage)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "indexes.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Smart Indexes", self.runINDEX)
+
+        iconFile = os.path.join("htmlResources", "commentary.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Commentary", self.runCOMMENTARY)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "cross_reference.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Cross References", self.runCROSSREFERENCE)
+
+        iconFile = os.path.join("htmlResources", "treasure.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Treasury of Scripture Knowledge (Enhanced)", self.runTSKE)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "translations.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Translations", self.runTRANSLATION)
+
+        iconFile = os.path.join("htmlResources", "discourse.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Discourse Features", self.runDISCOURSE)
+
+        iconFile = os.path.join("htmlResources", "words.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Words", self.runWORDS)
+
+        iconFile = os.path.join("htmlResources", "combo.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Translations + Discourse Features + Words", self.runCOMBO)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "portrait.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Landscape / Portrait Mode", self.switchLandscapeMode)
+
+        iconFile = os.path.join("htmlResources", "parallel.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Resize / Hide Study View", self.parallel)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton = self.rightToolBar.addAction(QIcon(iconFile), "Enable / Disable Hovering Feature", self.enableInstantButtonClicked)
+
+        iconFile = os.path.join("htmlResources", "lightning.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Show / Hide Bottom View", self.instant)
 
         self.rightToolBar.addSeparator()
 
@@ -2216,10 +2498,10 @@ class WebEngineView(QWebEngineView):
         self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
 
     def messageNoTtsEngine(self):
-        self.page().runJavaScript("alert('No text-to-speech engine is detected in your system!')")
+        self.page().runJavaScript("alert('No text-to-speech engine is found in your device!')")
 
     def messageNoTtsVoice(self):
-        self.page().runJavaScript("alert('No text-to-speech voice is detected in your system!')")
+        self.page().runJavaScript("alert('No text-to-speech voice is found in your device!')")
 
     def copySelectedText(self):
         if not self.selectedText():

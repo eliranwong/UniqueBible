@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 3.2
+latest_version = 3.3
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -29,6 +29,8 @@ if not hasattr(config, 'noToolBar'):
     config.noToolBar = False
 if not hasattr(config, 'singleToolBar'):
     config.singleToolBar = False
+if not hasattr(config, 'toolBarIconFullSize'):
+    config.toolBarIconFullSize = False
 if not hasattr(config, 'parallelMode'):
     config.parallelMode = 1
 if not hasattr(config, 'instantMode'):
@@ -149,6 +151,7 @@ def saveDataOnExit():
     fileObj.write("\nlandscapeMode = "+pprint.pformat(config.landscapeMode))
     fileObj.write("\nnoToolBar = "+pprint.pformat(config.noToolBar))
     fileObj.write("\nsingleToolBar = "+pprint.pformat(config.singleToolBar))
+    fileObj.write("\ntoolBarIconFullSize = "+pprint.pformat(config.toolBarIconFullSize))
     fileObj.write("\nparallelMode = "+pprint.pformat(config.parallelMode))
     fileObj.write("\ninstantMode = "+pprint.pformat(config.instantMode))
     fileObj.write("\ninstantInformationEnabled = "+pprint.pformat(config.instantInformationEnabled))
