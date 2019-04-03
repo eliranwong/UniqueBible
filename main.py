@@ -30,7 +30,7 @@ if not hasattr(config, 'noToolBar'):
 if not hasattr(config, 'singleToolBar'):
     config.singleToolBar = False
 if not hasattr(config, 'toolBarIconFullSize'):
-    config.toolBarIconFullSize = True
+    config.toolBarIconFullSize = False
 if not hasattr(config, 'parallelMode'):
     config.parallelMode = 1
 if not hasattr(config, 'instantMode'):
@@ -128,6 +128,8 @@ def setupMainWindow():
     availableGeometry = app.desktop().availableGeometry(mainWindow)
     if platform.system() == "Linux":
         mainWindow.resize(availableGeometry.width() * 4/5, availableGeometry.height() * 4/5)
+    elif platform.system() == "Windows":
+        mainWindow.showMaximized()
     else:
         mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
