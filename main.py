@@ -30,7 +30,7 @@ if not hasattr(config, 'noToolBar'):
 if not hasattr(config, 'singleToolBar'):
     config.singleToolBar = False
 if not hasattr(config, 'toolBarIconFullSize'):
-    config.toolBarIconFullSize = False
+    config.toolBarIconFullSize = True
 if not hasattr(config, 'parallelMode'):
     config.parallelMode = 1
 if not hasattr(config, 'instantMode'):
