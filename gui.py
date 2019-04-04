@@ -2310,19 +2310,13 @@ class CentralWidget(QWidget):
 
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
-        self.mainView.addTab(WebEngineView(self, "main"), "Bible1")
-        self.mainView.addTab(WebEngineView(self, "main"), "Bible2")
-        self.mainView.addTab(WebEngineView(self, "main"), "Bible3")
-        self.mainView.addTab(WebEngineView(self, "main"), "Bible4")
-        self.mainView.addTab(WebEngineView(self, "main"), "Bible5")
+        for i in range(config.numberOfTab):
+            self.mainView.addTab(WebEngineView(self, "main"), "Bible{0}".format(i+1))
 
         self.studyView = TabWidget(self, "study")
         self.parent.studyView = self.studyView
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool1")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool2")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool3")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool4")
-        self.studyView.addTab(WebEngineView(self, "study"), "Tool5")
+        for i in range(config.numberOfTab):
+            self.studyView.addTab(WebEngineView(self, "study"), "Tool{0}".format(i+1))
 
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
