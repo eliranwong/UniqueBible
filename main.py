@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 3.3
+latest_version = 3.4
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -30,7 +30,7 @@ if not hasattr(config, 'noToolBar'):
 if not hasattr(config, 'singleToolBar'):
     config.singleToolBar = False
 if not hasattr(config, 'toolBarIconFullSize'):
-    config.toolBarIconFullSize = True
+    config.toolBarIconFullSize = False
 if not hasattr(config, 'parallelMode'):
     config.parallelMode = 1
 if not hasattr(config, 'instantMode'):

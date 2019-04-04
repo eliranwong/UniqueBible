@@ -205,6 +205,8 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Left Toolbar [Show / Hide]", self, triggered=self.hideShowLeftToolBar))
         menu3.addAction(QAction("&Right Toolbar [Show / Hide]", self, triggered=self.hideShowRightToolBar))
         menu3.addSeparator()
+        menu3.addAction(QAction("&Toolbar Icons [Full-size / Standard]", self, triggered=self.switchIconSize))
+        menu3.addSeparator()
         menu3.addAction(QAction("&Landscape / Portrait Mode", self, shortcut = "Ctrl+L", triggered=self.switchLandscapeMode))
         menu3.addSeparator()
         menu3.addAction(QAction("Study Vie&w [Resize / Hide]", self, shortcut = "Ctrl+W", triggered=self.parallel))
@@ -2179,6 +2181,14 @@ class MainWindow(QMainWindow):
                 config.currentRecord[view] = len(viewhistory) - 1
 
     # switch between landscape / portrait mode
+    def switchIconSize(self):
+        if config.toolBarIconFullSize:
+            config.toolBarIconFullSize = False
+        else:
+            config.toolBarIconFullSize = True
+        self.mainPage.runJavaScript('alert("Icon size is changed. You need to restart the app to apply the changes.")')
+
+    # switch between landscape / portrait mode
     def switchLandscapeMode(self):
         if config.landscapeMode:
             config.landscapeMode = False
@@ -2763,6 +2773,12 @@ class NoteEditor(QMainWindow):
         self.show()
 
     def setupMenuBar(self):
+        if config.toolBarIconFullSize:
+            self.setupMenuBarFullIconSize()
+        else:
+            self.setupMenuBarStandardIconSize()
+
+    def setupMenuBarStandardIconSize(self):
 
         self.menuBar = QToolBar()
         self.menuBar.setWindowTitle("Note Editor Menu Bar")
@@ -2854,6 +2870,62 @@ class NoteEditor(QMainWindow):
 
         self.menuBar.addSeparator()
 
+    def setupMenuBarFullIconSize(self):
+
+        self.menuBar = QToolBar()
+        self.menuBar.setWindowTitle("Note Editor Menu Bar")
+        self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # In QWidget, self.menuBar is treated as the menubar without the following line
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.menuBar)
+
+        iconFile = os.path.join("htmlResources", "newfile.png")
+        self.menuBar.addAction(QIcon(iconFile), "Create a New Topical Note \n[Shortcut: Ctrl/Cmd + N]", self.newNoteFile)
+
+        iconFile = os.path.join("htmlResources", "open.png")
+        self.menuBar.addAction(QIcon(iconFile), "Open Topical Notes \n[Shortcut: Ctrl/Cmd + O]", self.openFileDialog)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "save.png")
+        self.menuBar.addAction(QIcon(iconFile), "Save \n[Shortcut: Ctrl/Cmd + S]", self.saveNote)
+
+        iconFile = os.path.join("htmlResources", "saveas.png")
+        self.menuBar.addAction(QIcon(iconFile), "Save as", self.openSaveAsDialog)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "print.png")
+        self.menuBar.addAction(QIcon(iconFile), "Print", self.printNote)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "toolbar.png")
+        self.menuBar.addAction(QIcon(iconFile), "Show / Hide Toolbar", self.toogleToolbar)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "switch.png")
+        self.menuBar.addAction(QIcon(iconFile), "Rich / Plain Mode", self.switchMode)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "fontMinus.png")
+        self.menuBar.addAction(QIcon(iconFile), "Smaller Font Size", self.decreaseNoteEditorFontSize)
+
+        iconFile = os.path.join("htmlResources", "fontPlus.png")
+        self.menuBar.addAction(QIcon(iconFile), "Larger Font Size", self.increaseNoteEditorFontSize)
+
+        self.menuBar.addSeparator()
+
+        self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setToolTip("Quick Search \n[Shortcut: Ctrl/Cmd + F]")
+        self.searchLineEdit.setMaximumWidth(300)
+        self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
+        self.menuBar.addWidget(self.searchLineEdit)
+
+        self.menuBar.addSeparator()
+
     def toogleToolbar(self):
         if self.showToolBar:
             self.toolBar.hide()
@@ -2872,6 +2944,12 @@ class NoteEditor(QMainWindow):
             return document.print_(printer)
 
     def setupToolBar(self):
+        if config.toolBarIconFullSize:
+            self.setupToolBarFullIconSize()
+        else:
+            self.setupToolBarStandardIconSize()
+
+    def setupToolBarStandardIconSize(self):
 
         self.toolBar = QToolBar()
         self.toolBar.setWindowTitle("Tool Bar")
@@ -2964,6 +3042,58 @@ class NoteEditor(QMainWindow):
         imageButton.setIcon(QIcon(imageButtonFile))
         imageButton.clicked.connect(self.openImageDialog)
         self.toolBar.addWidget(imageButton)
+
+        self.toolBar.addSeparator()
+
+    def setupToolBarFullIconSize(self):
+
+        self.toolBar = QToolBar()
+        self.toolBar.setWindowTitle("Tool Bar")
+        self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # self.toolBar can be treated as an individual widget and positioned with a specified layout
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.toolBar)
+
+        iconFile = os.path.join("htmlResources", "bold.png")
+        self.toolBar.addAction(QIcon(iconFile), "Bold \n[Shortcut: Ctrl/Cmd + B]", self.format_bold)
+
+        iconFile = os.path.join("htmlResources", "italic.png")
+        self.toolBar.addAction(QIcon(iconFile), "Italic \n[Shortcut: Ctrl/Cmd + I]", self.format_italic)
+
+        iconFile = os.path.join("htmlResources", "underline.png")
+        self.toolBar.addAction(QIcon(iconFile), "Underline \n[Shortcut: Ctrl/Cmd + U]", self.format_underline)
+
+        self.toolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "custom.png")
+        self.toolBar.addAction(QIcon(iconFile), "Transform Selected Text: \n[Shortcut: Ctrl/Cmd + M] \n \nBullet List, e.g.: \n* bullet one \n* bullet two \n \nNumbered List, e.g.: \n*1 numbered item one \n*2 numbered item two \n \nTable, e.g.: \n{one|two|three} \n{four|five|six}", self.format_custom)
+
+        self.toolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "align_left.png")
+        self.toolBar.addAction(QIcon(iconFile), "Align Left", self.format_left)
+
+        iconFile = os.path.join("htmlResources", "align_center.png")
+        self.toolBar.addAction(QIcon(iconFile), "Center Text", self.format_center)
+
+        iconFile = os.path.join("htmlResources", "align_right.png")
+        self.toolBar.addAction(QIcon(iconFile), "Align Right", self.format_right)
+
+        iconFile = os.path.join("htmlResources", "align_justify.png")
+        self.toolBar.addAction(QIcon(iconFile), "Justify", self.format_justify)
+
+        self.toolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "clearFormat.png")
+        self.toolBar.addAction(QIcon(iconFile), "Delete Formatting \n[Shortcut: Ctrl/Cmd + D]", self.format_clear)
+
+        self.toolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "hyperlink.png")
+        self.toolBar.addAction(QIcon(iconFile), "Add a Hyperlink", self.openHyperlinkDialog)
+
+        iconFile = os.path.join("htmlResources", "gallery.png")
+        self.toolBar.addAction(QIcon(iconFile), "Add an Image", self.openImageDialog)
 
         self.toolBar.addSeparator()
 
