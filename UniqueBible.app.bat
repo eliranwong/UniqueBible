@@ -1,1 +1,1 @@
-.\wvenv\Scripts\activate & python main.py
+.\venvwin\Scripts\activate & python main.py
