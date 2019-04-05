@@ -447,7 +447,7 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.secondToolBar)
 
         self.enableStudyBibleButton = QPushButton()
-        self.enableStudyBibleButton.setToolTip("Enable / Disable Bible Display on Study View")
+        self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
         enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
         self.enableStudyBibleButton.clicked.connect(self.enableStudyBibleButtonClicked)
@@ -866,7 +866,7 @@ class MainWindow(QMainWindow):
         self.addToolBar(self.secondToolBar)
 
         iconFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
-        self.enableStudyBibleButton = self.secondToolBar.addAction(QIcon(iconFile), "Enable / Disable Bible Display on Study View", self.enableStudyBibleButtonClicked)
+        self.enableStudyBibleButton = self.secondToolBar.addAction(QIcon(iconFile), self.getStudyBibleDisplayToolTip(), self.enableStudyBibleButtonClicked)
 
         self.secondToolBar.addSeparator()
 
@@ -1778,6 +1778,12 @@ class MainWindow(QMainWindow):
         else:
             return "deleteStudyViewBible.png"
 
+    def getStudyBibleDisplayToolTip(self):
+        if config.openBibleInMainViewOnly:
+            return "Enable Bible Display on Study View"
+        else:
+            return "Disable Bible Display on Study View"
+
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
             config.openBibleInMainViewOnly = False
@@ -1787,6 +1793,7 @@ class MainWindow(QMainWindow):
             self.studyBibleToolBar.hide()
         enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
+        self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
