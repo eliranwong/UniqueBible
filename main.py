@@ -60,7 +60,7 @@ if not hasattr(config, 'importRtlOT'):
 if not hasattr(config, 'rtlTexts'):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
 if not hasattr(config, 'openBibleInMainViewOnly'):
-    config.openBibleInMainViewOnly = True
+    config.openBibleInMainViewOnly = False
 if not hasattr(config, 'mainText'):
     config.mainText = 'KJV'
 if not hasattr(config, 'mainB'):
