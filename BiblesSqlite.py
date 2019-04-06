@@ -137,7 +137,16 @@ class BiblesSqlite:
                 check = len(bcList)
                 if check >= 1:
                     # i.e. book specified; add chapter menu
-                    menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4])
+                    bookReference = self.bcvToVerseReference(bcList[0], 1, 1)
+                    if config.openBibleInMainViewOnly:
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open</button>".format(text, bookReference)
+                    else:
+                        if source == "main":
+                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on study view</button>".format(text, bookReference)
+                        elif source == "study":
+                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on main view</button>".format(text, bookReference)
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open HERE</button> {2}".format(text, bookReference, anotherView)
+                    menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], openOption)
                     menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0], text))
                 if check >= 2:
                     # i.e. both book and chapter specified; add verse menu
