@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 3.7
+latest_version = 3.8
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -77,6 +77,8 @@ if not hasattr(config, 'studyC'):
     config.studyC = 3
 if not hasattr(config, 'studyV'):
     config.studyV = 16
+if not hasattr(config, 'iSearchVersion'):
+    config.iSearchVersion = "OHGB"
 if not hasattr(config, 'commentaryText'):
     config.commentaryText = 'CBSC'
 if not hasattr(config, 'commentaryB'):
@@ -175,6 +177,7 @@ def saveDataOnExit():
     fileObj.write("\nmainB = "+pprint.pformat(config.mainB))
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
     fileObj.write("\nmainV = "+pprint.pformat(config.mainV))
+    fileObj.write("\niSearchVersion = "+pprint.pformat(config.iSearchVersion))
     fileObj.write("\nstudyText = "+pprint.pformat(config.studyText))
     fileObj.write("\nstudyB = "+pprint.pformat(config.studyB))
     fileObj.write("\nstudyC = "+pprint.pformat(config.studyC))

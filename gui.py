@@ -371,7 +371,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip("Search Last Opened Bible on Main View with OHGB")
+        searchBibleButton.setToolTip("Search Last Opened Bible on Main View with {0}".format(config.iSearchVersion))
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displayISearchBibleCommand)
@@ -435,7 +435,7 @@ class MainWindow(QMainWindow):
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
         searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View with OHGB")
+        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View with {0}".format(config.iSearchVersion))
         searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
         searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
@@ -814,7 +814,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View", self.displaySearchBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View with OHGB", self.displayISearchBibleCommand)
+        self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View with {0}".format(config.iSearchVersion), self.displayISearchBibleCommand)
 
         self.firstToolBar.addSeparator()
 
@@ -858,7 +858,7 @@ class MainWindow(QMainWindow):
         self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View", self.displaySearchStudyBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View with OHGB", self.displayISearchStudyBibleCommand)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View with {0}".format(config.iSearchVersion), self.displayISearchStudyBibleCommand)
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
@@ -2401,8 +2401,8 @@ class WebEngineView(QWebEngineView):
         del parser
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
-        self.iSearchText.setText("Search with OHGB in {0}".format(text))
-        self.iSearchTextInBook.setText("Search with OHGB in {0} > {1}".format(text, book))
+        self.iSearchText.setText("Search with {1} in {0}".format(text, config.iSearchVersion))
+        self.iSearchTextInBook.setText("Search with {2} in {0} > {1}".format(text, book, config.iSearchVersion))
         self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
         self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
         self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
@@ -2446,12 +2446,12 @@ class WebEngineView(QWebEngineView):
         self.addAction(self.searchTextInBook)
 
         self.iSearchText = QAction(self)
-        self.iSearchText.setText("Search with OHGB")
+        self.iSearchText.setText("Search with {0}".format(config.iSearchVersion))
         self.iSearchText.triggered.connect(self.iSearchSelectedText)
         self.addAction(self.iSearchText)
 
         self.iSearchTextInBook = QAction(self)
-        self.iSearchTextInBook.setText("Search with OHGB in Current Book")
+        self.iSearchTextInBook.setText("Search with {0} in Current Book".format(config.iSearchVersion))
         self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
         self.addAction(self.iSearchTextInBook)
 

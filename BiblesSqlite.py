@@ -458,11 +458,11 @@ class BiblesSqlite:
                 divTag = "<div>"
             formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
             if interlinear:
-                if b < 40:
+                if b < 40 and config.iSearchVersion in config.rtlTexts:
                     divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 else:
                     divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
-                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse("OHGB", b, c, v)[3])
+                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse(config.iSearchVersion, b, c, v)[3])
         if mode == "BASIC" and not searchString == "z":
             formatedText = re.sub("("+searchString+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
