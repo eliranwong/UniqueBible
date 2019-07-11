@@ -1834,8 +1834,7 @@ class Twwy:
             (58,11,26),
             (19,9,10),
             (10,7,21),
-            (47,6,16,18),
-            (47,7,1),
+            (47,6,16,7,1),
             (61,1,3,4),
             (49,3,6),
             (47,1,19,20),
@@ -1873,19 +1872,39 @@ class Twwy:
             (42,1,38),
         )
         verses = ""
+        count = 0
         biblesSqlite = BiblesSqlite()
         bible = Bible(text)
-        for t in twwyVerses:
-            if len(t) == 3:
-                b, c, v = t
+        for verse in twwyVerses:
+            if len(verse) == 3:
+                b, c, v = verse
                 verses += "（{0}）\t{1}\n".format(biblesSqlite.bcvToVerseReference(b, c, v), biblesSqlite.readTextVerse(text, b, c, v)[3].strip())
-            elif len(t) == 4:
-                b, c, vs, ve = t
+                count += 1
+            elif len(verse) == 4:
+                b, c, vs, ve = verse
                 verses += "（{0}-{1}）\t".format(biblesSqlite.bcvToVerseReference(b, c, vs), ve)
                 v = vs
                 while (v <= ve):
                     verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    count += 1
                     v += 1
                 verses += "\n"
+            elif len(verse) == 5:
+                b, cs, vs, ce, ve = verse
+                verses += "（{0}-{1}:{2}）\t".format(biblesSqlite.bcvToVerseReference(b, cs, vs), ce, ve)
+                c = cs
+                v = vs
+                while (biblesSqlite.readTextVerse(text, b, c, v)[3].strip()):
+                    verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    count += 1
+                    v += 1
+                c = ce
+                v = 1
+                while (v <= ve):
+                    verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    count += 1
+                    v += 1
+                verses += "\n"
+        verses += "\nTotal number of verses: {0}\n".format(count)
         return verses
 
