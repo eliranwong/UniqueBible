@@ -1,0 +1,160 @@
+0.0	Book Cover
+0.1.0	Why This Manual Was Written
+0.2.0	A Proposed Method for Prayer
+0.3.0	The Prayer Method at Work
+0.4.0	An Example of Praying About The Struggle With Sin
+0.4.{1}	Praise God
+0.4.{2}	Confess Sin
+0.4.{3}	Pray the Promises
+0.4.{4}	Pray Scripture Prayers
+0.4.{5}	Pray Faith Affirmations
+0.5.0	Why Scripture Promises Are So Important for Our Prayers
+0.6.0	Four Important Truths
+0.6.1	Promises will only and always mean what they mean in their context and with the intent with which they were written.
+0.6.2	Promises sometimes have a multiple fulfillment in the past, present and future.
+0.6.3	Promises that are conditional always require fulfillment of the condition before the promise is granted.
+0.6.4	Promises that are granted are sometimes delayed for many years.
+0.7.0	Living Before the Face of God
+0.7.{6}.1	Presenting Ourselves to God
+0.7.{6}.2	Scriptures on Presenting Ourselves to God
+0.7.{7}.1	Accepting Everything from God
+0.7.{7}.2	Scriptures on Accepting Everything From God
+1.0	Using Scripture to Prepare to Pray
+1.1.0	Developing the Motivation for Prayer: The Glory of God
+1.1.{1}	Praying for God’s Honor and Glory
+1.1.{5}	Faith Affirmations
+1.2.0	Building Faith By Meditation on God’s Faithfulness
+1.2.{3}	Promises to Those Who Trust God
+1.2.{4}	Prayers for Faith
+1.2.{5}	Faith Affirmations
+2.0	Using Scripture to Praise God
+2.1.0	Beholding the Glory of Christ
+2.2.0	Beholding the Greatness of God
+2.2.{1}.1	Praising Our Great God
+2.2.{1}.2	Giving Thanks to Our Great God
+2.2.{4}	Scripture Prayers
+2.2.{5}	Faith Affirmations
+3.0	Using Scripture to Confess Sin
+3.0.{3}	Promises of Forgiveness
+3.0.{4}.0	Prayers Seeking Forgiveness
+3.0.{4}.1	Corporate Confession
+3.0.{4}.2	Personal Confession
+3.0.{5}	Faith Affirmations
+4.0	Using Scripture to Make Requests: Promises and Scripture Prayers
+4.1.{3}	Promises for Help with Prayer
+4.1.{4}	Prayer for God’s Help to Pray
+4.1.{5}	Faith Affirmations
+4.2.{3}	Promises to Answer Prayer
+4.2.{4}	Prayers for Answered Prayer
+4.2.{5}	Faith Affirmations
+4.3.{3}	Promises of God’s Intention to Save Us
+4.3.{4}	Prayers to God for Salvation
+4.3.{5}	Faith Affirmations
+4.4.{3}	Promises of God’s Intention to Save the Nations
+4.4.{4}.1	Prayers Asking God For the Gospel to Advance
+4.4.{4}.2	How to Pray So that People Will Be Saved
+4.4.{5}	Faith Affirmations
+4.5.{3}	Promises of God’s Love for His People
+4.5.{4}	Prayers Regarding God’s Love
+4.5.{5}	Faith Affirmations
+4.6.{3}	Promises to the Church
+4.6.{4}	Prayers For the Church (see also under Prayer Blessings)
+4.6.{5}	Faith Affirmations
+4.7.{3}	Promises to Shepherds
+4.7.{4}	Prayers For Leaders
+4.7.{5}	Faith Affirmations
+4.8.{3}	Promises on the Power of God’s Word
+4.8.{4}	Prayers Regarding God’s Word
+4.8.{5}	Faith Affirmations
+4.9.{3}	Promises to Send Revival
+4.9.{4}	Prayers for Revival
+4.9.{5}	Faith Affirmations
+4.10.{3}	Promises of The Holy Spirit’s Powerful Ministry
+4.10.{4}	Prayers for God to Give His Spirit
+4.10.{5}	Faith Affirmations
+4.11.{3}	Promises that God Will Make Us His Possession
+4.11.{4}	Prayers in Light of God’s Complete Ownership of Us
+4.11.{5}	Faith Affirmations
+4.12.{3}.1	The meaning of the promise “God with us”:
+4.12.{3}.2	Promises that God Will Be “With Us”
+4.12.{4}	Prayers Seeking Success and God’s Presence
+4.12.{5}	Faith Affirmations
+4.13.{3}	Promises that God Will Draw Near
+4.13.{4}	Prayers Seeking God’s Nearness
+4.13.{5}	Faith Affirmations
+4.14.{3}	Promises that God Will Manifest His Favor
+4.14.{4}	Prayers Seeking God’s Favor
+4.14.{5}	Faith Affirmations
+4.15.{3}	Promises to Believers Struggling with Sin
+4.15.{4}	Prayers for Sanctifying Grace
+4.15.{5}	Faith Affirmations
+4.16.{3}	Promises to Give His People Strength
+4.16.{4}	Prayers for Strength
+4.16.{5}	Faith Affirmations
+4.17.{3}	Promises to Give Light in the Darkness
+4.17.{4}	Prayers When in Darkness
+4.17.{5}	Faith Affirmations
+4.18.{3}	Promises to Those Who are Afflicted
+4.18.{4}	Prayers When Troubled and Afflicted
+4.18.{5}	Faith Affirmations
+4.19.{3}	Promises to Those Who are Anxious and Afraid
+4.19.{4}	Prayers for Peace
+4.19.{5}	Faith Affirmations
+4.20.{3}	Promises Regarding Wisdom
+4.20.{4}	Praying for Wisdom
+4.20.{5}	Faith Affirmations
+4.21.{3}	Promises to Give Guidance
+4.21.{4}	Praying for Guidance
+4.21.{5}	Faith Affirmations
+4.22.{3}	Promises to Give Needed Provision
+4.22.{4}	Prayers for Provision
+4.22.{5}	Faith Affirmations
+4.23.{3}	Promises to Give Needed Protection
+4.23.{4}	Prayers for Protection
+4.23.{5}	Faith Affirmations
+4.24.{3}	Promises that God is Fighting for His People
+4.24.{4}	Prayer in the Presence of Our Enemies
+4.24.{5}	Faith Affirmations
+4.25.{3}	Promises on the Power of the Cross Over Satan
+4.25.{4}	Praying for God’s Opposition to Satanic and Demonic Activity
+4.25.{5}	Faith Affirmations
+4.26.{3}	Promises to Save Our Children and Future Generations
+4.26.{4}	Praying for Our Children
+4.26.{5}	Faith Affirmations
+4.27.{3}	Promises to Those Who Seek God
+4.27.{4}	Seeking After God in Prayer
+4.27.{5}	Faith Affirmations
+4.28.{3}	Promises to Those Who Fear God
+4.28.{4}	Prayers Regarding the Fear of God
+4.28.{5}	Faith Affirmations
+4.29.{3}	Promises to the Humble
+4.29.{4}	Praying for and with Humility
+4.29.{5}	Faith Affirmations
+4.30.{3}	Promises to the Generous
+4.30.{4}	Praying about Our Giving
+4.30.{5}	Faith Affirmations
+4.31.{3}	Promises to the Obedient
+4.31.{4}	Praying for Obedience and Its Accompanying Blessings
+4.31.{5}	Faith Affirmations
+4.32.{3}	Promises to Those Facing Death
+4.32.{4}	Prayers of Those Facing Death
+4.32.{5}	Faith Affirmations
+5.0	Using Scripture for Prayer Blessings (Benedictions)
+6.0	Appendices
+6.1.0	Praying with Faith
+6.1.1	The person of Christ generates faith.
+6.1.2	The cross of Christ generates faith.
+6.1.3	The promises of Scripture generate faith
+6.2.0	Faith and the Prayerful Use of Promises
+6.3.0	Examples of How to Use the Prayer Method
+6.3.1	Praying When Feeling Discouraged
+6.3.2	Praying for a Lost Child
+6.3.3	Praying for Wisdom for Decisions and for Solving Problems
+6.3.4	Praying for Forgiveness of Sins
+6.3.5	Praying for Protection from Enemies
+6.3.6	Praying for a Church Meeting
+6.3.7	Praying for Your Pastor
+6.3.8	Praying for the Spread of the Gospel
+6.3.9	Praying for Revival
+6.4.0	Prayer Templates for Use in Intercession
+6.5.0	Scripture Index
