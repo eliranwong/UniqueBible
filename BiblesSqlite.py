@@ -644,7 +644,7 @@ class Bible:
         chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
         del biblesSqlite
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
-        self.cursor.execute(query, verse[:-1])
+        self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
         if scripture:
             chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
