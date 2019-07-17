@@ -316,7 +316,7 @@ class TextCommandParser:
             elif (text in ("OHGBi", "OHGB", "LXX1", "LXX2") or not text in formattedBibles) and config.readFormattedBibles:
                 config.readFormattedBibles = False
                 self.parent.enableParagraphButtonAction(False)
-            if len(verseList) == 1:
+            if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
                 chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)

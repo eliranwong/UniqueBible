@@ -484,7 +484,6 @@ class BiblesSqlite:
         return self.cursor.fetchall()
 
     def readMultipleVerses(self, text, verseList):
-        print(verseList)
         verses = ""
         for verse in verseList:
             b = verse[0]
