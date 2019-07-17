@@ -487,10 +487,10 @@ class Commentary:
 
     def getContent(self, verse):
         if self.text in self.getCommentaryList():
-            b, c, v = verse
+            b, c, v, *_ = verse
             chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
-            self.cursor.execute(query, verse[:-1])
+            self.cursor.execute(query, verse[0:2])
             scripture = self.cursor.fetchone()
             if scripture:
                 chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])

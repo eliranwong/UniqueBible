@@ -1695,7 +1695,7 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation):
         # set standard abbreviation, displayed in UniqueBible
-        self.standardAbbreviation = self.standardAbbreviationTC
+        self.standardAbbreviation = self.standardAbbreviationENG
         # set preference of standardisation
         self.standardisation = standardisation
         # setup a simple indicator for telling progress
