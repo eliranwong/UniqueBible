@@ -271,21 +271,21 @@ class TextCommandParser:
 
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
-        config.mainB, config.mainC, config.mainV = bcvTuple
+        config.mainB, config.mainC, config.mainV, *_ = bcvTuple
         self.parent.updateMainRefButton()
 
     def setStudyVerse(self, text, bcvTuple):
         config.studyText = text
-        config.studyB, config.studyC, config.studyV = bcvTuple
+        config.studyB, config.studyC, config.studyV, *_ = bcvTuple
         self.parent.updateStudyRefButton()
-        config.commentaryB, config.commentaryC, config.commentaryV = bcvTuple
+        config.commentaryB, config.commentaryC, config.commentaryV, *_ = bcvTuple
         self.parent.updateCommentaryRefButton()
 
     def setCommentaryVerse(self, text, bcvTuple):
         config.commentaryText = text
-        config.commentaryB, config.commentaryC, config.commentaryV = bcvTuple
+        config.commentaryB, config.commentaryC, config.commentaryV, *_ = bcvTuple
         self.parent.updateCommentaryRefButton()
-        config.studyB, config.studyC, config.studyV = bcvTuple
+        config.studyB, config.studyC, config.studyV, *_ = bcvTuple
         self.parent.updateStudyRefButton()
 
     # shared functions about bible text

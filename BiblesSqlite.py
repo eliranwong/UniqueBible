@@ -484,17 +484,73 @@ class BiblesSqlite:
         return self.cursor.fetchall()
 
     def readMultipleVerses(self, text, verseList):
+        print(verseList)
         verses = ""
-        for b, c, v in verseList:
-            divTag = "<div>"
+        for verse in verseList:
+            b = verse[0]
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
-            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), self.readTextVerse(text, b, c, v)[3])
+            else:
+                divTag = "<div>"
+            if len(verse) == 3:
+                b, c, v = verse
+                verseReference = self.bcvToVerseReference(b, c, v)
+                verseText = self.readTextVerse(text, b, c, v)[3].strip()
+                verseText += " "
+            elif len(verse) == 4:
+                b, c, vs, ve = verse
+                verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
+                verseText = ""
+                v = vs
+                while (v <= ve):
+                    verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                    verseText += " "
+                    v += 1
+                v = vs
+            elif len(verse) == 5:
+                b, cs, vs, ce, ve = verse
+                if (cs > ce):
+                    pass
+                elif (cs == ce):
+                    verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
+                    verseText = ""
+                    v = vs
+                    while (v <= ve):
+                        verseText += self.readTextVerse(text, b, cs, v)[3].strip()
+                        verseText += " "
+                        v += 1
+                    c = cs
+                    v = vs
+                else:
+                    verseReference = "{0}-{1}:{2}".format(self.bcvToVerseReference(b, cs, vs), ce, ve)
+                    verseText = ""
+                    c = cs
+                    v = vs
+                    while (self.readTextVerse(text, b, c, v)[3].strip()):
+                        verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                        verseText += " "
+                        v += 1
+                    c += 1
+                    while (c < ce):
+                        v = 1
+                        while (self.readTextVerse(text, b, c, v)[3].strip()):
+                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                            verseText += " "
+                            v += 1
+                        c += 1
+                    v = 1
+                    while (v <= ve):
+                        verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                        verseText += " "
+                        v += 1
+                    c = cs
+                    v = vs
+            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
         return verses
 
     def readPlainChapter(self, text, verse):
         # expect bcv is a tuple
-        b, c, v = verse
+        b, c, v, *_ = verse
         chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
@@ -583,7 +639,7 @@ class Bible:
         return textVerse
 
     def readFormattedChapter(self, verse):
-        b, c, v = verse
+        b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
         del biblesSqlite

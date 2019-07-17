@@ -2614,7 +2614,7 @@ class WebEngineView(QWebEngineView):
     def extractAllReferences(self):
         selectedText = self.selectedText()
         parser = BibleVerseParser(config.parserStandarisation)
-        verseList = parser.extractAllReferences(selectedText, False)
+        verseList = parser.extractAllReferences(selectedText, False, True)
         del parser
         if not verseList:
             self.page().runJavaScript("alert('No bible verse reference is found from the text you selected.')")
