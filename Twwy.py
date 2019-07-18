@@ -1890,6 +1890,7 @@ class Twwy:
                 v = vs
                 while (v <= ve):
                     verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    verses += " "
                     count += 1
                     v += 1
                 verses += "\n"
@@ -1900,12 +1901,14 @@ class Twwy:
                 v = vs
                 while (biblesSqlite.readTextVerse(text, b, c, v)[3].strip()):
                     verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    verses += " "
                     count += 1
                     v += 1
                 c = ce
                 v = 1
                 while (v <= ve):
                     verses += biblesSqlite.readTextVerse(text, b, c, v)[3].strip()
+                    verses += " "
                     count += 1
                     v += 1
                 verses += "\n"
