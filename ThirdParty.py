@@ -1006,9 +1006,8 @@ class Converter:
             ("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?):([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,\3)">'),
             ("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?)[^0-9:][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,1)">'),
             ("<a [^<>]*?href=['{0}]B:([0-9]+?)[^0-9: ][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,1,1)">'),
-            ("<a [^<>]*?href=['{0}]S:([GH][0-9]+?)[^0-9][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='lex({0}\1{0})'>\1</ref>".format('"')),
-            ("<a [^<>]*?href=['{0}]S:([GH][0-9]+?)[^0-9][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='lex({0}\1{0})'>\1</ref>".format('"')),
-            ("<a [^<>]*?href=['{0}]S:([^'{0}<>]*?)['{0}]>".format('"'), r"<a href='javascript:void(0)' onclick='searchThirdDictionary({0}{1}{0}, {0}\1{0})'>\1</ref>".format('"', abbreviation)),
+            ("<a [^<>]*?href=['{0}]S:([GH][0-9]+?)[^0-9][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='lex({0}\1{0})'>".format('"')),
+            ("<a [^<>]*?href=['{0}]S:([^'{0}<>]*?)['{0}]>".format('"'), r"<a href='javascript:void(0)' onclick='searchThirdDictionary({0}{1}{0}, {0}\1{0})'>".format('"', abbreviation)),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
