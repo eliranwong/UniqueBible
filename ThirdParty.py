@@ -839,7 +839,7 @@ class Converter:
 
         if notes:
             insert = "INSERT INTO Notes (Book, Chapter, Verse, ID, Note) VALUES (?, ?, ?, ?, ?)"
-            notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note)) for book, chapter, verse, id, note in notes]
+            notes = [(self.convertMyBibleBookNo(book), chapter, verse, id, self.formatNonBibleMyBibleModule(note, abbreviation)) for book, chapter, verse, id, note in notes]
             cursor.executemany(insert, notes)
             connection.commit()
 
@@ -956,7 +956,7 @@ class Converter:
                 verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text)
 
                 # convert from eSword format
-                verseContent = self.formatMyBibleCommentaryVerse(verseContent)
+                verseContent = self.formatMyBibleCommentaryVerse(verseContent, abbreviation)
 
                 fromverse = verse[2]
                 item = verseDict.get(fromverse, "not found")
@@ -980,7 +980,7 @@ class Converter:
         connection.close()
         ubFileConnection.close()
 
-    def formatMyBibleCommentaryVerse(self, text):
+    def formatMyBibleCommentaryVerse(self, text, abbreviation):
         text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\1:([0-9]+?)</b></u>", r"<u><b>\1:\2-\3</b></u>", text)
         text = text.replace("-None:None</b></u></ref><br>", "</b></u></ref><br>")
@@ -988,7 +988,7 @@ class Converter:
         text = text.replace(":0-0</b></u></ref><br>", "</b></u></ref><br>")
         # deal with internal links like <a class="contents" href="C:@1002 0:0">
         text = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
-        text = self.formatNonBibleMyBibleModule(text)
+        text = self.formatNonBibleMyBibleModule(text, abbreviation)
         return text
 
     def formatMyBibleCommentaryLink(self, match):
@@ -1001,12 +1001,14 @@ class Converter:
             value = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([0-9]+?):([0-9]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::\1.\2.\3{0}'>".format('"'), value)
         return value
 
-    def formatNonBibleMyBibleModule(self, text):
+    def formatNonBibleMyBibleModule(self, text, abbreviation):
         searchReplace = (
             ("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?):([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,\3)">'),
             ("<a [^<>]*?href=['{0}]B:([0-9]+?) ([0-9]+?)[^0-9:][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,\2,1)">'),
             ("<a [^<>]*?href=['{0}]B:([0-9]+?)[^0-9: ][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cr(\1,1,1)">'),
             ("<a [^<>]*?href=['{0}]S:([GH][0-9]+?)[^0-9][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='lex({0}\1{0})'>\1</ref>".format('"')),
+            ("<a [^<>]*?href=['{0}]S:([GH][0-9]+?)[^0-9][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='lex({0}\1{0})'>\1</ref>".format('"')),
+            ("<a [^<>]*?href=['{0}]S:([^'{0}<>]*?)['{0}]>".format('"'), r"<a href='javascript:void(0)' onclick='searchThirdDictionary({0}{1}{0}, {0}\1{0})'>\1</ref>".format('"', abbreviation)),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
@@ -1546,5 +1548,5 @@ class ThirdPartyDictionary:
             optionList = [(m, m) for m in self.moduleList]
             selectList = self.formatSelectList(action, optionList)
             config.thirdDictionary = self.module
-            content = Converter().formatNonBibleMyBibleModule(content[0])
+            content = Converter().formatNonBibleMyBibleModule(content[0], self.module)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
