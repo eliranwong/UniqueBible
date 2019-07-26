@@ -24,7 +24,7 @@ if not hasattr(config, 'numberOfTab'):
 if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
 if not hasattr(config, 'parserStandarisation'):
-    config.parserStandarisation = 'YES'
+    config.parserStandarisation = 'NO'
 if not hasattr(config, 'landscapeMode'):
     config.landscapeMode = True
 if not hasattr(config, 'noToolBar'):
