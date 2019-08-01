@@ -485,7 +485,7 @@ class BiblesSqlite:
 
     def readMultipleVerses(self, inputText, verseList):
         verses = ""
-        if config.extractParallel:
+        if config.extractParallel and (inputText != config.iSearchVersion):
             textList = (inputText, config.iSearchVersion)
         else:
             textList = (inputText,)
