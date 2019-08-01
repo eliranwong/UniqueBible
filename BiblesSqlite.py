@@ -483,68 +483,73 @@ class BiblesSqlite:
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
-    def readMultipleVerses(self, text, verseList):
+    def readMultipleVerses(self, inputText, verseList):
         verses = ""
+        if config.extractParallel:
+            textList = (inputText, config.iSearchVersion)
+        else:
+            textList = (inputText,)
         for verse in verseList:
-            b = verse[0]
-            if b < 40 and text in config.rtlTexts:
-                divTag = "<div style='direction: rtl;'>"
-            else:
-                divTag = "<div>"
-            if len(verse) == 3:
-                b, c, v = verse
-                verseReference = self.bcvToVerseReference(b, c, v)
-                verseText = self.readTextVerse(text, b, c, v)[3].strip()
-                verseText += " "
-            elif len(verse) == 4:
-                b, c, vs, ve = verse
-                verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
-                verseText = ""
-                v = vs
-                while (v <= ve):
-                    verseText += self.readTextVerse(text, b, c, v)[3].strip()
+            for text in textList:
+                b = verse[0]
+                if b < 40 and text in config.rtlTexts:
+                    divTag = "<div style='direction: rtl;'>"
+                else:
+                    divTag = "<div>"
+                if len(verse) == 3:
+                    b, c, v = verse
+                    verseReference = self.bcvToVerseReference(b, c, v)
+                    verseText = self.readTextVerse(text, b, c, v)[3].strip()
                     verseText += " "
-                    v += 1
-                v = vs
-            elif len(verse) == 5:
-                b, cs, vs, ce, ve = verse
-                if (cs > ce):
-                    pass
-                elif (cs == ce):
-                    verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
+                elif len(verse) == 4:
+                    b, c, vs, ve = verse
+                    verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
                     verseText = ""
                     v = vs
                     while (v <= ve):
-                        verseText += self.readTextVerse(text, b, cs, v)[3].strip()
-                        verseText += " "
-                        v += 1
-                    c = cs
-                    v = vs
-                else:
-                    verseReference = "{0}-{1}:{2}".format(self.bcvToVerseReference(b, cs, vs), ce, ve)
-                    verseText = ""
-                    c = cs
-                    v = vs
-                    while (self.readTextVerse(text, b, c, v)[3].strip()):
                         verseText += self.readTextVerse(text, b, c, v)[3].strip()
                         verseText += " "
                         v += 1
-                    c += 1
-                    while (c < ce):
-                        v = 1
+                    v = vs
+                elif len(verse) == 5:
+                    b, cs, vs, ce, ve = verse
+                    if (cs > ce):
+                        pass
+                    elif (cs == ce):
+                        verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
+                        verseText = ""
+                        v = vs
+                        while (v <= ve):
+                            verseText += self.readTextVerse(text, b, cs, v)[3].strip()
+                            verseText += " "
+                            v += 1
+                        c = cs
+                        v = vs
+                    else:
+                        verseReference = "{0}-{1}:{2}".format(self.bcvToVerseReference(b, cs, vs), ce, ve)
+                        verseText = ""
+                        c = cs
+                        v = vs
                         while (self.readTextVerse(text, b, c, v)[3].strip()):
                             verseText += self.readTextVerse(text, b, c, v)[3].strip()
                             verseText += " "
                             v += 1
                         c += 1
-                    v = 1
-                    while (v <= ve):
-                        verseText += self.readTextVerse(text, b, c, v)[3].strip()
-                        verseText += " "
-                        v += 1
-                    c = cs
-                    v = vs
-            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+                        while (c < ce):
+                            v = 1
+                            while (self.readTextVerse(text, b, c, v)[3].strip()):
+                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                                verseText += " "
+                                v += 1
+                            c += 1
+                        v = 1
+                        while (v <= ve):
+                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                            verseText += " "
+                            v += 1
+                        c = cs
+                        v = vs
+                verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
         return verses
 
     def readPlainChapter(self, text, verse):

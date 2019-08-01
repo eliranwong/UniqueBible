@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 4.3
+latest_version = 4.4
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -24,7 +24,7 @@ if not hasattr(config, 'numberOfTab'):
 if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
 if not hasattr(config, 'parserStandarisation'):
-    config.parserStandarisation = 'NO'
+    config.parserStandarisation = 'YES'
 if not hasattr(config, 'landscapeMode'):
     config.landscapeMode = True
 if not hasattr(config, 'noToolBar'):
@@ -79,6 +79,8 @@ if not hasattr(config, 'studyV'):
     config.studyV = 16
 if not hasattr(config, 'iSearchVersion'):
     config.iSearchVersion = "OHGB"
+if not hasattr(config, 'extractParallel'):
+    config.extractParallel = False
 if not hasattr(config, 'commentaryText'):
     config.commentaryText = 'CBSC'
 if not hasattr(config, 'commentaryB'):
@@ -178,6 +180,7 @@ def saveDataOnExit():
     fileObj.write("\nmainC = "+pprint.pformat(config.mainC))
     fileObj.write("\nmainV = "+pprint.pformat(config.mainV))
     fileObj.write("\niSearchVersion = "+pprint.pformat(config.iSearchVersion))
+    fileObj.write("\nextractParallel = "+pprint.pformat(config.extractParallel))
     fileObj.write("\nstudyText = "+pprint.pformat(config.studyText))
     fileObj.write("\nstudyB = "+pprint.pformat(config.studyB))
     fileObj.write("\nstudyC = "+pprint.pformat(config.studyC))
