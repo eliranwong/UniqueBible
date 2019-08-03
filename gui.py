@@ -1866,8 +1866,8 @@ class MainWindow(QMainWindow):
             mappedBibles = (
                 ("MIB", "OHGBi"),
                 ("MOB", "OHGB"),
-                ("LXX1i", "LXX1"),
-                ("LXX2i", "LXX2"),
+                #("LXX1", "LXX1i"),
+                #("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
@@ -1881,8 +1881,8 @@ class MainWindow(QMainWindow):
                 ("MPB", "OHGB"),
                 ("MTB", "OHGB"),
                 ("MAB", "OHGB"),
-                ("LXX1i", "LXX1"),
-                ("LXX2i", "LXX2"),
+                #("LXX1", "LXX1i"),
+                #("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
