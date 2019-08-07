@@ -33,7 +33,7 @@ Any answers other than "YES" [case-insensitive] skip the standarisation.
 """
 
 # import modules, which are ESSENTIAL for running BibleVerseParser
-import re, glob, os
+import re, glob, os, config
 from ast import literal_eval
 
 """
@@ -1695,7 +1695,12 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation):
         # set standard abbreviation, displayed in UniqueBible
-        self.standardAbbreviation = self.standardAbbreviationENG
+        standardAbbreviations = {
+            "ENG": self.standardAbbreviationENG,
+            "TC": self.standardAbbreviationTC,
+            "SC": self.standardAbbreviationSC,
+        }
+        self.standardAbbreviation = standardAbbreviations[config.standardAbbreviation]
         # set preference of standardisation
         self.standardisation = standardisation
         # setup a simple indicator for telling progress
