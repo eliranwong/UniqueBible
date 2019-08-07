@@ -398,13 +398,23 @@ function bookAbbToNo(bookAbb) {
     return bookNo["b"+bookAbb];
 }
 
-function tbcv(text,b,c,v) {
+function tbcv(text,b,c,v,opt1,opt2) {
     var verseReference = bcvToVerseRefence(b,c,v);
+    if ((opt1 != undefined) && (opt1 != undefined)) {
+        verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+    } else if (opt1 != undefined) {
+        verseReference = verseReference+"-"+String(opt1);
+    }
     document.title = "BIBLE:::"+text+":::"+verseReference;
 }
 
-function bcv(b,c,v) {
+function bcv(b,c,v,opt1,opt2) {
     var verseReference = bcvToVerseRefence(b,c,v);
+    if ((opt1 != undefined) && (opt1 != undefined)) {
+        verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+    } else if (opt1 != undefined) {
+        verseReference = verseReference+"-"+String(opt1);
+    }
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
 }
 
