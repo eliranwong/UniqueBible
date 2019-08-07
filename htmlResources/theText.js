@@ -401,7 +401,11 @@ function bookAbbToNo(bookAbb) {
 function tbcv(text,b,c,v,opt1,opt2) {
     var verseReference = bcvToVerseRefence(b,c,v);
     if ((opt1 != undefined) && (opt1 != undefined)) {
-        verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+        if (c == opt1) {
+            verseReference = verseReference+"-"+String(opt2);
+        } else {
+            verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+        }
     } else if (opt1 != undefined) {
         verseReference = verseReference+"-"+String(opt1);
     }
@@ -411,7 +415,11 @@ function tbcv(text,b,c,v,opt1,opt2) {
 function bcv(b,c,v,opt1,opt2) {
     var verseReference = bcvToVerseRefence(b,c,v);
     if ((opt1 != undefined) && (opt1 != undefined)) {
-        verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+        if (c == opt1) {
+            verseReference = verseReference+"-"+String(opt2);
+        } else {
+            verseReference = verseReference+"-"+String(opt1)+":"+String(opt2);
+        }
     } else if (opt1 != undefined) {
         verseReference = verseReference+"-"+String(opt1);
     }
