@@ -1695,7 +1695,7 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation):
         # set standard abbreviation, displayed in UniqueBible
-        self.standardAbbreviation = self.standardAbbreviationTC
+        self.standardAbbreviation = self.standardAbbreviationENG
         # set preference of standardisation
         self.standardisation = standardisation
         # setup a simple indicator for telling progress
@@ -1730,7 +1730,7 @@ class BibleVerseParser:
         for booknumber in self.standardAbbreviation:
             #self.updateWorkingIndicator()
             abbreviation = self.standardAbbreviation[booknumber]
-            standardisedText = re.sub('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>', standardisedText)
+            standardisedText = re.sub('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>', standardisedText, flags=re.M)
         return standardisedText
 
     def parseText(self, text):
@@ -1739,9 +1739,9 @@ class BibleVerseParser:
         taggedText = text+" "
 
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
-        p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">')
+        p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">', flags=re.M)
         if p.search(taggedText):
-            taggedText = re.sub('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">(.*?)</ref>', r'\1', taggedText, flags=re.M)
+            taggedText = re.sub('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>', r'\1', taggedText, flags=re.M)
 
         # search for books; mark them with book numbers, used by https://marvel.bible
         # sorting books by alphabet, then by length
@@ -1751,22 +1751,24 @@ class BibleVerseParser:
             #self.updateWorkingIndicator()
             # get the string of book name
             bookString = book
-            # make dot "." optional for an abbreviation
-            bookString = re.sub('\.', r'[\.]*?', bookString, flags=re.M)
-            # make space " " optional in some cases
-            bookString = re.sub('^([0-9]+?) ', r'\1[ ]*?', bookString, flags=re.M)
-            bookString = re.sub('^([I]+?) ', r'\1[ ]*?', bookString, flags=re.M)
-            bookString = re.sub('^(IV) ', r'\1[ ]*?', bookString, flags=re.M)
+            searchReplace = {
+                ('\.', r'[\.]*?'), # make dot "." optional for an abbreviation
+                ('^([0-9]+?) ', r'\1[ ]*?'), # make space " " optional in some cases
+                ('^([I]+?) ', r'\1[ ]*?'), 
+                ('^(IV) ', r'\1[ ]*?'), 
+            }
+            for search, replace in searchReplace:
+                bookString = re.sub(search, replace, bookString)
             # get assigned book number from dictionary
             booknumber = self.marvelBibleBookNo[book]
             # search & replace for marking book
-            taggedText = re.sub('('+bookString+') ([0-9])', '『'+booknumber+r'｜\1』 \2', taggedText)
+            taggedText = re.sub('('+bookString+') ([0-9])', '『'+booknumber+r'｜\1』 \2', taggedText, flags=re.M)
 
         # add first set of taggings:
         #self.updateWorkingIndicator()
-        taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5', taggedText)
+        taggedText = re.sub('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5', taggedText, flags=re.M)
         #self.updateWorkingIndicator()
-        taggedText = re.sub('『([0-9]+?)｜([^\n『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref｝\4', taggedText)
+        taggedText = re.sub('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref｝\4', taggedText, flags=re.M)
 
         # fix references without verse numbers
         # fix books with chapter 1 ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
@@ -1780,43 +1782,50 @@ class BibleVerseParser:
         p = re.compile('</ref｝[,-–;][ ]*?[0-9]', flags=re.M)
         if p.search(taggedText):
             searchReplace = {
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^\n｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
             }
         while p.search(taggedText):
             #self.updateWorkingIndicator()
             for search, replace in searchReplace:
-                taggedText = re.sub(search, replace, taggedText)
+                taggedText = re.sub(search, replace, taggedText, flags=re.M)
 
         # clear special markers
         #self.updateWorkingIndicator()
         searchReplace = {
-            ('『[0-9]+?|([^\n『』]*?)』', r'\1'),
+            ('『[0-9]+?|([^『』]*?)』', r'\1'),
             ('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
             ('</ref｝', '</ref>'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,\2'+',([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+r'\2,'+'([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
-            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
         }
         for search, replace in searchReplace:
-            taggedText = re.sub(search, replace, taggedText)
+            taggedText = re.sub(search, replace, taggedText, flags=re.M)
+
+        # handling range of verses
+        # e.g. John 3:16 is tagged as <ref onclick="bcv(43,3,16)">John 3:16</ref>
+        # e.g. John 3:14-16 is tagged as <ref onclick="bcv(43,3,14,3,16)">John 3:14-16</ref>
+        # e.g. John 3:14-4:3 is tagged as <ref onclick="bcv(43,3,14,4,3)">John 3:14-4:3</ref>
+        p = re.compile('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1'), flags=re.M)
+        if p.search(taggedText):
+            searchReplace = {
+                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1'), r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'), # range of verses range with different chapters
+            }
+        while p.search(taggedText):
+            #self.updateWorkingIndicator()
+            for search, replace in searchReplace:
+                taggedText = re.sub(search, replace, taggedText, flags=re.M)
+
+        # remove the extra space, added at the beginning of this function
         taggedText = taggedText[:-1]
+
+        # return the tagged text
         return taggedText
 
-    def extractAllReferences(self, text, tagged=False, range=False):
+    def extractAllReferences(self, text, tagged=False):
         if not tagged:
             taggedText = self.parseText(text)
-            #if range:
-            #    searchReplace = {
-            #        ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+r'\2,'+'([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
-            #        ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
-            #    }
-            #    for search, replace in searchReplace:
-            #        taggedText = re.sub(search, replace, taggedText)
         else:
             taggedText = text
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[0-9]+?,[0-9]+?[^\)\(]*?\))', taggedText)] # return a list of tuples (b, c, v)
