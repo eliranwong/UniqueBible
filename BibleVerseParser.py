@@ -1695,7 +1695,7 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation):
         # set standard abbreviation, displayed in UniqueBible
-        self.standardAbbreviation = self.standardAbbreviationENG
+        self.standardAbbreviation = self.standardAbbreviationTC
         # set preference of standardisation
         self.standardisation = standardisation
         # setup a simple indicator for telling progress
@@ -1799,6 +1799,8 @@ class BibleVerseParser:
             ('</ref｝', '</ref>'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,\2'+',([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
+            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+r'\2,'+'([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
+            ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
         }
         for search, replace in searchReplace:
             taggedText = re.sub(search, replace, taggedText)
@@ -1808,13 +1810,13 @@ class BibleVerseParser:
     def extractAllReferences(self, text, tagged=False, range=False):
         if not tagged:
             taggedText = self.parseText(text)
-            if range:
-                searchReplace = {
-                    ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+r'\2,'+'([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
-                    ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
-                }
-                for search, replace in searchReplace:
-                    taggedText = re.sub(search, replace, taggedText)
+            #if range:
+            #    searchReplace = {
+            #        ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+r'\2,'+'([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6)">\4\5'),
+            #        ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^\n<>]*?)</ref>([-–])<ref onclick="bcv\('+r'\1,'+'([0-9]+?),([0-9]+?)\)">', r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
+            #    }
+            #    for search, replace in searchReplace:
+            #        taggedText = re.sub(search, replace, taggedText)
         else:
             taggedText = text
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[0-9]+?,[0-9]+?[^\)\(]*?\))', taggedText)] # return a list of tuples (b, c, v)

@@ -14,7 +14,7 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 4.5
+latest_version = 4.6
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
@@ -24,7 +24,7 @@ if not hasattr(config, 'numberOfTab'):
 if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
 if not hasattr(config, 'parserStandarisation'):
-    config.parserStandarisation = 'YES'
+    config.parserStandarisation = 'NO'
 if not hasattr(config, 'landscapeMode'):
     config.landscapeMode = True
 if not hasattr(config, 'noToolBar'):
