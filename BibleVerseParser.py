@@ -1744,9 +1744,9 @@ class BibleVerseParser:
         taggedText = text+" "
 
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
-        p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">', flags=re.M)
+        p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>', flags=re.M)
         if p.search(taggedText):
-            taggedText = re.sub('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>', r'\1', taggedText, flags=re.M)
+            taggedText = re.sub(p, r'\1', taggedText)
 
         # search for books; mark them with book numbers, used by https://marvel.bible
         # sorting books by alphabet, then by length
