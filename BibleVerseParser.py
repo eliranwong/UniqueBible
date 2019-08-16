@@ -1745,7 +1745,7 @@ class BibleVerseParser:
 
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
         p = re.compile('<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>', flags=re.M)
-        if p.search(taggedText):
+        while p.search(taggedText):
             taggedText = re.sub(p, r'\1', taggedText)
 
         # search for books; mark them with book numbers, used by https://marvel.bible
@@ -1785,7 +1785,7 @@ class BibleVerseParser:
 
         # check if verses following tagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         p = re.compile('</ref｝[,-–;][ ]*?[0-9]', flags=re.M)
-        if p.search(taggedText):
+        while p.search(taggedText):
             searchReplace = {
                 ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
                 ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
@@ -1793,7 +1793,6 @@ class BibleVerseParser:
                 ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
                 ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
             }
-        while p.search(taggedText):
             #self.updateWorkingIndicator()
             for search, replace in searchReplace:
                 taggedText = re.sub(search, replace, taggedText, flags=re.M)
@@ -1813,11 +1812,10 @@ class BibleVerseParser:
         # e.g. John 3:14-16 is tagged as <ref onclick="bcv(43,3,14,3,16)">John 3:14-16</ref>
         # e.g. John 3:14-4:3 is tagged as <ref onclick="bcv(43,3,14,4,3)">John 3:14-4:3</ref>
         p = re.compile('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1'), flags=re.M)
-        if p.search(taggedText):
-            searchReplace = {
-                ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1'), r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'), # range of verses range with different chapters
-            }
         while p.search(taggedText):
+            searchReplace = {
+                (p, r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'), # range of verses range with different chapters
+            }
             #self.updateWorkingIndicator()
             for search, replace in searchReplace:
                 taggedText = re.sub(search, replace, taggedText, flags=re.M)
