@@ -1813,12 +1813,7 @@ class BibleVerseParser:
         # e.g. John 3:14-4:3 is tagged as <ref onclick="bcv(43,3,14,4,3)">John 3:14-4:3</ref>
         p = re.compile('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1'), flags=re.M)
         while p.search(taggedText):
-            searchReplace = {
-                (p, r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'), # range of verses range with different chapters
-            }
-            #self.updateWorkingIndicator()
-            for search, replace in searchReplace:
-                taggedText = re.sub(search, replace, taggedText, flags=re.M)
+            taggedText = re.sub(p, r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5', taggedText)
 
         # remove the extra space, added at the beginning of this function
         taggedText = taggedText[:-1]
