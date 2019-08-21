@@ -5,6 +5,61 @@ from BibleVerseParser import BibleVerseParser
 
 class Converter:
 
+    # Export from installed bibles into JSON format; for use with DartBible project.
+    # usage:
+    # from ThirdParty import Converter
+    # Converter().exportJsonBible("KJV")
+    def exportJsonBible(self, bible):
+        file = os.path.join("marvelData", "bibles", "{0}.bible".format(bible))
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
+        cursor.execute(query)
+        verses = cursor.fetchall()
+
+        jsonString = "[\n"
+        for book, chapter, verse, scripture in verses:
+            jsonString += "{\n"
+            jsonString += '"bNo": {0},\n'.format(book)
+            jsonString += '"cNo": {0},\n'.format(chapter)
+            jsonString += '"vNo": {0},\n'.format(verse)
+            jsonString += '"vText": "{0}"\n'.format(scripture.strip().replace('"', '\\"'))
+            jsonString += "},\n"
+        jsonString = jsonString[:-2]
+        jsonString += "\n]\n"
+
+        jsonFile = file = os.path.join("marvelData", "bibles", "{0}.json".format(bible))
+        fileObj = open(jsonFile, "w")
+        fileObj.write(jsonString)
+        fileObj.close()
+
+    # if exportMarvelBible doesn't work, use exportMarvelBible2 instead
+    def exportJsonBible2(self, bible):
+        file = os.path.join("marvelData", "bibles", "{0}.bible".format(bible))
+        connection = sqlite3.connect(file)
+        cursor = connection.cursor()
+
+        query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
+        cursor.execute(query)
+        verses = cursor.fetchall()
+
+        jsonString = "[\n"
+        jsonObject = []
+        for book, chapter, verse, scripture in verses:
+            verseObject = {}
+            verseObject["bNo"] = book
+            verseObject["cNo"] = chapter
+            verseObject["vNo"] = verse
+            verseObject["vText"] = scripture
+            jsonObject.append(verseObject)
+        jsonString = json.dumps(jsonObject) # Please note that "json.dumps()" converts unicode characters.
+
+        jsonFile = file = os.path.join("marvelData", "bibles", "{0}.json".format(bible))
+        fileObj = open(jsonFile, "w")
+        fileObj.write(jsonString)
+        fileObj.close()
+
     # bible modules verse number format
     def formatVerseNumber(self, book, chapter, verse, text):
         text = '<vid id="v{0}.{1}.{2}" onclick="luV({2})">{2}</vid> {3}'.format(book, chapter, verse, text)
