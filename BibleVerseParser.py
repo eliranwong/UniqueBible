@@ -1736,6 +1736,8 @@ class BibleVerseParser:
             #self.updateWorkingIndicator()
             abbreviation = self.standardAbbreviation[booknumber]
             standardisedText = re.sub('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>', standardisedText, flags=re.M)
+            standardisedText = re.sub('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?),([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2,\3,\4)">'+abbreviation+r' \1:\2-\3:\4</ref>', standardisedText, flags=re.M)
+            standardisedText = re.sub(r' ([0-9]+?):([0-9]+?)-\1:([0-9]+?)</ref>', r' \1:\2-\3</ref>', standardisedText, flags=re.M)
         return standardisedText
 
     def parseText(self, text):
@@ -1759,8 +1761,8 @@ class BibleVerseParser:
             searchReplace = {
                 ('\.', r'[\.]*?'), # make dot "." optional for an abbreviation
                 ('^([0-9]+?) ', r'\1[ ]*?'), # make space " " optional in some cases
-                ('^([I]+?) ', r'\1[ ]*?'), 
-                ('^(IV) ', r'\1[ ]*?'), 
+                ('^([I]+?) ', r'\1[ ]*?'),
+                ('^(IV) ', r'\1[ ]*?'),
             }
             for search, replace in searchReplace:
                 bookString = re.sub(search, replace, bookString)
@@ -1845,7 +1847,7 @@ class BibleVerseParser:
             # parse the opened text
             newData = self.parseText(newData)
             print("Finished parsing file", "\""+inputFile+"\".")
-    
+
             # standardise the format of bible verse references
             # standardisation is running only if user's answer is 'YES' [case-insensitive]
             if self.standardisation.lower() == 'yes':
@@ -1853,7 +1855,7 @@ class BibleVerseParser:
                 print("Verse reference format in file", "\""+inputFile+"\"", "had been standardised.")
             else:
                 print("Verse reference format used in file", "\""+inputFile+"\"", "is kept.")
-    
+
             # save output text in a separate file
             f = open(outputFile,'w')
             f.write(newData)
