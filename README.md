@@ -43,13 +43,28 @@ Click on the download button on this page to download a zip copy of this reposit
 # Example: Install & Run on macOS / Linux
 
 1. Use the download button on this page to download a zip copy.<br>
-2. This example assume that your downloaded file is located in "Downloads" of your home directory.<br>
+2. This example assume that your downloaded file is located in "Downloads" of your home directory, i.e. ~/Downloads/.<br>
 3. Open terminal and enter all the following commands:<br>
 cd ~<br>
 unzip ~/Downloads/UniqueBible-master.zip<br>
 cd UniqueBible-master<br>
 python3 -m venv venv<br>
 source venv/bin/activate<br>
+pip3 install PySide2<br>
+pip3 install PyPDF2<br>
+pip3 install python-docx<br>
+pip3 install gdown<br>
+4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
+python3 main.py<br>
+
+# Example: Install & Run on Windows
+
+1. Use the download button on this page to download a zip copy.<br>
+2. Unzip the downloaded file "UniqueBible-master.zip" into a folder, e.g. "C:\UniqueBible-master"<br>
+3. Open command prompt and enter all the following commands:<br>
+cd C:\UniqueBible-master<br>
+python3 -m venv venv<br>
+venv\Scripts\activate.bat<br>
 pip3 install PySide2<br>
 pip3 install PyPDF2<br>
 pip3 install python-docx<br>
