@@ -72,6 +72,11 @@ pip3 install gdown<br>
 4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
 python3 main.py<br>
 
+# Creating a Shortcut
+
+There are various ways to create a shortcut, below are some examples:
+For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh
+
 # Where are the Database Files?
 
 All codes for running the app is shared in this repository.
