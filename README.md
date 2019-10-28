@@ -14,9 +14,21 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
 
-# Installation
+# Download & Run UniqueBible.app
 
-Install python (version 3.6+)
+Use the download button on this page to download a zip copy.
+
+<img src="downloadButton.png">
+
+Unzip your folder and run the following command in command prompt:
+
+python3 main.py
+
+# Pre-requisite
+
+This bible app is based on python library, users have to install python (version 3.6+) first before running this app.
+
+Go to <a href="https://www.python.org">https://www.python.org</a> for instructions on installation of python.
 
 # Install Dependencies
 
@@ -31,16 +43,6 @@ pip3 install python-docx
 
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
-
-# Download & Run UniqueBible.app
-
-Use the download button on this page to download a zip copy.
-
-<img src="downloadButton.png">
-
-Unzip your folder and run the following command in command prompt:
-
-python3 main.py
 
 # Where are the Database Files?
 
