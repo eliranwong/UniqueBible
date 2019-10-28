@@ -14,21 +14,11 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
 
-# Download & Run UniqueBible.app
-
-Use the download button on this page to download a zip copy.
-
-<img src="downloadButton.png">
-
-Unzip your folder and run the following command in command prompt:
-
-python3 main.py
-
 # Pre-requisite
 
-This bible app is based on python library, users have to install python (version 3.6+) first before running this app.
+The "desktop" version of "UniqueBible.app" is programmed with python library.  Users have to install python library first in order to run "UniqueBible.app" on your desktop OS.
 
-Go to <a href="https://www.python.org">https://www.python.org</a> for instructions on installation of python.
+Go to <a href="https://www.python.org">https://www.python.org</a> for instructions on installation of python for FREE.
 
 # Install Dependencies
 
@@ -43,6 +33,29 @@ pip3 install python-docx
 
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
+
+# Download & Run UniqueBible.app
+
+Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
+
+<img src="downloadButton.png">
+
+# Example: Install & Run on macOS / Linux
+
+1. Use the download button on this page to download a zip copy.<br>
+2. This example assume that your downloaded file is located in "Downloads" of your home directory.<br>
+3. Open terminal and enter all the following commands:<br>
+cd ~<br>
+unzip ~/Downloads/UniqueBible-master.zip<br>
+cd UniqueBible-master<br>
+python3 -m venv venv<br>
+source venv/bin/activate<br>
+pip3 install PySide2<br>
+pip3 install PyPDF2<br>
+pip3 install python-docx<br>
+pip3 install gdown<br>
+4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
+python3 main.py<br>
 
 # Where are the Database Files?
 
