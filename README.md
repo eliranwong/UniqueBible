@@ -91,7 +91,7 @@ pip3 install --user gdown<br>
 5. Export PATH<br>
 * temporary solution - enter this command in terminal:<br>
 export PATH=$PATH:$HOME/.local/bin<br>
-* permenant solution - add the following line to the end of file ".bashrc" in the home directory:<br>
+* permanent solution - add the following line to the end of file ".bashrc" in the home directory:<br>
 export PATH=$PATH:$HOME/.local/bin<br>
 close terminal and re-open terminal for the following steps<br>
 6. Download the app in a zip file, enter in terminal:<br>
