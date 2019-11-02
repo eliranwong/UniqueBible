@@ -4,7 +4,7 @@ from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
-from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+#from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -2388,7 +2388,7 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
-        
+
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.selectionChanged.connect(self.updateContextMenu)
@@ -2430,10 +2430,10 @@ class WebEngineView(QWebEngineView):
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
-        tts = QAction(self)
-        tts.setText("Speak")
-        tts.triggered.connect(self.textToSpeech)
-        self.addAction(tts)
+#        tts = QAction(self)
+#        tts.setText("Speak")
+#        tts.triggered.connect(self.textToSpeech)
+#        self.addAction(tts)
 
         self.searchText = QAction(self)
         self.searchText.setText("Search")
@@ -2520,22 +2520,25 @@ class WebEngineView(QWebEngineView):
         else:
             self.page().triggerAction(self.page().Copy)
 
-    def textToSpeech(self):
-        if not self.selectedText():
-            self.messageNoSelection()
-        else:
-            engineNames = QTextToSpeech.availableEngines()
-            if engineNames:
-                self.engine = QTextToSpeech(engineNames[0])
-                engineVoices = self.engine.availableVoices()
-                if engineVoices:
-                    self.engine.setVoice(engineVoices[0])
-                    self.engine.setVolume(1.0)
-                    self.engine.say(self.selectedText())
-                else:
-                    self.messageNoTtsVoice()
-            else:
-                self.messageNoTtsEngine()
+# The following function is suspended due to compatability issues on some Linux environments, 
+# especially where sound system is not supported.
+# Users may manually enable text-to-speech function by removing # on the following lines
+#    def textToSpeech(self):
+#        if not self.selectedText():
+#            self.messageNoSelection()
+#        else:
+#            engineNames = QTextToSpeech.availableEngines()
+#            if engineNames:
+#                self.engine = QTextToSpeech(engineNames[0])
+#                engineVoices = self.engine.availableVoices()
+#                if engineVoices:
+#                    self.engine.setVoice(engineVoices[0])
+#                    self.engine.setVolume(1.0)
+#                    self.engine.say(self.selectedText())
+#                else:
+#                    self.messageNoTtsVoice()
+#            else:
+#                self.messageNoTtsEngine()
 
     def searchSelectedText(self):
         selectedText = self.selectedText()
@@ -2939,7 +2942,7 @@ class NoteEditor(QMainWindow):
         #document = QTextDocument("Sample Page")
         document = self.editor.document()
         printer = QPrinter()
-  
+
         myPrintDialog = QPrintDialog(printer, self)
         if myPrintDialog.exec_() == QDialog.Accepted:
             return document.print_(printer)

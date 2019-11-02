@@ -9,6 +9,10 @@ class Converter:
     # usage:
     # from ThirdParty import Converter
     # Converter().exportJsonBible("KJV")
+    def exportMultipleBibles(self, bibleList):
+        for bible in bibleList:
+            self.exportJsonBible(bible)
+
     def exportJsonBible(self, bible):
         file = os.path.join("marvelData", "bibles", "{0}.bible".format(bible))
         connection = sqlite3.connect(file)
@@ -789,7 +793,8 @@ class Converter:
         tables = [table[0] for table in tables]
         stories = []
         if "stories" in tables:
-            query = "SELECT * FROM stories ORDER BY book_number, chapter, verse, order_if_several"
+            query = "SELECT * FROM stories ORDER BY book_number, chapter, verse"
+            #query = "SELECT * FROM stories ORDER BY book_number, chapter, verse, order_if_several"
             cursor.execute(query)
             stories = cursor.fetchall()
 
