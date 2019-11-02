@@ -93,7 +93,7 @@ pip3 install --user gdown<br>
 export PATH=$PATH:$HOME/.local/bin<br>
 * permanent solution - add the following line at the end of file ".bashrc" in the home directory:<br>
 export PATH=$PATH:$HOME/.local/bin<br>
-[close and re-open the Linux terminal after saving the changes in file "~/.bashrc"]<br>
+[close and re-open the Linux terminal after saving the changes in file ".bashrc"]<br>
 6. Download the app in a zip file, enter in terminal:<br>
 cd ~<br>
 wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
@@ -103,7 +103,7 @@ cd UniqueBible-master<br>
 cd ~/UniqueBible-master/ && python3 main.py<br>
 8. Create a shortcut, add the following line at the end of file ".bashrc" in the home directory:<br> 
 alias uba="cd ~/UniqueBible-master/ && python3 main.py"<br>
-[close and re-open the Linux terminal after saving the changes in file "~/.bashrc"]<br>
+[close and re-open the Linux terminal after saving the changes in file ".bashrc"]<br>
 9. Run the app with shortcut in terminal:<br>
 uba
 
