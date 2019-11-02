@@ -111,7 +111,7 @@ uba
 
 There are various ways to create a shortcut, below are some examples:<br>
 For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh<br>
-Linux Desktop: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
+Linux / Chrome OS: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
 Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows.bat<br>
 <i>Remarks: Change paths in the files above according to where you place the app's folder on your devices.</i>
 
