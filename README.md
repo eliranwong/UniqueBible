@@ -74,33 +74,33 @@ python3 main.py<br>
 
 # Example: Install & Run on Chrome OS
 1. Enable Linux apps: Open your Chrome OS Settings app, find “Linux Apps” and click “Turn On“. Your Chromebook will download the required files to use Linux apps. When complete, a new Terminal app will open.<br>
-To get the latest update, in Linux terminal, enter:
+To get the latest update, in Linux terminal, enter:<br>
 sudo apt udpate<br>
 sudo apt full-upgrade<br>
 2. Make sure you have "wget" installed, by running the following commands in Linux terminal:<br>
 sudo apt install wget<br>
-3. Make sure you have "python" library & tools are in place:
-sudo apt install python3
-sudo apt install python3-setuptools
-sudo apt install python3-pip
-4. Install dependencies for this app, enter the following command:
-pip3 install --user PySide2
-pip3 install --user PyPDF2
-pip3 install --user python-docx
-pip3 install --user gdown
-5. Export PATH
-* temporary solution - enter this command in terminal:
-export PATH=$PATH:$HOME/.local/bin
-* permenant solution - add the following line to the end of file ".bashrc" in the home directory:
-export PATH=$PATH:$HOME/.local/bin
-close terminal and re-open terminal for the following steps
+3. Make sure you have "python" library & tools are in place:<br>
+sudo apt install python3<br>
+sudo apt install python3-setuptools<br>
+sudo apt install python3-pip<br>
+4. Install dependencies for this app, enter the following command:<br>
+pip3 install --user PySide2<br>
+pip3 install --user PyPDF2<br>
+pip3 install --user python-docx<br>
+pip3 install --user gdown<br>
+5. Export PATH<br>
+* temporary solution - enter this command in terminal:<br>
+export PATH=$PATH:$HOME/.local/bin<br>
+* permenant solution - add the following line to the end of file ".bashrc" in the home directory:<br>
+export PATH=$PATH:$HOME/.local/bin<br>
+close terminal and re-open terminal for the following steps<br>
 6. Download the app in a zip file, enter in terminal:<br>
 cd ~<br>
 wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
-unzip master.zip
-cd UniqueBible-master
-7. Run the app, enter in Linux terminal:
-cd ~/UniqueBible-master && python3 main.py
+unzip master.zip<br>
+cd UniqueBible-master<br>
+7. Run the app, enter in Linux terminal:<br>
+cd ~/UniqueBible-master && python3 main.py<br>
 
 # Creating a Shortcut
 
