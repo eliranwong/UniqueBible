@@ -60,10 +60,10 @@ python3 main.py<br>
 # Example: Install & Run on Windows
 
 1. Use the download button on this page to download a zip copy.<br>
-2. Unzip the downloaded file "UniqueBible-master.zip" into a folder, e.g. "C:\UniqueBible-master"<br>
+2. Unzip the downloaded file "UniqueBible-master.zip" into a folder, e.g. "c:\UniqueBible-master"<br>
 3. Open command prompt and enter all the following commands:<br>
-cd C:\UniqueBible-master<br>
-python3 -m venv venv<br>
+python -m venv c:\UniqueBible-master\venv<br>
+cd c:\UniqueBible-master<br>
 .\venv\Scripts\activate<br>
 pip3 install PySide2<br>
 pip3 install PyPDF2<br>
@@ -113,7 +113,7 @@ There are various ways to create a shortcut, below are some examples:<br>
 For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh<br>
 Linux Desktop: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
 Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows.bat<br>
-<i>Remarks: Change paths in the files above according to where you place the app's folder.</i>
+<i>Remarks: Change paths in the files above according to where you place the app's folder on your devices.</i>
 
 # Where are the Database Files?
 
