@@ -64,7 +64,7 @@ python3 main.py<br>
 3. Open command prompt and enter all the following commands:<br>
 cd C:\UniqueBible-master<br>
 python3 -m venv venv<br>
-venv\Scripts\activate.bat<br>
+.\venv\Scripts\activate<br>
 pip3 install PySide2<br>
 pip3 install PyPDF2<br>
 pip3 install python-docx<br>
@@ -93,7 +93,7 @@ pip3 install --user gdown<br>
 export PATH=$PATH:$HOME/.local/bin<br>
 * permanent solution - add the following line at the end of file ".bashrc" in the home directory:<br>
 export PATH=$PATH:$HOME/.local/bin<br>
-close terminal and re-open terminal for the following steps<br>
+[close and re-open the Linux terminal after saving the changes in file "~/.bashrc"]<br>
 6. Download the app in a zip file, enter in terminal:<br>
 cd ~<br>
 wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
@@ -109,8 +109,11 @@ uba
 
 # Creating a Shortcut
 
-There are various ways to create a shortcut, below are some examples:
-For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh
+There are various ways to create a shortcut, below are some examples:<br>
+For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh<br>
+Linux Desktop: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
+Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows.bat<br>
+<i>Remarks: Change paths in the files above according to where you place the app's folder.</i>
 
 # Where are the Database Files?
 
