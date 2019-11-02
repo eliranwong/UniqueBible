@@ -102,7 +102,7 @@ cd UniqueBible-master<br>
 7. Run the app, enter in Linux terminal:<br>
 cd ~/UniqueBible-master/ && python3 main.py<br>
 8. Create a shortcut, add the following line at the end of file ".bashrc" in the home directory:<br> 
-alias uba="cd UniqueBible-master/ && python3 main.py"<br>
+alias uba="cd ~/UniqueBible-master/ && python3 main.py"<br>
 [close and re-open the Linux terminal after saving the changes in file "~/.bashrc"]<br>
 9. Run the app with shortcut in terminal:<br>
 uba
