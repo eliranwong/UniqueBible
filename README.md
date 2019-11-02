@@ -72,6 +72,36 @@ pip3 install gdown<br>
 4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
 python3 main.py<br>
 
+# Example: Install & Run on Chrome OS
+1. Enable Linux apps: Open your Chrome OS Settings app, find “Linux Apps” and click “Turn On“. Your Chromebook will download the required files to use Linux apps. When complete, a new Terminal app will open.<br>
+To get the latest update, in Linux terminal, enter:
+sudo apt udpate<br>
+sudo apt full-upgrade<br>
+2. Make sure you have "wget" installed, by running the following commands in Linux terminal:<br>
+sudo apt install wget<br>
+3. Make sure you have "python" library & tools are in place:
+sudo apt install python3
+sudo apt install python3-setuptools
+sudo apt install python3-pip
+4. Install dependencies for this app, enter the following command:
+pip3 install --user PySide2
+pip3 install --user PyPDF2
+pip3 install --user python-docx
+pip3 install --user gdown
+5. Export PATH
+* temporary solution - enter this command in terminal:
+export PATH=$PATH:$HOME/.local/bin
+* permenant solution - add the following line to the end of file ".bashrc" in the home directory:
+export PATH=$PATH:$HOME/.local/bin
+close terminal and re-open terminal for the following steps
+6. Download the app in a zip file, enter in terminal:<br>
+cd ~<br>
+wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
+unzip master.zip
+cd UniqueBible-master
+7. Run the app, enter in Linux terminal:
+cd ~/UniqueBible-master && python3 main.py
+
 # Creating a Shortcut
 
 There are various ways to create a shortcut, below are some examples:
