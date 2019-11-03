@@ -113,6 +113,7 @@ uba<br>
 First, edit file "~/UniqueBible-master/shortcut_uba_Linux.desktop", by replacing username "eliranwong" with your username.<br>
 Second, run the following command in Linux terminal:<br>
 sudo mv ~/UniqueBible-master/shortcut_uba_Linux.desktop /usr/share/applications/UniqueBibleApp.desktop<br>
+Locate the created shortcut in folder "Linux apps" of chrome application menu.<br>
 [To read more about .desktop file: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en]
 
 # Creating a Shortcut
