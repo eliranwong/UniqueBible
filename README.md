@@ -88,6 +88,9 @@ pip3 install --user PySide2<br>
 pip3 install --user PyPDF2<br>
 pip3 install --user python-docx<br>
 pip3 install --user gdown<br>
+[Remarks: In our testings, command "pip3 install PySide2" comes with memory errors on some low-momory chromebooks.  You may install wheel from Qt servers with this command instead:<br>
+pip install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io<br>
+Reference: https://wiki.qt.io/Qt_for_Python/GettingStarted]<br>
 5. Export PATH<br>
 * temporary solution - enter this command in terminal:<br>
 export PATH=$PATH:$HOME/.local/bin<br>
