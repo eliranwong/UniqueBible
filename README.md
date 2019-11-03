@@ -104,11 +104,13 @@ unzip master.zip<br>
 cd UniqueBible-master<br>
 7. Run the app, enter in Linux terminal:<br>
 cd ~/UniqueBible-master/ && python3 main.py<br>
-8. Create a shortcut, add the following line at the end of file ".bashrc" in the home directory:<br> 
+8. Create a shortcut for use in terminal, add the following line at the end of file ".bashrc" in the home directory:<br> 
 alias uba="cd ~/UniqueBible-master/ && python3 main.py"<br>
 [close and re-open the Linux terminal after saving the changes in file ".bashrc"]<br>
 9. Run the app with shortcut in terminal:<br>
 uba
+10. Create a shortcut in application menu [so you don't need terminal to run the app]:
+sudo mv ~/UniqueBible-master/shortcut_uba_Linux.desktop /usr/share/applications/UniqueBibleApp.desktop
 
 # Creating a Shortcut
 
