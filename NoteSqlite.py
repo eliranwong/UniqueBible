@@ -5,7 +5,7 @@ class NoteSqlite:
 
     def __init__(self):
         # connect note.sqlite
-        self.database = os.path.join("marvelData", "note.sqlite")
+        self.database = os.path.join(config.marvelData, "note.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         create = (

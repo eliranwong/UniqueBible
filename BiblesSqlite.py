@@ -8,7 +8,7 @@ class BiblesSqlite:
 
     def __init__(self):
         # connect bibles.sqlite
-        self.database = os.path.join("marvelData", "bibles.sqlite")
+        self.database = os.path.join(config.marvelData, "bibles.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
@@ -37,7 +37,7 @@ class BiblesSqlite:
         return ["OHGB", "OHGBi", "LXX"]
 
     def getFormattedBibleList(self, includeMarvelBibles=True):
-        formattedBiblesFolder = os.path.join("marvelData", "bibles")
+        formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
         if not includeMarvelBibles:
             formattedBibles = [bible for bible in formattedBibles if not bible in self.marvelBibles]
@@ -576,7 +576,7 @@ class Bible:
     def __init__(self, text):
         # connect [text].bible
         self.text = text
-        self.database = os.path.join("marvelData", "bibles", text+".bible")
+        self.database = os.path.join(config.marvelData, "bibles", text+".bible")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -705,7 +705,7 @@ class ClauseONTData:
     def __init__(self, testament):
         self.testament = testament
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "clause{0}.data".format(self.testament))
+        self.database = os.path.join(config.marvelData, "data", "clause{0}.data".format(self.testament))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -726,7 +726,7 @@ class MorphologySqlite:
 
     def __init__(self):
         # connect bibles.sqlite
-        self.database = os.path.join("marvelData", "morphology.sqlite")
+        self.database = os.path.join(config.marvelData, "morphology.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 

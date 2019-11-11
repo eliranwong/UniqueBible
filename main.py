@@ -14,15 +14,17 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 5.1
+latest_version = 5.2
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
     config.version = latest_version
-if not hasattr(config, 'numberOfTab'):
-    config.numberOfTab = 5
 if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
+if not hasattr(config, 'marvelData'):
+    config.marvelData = 'marvelData'
+if not hasattr(config, 'numberOfTab'):
+    config.numberOfTab = 5
 if not hasattr(config, 'parserStandarisation'):
     config.parserStandarisation = 'NO'
 if not hasattr(config, 'standardAbbreviation'):
@@ -156,8 +158,9 @@ def setCurrentRecord():
 def saveDataOnExit():
     configs = (
         ("version = ", config.version),
-        ("\nnumberOfTab = ", config.numberOfTab),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
+        ("\nmarvelData = ", config.marvelData),
+        ("\nnumberOfTab = ", config.numberOfTab),
         ("\nparserStandarisation = ", config.parserStandarisation),
         ("\nstandardAbbreviation = ", config.standardAbbreviation),
         ("\nlandscapeMode = ", config.landscapeMode),

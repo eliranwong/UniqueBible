@@ -14,7 +14,7 @@ class Converter:
             self.exportJsonBible(bible)
 
     def exportJsonBible(self, bible):
-        file = os.path.join("marvelData", "bibles", "{0}.bible".format(bible))
+        file = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
 
@@ -33,14 +33,14 @@ class Converter:
         jsonString = jsonString[:-2]
         jsonString += "\n]\n"
 
-        jsonFile = file = os.path.join("marvelData", "bibles", "{0}.json".format(bible))
+        jsonFile = file = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
         fileObj = open(jsonFile, "w")
         fileObj.write(jsonString)
         fileObj.close()
 
     # if exportMarvelBible doesn't work, use exportMarvelBible2 instead
     def exportJsonBible2(self, bible):
-        file = os.path.join("marvelData", "bibles", "{0}.bible".format(bible))
+        file = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
         connection = sqlite3.connect(file)
         cursor = connection.cursor()
 
@@ -59,7 +59,7 @@ class Converter:
             jsonObject.append(verseObject)
         jsonString = json.dumps(jsonObject) # Please note that "json.dumps()" converts unicode characters.
 
-        jsonFile = file = os.path.join("marvelData", "bibles", "{0}.json".format(bible))
+        jsonFile = file = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
         fileObj = open(jsonFile, "w")
         fileObj.write(jsonString)
         fileObj.close()
@@ -161,7 +161,7 @@ class Converter:
         del biblesSqlite
 
     def eSwordBibleToRichFormat(self, description, abbreviation, verses, notes):
-        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
         connection = sqlite3.connect(formattedBible)
@@ -259,7 +259,7 @@ class Converter:
         chapters = cursor.fetchall()
 
         # create an UB commentary
-        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
         if os.path.isfile(ubCommentary):
             os.remove(ubCommentary)
         ubFileConnection = sqlite3.connect(ubCommentary)
@@ -502,7 +502,7 @@ class Converter:
         del biblesSqlite
 
     def mySwordBibleToRichFormat(self, description, abbreviation, verses):
-        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
         connection = sqlite3.connect(formattedBible)
@@ -656,7 +656,7 @@ class Converter:
                         imagefile.close()
 
         # create an UB commentary
-        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
         if os.path.isfile(ubCommentary):
             os.remove(ubCommentary)
         ubFileConnection = sqlite3.connect(ubCommentary)
@@ -853,7 +853,7 @@ class Converter:
         del biblesSqlite
 
     def myBibleBibleToRichFormat(self, description, abbreviation, verses, notes, strong_numbers_prefix, stories):
-        formattedBible = os.path.join("marvelData", "bibles", "{0}.bible".format(abbreviation))
+        formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
         connection = sqlite3.connect(formattedBible)
@@ -980,7 +980,7 @@ class Converter:
         chapters = cursor.fetchall()
 
         # create an UB commentary
-        ubCommentary = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(abbreviation))
+        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
         if os.path.isfile(ubCommentary):
             os.remove(ubCommentary)
         ubFileConnection = sqlite3.connect(ubCommentary)
@@ -1266,7 +1266,7 @@ class Converter:
 
     # Create lexicon modules
     def createLexiconModule(self, module, content):
-        book = os.path.join("marvelData", "lexicons", "{0}.lexicon".format(module))
+        book = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
         if os.path.isfile(book):
             os.remove(book)
         connection = sqlite3.connect(book)
@@ -1283,7 +1283,7 @@ class Converter:
         connection.close()
 
     def convertOldLexiconData(self):
-        database = os.path.join("marvelData", "data", "lexicon.data")
+        database = os.path.join(config.marvelData, "data", "lexicon.data")
         connection = sqlite3.connect(database)
         cursor = connection.cursor()
 
@@ -1304,7 +1304,7 @@ class Converter:
 
     # Create book modules
     def createBookModule(self, module, content):
-        book = os.path.join("marvelData", "books", "{0}.book".format(module))
+        book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         if os.path.isfile(book):
             os.remove(book)
         connection = sqlite3.connect(book)
@@ -1321,7 +1321,7 @@ class Converter:
         connection.close()
 
     def convertOldBookData(self):
-        database = os.path.join("marvelData", "data", "book.data")
+        database = os.path.join(config.marvelData, "data", "book.data")
         connection = sqlite3.connect(database)
         cursor = connection.cursor()
 

@@ -22,7 +22,7 @@ class VerseONTData:
 
     def __init__(self, filename):
         # connect bibles.sqlite
-        self.database = os.path.join("marvelData", "data", "{0}.data".format(filename))
+        self.database = os.path.join(config.marvelData, "data", "{0}.data".format(filename))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -43,7 +43,7 @@ class CrossReferenceSqlite:
 
     def __init__(self):
         # connect bibles.sqlite
-        self.database = os.path.join("marvelData", "cross-reference.sqlite")
+        self.database = os.path.join(config.marvelData, "cross-reference.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -76,7 +76,7 @@ class ImageSqlite:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "images.sqlite")
+        self.database = os.path.join(config.marvelData, "images.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -106,7 +106,7 @@ class IndexesSqlite:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "indexes.sqlite")
+        self.database = os.path.join(config.marvelData, "indexes.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         self.setResourceList()
@@ -212,7 +212,7 @@ class SearchSqlite:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "search.sqlite")
+        self.database = os.path.join(config.marvelData, "search.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -242,7 +242,7 @@ class DictionaryData:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "dictionary.data")
+        self.database = os.path.join(config.marvelData, "data", "dictionary.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -278,7 +278,7 @@ class EncyclopediaData:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "encyclopedia.data")
+        self.database = os.path.join(config.marvelData, "data", "encyclopedia.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -323,7 +323,7 @@ class WordONTData:
     def __init__(self, testament):
         self.testament = testament
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "word{0}.data".format(self.testament))
+        self.database = os.path.join(config.marvelData, "data", "word{0}.data".format(self.testament))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -346,7 +346,7 @@ class ExlbData:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join("marvelData", "data", "exlb.data")
+        self.database = os.path.join(config.marvelData, "data", "exlb.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -384,7 +384,7 @@ class Commentary:
     def __init__(self, text):
         self.text = text
         if self.text in self.getCommentaryList():
-            self.database = os.path.join("marvelData", "commentaries", "c{0}.commentary".format(text))
+            self.database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(text))
             self.connection = sqlite3.connect(self.database)
             self.cursor = self.connection.cursor()
 
@@ -418,7 +418,7 @@ class Commentary:
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"COMMENTARY:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_commentary:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, self.text, verseReference)
 
     def getCommentaryList(self):
-        commentaryFolder = os.path.join("marvelData", "commentaries")
+        commentaryFolder = os.path.join(config.marvelData, "commentaries")
         commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search("^[\._]", f)]
         return sorted(commentaryList)
 
@@ -507,7 +507,7 @@ class LexiconData:
         self.lexiconList = self.getLexiconList()
 
     def getLexiconList(self):
-        lexiconFolder = os.path.join("marvelData", "lexicons")
+        lexiconFolder = os.path.join(config.marvelData, "lexicons")
         lexiconList = [f[:-8] for f in os.listdir(lexiconFolder) if os.path.isfile(os.path.join(lexiconFolder, f)) and f.endswith(".lexicon") and not re.search("^[\._]", f)]
         return sorted(lexiconList)
 
@@ -526,7 +526,7 @@ class Lexicon:
         # connect lexicon module
         self.module = module
 
-        self.database = os.path.join("marvelData", "lexicons", "{0}.lexicon".format(module))
+        self.database = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -573,7 +573,7 @@ class BookData:
         self.bookList = self.getBookList()
 
     def getBookList(self):
-        bookFolder = os.path.join("marvelData", "books")
+        bookFolder = os.path.join(config.marvelData, "books")
         bookList = [f[:-5] for f in os.listdir(bookFolder) if os.path.isfile(os.path.join(bookFolder, f)) and f.endswith(".book") and not re.search("^[\._]", f)]
         bookList = sorted(bookList)
         return [(book, book) for book in bookList]
@@ -620,7 +620,7 @@ class Book:
         # connect book module
         self.module = module
 
-        self.database = os.path.join("marvelData", "books", "{0}.book".format(module))
+        self.database = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
