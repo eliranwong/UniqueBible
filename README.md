@@ -36,9 +36,9 @@ pip3 install gdown
 
 If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following command instead to install dependencies:
 
-conda install -c conda-forge pyside2
-conda install -c vladsaveliev gdown
-conda install -c conda-forge pypdf2
+conda install -c conda-forge pyside2<br>
+conda install -c vladsaveliev gdown<br>
+conda install -c conda-forge pypdf2<br>
 conda install -c conda-forge python-docx
 
 # Download & Run UniqueBible.app
