@@ -34,7 +34,7 @@ pip3 install python-docx
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
 
-If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following command instead to install dependencies:
+If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies:
 
 conda install -c conda-forge pyside2<br>
 conda install -c vladsaveliev gdown<br>
