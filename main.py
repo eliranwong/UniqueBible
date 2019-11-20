@@ -14,13 +14,15 @@ import config
 # setup configurations for 1st launch
 # or setup configurations if file "config.py" is missing
 # or update configurations after codes are updated
-latest_version = 5.2
+latest_version = 5.3
 if not hasattr(config, 'version'):
     config.version = latest_version
 elif config.version < latest_version:
     config.version = latest_version
 if not hasattr(config, 'myGoogleApiKey'):
     config.myGoogleApiKey = ''
+if not hasattr(config, 'virtualKeyboard'):
+    config.virtualKeyboard = False
 if not hasattr(config, 'marvelData'):
     config.marvelData = 'marvelData'
 if not hasattr(config, 'numberOfTab'):
@@ -156,9 +158,11 @@ def setCurrentRecord():
     config.currentRecord = currentRecord
 
 def saveDataOnExit():
+    #os.environ["QT_IM_MODULE"] = config.im
     configs = (
         ("version = ", config.version),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
+        ("\nvirtualKeyboard = ", config.virtualKeyboard),
         ("\nmarvelData = ", config.marvelData),
         ("\nnumberOfTab = ", config.numberOfTab),
         ("\nparserStandarisation = ", config.parserStandarisation),
@@ -216,6 +220,10 @@ def saveDataOnExit():
     for name, value in configs:
         fileObj.write(name+pprint.pformat(value))
     fileObj.close()
+
+#config.im = os.environ["QT_IM_MODULE"]
+if config.virtualKeyboard:
+    os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 app = QApplication(sys.argv)
 app.aboutToQuit.connect(saveDataOnExit)
