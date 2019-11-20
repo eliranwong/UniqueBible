@@ -1,148 +1,195 @@
-#! venv/bin/python
-# visit https://BibleTools.app for more information
+# For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
 import os
 
-# "config.py" is essential for running UniqueBible.app
-# check if missing file "config.py"
+# File "config.py" is essential for running module "config"
+# Create file "config.py" if it is missing.
 if not os.path.isfile("config.py"):
     fileObj = open("config.py", "w")
     fileObj.close()
 
 import config
 
-# setup configurations for 1st launch
-# or setup configurations if file "config.py" is missing
-# or update configurations after codes are updated
-latest_version = 5.3
-if not hasattr(config, 'version'):
-    config.version = latest_version
-elif config.version < latest_version:
-    config.version = latest_version
-if not hasattr(config, 'myGoogleApiKey'):
-    config.myGoogleApiKey = ''
-if not hasattr(config, 'virtualKeyboard'):
+# Default settings for configurations:
+
+# Set version number on 1st launch / Update version number
+current_version = 5.3
+if not hasattr(config, "version") or current_version > config.version:
+    config.version = current_version
+# Personal google api key for display of google maps
+if not hasattr(config, "myGoogleApiKey"):
+    config.myGoogleApiKey = ""
+# Options to use built-in virtual keyboards: True / False
+if not hasattr(config, "virtualKeyboard"):
     config.virtualKeyboard = False
-if not hasattr(config, 'marvelData'):
-    config.marvelData = 'marvelData'
-if not hasattr(config, 'numberOfTab'):
+# Specify the folder path of resources
+if not hasattr(config, "marvelData"):
+    config.marvelData = "marvelData"
+# Specify the number of tabs for bible reading and workspace
+if not hasattr(config, "numberOfTab"):
     config.numberOfTab = 5
-if not hasattr(config, 'parserStandarisation'):
-    config.parserStandarisation = 'NO'
-if not hasattr(config, 'standardAbbreviation'):
-    config.standardAbbreviation = 'ENG'
-if not hasattr(config, 'landscapeMode'):
+# Options to convert all bible book abbreviations to standard ones: YES / NO
+if not hasattr(config, "parserStandarisation"):
+    config.parserStandarisation = "NO"
+# Options of language of book abbreviations: ENG / TC / SC
+if not hasattr(config, "standardAbbreviation"):
+    config.standardAbbreviation = "ENG"
+# Options to use landscape mode: True / False
+if not hasattr(config, "landscapeMode"):
     config.landscapeMode = True
-if not hasattr(config, 'noToolBar'):
+# Options for NOT displaying any toolbars on startup: True / False
+if not hasattr(config, "noToolBar"):
     config.noToolBar = False
-if not hasattr(config, 'singleToolBar'):
+# Options for displaying a single toolbar only: True / False
+if not hasattr(config, "singleToolBar"):
     config.singleToolBar = False
-if not hasattr(config, 'toolBarIconFullSize'):
+# Options to use large sets of icons: True / False
+if not hasattr(config, "toolBarIconFullSize"):
     config.toolBarIconFullSize = False
-if not hasattr(config, 'parallelMode'):
+# Options on parallel mode: 0, 1, 2, 3
+if not hasattr(config, "parallelMode"):
     config.parallelMode = 1
-if not hasattr(config, 'instantMode'):
+# Options to display the window showing instant information: 0, 1
+if not hasattr(config, "instantMode"):
     config.instantMode = 1
-if not hasattr(config, 'instantInformationEnabled'):
+# Options to trigger instant information: True / False
+if not hasattr(config, "instantInformationEnabled"):
     config.instantInformationEnabled = True
-if not hasattr(config, 'fontSize'):
+# Default font size of content in main window and workspace
+if not hasattr(config, "fontSize"):
     config.fontSize = 120
-if not hasattr(config, 'noteEditorFontSize'):
+# Default font size of content in note editor
+if not hasattr(config, "noteEditorFontSize"):
     config.noteEditorFontSize = 14
-if not hasattr(config, 'readFormattedBibles'):
+# Options to display bibles in formatted layout or paragraphs: True / False
+# "False" here means displaying bible verse in plain format, with each one on a single line.
+if not hasattr(config, "readFormattedBibles"):
     config.readFormattedBibles = True
-if not hasattr(config, 'addTitleToPlainChapter'):
+# Options to add sub-headings when "readFormattedBibles" is set to "False": True / False
+if not hasattr(config, "addTitleToPlainChapter"):
     config.addTitleToPlainChapter = True
-if not hasattr(config, 'hideLexicalEntryInBible'):
+# Options to hide lexical entries or Strong's numbers: True / False
+if not hasattr(config, "hideLexicalEntryInBible"):
     config.hideLexicalEntryInBible = False
-if not hasattr(config, 'importAddVerseLinebreak'):
+# Import setting - add a line break after each verse: True / False
+if not hasattr(config, "importAddVerseLinebreak"):
     config.importAddVerseLinebreak = False
-if not hasattr(config, 'importDoNotStripStrongNo'):
+# Import setting - keep Strong's number for search: True / False
+if not hasattr(config, "importDoNotStripStrongNo"):
     config.importDoNotStripStrongNo = False
-if not hasattr(config, 'importDoNotStripMorphCode'):
+# Import setting - keep morphology codes for search: True / False
+if not hasattr(config, "importDoNotStripMorphCode"):
     config.importDoNotStripMorphCode = False
-if not hasattr(config, 'importRtlOT'):
+# Import setting - import text in right-to-left direction: True / False
+if not hasattr(config, "importRtlOT"):
     config.importRtlOT = False
-if not hasattr(config, 'rtlTexts'):
+# List of modules, which contains right-to-left texts on old testament
+if not hasattr(config, "rtlTexts"):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
-if not hasattr(config, 'openBibleInMainViewOnly'):
+# Open bible references on main window instead of workspace: Ture / False
+if not hasattr(config, "openBibleInMainViewOnly"):
     config.openBibleInMainViewOnly = False
-if not hasattr(config, 'mainText'):
-    config.mainText = 'KJV'
-if not hasattr(config, 'mainB'):
+# Last-opened bible version and passage to be displayed on main window
+if not hasattr(config, "mainText"):
+    config.mainText = "KJV"
+if not hasattr(config, "mainB"):
     config.mainB = 1
-if not hasattr(config, 'mainC'):
+if not hasattr(config, "mainC"):
     config.mainC = 1
-if not hasattr(config, 'mainV'):
+if not hasattr(config, "mainV"):
     config.mainV = 1
-if not hasattr(config, 'studyText'):
-    config.studyText = 'NET'
-if not hasattr(config, 'studyB'):
+# Last-opened bible version and passage to be displayed on workspace
+if not hasattr(config, "studyText"):
+    config.studyText = "NET"
+if not hasattr(config, "studyB"):
     config.studyB = 43
-if not hasattr(config, 'studyC'):
+if not hasattr(config, "studyC"):
     config.studyC = 3
-if not hasattr(config, 'studyV'):
+if not hasattr(config, "studyV"):
     config.studyV = 16
-if not hasattr(config, 'iSearchVersion'):
+# Additional version displayed in search results
+# This version is displayed in parallel with the version being searched.
+if not hasattr(config, "iSearchVersion"):
     config.iSearchVersion = "OHGB"
-if not hasattr(config, 'extractParallel'):
+# Options to display multiple verses using both main text version and "iSearchVersion" in parallel format: True / False
+if not hasattr(config, "extractParallel"):
     config.extractParallel = False
-if not hasattr(config, 'commentaryText'):
-    config.commentaryText = 'CBSC'
-if not hasattr(config, 'commentaryB'):
+# Last-opened commentary text and passage
+if not hasattr(config, "commentaryText"):
+    config.commentaryText = "CBSC"
+if not hasattr(config, "commentaryB"):
     config.commentaryB = 43
-if not hasattr(config, 'commentaryC'):
+if not hasattr(config, "commentaryC"):
     config.commentaryC = 3
-if not hasattr(config, 'commentaryV'):
+if not hasattr(config, "commentaryV"):
     config.commentaryV = 16
-if not hasattr(config, 'topic'):
-    config.topic = 'EXLBT'
-if not hasattr(config, 'dictionary'):
-    config.dictionary = 'EAS'
-if not hasattr(config, 'encyclopedia'):
-    config.encyclopedia = 'ISB'
-if not hasattr(config, 'book'):
-    config.book = 'Timelines'
-if not hasattr(config, 'bookSearchString'):
-    config.bookSearchString = ''
-if not hasattr(config, 'noteSearchString'):
-    config.noteSearchString = ''
-if not hasattr(config, 'thirdDictionary'):
-    config.thirdDictionary = 'webster'
-if not hasattr(config, 'defaultLexiconStrongH'):
-    config.defaultLexiconStrongH = 'TBESH'
-if not hasattr(config, 'defaultLexiconStrongG'):
-    config.defaultLexiconStrongG = 'TBESG'
-if not hasattr(config, 'defaultLexiconETCBC'):
-    config.defaultLexiconETCBC = 'ConcordanceMorphology'
-if not hasattr(config, 'defaultLexiconLXX'):
-    config.defaultLexiconLXX = 'LXX'
-if not hasattr(config, 'defaultLexiconGK'):
-    config.defaultLexiconGK = 'MCGED'
-if not hasattr(config, 'defaultLexiconLN'):
-    config.defaultLexiconLN = 'LN'
-if not hasattr(config, 'historyRecordAllowed'):
+# Last-opened module for topical studies
+if not hasattr(config, "topic"):
+    config.topic = "EXLBT"
+# Last-opened dictionary module
+if not hasattr(config, "dictionary"):
+    config.dictionary = "EAS"
+# Last-opened encyclopedia module
+if not hasattr(config, "encyclopedia"):
+    config.encyclopedia = "ISB"
+# Last-opened book module
+if not hasattr(config, "book"):
+    config.book = "Timelines"
+# Last string entered for searching book
+if not hasattr(config, "bookSearchString"):
+    config.bookSearchString = ""
+# Last string entered for searching note
+if not hasattr(config, "noteSearchString"):
+    config.noteSearchString = ""
+# Last-opened third-party dictionary
+if not hasattr(config, "thirdDictionary"):
+    config.thirdDictionary = "webster"
+# Default Hebrew lexicon
+if not hasattr(config, "defaultLexiconStrongH"):
+    config.defaultLexiconStrongH = "TBESH"
+# Default Greek lexicon
+if not hasattr(config, "defaultLexiconStrongG"):
+    config.defaultLexiconStrongG = "TBESG"
+# Default lexicon based on ETCBC data
+if not hasattr(config, "defaultLexiconETCBC"):
+    config.defaultLexiconETCBC = "ConcordanceMorphology"
+# Default lexicon on LXX words
+if not hasattr(config, "defaultLexiconLXX"):
+    config.defaultLexiconLXX = "LXX"
+# Default lexicon on GK entries
+if not hasattr(config, "defaultLexiconGK"):
+    config.defaultLexiconGK = "MCGED"
+# Default lexicon on LN entries
+if not hasattr(config, "defaultLexiconLN"):
+    config.defaultLexiconLN = "LN"
+# Maximum number of history records allowed to be stored
+if not hasattr(config, "historyRecordAllowed"):
     config.historyRecordAllowed = 50
-if not hasattr(config, 'currentRecord'):
-    config.currentRecord = {'main': 0, 'study': 0}
-if not hasattr(config, 'history'):
-    config.history = {'external': ['Note.docx'], 'main': ['BIBLE:::KJV:::Genesis 1:1'], 'study': ['BIBLE:::NET:::John 3:16']}
+# Indexes of last-opened records
+if not hasattr(config, "currentRecord"):
+    config.currentRecord = {"main": 0, "study": 0}
+# History records are kept in config.history
+if not hasattr(config, "history"):
+    config.history = {"external": ["Note.docx"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
 from gui import MainWindow
 
+# Set screen size at first launch
 def setupMainWindow():
-    # set screen size when first opened
-    # launching with full screen size in some Linux distributions makes the app too sticky to be resized.
-    # check os with platform.system() or sys.platform
-    # Linux / Darwin / Windows
+    # check screen size
     availableGeometry = app.desktop().availableGeometry(mainWindow)
+    # Check os with platform.system() or sys.platform
+    # Linux / Darwin / Windows
     if platform.system() == "Linux":
+        # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
+        # Below is a workaround, loading the app in 4/5 of the screen size.
         mainWindow.resize(availableGeometry.width() * 4/5, availableGeometry.height() * 4/5)
     elif platform.system() == "Windows":
         mainWindow.showMaximized()
     else:
+        # macOS
         mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
@@ -154,11 +201,10 @@ def executeInitialTextCommand(textCommand, source="main"):
 def setCurrentRecord():
     mainRecordPosition = len(config.history["main"]) - 1
     studyRecordPosition = len(config.history["study"]) - 1
-    currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
-    config.currentRecord = currentRecord
+    config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
+# Save configurations on exit
 def saveDataOnExit():
-    #os.environ["QT_IM_MODULE"] = config.im
     configs = (
         ("version = ", config.version),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
@@ -221,31 +267,35 @@ def saveDataOnExit():
         fileObj.write(name+pprint.pformat(value))
     fileObj.close()
 
-#config.im = os.environ["QT_IM_MODULE"]
+# Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"
 if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
+# Start PySide2 gui
 app = QApplication(sys.argv)
+# Assign a function to save configurations when the app is closed
 app.aboutToQuit.connect(saveDataOnExit)
 
+# Class "MainWindow" is located in file "gui.py"
 mainWindow = MainWindow()
 setupMainWindow()
 
-# check if migration is needed for version >= 0.56
+# Check if migration is needed for version >= 0.56
 mainWindow.checkMigration()
 
-# execute initial command in main view
+# Execute initial command in main view
 initial_mainTextCommand = " ".join(sys.argv[1:])
 if not initial_mainTextCommand:
     mainHistory = config.history["main"]
     initial_mainTextCommand = mainHistory[-1]
 executeInitialTextCommand(initial_mainTextCommand)
 
-# execute initial command in study view
+# Execute initial command in study view
 studyHistory = config.history["study"]
 initial_studyTextCommand = studyHistory[-1]
 executeInitialTextCommand(initial_studyTextCommand, "study")
 
+# Set indexes of history records
 setCurrentRecord()
 
 sys.exit(app.exec_())
