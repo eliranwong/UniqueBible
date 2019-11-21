@@ -13,6 +13,8 @@ from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from shutil import copyfile
 from distutils.dir_util import copy_tree
+# import opencc
+# To use opencc module above, you need to install it first: pip3 install OpenCC
 
 class MainWindow(QMainWindow):
 
@@ -100,12 +102,18 @@ class MainWindow(QMainWindow):
 
     # manage key capture
     def event(self, event):
-        if event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Tab:
-            self.textCommandLineEdit.setFocus()
-            return True
-        elif event.type() == QEvent.KeyRelease and event.key() == Qt.Key_Escape:
-            self.setNoToolBar()
-            return True
+        if event.type() == QEvent.KeyRelease:
+            if event.key() == Qt.Key_Tab:
+                self.textCommandLineEdit.setFocus()
+                return True
+            elif event.key() == Qt.Key_Escape:
+                self.setNoToolBar()
+                return True
+            # Convert command line from simplified Chinese to traditional Chinese characters
+#            elif event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
+#                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
+#                self.textCommandLineEdit.setText(newTextCommand)
+#                return True
         return QWidget.event(self, event)
 
     # manage main page
