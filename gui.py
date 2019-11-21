@@ -4,7 +4,10 @@ from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QAction, QGridLayout, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+# Uncomment the following line to enable text-to-speech feature.
 #from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+# Remarks: text-to-speech feature may be incompatible on some devices.
+# Search for TEXT-TO-SPEECH to locate related codes.
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -13,8 +16,13 @@ from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from shutil import copyfile
 from distutils.dir_util import copy_tree
-# import opencc
-# To use opencc module above, you need to install it first: pip3 install OpenCC
+# Uncomment the following line to enable conversion of Chinese characters.
+#import opencc
+# To use "opencc" module above, you need to install it first: pip3 install OpenCC.
+# Uncomment the following line to enable Chinese pinyin feature.
+#from pypinyin import pinyin
+# To use "pypinyin" module above, you need to install it first: pip3 install pypinyin.
+# search for "CHINESE TOOL" to locate related codes.
 
 class MainWindow(QMainWindow):
 
@@ -109,7 +117,9 @@ class MainWindow(QMainWindow):
             elif event.key() == Qt.Key_Escape:
                 self.setNoToolBar()
                 return True
+            # CHINESE TOOL
             # Convert command line from simplified Chinese to traditional Chinese characters
+            # Uncomment the following 4 lines to enable pinyin feature
 #            elif event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
 #                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
 #                self.textCommandLineEdit.setText(newTextCommand)
@@ -2438,6 +2448,17 @@ class WebEngineView(QWebEngineView):
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
+        # CHINESE TOOL
+        # Convert Chinese characters into pinyin
+        # Uncomment the following 4 lines to enable pinyin feature
+#        pinyinText = QAction(self)
+#        pinyinText.setText("Chinese Pinyin")
+#        pinyinText.triggered.connect(self.pinyinSelectedText)
+#        self.addAction(pinyinText)
+
+        # TEXT-TO-SPEECH feature
+        # This feature may not be compatible on some devices.
+        # Uncomment the following 4 lines to enable text-to-speech feature
 #        tts = QAction(self)
 #        tts.setText("Speak")
 #        tts.triggered.connect(self.textToSpeech)
@@ -2528,9 +2549,18 @@ class WebEngineView(QWebEngineView):
         else:
             self.page().triggerAction(self.page().Copy)
 
-# The following function is suspended due to compatability issues on some Linux environments, 
-# especially where sound system is not supported.
-# Users may manually enable text-to-speech function by removing # on the following lines
+    def pinyinSelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            pinyinList = pinyin(self.selectedText())
+            pinyinList = [" ".join(list) for list in pinyinList]
+            pinyinText = " ".join(pinyinList)
+            self.page().runJavaScript("alert('{0}')".format(pinyinText))
+
+    # TEXT-TO-SPEECH feature
+    # This feature may not be compatible on some devices.
+    # Uncomment the following 16 lines to enable text-to-speech feature
 #    def textToSpeech(self):
 #        if not self.selectedText():
 #            self.messageNoSelection()
