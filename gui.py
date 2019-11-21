@@ -11,7 +11,8 @@ from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
-from shutil import copyfile, copy2
+from shutil import copyfile
+from distutils.dir_util import copy_tree
 
 class MainWindow(QMainWindow):
 
@@ -144,31 +145,10 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.updateUniqueBibleApp()
 
-#    def updateUniqueBibleApp(self):
-#        file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
-#        request = requests.get(file)
-#        if request.status_code == 200:
-#            currentName = os.getcwd()
-#            tempName = os.path.join(os.path.dirname(os.getcwd()), "UniqueBible-master")
-#            if not currentName == tempName:
-#                os.rename(currentName, tempName)
-#            filename = file.split("/")[-1]
-#            with open(filename, "wb") as content:
-#                content.write(request.content)
-#            if filename.endswith(".zip"):
-#                zip = zipfile.ZipFile(filename, "r")
-#                zip.extractall(os.path.dirname(os.getcwd()))
-#                zip.close()
-#                os.remove(filename)
-#            if not currentName == tempName:
-#                os.rename(tempName, currentName)
-#            self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need to restart the app to apply the changes.")')
-#        else:
-#            self.mainPage.runJavaScript('alert("Failed to download the latest update. Please check your internet connection.")')
-
     def updateUniqueBibleApp(self):
         file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
         request = requests.get(file)
+        alertFailedUpdate = 'alert("Update failed.  You may check your internet connection and try again.  Alternatively, you may download our lastest files manually from https://github.com/eliranwong/UniqueBible.")'
         if request.status_code == 200:
             filename = file.split("/")[-1]
             with open(filename, "wb") as content:
@@ -178,17 +158,13 @@ class MainWindow(QMainWindow):
                 zip.extractall(os.getcwd())
                 zip.close()
                 os.remove(filename)
-                src = "UniqueBible-master"
-                src_files = os.listdir(src)
-                for file_name in src_files:
-                    full_file_name = os.path.join("UniqueBible-master", file_name)
-                    if os.path.isfile(full_file_name):
-                        copy2(full_file_name, os.getcwd())
-                self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need to restart the app to apply the changes.")')
+                # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
+                copy_tree("UniqueBible-master", os.getcwd())
+                self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need a restart to apply the changes.")')
             else:
-                self.mainPage.runJavaScript('alert("Update failed.  You may check your internet connect and try again.  You may also download updated files manually from https://github.com/eliranwong/UniqueBible.")')
+                self.mainPage.runJavaScript(alertFailedUpdate)
         else:
-            self.mainPage.runJavaScript('alert("Failed to download the latest update. Please check your internet connection.")')
+            self.mainPage.runJavaScript(alertFailedUpdate)
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
