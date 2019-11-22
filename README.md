@@ -158,6 +158,8 @@ In ADDITION to official UniqueBible.app data, we support various <b>3rd party mo
 
 # 3rd Party Resources
 
+You can use popular third-party resources on UniqueBible.app.
+
 In addition to Marvel.bible modules and datasets, UniqueBible.app has a built-in converter.<br>
 The built-in converter supports import of the following third-party modules:<br>
 
