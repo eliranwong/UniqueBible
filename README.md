@@ -16,11 +16,17 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
 
+# Screenshot:
+
+<img src="screenshot.png">
+
 # Pre-requisite
 
 The "desktop" version of "UniqueBible.app" is programmed with python library.  Users have to install python library first in order to run "UniqueBible.app" on your desktop OS.
 
 Go to <a href="https://www.python.org">https://www.python.org</a> for instructions on installation of python for FREE.
+
+We also recommend <a href='https://www.anaconda.com/'>Anaconda python distribution</a>.  It may be easier to be installed.
 
 # Install Dependencies
 
@@ -151,10 +157,6 @@ Go to "Resources" > "Install Marvel.bible Datasets"
 <i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 49MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
 
 In ADDITION to official UniqueBible.app data, we support various <b>3rd party modules</b>.  Please see <a href="https://github.com/eliranwong/UniqueBible#3rd-party-resources">below</a> for details.
-
-# Screenshot:
-
-<img src="screenshot.png">
 
 # 3rd Party Resources
 
