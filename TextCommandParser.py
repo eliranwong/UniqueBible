@@ -576,7 +576,7 @@ class TextCommandParser:
     # _uba:::
     def textUba(self, command, source):
         if command:
-            pathItems = command[8:].split("/")
+            pathItems = command[7:].split("/")
             file = os.path.join(*pathItems)
             config.history["external"].append(file)
             self.parent.openExternalFileHistoryRecord(-1)

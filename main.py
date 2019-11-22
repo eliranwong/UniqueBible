@@ -13,7 +13,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 5.4
+current_version = 5.5
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -170,7 +170,7 @@ if not hasattr(config, "currentRecord"):
     config.currentRecord = {"main": 0, "study": 0}
 # History records are kept in config.history
 if not hasattr(config, "history"):
-    config.history = {"external": ["Note.docx"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
+    config.history = {"external": ["notes.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
