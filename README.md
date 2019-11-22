@@ -141,7 +141,11 @@ Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Wind
 
 # Virtual Keyboards
 
-You can use virtual keyboards for input.  Read more at: https://github.com/eliranwong/Chrome-OS-Linux/blob/master/unique-bible-app/desktop.md#use-virtual-keyboard
+Virtual Keyboard is NOT turned on by default.  You can enable it according to your needs.
+
+For more information, read: https://github.com/eliranwong/Chrome-OS-Linux/blob/master/unique-bible-app/desktop.md#use-virtual-keyboard
+
+<img src="virtualKeyboard.png">
 
 # Where are the Database Files?
 
