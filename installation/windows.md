@@ -32,10 +32,13 @@ Unzip it and place in a location you like.  In this example, we put it on deskto
 
 # 5. Open Command Prompt & ENTER commands:
 
-cd C:\Users\elira\OneDrive\Desktop\UniqueBible<br>
+> cd C:\Users\elira\OneDrive\Desktop\UniqueBible
+
 [<b>IMPORTANT!</b> In our example, we put in C:\Users\elira\OneDrive\Desktop\UniqueBible.  You need to modify the path according to the actual path of the folder in YOUR device.]
 
 <img src="screenshots/command_prompt1.png">
+
+> python -m venv venv
 
 <img src="screenshots/command_prompt3.png">
 
