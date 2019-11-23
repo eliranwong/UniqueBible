@@ -10,11 +10,11 @@ Go to https://www.anaconda.com/distribution/ and download a windows version of p
 
 # 2. Run Anaconda installer
 
-To avoid writting permission, it is easier to select option "Just me"
+To avoid writting permission, it is easier to select option "Just Me"
 
 <img src="screenshots/install_just_for_me.png">
 
-To make running the app easier, it is suggested to select "add path ..." option, as indicated below.
+To make running the app easier, it is suggested to select "Add Anaconda to my PATH environment variable" option, as indicated below.
 
 <img src="screenshots/add_path.png">
 
