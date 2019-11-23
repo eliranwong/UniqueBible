@@ -1,4 +1,4 @@
-# Example - Installation on macOS
+# Example: Install & Run on macOS / Linux
 
 There are different ways to install.  Below is an example.
 
