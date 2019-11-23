@@ -14,6 +14,8 @@ There are different ways to complete the installation.  Below are just examples:
 
 # macOS
 
+<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/macos.md">READ HERE</a>
+
 # Linux
 
 # Crostini in Chrome OS
