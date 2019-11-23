@@ -12,10 +12,9 @@ There are different ways to complete the installation.  Below are just examples:
 
 <a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/windows.md">READ HERE</a>
 
-# macOS
+# macOS / Linux
 
 <a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/macos.md">READ HERE</a>
 
-# Linux
+# Linux / Chrome OS
 
-# Crostini in Chrome OS
