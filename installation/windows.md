@@ -54,4 +54,6 @@ Double the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
 
 # 7. Create a Desktop Shortcut
 
+Right-click the file "shortcut_uba_Windows.bat", select "Send to > Desktop (create shortcut)"
 
+<img src="screenshots/desktop_shortcut.png.png">
