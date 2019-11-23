@@ -54,7 +54,7 @@ Double the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
 
 # 7. Download-on-demand
 
-As you run the app, our built-in download helper helps you to download files when required.
+As you run the app, our built-in <b>Download helper</b> helps you to download database files on first launch of each feature.
 
 # 8. Create a Desktop Shortcut
 
