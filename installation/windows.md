@@ -10,7 +10,7 @@ Go to https://www.anaconda.com/distribution/ and download a windows version of p
 
 # 2. Run Anaconda installer
 
-To avoid writting permission, it is easier to select option "just for me"
+To avoid writting permission, it is easier to select option "Just me"
 
 <img src="screenshots/install_just_for_me.png">
 
