@@ -12,8 +12,6 @@
 
 <img src="screenshots/command_prompt1.png">
 
-<img src="screenshots/command_prompt2.png">
-
 <img src="screenshots/command_prompt3.png">
 
 <img src="screenshots/shortcut.png">
