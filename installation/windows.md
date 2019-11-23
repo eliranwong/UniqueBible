@@ -36,11 +36,22 @@ Unzip it and place in a location you like.  In this example, we put it on deskto
 
 [<b>IMPORTANT!</b> In our example, we put in C:\Users\elira\OneDrive\Desktop\UniqueBible.  You need to modify the path according to the actual path of the folder in YOUR device.]
 
+> python -m venv venv
+
 <img src="screenshots/command_prompt1.png">
 
-> python -m venv venv
+> .\venv\Scripts\activate
+
+> pip install PySide2 PyPDF2 gdown python-docx
 
 <img src="screenshots/command_prompt3.png">
 
+# 6. Run
+
+Double the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
+
 <img src="screenshots/shortcut.png">
+
+# 7. Create a Desktop Shortcut
+
 
