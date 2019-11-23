@@ -49,87 +49,17 @@ conda install -c vladsaveliev gdown<br>
 conda install -c conda-forge pypdf2<br>
 conda install -c conda-forge python-docx
 
-# Download & Run UniqueBible.app
+# Download
 
 Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
 
 <img src="downloadButton.png">
 
-# Example: Install & Run on macOS / Linux
+# Installation & Run
 
-1. Use the download button on this page to download a zip copy.<br>
-2. This example assume that your downloaded file is located in "Downloads" of your home directory, i.e. ~/Downloads/.<br>
-3. Open terminal and enter all the following commands:<br>
-cd ~<br>
-unzip ~/Downloads/UniqueBible-master.zip<br>
-cd UniqueBible-master<br>
-python3 -m venv venv<br>
-source venv/bin/activate<br>
-pip3 install PySide2<br>
-pip3 install PyPDF2<br>
-pip3 install python-docx<br>
-pip3 install gdown<br>
-4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
-python3 main.py<br>
+There are different ways to setup and run our app.  We have some examples in the following link:
 
-# Example: Install & Run on Windows
-
-1. Use the download button on this page to download a zip copy.<br>
-2. Unzip the downloaded file "UniqueBible-master.zip" into a folder, e.g. "c:\UniqueBible-master"<br>
-3. Open command prompt and enter all the following commands:<br>
-python -m venv c:\UniqueBible-master\venv<br>
-cd c:\UniqueBible-master<br>
-.\venv\Scripts\activate<br>
-pip3 install PySide2<br>
-pip3 install PyPDF2<br>
-pip3 install python-docx<br>
-pip3 install gdown<br>
-4. To run the app that installed with the previous 3 steps, enter the following command in terminal:<br>
-python3 main.py<br>
-
-# Example: Install & Run on Chrome OS
-1. Enable Linux apps: Open your Chrome OS Settings app, find “Linux Apps” and click “Turn On“. Your Chromebook will download the required files to use Linux apps. When complete, a new Terminal app will open.<br>
-To get the latest update, in Linux terminal, enter:<br>
-sudo apt udpate<br>
-sudo apt full-upgrade<br>
-2. Make sure you have "wget" installed, by running the following commands in Linux terminal:<br>
-sudo apt install wget<br>
-3. Make sure you have "python" library & tools are in place:<br>
-sudo apt install python3<br>
-sudo apt install python3-setuptools<br>
-sudo apt install python3-pip<br>
-4. Install dependencies for this app, enter the following command:<br>
-pip3 install --user PySide2<br>
-pip3 install --user PyPDF2<br>
-pip3 install --user python-docx<br>
-pip3 install --user gdown<br>
-[Remarks: In our testings, command "pip3 install PySide2" encounters memory errors on some low-memory chromebooks.  You may install wheel from Qt servers with this command instead:<br>
-pip3 install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io<br>
-Reference: https://wiki.qt.io/Qt_for_Python/GettingStarted]<br>
-5. Export PATH<br>
-* temporary solution - enter this command in terminal:<br>
-export PATH=$PATH:$HOME/.local/bin<br>
-* permanent solution - add the following line at the end of file ".bashrc" in the home directory:<br>
-export PATH=$PATH:$HOME/.local/bin<br>
-[close and re-open the Linux terminal after saving the changes in file ".bashrc"]<br>
-6. Download the app in a zip file, enter in terminal:<br>
-cd ~<br>
-wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
-unzip master.zip<br>
-cd UniqueBible-master<br>
-7. Run the app, enter in Linux terminal:<br>
-cd ~/UniqueBible-master/ && python3 main.py<br>
-8. Create a shortcut for use in terminal, add the following line at the end of file ".bashrc" in the home directory:<br> 
-alias uba="cd ~/UniqueBible-master/ && python3 main.py"<br>
-[close and re-open the Linux terminal after saving the changes in file ".bashrc"]<br>
-9. Run the app with shortcut in terminal:<br>
-uba<br>
-10. Create a shortcut in application menu [so you don't need terminal to run the app]<br>
-First, edit file "~/UniqueBible-master/shortcut_uba_Linux.desktop", by replacing username "eliranwong" with your username.<br>
-Second, run the following command in Linux terminal:<br>
-sudo mv ~/UniqueBible-master/shortcut_uba_Linux.desktop /usr/share/applications/UniqueBibleApp.desktop<br>
-Locate the created shortcut in folder "Linux apps" of chrome application menu.<br>
-[To read more about .desktop file: https://developer.gnome.org/integration-guide/stable/desktop-files.html.en]
+https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
 # Creating a Shortcut
 
