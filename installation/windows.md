@@ -20,11 +20,20 @@ To make running the app easier, it is suggested to select "add path ..." option,
 
 # 3. Download UniqueBible
 
-Go to https://github.com/eliranwong/UniqueBible, use the download button to download a zip copy.  Unzip it and place in a location you like.
+Go to https://github.com/eliranwong/UniqueBible, use the download button to download a zip copy.
 
 <img src="screenshots/downloadButton.png">
 
+# 4. Unzip
+
+Unzip it and place in a location you like.  In this example, we put it on desktop.  You can find the full path of the folder with file explorer, like this screenshot.
+
 <img src="screenshots/uba_path.png">
+
+# 5. Open Command Prompt & ENTER commands:
+
+cd C:\Users\elira\OneDrive\Desktop\UniqueBible<br>
+[<b>IMPORTANT!</b> In our example, we put in C:\Users\elira\OneDrive\Desktop\UniqueBible.  You need to modify the path according to the actual path of the folder in YOUR device.]
 
 <img src="screenshots/command_prompt1.png">
 
