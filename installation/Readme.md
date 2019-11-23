@@ -10,7 +10,7 @@ There are different ways to complete the installation.  Below are just examples:
 
 # Windows
 
-<a href="">READ HERE</a>
+<a href="https://github.com/eliranwong/UniqueBible/edit/master/installation/windows.md">READ HERE</a>
 
 # macOS
 
