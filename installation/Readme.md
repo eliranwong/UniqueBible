@@ -14,7 +14,8 @@ There are different ways to complete the installation.  Below are just examples:
 
 # macOS / Linux
 
-<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/macos.md">READ HERE</a>
+<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/macos_linux.md">READ HERE</a>
 
 # Linux / Chrome OS
 
+<a href="https://github.com/eliranwong/Chrome-OS-Linux/blob/master/unique-bible-app/desktop.md">READ HERE</a>
