@@ -52,7 +52,11 @@ Double the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
 
 <img src="screenshots/shortcut.png">
 
-# 7. Create a Desktop Shortcut
+# 7. Download-on-demand
+
+As you run the app, our built-in download helper helps you to download files when required.
+
+# 8. Create a Desktop Shortcut
 
 Right-click the file "shortcut_uba_Windows.bat", select "Send to > Desktop (create shortcut)"
 
