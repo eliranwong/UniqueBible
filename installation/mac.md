@@ -61,3 +61,18 @@ Enter the following commands in terminal:
 > python3 main.py
 
 # 7. Create a Shortcut
+
+There are different ways to create a shortcut, below is an example.
+
+Create a plain text file, e.g. UniqueBible.sh, and place on your desktop.
+
+Paste the following lines in the file and save changes:
+
+> ~/Desktop/UniqueBible-master<br>
+> python3 main.py
+
+Open your terminal and enter:
+
+> chmod +x ~/Desktop/UniqueBible.sh
+
+On mac, right click the file UniqueBible.sh, select "Terminal" as the application to "Open With".
