@@ -2,9 +2,9 @@
 
 Below are general steps for the installation:
 
-* Python<br>
-* dependencies<br>
-* Download UniqueBible repository
+* Install a python distribution<br>
+* Install dependencies / packages<br>
+* Download a copy of "UniqueBible" repository
 
 There are different ways to complete the installation.  Below are some examples:
 
