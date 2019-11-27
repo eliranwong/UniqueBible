@@ -68,3 +68,19 @@ On mac, right click the file UniqueBible.sh, select "Terminal" as the applicatio
 
 # 7. Create a Shortcut on Linux
 
+Create a plain text file /usr/share/applications/UniqueBibleApp.desktop
+
+For example, if you use nano,
+
+> sudo nano /usr/share/applications/UniqueBibleApp.desktop
+
+Paste the following content, but replace your_username with your usename on your device
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Path=/home/your_username/UniqueBible-master/
+Exec=python3 /home/your_username/UniqueBible-master/main.py
+Name=Unique Bible App
+Icon=/home/your_username/UniqueBible-master/htmlResources/theText.png
