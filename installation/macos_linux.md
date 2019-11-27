@@ -64,7 +64,15 @@ Open your terminal and enter:
 
 > chmod +x ~/Desktop/UniqueBible.sh
 
-On mac, right click the file UniqueBible.sh, select "Terminal" as the application to "Open With".
+On mac, right click the file UniqueBible.sh, select "Get Info".
+
+<img src="screenshots/mac_shortcut1.png">
+
+In the section "Open with:", select "Terminal.app" as default.
+
+<img src="screenshots/mac_shortcut2.png">
+
+Now, you can double-click the file "UniqueBible.sh" to run the app directly.
 
 # 7. Create a Shortcut on Linux
 
