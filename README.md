@@ -42,24 +42,25 @@ pip3 install python-docx
 pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
 
-If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies:
+If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies [<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/mac.md">Click here for an example of installation using Anaconda</a>]:
 
 conda install -c conda-forge pyside2<br>
 conda install -c vladsaveliev gdown<br>
 conda install -c conda-forge pypdf2<br>
 conda install -c conda-forge python-docx
 
+# Instructions on Installation
+
+There are different ways to setup and run our app.  We have some examples in the following link:
+
+https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
+
+
 # Download
 
 Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
 
 <img src="downloadButton.png">
-
-# Installation & Run
-
-There are different ways to setup and run our app.  We have some examples in the following link:
-
-https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
 # Creating a Shortcut
 
