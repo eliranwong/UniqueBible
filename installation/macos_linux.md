@@ -76,11 +76,11 @@ For example, if you use nano,
 
 Paste the following content, but replace your_username with your usename on your device
 
-[Desktop Entry]
-Version=1.0
-Type=Application
-Terminal=false
-Path=/home/your_username/UniqueBible-master/
-Exec=python3 /home/your_username/UniqueBible-master/main.py
-Name=Unique Bible App
-Icon=/home/your_username/UniqueBible-master/htmlResources/theText.png
+[Desktop Entry]<br>
+Version=1.0<br>
+Type=Application<br>
+Terminal=false<br>
+Path=/home/your_username/UniqueBible-master/<br>
+Exec=python3 /home/your_username/UniqueBible-master/main.py<br>
+Icon=/home/your_username/UniqueBible-master/htmlResources/theText.png<br>
+Name=Unique Bible App<br>
