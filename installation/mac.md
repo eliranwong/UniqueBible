@@ -4,7 +4,17 @@ There are different ways to install.  Below is an example.
 
 # 1. Download & Install a Python Distribution First
 
-For example, go to https://www.anaconda.com/distribution/#download-section and download version python version 3.7
+For example, go to https://www.anaconda.com/distribution/#download-section and download a python version 3.7.
+
+<img src="screenshots/mac_anaconda1.png">
+
+Open the installer from "Downloads" or your "Downloads" folder.
+
+<img src="screenshots/mac_anaconda2.png">
+
+Follow through the installer to complete the installation.
+
+<img src="screenshots/mac_anaconda3.png">
 
 <b>Remarks:</b>
 
@@ -35,6 +45,19 @@ Use the download button on this page to download a zip copy.<br>
 
 <img src="screenshots/downloadButton.png">
 
-The following steps assume that your downloaded file is located in "Downloads" of your home directory, i.e. ~/Downloads/.<br>
+The downloaded zip file should be automatically "unzipped" on mac.
 
-# 5. Run 
+# 5. Move the Folder
+
+You can place the folder "UniqueBible-master" anywhere you like on your mac.
+
+In the following steps, we assume the folder is placed on your Desktop, i.e. ~/Desktop/UniqueBible-master
+
+# 6. Run 
+
+Enter the following commands in terminal:
+
+> ~/Desktop/UniqueBible-master<br>
+> python3 main.py
+
+# 7. Create a Shortcut
