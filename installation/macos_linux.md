@@ -14,7 +14,9 @@ We recommend to download a 3.7.x version, e.g. 3.7.5.  We haven't tested our app
 
 Use the download button on this page to download a zip copy.<br>
 
-This example assume that your downloaded file is located in "Downloads" of your home directory, i.e. ~/Downloads/.<br>
+<img src="screenshots/downloadButton.png">
+
+The following steps assume that your downloaded file is located in "Downloads" of your home directory, i.e. ~/Downloads/.<br>
 
 # 3. Open your Terminal
 
