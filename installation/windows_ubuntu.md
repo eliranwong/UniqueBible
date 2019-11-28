@@ -1,0 +1,3 @@
+updating ...
+
+sudo apt install libxss*
