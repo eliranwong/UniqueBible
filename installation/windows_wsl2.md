@@ -63,3 +63,5 @@ In our testing, we edited the file config.py of our LINUX copy [NOT Window copy]
 marvelData = '/home/eliran/winhome/OneDrive/Documents/UniqueBible/marvelData'
 
 Remarks: DO NOT edit file config.py while the app is running.
+
+Remarks: Be aware of the issue on slower cross os file speed in wsl2, which is mentioned at https://docs.microsoft.com/en-us/windows/wsl/wsl2-ux-changes#cross-os-file-speed-will-be-slower-in-initial-preview-builds  UniqueBible.app runs faster using files under the same os in wsl2.
