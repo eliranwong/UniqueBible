@@ -4,7 +4,7 @@ In our testing, UniqueBible requires version 2 of WSL to work.
 
 In the example below, we tested with pengwin under WSL2.
 
-For conversion from WSL1 to WSL2, you may read 
+For conversion from WSL1 to WSL2, you may read https://www.pengwin.dev/blog/2019/6/12/enable-wsl2-and-convert-existing-pengwin-installations
 
 # Installation
 
