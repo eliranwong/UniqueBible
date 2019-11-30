@@ -68,7 +68,12 @@ There are various ways to create a shortcut, below are some examples:<br>
 For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh<br>
 Linux / Chrome OS: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
 Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows.bat<br>
+Windows Subsystem for Linux (Version 2): https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows_wsl2.sh<br>
 <i>Remarks: Change paths in the files above according to where you place the app's folder on your devices.</i>
+
+# Customise the location of Folder "marvelData"
+
+Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
 
 # Virtual Keyboards
 
