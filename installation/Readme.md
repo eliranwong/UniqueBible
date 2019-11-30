@@ -12,6 +12,10 @@ There are different ways to complete the installation.  Below are some examples:
 
 <a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/windows.md">READ HERE</a>
 
+# Windows Subsystem for Linux (Version 2)
+
+<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md">READ HERE</a>
+
 # macOS
 
 <a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/mac.md">READ HERE</a>
