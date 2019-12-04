@@ -55,7 +55,6 @@ There are different ways to setup and run our app.  We have some examples in the
 
 https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
-
 # Download
 
 Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
@@ -74,6 +73,12 @@ Windows Subsystem for Linux (Version 2): https://github.com/eliranwong/UniqueBib
 # Customise the location of Folder "marvelData"
 
 Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
+
+# Change Default Font
+
+Read the following example:
+
+https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md#change-default-font
 
 # Virtual Keyboards
 
