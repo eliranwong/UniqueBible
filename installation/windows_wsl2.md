@@ -8,7 +8,7 @@ For conversion from WSL1 to WSL2, you may read https://www.pengwin.dev/blog/2019
 
 # Installation
 
-Under pengwin, install python via pengwin-setup > GUI
+Install "PYTHONPI" via pengwin-setup > PROGRAMMING
 
 Alternatively, run in terminal
 
