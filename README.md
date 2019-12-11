@@ -57,18 +57,33 @@ There are different ways to setup and run our app.  We have some examples in the
 
 https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
+# Graphical User Interface
 
-# Customise the location of Folder "marvelData"
+... we are working on documentation the graphical user interface of UniqueBible.app ...
 
-Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
+Meanwhile, you may check function of each button to hovering a mouse cursor on it.
 
-# Change Default Font
+# Supported Commands
+
+UniqueBible.app supports a set of command lines for quick navigation to bible passages or tools.
+
+<img src="screenshot_command_line.png">
+
+For details, read:
+
+https://github.com/eliranwong/UniqueBible/wiki/command_line
+
+# Change Default Font [optional]
 
 Read the following example:
 
 https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md#change-default-font
 
-# Virtual Keyboards
+# Customise the location of "marvelData" [optional]
+
+Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
+
+# Virtual Keyboards [optional]
 
 Virtual Keyboard is NOT turned on by default.  You can enable it according to your needs.
 
