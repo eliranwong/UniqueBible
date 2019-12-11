@@ -73,7 +73,7 @@ For details, read:
 
 https://github.com/eliranwong/UniqueBible/wiki/command_line
 
-# Customise Configurations
+# Customise Configurations [optional]
 
 Read: https://github.com/eliranwong/UniqueBible/wiki/config_file
 
