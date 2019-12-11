@@ -73,6 +73,29 @@ For details, read:
 
 https://github.com/eliranwong/UniqueBible/wiki/command_line
 
+# Where are the Database Files?
+
+All codes for running the app is shared in this repository.
+
+Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
+
+To run UniqueBible.app and its features, several database files are required.  To help you about installing particular datasets, <b>"Download Helper"</b> comes up automatically, when a database file is needed for a particular feature.
+
+You can also manually install <b>"ALL"</b> https://marvel.bible datasets via our menu bar.<br>
+Go to "Resources" > "Install Marvel.bible Datasets"
+
+<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 49MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
+
+# 3rd Party Resources
+
+In ADDITION to official UniqueBible.app data, you can convert resources from third-party modules and import into UniqueBible.app.
+
+Currently, we support conversion and import of modules of <b>MyBible</b>, <b>e-Sword</b>, <b>MySword</b>.
+
+For more information, read:
+
+https://github.com/eliranwong/UniqueBible/wiki/third_party_resources
+
 # Customise Configurations [optional]
 
 Read: https://github.com/eliranwong/UniqueBible/wiki/config_file
@@ -96,31 +119,6 @@ For more information, read: https://github.com/eliranwong/Chrome-OS-Linux/blob/m
 <img src="virtualKeyboard.png">
 
 <b>Remarks:</b> You need to close the virtual keyboard before you can close the app.  You can use the button located at the right lower corner of the virtual keyboard to close it.
-
-# Where are the Database Files?
-
-All codes for running the app is shared in this repository.
-
-Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
-
-To run UniqueBible.app and its features, several database files are required.  To help you about installing particular datasets, <b>"Download Helper"</b> comes up automatically, when a database file is needed for a particular feature.
-
-You can also manually install <b>"ALL"</b> https://marvel.bible datasets via our menu bar.<br>
-Go to "Resources" > "Install Marvel.bible Datasets"
-
-<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 49MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
-
-In ADDITION to official UniqueBible.app data, we support various <b>3rd party modules</b>.  Please see <a href="https://github.com/eliranwong/UniqueBible#3rd-party-resources">below</a> for details.
-
-# 3rd Party Resources
-
-You can convert resources from third-party modules and import into UniqueBible.app.
-
-Currently, we support conversion and import of modules of <b>MyBible</b>, <b>e-Sword</b>, <b>MySword</b>.
-
-For more information, read:
-
-https://github.com/eliranwong/UniqueBible/wiki/third_party_resources
 
 # Donations:
 
