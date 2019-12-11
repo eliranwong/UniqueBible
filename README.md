@@ -22,6 +22,8 @@ Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a
 
 # Pre-requisite
 
+Install a Pyhton Distribution First!
+
 The "desktop" version of "UniqueBible.app" is programmed with python library.  Users have to install python library first in order to run "UniqueBible.app" on your desktop OS.
 
 Go to <a href="https://www.python.org">https://www.python.org</a> for instructions on installation of python for FREE.
@@ -55,20 +57,6 @@ There are different ways to setup and run our app.  We have some examples in the
 
 https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
-# Download
-
-Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
-
-<img src="downloadButton.png">
-
-# Creating a Shortcut
-
-There are various ways to create a shortcut, below are some examples:<br>
-For macOS / Linux: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_macOS_Linux.sh<br>
-Linux / Chrome OS: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Linux.desktop<br>
-Windows: https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows.bat<br>
-Windows Subsystem for Linux (Version 2): https://github.com/eliranwong/UniqueBible/blob/master/shortcut_uba_Windows_wsl2.sh<br>
-<i>Remarks: Change paths in the files above according to where you place the app's folder on your devices.</i>
 
 # Customise the location of Folder "marvelData"
 
