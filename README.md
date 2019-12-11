@@ -73,6 +73,10 @@ For details, read:
 
 https://github.com/eliranwong/UniqueBible/wiki/command_line
 
+# Customise Configurations
+
+Read: https://github.com/eliranwong/UniqueBible/wiki/config_file
+
 # Change Default Font [optional]
 
 Read the following example:
