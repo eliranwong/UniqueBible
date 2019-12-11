@@ -114,43 +114,13 @@ In ADDITION to official UniqueBible.app data, we support various <b>3rd party mo
 
 # 3rd Party Resources
 
-You can use popular third-party resources on UniqueBible.app.
+You can convert resources from third-party modules and import into UniqueBible.app.
 
-In addition to Marvel.bible modules and datasets, UniqueBible.app has a built-in converter.<br>
-The built-in converter supports import of the following third-party modules:<br>
+Currently, we support conversion and import of modules of <b>MyBible</b>, <b>e-Sword</b>, <b>MySword</b>.
 
-* MySword Bible Modules (<a href="https://mysword.info/download-mysword/bibles">https://mysword.info/download-mysword/bibles</a>)
+For more information, read:
 
-* MySword Commentary Modules (<a href="https://mysword.info/download-mysword/commentaries">https://mysword.info/download-mysword/commentaries</a>)
-
-* MySword Dictionary Modules (<a href="https://mysword.info/download-mysword/dictionaries">https://mysword.info/download-mysword/dictionaries</a>)
-
-* e-Sword Bible Modules [Apple / macOS / iOS (*.bbli)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
-
-* e-Sword Commentary Modules [Apple / macOS / iOS (*.cmti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
-
-* e-Sword Dictionary Modules [Apple / macOS / iOS (*.dcti)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
-
-* e-Sword Lexicon Modules [Apple / macOS / iOS (*.lexi)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
-
-* e-Sword Book Modules [Apple / macOS / iOS (*.refi)] (<a href="https://www.e-sword.net">https://www.e-sword.net</a>)
-
-* MyBible Bible Modules (<a href="https://www.ph4.org/b4_my.php?k=bibles&q=mybible">https://www.ph4.org/b4_my.php?k=bibles&q=mybible</a>)
-
-* MyBible Commentary Modules (<a href="https://www.ph4.org/b4_my.php?k=commentaries&q=mybible">https://www.ph4.org/b4_my.php?k=commentaries&q=mybible</a>)
-
-* MyBible Dictionary Modules (<a href="https://www.ph4.org/b4_my.php?k=dictionary&q=mybible">https://www.ph4.org/b4_my.php?k=dictionary&q=mybible</a>)
-
-* More MySword / e-Sword modules are available at: <a href="http://www.biblesupport.com">http://www.biblesupport.com</a>
-
-Users need to download 3rd party modules separately.<br><br>
-Built-in converter can be accessed via our menu bar:<br>
-Go to menu "Resources" > "Import 3rd Party Modules"<br>
-For import of <b>multiple files in one go</b>:<br>
-Put 3rd party modules, which you want to import, in a folder.<br>
-Go to menu "Resources" > "Import Supported 3rd Party Modules in a Folder"
-
-<b>Disclaimer</b>: All third-party modules are created by third parties. UniqueBible.app does not endorse any particular theological views or individual content of these 3rd-party modules. Please contact individual module creators or parties if you have issues with their content. UniqueBible.app is NOT responsible for any third-party modules in terms of their quality or content. Users should only use these third-party modules with their own judgment and at their own risks.
+https://github.com/eliranwong/UniqueBible/wiki/third_party_resources
 
 # Donations:
 
