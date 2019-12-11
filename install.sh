@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd ~
 wget "https://github.com/eliranwong/UniqueBible/archive/master.zip"
 unzip master.zip
