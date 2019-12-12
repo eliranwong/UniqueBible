@@ -8,6 +8,10 @@ For conversion from WSL1 to WSL2, you may read https://www.pengwin.dev/blog/2019
 
 # Installation
 
+Install "mesa-utils" if you don't have one in place:
+
+> sudo apt install mesa-utils
+
 Install "PYTHONPI" via pengwin-setup > PROGRAMMING
 
 Alternatively, run in terminal
