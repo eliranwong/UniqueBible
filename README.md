@@ -32,17 +32,20 @@ We also recommend <a href='https://www.anaconda.com/'>Anaconda python distributi
 
 # Install Dependencies
 
-pip3 install PySide2
+> pip3 install PySide2
 <br>(PySide2 is required for graphical user interface, used by UniqueBible.app.)
 
-pip3 install PyPDF2
+> pip3 install PyPDF2
 <br>(PyPDF2 is required for reading text from *.pdf documents.)
 
-pip3 install python-docx
+> pip3 install python-docx
 <br>(python-docx is required for reading text from *.docx documents.)
 
-pip3 install gdown
+> pip3 install gdown
 <br>(gdown is required for downloading database files stored in google drive.)
+
+> pip3 install diff-match-patch
+<br>(it is an essential component for advanced verse comparison from version 5.7 onwards.)
 
 If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies [<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/mac.md">Click here for an example of installation using Anaconda</a>]:
 
