@@ -12,18 +12,31 @@ class TextCommandParser:
         self.lastKeyword = None
 
     def parser(self, textCommad, source="main"):
+        # Uncomment the following line for debugging gui.
+        #print(textCommad)
         interpreters = {
             "_imv": self.instantMainVerse,
+            # e.g. _instantVerse:::KJV:::1.1.1
             "_instantverse": self.instantVerse,
+            # e.g. _instantWord:::1:::h2
             "_instantword": self.instantWord,
+            # e.g. _menu:::
             "_menu": self.textMenu,
+            # e.g. _commentary:::CBSC.1.1.1
             "_commentary": self.textCommentaryMenu,
+            # e.g. _book:::
             "_book": self.textBookMenu,
+            # e.g. _info:::Genesis
             "_info": self.textInfo,
+            # e.g. _bibleinfo:::KJV
             "_bibleinfo": self.textBibleInfo,
+            # e.g. _commentaryinfo:::CBSC
             "_commentaryinfo": self.textCommentaryInfo,
             "_command": self.textCommand,
+            # e.g. _history:::main
+            # e.g. _history:::study
             "_history": self.textHistory,
+            # e.g. _historyrecord:::1
             "_historyrecord": self.textHistoryRecord,
             "_image": self.textImage,
             "_editchapternote": self.editChapterNote,
@@ -36,49 +49,221 @@ class TextCommandParser:
             "_uba": self.textUba,
             "_biblenote": self.textBiblenote,
             "_lxxword": self.textLxxWord,
-            "main": self.textMain,
-            "study": self.textStudy,
+            # [KEYWORD] BIBLE
+            # Feature - Open a bible chapter or multiples verses on main or study view.
+            # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version currently active on main view is opened by default if "[BIBLE_VERSION]:::" or "BIBLE:::[BIBLE_VERSION]:::" is omitted.
+            # 2) If "BIBLE:::" command is called from manual entry via command field or a link within the content on main view, bible text is opened on main view.
+            # 3) If "BIBLE:::" command is called from a link within the content on study view and "Bible Display on Study View" is enabled, bible text is opened on study view.
+            # 4) If "BIBLE:::" command is called from a link within the content on study view and "Bible Display on Study View" is disabled, bible text is opened on main view.
+            # 5) Common abbreviations of bible references are supported.
+            # Examples:
+            # e.g. John 3:16
+            # e.g. Jn 3:16; Rm 5:8; Deu 6:4
+            # e.g. BIBLE:::John 3:16
+            # e.g. BIBLE:::Jn 3:16; Rm 5:8; Deu 6:4
+            # e.g. BIBLE:::KJV:::John 3:16
+            # e.g. BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
             "bible": self.textBible,
+            # [KEYWORD] MAIN
+            # Feature - Open a bible chapter or multiples verses on main view.
+            # Usage - MAIN:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version currently active on main view is opened by default if "[BIBLE_VERSION]:::" or "MAIN:::[BIBLE_VERSION]:::" is omitted.
+            # 2) Common abbreviations of bible references are supported.
+            # Examples:
+            # e.g. John 3:16
+            # e.g. Jn 3:16; Rm 5:8; Deu 6:4
+            # e.g. MAIN:::John 3:16
+            # e.g. MAIN:::Jn 3:16; Rm 5:8; Deu 6:4
+            # e.g. MAIN:::KJV:::John 3:16
+            # e.g. MAIN:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
+            "main": self.textMain,
+            # [KEYWORD] STUDY
+            # Feature - Open a bible chapter or multiples verses on study / main view.
+            # Usage - STUDY:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version currently active on study view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # 2) If "Bible Display on Study View" is enabled, bible text is opened on study view.
+            # 3) If "Bible Display on Study View" is disabled, bible text is opened on main view.
+            # 4) Common abbreviations of bible references are supported.
+            # Examples:
+            # e.g. STUDY:::John 3:16
+            # e.g. STUDY:::Jn 3:16; Rm 5:8; Deu 6:4
+            # e.g. STUDY:::KJV:::John 3:16
+            # e.g. STUDY:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
+            "study": self.textStudy,
+            # [KEYWORD] TEXT
+            # Feature - Change the bible version of the currently active passage on main view.
+            # Usage - TEXT:::[BIBLE_VERSION]
+            # e.g. TEXT:::KJV
+            # e.g. TEXT:::NET
             "text": self.textText,
+            # [KEYWORD] COMPARE
+            # Feature - Compare bible versions of a single or multiple references.
+            # Usage - COMPARE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) All installed bible versions are opened for comparison if "[BIBLE_VERSION(S)]:::" is omitted.
+            # 2) Multiple bible versions for comparison are separated by "_".
+            # 3) If a single reference is entered and bible versions for comparison are specified, verses of the same chapter of the entered reference are opened.
+            # 4) Muliple verse references are supported for comparison.
+            # e.g. COMPARE:::John 3:16
+            # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
+            # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8
             "compare": self.textCompare,
+            # [KEYWORD] PARALLEL
+            # Feature - Display bible versions of the same chapter in parallel columns.
+            # Usage - PARALLEL:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
+            # Remarks:
+            # 1) Multiple bible versions for comparison are separated by "_".
+            # 2) If a single reference is entered and bible versions for comparison are specified, verses of the same chapter of the entered reference are opened.
+            # 3) Muliple verse references are supported for comparison.
+            # 4) Only the bible version currently active on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
+            # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
+            # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8
             "parallel": self.textParallel,
-            "word": self.textWordData,
-            "commentary": self.textCommentary,
-            "commentary2": self.textCommentary2,
-            "book": self.textBook,
-            "searchbook": self.textSearchBook,
-            "searchchapternote": self.textSearchChapterNote,
-            "searchversenote": self.textSearchVerseNote,
-            "clause": self.textClause,
-            "combo": self.textCombo,
-            "translation": self.textTranslation,
-            "discourse": self.textDiscourse,
-            "words": self.textWords,
-            "lexicon": self.textLexicon,
-            "lmcombo": self.textLMcombo,
+            # [KEYWORD] SEARCH
+            # e.g. SEARCH:::KJV:::love
             "search": self.textCountSearch,
+            # [KEYWORD] SHOWSEARCH
+            # e.g. SHOWSEARCH:::KJV:::love
             "showsearch": self.textSearchBasic,
+            # [KEYWORD] ADVANCEDSEARCH
+            # e.g. ADVANCEDSEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
             "advancedsearch": self.textSearchAdvanced,
+            # [KEYWORD] ANDSEARCH
+            # e.g. ANDSEARCH:::KJV:::love|Jesus
+            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%"
             "andsearch": self.textAndSearch,
+            # [KEYWORD] ORSEARCH
+            # e.g. ORSEARCH:::KJV:::love|Jesus
+            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
             "orsearch": self.textOrSearch,
+            # [KEYWORD] iSEARCH
+            # e.g. iSEARCH:::KJV:::love
             "isearch": self.textCountISearch,
-            "andisearch": self.textAndISearch,
-            "orisearch": self.textOrISearch,
+            # [KEYWORD] SHOWISEARCH
+            # e.g. SHOWISEARCH:::KJV:::love
             "showisearch": self.textISearchBasic,
+            # [KEYWORD] ADVANCEDISEARCH
+            # e.g. ADVANCEDISEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
             "advancedisearch": self.textISearchAdvanced,
-            "searchtool": self.textSearchTool,
-            "lemma": self.textLemma,
-            "morphologycode": self.textMorphologyCode,
-            "morphology": self.textMorphology,
-            "searchmorphology": self.textSearchMorphology,
+            # [KEYWORD] ANDISEARCH
+            # e.g. ANDISEARCH:::KJV:::love|Jesus
+            # alias of, e.g. ADVANCEDISEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%"
+            "andisearch": self.textAndISearch,
+            # [KEYWORD] ORISEARCH
+            # e.g. ORISEARCH:::KJV:::love|Jesus
+            # alias of, e.g. ADVANCEDISEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
+            "orisearch": self.textOrISearch,
+            # [KEYWORD] INDEX
+            # e.g. INDEX:::Gen 1:1
             "index": self.textIndex,
-            "exlb": self.textExlb,
-            "dictionary": self.textDictionary,
-            "encyclopedia": self.textEncyclopedia,
+            # [KEYWORD] CROSSREFERENCE
+            # e.g. CROSSREFERENCE:::Gen 1:1
             "crossreference": self.textCrossReference,
+            # [KEYWORD] TSKE
+            # e.g. TSKE:::Gen 1:1
             "tske": self.tske,
+            # [KEYWORD] COMMENTARY
+            # Feature - Open commentary of a bible reference.
+            # Usage - COMMENTARY:::[COMMENTARY_MODULE]:::[BIBLE_REFERENCE]
+            # Remarks:
+            # 1) The last opened commentary module is opened if "[COMMENTARY_MODULE]:::" is omitted.
+            # 2) Commentary is opened on study view.
+            # e.g. COMMENTARY:::John 3:16
+            # e.g. COMMENTARY:::CBSC:::John 3:16
+            "commentary": self.textCommentary,
+            # [KEYWORD] COMMENTARY2
+            # Feature - Open commentary of a bible reference.
+            # Usage - COMMENTARY2:::[COMMENTARY_MODULE]:::[BIBLE_REFERENCE]
+            # Remarks:
+            # 1) The last opened commentary module is opened if "[COMMENTARY_MODULE]:::" is omitted.
+            # 2) Commentary is opened on study view.
+            # 3) Bible reference used with "COMMENTARY2:::" is formatted as [BOOK_NUMBER.CHAPTER_NUMBER.VERSE_NUMBER], see examples below.
+            # e.g. COMMENTARY2:::43.3.16
+            # e.g. COMMENTARY2:::CBSC:::43.3.16
+            "commentary2": self.textCommentary2,
+            # [KEYWORD] COMBO
+            # e.g. COMBO:::Gen 1:1
+            "combo": self.textCombo,
+            # [KEYWORD] TRANSLATION
+            # e.g. TRANSLATION:::Gen 1:1
+            "translation": self.textTranslation,
+            # [KEYWORD] DISCOURSE
+            # e.g. DISCOURSE:::Gen 1:1
+            "discourse": self.textDiscourse,
+            # [KEYWORD] WORDS
+            # e.g. WORDS:::Gen 1:1
+            "words": self.textWords,
+            # [KEYWORD] LEXICON
+            # e.g. LEXICON:::BDB:::H7225
+            "lexicon": self.textLexicon,
+            # [KEYWORD] LMCOMBO
+            # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a
+            "lmcombo": self.textLMcombo,
+            # [KEYWORD] LEMMA
+            # e.g. LEMMA:::E70002
+            # e.g. LEMMA:::H7225
+            "lemma": self.textLemma,
+            # [KEYWORD] MORPHOLOGYCODE
+            # e.g. MORPHOLOGYCODE:::E70002,subs.f.sg.a
+            "morphologycode": self.textMorphologyCode,
+            # [KEYWORD] MORPHOLOGY
+            # e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND Morphology LIKE '%feminine%'
+            "morphology": self.textMorphology,
+            # [KEYWORD] SEARCHMORPHOLOGY
+            # e.g. SEARCHMORPHOLOGY:::E70002:::feminine
+            # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%")
+            # e.g. SEARCHMORPHOLOGY:::E70002:::feminine|noun
+            # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%" OR Morphology LIKE "%noun%")
+            "searchmorphology": self.textSearchMorphology,
+            # [KEYWORD] WORD
+            # e.g. WORD:::1:::2
+            "word": self.textWordData,
+            # [KEYWORD] CLAUSE
+            # e.g. Embed in the first clause of Gen 1:1 in MAB
+            # e.g. CLAUSE:::1.1.1:::1
+            "clause": self.textClause,
+            # [KEYWORD] SEARCHTOOL
+            # e.g. SEARCHTOOL:::EXLBP:::Jesus
+            # e.g. SEARCHTOOL:::HBN:::Jesus
+            # e.g. SEARCHTOOL:::EXLBL:::Jerusalem
+            # e.g. SEARCHTOOL:::EXLBT:::faith
+            # e.g. SEARCHTOOL:::EAS:::faith
+            # e.g. SEARCHTOOL:::ISB:::faith
+            # e.g. SEARCHBOOK:::OT_History1:::Abraham
+            # e.g. SEARCHTOOL:::mETCBC:::prep
+            "searchtool": self.textSearchTool,
+            # [KEYWORD] EXLB
+            # e.g. EXLB:::exlbp:::BP904
+            # e.g. EXLB:::exlbl:::BL636
+            "exlb": self.textExlb,
+            # [KEYWORD] DICTIONARY
+            # e.g. DICTIONARY:::EAS1312
+            "dictionary": self.textDictionary,
+            # [KEYWORD] ENCYCLOPEDIA
+            # e.g. ENCYCLOPEDIA:::ISB:::ISBE3333
+            "encyclopedia": self.textEncyclopedia,
+            # [KEYWORD] SEARCHTHIRDDICTIONARY
+            # e.g. SEARCHTHIRDDICTIONARY:::faith
             "searchthirddictionary": self.thirdDictionarySearch,
+            # [KEYWORD] THIRDDICTIONARY
+            # e.g. THIRDDICTIONARY:::webster:::FAITH
             "thirddictionary": self.thirdDictionaryOpen,
+            # [KEYWORD] BOOK
+            # e.g. BOOK:::Timelines:::2210-2090_BCE
+            "book": self.textBook,
+            # [KEYWORD] SEARCHBOOK
+            # e.g. SEARCHBOOK:::faith
+            "searchbook": self.textSearchBook,
+            # [KEYWORD] SEARCHCHAPTERNOTE
+            # e.g. SEARCHCHAPTERNOTE:::faith
+            "searchchapternote": self.textSearchChapterNote,
+            # [KEYWORD] SEARCHVERSENOTE
+            # e.g. SEARCHVERSENOTE:::faith
+            "searchversenote": self.textSearchVerseNote,
         }
         commandList = self.splitCommand(textCommad)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -160,7 +345,7 @@ class TextCommandParser:
         }
 
     def getCoreBiblesInfo(self):
-        return ((config.marvelData, "morphology.sqlite"), "1Vn3UXicjqDQSA41ek3_zJ7n2iAlspU_3")
+        return ((config.marvelData, "images.sqlite"), "1E7uoGqndCcqdeh8kl5kS0Z9pOTe8iWFp")
 
     def getBibleNoteInfo(self):
         return ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")

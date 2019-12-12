@@ -13,12 +13,16 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 5.5
+current_version = 5.6
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
+# Options to use ibus as input method: True / False
+# This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
+if not hasattr(config, "ibus"):
+    config.ibus = False
 # Options to use built-in virtual keyboards: True / False
 if not hasattr(config, "virtualKeyboard"):
     config.virtualKeyboard = False
@@ -208,6 +212,7 @@ def saveDataOnExit():
     configs = (
         ("version = ", config.version),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
+        ("\nibus = ", config.ibus),
         ("\nvirtualKeyboard = ", config.virtualKeyboard),
         ("\nmarvelData = ", config.marvelData),
         ("\nnumberOfTab = ", config.numberOfTab),
@@ -266,6 +271,11 @@ def saveDataOnExit():
     for name, value in configs:
         fileObj.write(name+pprint.pformat(value))
     fileObj.close()
+
+
+# Set Qt input method variable to use ibus if config.ibus is "True"
+if config.ibus:
+    os.environ["QT_IM_MODULE"] = "ibus"
 
 # Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"
 if config.virtualKeyboard:
