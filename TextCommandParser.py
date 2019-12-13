@@ -112,6 +112,12 @@ class TextCommandParser:
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8
             "compare": self.textCompare,
+            # [KEYWORD] DIFF
+            "diff": self.textDiff,
+            # [KEYWORD] DIFFERENT
+            "different": self.textDiff,
+            # [KEYWORD] DIFFERENCE
+            "difference": self.textDiff,
             # [KEYWORD] PARALLEL
             # Feature - Display bible versions of the same chapter in parallel columns.
             # Usage - PARALLEL:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
@@ -662,6 +668,30 @@ class TextCommandParser:
         else:
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
+            del biblesSqlite
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            if confirmedTexts == ["ALL"]:
+                updateViewConfig(viewText, verseList[-1])
+            else:
+                updateViewConfig(confirmedTexts[-1], verseList[-1])
+            return (source, verses)
+
+    # DIFF:::
+    # DIFFERENT:::
+    # DIFFERENCE:::
+    def textDiff(self, command, source):
+        if command.count(":::") == 0:
+            confirmedTexts = ["ALL"]
+            verseList = self.extractAllVerses(command)
+        else:
+            texts, references = self.splitCommand(command)
+            confirmedTexts = self.getConfirmedTexts(texts)
+            verseList = self.extractAllVerses(references)
+        if not confirmedTexts or not verseList:
+            return self.invalidCommand()
+        else:
+            biblesSqlite = BiblesSqlite()
+            verses = biblesSqlite.diffVerse(verseList, confirmedTexts)
             del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             if confirmedTexts == ["ALL"]:

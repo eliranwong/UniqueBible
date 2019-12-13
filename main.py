@@ -13,7 +13,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 5.6
+current_version = 5.7
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -87,6 +87,9 @@ if not hasattr(config, "importDoNotStripMorphCode"):
 # Import setting - import text in right-to-left direction: True / False
 if not hasattr(config, "importRtlOT"):
     config.importRtlOT = False
+# List of modules, which contains Hebrew / Greek texts
+if not hasattr(config, "originalTexts"):
+    config.originalTexts = ['original', 'MOB', 'MAB', 'MTB', 'MIB', 'MPB', 'OHGB', 'OHGBi', 'LXX', 'LXX1', 'LXX1i', 'LXX2', 'LXX2i']
 # List of modules, which contains right-to-left texts on old testament
 if not hasattr(config, "rtlTexts"):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
@@ -234,6 +237,7 @@ def saveDataOnExit():
         ("\nimportDoNotStripMorphCode = ", config.importDoNotStripMorphCode),
         ("\nimportAddVerseLinebreak = ", config.importAddVerseLinebreak),
         ("\nimportRtlOT = ", config.importRtlOT),
+        ("\noriginalTexts = ", config.originalTexts),
         ("\nrtlTexts = ", config.rtlTexts),
         ("\nopenBibleInMainViewOnly = ", config.openBibleInMainViewOnly),
         ("\nmainText = ", config.mainText),
