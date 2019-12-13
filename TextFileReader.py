@@ -1,6 +1,7 @@
-#! /Users/Eliran/Desktop/venv/venv/bin/python
-# source: https://github.com/python-openxml/python-docx/issues/276
+# This file contains class and functions related to reading external files
 
+# To support reading paragraphs and tables with python-docx
+# source: https://github.com/python-openxml/python-docx/issues/276
 from __future__ import (
     absolute_import, division, print_function, unicode_literals
 )

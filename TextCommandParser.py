@@ -12,48 +12,12 @@ class TextCommandParser:
         self.lastKeyword = None
 
     def parser(self, textCommad, source="main"):
-        # Uncomment the following line for debugging gui.
-        #print(textCommad)
         interpreters = {
-            "_imv": self.instantMainVerse,
-            # e.g. _instantVerse:::KJV:::1.1.1
-            "_instantverse": self.instantVerse,
-            # e.g. _instantWord:::1:::h2
-            "_instantword": self.instantWord,
-            # e.g. _menu:::
-            "_menu": self.textMenu,
-            # e.g. _commentary:::CBSC.1.1.1
-            "_commentary": self.textCommentaryMenu,
-            # e.g. _book:::
-            "_book": self.textBookMenu,
-            # e.g. _info:::Genesis
-            "_info": self.textInfo,
-            # e.g. _bibleinfo:::KJV
-            "_bibleinfo": self.textBibleInfo,
-            # e.g. _commentaryinfo:::CBSC
-            "_commentaryinfo": self.textCommentaryInfo,
-            "_command": self.textCommand,
-            # e.g. _history:::main
-            # e.g. _history:::study
-            "_history": self.textHistory,
-            # e.g. _historyrecord:::1
-            "_historyrecord": self.textHistoryRecord,
-            "_image": self.textImage,
-            "_editchapternote": self.editChapterNote,
-            "_editversenote": self.editVerseNote,
-            "_openchapternote": self.openChapterNote,
-            "_openversenote": self.openVerseNote,
-            "_openfile": self.textOpenFile,
-            "_editfile": self.textEditFile,
-            "_website": self.textWebsite,
-            "_uba": self.textUba,
-            "_biblenote": self.textBiblenote,
-            "_lxxword": self.textLxxWord,
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
             # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
             # Remarks:
-            # 1) The bible version currently active on main view is opened by default if "[BIBLE_VERSION]:::" or "BIBLE:::[BIBLE_VERSION]:::" is omitted.
+            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" or "BIBLE:::[BIBLE_VERSION]:::" is omitted.
             # 2) If "BIBLE:::" command is called from manual entry via command field or a link within the content on main view, bible text is opened on main view.
             # 3) If "BIBLE:::" command is called from a link within the content on study view and "Bible Display on Study View" is enabled, bible text is opened on study view.
             # 4) If "BIBLE:::" command is called from a link within the content on study view and "Bible Display on Study View" is disabled, bible text is opened on main view.
@@ -70,7 +34,7 @@ class TextCommandParser:
             # Feature - Open a bible chapter or multiples verses on main view.
             # Usage - MAIN:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
             # Remarks:
-            # 1) The bible version currently active on main view is opened by default if "[BIBLE_VERSION]:::" or "MAIN:::[BIBLE_VERSION]:::" is omitted.
+            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" or "MAIN:::[BIBLE_VERSION]:::" is omitted.
             # 2) Common abbreviations of bible references are supported.
             # Examples:
             # e.g. John 3:16
@@ -84,7 +48,7 @@ class TextCommandParser:
             # Feature - Open a bible chapter or multiples verses on study / main view.
             # Usage - STUDY:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
             # Remarks:
-            # 1) The bible version currently active on study view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # 1) The bible version last opened on study view is opened by default if "[BIBLE_VERSION]:::" is omitted.
             # 2) If "Bible Display on Study View" is enabled, bible text is opened on study view.
             # 3) If "Bible Display on Study View" is disabled, bible text is opened on main view.
             # 4) Common abbreviations of bible references are supported.
@@ -95,7 +59,7 @@ class TextCommandParser:
             # e.g. STUDY:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
             "study": self.textStudy,
             # [KEYWORD] TEXT
-            # Feature - Change the bible version of the currently active passage on main view.
+            # Feature - Change the bible version of the last opened passage on main view.
             # Usage - TEXT:::[BIBLE_VERSION]
             # e.g. TEXT:::KJV
             # e.g. TEXT:::NET
@@ -113,10 +77,28 @@ class TextCommandParser:
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8
             "compare": self.textCompare,
             # [KEYWORD] DIFF
+            # Feature - Compare bible versions against the last opened version, with highlights of differences.
+            # Dependency - This feature is available since the release of version 5.7.  You have to install package 'diff_match_patch' to run this feature.  Read https://github.com/eliranwong/UniqueBible#install-dependencies for guideline on installation.
+            # Usage - DIFF:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) Last-opened bible version is always displayed at the top for comparison.
+            # 2) All installed bible versions are opened for comparison if "[BIBLE_VERSION(S)]:::" is omitted.
+            # 3) Multiple bible versions for comparison are separated by "_".
+            # 4) Muliple verse references are supported for comparison.
+            # e.g. DIFF:::Joh 3:16
+            # e.g. DIFF:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
             "diff": self.textDiff,
             # [KEYWORD] DIFFERENT
+            # Feature - same as [KEYWORD] DIFF
+            # Usage - DIFFERENT:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # e.g. DIFFERENT:::Joh 3:16
+            # e.g. DIFFERENT:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
             "different": self.textDiff,
             # [KEYWORD] DIFFERENCE
+            # Feature - same as [KEYWORD] DIFF
+            # Usage - DIFFERENCE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # e.g. DIFFERENCE:::Joh 3:16
+            # e.g. DIFFERENCE:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
             "difference": self.textDiff,
             # [KEYWORD] PARALLEL
             # Feature - Display bible versions of the same chapter in parallel columns.
@@ -125,7 +107,7 @@ class TextCommandParser:
             # 1) Multiple bible versions for comparison are separated by "_".
             # 2) If a single reference is entered and bible versions for comparison are specified, verses of the same chapter of the entered reference are opened.
             # 3) Muliple verse references are supported for comparison.
-            # 4) Only the bible version currently active on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
+            # 4) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8
             "parallel": self.textParallel,
@@ -270,6 +252,85 @@ class TextCommandParser:
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith
             "searchversenote": self.textSearchVerseNote,
+            #
+            # Keywords starting with "_" are mainly internal commands for GUI operations
+            # They are not recorded in history records.
+            #
+            # [KEYWORD] _imv
+            # e.g. _imv:::1.1.1
+            # e.g. _imv:::43.3.16
+            "_imv": self.instantMainVerse,
+            # [KEYWORD] _instantverse
+            # e.g. _instantVerse:::KJV:::1.1.1
+            "_instantverse": self.instantVerse,
+            # [KEYWORD] _instantword
+            # e.g. _instantWord:::1:::h2
+            "_instantword": self.instantWord,
+            # [KEYWORD] _menu
+            # e.g. _menu:::
+            "_menu": self.textMenu,
+            # [KEYWORD] _commentary
+            # e.g. _commentary:::CBSC.1.1.1
+            "_commentary": self.textCommentaryMenu,
+            # [KEYWORD] _book
+            # e.g. _book:::
+            "_book": self.textBookMenu,
+            # [KEYWORD] _info
+            # e.g. _info:::Genesis
+            "_info": self.textInfo,
+            # [KEYWORD] _bibleinfo
+            # e.g. _bibleinfo:::KJV
+            "_bibleinfo": self.textBibleInfo,
+            # [KEYWORD] _commentaryinfo
+            # e.g. _commentaryinfo:::CBSC
+            "_commentaryinfo": self.textCommentaryInfo,
+            # [KEYWORD] _command
+            # e.g. _command:::testing
+            "_command": self.textCommand,
+            # [KEYWORD] _history
+            # e.g. _history:::main
+            # e.g. _history:::study
+            "_history": self.textHistory,
+            # [KEYWORD] _historyrecord
+            # e.g. _historyrecord:::1
+            "_historyrecord": self.textHistoryRecord,
+            # [KEYWORD] _image
+            # e.g. _image:::EXLBL:::1.jpg
+            "_image": self.textImage,
+            # [KEYWORD] _editchapternote
+            # e.g. _editchapternote:::
+            "_editchapternote": self.editChapterNote,
+            # [KEYWORD] _editversenote
+            # e.g. _editversenote:::
+            "_editversenote": self.editVerseNote,
+            # [KEYWORD] _openchapternote
+            # e.g. _openchapternote:::43.3
+            "_openchapternote": self.openChapterNote,
+            # [KEYWORD] _openversenote
+            # e.g. _openversenote:::43.3.16
+            "_openversenote": self.openVerseNote,
+            # [KEYWORD] _openfile
+            # e.g. _openfile:::1
+            "_openfile": self.textOpenFile,
+            # [KEYWORD] _editfile
+            # e.g. _editfile:::1
+            "_editfile": self.textEditFile,
+            # [KEYWORD] _website
+            # e.g. _website:::https://marvel.bible
+            "_website": self.textWebsite,
+            # [KEYWORD] _uba
+            # e.g. _uba:::file://notes.uba
+            # e.g. _uba:::file://note_editor_key_combo.uba
+            "_uba": self.textUba,
+            # [KEYWORD] _biblenote
+            # e.g. _biblenote:::1.1.1.[1]
+            "_biblenote": self.textBiblenote,
+            # [KEYWORD] _lxxword
+            # e.g. _lxxword:::LXX1:::l1
+            "_lxxword": self.textLxxWord,
+            # [KEYWORD] _paste
+            # e.g. _paste:::
+            "_paste": self.pasteFromClipboard,
         }
         commandList = self.splitCommand(textCommad)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -948,6 +1009,11 @@ class TextCommandParser:
     # _command:::
     def textCommand(self, command, source):
         return ("command", command)
+
+    # _paste:::
+    def pasteFromClipboard(self, command, source):
+        self.parent.pasteFromClipboard()
+        return ("", "")
 
     # _image:::
     def textImage(self, command, source):

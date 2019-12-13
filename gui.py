@@ -1204,8 +1204,8 @@ class MainWindow(QMainWindow):
         if sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
         else:
-            # write text in a text file
-            # reason: setHTML does not work with content larger than 2 MB
+            # save html in a separate file if text is larger than 2MB
+            # reason: setHTML does not work with content larger than 2MB
             outputFile = os.path.join("htmlResources", "main.html")
             fileObject = open(outputFile, 'w')
             fileObject.write(text)
@@ -1221,18 +1221,20 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
-#        testing
+
+#        # testing
 #        currentIndex = self.studyView.currentIndex()
 #        if currentIndex == 4:
 #            nextIndex = 0
 #        else:
 #            nextIndex = currentIndex + 1
 #        self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
+
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
         else:
-            # write text in a text file
-            # reason: setHTML does not work with content larger than 2 MB
+            # save html in a separate file if text is larger than 2MB
+            # reason: setHTML does not work with content larger than 2MB
             outputFile = os.path.join("htmlResources", "study.html")
             fileObject = open(outputFile, 'w')
             fileObject.write(text)
@@ -1298,6 +1300,9 @@ class MainWindow(QMainWindow):
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
+        # prevent blocking of a previously loaded command
+        newCommand = (self.studyView.currentIndex(), "_openchapternote:::{0}.{1}".format(b, c))
+        self.lastLoadedCommand["study"] = newCommand
 
     def openVerseNote(self, b, c, v):
         self.textCommandParser.lastKeyword = "note"
@@ -1311,6 +1316,9 @@ class MainWindow(QMainWindow):
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
+        # prevent blocking of a previously loaded command
+        newCommand = (self.studyView.currentIndex(), "_openversenote:::{0}.{1}.{2}".format(b, c, v))
+        self.lastLoadedCommand["study"] = newCommand
 
     # Actions - open text from external sources
     def htmlWrapper(self, text, parsing=False, view="study", linebreak=True):
@@ -1340,8 +1348,11 @@ class MainWindow(QMainWindow):
 
     def pasteFromClipboard(self):
         clipboardText = qApp.clipboard().text()
-        # note: use qApp.clipboard().setText to set text in clipboard
+        # note: can use qApp.clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
+        # prevent blocking of a previously loaded command
+        newCommand = (self.studyView.currentIndex(), "_paste:::")
+        self.lastLoadedCommand["study"] = newCommand
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()
@@ -1432,24 +1443,36 @@ class MainWindow(QMainWindow):
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
+            # prevent blocking of a previously loaded command
+            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
+            self.lastLoadedCommand["study"] = newCommand
 
     def openUbaFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text)
+            # prevent blocking of a previously loaded command
+            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
+            self.lastLoadedCommand["study"] = newCommand
 
     def openPdfFile(self, fileName):
         if fileName:
             text = TextFileReader().readPdfFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
+            # prevent blocking of a previously loaded command
+            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
+            self.lastLoadedCommand["study"] = newCommand
 
     def openDocxFile(self, fileName):
         if fileName:
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
+            # prevent blocking of a previously loaded command
+            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
+            self.lastLoadedCommand["study"] = newCommand
 
     # Actions - export to pdf
     def printMainPage(self):
@@ -2136,11 +2159,6 @@ class MainWindow(QMainWindow):
 
         if content == "INVALID_COMMAND_ENTERED":
             self.mainPage.runJavaScript("alert('Invalid command not processed.')")
-        elif view == "":
-            if source == "main":
-                self.mainPage.runJavaScript("document.title = 'UniqueBible.app';")
-            elif source == "study":
-                self.studyPage.runJavaScript("document.title = 'UniqueBible.app';")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
@@ -2165,15 +2183,11 @@ class MainWindow(QMainWindow):
                 html = re.sub(search, replace, html)
             # load into widget view
             if view == "study":
-                # save html in a separate file if text is larger than 2MB
-                # reason: setHTML does not work with content larger than 2MB
                 newCommand = (self.studyView.currentIndex(), textCommand)
                 if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
                     self.openTextOnStudyView(html)
                     self.lastLoadedCommand["study"] = newCommand
             elif view == "main":
-                # save html in a separate file if text is larger than 2MB
-                # reason: setHTML does not work with content larger than 2MB
                 newCommand = (self.mainView.currentIndex(), textCommand)
                 if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
                     self.openTextOnMainView(html)
@@ -2181,10 +2195,16 @@ class MainWindow(QMainWindow):
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].currentWidget().openPopover(html=html)
-            else:
+            elif not view == "":
                 views[view].setHtml(html, baseUrl)
             if addRecord == True and view in ("main", "study"):
                 self.addHistoryRecord(view, textCommand)
+
+        # reset document.title
+        changeTitle = "document.title = 'UniqueBible.app';"
+        self.mainPage.runJavaScript(changeTitle)
+        self.studyPage.runJavaScript(changeTitle)
+        self.instantPage.runJavaScript(changeTitle)
 
     def convertCrLink(self, match):
         value = match.group()

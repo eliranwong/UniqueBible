@@ -1,3 +1,7 @@
+#!venv/bin/python
+
+# UniqueBible.app
+# a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
 import os
@@ -13,7 +17,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 5.7
+current_version = 5.8
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
