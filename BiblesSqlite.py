@@ -390,7 +390,7 @@ class BiblesSqlite:
             config.mainText = mainText
             return verses
         except:
-            return "Package 'diff_match_patch' is missing.  Read https://github.com/eliranwong/UniqueBible#install-dependencies for guideline on installation."
+            return "Package 'diff_match_patch' is missing.  Read <ref onclick={0}website('https://github.com/eliranwong/UniqueBible#install-dependencies'){0}>https://github.com/eliranwong/UniqueBible#install-dependencies</ref> for guideline on installation.".format('"')
 
     def removeVowelAccent(self, text):
         searchReplace = (
