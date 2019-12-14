@@ -2,7 +2,7 @@
 
 Click on the download button on this page to download a zip copy of this repository, i.e. "UniqueBible-master.zip".
 
-<img src="../downloadButton.png">
+<img src="../screenshots/screenshot_downloadButton.png">
 
 Alternately, you can download a copy from this link:
 
