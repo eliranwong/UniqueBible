@@ -18,7 +18,7 @@ Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a
 
 # Screenshot:
 
-<img src="screenshot.png">
+<img src="screenshots/screenshot.png">
 
 # Pre-requisite
 
@@ -71,7 +71,7 @@ Meanwhile, you may check function of each button to hovering a mouse cursor on i
 
 UniqueBible.app supports a set of command lines for quick navigation to bible passages or tools.
 
-<img src="screenshot_command_line.png">
+<img src="screenshots/screenshot_command_line.png">
 
 For details, read:
 
@@ -120,7 +120,7 @@ Virtual Keyboard is NOT turned on by default.  You can enable it according to yo
 
 For more information, read: https://github.com/eliranwong/Chrome-OS-Linux/blob/master/unique-bible-app/desktop.md#use-virtual-keyboard
 
-<img src="virtualKeyboard.png">
+<img src="screenshots/screenshot_virtualKeyboard.png">
 
 <b>Remarks:</b> You need to close the virtual keyboard before you can close the app.  You can use the button located at the right lower corner of the virtual keyboard to close it.
 
