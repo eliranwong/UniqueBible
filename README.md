@@ -63,9 +63,9 @@ https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
 # Graphical User Interface
 
-... we are working on documentation the graphical user interface of UniqueBible.app ...
+A guide on GUI:
 
-Meanwhile, you may check function of each button to hovering a mouse cursor on it.
+https://github.com/eliranwong/UniqueBible/wiki/graphical_user_interface
 
 # Supported Commands
 
