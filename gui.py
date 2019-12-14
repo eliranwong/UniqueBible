@@ -201,6 +201,8 @@ class MainWindow(QMainWindow):
     def create_menu(self):
 
         menu1 = self.menuBar().addMenu("&UniqueBible.app")
+        menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
+        menu1.addSeparator()
         menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
@@ -1761,6 +1763,9 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setFocus()
 
     # Actions - open urls
+    def openUbaWiki(self):
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki")
+
     def openBibleTools(self):
         webbrowser.open("https://bibletools.app")
 
