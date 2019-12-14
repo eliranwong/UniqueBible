@@ -113,6 +113,7 @@ class TextCommandParser:
             "parallel": self.textParallel,
             # [KEYWORD] SEARCH
             # e.g. SEARCH:::KJV:::love
+            # e.g. SEARCH:::KJV_WEB:::love
             "search": self.textCountSearch,
             # [KEYWORD] SHOWSEARCH
             # e.g. SHOWSEARCH:::KJV:::love
@@ -130,6 +131,7 @@ class TextCommandParser:
             "orsearch": self.textOrSearch,
             # [KEYWORD] iSEARCH
             # e.g. iSEARCH:::KJV:::love
+            # e.g. iSEARCH:::KJV_WEB:::love
             "isearch": self.textCountISearch,
             # [KEYWORD] SHOWISEARCH
             # e.g. SHOWISEARCH:::KJV:::love
@@ -1106,7 +1108,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = biblesSqlite.countSearchBible(texts[0], commandList[1], interlinear)
+            searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, commandList[1], interlinear) for text in texts])
             del biblesSqlite
             return ("study", searchResult)
 
