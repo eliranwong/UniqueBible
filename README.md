@@ -108,9 +108,9 @@ Read: https://github.com/eliranwong/UniqueBible/wiki/config_file
 
 # Change Default Font [optional]
 
-Read the following example:
+You can change the default font to your favourite font installed on your system.
 
-https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md#change-default-font
+Read: https://github.com/eliranwong/UniqueBible/wiki/config_file#default-font
 
 # Customise the location of "marvelData" [optional]
 
