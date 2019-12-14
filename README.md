@@ -14,6 +14,8 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 (developed with Python [version: 3.7.2])
 
+Our Wiki Pages: https://github.com/eliranwong/UniqueBible/wiki
+
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
 
 # Screenshot:
