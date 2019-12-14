@@ -17,7 +17,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 5.8
+current_version = 5.9
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -63,6 +63,9 @@ if not hasattr(config, "instantMode"):
 # Options to trigger instant information: True / False
 if not hasattr(config, "instantInformationEnabled"):
     config.instantInformationEnabled = True
+# Default font
+if not hasattr(config, "font"):
+    config.font = ""
 # Default font size of content in main window and workspace
 if not hasattr(config, "fontSize"):
     config.fontSize = 120
@@ -232,6 +235,7 @@ def saveDataOnExit():
         ("\nparallelMode = ", config.parallelMode),
         ("\ninstantMode = ", config.instantMode),
         ("\ninstantInformationEnabled = ", config.instantInformationEnabled),
+        ("\nfont = ", config.font),
         ("\nfontSize = ", config.fontSize),
         ("\nnoteEditorFontSize = ", config.noteEditorFontSize),
         ("\nreadFormattedBibles = ", config.readFormattedBibles),

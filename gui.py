@@ -1343,7 +1343,7 @@ class MainWindow(QMainWindow):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, text)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%; font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, text, '"', config.font)
         return text
 
     def pasteFromClipboard(self):
@@ -2168,7 +2168,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, content)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {1}%;  font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, content, '"', config.font)
             views = {
                 "main": self.mainView,
                 "study": self.studyView,
@@ -2195,7 +2195,9 @@ class MainWindow(QMainWindow):
             elif view.startswith("popover"):
                 view = view.split(".")[1]
                 views[view].currentWidget().openPopover(html=html)
-            elif not view == "":
+            # There is a case where view is an empty string "".
+            # The following condition applies where view is not empty only.
+            elif view:
                 views[view].setHtml(html, baseUrl)
             if addRecord == True and view in ("main", "study"):
                 self.addHistoryRecord(view, textCommand)
@@ -2694,7 +2696,7 @@ class WebEngineView(QWebEngineView):
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%;'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = [];</script></head><body style='font-size: {0}%; font-family: {2}{3}{2};'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html, '"', config.font)
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
