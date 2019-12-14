@@ -184,7 +184,7 @@ if not hasattr(config, "currentRecord"):
     config.currentRecord = {"main": 0, "study": 0}
 # History records are kept in config.history
 if not hasattr(config, "history"):
-    config.history = {"external": ["notes.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
+    config.history = {"external": ["note_editor.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
