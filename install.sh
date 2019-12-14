@@ -10,3 +10,4 @@ pip3 install PySide2
 pip3 install PyPDF2
 pip3 install python-docx
 pip3 install gdown
+pip3 install diff_match_patch
