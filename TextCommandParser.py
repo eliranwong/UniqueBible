@@ -437,8 +437,8 @@ class TextCommandParser:
         return {
             "ASV": ((config.marvelData, "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr"),
             "BSB": ((config.marvelData, "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN"),
-            "CUV": ((config.marvelData, "bibles", "CUV.bible"), "1iqsHxOWD_H-BABbjq03qIIrTu8u-UyjJ"),
-            "CUVs": ((config.marvelData, "bibles", "CUVs.bible"), "1neY4KK3tfVtmnoLQu6YVMCyIhqcFEiPZ"),
+            "CUV": ((config.marvelData, "bibles", "CUV.bible"), "1xOdkJ3IoGmqZcuK0o-9mHg9N9e5ZM3vH"),
+            "CUVs": ((config.marvelData, "bibles", "CUVs.bible"), "1_aFTULcPDjaSlWztjSTKuHHmVpi_cirm"),
             "ISV": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
             "KJV": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
             "LEB": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
