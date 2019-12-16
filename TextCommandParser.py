@@ -223,7 +223,6 @@ class TextCommandParser:
             # e.g. SEARCHTOOL:::EXLBT:::faith
             # e.g. SEARCHTOOL:::EAS:::faith
             # e.g. SEARCHTOOL:::ISB:::faith
-            # e.g. SEARCHBOOK:::OT_History1:::Abraham
             # e.g. SEARCHTOOL:::mETCBC:::prep
             "searchtool": self.textSearchTool,
             # [KEYWORD] EXLB
@@ -246,7 +245,13 @@ class TextCommandParser:
             # e.g. BOOK:::Timelines:::2210-2090_BCE
             "book": self.textBook,
             # [KEYWORD] SEARCHBOOK
-            # e.g. SEARCHBOOK:::faith
+            # To search the last opened book module
+            # e.g. SEARCHBOOK:::Abraham
+            # To search a particular book module
+            # e.g. SEARCHBOOK:::OT_History1:::Abraham
+            # To search mutliple books, separate book modules with a comma ",".
+            # e.g. OT_History1,OT_History2:::Abraham
+            # Remarks: Module creator should avoid comma for naming a book module.
             "searchbook": self.textSearchBook,
             # [KEYWORD] SEARCHCHAPTERNOTE
             # e.g. SEARCHCHAPTERNOTE:::faith
@@ -1366,13 +1371,14 @@ class TextCommandParser:
     def textSearchBook(self, command, source):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.book, command)
-        module, searchString = self.splitCommand(command)
+        modules, searchString = self.splitCommand(command)
         if not searchString:
             return self.invalidCommand("study")
         else:
             config.bookSearchString = searchString
             bookData = BookData()
-            content = bookData.getSearchedMenu(module, searchString)
+            modules = modules.split(",")
+            content = "<hr>".join([bookData.getSearchedMenu(module, searchString) for module in modules])
             del bookData
             if not content:
                 return self.invalidCommand("study")
