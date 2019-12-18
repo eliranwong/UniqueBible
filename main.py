@@ -17,12 +17,17 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 6.1
+current_version = 6.2
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
+# Options to use remote commander: True / False
+# This feature is created for use in church settings.
+# Users can use this additional command field to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
+if not hasattr(config, "remoteCommander"):
+    config.remoteCommander = False
 # Options to use ibus as input method: True / False
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
@@ -222,6 +227,7 @@ def saveDataOnExit():
     configs = (
         ("version = ", config.version),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
+        ("\nremoteCommander = ", config.remoteCommander),
         ("\nibus = ", config.ibus),
         ("\nvirtualKeyboard = ", config.virtualKeyboard),
         ("\nmarvelData = ", config.marvelData),

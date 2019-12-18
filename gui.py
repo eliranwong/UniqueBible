@@ -77,6 +77,10 @@ class MainWindow(QMainWindow):
         # check if the current version is up-to-date
         self.checkLatestUpdate()
 
+        if config.remoteCommander:
+            self.remoteCommander = RemoteCommander(self)
+            self.remoteCommander.show()
+
     def __del__(self):
         del self.textCommandParser
 
@@ -2747,6 +2751,46 @@ class WebEngineViewPopover(QWebEngineView):
     def runAsCommand(self):
         selectedText = self.selectedText()
         self.parent.parent.parent.textCommandChanged(selectedText, "main")
+
+
+class RemoteCommander(QMainWindow):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.setWindowTitle("Remote Commander")
+        self.parent = parent
+        # specify window size
+        self.resizeWindow(2/3, 1/7)
+        # setup interface
+        self.setupMenuBar()
+
+    # window appearance
+    def resizeWindow(self, widthFactor, heightFactor):
+        availableGeometry = qApp.desktop().availableGeometry()
+        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+
+    def setupMenuBar(self):
+        self.menuBar = QToolBar()
+        self.menuBar.setWindowTitle("Remote Commander")
+        self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # In QWidget, self.menuBar is treated as the menubar without the following line
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.menuBar)
+
+        self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setToolTip("Enter command here ...")
+        self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
+        self.menuBar.addWidget(self.searchLineEdit)
+
+    # search field entered
+    def searchLineEntered(self):
+        searchString = self.searchLineEdit.text()
+        self.parent.runTextCommand(searchString)
+
+    # re-implementing close event, when users close this widget
+    # avoid closing by mistake
+    def closeEvent(self, event):
+        event.ignore()
 
 
 class NoteEditor(QMainWindow):
