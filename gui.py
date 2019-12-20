@@ -1108,7 +1108,7 @@ class MainWindow(QMainWindow):
             "American Standard Version": ((config.marvelData, "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr"),
             "Berean Study Bible": ((config.marvelData, "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN"),
             "Chinese Union Version (Traditional Chinese)": ((config.marvelData, "bibles", "CUV.bible"), "1xOdkJ3IoGmqZcuK0o-9mHg9N9e5ZM3vH"),
-            "Chinese Union Version (Simplified Chinese)": ((config.marvelData, "bibles", "CUVs.bible"), "1_aFTULcPDjaSlWztjSTKuHHmVpi_cirm"),
+            "Chinese Union Version (Simplified Chinese)": ((config.marvelData, "bibles", "CUVs.bible"), "1bI85pU5-_fXJNmU-hTSTe1s2t62Zl_Wz"),
             "International Standard Version": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
             "King James Version": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
             "Lexhame English Bible": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
