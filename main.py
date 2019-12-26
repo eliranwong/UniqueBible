@@ -9,15 +9,14 @@ import os
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
 if not os.path.isfile("config.py"):
-    fileObj = open("config.py", "w")
-    fileObj.close()
+    open("config.py", "a").close()
 
 import config
 
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 6.4
+current_version = 6.5
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -285,10 +284,9 @@ def saveDataOnExit():
         ("\ncurrentRecord = ", {'main': 0, 'study': 0}),
         ("\nhistory = ", config.history),
     )
-    fileObj = open("config.py", "w")
-    for name, value in configs:
-        fileObj.write(name+pprint.pformat(value))
-    fileObj.close()
+    with open("config.py", "w") as fileObj:
+        for name, value in configs:
+            fileObj.write(name+pprint.pformat(value))
 
 
 # Set Qt input method variable to use ibus if config.ibus is "True"

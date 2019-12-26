@@ -32,8 +32,16 @@ Enter YES if you want to standardise all verse references with SBL-style-abbrevi
 Any answers other than "YES" [case-insensitive] skip the standarisation.
 """
 
+import os
+
+# File "config.py" is essential for running module "config"
+# Create file "config.py" if it is missing.
+# The following two lines are written for use of this parser outside UniqueBible.app
+if not os.path.isfile("config.py"):
+    open("config.py", "a").close()
+
 # import modules, which are ESSENTIAL for running BibleVerseParser
-import re, glob, os, config, sys
+import re, glob, config, sys
 from ast import literal_eval
 from BibleBooks import BibleBooks
 from RegexSearch import RegexSearch
@@ -49,12 +57,7 @@ class BibleVerseParser:
     # initialisation
     def __init__(self, standardisation):
         # set standard abbreviation, displayed in UniqueBible
-        standardAbbreviations = {
-            "ENG": BibleBooks.eng,
-            "TC": BibleBooks.tc,
-            "SC": BibleBooks.sc,
-        }
-        self.standardAbbreviation = standardAbbreviations[config.standardAbbreviation]
+        self.updateStandardAbbreviation()
         # set preference of standardisation
         self.standardisation = standardisation
 
@@ -65,6 +68,26 @@ class BibleVerseParser:
             return "{0} {1}:{2}".format(self.standardAbbreviation[bookNo], c, v)
         else:
             return "BOOK 0:0"
+
+    # update self.standardAbbreviation
+    def updateStandardAbbreviation(self):
+        standardAbbreviations = {
+            "ENG": BibleBooks.eng,
+            "TC": BibleBooks.tc,
+            "SC": BibleBooks.sc,
+        }
+        self.checkConfig()
+        self.standardAbbreviation = standardAbbreviations[config.standardAbbreviation]
+        self.standardAbbreviation = {key: value[0] for key, value in self.standardAbbreviation.items()}
+
+    # The following two lines are written for use of this parser outside UniqueBible.app
+    # This function check if there is an existing value of config.standardAbbreviation
+    def checkConfig(self):
+        if not hasattr(config, "standardAbbreviation"):
+            config.standardAbbreviation = "ENG"
+            with open("config.py", "w") as fileObj:
+                name, value = ("standardAbbreviation = ", config.standardAbbreviation),
+                fileObj.write(name+pprint.pformat(value))
 
     # To format of all references by using standard abbreviations.
     def standardReference(self, text):

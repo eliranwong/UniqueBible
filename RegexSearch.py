@@ -29,20 +29,17 @@ class RegexSearch:
         path, file = os.path.split(inputFile)
         outputFile = os.path.join(path, "replaced_{0}".format(file))
         # open file and read input text
-        try:
-            f = open(inputFile,'r')
+        with open(inputFile,'r') as f:
             newData = f.read()
-            f.close()
-        except:
-            print("Filename not found! Please try again with a correct name.")
         # work on non-empty text
         if newData:
             # search and replace the text
             newData = self.processInputText(newData)
             # save output text in a separate file
-            f = open(outputFile,'w')
-            f.write(newData)
-            f.close()
+            with open(outputFile,'w') as f:
+                f.write(newData)
+        else:
+            print("No data is read.")
 
     def searchFilesInFolder(self, folder):
         fileList = glob.glob(folder+"/*")
