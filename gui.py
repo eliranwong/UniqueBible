@@ -1613,7 +1613,7 @@ class MainWindow(QMainWindow):
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.mainPage.runJavaScript("alert('Finished. Tagged file(s) is/are named with a prefix \"tagged_\".')")
+        self.mainPage.runJavaScript("alert('Finished. Tagged file(s) is/are prefixed with \"tagged_\".')")
 
     def tagFile(self):
         options = QFileDialog.Options()
