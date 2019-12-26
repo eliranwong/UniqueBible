@@ -62,10 +62,20 @@ class BibleVerseParser:
         self.standardisation = standardisation
 
     # function for converting b c v integers to verse reference string
-    def bcvToVerseReference(self, b, c, v):
+    def bcvToVerseReference(self, b, c, v, *args, isChapter=False):
         bookNo = str(b)
         if bookNo in self.standardAbbreviation:
-            return "{0} {1}:{2}".format(self.standardAbbreviation[bookNo], c, v)
+            abbreviation = self.standardAbbreviation[bookNo]
+            if isChapter:
+                return "{0} {1}".format(abbreviation, c)
+            if args and len(args) == 2:
+                c2, v2 = args
+                if c2 == c and v2 > v:
+                    return "{0} {1}:{2}-{3}".format(abbreviation, c, v, v2)
+                elif c2 > c:
+                    return "{0} {1}:{2}-{3}:{4}".format(abbreviation, c, v, c2, v2)
+            else:
+                return "{0} {1}:{2}".format(abbreviation, c, v)
         else:
             return "BOOK 0:0"
 
