@@ -103,24 +103,24 @@ class BibleVerseParser:
     def standardReference(self, text):
         for booknumber in self.standardAbbreviation:
             abbreviation = self.standardAbbreviation[booknumber]
-            searchReplace = {
+            searchReplace = (
                 ('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2)">'+abbreviation+r' \1:\2</ref>'),
                 ('<ref onclick="bcv\('+booknumber+',([0-9]+?),([0-9]+?),([0-9]+?),([0-9]+?)\)">.*?</ref>', '<ref onclick="bcv('+booknumber+r',\1,\2,\3,\4)">'+abbreviation+r' \1:\2-\3:\4</ref>'),
                 (r' ([0-9]+?):([0-9]+?)-\1:([0-9]+?)</ref>', r' \1:\2-\3</ref>'),
-            }
+            )
             text = RegexSearch.replace(text, searchReplace)
         return text
 
     def parseText(self, text):
-        # add a space at the end of the text, to avoid indefinite loop in later steps
-        #this extra space will be removed when parsing is finished.
+        # Add a space at the end of the text, to avoid indefinite loop in some of the following processes.
+        # This extra space will be removed when parsing is finished.
         text = text + " "
 
         # remove bcv tags, if any, to avoid duplication of tagging in later steps
         searchPattern = '<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9][^\(\)]*?\)">(.*?)</ref>'
-        searchReplace = {
+        searchReplace = (
             (searchPattern, r'\1'),
-        }
+        )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
         # search for books; mark them with book numbers, used by https://marvel.bible
@@ -130,58 +130,50 @@ class BibleVerseParser:
         for name in sortedNames:
             # get the string of book name
             bookName = name
-            searchReplace = {
+            searchReplace = (
                 ('\.', r'[\.]*?'), # make dot "." optional for an abbreviation
                 ('^([0-9]+?) ', r'\1[ ]*?'), # make space " " optional in some cases
                 ('^([I]+?) ', r'\1[ ]*?'),
                 ('^(IV) ', r'\1[ ]*?'),
-            }
+            )
             bookName = RegexSearch.replace(bookName, searchReplace)
             # get assigned book number from dictionary
             bookNumber = BibleBooks.name2number[name]
             # search & replace for marking book
-            searchReplace = {
+            searchReplace = (
                 ('('+bookName+') ([0-9])', '『'+bookNumber+r'｜\1』 \2'),
-            }
+            )
             text = RegexSearch.replace(text, searchReplace)
 
-        # 1st set of taggings
-        searchReplace = {
+        searchReplace = (
+            # 1st set of taggings
             ('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5'),
             ('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,)">\2 \3</ref｝\4'),
-        }
-        text = RegexSearch.replace(text, searchReplace)
-
-        # fix references without verse numbers
-        # fix books with one chapter ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
-        searchReplace = {
+            # fix references without verse numbers
+            # fix books with one chapter ONLY; oneChapterBook = [31,57,63,64,65,72,73,75,79,85]
             ('<ref onclick="bcv\((31|57|63|64|65|72|73|75|79|85),([0-9]+?),\)">', r'<ref onclick="bcv(\1,1,\2)">'),
-        }
-        text = RegexSearch.replace(text, searchReplace)
-
-        # fix chapter references without verse number; assign verse number 1 in taggings
-        searchReplace = {
+            # fix chapter references without verse number; assign verse number 1 in taggings
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊'),
-        }
+        )
         text = RegexSearch.replace(text, searchReplace)
 
         # check if tagged references are followed by untagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         searchPattern = '</ref｝[,-–;][ ]*?[0-9]'
-        searchReplace = {
+        searchReplace = (
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝\7'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^＊][^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\2,\6)">\6</ref｝:\7'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?)([^:0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝\7'),
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">(＊[^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,1)">＊\6</ref｝:\7'),
-        }
+        )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
         # clear special markers
-        searchReplace = {
+        searchReplace = (
             ('『[0-9]+?|([^『』]*?)』', r'\1'),
             ('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
             ('</ref｝', '</ref>'),
-        }
+        )
         text = RegexSearch.replace(text, searchReplace)
 
         # handling range of verses
@@ -189,16 +181,13 @@ class BibleVerseParser:
         # e.g. John 3:14-16 is tagged as <ref onclick="bcv(43,3,14,3,16)">John 3:14-16</ref>
         # e.g. John 3:14-4:3 is tagged as <ref onclick="bcv(43,3,14,4,3)">John 3:14-4:3</ref>
         searchPattern = '<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^<>]*?)</ref>([-–])<ref onclick="bcv\({0},([0-9]+?),([0-9]+?)\)">'.format(r'\1')
-        searchReplace = {
+        searchReplace = (
             (searchPattern, r'<ref onclick="bcv(\1,\2,\3,\6,\7)">\4\5'),
-        }
+        )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
-        # remove the extra space, added at the beginning of this function
-        text = text[:-1]
-
-        # return the tagged text
-        return text
+        # return the tagged text, without the extra space added at the beginning of this function.
+        return text[:-1]
 
     def extractAllReferences(self, text, tagged=False):
         if not tagged:

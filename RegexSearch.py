@@ -58,15 +58,15 @@ class RegexSearch:
 
     def processInputText(self, text):
         # an example of a simple search & replace
-#        searchReplace = {
+#        searchReplace = (
 #            ('^([0-9]+?\t[0-9]+?\t[0-9]+?\t)(.*?)\t(.*?)$', r'\1\2 ｜＠\3'),
-#        }
+#        )
 #        text = self.replace(text, searchReplace)
         # an example of searching in loop until search pattern is no longer found.
 #        searchPattern = '^([0-9]+?\t[0-9]+?\t[0-9]+?\t)(.*?)\n{0}'.format(r'\1')
-#        searchReplace = {
+#        searchReplace = (
 #            (searchPattern, r'\1\2 ｜'),
-#        }
+#        )
 #        text = self.deepReplace(text, searchPattern, searchReplace)
         return text
 
