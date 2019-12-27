@@ -23,7 +23,7 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 
 > choco install python
 
-> choco install wget
+> choco install git
 
 # Download & Setup UniqueBible.app
 
