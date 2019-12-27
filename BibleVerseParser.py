@@ -193,7 +193,7 @@ class BibleVerseParser:
         if not tagged:
             text = self.parseText(text)
         # return a list of tuples (b, c, v)
-        return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[0-9]+?,[0-9]+?[^\)\(]*?\))', text)]
+        return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 
     def parseFile(self, inputFile):
         # set output filename here

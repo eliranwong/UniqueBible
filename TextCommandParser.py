@@ -428,7 +428,7 @@ class TextCommandParser:
         return ((config.marvelData, "books", "Timelines.book"), "1nuhrsujL6LYYeviaT22Rhn_wk9kc6una")
 
     def getXRefInfo(self):
-        return ((config.marvelData, "cross-reference.sqlite"), "1gZNqhwER_-IWYPaMNGZ229teJ5cSA7My")
+        return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
 
     def getLastCommentaryInfo(self):
         return ((config.marvelData, "commentaries", "c{0}.commentary".format(config.commentaryText)), self.getCommentaryCloudID(config.commentaryText))
@@ -1418,12 +1418,12 @@ class TextCommandParser:
             crossReferenceSqlite = CrossReferenceSqlite()
             content = ""
             for verse in verseList:
-                b, c, v = verse
-                content += "<h2>Cross-reference: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
-                crossReferenceList = self.extractAllVerses(crossReferenceSqlite.scrollMapper(verse), True)
+                content += "<h2>Cross-reference: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>".format(biblesSqlite.bcvToVerseReference(*verse))
+                crossReferenceList = self.extractAllVerses(crossReferenceSqlite.scrollMapper(verse))
                 if not crossReferenceList:
                     content += "[No cross-reference is found for this verse!]"
                 else:
+                    crossReferenceList.insert(0, tuple(verse))
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
             del crossReferenceSqlite
@@ -1441,14 +1441,14 @@ class TextCommandParser:
             crossReferenceSqlite = CrossReferenceSqlite()
             content = ""
             for verse in verseList:
-                b, c, v = verse
-                content += "<h2>TSKE: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>".format(biblesSqlite.bcvToVerseReference(b, c, v))
+                content += "<h2>TSKE: <ref  id='v{0}.{1}.{2}' onclick='document.title=\"{3}\"'>{3}</ref></h2>".format(*verse[:3], biblesSqlite.bcvToVerseReference(*verse))
                 tskeContent = crossReferenceSqlite.tske(verse)
                 content += "<div style='margin: 10px; padding: 0px 10px; border: 1px solid gray; border-radius: 5px;'>{0}</div>".format(tskeContent)
-                crossReferenceList = self.extractAllVerses(tskeContent, False)
+                crossReferenceList = self.extractAllVerses(tskeContent)
                 if not crossReferenceList:
                     content += "[No cross-reference is found for this verse!]"
                 else:
+                    crossReferenceList.insert(0, tuple(verse))
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
             del crossReferenceSqlite
