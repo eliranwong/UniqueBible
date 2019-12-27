@@ -28,6 +28,8 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 
 > choco install git
 
+> refreshenv
+
 # Download & Setup UniqueBible.app
 
 1) Right-click Windows Icon, located at left lower corner
