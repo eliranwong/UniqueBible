@@ -48,7 +48,7 @@ Unzip it and place in a location you like.  In this example, we put it on deskto
 
 # 6. Run
 
-Double the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
+Double-click the file "shortcut_uba_Windows.bat" in the UniqueBible folder.
 
 <img src="screenshots/shortcut.png">
 
