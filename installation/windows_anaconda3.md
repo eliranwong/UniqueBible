@@ -1,4 +1,4 @@
-# Installation on Windows - An Example
+# Installation on Windows - with Anaconda 3
 
 There are different ways to install python library and dependencies.  Below is an example using Anaconda python distribution.
 
