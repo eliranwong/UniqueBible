@@ -1,3 +1,6 @@
+# Windows
+
+There are a several ways to install UniqueBible.app on Windows.  Below is one of the examples.  You may take a look at other examples at https://github.com/eliranwong/UniqueBible/wiki/installation.
 
 # Install Chocolatey
 
@@ -31,6 +34,7 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 
 2) Select and open "Windows PowerShell"<br>
 <b>[Remarks: Please note that in the following steps, use "Windows PowerShell" instead of "Windows PowerShell (Admin)"]</b>
+<b>[Remarks: When "Windows PowerShell" is opened, the initial location is most likely your user directory.  The following commands install UniqueBible.app into your "Documents" folder of your user directory.]</b>
 
 3) Enter the following command:
 
@@ -64,7 +68,7 @@ Alternatively, double-click the file "shortcut_uba_Windows.bat" in the UniqueBib
 
 5) Change Icon..., browse and select "theText.ico" in folder "UniqueBible\htmlResources", i.e.:
 
-%USERPROFILE%\Documents\UniqueBible\htmlResources\theText.ico
+> %USERPROFILE%\Documents\UniqueBible\htmlResources\theText.ico
 
 # Run with Desktop Shortcut
 
