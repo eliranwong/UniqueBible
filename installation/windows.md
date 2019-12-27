@@ -33,10 +33,9 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 1) Right-click Windows Icon, located at left lower corner
 
 2) Select and open "Windows PowerShell"<br>
-<b>[Remarks: Please note that in the following steps, use "Windows PowerShell" instead of "Windows PowerShell (Admin)"]</b>
-<b>[Remarks: When "Windows PowerShell" is opened, the initial location is most likely your user directory.  The following commands install UniqueBible.app into your "Documents" folder of your user directory.]</b>
+<b>[Remarks: Please note that in the following steps, use "Windows PowerShell" instead of "Windows PowerShell (Admin)". When "Windows PowerShell" is opened, the initial location is most likely your user directory.  The following commands setup a copy of UniqueBible.app into your "Documents" folder of your user directory.]</b>
 
-3) Enter the following command:
+3) Enter the following commands:
 
 > cd .\Documents\
 
