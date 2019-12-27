@@ -12,7 +12,7 @@ class RegexSearch:
                 text = re.sub(search, replace, text)
         return text
 
-    # Searching in loop until a specific pattern is no longer found.
+    # Searching in a loop until a specific pattern is no longer found.
     @staticmethod
     def deepReplace(text, searchPattern, searchReplace, multiLine=True):
         p = re.compile(searchPattern, flags=re.M)
@@ -59,13 +59,17 @@ class RegexSearch:
     def processInputText(self, text):
         # an example of a simple search & replace
 #        searchReplace = (
-#            ('^([0-9]+?\t[0-9]+?\t[0-9]+?\t)(.*?)\t(.*?)$', r'\1\2 ｜＠\3'),
+#            ('search1', 'replace1'),
+#            ('search2', 'replace2'),
+#            ('search3', 'replace3'),
 #        )
 #        text = self.replace(text, searchReplace)
-        # an example of searching in loop until search pattern is no longer found.
-#        searchPattern = '^([0-9]+?\t[0-9]+?\t[0-9]+?\t)(.*?)\n{0}'.format(r'\1')
+        # an example of searching in a loop until a search pattern is no longer found.
+#        searchPattern = 'pattern'
 #        searchReplace = (
-#            (searchPattern, r'\1\2 ｜'),
+#            ('search1', 'replace1'),
+#            ('search2', 'replace2'),
+#            ('search3', 'replace3'),
 #        )
 #        text = self.deepReplace(text, searchPattern, searchReplace)
         return text
