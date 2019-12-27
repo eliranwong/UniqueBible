@@ -119,10 +119,10 @@ class BiblesSqlite:
             bible.importPlainFormat(verses, description)
             del bible
 
-    def bcvToVerseReference(self, b, c, v, *args):
+    def bcvToVerseReference(self, b, c, v, *args, isChapter=False):
         if args:
-            return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, *args)
-        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
+            return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, *args, isChapter)
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, isChapter)
 
     def getMenu(self, command, source="main"):
         if source == "main":
