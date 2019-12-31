@@ -13,9 +13,9 @@ Install pyhon3 and pip tools first:
 
 Enter in terminal:
 
-pip3 install PyPDF2 python-docx gdown
+> pip3 install PyPDF2 python-docx gdown diff_match_patch
 
-pip3 install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
+> pip3 install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 
 [Remarks: 
 * "PySide2" folder, installed with the command above, is located at "~/.local/lib/python3.5/site-packages/PySide2"<br>
@@ -26,14 +26,14 @@ pip3 install --index-url=https://download.qt.io/official_releases/QtForPython/ p
 # Download
 Enter in terminal:
 
-cd ~<br>
-wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
-unzip master.zip<br>
+> cd ~<br>
+> wget https://github.com/eliranwong/UniqueBible/archive/master.zip<br>
+> unzip master.zip<br>
 
 # Run
 Enter in Linux terminal:
 
-cd ~/UniqueBible-master/ && python3 main.py<br>
+> cd ~/UniqueBible-master/ && python3 main.py<br>
 
 # Create a Shortcut
 Create a shortcut in chrome os application menu<br>
@@ -43,7 +43,7 @@ First, edit file "~/UniqueBible-master/shortcut_uba_Linux.desktop", by replacing
 
 Second, run the following command in Linux terminal:<br>
 
-sudo cp ~/UniqueBible-master/shortcut_uba_Linux.desktop /usr/share/applications/UniqueBibleApp.desktop<br>
+> sudo cp ~/UniqueBible-master/shortcut_uba_Linux.desktop /usr/share/applications/UniqueBibleApp.desktop<br>
 
 Locate the created shortcut in folder "Linux apps" inside chrome os application menu.<br>
 
@@ -75,6 +75,6 @@ virtualKeyboard = True
 
 This following may work on some Linux distributions, but not on Linux distribution which comes with Chrome OS 78.
 
-cp /usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so ~/.local/lib/python3.5/site-packages/PySide2/Qt/plugins/platforminputcontexts/
+> cp /usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so ~/.local/lib/python3.5/site-packages/PySide2/Qt/plugins/platforminputcontexts/
 
-chmod +x ~/.local/lib/python3.5/site-packages/PySide2/Qt/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so
+> chmod +x ~/.local/lib/python3.5/site-packages/PySide2/Qt/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so
