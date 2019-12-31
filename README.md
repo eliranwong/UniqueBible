@@ -120,7 +120,7 @@ Read this example: https://github.com/eliranwong/UniqueBible/blob/master/install
 
 Virtual Keyboard is NOT turned on by default.  You can enable it according to your needs.
 
-For more information, read: https://github.com/eliranwong/Chrome-OS-Linux/blob/master/unique-bible-app/desktop.md#use-virtual-keyboard
+For more information, read: https://github.com/eliranwong/UniqueBible/blob/master/installation/chrome_os.md#use-virtual-keyboard
 
 <img src="screenshots/screenshot_virtualKeyboard.png">
 
