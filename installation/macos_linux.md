@@ -6,9 +6,7 @@ There are different ways to install.  Below is an example.
 
 Go to https://www.python.org/downloads/
 
-Download a version 3.
-
-We recommend to download a 3.7.x version, e.g. 3.7.5.  We haven't tested our app with the latest python distribution 3.8.
+Download a version 3.6+
 
 # 2. Download a copy of UniqueBible.app
 
