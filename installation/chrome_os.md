@@ -63,7 +63,7 @@ To enable built-in virtual keyboards, edit file "config.py" with a text editor.
 
 Change the option "virtualKeyboard" FROM:
 
-virtualKeyboard = False
+> virtualKeyboard = False
 
 TO:
 
