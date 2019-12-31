@@ -67,7 +67,7 @@ Change the option "virtualKeyboard" FROM:
 
 TO:
 
-virtualKeyboard = True
+> virtualKeyboard = True
 
 <b>Remarks:</b> You need to close the virtual keyboard before you can close the app.  You can use the button located at the right lower corner of the virtual keyboard to close it.
 
