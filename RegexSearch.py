@@ -1,4 +1,7 @@
+#!/usr/bin/env python
+
 import re, glob, os, sys
+from ast import literal_eval
 
 class RegexSearch:
 
@@ -24,7 +27,7 @@ class RegexSearch:
                     text = re.sub(search, replace, text)
         return text
 
-    def searchFile(self, inputFile):
+    def searchFile(self, inputFile, searchReplace=None):
         # set output filename
         path, file = os.path.split(inputFile)
         outputFile = os.path.join(path, "replaced_{0}".format(file))
@@ -34,29 +37,31 @@ class RegexSearch:
         # work on non-empty text
         if newData:
             # search and replace the text
-            newData = self.processInputText(newData)
+            newData = self.processInputText(newData, searchReplace)
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
         else:
             print("No data is read.")
 
-    def searchFilesInFolder(self, folder):
+    def searchFilesInFolder(self, folder, searchReplace=None):
         fileList = glob.glob(folder+"/*")
         for file in fileList:
             if os.path.isfile(file):
-                self.searchFile(file)
+                self.searchFile(file, searchReplace)
 
-    def processInput(self, inputName):
+    def processInput(self, inputName, searchReplace=None):
         # check if user's input is a file or a folder
         if os.path.isfile(inputName):
-            self.searchFile(inputName)
+            self.searchFile(inputName, searchReplace)
         elif os.path.isdir(inputName):
-            self.searchFilesInFolder(inputName)
+            self.searchFilesInFolder(inputName, searchReplace)
         else:
             print("\""+inputName+"\"", "is not found!")
 
-    def processInputText(self, text):
+    def processInputText(self, text, searchReplace=None):
+        if searchReplace:
+            text = self.replace(text, searchReplace)
         # an example of a simple search & replace
 #        searchReplace = (
 #            ('search1', 'replace1'),
@@ -78,12 +83,33 @@ if __name__ == '__main__':
     inputName = ""
     arguments = sys.argv
 
-    if (len(arguments) > 1):
-        inputName = " ".join(arguments[1:])
+    # Usage:
+    # RegexSearch.py [a nested tuple of search & replace items] [file1 / folder1] [file2 / folder2] [file3 / folder3] ...
+    # Support multple files / folders, starting from the second parameter.
+    # To make this script executable, run:
+    # chmod +x RegexSearch.py
+    # To provide a nested tuple / list of search & replace items on command line:
+    # e.g. ./RegexSearch.py '(("test", "TEST"), ("[a-e]", r"x\1x"))' test.txt test1.txt
+    # To work with dynamic scripting, edit the content of function "processInputText" and run:
+    # e.g. ./RegexSearch.py '()' test.txt test1.txt
+    # The first parameter is optional to work on a single file or a single folder.  This assumes power users edit the content of function "processInputText" according to their own needs.
+    # e.g. ./RegexSearch.py test.txt
+    if (len(arguments) > 2):
+        searchReplace = literal_eval(arguments[1])
+        if searchReplace and isinstance(searchReplace, (list, tuple)):
+            regexSearch = RegexSearch()
+            for inputName in arguments[2:]:
+                if inputName:
+                    regexSearch.processInput(inputName, searchReplace=searchReplace)
+                    print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
+    elif (len(arguments) == 2):
+        inputName = arguments[1]
+        if inputName:
+            RegexSearch().processInput(inputName)
+            print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
     else:
         # User Interaction - ask for filename / folder name
         inputName = input("Enter a file / folder name here: ")
-
-    RegexSearch().processInput(inputName)
-    
-    print("Done! Output file(s) is / are prefixed with 'replaced_'")
+        if inputName:
+            RegexSearch().processInput(inputName)
+            print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
