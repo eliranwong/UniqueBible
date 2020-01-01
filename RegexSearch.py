@@ -29,8 +29,8 @@ class RegexSearch:
 
     def searchFile(self, inputFile, searchReplace=None):
         # set output filename
-        path, file = os.path.split(inputFile)
-        outputFile = os.path.join(path, "replaced_{0}".format(file))
+        path, filename = os.path.split(inputFile)
+        outputFile = os.path.join(path, "replaced_{0}".format(filename))
         # open file and read input text
         with open(inputFile,'r') as f:
             newData = f.read()
@@ -41,6 +41,7 @@ class RegexSearch:
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
+                print("File '{0}' was processed, with output saved in file 'replaced_{0}'.".format(inputName))
         else:
             print("No data is read.")
 
@@ -94,6 +95,8 @@ if __name__ == '__main__':
     # e.g. ./RegexSearch.py '()' test.txt test1.txt
     # The first parameter is optional to work on a single file or a single folder.  This assumes power users edit the content of function "processInputText" according to their own needs.
     # e.g. ./RegexSearch.py test.txt
+    # To run interactive mode, simply run:
+    # ./RegexSearch.py
     if (len(arguments) > 2):
         searchReplace = literal_eval(arguments[1])
         if searchReplace and isinstance(searchReplace, (list, tuple)):
@@ -101,15 +104,12 @@ if __name__ == '__main__':
             for inputName in arguments[2:]:
                 if inputName:
                     regexSearch.processInput(inputName, searchReplace=searchReplace)
-                    print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:
             RegexSearch().processInput(inputName)
-            print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
     else:
         # User Interaction - ask for filename / folder name
         inputName = input("Enter a file / folder name here: ")
         if inputName:
             RegexSearch().processInput(inputName)
-            print("'{0}' was processed! Output file(s) is / are prefixed with 'replaced_'".format(inputName))
