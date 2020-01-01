@@ -20,14 +20,6 @@ background: #ffb7b7; /* Gecko Browsers */
 /* css for Greek data */
 @font-face {
 font-family: 'KoineGreek';
-src: url('/sileot.ttf');
-}
-kgrk{
-font-family:'KoineGreek';
-font-size: 110%;
-}
-@font-face {
-font-family: 'KoineGreek';
 src: url('KoineGreek.ttf');
 }
 kgrk{
@@ -36,6 +28,11 @@ font-family:'KoineGreek';
 kgrk, gu, grk{
 font-size: 110%;
 }
+/* css for Chinese data */
+zh{
+font-family:'NSimSun';
+}
+/* css for Hebrew data */
 @font-face {
 font-family: 'Ezra SIL';
 src: url('sileot.ttf');
