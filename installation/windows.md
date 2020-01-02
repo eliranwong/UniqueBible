@@ -74,3 +74,11 @@ Alternatively, double-click the file "shortcut_uba_Windows.bat" in the UniqueBib
 # Run with Desktop Shortcut
 
 Double-click the created shortcut file
+
+# Run without the black console
+
+1) Right-click the shortcut file and select "Properties"
+
+2) In "Target", add "RunNHide.vbs", followed by a space character, at the beggining of the whole line.
+
+3) Select "Apply" to make changes effective.
