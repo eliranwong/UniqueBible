@@ -27,10 +27,14 @@ class RegexSearch:
                     text = re.sub(search, replace, text)
         return text
 
-    def searchFile(self, inputFile, searchReplace=None):
+    def searchFile(self, inputFile, searchReplace=None, overwrite=False):
         # set output filename
         path, filename = os.path.split(inputFile)
-        outputFile = os.path.join(path, "replaced_{0}".format(filename))
+        if overwrite:
+            outputFile = inputFile
+        else:
+            filename = "replaced_{0}".format(filename)
+            outputFile = os.path.join(path, filename)
         # open file and read input text
         with open(inputFile,'r') as f:
             newData = f.read()
@@ -41,22 +45,22 @@ class RegexSearch:
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
-                print("File '{0}' was processed, with output saved in file 'replaced_{0}'.".format(inputName))
+                print("File '{0}' was processed, with output saved in file '{0}'.".format(inputName))
         else:
             print("No data is read.")
 
-    def searchFilesInFolder(self, folder, searchReplace=None):
+    def searchFilesInFolder(self, folder, searchReplace=None, overwrite=False):
         fileList = glob.glob(folder+"/*")
         for file in fileList:
             if os.path.isfile(file):
-                self.searchFile(file, searchReplace)
+                self.searchFile(file, searchReplace, overwrite)
 
-    def processInput(self, inputName, searchReplace=None):
+    def processInput(self, inputName, searchReplace=None, overwrite=False):
         # check if user's input is a file or a folder
         if os.path.isfile(inputName):
-            self.searchFile(inputName, searchReplace)
+            self.searchFile(inputName, searchReplace, overwrite)
         elif os.path.isdir(inputName):
-            self.searchFilesInFolder(inputName, searchReplace)
+            self.searchFilesInFolder(inputName, searchReplace, overwrite)
         else:
             print("\""+inputName+"\"", "is not found!")
 
@@ -103,7 +107,7 @@ if __name__ == '__main__':
             regexSearch = RegexSearch()
             for inputName in arguments[2:]:
                 if inputName:
-                    regexSearch.processInput(inputName, searchReplace=searchReplace)
+                    regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=True)
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:
