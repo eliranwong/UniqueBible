@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
     # manage latest update
     def checkLatestUpdate(self):
         # change the following 2 files for major changes of version
-        # main.py line 17
+        # main.py line 19
         # https://biblebento.com/UniqueBibleAppVersion.txt
         try:
             request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt", timeout=5)
@@ -201,6 +201,9 @@ class MainWindow(QMainWindow):
                 os.remove(filename)
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
                 copy_tree("UniqueBible-master", os.getcwd())
+                if not platform.system() == "Windows":
+                    for filename in ("main.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
+                        os.chmod(filename, 0o755)
                 self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need a restart to apply the changes.")')
             else:
                 self.mainPage.runJavaScript(alertFailedUpdate)
