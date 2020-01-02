@@ -107,7 +107,7 @@ if __name__ == '__main__':
             regexSearch = RegexSearch()
             for inputName in arguments[2:]:
                 if inputName:
-                    regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=True)
+                    regexSearch.processInput(inputName, searchReplace=searchReplace)
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:
