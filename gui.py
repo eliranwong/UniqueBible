@@ -1122,8 +1122,8 @@ class MainWindow(QMainWindow):
             "Marvel Parallel Bible": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
             "Marvel Trilingual Bible": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
             "New English Translation": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
-            "unfoldingWord Literal Text": ((config.marvelData, "bibles", "ULT.bible"), "10Udo5ND0a26hPIcJHNOuNqJ2feZuVXjT"),
-            "unfoldingWord Simplified Text": ((config.marvelData, "bibles", "UST.bible"), "1OFwdXRwC9gG4PJLt5j4NHWgFs9wcgXQk"),
+            "unfoldingWord Literal Text": ((config.marvelData, "bibles", "ULT.bible"), "1C_YiWs7GsduCuBOO4vSR7c13RRFtIZGg"),
+            "unfoldingWord Simplified Text": ((config.marvelData, "bibles", "UST.bible"), "1-s7NUKpPauer3w1hpu6W9YqVBjiLuXmc"),
             "World English Bible": ((config.marvelData, "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),
         }
         items = [bible for bible in bibles.keys() if not os.path.isfile(os.path.join(*bibles[bible][0]))]
