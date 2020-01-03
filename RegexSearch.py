@@ -31,10 +31,11 @@ class RegexSearch:
         # set output filename
         path, filename = os.path.split(inputFile)
         if overwrite:
+            outputFilename = filename
             outputFile = inputFile
         else:
-            filename = "replaced_{0}".format(filename)
-            outputFile = os.path.join(path, filename)
+            outputFilename = "replaced_{0}".format(filename)
+            outputFile = os.path.join(path, outputFilename)
         # open file and read input text
         with open(inputFile,'r') as f:
             newData = f.read()
@@ -45,7 +46,7 @@ class RegexSearch:
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
-                print("File '{0}' was processed, with output saved in file '{0}'.".format(inputName))
+                print("File '{0}' was processed, with output saved in file '{1}'.".format(filename, outputFilename))
         else:
             print("No data is read.")
 
@@ -108,6 +109,8 @@ if __name__ == '__main__':
             for inputName in arguments[2:]:
                 if inputName:
                     regexSearch.processInput(inputName, searchReplace=searchReplace)
+                    # To overwrite the original file, comment the line above and uncomment the following line:
+                    #regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=True)
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:

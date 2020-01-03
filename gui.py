@@ -202,7 +202,7 @@ class MainWindow(QMainWindow):
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
                 copy_tree("UniqueBible-master", os.getcwd())
                 if not platform.system() == "Windows":
-                    for filename in ("main.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
+                    for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
                 self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need a restart to apply the changes.")')
             else:

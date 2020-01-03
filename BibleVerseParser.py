@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 A python utility to parse bible verse references.
 It is both useful for tagging and extracting bible verse references from a text.
