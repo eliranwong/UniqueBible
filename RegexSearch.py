@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import re, glob, os, sys
+import re, glob, os, sys, pprint
 from ast import literal_eval
 
 class RegexSearch:
@@ -106,17 +106,52 @@ if __name__ == '__main__':
         searchReplace = literal_eval(arguments[1])
         if searchReplace and isinstance(searchReplace, (list, tuple)):
             regexSearch = RegexSearch()
-            for inputName in arguments[2:]:
-                if inputName:
-                    regexSearch.processInput(inputName, searchReplace=searchReplace)
-                    # To overwrite the original file, comment the line above and uncomment the following line:
-                    #regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=True)
+            overwrite = (arguments[2] == "--overwrite")
+            if overwrite and (len(arguments) > 3):
+                files = arguments[3:]
+            else:
+                files = arguments[2:]
+            if files:
+                for inputName in files:
+                    if inputName:
+                        regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:
             RegexSearch().processInput(inputName)
     else:
-        # User Interaction - ask for filename / folder name
-        inputName = input("Enter a file / folder name here: ")
-        if inputName:
-            RegexSearch().processInput(inputName)
+        # User Interaction
+        print("[A search & seplace utility, written by Eliran Wong]")
+        # Ask for name(s) of file(s) / folder(s)
+        checkMultiple = input("Work on more than one file or folder? [yes/No] ").lower()
+        multiple = (checkMultiple == "yes" or checkMultiple == "y")
+        if multiple:
+            inputNames = literal_eval(input("Enter a list of files or folders: "))
+        else:
+            inputName = input("Enter a file or folder: ")
+        # Ask if overwriting original file(s)
+        checkOverwrite = input("Overwrite? [yes/No] ").lower()
+        overwrite = (checkOverwrite == "yes" or checkOverwrite == "y")
+        # formulate a nested list of tuples, according to user input
+        searchReplace = []
+        addSearchReplace = True
+        while addSearchReplace:
+            print("Adding a pair of search & replace items ...")
+            search = input("Search: ")
+            if search:
+                replace = input("Replace: ")
+                checkLiteral = input("Are they literal strings? [yes/No] ").lower()
+                literal = (checkLiteral == "yes" or checkLiteral == "y")
+                if literal:
+                    searchReplace.append((literal_eval(search), literal_eval(replace)))
+                else:
+                    searchReplace.append((search, replace))
+            checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
+            addSearchReplace = (checkAddSearchReplace == "yes" or checkAddSearchReplace == "y")
+        print("Your search & replace items: ")
+        print(pprint.pformat(searchReplace))
+        if multiple and inputNames:
+            for inputName in inputNames:
+                RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+        elif not multiple and inputName:
+            RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
