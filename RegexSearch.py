@@ -103,7 +103,11 @@ if __name__ == '__main__':
     # To run interactive mode, simply run:
     # ./RegexSearch.py
     if (len(arguments) > 2):
-        searchReplace = literal_eval(arguments[1])
+        try:
+            searchReplace = literal_eval(arguments[1])
+        except:
+            print("Process cancelled.  Reason: Search & replace option is not properly formatted.")
+            exit()
         if searchReplace and isinstance(searchReplace, (list, tuple)):
             regexSearch = RegexSearch()
             overwrite = (arguments[2] == "--overwrite")
@@ -114,7 +118,11 @@ if __name__ == '__main__':
             if files:
                 for inputName in files:
                     if inputName:
-                        regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+                        try:
+                            regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+                        except:
+                            print("Process cancelled.  Reason: Search & replace option is not properly formatted.")
+                            exit()
     elif (len(arguments) == 2):
         inputName = arguments[1]
         if inputName:
@@ -143,15 +151,22 @@ if __name__ == '__main__':
                 checkLiteral = input("Are they literal strings? [yes/No] ").lower()
                 literal = (checkLiteral == "yes" or checkLiteral == "y")
                 if literal:
-                    searchReplace.append((literal_eval(search), literal_eval(replace)))
+                    try:
+                        searchReplace.append((literal_eval(search), literal_eval(replace)))
+                    except:
+                        print("Failed to add this pair of search & replace items.  Reason: Literal expression is not found.")
                 else:
                     searchReplace.append((search, replace))
-            checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
+                    print("Added successfully.")
+            print("Your current search & replace items: ")
+            print(pprint.pformat(searchReplace))checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
             addSearchReplace = (checkAddSearchReplace == "yes" or checkAddSearchReplace == "y")
-        print("Your search & replace items: ")
-        print(pprint.pformat(searchReplace))
-        if multiple and inputNames:
-            for inputName in inputNames:
+        try:
+            if multiple and inputNames:
+                for inputName in inputNames:
+                    RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+            elif not multiple and inputName:
                 RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
-        elif not multiple and inputName:
-            RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+        except:
+            print("Process cancelled.  Reason: At least one of your search & replace items is not properly formulated.")
+            exit()
