@@ -159,7 +159,8 @@ if __name__ == '__main__':
                     searchReplace.append((search, replace))
                     print("Added successfully.")
             print("Your current search & replace items: ")
-            print(pprint.pformat(searchReplace))checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
+            print(pprint.pformat(searchReplace))
+            checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
             addSearchReplace = (checkAddSearchReplace == "yes" or checkAddSearchReplace == "y")
         try:
             if multiple and inputNames:
