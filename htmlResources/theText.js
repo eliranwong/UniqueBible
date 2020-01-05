@@ -715,6 +715,6 @@ function bn(b, c, v, n) {
     document.title = "_biblenote:::"+b+"."+c+"."+v+"."+n;
 }
 
-function biblenote(lxx, word) {
-    document.title = "_lxxword:::"+lxx+":::"+word;
+function biblenote(module, wordID) {
+    document.title = "_wordnote:::"+module+":::"+wordID;
 }
