@@ -27,7 +27,7 @@ class RegexSearch:
                     text = re.sub(search, replace, text)
         return text
 
-    def searchFile(self, inputFile, searchReplace=None, overwrite=False):
+    def searchFile(self, inputFile, searchReplace=None, overwrite=False, deepSearchPattern=None):
         # set output filename
         path, filename = os.path.split(inputFile)
         if overwrite:
@@ -42,7 +42,7 @@ class RegexSearch:
         # work on non-empty text
         if newData:
             # search and replace the text
-            newData = self.processInputText(newData, searchReplace)
+            newData = self.processInputText(newData, searchReplace, deepSearchPattern)
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
@@ -50,24 +50,28 @@ class RegexSearch:
         else:
             print("No data is read.")
 
-    def searchFilesInFolder(self, folder, searchReplace=None, overwrite=False):
+    def searchFilesInFolder(self, folder, searchReplace=None, overwrite=False, deepSearchPattern=None):
         fileList = glob.glob(folder+"/*")
         for file in fileList:
             if os.path.isfile(file):
-                self.searchFile(file, searchReplace, overwrite)
+                self.searchFile(file, searchReplace, overwrite, deepSearchPattern)
 
-    def processInput(self, inputName, searchReplace=None, overwrite=False):
+    def processInput(self, inputName, searchReplace=None, overwrite=False, deepSearchPattern=None):
         # check if user's input is a file or a folder
         if os.path.isfile(inputName):
-            self.searchFile(inputName, searchReplace, overwrite)
+            self.searchFile(inputName, searchReplace, overwrite, deepSearchPattern)
         elif os.path.isdir(inputName):
-            self.searchFilesInFolder(inputName, searchReplace, overwrite)
+            self.searchFilesInFolder(inputName, searchReplace, overwrite, deepSearchPattern)
         else:
             print("\""+inputName+"\"", "is not found!")
 
-    def processInputText(self, text, searchReplace=None):
+    def processInputText(self, text, searchReplace=None, deepSearchPattern=None):
         if searchReplace:
-            text = self.replace(text, searchReplace)
+            if deepSearchPattern:
+                text = self.deepReplace(text, deepSearchPattern, searchReplace)
+            else:
+                text = self.replace(text, searchReplace)
+        # Advanced users add customised search & items below:
         # an example of a simple search & replace
 #        searchReplace = (
 #            ('search1', 'replace1'),
@@ -75,7 +79,7 @@ class RegexSearch:
 #            ('search3', 'replace3'),
 #        )
 #        text = self.replace(text, searchReplace)
-        # an example of searching in a loop until a search pattern is no longer found.
+        # an example of a repetitive search until a pre-defined pattern is no longer found.
 #        searchPattern = 'pattern'
 #        searchReplace = (
 #            ('search1', 'replace1'),
@@ -102,11 +106,11 @@ if __name__ == '__main__':
     # e.g. ./RegexSearch.py test.txt
     # To run interactive mode, simply run:
     # ./RegexSearch.py
-    if (len(arguments) > 2):
+    if len(arguments) > 2:
         try:
             searchReplace = literal_eval(arguments[1])
         except:
-            print("Process cancelled.  Reason: Search & replace option is not properly formatted.")
+            print("Process cancelled!  Reason: Search & replace items are not properly formatted.")
             exit()
         if searchReplace and isinstance(searchReplace, (list, tuple)):
             regexSearch = RegexSearch()
@@ -121,9 +125,9 @@ if __name__ == '__main__':
                         try:
                             regexSearch.processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
                         except:
-                            print("Process cancelled.  Reason: Search & replace option is not properly formatted.")
+                            print("Process cancelled!  Reason: Search & replace items are not properly formatted.")
                             exit()
-    elif (len(arguments) == 2):
+    elif len(arguments) == 2 and not arguments[1] == "--deep":
         inputName = arguments[1]
         if inputName:
             RegexSearch().processInput(inputName)
@@ -140,6 +144,24 @@ if __name__ == '__main__':
         # Ask if overwriting original file(s)
         checkOverwrite = input("Overwrite? [yes/No] ").lower()
         overwrite = (checkOverwrite == "yes" or checkOverwrite == "y")
+        # check if running deep mode
+        deepSearchPattern = None
+        if len(arguments) == 2 and arguments[1] == "--deep":
+            print("Deep mode is enabled.  Search & replace are performed repetitively until a pre-defined pattern is no longer found.")
+            userPattern = input("Define a pattern here: ")
+            checkPatternLiteral = input("Is this pattern a string literal? [yes/No] ").lower()
+            patternLiteral = (checkPatternLiteral == "yes" or checkPatternLiteral == "y")
+            if userPattern:
+                if patternLiteral:
+                    try:
+                        deepSearchPattern = literal_eval(userPattern)
+                    except:
+                        print("Deep mode is disabled.  Entered pattern is not properly formatted")
+                        deepSearchPattern = None
+                else:
+                    deepSearchPattern = userPattern
+            else:
+                print("Deep mode is disabled.  Entered pattern is empty.")
         # formulate a nested list of tuples, according to user input
         searchReplace = []
         addSearchReplace = True
@@ -148,26 +170,26 @@ if __name__ == '__main__':
             search = input("Search: ")
             if search:
                 replace = input("Replace: ")
-                checkLiteral = input("Are they literal strings? [yes/No] ").lower()
+                checkLiteral = input("Are these items string literals? [yes/No] ").lower()
                 literal = (checkLiteral == "yes" or checkLiteral == "y")
                 if literal:
                     try:
                         searchReplace.append((literal_eval(search), literal_eval(replace)))
                     except:
-                        print("Failed to add this pair of search & replace items.  Reason: Literal expression is not found.")
+                        print("Failed to add this pair of search & replace items!  Reason: One of entered items is not string literal.")
                 else:
                     searchReplace.append((search, replace))
                     print("Added successfully.")
-            print("Your current search & replace items: ")
+            print("Here are your search & replace items: ")
             print(pprint.pformat(searchReplace))
             checkAddSearchReplace = input("Add more search & replace items? [yes/No] ").lower()
             addSearchReplace = (checkAddSearchReplace == "yes" or checkAddSearchReplace == "y")
         try:
             if multiple and inputNames:
                 for inputName in inputNames:
-                    RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+                    RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite, deepSearchPattern=deepSearchPattern)
             elif not multiple and inputName:
-                RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite)
+                RegexSearch().processInput(inputName, searchReplace=searchReplace, overwrite=overwrite, deepSearchPattern=deepSearchPattern)
         except:
-            print("Process cancelled.  Reason: At least one of your search & replace items is not properly formulated.")
+            print("Process cancelled!  Reason: One of search & replace items is not properly formatted.")
             exit()
