@@ -332,9 +332,9 @@ class TextCommandParser:
             # [KEYWORD] _biblenote
             # e.g. _biblenote:::1.1.1.[1]
             "_biblenote": self.textBiblenote,
-            # [KEYWORD] _lxxword
-            # e.g. _lxxword:::LXX1:::l1
-            "_lxxword": self.textLxxWord,
+            # [KEYWORD] _wordnote
+            # e.g. _wordnote:::LXX1:::l1
+            "_wordnote": self.textWordNote,
             # [KEYWORD] _paste
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
@@ -1237,12 +1237,12 @@ class TextCommandParser:
         del searchSqlite
         return ("study", "{0}<hr>{1}".format(morphologyDescription, lexiconContent))
 
-    # _lxxword:::
-    def textLxxWord(self, command, source):
-        if re.search("^(LXX1|LXX2):::", command):
-            lxx, word = self.splitCommand(command)
-            bibleSqlite = Bible(lxx)
-            data = bibleSqlite.readLXXnote(word)
+    # _wordnote:::
+    def textWordNote(self, command, source):
+        if re.search("^(LXX1|LXX2|SBLGNT):::", command):
+            module, wordID = self.splitCommand(command)
+            bibleSqlite = Bible(module)
+            data = bibleSqlite.readWordNote(wordID)
             del bibleSqlite
             if data:
                 return ("study", data)

@@ -708,8 +708,8 @@ class Bible:
             note = note[0]
         return note
 
-    # apply to LXX1, LXX1i, LXX2, LXX2i only
-    def readLXXnote(self, entry):
+    # apply to LXX1, LXX1i, LXX2, LXX2i, SBLGNT & its variants only
+    def readWordNote(self, entry):
         query = "Select content FROM Note WHERE path=?"
         self.cursor.execute(query, (entry,))
         note = self.cursor.fetchone()
