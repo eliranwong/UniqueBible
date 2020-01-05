@@ -509,6 +509,9 @@ class BiblesSqlite:
             for searchword in searchWords:
                 if not searchword == "z":
                     formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
+        # fix searching SBLGNT words
+        formatedText = re.sub("<z>(S[0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
+        # remove misplacement of tags <z> & </z>
         p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
         s = p.search(formatedText)
         while s:
