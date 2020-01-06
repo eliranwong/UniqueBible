@@ -452,6 +452,8 @@ class TextCommandParser:
             "MPB": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
             "MTB": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
             "NET": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
+            "SBLGNT": ((config.marvelData, "bibles", "SBLGNT.bible"), "1t5PYQKzl06eN_xNjRIQQjqPLj9YEj9JD"),
+            "SBLGNTl": ((config.marvelData, "bibles", "SBLGNTl.bible"), "1t5PYQKzl06eN_xNjRIQQjqPLj9YEj9JD"),
             "ULT": ((config.marvelData, "bibles", "ULT.bible"), "1C_YiWs7GsduCuBOO4vSR7c13RRFtIZGg"),
             "UST": ((config.marvelData, "bibles", "UST.bible"), "1-s7NUKpPauer3w1hpu6W9YqVBjiLuXmc"),
             "WEB": ((config.marvelData, "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),

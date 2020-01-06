@@ -1125,6 +1125,7 @@ class MainWindow(QMainWindow):
             "Marvel Parallel Bible": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
             "Marvel Trilingual Bible": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
             "New English Translation": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
+            "SBL Greek New Testament Study Set": ((config.marvelData, "bibles", "SBLGNTl.bible"), "1t5PYQKzl06eN_xNjRIQQjqPLj9YEj9JD"),
             "unfoldingWord Literal Text": ((config.marvelData, "bibles", "ULT.bible"), "1C_YiWs7GsduCuBOO4vSR7c13RRFtIZGg"),
             "unfoldingWord Simplified Text": ((config.marvelData, "bibles", "UST.bible"), "1-s7NUKpPauer3w1hpu6W9YqVBjiLuXmc"),
             "World English Bible": ((config.marvelData, "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),
@@ -1249,7 +1250,6 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
-
 #        # testing
 #        currentIndex = self.studyView.currentIndex()
 #        if currentIndex == 4:
