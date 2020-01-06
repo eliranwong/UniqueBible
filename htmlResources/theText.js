@@ -722,3 +722,7 @@ function biblenote(module, wordID) {
 function searchBible(module, item) {
     document.title = "SEARCH:::"+module+":::"+item;
 }
+
+function searchVerse(module, item, b, c, v) {
+    document.title = "ADVANCEDSEARCH:::"+module+":::Book = "+b+" AND Chapter = "+c+" AND Verse = "+v+" AND Scripture LIKE '%"+item+"%'";
+}
