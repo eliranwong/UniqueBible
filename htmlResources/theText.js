@@ -719,6 +719,10 @@ function biblenote(module, wordID) {
     document.title = "_wordnote:::"+module+":::"+wordID;
 }
 
+function wordnote(module, wordID) {
+    document.title = "_wordnote:::"+module+":::"+wordID;
+}
+
 function searchBible(module, item) {
     document.title = "SEARCH:::"+module+":::"+item;
 }
