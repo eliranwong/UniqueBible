@@ -26,6 +26,33 @@ from distutils.dir_util import copy_tree
 
 class MainWindow(QMainWindow):
 
+    # A tulple of files which have been updated since the initial release
+    updatedFiles = ("CUV.bible", "CUVs.bible", "ULT.bible", "UST.bible", "SBLGNT.bible", "SBLGNTl.bible", "LXX1.bible", "LXX2.bible", "LXX1i.bible", "LXX2i.bible")
+    bibleInfo = {
+        "ASV": ((config.marvelData, "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr", "American Standard Version"),
+        "BSB": ((config.marvelData, "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN", "Berean Study Bible"),
+        "CUV": ((config.marvelData, "bibles", "CUV.bible"), "1SuXGZIx_ivz9ztPvnylO_ComYOYrJyzk", "Chinese Union Version (Traditional Chinese)"),
+        "CUVs": ((config.marvelData, "bibles", "CUVs.bible"), "1cu0FFIb_Zc3lQ71P1EJB3P8E5vDLnOt6", "Chinese Union Version (Simplified Chinese)"),
+        "ISV": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW", "International Standard Version"),
+        "KJV": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq", "King James Version"),
+        "LEB": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn", "Lexhame English Bible"),
+        "LXX1": ((config.marvelData, "bibles", "LXX1.bible"), "1t9sgkQxYkZElg1M8f3QHYIF8oRAIN_hd", "Septuagint / LXX [main]"),
+        "LXX1i": ((config.marvelData, "bibles", "LXX1i.bible"), "1vtGfv2otmb2N86M2QdRB6KdFjlNyAGOc", "Septuagint / LXX interlinear [main]"),
+        "LXX2": ((config.marvelData, "bibles", "LXX2.bible"), "1oZk5nYKcR1s2XtRLfU-H9IxCkCQ2px6U", "Septuagint / LXX [alternate]"),
+        "LXX2i": ((config.marvelData, "bibles", "LXX2i.bible"), "1jgq30khM0Oqxa3phE07Wg4R2p15t1N12", "Septuagint / LXX interlinear [alternate]"),
+        "MAB": ((config.marvelData, "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT", "Marvel Annotated Bible"),
+        "MIB": ((config.marvelData, "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs", "Marvel Interlinear Bible"),
+        "MOB": ((config.marvelData, "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR", "Marvel Original Bible"),
+        "MPB": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU", "Marvel Parallel Bible"),
+        "MTB": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8", "Marvel Trilingual Bible"),
+        "NET": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur", "New English Translation"),
+        "SBLGNT": ((config.marvelData, "bibles", "SBLGNT.bible"), "1N1ryqvSytW3RFlOUy7rex0JdO2X5IzuK", "SBL Greek New Testament"),
+        "SBLGNTl": ((config.marvelData, "bibles", "SBLGNTl.bible"), "1IgbX1ZBB05FgNglQM8t6GZBNSJVCu2fS", "SBL Greek New Testament annotated"),
+        "ULT": ((config.marvelData, "bibles", "ULT.bible"), "1C_YiWs7GsduCuBOO4vSR7c13RRFtIZGg", "unfoldingWord Literal Text"),
+        "UST": ((config.marvelData, "bibles", "UST.bible"), "1-s7NUKpPauer3w1hpu6W9YqVBjiLuXmc", "unfoldingWord Simplified Text"),
+        "WEB": ((config.marvelData, "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l", "World English Bible"),
+    }
+
     def __init__(self):
         super().__init__()
 
@@ -75,7 +102,9 @@ class MainWindow(QMainWindow):
         self.resizeInstant()
 
         # check if newer version is available
-        self.checkLatestUpdate()
+        self.checkApplicationUpdate()
+        # check if newer versions of formatted bibles are available
+        self.checkModulesUpdate()
 
         # setup a remote controller
         self.remoteControl = RemoteControl(self)
@@ -167,7 +196,7 @@ class MainWindow(QMainWindow):
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     # manage latest update
-    def checkLatestUpdate(self):
+    def checkApplicationUpdate(self):
         # change the following 2 files for major changes of version
         # main.py line 19
         # https://biblebento.com/UniqueBibleAppVersion.txt
@@ -178,6 +207,24 @@ class MainWindow(QMainWindow):
                     self.promptUpdate(request.text)
         except:
             pass
+
+    def checkModulesUpdate(self):
+        for filename in self.updatedFiles:
+            abb = filename[:-6]
+            if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
+                if self.isNewerAvailable(filename):
+                    self.mainPage.runJavaScript('alert("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.")'.format("'", filename))
+
+    def isNewerAvailable(self, filename):
+        abb = filename[:-6]
+        if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
+            if not filename in self.updatedFiles:
+                return False
+            else:
+                if filename in config.installHistory:
+                    if config.installHistory[filename] == self.bibleInfo[abb][1]:
+                        return False
+        return True
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
@@ -215,13 +262,16 @@ class MainWindow(QMainWindow):
         self.downloader = Downloader(self, databaseInfo)
         self.downloader.show()
 
-    def moduleInstalled(self, file):
+    def moduleInstalled(self, filename):
         self.downloader.close()
-        self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", file))
+        if filename.endswith(".bible"):
+            abb = filename[:-6]
+            config.installHistory[filename] = self.bibleInfo[abb][1]
+        self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", filename))
 
-    def moduleInstalledFailed(self, file):
+    def moduleInstalledFailed(self, filename):
         self.downloader.close()
-        self.mainPage.runJavaScript('alert("Failed to download {0}{1}{0}. Please check your internet connection.")'.format("'", file))
+        self.mainPage.runJavaScript('alert("Failed to download {0}{1}{0}. Please check your internet connection.")'.format("'", filename))
 
     # setup interface
     def create_menu(self):
@@ -1107,36 +1157,16 @@ class MainWindow(QMainWindow):
 
     # install marvel data
     def installMarvelBibles(self):
-        bibles = {
-            "American Standard Version": ((config.marvelData, "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr"),
-            "Berean Study Bible": ((config.marvelData, "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN"),
-            "Chinese Union Version (Traditional Chinese)": ((config.marvelData, "bibles", "CUV.bible"), "1SuXGZIx_ivz9ztPvnylO_ComYOYrJyzk"),
-            "Chinese Union Version (Simplified Chinese)": ((config.marvelData, "bibles", "CUVs.bible"), "1cu0FFIb_Zc3lQ71P1EJB3P8E5vDLnOt6"),
-            "International Standard Version": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
-            "King James Version": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
-            "Lexhame English Bible": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
-            "Septuagint / LXX [main]": ((config.marvelData, "bibles", "LXX1.bible"), "1t9sgkQxYkZElg1M8f3QHYIF8oRAIN_hd"),
-            "Septuagint / LXX interlinear [main]": ((config.marvelData, "bibles", "LXX1i.bible"), "1vtGfv2otmb2N86M2QdRB6KdFjlNyAGOc"),
-            "Septuagint / LXX [alternate]": ((config.marvelData, "bibles", "LXX2.bible"), "1oZk5nYKcR1s2XtRLfU-H9IxCkCQ2px6U"),
-            "Septuagint / LXX interlinear [alternate]": ((config.marvelData, "bibles", "LXX2i.bible"), "1jgq30khM0Oqxa3phE07Wg4R2p15t1N12"),
-            "Marvel Annotated Bible": ((config.marvelData, "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT"),
-            "Marvel Interlinear Bible": ((config.marvelData, "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs"),
-            "Marvel Original Bible": ((config.marvelData, "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR"),
-            "Marvel Parallel Bible": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU"),
-            "Marvel Trilingual Bible": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8"),
-            "New English Translation": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur"),
-            "SBL Greek New Testament Study Set": ((config.marvelData, "bibles", "SBLGNTl.bible"), "1t5PYQKzl06eN_xNjRIQQjqPLj9YEj9JD"),
-            "unfoldingWord Literal Text": ((config.marvelData, "bibles", "ULT.bible"), "1C_YiWs7GsduCuBOO4vSR7c13RRFtIZGg"),
-            "unfoldingWord Simplified Text": ((config.marvelData, "bibles", "UST.bible"), "1-s7NUKpPauer3w1hpu6W9YqVBjiLuXmc"),
-            "World English Bible": ((config.marvelData, "bibles", "WEB.bible"), "1L9qAeamdZwGzVdf7jC4_ks05hyQa2R7l"),
-        }
-        items = [bible for bible in bibles.keys() if not os.path.isfile(os.path.join(*bibles[bible][0]))]
+        items = [self.bibleInfo[bible][-1] for bible in self.bibleInfo.keys() if not os.path.isfile(os.path.join(*self.bibleInfo[bible][0])) or self.isNewerAvailable(self.bibleInfo[bible][0][-1])]
         if not items:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
                 "Available Modules:", items, 0, False)
         if ok and item and not item == "[All Installed]":
-            self.downloadHelper(bibles[item])
+            for key, value in self.bibleInfo.items():
+                if item == value[-1]:
+                    self.downloadHelper(self.bibleInfo[key])
+                    break
 
     def installMarvelCommentaries(self):
         commentaries = {
@@ -3931,7 +3961,7 @@ class Downloader(QDialog):
         self.setWindowTitle("Download Helper")
         self.setModal(True)
 
-        fileItems, cloudID = databaseInfo
+        fileItems, cloudID, *_ = databaseInfo
         self.cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         self.localFile = "{0}.zip".format(os.path.join(*fileItems))
         self.filename = fileItems[-1]

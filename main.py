@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 7.0
+current_version = 7.1
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -189,6 +189,9 @@ if not hasattr(config, "currentRecord"):
 # History records are kept in config.history
 if not hasattr(config, "history"):
     config.history = {"external": ["note_editor.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
+# Installed Formatted Bibles
+if not hasattr(config, "installHistory"):
+    config.installHistory = {}
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
@@ -283,6 +286,7 @@ def saveDataOnExit():
         ("\nhistoryRecordAllowed = ", config.historyRecordAllowed),
         ("\ncurrentRecord = ", {'main': 0, 'study': 0}),
         ("\nhistory = ", config.history),
+        ("\ninstallHistory = ", config.installHistory),
     )
     with open("config.py", "w") as fileObj:
         for name, value in configs:
