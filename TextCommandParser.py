@@ -442,10 +442,10 @@ class TextCommandParser:
             "ISV": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
             "KJV": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
             "LEB": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
-            "LXX1": ((config.marvelData, "bibles", "LXX1.bible"), "1sjPa7oP9SnsrsPyQ1JPUGbwgMT8QE8F1"),
-            "LXX1i": ((config.marvelData, "bibles", "LXX1i.bible"), "1pxj_pg7412ZA9ojnkI1iV46c6J3_7SJ9"),
-            "LXX2": ((config.marvelData, "bibles", "LXX2.bible"), "1fK99KgtdFhEQssvYVp3fPQZNJBFBpEca"),
-            "LXX2i": ((config.marvelData, "bibles", "LXX2i.bible"), "1E-i68TbbxxvDTzzzl-aFTXwmsro9LUjZ"),
+            "LXX1": ((config.marvelData, "bibles", "LXX1.bible"), "1t9sgkQxYkZElg1M8f3QHYIF8oRAIN_hd"),
+            "LXX1i": ((config.marvelData, "bibles", "LXX1i.bible"), "1vtGfv2otmb2N86M2QdRB6KdFjlNyAGOc"),
+            "LXX2": ((config.marvelData, "bibles", "LXX2.bible"), "1oZk5nYKcR1s2XtRLfU-H9IxCkCQ2px6U"),
+            "LXX2i": ((config.marvelData, "bibles", "LXX2i.bible"), "1jgq30khM0Oqxa3phE07Wg4R2p15t1N12"),
             "MAB": ((config.marvelData, "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT"),
             "MIB": ((config.marvelData, "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs"),
             "MOB": ((config.marvelData, "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR"),
@@ -1241,7 +1241,7 @@ class TextCommandParser:
 
     # _wordnote:::
     def textWordNote(self, command, source):
-        if re.search("^(LXX1|LXX2|SBLGNT):::", command):
+        if re.search("^(LXX1|LXX2|LXX1i|LXX2i|SBLGNT):::", command):
             module, wordID = self.splitCommand(command)
             bibleSqlite = Bible(module)
             data = bibleSqlite.readWordNote(wordID)

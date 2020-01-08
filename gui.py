@@ -1115,10 +1115,10 @@ class MainWindow(QMainWindow):
             "International Standard Version": ((config.marvelData, "bibles", "ISV.bible"), "1_nmaakABx8wVsQHdBL9rVh2wtRK8uyyW"),
             "King James Version": ((config.marvelData, "bibles", "KJV.bible"), "1ycOkEJ2JI_4iwjllb4mE02wkDvrsPlNq"),
             "Lexhame English Bible": ((config.marvelData, "bibles", "LEB.bible"), "1p-_phmh3y54i4FSLhzEd33_v0kzSjAZn"),
-            "Septuagint / LXX [main]": ((config.marvelData, "bibles", "LXX1.bible"), "1sjPa7oP9SnsrsPyQ1JPUGbwgMT8QE8F1"),
-            "Septuagint / LXX interlinear [main]": ((config.marvelData, "bibles", "LXX1i.bible"), "1pxj_pg7412ZA9ojnkI1iV46c6J3_7SJ9"),
-            "Septuagint / LXX [alternate]": ((config.marvelData, "bibles", "LXX2.bible"), "1fK99KgtdFhEQssvYVp3fPQZNJBFBpEca"),
-            "Septuagint / LXX interlinear [alternate]": ((config.marvelData, "bibles", "LXX2i.bible"), "1E-i68TbbxxvDTzzzl-aFTXwmsro9LUjZ"),
+            "Septuagint / LXX [main]": ((config.marvelData, "bibles", "LXX1.bible"), "1t9sgkQxYkZElg1M8f3QHYIF8oRAIN_hd"),
+            "Septuagint / LXX interlinear [main]": ((config.marvelData, "bibles", "LXX1i.bible"), "1vtGfv2otmb2N86M2QdRB6KdFjlNyAGOc"),
+            "Septuagint / LXX [alternate]": ((config.marvelData, "bibles", "LXX2.bible"), "1oZk5nYKcR1s2XtRLfU-H9IxCkCQ2px6U"),
+            "Septuagint / LXX interlinear [alternate]": ((config.marvelData, "bibles", "LXX2i.bible"), "1jgq30khM0Oqxa3phE07Wg4R2p15t1N12"),
             "Marvel Annotated Bible": ((config.marvelData, "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT"),
             "Marvel Interlinear Bible": ((config.marvelData, "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs"),
             "Marvel Original Bible": ((config.marvelData, "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR"),
@@ -1250,6 +1250,7 @@ class MainWindow(QMainWindow):
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
     def openTextOnStudyView(self, text):
+        #print(text)
 #        # testing
 #        currentIndex = self.studyView.currentIndex()
 #        if currentIndex == 4:

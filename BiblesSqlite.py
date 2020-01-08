@@ -447,7 +447,7 @@ class BiblesSqlite:
             self.cursor.execute(query, t)
             return len(self.cursor.fetchall())
         elif text in formattedBibleList:
-            if text in self.marvelBibles:
+            if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
                 searchString = self.removeVowelAccent(searchString)
             bible = Bible(text)
             count = bible.countSearchBook(book, searchString)
@@ -455,7 +455,7 @@ class BiblesSqlite:
             return count
 
     def searchBible(self, text, mode, searchString, interlinear=False):
-        if text in self.marvelBibles:
+        if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
                 searchString = self.removeVowelAccent(searchString)
 
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -509,8 +509,8 @@ class BiblesSqlite:
             for searchword in searchWords:
                 if not searchword == "z":
                     formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
-        # fix searching SBLGNT words
-        formatedText = re.sub("<z>(S[0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
+        # fix searching LXX / SBLGNT words
+        formatedText = re.sub("<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
         # remove misplacement of tags <z> & </z>
         p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
         s = p.search(formatedText)
