@@ -2392,6 +2392,11 @@ class MainWindow(QMainWindow):
         else:
             self.studyView.hide()
 
+    def openMorphDialog(self, items):
+        self.morphDialog = MorphDialog(self, items)
+        #self.morphDialog.setModal(True)
+        self.morphDialog.show()
+
 
 class CentralWidget(QWidget):
 
@@ -2794,6 +2799,56 @@ class WebEngineViewPopover(QWebEngineView):
     def runAsCommand(self):
         selectedText = self.selectedText()
         self.parent.parent.parent.textCommandChanged(selectedText, "main")
+
+
+class MorphDialog(QDialog):
+
+    def __init__(self, parent, items):
+        super().__init__()
+        self.parent = parent
+        lexeme, self.lexicalEntry, morphologyString = items
+
+        # morphology items
+        morphology = QWidget()
+        morphologyLayout = QVBoxLayout()
+        morphologyLayout.setContentsMargins(0, 0, 0, 0)
+
+        lexemeLabel = QLabel(lexeme)
+        morphologyLayout.addWidget(lexemeLabel)
+
+        self.checkBoxes = []
+        self.morphologyList = morphologyString.split(",")
+        for counter, value in enumerate(self.morphologyList[:-1]):
+            self.checkBoxes.append(QCheckBox(value))
+            morphologyLayout.addWidget(self.checkBoxes[counter])
+        morphology.setLayout(morphologyLayout)
+
+        # Two buttons
+        buttons = QWidget()
+        buttonsLayout = QHBoxLayout()
+        self.cancelButton = QPushButton("&Cancel")
+        self.cancelButton.clicked.connect(self.close)
+        buttonsLayout.addWidget(self.cancelButton)
+        self.searchButton = QPushButton("&Search")
+        self.searchButton.clicked.connect(self.searchMorphology)
+        buttonsLayout.addWidget(self.searchButton)
+        buttons.setLayout(buttonsLayout)
+
+        # set main layout & title
+        mainLayout = QVBoxLayout()
+        mainLayout.addWidget(morphology)
+        mainLayout.addWidget(buttons)
+
+        self.setLayout(mainLayout)
+        self.setWindowTitle("Search Morphology ...")
+
+    def searchMorphology(self):
+        command = "MORPHOLOGY:::LexicalEntry LIKE '%{0},%'".format(self.lexicalEntry.split(",")[0])
+        selectedItems = [self.morphologyList[counter] for counter, value in enumerate(self.checkBoxes) if value.isChecked()]
+        for item in selectedItems:
+            command += " AND Morphology LIKE '%{0}%'".format(item)
+        self.parent.runTextCommand(command)
+        self.close()
 
 
 class RemoteControl(QWidget):

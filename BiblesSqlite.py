@@ -839,14 +839,12 @@ class MorphologySqlite:
 
     def searchWord(self, portion, wordID):
         if portion == "1":
-            query = "SELECT lexicalEntry, morphology FROM morphology WHERE Book < 40 AND WordID = ?"
+            query = "SELECT Lexeme, LexicalEntry, Morphology FROM morphology WHERE Book < 40 AND WordID = ?"
         else:
-            query = "SELECT lexicalEntry, morphology FROM morphology WHERE Book >= 40 AND WordID = ?"
+            query = "SELECT Lexeme, LexicalEntry, Morphology FROM morphology WHERE Book >= 40 AND WordID = ?"
         t = (wordID,)
         self.cursor.execute(query, t)
-        word = self.cursor.fetchone()
-        lexicalEntry, morphology = word
-        return self.searchMorphology("LEMMA", lexicalEntry.split(',')[0])
+        return self.cursor.fetchone()
 
     def searchMorphology(self, mode, searchString):
         formatedText = ""

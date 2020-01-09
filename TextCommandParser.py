@@ -1268,10 +1268,9 @@ class TextCommandParser:
     # _searchword:::
     def textSearchWord(self, command, source):
         portion, wordID = self.splitCommand(command)
-        morphologySqlite = MorphologySqlite()
-        searchResult = morphologySqlite.searchWord(portion, wordID)
-        del morphologySqlite
-        return ("study", searchResult)
+        items = MorphologySqlite().searchWord(portion, wordID)
+        self.parent.openMorphDialog(items)
+        return ("", "")
 
     # EXLB:::
     def textExlb(self, command, source):
