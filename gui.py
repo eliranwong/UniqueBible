@@ -4060,7 +4060,12 @@ class Downloader(QDialog):
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
         except:
-            connection = False
+            #connection = False
+            try:
+                gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
+                connection = True
+            except:
+                connection = False
         if connection:
             if self.localFile.endswith(".zip"):
                 zip = zipfile.ZipFile(self.localFile, "r")
