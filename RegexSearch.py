@@ -37,6 +37,7 @@ class RegexSearch:
             outputFilename = "replaced_{0}".format(filename)
             outputFile = os.path.join(path, outputFilename)
         # open file and read input text
+        print("Processing '{0}' ...".format(filename))
         with open(inputFile,'r') as f:
             newData = f.read()
         # work on non-empty text
@@ -46,7 +47,7 @@ class RegexSearch:
             # save output text in a separate file
             with open(outputFile,'w') as f:
                 f.write(newData)
-                print("File '{0}' was processed, with output saved in file '{1}'.".format(filename, outputFilename))
+                print("Processed.  Saved output as '{0}'.".format(outputFilename))
         else:
             print("No data is read.")
 
@@ -156,12 +157,12 @@ if __name__ == '__main__':
                     try:
                         deepSearchPattern = literal_eval(userPattern)
                     except:
-                        print("Deep mode is disabled.  Entered pattern is not properly formatted")
+                        print("Deep mode is disabled!  Reason: Entered pattern is not properly formatted.")
                         deepSearchPattern = None
                 else:
                     deepSearchPattern = userPattern
             else:
-                print("Deep mode is disabled.  Entered pattern is empty.")
+                print("Deep mode is disabled!  Reason: Entered pattern is empty.")
         # formulate a nested list of tuples, according to user input
         searchReplace = []
         addSearchReplace = True

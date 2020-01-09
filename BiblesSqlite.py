@@ -837,6 +837,17 @@ class MorphologySqlite:
         del clauseData
         return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
 
+    def searchWord(self, portion, wordID):
+        if portion == "1":
+            query = "SELECT lexicalEntry, morphology FROM morphology WHERE Book < 40 AND WordID = ?"
+        else:
+            query = "SELECT lexicalEntry, morphology FROM morphology WHERE Book >= 40 AND WordID = ?"
+        t = (wordID,)
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        lexicalEntry, morphology = word
+        return self.searchMorphology("LEMMA", lexicalEntry.split(',')[0])
+
     def searchMorphology(self, mode, searchString):
         formatedText = ""
         query = "SELECT * FROM morphology WHERE "

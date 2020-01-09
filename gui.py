@@ -27,7 +27,7 @@ from distutils.dir_util import copy_tree
 class MainWindow(QMainWindow):
 
     # A tulple of files which have been updated since the initial release
-    updatedFiles = ("CUV.bible", "CUVs.bible", "ULT.bible", "UST.bible", "SBLGNT.bible", "SBLGNTl.bible", "LXX1.bible", "LXX2.bible", "LXX1i.bible", "LXX2i.bible")
+    updatedFiles = ("CUV.bible", "CUVs.bible", "ULT.bible", "UST.bible", "SBLGNT.bible", "SBLGNTl.bible", "LXX1.bible", "LXX2.bible", "LXX1i.bible", "LXX2i.bible", "MOB.bible", "MPB.bible", "MIB.bible", "MAB.bible", "MTB.bible")
     bibleInfo = {
         "ASV": ((config.marvelData, "bibles", "ASV.bible"), "1oDuV54_zOl_L0GQqmYiLvgjk2pQu4iSr", "American Standard Version"),
         "BSB": ((config.marvelData, "bibles", "BSB.bible"), "1fQX8cT12LE9Q3dBUJyezTYg4a0AbdKbN", "Berean Study Bible"),
@@ -40,11 +40,11 @@ class MainWindow(QMainWindow):
         "LXX1i": ((config.marvelData, "bibles", "LXX1i.bible"), "1vtGfv2otmb2N86M2QdRB6KdFjlNyAGOc", "Septuagint / LXX interlinear [main]"),
         "LXX2": ((config.marvelData, "bibles", "LXX2.bible"), "1oZk5nYKcR1s2XtRLfU-H9IxCkCQ2px6U", "Septuagint / LXX [alternate]"),
         "LXX2i": ((config.marvelData, "bibles", "LXX2i.bible"), "1jgq30khM0Oqxa3phE07Wg4R2p15t1N12", "Septuagint / LXX interlinear [alternate]"),
-        "MAB": ((config.marvelData, "bibles", "MAB.bible"), "1baA_5OkjO6-dk2dIQ4rcJ2VaAZqy1gRT", "Marvel Annotated Bible"),
-        "MIB": ((config.marvelData, "bibles", "MIB.bible"), "106g4L5fO5UBjzGv641H0rdXFvTB9COvs", "Marvel Interlinear Bible"),
-        "MOB": ((config.marvelData, "bibles", "MOB.bible"), "1OG28pqdbEOxk1Kjly6EPvsMDRXJ4_RsR", "Marvel Original Bible"),
-        "MPB": ((config.marvelData, "bibles", "MPB.bible"), "1gl2KDzxXIjXOC71ZYVQZduAzqaSK3fEU", "Marvel Parallel Bible"),
-        "MTB": ((config.marvelData, "bibles", "MTB.bible"), "1HqJoGzWrsPqkys3IydAbogZ5NeI47WE8", "Marvel Trilingual Bible"),
+        "MAB": ((config.marvelData, "bibles", "MAB.bible"), "1n0U-yKBWdUbTlBTfENwMISuTQv2WAUfP", "Marvel Annotated Bible"),
+        "MIB": ((config.marvelData, "bibles", "MIB.bible"), "1gVeLLNWFSTaljPxaTro_vS3iiY1MEADQ", "Marvel Interlinear Bible"),
+        "MOB": ((config.marvelData, "bibles", "MOB.bible"), "1c2L0nU0Y4nMGR8pvfTGqEzVn3X-bH8_C", "Marvel Original Bible"),
+        "MPB": ((config.marvelData, "bibles", "MPB.bible"), "138XuGtu1_6IUlXXAhdltjrSEjWKCqfno", "Marvel Parallel Bible"),
+        "MTB": ((config.marvelData, "bibles", "MTB.bible"), "1v1ECbnDNwIVacOcz8EexvneAnNehZURn", "Marvel Trilingual Bible"),
         "NET": ((config.marvelData, "bibles", "NET.bible"), "1pJ_9Wk4CmDdFO08wioOxs4krKjNeh4Ur", "New English Translation"),
         "SBLGNT": ((config.marvelData, "bibles", "SBLGNT.bible"), "1N1ryqvSytW3RFlOUy7rex0JdO2X5IzuK", "SBL Greek New Testament"),
         "SBLGNTl": ((config.marvelData, "bibles", "SBLGNTl.bible"), "1IgbX1ZBB05FgNglQM8t6GZBNSJVCu2fS", "SBL Greek New Testament annotated"),

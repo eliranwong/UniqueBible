@@ -335,6 +335,10 @@ class TextCommandParser:
             # [KEYWORD] _wordnote
             # e.g. _wordnote:::LXX1:::l1
             "_wordnote": self.textWordNote,
+            # [KEYWORD] _searchword
+            # Usage: _searchword:::[1=OT, 2=NT]:::[wordID]
+            # e.g. _searchword:::1:::1
+            "_searchword": self.textSearchWord,
             # [KEYWORD] _paste
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
@@ -1258,6 +1262,14 @@ class TextCommandParser:
     def textMorphologyFeature(self, command, source, mode):
         morphologySqlite = MorphologySqlite()
         searchResult = morphologySqlite.searchMorphology(mode, command)
+        del morphologySqlite
+        return ("study", searchResult)
+
+    # _searchword:::
+    def textSearchWord(self, command, source):
+        portion, wordID = self.splitCommand(command)
+        morphologySqlite = MorphologySqlite()
+        searchResult = morphologySqlite.searchWord(portion, wordID)
         del morphologySqlite
         return ("study", searchResult)
 
