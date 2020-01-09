@@ -2845,8 +2845,9 @@ class MorphDialog(QDialog):
     def searchMorphology(self):
         command = "MORPHOLOGY:::LexicalEntry LIKE '%{0},%'".format(self.lexicalEntry.split(",")[0])
         selectedItems = [self.morphologyList[counter] for counter, value in enumerate(self.checkBoxes) if value.isChecked()]
-        for item in selectedItems:
-            command += " AND Morphology LIKE '%{0}%'".format(item)
+        if selectedItems:
+            joinedItems = ",%".join(selectedItems)
+            command += " AND Morphology LIKE '%{0}%'".format(joinedItems)
         self.parent.runTextCommand(command)
         self.close()
 
