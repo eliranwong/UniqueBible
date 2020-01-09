@@ -2826,12 +2826,12 @@ class MorphDialog(QDialog):
         # Two buttons
         buttons = QWidget()
         buttonsLayout = QHBoxLayout()
-        self.cancelButton = QPushButton("&Cancel")
-        self.cancelButton.clicked.connect(self.close)
-        buttonsLayout.addWidget(self.cancelButton)
         self.searchButton = QPushButton("&Search")
         self.searchButton.clicked.connect(self.searchMorphology)
         buttonsLayout.addWidget(self.searchButton)
+        self.cancelButton = QPushButton("&Cancel")
+        self.cancelButton.clicked.connect(self.close)
+        buttonsLayout.addWidget(self.cancelButton)
         buttons.setLayout(buttonsLayout)
 
         # set main layout & title
