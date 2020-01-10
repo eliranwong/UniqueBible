@@ -210,7 +210,7 @@ class BiblesSqlite:
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='diff{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Draw Difference(s)</button>"
+                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Show Difference(s)</button>"
         return menu
 
     def formTextTag(self, text=config.mainText):
