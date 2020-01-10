@@ -531,6 +531,24 @@ function addParallel(value) {
     }
 }
 
+function checkDiff() {
+    versionList.forEach(addDiff);
+    if (diffList.length == 0) {
+        alert("No version is selected for detailed comparison.");
+    } else {
+        var diffTexts = diffList.join("_");
+        var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
+        document.title = "DIFF:::"+activeText+"_"+diffTexts+":::"+verseReference;
+    }
+}
+
+function addDiff(value) {
+    var checkBox = document.getElementById("diff"+value);
+    if (checkBox.checked == true){
+        diffList.push(value);
+    }
+}
+
 function searchLexicalEntry(lexicalEntry) {
     document.title = "LEMMA:::"+lexicalEntry;
 }
