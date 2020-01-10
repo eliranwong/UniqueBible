@@ -192,17 +192,25 @@ class BiblesSqlite:
                     for keyword, description in features:
                         menu += "<button class='feature' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
                     versions = self.getBibleList()
+                    # Compare menu
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                             menu += "<script>versionList.push('{0}');</script>".format(version)
                     menu += "<br><button type='button' onclick='checkCompare();' class='feature'>Start Comparison</button>"
+                    # Parallel menu
                     menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
                     menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
+                    # Diff menu
+                    menu += "<hr><b>Difference(s) between <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> and:</b><br>".format(text)
+                    for version in versions:
+                        if not version == text:
+                            menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='diff{0}'></div> ".format(version)
+                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Draw Difference(s)</button>"
         return menu
 
     def formTextTag(self, text=config.mainText):
