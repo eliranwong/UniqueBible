@@ -501,6 +501,7 @@ function checkCompare() {
         alert("No version is selected for comparison.");
     } else {
         var compareTexts = compareList.join("_");
+        compareList = [];
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
         document.title = "COMPARE:::"+activeText+"_"+compareTexts+":::"+verseReference;
     }
@@ -519,6 +520,7 @@ function checkParallel() {
         alert("No version is selected for parallel reading.");
     } else {
         var parallelTexts = parallelList.join("_");
+        parallelList = [];
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
         document.title = "PARALLEL:::"+activeText+"_"+parallelTexts+":::"+verseReference;
     }
@@ -537,6 +539,7 @@ function checkDiff() {
         alert("No version is selected for detailed comparison.");
     } else {
         var diffTexts = diffList.join("_");
+        diffList = [];
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
         document.title = "DIFF:::"+activeText+"_"+diffTexts+":::"+verseReference;
     }
@@ -546,6 +549,38 @@ function addDiff(value) {
     var checkBox = document.getElementById("diff"+value);
     if (checkBox.checked == true){
         diffList.push(value);
+    }
+}
+
+function checkSearch(searchKeyword, searchText) {
+    var searchString = document.getElementById("bibleSearch").value;
+    if (searchString == "") {
+        alert("Search field is empty!");
+    } else {
+        document.title = searchKeyword+":::"+searchText+":::"+searchString;
+    }
+}
+
+function checkMultiSearch(searchKeyword) {
+    var searchString = document.getElementById("multiBibleSearch").value;
+    if (searchString == "") {
+        alert("Search field is empty!");
+    } else {
+        versionList.forEach(addMultiSearch);
+        if (searchList.length == 0) {
+            document.title = searchKeyword+":::"+activeText+":::"+searchString;
+        } else {
+            var searchTexts = searchList.join("_");
+            searchList = [];
+            document.title = searchKeyword+":::"+searchTexts+":::"+searchString;
+        }
+    }
+}
+
+function addMultiSearch(value) {
+    var checkBox = document.getElementById("search"+value);
+    if (checkBox.checked == true){
+        searchList.push(value);
     }
 }
 
