@@ -345,6 +345,7 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction("&Parallel with ...", self, triggered=self.mainRefButtonClicked))
 
         menu5 = self.menuBar().addMenu("&Search")
+        menu5.addAction(QAction("&Bible / Bibles", self, triggered=self.displaySearchBibleMenu))
         menu5.addAction(QAction("&Last Opened Bible on Main View", self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
         menu5.addAction(QAction("&Last Opened Bible on Study View", self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
@@ -466,10 +467,10 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip("Search Last Opened Bible on Main View with {0}".format(config.iSearchVersion))
+        searchBibleButton.setToolTip("Open Search Bible Menu".format(config.iSearchVersion))
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
-        searchBibleButton.clicked.connect(self.displayISearchBibleCommand)
+        searchBibleButton.clicked.connect(self.displaySearchBibleMenu)
         self.firstToolBar.addWidget(searchBibleButton)
 
         self.firstToolBar.addSeparator()
@@ -530,10 +531,10 @@ class MainWindow(QMainWindow):
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
         searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip("Search Last Opened Bible on Study View with {0}".format(config.iSearchVersion))
+        searchStudyBibleButton.setToolTip("Open Search Bible Menu")
         searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
-        searchStudyBibleButton.clicked.connect(self.displayISearchStudyBibleCommand)
+        searchStudyBibleButton.clicked.connect(self.displaySearchBibleMenu)
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
         self.secondToolBar = QToolBar()
@@ -909,7 +910,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View", self.displaySearchBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View with {0}".format(config.iSearchVersion), self.displayISearchBibleCommand)
+        self.firstToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu".format(config.iSearchVersion), self.displaySearchBibleMenu)
 
         self.firstToolBar.addSeparator()
 
@@ -953,7 +954,7 @@ class MainWindow(QMainWindow):
         self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View", self.displaySearchStudyBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View with {0}".format(config.iSearchVersion), self.displayISearchStudyBibleCommand)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu".format(config.iSearchVersion), self.displaySearchBibleMenu)
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
@@ -1402,7 +1403,7 @@ class MainWindow(QMainWindow):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = [];</script></head><body style='font-size: {1}%; font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, text, '"', config.font)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body style='font-size: {1}%; font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, text, '"', config.font)
         return text
 
     def pasteFromClipboard(self):
@@ -1766,17 +1767,12 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
         self.textCommandLineEdit.setFocus()
 
-    def displayISearchBibleCommand(self):
-        self.textCommandLineEdit.setText("iSEARCH:::{0}:::".format(config.mainText))
-        self.textCommandLineEdit.setFocus()
-
     def displaySearchStudyBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
         self.textCommandLineEdit.setFocus()
 
-    def displayISearchStudyBibleCommand(self):
-        self.textCommandLineEdit.setText("iSEARCH:::{0}:::".format(config.studyText))
-        self.textCommandLineEdit.setFocus()
+    def displaySearchBibleMenu(self):
+        self.runTextCommand("_menu:::", False, "main")
 
     # Action - other search commands
     def searchCommandChapterNote(self):
@@ -2220,7 +2216,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = [];</script></head><body style='font-size: {1}%;  font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, content, '"', config.font)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body style='font-size: {1}%;  font-family: {3}{4}{3};'><span id='v0.0.0'></span>{2}</body></html>".format(activeBCVsettings, config.fontSize, content, '"', config.font)
             views = {
                 "main": self.mainView,
                 "study": self.studyView,
@@ -2753,7 +2749,7 @@ class WebEngineView(QWebEngineView):
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = []; var diffList = [];</script></head><body style='font-size: {0}%; font-family: {2}{3}{2};'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html, '"', config.font)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body style='font-size: {0}%; font-family: {2}{3}{2};'><span id='v0.0.0'></span>{1}</body></html>".format(config.fontSize, html, '"', config.font)
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()

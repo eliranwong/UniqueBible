@@ -134,6 +134,7 @@ class BiblesSqlite:
         menu += "<hr><b>Bibles:</b> {0}".format(self.getTexts())
         items = command.split(".", 3)
         text = items[0]
+        versions = self.getBibleList()
         if not text == "":
             # i.e. text specified; add book menu
             menu += "<hr><b>Selected Bible:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open {1} in {0}</button>".format(text, mainVerseReference)
@@ -191,7 +192,7 @@ class BiblesSqlite:
                     )
                     for keyword, description in features:
                         menu += "<button class='feature' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
-                    versions = self.getBibleList()
+                    #versions = self.getBibleList()
                     # Compare menu
                     menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
                     for version in versions:
@@ -211,6 +212,22 @@ class BiblesSqlite:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='diff{0}'></div> ".format(version)
                     menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Show Difference(s)</button>"
+        else:
+            # menu - Search a bible
+            menu += "<hr><b>Search Bible</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(config.mainText)
+            for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+                menu += "<button type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, config.mainText)
+            menu += "<br>"
+            for searchMode in ("iSEARCH", "SHOWiSEARCH", "ANDiSEARCH", "ORiSEARCH", "ADVANCEDiSEARCH"):
+                menu += "<button type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, config.mainText)
+            # menu - Search multiple bibles
+            menu += "<hr><b>Bible Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
+            for version in versions:
+                menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
+                menu += "<script>versionList.push('{0}');</script>".format(version)
+            menu += "<br>"
+            for searchMode in ("SEARCH", "iSEARCH"):
+                menu += "<button type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
         return menu
 
     def formTextTag(self, text=config.mainText):
