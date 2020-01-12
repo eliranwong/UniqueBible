@@ -42,7 +42,7 @@ class VerseONTData:
 class CrossReferenceSqlite:
 
     def __init__(self):
-        # connect bibles.sqlite
+        # connect cross-reference.sqlite
         self.database = os.path.join(config.marvelData, "cross-reference.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
@@ -70,6 +70,27 @@ class CrossReferenceSqlite:
             return "[not applicable]"
         else:
             return information[0]
+
+
+class CollectionSqlite:
+
+    def __init__(self):
+        # connect collections.sqlite
+        self.database = os.path.join(config.marvelData, "collections.sqlite")
+        self.connection = sqlite3.connect(self.database)
+        self.cursor = self.connection.cursor()
+
+    def __del__(self):
+        self.connection.close()
+
+    def readData(self, table, toolNumber):
+        query = "SELECT Topic, Passages FROM {0} WHERE Tool=? AND Number=?".format(table)
+        self.cursor.execute(query, toolNumber)
+        information = self.cursor.fetchone()
+        if not information:
+            return "[not applicable]"
+        else:
+            return information
 
 
 class ImageSqlite:

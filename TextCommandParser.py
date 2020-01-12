@@ -1,7 +1,7 @@
 import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from ToolsSqlite import CrossReferenceSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
+from ToolsSqlite import CrossReferenceSqlite, CollectionSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 
@@ -111,6 +111,8 @@ class TextCommandParser:
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8
             "parallel": self.textParallel,
+            # [KEYWORD] COLLECTION
+            "collection": self.textCollection,
             # [KEYWORD] SEARCH
             # e.g. SEARCH:::KJV:::love
             # e.g. SEARCH:::KJV_WEB:::love
@@ -771,6 +773,32 @@ class TextCommandParser:
                 tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
                 versions, verses = zip(*tableList)
                 return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+
+    # COLLECTION:::
+    def textCollection(self, command, source):
+        updateViewConfig, viewText, *_ = self.getViewConfig(source)
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        confirmedTexts = self.getConfirmedTexts(texts)
+        if not confirmedTexts:
+            return self.invalidCommand()
+        else:
+            text = confirmedTexts[0]
+            marvelBibles = self.getMarvelBibles()
+            if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
+                databaseInfo = marvelBibles[text]
+                self.parent.downloadHelper(databaseInfo)
+                return ("", "")
+            else:
+                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+                biblesSqlite = BiblesSqlite()
+                cs = CollectionSqlite()
+                topic, passagesString = cs.readData("PARALLEL", references.split("."))
+                passages = bibleVerseParser.extractAllReferences(passagesString)
+                tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
+                versions, verses = zip(*tableList)
+                return (source, "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
 
     # _biblenote:::
     def textBiblenote(self, command, source):

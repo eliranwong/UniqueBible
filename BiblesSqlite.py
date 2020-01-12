@@ -548,7 +548,7 @@ class BiblesSqlite:
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
-    def readMultipleVerses(self, inputText, verseList):
+    def readMultipleVerses(self, inputText, verseList, displayRef=True):
         verses = ""
         if config.extractParallel and (inputText != config.iSearchVersion):
             textList = (inputText, config.iSearchVersion)
@@ -614,7 +614,10 @@ class BiblesSqlite:
                             v += 1
                         c = cs
                         v = vs
-                verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+                if displayRef:
+                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+                else:
+                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
         return verses
 
     def readPlainChapter(self, text, verse):
