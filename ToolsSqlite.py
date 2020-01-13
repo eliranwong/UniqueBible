@@ -72,7 +72,7 @@ class CrossReferenceSqlite:
             return information[0]
 
 
-class CollectionSqlite:
+class CollectionsSqlite:
 
     def __init__(self):
         # connect collections.sqlite

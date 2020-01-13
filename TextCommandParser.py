@@ -1,7 +1,7 @@
 import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from ToolsSqlite import CrossReferenceSqlite, CollectionSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
+from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 
@@ -88,12 +88,6 @@ class TextCommandParser:
             # e.g. DIFF:::Joh 3:16
             # e.g. DIFF:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
             "diff": self.textDiff,
-            # [KEYWORD] DIFFERENT
-            # Feature - same as [KEYWORD] DIFF
-            # Usage - DIFFERENT:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
-            # e.g. DIFFERENT:::Joh 3:16
-            # e.g. DIFFERENT:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
-            "different": self.textDiff,
             # [KEYWORD] DIFFERENCE
             # Feature - same as [KEYWORD] DIFF
             # Usage - DIFFERENCE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
@@ -111,8 +105,18 @@ class TextCommandParser:
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8
             "parallel": self.textParallel,
-            # [KEYWORD] COLLECTION
-            "collection": self.textCollection,
+            # [KEYWORD] PASSAGES
+            # Feature - Display different bible passages of the same bible version in parallel columns. It is created for studying similar passages.
+            # Usage - PARALLEL:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
+            # Remarks:
+            # 1) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
+            # 2) Only the first bible version specified in the command is taken, even multiple bible versions are entered and separated by "_".
+            # 3) Users can read an additional version by setting config.extractParallel as True.
+            # 4) Book abbreviations and ranges of verses are supported for bible references.
+            # 5) If a chapter reference is entered, only verse 1 of the chapter specified is displayed.
+            # e.g. PASSAGES:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
+            # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
+            "passages": self.textPassages,
             # [KEYWORD] SEARCH
             # e.g. SEARCH:::KJV:::love
             # e.g. SEARCH:::KJV_WEB:::love
@@ -341,6 +345,10 @@ class TextCommandParser:
             # Usage: _searchword:::[1=OT, 2=NT]:::[wordID]
             # e.g. _searchword:::1:::1
             "_searchword": self.textSearchWord,
+            # [KEYWORD] _harmony
+            "_harmony": self.textHarmony,
+            # [KEYWORD] _promise
+            "_promise": self.textPromise,
             # [KEYWORD] _paste
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
@@ -382,6 +390,9 @@ class TextCommandParser:
             "text": self.getCoreBiblesInfo(),
             "compare": self.getCoreBiblesInfo(),
             "parallel": self.getCoreBiblesInfo(),
+            "passages": self.getCoreBiblesInfo(),
+            "diff": self.getCoreBiblesInfo(),
+            "difference": self.getCoreBiblesInfo(),
             "search": self.getCoreBiblesInfo(),
             "showsearch": self.getCoreBiblesInfo(),
             "advancedsearch": self.getCoreBiblesInfo(),
@@ -404,6 +415,8 @@ class TextCommandParser:
             "_editversenote": self.getBibleNoteInfo(),
             "searchchapternote": self.getBibleNoteInfo(),
             "searchversenote": self.getBibleNoteInfo(),
+            "_harmony": self.getCollectionsInfo(),
+            "_promise": self.getCollectionsInfo(),
             "_book": self.getBookInfo(),
             "book": self.getBookInfo(),
             "searchbook": self.getBookInfo(),
@@ -430,8 +443,11 @@ class TextCommandParser:
     def getBibleNoteInfo(self):
         return ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
 
+    def getCollectionsInfo(self):
+        return ((config.marvelData, "collections.sqlite"), "17x5t-qPwb0Bq60b4bXQ9T8Hva3ZUYVBP")
+
     def getBookInfo(self):
-        return ((config.marvelData, "books", "Timelines.book"), "1nuhrsujL6LYYeviaT22Rhn_wk9kc6una")
+        return ((config.marvelData, "books", "Harmonies_and_Parallels.book"), "1zNOXxDECk-SehYum0ENcvP3PCOZfHOW-")
 
     def getXRefInfo(self):
         return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
@@ -730,7 +746,6 @@ class TextCommandParser:
             return (source, verses)
 
     # DIFF:::
-    # DIFFERENT:::
     # DIFFERENCE:::
     def textDiff(self, command, source):
         if command.count(":::") == 0:
@@ -774,8 +789,8 @@ class TextCommandParser:
                 versions, verses = zip(*tableList)
                 return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
-    # COLLECTION:::
-    def textCollection(self, command, source):
+   # PASSAGES:::
+    def textPassages(self, command, source):
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(viewText, command)
@@ -793,12 +808,62 @@ class TextCommandParser:
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 biblesSqlite = BiblesSqlite()
-                cs = CollectionSqlite()
+                passages = bibleVerseParser.extractAllReferences(references)
+                tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
+                versions, verses = zip(*tableList)
+                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+
+    # _harmony:::
+    def textHarmony(self, command, source):
+        updateViewConfig, viewText, *_ = self.getViewConfig(source)
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        confirmedTexts = self.getConfirmedTexts(texts)
+        if not confirmedTexts:
+            return self.invalidCommand()
+        else:
+            text = confirmedTexts[0]
+            marvelBibles = self.getMarvelBibles()
+            if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
+                databaseInfo = marvelBibles[text]
+                self.parent.downloadHelper(databaseInfo)
+                return ("", "")
+            else:
+                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+                biblesSqlite = BiblesSqlite()
+                cs = CollectionsSqlite()
                 topic, passagesString = cs.readData("PARALLEL", references.split("."))
+                del cs
                 passages = bibleVerseParser.extractAllReferences(passagesString)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
-                return (source, "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
+                return ("main", "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
+
+    # _promise:::
+    def textPromise(self, command, source):
+        updateViewConfig, viewText, *_ = self.getViewConfig(source)
+        if command.count(":::") == 0:
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        confirmedTexts = self.getConfirmedTexts(texts)
+        if not confirmedTexts:
+            return self.invalidCommand()
+        else:
+            text = confirmedTexts[0]
+            marvelBibles = self.getMarvelBibles()
+            if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
+                databaseInfo = marvelBibles[text]
+                self.parent.downloadHelper(databaseInfo)
+                return ("", "")
+            else:
+                bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+                biblesSqlite = BiblesSqlite()
+                cs = CollectionsSqlite()
+                topic, passagesString = cs.readData("PROMISES", references.split("."))
+                del cs
+                passages = bibleVerseParser.extractAllReferences(passagesString)
+                return ("main", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)))
 
     # _biblenote:::
     def textBiblenote(self, command, source):
