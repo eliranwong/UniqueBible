@@ -125,11 +125,10 @@ if not hasattr(config, "studyC"):
     config.studyC = 3
 if not hasattr(config, "studyV"):
     config.studyV = 16
-# Additional version displayed in search results
-# This version is displayed in parallel with the version being searched.
+# Set your favourite version here
 if not hasattr(config, "favouriteVersion"):
     config.favouriteVersion = "OHGB"
-# Options to display multiple verses using both main text version and "iSearchVersion" in parallel format: True / False
+# Options to display "favouriteVersion" together with the main version for reading multiple references: True / False
 if not hasattr(config, "addFavouriteToMultiRef"):
     config.addFavouriteToMultiRef = False
 # Last-opened commentary text and passage
