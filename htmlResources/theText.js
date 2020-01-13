@@ -783,3 +783,11 @@ function searchVerse(module, item, b, c, v) {
 function searchWord(portion, wordID) {
     document.title = "_searchword:::"+portion+":::"+wordID;
 }
+
+function harmony(tool, number) {
+    document.title = "_harmony:::"+tool+"."+number;
+}
+
+function promise(tool, number) {
+    document.title = "_promise:::"+tool+"."+number;
+}
