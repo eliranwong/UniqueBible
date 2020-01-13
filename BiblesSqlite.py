@@ -217,16 +217,13 @@ class BiblesSqlite:
             menu += "<hr><b>Search Bible</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(config.mainText)
             for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, config.mainText)
-            menu += "<br>"
-            for searchMode in ("iSEARCH", "SHOWiSEARCH", "ANDiSEARCH", "ORiSEARCH", "ADVANCEDiSEARCH"):
-                menu += "<button type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, config.mainText)
             # menu - Search multiple bibles
             menu += "<hr><b>Bible Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
             for version in versions:
                 menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br>"
-            for searchMode in ("SEARCH", "iSEARCH"):
+            for searchMode in ("SEARCH",):
                 menu += "<button type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
         return menu
 
@@ -446,14 +443,9 @@ class BiblesSqlite:
         return text
 
     def countSearchBible(self, text, searchString, interlinear=False):
-        if interlinear:
-            content = "ISEARCH:::{0}:::{1}".format(text, searchString)
-            showCommand = "SHOWISEARCH"
-            searchFunction = "iSearchBibleBook"
-        else:
-            content = "SEARCH:::{0}:::{1}".format(text, searchString)
-            showCommand = "SHOWSEARCH"
-            searchFunction = "searchBibleBook"
+        content = "SEARCH:::{0}:::{1}".format(text, searchString)
+        showCommand = "SHOWSEARCH"
+        searchFunction = "searchBibleBook"
         bookList = self.getBookList(text)
         bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
         content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}.</p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
@@ -492,16 +484,12 @@ class BiblesSqlite:
             query = "SELECT * FROM Verses WHERE "
         if mode == "BASIC":
             searchCommand = "SHOWSEARCH"
-            if interlinear:
-                searchCommand = "SHOWISEARCH"
             formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
             t = tuple()
             searchCommand = "ADVANCEDSEARCH"
-            if interlinear:
-                searchCommand = "ADVANCEDISEARCH"
             formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
             query += searchString
         query += " ORDER BY Book, Chapter, Verse"
@@ -520,11 +508,11 @@ class BiblesSqlite:
                 divTag = "<div>"
             formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
             if interlinear:
-                if b < 40 and config.iSearchVersion in config.rtlTexts:
+                if b < 40 and config.favouriteVersion in config.rtlTexts:
                     divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 else:
                     divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
-                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse(config.iSearchVersion, b, c, v)[3])
+                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse(config.favouriteVersion, b, c, v)[3])
         if mode == "BASIC" and not searchString == "z":
             formatedText = re.sub("("+searchString+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
@@ -550,8 +538,8 @@ class BiblesSqlite:
 
     def readMultipleVerses(self, inputText, verseList, displayRef=True):
         verses = ""
-        if config.extractParallel and (inputText != config.iSearchVersion):
-            textList = (inputText, config.iSearchVersion)
+        if config.addFavouriteToMultiRef and (inputText != config.favouriteVersion):
+            textList = (inputText, config.favouriteVersion)
         else:
             textList = (inputText,)
         for verse in verseList:

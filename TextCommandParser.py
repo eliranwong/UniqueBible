@@ -111,7 +111,7 @@ class TextCommandParser:
             # Remarks:
             # 1) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # 2) Only the first bible version specified in the command is taken, even multiple bible versions are entered and separated by "_".
-            # 3) Users can read an additional version by setting config.extractParallel as True.
+            # 3) Users can read an additional version by setting config.addFavouriteToMultiRef as True.
             # 4) Book abbreviations and ranges of verses are supported for bible references.
             # 5) If a chapter reference is entered, only verse 1 of the chapter specified is displayed.
             # e.g. PASSAGES:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
@@ -135,24 +135,6 @@ class TextCommandParser:
             # e.g. ORSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
             "orsearch": self.textOrSearch,
-            # [KEYWORD] iSEARCH
-            # e.g. iSEARCH:::KJV:::love
-            # e.g. iSEARCH:::KJV_WEB:::love
-            "isearch": self.textCountISearch,
-            # [KEYWORD] SHOWISEARCH
-            # e.g. SHOWISEARCH:::KJV:::love
-            "showisearch": self.textISearchBasic,
-            # [KEYWORD] ADVANCEDISEARCH
-            # e.g. ADVANCEDISEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
-            "advancedisearch": self.textISearchAdvanced,
-            # [KEYWORD] ANDISEARCH
-            # e.g. ANDISEARCH:::KJV:::love|Jesus
-            # alias of, e.g. ADVANCEDISEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%"
-            "andisearch": self.textAndISearch,
-            # [KEYWORD] ORISEARCH
-            # e.g. ORISEARCH:::KJV:::love|Jesus
-            # alias of, e.g. ADVANCEDISEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
-            "orisearch": self.textOrISearch,
             # [KEYWORD] INDEX
             # e.g. INDEX:::Gen 1:1
             "index": self.textIndex,
@@ -398,11 +380,6 @@ class TextCommandParser:
             "advancedsearch": self.getCoreBiblesInfo(),
             "andsearch": self.getCoreBiblesInfo(),
             "orsearch": self.getCoreBiblesInfo(),
-            "isearch": self.getCoreBiblesInfo(),
-            "andisearch": self.getCoreBiblesInfo(),
-            "orisearch": self.getCoreBiblesInfo(),
-            "showisearch": self.getCoreBiblesInfo(),
-            "advancedisearch": self.getCoreBiblesInfo(),
             "lemma": self.getCoreBiblesInfo(),
             "morphologycode": self.getCoreBiblesInfo(),
             "morphology": self.getCoreBiblesInfo(),
@@ -1173,13 +1150,9 @@ class TextCommandParser:
 
     # SEARCH:::
     def textCountSearch(self, command, source):
-        return self.textCount(command, False)
+        return self.textCount(command, config.addFavouriteToMultiRef)
 
-    # ISEARCH:::
-    def textCountISearch(self, command, source):
-        return self.textCount(command, True)
-
-    # called by SEARCH::: & ISEARCH:::
+    # called by SEARCH:::
     def textCount(self, command, interlinear):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
@@ -1195,49 +1168,27 @@ class TextCommandParser:
 
     # SHOWSEARCH:::
     def textSearchBasic(self, command, source):
-        return self.textSearch(command, source, "BASIC")
-
-    # SHOWISEARCH:::
-    def textISearchBasic(self, command, source):
-        return self.textSearch(command, source, "BASIC", True)
+        return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef)
 
     # ADVANCEDSEARCH:::
     def textSearchAdvanced(self, command, source):
-        return self.textSearch(command, source, "ADVANCED")
-
-    # ADVANCEDISEARCH:::
-    def textISearchAdvanced(self, command, source):
-        return self.textSearch(command, source, "ADVANCED", True)
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
     # ANDSEARCH:::
     def textAndSearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = ":::".join(commandList)
-        return self.textSearch(command, source, "ADVANCED")
-
-    # ANDISEARCH:::
-    def textAndISearch(self, command, source):
-        commandList = command.split(":::")
-        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = ":::".join(commandList)
-        return self.textSearch(command, source, "ADVANCED", True)
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
     # ORSEARCH:::
     def textOrSearch(self, command, source):
         commandList = command.split(":::")
         commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
         command = ":::".join(commandList)
-        return self.textSearch(command, source, "ADVANCED")
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # ORISEARCH:::
-    def textOrISearch(self, command, source):
-        commandList = command.split(":::")
-        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
-        command = ":::".join(commandList)
-        return self.textSearch(command, source, "ADVANCED", True)
-
-    # called by SHOWSEARCH::: & SHOWISEARCH::: & ADVANCEDSEARCH::: & ADVANCEDISEARCH:::
+    # called by SHOWSEARCH::: & ADVANCEDSEARCH:::
     def textSearch(self, command, source, mode, interlinear=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)

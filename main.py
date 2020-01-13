@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 7.9
+current_version = 8.0
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -127,11 +127,11 @@ if not hasattr(config, "studyV"):
     config.studyV = 16
 # Additional version displayed in search results
 # This version is displayed in parallel with the version being searched.
-if not hasattr(config, "iSearchVersion"):
-    config.iSearchVersion = "OHGB"
+if not hasattr(config, "favouriteVersion"):
+    config.favouriteVersion = "OHGB"
 # Options to display multiple verses using both main text version and "iSearchVersion" in parallel format: True / False
-if not hasattr(config, "extractParallel"):
-    config.extractParallel = False
+if not hasattr(config, "addFavouriteToMultiRef"):
+    config.addFavouriteToMultiRef = False
 # Last-opened commentary text and passage
 if not hasattr(config, "commentaryText"):
     config.commentaryText = "CBSC"
@@ -260,8 +260,8 @@ def saveDataOnExit():
         ("\nmainB = ", config.mainB),
         ("\nmainC = ", config.mainC),
         ("\nmainV = ", config.mainV),
-        ("\niSearchVersion = ", config.iSearchVersion),
-        ("\nextractParallel = ", config.extractParallel),
+        ("\nfavouriteVersion = ", config.favouriteVersion),
+        ("\naddFavouriteToMultiRef = ", config.addFavouriteToMultiRef),
         ("\nstudyText = ", config.studyText),
         ("\nstudyB = ", config.studyB),
         ("\nstudyC = ", config.studyC),

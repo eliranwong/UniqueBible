@@ -2,7 +2,7 @@ import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, re
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget)
+from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 # Uncomment the following line to enable text-to-speech feature.
 #from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
@@ -284,6 +284,7 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
         menu1.addSeparator()
         menu1.addAction(QAction("&Remote Control [On / Off]", self, triggered=self.manageRemoteControl))
+        menu1.addAction(QAction("&Set my Favourite Version", self, triggered=self.openAddVersionDialog))
         menu1.addSeparator()
         menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
         menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
@@ -467,7 +468,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip("Open Search Bible Menu".format(config.iSearchVersion))
+        searchBibleButton.setToolTip("Open Search Bible Menu")
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displaySearchBibleMenu)
@@ -910,7 +911,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Main View", self.displaySearchBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu".format(config.iSearchVersion), self.displaySearchBibleMenu)
+        self.firstToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu", self.displaySearchBibleMenu)
 
         self.firstToolBar.addSeparator()
 
@@ -954,7 +955,7 @@ class MainWindow(QMainWindow):
         self.studyBibleToolBar.addAction(QIcon(iconFile), "Search Last Opened Bible on Study View", self.displaySearchStudyBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu".format(config.iSearchVersion), self.displaySearchBibleMenu)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), "Open Search Bible Menu", self.displaySearchBibleMenu)
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle("Secondary Toolbar")
@@ -2393,6 +2394,16 @@ class MainWindow(QMainWindow):
         #self.morphDialog.setModal(True)
         self.morphDialog.show()
 
+    def openAddVersionDialog(self):
+        items = BiblesSqlite().getBibleList()
+        item, ok = QInputDialog.getItem(self, "Favourite version",
+                "Add as a parallel version for reading multiple References:", items, items.index(config.favouriteVersion), False)
+        if ok and item:
+            config.favouriteVersion = item
+            config.addFavouriteToMultiRef = True
+        else:
+            config.addFavouriteToMultiRef = False
+
 
 class CentralWidget(QWidget):
 
@@ -2493,8 +2504,6 @@ class WebEngineView(QWebEngineView):
         del parser
         self.searchText.setText("Search in {0}".format(text))
         self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
-        self.iSearchText.setText("Search with {1} in {0}".format(text, config.iSearchVersion))
-        self.iSearchTextInBook.setText("Search with {2} in {0} > {1}".format(text, book, config.iSearchVersion))
         self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
         self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
         self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
@@ -2547,16 +2556,6 @@ class WebEngineView(QWebEngineView):
         self.searchTextInBook.setText("Search in Current Book")
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
-
-        self.iSearchText = QAction(self)
-        self.iSearchText.setText("Search with {0}".format(config.iSearchVersion))
-        self.iSearchText.triggered.connect(self.iSearchSelectedText)
-        self.addAction(self.iSearchText)
-
-        self.iSearchTextInBook = QAction(self)
-        self.iSearchTextInBook.setText("Search with {0} in Current Book".format(config.iSearchVersion))
-        self.iSearchTextInBook.triggered.connect(self.iSearchSelectedTextInBook)
-        self.addAction(self.iSearchTextInBook)
 
         self.searchLexicon = QAction(self)
         self.searchLexicon.setText("Hebrew / Greek Lexicons")
@@ -2666,22 +2665,6 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
-            self.parent.parent.textCommandChanged(searchCommand, self.name)
-
-    def iSearchSelectedText(self):
-        selectedText = self.selectedText()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            searchCommand = "ISEARCH:::{0}:::{1}".format(self.getText(), selectedText)
-            self.parent.parent.textCommandChanged(searchCommand, self.name)
-
-    def iSearchSelectedTextInBook(self):
-        selectedText = self.selectedText()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            searchCommand = "ADVANCEDISEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchHebrewGreekLexicon(self):
