@@ -2436,6 +2436,7 @@ class MainWindow(QMainWindow):
             config.addFavouriteToMultiRef = True
         else:
             config.addFavouriteToMultiRef = False
+        self.reloadCurrentRecord()
 
 
 class CentralWidget(QWidget):
