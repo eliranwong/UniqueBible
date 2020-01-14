@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 8.0
+current_version = 8.1
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -27,6 +27,9 @@ if not hasattr(config, "myGoogleApiKey"):
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
 if not hasattr(config, "remoteControl"):
     config.remoteControl = False
+# Start full-screen on Linux os
+if not hasattr(config, "linuxStartFullScreen"):
+    config.linuxStartFullScreen = False
 # Options to use ibus as input method: True / False
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
@@ -202,14 +205,14 @@ def setupMainWindow():
     availableGeometry = app.desktop().availableGeometry(mainWindow)
     # Check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
-    if platform.system() == "Linux":
+    if platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         # Below is a workaround, loading the app in 4/5 of the screen size.
         mainWindow.resize(availableGeometry.width() * 4/5, availableGeometry.height() * 4/5)
     elif platform.system() == "Windows":
         mainWindow.showMaximized()
     else:
-        # macOS
+        # macOS or Linux set to fullscreen
         mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
@@ -229,6 +232,7 @@ def saveDataOnExit():
         ("version = ", config.version),
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
         ("\nremoteControl = ", config.remoteControl),
+        ("\nlinuxStartFullScreen = ", config.linuxStartFullScreen),
         ("\nibus = ", config.ibus),
         ("\nvirtualKeyboard = ", config.virtualKeyboard),
         ("\nmarvelData = ", config.marvelData),
