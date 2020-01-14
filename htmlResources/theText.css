@@ -1,7 +1,6 @@
 body {
 margin-left: 5px;
 margin-right: 20px;
-font-size: 130%;
 }
 /*
 select:active, select:hover {
@@ -27,10 +26,6 @@ font-family:'KoineGreek';
 }
 kgrk, gu, grk{
 font-size: 110%;
-}
-/* css for Chinese data */
-zh{
-font-family:'NSimSun';
 }
 /* css for Hebrew data */
 @font-face {
