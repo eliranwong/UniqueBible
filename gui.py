@@ -1,8 +1,8 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
-from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor
+from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox)
+from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox, QFontDialog)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 # Uncomment the following line to enable text-to-speech feature.
 #from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
@@ -113,6 +113,24 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    # set default font
+    def setDefaultFont(self):
+        ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
+        if ok:
+            #print(font.key())
+            config.font, fontSize, *_ = font.key().split(",")
+            config.fontSize = int(fontSize)
+            self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
+            self.reloadCurrentRecord()
+
+    # set Chinese font
+    def setChineseFont(self):
+        ok, font = QFontDialog.getFont(QFont(config.fontChinese, config.fontSize), self)
+        if ok:
+            #print(font.key())
+            config.fontChinese, *_ = font.key().split(",")
+            self.reloadCurrentRecord()
 
     # base folder for webViewEngine
     def setupBaseUrl(self):
@@ -284,6 +302,9 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction("&Left Half", self, triggered=self.halfScreenWidth))
         menu1.addSeparator()
         menu1.addAction(QAction("&Remote Control [On / Off]", self, triggered=self.manageRemoteControl))
+        menu1.addSeparator()
+        menu1.addAction(QAction("&Set Default Font and Size", self, triggered=self.setDefaultFont))
+        menu1.addAction(QAction("&Set Chinese Font", self, triggered=self.setChineseFont))
         menu1.addAction(QAction("&Set my Favourite Version", self, triggered=self.openAddVersionDialog))
         menu1.addSeparator()
         menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
@@ -610,6 +631,12 @@ class MainWindow(QMainWindow):
         fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
         fontMinusButton.clicked.connect(self.smallerFont)
         self.secondToolBar.addWidget(fontMinusButton)
+
+        self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
+        self.defaultFontButton.setToolTip("Set Default Font & Size")
+        self.defaultFontButton.setStyleSheet(textButtonStyle)
+        self.defaultFontButton.clicked.connect(self.setDefaultFont)
+        self.secondToolBar.addWidget(self.defaultFontButton)
 
         fontPlusButton = QPushButton()
         fontPlusButton.setToolTip("Larger Font Size")
@@ -1010,6 +1037,12 @@ class MainWindow(QMainWindow):
         iconFile = os.path.join("htmlResources", "fontMinus.png")
         self.secondToolBar.addAction(QIcon(iconFile), "Smaller Font Size", self.smallerFont)
 
+        self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
+        self.defaultFontButton.setToolTip("Set Default Font & Size")
+        self.defaultFontButton.setStyleSheet(textButtonStyle)
+        self.defaultFontButton.clicked.connect(self.setDefaultFont)
+        self.secondToolBar.addWidget(self.defaultFontButton)
+
         iconFile = os.path.join("htmlResources", "fontPlus.png")
         self.secondToolBar.addAction(QIcon(iconFile), "Larger Font Size", self.largerFont)
 
@@ -1404,7 +1437,7 @@ class MainWindow(QMainWindow):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}%; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese)
         return text
 
     def pasteFromClipboard(self):
@@ -2217,7 +2250,7 @@ class MainWindow(QMainWindow):
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
             elif view == "study":
                 activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}%; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese)
+            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese)
             views = {
                 "main": self.mainView,
                 "study": self.studyView,
@@ -2732,7 +2765,7 @@ class WebEngineView(QWebEngineView):
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}%; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese)
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
