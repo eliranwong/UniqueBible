@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 8.1
+current_version = 8.2
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -70,12 +70,15 @@ if not hasattr(config, "instantMode"):
 # Options to trigger instant information: True / False
 if not hasattr(config, "instantInformationEnabled"):
     config.instantInformationEnabled = True
-# Default font
-if not hasattr(config, "font"):
-    config.font = ""
 # Default font size of content in main window and workspace
 if not hasattr(config, "fontSize"):
     config.fontSize = 120
+# Default font
+if not hasattr(config, "font"):
+    config.font = ""
+# Default Chinese font
+if not hasattr(config, "fontChinese"):
+    config.fontChinese = "NSimSun"
 # Default font size of content in note editor
 if not hasattr(config, "noteEditorFontSize"):
     config.noteEditorFontSize = 14
@@ -246,8 +249,9 @@ def saveDataOnExit():
         ("\nparallelMode = ", config.parallelMode),
         ("\ninstantMode = ", config.instantMode),
         ("\ninstantInformationEnabled = ", config.instantInformationEnabled),
-        ("\nfont = ", config.font),
         ("\nfontSize = ", config.fontSize),
+        ("\nfont = ", config.font),
+        ("\nfontChinese = ", config.fontChinese),
         ("\nnoteEditorFontSize = ", config.noteEditorFontSize),
         ("\nreadFormattedBibles = ", config.readFormattedBibles),
         ("\naddTitleToPlainChapter = ", config.addTitleToPlainChapter),
