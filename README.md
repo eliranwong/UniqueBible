@@ -46,7 +46,9 @@ We also recommend <a href='https://www.anaconda.com/'>Anaconda python distributi
 > pip3 install gdown
 <br>(gdown is required for downloading database files from google drive.)
 
-> pip3 install diff-match-patch
+> pip3 install diff-match-patch<br>
+or [on some Linux distro]:<br>
+> sudo apt install python3-diff-match-patch
 <br>(it is an essential component for advanced verse comparison <b>from version 5.7 onwards</b>.)
 
 If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies [<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/mac.md">Click here for an example of installation using Anaconda</a>]:
