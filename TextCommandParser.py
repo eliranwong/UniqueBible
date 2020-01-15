@@ -13,6 +13,9 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
+            # [KEYWORD] 
+            # Feature - Run os command
+            "cmd": self.osCommand,
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
             # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -622,6 +625,11 @@ class TextCommandParser:
             chapter = biblesSqlite.readPlainChapter(text, verse)
             del biblesSqlite
         return chapter
+
+    # [KEYWORD] CMD
+    # run os command
+    def osCommand(self, command, source):
+        os.system(command)
 
     # functions about bible
 
