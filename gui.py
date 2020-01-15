@@ -114,24 +114,6 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
-    # set default font
-    def setDefaultFont(self):
-        ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
-        if ok:
-            #print(font.key())
-            config.font, fontSize, *_ = font.key().split(",")
-            config.fontSize = int(fontSize)
-            self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
-            self.reloadCurrentRecord()
-
-    # set Chinese font
-    def setChineseFont(self):
-        ok, font = QFontDialog.getFont(QFont(config.fontChinese, config.fontSize), self)
-        if ok:
-            #print(font.key())
-            config.fontChinese, *_ = font.key().split(",")
-            self.reloadCurrentRecord()
-
     # base folder for webViewEngine
     def setupBaseUrl(self):
         # Variable "baseUrl" is shared by multiple classes
@@ -305,6 +287,7 @@ class MainWindow(QMainWindow):
         menu1.addSeparator()
         menu1.addAction(QAction("&Set Default Font and Size", self, triggered=self.setDefaultFont))
         menu1.addAction(QAction("&Set Chinese Font", self, triggered=self.setChineseFont))
+        menu1.addAction(QAction("&Set Bible Abbreviations", self, triggered=self.setBibleAbbreviations))
         menu1.addAction(QAction("&Set my Favourite Version", self, triggered=self.openAddVersionDialog))
         menu1.addSeparator()
         menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
@@ -1983,12 +1966,14 @@ class MainWindow(QMainWindow):
 
     # Actions - change font size
     def smallerFont(self):
-        if not config.fontSize == 10:
-            config.fontSize = config.fontSize - 5
+        if not config.fontSize == 5:
+            config.fontSize = config.fontSize - 1
+            self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
             self.reloadCurrentRecord()
 
     def largerFont(self):
-        config.fontSize = config.fontSize + 5
+        config.fontSize = config.fontSize + 1
+        self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
         self.reloadCurrentRecord()
 
     def reloadCurrentRecord(self):
@@ -2422,11 +2407,13 @@ class MainWindow(QMainWindow):
         else:
             self.studyView.hide()
 
+    # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
     def openMorphDialog(self, items):
         self.morphDialog = MorphDialog(self, items)
         #self.morphDialog.setModal(True)
         self.morphDialog.show()
 
+    # Set Favourite Bible Version
     def openAddVersionDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, "Favourite version",
@@ -2437,6 +2424,33 @@ class MainWindow(QMainWindow):
         else:
             config.addFavouriteToMultiRef = False
         self.reloadCurrentRecord()
+
+    # Set bible book abbreviations
+    def setBibleAbbreviations(self):
+        items = ("ENG", "TC", "SC")
+        item, ok = QInputDialog.getItem(self, "Language",
+                "Abbreviations of Bible Books:", items, items.index(config.standardAbbreviation), False)
+        if ok and item:
+            config.standardAbbreviation = item
+            self.reloadCurrentRecord()
+
+    # set default font
+    def setDefaultFont(self):
+        ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
+        if ok:
+            #print(font.key())
+            config.font, fontSize, *_ = font.key().split(",")
+            config.fontSize = int(fontSize)
+            self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
+            self.reloadCurrentRecord()
+
+    # set Chinese font
+    def setChineseFont(self):
+        ok, font = QFontDialog.getFont(QFont(config.fontChinese, config.fontSize), self)
+        if ok:
+            #print(font.key())
+            config.fontChinese, *_ = font.key().split(",")
+            self.reloadCurrentRecord()
 
 
 class CentralWidget(QWidget):
@@ -2591,6 +2605,11 @@ class WebEngineView(QWebEngineView):
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
 
+        self.searchTextOriginal = QAction(self)
+        self.searchTextOriginal.setText("Search Hebrew / Greek Bible")
+        self.searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
+        self.addAction(self.searchTextOriginal)
+
         self.searchLexicon = QAction(self)
         self.searchLexicon.setText("Hebrew / Greek Lexicons")
         self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
@@ -2699,6 +2718,14 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchSelectedTextOriginal(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCH:::{0}:::{1}".format("MOB", selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchHebrewGreekLexicon(self):
