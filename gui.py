@@ -288,7 +288,7 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction("&Set Default Font and Size", self, triggered=self.setDefaultFont))
         menu1.addAction(QAction("&Set Chinese Font", self, triggered=self.setChineseFont))
         menu1.addAction(QAction("&Set Bible Abbreviations", self, triggered=self.setBibleAbbreviations))
-        menu1.addAction(QAction("&Set my Favourite Version", self, triggered=self.openAddVersionDialog))
+        menu1.addAction(QAction("&Set my Favourite Bible", self, triggered=self.openAddVersionDialog))
         menu1.addSeparator()
         menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
         menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
@@ -2416,10 +2416,10 @@ class MainWindow(QMainWindow):
     # Set Favourite Bible Version
     def openAddVersionDialog(self):
         items = BiblesSqlite().getBibleList()
-        item, ok = QInputDialog.getItem(self, "Favourite version",
-                "Add as a parallel version for reading multiple References:", items, items.index(config.favouriteVersion), False)
+        item, ok = QInputDialog.getItem(self, "Favourite Bible",
+                "Add as a parallel version for reading multiple References:", items, items.index(config.favouriteBible), False)
         if ok and item:
-            config.favouriteVersion = item
+            config.favouriteBible = item
             config.addFavouriteToMultiRef = True
         else:
             config.addFavouriteToMultiRef = False
@@ -2605,10 +2605,15 @@ class WebEngineView(QWebEngineView):
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
 
-        self.searchTextOriginal = QAction(self)
-        self.searchTextOriginal.setText("Search Hebrew / Greek Bible")
-        self.searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
-        self.addAction(self.searchTextOriginal)
+        searchFavouriteBible = QAction(self)
+        searchFavouriteBible.setText("Search my Favourite Bible")
+        searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
+        self.addAction(searchFavouriteBible)
+
+        searchTextOriginal = QAction(self)
+        searchTextOriginal.setText("Search Hebrew / Greek Bible")
+        searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
+        self.addAction(searchTextOriginal)
 
         self.searchLexicon = QAction(self)
         self.searchLexicon.setText("Hebrew / Greek Lexicons")
@@ -2718,6 +2723,14 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchSelectedFavouriteBible(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCH:::{0}:::{1}".format(config.favouriteBible, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedTextOriginal(self):

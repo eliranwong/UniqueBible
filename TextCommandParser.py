@@ -13,9 +13,6 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
-            # [KEYWORD] 
-            # Feature - Run os command
-            "cmd": self.osCommand,
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
             # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -250,6 +247,14 @@ class TextCommandParser:
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith
             "searchversenote": self.textSearchVerseNote,
+            # [KEYWORD] 
+            # Feature - Run an os command
+            # Warning! Make sure you know what you are running before you use this keyword.  The running command may affect data outside UniqueBible folder.
+            # e.g. cmd:::firefox&
+            # e.g. cmd:::mkdir -p myNotes; cd myNotes; gedit test.txt&
+            # e.g. cmd:::rm -rf myNotes&
+            # e.g. cmd:::google-chrome https://uniquebible.app&
+            "cmd": self.osCommand,
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -1196,7 +1201,7 @@ class TextCommandParser:
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # called by SHOWSEARCH::: & ADVANCEDSEARCH:::
+    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH:::
     def textSearch(self, command, source, mode, interlinear=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)

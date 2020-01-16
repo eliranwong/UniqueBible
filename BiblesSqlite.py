@@ -214,18 +214,40 @@ class BiblesSqlite:
                     menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Show Difference(s)</button>"
         else:
             # menu - Search a bible
-            menu += "<hr><b>Search Bible</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(config.mainText)
+            if source == "study":
+                defaultSearchText = config.studyText
+            else:
+                defaultSearchText = config.mainText
+            menu += "<hr><b>Search Bible</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(defaultSearchText)
             for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
-                menu += "<button type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, config.mainText)
+                menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
             menu += "<hr><b>Bible Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
             for version in versions:
-                menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
+                if version == defaultSearchText or version == config.favouriteBible:
+                    menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
+                else:
+                    menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br>"
             for searchMode in ("SEARCH",):
-                menu += "<button type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
+                menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
+            # Perform search when "ENTER" key is pressed
+            menu += self.inputEntered("bibleSearch", "SEARCH")
+            menu += self.inputEntered("multiBibleSearch", "multiSEARCH")
         return menu
+
+    def inputEntered(self, inputID, buttonID):
+        return """
+<script>
+var input = document.getElementById('{2}');
+input.addEventListener('keyup', function(event) {0}
+  if (event.keyCode === 13) {0}
+   event.preventDefault();
+   document.getElementById('{3}').click();
+  {1}
+{1});
+</script>""".format("{", "}", inputID, buttonID)
 
     def formTextTag(self, text=config.mainText):
         return "<ref onclick='document.title=\"_menu:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
@@ -507,14 +529,16 @@ class BiblesSqlite:
             else:
                 divTag = "<div>"
             formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
-            if interlinear:
-                if b < 40 and config.favouriteVersion in config.rtlTexts:
+            if interlinear and not config.favouriteBible == text:
+                if b < 40 and config.favouriteBible in config.rtlTexts:
                     divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                 else:
                     divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
-                formatedText += "{0}{1}</div>".format(divTag, self.readTextVerse(config.favouriteVersion, b, c, v)[3])
+                formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, config.favouriteBible), config.favouriteBible, self.readTextVerse(config.favouriteBible, b, c, v)[3])
+        # add highlighting to search string with tags <z>...</z>
         if mode == "BASIC" and not searchString == "z":
-            formatedText = re.sub("("+searchString+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
+            for searchWord in searchString.split("%"):
+                formatedText = re.sub("("+searchWord+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
         elif mode == "ADVANCED":
             searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
             searchWords = [m.split("%") for m in searchWords]
@@ -538,17 +562,24 @@ class BiblesSqlite:
 
     def readMultipleVerses(self, inputText, verseList, displayRef=True):
         verses = ""
-        if config.addFavouriteToMultiRef and (inputText != config.favouriteVersion):
-            textList = (inputText, config.favouriteVersion)
+        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible:
+            textList = [inputText, config.favouriteBible]
         else:
-            textList = (inputText,)
+            textList = [inputText]
         for verse in verseList:
-            for text in textList:
+            for counter, text in enumerate(textList):
                 b = verse[0]
-                if b < 40 and text in config.rtlTexts:
-                    divTag = "<div style='direction: rtl;'>"
+                # format opening tag
+                if counter == 1 and text == config.favouriteBible:
+                    extraStyle = " border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;"
                 else:
-                    divTag = "<div>"
+                    extraStyle = ""
+                if b < 40 and text in config.rtlTexts:
+                    divTag = "<div style='direction: rtl;{0}'>".format(extraStyle)
+                else:
+                    divTag = "<div style='{0}'>".format(extraStyle)
+                # format verse text
+                verseText = ""
                 if len(verse) == 3:
                     b, c, v = verse
                     verseReference = self.bcvToVerseReference(b, c, v)
@@ -557,10 +588,12 @@ class BiblesSqlite:
                 elif len(verse) == 4:
                     b, c, vs, ve = verse
                     verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
-                    verseText = ""
                     v = vs
                     while (v <= ve):
-                        verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                        if config.showVerseNumbersInRange:
+                            verseText += "{0}<vid>{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip())
+                        else:
+                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
                         verseText += " "
                         v += 1
                     v = vs
@@ -570,10 +603,12 @@ class BiblesSqlite:
                         pass
                     elif (cs == ce):
                         verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
-                        verseText = ""
                         v = vs
                         while (v <= ve):
-                            verseText += self.readTextVerse(text, b, cs, v)[3].strip()
+                            if config.showVerseNumbersInRange:
+                                verseText += "{0}<vid>{1}</vid></ref> {2}".format(self.formVerseTag(b, cs, v, text), v, self.readTextVerse(text, b, cs, v)[3].strip())
+                            else:
+                                verseText += self.readTextVerse(text, b, cs, v)[3].strip()
                             verseText += " "
                             v += 1
                         c = cs
@@ -584,28 +619,37 @@ class BiblesSqlite:
                         c = cs
                         v = vs
                         while (self.readTextVerse(text, b, c, v)[3].strip()):
-                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                            if config.showVerseNumbersInRange:
+                                verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
+                            else:
+                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
                             verseText += " "
                             v += 1
                         c += 1
                         while (c < ce):
                             v = 1
                             while (self.readTextVerse(text, b, c, v)[3].strip()):
-                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                                if config.showVerseNumbersInRange:
+                                    verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
+                                else:
+                                    verseText += self.readTextVerse(text, b, c, v)[3].strip()
                                 verseText += " "
                                 v += 1
                             c += 1
                         v = 1
                         while (v <= ve):
-                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
+                            if config.showVerseNumbersInRange:
+                                verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
+                            else:
+                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
                             verseText += " "
                             v += 1
                         c = cs
                         v = vs
-                if displayRef:
-                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
-                else:
+                if not displayRef or (counter == 1 and text == config.favouriteBible):
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
+                else:
+                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
         return verses
 
     def readPlainChapter(self, text, verse):

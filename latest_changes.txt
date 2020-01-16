@@ -1,0 +1,12 @@
+Latest changes in version 8.6:
+
+* Fixed default bible version on bible search menu displayed on "Study View".
+* Improved display of favourite bible version for reading multiple verses.
+* Added key detection with search input field on bible search menu.  Bible search is now performed when key "ENTER" is pressed in search field of bible search menu.
+* Added version link to favourite bible verses in search results.
+* Added option "Search my Favourite Bible" to right-click context menu.
+* Added default selection of last opened bible and favourite bible for search of multiple bibles on search menu.
+* Removed duplication of verses in search result when fvaourite bible is searched.
+* Improved highlighting of search result when search string contains "%"
+* Added an option "showVerseNumbersInRange" in config.py, to configure showing / hiding individual verse numbers when a range of verses is displayed.
+* Now display individual verse numbers by default when a range of verses is displayed.  e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3".

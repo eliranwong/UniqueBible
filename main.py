@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 8.5
+current_version = 8.6
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -49,6 +49,10 @@ if not hasattr(config, "parserStandarisation"):
 # Options of language of book abbreviations: ENG / TC / SC
 if not hasattr(config, "standardAbbreviation"):
     config.standardAbbreviation = "ENG"
+# Option to display verse number in a range of verses: True / False
+# e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3"
+if not hasattr(config, "showVerseNumbersInRange"):
+    config.showVerseNumbersInRange = True
 # Options to use landscape mode: True / False
 if not hasattr(config, "landscapeMode"):
     config.landscapeMode = True
@@ -132,9 +136,9 @@ if not hasattr(config, "studyC"):
 if not hasattr(config, "studyV"):
     config.studyV = 16
 # Set your favourite version here
-if not hasattr(config, "favouriteVersion"):
-    config.favouriteVersion = "OHGB"
-# Options to display "favouriteVersion" together with the main version for reading multiple references: True / False
+if not hasattr(config, "favouriteBible"):
+    config.favouriteBible = "OHGBi"
+# Options to display "favouriteBible" together with the main version for reading multiple references: True / False
 if not hasattr(config, "addFavouriteToMultiRef"):
     config.addFavouriteToMultiRef = False
 # Last-opened commentary text and passage
@@ -242,6 +246,7 @@ def saveDataOnExit():
         ("\nnumberOfTab = ", config.numberOfTab),
         ("\nparserStandarisation = ", config.parserStandarisation),
         ("\nstandardAbbreviation = ", config.standardAbbreviation),
+        ("\nshowVerseNumbersInRange = ", config.showVerseNumbersInRange),
         ("\nlandscapeMode = ", config.landscapeMode),
         ("\nnoToolBar = ", config.noToolBar),
         ("\nsingleToolBar = ", config.singleToolBar),
@@ -267,7 +272,7 @@ def saveDataOnExit():
         ("\nmainB = ", config.mainB),
         ("\nmainC = ", config.mainC),
         ("\nmainV = ", config.mainV),
-        ("\nfavouriteVersion = ", config.favouriteVersion),
+        ("\nfavouriteBible = ", config.favouriteBible),
         ("\naddFavouriteToMultiRef = ", config.addFavouriteToMultiRef),
         ("\nstudyText = ", config.studyText),
         ("\nstudyB = ", config.studyB),
