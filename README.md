@@ -34,6 +34,8 @@ We also recommend <a href='https://www.anaconda.com/'>Anaconda python distributi
 
 # Install Dependencies
 
+<b>[ESSENTIAL]</b>
+
 > pip3 install PySide2
 <br>(PySide2 is required for graphical user interface, used by UniqueBible.app.)
 
@@ -46,10 +48,21 @@ We also recommend <a href='https://www.anaconda.com/'>Anaconda python distributi
 > pip3 install gdown
 <br>(gdown is required for downloading database files from google drive.)
 
+<b>[OPTIONAL]</b>
+
 > pip3 install diff-match-patch<br>
 or [on some Linux distro]:<br>
 > sudo apt install python3-diff-match-patch
-<br>(it is an essential component for advanced verse comparison <b>from version 5.7 onwards</b>.)
+<br>(it is an essential component for advanced verse comparison developed <b>from version 5.7 onwards</b>.)
+
+> pip3 install googletrans<br>
+(Install it to enable google-translate of any texts displayed on UniqueBible.app.)
+
+> pip3 install OpenCC<br>
+(Install it to enable conversion of Chinese texts in command field between traditional and simplified characters.)
+
+> pip3 install pypinyin<br>
+(Install it to enable translating Chinese characters into Mandarin pinyin.)
 
 If you use use <a href='https://www.anaconda.com/'>Anaconda python distribution</a>, use the following commands instead to install dependencies [<a href="https://github.com/eliranwong/UniqueBible/blob/master/installation/mac.md">Click here for an example of installation using Anaconda</a>]:
 
@@ -57,7 +70,8 @@ conda install -c conda-forge pyside2<br>
 conda install -c vladsaveliev gdown<br>
 conda install -c conda-forge pypdf2<br>
 conda install -c conda-forge python-docx<br>
-conda install -c conda-forge diff-match-patch
+conda install -c conda-forge diff-match-patch<br>
+conda install -c conda-forge googletrans<br>
 
 # Instructions on Installation
 
