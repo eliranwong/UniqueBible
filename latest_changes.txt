@@ -1,6 +1,15 @@
-Latest changes in version 8.7:
+Latest changes in version 8.8:
 
 Optional features added:
-* text-to-speech
-* conversion between traditional Chinese and simplified Chinese
-* translating Chinese characters into pinyin
+* added "myLanuage" option to config.py to work with Google Translate feature
+* added google-translate feature to right-click context menu
+* support translation into English, Traditional Chinese, Simplified Chinese by default
+* support translation into a user-defined language, defined via "myLanguage" in config.py
+# Check standard language code from https://translate.google.com/
+# e.g. 'de' for German, entry should be:
+#config.myLanguage = "de"
+# e.g. 'ja' for Japanese, entry should be:
+#config.myLanguage = "ja"
+# e.g. 'ru' for Russian, entry should be:
+#config.myLanguage = "ru"
+

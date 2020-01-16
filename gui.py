@@ -13,14 +13,14 @@ from ThirdParty import Converter
 from shutil import copyfile
 from distutils.dir_util import copy_tree
 # Optional Features
-# Text-to-Speech feature
+# [Optional] Text-to-Speech feature
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
     ttsSupport = True
 except:
     ttsSupport = False
     print("Text-to-speech feature is not supported on this operating system.")
-# Chinese feature - opencc
+# [Optional] Chinese feature - opencc
 # It converts conversion between Traditional Chinese and Simplified Chinese.
 # To enable functions working with "opencc", install python package "opencc" first, e.g. pip3 install OpenCC.
 try:
@@ -29,7 +29,7 @@ try:
 except:
     openccSupport = False
     print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
-# Chinese feature - pypinyin
+# [Optional] Chinese feature - pypinyin
 # It translates Chinese characters into pinyin.
 # To enable functions working with "pypinyin", install python package "pypinyin" first, e.g. pip3 install pypinyin.
 try:
@@ -38,7 +38,13 @@ try:
 except:
     pinyinSupport = False
     print("Chinese feature 'pypinyin' is disabled.  To enable it, install python package 'pypinyin' first, by running 'pip3 install pypinyin'.")
-
+# [Optional] Google-translate
+try:
+    from googletrans import Translator
+    googletransSupport = True
+except:
+    googletransSupport = False
+    print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first, by running 'pip3 install googletrans'.")
 
 class MainWindow(QMainWindow):
 
@@ -2602,11 +2608,35 @@ class WebEngineView(QWebEngineView):
             tts.triggered.connect(self.textToSpeech)
             self.addAction(tts)
 
+        # Google Translate
+        if googletransSupport:
+            # Translate into English
+            translateText = QAction(self)
+            translateText.setText("Translate into English")
+            translateText.triggered.connect(self.translateEnglishSelectedText)
+            self.addAction(translateText)
+            # Translate into Traditional Chinese
+            translateText = QAction(self)
+            translateText.setText("Translate into 繁體中文")
+            translateText.triggered.connect(self.translateTraChineseSelectedText)
+            self.addAction(translateText)
+            # Translate into Simplified Chinese
+            translateText = QAction(self)
+            translateText.setText("Translate into 简体中文")
+            translateText.triggered.connect(self.translateSimChineseSelectedText)
+            self.addAction(translateText)
+            # Translate into User Customise Language
+            if config.myLanguage:
+                translateText = QAction(self)
+                translateText.setText("Translate into {0}".format(config.myLanguage))
+                translateText.triggered.connect(self.translateSimChineseSelectedText)
+                self.addAction(translateText)
+
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if pinyinSupport:
             pinyinText = QAction(self)
-            pinyinText.setText("Chinese Pinyin")
+            pinyinText.setText("Translate into 汉语拼音")
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
@@ -2695,6 +2725,31 @@ class WebEngineView(QWebEngineView):
         else:
             self.page().triggerAction(self.page().Copy)
 
+    # Translate selected words into English
+    def translateEnglishSelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            translatedText = Translator().translate(self.selectedText()).text
+            self.page().runJavaScript("alert('{0}')".format(translatedText))
+
+    # Translate selected words into Traditional Chinese
+    def translateTraChineseSelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            translatedText = Translator().translate(self.selectedText(), dest="zh-TW").text
+            self.page().runJavaScript("alert('{0}')".format(translatedText))
+
+    # Translate selected words into Simplified Chinese
+    def translateSimChineseSelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            translatedText = Translator().translate(self.selectedText(), dest="zh-CN").text
+            self.page().runJavaScript("alert('{0}')".format(translatedText))
+
+    # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):
         if not self.selectedText():
             self.messageNoSelection()
