@@ -2629,7 +2629,7 @@ class WebEngineView(QWebEngineView):
             if config.myLanguage:
                 translateText = QAction(self)
                 translateText.setText("Translate into {0}".format(config.myLanguage))
-                translateText.triggered.connect(self.translateSimChineseSelectedText)
+                translateText.triggered.connect(self.translateUserLanguageSelectedText)
                 self.addAction(translateText)
 
         # CHINESE TOOL - pinyin
@@ -2747,6 +2747,14 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             translatedText = Translator().translate(self.selectedText(), dest="zh-CN").text
+            self.page().runJavaScript("alert('{0}')".format(translatedText))
+
+    # Translate selected words into user-defined language
+    def translateUserLanguageSelectedText(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            translatedText = Translator().translate(self.selectedText(), dest=config.myLanguage).text
             self.page().runJavaScript("alert('{0}')".format(translatedText))
 
     # Translate Chinese characters into pinyin
