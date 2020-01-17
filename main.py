@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 9.2
+current_version = 9.3
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -57,6 +57,15 @@ if not hasattr(config, "standardAbbreviation"):
 # Use gui "Set my Language" dialog, from menu bar, to set "userLanguage".
 if not hasattr(config, "userLanguage"):
     config.userLanguage = ""
+# Option to show Chinese options for google translate on right-click context menu: True / False
+if not hasattr(config, "showGoogleTranslateChineseOptions"):
+    config.showGoogleTranslateChineseOptions = False
+# Option to copy automatically to clipboard the result of accessing Google Translate: True / False
+if not hasattr(config, "autoCopyGoogleTranslateOutput"):
+    config.autoCopyGoogleTranslateOutput = True
+# Option to copy automatically to clipboard the output of Chinese pinyin conversion: True / False
+if not hasattr(config, "autoCopyChinesePinyinOutput"):
+    config.autoCopyChinesePinyinOutput = True
 # Option to display verse number in a range of verses: True / False
 # e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3"
 if not hasattr(config, "showVerseNumbersInRange"):
@@ -256,6 +265,9 @@ def saveDataOnExit():
         ("\nparserStandarisation = ", config.parserStandarisation),
         ("\nstandardAbbreviation = ", config.standardAbbreviation),
         ("\nuserLanguage = ", config.userLanguage),
+        ("\nshowGoogleTranslateChineseOptions = ", config.showGoogleTranslateChineseOptions),
+        ("\nautoCopyGoogleTranslateOutput = ", config.autoCopyGoogleTranslateOutput),
+        ("\nautoCopyChinesePinyinOutput = ", config.autoCopyChinesePinyinOutput),
         ("\nshowVerseNumbersInRange = ", config.showVerseNumbersInRange),
         ("\nlandscapeMode = ", config.landscapeMode),
         ("\nnoToolBar = ", config.noToolBar),

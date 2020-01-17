@@ -48,7 +48,7 @@ try:
     googletransSupport = True
 except:
     googletransSupport = False
-    print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first, by running 'pip3 install googletrans'.")
+    print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
 
 class MainWindow(QMainWindow):
 
@@ -239,7 +239,7 @@ class MainWindow(QMainWindow):
             abb = filename[:-6]
             if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
                 if self.isNewerAvailable(filename):
-                    self.mainPage.runJavaScript('alert("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.")'.format("'", filename))
+                    self.mainPage.displayMessage("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -262,7 +262,7 @@ class MainWindow(QMainWindow):
     def updateUniqueBibleApp(self):
         file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
         request = requests.get(file)
-        alertFailedUpdate = 'alert("Update failed.  You may check your internet connection and try again.  Alternatively, you may download our lastest files manually from https://github.com/eliranwong/UniqueBible.")'
+        alertFailedUpdate = "Failed to update.  You may check your internet connection and try again.  Alternatively, you may download our lastest files manually from https://github.com/eliranwong/UniqueBible."
         if request.status_code == 200:
             filename = file.split("/")[-1]
             with open(filename, "wb") as content:
@@ -277,11 +277,11 @@ class MainWindow(QMainWindow):
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
-                self.mainPage.runJavaScript('alert("UniqueBible.app updated. You need a restart to apply the changes.")')
+                self.mainPage.displayMessage("UniqueBible.app updated. A restart is required to apply the changes.")
             else:
-                self.mainPage.runJavaScript(alertFailedUpdate)
+                self.mainPage.displayMessage(alertFailedUpdate)
         else:
-            self.mainPage.runJavaScript(alertFailedUpdate)
+            self.mainPage.displayMessage(alertFailedUpdate)
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
@@ -293,11 +293,11 @@ class MainWindow(QMainWindow):
         if filename.endswith(".bible"):
             abb = filename[:-6]
             config.installHistory[filename] = self.bibleInfo[abb][1]
-        self.mainPage.runJavaScript('alert("{0}{1}{0} was downloaded and installed successfully.")'.format("'", filename))
+        self.mainPage.displayMessage("{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
 
     def moduleInstalledFailed(self, filename):
         self.downloader.close()
-        self.mainPage.runJavaScript('alert("Failed to download {0}{1}{0}. Please check your internet connection.")'.format("'", filename))
+        self.mainPage.displayMessage("Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
 
     # setup interface
     def create_menu(self):
@@ -1261,12 +1261,12 @@ class MainWindow(QMainWindow):
 
     def installAllMarvelCommentaries(self, commentaries):
         toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        self.mainPage.runJavaScript('alert("It takes time to install all Marvel.bible commentaries. You will receive another message when files are downloaded.")')
+        self.mainPage.displayMessage("It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
         for commentary in toBeInstalled:
             databaseInfo = commentaries[commentary]
             downloader = Downloader(self, databaseInfo)
             downloader.downloadFile(False)
-        self.mainPage.runJavaScript('alert("All Marvel.bible commentaries installed.")')
+        self.mainPage.displayMessage("All Marvel.bible commentaries installed.")
 
     def installMarvelDatasets(self):
         datasets = {
@@ -1595,9 +1595,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
-                self.mainPage.runJavaScript("alert('Multiple BibleBento Plus lexicons imported.')")
+                self.mainPage.displayMessage("Multiple BibleBento Plus lexicons imported.")
             else:
-                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
+                self.mainPage.displayMessage("No supported module is found in the selected folder.")
 
     def importBBPlusDictionaryInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -1606,9 +1606,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
-                self.mainPage.runJavaScript("alert('Multiple BibleBento Plus dictionaries imported.')")
+                self.mainPage.displayMessage("Multiple BibleBento Plus dictionaries imported.")
             else:
-                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
+                self.mainPage.displayMessage("No supported module is found in the selected folder.")
 
     # import 3rd party modules
     def importSettingsDialog(self):
@@ -1646,9 +1646,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
-                self.mainPage.runJavaScript("alert('Multiple 3rd party modules imported.')")
+                self.mainPage.displayMessage("Multiple third party modules are imported.")
             else:
-                self.mainPage.runJavaScript("alert('No supported module is found in the selected folder.')")
+                self.mainPage.displayMessage("No supported module is found in the selected folder.")
 
     def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
@@ -1688,11 +1688,11 @@ class MainWindow(QMainWindow):
         self.completeImport()
 
     def completeImport(self):
-        self.mainPage.runJavaScript("alert('3rd Party Module Installed.')")
+        self.mainPage.displayMessage("A third party module is installed.")
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.mainPage.runJavaScript("alert('Finished. Tagged file(s) is/are prefixed with \"tagged_\".')")
+        self.mainPage.displayMessage("Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
 
     def tagFile(self):
         options = QFileDialog.Options()
@@ -2254,7 +2254,7 @@ class MainWindow(QMainWindow):
         view, content = self.textCommandParser.parser(textCommand, source)
 
         if content == "INVALID_COMMAND_ENTERED":
-            self.mainPage.runJavaScript("alert('Invalid command not processed.')")
+            self.mainPage.displayMessage("Entered command is invalid!")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
@@ -2328,7 +2328,7 @@ class MainWindow(QMainWindow):
             config.toolBarIconFullSize = False
         else:
             config.toolBarIconFullSize = True
-        self.mainPage.runJavaScript('alert("Icon size is changed. You need to restart the app to apply the changes.")')
+        self.mainPage.displayMessage("Icon size is changed. You need to restart the app to apply the changes.")
 
     # switch between landscape / portrait mode
     def switchLandscapeMode(self):
@@ -2451,9 +2451,11 @@ class MainWindow(QMainWindow):
             userLanguage = "English"
         items = [language for language in languages.codes.keys()]
         item, ok = QInputDialog.getItem(self, "Set my Language",
-                "Select for google translate:", items, items.index(userLanguage), False)
+                "Select:", items, items.index(userLanguage), False)
         if ok and item:
             config.userLanguage = item
+            if not googletransSupport:
+                self.mainPage.displayMessage("You need to install python package 'googletrans' before you can use Google Translate features on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
 
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
@@ -2587,6 +2589,10 @@ class WebEngineView(QWebEngineView):
         self.selectionChanged.connect(self.updateContextMenu)
         self.addMenuActions()
 
+    def displayMessage(self, message):
+        message = message.replace("'", "\\'")
+        self.page().runJavaScript("alert('{0}')".format(message))
+
     def updateContextMenu(self):
         text = self.getText()
         parser = BibleVerseParser(config.parserStandarisation)
@@ -2633,18 +2639,19 @@ class WebEngineView(QWebEngineView):
             # Translate into English
             translateText = QAction(self)
             translateText.setText("Translate into English")
-            translateText.triggered.connect(self.translateEnglishSelectedText)
+            translateText.triggered.connect(self.selectedTextToEnglish)
             self.addAction(translateText)
-#            # Translate into Traditional Chinese
-#            translateText = QAction(self)
-#            translateText.setText("Translate into 繁體中文")
-#            translateText.triggered.connect(self.translateTraChineseSelectedText)
-#            self.addAction(translateText)
-#            # Translate into Simplified Chinese
-#            translateText = QAction(self)
-#            translateText.setText("Translate into 简体中文")
-#            translateText.triggered.connect(self.translateSimChineseSelectedText)
-#            self.addAction(translateText)
+            if config.showGoogleTranslateChineseOptions:
+                # Translate into Traditional Chinese
+                translateText = QAction(self)
+                translateText.setText("翻譯成繁體中文")
+                translateText.triggered.connect(self.selectedTextToTraditionalChinese)
+                self.addAction(translateText)
+                # Translate into Simplified Chinese
+                translateText = QAction(self)
+                translateText.setText("翻译成简体中文")
+                translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
+                self.addAction(translateText)
             # Translate into User-defined Language
             if config.userLanguage:
                 userLanguage = config.userLanguage
@@ -2654,13 +2661,12 @@ class WebEngineView(QWebEngineView):
             translateText.setText("Translate into {0}".format(userLanguage))
             translateText.triggered.connect(self.checkUserLanguage)
             self.addAction(translateText)
-            
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if pinyinSupport:
             pinyinText = QAction(self)
-            pinyinText.setText("Translate into Chinese Pinyin")
+            pinyinText.setText("翻译成汉语拼音")
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
@@ -2735,13 +2741,13 @@ class WebEngineView(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
+        self.displayMessage("You have not selected word(s) for this action!")
 
     def messageNoTtsEngine(self):
-        self.page().runJavaScript("alert('No text-to-speech engine is found in your device!')")
+        self.displayMessage("No text-to-speech engine is found in your device!")
 
     def messageNoTtsVoice(self):
-        self.page().runJavaScript("alert('No text-to-speech voice is found in your device!')")
+        self.displayMessage("No text-to-speech voice is found in your device!")
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -2750,43 +2756,50 @@ class WebEngineView(QWebEngineView):
             self.page().triggerAction(self.page().Copy)
 
     # Translate selected words into English
-    def translateEnglishSelectedText(self):
-        if not self.selectedText():
+    def selectedTextToEnglish(self):
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            translatedText = Translator().translate(self.selectedText()).text
-            self.page().runJavaScript("alert('{0}')".format(translatedText))
+            self.translateTextIntoUserLanguage(selectedText)
 
     # Translate selected words into Traditional Chinese
-    def translateTraChineseSelectedText(self):
-        if not self.selectedText():
+    def selectedTextToTraditionalChinese(self):
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            translatedText = Translator().translate(self.selectedText(), dest="zh-TW").text
-            self.page().runJavaScript("alert('{0}')".format(translatedText))
+            self.translateTextIntoUserLanguage(selectedText, "zh-TW")
 
     # Translate selected words into Simplified Chinese
-    def translateSimChineseSelectedText(self):
-        if not self.selectedText():
+    def selectedTextToSimplifiedChinese(self):
+        selectedText = self.selectedText()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            translatedText = Translator().translate(self.selectedText(), dest="zh-CN").text
-            self.page().runJavaScript("alert('{0}')".format(translatedText))
+            self.translateTextIntoUserLanguage(selectedText, "zh-CN")
 
     # Check if config.userLanguage is set
     def checkUserLanguage(self):
         if config.userLanguage:
-            self.translateUserLanguageSelectedText()
+            selectedText = self.selectedText()
+            if not selectedText:
+                self.messageNoSelection()
+            else:
+                userLanguage = Languages().codes[config.userLanguage]
+                self.translateTextIntoUserLanguage(selectedText, userLanguage)
         else:
             self.parent.parent.openMyLanguageDialog()
 
     # Translate selected words into user-defined language
-    def translateUserLanguageSelectedText(self):
-        if not self.selectedText():
-            self.messageNoSelection()
-        else:
-            translatedText = Translator().translate(self.selectedText(), dest=Languages().codes[config.userLanguage]).text
-            self.page().runJavaScript("alert('{0}')".format(translatedText))
+    def translateTextIntoUserLanguage(self, text, userLanguage="en"):
+        try:
+            translatedText = Translator().translate(text, dest=userLanguage).text
+            if config.autoCopyGoogleTranslateOutput:
+                qApp.clipboard().setText(translatedText)
+        except:
+            translatedText = "ATTENTION! Google Translate is not accessible.  Internet connection is required for this feature."
+        self.displayMessage(translatedText)
 
     # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):
@@ -2796,7 +2809,9 @@ class WebEngineView(QWebEngineView):
             pinyinList = pinyin(self.selectedText())
             pinyinList = [" ".join(list) for list in pinyinList]
             pinyinText = " ".join(pinyinList)
-            self.page().runJavaScript("alert('{0}')".format(pinyinText))
+            if config.autoCopyChinesePinyinOutput:
+                qApp.clipboard().setText(pinyinText)
+            self.displayMessage(pinyinText)
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
@@ -2897,7 +2912,7 @@ class WebEngineView(QWebEngineView):
         verseList = parser.extractAllReferences(selectedText, False)
         del parser
         if not verseList:
-            self.page().runJavaScript("alert('No bible verse reference is found from the text you selected.')")
+            self.displayMessage("No bible verse reference is found from the text you selected.")
         else:
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
@@ -2949,7 +2964,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.page().runJavaScript("alert('You have not selected word(s) for this action!')")
+        self.parent.displayMessage("You have not selected word(s) for this action!")
 
     def copySelectedText(self):
         if not self.selectedText():
