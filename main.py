@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 9.0
+current_version = 9.1
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -30,6 +30,9 @@ if not hasattr(config, "remoteControl"):
 # Start full-screen on Linux os
 if not hasattr(config, "linuxStartFullScreen"):
     config.linuxStartFullScreen = False
+# Show text-to-speech feature on Linux os
+if not hasattr(config, "showTtsOnLinux"):
+    config.showTtsOnLinux = False
 # Options to use ibus as input method: True / False
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
@@ -250,6 +253,7 @@ def saveDataOnExit():
         ("\nmyGoogleApiKey = ", config.myGoogleApiKey),
         ("\nremoteControl = ", config.remoteControl),
         ("\nlinuxStartFullScreen = ", config.linuxStartFullScreen),
+        ("\nshowTtsOnLinux = ", config.showTtsOnLinux),
         ("\nibus = ", config.ibus),
         ("\nvirtualKeyboard = ", config.virtualKeyboard),
         ("\nmarvelData = ", config.marvelData),

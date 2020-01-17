@@ -16,7 +16,10 @@ from distutils.dir_util import copy_tree
 # [Optional] Text-to-Speech feature
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
-    ttsSupport = True
+    if platform.system() == "Linux" and not config.showTtsOnLinux:
+        ttsSupport = False
+    else:
+        ttsSupport = True
 except:
     ttsSupport = False
     print("Text-to-speech feature is not supported on this operating system.")
@@ -321,10 +324,10 @@ class MainWindow(QMainWindow):
 
         menu2 = self.menuBar().addMenu("&View")
         menu2.addAction(QAction("&All Toolbars [Show / Hide]", self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
-        menu2.addAction(QAction("&All Toolbars / Main Toolbar Only", self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        menu2.addAction(QAction("&All Toolbars / Top Toolbar Only", self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu2.addSeparator()
-        menu2.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
-        menu2.addAction(QAction("&Secondary Toolbar [Show / Hide]", self, triggered=self.hideShowSecondaryToolBar))
+        menu2.addAction(QAction("&Top Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
+        menu2.addAction(QAction("&Second Toolbar [Show / Hide]", self, triggered=self.hideShowSecondaryToolBar))
         menu2.addAction(QAction("&Left Toolbar [Show / Hide]", self, triggered=self.hideShowLeftToolBar))
         menu2.addAction(QAction("&Right Toolbar [Show / Hide]", self, triggered=self.hideShowRightToolBar))
         menu2.addSeparator()
@@ -348,7 +351,7 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction("&Back", self, shortcut="Ctrl+[", triggered=self.back))
         menu3.addAction(QAction("&Forward", self, shortcut="Ctrl+]", triggered=self.forward))
         menu3.addSeparator()
-        menu3.addAction(QAction("&Secondary", self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
+        menu3.addAction(QAction("&Study", self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
         menu3.addAction(QAction("&Back", self, shortcut="Ctrl+{", triggered=self.studyBack))
         menu3.addAction(QAction("&Forward", self, shortcut="Ctrl+}", triggered=self.studyForward))
 
