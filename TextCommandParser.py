@@ -4,6 +4,7 @@ from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
+from Languages import Languages
 
 class TextCommandParser:
 
@@ -247,14 +248,24 @@ class TextCommandParser:
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith
             "searchversenote": self.textSearchVerseNote,
-            # [KEYWORD] 
+            # [KEYWORD] cmd
             # Feature - Run an os command
             # Warning! Make sure you know what you are running before you use this keyword.  The running command may affect data outside UniqueBible folder.
+            # Examples on Windows:
+            # e.g. cmd:::notepad
+            # e.g. cmd:::start latest_changes.txt
+            # Examples on macOS:
+            # e.g. cmd:::open latest_changes.txt
+            # e.g. cmd:::open "~/Applications/Visual Studio Code.app"/
+            # Examples on Linux:
             # e.g. cmd:::firefox&
             # e.g. cmd:::mkdir -p myNotes; cd myNotes; gedit test.txt&
             # e.g. cmd:::rm -rf myNotes&
             # e.g. cmd:::google-chrome https://uniquebible.app&
             "cmd": self.osCommand,
+            # [KEYWORD] translate
+            # Feature - Translate entered text
+            "translate": self.translateText,
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -689,6 +700,26 @@ class TextCommandParser:
     # STUDY:::
     def textStudy(self, command, source):
         return self.textAnotherView(command, source, "study")
+
+    # TRANSLATE:::
+    def translateText(self, command, source):
+        languages = Languages().codes
+        # unpack command
+        if command.count(":::") == 0:
+            if config.userLanguage:
+                language = languages[config.userLanguage]
+            else:
+                language = "en"
+            text = command
+        else:
+            language, text = self.splitCommand(command)
+        # run google translate
+        if language in languages.values():
+            self.parent.mainView.translateTextIntoUserLanguage(text, language)
+        else:
+            print("something wrong")
+            self.parent.mainView.displayMessage("Entered language code is not recognised.")
+        return ("", "")
 
     # called by MAIN::: & STUDY:::
     def textAnotherView(self, command, source, target):

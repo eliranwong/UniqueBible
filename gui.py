@@ -82,6 +82,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # set language of interface
+        self.interface = Languages().interface
         # setup a parser for text commands
         self.textCommandParser = TextCommandParser(self)
         # setup a global variable "baseURL"
@@ -239,7 +241,7 @@ class MainWindow(QMainWindow):
             abb = filename[:-6]
             if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
                 if self.isNewerAvailable(filename):
-                    self.mainPage.displayMessage("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
+                    self.mainView.displayMessage("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -277,11 +279,11 @@ class MainWindow(QMainWindow):
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
-                self.mainPage.displayMessage("UniqueBible.app updated. A restart is required to apply the changes.")
+                self.mainView.displayMessage("UniqueBible.app updated. A restart is required to apply the changes.")
             else:
-                self.mainPage.displayMessage(alertFailedUpdate)
+                self.mainView.displayMessage(alertFailedUpdate)
         else:
-            self.mainPage.displayMessage(alertFailedUpdate)
+            self.mainView.displayMessage(alertFailedUpdate)
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
@@ -293,11 +295,11 @@ class MainWindow(QMainWindow):
         if filename.endswith(".bible"):
             abb = filename[:-6]
             config.installHistory[filename] = self.bibleInfo[abb][1]
-        self.mainPage.displayMessage("{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
+        self.mainView.displayMessage("{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
 
     def moduleInstalledFailed(self, filename):
         self.downloader.close()
-        self.mainPage.displayMessage("Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
+        self.mainView.displayMessage("Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
 
     # setup interface
     def create_menu(self):
@@ -1261,12 +1263,12 @@ class MainWindow(QMainWindow):
 
     def installAllMarvelCommentaries(self, commentaries):
         toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        self.mainPage.displayMessage("It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
+        self.mainView.displayMessage("It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
         for commentary in toBeInstalled:
             databaseInfo = commentaries[commentary]
             downloader = Downloader(self, databaseInfo)
             downloader.downloadFile(False)
-        self.mainPage.displayMessage("All Marvel.bible commentaries installed.")
+        self.mainView.displayMessage("All Marvel.bible commentaries installed.")
 
     def installMarvelDatasets(self):
         datasets = {
@@ -1595,9 +1597,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
-                self.mainPage.displayMessage("Multiple BibleBento Plus lexicons imported.")
+                self.mainView.displayMessage("Multiple BibleBento Plus lexicons imported.")
             else:
-                self.mainPage.displayMessage("No supported module is found in the selected folder.")
+                self.mainView.displayMessage("No supported module is found in the selected folder.")
 
     def importBBPlusDictionaryInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -1606,9 +1608,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
-                self.mainPage.displayMessage("Multiple BibleBento Plus dictionaries imported.")
+                self.mainView.displayMessage("Multiple BibleBento Plus dictionaries imported.")
             else:
-                self.mainPage.displayMessage("No supported module is found in the selected folder.")
+                self.mainView.displayMessage("No supported module is found in the selected folder.")
 
     # import 3rd party modules
     def importSettingsDialog(self):
@@ -1646,9 +1648,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
-                self.mainPage.displayMessage("Multiple third party modules are imported.")
+                self.mainView.displayMessage("Multiple third party modules are imported.")
             else:
-                self.mainPage.displayMessage("No supported module is found in the selected folder.")
+                self.mainView.displayMessage("No supported module is found in the selected folder.")
 
     def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
@@ -1688,11 +1690,11 @@ class MainWindow(QMainWindow):
         self.completeImport()
 
     def completeImport(self):
-        self.mainPage.displayMessage("A third party module is installed.")
+        self.mainView.displayMessage("A third party module is installed.")
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.mainPage.displayMessage("Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
+        self.mainView.displayMessage("Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
 
     def tagFile(self):
         options = QFileDialog.Options()
@@ -2254,7 +2256,7 @@ class MainWindow(QMainWindow):
         view, content = self.textCommandParser.parser(textCommand, source)
 
         if content == "INVALID_COMMAND_ENTERED":
-            self.mainPage.displayMessage("Entered command is invalid!")
+            self.mainView.displayMessage("Entered command is invalid!")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
@@ -2328,7 +2330,7 @@ class MainWindow(QMainWindow):
             config.toolBarIconFullSize = False
         else:
             config.toolBarIconFullSize = True
-        self.mainPage.displayMessage("Icon size is changed. You need to restart the app to apply the changes.")
+        self.mainView.displayMessage("Icon size is changed. You need to restart the app to apply the changes.")
 
     # switch between landscape / portrait mode
     def switchLandscapeMode(self):
@@ -2455,7 +2457,7 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.userLanguage = item
             if not googletransSupport:
-                self.mainPage.displayMessage("You need to install python package 'googletrans' before you can use Google Translate features on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
+                self.mainView.displayMessage("You need to install python package 'googletrans' before you can use Google Translate features on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
 
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
@@ -2563,6 +2565,12 @@ class TabWidget(QTabWidget):
         # the first tab is indexed with 0.  the rest with 1,2,3,4,etc.
         # to get the index of current tab, print(self.currentIndex())
         # to change the current tab, self.setCurrentWidget(self.widget(4))
+
+    def displayMessage(self, message):
+        self.currentWidget().displayMessage(message)
+
+    def translateTextIntoUserLanguage(self, text, message):
+        self.currentWidget().translateTextIntoUserLanguage(text, message)
 
     def setHtml(self, html, baseUrl):
         self.currentWidget().setHtml(html, baseUrl)

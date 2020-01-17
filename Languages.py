@@ -106,3 +106,7 @@ class Languages:
         "Yoruba": "yo",
         "Zulu": "zu",
     }
+
+    interface = {
+        "menu1_app": "UniqueBible.app",
+    }
