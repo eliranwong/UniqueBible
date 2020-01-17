@@ -13,3 +13,5 @@ Optional features added:
 # e.g. 'ru' for Russian, entry should be:
 #config.myLanguage = "ru"
 
+Remarks: To use google translate on UniqueBible.app, you have to install a python package called 'googletrans'.  To install, run "pip3 install googletrans" in command prompt.
+

@@ -321,7 +321,7 @@ class MainWindow(QMainWindow):
 
         menu2 = self.menuBar().addMenu("&View")
         menu2.addAction(QAction("&All Toolbars [Show / Hide]", self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
-        menu2.addAction(QAction("&Single Toolbar [On / Off]", self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        menu2.addAction(QAction("&All Toolbars / Main Toolbar Only", self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu2.addSeparator()
         menu2.addAction(QAction("&Main Toolbar [Show / Hide]", self, triggered=self.hideShowMainToolBar))
         menu2.addAction(QAction("&Secondary Toolbar [Show / Hide]", self, triggered=self.hideShowSecondaryToolBar))
@@ -371,7 +371,7 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction("&Compare with ...", self, triggered=self.mainRefButtonClicked))
         menu4.addAction(QAction("&Parallel with ...", self, triggered=self.mainRefButtonClicked))
 
-        menu5 = self.menuBar().addMenu("&Search")
+        menu5 = self.menuBar().addMenu("S&earch")
         menu5.addAction(QAction("&Bible / Bibles", self, triggered=self.displaySearchBibleMenu))
         menu5.addAction(QAction("&Last Opened Bible on Main View", self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
         menu5.addAction(QAction("&Last Opened Bible on Study View", self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
@@ -1731,8 +1731,10 @@ class MainWindow(QMainWindow):
 
     def hideShowSecondaryToolBar(self):
         if self.secondToolBar.isVisible():
+            self.studyBibleToolBar.hide()
             self.secondToolBar.hide()
         else:
+            self.setStudyBibleToolBar()
             self.secondToolBar.show()
 
     def hideShowLeftToolBar(self):
