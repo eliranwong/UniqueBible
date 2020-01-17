@@ -10,6 +10,7 @@ from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
+from Languages import Languages
 from shutil import copyfile
 from distutils.dir_util import copy_tree
 # Optional Features
@@ -313,7 +314,8 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction("&Set Default Font and Size", self, triggered=self.setDefaultFont))
         menu1.addAction(QAction("&Set Chinese Font", self, triggered=self.setChineseFont))
         menu1.addAction(QAction("&Set Bible Abbreviations", self, triggered=self.setBibleAbbreviations))
-        menu1.addAction(QAction("&Set my Favourite Bible", self, triggered=self.openAddVersionDialog))
+        menu1.addAction(QAction("&Set my Language", self, triggered=self.openMyLanguageDialog))
+        menu1.addAction(QAction("&Set my Favourite Bible", self, triggered=self.openFavouriteBibleDialog))
         menu1.addSeparator()
         menu1.addAction(QAction("&Wiki Pages", self, triggered=self.openUbaWiki))
         menu1.addAction(QAction("&Update", self, triggered=self.updateUniqueBibleApp))
@@ -2440,8 +2442,21 @@ class MainWindow(QMainWindow):
         #self.morphDialog.setModal(True)
         self.morphDialog.show()
 
+    # Set my language (config.userLanguage)
+    def openMyLanguageDialog(self):
+        languages = Languages()
+        if config.userLanguage:
+            userLanguage = config.userLanguage
+        else:
+            userLanguage = "English"
+        items = [language for language in languages.codes.keys()]
+        item, ok = QInputDialog.getItem(self, "Set my Language",
+                "Select for google translate:", items, items.index(userLanguage), False)
+        if ok and item:
+            config.userLanguage = item
+
     # Set Favourite Bible Version
-    def openAddVersionDialog(self):
+    def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, "Favourite Bible",
                 "Add as a parallel version for reading multiple References:", items, items.index(config.favouriteBible), False)
@@ -2620,28 +2635,32 @@ class WebEngineView(QWebEngineView):
             translateText.setText("Translate into English")
             translateText.triggered.connect(self.translateEnglishSelectedText)
             self.addAction(translateText)
-            # Translate into Traditional Chinese
+#            # Translate into Traditional Chinese
+#            translateText = QAction(self)
+#            translateText.setText("Translate into 繁體中文")
+#            translateText.triggered.connect(self.translateTraChineseSelectedText)
+#            self.addAction(translateText)
+#            # Translate into Simplified Chinese
+#            translateText = QAction(self)
+#            translateText.setText("Translate into 简体中文")
+#            translateText.triggered.connect(self.translateSimChineseSelectedText)
+#            self.addAction(translateText)
+            # Translate into User-defined Language
+            if config.userLanguage:
+                userLanguage = config.userLanguage
+            else:
+                userLanguage = "My Language"
             translateText = QAction(self)
-            translateText.setText("Translate into 繁體中文")
-            translateText.triggered.connect(self.translateTraChineseSelectedText)
+            translateText.setText("Translate into {0}".format(userLanguage))
+            translateText.triggered.connect(self.checkUserLanguage)
             self.addAction(translateText)
-            # Translate into Simplified Chinese
-            translateText = QAction(self)
-            translateText.setText("Translate into 简体中文")
-            translateText.triggered.connect(self.translateSimChineseSelectedText)
-            self.addAction(translateText)
-            # Translate into User Customise Language
-            if config.myLanguage:
-                translateText = QAction(self)
-                translateText.setText("Translate into {0}".format(config.myLanguage))
-                translateText.triggered.connect(self.translateUserLanguageSelectedText)
-                self.addAction(translateText)
+            
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if pinyinSupport:
             pinyinText = QAction(self)
-            pinyinText.setText("Translate into 汉语拼音")
+            pinyinText.setText("Translate into Chinese Pinyin")
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
@@ -2754,12 +2773,19 @@ class WebEngineView(QWebEngineView):
             translatedText = Translator().translate(self.selectedText(), dest="zh-CN").text
             self.page().runJavaScript("alert('{0}')".format(translatedText))
 
+    # Check if config.userLanguage is set
+    def checkUserLanguage(self):
+        if config.userLanguage:
+            self.translateUserLanguageSelectedText()
+        else:
+            self.parent.parent.openMyLanguageDialog()
+
     # Translate selected words into user-defined language
     def translateUserLanguageSelectedText(self):
         if not self.selectedText():
             self.messageNoSelection()
         else:
-            translatedText = Translator().translate(self.selectedText(), dest=config.myLanguage).text
+            translatedText = Translator().translate(self.selectedText(), dest=Languages().codes[config.userLanguage]).text
             self.page().runJavaScript("alert('{0}')".format(translatedText))
 
     # Translate Chinese characters into pinyin

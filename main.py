@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 9.1
+current_version = 9.2
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -53,15 +53,10 @@ if not hasattr(config, "parserStandarisation"):
 if not hasattr(config, "standardAbbreviation"):
     config.standardAbbreviation = "ENG"
 # Option to set a customised language for google-translate
-# Check standard language code from https://translate.google.com/
-# e.g. 'de' for German, entry should be:
-#config.myLanguage = "de"
-# e.g. 'ja' for Japanese, entry should be:
-#config.myLanguage = "ja"
-# e.g. 'ru' for Russian, entry should be:
-#config.myLanguage = "ru"
-if not hasattr(config, "myLanguage"):
-    config.myLanguage = ""
+# References: https://cloud.google.com/translate/docs/languages
+# Use gui "Set my Language" dialog, from menu bar, to set "userLanguage".
+if not hasattr(config, "userLanguage"):
+    config.userLanguage = ""
 # Option to display verse number in a range of verses: True / False
 # e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3"
 if not hasattr(config, "showVerseNumbersInRange"):
@@ -260,7 +255,7 @@ def saveDataOnExit():
         ("\nnumberOfTab = ", config.numberOfTab),
         ("\nparserStandarisation = ", config.parserStandarisation),
         ("\nstandardAbbreviation = ", config.standardAbbreviation),
-        ("\nmyLanguage = ", config.myLanguage),
+        ("\nuserLanguage = ", config.userLanguage),
         ("\nshowVerseNumbersInRange = ", config.showVerseNumbersInRange),
         ("\nlandscapeMode = ", config.landscapeMode),
         ("\nnoToolBar = ", config.noToolBar),

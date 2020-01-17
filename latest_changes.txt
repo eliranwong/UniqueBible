@@ -1,17 +1,7 @@
-Latest changes in version 8.8:
+Latest changes in version 9.2:
 
-Optional features added:
-* added "myLanuage" option to config.py to work with Google Translate feature
-* added google-translate feature to right-click context menu
-* support translation into English, Traditional Chinese, Simplified Chinese by default
-* support translation into a user-defined language, defined via "myLanguage" in config.py
-# Check standard language code from https://translate.google.com/
-# e.g. 'de' for German, entry should be:
-#config.myLanguage = "de"
-# e.g. 'ja' for Japanese, entry should be:
-#config.myLanguage = "ja"
-# e.g. 'ru' for Russian, entry should be:
-#config.myLanguage = "ru"
+Improve use of google-translate feature on UniqueBible.app:
+* changed "myLanuage" to "userLanguage" in config.py
+* added a gui dialog for users to define their target language for Google Translate.  The dialog is accessible via application menu.
 
 Remarks: To use google translate on UniqueBible.app, you have to install a python package called 'googletrans'.  To install, run "pip3 install googletrans" in command prompt.
-
