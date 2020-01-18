@@ -57,6 +57,9 @@ if not hasattr(config, "standardAbbreviation"):
 # Use gui "Set my Language" dialog, from menu bar, to set "userLanguage".
 if not hasattr(config, "userLanguage"):
     config.userLanguage = ""
+# Option to use interface translated into userLanguage: True / False
+if not hasattr(config, "userLanguageInterface"):
+    config.userLanguageInterface = False
 # Option to show Chinese options for google translate on right-click context menu: True / False
 if not hasattr(config, "showGoogleTranslateChineseOptions"):
     config.showGoogleTranslateChineseOptions = False
@@ -265,6 +268,8 @@ def saveDataOnExit():
         ("\nparserStandarisation = ", config.parserStandarisation),
         ("\nstandardAbbreviation = ", config.standardAbbreviation),
         ("\nuserLanguage = ", config.userLanguage),
+        # testing
+        #("\nuserLanguageInterface = ", config.userLanguageInterface),
         ("\nshowGoogleTranslateChineseOptions = ", config.showGoogleTranslateChineseOptions),
         ("\nautoCopyGoogleTranslateOutput = ", config.autoCopyGoogleTranslateOutput),
         ("\nautoCopyChinesePinyinOutput = ", config.autoCopyChinesePinyinOutput),

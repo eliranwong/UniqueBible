@@ -264,7 +264,14 @@ class TextCommandParser:
             # e.g. cmd:::google-chrome https://uniquebible.app&
             "cmd": self.osCommand,
             # [KEYWORD] translate
-            # Feature - Translate entered text
+            # Feature - Use google translate to entered text
+            # Usage - TRANSLATE:::[language code]:::[text to be translated]
+            # Language code of config.userLanguage is used by default if language code is not provided.  If config.userLanguage is not defined, "en" is used.
+            # Users may check supported language codes in file Languages.py
+            # e.g. TRANSLATE:::測試
+            # e.g. TRANSLATE:::en:::測試
+            # e.g. TRANSLATE:::zh-CN:::test
+            # e.g. TRANSLATE:::ja:::test
             "translate": self.translateText,
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
