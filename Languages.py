@@ -1,4 +1,4 @@
-import os, sys, pprint
+import config, os, pprint
 # [Optional] Google-translate
 try:
     from googletrans import Translator
@@ -115,7 +115,7 @@ class Languages:
         "Zulu": "zu",
     }
 
-    interface = {
+    translation = {
         "menu1_app": "UniqueBible",
         "menu1_fullScreen": "Full Screen",
         "menu1_resize": "Resize",
@@ -125,11 +125,13 @@ class Languages:
         "menu1_setDefaultFont": "Set Default Font and Size",
         "menu1_setChineseFont": "Set Chinese Font",
         "menu1_setAbbreviations": "Set Bible Abbreviations",
-        "menu1_setMyLanguage": "Set my Language",
         "menu1_setMyFavouriteBible": "Set my Favourite Bible",
+        "menu1_setMyLanguage": "Set my Language",
+        "menu1_translateInterface": "Translate Interface into my Language",
+        "menu1_toogleInterface": "Language [English / My Translation]",
         "menu1_wikiPages": "Wiki Pages",
         "menu1_update": "Update",
-        "menu2_view": "View",
+        "menu2_view": "Layout",
         "menu2_all": "All Toolbars [Show / Hide]",
         "menu2_topOnly": "All Toolbars / Top Toolbar Only",
         "menu2_top": "Top Toolbar [Show / Hide]",
@@ -208,27 +210,63 @@ class Languages:
         "menu9_information": "Information",
         "menu9_credits": "Credits",
         "menu9_contact": "Contact Eliran Wong",
+        "context1_copy": "Copy",
+        "context1_speak": "Speak",
+        "context1_english": "Translate into English",
+        "context1_tChinese": "翻譯成繁體中文",
+        "context1_sChinese": "翻译成简体中文",
+        "context1_my": "My Language",
+        "context1_translate": "Translate into",
+        "context1_pinyin": "翻译成汉语拼音",
+        "context1_search": "Search",
+        "context1_current": "Search in Current Book",
+        "context1_favourite": "Search my Favourite Bible",
+        "context1_original": "Search Hebrew / Greek Bible",
+        "context1_lexicon": "Hebrew / Greek Lexicons",
+        "context1_character": "Bible Character",
+        "context1_name": "Bible Name",
+        "context1_location": "Bible Location",
+        "context1_topic": "Bible Topic",
+        "context1_encyclopedia": "Bible Encyclopedia",
+        "context1_dict": "Bible Dictionary",
+        "context1_3rdDict": "3rd Party Dictionary",
+        "context1_extract": "Extract All Bible References",
+        "context1_command": "Run as Command",
     }
 
-    def translateInterfaceIntoAllLanguages(self):
+    def translateInterface(self, language):
+        print("translating interface into '{0}' ...".format(language))
+        translator = Translator()
+        code = self.codes[language]
+        tempDict = {}
+        for key, value in self.translation.items():
+            tempDict[key] = value
+            try:
+                tempDict[key] = translator.translate(value, dest=code).text
+            except:
+                tempDict[key] = value
+        config.translationLanguage = language
+        config.translation = tempDict
+        print("done.")
+
+    def createTranslationTemplates(self):
         if googletransInstall:
             for code in self.codes.values():
-                print("translating '{0}' interface ...".format(code))
+                print("creating '{0}' template ...".format(code))
                 translator = Translator()
                 tempDict = {}
-                for key, value in self.interface.items():
+                for key, value in self.translation.items():
                     tempDict[key] = value
+# Note: Attempted to use Google Translate to translate interface into all languages, but access is blocked in the middle of the operation.  It looks like Google blocks access by ip, when there are too many queries within a short time.
+# Don't use the following 4 lines, or ip will be blocked for Google Translate
 #                    try:
 #                        tempDict[key] = translator.translate(value, dest=code).text
 #                    except:
 #                        tempDict[key] = value
-                with open("interface.py", "a") as fileObj:
+                with open("translations.py", "a") as fileObj:
                     code = code.replace("-", "")
-                    fileObj.write("\n\nuB{0} = {1}".format(code, pprint.pformat(tempDict)))
+                    fileObj.write("uB{0} = {1}\n\n".format(code, pprint.pformat(tempDict)))
 
 
 if __name__ == '__main__':
-    Languages().translateInterfaceIntoAllLanguages()
-    
-    
-    
+    Languages().createTranslationTemplates()

@@ -1,5 +1,4 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests
-import interface
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
@@ -83,9 +82,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # set language of interface
-        #self.interface = self.setInterfaceLanguage()
-        self.interface = Languages().interface
+        # set translation of interface
+        self.setTranslation()
         # setup a parser for text commands
         self.textCommandParser = TextCommandParser(self)
         # setup a global variable "baseURL"
@@ -144,118 +142,48 @@ class MainWindow(QMainWindow):
     def __del__(self):
         del self.textCommandParser
 
-    def setInterfaceLanguage(self):
-        translations = {
-            "af": interface.uBaf,
-            "sq": interface.uBsq,
-            "am": interface.uBam,
-            "ar": interface.uBar,
-            "hy": interface.uBhy,
-            "az": interface.uBaz,
-            "eu": interface.uBeu,
-            "be": interface.uBbe,
-            "bn": interface.uBbn,
-            "bs": interface.uBbs,
-            "bg": interface.uBbg,
-            "ca": interface.uBca,
-            "ceb": interface.uBceb,
-            "zh-CN": interface.uBzhCN,
-            "zh-TW": interface.uBzhTW,
-            "co": interface.uBco,
-            "hr": interface.uBhr,
-            "cs": interface.uBcs,
-            "da": interface.uBda,
-            "nl": interface.uBnl,
-            "en": interface.uBen,
-            "eo": interface.uBeo,
-            "et": interface.uBet,
-            "fi": interface.uBfi,
-            "fr": interface.uBfr,
-            "fy": interface.uBfy,
-            "gl": interface.uBgl,
-            "ka": interface.uBka,
-            "de": interface.uBde,
-            "el": interface.uBel,
-            "gu": interface.uBgu,
-            "ht": interface.uBht,
-            "ha": interface.uBha,
-            "haw": interface.uBhaw,
-            "iw": interface.uBiw,
-            "hi": interface.uBhi,
-            "hmn": interface.uBhmn,
-            "hu": interface.uBhu,
-            "is": interface.uBis,
-            "ig": interface.uBig,
-            "id": interface.uBid,
-            "ga": interface.uBga,
-            "it": interface.uBit,
-            "ja": interface.uBja,
-            "jv": interface.uBjv,
-            "kn": interface.uBkn,
-            "kk": interface.uBkk,
-            "km": interface.uBkm,
-            "ko": interface.uBko,
-            "ku": interface.uBku,
-            "ky": interface.uBky,
-            "lo": interface.uBlo,
-            "la": interface.uBla,
-            "lv": interface.uBlv,
-            "lt": interface.uBlt,
-            "lb": interface.uBlb,
-            "mk": interface.uBmk,
-            "mg": interface.uBmg,
-            "ms": interface.uBms,
-            "ml": interface.uBml,
-            "mt": interface.uBmt,
-            "mi": interface.uBmi,
-            "mr": interface.uBmr,
-            "mn": interface.uBmn,
-            "my": interface.uBmy,
-            "ne": interface.uBne,
-            "no": interface.uBno,
-            "ny": interface.uBny,
-            "ps": interface.uBps,
-            "fa": interface.uBfa,
-            "pl": interface.uBpl,
-            "pt": interface.uBpt,
-            "pa": interface.uBpa,
-            "ro": interface.uBro,
-            "ru": interface.uBru,
-            "sm": interface.uBsm,
-            "gd": interface.uBgd,
-            "sr": interface.uBsr,
-            "st": interface.uBst,
-            "sn": interface.uBsn,
-            "sd": interface.uBsd,
-            "si": interface.uBsi,
-            "sk": interface.uBsk,
-            "sl": interface.uBsl,
-            "so": interface.uBso,
-            "es": interface.uBes,
-            "su": interface.uBsu,
-            "sw": interface.uBsw,
-            "sv": interface.uBsv,
-            "tl": interface.uBtl,
-            "tg": interface.uBtg,
-            "ta": interface.uBta,
-            "te": interface.uBte,
-            "th": interface.uBth,
-            "tr": interface.uBtr,
-            "uk": interface.uBuk,
-            "ur": interface.uBur,
-            "uz": interface.uBuz,
-            "vi": interface.uBvi,
-            "cy": interface.uBcy,
-            "xh": interface.uBxh,
-            "yi": interface.uByi,
-            "yo": interface.uByo,
-            "zu": interface.uBzu,
-        }
-        if config.userLanguage and config.userLanguageInterface:
-            translation = translations[Languages().codes[config.userLanguage]]
+    def setTranslation(self):
+        updateNeeded = False
+        if config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage") and hasattr(config, "translation"):
+            # check for missing items; add default English translation if there is a missing one.
+            languages = Languages()
+            code = languages.codes[config.userLanguage]
+            for key, value in languages.translation.items():
+                if not key in config.translation:
+                    if googletransSupport and config.translationLanguage == config.userLanguage:
+                        try:
+                            config.translation[key] = Translator().translate(value, dest=code).text
+                        except:
+                            config.translation[key] = value
+                    else:
+                        config.translation[key] = value
+                    updateNeeded = True
+            self.translation = config.translation
         else:
-            translation = translations["en"]
-        return translation
+            self.translation = Languages().translation
+        if updateNeeded:
+            self.displayNotice("UniqueBible.app", "New items were added to your translation of interface.  To refine the translation, you may manually edit entries of 'translation' at the bottom part of file 'config.py' when this app is CLOSED.")
+
+    def translateInterface(self):
+        if googletransSupport:
+            if not config.userLanguage:
+                self.displayNotice("To run this feature ...", "set your Language first.")
+            else:
+                Languages().translateInterface(config.userLanguage)
+                config.userLanguageInterface = True
+                self.displayNotice("To apply the changes ...", "This app needs to be re-started.  To refine the translation, you may manually edit entries of 'translation' at the bottom part of file 'config.py' when this app is CLOSED.")
+        else:
+            self.displayNotice("To run this feature ...", "install python package 'googletrans' first.")
+
+    def toogleInterfaceTranslation(self):
+        if not hasattr(config, "translation") and not config.userLanguageInterface:
+            self.displayNotice("To run this feature ...", "translate interface into your language first.")
+        else:
+            if config.userLanguageInterface:
+                config.userLanguageInterface = False
+            else:
+                config.userLanguageInterface = True
+            self.displayNotice("To apply the changes ...", "This app needs to be re-started.")
 
     # base folder for webViewEngine
     def setupBaseUrl(self):
@@ -292,15 +220,12 @@ class MainWindow(QMainWindow):
             biblesSqlite = BiblesSqlite()
             biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
             if biblesWithBothVersions:
-                initialMessage = ("Migration is needed.", "It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
-                self.displayNotice(initialMessage)
+                self.displayNotice("Migration is needed.", "It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
                 biblesSqlite.proceedMigration(biblesWithBothVersions)
-                finishMessage = ("Migration is finished." , "Your bible files are updated. Enjoy!")
-                self.displayNotice(finishMessage)
+                self.displayNotice("Migration is finished." , "Your bible files are updated. Enjoy!")
             del biblesSqlite
 
-    def displayNotice(self, title_message):
-        title, message = title_message
+    def displayNotice(self, title, message):
         reply = QMessageBox.information(self, title, message)
 
     # manage key capture
@@ -356,7 +281,7 @@ class MainWindow(QMainWindow):
             abb = filename[:-6]
             if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
                 if self.isNewerAvailable(filename):
-                    self.mainView.displayMessage("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
+                    self.displayNotice("UniqueBible.app", "Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -394,11 +319,11 @@ class MainWindow(QMainWindow):
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
-                self.mainView.displayMessage("UniqueBible.app updated. A restart is required to apply the changes.")
+                self.displayNotice("UniqueBible.app", "UniqueBible.app updated. A restart is required to apply the changes.")
             else:
-                self.mainView.displayMessage(alertFailedUpdate)
+                self.displayNotice("UniqueBible.app", alertFailedUpdate)
         else:
-            self.mainView.displayMessage(alertFailedUpdate)
+            self.displayNotice("UniqueBible.app", alertFailedUpdate)
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
@@ -410,142 +335,146 @@ class MainWindow(QMainWindow):
         if filename.endswith(".bible"):
             abb = filename[:-6]
             config.installHistory[filename] = self.bibleInfo[abb][1]
-        self.mainView.displayMessage("{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
+        self.displayNotice("UniqueBible.app", "{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
 
     def moduleInstalledFailed(self, filename):
         self.downloader.close()
-        self.mainView.displayMessage("Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
+        self.displayNotice("UniqueBible.app", "Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
 
     # setup interface
     def create_menu(self):
-        menu1 = self.menuBar().addMenu("&{0}".format(self.interface["menu1_app"]))
-        menu1.addAction(QAction(self.interface["menu1_fullScreen"], self, triggered=self.fullsizeWindow))
-        menu1.addAction(QAction(self.interface["menu1_resize"], self, triggered=self.twoThirdWindow))
+        menu1 = self.menuBar().addMenu("&{0}".format(self.translation["menu1_app"]))
+        menu1.addAction(QAction(self.translation["menu1_fullScreen"], self, triggered=self.fullsizeWindow))
+        menu1.addAction(QAction(self.translation["menu1_resize"], self, triggered=self.twoThirdWindow))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.interface["menu1_topHalf"], self, triggered=self.halfScreenHeight))
-        menu1.addAction(QAction(self.interface["menu1_leftHalf"], self, triggered=self.halfScreenWidth))
+        menu1.addAction(QAction(self.translation["menu1_topHalf"], self, triggered=self.halfScreenHeight))
+        menu1.addAction(QAction(self.translation["menu1_leftHalf"], self, triggered=self.halfScreenWidth))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.interface["menu1_remoteControl"], self, triggered=self.manageRemoteControl))
+        menu1.addAction(QAction(self.translation["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
+        menu1.addAction(QAction(self.translation["menu1_setChineseFont"], self, triggered=self.setChineseFont))
+        menu1.addAction(QAction(self.translation["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
+        menu1.addAction(QAction(self.translation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
+        menu1.addAction(QAction(self.translation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.interface["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
-        menu1.addAction(QAction(self.interface["menu1_setChineseFont"], self, triggered=self.setChineseFont))
-        menu1.addAction(QAction(self.interface["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
-        menu1.addAction(QAction(self.interface["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
-        menu1.addAction(QAction(self.interface["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
+        #if not hasattr(config, "translationLanguage") or (hasattr(config, "translationLanguage") and not config.translationLanguage == config.userLanguage):
+            #menu1.addAction(QAction(self.translation["menu1_translateInterface"], self, triggered=self.translateInterface))
+        #menu1.addAction(QAction(self.translation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
+        #menu1.addSeparator()
+        menu1.addAction(QAction(self.translation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
+        menu1.addAction(QAction(self.translation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.interface["menu1_wikiPages"], self, triggered=self.openUbaWiki))
-        menu1.addAction(QAction(self.interface["menu1_update"], self, triggered=self.updateUniqueBibleApp))
+        menu1.addAction(QAction(self.translation["menu1_remoteControl"], self, triggered=self.manageRemoteControl))
         menu1.addSeparator()
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
         quit_action = QAction(appIcon, "E&xit", self, shortcut="Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
 
-        menu2 = self.menuBar().addMenu("&{0}".format(self.interface["menu2_view"]))
-        menu2.addAction(QAction(self.interface["menu2_all"], self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
-        menu2.addAction(QAction(self.interface["menu2_topOnly"], self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        menu2 = self.menuBar().addMenu("&{0}".format(self.translation["menu2_view"]))
+        menu2.addAction(QAction(self.translation["menu2_all"], self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
+        menu2.addAction(QAction(self.translation["menu2_topOnly"], self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_top"], self, triggered=self.hideShowMainToolBar))
-        menu2.addAction(QAction(self.interface["menu2_second"], self, triggered=self.hideShowSecondaryToolBar))
-        menu2.addAction(QAction(self.interface["menu2_left"], self, triggered=self.hideShowLeftToolBar))
-        menu2.addAction(QAction(self.interface["menu2_right"], self, triggered=self.hideShowRightToolBar))
+        menu2.addAction(QAction(self.translation["menu2_top"], self, triggered=self.hideShowMainToolBar))
+        menu2.addAction(QAction(self.translation["menu2_second"], self, triggered=self.hideShowSecondaryToolBar))
+        menu2.addAction(QAction(self.translation["menu2_left"], self, triggered=self.hideShowLeftToolBar))
+        menu2.addAction(QAction(self.translation["menu2_right"], self, triggered=self.hideShowRightToolBar))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_icons"], self, triggered=self.switchIconSize))
+        menu2.addAction(QAction(self.translation["menu2_icons"], self, triggered=self.switchIconSize))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_landscape"], self, shortcut="Ctrl+L", triggered=self.switchLandscapeMode))
+        menu2.addAction(QAction(self.translation["menu2_landscape"], self, shortcut="Ctrl+L", triggered=self.switchLandscapeMode))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_study"], self, shortcut="Ctrl+W", triggered=self.parallel))
-        menu2.addAction(QAction(self.interface["menu2_bottom"], self, shortcut="Ctrl+T", triggered=self.instant))
+        menu2.addAction(QAction(self.translation["menu2_study"], self, shortcut="Ctrl+W", triggered=self.parallel))
+        menu2.addAction(QAction(self.translation["menu2_bottom"], self, shortcut="Ctrl+T", triggered=self.instant))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_hover"], self, shortcut="Ctrl+=", triggered=self.enableInstantButtonClicked))
+        menu2.addAction(QAction(self.translation["menu2_hover"], self, shortcut="Ctrl+=", triggered=self.enableInstantButtonClicked))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
-        menu2.addAction(QAction(self.interface["menu2_smaller"], self, shortcut="Ctrl+-", triggered=self.smallerFont))
+        menu2.addAction(QAction(self.translation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
+        menu2.addAction(QAction(self.translation["menu2_smaller"], self, shortcut="Ctrl+-", triggered=self.smallerFont))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.interface["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
-        menu2.addAction(QAction(self.interface["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
+        menu2.addAction(QAction(self.translation["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu2.addAction(QAction(self.translation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
 
-        menu3 = self.menuBar().addMenu("&{0}".format(self.interface["menu3_history"]))
-        menu3.addAction(QAction(self.interface["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
-        menu3.addAction(QAction(self.interface["menu3_mainBack"], self, shortcut="Ctrl+[", triggered=self.back))
-        menu3.addAction(QAction(self.interface["menu3_mainForward"], self, shortcut="Ctrl+]", triggered=self.forward))
+        menu3 = self.menuBar().addMenu("&{0}".format(self.translation["menu3_history"]))
+        menu3.addAction(QAction(self.translation["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
+        menu3.addAction(QAction(self.translation["menu3_mainBack"], self, shortcut="Ctrl+[", triggered=self.back))
+        menu3.addAction(QAction(self.translation["menu3_mainForward"], self, shortcut="Ctrl+]", triggered=self.forward))
         menu3.addSeparator()
-        menu3.addAction(QAction(self.interface["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
-        menu3.addAction(QAction(self.interface["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
-        menu3.addAction(QAction(self.interface["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
+        menu3.addAction(QAction(self.translation["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
+        menu3.addAction(QAction(self.translation["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
+        menu3.addAction(QAction(self.translation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
 
-        menu4 = self.menuBar().addMenu("&{0}".format(self.interface["menu4_further"]))
-        menu4.addAction(QAction(self.interface["menu4_next"], self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
-        menu4.addAction(QAction(self.interface["menu4_previous"], self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
+        menu4 = self.menuBar().addMenu("&{0}".format(self.translation["menu4_further"]))
+        menu4.addAction(QAction(self.translation["menu4_next"], self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
+        menu4.addAction(QAction(self.translation["menu4_previous"], self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.interface["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
-        menu4.addAction(QAction(self.interface["menu4_commentary"], self, shortcut="Ctrl+Y", triggered=self.runCOMMENTARY))
+        menu4.addAction(QAction(self.translation["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
+        menu4.addAction(QAction(self.translation["menu4_commentary"], self, shortcut="Ctrl+Y", triggered=self.runCOMMENTARY))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.interface["menu4_traslations"], self, triggered=self.runTRANSLATION))
-        menu4.addAction(QAction(self.interface["menu4_discourse"], self, triggered=self.runDISCOURSE))
-        menu4.addAction(QAction(self.interface["menu4_words"], self, triggered=self.runWORDS))
-        menu4.addAction(QAction(self.interface["menu4_tdw"], self, shortcut="Ctrl+K", triggered=self.runCOMBO))
+        menu4.addAction(QAction(self.translation["menu4_traslations"], self, triggered=self.runTRANSLATION))
+        menu4.addAction(QAction(self.translation["menu4_discourse"], self, triggered=self.runDISCOURSE))
+        menu4.addAction(QAction(self.translation["menu4_words"], self, triggered=self.runWORDS))
+        menu4.addAction(QAction(self.translation["menu4_tdw"], self, shortcut="Ctrl+K", triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.interface["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))
-        menu4.addAction(QAction(self.interface["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
+        menu4.addAction(QAction(self.translation["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction(self.translation["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.interface["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
-        menu4.addAction(QAction(self.interface["menu4_compare"], self, triggered=self.mainRefButtonClicked))
-        menu4.addAction(QAction(self.interface["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction(self.translation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
+        menu4.addAction(QAction(self.translation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction(self.translation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
 
-        menu5 = self.menuBar().addMenu("&{0}".format(self.interface["menu5_search"]))
-        menu5.addAction(QAction(self.interface["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
-        menu5.addAction(QAction(self.interface["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
-        menu5.addAction(QAction(self.interface["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5 = self.menuBar().addMenu("&{0}".format(self.translation["menu5_search"]))
+        menu5.addAction(QAction(self.translation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
+        menu5.addAction(QAction(self.translation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
+        menu5.addAction(QAction(self.translation["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.interface["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
-        menu5.addAction(QAction(self.interface["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
-        menu5.addAction(QAction(self.interface["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(self.translation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
+        menu5.addAction(QAction(self.translation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
+        menu5.addAction(QAction(self.translation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.interface["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
-        menu5.addAction(QAction(self.interface["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
-        menu5.addAction(QAction(self.interface["menu5_locations"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleLocation))
-        menu5.addAction(QAction(self.interface["menu5_topics"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleTopic))
+        menu5.addAction(QAction(self.translation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
+        menu5.addAction(QAction(self.translation["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
+        menu5.addAction(QAction(self.translation["menu5_locations"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleLocation))
+        menu5.addAction(QAction(self.translation["menu5_topics"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleTopic))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.interface["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
+        menu5.addAction(QAction(self.translation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.interface["menu5_3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
+        menu5.addAction(QAction(self.translation["menu5_3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
 
-        menu6 = self.menuBar().addMenu("&{0}".format(self.interface["menu6_notes"]))
-        menu6.addAction(QAction(self.interface["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
-        menu6.addAction(QAction(self.interface["menu6_studyChapter"], self, triggered=self.openStudyChapterNote))
-        menu6.addAction(QAction(self.interface["menu6_searchChapters"], self, triggered=self.searchCommandChapterNote))
+        menu6 = self.menuBar().addMenu("&{0}".format(self.translation["menu6_notes"]))
+        menu6.addAction(QAction(self.translation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
+        menu6.addAction(QAction(self.translation["menu6_studyChapter"], self, triggered=self.openStudyChapterNote))
+        menu6.addAction(QAction(self.translation["menu6_searchChapters"], self, triggered=self.searchCommandChapterNote))
         menu6.addSeparator()
-        menu6.addAction(QAction(self.interface["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
-        menu6.addAction(QAction(self.interface["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
-        menu6.addAction(QAction(self.interface["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
+        menu6.addAction(QAction(self.translation["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
+        menu6.addAction(QAction(self.translation["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
+        menu6.addAction(QAction(self.translation["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
 
-        menu7 = self.menuBar().addMenu("&{0}".format(self.interface["menu7_topics"]))
-        menu7.addAction(QAction(self.interface["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
+        menu7 = self.menuBar().addMenu("&{0}".format(self.translation["menu7_topics"]))
+        menu7.addAction(QAction(self.translation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
         menu7.addSeparator()
-        menu7.addAction(QAction(self.interface["menu7_open"], self, triggered=self.openTextFileDialog))
-        menu7.addAction(QAction(self.interface["menu7_recent"], self, triggered=self.openExternalFileHistory))
-        menu7.addAction(QAction(self.interface["menu7_read"], self, triggered=self.externalFileButtonClicked))
-        menu7.addAction(QAction(self.interface["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
+        menu7.addAction(QAction(self.translation["menu7_open"], self, triggered=self.openTextFileDialog))
+        menu7.addAction(QAction(self.translation["menu7_recent"], self, triggered=self.openExternalFileHistory))
+        menu7.addAction(QAction(self.translation["menu7_read"], self, triggered=self.externalFileButtonClicked))
+        menu7.addAction(QAction(self.translation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
         menu7.addSeparator()
-        menu7.addAction(QAction(self.interface["menu7_paste"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
+        menu7.addAction(QAction(self.translation["menu7_paste"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
 
-        menu8 = self.menuBar().addMenu("&{0}".format(self.interface["menu8_resources"]))
-        menu8.addAction(QAction(self.interface["menu8_bibles"], self, triggered=self.installMarvelBibles))
-        menu8.addAction(QAction(self.interface["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
-        menu8.addAction(QAction(self.interface["menu8_datasets"], self, triggered=self.installMarvelDatasets))
+        menu8 = self.menuBar().addMenu("&{0}".format(self.translation["menu8_resources"]))
+        menu8.addAction(QAction(self.translation["menu8_bibles"], self, triggered=self.installMarvelBibles))
+        menu8.addAction(QAction(self.translation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
+        menu8.addAction(QAction(self.translation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.interface["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
-        menu8.addAction(QAction(self.interface["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
+        menu8.addAction(QAction(self.translation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
+        menu8.addAction(QAction(self.translation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.interface["menu8_3rdParty"], self, triggered=self.importModules))
-        menu8.addAction(QAction(self.interface["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
-        menu8.addAction(QAction(self.interface["menu8_settings"], self, triggered=self.importSettingsDialog))
+        menu8.addAction(QAction(self.translation["menu8_3rdParty"], self, triggered=self.importModules))
+        menu8.addAction(QAction(self.translation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
+        menu8.addAction(QAction(self.translation["menu8_settings"], self, triggered=self.importSettingsDialog))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.interface["menu8_tagFile"], self, triggered=self.tagFile))
-        menu8.addAction(QAction(self.interface["menu8_tagFiles"], self, triggered=self.tagFiles))
-        menu8.addAction(QAction(self.interface["menu8_tagFolder"], self, triggered=self.tagFolder))
+        menu8.addAction(QAction(self.translation["menu8_tagFile"], self, triggered=self.tagFile))
+        menu8.addAction(QAction(self.translation["menu8_tagFiles"], self, triggered=self.tagFiles))
+        menu8.addAction(QAction(self.translation["menu8_tagFolder"], self, triggered=self.tagFolder))
 
-        menu9 = self.menuBar().addMenu("&{0}".format(self.interface["menu9_information"]))
+        menu9 = self.menuBar().addMenu("&{0}".format(self.translation["menu9_information"]))
         menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
         menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))
         menu9.addAction(QAction("Marvel.bible", self, triggered=self.openMarvelBible))
@@ -557,9 +486,9 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
         menu9.addAction(QAction("Open Greek New Testament", self, triggered=self.openOpenGNTSource))
         menu9.addSeparator()
-        menu9.addAction(QAction(self.interface["menu9_credits"], self, triggered=self.openCredits))
+        menu9.addAction(QAction(self.translation["menu9_credits"], self, triggered=self.openCredits))
         menu9.addSeparator()
-        menu9.addAction(QAction(self.interface["menu9_contact"], self, triggered=self.contactEliranWong))
+        menu9.addAction(QAction(self.translation["menu9_contact"], self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
         if config.toolBarIconFullSize:
@@ -1377,12 +1306,12 @@ class MainWindow(QMainWindow):
 
     def installAllMarvelCommentaries(self, commentaries):
         toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        self.mainView.displayMessage("It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
+        self.displayNotice("UniqueBible.app", "It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
         for commentary in toBeInstalled:
             databaseInfo = commentaries[commentary]
             downloader = Downloader(self, databaseInfo)
             downloader.downloadFile(False)
-        self.mainView.displayMessage("All Marvel.bible commentaries installed.")
+        self.displayNotice("UniqueBible.app", "All Marvel.bible commentaries installed.")
 
     def installMarvelDatasets(self):
         datasets = {
@@ -1711,9 +1640,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
-                self.mainView.displayMessage("Multiple BibleBento Plus lexicons imported.")
+                self.displayNotice("UniqueBible.app", "Multiple BibleBento Plus lexicons imported.")
             else:
-                self.mainView.displayMessage("No supported module is found in the selected folder.")
+                self.displayNotice("UniqueBible.app", "No supported module is found in the selected folder.")
 
     def importBBPlusDictionaryInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -1722,9 +1651,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
-                self.mainView.displayMessage("Multiple BibleBento Plus dictionaries imported.")
+                self.displayNotice("UniqueBible.app", "Multiple BibleBento Plus dictionaries imported.")
             else:
-                self.mainView.displayMessage("No supported module is found in the selected folder.")
+                self.displayNotice("UniqueBible.app", "No supported module is found in the selected folder.")
 
     # import 3rd party modules
     def importSettingsDialog(self):
@@ -1762,9 +1691,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
-                self.mainView.displayMessage("Multiple third party modules are imported.")
+                self.displayNotice("UniqueBible.app", "Multiple third party modules are imported.")
             else:
-                self.mainView.displayMessage("No supported module is found in the selected folder.")
+                self.displayNotice("UniqueBible.app", "No supported module is found in the selected folder.")
 
     def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
@@ -1804,11 +1733,11 @@ class MainWindow(QMainWindow):
         self.completeImport()
 
     def completeImport(self):
-        self.mainView.displayMessage("A third party module is installed.")
+        self.displayNotice("UniqueBible.app", "A third party module is installed.")
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.mainView.displayMessage("Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
+        self.displayNotice("UniqueBible.app", "Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
 
     def tagFile(self):
         options = QFileDialog.Options()
@@ -2370,7 +2299,7 @@ class MainWindow(QMainWindow):
         view, content = self.textCommandParser.parser(textCommand, source)
 
         if content == "INVALID_COMMAND_ENTERED":
-            self.mainView.displayMessage("Entered command is invalid!")
+            self.displayNotice("UniqueBible.app", "Entered command is invalid!")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
@@ -2444,7 +2373,7 @@ class MainWindow(QMainWindow):
             config.toolBarIconFullSize = False
         else:
             config.toolBarIconFullSize = True
-        self.mainView.displayMessage("Icon size is changed. You need to restart the app to apply the changes.")
+        self.displayNotice("UniqueBible.app", "Icon size is changed. You need to restart the app to apply the changes.")
 
     # switch between landscape / portrait mode
     def switchLandscapeMode(self):
@@ -2571,7 +2500,7 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.userLanguage = item
             if not googletransSupport:
-                self.mainView.displayMessage("You need to install python package 'googletrans' before you can use Google Translate features on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
+                self.displayNotice("UniqueBible.app", "You need to install python package 'googletrans' before you can use Google Translate features on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
 
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
@@ -2680,9 +2609,6 @@ class TabWidget(QTabWidget):
         # to get the index of current tab, print(self.currentIndex())
         # to change the current tab, self.setCurrentWidget(self.widget(4))
 
-    def displayMessage(self, message):
-        self.currentWidget().displayMessage(message)
-
     def translateTextIntoUserLanguage(self, text, message):
         self.currentWidget().translateTextIntoUserLanguage(text, message)
 
@@ -2712,20 +2638,21 @@ class WebEngineView(QWebEngineView):
         self.addMenuActions()
 
     def displayMessage(self, message):
-        message = message.replace("'", "\\'")
-        self.page().runJavaScript("alert('{0}')".format(message))
+        #message = message.replace("'", "\\'")
+        #self.page().runJavaScript("alert('{0}')".format(message))
+        self.parent.parent.displayNotice("UniqueBible.app", message)
 
     def updateContextMenu(self):
         text = self.getText()
         parser = BibleVerseParser(config.parserStandarisation)
         book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         del parser
-        self.searchText.setText("Search in {0}".format(text))
-        self.searchTextInBook.setText("Search in {0} > {1}".format(text, book))
-        self.searchBibleTopic.setText("Bible Topic > {0}".format(config.topic))
-        self.searchBibleDictionary.setText("Bible Dictionary > {0}".format(config.dictionary))
-        self.searchBibleEncyclopedia.setText("Bible Encyclopedia > {0}".format(config.encyclopedia))
-        self.searchThirdDictionary.setText("3rd Party Dictionary > {0}".format(config.thirdDictionary))
+        self.searchText.setText("{1} {0}".format(text, self.parent.parent.translation["context1_search"]))
+        self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, self.parent.parent.translation["context1_search"]))
+        self.searchBibleTopic.setText("{1} > {0}".format(config.topic, self.parent.parent.translation["context1_topic"]))
+        self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, self.parent.parent.translation["context1_dict"]))
+        self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, self.parent.parent.translation["context1_encyclopedia"]))
+        self.searchThirdDictionary.setText("{1} > {0}".format(config.thirdDictionary, self.parent.parent.translation["context1_3rdDict"]))
 
     def getText(self):
         text = {
@@ -2745,14 +2672,14 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
         copyText = QAction(self)
-        copyText.setText("Copy")
+        copyText.setText(self.parent.parent.translation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
         # TEXT-TO-SPEECH feature
         if ttsSupport:
             tts = QAction(self)
-            tts.setText("Speak")
+            tts.setText(self.parent.parent.translation["context1_speak"])
             tts.triggered.connect(self.textToSpeech)
             self.addAction(tts)
 
@@ -2760,27 +2687,27 @@ class WebEngineView(QWebEngineView):
         if googletransSupport:
             # Translate into English
             translateText = QAction(self)
-            translateText.setText("Translate into English")
+            translateText.setText(self.parent.parent.translation["context1_english"])
             translateText.triggered.connect(self.selectedTextToEnglish)
             self.addAction(translateText)
             if config.showGoogleTranslateChineseOptions:
                 # Translate into Traditional Chinese
                 translateText = QAction(self)
-                translateText.setText("翻譯成繁體中文")
+                translateText.setText(self.parent.parent.translation["context1_tChinese"])
                 translateText.triggered.connect(self.selectedTextToTraditionalChinese)
                 self.addAction(translateText)
                 # Translate into Simplified Chinese
                 translateText = QAction(self)
-                translateText.setText("翻译成简体中文")
+                translateText.setText(self.parent.parent.translation["context1_sChinese"])
                 translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
                 self.addAction(translateText)
             # Translate into User-defined Language
             if config.userLanguage:
                 userLanguage = config.userLanguage
             else:
-                userLanguage = "My Language"
+                userLanguage = self.parent.parent.translation["context1_my"]
             translateText = QAction(self)
-            translateText.setText("Translate into {0}".format(userLanguage))
+            translateText.setText("{0} {1}".format(self.parent.parent.translation["context1_translate"], userLanguage))
             translateText.triggered.connect(self.checkUserLanguage)
             self.addAction(translateText)
 
@@ -2788,77 +2715,77 @@ class WebEngineView(QWebEngineView):
         # Convert Chinese characters into pinyin
         if pinyinSupport:
             pinyinText = QAction(self)
-            pinyinText.setText("翻译成汉语拼音")
+            pinyinText.setText(self.parent.parent.translation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
         self.searchText = QAction(self)
-        self.searchText.setText("Search")
+        self.searchText.setText(self.parent.parent.translation["context1_search"])
         self.searchText.triggered.connect(self.searchSelectedText)
         self.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
-        self.searchTextInBook.setText("Search in Current Book")
+        self.searchTextInBook.setText(self.parent.parent.translation["context1_current"])
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
 
         searchFavouriteBible = QAction(self)
-        searchFavouriteBible.setText("Search my Favourite Bible")
+        searchFavouriteBible.setText(self.parent.parent.translation["context1_favourite"])
         searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
         self.addAction(searchFavouriteBible)
 
         searchTextOriginal = QAction(self)
-        searchTextOriginal.setText("Search Hebrew / Greek Bible")
+        searchTextOriginal.setText(self.parent.parent.translation["context1_original"])
         searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
         self.addAction(searchTextOriginal)
 
         self.searchLexicon = QAction(self)
-        self.searchLexicon.setText("Hebrew / Greek Lexicons")
+        self.searchLexicon.setText(self.parent.parent.translation["context1_lexicon"])
         self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
         self.addAction(self.searchLexicon)
 
         searchBibleCharacter = QAction(self)
-        searchBibleCharacter.setText("Bible Character")
+        searchBibleCharacter.setText(self.parent.parent.translation["context1_character"])
         searchBibleCharacter.triggered.connect(self.searchCharacter)
         self.addAction(searchBibleCharacter)
 
         searchBibleName = QAction(self)
-        searchBibleName.setText("Bible Name")
+        searchBibleName.setText(self.parent.parent.translation["context1_name"])
         searchBibleName.triggered.connect(self.searchName)
         self.addAction(searchBibleName)
 
         searchBibleLocation = QAction(self)
-        searchBibleLocation.setText("Bible Location")
+        searchBibleLocation.setText(self.parent.parent.translation["context1_location"])
         searchBibleLocation.triggered.connect(self.searchLocation)
         self.addAction(searchBibleLocation)
 
         self.searchBibleTopic = QAction(self)
-        self.searchBibleTopic.setText("Bible Topic")
+        self.searchBibleTopic.setText(self.parent.parent.translation["context1_topic"])
         self.searchBibleTopic.triggered.connect(self.searchTopic)
         self.addAction(self.searchBibleTopic)
 
         self.searchBibleEncyclopedia = QAction(self)
-        self.searchBibleEncyclopedia.setText("Bible Encyclopedia")
+        self.searchBibleEncyclopedia.setText(self.parent.parent.translation["context1_encyclopedia"])
         self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
         self.addAction(self.searchBibleEncyclopedia)
 
         self.searchBibleDictionary = QAction(self)
-        self.searchBibleDictionary.setText("Bible Dictionary")
+        self.searchBibleDictionary.setText(self.parent.parent.translation["context1_dict"])
         self.searchBibleDictionary.triggered.connect(self.searchDictionary)
         self.addAction(self.searchBibleDictionary)
 
         self.searchThirdDictionary = QAction(self)
-        self.searchThirdDictionary.setText("3rd Party Dictionary")
+        self.searchThirdDictionary.setText(self.parent.parent.translation["context1_3rdDict"])
         self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
         self.addAction(self.searchThirdDictionary)
 
         searchBibleReferences = QAction(self)
-        searchBibleReferences.setText("Extract All Bible References")
+        searchBibleReferences.setText(self.parent.parent.translation["context1_extract"])
         searchBibleReferences.triggered.connect(self.extractAllReferences)
         self.addAction(searchBibleReferences)
 
         runAsCommandLine = QAction(self)
-        runAsCommandLine.setText("Run as Command")
+        runAsCommandLine.setText(self.parent.parent.translation["context1_command"])
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
 
