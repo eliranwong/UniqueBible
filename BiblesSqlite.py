@@ -222,7 +222,7 @@ class BiblesSqlite:
             for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
-            menu += "<hr><b>Bible Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
+            menu += "<hr><b>Search Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
             for version in versions:
                 if version == defaultSearchText or version == config.favouriteBible:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
