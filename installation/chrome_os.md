@@ -13,7 +13,7 @@ Install pyhon3 and pip tools first:
 
 Enter in terminal:
 
-> pip3 install PyPDF2 python-docx gdown diff_match_patch
+> pip3 install PyPDF2 python-docx gdown diff_match_patch googletrans
 
 > pip3 install --index-url=https://download.qt.io/official_releases/QtForPython/ pyside2 --trusted-host download.qt.io
 
