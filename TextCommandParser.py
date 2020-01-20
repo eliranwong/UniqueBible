@@ -1317,7 +1317,7 @@ class TextCommandParser:
 
     # _wordnote:::
     def textWordNote(self, command, source):
-        if re.search("^(LXX1|LXX2|LXX1i|LXX2i|SBLGNT):::", command):
+        if re.search("^(LXX1|LXX2|LXX1i|LXX2i|SBLGNT|SBLGNTl):::", command):
             module, wordID = self.splitCommand(command)
             bibleSqlite = Bible(module)
             data = bibleSqlite.readWordNote(wordID)
