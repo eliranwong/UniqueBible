@@ -56,7 +56,8 @@ or [on some Linux distro]:<br>
 <br>(it is an essential component for advanced verse comparison developed <b>from version 5.7 onwards</b>.)
 
 > pip3 install googletrans<br>
-(Install it to enable google-translate of any texts displayed on UniqueBible.app.)
+(Install it to enable google-translate of any texts displayed on UniqueBible.app.)<br>
+(It is also essentail for translating program interface into user's language.)
 
 > pip3 install OpenCC<br>
 (Install it to enable conversion of Chinese texts in command field between traditional and simplified characters.)
