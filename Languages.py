@@ -250,7 +250,6 @@ class Languages:
         "bar2_books": "Reference Book",
         "bar2_searchBooks": "Search Reference Book",
         "bar3_pdf": "Export to PDF",
-        "bar3_compareAll": "Compare All Versions",
         "note_title": "Note Editor Menu Bar",
         "note_save": "Save",
         "note_saveAs": "Save as",

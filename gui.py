@@ -757,14 +757,14 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_compareAll"])
+        actionButton.setToolTip(self.translation["menu4_compareAll"])
         actionButtonFile = os.path.join("htmlResources", "compare_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMPARE)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_compareAll"])
+        actionButton.setToolTip(self.translation["menu4_compare"])
         actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.mainRefButtonClicked)
@@ -1126,10 +1126,10 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "compare_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_compareAll"], self.runCOMPARE)
+        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_compareAll"], self.runCOMPARE)
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_compareAll"], self.mainRefButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_compare"], self.mainRefButtonClicked)
 
         self.leftToolBar.addSeparator()
 
