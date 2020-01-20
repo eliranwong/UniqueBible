@@ -42,7 +42,7 @@ Unzip it and place in a location you like.  In this example, we put it on deskto
 
 > .\venv\Scripts\activate
 
-> pip install PySide2 PyPDF2 gdown python-docx diff-match-patch
+> pip install PySide2 PyPDF2 gdown python-docx diff-match-patch googletrans
 
 <img src="screenshots/command_prompt3.png">
 
