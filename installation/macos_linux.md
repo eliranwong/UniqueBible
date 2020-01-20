@@ -34,6 +34,7 @@ On mac, open "Applications > Utilities > Terminal.app"
 > pip3 install python-docx<br>
 > pip3 install gdown<br>
 > pip3 install diff-match-patch<br>
+> pip3 install googletrans<br>
 
 # 5. Run the app
 
