@@ -773,35 +773,35 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_mob"])
+        actionButton.setToolTip("Marvel Original Bible")
         actionButtonFile = os.path.join("htmlResources", "original.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMOB)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_mib"])
+        actionButton.setToolTip("Marvel Interlinear Bible")
         actionButtonFile = os.path.join("htmlResources", "interlinear.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMIB)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_mtb"])
+        actionButton.setToolTip("Marvel Trilingual Bible")
         actionButtonFile = os.path.join("htmlResources", "trilingual.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMTB)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_mpb"])
+        actionButton.setToolTip("Marvel Parallel Bible")
         actionButtonFile = os.path.join("htmlResources", "line.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMPB)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_mab"])
+        actionButton.setToolTip("Marvel Annotated Bible")
         actionButtonFile = os.path.join("htmlResources", "annotated.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runMAB)
@@ -1134,19 +1134,19 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "original.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_mob"], self.runMOB)
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Original Bible", self.runMOB)
 
         iconFile = os.path.join("htmlResources", "interlinear.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_mib"], self.runMIB)
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Interlinear Bible", self.runMIB)
 
         iconFile = os.path.join("htmlResources", "trilingual.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_mtb"], self.runMTB)
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Trilingual Bible", self.runMTB)
 
         iconFile = os.path.join("htmlResources", "line.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_mpb"], self.runMPB)
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Parallel Bible", self.runMPB)
 
         iconFile = os.path.join("htmlResources", "annotated.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_mab"], self.runMAB)
+        self.leftToolBar.addAction(QIcon(iconFile), "Marvel Annotated Bible", self.runMAB)
 
         self.leftToolBar.addSeparator()
 
@@ -3588,7 +3588,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setToolTip(self.parent.translation["note_find"])
+        self.searchLineEdit.setToolTip(self.parent.translation["menu5_search"])
         self.searchLineEdit.setMaximumWidth(300)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
@@ -3707,7 +3707,7 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         customButton = QPushButton()
-        customButton.setToolTip(self.parent.translation["noteTool_transform"])
+        customButton.setToolTip("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(self.parent.translation["noteTool_trans0"], self.parent.translation["noteTool_trans1"], self.parent.translation["noteTool_trans2"], self.parent.translation["noteTool_trans3"], self.parent.translation["noteTool_no1"], self.parent.translation["noteTool_no2"], self.parent.translation["noteTool_no3"], self.parent.translation["noteTool_no4"], self.parent.translation["noteTool_no5"], self.parent.translation["noteTool_no6"], "{", "}"))
         customButtonFile = os.path.join("htmlResources", "custom.png")
         customButton.setIcon(QIcon(customButtonFile))
         customButton.clicked.connect(self.format_custom)
