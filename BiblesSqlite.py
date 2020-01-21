@@ -131,14 +131,14 @@ class BiblesSqlite:
         elif source == "study":
             mainVerseReference = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
             menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
-        menu += "<hr><b>Bibles:</b> {0}".format(self.getTexts())
+        menu += "<hr><b>{1}</b> {0}".format(self.getTexts(), config.thisTranslation["html_bibles"])
         items = command.split(".", 3)
         text = items[0]
         versions = self.getBibleList()
         if not text == "":
             # i.e. text specified; add book menu
-            menu += "<hr><b>Selected Bible:</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open {1} in {0}</button>".format(text, mainVerseReference)
-            menu += "<hr><b>Books:</b> {0}".format(self.getBooks(text))
+            menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button>".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+            menu += "<hr><b>{1}</b> {0}".format(self.getBooks(text), config.thisTranslation["html_book"])
             bcList = [int(i) for i in items[1:]]
             if bcList:
                 check = len(bcList)
@@ -146,83 +146,83 @@ class BiblesSqlite:
                     # i.e. book specified; add chapter menu
                     bookReference = self.bcvToVerseReference(bcList[0], 1, 1)
                     if config.openBibleInMainViewOnly:
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open</button>".format(text, bookReference)
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_open"])
                     else:
                         if source == "main":
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on study view</button>".format(text, bookReference)
+                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openStudy"])
                         elif source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on main view</button>".format(text, bookReference)
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open HERE</button> {2}".format(text, bookReference, anotherView)
-                    menu += "<hr><b>Selected book:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], openOption)
-                    menu += "<hr><b>Chapters:</b> {0}".format(self.getChapters(bcList[0], text))
+                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openMain"])
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, bookReference, anotherView, config.thisTranslation["html_openHere"])
+                    menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], openOption, config.thisTranslation["html_current"])
+                    menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bcList[0], text), config.thisTranslation["html_chapter"])
                 if check >= 2:
                     # i.e. both book and chapter specified; add verse menu
                     chapterReference = self.bcvToVerseReference(bcList[0], bcList[1], 1)
                     if config.openBibleInMainViewOnly:
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open</button>".format(text, chapterReference)
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_open"])
                     else:
                         if source == "main":
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on study view</button>".format(text, chapterReference)
+                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openStudy"])
                         elif source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on main view</button>".format(text, chapterReference)
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open HERE</button> {2}".format(text, chapterReference, anotherView)
-                    menu += "<hr><b>Selected chapter:</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>chapter note</button>".format(bcList[0], bcList[1], openOption)
-                    menu += "<hr><b>Verses:</b> {0}".format(self.getVerses(bcList[0], bcList[1], text))
+                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openMain"])
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, chapterReference, anotherView, config.thisTranslation["html_openHere"])
+                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button>".format(bcList[0], bcList[1], openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
+                    menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bcList[0], bcList[1], text), config.thisTranslation["html_verse"])
                 if check == 3:
                     if config.openBibleInMainViewOnly:
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open</button>".format(text, mainVerseReference)
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_open"])
                     else:
                         if source == "main":
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>open on study view</button>".format(text, mainVerseReference)
+                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
                         elif source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>open on main view</button>".format(text, mainVerseReference)
-                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>open HERE</button> {2}".format(text, mainVerseReference, anotherView)
-                    menu += "<hr><b>Selected verse:</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>verse note</button>".format(text, bcList[0], bcList[1], bcList[2], openOption)
-                    menu += "<hr><b>Special Features:</b><br>"
+                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
+                        openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, mainVerseReference, anotherView, config.thisTranslation["html_openHere"])
+                    menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>{6}</button>".format(text, bcList[0], bcList[1], bcList[2], openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
+                    menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_features"])
                     features = (
-                        ("COMPARE", "Compare All Versions"),
-                        ("CROSSREFERENCE", "Cross References"),
-                        ("TSKE", "TSK (Enhanced)"),
-                        ("TRANSLATION", "Translations"),
-                        ("DISCOURSE", "Discourse"),
-                        ("WORDS", "Words"),
-                        ("COMBO", "TDW Combo"),
-                        ("COMMENTARY", "Commentary"),
-                        ("INDEX", "Smart Indexes"),
+                        ("COMPARE", config.thisTranslation["menu4_compareAll"]),
+                        ("CROSSREFERENCE", config.thisTranslation["menu4_crossRef"]),
+                        ("TSKE", config.thisTranslation["menu4_tske"]),
+                        ("TRANSLATION", config.thisTranslation["menu4_traslations"]),
+                        ("DISCOURSE", config.thisTranslation["menu4_discourse"]),
+                        ("WORDS", config.thisTranslation["menu4_words"]),
+                        ("COMBO", config.thisTranslation["menu4_tdw"]),
+                        ("COMMENTARY", config.thisTranslation["menu4_commentary"]),
+                        ("INDEX", config.thisTranslation["menu4_indexes"]),
                     )
                     for keyword, description in features:
                         menu += "<button class='feature' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
                     #versions = self.getBibleList()
                     # Compare menu
-                    menu += "<hr><b>Compare <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
+                    menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                             menu += "<script>versionList.push('{0}');</script>".format(version)
-                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>Start Comparison</button>"
+                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>{0}</button>".format(config.thisTranslation["html_showCompare"])
                     # Parallel menu
-                    menu += "<hr><b>Parallel <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> with:</b><br>".format(text)
+                    menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>Start Parallel Reading</button>"
+                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>{0}</button>".format(config.thisTranslation["html_showParallel"])
                     # Diff menu
-                    menu += "<hr><b>Difference(s) between <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> and:</b><br>".format(text)
+                    menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='diff{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>Show Difference(s)</button>"
+                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>{0}</button>".format(config.thisTranslation["html_showDifference"])
         else:
             # menu - Search a bible
             if source == "study":
                 defaultSearchText = config.studyText
             else:
                 defaultSearchText = config.mainText
-            menu += "<hr><b>Search Bible</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(defaultSearchText)
+            menu += "<hr><b>{1}</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(defaultSearchText, config.thisTranslation["html_searchBible"])
             for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
-            menu += "<hr><b>Search Multiple Bibles</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>"
+            menu += "<hr><b>{0}</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>".format(config.thisTranslation["html_searchBibles"])
             for version in versions:
                 if version == defaultSearchText or version == config.favouriteBible:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
