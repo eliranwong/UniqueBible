@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 9.8
+current_version = 9.9
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -79,9 +79,9 @@ if not hasattr(config, "landscapeMode"):
 # Options for NOT displaying any toolbars on startup: True / False
 if not hasattr(config, "noToolBar"):
     config.noToolBar = False
-# Options for displaying a single toolbar only: True / False
-if not hasattr(config, "singleToolBar"):
-    config.singleToolBar = False
+# Options to display the top toolbar only, with all other toolbars hidden: True / False
+if not hasattr(config, "topToolBarOnly"):
+    config.topToolBarOnly = False
 # Options to use large sets of icons: True / False
 if not hasattr(config, "toolBarIconFullSize"):
     config.toolBarIconFullSize = False
@@ -96,7 +96,7 @@ if not hasattr(config, "instantInformationEnabled"):
     config.instantInformationEnabled = True
 # Default font size of content in main window and workspace
 if not hasattr(config, "fontSize"):
-    config.fontSize = 120
+    config.fontSize = 17
 # Default font
 if not hasattr(config, "font"):
     config.font = ""
@@ -275,7 +275,7 @@ def saveDataOnExit():
         ("showVerseNumbersInRange", config.showVerseNumbersInRange),
         ("landscapeMode", config.landscapeMode),
         ("noToolBar", config.noToolBar),
-        ("singleToolBar", config.singleToolBar),
+        ("topToolBarOnly", config.topToolBarOnly),
         ("toolBarIconFullSize", config.toolBarIconFullSize),
         ("parallelMode", config.parallelMode),
         ("instantMode", config.instantMode),

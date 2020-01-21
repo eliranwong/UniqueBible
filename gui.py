@@ -1224,8 +1224,8 @@ class MainWindow(QMainWindow):
         items = [self.bibleInfo[bible][-1] for bible in self.bibleInfo.keys() if not os.path.isfile(os.path.join(*self.bibleInfo[bible][0])) or self.isNewerAvailable(self.bibleInfo[bible][0][-1])]
         if not items:
             items = ["[All Installed]"]
-        item, ok = QInputDialog.getItem(self, "Install Formatted Bibles",
-                "Available Modules:", items, 0, False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu8_bibles"], items, 0, False)
         if ok and item and not item == "[All Installed]":
             for key, value in self.bibleInfo.items():
                 if item == value[-1]:
@@ -1271,8 +1271,8 @@ class MainWindow(QMainWindow):
             items.append("Install ALL Commentaries Listed Above")
         else:
             items = ["[All Installed]"]
-        item, ok = QInputDialog.getItem(self, "Install Bible Commentaries",
-                "Available Modules:", items, 0, False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu8_commentaries"], items, 0, False)
         if ok and item and not item in ("[All Installed]", "Install ALL Commentaries Listed Above"):
             self.downloadHelper(commentaries[item])
         elif item == "Install ALL Commentaries Listed Above":
@@ -1310,8 +1310,8 @@ class MainWindow(QMainWindow):
         items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(*datasets[dataset][0]))]
         if not items:
             items = ["[All Installed]"]
-        item, ok = QInputDialog.getItem(self, "Install Marvel.bible Datasets",
-                "Available Modules:", items, 0, False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu8_datasets"], items, 0, False)
         if ok and item and not item == "[All Installed]":
             self.downloadHelper(datasets[item])
 
@@ -1480,7 +1480,7 @@ class MainWindow(QMainWindow):
     def openTextFileDialog(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
+                config.thisTranslation["menu7_open"],
                 self.openFileNameLabel.text(),
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)", "", options)
         if fileName:
@@ -1610,7 +1610,7 @@ class MainWindow(QMainWindow):
     def importBBPlusLexiconInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
-                "QFileDialog.getExistingDirectory()",
+                config.thisTranslation["menu8_plusLexicons"],
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
@@ -1621,7 +1621,7 @@ class MainWindow(QMainWindow):
     def importBBPlusDictionaryInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
-                "QFileDialog.getExistingDirectory()",
+                config.thisTranslation["menu8_plusDictionaries"],
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
@@ -1637,7 +1637,7 @@ class MainWindow(QMainWindow):
     def importModules(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
+                config.thisTranslation["menu8_3rdParty"],
                 self.openFileNameLabel.text(),
                 "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
         if fileName:
@@ -1661,7 +1661,7 @@ class MainWindow(QMainWindow):
     def importModulesInFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
-                "QFileDialog.getExistingDirectory()",
+                config.thisTranslation["menu8_3rdPartyInFolder"],
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
@@ -1716,7 +1716,7 @@ class MainWindow(QMainWindow):
     def tagFile(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
+                config.thisTranslation["menu8_tagFile"],
                 self.openFileNameLabel.text(),
                 "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
         if fileName:
@@ -1726,7 +1726,7 @@ class MainWindow(QMainWindow):
     def tagFiles(self):
         options = QFileDialog.Options()
         files, filtr = QFileDialog.getOpenFileNames(self,
-                "QFileDialog.getOpenFileNames()", self.openFilesPath,
+                config.thisTranslation["menu8_tagFiles"], self.openFilesPath,
                 "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
         if files:
             parser = BibleVerseParser(config.parserStandarisation)
@@ -1738,7 +1738,7 @@ class MainWindow(QMainWindow):
     def tagFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
-                "QFileDialog.getExistingDirectory()",
+                config.thisTranslation["menu8_tagFolder"],
                 self.directoryLabel.text(), options)
         if directory:
             path, file = os.path.split(directory)
@@ -1774,25 +1774,25 @@ class MainWindow(QMainWindow):
             self.rightToolBar.show()
 
     def hideShowAdditionalToolBar(self):
-        if config.singleToolBar:
-            config.singleToolBar = False
+        if config.topToolBarOnly:
+            config.topToolBarOnly = False
         else:
-            config.singleToolBar = True
+            config.topToolBarOnly = True
         self.setAdditionalToolBar()
 
     def setAdditionalToolBar(self):
         self.firstToolBar.show()
         config.noToolBar = False
-        if config.singleToolBar:
-            self.setStudyBibleToolBar()
-            self.secondToolBar.show()
-            self.leftToolBar.show()
-            self.rightToolBar.show()
-        else:
+        if config.topToolBarOnly:
             self.studyBibleToolBar.hide()
             self.secondToolBar.hide()
             self.leftToolBar.hide()
             self.rightToolBar.hide()
+        else:
+            self.setStudyBibleToolBar()
+            self.secondToolBar.show()
+            self.leftToolBar.show()
+            self.rightToolBar.show()
 
     def setNoToolBar(self):
         if config.noToolBar:
@@ -1803,7 +1803,7 @@ class MainWindow(QMainWindow):
             self.hideAllToolBar()
 
     def showAllToolBar(self):
-        config.singleToolBar = True
+        config.topToolBarOnly = False
         self.firstToolBar.show()
         self.setStudyBibleToolBar()
         self.secondToolBar.show()
@@ -1811,7 +1811,7 @@ class MainWindow(QMainWindow):
         self.rightToolBar.show()
 
     def hideAllToolBar(self):
-        config.singleToolBar = False
+        config.topToolBarOnly = False
         self.firstToolBar.hide()
         self.studyBibleToolBar.hide()
         self.secondToolBar.hide()
@@ -2469,8 +2469,8 @@ class MainWindow(QMainWindow):
         else:
             userLanguage = "English"
         items = [language for language in languages.codes.keys()]
-        item, ok = QInputDialog.getItem(self, "Set my Language",
-                "Select:", items, items.index(userLanguage), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage), False)
         if ok and item:
             config.userLanguage = item
             if not googletransSupport:
@@ -2479,8 +2479,8 @@ class MainWindow(QMainWindow):
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
-        item, ok = QInputDialog.getItem(self, "Favourite Bible",
-                "Add as a parallel version for reading multiple References:", items, items.index(config.favouriteBible), False)
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible"],
+                config.thisTranslation["message_addFavouriteVersion"], items, items.index(config.favouriteBible), False)
         if ok and item:
             config.favouriteBible = item
             config.addFavouriteToMultiRef = True
@@ -2491,8 +2491,8 @@ class MainWindow(QMainWindow):
     # Set bible book abbreviations
     def setBibleAbbreviations(self):
         items = ("ENG", "TC", "SC")
-        item, ok = QInputDialog.getItem(self, "Language",
-                "Abbreviations of Bible Books:", items, items.index(config.standardAbbreviation), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu1_setAbbreviations"], items, items.index(config.standardAbbreviation), False)
         if ok and item:
             config.standardAbbreviation = item
             self.reloadCurrentRecord()
@@ -2762,7 +2762,7 @@ class WebEngineView(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_select"]))
+        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_selectWord"]))
 
     def messageNoTtsEngine(self):
         self.displayMessage(config.thisTranslation["message_noSupport"])
@@ -2963,7 +2963,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.parent = parent
         self.name = name
         self.source = source
-        self.setWindowTitle("Unique Bible App - Popover")
+        self.setWindowTitle("Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
 
         # add context menu (triggered by right-clicking)
@@ -2985,7 +2985,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_select"]))
+        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_selectWord"]))
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -3023,10 +3023,10 @@ class MorphDialog(QDialog):
         # Two buttons
         buttons = QWidget()
         buttonsLayout = QHBoxLayout()
-        self.searchButton = QPushButton("&Search")
+        self.searchButton = QPushButton("&{0}".format(config.thisTranslation["menu5_search"]))
         self.searchButton.clicked.connect(self.searchMorphology)
         buttonsLayout.addWidget(self.searchButton)
-        self.cancelButton = QPushButton("&Cancel")
+        self.cancelButton = QPushButton("&{0}".format(config.thisTranslation["message_cancel"]))
         self.cancelButton.clicked.connect(self.close)
         buttonsLayout.addWidget(self.cancelButton)
         buttons.setLayout(buttonsLayout)
@@ -3037,7 +3037,7 @@ class MorphDialog(QDialog):
         mainLayout.addWidget(buttons)
 
         self.setLayout(mainLayout)
-        self.setWindowTitle("Search Morphology ...")
+        self.setWindowTitle(config.thisTranslation["message_searchMorphology"])
 
     def searchMorphology(self):
         command = "MORPHOLOGY:::LexicalEntry LIKE '%{0},%'".format(self.lexicalEntry.split(",")[0])
@@ -3916,7 +3916,7 @@ class NoteEditor(QMainWindow):
     def openFileDialogAction(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
+                config.thisTranslation["menu7_open"],
                 self.parent.openFileNameLabel.text(),
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
@@ -3972,7 +3972,7 @@ class NoteEditor(QMainWindow):
             defaultName = "new.uba"
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getSaveFileName(self,
-                "QFileDialog.getSaveFileName()",
+                config.thisTranslation["note_saveAs"],
                 defaultName,
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
@@ -4108,7 +4108,7 @@ class NoteEditor(QMainWindow):
     def openImageDialog(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()",
+                config.thisTranslation["html_open"],
                 self.parent.openFileNameLabel.text(),
                 "JPG Files (*.jpg);;JPEG Files (*.jpeg);;PNG Files (*.png);;GIF Files (*.gif);;BMP Files (*.bmp);;All Files (*)", "", options)
         if fileName:
@@ -4143,33 +4143,33 @@ class ImportSettings(QDialog):
         self.parent = parent
         self.setModal(True)
 
-        self.setWindowTitle("Import settings")
+        self.setWindowTitle(config.thisTranslation["menu8_settings"])
 
         self.setupLayout()
 
     def setupLayout(self):
-        titleBibles = QLabel("Bibles:")
+        titleBibles = QLabel(config.thisTranslation["menu5_bible"])
 
         self.linebreak = QCheckBox()
-        self.linebreak.setText("Additional linebreak for each verse")
+        self.linebreak.setText(config.thisTranslation["import_linebreak"])
         self.linebreak.setChecked(config.importAddVerseLinebreak)
 
         self.stripStrNo = QCheckBox()
-        self.stripStrNo.setText("Keep Strong's numbers for search")
+        self.stripStrNo.setText(config.thisTranslation["import_strongNo"])
         self.stripStrNo.setChecked(config.importDoNotStripStrongNo)
 
         self.stripMorphCode = QCheckBox()
-        self.stripMorphCode.setText("Keep morphology codes for search")
+        self.stripMorphCode.setText(config.thisTranslation["import_morphCode"])
         self.stripMorphCode.setChecked(config.importDoNotStripMorphCode)
 
         self.importRtlOT = QCheckBox()
-        self.importRtlOT.setText("Right-to-Left display for Old Testament")
+        self.importRtlOT.setText(config.thisTranslation["import_rtl"])
         self.importRtlOT.setChecked(config.importRtlOT)
 
-        saveButton = QPushButton("Save")
+        saveButton = QPushButton(config.thisTranslation["note_save"])
         saveButton.clicked.connect(self.saveSettings)
 
-        cancelButton = QPushButton("Cancel")
+        cancelButton = QPushButton(config.thisTranslation["message_cancel"])
         cancelButton.clicked.connect(self.close)
 
         self.layout = QGridLayout()
@@ -4211,7 +4211,7 @@ class Downloader(QDialog):
     def __init__(self, parent, databaseInfo):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle("Download Helper")
+        self.setWindowTitle(config.thisTranslation["message_downloadHelper"])
         self.setModal(True)
 
         fileItems, cloudID, *_ = databaseInfo
@@ -4225,15 +4225,15 @@ class Downloader(QDialog):
 
         #self.setupProgressBar()
 
-        message = QLabel("File '{0}' is required for running the feature you selected.".format(self.filename))
+        message = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
 
-        downloadButton = QPushButton("Download + Install")
+        downloadButton = QPushButton(config.thisTranslation["message_install"])
         downloadButton.clicked.connect(self.startDownloadFile)
 
-        cancelButton = QPushButton("Cancel")
+        cancelButton = QPushButton(config.thisTranslation["message_cancel"])
         cancelButton.clicked.connect(self.close)
 
-        remarks = QLabel("Remarks: It takes time for large files to be downloaded.")
+        remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
 
         self.layout = QGridLayout()
         #self.layout.addWidget(self.progressBar, 0, 0)
