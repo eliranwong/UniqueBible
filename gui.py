@@ -135,32 +135,32 @@ class MainWindow(QMainWindow):
                     else:
                         config.translation[key] = value
                     updateNeeded = True
-            self.translation = config.translation
+            config.thisTranslation = config.translation
         else:
-            self.translation = Languages().translation
+            config.thisTranslation = Languages().translation
         if updateNeeded:
-            self.displayNotice("UniqueBible", "New items were added to your translation of interface.  To improve the quality of translation, you may close this application first and manually edit file 'config.py'.")
+            self.displayMessage(config.thisTranslation["message_newInterfaceItems"])
 
     def translateInterface(self):
         if googletransSupport:
             if not config.userLanguage:
-                self.displayNotice("UniqueBible", "To run this feature, configure your language first.")
+                self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
             else:
                 Languages().translateInterface(config.userLanguage)
                 config.userLanguageInterface = True
-                self.displayNotice("UniqueBible", "Restart this application to apply the new changes.  To improve the quality of translation, you may close this application first and manually edit file 'config.py'.")
+                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
         else:
-            self.displayNotice("UniqueBible", "To run this feature, install 'googletrans' first.")
+            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
 
     def toogleInterfaceTranslation(self):
         if not hasattr(config, "translation") and not config.userLanguageInterface:
-            self.displayNotice("UniqueBible", "To run this feature, translate program interface into your language first.")
+            self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_translateFirst"]))
         else:
             if config.userLanguageInterface:
                 config.userLanguageInterface = False
             else:
                 config.userLanguageInterface = True
-            self.displayNotice("UniqueBible", "Restart this application to apply the new changes.")
+            self.displayMessage(config.thisTranslation["message_restart"])
 
     # base folder for webViewEngine
     def setupBaseUrl(self):
@@ -197,12 +197,12 @@ class MainWindow(QMainWindow):
             biblesSqlite = BiblesSqlite()
             biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
             if biblesWithBothVersions:
-                self.displayNotice("UniqueBible", "Migration is needed.  It looks like that all or some of your bible files are not up-to-date for running this version.  We are helping you to update those files.  It will take a while.  When it is finished, you will receive another message.")
+                self.displayMessage(config.thisTranslation["message_migration"])
                 biblesSqlite.proceedMigration(biblesWithBothVersions)
-                self.displayNotice("UniqueBible" , "Migration is finished.  Your bible files are up-to-date now. Enjoy!")
+                self.displayMessage(config.thisTranslation["message_done"])
             del biblesSqlite
 
-    def displayNotice(self, title, message):
+    def displayMessage(self, message, title="UniqueBible"):
         reply = QMessageBox.information(self, title, message)
 
     # manage key capture
@@ -258,7 +258,7 @@ class MainWindow(QMainWindow):
             abb = filename[:-6]
             if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
                 if self.isNewerAvailable(filename):
-                    self.displayNotice("UniqueBible", "Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
+                    self.displayMessage("Newer version of {0}{1}{0} is available.  Install from {0}Menu > Resources > Install Formatted Bibles{0}.".format("'", filename))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -296,11 +296,11 @@ class MainWindow(QMainWindow):
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
-                self.displayNotice("UniqueBible", "The latest version is installed.  Restart this application to apply new changes.")
+                self.displayMessage("The latest version is installed.  Restart this application to apply new changes.")
             else:
-                self.displayNotice("UniqueBible", alertFailedUpdate)
+                self.displayMessage(alertFailedUpdate)
         else:
-            self.displayNotice("UniqueBible", alertFailedUpdate)
+            self.displayMessage(alertFailedUpdate)
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
@@ -312,147 +312,147 @@ class MainWindow(QMainWindow):
         if filename.endswith(".bible"):
             abb = filename[:-6]
             config.installHistory[filename] = self.bibleInfo[abb][1]
-        self.displayNotice("UniqueBible", "{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
+        self.displayMessage("{0}{1}{0} was downloaded and installed successfully.".format("'", filename))
 
     def moduleInstalledFailed(self, filename):
         self.downloader.close()
-        self.displayNotice("UniqueBible", "Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
+        self.displayMessage("Failed to download {0}{1}{0}. Please check your internet connection.".format("'", filename))
 
     # setup interface
     def create_menu(self):
-        menu1 = self.menuBar().addMenu("&{0}".format(self.translation["menu1_app"]))
-        menu1.addAction(QAction(self.translation["menu1_fullScreen"], self, triggered=self.fullsizeWindow))
-        menu1.addAction(QAction(self.translation["menu1_resize"], self, triggered=self.twoThirdWindow))
+        menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
+        menu1.addAction(QAction(config.thisTranslation["menu1_fullScreen"], self, triggered=self.fullsizeWindow))
+        menu1.addAction(QAction(config.thisTranslation["menu1_resize"], self, triggered=self.twoThirdWindow))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.translation["menu1_topHalf"], self, triggered=self.halfScreenHeight))
-        menu1.addAction(QAction(self.translation["menu1_leftHalf"], self, triggered=self.halfScreenWidth))
+        menu1.addAction(QAction(config.thisTranslation["menu1_topHalf"], self, triggered=self.halfScreenHeight))
+        menu1.addAction(QAction(config.thisTranslation["menu1_leftHalf"], self, triggered=self.halfScreenWidth))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.translation["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
-        menu1.addAction(QAction(self.translation["menu1_setChineseFont"], self, triggered=self.setChineseFont))
-        menu1.addAction(QAction(self.translation["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
-        menu1.addAction(QAction(self.translation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
-        menu1.addAction(QAction(self.translation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
+        menu1.addAction(QAction(config.thisTranslation["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
+        menu1.addAction(QAction(config.thisTranslation["menu1_setChineseFont"], self, triggered=self.setChineseFont))
+        menu1.addAction(QAction(config.thisTranslation["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
+        menu1.addAction(QAction(config.thisTranslation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
+        menu1.addAction(QAction(config.thisTranslation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
         menu1.addSeparator()
         if not hasattr(config, "translationLanguage") or (hasattr(config, "translationLanguage") and not config.translationLanguage == config.userLanguage):
-            menu1.addAction(QAction(self.translation["menu1_translateInterface"], self, triggered=self.translateInterface))
-        menu1.addAction(QAction(self.translation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
+            menu1.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
+        menu1.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.translation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
-        menu1.addAction(QAction(self.translation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
+        menu1.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
+        menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
-        menu1.addAction(QAction(self.translation["menu1_remoteControl"], self, triggered=self.manageRemoteControl))
+        menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, triggered=self.manageRemoteControl))
         menu1.addSeparator()
         appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
-        quit_action = QAction(appIcon, self.translation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=qApp.quit)
+        quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
 
-        menu2 = self.menuBar().addMenu("&{0}".format(self.translation["menu2_view"]))
-        menu2.addAction(QAction(self.translation["menu2_all"], self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
-        menu2.addAction(QAction(self.translation["menu2_topOnly"], self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        menu2 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu2_view"]))
+        menu2.addAction(QAction(config.thisTranslation["menu2_all"], self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
+        menu2.addAction(QAction(config.thisTranslation["menu2_topOnly"], self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_top"], self, triggered=self.hideShowMainToolBar))
-        menu2.addAction(QAction(self.translation["menu2_second"], self, triggered=self.hideShowSecondaryToolBar))
-        menu2.addAction(QAction(self.translation["menu2_left"], self, triggered=self.hideShowLeftToolBar))
-        menu2.addAction(QAction(self.translation["menu2_right"], self, triggered=self.hideShowRightToolBar))
+        menu2.addAction(QAction(config.thisTranslation["menu2_top"], self, triggered=self.hideShowMainToolBar))
+        menu2.addAction(QAction(config.thisTranslation["menu2_second"], self, triggered=self.hideShowSecondaryToolBar))
+        menu2.addAction(QAction(config.thisTranslation["menu2_left"], self, triggered=self.hideShowLeftToolBar))
+        menu2.addAction(QAction(config.thisTranslation["menu2_right"], self, triggered=self.hideShowRightToolBar))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_icons"], self, triggered=self.switchIconSize))
+        menu2.addAction(QAction(config.thisTranslation["menu2_icons"], self, triggered=self.switchIconSize))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_landscape"], self, shortcut="Ctrl+L", triggered=self.switchLandscapeMode))
+        menu2.addAction(QAction(config.thisTranslation["menu2_landscape"], self, shortcut="Ctrl+L", triggered=self.switchLandscapeMode))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_study"], self, shortcut="Ctrl+W", triggered=self.parallel))
-        menu2.addAction(QAction(self.translation["menu2_bottom"], self, shortcut="Ctrl+T", triggered=self.instant))
+        menu2.addAction(QAction(config.thisTranslation["menu2_study"], self, shortcut="Ctrl+W", triggered=self.parallel))
+        menu2.addAction(QAction(config.thisTranslation["menu2_bottom"], self, shortcut="Ctrl+T", triggered=self.instant))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_hover"], self, shortcut="Ctrl+=", triggered=self.enableInstantButtonClicked))
+        menu2.addAction(QAction(config.thisTranslation["menu2_hover"], self, shortcut="Ctrl+=", triggered=self.enableInstantButtonClicked))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
-        menu2.addAction(QAction(self.translation["menu2_smaller"], self, shortcut="Ctrl+-", triggered=self.smallerFont))
+        menu2.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
+        menu2.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut="Ctrl+-", triggered=self.smallerFont))
         menu2.addSeparator()
-        menu2.addAction(QAction(self.translation["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
-        menu2.addAction(QAction(self.translation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
+        menu2.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        menu2.addAction(QAction(config.thisTranslation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
 
-        menu3 = self.menuBar().addMenu("&{0}".format(self.translation["menu3_history"]))
-        menu3.addAction(QAction(self.translation["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
-        menu3.addAction(QAction(self.translation["menu3_mainBack"], self, shortcut="Ctrl+[", triggered=self.back))
-        menu3.addAction(QAction(self.translation["menu3_mainForward"], self, shortcut="Ctrl+]", triggered=self.forward))
+        menu3 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu3_history"]))
+        menu3.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
+        menu3.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut="Ctrl+[", triggered=self.back))
+        menu3.addAction(QAction(config.thisTranslation["menu3_mainForward"], self, shortcut="Ctrl+]", triggered=self.forward))
         menu3.addSeparator()
-        menu3.addAction(QAction(self.translation["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
-        menu3.addAction(QAction(self.translation["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
-        menu3.addAction(QAction(self.translation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
+        menu3.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
+        menu3.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
+        menu3.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
 
-        menu4 = self.menuBar().addMenu("&{0}".format(self.translation["menu4_further"]))
-        menu4.addAction(QAction(self.translation["menu4_next"], self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
-        menu4.addAction(QAction(self.translation["menu4_previous"], self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
+        menu4 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu4_further"]))
+        menu4.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
+        menu4.addAction(QAction(config.thisTranslation["menu4_previous"], self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.translation["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
-        menu4.addAction(QAction(self.translation["menu4_commentary"], self, shortcut="Ctrl+Y", triggered=self.runCOMMENTARY))
+        menu4.addAction(QAction(config.thisTranslation["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
+        menu4.addAction(QAction(config.thisTranslation["menu4_commentary"], self, shortcut="Ctrl+Y", triggered=self.runCOMMENTARY))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.translation["menu4_traslations"], self, triggered=self.runTRANSLATION))
-        menu4.addAction(QAction(self.translation["menu4_discourse"], self, triggered=self.runDISCOURSE))
-        menu4.addAction(QAction(self.translation["menu4_words"], self, triggered=self.runWORDS))
-        menu4.addAction(QAction(self.translation["menu4_tdw"], self, shortcut="Ctrl+K", triggered=self.runCOMBO))
+        menu4.addAction(QAction(config.thisTranslation["menu4_traslations"], self, triggered=self.runTRANSLATION))
+        menu4.addAction(QAction(config.thisTranslation["menu4_discourse"], self, triggered=self.runDISCOURSE))
+        menu4.addAction(QAction(config.thisTranslation["menu4_words"], self, triggered=self.runWORDS))
+        menu4.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut="Ctrl+K", triggered=self.runCOMBO))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.translation["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))
-        menu4.addAction(QAction(self.translation["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
+        menu4.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))
+        menu4.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
         menu4.addSeparator()
-        menu4.addAction(QAction(self.translation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
-        menu4.addAction(QAction(self.translation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
-        menu4.addAction(QAction(self.translation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
+        menu4.addAction(QAction(config.thisTranslation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction(config.thisTranslation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
 
-        menu5 = self.menuBar().addMenu("&{0}".format(self.translation["menu5_search"]))
-        menu5.addAction(QAction(self.translation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
-        menu5.addAction(QAction(self.translation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
-        menu5.addAction(QAction(self.translation["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
+        menu5.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
+        menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.translation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
-        menu5.addAction(QAction(self.translation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
-        menu5.addAction(QAction(self.translation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
+        menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
+        menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.translation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
-        menu5.addAction(QAction(self.translation["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
-        menu5.addAction(QAction(self.translation["menu5_locations"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleLocation))
-        menu5.addAction(QAction(self.translation["menu5_topics"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleTopic))
+        menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
+        menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
+        menu5.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleLocation))
+        menu5.addAction(QAction(config.thisTranslation["menu5_topics"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleTopic))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.translation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
+        menu5.addAction(QAction(config.thisTranslation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
         menu5.addSeparator()
-        menu5.addAction(QAction(self.translation["menu5_3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
+        menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
 
-        menu6 = self.menuBar().addMenu("&{0}".format(self.translation["menu6_notes"]))
-        menu6.addAction(QAction(self.translation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
-        menu6.addAction(QAction(self.translation["menu6_studyChapter"], self, triggered=self.openStudyChapterNote))
-        menu6.addAction(QAction(self.translation["menu6_searchChapters"], self, triggered=self.searchCommandChapterNote))
+        menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu6_notes"]))
+        menu6.addAction(QAction(config.thisTranslation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
+        menu6.addAction(QAction(config.thisTranslation["menu6_studyChapter"], self, triggered=self.openStudyChapterNote))
+        menu6.addAction(QAction(config.thisTranslation["menu6_searchChapters"], self, triggered=self.searchCommandChapterNote))
         menu6.addSeparator()
-        menu6.addAction(QAction(self.translation["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
-        menu6.addAction(QAction(self.translation["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
-        menu6.addAction(QAction(self.translation["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
+        menu6.addAction(QAction(config.thisTranslation["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
+        menu6.addAction(QAction(config.thisTranslation["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
+        menu6.addAction(QAction(config.thisTranslation["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
 
-        menu7 = self.menuBar().addMenu("&{0}".format(self.translation["menu7_topics"]))
-        menu7.addAction(QAction(self.translation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
-        menu7.addAction(QAction(self.translation["menu7_open"], self, triggered=self.openTextFileDialog))
+        menu7 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
+        menu7.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
+        menu7.addAction(QAction(config.thisTranslation["menu7_open"], self, triggered=self.openTextFileDialog))
         menu7.addSeparator()
-        menu7.addAction(QAction(self.translation["menu7_read"], self, triggered=self.externalFileButtonClicked))
-        menu7.addAction(QAction(self.translation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
+        menu7.addAction(QAction(config.thisTranslation["menu7_read"], self, triggered=self.externalFileButtonClicked))
+        menu7.addAction(QAction(config.thisTranslation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
         menu7.addSeparator()
-        menu7.addAction(QAction(self.translation["menu7_recent"], self, triggered=self.openExternalFileHistory))
+        menu7.addAction(QAction(config.thisTranslation["menu7_recent"], self, triggered=self.openExternalFileHistory))
         menu7.addSeparator()
-        menu7.addAction(QAction(self.translation["menu7_paste"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
+        menu7.addAction(QAction(config.thisTranslation["menu7_paste"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
 
-        menu8 = self.menuBar().addMenu("&{0}".format(self.translation["menu8_resources"]))
-        menu8.addAction(QAction(self.translation["menu8_bibles"], self, triggered=self.installMarvelBibles))
-        menu8.addAction(QAction(self.translation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
-        menu8.addAction(QAction(self.translation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
+        menu8 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu8_resources"]))
+        menu8.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
+        menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
+        menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.translation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
-        menu8.addAction(QAction(self.translation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
+        menu8.addAction(QAction(config.thisTranslation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
+        menu8.addAction(QAction(config.thisTranslation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.translation["menu8_3rdParty"], self, triggered=self.importModules))
-        menu8.addAction(QAction(self.translation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
-        menu8.addAction(QAction(self.translation["menu8_settings"], self, triggered=self.importSettingsDialog))
+        menu8.addAction(QAction(config.thisTranslation["menu8_3rdParty"], self, triggered=self.importModules))
+        menu8.addAction(QAction(config.thisTranslation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
+        menu8.addAction(QAction(config.thisTranslation["menu8_settings"], self, triggered=self.importSettingsDialog))
         menu8.addSeparator()
-        menu8.addAction(QAction(self.translation["menu8_tagFile"], self, triggered=self.tagFile))
-        menu8.addAction(QAction(self.translation["menu8_tagFiles"], self, triggered=self.tagFiles))
-        menu8.addAction(QAction(self.translation["menu8_tagFolder"], self, triggered=self.tagFolder))
+        menu8.addAction(QAction(config.thisTranslation["menu8_tagFile"], self, triggered=self.tagFile))
+        menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
+        menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
 
-        menu9 = self.menuBar().addMenu("&{0}".format(self.translation["menu9_information"]))
+        menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
         menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
         menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))
         menu9.addAction(QAction("Marvel.bible", self, triggered=self.openMarvelBible))
@@ -464,9 +464,9 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction("Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
         menu9.addAction(QAction("Open Greek New Testament", self, triggered=self.openOpenGNTSource))
         menu9.addSeparator()
-        menu9.addAction(QAction(self.translation["menu9_credits"], self, triggered=self.openCredits))
+        menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
         menu9.addSeparator()
-        menu9.addAction(QAction(self.translation["menu9_contact"], self, triggered=self.contactEliranWong))
+        menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
 
     def setupToolBar(self):
         if config.toolBarIconFullSize:
@@ -479,18 +479,18 @@ class MainWindow(QMainWindow):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
         self.firstToolBar = QToolBar()
-        self.firstToolBar.setWindowTitle(self.translation["bar1_title"])
+        self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
         self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
-        self.mainTextMenuButton.setToolTip(self.translation["bar1_menu"])
+        self.mainTextMenuButton.setToolTip(config.thisTranslation["bar1_menu"])
         self.mainTextMenuButton.setStyleSheet(textButtonStyle)
         self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
         self.firstToolBar.addWidget(self.mainTextMenuButton)
 
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
-        self.mainRefButton.setToolTip(self.translation["bar1_reference"])
+        self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
@@ -498,7 +498,7 @@ class MainWindow(QMainWindow):
         openChapterNoteButton = QPushButton()
         #openChapterNoteButton.setFixedSize(40, 40)
         #openChapterNoteButton.setBaseSize(70, 70)
-        openChapterNoteButton.setToolTip(self.translation["bar1_chapterNotes"])
+        openChapterNoteButton.setToolTip(config.thisTranslation["bar1_chapterNotes"])
         openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
         openChapterNoteButton.clicked.connect(self.openMainChapterNote)
@@ -508,21 +508,21 @@ class MainWindow(QMainWindow):
         #t.setIcon(QIcon(openChapterNoteButtonFile))
 
         openVerseNoteButton = QPushButton()
-        openVerseNoteButton.setToolTip(self.translation["bar1_verseNotes"])
+        openVerseNoteButton.setToolTip(config.thisTranslation["bar1_verseNotes"])
         openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
         openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.firstToolBar.addWidget(openVerseNoteButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip(self.translation["bar1_searchBible"])
+        searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBible"])
         searchBibleButtonFile = os.path.join("htmlResources", "search.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
         self.firstToolBar.addWidget(searchBibleButton)
 
         searchBibleButton = QPushButton()
-        searchBibleButton.setToolTip(self.translation["bar1_searchBibles"])
+        searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBibles"])
         searchBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         searchBibleButton.clicked.connect(self.displaySearchBibleMenu)
@@ -531,7 +531,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addSeparator()
 
         self.textCommandLineEdit = QLineEdit()
-        self.textCommandLineEdit.setToolTip(self.translation["bar1_command"])
+        self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.firstToolBar.addWidget(self.textCommandLineEdit)
@@ -539,7 +539,7 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar1_toolbars"])
+        actionButton.setToolTip(config.thisTranslation["bar1_toolbars"])
         actionButtonFile = os.path.join("htmlResources", "toolbar.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.hideShowAdditionalToolBar)
@@ -548,52 +548,52 @@ class MainWindow(QMainWindow):
         self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
-        self.studyBibleToolBar.setWindowTitle(self.translation["bar2_title"])
+        self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.studyBibleToolBar)
 
         self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
-        self.studyTextMenuButton.setToolTip(self.translation["bar2_menu"])
+        self.studyTextMenuButton.setToolTip(config.thisTranslation["bar2_menu"])
         self.studyTextMenuButton.setStyleSheet(textButtonStyle)
         self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
         self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study")[1])
-        self.studyRefButton.setToolTip(self.translation["bar2_reference"])
+        self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
         self.studyRefButton.setStyleSheet(textButtonStyle)
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
         self.studyBibleToolBar.addWidget(self.studyRefButton)
 
         openStudyChapterNoteButton = QPushButton()
-        openStudyChapterNoteButton.setToolTip(self.translation["bar2_chapterNotes"])
+        openStudyChapterNoteButton.setToolTip(config.thisTranslation["bar2_chapterNotes"])
         openStudyChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
         openStudyChapterNoteButton.setIcon(QIcon(openStudyChapterNoteButtonFile))
         openStudyChapterNoteButton.clicked.connect(self.openStudyChapterNote)
         self.studyBibleToolBar.addWidget(openStudyChapterNoteButton)
 
         openStudyVerseNoteButton = QPushButton()
-        openStudyVerseNoteButton.setToolTip(self.translation["bar2_verseNotes"])
+        openStudyVerseNoteButton.setToolTip(config.thisTranslation["bar2_verseNotes"])
         openStudyVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
         openStudyVerseNoteButton.setIcon(QIcon(openStudyVerseNoteButtonFile))
         openStudyVerseNoteButton.clicked.connect(self.openStudyVerseNote)
         self.studyBibleToolBar.addWidget(openStudyVerseNoteButton)
 
         searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip(self.translation["bar2_searchBible"])
+        searchStudyBibleButton.setToolTip(config.thisTranslation["bar2_searchBible"])
         searchStudyBibleButtonFile = os.path.join("htmlResources", "search.png")
         searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
         searchStudyBibleButton.clicked.connect(self.displaySearchStudyBibleCommand)
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
         searchStudyBibleButton = QPushButton()
-        searchStudyBibleButton.setToolTip(self.translation["bar2_searchBibles"])
+        searchStudyBibleButton.setToolTip(config.thisTranslation["bar2_searchBibles"])
         searchStudyBibleButtonFile = os.path.join("htmlResources", "search_plus.png")
         searchStudyBibleButton.setIcon(QIcon(searchStudyBibleButtonFile))
         searchStudyBibleButton.clicked.connect(self.displaySearchBibleMenu)
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
         self.secondToolBar = QToolBar()
-        self.secondToolBar.setWindowTitle(self.translation["bar2_title"])
+        self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
@@ -607,7 +607,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setToolTip(self.translation["menu4_commentary"])
+        self.commentaryRefButton.setToolTip(config.thisTranslation["menu4_commentary"])
         self.commentaryRefButton.setStyleSheet(textButtonStyle)
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
@@ -615,13 +615,13 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setToolTip(self.translation["bar2_books"])
+        self.bookButton.setToolTip(config.thisTranslation["bar2_books"])
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
 #        searchBookButton = QPushButton()
-#        searchBookButton.setToolTip(self.translation["bar2_searchBooks"])
+#        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
 #        searchBookButtonFile = os.path.join("htmlResources", "search.png")
 #        searchBookButton.setIcon(QIcon(searchBookButtonFile))
 #        searchBookButton.clicked.connect(self.displaySearchBookCommand)
@@ -630,27 +630,27 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         newFileButton = QPushButton()
-        newFileButton.setToolTip(self.translation["menu7_create"])
+        newFileButton.setToolTip(config.thisTranslation["menu7_create"])
         newFileButtonFile = os.path.join("htmlResources", "newfile.png")
         newFileButton.setIcon(QIcon(newFileButtonFile))
         newFileButton.clicked.connect(self.createNewNoteFile)
         self.secondToolBar.addWidget(newFileButton)
 
         openFileButton = QPushButton()
-        openFileButton.setToolTip(self.translation["menu7_open"])
+        openFileButton.setToolTip(config.thisTranslation["menu7_open"])
         openFileButtonFile = os.path.join("htmlResources", "open.png")
         openFileButton.setIcon(QIcon(openFileButtonFile))
         openFileButton.clicked.connect(self.openTextFileDialog)
         self.secondToolBar.addWidget(openFileButton)
 
         self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.externalFileButton.setToolTip(self.translation["menu7_read"])
+        self.externalFileButton.setToolTip(config.thisTranslation["menu7_read"])
         self.externalFileButton.setStyleSheet(textButtonStyle)
         self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
         self.secondToolBar.addWidget(self.externalFileButton)
 
         editExternalFileButton = QPushButton()
-        editExternalFileButton.setToolTip(self.translation["menu7_edit"])
+        editExternalFileButton.setToolTip(config.thisTranslation["menu7_edit"])
         editExternalFileButtonFile = os.path.join("htmlResources", "edit.png")
         editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
         editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
@@ -659,20 +659,20 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         fontMinusButton = QPushButton()
-        fontMinusButton.setToolTip(self.translation["menu2_smaller"])
+        fontMinusButton.setToolTip(config.thisTranslation["menu2_smaller"])
         fontMinusButtonFile = os.path.join("htmlResources", "fontMinus.png")
         fontMinusButton.setIcon(QIcon(fontMinusButtonFile))
         fontMinusButton.clicked.connect(self.smallerFont)
         self.secondToolBar.addWidget(fontMinusButton)
 
         self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
-        self.defaultFontButton.setToolTip(self.translation["menu1_setDefaultFont"])
+        self.defaultFontButton.setToolTip(config.thisTranslation["menu1_setDefaultFont"])
         self.defaultFontButton.setStyleSheet(textButtonStyle)
         self.defaultFontButton.clicked.connect(self.setDefaultFont)
         self.secondToolBar.addWidget(self.defaultFontButton)
 
         fontPlusButton = QPushButton()
-        fontPlusButton.setToolTip(self.translation["menu2_larger"])
+        fontPlusButton.setToolTip(config.thisTranslation["menu2_larger"])
         fontPlusButtonFile = os.path.join("htmlResources", "fontPlus.png")
         fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
         fontPlusButton.clicked.connect(self.largerFont)
@@ -681,26 +681,26 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         self.leftToolBar = QToolBar()
-        self.leftToolBar.setWindowTitle(self.translation["bar3_title"])
+        self.leftToolBar.setWindowTitle(config.thisTranslation["bar3_title"])
         self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
 
         backButton = QPushButton()
-        backButton.setToolTip(self.translation["menu3_mainBack"])
+        backButton.setToolTip(config.thisTranslation["menu3_mainBack"])
         leftButtonFile = os.path.join("htmlResources", "left.png")
         backButton.setIcon(QIcon(leftButtonFile))
         backButton.clicked.connect(self.back)
         self.leftToolBar.addWidget(backButton)
 
         mainHistoryButton = QPushButton()
-        mainHistoryButton.setToolTip(self.translation["menu3_main"])
+        mainHistoryButton.setToolTip(config.thisTranslation["menu3_main"])
         mainHistoryButtonFile = os.path.join("htmlResources", "history.png")
         mainHistoryButton.setIcon(QIcon(mainHistoryButtonFile))
         mainHistoryButton.clicked.connect(self.mainHistoryButtonClicked)
         self.leftToolBar.addWidget(mainHistoryButton)
 
         forwardButton = QPushButton()
-        forwardButton.setToolTip(self.translation["menu3_mainForward"])
+        forwardButton.setToolTip(config.thisTranslation["menu3_mainForward"])
         rightButtonFile = os.path.join("htmlResources", "right.png")
         forwardButton.setIcon(QIcon(rightButtonFile))
         forwardButton.clicked.connect(self.forward)
@@ -709,7 +709,7 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_pdf"])
+        actionButton.setToolTip(config.thisTranslation["bar3_pdf"])
         actionButtonFile = os.path.join("htmlResources", "pdf.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.printMainPage)
@@ -718,14 +718,14 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         self.enableParagraphButton = QPushButton()
-        self.enableParagraphButton.setToolTip(self.translation["menu2_format"])
+        self.enableParagraphButton.setToolTip(config.thisTranslation["menu2_format"])
         enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
         self.enableParagraphButton.clicked.connect(self.enableParagraphButtonClicked)
         self.leftToolBar.addWidget(self.enableParagraphButton)
 
         self.enableSubheadingButton = QPushButton()
-        self.enableSubheadingButton.setToolTip(self.translation["menu2_subHeadings"])
+        self.enableSubheadingButton.setToolTip(config.thisTranslation["menu2_subHeadings"])
         enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
         self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
         self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
@@ -734,21 +734,21 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_previous"])
+        actionButton.setToolTip(config.thisTranslation["menu4_previous"])
         actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.previousMainChapter)
         self.leftToolBar.addWidget(actionButton)
 
 #        actionButton = QPushButton()
-#        actionButton.setToolTip(self.translation["bar1_reference"])
+#        actionButton.setToolTip(config.thisTranslation["bar1_reference"])
 #        actionButtonFile = os.path.join("htmlResources", "bible.png")
 #        actionButton.setIcon(QIcon(actionButtonFile))
 #        actionButton.clicked.connect(self.openMainChapter)
 #        self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_next"])
+        actionButton.setToolTip(config.thisTranslation["menu4_next"])
         actionButtonFile = os.path.join("htmlResources", "nextChapter.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.nextMainChapter)
@@ -757,14 +757,14 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_compareAll"])
+        actionButton.setToolTip(config.thisTranslation["menu4_compareAll"])
         actionButtonFile = os.path.join("htmlResources", "compare_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMPARE)
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_compare"])
+        actionButton.setToolTip(config.thisTranslation["menu4_compare"])
         actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.mainRefButtonClicked)
@@ -810,26 +810,26 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         self.rightToolBar = QToolBar()
-        self.rightToolBar.setWindowTitle(self.translation["bar4_title"])
+        self.rightToolBar.setWindowTitle(config.thisTranslation["bar4_title"])
         self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
 
         studyBackButton = QPushButton()
-        studyBackButton.setToolTip(self.translation["menu3_studyBack"])
+        studyBackButton.setToolTip(config.thisTranslation["menu3_studyBack"])
         leftButtonFile = os.path.join("htmlResources", "left.png")
         studyBackButton.setIcon(QIcon(leftButtonFile))
         studyBackButton.clicked.connect(self.studyBack)
         self.rightToolBar.addWidget(studyBackButton)
 
         studyHistoryButton = QPushButton()
-        studyHistoryButton.setToolTip(self.translation["menu3_study"])
+        studyHistoryButton.setToolTip(config.thisTranslation["menu3_study"])
         studyHistoryButtonFile = os.path.join("htmlResources", "history.png")
         studyHistoryButton.setIcon(QIcon(studyHistoryButtonFile))
         studyHistoryButton.clicked.connect(self.studyHistoryButtonClicked)
         self.rightToolBar.addWidget(studyHistoryButton)
 
         studyForwardButton = QPushButton()
-        studyForwardButton.setToolTip(self.translation["menu3_studyForward"])
+        studyForwardButton.setToolTip(config.thisTranslation["menu3_studyForward"])
         rightButtonFile = os.path.join("htmlResources", "right.png")
         studyForwardButton.setIcon(QIcon(rightButtonFile))
         studyForwardButton.clicked.connect(self.studyForward)
@@ -838,7 +838,7 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["bar3_pdf"])
+        actionButton.setToolTip(config.thisTranslation["bar3_pdf"])
         actionButtonFile = os.path.join("htmlResources", "pdf.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.printStudyPage)
@@ -847,14 +847,14 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_indexes"])
+        actionButton.setToolTip(config.thisTranslation["menu4_indexes"])
         actionButtonFile = os.path.join("htmlResources", "indexes.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runINDEX)
         self.rightToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_commentary"])
+        actionButton.setToolTip(config.thisTranslation["menu4_commentary"])
         actionButtonFile = os.path.join("htmlResources", "commentary.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMMENTARY)
@@ -863,14 +863,14 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_crossRef"])
+        actionButton.setToolTip(config.thisTranslation["menu4_crossRef"])
         actionButtonFile = os.path.join("htmlResources", "cross_reference.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCROSSREFERENCE)
         self.rightToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_tske"])
+        actionButton.setToolTip(config.thisTranslation["menu4_tske"])
         actionButtonFile = os.path.join("htmlResources", "treasure.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runTSKE)
@@ -879,28 +879,28 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_traslations"])
+        actionButton.setToolTip(config.thisTranslation["menu4_traslations"])
         actionButtonFile = os.path.join("htmlResources", "translations.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runTRANSLATION)
         self.rightToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_discourse"])
+        actionButton.setToolTip(config.thisTranslation["menu4_discourse"])
         actionButtonFile = os.path.join("htmlResources", "discourse.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runDISCOURSE)
         self.rightToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_words"])
+        actionButton.setToolTip(config.thisTranslation["menu4_words"])
         actionButtonFile = os.path.join("htmlResources", "words.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runWORDS)
         self.rightToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu4_tdw"])
+        actionButton.setToolTip(config.thisTranslation["menu4_tdw"])
         actionButtonFile = os.path.join("htmlResources", "combo.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.runCOMBO)
@@ -909,14 +909,14 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         actionButton = QPushButton()
-        actionButton.setToolTip(self.translation["menu2_landscape"])
+        actionButton.setToolTip(config.thisTranslation["menu2_landscape"])
         actionButtonFile = os.path.join("htmlResources", "portrait.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.switchLandscapeMode)
         self.rightToolBar.addWidget(actionButton)
 
         parallelButton = QPushButton()
-        parallelButton.setToolTip(self.translation["menu2_study"])
+        parallelButton.setToolTip(config.thisTranslation["menu2_study"])
         parallelButtonFile = os.path.join("htmlResources", "parallel.png")
         parallelButton.setIcon(QIcon(parallelButtonFile))
         parallelButton.clicked.connect(self.parallel)
@@ -925,14 +925,14 @@ class MainWindow(QMainWindow):
         self.rightToolBar.addSeparator()
 
         self.enableInstantButton = QPushButton()
-        self.enableInstantButton.setToolTip(self.translation["menu2_hover"])
+        self.enableInstantButton.setToolTip(config.thisTranslation["menu2_hover"])
         enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
         self.enableInstantButton.clicked.connect(self.enableInstantButtonClicked)
         self.rightToolBar.addWidget(self.enableInstantButton)
 
         instantButton = QPushButton()
-        instantButton.setToolTip(self.translation["menu2_bottom"])
+        instantButton.setToolTip(config.thisTranslation["menu2_bottom"])
         instantButtonFile = os.path.join("htmlResources", "lightning.png")
         instantButton.setIcon(QIcon(instantButtonFile))
         instantButton.clicked.connect(self.instant)
@@ -945,38 +945,38 @@ class MainWindow(QMainWindow):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
         self.firstToolBar = QToolBar()
-        self.firstToolBar.setWindowTitle(self.translation["bar1_title"])
+        self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
         self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
-        self.mainTextMenuButton.setToolTip(self.translation["bar1_menu"])
+        self.mainTextMenuButton.setToolTip(config.thisTranslation["bar1_menu"])
         self.mainTextMenuButton.setStyleSheet(textButtonStyle)
         self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
         self.firstToolBar.addWidget(self.mainTextMenuButton)
 
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
-        self.mainRefButton.setToolTip(self.translation["bar1_reference"])
+        self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
-        self.firstToolBar.addAction(QIcon(iconFile), self.translation["bar1_chapterNotes"], self.openMainChapterNote)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)
 
         iconFile = os.path.join("htmlResources", "noteVerse.png")
-        self.firstToolBar.addAction(QIcon(iconFile), self.translation["bar1_verseNotes"], self.openMainVerseNote)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_verseNotes"], self.openMainVerseNote)
 
         iconFile = os.path.join("htmlResources", "search.png")
-        self.firstToolBar.addAction(QIcon(iconFile), self.translation["bar1_searchBible"], self.displaySearchBibleCommand)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), self.translation["bar1_searchBibles"], self.displaySearchBibleMenu)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBibles"], self.displaySearchBibleMenu)
 
         self.firstToolBar.addSeparator()
 
         self.textCommandLineEdit = QLineEdit()
-        self.textCommandLineEdit.setToolTip(self.translation["bar1_command"])
+        self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         self.firstToolBar.addWidget(self.textCommandLineEdit)
@@ -984,41 +984,41 @@ class MainWindow(QMainWindow):
         self.firstToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
-        self.firstToolBar.addAction(QIcon(iconFile), self.translation["bar1_toolbars"], self.hideShowAdditionalToolBar)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_toolbars"], self.hideShowAdditionalToolBar)
 
         self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
-        self.studyBibleToolBar.setWindowTitle(self.translation["bar2_title"])
+        self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.studyBibleToolBar)
 
         self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
-        self.studyTextMenuButton.setToolTip(self.translation["bar2_menu"])
+        self.studyTextMenuButton.setToolTip(config.thisTranslation["bar2_menu"])
         self.studyTextMenuButton.setStyleSheet(textButtonStyle)
         self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
         self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study")[1])
-        self.studyRefButton.setToolTip(self.translation["bar2_reference"])
+        self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
         self.studyRefButton.setStyleSheet(textButtonStyle)
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
         self.studyBibleToolBar.addWidget(self.studyRefButton)
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), self.translation["bar2_chapterNotes"], self.openStudyChapterNote)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_chapterNotes"], self.openStudyChapterNote)
 
         iconFile = os.path.join("htmlResources", "noteVerse.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), self.translation["bar2_verseNotes"], self.openStudyVerseNote)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_verseNotes"], self.openStudyVerseNote)
 
         iconFile = os.path.join("htmlResources", "search.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), self.translation["bar2_searchBible"], self.displaySearchStudyBibleCommand)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBible"], self.displaySearchStudyBibleCommand)
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), self.translation["bar2_searchBibles"], self.displaySearchBibleMenu)
+        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBibles"], self.displaySearchBibleMenu)
 
         self.secondToolBar = QToolBar()
-        self.secondToolBar.setWindowTitle(self.translation["bar2_title"])
+        self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
@@ -1028,7 +1028,7 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setToolTip(self.translation["menu4_commentary"])
+        self.commentaryRefButton.setToolTip(config.thisTranslation["menu4_commentary"])
         self.commentaryRefButton.setStyleSheet(textButtonStyle)
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
@@ -1036,13 +1036,13 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setToolTip(self.translation["bar2_books"])
+        self.bookButton.setToolTip(config.thisTranslation["bar2_books"])
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
 #        searchBookButton = QPushButton()
-#        searchBookButton.setToolTip(self.translation["bar2_searchBooks"])
+#        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
 #        searchBookButtonFile = os.path.join("htmlResources", "search.png")
 #        searchBookButton.setIcon(QIcon(searchBookButtonFile))
 #        searchBookButton.clicked.connect(self.displaySearchBookCommand)
@@ -1051,85 +1051,85 @@ class MainWindow(QMainWindow):
         self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "newfile.png")
-        self.secondToolBar.addAction(QIcon(iconFile), self.translation["menu7_create"], self.createNewNoteFile)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_create"], self.createNewNoteFile)
 
         iconFile = os.path.join("htmlResources", "open.png")
-        self.secondToolBar.addAction(QIcon(iconFile), self.translation["menu7_open"], self.openTextFileDialog)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_open"], self.openTextFileDialog)
 
         self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.externalFileButton.setToolTip(self.translation["menu7_read"])
+        self.externalFileButton.setToolTip(config.thisTranslation["menu7_read"])
         self.externalFileButton.setStyleSheet(textButtonStyle)
         self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
         self.secondToolBar.addWidget(self.externalFileButton)
 
         iconFile = os.path.join("htmlResources", "edit.png")
-        self.secondToolBar.addAction(QIcon(iconFile), self.translation["menu7_edit"], self.editExternalFileButtonClicked)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_edit"], self.editExternalFileButtonClicked)
 
         self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "fontMinus.png")
-        self.secondToolBar.addAction(QIcon(iconFile), self.translation["menu2_smaller"], self.smallerFont)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_smaller"], self.smallerFont)
 
         self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
-        self.defaultFontButton.setToolTip(self.translation["menu1_setDefaultFont"])
+        self.defaultFontButton.setToolTip(config.thisTranslation["menu1_setDefaultFont"])
         self.defaultFontButton.setStyleSheet(textButtonStyle)
         self.defaultFontButton.clicked.connect(self.setDefaultFont)
         self.secondToolBar.addWidget(self.defaultFontButton)
 
         iconFile = os.path.join("htmlResources", "fontPlus.png")
-        self.secondToolBar.addAction(QIcon(iconFile), self.translation["menu2_larger"], self.largerFont)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_larger"], self.largerFont)
 
         self.secondToolBar.addSeparator()
 
         self.leftToolBar = QToolBar()
-        self.leftToolBar.setWindowTitle(self.translation["bar3_title"])
+        self.leftToolBar.setWindowTitle(config.thisTranslation["bar3_title"])
         self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
 
         iconFile = os.path.join("htmlResources", "left.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu3_mainBack"], self.back)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_mainBack"], self.back)
 
         iconFile = os.path.join("htmlResources", "history.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu3_main"], self.mainHistoryButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_main"], self.mainHistoryButtonClicked)
 
         iconFile = os.path.join("htmlResources", "right.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu3_mainForward"], self.forward)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_mainForward"], self.forward)
 
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "pdf.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["bar3_pdf"], self.printMainPage)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar3_pdf"], self.printMainPage)
 
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton = self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu2_format"], self.enableParagraphButtonClicked)
+        self.enableParagraphButton = self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_format"], self.enableParagraphButtonClicked)
 
         iconFile = os.path.join("htmlResources", self.getAddSubheading())
-        self.enableSubheadingButton = self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu2_subHeadings"], self.enableSubheadingButtonClicked)
+        self.enableSubheadingButton = self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_subHeadings"], self.enableSubheadingButtonClicked)
 
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "previousChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_previous"], self.previousMainChapter)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_previous"], self.previousMainChapter)
 
 #        actionButton = QPushButton()
-#        actionButton.setToolTip(self.translation["bar1_reference"])
+#        actionButton.setToolTip(config.thisTranslation["bar1_reference"])
 #        actionButtonFile = os.path.join("htmlResources", "bible.png")
 #        actionButton.setIcon(QIcon(actionButtonFile))
 #        actionButton.clicked.connect(self.openMainChapter)
 #        self.leftToolBar.addWidget(actionButton)
 
         iconFile = os.path.join("htmlResources", "nextChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_next"], self.nextMainChapter)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_next"], self.nextMainChapter)
 
         self.leftToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "compare_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_compareAll"], self.runCOMPARE)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compareAll"], self.runCOMPARE)
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), self.translation["menu4_compare"], self.mainRefButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compare"], self.mainRefButtonClicked)
 
         self.leftToolBar.addSeparator()
 
@@ -1151,69 +1151,69 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addSeparator()
 
         self.rightToolBar = QToolBar()
-        self.rightToolBar.setWindowTitle(self.translation["bar4_title"])
+        self.rightToolBar.setWindowTitle(config.thisTranslation["bar4_title"])
         self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
 
         iconFile = os.path.join("htmlResources", "left.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu3_studyBack"], self.studyBack)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_studyBack"], self.studyBack)
 
         iconFile = os.path.join("htmlResources", "history.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu3_study"], self.studyHistoryButtonClicked)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_study"], self.studyHistoryButtonClicked)
 
         iconFile = os.path.join("htmlResources", "right.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu3_studyForward"], self.studyForward)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu3_studyForward"], self.studyForward)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "pdf.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["bar3_pdf"], self.printStudyPage)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar3_pdf"], self.printStudyPage)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "indexes.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_indexes"], self.runINDEX)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_indexes"], self.runINDEX)
 
         iconFile = os.path.join("htmlResources", "commentary.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_commentary"], self.runCOMMENTARY)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_commentary"], self.runCOMMENTARY)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "cross_reference.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_crossRef"], self.runCROSSREFERENCE)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_crossRef"], self.runCROSSREFERENCE)
 
         iconFile = os.path.join("htmlResources", "treasure.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_tske"], self.runTSKE)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_tske"], self.runTSKE)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "translations.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_traslations"], self.runTRANSLATION)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_traslations"], self.runTRANSLATION)
 
         iconFile = os.path.join("htmlResources", "discourse.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_discourse"], self.runDISCOURSE)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_discourse"], self.runDISCOURSE)
 
         iconFile = os.path.join("htmlResources", "words.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_words"], self.runWORDS)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_words"], self.runWORDS)
 
         iconFile = os.path.join("htmlResources", "combo.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu4_tdw"], self.runCOMBO)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_tdw"], self.runCOMBO)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "portrait.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu2_landscape"], self.switchLandscapeMode)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_landscape"], self.switchLandscapeMode)
 
         iconFile = os.path.join("htmlResources", "parallel.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu2_study"], self.parallel)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_study"], self.parallel)
 
         self.rightToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton = self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu2_hover"], self.enableInstantButtonClicked)
+        self.enableInstantButton = self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_hover"], self.enableInstantButtonClicked)
 
         iconFile = os.path.join("htmlResources", "lightning.png")
-        self.rightToolBar.addAction(QIcon(iconFile), self.translation["menu2_bottom"], self.instant)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.instant)
 
         self.rightToolBar.addSeparator()
 
@@ -1284,12 +1284,12 @@ class MainWindow(QMainWindow):
 
     def installAllMarvelCommentaries(self, commentaries):
         toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        self.displayNotice("UniqueBible", "It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
+        self.displayMessage("It takes time to install all Marvel.bible commentaries. You will receive another message when all files are downloaded.")
         for commentary in toBeInstalled:
             databaseInfo = commentaries[commentary]
             downloader = Downloader(self, databaseInfo)
             downloader.downloadFile(False)
-        self.displayNotice("UniqueBible", "All Marvel.bible commentaries are installed.")
+        self.displayMessage("All Marvel.bible commentaries are installed.")
 
     def installMarvelDatasets(self):
         datasets = {
@@ -1618,9 +1618,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
-                self.displayNotice("UniqueBible", "Multiple BibleBento Plus lexicons are imported.")
+                self.displayMessage("Multiple BibleBento Plus lexicons are imported.")
             else:
-                self.displayNotice("UniqueBible", "No supported module is found in the selected folder.")
+                self.displayMessage("No supported module is found in the selected folder.")
 
     def importBBPlusDictionaryInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -1629,9 +1629,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
-                self.displayNotice("UniqueBible", "Multiple BibleBento Plus dictionaries are imported.")
+                self.displayMessage("Multiple BibleBento Plus dictionaries are imported.")
             else:
-                self.displayNotice("UniqueBible", "No supported module is found in the selected folder.")
+                self.displayMessage("No supported module is found in the selected folder.")
 
     # import 3rd party modules
     def importSettingsDialog(self):
@@ -1669,9 +1669,9 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
-                self.displayNotice("UniqueBible", "Multiple third party modules are imported.")
+                self.displayMessage("Multiple third party modules are imported.")
             else:
-                self.displayNotice("UniqueBible", "No supported module is found in the selected folder.")
+                self.displayMessage("No supported module is found in the selected folder.")
 
     def importThirdPartyDictionary(self, fileName):
         *_, name = os.path.split(fileName)
@@ -1711,11 +1711,11 @@ class MainWindow(QMainWindow):
         self.completeImport()
 
     def completeImport(self):
-        self.displayNotice("UniqueBible", "A third party module is installed.")
+        self.displayMessage("A third party module is installed.")
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.displayNotice("UniqueBible", "Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
+        self.displayMessage("Finished. Tagged file(s) is/are prefixed with 'tagged_'.")
 
     def tagFile(self):
         options = QFileDialog.Options()
@@ -1947,9 +1947,9 @@ class MainWindow(QMainWindow):
 
     def getStudyBibleDisplayToolTip(self):
         if config.openBibleInMainViewOnly:
-            return self.translation["bar2_enableBible"]
+            return config.thisTranslation["bar2_enableBible"]
         else:
-            return self.translation["bar2_disableBible"]
+            return config.thisTranslation["bar2_disableBible"]
 
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
@@ -2277,7 +2277,7 @@ class MainWindow(QMainWindow):
         view, content = self.textCommandParser.parser(textCommand, source)
 
         if content == "INVALID_COMMAND_ENTERED":
-            self.displayNotice("UniqueBible", "Entered command is invalid!")
+            self.displayMessage("Entered command is invalid!")
         elif view == "command":
             self.textCommandLineEdit.setText(content)
             self.textCommandLineEdit.setFocus()
@@ -2351,7 +2351,7 @@ class MainWindow(QMainWindow):
             config.toolBarIconFullSize = False
         else:
             config.toolBarIconFullSize = True
-        self.displayNotice("UniqueBible", "Icons are changed.  Restart this application to apply the new changes.")
+        self.displayMessage("Icons are changed.  Restart this application to apply the new changes.")
 
     # switch between landscape / portrait mode
     def switchLandscapeMode(self):
@@ -2478,7 +2478,7 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.userLanguage = item
             if not googletransSupport:
-                self.displayNotice("UniqueBible", "You need to install python package 'googletrans' before you can use integrated features of Google Translate on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
+                self.displayMessage("You need to install python package 'googletrans' before you can use integrated features of Google Translate on this app.  Read more at https://github.com/eliranwong/UniqueBible#install-dependencies.")
 
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
@@ -2536,12 +2536,12 @@ class CentralWidget(QWidget):
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
         for i in range(config.numberOfTab):
-            self.mainView.addTab(WebEngineView(self, "main"), "{1}{0}".format(i+1, self.parent.translation["tabBible"]))
+            self.mainView.addTab(WebEngineView(self, "main"), "{1}{0}".format(i+1, config.thisTranslation["tabBible"]))
 
         self.studyView = TabWidget(self, "study")
         self.parent.studyView = self.studyView
         for i in range(config.numberOfTab):
-            self.studyView.addTab(WebEngineView(self, "study"), "{1}{0}".format(i+1, self.parent.translation["tabStudy"]))
+            self.studyView.addTab(WebEngineView(self, "study"), "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
 
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
@@ -2616,21 +2616,19 @@ class WebEngineView(QWebEngineView):
         self.addMenuActions()
 
     def displayMessage(self, message):
-        #message = message.replace("'", "\\'")
-        #self.page().runJavaScript("alert('{0}')".format(message))
-        self.parent.parent.displayNotice("UniqueBible", message)
+        self.parent.parent.displayMessage(message)
 
     def updateContextMenu(self):
         text = self.getText()
         parser = BibleVerseParser(config.parserStandarisation)
         book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         del parser
-        self.searchText.setText("{1} {0}".format(text, self.parent.parent.translation["context1_search"]))
-        self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, self.parent.parent.translation["context1_search"]))
-        self.searchBibleTopic.setText("{1} > {0}".format(config.topic, self.parent.parent.translation["menu5_topics"]))
-        self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, self.parent.parent.translation["context1_dict"]))
-        self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, self.parent.parent.translation["context1_encyclopedia"]))
-        self.searchThirdDictionary.setText("{1} > {0}".format(config.thirdDictionary, self.parent.parent.translation["menu5_3rdDict"]))
+        self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
+        self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, config.thisTranslation["context1_search"]))
+        self.searchBibleTopic.setText("{1} > {0}".format(config.topic, config.thisTranslation["menu5_topics"]))
+        self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, config.thisTranslation["context1_dict"]))
+        self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, config.thisTranslation["context1_encyclopedia"]))
+        self.searchThirdDictionary.setText("{1} > {0}".format(config.thirdDictionary, config.thisTranslation["menu5_3rdDict"]))
 
     def getText(self):
         text = {
@@ -2650,14 +2648,14 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
         copyText = QAction(self)
-        copyText.setText(self.parent.parent.translation["context1_copy"])
+        copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
         # TEXT-TO-SPEECH feature
         if ttsSupport:
             tts = QAction(self)
-            tts.setText(self.parent.parent.translation["context1_speak"])
+            tts.setText(config.thisTranslation["context1_speak"])
             tts.triggered.connect(self.textToSpeech)
             self.addAction(tts)
 
@@ -2665,27 +2663,27 @@ class WebEngineView(QWebEngineView):
         if googletransSupport:
             # Translate into English
             translateText = QAction(self)
-            translateText.setText(self.parent.parent.translation["context1_english"])
+            translateText.setText(config.thisTranslation["context1_english"])
             translateText.triggered.connect(self.selectedTextToEnglish)
             self.addAction(translateText)
             if config.showGoogleTranslateChineseOptions:
                 # Translate into Traditional Chinese
                 translateText = QAction(self)
-                translateText.setText(self.parent.parent.translation["context1_tChinese"])
+                translateText.setText(config.thisTranslation["context1_tChinese"])
                 translateText.triggered.connect(self.selectedTextToTraditionalChinese)
                 self.addAction(translateText)
                 # Translate into Simplified Chinese
                 translateText = QAction(self)
-                translateText.setText(self.parent.parent.translation["context1_sChinese"])
+                translateText.setText(config.thisTranslation["context1_sChinese"])
                 translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
                 self.addAction(translateText)
             # Translate into User-defined Language
             if config.userLanguage:
                 userLanguage = config.userLanguage
             else:
-                userLanguage = self.parent.parent.translation["context1_my"]
+                userLanguage = config.thisTranslation["context1_my"]
             translateText = QAction(self)
-            translateText.setText("{0} {1}".format(self.parent.parent.translation["context1_translate"], userLanguage))
+            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
             translateText.triggered.connect(self.checkUserLanguage)
             self.addAction(translateText)
 
@@ -2693,88 +2691,88 @@ class WebEngineView(QWebEngineView):
         # Convert Chinese characters into pinyin
         if pinyinSupport:
             pinyinText = QAction(self)
-            pinyinText.setText(self.parent.parent.translation["context1_pinyin"])
+            pinyinText.setText(config.thisTranslation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
         self.searchText = QAction(self)
-        self.searchText.setText(self.parent.parent.translation["context1_search"])
+        self.searchText.setText(config.thisTranslation["context1_search"])
         self.searchText.triggered.connect(self.searchSelectedText)
         self.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
-        self.searchTextInBook.setText(self.parent.parent.translation["context1_current"])
+        self.searchTextInBook.setText(config.thisTranslation["context1_current"])
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
         self.addAction(self.searchTextInBook)
 
         searchFavouriteBible = QAction(self)
-        searchFavouriteBible.setText(self.parent.parent.translation["context1_favourite"])
+        searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
         searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
         self.addAction(searchFavouriteBible)
 
         searchTextOriginal = QAction(self)
-        searchTextOriginal.setText(self.parent.parent.translation["context1_original"])
+        searchTextOriginal.setText(config.thisTranslation["context1_original"])
         searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
         self.addAction(searchTextOriginal)
 
         self.searchLexicon = QAction(self)
-        self.searchLexicon.setText(self.parent.parent.translation["menu5_lexicon"])
+        self.searchLexicon.setText(config.thisTranslation["menu5_lexicon"])
         self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
         self.addAction(self.searchLexicon)
 
         searchBibleCharacter = QAction(self)
-        searchBibleCharacter.setText(self.parent.parent.translation["menu5_characters"])
+        searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
         searchBibleCharacter.triggered.connect(self.searchCharacter)
         self.addAction(searchBibleCharacter)
 
         searchBibleName = QAction(self)
-        searchBibleName.setText(self.parent.parent.translation["menu5_names"])
+        searchBibleName.setText(config.thisTranslation["menu5_names"])
         searchBibleName.triggered.connect(self.searchName)
         self.addAction(searchBibleName)
 
         searchBibleLocation = QAction(self)
-        searchBibleLocation.setText(self.parent.parent.translation["menu5_locations"])
+        searchBibleLocation.setText(config.thisTranslation["menu5_locations"])
         searchBibleLocation.triggered.connect(self.searchLocation)
         self.addAction(searchBibleLocation)
 
         self.searchBibleTopic = QAction(self)
-        self.searchBibleTopic.setText(self.parent.parent.translation["menu5_topics"])
+        self.searchBibleTopic.setText(config.thisTranslation["menu5_topics"])
         self.searchBibleTopic.triggered.connect(self.searchTopic)
         self.addAction(self.searchBibleTopic)
 
         self.searchBibleEncyclopedia = QAction(self)
-        self.searchBibleEncyclopedia.setText(self.parent.parent.translation["context1_encyclopedia"])
+        self.searchBibleEncyclopedia.setText(config.thisTranslation["context1_encyclopedia"])
         self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
         self.addAction(self.searchBibleEncyclopedia)
 
         self.searchBibleDictionary = QAction(self)
-        self.searchBibleDictionary.setText(self.parent.parent.translation["context1_dict"])
+        self.searchBibleDictionary.setText(config.thisTranslation["context1_dict"])
         self.searchBibleDictionary.triggered.connect(self.searchDictionary)
         self.addAction(self.searchBibleDictionary)
 
         self.searchThirdDictionary = QAction(self)
-        self.searchThirdDictionary.setText(self.parent.parent.translation["menu5_3rdDict"])
+        self.searchThirdDictionary.setText(config.thisTranslation["menu5_3rdDict"])
         self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
         self.addAction(self.searchThirdDictionary)
 
         searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(self.parent.parent.translation["context1_extract"])
+        searchBibleReferences.setText(config.thisTranslation["context1_extract"])
         searchBibleReferences.triggered.connect(self.extractAllReferences)
         self.addAction(searchBibleReferences)
 
         runAsCommandLine = QAction(self)
-        runAsCommandLine.setText(self.parent.parent.translation["context1_command"])
+        runAsCommandLine.setText(config.thisTranslation["context1_command"])
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.displayMessage("You have not selected word(s) for this action!")
+        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_select"]))
 
     def messageNoTtsEngine(self):
-        self.displayMessage("No text-to-speech engine is found in your device!")
+        self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def messageNoTtsVoice(self):
-        self.displayMessage("No text-to-speech voice is found in your device!")
+        self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -2939,7 +2937,7 @@ class WebEngineView(QWebEngineView):
         verseList = parser.extractAllReferences(selectedText, False)
         del parser
         if not verseList:
-            self.displayMessage("No bible verse reference is found from the text you selected.")
+            self.displayMessage(config.thisTranslation["message_noReference"])
         else:
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
@@ -2981,17 +2979,17 @@ class WebEngineViewPopover(QWebEngineView):
 
     def addMenuActions(self):
         copyText = QAction(self)
-        copyText.setText(self.parent.parent.parent.translation["context1_copy"])
+        copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
         runAsCommandLine = QAction(self)
-        runAsCommandLine.setText(self.parent.parent.parent.translation["context1_command"])
+        runAsCommandLine.setText(config.thisTranslation["context1_command"])
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.parent.displayMessage("You have not selected word(s) for this action!")
+        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_select"]))
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -3506,21 +3504,21 @@ class NoteEditor(QMainWindow):
     def setupMenuBarStandardIconSize(self):
 
         self.menuBar = QToolBar()
-        self.menuBar.setWindowTitle(self.parent.translation["note_title"])
+        self.menuBar.setWindowTitle(config.thisTranslation["note_title"])
         self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
         # In QWidget, self.menuBar is treated as the menubar without the following line
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.menuBar)
 
         newButton = QPushButton()
-        newButton.setToolTip("{0}\n[Ctrl/Cmd + N]".format(self.parent.translation["menu7_create"]))
+        newButton.setToolTip("{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]))
         newButtonFile = os.path.join("htmlResources", "newfile.png")
         newButton.setIcon(QIcon(newButtonFile))
         newButton.clicked.connect(self.newNoteFile)
         self.menuBar.addWidget(newButton)
 
         openButton = QPushButton()
-        openButton.setToolTip("{0}\n[Ctrl/Cmd + O]".format(self.parent.translation["menu7_open"]))
+        openButton.setToolTip("{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"]))
         openButtonFile = os.path.join("htmlResources", "open.png")
         openButton.setIcon(QIcon(openButtonFile))
         openButton.clicked.connect(self.openFileDialog)
@@ -3529,14 +3527,14 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         saveButton = QPushButton()
-        saveButton.setToolTip("{0}\n[Ctrl/Cmd + S]".format(self.parent.translation["note_save"]))
+        saveButton.setToolTip("{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"]))
         saveButtonFile = os.path.join("htmlResources", "save.png")
         saveButton.setIcon(QIcon(saveButtonFile))
         saveButton.clicked.connect(self.saveNote)
         self.menuBar.addWidget(saveButton)
 
         saveAsButton = QPushButton()
-        saveAsButton.setToolTip(self.parent.translation["note_saveAs"])
+        saveAsButton.setToolTip(config.thisTranslation["note_saveAs"])
         saveAsButtonFile = os.path.join("htmlResources", "saveas.png")
         saveAsButton.setIcon(QIcon(saveAsButtonFile))
         saveAsButton.clicked.connect(self.openSaveAsDialog)
@@ -3545,7 +3543,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         toolBarButton = QPushButton()
-        toolBarButton.setToolTip(self.parent.translation["note_print"])
+        toolBarButton.setToolTip(config.thisTranslation["note_print"])
         toolBarButtonFile = os.path.join("htmlResources", "print.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
         toolBarButton.clicked.connect(self.printNote)
@@ -3554,7 +3552,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         toolBarButton = QPushButton()
-        toolBarButton.setToolTip(self.parent.translation["note_toolbar"])
+        toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
         toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
         toolBarButton.clicked.connect(self.toogleToolbar)
@@ -3563,7 +3561,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         switchButton = QPushButton()
-        switchButton.setToolTip(self.parent.translation["note_mode"])
+        switchButton.setToolTip(config.thisTranslation["note_mode"])
         switchButtonFile = os.path.join("htmlResources", "switch.png")
         switchButton.setIcon(QIcon(switchButtonFile))
         switchButton.clicked.connect(self.switchMode)
@@ -3572,14 +3570,14 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         decreaseFontSizeButton = QPushButton()
-        decreaseFontSizeButton.setToolTip(self.parent.translation["menu2_smaller"])
+        decreaseFontSizeButton.setToolTip(config.thisTranslation["menu2_smaller"])
         decreaseFontSizeButtonFile = os.path.join("htmlResources", "fontMinus.png")
         decreaseFontSizeButton.setIcon(QIcon(decreaseFontSizeButtonFile))
         decreaseFontSizeButton.clicked.connect(self.decreaseNoteEditorFontSize)
         self.menuBar.addWidget(decreaseFontSizeButton)
 
         increaseFontSizeButton = QPushButton()
-        increaseFontSizeButton.setToolTip(self.parent.translation["menu2_larger"])
+        increaseFontSizeButton.setToolTip(config.thisTranslation["menu2_larger"])
         increaseFontSizeButtonFile = os.path.join("htmlResources", "fontPlus.png")
         increaseFontSizeButton.setIcon(QIcon(increaseFontSizeButtonFile))
         increaseFontSizeButton.clicked.connect(self.increaseNoteEditorFontSize)
@@ -3588,7 +3586,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setToolTip(self.parent.translation["menu5_search"])
+        self.searchLineEdit.setToolTip(config.thisTranslation["menu5_search"])
         self.searchLineEdit.setMaximumWidth(300)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
@@ -3598,53 +3596,53 @@ class NoteEditor(QMainWindow):
     def setupMenuBarFullIconSize(self):
 
         self.menuBar = QToolBar()
-        self.menuBar.setWindowTitle(self.parent.translation["note_title"])
+        self.menuBar.setWindowTitle(config.thisTranslation["note_title"])
         self.menuBar.setContextMenuPolicy(Qt.PreventContextMenu)
         # In QWidget, self.menuBar is treated as the menubar without the following line
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.menuBar)
 
         iconFile = os.path.join("htmlResources", "newfile.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + N]".format(self.parent.translation["menu7_create"]), self.newNoteFile)
+        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]), self.newNoteFile)
 
         iconFile = os.path.join("htmlResources", "open.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + O]".format(self.parent.translation["menu7_open"]), self.openFileDialog)
+        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"]), self.openFileDialog)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "save.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + S]".format(self.parent.translation["note_save"]), self.saveNote)
+        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"]), self.saveNote)
 
         iconFile = os.path.join("htmlResources", "saveas.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["note_saveAs"], self.openSaveAsDialog)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_saveAs"], self.openSaveAsDialog)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "print.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["note_print"], self.printNote)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_print"], self.printNote)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["note_toolbar"], self.toogleToolbar)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toogleToolbar)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "switch.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["note_mode"], self.switchMode)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_mode"], self.switchMode)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "fontMinus.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["menu2_smaller"], self.decreaseNoteEditorFontSize)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_smaller"], self.decreaseNoteEditorFontSize)
 
         iconFile = os.path.join("htmlResources", "fontPlus.png")
-        self.menuBar.addAction(QIcon(iconFile), self.parent.translation["menu2_larger"], self.increaseNoteEditorFontSize)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_larger"], self.increaseNoteEditorFontSize)
 
         self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setToolTip("{0}\n[Ctrl/Cmd + F]".format(self.parent.translation["menu5_search"]))
+        self.searchLineEdit.setToolTip("{0}\n[Ctrl/Cmd + F]".format(config.thisTranslation["menu5_search"]))
         self.searchLineEdit.setMaximumWidth(300)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
@@ -3677,28 +3675,28 @@ class NoteEditor(QMainWindow):
     def setupToolBarStandardIconSize(self):
 
         self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle(self.parent.translation["noteTool_title"])
+        self.toolBar.setWindowTitle(config.thisTranslation["noteTool_title"])
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
 
         boldButton = QPushButton()
-        boldButton.setToolTip("{0}\n[Ctrl/Cmd + B]".format(self.parent.translation["noteTool_bold"]))
+        boldButton.setToolTip("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]))
         boldButtonFile = os.path.join("htmlResources", "bold.png")
         boldButton.setIcon(QIcon(boldButtonFile))
         boldButton.clicked.connect(self.format_bold)
         self.toolBar.addWidget(boldButton)
 
         italicButton = QPushButton()
-        italicButton.setToolTip("{0}\n[Ctrl/Cmd + I]".format(self.parent.translation["noteTool_italic"]))
+        italicButton.setToolTip("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]))
         italicButtonFile = os.path.join("htmlResources", "italic.png")
         italicButton.setIcon(QIcon(italicButtonFile))
         italicButton.clicked.connect(self.format_italic)
         self.toolBar.addWidget(italicButton)
 
         underlineButton = QPushButton()
-        underlineButton.setToolTip("{0}\n[Ctrl/Cmd + U]".format(self.parent.translation["noteTool_underline"]))
+        underlineButton.setToolTip("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]))
         underlineButtonFile = os.path.join("htmlResources", "underline.png")
         underlineButton.setIcon(QIcon(underlineButtonFile))
         underlineButton.clicked.connect(self.format_underline)
@@ -3707,7 +3705,7 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         customButton = QPushButton()
-        customButton.setToolTip("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(self.parent.translation["noteTool_trans0"], self.parent.translation["noteTool_trans1"], self.parent.translation["noteTool_trans2"], self.parent.translation["noteTool_trans3"], self.parent.translation["noteTool_no1"], self.parent.translation["noteTool_no2"], self.parent.translation["noteTool_no3"], self.parent.translation["noteTool_no4"], self.parent.translation["noteTool_no5"], self.parent.translation["noteTool_no6"], "{", "}"))
+        customButton.setToolTip("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"))
         customButtonFile = os.path.join("htmlResources", "custom.png")
         customButton.setIcon(QIcon(customButtonFile))
         customButton.clicked.connect(self.format_custom)
@@ -3716,28 +3714,28 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         leftButton = QPushButton()
-        leftButton.setToolTip(self.parent.translation["noteTool_left"])
+        leftButton.setToolTip(config.thisTranslation["noteTool_left"])
         leftButtonFile = os.path.join("htmlResources", "align_left.png")
         leftButton.setIcon(QIcon(leftButtonFile))
         leftButton.clicked.connect(self.format_left)
         self.toolBar.addWidget(leftButton)
 
         centerButton = QPushButton()
-        centerButton.setToolTip(self.parent.translation["noteTool_centre"])
+        centerButton.setToolTip(config.thisTranslation["noteTool_centre"])
         centerButtonFile = os.path.join("htmlResources", "align_center.png")
         centerButton.setIcon(QIcon(centerButtonFile))
         centerButton.clicked.connect(self.format_center)
         self.toolBar.addWidget(centerButton)
 
         rightButton = QPushButton()
-        rightButton.setToolTip(self.parent.translation["noteTool_right"])
+        rightButton.setToolTip(config.thisTranslation["noteTool_right"])
         rightButtonFile = os.path.join("htmlResources", "align_right.png")
         rightButton.setIcon(QIcon(rightButtonFile))
         rightButton.clicked.connect(self.format_right)
         self.toolBar.addWidget(rightButton)
 
         justifyButton = QPushButton()
-        justifyButton.setToolTip(self.parent.translation["noteTool_justify"])
+        justifyButton.setToolTip(config.thisTranslation["noteTool_justify"])
         justifyButtonFile = os.path.join("htmlResources", "align_justify.png")
         justifyButton.setIcon(QIcon(justifyButtonFile))
         justifyButton.clicked.connect(self.format_justify)
@@ -3746,7 +3744,7 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         clearButton = QPushButton()
-        clearButton.setToolTip("{0}\n[Ctrl/Cmd + D]".format(self.parent.translation["noteTool_delete"]))
+        clearButton.setToolTip("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]))
         clearButtonFile = os.path.join("htmlResources", "clearFormat.png")
         clearButton.setIcon(QIcon(clearButtonFile))
         clearButton.clicked.connect(self.format_clear)
@@ -3755,14 +3753,14 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         hyperlinkButton = QPushButton()
-        hyperlinkButton.setToolTip(self.parent.translation["noteTool_hyperlink"])
+        hyperlinkButton.setToolTip(config.thisTranslation["noteTool_hyperlink"])
         hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
         hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
         hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
         self.toolBar.addWidget(hyperlinkButton)
 
         imageButton = QPushButton()
-        imageButton.setToolTip(self.parent.translation["noteTool_image"])
+        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
         imageButtonFile = os.path.join("htmlResources", "gallery.png")
         imageButton.setIcon(QIcon(imageButtonFile))
         imageButton.clicked.connect(self.openImageDialog)
@@ -3773,52 +3771,52 @@ class NoteEditor(QMainWindow):
     def setupToolBarFullIconSize(self):
 
         self.toolBar = QToolBar()
-        self.toolBar.setWindowTitle(self.parent.translation["noteTool_title"])
+        self.toolBar.setWindowTitle(config.thisTranslation["noteTool_title"])
         self.toolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
 
         iconFile = os.path.join("htmlResources", "bold.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + B]".format(self.parent.translation["noteTool_bold"]), self.format_bold)
+        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), self.format_bold)
 
         iconFile = os.path.join("htmlResources", "italic.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + I]".format(self.parent.translation["noteTool_italic"]), self.format_italic)
+        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), self.format_italic)
 
         iconFile = os.path.join("htmlResources", "underline.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + U]".format(self.parent.translation["noteTool_underline"]), self.format_underline)
+        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), self.format_underline)
 
         self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "custom.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(self.parent.translation["noteTool_trans0"], self.parent.translation["noteTool_trans1"], self.parent.translation["noteTool_trans2"], self.parent.translation["noteTool_trans3"], self.parent.translation["noteTool_no1"], self.parent.translation["noteTool_no2"], self.parent.translation["noteTool_no3"], self.parent.translation["noteTool_no4"], self.parent.translation["noteTool_no5"], self.parent.translation["noteTool_no6"], "{", "}"), self.format_custom)
+        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), self.format_custom)
 
         self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "align_left.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_left"], self.format_left)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_left"], self.format_left)
 
         iconFile = os.path.join("htmlResources", "align_center.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_centre"], self.format_center)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_centre"], self.format_center)
 
         iconFile = os.path.join("htmlResources", "align_right.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_right"], self.format_right)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_right"], self.format_right)
 
         iconFile = os.path.join("htmlResources", "align_justify.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_justify"], self.format_justify)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_justify"], self.format_justify)
 
         self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "clearFormat.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + D]".format(self.parent.translation["noteTool_delete"]), self.format_clear)
+        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), self.format_clear)
 
         self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "hyperlink.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_hyperlink"], self.openHyperlinkDialog)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_hyperlink"], self.openHyperlinkDialog)
 
         iconFile = os.path.join("htmlResources", "gallery.png")
-        self.toolBar.addAction(QIcon(iconFile), self.parent.translation["noteTool_image"], self.openImageDialog)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_image"], self.openImageDialog)
 
         self.toolBar.addSeparator()
 

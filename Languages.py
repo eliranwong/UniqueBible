@@ -279,6 +279,21 @@ class Languages:
         "noteTool_image": "Add an Image",
         "tabBible": "Bible",
         "tabStudy": "Tool",
+        "message_done": "Done.",
+        "message_fail": "Failed to complete the last operation!",
+        "message_invalid": "Entered command is invalid!",
+        "message_missing": "Missing component:",
+        "message_installFirst": "Install it first and try again.",
+        "message_restart": "Restart this application to apply the new changes.",
+        "message_run": "Before you can run this feature, you need to:",
+        "message_select": "Select a word or some words.",
+        "message_setLanguage": "Configure your language.",
+        "message_translateFirst": "Translate program interface into your language.",
+        "message_improveTrans": "To improve the quality of interface translation, you may close this application first and manually edit file 'config.py'.",
+        "message_newInterfaceItems": "New items were added to your translation of program interface.  To improve the quality of translation, you may close this application first and manually edit file 'config.py'.",
+        "message_migration": "Some of your files are old.  We are helping you to upgrade those files.  You will receive a message when upgrade is done.",
+        "message_noReference": "No bible verse reference is found from the text you selected.",
+        "message_noSupport": "It looks like that this feature does not work on your device.",
     }
 
     def translateInterface(self, language):

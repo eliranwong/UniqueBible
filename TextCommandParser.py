@@ -724,8 +724,7 @@ class TextCommandParser:
         if language in languages.values():
             self.parent.mainView.translateTextIntoUserLanguage(text, language)
         else:
-            print("something wrong")
-            self.parent.mainView.displayMessage("Entered language code is not recognised.")
+            self.parent.mainView.displayMessage(config.thisTranslation["message_invalid"])
         return ("", "")
 
     # called by MAIN::: & STUDY:::
