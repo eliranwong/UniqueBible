@@ -11,6 +11,7 @@ from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from Languages import Languages
+from ToolsSqlite import BookData
 from shutil import copyfile
 from distutils.dir_util import copy_tree
 # Optional Features
@@ -394,6 +395,13 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction(config.thisTranslation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
         menu4.addAction(QAction(config.thisTranslation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
 
+        menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
+        menu10.addAction(QAction("Timelines", self, triggered=self.openTimelines))
+        menu10.addAction(QAction("Harmonies and Parallels", self, triggered=self.openHarmonies))
+        menu10.addAction(QAction("Bible Promises", self, triggered=self.openPromises))
+        menu10.addSeparator()
+        menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
+
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
@@ -610,8 +618,15 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        openFileButton = QPushButton()
+        openFileButton.setToolTip(config.thisTranslation["menu10_dialog"])
+        openFileButtonFile = os.path.join("htmlResources", "open.png")
+        openFileButton.setIcon(QIcon(openFileButtonFile))
+        openFileButton.clicked.connect(self.openBookDialog)
+        self.secondToolBar.addWidget(openFileButton)
+
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setToolTip(config.thisTranslation["bar2_books"])
+        self.bookButton.setToolTip(config.thisTranslation["menu5_book"])
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
@@ -1031,8 +1046,11 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        iconFile = os.path.join("htmlResources", "open.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu10_dialog"], self.openBookDialog)
+
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setToolTip(config.thisTranslation["bar2_books"])
+        self.bookButton.setToolTip(config.thisTranslation["menu5_book"])
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
@@ -1826,6 +1844,23 @@ class MainWindow(QMainWindow):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
         self.textCommandLineEdit.setFocus()
+
+    def openTimelines(self):
+        self.runTextCommand("BOOK:::Timelines", True, "main")
+
+    def openHarmonies(self):
+        self.runTextCommand("BOOK:::Harmonies_and_Parallels", True, "main")
+
+    def openPromises(self):
+        self.runTextCommand("BOOK:::Bible_Promises", True, "main")
+
+    def openBookDialog(self):
+        bookData = BookData()
+        items = [book for book, *_ in bookData.getBookList()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+        if ok and item:
+            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
 
     # Action - bible search commands
     def displaySearchBibleCommand(self):

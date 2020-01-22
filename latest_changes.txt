@@ -1,14 +1,9 @@
-Latest changes in version 9.3:
-* Fixed display of translated text containing single quotation mark '.
-* Added three options in config.py: showGoogleTranslateChineseOptions, autoCopyGoogleTranslateOutput, autoCopyChinesePinyinOutput
-* Set showGoogleTranslateChineseOptions to True to enable display of translation options into Chinese.  Default is False
-* Set autoCopyGoogleTranslateOutput to True to copy automatically to clipboard the output of Google Translate.  Default is True
-* Set autoCopyChinesePinyinOutput to True to copy automatically to clipboard the output of Chinese pinyin conversion.  Default is True
-
-Remarks:
-* To use Google Translate with UniqueBible.app, install python package googletrans. Run "pip3 install googletrans" to install.
-* To use Chinese pinyin conversion with UniqueBible.app, install python package pypinyin. Run "pip3 install pypinyin" to install.
-* Read https://github.com/eliranwong/UniqueBible#install-dependencies for information on dependencies.
-
-Upcoming:
-* Translation of inteface into 104 languages
+Latest changes in version 10.0:
+* added a menu item, a button, a dialog to open a reference book
+* improved use of command keyword "BOOK"
+            # [KEYWORD] BOOK
+            # Usage - BOOK:::[BOOK_MODULE]:::[OPTIONAL_TOPIC]
+            # To view all the available topics of a book
+            # e.g. BOOK:::Timelines
+            # To specify a particular topic
+            # e.g. BOOK:::Timelines:::2210-2090_BCE

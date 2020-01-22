@@ -1,7 +1,7 @@
 import os, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Lexicon
+from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from Languages import Languages
@@ -231,6 +231,10 @@ class TextCommandParser:
             # e.g. THIRDDICTIONARY:::webster:::FAITH
             "thirddictionary": self.thirdDictionaryOpen,
             # [KEYWORD] BOOK
+            # Usage - BOOK:::[BOOK_MODULE]:::[OPTIONAL_TOPIC]
+            # To view all the available topics of a book
+            # e.g. BOOK:::Timelines
+            # To specify a particular topic
             # e.g. BOOK:::Timelines:::2210-2090_BCE
             "book": self.textBook,
             # [KEYWORD] SEARCHBOOK
@@ -1437,10 +1441,15 @@ class TextCommandParser:
 
     # BOOK:::
     def textBook(self, command, source):
+        bookData = BookData()
+        bookList = [book for book, *_ in bookData.getBookList()]
+        if command.count(":::") == 0 and command in bookList:
+            config.book = command
+            self.parent.bookButton.setText(config.book)
+            return ("study", bookData.getMenu(module=config.book))
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
             module, entry = commandList
-            bookData = BookData()
             content = bookData.getContent(module, entry)
             del bookData
             if not content:
