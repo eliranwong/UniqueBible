@@ -176,6 +176,7 @@ class Languages:
         "menu5_dictionary": "The Last Opened Bible Dictionary",
         "menu5_encyclopedia": "The Last Opened Bible Encyclopedia",
         "menu5_book": "The Last Opened Reference Book",
+        "menu5_allBook": "All Reference Books",
         "menu5_characters": "Bible Charcters",
         "menu5_names": "Bible People Names",
         "menu5_locations": "Bible Locations",

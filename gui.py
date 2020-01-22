@@ -409,7 +409,9 @@ class MainWindow(QMainWindow):
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
+        menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_allBook"], self, triggered=self.displaySearchAllBookCommand))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
         menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
@@ -1843,6 +1845,11 @@ class MainWindow(QMainWindow):
     def displaySearchBookCommand(self):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
+        self.textCommandLineEdit.setFocus()
+
+    def displaySearchAllBookCommand(self):
+        config.bookSearchString = ""
+        self.textCommandLineEdit.setText("SEARCHBOOK:::ALL:::")
         self.textCommandLineEdit.setFocus()
 
     def openTimelines(self):

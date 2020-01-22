@@ -669,12 +669,12 @@ class Book:
             config.book = self.module
             content = content[0]
             if config.bookSearchString and not config.bookSearchString == "z":
-                content = re.sub("("+config.bookSearchString+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
+                content = re.sub("({0})".format(config.bookSearchString), r"<z>\1</z>", content, flags=re.IGNORECASE)
                 p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
                 s = p.search(content)
                 while s:
                     content = re.sub(p, r"\1\2", content)
                     s = p.search(content)
-            return content
+            return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, entry, content, '"')
 
 

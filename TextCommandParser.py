@@ -243,7 +243,9 @@ class TextCommandParser:
             # To search a particular book module
             # e.g. SEARCHBOOK:::OT_History1:::Abraham
             # To search mutliple books, separate book modules with a comma ",".
-            # e.g. OT_History1,OT_History2:::Abraham
+            # e.g. SEARCHBOOK:::OT_History1,OT_History2:::Abraham
+            # To search all installed book modules
+            # e.g. SEARCHBOOK:::ALL:::Jerusalem
             # Remarks: Module creator should avoid comma for naming a book module.
             "searchbook": self.textSearchBook,
             # [KEYWORD] SEARCHCHAPTERNOTE
@@ -1462,14 +1464,16 @@ class TextCommandParser:
 
     # SEARCHBOOK:::
     def textSearchBook(self, command, source):
+        bookData = BookData()
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.book, command)
         modules, searchString = self.splitCommand(command)
+        if modules == "ALL":
+            modules = ",".join([book for book, *_ in bookData.getBookList()])
         if not searchString:
             return self.invalidCommand("study")
         else:
             config.bookSearchString = searchString
-            bookData = BookData()
             modules = modules.split(",")
             content = "<hr>".join([bookData.getSearchedMenu(module, searchString) for module in modules])
             del bookData

@@ -1,5 +1,6 @@
-Latest changes in version 10.0:
+Latest changes in version 10.0 & 10.1:
 * added a menu item, a button, a dialog to open a reference book
+* added a link on book's content page to go back the list of topics of the opened book module
 * improved use of command keyword "BOOK"
             # [KEYWORD] BOOK
             # Usage - BOOK:::[BOOK_MODULE]:::[OPTIONAL_TOPIC]
@@ -7,3 +8,14 @@ Latest changes in version 10.0:
             # e.g. BOOK:::Timelines
             # To specify a particular topic
             # e.g. BOOK:::Timelines:::2210-2090_BCE
+* improved use of command keyword "SEARCHBOOK" 
+            # [KEYWORD] SEARCHBOOK
+            # To search the last opened book module
+            # e.g. SEARCHBOOK:::Abraham
+            # To search a particular book module
+            # e.g. SEARCHBOOK:::OT_History1:::Abraham
+            # To search mutliple books, separate book modules with a comma ",".
+            # e.g. SEARCHBOOK:::OT_History1,OT_History2:::Abraham
+            # To search all installed book modules
+            # e.g. SEARCHBOOK:::ALL:::Jerusalem
+            # Remarks: Module creator should avoid comma for naming a book module.
