@@ -218,19 +218,20 @@ class BiblesSqlite:
                 defaultSearchText = config.studyText
             else:
                 defaultSearchText = config.mainText
-            menu += "<hr><b>{1}</b><br><br>Search <input type='text' id='bibleSearch'> in <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(defaultSearchText, config.thisTranslation["html_searchBible"])
+            menu += "<hr><b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(defaultSearchText, config.thisTranslation["html_searchBible2"])
+            menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
             for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
-            menu += "<hr><b>{0}</b><br><br>Search <input type='text' id='multiBibleSearch'> in ...<br><br>".format(config.thisTranslation["html_searchBibles"])
+            menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
             for version in versions:
                 if version == defaultSearchText or version == config.favouriteBible:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}' checked></div> ".format(version)
                 else:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
-            menu += "<br>"
-            for searchMode in ("SEARCH",):
+            menu += "<br><br><input type='text' id='multiBibleSearch' style='width:95%'><br><br>"
+            for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
             menu += self.inputEntered("bibleSearch", "SEARCH")
@@ -499,20 +500,20 @@ input.addEventListener('keyup', function(event) {0}
 
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
 
-        formatedText = ""
+        formatedText = "<b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(text, config.thisTranslation["html_searchBible2"])
         if text in plainBibleList:
             query = "SELECT * FROM {0} WHERE ".format(text)
         elif text in formattedBibleList:
             query = "SELECT * FROM Verses WHERE "
         if mode == "BASIC":
             searchCommand = "SHOWSEARCH"
-            formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
+            formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
         elif mode == "ADVANCED":
             t = tuple()
             searchCommand = "ADVANCEDSEARCH"
-            formatedText += "{0}:::{1}:::{2}".format(searchCommand, text, searchString)
+            formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             query += searchString
         query += " ORDER BY Book, Chapter, Verse"
         if text in plainBibleList:

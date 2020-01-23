@@ -1256,7 +1256,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = biblesSqlite.searchBible(texts[0], mode, commandList[1], interlinear)
+            searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, commandList[1], interlinear) for text in texts])
             del biblesSqlite
             return ("study", searchResult)
 

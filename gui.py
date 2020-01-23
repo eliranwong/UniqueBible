@@ -12,7 +12,7 @@ from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite
-from shutil import copyfile
+from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -254,13 +254,14 @@ class MainWindow(QMainWindow):
         # change the following 2 files for major changes of version
         # main.py line 19
         # https://biblebento.com/UniqueBibleAppVersion.txt
+        checkFile = "https://biblebento.com/UniqueBibleAppVersion.txt"
         try:
-            request = requests.get("https://biblebento.com/UniqueBibleAppVersion.txt", timeout=5)
+            request = requests.get(checkFile, timeout=5)
             if request.status_code == 200:
                 if float(request.text) > config.version:
                     self.promptUpdate(request.text)
         except:
-            pass
+            print("Failed to read 'checkFile'.")
 
     def checkModulesUpdate(self):
         for filename in self.updatedFiles:
@@ -301,9 +302,14 @@ class MainWindow(QMainWindow):
                 os.remove(filename)
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
                 copy_tree("UniqueBible-master", os.getcwd())
+                # set executable files on macOS or Linux
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
+                # remove download files after upgrade
+                if config.removeBackup:
+                    rmtree("UniqueBible-master")
+                # prompt a restart
                 self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
             else:
                 self.displayMessage(config.thisTranslation["message_fail"])
