@@ -661,10 +661,6 @@ function bibleDict(entry) {
     document.title = "DICTIONARY:::"+entry;
 }
 
-function exlbt(entry) {
-    document.title = "TOPIC:::"+entry;
-}
-
 function searchBibleBook(text, book, searchString) {
     document.title = "ADVANCEDSEARCH:::"+text+":::Book = "+book+" AND Scripture LIKE '%"+searchString+"%'";
 }
