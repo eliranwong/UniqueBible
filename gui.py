@@ -56,6 +56,14 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # delete old files
+        for items in update.oldFiles:
+            filePath = os.path.join(*items)
+            if os.path.isfile(filePath):
+                try:
+                    os.remove(filePath)
+                except:
+                    print("'{0}' is not deleted.".format(filePath))
         # information on latest modules
         self.updatedFiles = update.updatedFiles
         self.bibleInfo = update.bibleInfo
@@ -396,9 +404,26 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction(config.thisTranslation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
 
         menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
-        menu10.addAction(QAction("Timelines", self, triggered=self.openTimelines))
-        menu10.addAction(QAction("Harmonies and Parallels", self, triggered=self.openHarmonies))
-        menu10.addAction(QAction("Bible Promises", self, triggered=self.openPromises))
+        if config.favouriteBooks:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[0]), self, triggered=self.openFavouriteBook0))
+        if len(config.favouriteBooks) > 1:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[1]), self, triggered=self.openFavouriteBook1))
+        if len(config.favouriteBooks) > 2:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[2]), self, triggered=self.openFavouriteBook2))
+        if len(config.favouriteBooks) > 3:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[3]), self, triggered=self.openFavouriteBook3))
+        if len(config.favouriteBooks) > 4:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[4]), self, triggered=self.openFavouriteBook4))
+        if len(config.favouriteBooks) > 5:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[5]), self, triggered=self.openFavouriteBook5))
+        if len(config.favouriteBooks) > 6:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[6]), self, triggered=self.openFavouriteBook6))
+        if len(config.favouriteBooks) > 7:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[7]), self, triggered=self.openFavouriteBook7))
+        if len(config.favouriteBooks) > 8:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[8]), self, triggered=self.openFavouriteBook8))
+        if len(config.favouriteBooks) > 9:
+            menu10.addAction(QAction(self.getBookName(config.favouriteBooks[9]), self, triggered=self.openFavouriteBook9))
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
 
@@ -1852,14 +1877,38 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCHBOOK:::ALL:::")
         self.textCommandLineEdit.setFocus()
 
-    def openTimelines(self):
-        self.runTextCommand("BOOK:::Timelines", True, "main")
+    def getBookName(self, book):
+        return book.replace("_", " ")
 
-    def openHarmonies(self):
-        self.runTextCommand("BOOK:::Harmonies_and_Parallels", True, "main")
+    def openFavouriteBook0(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[0]), True, "main")
 
-    def openPromises(self):
-        self.runTextCommand("BOOK:::Bible_Promises", True, "main")
+    def openFavouriteBook1(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[1]), True, "main")
+
+    def openFavouriteBook2(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[2]), True, "main")
+
+    def openFavouriteBook3(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[3]), True, "main")
+
+    def openFavouriteBook4(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[4]), True, "main")
+
+    def openFavouriteBook5(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[5]), True, "main")
+
+    def openFavouriteBook6(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[6]), True, "main")
+
+    def openFavouriteBook7(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[7]), True, "main")
+
+    def openFavouriteBook8(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[8]), True, "main")
+
+    def openFavouriteBook9(self):
+        self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[9]), True, "main")
 
     def openBookDialog(self):
         bookData = BookData()

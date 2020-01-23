@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 10.1
+current_version = 10.2
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -182,6 +182,9 @@ if not hasattr(config, "encyclopedia"):
 # Last-opened book module
 if not hasattr(config, "book"):
     config.book = "Harmonies_and_Parallels"
+# List of favourite book modules
+if not hasattr(config, "favouriteBooks"):
+    config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines"]
 # Last string entered for searching book
 if not hasattr(config, "bookSearchString"):
     config.bookSearchString = ""
@@ -312,6 +315,7 @@ def saveDataOnExit():
         ("dictionary", config.dictionary),
         ("encyclopedia", config.encyclopedia),
         ("book", config.book),
+        ("favouriteBooks", config.favouriteBooks),
         ("bookSearchString", config.bookSearchString),
         ("noteSearchString", config.noteSearchString),
         ("thirdDictionary", config.thirdDictionary),

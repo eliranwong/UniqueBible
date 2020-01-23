@@ -453,10 +453,10 @@ class TextCommandParser:
         return ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
 
     def getCollectionsInfo(self):
-        return ((config.marvelData, "collections.sqlite"), "17x5t-qPwb0Bq60b4bXQ9T8Hva3ZUYVBP")
+        return ((config.marvelData, "collections2.sqlite"), "1TIyVmlOWwVxRD9UnFNBq2v5Oyv3hZe3M")
 
     def getBookInfo(self):
-        return ((config.marvelData, "books", "Harmonies_and_Parallels.book"), "1zNOXxDECk-SehYum0ENcvP3PCOZfHOW-")
+        return ((config.marvelData, "books", "Maps_NET.book"), "1Kf3-CSHVZ2aohlLOVIPaGJtTEzEkamr1")
 
     def getXRefInfo(self):
         return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
