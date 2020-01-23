@@ -301,14 +301,20 @@ class MainWindow(QMainWindow):
                 zip.close()
                 os.remove(filename)
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
-                copy_tree("UniqueBible-master", os.getcwd())
+                try:
+                    copy_tree("UniqueBible-master", os.getcwd())
+                except:
+                    print("Failed to overwrite files.")
                 # set executable files on macOS or Linux
                 if not platform.system() == "Windows":
                     for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
                         os.chmod(filename, 0o755)
                 # remove download files after upgrade
                 if config.removeBackup:
-                    rmtree("UniqueBible-master")
+                    try:
+                        rmtree("UniqueBible-master")
+                    except:
+                        print("Failed to remove downloaded files.")
                 # prompt a restart
                 self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
             else:
