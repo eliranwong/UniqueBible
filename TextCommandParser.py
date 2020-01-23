@@ -244,6 +244,8 @@ class TextCommandParser:
             # e.g. SEARCHBOOK:::OT_History1:::Abraham
             # To search mutliple books, separate book modules with a comma ",".
             # e.g. SEARCHBOOK:::OT_History1,OT_History2:::Abraham
+            # To search all favourite book modules
+            # e.g. SEARCHBOOK:::FAV:::Jerusalem
             # To search all installed book modules
             # e.g. SEARCHBOOK:::ALL:::Jerusalem
             # Remarks: Module creator should avoid comma for naming a book module.
@@ -1470,6 +1472,8 @@ class TextCommandParser:
         modules, searchString = self.splitCommand(command)
         if modules == "ALL":
             modules = ",".join([book for book, *_ in bookData.getBookList()])
+        elif modules == "FAV":
+            modules = ",".join(config.favouriteBooks)
         if not searchString:
             return self.invalidCommand("study")
         else:

@@ -184,7 +184,7 @@ if not hasattr(config, "book"):
     config.book = "Harmonies_and_Parallels"
 # List of favourite book modules
 if not hasattr(config, "favouriteBooks"):
-    config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines"]
+    config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ASB", "Maps_NET"]
 # Last string entered for searching book
 if not hasattr(config, "bookSearchString"):
     config.bookSearchString = ""

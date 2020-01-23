@@ -425,7 +425,9 @@ class MainWindow(QMainWindow):
         if len(config.favouriteBooks) > 9:
             menu10.addAction(QAction(self.getBookName(config.favouriteBooks[9]), self, triggered=self.openFavouriteBook9))
         menu10.addSeparator()
+        menu10.addAction(QAction(config.thisTranslation["menu5_book"], self, triggered=self.openBookMenu))
         menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
+        menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
@@ -436,6 +438,7 @@ class MainWindow(QMainWindow):
         menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_favouriteBook"], self, triggered=self.displaySearchFavBookCommand))
         menu5.addAction(QAction(config.thisTranslation["menu5_allBook"], self, triggered=self.displaySearchAllBookCommand))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
@@ -1877,6 +1880,11 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCHBOOK:::ALL:::")
         self.textCommandLineEdit.setFocus()
 
+    def displaySearchFavBookCommand(self):
+        config.bookSearchString = ""
+        self.textCommandLineEdit.setText("SEARCHBOOK:::FAV:::")
+        self.textCommandLineEdit.setFocus()
+
     def getBookName(self, book):
         return book.replace("_", " ")
 
@@ -1917,6 +1925,17 @@ class MainWindow(QMainWindow):
                 config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
         if ok and item:
             self.runTextCommand("BOOK:::{0}".format(item), True, "main")
+
+    def addFavouriteBookDialog(self):
+        bookData = BookData()
+        items = [book for book, *_ in bookData.getBookList()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu10_addFavourite"], items, items.index(config.book), False)
+        if ok and item:
+            config.favouriteBooks.insert(0, item)
+            if len(config.favouriteBooks) > 10:
+                config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
+            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
     # Action - bible search commands
     def displaySearchBibleCommand(self):
