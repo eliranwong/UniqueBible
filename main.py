@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 10.2
+current_version = 10.3
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -183,6 +183,7 @@ if not hasattr(config, "encyclopedia"):
 if not hasattr(config, "book"):
     config.book = "Harmonies_and_Parallels"
 # List of favourite book modules
+# Only the first 10 books are shown on menu bar
 if not hasattr(config, "favouriteBooks"):
     config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ASB", "Maps_NET"]
 # Last string entered for searching book

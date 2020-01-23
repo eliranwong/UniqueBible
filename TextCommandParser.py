@@ -1378,10 +1378,10 @@ class TextCommandParser:
     def textExlb(self, command, source):
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
-            module, entry = commandList
+            module, *_ = commandList
             if module in ["exlbl", "exlbp", "exlbt"]:
                 if module == "exlbt":
-                    config.topic = "exlbt"
+                    config.topic = "EXLBT"
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
                 del exlbData

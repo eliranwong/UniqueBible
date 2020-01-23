@@ -11,7 +11,7 @@ from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from Languages import Languages
-from ToolsSqlite import BookData
+from ToolsSqlite import BookData, IndexesSqlite
 from shutil import copyfile
 from distutils.dir_util import copy_tree
 # Optional Features
@@ -401,6 +401,7 @@ class MainWindow(QMainWindow):
         menu4.addSeparator()
         menu4.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
         menu4.addAction(QAction(config.thisTranslation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
+        menu4.addSeparator()
         menu4.addAction(QAction(config.thisTranslation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
 
         menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
@@ -430,21 +431,28 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
-        menu5.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
         menu5.addAction(QAction(config.thisTranslation["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
+        menu5.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
+        menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
+        menu5.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, triggered=self.searchBookDialog))
         menu5.addAction(QAction(config.thisTranslation["menu5_favouriteBook"], self, triggered=self.displaySearchFavBookCommand))
         menu5.addAction(QAction(config.thisTranslation["menu5_allBook"], self, triggered=self.displaySearchAllBookCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleCharacter))
-        menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleName))
-        menu5.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleLocation))
-        menu5.addAction(QAction(config.thisTranslation["menu5_topics"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleTopic))
+        menu5.addAction(QAction(config.thisTranslation["menu5_lastTopics"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleTopic))
+        menu5.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
+        menu5.addAction(QAction(config.thisTranslation["menu5_allTopics"], self, triggered=self.searchCommandAllBibleTopic))
+        menu5.addSeparator()
+        menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleCharacter))
+        menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleName))
+        menu5.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleLocation))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
         menu5.addSeparator()
@@ -1937,6 +1945,51 @@ class MainWindow(QMainWindow):
                 config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
             self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
+    def searchBookDialog(self):
+        bookData = BookData()
+        items = [book for book, *_ in bookData.getBookList()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+        if ok and item:
+            self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
+            self.textCommandLineEdit.setFocus()
+
+    def searchDictionaryDialog(self):
+        indexes = IndexesSqlite()
+        dictionaryDict = {abb: name for abb, name in indexes.dictionaryList}
+        lastDictionary = dictionaryDict[config.dictionary]
+        dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
+        items = [key for key in dictionaryDict.keys()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
+        if ok and item:
+            self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
+            self.textCommandLineEdit.setFocus()
+
+    def searchEncyclopediaDialog(self):
+        indexes = IndexesSqlite()
+        dictionaryDict = {abb: name for abb, name in indexes.encyclopediaList}
+        lastDictionary = dictionaryDict[config.encyclopedia]
+        dictionaryDict = {name: abb for abb, name in indexes.encyclopediaList}
+        items = [key for key in dictionaryDict.keys()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
+        if ok and item:
+            self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
+            self.textCommandLineEdit.setFocus()
+
+    def searchTopicDialog(self):
+        indexes = IndexesSqlite()
+        dictionaryDict = {abb: name for abb, name in indexes.topicList}
+        lastDictionary = dictionaryDict[config.topic]
+        dictionaryDict = {name: abb for abb, name in indexes.topicList}
+        items = [key for key in dictionaryDict.keys()]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
+        if ok and item:
+            self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
+            self.textCommandLineEdit.setFocus()
+
     # Action - bible search commands
     def displaySearchBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
@@ -1979,6 +2032,10 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setFocus()
 
     def searchCommandBibleTopic(self):
+        self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.topic))
+        self.textCommandLineEdit.setFocus()
+
+    def searchCommandAllBibleTopic(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBT:::")
         self.textCommandLineEdit.setFocus()
 
@@ -2650,7 +2707,7 @@ class CentralWidget(QWidget):
             self.studyView.addTab(WebEngineView(self, "study"), "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
 
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<u><b>Bottom View</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
+        self.instantView.setHtml("<u><b>Bottom Window</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
 
         self.layout = QGridLayout()
         self.layout.setContentsMargins(0, 10, 0, 3)
@@ -2822,9 +2879,14 @@ class WebEngineView(QWebEngineView):
         self.addAction(searchTextOriginal)
 
         self.searchLexicon = QAction(self)
-        self.searchLexicon.setText(config.thisTranslation["menu5_lexicon"])
+        self.searchLexicon.setText(config.thisTranslation["context1_originalLexicon"])
         self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
         self.addAction(self.searchLexicon)
+
+        searchFavouriteBooks = QAction(self)
+        searchFavouriteBooks.setText(config.thisTranslation["context1_favouriteBooks"])
+        searchFavouriteBooks.triggered.connect(self.searchSearchFavouriteBooks)
+        self.addAction(searchFavouriteBooks)
 
         searchBibleCharacter = QAction(self)
         searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
@@ -3001,6 +3063,14 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             searchCommand = "LEXICON:::{0}".format(selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchSearchFavouriteBooks(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHBOOK:::FAV:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchResource(self, module):
