@@ -617,7 +617,10 @@ class BookData:
             topicList = Book(module).getSearchedTopicList(searchString)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
             config.book = module
-            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+            if topics:
+                return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+            else:
+                return ""
         else:
             return "INVALID_COMMAND_ENTERED"
 
@@ -668,13 +671,14 @@ class Book:
         else:
             config.book = self.module
             content = content[0]
-            if config.bookSearchString and not config.bookSearchString == "z":
-                content = re.sub("({0})".format(config.bookSearchString), r"<z>\1</z>", content, flags=re.IGNORECASE)
-                p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
-                s = p.search(content)
-                while s:
-                    content = re.sub(p, r"\1\2", content)
+            for searchString in config.bookSearchString.split("%"):
+                if searchString and not searchString == "z":
+                    content = re.sub("({0})".format(searchString), r"<z>\1</z>", content, flags=re.IGNORECASE)
+                    p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
                     s = p.search(content)
+                    while s:
+                        content = re.sub(p, r"\1\2", content)
+                        s = p.search(content)
             return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, entry, content, '"')
 
 

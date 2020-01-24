@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 10.4
+current_version = 10.5
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -185,6 +185,9 @@ if not hasattr(config, "encyclopedia"):
 # Last-opened book module
 if not hasattr(config, "book"):
     config.book = "Harmonies_and_Parallels"
+# Option to open book content on a new window
+if not hasattr(config, "bookOnNewWindow"):
+    config.bookOnNewWindow = False
 # List of favourite book modules
 # Only the first 10 books are shown on menu bar
 if not hasattr(config, "favouriteBooks"):
@@ -320,6 +323,7 @@ def saveDataOnExit():
         ("dictionary", config.dictionary),
         ("encyclopedia", config.encyclopedia),
         ("book", config.book),
+        ("bookOnNewWindow", config.bookOnNewWindow),
         ("favouriteBooks", config.favouriteBooks),
         ("bookSearchString", config.bookSearchString),
         ("noteSearchString", config.noteSearchString),

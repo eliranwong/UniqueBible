@@ -1459,8 +1459,12 @@ class TextCommandParser:
             if not content:
                 return self.invalidCommand("study")
             else:
-                self.parent.bookButton.setText(config.book)
-                return ("study", content)
+                if config.bookOnNewWindow:
+                    self.parent.bookButton.setText(config.book)
+                    return ("popover.study", content)
+                else:
+                    self.parent.bookButton.setText(config.book)
+                    return ("study", content)
         else:
             return self.invalidCommand("study")
 
@@ -1482,7 +1486,8 @@ class TextCommandParser:
             content = "<hr>".join([bookData.getSearchedMenu(module, searchString) for module in modules])
             del bookData
             if not content:
-                return self.invalidCommand("study")
+                return ("study", config.thisTranslation["search_notFound"])
+                #return self.invalidCommand("study")
             else:
                 self.parent.bookButton.setText(config.book)
                 return ("study", content)

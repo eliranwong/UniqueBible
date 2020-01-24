@@ -261,7 +261,7 @@ class MainWindow(QMainWindow):
                 if float(request.text) > config.version:
                     self.promptUpdate(request.text)
         except:
-            print("Failed to read 'checkFile'.")
+            print("Failed to read '{0}'.".format(checkFile))
 
     def checkModulesUpdate(self):
         for filename in self.updatedFiles:
@@ -440,7 +440,9 @@ class MainWindow(QMainWindow):
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu5_book"], self, triggered=self.openBookMenu))
         menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
+        menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
+        menu10.addAction(QAction(config.thisTranslation["menu10_displayContent"], self, triggered=self.toggleDisplayBookContent))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
@@ -1888,7 +1890,7 @@ class MainWindow(QMainWindow):
 
     # Actions - book features
     def openBookMenu(self):
-        self.runTextCommand("_book:::", False, "main")
+        self.runTextCommand("BOOK:::{0}".format(config.book), True, "main")
 
     def displaySearchBookCommand(self):
         config.bookSearchString = ""
@@ -1956,6 +1958,14 @@ class MainWindow(QMainWindow):
             if len(config.favouriteBooks) > 10:
                 config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
             self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+
+    def toggleDisplayBookContent(self):
+        if config.bookOnNewWindow:
+            config.bookOnNewWindow = False
+            self.displayMessage(config.thisTranslation["menu10_bookOnStudy"])
+        else:
+            config.bookOnNewWindow = True
+            self.displayMessage(config.thisTranslation["menu10_bookOnNew"])
 
     def searchBookDialog(self):
         bookData = BookData()
@@ -2900,6 +2910,11 @@ class WebEngineView(QWebEngineView):
         searchFavouriteBooks.triggered.connect(self.searchSearchFavouriteBooks)
         self.addAction(searchFavouriteBooks)
 
+        searchFavouriteBooks = QAction(self)
+        searchFavouriteBooks.setText(config.thisTranslation["context1_allBooks"])
+        searchFavouriteBooks.triggered.connect(self.searchAllBooks)
+        self.addAction(searchFavouriteBooks)
+
         searchBibleCharacter = QAction(self)
         searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
         searchBibleCharacter.triggered.connect(self.searchCharacter)
@@ -3085,6 +3100,14 @@ class WebEngineView(QWebEngineView):
             searchCommand = "SEARCHBOOK:::FAV:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
+    def searchAllBooks(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHBOOK:::ALL:::{0}".format(selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
     def searchResource(self, module):
         selectedText = self.selectedText()
         if not selectedText:
@@ -3142,7 +3165,11 @@ class WebEngineView(QWebEngineView):
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script><script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese)
+        if self.name == "main":
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+        elif self.name == "study":
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{6}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese, activeBCVsettings)
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()

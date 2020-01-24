@@ -219,6 +219,9 @@ class Languages:
         "menu10_books": "Books",
         "menu10_dialog": "Open a Reference Book",
         "menu10_addFavourite": "Add a Favourite Reference Book",
+        "menu10_displayContent": "Display Content: Study / New Window",
+        "menu10_bookOnNew": "Further book content will be opened on a new window.",
+        "menu10_bookOnStudy": "Further book content will be opened on Study Window.",
         "context1_copy": "Copy",
         "context1_speak": "Speak",
         "context1_english": "Translate into English",
@@ -233,6 +236,7 @@ class Languages:
         "context1_original": "Search Hebrew / Greek Bible",
         "context1_originalLexicon": "Search Hebrew / Greek Lexicon",
         "context1_favouriteBooks": "Search my Favourite Reference Books",
+        "context1_allBooks": "Search All Reference Books",
         "context1_encyclopedia": "Bible Encyclopedia",
         "context1_dict": "Bible Dictionary",
         "context1_extract": "Extract All Bible References",
@@ -335,6 +339,7 @@ class Languages:
         "import_morphCode": "Allow search for morphology codes",
         "import_rtl": "Old Testament Text Direction: Right-to-left",
         "message_addFavouriteVersion": "Add as a parallel version for reading multiple bible verse references:",
+        "search_notFound": "[no result]",
     }
 
     def translateInterface(self, language):

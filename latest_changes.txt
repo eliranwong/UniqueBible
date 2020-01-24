@@ -1,15 +1,19 @@
-Latest changes in version 10.0-10.4:
+Latest changes in version 10.0-10.5:
 * fixed a previous error on context menu after searching all bible topics
+* fixed highlights of search results of searching a string containing a wildcard character "%".
+* added an option to open book content on a new window.
 * added a menu item, a button, a dialog to open a reference book
 * added two book modules on bible maps: Maps_NET.book, Maps_ASB.book
 * added a configurable list of favourite books, config.favouriteBooks.  The first 10 books on the list are displayed on menu bar under section "Books" for quick access.
-* added "Search my Favourite Books" on right-click context menu.
+* added "Search my Favourite Reference Books" on right-click context menu.
+* added "Search All Rreference Books" on right-click context menu.
 * added a dialog to add favourite book
 * added a function to delete old files
 * added a link on book's content page to go back the list of topics of the opened book module
 * added dialog boxes to select dictionary, encyclopedia and books for search
 * added support of advanced search on multiple bibles
 * added config.removeBackup option to delete downloaded files after upgrade to the latest version.
+* improved display of book search result, hiding the ones with no hit.
 * improved search items on menu bar
 * improved use of command keyword "BOOK"
             # [KEYWORD] BOOK
