@@ -119,20 +119,42 @@ class TextCommandParser:
             # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
             "passages": self.textPassages,
             # [KEYWORD] SEARCH
+            # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
+            # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # To search for a string in a bible
             # e.g. SEARCH:::KJV:::love
+            # To search with a wild card character "%"
+            # e.g. SEARCH:::KJV:::Christ%Jesus
+            # To search multiple bibles, separate versions with a character "_"
             # e.g. SEARCH:::KJV_WEB:::love
+            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus
             "search": self.textCountSearch,
             # [KEYWORD] SHOWSEARCH
+            # Feature - Search bible / bibles for a string
+            # Usage - SHOWSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # SHOWSEARCH::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SHOWSEARCH::: display all texts of the result.
             # e.g. SHOWSEARCH:::KJV:::love
+            # To work on multiple bilbes, separate bible versions with a character "_":
+            # e.g. SHOWSEARCH:::KJV_WEB:::love
             "showsearch": self.textSearchBasic,
             # [KEYWORD] ADVANCEDSEARCH
+            # Feature - Search bible / bibles for a sql string
+            # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # e.g. ADVANCEDSEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
+            # To work on multiple bibles, separate bible versions with a character "_":
+            # e.g. ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'
             "advancedsearch": self.textSearchAdvanced,
             # [KEYWORD] ANDSEARCH
+            # Feature - Search bible / bibles for combinations of words without taking order into consideration
+            # Usage - ANDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Words are separated by a character "|" in a search string.
             # e.g. ANDSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%"
             "andsearch": self.textAndSearch,
             # [KEYWORD] ORSEARCH
+            # Feature - Search bible / bibles for verses containing at least on of the words given in a string
+            # Usage - ORSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Words are separated by a character "|" in a search string.
             # e.g. ORSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
             "orsearch": self.textOrSearch,
@@ -455,7 +477,7 @@ class TextCommandParser:
         return ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")
 
     def getCollectionsInfo(self):
-        return ((config.marvelData, "collections2.sqlite"), "1TIyVmlOWwVxRD9UnFNBq2v5Oyv3hZe3M")
+        return ((config.marvelData, "collections3.sqlite"), "18dRwEc3SL2Z6JxD1eI1Jm07oIpt9i205")
 
     def getBookInfo(self):
         return ((config.marvelData, "books", "Maps_NET.book"), "1Kf3-CSHVZ2aohlLOVIPaGJtTEzEkamr1")
@@ -870,7 +892,7 @@ class TextCommandParser:
                 cs = CollectionsSqlite()
                 topic, passagesString = cs.readData("PARALLEL", references.split("."))
                 del cs
-                passages = bibleVerseParser.extractAllReferences(passagesString)
+                passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
                 return ("main", "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
@@ -897,7 +919,7 @@ class TextCommandParser:
                 cs = CollectionsSqlite()
                 topic, passagesString = cs.readData("PROMISES", references.split("."))
                 del cs
-                passages = bibleVerseParser.extractAllReferences(passagesString)
+                passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 return ("main", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)))
 
     # _biblenote:::

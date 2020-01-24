@@ -76,7 +76,7 @@ class CollectionsSqlite:
 
     def __init__(self):
         # connect collections.sqlite
-        self.database = os.path.join(config.marvelData, "collections2.sqlite")
+        self.database = os.path.join(config.marvelData, "collections3.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 

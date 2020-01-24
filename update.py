@@ -3,6 +3,7 @@ import config
 # Old files
 oldFiles = (
     (config.marvelData, "collections.sqlite"),
+    (config.marvelData, "collections2.sqlite"),
 )
 
 # A tulple of files which have been updated since the initial release
