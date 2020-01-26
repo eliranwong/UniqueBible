@@ -76,6 +76,9 @@ if not hasattr(config, "autoCopyChinesePinyinOutput"):
 # e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3"
 if not hasattr(config, "showVerseNumbersInRange"):
     config.showVerseNumbersInRange = True
+# Options to open chapter / verse note on Study Window after saving: True / False
+if not hasattr(config, "openBibleNoteAfterSave"):
+    config.openBibleNoteAfterSave = False
 # Options to use landscape mode: True / False
 if not hasattr(config, "landscapeMode"):
     config.landscapeMode = True
@@ -287,6 +290,7 @@ def saveDataOnExit():
         ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput),
         ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput),
         ("showVerseNumbersInRange", config.showVerseNumbersInRange),
+        ("openBibleNoteAfterSave", config.openBibleNoteAfterSave),
         ("landscapeMode", config.landscapeMode),
         ("noToolBar", config.noToolBar),
         ("topToolBarOnly", config.topToolBarOnly),

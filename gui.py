@@ -4181,14 +4181,16 @@ class NoteEditor(QMainWindow):
             noteSqlite = NoteSqlite()
             noteSqlite.saveChapterNote((self.b, self.c, note))
             del noteSqlite
-            self.parent.openChapterNote(self.b, self.c)
+            if config.openBibleNoteAfterSave:
+                self.parent.openChapterNote(self.b, self.c)
             self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
             noteSqlite = NoteSqlite()
             noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
             del noteSqlite
-            self.parent.openVerseNote(self.b, self.c, self.v)
+            if config.openBibleNoteAfterSave:
+                self.parent.openVerseNote(self.b, self.c, self.v)
             self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "file":
