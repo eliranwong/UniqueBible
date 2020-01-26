@@ -92,6 +92,17 @@ class CollectionsSqlite:
         else:
             return information
 
+    def getChapterParallels(self, b, c):
+        query = "SELECT Tool, Number, Topic FROM PARALLEL WHERE Passages LIKE ?"
+        searchString = '%<ref onclick="bcv({0},{1},%'.format(b, c)
+        self.cursor.execute(query, (searchString,))
+        return "<br>".join(['<ref onclick="harmony({0}, {1})">[Go to]</ref> {2}'.format(tool, number, topic) for tool, number, topic in self.cursor.fetchall()])
+
+    def getChapterPromises(self, b, c):
+        query = "SELECT Tool, Number, Topic FROM PROMISES WHERE Passages LIKE ?"
+        searchString = '%<ref onclick="bcv({0},{1},%'.format(b, c)
+        self.cursor.execute(query, (searchString,))
+        return "<br>".join(['<ref onclick="promise({0}, {1})">[Go to]</ref> {2}'.format(tool, number, topic) for tool, number, topic in self.cursor.fetchall()])
 
 class ImageSqlite:
 

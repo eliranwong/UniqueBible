@@ -251,13 +251,18 @@ class MainWindow(QMainWindow):
 
     # manage latest update
     def checkApplicationUpdate(self):
-        # change the following 2 files for major changes of version
-        # main.py line 19
-        # https://biblebento.com/UniqueBibleAppVersion.txt
-        checkFile = "https://biblebento.com/UniqueBibleAppVersion.txt"
+        # change the following 2 files for changing version number
+        # main.py line 19 and UniqueBibleAppVersion.txt
+        # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
+        checkFile = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/UniqueBibleAppVersion.txt"
+        # Alternatively,
+        #checkFile = "https://biblebento.com/UniqueBibleAppVersion.txt"
         try:
             request = requests.get(checkFile, timeout=5)
             if request.status_code == 200:
+                # check in console
+                #print(float(request.text))
+                # compare with user's current version
                 if float(request.text) > config.version:
                     self.promptUpdate(request.text)
         except:
@@ -412,9 +417,8 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
         menu4.addSeparator()
         menu4.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
-        menu4.addAction(QAction(config.thisTranslation["menu4_compare"], self, triggered=self.mainRefButtonClicked))
         menu4.addSeparator()
-        menu4.addAction(QAction(config.thisTranslation["menu4_parallel"], self, triggered=self.mainRefButtonClicked))
+        menu4.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=self.mainRefButtonClicked))
 
         menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
         if config.favouriteBooks:
@@ -827,7 +831,7 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addWidget(actionButton)
 
         actionButton = QPushButton()
-        actionButton.setToolTip(config.thisTranslation["menu4_compare"])
+        actionButton.setToolTip(config.thisTranslation["menu4_moreComparison"])
         actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
         actionButton.clicked.connect(self.mainRefButtonClicked)
@@ -1195,7 +1199,7 @@ class MainWindow(QMainWindow):
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compareAll"], self.runCOMPARE)
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compare"], self.mainRefButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], self.mainRefButtonClicked)
 
         self.leftToolBar.addSeparator()
 
@@ -1465,9 +1469,10 @@ class MainWindow(QMainWindow):
         else:
             self.noteEditor.raise_()
 
-    def openNoteEditor(self, noteType):
-        self.noteEditor = NoteEditor(self, noteType)
-        self.noteEditor.show()
+    def openNoteEditor(self, noteType, b=None, c=None, v=None):
+        if not (config.noteOpened and config.lastOpenedNote == (noteType, b, c, v)):
+            self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
+            self.noteEditor.show()
 
     def openMainChapterNote(self):
         self.openChapterNote(config.mainB, config.mainC)
@@ -1489,7 +1494,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)), b, c)
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
@@ -1505,7 +1510,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)))
+        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)), b, c, v)
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
@@ -3621,10 +3626,15 @@ class RemoteControl(QWidget):
 
 class NoteEditor(QMainWindow):
 
-    def __init__(self, parent, noteType, noteFileName=""):
+    def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None):
         super().__init__()
         self.parent, self.noteType = parent, noteType
         self.noteFileName = noteFileName
+        if not self.noteType == "file":
+            if v:
+                self.b, self.c, self.v = b, c, v
+            else:
+                self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
 
         # default - "Rich" mode for editing
         self.html = True
@@ -3632,6 +3642,8 @@ class NoteEditor(QMainWindow):
         self.showToolBar = True
         # default - text is not modified; no need for saving new content
         self.parent.noteSaved = True
+        config.noteOpened = True
+        config.lastOpenedNote = (noteType, b, c, v)
 
         # specify window size
         self.resizeWindow(2/3, 2/3)
@@ -3651,10 +3663,12 @@ class NoteEditor(QMainWindow):
     # re-implementing close event, when users close this widget
     def closeEvent(self, event):
         if self.parent.noteSaved:
+            config.noteOpened = False
             event.accept()
         else:
             if self.parent.warningNotSaved():
                 self.parent.noteSaved = True
+                config.noteOpened = False
                 event.accept()
             else:
                 event.ignore()
@@ -4090,7 +4104,6 @@ class NoteEditor(QMainWindow):
             else:
                 self.newNoteFile()
         else:
-            self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
             self.openBibleNote()
 
         self.editor.selectAll()

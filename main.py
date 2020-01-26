@@ -231,6 +231,9 @@ if not hasattr(config, "history"):
 # Installed Formatted Bibles
 if not hasattr(config, "installHistory"):
     config.installHistory = {}
+# for checking if note editor is currently open
+if not hasattr(config, "noteOpened"):
+    config.noteOpened = False
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication

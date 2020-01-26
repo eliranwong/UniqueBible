@@ -3,6 +3,7 @@ Reading data from bibles.sqlite
 """
 import os, sqlite3, config, re
 from BibleVerseParser import BibleVerseParser
+from BibleBooks import BibleBooks
 try:
     from diff_match_patch import diff_match_patch
 except:
@@ -125,26 +126,36 @@ class BiblesSqlite:
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v, isChapter)
 
     def getMenu(self, command, source="main"):
-        if source == "main":
-            mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.mainText, mainVerseReference)
-        elif source == "study":
-            mainVerseReference = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
-            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
-        menu += "<hr><b>{1}</b> {0}".format(self.getTexts(), config.thisTranslation["html_bibles"])
+        parser = BibleVerseParser(config.parserStandarisation)
         items = command.split(".", 3)
         text = items[0]
         versions = self.getBibleList()
-        if not text == "":
+        # provide a link to go back the last opened bible verse
+        if source == "main":
+            mainVerseReference = parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.mainText, mainVerseReference)
+        elif source == "study":
+            mainVerseReference = parser.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+            menu = "<ref onclick='document.title=\"BIBLE:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.studyText, mainVerseReference)
+        # select bible versions
+        menu += "<hr><b>{1}</b> {0}".format(self.getTexts(), config.thisTranslation["html_bibles"])
+        if text:
             # i.e. text specified; add book menu
             menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button>".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
             menu += "<hr><b>{1}</b> {0}".format(self.getBooks(text), config.thisTranslation["html_book"])
+            # create a list of inters b, c, v
             bcList = [int(i) for i in items[1:]]
             if bcList:
                 check = len(bcList)
+                bookNo = bcList[0]
+                engFullBookName = BibleBooks().eng[str(bookNo)][-1]
+                # check book name
+                #print(engFullBookName)
                 if check >= 1:
                     # i.e. book specified; add chapter menu
-                    bookReference = self.bcvToVerseReference(bcList[0], 1, 1)
+                    bookReference = parser.bcvToVerseReference(bookNo, 1, 1)
+                    bookAbb = bookReference[:-4]
+                    # build open book button
                     if config.openBibleInMainViewOnly:
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_open"])
                     else:
@@ -153,11 +164,21 @@ class BiblesSqlite:
                         elif source == "study":
                             anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openMain"])
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, bookReference, anotherView, config.thisTranslation["html_openHere"])
-                    menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], openOption, config.thisTranslation["html_current"])
-                    menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bcList[0], text), config.thisTranslation["html_chapter"])
+                    # build search timelines button
+                    timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOK:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, "Timelines")
+                    # build search encyclopedia button
+                    encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookName, config.thisTranslation["context1_encyclopedia"])
+                    # build search dictionary button
+                    dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookName, config.thisTranslation["context1_dict"])
+                    # display selected book
+                    menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1} {3} {4}".format(bookAbb, openOption, config.thisTranslation["html_current"], dictionaryButton, encyclopediaButton)
+                    # add chapter menu
+                    menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bookNo, text), config.thisTranslation["html_chapter"])
                 if check >= 2:
+                    chapterNo = bcList[1]
                     # i.e. both book and chapter specified; add verse menu
-                    chapterReference = self.bcvToVerseReference(bcList[0], bcList[1], 1)
+                    chapterReference = parser.bcvToVerseReference(bookNo, chapterNo, 1)
+                    # build open chapter button
                     if config.openBibleInMainViewOnly:
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_open"])
                     else:
@@ -166,9 +187,10 @@ class BiblesSqlite:
                         elif source == "study":
                             anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openMain"])
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, chapterReference, anotherView, config.thisTranslation["html_openHere"])
-                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button>".format(bcList[0], bcList[1], openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
-                    menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bcList[0], bcList[1], text), config.thisTranslation["html_verse"])
+                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button>".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
+                    menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bookNo, chapterNo, text), config.thisTranslation["html_verse"])
                 if check == 3:
+                    verseNo = bcList[2]
                     if config.openBibleInMainViewOnly:
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_open"])
                     else:
@@ -177,7 +199,7 @@ class BiblesSqlite:
                         elif source == "study":
                             anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, mainVerseReference, anotherView, config.thisTranslation["html_openHere"])
-                    menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>{6}</button>".format(text, bcList[0], bcList[1], bcList[2], openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
+                    menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>{6}</button>".format(text, bookNo, chapterNo, verseNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
                     menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_features"])
                     features = (
                         ("COMPARE", config.thisTranslation["menu4_compareAll"]),
@@ -342,6 +364,11 @@ input.addEventListener('keyup', function(event) {0}
             else:
                 chaptersMenu.append("{0}{1}</ref>".format(self.formVerseTag(b, chapter, 1, text), chapter))
         return " ".join(chaptersMenu)
+
+    def getChapterSubheadings(self, b, c):
+        query = "SELECT * FROM title WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        return "<br>".join(['<ref onclick="bcv({0},{1},{2})">[{1}:{2}]</ref> {3}'.format(b, c, v, text.replace("<br>", " ")) for b, c, v, text in self.cursor.fetchall()])
 
     def getVerseList(self, b, c, text=config.mainText):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
