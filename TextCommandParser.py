@@ -273,6 +273,9 @@ class TextCommandParser:
             # e.g. SEARCHBOOK:::ALL:::Jerusalem
             # Remarks: Module creator should avoid comma for naming a book module.
             "searchbook": self.textSearchBook,
+            # [KEYWORD] SEARCHBOOKCHAPTER
+            # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only
+            "searchbookchapter": self.textSearchBookChapter,
             # [KEYWORD] SEARCHCHAPTERNOTE
             # e.g. SEARCHCHAPTERNOTE:::faith
             "searchchapternote": self.textSearchChapterNote,
@@ -365,6 +368,9 @@ class TextCommandParser:
             # [KEYWORD] _openversenote
             # e.g. _openversenote:::43.3.16
             "_openversenote": self.openVerseNote,
+            # [KEYWORD] _open
+            # e.g. _open:::test.txt
+            "_open": self.openExternalFile,
             # [KEYWORD] _openfile
             # e.g. _openfile:::1
             "_openfile": self.textOpenFile,
@@ -459,6 +465,7 @@ class TextCommandParser:
             "_book": self.getBookInfo(),
             "book": self.getBookInfo(),
             "searchbook": self.getBookInfo(),
+            "searchbookchapter": self.getBookInfo(),
             "crossreference": self.getXRefInfo(),
             "tske": self.getXRefInfo(),
             "_image": ((config.marvelData, "images.sqlite"), "1_fo1CzhzT6h0fEHS_6R0JGDjf9uLJd3r"),
@@ -486,7 +493,7 @@ class TextCommandParser:
         return ((config.marvelData, "collections3.sqlite"), "18dRwEc3SL2Z6JxD1eI1Jm07oIpt9i205")
 
     def getBookInfo(self):
-        return ((config.marvelData, "books", "Maps_NET.book"), "1Kf3-CSHVZ2aohlLOVIPaGJtTEzEkamr1")
+        return ((config.marvelData, "books", "Tidwell_The_Bible_Book_by_Book.book"), "12AmieUR46ytg0qN1Alq8WxGeHzM9oLnU")
 
     def getXRefInfo(self):
         return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
@@ -994,6 +1001,17 @@ class TextCommandParser:
             self.parent.openNoteEditor("verse", b=b, c=c, v=v)
         else:
             self.parent.noteEditor.raise_()
+        return ("", "")
+
+    # _open:::
+    def openExternalFile(self, command, source):
+        if config.lastOpenedFile == command:
+            config.lastOpenedFile = ""
+        else:
+            config.lastOpenedFile = command
+            fileitems = command.split("/")
+            filePath = os.path.join(config.marvelData, *fileitems)
+            self.parent.openExternalFile(filePath)
         return ("", "")
 
     # _openfile:::
@@ -1518,8 +1536,12 @@ class TextCommandParser:
         else:
             return self.invalidCommand("study")
 
+    # SEARCHBOOKCHAPTER:::
+    def textSearchBookChapter(self, command, source):
+        return self.textSearchBook(command, source, chapterOnly=True)
+
     # SEARCHBOOK:::
-    def textSearchBook(self, command, source):
+    def textSearchBook(self, command, source, chapterOnly=False):
         bookData = BookData()
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.book, command)
@@ -1533,7 +1555,7 @@ class TextCommandParser:
         else:
             config.bookSearchString = searchString
             modules = modules.split(",")
-            content = "<hr>".join([bookData.getSearchedMenu(module, searchString) for module in modules])
+            content = "<hr>".join([bookData.getSearchedMenu(module, searchString, chapterOnly=chapterOnly) for module in modules])
             del bookData
             if not content:
                 return ("study", config.thisTranslation["search_notFound"])

@@ -235,8 +235,9 @@ if not hasattr(config, "history"):
 if not hasattr(config, "installHistory"):
     config.installHistory = {}
 # for checking if note editor is currently open
-if not hasattr(config, "noteOpened"):
-    config.noteOpened = False
+config.noteOpened = False
+# for checking if external file is repeatedly opened
+config.lastOpenedFile = ""
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication

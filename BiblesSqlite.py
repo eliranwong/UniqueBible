@@ -164,14 +164,16 @@ class BiblesSqlite:
                         elif source == "study":
                             anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openMain"])
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, bookReference, anotherView, config.thisTranslation["html_openHere"])
+                    # build search book by book introduction button
+                    introductionButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_introduction"])
                     # build search timelines button
-                    timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOK:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, "Timelines")
+                    timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_timelines"])
                     # build search encyclopedia button
                     encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookName, config.thisTranslation["context1_encyclopedia"])
                     # build search dictionary button
                     dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookName, config.thisTranslation["context1_dict"])
                     # display selected book
-                    menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1} {3} {4}".format(bookAbb, openOption, config.thisTranslation["html_current"], dictionaryButton, encyclopediaButton)
+                    menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1} {3} {4} {5} {6}".format(bookAbb, openOption, config.thisTranslation["html_current"], introductionButton, timelinesButton, dictionaryButton, encyclopediaButton)
                     # add chapter menu
                     menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bookNo, text), config.thisTranslation["html_chapter"])
                 if check >= 2:

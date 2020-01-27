@@ -622,14 +622,18 @@ class BookData:
         else:
             return "INVALID_COMMAND_ENTERED"
 
-    def getSearchedMenu(self, module, searchString):
+    def getSearchedMenu(self, module, searchString, chapterOnly=False):
         if module in dict(self.bookList).keys():
             books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
-            topicList = Book(module).getSearchedTopicList(searchString)
+            topicList = Book(module).getSearchedTopicList(searchString, chapterOnly=chapterOnly)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
             config.book = module
             if topics:
-                return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+                if chapterOnly:
+                    searchCommand = "SEARCHBOOKCHAPTER"
+                else:
+                    searchCommand = "SEARCHBOOK"
+                return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::{3}:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics, searchCommand)
             else:
                 return ""
         else:
@@ -667,10 +671,14 @@ class Book:
         self.cursor.execute(query)
         return [topic[0] for topic in self.cursor.fetchall()]
 
-    def getSearchedTopicList(self, searchString):
+    def getSearchedTopicList(self, searchString, chapterOnly=False):
         searchString = "%{0}%".format(searchString)
-        query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? OR Content LIKE ? ORDER BY ROWID"
-        self.cursor.execute(query, (searchString, searchString))
+        if chapterOnly:
+            query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? ORDER BY ROWID"
+            self.cursor.execute(query, (searchString,))
+        else:
+            query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? OR Content LIKE ? ORDER BY ROWID"
+            self.cursor.execute(query, (searchString, searchString))
         return [topic[0] for topic in self.cursor.fetchall()]
 
     def getContent(self, entry):
