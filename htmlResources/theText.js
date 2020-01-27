@@ -787,3 +787,7 @@ function harmony(tool, number) {
 function promise(tool, number) {
     document.title = "_promise:::"+tool+"."+number;
 }
+
+function openMarvelFile(filename) {
+    document.title = "_open:::"+filename;
+}
