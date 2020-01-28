@@ -190,11 +190,15 @@ class BiblesSqlite:
                             anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openMain"])
                         openOption = "<button class='feature' onclick='document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, chapterReference, anotherView, config.thisTranslation["html_openHere"])
                     # overview button
-                    overviewButton = "<button class='feature' onclick='document.title=\"OVERVIEW:::{0}.{1}\"'>{2}</button>".format(bookNo, chapterNo, config.thisTranslation["html_overview"])
+                    overviewButton = "<button class='feature' onclick='document.title=\"OVERVIEW:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_overview"])
+                    # chapter index button
+                    chapterIndexButton = "<button class='feature' onclick='document.title=\"CHAPTERINDEX:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_chapterIndex"])
+                    # summary button
+                    summaryButton = "<button class='feature' onclick='document.title=\"SUMMARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_summary"])
                     # chapter commentary button
                     chapterCommentaryButton = "<button class='feature' onclick='document.title=\"COMMENTARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["menu4_commentary"])
                     # selected chapter
-                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button><br>{5} {6}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"], overviewButton, chapterCommentaryButton)
+                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button><br>{5} {6} {7} {8}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"], overviewButton, chapterIndexButton, summaryButton, chapterCommentaryButton)
                     # building verse list of slected chapter
                     menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bookNo, chapterNo, text), config.thisTranslation["html_verse"])
                 if check == 3:

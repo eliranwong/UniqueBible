@@ -14,9 +14,6 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
-            # [KEYWORD] OVERVIEW
-            # e.g. overview:::43.3
-            "overview": self.textChapterOverview,
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
             # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -121,6 +118,12 @@ class TextCommandParser:
             # e.g. PASSAGES:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
             # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
             "passages": self.textPassages,
+            # [KEYWORD] OVERVIEW
+            # e.g. overview:::John 3
+            "overview": self.textChapterOverview,
+            # [KEYWORD] SUMMARY
+            # e.g. summary:::John 3
+            "summary": self.textChapterSummary,
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
             # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
@@ -164,6 +167,9 @@ class TextCommandParser:
             # [KEYWORD] INDEX
             # e.g. INDEX:::Gen 1:1
             "index": self.textIndex,
+            # [KEYWORD] CHAPTERINDEX
+            # e.g. CHAPTERINDEX:::Gen 1
+            "chapterindex": self.textChapterIndex,
             # [KEYWORD] CROSSREFERENCE
             # e.g. CROSSREFERENCE:::Gen 1:1
             "crossreference": self.textCrossReference,
@@ -461,7 +467,8 @@ class TextCommandParser:
             "_editversenote": self.getBibleNoteInfo(),
             "searchchapternote": self.getBibleNoteInfo(),
             "searchversenote": self.getBibleNoteInfo(),
-            "subheadings": self.getCollectionsInfo(),
+            "overview": self.getCollectionsInfo(),
+            "summary": ((config.marvelData, "commentaries", "cBrooks.commentary"), "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm"),
             "_harmony": self.getCollectionsInfo(),
             "_promise": self.getCollectionsInfo(),
             "_book": self.getBookInfo(),
@@ -471,7 +478,8 @@ class TextCommandParser:
             "crossreference": self.getXRefInfo(),
             "tske": self.getXRefInfo(),
             "_image": ((config.marvelData, "images.sqlite"), "1_fo1CzhzT6h0fEHS_6R0JGDjf9uLJd3r"),
-            "index": ((config.marvelData, "indexes.sqlite"), "1Fdq3C9hyoyBX7riniByyZdW9mMoMe6EX"),
+            "index": ((config.marvelData, "indexes2.sqlite"), "1hY-QkBWQ8UpkeqM8lkB6q_FbaneU_Tg5"),
+            "chapterindex": ((config.marvelData, "indexes2.sqlite"), "1hY-QkBWQ8UpkeqM8lkB6q_FbaneU_Tg5"),
             "searchtool": ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
             "word": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
             "clause": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
@@ -716,21 +724,38 @@ class TextCommandParser:
 
     # overview:::
     def textChapterOverview(self, command, source):
-        b, c, *_ = command.split(".")
-        chapterReference = self.bcvToVerseReference(b, c, 1)[:-2]
-        subheadings = BiblesSqlite().getChapterSubheadings(b, c)
-        if subheadings:
-            subheadings = "<p>{0}</p>".format(subheadings)
-        parallels = CollectionsSqlite().getChapterParallels(b, c)
-        if parallels:
-            parallels = "<hr><p><bb>Harmonies and Parallels</bb></p><p>{0}</p>".format(parallels)
-        promises = CollectionsSqlite().getChapterPromises(b, c)
-        if promises:
-            promises = "<hr><p><bb>Bible Promises</bb></p><p>{0}</p>".format(promises)
-        chapterSummary =  Commentary("Brooks").getContent((b, c, 1))
-        if chapterSummary:
-            chapterSummary = "<hr><p><bb>Complete Summary of the Bible (Brooks)</bb></p><p>{0}</p>".format(chapterSummary)
-        return ("study", "<p><bb>{0}</bb></p><p>{1}</p>{2}{3}{4}".format(chapterReference, subheadings, parallels, promises, chapterSummary))
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            content = ""
+            for b, c, *_ in verseList:
+                chapterReference = self.bcvToVerseReference(b, c, 1)[:-2]
+                subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+                if subheadings:
+                    subheadings = "<p>{0}</p>".format(subheadings)
+                parallels = CollectionsSqlite().getChapterParallels(b, c)
+                if parallels:
+                    parallels = "<hr><p><bb>Harmonies and Parallels</bb></p><p>{0}</p>".format(parallels)
+                promises = CollectionsSqlite().getChapterPromises(b, c)
+                if promises:
+                    promises = "<hr><p><bb>Bible Promises</bb></p><p>{0}</p>".format(promises)
+                content += "<p><bb>{0}</bb></p>{1}{2}{3}<hr>".format(chapterReference, subheadings, parallels, promises)
+            return ("study", content)
+
+    # summary:::
+    def textChapterSummary(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            content = ""
+            for b, c, *_ in verseList:
+                chapterSummary =  Commentary("Brooks").getContent((b, c, 1))
+                if chapterSummary:
+                    chapterSummary = "<p><bb>Complete Summary of the Bible (Brooks)</bb></p><p>{0}</p><hr>".format(chapterSummary)
+                content += chapterSummary
+            return ("study", content)
 
     # BIBLE:::
     def textBible(self, command, source):
@@ -1689,9 +1714,27 @@ class TextCommandParser:
         else:
             parser = BibleVerseParser(config.parserStandarisation)
             indexesSqlite = IndexesSqlite()
+            content = ""
             for verse in verseList:
                 b, c, v = verse
-                content = "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
+                content += "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
+            del indexesSqlite
+            del parser
+            self.setStudyVerse(config.studyText, verseList[-1])
+            return ("study", content)
+
+    # CHAPTERINDEX:::
+    def textChapterIndex(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if not verseList:
+            return self.invalidCommand()
+        else:
+            parser = BibleVerseParser(config.parserStandarisation)
+            indexesSqlite = IndexesSqlite()
+            content = ""
+            for verse in verseList:
+                b, c, v = verse
+                content += "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v, isChapter=True), indexesSqlite.getChapterIndexes(verse[:2]))
             del indexesSqlite
             del parser
             self.setStudyVerse(config.studyText, verseList[-1])

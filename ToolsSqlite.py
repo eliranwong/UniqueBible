@@ -138,7 +138,7 @@ class IndexesSqlite:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join(config.marvelData, "indexes.sqlite")
+        self.database = os.path.join(config.marvelData, "indexes2.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         self.setResourceList()
@@ -182,19 +182,33 @@ class IndexesSqlite:
         ]
 
     def getAllIndexes(self, bcvTuple):
-        indexList = ["exlbp", "exlbl", "exlbt", "dictionaries", "encyclopedia"]
-        indexItems = [
-            ("Characters", self.searchCharacters()),
-            ("Locations", self.searchLocations()),
-            ("Topics", self.searchTopics()),
-            ("Dictionaries", self.searchDictionaries()),
-            ("Encyclopedia", self.searchEncyclopedia())
-        ]
+        indexItems = (
+            (config.thisTranslation["menu5_characters"], "exlbp", self.searchCharacters()),
+            (config.thisTranslation["menu5_locations"], "exlbl", self.searchLocations()),
+            (config.thisTranslation["menu5_topics"], "exlbt", self.searchTopics()),
+            (config.thisTranslation["context1_dict"], "dictionaries", self.searchDictionaries()),
+            (config.thisTranslation["context1_encyclopedia"], "encyclopedia", self.searchEncyclopedia()),
+        )
         content = ""
-        for counter, index in enumerate(indexList):
-            content += "<h2>{0}</h2>".format(indexItems[counter][0])
-            content += self.getContent(index, bcvTuple)
-            content += "<p>{0}</p>".format(indexItems[counter][1])
+        for feature, module, searchOption in indexItems:
+            content += "<h2>{0}</h2>".format(feature)
+            content += self.getContent(module, bcvTuple)
+            content += "<p>{0}</p>".format(searchOption)
+        return content
+
+    def getChapterIndexes(self, bcTuple):
+        indexItems = (
+            (config.thisTranslation["menu5_characters"], "exlbp", self.searchCharacters()),
+            (config.thisTranslation["menu5_locations"], "exlbl", self.searchLocations()),
+            #(config.thisTranslation["menu5_topics"], "exlbt", self.searchTopics()),
+            #(config.thisTranslation["context1_dict"], "dictionaries", self.searchDictionaries()),
+            #(config.thisTranslation["context1_encyclopedia"], "encyclopedia", self.searchEncyclopedia()),
+        )
+        content = ""
+        for feature, module, searchOption in indexItems:
+            content += "<h2>{0}</h2>".format(feature)
+            content += self.getChapterContent(module, bcTuple)
+            content += "<p>{0}</p>".format(searchOption)
         return content
 
     def searchCharacters(self):
@@ -238,6 +252,19 @@ class IndexesSqlite:
                 return "<table>{0}</table>".format(content[0])
             else:
                 return content[0]
+
+    def getChapterContent(self, table, bcTuple):
+        query = "SELECT * FROM {0} WHERE Book = ? AND Chapter = ?".format(table)
+        self.cursor.execute(query, bcTuple)
+        parser = BibleVerseParser(config.parserStandarisation)
+        content = "<br>".join(['[<ref onclick="bcv({0},{1},{2})">{1}:{2}</ref>] {3}'.format(b, c, v, re.sub("<p>|</p>", " ", text)) for b, c, v, text in self.cursor.fetchall()])
+        if not content:
+            return "[not applicable]"
+        else:
+            if table == "dictionaries" or table == "encyclopedia":
+                return "<table>{0}</table>".format(content)
+            else:
+                return content
 
 
 class SearchSqlite:
