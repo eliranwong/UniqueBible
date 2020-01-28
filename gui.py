@@ -67,7 +67,8 @@ class MainWindow(QMainWindow):
         # information on latest modules
         self.updatedFiles = update.updatedFiles
         self.bibleInfo = update.bibleInfo
-
+        # set os open command
+        self.setOsOpenCmd()
         # set translation of interface
         self.setTranslation()
         # setup a parser for text commands
@@ -127,6 +128,14 @@ class MainWindow(QMainWindow):
 
     def __del__(self):
         del self.textCommandParser
+
+    def setOsOpenCmd(self):
+        if platform.system() == "Linux":
+            config.open = config.openLinux
+        elif platform.system() == "Darwin":
+            config.open = config.openMacos
+        elif platform.system() == "Windows":
+            config.open = config.openWindows
 
     def setTranslation(self):
         updateNeeded = False
@@ -322,6 +331,7 @@ class MainWindow(QMainWindow):
                         print("Failed to remove downloaded files.")
                 # prompt a restart
                 self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+                self.openExternalFile("latest_changes.txt")
             else:
                 self.displayMessage(config.thisTranslation["message_fail"])
         else:
@@ -1607,29 +1617,26 @@ class MainWindow(QMainWindow):
             self.openTextFileDialog()
 
     def editExternalFileHistoryRecord(self, record):
-        file = config.history["external"][record]
-        fileExtension = file.split(".")[-1].lower()
+        filename = config.history["external"][record]
+        fileExtension = filename.split(".")[-1].lower()
         directEdit = ("uba", "html", "htm")
         if fileExtension in directEdit:
             if self.noteSaved:
-                self.noteEditor = NoteEditor(self, "file", file)
+                self.noteEditor = NoteEditor(self, "file", filename)
                 self.noteEditor.show()
             elif self.warningNotSaved():
-                self.noteEditor = NoteEditor(self, "file", file)
+                self.noteEditor = NoteEditor(self, "file", filename)
                 self.noteEditor.show()
             else:
                 self.noteEditor.raise_()
         else:
-            self.openExternalFile(file)
+            self.openExternalFile(filename)
 
-    def openExternalFile(self, file):
-        # should check if file exists
-        if platform.system() == "Linux":
-            subprocess.call(["xdg-open", file])
-        elif platform.system() == "Darwin":
-            os.system("open {0}".format(file))
-        elif platform.system() == "Windows":
-            os.system("start {0}".format(file))
+    def openExternalFile(self, filename, isPdf=False):
+        if isPdf and platform.system() == "Linux":
+            subprocess.Popen([config.openLinuxPdf, filename])
+        else:
+            subprocess.Popen([config.open, filename])
 
     def openExternalFileHistoryRecord(self, record):
         self.openTextFile(config.history["external"][record])
@@ -1675,12 +1682,12 @@ class MainWindow(QMainWindow):
 
     # Actions - export to pdf
     def printMainPage(self):
-        file = "UniqueBible.app.pdf"
-        self.mainPage.printToPdf(file)
+        filename = "UniqueBible.app.pdf"
+        self.mainPage.printToPdf(filename)
 
     def printStudyPage(self):
-        file = "UniqueBible.app.pdf"
-        self.studyPage.printToPdf(file)
+        filename = "UniqueBible.app.pdf"
+        self.studyPage.printToPdf(filename)
 
     # import BibleBentoPlus modules
     def importBBPlusLexiconInAFolder(self):
@@ -2386,7 +2393,7 @@ class MainWindow(QMainWindow):
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
         if success:
-            self.openExternalFile(filePath)
+            self.openExternalFile(filePath, isPdf=True)
         else:
             print("Failed to print pdf")
 

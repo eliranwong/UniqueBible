@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 10.5
+current_version = 10.6
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -43,6 +43,18 @@ if not hasattr(config, "ibus"):
 # Options to use built-in virtual keyboards: True / False
 if not hasattr(config, "virtualKeyboard"):
     config.virtualKeyboard = False
+# Specify the "open" command on Windows
+if not hasattr(config, "openWindows"):
+    config.openWindows = "start"
+# Specify the "open" command on macOS
+if not hasattr(config, "openMacos"):
+    config.openMacos = "open"
+# Specify the "open" command on Linux
+if not hasattr(config, "openLinux"):
+    config.openLinux = "xdg-open"
+# Specify the command to open pdf file on Linux
+if not hasattr(config, "openLinuxPdf"):
+    config.openLinuxPdf = "xdg-open"
 # Specify the folder path of resources
 if not hasattr(config, "marvelData"):
     config.marvelData = "marvelData"
@@ -277,6 +289,10 @@ def saveDataOnExit():
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("removeBackup", config.removeBackup),
         ("remoteControl", config.remoteControl),
+        ("openWindows", config.openWindows),
+        ("openMacos", config.openMacos),
+        ("openLinux", config.openLinux),
+        ("openLinuxPdf", config.openLinuxPdf),
         ("linuxStartFullScreen", config.linuxStartFullScreen),
         ("showTtsOnLinux", config.showTtsOnLinux),
         ("ibus", config.ibus),

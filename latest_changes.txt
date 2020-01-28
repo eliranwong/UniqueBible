@@ -1,37 +1,39 @@
-Latest changes in version 10.0-10.5:
-* fixed a previous error on context menu after searching all bible topics
-* fixed highlights of search results of searching a string containing a wildcard character "%".
-* added an option to open book content on a new window.
-* added a menu item, a button, a dialog to open a reference book
-* added two book modules on bible maps: Maps_NET.book, Maps_ASB.book
-* added a configurable list of favourite books, config.favouriteBooks.  The first 10 books on the list are displayed on menu bar under section "Books" for quick access.
-* added "Search my Favourite Reference Books" on right-click context menu.
-* added "Search All Rreference Books" on right-click context menu.
-* added a dialog to add favourite book
-* added a function to delete old files
-* added a link on book's content page to go back the list of topics of the opened book module
-* added dialog boxes to select dictionary, encyclopedia and books for search
-* added support of advanced search on multiple bibles
-* added config.removeBackup option to delete downloaded files after upgrade to the latest version.
-* improved display of book search result, hiding the ones with no hit.
-* improved search items on menu bar
-* improved use of command keyword "BOOK"
-            # [KEYWORD] BOOK
-            # Usage - BOOK:::[BOOK_MODULE]:::[OPTIONAL_TOPIC]
-            # To view all the available topics of a book
-            # e.g. BOOK:::Timelines
-            # To specify a particular topic
-            # e.g. BOOK:::Timelines:::2210-2090_BCE
-* improved use of command keyword "SEARCHBOOK" 
-            # [KEYWORD] SEARCHBOOK
-            # To search the last opened book module
-            # e.g. SEARCHBOOK:::Abraham
-            # To search a particular book module
-            # e.g. SEARCHBOOK:::OT_History1:::Abraham
-            # To search mutliple books, separate book modules with a comma ",".
-            # e.g. SEARCHBOOK:::OT_History1,OT_History2:::Abraham
-            # To search all favourite book modules
-            # e.g. SEARCHBOOK:::FAV:::Jerusalem
-            # To search all installed book modules
-            # e.g. SEARCHBOOK:::ALL:::Jerusalem
-            # Remarks: Module creator should avoid comma for naming a book module.
+Latest changes in version 10.6:
+* fixed:
+    - "edit" button displayed on chapter / verse notes
+    - display of smart indexes for multiple verses
+    - note editor was opened twice with the same command
+* changed:
+    - now check latest version from a github file instead of a file from biblebento.com
+* updated several database files:
+    - collections3.sqlite
+    - indexes2.sqlite
+* added two new books to books.zip for download:
+    - Tidwell_The_Bible_Book_by_Book.book
+    - Timelines.book
+* added 25 high-quality image files:
+    - bible timelines
+* new GUI features:
+    - book introduction
+    - timelines for individual books
+    - button to look for selected bible book names in the last opened dictionary
+    - button to look for selected bible book names in the last opened encyclopedia
+    - chapter overview, including subheadings, harmonies & parallels, bible promises
+    - list of all bible characters & locations on individual chapters
+    - button to open chapter summary
+    - button to open the last opened commentary on chapter
+    - added option to display chapter / verse notes on Study Window each time a chapter / verse not is saved
+* new command keywords:
+    (you may find brief description below, more details will be given on https://github.com/eliranwong/UniqueBible/wiki/command_line)
+    - "overview:::" chapter overview
+    - "summary:::" chapter summary
+    - "chapterindex:::" list all bible characters and locations of a chapter 
+    - "_open:::" open a file / directory inside folder "marvelData"
+    - "mp3:::" [experimental] integrate youtube-dl in UB to download a mp3 audio file from Youtube.com
+* new config options:
+   (more details will be given on https://github.com/eliranwong/UniqueBible/wiki/config_file)
+    - openBibleNoteAfterSave
+    - openLinux
+    - openWindows
+    - openMacos
+    - openLinuxPdf

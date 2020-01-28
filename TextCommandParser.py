@@ -300,15 +300,19 @@ class TextCommandParser:
             # e.g. cmd:::open latest_changes.txt
             # e.g. cmd:::open "~/Applications/Visual Studio Code.app"/
             # Examples on Linux:
-            # e.g. cmd:::firefox&
-            # e.g. cmd:::mkdir -p myNotes; cd myNotes; gedit test.txt&
-            # e.g. cmd:::rm -rf myNotes&
-            # e.g. cmd:::google-chrome https://uniquebible.app&
+            # e.g. cmd:::firefox
+            # e.g. cmd:::mkdir -p myNotes; cd myNotes; gedit test.txt
+            # e.g. cmd:::rm -rf myNotes
+            # e.g. cmd:::google-chrome https://uniquebible.app
             "cmd": self.osCommand,
             # [KEYWORD] MP3
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
             # Usage - MP3:::[youtube_link]
             "mp3": self.mp3Download,
+            # [KEYWORD] _open
+            # e.g. _open:::.
+            # e.g. _open:::bibles
+            "_open": self.openExternalFile,
             # [KEYWORD] TRANSLATE
             # Feature - Use google translate to entered text
             # Usage - TRANSLATE:::[language code]:::[text to be translated]
@@ -376,9 +380,6 @@ class TextCommandParser:
             # [KEYWORD] _openversenote
             # e.g. _openversenote:::43.3.16
             "_openversenote": self.openVerseNote,
-            # [KEYWORD] _open
-            # e.g. _open:::test.txt
-            "_open": self.openExternalFile,
             # [KEYWORD] _openfile
             # e.g. _openfile:::1
             "_openfile": self.textOpenFile,
@@ -702,13 +703,15 @@ class TextCommandParser:
             del biblesSqlite
         return chapter
 
-    # [KEYWORD] CMD
+    # cmd:::
     # run os command
     def osCommand(self, command, source):
-        os.system(command)
+        subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        return ("", "")
 
     # mp3:::
     # run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
+    # at the moment, this works only if UniqueBible is launched from terminal
     def mp3Download(self, command, source):
         # Installation: http://ytdl-org.github.io/youtube-dl/download.html
         # Testing, e.g. to download a song 'amazing grace':
@@ -716,6 +719,7 @@ class TextCommandParser:
         try:
             subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             self.parent.displayMessage(config.thisTranslation["message_done"])
+            subprocess.Popen([config.open, "music"])
         except subprocess.CalledProcessError as err:
             self.parent.displayMessage(err, title="ERROR:")
         return ("", "")
