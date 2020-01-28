@@ -1,4 +1,4 @@
-import os, re, config, webbrowser
+import os, subprocess, re, config, webbrowser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
@@ -14,6 +14,8 @@ class TextCommandParser:
 
     def parser(self, textCommad, source="main"):
         interpreters = {
+            # [KEYWORD] OVERVIEW
+            # e.g. overview:::43.3
             "overview": self.textChapterOverview,
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
@@ -697,24 +699,38 @@ class TextCommandParser:
     def osCommand(self, command, source):
         os.system(command)
 
+    # mp3:::
     # run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
     def mp3Download(self, command, source):
         # Installation: http://ytdl-org.github.io/youtube-dl/download.html
         # Testing, e.g. to download a song 'amazing grace':
         # https://www.youtube.com/watch?v=CDdvReNKKuk
-        os.system("cd music; youtube-dl -x --audio-format mp3 {0}".format(command))
+        try:
+            subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            self.parent.displayMessage(config.thisTranslation["message_done"])
+        except subprocess.CalledProcessError as err:
+            self.parent.displayMessage(err, title="ERROR:")
         return ("", "")
 
     # functions about bible
 
-    # SUBHEADINGS:::
+    # overview:::
     def textChapterOverview(self, command, source):
         b, c, *_ = command.split(".")
         chapterReference = self.bcvToVerseReference(b, c, 1)[:-2]
         subheadings = BiblesSqlite().getChapterSubheadings(b, c)
+        if subheadings:
+            subheadings = "<p>{0}</p>".format(subheadings)
         parallels = CollectionsSqlite().getChapterParallels(b, c)
+        if parallels:
+            parallels = "<hr><p><bb>Harmonies and Parallels</bb></p><p>{0}</p>".format(parallels)
         promises = CollectionsSqlite().getChapterPromises(b, c)
-        return ("study", "<p><bb>{0}</bb></p><p>{1}</p><hr><p><bb>Harmonies and Parallels</bb></p><p>{2}</p><hr><p><bb>Bible Promises</bb></p><p>{3}</p>".format(chapterReference, subheadings, parallels, promises))
+        if promises:
+            promises = "<hr><p><bb>Bible Promises</bb></p><p>{0}</p>".format(promises)
+        chapterSummary =  Commentary("Brooks").getContent((b, c, 1))
+        if chapterSummary:
+            chapterSummary = "<hr><p><bb>Complete Summary of the Bible (Brooks)</bb></p><p>{0}</p>".format(chapterSummary)
+        return ("study", "<p><bb>{0}</bb></p><p>{1}</p>{2}{3}{4}".format(chapterReference, subheadings, parallels, promises, chapterSummary))
 
     # BIBLE:::
     def textBible(self, command, source):

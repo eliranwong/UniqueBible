@@ -329,6 +329,7 @@ class Languages:
         "html_openMain": "open on Bible Window",
         "html_openStudy": "open on Study Window",
         "html_introduction": "Introduction",
+        "html_overview": "Overview",
         "html_timelines": "Timelines",
         "message_remarks": "Remarks:",
         "message_cancel": "Cancel",
