@@ -1633,10 +1633,13 @@ class MainWindow(QMainWindow):
             self.openExternalFile(filename)
 
     def openExternalFile(self, filename, isPdf=False):
-        if isPdf and platform.system() == "Linux":
-            subprocess.Popen([config.openLinuxPdf, filename])
+        if platform.system() == "Linux":
+            if isPdf:
+                subprocess.Popen([config.openLinuxPdf, filename])
+            else:
+                subprocess.Popen([config.open, filename])
         else:
-            subprocess.Popen([config.open, filename])
+            os.system("{0} {1}".format(config.open, filename))
 
     def openExternalFileHistoryRecord(self, record):
         self.openTextFile(config.history["external"][record])
