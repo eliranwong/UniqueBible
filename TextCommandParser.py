@@ -1,4 +1,4 @@
-import os, subprocess, re, config, webbrowser
+import os, subprocess, re, config, webbrowser, platform
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
@@ -719,12 +719,17 @@ class TextCommandParser:
         # Installation: http://ytdl-org.github.io/youtube-dl/download.html
         # Testing, e.g. to download a song 'amazing grace':
         # https://www.youtube.com/watch?v=CDdvReNKKuk
-        try:
-            subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        if platform.system() == "Linux":
+            try:
+                subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                self.parent.displayMessage(config.thisTranslation["message_done"])
+                subprocess.Popen([config.open, "music"])
+            except subprocess.CalledProcessError as err:
+                self.parent.displayMessage(err, title="ERROR:")
+        else:
+            os.system("cd music; youtube-dl -x --audio-format mp3 {0}".format(command))
             self.parent.displayMessage(config.thisTranslation["message_done"])
-            subprocess.Popen([config.open, "music"])
-        except subprocess.CalledProcessError as err:
-            self.parent.displayMessage(err, title="ERROR:")
+            os.system("{0} music".format(config.open))
         return ("", "")
 
     # functions about bible
