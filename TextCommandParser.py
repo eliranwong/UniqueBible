@@ -719,6 +719,7 @@ class TextCommandParser:
         # Installation: http://ytdl-org.github.io/youtube-dl/download.html
         # Testing, e.g. to download a song 'amazing grace':
         # https://www.youtube.com/watch?v=CDdvReNKKuk
+        # on Linux
         if platform.system() == "Linux":
             try:
                 subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
@@ -726,6 +727,12 @@ class TextCommandParser:
                 subprocess.Popen([config.open, "music"])
             except subprocess.CalledProcessError as err:
                 self.parent.displayMessage(err, title="ERROR:")
+        # on Windows
+        elif platform.system() == "Windows":
+            os.system("cd .\music\ & youtube-dl -x --audio-format mp3 {0}".format(command))
+            self.parent.displayMessage(config.thisTranslation["message_done"])
+            os.system("{0} music".format(config.open))
+        # on Unix-based system, like macOS
         else:
             os.system("cd music; youtube-dl -x --audio-format mp3 {0}".format(command))
             self.parent.displayMessage(config.thisTranslation["message_done"])
