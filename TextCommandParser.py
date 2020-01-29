@@ -706,12 +706,15 @@ class TextCommandParser:
     # cmd:::
     # run os command
     def osCommand(self, command, source):
-        subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        if platform.system() == "Linux":
+            subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        else:
+            os.system(command)
         return ("", "")
 
     # mp3:::
     # run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
-    # at the moment, this works only if UniqueBible is launched from terminal
+    # at the moment, this works only on Linux if UniqueBible is launched from terminal
     def mp3Download(self, command, source):
         # Installation: http://ytdl-org.github.io/youtube-dl/download.html
         # Testing, e.g. to download a song 'amazing grace':
