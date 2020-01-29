@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
             config.thisTranslation = config.translation
         elif config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage"):
             languages = Languages()
-            code = languages.codes[config.userLanguage]
+            code = languages.codes[config.translationLanguage]
             if code in translations:
                 config.thisTranslation = translations[code]
             else:
@@ -176,12 +176,13 @@ class MainWindow(QMainWindow):
                     config.userLanguageInterface = True
                     self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
                 else:
+                    config.userLanguageInterface = False
                     self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
         else:
             self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
 
     def toogleInterfaceTranslation(self):
-        if not hasattr(config, "translation") and not config.userLanguageInterface:
+        if not hasattr(config, "translationLanguage") and not config.userLanguageInterface:
             self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_translateFirst"]))
         else:
             if config.userLanguageInterface:

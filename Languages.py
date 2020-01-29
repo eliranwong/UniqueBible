@@ -351,10 +351,12 @@ class Languages:
 
     def translateInterface(self, language):
         code = self.codes[language]
+        print(code)
         if code in translations:
+            print("available")
             config.translationLanguage = language
             return True
-        elif not platform.system() == "Linux":
+        elif not platform.system() == "Windows":
             print("translating interface into '{0}' ...".format(language))
             translator = Translator()
             tempDict = {}

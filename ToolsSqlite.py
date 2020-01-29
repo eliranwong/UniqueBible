@@ -170,7 +170,7 @@ class IndexesSqlite:
             ("PMD", "Poor Man's Dictionary"),
             ("SBD", "Smith's Bible Dictionary"),
             ("USS", "Annals of the World"),
-            ("VNT", "Vine's Expository Dictionary of New Testament Words")
+            ("VNT", "Vine's Expository Dictionary of New Testament Words"),
         ]
         self.encyclopediaList = [
             ("DAC", "Hasting's Dictionary of the Apostolic Church"),
@@ -178,7 +178,7 @@ class IndexesSqlite:
             ("HAS", "Hasting's Dictionary of the Bible"),
             ("ISB", "International Standard Bible Encyclopedia"),
             ("KIT", "Kitto's Cyclopedia of Biblical Literature"),
-            ("MSC", "McClintock & Strong's Cyclopedia of Biblical Literature")
+            ("MSC", "McClintock & Strong's Cyclopedia of Biblical Literature"),
         ]
 
     def getAllIndexes(self, bcvTuple):

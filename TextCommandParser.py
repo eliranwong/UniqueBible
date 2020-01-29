@@ -1724,7 +1724,7 @@ class TextCommandParser:
             content = ""
             for verse in verseList:
                 b, c, v = verse
-                content += "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
+                content += "<h2>{0} - <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}<hr>".format(config.thisTranslation["menu4_indexes"], parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
             del indexesSqlite
             del parser
             self.setStudyVerse(config.studyText, verseList[-1])

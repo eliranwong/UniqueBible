@@ -1,3 +1,7 @@
+Latest changes in version 10.8:
+* fixed program inteface translation on Windows
+* fixed an error of program inteface translation on Linux, introduced in version 10.7
+
 Latest changes in version 10.7:
 * fixed an error introuced in version 10.6 on opening pdf file on non-Linux platforms
 * added 3 interface translations for Windows users: Traditional Chinese, Simplified Chinese, Korean
