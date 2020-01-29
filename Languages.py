@@ -354,7 +354,7 @@ class Languages:
         if code in translations:
             config.translationLanguage = language
             return True
-        else if not platform.system() == "Linux":
+        elif not platform.system() == "Linux":
             print("translating interface into '{0}' ...".format(language))
             translator = Translator()
             tempDict = {}
