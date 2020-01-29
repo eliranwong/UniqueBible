@@ -712,7 +712,7 @@ class TextCommandParser:
             os.system(command)
         return ("", "")
 
-    # mp3:::
+    # mp3::: [experimental]
     # run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
     # at the moment, this works only on Linux if UniqueBible is launched from terminal
     def mp3Download(self, command, source):

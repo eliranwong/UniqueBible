@@ -1,3 +1,9 @@
+Latest changes in version 10.7:
+* fixed an error introuced in version 10.6 on opening pdf file on non-Linux platforms
+* added 3 interface translations for Windows users: Traditional Chinese, Simplified Chinese, Korean
+* Windows users can send us email to request a copy of your language if it is not yet available.
+* macOS or Linux users can use "Translate Program Interface into my Language" to translate interface into 106 languages.
+
 Latest changes in version 10.6:
 * fixed:
     - "edit" button displayed on chapter / verse notes

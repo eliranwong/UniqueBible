@@ -12,6 +12,7 @@ from NoteSqlite import NoteSqlite
 from ThirdParty import Converter
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite
+from translations import translations
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
 # Optional Features
@@ -154,6 +155,13 @@ class MainWindow(QMainWindow):
                         config.translation[key] = value
                     updateNeeded = True
             config.thisTranslation = config.translation
+        elif config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage"):
+            languages = Languages()
+            code = languages.codes[config.userLanguage]
+            if code in translations:
+                config.thisTranslation = translations[code]
+            else:
+                config.thisTranslation = Languages().translation
         else:
             config.thisTranslation = Languages().translation
         if updateNeeded:
@@ -164,9 +172,11 @@ class MainWindow(QMainWindow):
             if not config.userLanguage:
                 self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
             else:
-                Languages().translateInterface(config.userLanguage)
-                config.userLanguageInterface = True
-                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
+                if Languages().translateInterface(config.userLanguage):
+                    config.userLanguageInterface = True
+                    self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
+                else:
+                    self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
         else:
             self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
 
@@ -412,6 +422,9 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
 
         menu4 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu4_further"]))
+        menu4.addAction(QAction(config.thisTranslation["menu4_book"], self, triggered=self.bookFeatures))
+        menu4.addAction(QAction(config.thisTranslation["menu4_chapter"], self, triggered=self.chapterFeatures))
+        menu4.addSeparator()
         menu4.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut = 'Ctrl+>', triggered=self.nextMainChapter))
         menu4.addAction(QAction(config.thisTranslation["menu4_previous"], self, shortcut = 'Ctrl+<', triggered=self.previousMainChapter))
         menu4.addSeparator()
@@ -2293,6 +2306,14 @@ class MainWindow(QMainWindow):
     def studyTextMenu(self):
         newTextCommand = "_menu:::"
         self.runTextCommand(newTextCommand, False, "study")
+
+    def bookFeatures(self):
+        newTextCommand = "_menu:::{0}.{1}".format(config.mainText, config.mainB)
+        self.runTextCommand(newTextCommand, False, "main")
+
+    def chapterFeatures(self):
+        newTextCommand = "_menu:::{0}.{1}.{2}".format(config.mainText, config.mainB, config.mainC)
+        self.runTextCommand(newTextCommand, False, "main")
 
     def mainRefButtonClicked(self):
         newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)

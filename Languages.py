@@ -1,4 +1,5 @@
-import config, pprint
+import config, pprint, platform
+from translations import translations
 # [Optional] Google-translate
 try:
     from googletrans import Translator
@@ -156,6 +157,8 @@ class Languages:
         "menu3_studyBack": "Study Window's Previous Record",
         "menu3_studyForward": "Study Window's Next Record",
         "menu4_further": "Further Study",
+        "menu4_book": "Book Features",
+        "menu4_chapter": "Chapter Features",
         "menu4_next": "Next Chapter",
         "menu4_previous": "Previous Chapter",
         "menu4_indexes": "Smart Indexes",
@@ -347,19 +350,25 @@ class Languages:
     }
 
     def translateInterface(self, language):
-        print("translating interface into '{0}' ...".format(language))
-        translator = Translator()
         code = self.codes[language]
-        tempDict = {}
-        for key, value in self.translation.items():
-            tempDict[key] = value
-            try:
-                tempDict[key] = translator.translate(value, dest=code).text
-            except:
+        if code in translations:
+            config.translationLanguage = language
+            return True
+        else if not platform.system() == "Linux":
+            print("translating interface into '{0}' ...".format(language))
+            translator = Translator()
+            tempDict = {}
+            for key, value in self.translation.items():
                 tempDict[key] = value
-        config.translationLanguage = language
-        config.translation = tempDict
-        print("done.")
+                try:
+                    tempDict[key] = translator.translate(value, dest=code).text
+                except:
+                    tempDict[key] = value
+            config.translationLanguage = language
+            config.translation = tempDict
+            print("Done")
+            return True
+        return False
 
     def createTranslationTemplates(self):
         if googletransInstall:
