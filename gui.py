@@ -535,6 +535,8 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFile"], self, triggered=self.tagFile))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
+        menu8.addSeparator()
+        menu8.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
 
         menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
         menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
@@ -1845,6 +1847,12 @@ class MainWindow(QMainWindow):
             outputFile = os.path.join(path, "output_{0}".format(file))
             BibleVerseParser(config.parserStandarisation).startParsing(directory)
             self.onTaggingCompleted()
+
+    # Actions - open a dialog box to download a mp3 file from youtube
+    def downloadMp3Dialog(self):
+        text, ok = QInputDialog.getText(self, "YouTube > mp3", "Enter a YouTube link:", QLineEdit.Normal, "")
+        if ok and text:
+            self.runTextCommand("mp3:::{0}".format(text))
 
     # Actions - hide / show tool bars
     def hideShowMainToolBar(self):
