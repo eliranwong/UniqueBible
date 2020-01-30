@@ -536,8 +536,10 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
         menu8.addSeparator()
+        menu8.addAction(QAction("Download YouTube Audio / Video", self, triggered=self.openYouTube))
         menu8.addAction(QAction("music", self, triggered=self.openMusicFolder))
-        menu8.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
+        menu8.addAction(QAction("video", self, triggered=self.openVideoFolder))
+        #menu8.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         #menu8.addAction(QAction("marvelData", self, triggered=self.openMarvelDataFolder))
 
         menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
@@ -1834,8 +1836,8 @@ class MainWindow(QMainWindow):
                 "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
         if files:
             parser = BibleVerseParser(config.parserStandarisation)
-            for file in files:
-                parser.startParsing(file)
+            for filename in files:
+                parser.startParsing(filename)
             del parser
             self.onTaggingCompleted()
 
@@ -1845,20 +1847,29 @@ class MainWindow(QMainWindow):
                 config.thisTranslation["menu8_tagFolder"],
                 self.directoryLabel.text(), options)
         if directory:
-            path, file = os.path.split(directory)
-            outputFile = os.path.join(path, "output_{0}".format(file))
+            path, filename = os.path.split(directory)
+            outputFile = os.path.join(path, "output_{0}".format(filename))
             BibleVerseParser(config.parserStandarisation).startParsing(directory)
             self.onTaggingCompleted()
 
     # Action - open a dialog box to download a mp3 file from youtube
     def downloadMp3Dialog(self):
         text, ok = QInputDialog.getText(self, "YouTube > mp3", "Enter a YouTube link:", QLineEdit.Normal, "")
-        if ok and text:
+        if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp3:::{0}".format(text))
+
+    def openYouTube(self):
+        self.youTubeView = YouTubePopover(self)
+        self.youTubeView.load(QUrl("https://www.youtube.com/"))
+        self.youTubeView.show()
 
     # Action - open "music" directory
     def openMusicFolder(self):
         self.runTextCommand("cmd:::{0} music".format(config.open))
+
+    # Action - open "video" directory
+    def openVideoFolder(self):
+        self.runTextCommand("cmd:::{0} video".format(config.open))
 
     # Action - open "marvelData" directory
     def openMarvelDataFolder(self):
@@ -3229,6 +3240,38 @@ class WebEngineView(QWebEngineView):
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
+
+
+class YouTubePopover(QWebEngineView):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        self.setWindowTitle("YouTube.com")
+        self.urlChanged.connect(self.videoLinkChanged)
+        # add context menu (triggered by right-clicking)
+        self.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.addMenuActions()
+
+    def videoLinkChanged(self, url):
+        self.urlString = url.toString()
+
+    def addMenuActions(self):
+        mp3 = QAction(self)
+        mp3.setText("Download Audio in mp3 Format")
+        mp3.triggered.connect(self.downloadMp3)
+        self.addAction(mp3)
+
+        video = QAction(self)
+        video.setText("Download Video in mp4 Format")
+        video.triggered.connect(self.downloadVideo)
+        self.addAction(video)
+
+    def downloadMp3(self):
+        self.parent.runTextCommand("mp3:::{0}".format(self.urlString))
+
+    def downloadVideo(self):
+        self.parent.runTextCommand("mp4:::{0}".format(self.urlString))
 
 
 class WebEngineViewPopover(QWebEngineView):

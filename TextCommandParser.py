@@ -309,6 +309,8 @@ class TextCommandParser:
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
             # Usage - MP3:::[youtube_link]
             "mp3": self.mp3Download,
+            # Usage - MP4:::[youtube_link]
+            "mp4": self.mp4Download,
             # [KEYWORD] _open
             # e.g. _open:::.
             # e.g. _open:::bibles
@@ -713,30 +715,47 @@ class TextCommandParser:
         return ("", "")
 
     # mp3::: [experimental]
-    # run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
-    # at the moment, this works only on Linux if UniqueBible is launched from terminal
     def mp3Download(self, command, source):
-        # Installation: http://ytdl-org.github.io/youtube-dl/download.html
-        # Testing, e.g. to download a song 'amazing grace':
-        # https://www.youtube.com/watch?v=CDdvReNKKuk
-        # on Linux
+        shortcut = "youtube-dl -x --audio-format mp3"
         if platform.system() == "Linux":
             try:
-                subprocess.run(["cd music; youtube-dl -x --audio-format mp3 {0}".format(command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                subprocess.run(["cd music; {0} {1}".format(shortcut, command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                 self.parent.displayMessage(config.thisTranslation["message_done"])
                 subprocess.Popen([config.open, "music"])
             except subprocess.CalledProcessError as err:
                 self.parent.displayMessage(err, title="ERROR:")
         # on Windows
         elif platform.system() == "Windows":
-            os.system("cd .\music\ & youtube-dl -x --audio-format mp3 {0}".format(command))
+            os.system("cd .\music\ & {0} {1}".format(shortcut, command))
             self.parent.displayMessage(config.thisTranslation["message_done"])
             os.system("{0} music".format(config.open))
         # on Unix-based system, like macOS
         else:
-            os.system("cd music; youtube-dl -x --audio-format mp3 {0}".format(command))
+            os.system("cd music; {0} {1}".format(shortcut, command))
             self.parent.displayMessage(config.thisTranslation["message_done"])
             os.system("{0} music".format(config.open))
+        return ("", "")
+
+    # mp4::: [experimental]
+    def mp4Download(self, command, source):
+        shortcut = "youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4'"
+        if platform.system() == "Linux":
+            try:
+                subprocess.run(["cd video; {0} {1}".format(shortcut, command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                self.parent.displayMessage(config.thisTranslation["message_done"])
+                subprocess.Popen([config.open, "video"])
+            except subprocess.CalledProcessError as err:
+                self.parent.displayMessage(err, title="ERROR:")
+        # on Windows
+        elif platform.system() == "Windows":
+            os.system("cd .\video\ & {0} {1}".format(shortcut, command))
+            self.parent.displayMessage(config.thisTranslation["message_done"])
+            os.system("{0} video".format(config.open))
+        # on Unix-based system, like macOS
+        else:
+            os.system("cd video; {0} {1}".format(shortcut, command))
+            self.parent.displayMessage(config.thisTranslation["message_done"])
+            os.system("{0} video".format(config.open))
         return ("", "")
 
     # functions about bible

@@ -1,3 +1,9 @@
+Latest changes in version 11.0:
+Enhanced Downloading YouTube Audio in mp3 format / Video in mp4 format
+- Load youtube.com directly in a new window, so that users can search a video.
+- After navigating to a desired video, right-click on area outside the video,
+- Select "Downalod Video in mp4 Format" or "Download Audio in mp3 Format"
+
 Latest changes in version 10.9:
 * Added support of using youtube-dl on Windows, macOS & Linux
 * This feature downloads a video file from a youtube link user provides, convert it into a mp3 file and saved in folder "music" inside "UniqueBible" folder.
