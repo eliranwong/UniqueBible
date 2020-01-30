@@ -347,6 +347,18 @@ class Languages:
         "import_rtl": "Old Testament Text Direction: Right-to-left",
         "message_addFavouriteVersion": "Add as a parallel version for reading multiple bible verse references:",
         "search_notFound": "[no result]",
+        "menu11_multimedia": "Multimedia",
+        "menu11_images": "Images",
+        "menu11_music": "Music",
+        "menu11_video": "Video",
+        "menu11_setupDownload": "Instructions to Setup YouTube Downloader",
+        "menu11_youtube": "Download YouTube Audio / Video",
+        "youtube_back": "Back",
+        "youtube_forward": "Forward",
+        "youtube_mp3": "Download Audio in mp3 Format",
+        "youtube_mp4": "Download Video in mp4 Format",
+        "youtube_address": "Enter a YouTube address:",
+        "menu9_donate": "Donate to us",
     }
 
     def translateInterface(self, language):

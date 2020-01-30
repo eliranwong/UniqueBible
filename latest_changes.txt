@@ -1,3 +1,12 @@
+Latest changes in version 11.1:
+* Enhanced built-in YouTube browser
+* Added instructions for setup and use of built-in YouTube browser for downloading video / audio files:
+    https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video
+* Added a new section "Multimedia" to user menu
+* Added items for interface translation
+* Added "Donate to us" to menu items.
+This app is made out of labour of love.  Please consider a donation to support our development.
+
 Latest changes in version 11.0:
 Enhanced Downloading YouTube Audio in mp3 format / Video in mp4 format
 - Load youtube.com directly in a new window, so that users can search a video.

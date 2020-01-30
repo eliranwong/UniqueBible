@@ -520,6 +520,18 @@ class MainWindow(QMainWindow):
         menu7.addSeparator()
         menu7.addAction(QAction(config.thisTranslation["menu7_paste"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
 
+        menu11 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu11_multimedia"]))
+        menu11.addAction(QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
+        menu11.addAction(QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
+        menu11.addAction(QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
+        #menu11.addAction(QAction("marvelData", self, triggered=self.openMarvelDataFolder))
+        menu11.addSeparator()
+        menu11.addAction(QAction(config.thisTranslation["menu11_setupDownload"], self, triggered=self.setupYouTube))
+        menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openYouTube))
+        menu11.addSeparator()
+        menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
+        menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
+
         menu8 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu8_resources"]))
         menu8.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
         menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
@@ -535,12 +547,6 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFile"], self, triggered=self.tagFile))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
-        menu8.addSeparator()
-        menu8.addAction(QAction("Download YouTube Audio / Video", self, triggered=self.openYouTube))
-        menu8.addAction(QAction("music", self, triggered=self.openMusicFolder))
-        menu8.addAction(QAction("video", self, triggered=self.openVideoFolder))
-        #menu8.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
-        #menu8.addAction(QAction("marvelData", self, triggered=self.openMarvelDataFolder))
 
         menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
         menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
@@ -557,6 +563,7 @@ class MainWindow(QMainWindow):
         menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
         menu9.addSeparator()
         menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
+        menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
 
     def setupToolBar(self):
         if config.toolBarIconFullSize:
@@ -1854,14 +1861,28 @@ class MainWindow(QMainWindow):
 
     # Action - open a dialog box to download a mp3 file from youtube
     def downloadMp3Dialog(self):
-        text, ok = QInputDialog.getText(self, "YouTube > mp3", "Enter a YouTube link:", QLineEdit.Normal, "")
+        text, ok = QInputDialog.getText(self, "YouTube -> mp3", config.thisTranslation["youtube_address"], QLineEdit.Normal, "")
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp3:::{0}".format(text))
+
+    # Action - open a dialog box to download a youtube video in mp4 format
+    def downloadMp4Dialog(self):
+        text, ok = QInputDialog.getText(self, "YouTube -> mp4", config.thisTranslation["youtube_address"], QLineEdit.Normal, "")
+        if ok and text and QUrl.fromUserInput(text).isValid():
+            self.runTextCommand("mp4:::{0}".format(text))
+
+    def setupYouTube(self):
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video")
 
     def openYouTube(self):
         self.youTubeView = YouTubePopover(self)
         self.youTubeView.load(QUrl("https://www.youtube.com/"))
         self.youTubeView.show()
+
+    # Action - open "images" directory
+    def openImagesFolder(self):
+        imageFolder = os.path.join("htmlResources", "images")
+        self.runTextCommand("cmd:::{0} {1}".format(config.open, imageFolder))
 
     # Action - open "music" directory
     def openMusicFolder(self):
@@ -2164,6 +2185,9 @@ class MainWindow(QMainWindow):
 
     def contactEliranWong(self):
         webbrowser.open("https://marvel.bible/contact/contactform.php")
+
+    def donateToUs(self):
+        webbrowser.open("https://www.paypal.me/MarvelBible")
 
     # Actions - resize the main window
     def fullsizeWindow(self):
@@ -2904,12 +2928,20 @@ class WebEngineView(QWebEngineView):
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         # TEXT-TO-SPEECH feature
         if ttsSupport:
             tts = QAction(self)
             tts.setText(config.thisTranslation["context1_speak"])
             tts.triggered.connect(self.textToSpeech)
             self.addAction(tts)
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
 
         # Google Translate
         if googletransSupport:
@@ -2939,6 +2971,10 @@ class WebEngineView(QWebEngineView):
             translateText.triggered.connect(self.checkUserLanguage)
             self.addAction(translateText)
 
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
+
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if pinyinSupport:
@@ -2946,6 +2982,10 @@ class WebEngineView(QWebEngineView):
             pinyinText.setText(config.thisTranslation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
 
         self.searchText = QAction(self)
         self.searchText.setText(config.thisTranslation["context1_search"])
@@ -2962,6 +3002,10 @@ class WebEngineView(QWebEngineView):
         searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
         self.addAction(searchFavouriteBible)
 
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         searchTextOriginal = QAction(self)
         searchTextOriginal.setText(config.thisTranslation["context1_original"])
         searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
@@ -2972,6 +3016,10 @@ class WebEngineView(QWebEngineView):
         self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
         self.addAction(self.searchLexicon)
 
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         searchFavouriteBooks = QAction(self)
         searchFavouriteBooks.setText(config.thisTranslation["context1_favouriteBooks"])
         searchFavouriteBooks.triggered.connect(self.searchSearchFavouriteBooks)
@@ -2981,6 +3029,10 @@ class WebEngineView(QWebEngineView):
         searchFavouriteBooks.setText(config.thisTranslation["context1_allBooks"])
         searchFavouriteBooks.triggered.connect(self.searchAllBooks)
         self.addAction(searchFavouriteBooks)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         searchBibleCharacter = QAction(self)
         searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
@@ -3017,10 +3069,18 @@ class WebEngineView(QWebEngineView):
         self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
         self.addAction(self.searchThirdDictionary)
 
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         searchBibleReferences = QAction(self)
         searchBibleReferences.setText(config.thisTranslation["context1_extract"])
         searchBibleReferences.triggered.connect(self.extractAllReferences)
         self.addAction(searchBibleReferences)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         runAsCommandLine = QAction(self)
         runAsCommandLine.setText(config.thisTranslation["context1_command"])
@@ -3257,22 +3317,41 @@ class YouTubePopover(QWebEngineView):
         self.urlString = url.toString()
 
     def addMenuActions(self):
+        goBack = QAction(self)
+        goBack.setText(config.thisTranslation["youtube_back"])
+        goBack.triggered.connect(self.back)
+        self.addAction(goBack)
+
+        goForward = QAction(self)
+        goForward.setText(config.thisTranslation["youtube_forward"])
+        goForward.triggered.connect(self.forward)
+        self.addAction(goForward)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         mp3 = QAction(self)
-        mp3.setText("Download Audio in mp3 Format")
+        mp3.setText(config.thisTranslation["youtube_mp3"])
         mp3.triggered.connect(self.downloadMp3)
         self.addAction(mp3)
 
         video = QAction(self)
-        video.setText("Download Video in mp4 Format")
+        video.setText(config.thisTranslation["youtube_mp4"])
         video.triggered.connect(self.downloadVideo)
         self.addAction(video)
+
+    def back(self):
+        self.page().triggerAction(QWebEnginePage.Back)
+
+    def forward(self):
+        self.page().triggerAction(QWebEnginePage.Forward)
 
     def downloadMp3(self):
         self.parent.runTextCommand("mp3:::{0}".format(self.urlString))
 
     def downloadVideo(self):
         self.parent.runTextCommand("mp4:::{0}".format(self.urlString))
-
 
 class WebEngineViewPopover(QWebEngineView):
 
