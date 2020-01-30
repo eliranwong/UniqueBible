@@ -74,6 +74,10 @@ conda install -c conda-forge python-docx<br>
 conda install -c conda-forge diff-match-patch<br>
 conda install -c conda-forge googletrans<br>
 
+# Dependency to Run YouTube Downloader
+
+Read <a href="https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video">https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video</a>
+
 # Instructions on Installation
 
 There are different ways to setup and run our app.  We have some examples in the following link:
