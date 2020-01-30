@@ -58,6 +58,12 @@ if not hasattr(config, "openLinuxPdf"):
 # Specify the folder path of resources
 if not hasattr(config, "marvelData"):
     config.marvelData = "marvelData"
+# Specify the folder path of music files
+if not hasattr(config, "musicFolder"):
+    config.musicFolder = "music"
+# Specify the folder path of video files
+if not hasattr(config, "videoFolder"):
+    config.videoFolder = "video"
 # Specify the number of tabs for bible reading and workspace
 if not hasattr(config, "numberOfTab"):
     config.numberOfTab = 5
@@ -298,6 +304,8 @@ def saveDataOnExit():
         ("ibus", config.ibus),
         ("virtualKeyboard", config.virtualKeyboard),
         ("marvelData", config.marvelData),
+        ("musicFolder", config.musicFolder),
+        ("videoFolder", config.videoFolder),
         ("numberOfTab", config.numberOfTab),
         ("parserStandarisation", config.parserStandarisation),
         ("standardAbbreviation", config.standardAbbreviation),

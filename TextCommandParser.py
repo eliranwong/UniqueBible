@@ -717,12 +717,12 @@ class TextCommandParser:
     # mp3:::
     def mp3Download(self, command, source):
         downloadCommand = "youtube-dl -x --audio-format mp3"
-        return self.downloadYouTubeFile(downloadCommand, command, "music")
+        return self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
 
     # mp4:::
     def mp4Download(self, command, source):
         downloadCommand = "youtube-dl -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
-        return self.downloadYouTubeFile(downloadCommand, command, "video")
+        return self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
 
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         if platform.system() == "Linux":
