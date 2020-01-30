@@ -1,3 +1,6 @@
+Latest changes in version 11.3:
+* Fixed downloading YouTube video in mp4 format on Windows
+
 Latest changes in version 11.2:
 * added "Copy Opened Link" to right-click context menu of built-in YouTube browser.
 * prevent download actions on YouTube's home page and search results.  Download action is expected to work after a video or play list is opened.

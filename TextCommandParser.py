@@ -714,48 +714,34 @@ class TextCommandParser:
             os.system(command)
         return ("", "")
 
-    # mp3::: [experimental]
+    # mp3:::
     def mp3Download(self, command, source):
-        shortcut = "youtube-dl -x --audio-format mp3"
-        if platform.system() == "Linux":
-            try:
-                subprocess.run(["cd music; {0} {1}".format(shortcut, command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-                self.parent.displayMessage(config.thisTranslation["message_done"])
-                subprocess.Popen([config.open, "music"])
-            except subprocess.CalledProcessError as err:
-                self.parent.displayMessage(err, title="ERROR:")
-        # on Windows
-        elif platform.system() == "Windows":
-            os.system("cd .\music\ & {0} {1}".format(shortcut, command))
-            self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} music".format(config.open))
-        # on Unix-based system, like macOS
-        else:
-            os.system("cd music; {0} {1}".format(shortcut, command))
-            self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} music".format(config.open))
-        return ("", "")
+        downloadCommand = "youtube-dl -x --audio-format mp3"
+        return self.downloadYouTubeFile(downloadCommand, command, "music")
 
-    # mp4::: [experimental]
+    # mp4:::
     def mp4Download(self, command, source):
-        shortcut = "youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4'"
+        downloadCommand = "youtube-dl -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
+        return self.downloadYouTubeFile(downloadCommand, command, "video")
+
+    def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         if platform.system() == "Linux":
             try:
-                subprocess.run(["cd video; {0} {1}".format(shortcut, command)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
                 self.parent.displayMessage(config.thisTranslation["message_done"])
-                subprocess.Popen([config.open, "video"])
+                subprocess.Popen([config.open, outputFolder])
             except subprocess.CalledProcessError as err:
                 self.parent.displayMessage(err, title="ERROR:")
         # on Windows
         elif platform.system() == "Windows":
-            os.system("cd .\video\ & {0} {1}".format(shortcut, command))
+            os.system("cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
             self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} video".format(config.open))
+            os.system("{0} {1}".format(config.open, outputFolder))
         # on Unix-based system, like macOS
         else:
-            os.system("cd video; {0} {1}".format(shortcut, command))
+            os.system("cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
             self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} video".format(config.open))
+            os.system("{0} {1}".format(config.open, outputFolder))
         return ("", "")
 
     # functions about bible
