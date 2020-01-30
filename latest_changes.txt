@@ -1,3 +1,7 @@
+Latest changes in version 11.4:
+* added options "musicFolder" and "videoFolder" in config.py to allow users to specfy the paths of music and video folders for storing YouTube files.
+* added two buttons on second-top toolbar, "Search Reference Book" and "Download YouTube Audio / Video"
+
 Latest changes in version 11.3:
 * Fixed downloading YouTube video in mp4 format on Windows
 

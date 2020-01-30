@@ -724,12 +724,12 @@ class MainWindow(QMainWindow):
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
-#        searchBookButton = QPushButton()
-#        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
-#        searchBookButtonFile = os.path.join("htmlResources", "search.png")
-#        searchBookButton.setIcon(QIcon(searchBookButtonFile))
-#        searchBookButton.clicked.connect(self.displaySearchBookCommand)
-#        self.secondToolBar.addWidget(searchBookButton)
+        searchBookButton = QPushButton()
+        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
+        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+        self.secondToolBar.addWidget(searchBookButton)
 
         self.secondToolBar.addSeparator()
 
@@ -781,6 +781,15 @@ class MainWindow(QMainWindow):
         fontPlusButton.setIcon(QIcon(fontPlusButtonFile))
         fontPlusButton.clicked.connect(self.largerFont)
         self.secondToolBar.addWidget(fontPlusButton)
+
+        self.secondToolBar.addSeparator()
+
+        youtubeButton = QPushButton()
+        youtubeButton.setToolTip(config.thisTranslation["menu11_youtube"])
+        youtubeButtonFile = os.path.join("htmlResources", "youtube.png")
+        youtubeButton.setIcon(QIcon(youtubeButtonFile))
+        youtubeButton.clicked.connect(self.openYouTube)
+        self.secondToolBar.addWidget(youtubeButton)
 
         self.secondToolBar.addSeparator()
 
@@ -1148,12 +1157,12 @@ class MainWindow(QMainWindow):
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
-#        searchBookButton = QPushButton()
-#        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
-#        searchBookButtonFile = os.path.join("htmlResources", "search.png")
-#        searchBookButton.setIcon(QIcon(searchBookButtonFile))
-#        searchBookButton.clicked.connect(self.displaySearchBookCommand)
-#        self.secondToolBar.addWidget(searchBookButton)
+        searchBookButton = QPushButton()
+        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
+        searchBookButtonFile = os.path.join("htmlResources", "search.png")
+        searchBookButton.setIcon(QIcon(searchBookButtonFile))
+        searchBookButton.clicked.connect(self.displaySearchBookCommand)
+        self.secondToolBar.addWidget(searchBookButton)
 
         self.secondToolBar.addSeparator()
 
@@ -1185,6 +1194,15 @@ class MainWindow(QMainWindow):
 
         iconFile = os.path.join("htmlResources", "fontPlus.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_larger"], self.largerFont)
+
+        self.secondToolBar.addSeparator()
+
+        youtubeButton = QPushButton()
+        youtubeButton.setToolTip(config.thisTranslation["menu11_youtube"])
+        youtubeButtonFile = os.path.join("htmlResources", "youtube.png")
+        youtubeButton.setIcon(QIcon(youtubeButtonFile))
+        youtubeButton.clicked.connect(self.openYouTube)
+        self.secondToolBar.addWidget(youtubeButton)
 
         self.secondToolBar.addSeparator()
 
@@ -3306,7 +3324,7 @@ class YouTubePopover(QWebEngineView):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle("YouTube.com")
+        self.setWindowTitle(config.thisTranslation["menu11_youtube"])
         self.load(QUrl("https://www.youtube.com/"))
         self.urlString = ""
         self.urlChanged.connect(self.videoLinkChanged)
