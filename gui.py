@@ -1876,7 +1876,6 @@ class MainWindow(QMainWindow):
 
     def openYouTube(self):
         self.youTubeView = YouTubePopover(self)
-        self.youTubeView.load(QUrl("https://www.youtube.com/"))
         self.youTubeView.show()
 
     # Action - open "images" directory
@@ -3308,6 +3307,8 @@ class YouTubePopover(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.setWindowTitle("YouTube.com")
+        self.load(QUrl("https://www.youtube.com/"))
+        self.urlString = ""
         self.urlChanged.connect(self.videoLinkChanged)
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -3331,6 +3332,15 @@ class YouTubePopover(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        copyLink = QAction(self)
+        copyLink.setText(config.thisTranslation["youtube_copy"])
+        copyLink.triggered.connect(self.copy)
+        self.addAction(copyLink)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         mp3 = QAction(self)
         mp3.setText(config.thisTranslation["youtube_mp3"])
         mp3.triggered.connect(self.downloadMp3)
@@ -3347,11 +3357,22 @@ class YouTubePopover(QWebEngineView):
     def forward(self):
         self.page().triggerAction(QWebEnginePage.Forward)
 
+    def copy(self):
+        if self.urlString:
+            qApp.clipboard().setText(self.urlString)
+
     def downloadMp3(self):
-        self.parent.runTextCommand("mp3:::{0}".format(self.urlString))
+        if not self.urlString or "/results?search_query=" in self.urlString:
+            self.parent.displayMessage(config.thisTranslation["message_invalid"])
+        else:
+            self.parent.runTextCommand("mp3:::{0}".format(self.urlString))
 
     def downloadVideo(self):
-        self.parent.runTextCommand("mp4:::{0}".format(self.urlString))
+        if not self.urlString or "/results?search_query=" in self.urlString:
+            self.parent.displayMessage(config.thisTranslation["message_invalid"])
+        else:
+            self.parent.runTextCommand("mp4:::{0}".format(self.urlString))
+
 
 class WebEngineViewPopover(QWebEngineView):
 

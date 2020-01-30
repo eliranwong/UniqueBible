@@ -246,6 +246,7 @@ translations = {
         'youtube_mp3': '下载 mp3 格式的语音档案',
         'youtube_mp4': '下载 mp4 格式的录像档案',
         'youtube_address': '输入 YouTube 地址:',
+        "youtube_copy": "复制现正开启的连接",
         'menu9_donate': '捐赠给我们',
     },
     "zh-TW": {
@@ -495,6 +496,7 @@ translations = {
         'youtube_mp3': '下載 mp3 格式的語音檔案',
         'youtube_mp4': '下載 mp4 格式的錄像檔案',
         'youtube_address': '輸入 YouTube 地址:',
+        "youtube_copy": "複製現正開啟的連接",
         'menu9_donate': '捐贈給我們',
     },
     "ko": {
@@ -749,6 +751,7 @@ translations = {
         'youtube_mp3': '오디오 다운로드(mp3)',
         'youtube_mp4': '비디오 다운로드(mp4)',
         'youtube_address': 'Enter a YouTube address:',
+        "youtube_copy": "Copy Opened Link",
         'menu9_donate': 'Donate to us',
      },
 }

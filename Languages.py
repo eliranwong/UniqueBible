@@ -358,6 +358,7 @@ class Languages:
         "youtube_mp3": "Download Audio in mp3 Format",
         "youtube_mp4": "Download Video in mp4 Format",
         "youtube_address": "Enter a YouTube address:",
+        "youtube_copy": "Copy Opened Link",
         "menu9_donate": "Donate to us",
     }
 

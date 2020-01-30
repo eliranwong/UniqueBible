@@ -1,3 +1,7 @@
+Latest changes in version 11.2:
+* added "Copy Opened Link" to right-click context menu of built-in YouTube browser.
+* prevent download actions on YouTube's home page and search results.  Download action is expected to work after a video or play list is opened.
+
 Latest changes in version 11.1:
 * Enhanced built-in YouTube browser
 * Added instructions for setup and use of built-in YouTube browser for downloading video / audio files:
