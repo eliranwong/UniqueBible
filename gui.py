@@ -1157,12 +1157,8 @@ class MainWindow(QMainWindow):
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
 
-        searchBookButton = QPushButton()
-        searchBookButton.setToolTip(config.thisTranslation["bar2_searchBooks"])
-        searchBookButtonFile = os.path.join("htmlResources", "search.png")
-        searchBookButton.setIcon(QIcon(searchBookButtonFile))
-        searchBookButton.clicked.connect(self.displaySearchBookCommand)
-        self.secondToolBar.addWidget(searchBookButton)
+        iconFile = os.path.join("htmlResources", "search.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBooks"], self.displaySearchBookCommand)
 
         self.secondToolBar.addSeparator()
 
@@ -1197,12 +1193,8 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
-        youtubeButton = QPushButton()
-        youtubeButton.setToolTip(config.thisTranslation["menu11_youtube"])
-        youtubeButtonFile = os.path.join("htmlResources", "youtube.png")
-        youtubeButton.setIcon(QIcon(youtubeButtonFile))
-        youtubeButton.clicked.connect(self.openYouTube)
-        self.secondToolBar.addWidget(youtubeButton)
+        iconFile = os.path.join("htmlResources", "youtube.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
 
         self.secondToolBar.addSeparator()
 
