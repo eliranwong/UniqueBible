@@ -360,6 +360,7 @@ class Languages:
         "youtube_address": "Enter a YouTube address:",
         "youtube_copy": "Copy Opened Link",
         "menu9_donate": "Donate to us",
+        "menu8_moreBooks": "Download More Reference Books",
     }
 
     def translateInterface(self, language):

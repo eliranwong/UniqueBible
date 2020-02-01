@@ -248,6 +248,7 @@ translations = {
         'youtube_address': '输入 YouTube 地址:',
         "youtube_copy": "复制现正开启的连接",
         'menu9_donate': '捐赠给我们',
+        'menu8_moreBooks': '下载更多参考书',
     },
     "zh-TW": {
        'bar1_chapterNotes': '聖經窗口的聖經章註釋',
@@ -498,6 +499,7 @@ translations = {
         'youtube_address': '輸入 YouTube 地址:',
         "youtube_copy": "複製現正開啟的連接",
         'menu9_donate': '捐贈給我們',
+        'menu8_moreBooks': '下載更多參考書',
     },
     "ko": {
         'bar1_chapterNotes': '성경 윈도우의 성경 장 참고',
@@ -750,8 +752,9 @@ translations = {
         'youtube_forward': '앞으로',
         'youtube_mp3': '오디오 다운로드(mp3)',
         'youtube_mp4': '비디오 다운로드(mp4)',
-        'youtube_address': 'Enter a YouTube address:',
-        "youtube_copy": "Copy Opened Link",
-        'menu9_donate': 'Donate to us',
+        'youtube_address': '유튜브 주소를 입력 :',
+        "youtube_copy": "링크를 개설 복사합니다",
+        'menu9_donate': '우리에게 기부',
+        'menu8_moreBooks': '더 많은 참조 책을 다운로드',
      },
 }
