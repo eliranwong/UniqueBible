@@ -137,15 +137,9 @@ Read: https://github.com/eliranwong/UniqueBible/wiki/config_file#default-font
 
 Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
 
-# Virtual Keyboards [optional]
+# Virtual Keyboards
 
-Virtual Keyboard is NOT turned on by default.  You can enable it according to your needs.
-
-For more information, read: https://github.com/eliranwong/UniqueBible/blob/master/installation/chrome_os.md#use-virtual-keyboard
-
-<img src="screenshots/screenshot_virtualKeyboard.png">
-
-<b>Remarks:</b> You need to close the virtual keyboard before you can close the app.  You can use the button located at the right lower corner of the virtual keyboard to close it.
+Read https://github.com/eliranwong/UniqueBible/wiki/virtual_keyboard
 
 # Donations:
 
