@@ -338,6 +338,11 @@ class MainWindow(QMainWindow):
                 os.remove(filename)
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
                 try:
+                    # delete unwant files / folders first
+                    oldExlblFolder = os.path.join("htmlResources", "images", "EXLBL")
+                    if os.path.isdir(oldExlblFolder):
+                        rmtree(oldExlblFolder)
+                    # copy all new content
                     copy_tree("UniqueBible-master", os.getcwd())
                 except:
                     print("Failed to overwrite files.")
