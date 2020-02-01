@@ -75,49 +75,6 @@ There are different ways to setup and run our app.  We have some examples in the
 
 https://github.com/eliranwong/UniqueBible/blob/master/installation/Readme.md
 
-# Graphical User Interface
-
-A guide on GUI:
-
-https://github.com/eliranwong/UniqueBible/wiki/graphical_user_interface
-
-# Supported Commands
-
-UniqueBible.app supports a set of command lines for quick navigation to bible passages or tools.
-
-<img src="screenshots/screenshot_command_line.png">
-
-For details, read:
-
-https://github.com/eliranwong/UniqueBible/wiki/command_line
-
-# Where are the Database Files?
-
-All codes for running the app is shared in this repository.
-
-Github has restrictions on upload size.  For this reason, full set of database files is not able to be uploaded here.
-
-To run UniqueBible.app and its features, several database files are required.  To help you about installing particular datasets, <b>"Download Helper"</b> comes up automatically, when a database file is needed for a particular feature.
-
-You can also manually install <b>"ALL"</b> https://marvel.bible datasets via our menu bar.<br>
-Go to "Resources" > "Install Marvel.bible Datasets"
-
-<i><b>Remarks:</b></i> It takes time for large files to be downloaded.  The core datasets for running UniqueBible.app is 49MB in size.  You may need to wait for a while for downloading it after you first launched UniqueBible.app.
-
-# 3rd Party Resources
-
-In ADDITION to official UniqueBible.app data, you can convert resources from third-party modules and import into UniqueBible.app.
-
-Currently, we support conversion and import of modules of <b>MyBible</b>, <b>e-Sword</b>, <b>MySword</b>.
-
-For more information, read:
-
-https://github.com/eliranwong/UniqueBible/wiki/third_party_resources
-
-# Virtual Keyboards
-
-Read https://github.com/eliranwong/UniqueBible/wiki/virtual_keyboard
-
 # Technical Support / Join our Development
 
 You are welcome to join our channel:
