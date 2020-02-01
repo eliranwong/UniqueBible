@@ -744,6 +744,10 @@ function openHtmlFile(filename) {
     document.title = "open:::htmlResources/"+filename;
 }
 
+function openHtmlImage(filename) {
+    document.title = "_htmlimage:::"+filename;
+}
+
 function editExternalRecord(recordNo) {
     document.title = "_editfile:::"+recordNo;
 }
