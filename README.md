@@ -1,12 +1,3 @@
-# Looking for Android / iPhone / iPad versions?
-
-We have recently launched our mobile versions in Google Play Store and Apple App Store.
-
-Illustrated User Manual: <a href='https://www.uniquebible.app/mobile'>https://www.uniquebible.app/mobile</a><br>
-Links for downloads: <a href='https://www.uniquebible.app/download'>https://www.uniquebible.app/download</a>
-
-Description below is about desktop version, running in Windows / macOS / Linux / Chrome OS
-
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
