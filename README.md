@@ -123,23 +123,15 @@ For more information, read:
 
 https://github.com/eliranwong/UniqueBible/wiki/third_party_resources
 
-# Customise Configurations [optional]
-
-Read: https://github.com/eliranwong/UniqueBible/wiki/config_file
-
-# Change Default Font [optional]
-
-You can change the default font to your favourite font installed on your system.
-
-Read: https://github.com/eliranwong/UniqueBible/wiki/config_file#default-font
-
-# Customise the location of "marvelData" [optional]
-
-Read this example: https://github.com/eliranwong/UniqueBible/blob/master/installation/windows_wsl2.md#shared-marveldata-folder-in-windows-drive-c-optional
-
 # Virtual Keyboards
 
 Read https://github.com/eliranwong/UniqueBible/wiki/virtual_keyboard
+
+# Technical Support / Join our Development
+
+You are welcome to join our channel:
+
+https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU
 
 # Donations:
 
