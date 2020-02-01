@@ -1,3 +1,9 @@
+Latest changes in version 11.8:
+* Upgraded database file from "exlb2.data" to exlb3.data
+* Enhanced Exhaustive Library of Bible Locations, with 3 sets of offline google maps of different coverage, and quality.  All together, there is a total of 3441 offline google maps on bible locations.
+* Fixed the missing menu item "Download More Reference Books" in version 11.7.
+* Now clear config.bookSearchString and config.noteSearchString when the application is closed.
+
 Latest changes in version 11.7:
 * Added a link to Darrel Wright's repository "UniqueBible_Books": https://github.com/darrelwright/UniqueBible_Books
 * Added a wiki page on how to download more books: https://github.com/eliranwong/UniqueBible/wiki/download_more_books

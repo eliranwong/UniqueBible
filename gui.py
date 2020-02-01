@@ -553,6 +553,8 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
         menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
+        menu8.addAction(QAction(config.thisTranslation["menu8_moreBooks"], self, triggered=self.moreBooks))
+        menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
         menu8.addAction(QAction(config.thisTranslation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
         menu8.addSeparator()
@@ -597,15 +599,17 @@ class MainWindow(QMainWindow):
             url = "https://maps.googleapis.com/maps/api/staticmap?"
             # zoom defines the zoom
             # level of the map
-            zoom = 10
-            # specify size
-            size = "500x500"
+            zoom = 9
+            # specify size, maximum 640x640
+            size = "640x640"
+            # specify scale, value ranges from 1 to 4
+            scale = 2
             # get method of requests module
             # return response object
-            fullUrl =  "{0}center={1},{2}&zoom={3}&size={4}&key={5}&markers=color:red%7Clabel:{6}%7C{1},{2}".format(url, lat, lng, zoom, size, config.myGoogleApiKey, location[0])
+            fullUrl =  "{0}center={1},{2}&zoom={3}&size={4}&key={5}&scale={6}&markers=color:red%7Clabel:{7}%7C{1},{2}".format(url, lat, lng, zoom, size, config.myGoogleApiKey, scale, location[0])
             r = requests.get(fullUrl)
             # wb mode is stand for write binary mode
-            filepath = os.path.join("htmlResources", "images", "exlbl", "{0}.png".format(entry))
+            filepath = os.path.join("htmlResources", "images", "exlbl_largeHD", "{0}.png".format(entry))
             f = open(filepath, "wb")
             # r.content gives content,
             # in this case gives image
@@ -1464,8 +1468,8 @@ class MainWindow(QMainWindow):
             "Search Engine": ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
             "Smart Indexes": ((config.marvelData, "indexes2.sqlite"), "1hY-QkBWQ8UpkeqM8lkB6q_FbaneU_Tg5"),
             "Chapter & Verse Notes": ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),
-            "Bible Background Data": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
-            "Bible Topics Data": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
+            "Bible Background Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
+            "Bible Topics Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
             "Cross-reference Data": ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_"),
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
@@ -2247,6 +2251,9 @@ class MainWindow(QMainWindow):
 
     def donateToUs(self):
         webbrowser.open("https://www.paypal.me/MarvelBible")
+
+    def moreBooks(self):
+        webbrowser.open("https://github.com/darrelwright/UniqueBible_Books")
 
     # Actions - resize the main window
     def fullsizeWindow(self):

@@ -374,6 +374,8 @@ class TextCommandParser:
             # [KEYWORD] _image
             # e.g. _image:::EXLBL:::1.jpg
             "_image": self.textImage,
+            # [KEYWORD] _htmlimage
+            "_htmlimage": self.textHtmlImage,
             # [KEYWORD] _editchapternote
             # e.g. _editchapternote:::
             "_editchapternote": self.editChapterNote,
@@ -495,7 +497,7 @@ class TextCommandParser:
             "words": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "combo": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "lexicon": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "exlb": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
+            "exlb": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
             "dictionary": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
         }
@@ -1284,6 +1286,11 @@ class TextCommandParser:
     def pasteFromClipboard(self, command, source):
         self.parent.pasteFromClipboard()
         return ("", "")
+
+    # _htmlimage:::
+    def textHtmlImage(self, command, source):
+        content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
+        return ("popover.{0}".format(source), content)
 
     # _image:::
     def textImage(self, command, source):
