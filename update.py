@@ -5,8 +5,8 @@ oldFiles = (
     (config.marvelData, "collections.sqlite"),
     (config.marvelData, "collections2.sqlite"),
     (config.marvelData, "indexes.sqlite"),
-    (config.marvelData, "data", "exlb.data")
-    (config.marvelData, "data", "exlb2.data")
+    (config.marvelData, "data", "exlb.data"),
+    (config.marvelData, "data", "exlb2.data"),
 )
 
 # A tulple of files which have been updated since the initial release
