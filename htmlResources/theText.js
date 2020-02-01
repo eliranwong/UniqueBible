@@ -740,6 +740,10 @@ function openExternalRecord(recordNo) {
     document.title = "_openfile:::"+recordNo;
 }
 
+function openHtmlFile(filename) {
+    document.title = "open:::htmlResources/"+filename;
+}
+
 function editExternalRecord(recordNo) {
     document.title = "_editfile:::"+recordNo;
 }
