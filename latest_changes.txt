@@ -1,3 +1,10 @@
+Latest changes in version 11.6:
+* upgrade data file "exlb.data" to exlb2.data
+    - added links "Click HERE for a Live Google Map" to 1147 articles
+    - support display google static maps
+* added 1147 static google maps of bible locations
+* now display static google maps of bible locations when google api key is not entered or internet connection is not available.
+
 Latest changes in version 11.5:
 * fixed display of two buttons, "Search Reference Book" and "Download YouTube Audio / Video"
 

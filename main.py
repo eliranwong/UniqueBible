@@ -16,9 +16,12 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 11.5
+current_version = 11.6
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
+# Personal google api key for display of google maps
+if not hasattr(config, "testing"):
+    config.testing = False
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
@@ -256,6 +259,11 @@ if not hasattr(config, "installHistory"):
 config.noteOpened = False
 # for checking if external file is repeatedly opened
 config.lastOpenedFile = ""
+# for checking if an url is repeatedly opened
+config.lastOpenedUrl = ""
+# set show information to True
+if not hasattr(config, "showInformation"):
+    config.showInformation = True
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
@@ -292,6 +300,7 @@ def setCurrentRecord():
 def saveDataOnExit():
     configs = (
         ("version", config.version),
+        ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("removeBackup", config.removeBackup),
         ("remoteControl", config.remoteControl),

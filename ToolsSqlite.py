@@ -124,6 +124,8 @@ class ImageSqlite:
             htmlImageFolder = os.path.join("htmlResources", "images")
             if not os.path.isdir(htmlImageFolder):
                 os.mkdir(htmlImageFolder)
+            if module == "EXLBL":
+                module = "exlbl"
             imageFolder = os.path.join(htmlImageFolder, module)
             if not os.path.isdir(imageFolder):
                 os.mkdir(imageFolder)
@@ -405,7 +407,7 @@ class ExlbData:
 
     def __init__(self):
         # connect images.sqlite
-        self.database = os.path.join(config.marvelData, "data", "exlb.data")
+        self.database = os.path.join(config.marvelData, "data", "exlb2.data")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 
@@ -421,13 +423,14 @@ class ExlbData:
         else:
             if module == "exlbl":
                 content = content[0]
-                if not config.myGoogleApiKey:
-                    marvelLink = 'website("https://marvel.bible/tool.php?exlbl={0}")'.format(entry)
-                    content = "[<ref onclick='{0}'>Open with https://marvel.bible</ref>]<br>{1}".format(marvelLink, content)
-                    content = content.replace("[MYGOOGLEAPIKEY]", "")
+                if not config.myGoogleApiKey or not config.internet:
+                    # display static google map if users do not have a google api key or internet connection
+                    content = re.sub('<blid="(.*?)">.*?MYGOOGLEAPIKEY\]&callback=myMap"></script>', r'<p align="center"><img src="images/exlbl/\1.png"></p>', content)
+                    # adjust zoom level with the following line
+                    #content = content.replace("&z=10'", "&z=8'")
                 else:
                     content = content.replace("[MYGOOGLEAPIKEY]", config.myGoogleApiKey)
-                return re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content)
+                return re.sub('href="getImage\.php\?resource=([^"]*?)&id=([^"]*?)" target="_blank"', r'href="javascript:void(0)" onclick="openImage({0}\1{0},{0}\2{0})"'.format("'"), content)
             else:
                 moduleName = {
                     "exlbp": "Exhaustive Library of Bible People",

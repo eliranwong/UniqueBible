@@ -312,9 +312,13 @@ class TextCommandParser:
             # Usage - MP4:::[youtube_link]
             "mp4": self.mp4Download,
             # [KEYWORD] _open
+            # open a file inside marvelData folder
             # e.g. _open:::.
             # e.g. _open:::bibles
-            "_open": self.openExternalFile,
+            "_open": self.openMarvelDataFile,
+            # [KEYWORD] open
+            # e.g. open:::.
+            "open": self.openExternalFile,
             # [KEYWORD] TRANSLATE
             # Feature - Use google translate to entered text
             # Usage - TRANSLATE:::[language code]:::[text to be translated]
@@ -491,7 +495,7 @@ class TextCommandParser:
             "words": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "combo": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "lexicon": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "exlb": ((config.marvelData, "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
+            "exlb": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
             "dictionary": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
         }
@@ -1069,13 +1073,24 @@ class TextCommandParser:
         return ("", "")
 
     # _open:::
-    def openExternalFile(self, command, source):
+    def openMarvelDataFile(self, command, source):
         if config.lastOpenedFile == command:
             config.lastOpenedFile = ""
         else:
             config.lastOpenedFile = command
             fileitems = command.split("/")
             filePath = os.path.join(config.marvelData, *fileitems)
+            self.parent.openExternalFile(filePath)
+        return ("", "")
+
+    # open:::
+    def openExternalFile(self, command, source):
+        if config.lastOpenedFile == command:
+            config.lastOpenedFile = ""
+        else:
+            config.lastOpenedFile = command
+            fileitems = command.split("/")
+            filePath = os.path.join(*fileitems)
             self.parent.openExternalFile(filePath)
         return ("", "")
 
@@ -1095,7 +1110,11 @@ class TextCommandParser:
     # _website:::
     def textWebsite(self, command, source):
         if command:
-            webbrowser.open(command)
+            if config.lastOpenedUrl == command:
+                config.lastOpenedUrl = ""
+            else:
+                config.lastOpenedUrl = command
+                webbrowser.open(command)
             return ("", "")
         else:
             return self.invalidCommand()
@@ -1272,8 +1291,14 @@ class TextCommandParser:
         imageSqlite = ImageSqlite()
         imageSqlite.exportImage(module, entry)
         del imageSqlite
-        content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
-        return ("popover.{0}".format(source), content)
+        if module == "EXLBL":
+            imageFile = "htmlResources/images/exlbl/EXLBL_{0}".format(entry)
+        else:
+            imageFile = "htmlResources/images/{0}/{0}_{1}".format(module, entry)
+        self.openExternalFile(imageFile, source)
+        return ("", "")
+        #content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
+        #return ("popover.{0}".format(source), content)
 
     # COMMENTARY:::
     def textCommentary(self, command, source):

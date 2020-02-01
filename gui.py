@@ -51,6 +51,9 @@ try:
 except:
     googletransSupport = False
     print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
+# import for testing
+if config.testing:
+    import exlbl
 
 class MainWindow(QMainWindow):
 
@@ -271,6 +274,11 @@ class MainWindow(QMainWindow):
 
     # manage latest update
     def checkApplicationUpdate(self):
+        # delete unwanted old files / folders
+        if config.version < 11.6:
+            oldExlblFolder = os.path.join("htmlResources", "images", "EXLBL")
+            if os.path.isdir(oldExlblFolder):
+                rmtree(oldExlblFolder)
         # change the following 2 files for changing version number
         # main.py line 19 and UniqueBibleAppVersion.txt
         # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
@@ -280,12 +288,15 @@ class MainWindow(QMainWindow):
         try:
             request = requests.get(checkFile, timeout=5)
             if request.status_code == 200:
-                # check in console
-                #print(float(request.text))
+                # tell the rest that internet connection is available
+                config.internet = True
                 # compare with user's current version
                 if float(request.text) > config.version:
                     self.promptUpdate(request.text)
+            else:
+                config.internet = False
         except:
+            config.internet = False
             print("Failed to read '{0}'.".format(checkFile))
 
     def checkModulesUpdate(self):
@@ -314,16 +325,16 @@ class MainWindow(QMainWindow):
             self.updateUniqueBibleApp()
 
     def updateUniqueBibleApp(self):
-        file = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
-        request = requests.get(file)
+        masterfile = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
+        request = requests.get(masterfile)
         if request.status_code == 200:
-            filename = file.split("/")[-1]
+            filename = masterfile.split("/")[-1]
             with open(filename, "wb") as content:
                 content.write(request.content)
             if filename.endswith(".zip"):
-                zip = zipfile.ZipFile(filename, "r")
-                zip.extractall(os.getcwd())
-                zip.close()
+                zipObject = zipfile.ZipFile(filename, "r")
+                zipObject.extractall(os.getcwd())
+                zipObject.close()
                 os.remove(filename)
                 # We use "distutils.dir_util.copy_tree" below instead of "shutil.copytree", as "shutil.copytree" does not overwrite old files.
                 try:
@@ -548,22 +559,56 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
 
-        menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
-        menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
-        menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))
-        menu9.addAction(QAction("Marvel.bible", self, triggered=self.openMarvelBible))
-        menu9.addAction(QAction("BibleBento.com", self, triggered=self.openBibleBento))
-        menu9.addAction(QAction("OpenGNT.com", self, triggered=self.openOpenGNT))
-        menu9.addSeparator()
-        menu9.addAction(QAction("GitHub Repositories", self, triggered=self.openSource))
-        menu9.addAction(QAction("Unique Bible", self, triggered=self.openUniqueBibleSource))
-        menu9.addAction(QAction("Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
-        menu9.addAction(QAction("Open Greek New Testament", self, triggered=self.openOpenGNTSource))
-        menu9.addSeparator()
-        menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
-        menu9.addSeparator()
-        menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
-        menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
+        if config.showInformation:
+            menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
+            menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
+            menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))
+            menu9.addAction(QAction("Marvel.bible", self, triggered=self.openMarvelBible))
+            menu9.addAction(QAction("BibleBento.com", self, triggered=self.openBibleBento))
+            menu9.addAction(QAction("OpenGNT.com", self, triggered=self.openOpenGNT))
+            menu9.addSeparator()
+            menu9.addAction(QAction("GitHub Repositories", self, triggered=self.openSource))
+            menu9.addAction(QAction("Unique Bible", self, triggered=self.openUniqueBibleSource))
+            menu9.addAction(QAction("Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
+            menu9.addAction(QAction("Open Greek New Testament", self, triggered=self.openOpenGNTSource))
+            menu9.addSeparator()
+            menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
+            menu9.addSeparator()
+            menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
+            menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
+        
+        # testing
+        if config.testing:
+            menu999 = self.menuBar().addMenu("&Testing")
+            menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
+
+    def downloadGoogleStaticMaps(self):
+        # https://developers.google.com/maps/documentation/maps-static/intro
+        # https://developers.google.com/maps/documentation/maps-static/dev-guide
+
+        for entry, location, lat, lng in exlbl.locations:
+            print("downloading a map on '{0}' ...".format(location))
+            # url variable store url
+            url = "https://maps.googleapis.com/maps/api/staticmap?"
+            # zoom defines the zoom
+            # level of the map
+            zoom = 10
+            # specify size
+            size = "500x500"
+            # get method of requests module
+            # return response object
+            fullUrl =  "{0}center={1},{2}&zoom={3}&size={4}&key={5}&markers=color:red%7Clabel:{6}%7C{1},{2}".format(url, lat, lng, zoom, size, config.myGoogleApiKey, location[0])
+            r = requests.get(fullUrl)
+            # wb mode is stand for write binary mode
+            filepath = os.path.join("htmlResources", "images", "exlbl", "{0}.png".format(entry))
+            f = open(filepath, "wb")
+            # r.content gives content,
+            # in this case gives image
+            f.write(r.content)
+            # close method of file object
+            # save and close the file
+            f.close()
+        print("done")
 
     def setupToolBar(self):
         if config.toolBarIconFullSize:
@@ -1414,8 +1459,8 @@ class MainWindow(QMainWindow):
             "Search Engine": ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
             "Smart Indexes": ((config.marvelData, "indexes2.sqlite"), "1hY-QkBWQ8UpkeqM8lkB6q_FbaneU_Tg5"),
             "Chapter & Verse Notes": ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),
-            "Bible Background Data": ((config.marvelData, "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
-            "Bible Topics Data": ((config.marvelData, "data", "exlb.data"), "1kA5appVfyQ1lWF1czEQWtts4idogHIpa"),
+            "Bible Background Data": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
+            "Bible Topics Data": ((config.marvelData, "data", "exlb2.data"), "1TVLXYOuTFjpXOn43G7-vpuOfWKwfBs90"),
             "Cross-reference Data": ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_"),
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
