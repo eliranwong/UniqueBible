@@ -1,4 +1,5 @@
 import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests, update
+from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
@@ -60,6 +61,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Repository
+        # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
+        self.repository = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/"
         # delete old files
         for items in update.oldFiles:
             filePath = os.path.join(*items)
@@ -281,12 +285,8 @@ class MainWindow(QMainWindow):
                 rmtree(oldExlblFolder)
         # change the following 2 files for changing version number
         # main.py line 19 and UniqueBibleAppVersion.txt
-        # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
-        checkFile = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/UniqueBibleAppVersion.txt"
-        # Alternatively,
-        #checkFile = "https://biblebento.com/UniqueBibleAppVersion.txt"
         try:
-            request = requests.get(checkFile, timeout=5)
+            request = requests.get("{0}UniqueBibleAppVersion.txt".format(self.repository), timeout=5)
             if request.status_code == 200:
                 # tell the rest that internet connection is available
                 config.internet = True
@@ -324,7 +324,36 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.updateUniqueBibleApp()
 
+    # The following update method is used from version 11.9 onwards
+    # "patches.txt" from the repository is read for proceeding the update
     def updateUniqueBibleApp(self):
+        requestObject = requests.get("{0}patches.txt".format(self.repository))
+        for line in requestObject.text.split("\n"):
+            if line:
+                try:
+                    version, contentType, filePath = literal_eval(line)
+                    if version > config.version:
+                        localPath = os.path.join(*filePath.split("/"))
+                        if contentType == "folder":
+                            if not os.path.isdir(localPath):
+                                os.makedirs(localPath)
+                        elif contentType == "file":
+                            requestObject2 = requests.get("{0}{1}".format(self.repository, filePath))
+                            with open(localPath, "wb") as fileObject:
+                                fileObject.write(requestObject2.content)
+                except:
+                    # message on failed item
+                    self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_fail"], line))
+        # set executable files on macOS or Linux
+        if not platform.system() == "Windows":
+            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh"):
+                os.chmod(filename, 0o755)
+        # finish message
+        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+        self.openExternalFile("latest_changes.txt")
+
+    # old way to do the update, all content will be downloaded to overwrite all current files
+    def updateUniqueBibleApp2(self):
         masterfile = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
         request = requests.get(masterfile)
         if request.status_code == 200:
@@ -583,7 +612,7 @@ class MainWindow(QMainWindow):
             menu9.addSeparator()
             menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
             menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
-        
+
         # testing
         if config.testing:
             menu999 = self.menuBar().addMenu("&Testing")
@@ -592,7 +621,6 @@ class MainWindow(QMainWindow):
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro
         # https://developers.google.com/maps/documentation/maps-static/dev-guide
-
         for entry, location, lat, lng in exlbl.locations:
             print("downloading a map on '{0}' ...".format(location))
             # url variable store url
@@ -610,13 +638,10 @@ class MainWindow(QMainWindow):
             r = requests.get(fullUrl)
             # wb mode is stand for write binary mode
             filepath = os.path.join("htmlResources", "images", "exlbl_largeHD", "{0}.png".format(entry))
-            f = open(filepath, "wb")
-            # r.content gives content,
-            # in this case gives image
-            f.write(r.content)
-            # close method of file object
-            # save and close the file
-            f.close()
+            with open(filepath, "wb") as f:
+                # r.content gives content,
+                # in this case gives image
+                f.write(r.content)
         print("done")
 
     def setupToolBar(self):

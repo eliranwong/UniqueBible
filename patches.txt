@@ -1,3 +1,4 @@
-(19.8, "folder", "test1")
-(19.8, "file", "test1.txt")
-(19.8, "file", "htmlResources/test2.txt")
+(11.9, "file", "latest_changes.txt")
+(11.9, "file", "UniqueBibleAppVersion.txt")
+(11.9, "file", "main.py")
+(11.9, "file", "gui.py")

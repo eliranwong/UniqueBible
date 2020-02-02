@@ -16,7 +16,7 @@ import config
 # Default settings for configurations:
 
 # Set version number on 1st launch / Update version number
-current_version = 11.8
+current_version = 11.9
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 # Personal google api key for display of google maps
@@ -25,9 +25,10 @@ if not hasattr(config, "testing"):
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
+# The following options was cancelled in version 11.9
 # Option to delete downloaded files after upgrade
-if not hasattr(config, "removeBackup"):
-    config.removeBackup = False
+#if not hasattr(config, "removeBackup"):
+#    config.removeBackup = False
 # Options to use remote control: True / False
 # This feature is created for use in church settings.
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
@@ -304,7 +305,7 @@ def saveDataOnExit():
         ("version", config.version),
         ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
-        ("removeBackup", config.removeBackup),
+        #("removeBackup", config.removeBackup),
         ("remoteControl", config.remoteControl),
         ("openWindows", config.openWindows),
         ("openMacos", config.openMacos),

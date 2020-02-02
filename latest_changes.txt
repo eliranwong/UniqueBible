@@ -1,3 +1,6 @@
+Latest changes in version 11.9:
+* changed the update method to minimise the time for updating the application.
+
 Latest changes in version 11.8:
 * Upgraded database file from "exlb2.data" to exlb3.data
 * Enhanced Exhaustive Library of Bible Locations, with 3 sets of offline google maps of different coverage, and quality.  All together, there is a total of 3441 offline google maps on bible locations.
