@@ -1,2 +1,2 @@
-(19.8, "test1.txt", (config.marvelData, "test1.txt"))
-(19.8, "test2.txt", (config.marvelData, "test2.txt"))
+(19.8, "test1.txt")
+(19.8, "test2.txt")
