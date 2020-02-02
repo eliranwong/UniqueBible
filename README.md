@@ -3,11 +3,9 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 <b>Tested in:</b> Windows, macOS and Linux (Ubuntu & Mint)
 
-(developed with Python [version: 3.7.2])
-
 Our Wiki Pages: https://github.com/eliranwong/UniqueBible/wiki
 
-Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further information.
+Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
 # Screenshot:
 
@@ -21,7 +19,7 @@ Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a
 
 You are welcome to join our channel:
 
-<a href="https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU">Click here for an invitation link.</a>
+<a href="https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU">Click here for an invitation link</a>
 
 # Donations:
 
