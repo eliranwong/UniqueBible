@@ -21,7 +21,7 @@ Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a
 
 You are welcome to join our channel:
 
-https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU
+<a href="https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU">Click here for an invitation link.</a>
 
 # Donations:
 
