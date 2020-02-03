@@ -423,7 +423,7 @@ class ExlbData:
         else:
             if module == "exlbl":
                 content = content[0]
-                if not config.myGoogleApiKey or not config.internet:
+                if not config.myGoogleApiKey or not config.internet or config.alwaysDisplayStaticMaps:
                     # display static google map if users do not have a google api key or internet connection
                     content = re.sub('<blid="(.*?)">.*?MYGOOGLEAPIKEY\]&callback=myMap"></script>', r'<p align="center"><img src="images/exlbl_large/\1.png"></p>', content)
                     # adjust zoom level with the following line

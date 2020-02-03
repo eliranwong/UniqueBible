@@ -29,10 +29,9 @@ if not hasattr(config, "testing"):
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
-# The following options was cancelled in version 11.9
-# Option to delete downloaded files after upgrade
-#if not hasattr(config, "removeBackup"):
-#    config.removeBackup = False
+# Options to always display static maps even "myGoogleApiKey" is not empty: True / False
+if not hasattr(config, "alwaysDisplayStaticMaps"):
+    config.alwaysDisplayStaticMaps = False
 # Options to use remote control: True / False
 # This feature is created for use in church settings.
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
@@ -309,7 +308,7 @@ def saveDataOnExit():
         ("version", config.version),
         ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
-        #("removeBackup", config.removeBackup),
+        ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
         ("remoteControl", config.remoteControl),
         ("openWindows", config.openWindows),
         ("openMacos", config.openMacos),

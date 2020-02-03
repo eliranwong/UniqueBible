@@ -1,3 +1,8 @@
+Latest changes in version 12.1:
+* Two more options added to "Configure More ...":
+    - "bookOnNewWindow"
+    - "alwaysDisplayStaticMaps"
+
 Latest changes in version 12.0:
 * The app now reads "UniqueBibleAppVersion.txt" for checking current version on startup.
 * Added a function to import MySword book modules

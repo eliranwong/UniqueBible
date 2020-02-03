@@ -516,7 +516,7 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
-        menu10.addAction(QAction(config.thisTranslation["menu10_displayContent"], self, triggered=self.toggleDisplayBookContent))
+        #menu10.addAction(QAction(config.thisTranslation["menu10_displayContent"], self, triggered=self.toggleDisplayBookContent))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
@@ -4765,7 +4765,9 @@ class MoreConfigOptions(QDialog):
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
+            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
+            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
@@ -4801,6 +4803,12 @@ class MoreConfigOptions(QDialog):
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+
+    def bookOnNewWindowChanged(self):
+        config.bookOnNewWindow = not config.bookOnNewWindow
+
+    def alwaysDisplayStaticMapsChanged(self):
+        config.alwaysDisplayStaticMaps = not config.alwaysDisplayStaticMaps
 
     def openBibleNoteAfterSaveChanged(self):
         config.openBibleNoteAfterSave = not config.openBibleNoteAfterSave
