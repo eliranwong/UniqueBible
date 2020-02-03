@@ -1,3 +1,7 @@
+Latest changes in version 12.2:
+* One more option added to "Configure More ...":
+    - "parserStandarisation"
+
 Latest changes in version 12.1:
 * Two more options added to "Configure More ...":
     - "bookOnNewWindow"

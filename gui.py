@@ -4771,6 +4771,7 @@ class MoreConfigOptions(QDialog):
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
+            ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged),
         )
         for name, value, function in options:
             checkbox = QCheckBox()
@@ -4822,6 +4823,12 @@ class MoreConfigOptions(QDialog):
 
     def autoCopyChinesePinyinOutputChanged(self):
         config.autoCopyChinesePinyinOutput = not config.autoCopyChinesePinyinOutput
+
+    def parserStandarisationChanged(self):
+        if config.parserStandarisation == "YES":
+            config.parserStandarisation = "NO"
+        else:
+            config.parserStandarisation = "YES"
 
     def linuxStartFullScreenChanged(self):
         config.linuxStartFullScreen = not config.linuxStartFullScreen
