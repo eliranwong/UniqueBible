@@ -13,12 +13,16 @@ if not os.path.isfile("config.py"):
 
 import config
 
-# Default settings for configurations:
-
-# Set version number on 1st launch / Update version number
-current_version = 11.9
+# Check current version
+with open("UniqueBibleAppVersion.txt", "r") as fileObject:
+    text = fileObject.read()
+    current_version = float(text)
+# update config.py on current version
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
+
+# Default settings for configurations:
+
 # Personal google api key for display of google maps
 if not hasattr(config, "testing"):
     config.testing = False

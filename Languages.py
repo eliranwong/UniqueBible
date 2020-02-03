@@ -361,6 +361,10 @@ class Languages:
         "youtube_copy": "Copy Opened Link",
         "menu9_donate": "Donate to us",
         "menu8_moreBooks": "Download More Reference Books",
+        "menu1_moreConfig": "Configure More ...",
+        "message_readWiki": "Read Wiki pages for more information:",
+        "menu1_tabNo": "Configure Number of Tabs",
+        "menu5_last3rdDict": "The Last Opened Third Party Dictionary",
     }
 
     def translateInterface(self, language):

@@ -10,7 +10,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
-from ThirdParty import Converter
+from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite
 from translations import translations
@@ -283,9 +283,8 @@ class MainWindow(QMainWindow):
             oldExlblFolder = os.path.join("htmlResources", "images", "EXLBL")
             if os.path.isdir(oldExlblFolder):
                 rmtree(oldExlblFolder)
-        # change the following 2 files for changing version number
-        # main.py line 19 and UniqueBibleAppVersion.txt
         try:
+            # latest version number is indicated in file "UniqueBibleAppVersion.txt"
             request = requests.get("{0}UniqueBibleAppVersion.txt".format(self.repository), timeout=5)
             if request.status_code == 200:
                 # tell the rest that internet connection is available
@@ -418,8 +417,10 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction(config.thisTranslation["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
         menu1.addAction(QAction(config.thisTranslation["menu1_setChineseFont"], self, triggered=self.setChineseFont))
         menu1.addAction(QAction(config.thisTranslation["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
+        menu1.addAction(QAction(config.thisTranslation["menu1_tabNo"], self, triggered=self.setTabNumberDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
+        menu1.addAction(QAction(config.thisTranslation["menu1_moreConfig"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addSeparator()
         if not hasattr(config, "translationLanguage") or (hasattr(config, "translationLanguage") and not config.translationLanguage == config.userLanguage):
             menu1.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
@@ -543,7 +544,8 @@ class MainWindow(QMainWindow):
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
+        menu5.addAction(QAction(config.thisTranslation["menu5_last3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
+        menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
 
         menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu6_notes"]))
         menu6.addAction(QAction(config.thisTranslation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
@@ -1841,7 +1843,7 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 config.thisTranslation["menu8_3rdParty"],
                 self.openFileNameLabel.text(),
-                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
+                "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Books (*.bok.mybible);;MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;e-Sword Commentaries [Apple] (*.cmti);;e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3)", "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(".lexi") or fileName.endswith(".dictionary.SQLite3"):
                 self.importThirdPartyDictionary(fileName)
@@ -1849,6 +1851,8 @@ class MainWindow(QMainWindow):
                 self.importMySwordBible(fileName)
             elif fileName.endswith(".cmt.mybible"):
                 self.importMySwordCommentary(fileName)
+            elif fileName.endswith(".bok.mybible"):
+                self.importMySwordBook(fileName)
             elif fileName.endswith(".bbli"):
                 self.importESwordBible(fileName)
             elif fileName.endswith(".cmti"):
@@ -1886,6 +1890,10 @@ class MainWindow(QMainWindow):
 
     def importMySwordCommentary(self, fileName):
         Converter().importMySwordCommentary(fileName)
+        self.completeImport()
+
+    def importMySwordBook(self, fileName):
+        Converter().importMySwordBook(fileName)
         self.completeImport()
 
     def importESwordBible(self, fileName):
@@ -2111,16 +2119,25 @@ class MainWindow(QMainWindow):
     def openBookDialog(self):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
         if ok and item:
             self.runTextCommand("BOOK:::{0}".format(item), True, "main")
+
+    def setTabNumberDialog(self):
+        integer, ok = QInputDialog.getInt(self,
+                "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1, 15, 1)
+        if ok:
+            config.numberOfTab = integer
+            self.displayMessage(config.thisTranslation["message_restart"])
+
+    def moreConfigOptionsDialog(self):
+        self.moreConfigOptions = MoreConfigOptions(self)
+        self.moreConfigOptions.show()
 
     def addFavouriteBookDialog(self):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["menu10_addFavourite"], items, items.index(config.book), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_addFavourite"], items, items.index(config.book), False)
         if ok and item:
             config.favouriteBooks.insert(0, item)
             if len(config.favouriteBooks) > 10:
@@ -2138,10 +2155,16 @@ class MainWindow(QMainWindow):
     def searchBookDialog(self):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
+            self.textCommandLineEdit.setFocus()
+
+    def search3rdDictionaryDialog(self):
+        items = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items, items.index(config.thirdDictionary), False)
+        if ok and item:
+            self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::{0}:::".format(item))
             self.textCommandLineEdit.setFocus()
 
     def searchDictionaryDialog(self):
@@ -2150,8 +2173,7 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.dictionary]
         dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
         items = [key for key in dictionaryDict.keys()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
             self.textCommandLineEdit.setFocus()
@@ -2162,8 +2184,7 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.encyclopedia]
         dictionaryDict = {name: abb for abb, name in indexes.encyclopediaList}
         items = [key for key in dictionaryDict.keys()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
             self.textCommandLineEdit.setFocus()
@@ -2174,8 +2195,7 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.topic]
         dictionaryDict = {name: abb for abb, name in indexes.topicList}
         items = [key for key in dictionaryDict.keys()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
             self.textCommandLineEdit.setFocus()
@@ -4442,7 +4462,7 @@ class NoteEditor(QMainWindow):
 
     def openNoteFile(self, fileName):
         try:
-            f = open(fileName,'r')
+            f = open(fileName, "r")
         except:
             print("Failed to open '{0}'".format(fileName))
         note = f.read()
@@ -4661,7 +4681,7 @@ class ImportSettings(QDialog):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        self.setModal(True)
+        #self.setModal(True)
 
         self.setWindowTitle(config.thisTranslation["menu8_settings"])
 
@@ -4724,6 +4744,88 @@ class ImportSettings(QDialog):
             config.importRtlOT = False
 
         self.close()
+
+
+class MoreConfigOptions(QDialog):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+        #self.setModal(True)
+        self.setWindowTitle(config.thisTranslation["menu1_moreConfig"])
+        self.setupLayout()
+
+    def setupLayout(self):
+        layout = QVBoxLayout()
+
+        readWiki = QLabel(config.thisTranslation["message_readWiki"])
+        layout.addWidget(readWiki)
+
+        options = (
+            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
+            ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
+            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
+            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
+            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
+            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
+            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
+        )
+        for name, value, function in options:
+            checkbox = QCheckBox()
+            checkbox.setText(name)
+            checkbox.setChecked(value)
+            checkbox.stateChanged.connect(function)
+            layout.addWidget(checkbox)
+
+        if platform.system() == "Linux":
+            options = (
+                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
+                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
+                ("ibus", config.ibus, self.ibusChanged),
+            )
+            for name, value, function in options:
+                checkbox = QCheckBox()
+                checkbox.setText(name)
+                checkbox.setChecked(value)
+                checkbox.stateChanged.connect(function)
+                layout.addWidget(checkbox)
+
+        self.setLayout(layout)
+
+    def virtualKeyboardChanged(self):
+        config.virtualKeyboard = not config.virtualKeyboard
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def showVerseNumbersInRangeChanged(self):
+        config.showVerseNumbersInRange = not config.showVerseNumbersInRange
+
+    def addFavouriteToMultiRefChanged(self):
+        config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+
+    def openBibleNoteAfterSaveChanged(self):
+        config.openBibleNoteAfterSave = not config.openBibleNoteAfterSave
+
+    def showGoogleTranslateChineseOptionsChanged(self):
+        config.showGoogleTranslateChineseOptions = not config.showGoogleTranslateChineseOptions
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def autoCopyGoogleTranslateOutputChanged(self):
+        config.autoCopyGoogleTranslateOutput = not config.autoCopyGoogleTranslateOutput
+
+    def autoCopyChinesePinyinOutputChanged(self):
+        config.autoCopyChinesePinyinOutput = not config.autoCopyChinesePinyinOutput
+
+    def linuxStartFullScreenChanged(self):
+        config.linuxStartFullScreen = not config.linuxStartFullScreen
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def showTtsOnLinuxChanged(self):
+        config.showTtsOnLinux = not config.showTtsOnLinux
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def ibusChanged(self):
+        config.ibus = not config.ibus
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
 
 class Downloader(QDialog):

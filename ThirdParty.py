@@ -14,8 +14,8 @@ class Converter:
             self.exportJsonBible(bible)
 
     def exportJsonBible(self, bible):
-        file = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
-        connection = sqlite3.connect(file)
+        filename = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
@@ -33,15 +33,15 @@ class Converter:
         jsonString = jsonString[:-2]
         jsonString += "\n]\n"
 
-        jsonFile = file = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
+        jsonFile = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
         fileObj = open(jsonFile, "w")
         fileObj.write(jsonString)
         fileObj.close()
 
     # if exportMarvelBible doesn't work, use exportMarvelBible2 instead
     def exportJsonBible2(self, bible):
-        file = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
-        connection = sqlite3.connect(file)
+        filename = os.path.join(config.marvelData, "bibles", "{0}.bible".format(bible))
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT * FROM Verses ORDER BY Book, Chapter, Verse"
@@ -59,7 +59,7 @@ class Converter:
             jsonObject.append(verseObject)
         jsonString = json.dumps(jsonObject) # Please note that "json.dumps()" converts unicode characters.
 
-        jsonFile = file = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
+        jsonFile = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
         fileObj = open(jsonFile, "w")
         fileObj.write(jsonString)
         fileObj.close()
@@ -90,40 +90,42 @@ class Converter:
         return chapterText
 
     def importAllFilesInAFolder(self, folder):
-        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
-        validFiles = [file for file in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', file)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', filename)]
         if validFiles:
-            for file in validFiles:
-                file = os.path.join(folder, file)
-                if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', file):
-                    self.importThirdPartyDictionary(file)
-                elif file.endswith(".bbl.mybible"):
-                    self.importMySwordBible(file)
-                elif file.endswith(".cmt.mybible"):
-                    self.importMySwordCommentary(file)
-                elif file.endswith(".bbli"):
-                    self.importESwordBible(file)
-                elif file.endswith(".cmti"):
-                    self.importESwordCommentary(file)
-                elif file.endswith(".refi"):
-                    self.importESwordBook(file)
-                elif file.endswith(".commentaries.SQLite3"):
-                    self.importMyBibleCommentary(file)
-                elif file.endswith(".SQLite3"):
-                    self.importMyBibleBible(file)
+            for filename in validFiles:
+                filename = os.path.join(folder, filename)
+                if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', filename):
+                    self.importThirdPartyDictionary(filename)
+                elif filename.endswith(".bbl.mybible"):
+                    self.importMySwordBible(filename)
+                elif filename.endswith(".cmt.mybible"):
+                    self.importMySwordCommentary(filename)
+                elif filename.endswith(".bok.mybible"):
+                    self.importMySwordBook(filename)
+                elif filename.endswith(".bbli"):
+                    self.importESwordBible(filename)
+                elif filename.endswith(".cmti"):
+                    self.importESwordCommentary(filename)
+                elif filename.endswith(".refi"):
+                    self.importESwordBook(filename)
+                elif filename.endswith(".commentaries.SQLite3"):
+                    self.importMyBibleCommentary(filename)
+                elif filename.endswith(".SQLite3"):
+                    self.importMyBibleBible(filename)
             return True
 
-    def importThirdPartyDictionary(self, file):
-        *_, name = os.path.split(file)
+    def importThirdPartyDictionary(self, filename):
+        *_, name = os.path.split(filename)
         destination = os.path.join("thirdParty", "dictionaries", name)
         try:
-            copyfile(file, destination)
+            copyfile(filename, destination)
         except:
-            print("Failed to copy '{0}'.".format(file))
+            print("Failed to copy '{0}'.".format(filename))
 
     # Import e-Sword Bibles [Apple / macOS / iOS]
-    def importESwordBible(self, file):
-        connection = sqlite3.connect(file)
+    def importESwordBible(self, filename):
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT Title, Abbreviation FROM Details"
@@ -244,9 +246,9 @@ class Converter:
         return text
 
     # Import e-Sword Commentaries
-    def importESwordCommentary(self, file):
+    def importESwordCommentary(self, filename):
         # connect e-Sword commentary
-        connection = sqlite3.connect(file)
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         # process 4 tables: Details, BookCommentary, ChapterCommentary, VerseCommentary
@@ -474,8 +476,8 @@ class Converter:
             return 0
 
     # Import MySword Bibles
-    def importMySwordBible(self, file):
-        connection = sqlite3.connect(file)
+    def importMySwordBible(self, filename):
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT Description, Abbreviation FROM Details"
@@ -618,9 +620,9 @@ class Converter:
         return (text, notes)
 
     # Import MySword Commentaries
-    def importMySwordCommentary(self, file):
+    def importMySwordCommentary(self, filename):
         # connect MySword commentary
-        connection = sqlite3.connect(file)
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         # process 2 tables: details, commentary
@@ -719,6 +721,21 @@ class Converter:
         text = self.formatNonBibleMySwordModule(text)
         return text
 
+    def importMySwordBook(self, filename):
+        *_, module = os.path.split(filename)
+        module = module[:-12]
+
+        # connect MySword *.bok.mybible file
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+
+            query = "SELECT title, content FROM journal"
+            cursor.execute(query)
+            content = cursor.fetchall()
+            content = [(chapter, self.formatNonBibleMySwordModule(chapterContent)) for chapter, chapterContent in content]
+
+            self.createBookModule(module, content)
+
     def formatNonBibleMySwordModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
         text = re.sub("<a [^<>]*?href=['{0}][#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractBibleReferences, text)
@@ -763,14 +780,14 @@ class Converter:
             return value
 
     # Import MyBible Bibles
-    def importMyBibleBible(self, file):
-        connection = sqlite3.connect(file)
+    def importMyBibleBible(self, filename):
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT value FROM info WHERE name = 'description'"
         cursor.execute(query)
         description = cursor.fetchone()[0]
-        inputFilePath, inputFileName = os.path.split(file)
+        inputFilePath, inputFileName = os.path.split(filename)
         originalModuleName = inputFileName[:-8]
         abbreviation = originalModuleName
         abbreviation = abbreviation.replace("-", "")
@@ -962,9 +979,9 @@ class Converter:
         return text
 
     # Import MyBible Commentaries
-    def importMyBibleCommentary(self, file):
+    def importMyBibleCommentary(self, filename):
         # connect MySword commentary
-        connection = sqlite3.connect(file)
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         # process 2 tables: info, commentaries
@@ -973,7 +990,7 @@ class Converter:
         cursor.execute(query)
         description = cursor.fetchone()[0]
         title = description
-        *_, inputFileName = os.path.split(file)
+        *_, inputFileName = os.path.split(filename)
         abbreviation = inputFileName[:-21]
         query = "SELECT DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
         cursor.execute(query)
@@ -1226,10 +1243,10 @@ class Converter:
         return text
 
     def createDictionaryModule(self, module, content):
-        file = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
-        if os.path.isfile(file):
-            os.remove(file)
-        connection = sqlite3.connect(file)
+        filename = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
+        if os.path.isfile(filename):
+            os.remove(filename)
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
@@ -1243,23 +1260,23 @@ class Converter:
         connection.close()
 
     def importBBPlusLexiconInAFolder(self, folder):
-        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
-        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search('^Dict.*?\.json$', filename)]
         if validFiles:
-            for file in validFiles:
-                module = file[4:-5]
-                jsonList = self.readJsonFile(os.path.join(folder, file))
+            for filename in validFiles:
+                module = filename[4:-5]
+                jsonList = self.readJsonFile(os.path.join(folder, filename))
                 jsonList = [(jsonEntry["top"], self.convertBibleBentoPlusTag(jsonEntry["def"])) for jsonEntry in jsonList]
                 self.createLexiconModule(module, jsonList)
             return True
 
     def importBBPlusDictionaryInAFolder(self, folder):
-        files = [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file)) and not re.search("^[\._]", file)]
-        validFiles = [file for file in files if re.search('^Dict.*?\.json$', file)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search('^Dict.*?\.json$', filename)]
         if validFiles:
-            for file in validFiles:
-                module = file[4:-5]
-                jsonList = self.readJsonFile(os.path.join(folder, file))
+            for filename in validFiles:
+                module = filename[4:-5]
+                jsonList = self.readJsonFile(os.path.join(folder, filename))
                 jsonList = [(jsonEntry["top"], jsonEntry["def"]) for jsonEntry in jsonList]
                 self.createDictionaryModule(module, jsonList)
             return True
@@ -1340,12 +1357,12 @@ class Converter:
 
         connection.close()
 
-    def importESwordBook(self, file):
-        *_, module = os.path.split(file)
+    def importESwordBook(self, filename):
+        *_, module = os.path.split(filename)
         module = module[:-5]
 
         # connect e-Sword *.refi file
-        connection = sqlite3.connect(file)
+        connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
         query = "SELECT Chapter, Content FROM Reference"
