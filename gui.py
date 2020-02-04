@@ -572,7 +572,6 @@ class MainWindow(QMainWindow):
         menu11.addAction(QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
-        #menu11.addAction(QAction("marvelData", self, triggered=self.openMarvelDataFolder))
         menu11.addSeparator()
         menu11.addAction(QAction(config.thisTranslation["menu11_setupDownload"], self, triggered=self.setupYouTube))
         menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openYouTube))
@@ -581,6 +580,8 @@ class MainWindow(QMainWindow):
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
 
         menu8 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu8_resources"]))
+        menu8.addAction(QAction(config.thisTranslation["menu8_marvelData"], self, triggered=self.openMarvelDataFolder))
+        menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
         menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
         menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))

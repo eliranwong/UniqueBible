@@ -1,3 +1,7 @@
+Latest changes in version 12.4:
+* Added a menu item to open folder "marvelData"
+* Fixed the issue about the same map being repeatedly opened
+
 Latest changes in version 12.3:
 * An important fix on failed startup issue when the app is launched offline.  The error was introduced since version 10.6.
 * Added support to import MySword book modules with table "data" containing binary images

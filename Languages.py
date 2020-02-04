@@ -365,6 +365,7 @@ class Languages:
         "message_readWiki": "Read Wiki pages for more information:",
         "menu1_tabNo": "Configure Number of Tabs",
         "menu5_last3rdDict": "The Last Opened Third Party Dictionary",
+        "menu8_marvelData": "Database Files",
     }
 
     def translateInterface(self, language):

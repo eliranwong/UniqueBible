@@ -265,6 +265,8 @@ config.noteOpened = False
 config.lastOpenedFile = ""
 # for checking if an url is repeatedly opened
 config.lastOpenedUrl = ""
+# for checking if an image is repeatedly opened
+config.lastOpenedImage = ""
 # set show information to True
 if not hasattr(config, "showInformation"):
     config.showInformation = True
