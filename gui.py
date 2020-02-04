@@ -285,7 +285,8 @@ class MainWindow(QMainWindow):
                 rmtree(oldExlblFolder)
         try:
             # latest version number is indicated in file "UniqueBibleAppVersion.txt"
-            request = requests.get("{0}UniqueBibleAppVersion.txt".format(self.repository), timeout=5)
+            checkFile = "{0}UniqueBibleAppVersion.txt".format(self.repository)
+            request = requests.get(checkFile, timeout=5)
             if request.status_code == 200:
                 # tell the rest that internet connection is available
                 config.internet = True

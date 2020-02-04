@@ -644,18 +644,7 @@ class Converter:
             cursor.execute(query)
             images = cursor.fetchall()
             if images:
-                htmlImageFolder = os.path.join("htmlResources", "images")
-                if not os.path.isdir(htmlImageFolder):
-                    os.mkdir(htmlImageFolder)
-                imageFolder = os.path.join(htmlImageFolder, abbreviation)
-                if not os.path.isdir(imageFolder):
-                    os.mkdir(imageFolder)
-                for filename, content in images:
-                    imageFilePath = os.path.join(imageFolder, filename)
-                    if not os.path.isfile(imageFilePath):
-                        imagefile = open(imageFilePath, "wb")
-                        imagefile.write(content)
-                        imagefile.close()
+                self.exportImageData(abbreviation, images)
 
         # create an UB commentary
         ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
@@ -734,7 +723,32 @@ class Converter:
             content = cursor.fetchall()
             content = [(chapter, self.formatNonBibleMySwordModule(chapterContent)) for chapter, chapterContent in content]
 
+            # check if table "data" exists; (mainly contain images)
+            query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+            cursor.execute(query, ("table",))
+            tables = cursor.fetchall()
+            tables = [table[0] for table in tables]
+            if "data" in tables:
+                query = "SELECT filename, content FROM data"
+                cursor.execute(query)
+                images = cursor.fetchall()
+                if images:
+                    # rework imgage link in book content
+                    content = [(chapter, re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(module), chapterContent)) for chapter, chapterContent in content]
+                    # export image data
+                    self.exportImageData(module, images)
+            # send data to create a UniqueBible book module
             self.createBookModule(module, content)
+
+    def exportImageData(self, module, images):
+        imageFolder = os.path.join("htmlResources", "images", module)
+        if not os.path.isdir(imageFolder):
+            os.makedirs(imageFolder)
+        for filename, blobData in images:
+            imageFilePath = os.path.join(imageFolder, filename)
+            if not os.path.isfile(imageFilePath):
+                with open(imageFilePath, "wb") as imagefile:
+                    imagefile.write(blobData)
 
     def formatNonBibleMySwordModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
@@ -1320,22 +1334,29 @@ class Converter:
         connection.close()
 
     # Create book modules
-    def createBookModule(self, module, content):
+    def createBookModule(self, module, content, blobData=None):
         book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         if os.path.isfile(book):
             os.remove(book)
-        connection = sqlite3.connect(book)
-        cursor = connection.cursor()
-
-        create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
-        cursor.execute(create)
-        connection.commit()
-
-        insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
-        cursor.executemany(insert, content)
-        connection.commit()
-
-        connection.close()
+        with sqlite3.connect(book) as connection:
+            cursor = connection.cursor()
+            # Create table for book content
+            create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
+            cursor.execute(create)
+            connection.commit()
+            # insert data for book content
+            insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
+            cursor.executemany(insert, content)
+            connection.commit()
+            if blobData:
+                # Create table for book content
+                create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
+                cursor.execute(create)
+                connection.commit()
+                # insert data for book content
+                insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
+                cursor.executemany(insert, blobData)
+                connection.commit()
 
     def convertOldBookData(self):
         database = os.path.join(config.marvelData, "data", "book.data")
