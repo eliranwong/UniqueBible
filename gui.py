@@ -1503,7 +1503,7 @@ class MainWindow(QMainWindow):
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
             "Lexicons": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "Atlas, Timelines & Books": ((config.marvelData, "books", "Tidwell_The_Bible_Book_by_Book.book"), "12AmieUR46ytg0qN1Alq8WxGeHzM9oLnU"),
+            "Atlas, Timelines & Books": ((config.marvelData, "books", "Kitto_John_Illustrated_History_of_the_Bible.book"), "1g6dUaOz3A71b1gfiFKYvQ2QyH7yeHB9Y"),
             "Word Data": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
             "Words Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Clause Data": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),

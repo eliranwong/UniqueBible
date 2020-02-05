@@ -1,3 +1,8 @@
+Latest changes in version 12.7:
+* Added two books to book dataset for download:
+    - Kitto_John_Illustrated_History_of_the_Bible.book
+    - Tidwell_The_Bible_Period_by_Period.book
+
 Latest changes in version 12.6:
 * Improved import of book modules
 

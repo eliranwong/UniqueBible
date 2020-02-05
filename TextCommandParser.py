@@ -512,7 +512,7 @@ class TextCommandParser:
         return ((config.marvelData, "collections3.sqlite"), "18dRwEc3SL2Z6JxD1eI1Jm07oIpt9i205")
 
     def getBookInfo(self):
-        return ((config.marvelData, "books", "Tidwell_The_Bible_Book_by_Book.book"), "12AmieUR46ytg0qN1Alq8WxGeHzM9oLnU")
+        return ((config.marvelData, "books", "Kitto_John_Illustrated_History_of_the_Bible.book"), "1g6dUaOz3A71b1gfiFKYvQ2QyH7yeHB9Y")
 
     def getXRefInfo(self):
         return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
