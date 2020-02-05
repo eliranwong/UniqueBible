@@ -1337,6 +1337,7 @@ class Converter:
 
     # Create book modules
     def createBookModule(self, module, content, blobData=None):
+        content = [(re.sub("['{0}]".format('"'), "_", chapter), chapterContent) for chapter, chapterContent in content]
         book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         if os.path.isfile(book):
             os.remove(book)

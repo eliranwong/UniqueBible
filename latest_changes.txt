@@ -1,3 +1,6 @@
+Latest changes in version 12.6:
+* Improved import of book modules
+
 Latest changes in version 12.5:
 * Improved module converter to add support of Strong's numbers links in MySword non-bible modules.
 
