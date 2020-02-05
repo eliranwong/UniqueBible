@@ -719,7 +719,7 @@ class Book:
             return "[not applicable]"
         else:
             config.book = self.module
-            content = content[0]
+            content = re.sub("font-size:[^>]*?;", "", content[0])
             for searchString in config.bookSearchString.split("%"):
                 if searchString and not searchString == "z":
                     content = re.sub("({0})".format(searchString), r"<z>\1</z>", content, flags=re.IGNORECASE)

@@ -1,3 +1,7 @@
+Latest changes in version 12.8:
+* fixed a download issue in version 12.7
+* ignore third-module embedded font-size style in third-party book modules so to use the font-size defined in the app.
+
 Latest changes in version 12.7:
 * Added two books to book dataset for download:
     - Kitto_John_Illustrated_History_of_the_Bible.book
