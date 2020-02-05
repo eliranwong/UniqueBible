@@ -1,6 +1,6 @@
 (12.7, "file", "latest_changes.txt")
 (12.7, "file", "UniqueBibleAppVersion.txt")
-(12.7, "file", "TextCommandParser.py")
+(12.8, "file", "TextCommandParser.py")
 (12.7, "file", "gui.py")
 (12.6, "file", "ThirdParty.py")
 (12.4, "file", "main.py")
