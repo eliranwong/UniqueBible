@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         self.directoryLabel.setFrameStyle(frameStyle)
 
         # setup UI
-        self.setWindowTitle('Unique Bible App')
+        self.setWindowTitle("UniqueBible.app [version {0}]".format(config.version))
         appIconFile = os.path.join("htmlResources", "theText.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
@@ -611,10 +611,12 @@ class MainWindow(QMainWindow):
             menu9.addAction(QAction("Unique Bible", self, triggered=self.openUniqueBibleSource))
             menu9.addAction(QAction("Open Hebrew Bible", self, triggered=self.openHebrewBibleSource))
             menu9.addAction(QAction("Open Greek New Testament", self, triggered=self.openOpenGNTSource))
+            #menu9.addSeparator()
+            #menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
             menu9.addSeparator()
-            menu9.addAction(QAction(config.thisTranslation["menu9_credits"], self, triggered=self.openCredits))
-            menu9.addSeparator()
+            menu9.addAction(QAction("MarvelBible.Slack.com", self, triggered=self.goToSlack))
             menu9.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
+            menu9.addSeparator()
             menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
 
         # testing
@@ -2295,6 +2297,9 @@ class MainWindow(QMainWindow):
 
     def contactEliranWong(self):
         webbrowser.open("https://marvel.bible/contact/contactform.php")
+
+    def goToSlack(self):
+        webbrowser.open("https://marvelbible.slack.com")
 
     def donateToUs(self):
         webbrowser.open("https://www.paypal.me/MarvelBible")
@@ -4904,10 +4909,10 @@ class Downloader(QDialog):
                 connection = False
         if connection:
             if self.localFile.endswith(".zip"):
-                zip = zipfile.ZipFile(self.localFile, "r")
+                zipObject = zipfile.ZipFile(self.localFile, "r")
                 path, *_ = os.path.split(self.localFile)
-                zip.extractall(path)
-                zip.close()
+                zipObject.extractall(path)
+                zipObject.close()
                 os.remove(self.localFile)
             if interactWithParent:
                 self.parent.moduleInstalled(self.filename)

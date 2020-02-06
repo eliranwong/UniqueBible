@@ -307,7 +307,7 @@ def saveDataOnExit():
     config.bookSearchString = ""
     config.noteSearchString = ""
     configs = (
-        ("version", config.version),
+        #("version", config.version),
         ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
