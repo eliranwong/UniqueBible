@@ -1,3 +1,6 @@
+Latest changes in version 13.0:
+* Fixed menu items, which are not displayed on macOS.  In previous versions, menu items beginning with English words "Configure" are not displayed.  This issue is now fixed by changing "Configure" to "Select"
+
 Latest changes in version 12.9:
 * Main window's title now display version number
 * Version number will no longer be written to config.py
