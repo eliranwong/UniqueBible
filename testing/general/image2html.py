@@ -10,7 +10,7 @@ if not os.path.isfile(inputName):
     print("ERROR! '{0}' is not a file.".format(inputName))
 else:
     fileName, fileExtension = os.path.splitext(inputName)
-    if fileExtension.lower() in (".png", ".jpg", ".jpeg"):
+    if fileExtension.lower() in (".png", ".jpg", ".jpeg", ".bmp", ".gif"):
         # read a binary file
         with open(inputName, "rb") as fileObject:
             binaryData = fileObject.read()
