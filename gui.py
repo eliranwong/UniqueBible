@@ -1551,7 +1551,7 @@ class MainWindow(QMainWindow):
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
-        searchPattern = r'src=(["{0}])data:image/[^<>]+?;[ ]*?base64,[ ]*?[^ <>]+?\1'.format("'")
+        searchPattern = r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'")
         htmlText = re.sub(searchPattern, self.exportAnImage, htmlText)
         return htmlText
 
@@ -1559,8 +1559,13 @@ class MainWindow(QMainWindow):
         exportFolder = os.path.join("htmlResources", "images", "export")
         if not os.path.isdir(exportFolder):
             os.makedirs(exportFolder)
+        quotationMark, ext, asciiString = match.groups()
+        # Note the difference between "groups" and "group"
+        #wholeString = match.group(0)
+        #quotationMark = match.group(1)
+        #ext = match.group(2)
+        #asciiString = match.group(3)
         self.exportImageNumber += 1
-        quotationMark, ext, asciiString = re.findall(r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'"), match.group())[0]
         binaryString = asciiString.encode("ascii")
         binaryData = base64.b64decode(binaryString)
         imageFilename = "tab{0}_image{1}.{2}".format(self.studyView.currentIndex(), self.exportImageNumber, ext)
