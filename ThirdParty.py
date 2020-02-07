@@ -609,7 +609,7 @@ class Converter:
         return '<ref onclick="bcv({0},{1},{2})">{3} {1}:{2}</ref>'.format(b, c, v, bookName)
 
     def convertMySwordRfTag(self, text):
-        notes = [m for m in re.findall("<RF[^\n<>]*?>(.*?)<Rf>", text)]
+        notes = re.findall("<RF[^\n<>]*?>(.*?)<Rf>", text)
         p = re.compile("<RF[^\n<>]*?>.*?<Rf>")
         s = p.search(text)
         noteID = 0

@@ -1,4 +1,4 @@
-import os, sys, re, config, webbrowser, platform, subprocess, zipfile, gdown, requests, update
+import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update
 from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
@@ -1549,7 +1549,36 @@ class MainWindow(QMainWindow):
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
+    def exportAllImages(self, htmlText):
+        self.exportImageNumber = 0
+        searchPattern = r'src=(["{0}])data:image/[^<>]+?;[ ]*?base64,[ ]*?[^ <>]+?\1'.format("'")
+        htmlText = re.sub(searchPattern, self.exportAnImage, htmlText)
+        return htmlText
+
+    def exportAnImage(self, match):
+        exportFolder = os.path.join("htmlResources", "images", "export")
+        if not os.path.isdir(exportFolder):
+            os.makedirs(exportFolder)
+        self.exportImageNumber += 1
+        quotationMark, ext, asciiString = re.findall(r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'"), match.group())[0]
+        binaryString = asciiString.encode("ascii")
+        binaryData = base64.b64decode(binaryString)
+        imageFilename = "tab{0}_image{1}.{2}".format(self.studyView.currentIndex(), self.exportImageNumber, ext)
+        exportPath = os.path.join(exportFolder, imageFilename)
+        with open(exportPath, "wb") as fileObject2:
+            fileObject2.write(binaryData)
+        return "src={0}images/export/{1}{0}".format(quotationMark, imageFilename)
+
+    def addOpenImageAction(self, text):
+        return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick=openHtmlFile('\3')>\1\2\3\2\4</ref>", text)
+
     def openTextOnStudyView(self, text):
+        if config.exportEmbeddedImages:
+            text = self.exportAllImages(text)
+
+        if config.clickToOpenImage:
+            text = self.addOpenImageAction(text)
+
         #print(text)
 #        # testing
 #        currentIndex = self.studyView.currentIndex()
@@ -4772,6 +4801,8 @@ class MoreConfigOptions(QDialog):
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
+            ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
+            ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
@@ -4811,6 +4842,12 @@ class MoreConfigOptions(QDialog):
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+
+    def exportEmbeddedImagesChanged(self):
+        config.exportEmbeddedImages = not config.exportEmbeddedImages
+
+    def clickToOpenImageChanged(self):
+        config.clickToOpenImage = not config.clickToOpenImage
 
     def bookOnNewWindowChanged(self):
         config.bookOnNewWindow = not config.bookOnNewWindow

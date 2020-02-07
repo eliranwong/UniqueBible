@@ -1,3 +1,10 @@
+Latest changes in version 13.1:
+* Support a single click to open image files of images displayed on Study Window
+* Added two config.py options:
+    - exportEmbeddedImages [Default: False]
+    - clickToOpenImage [Default: False]
+    (For description on these options, please read our wiki page: https://github.com/eliranwong/UniqueBible/wiki/config_file)
+
 Latest changes in version 13.0:
 * Fixed menu items, which are not displayed on macOS.  In previous versions, menu items beginning with English words "Configure" are not displayed.  This issue is now fixed by changing "Configure" to "Select"
 

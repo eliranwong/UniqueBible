@@ -17,7 +17,7 @@ import config
 with open("UniqueBibleAppVersion.txt", "r") as fileObject:
     text = fileObject.read()
     current_version = float(text)
-# update config.py on current version
+# update current version in config
 if not hasattr(config, "version") or current_version > config.version:
     config.version = current_version
 
@@ -104,6 +104,12 @@ if not hasattr(config, "showVerseNumbersInRange"):
 # Options to open chapter / verse note on Study Window after saving: True / False
 if not hasattr(config, "openBibleNoteAfterSave"):
     config.openBibleNoteAfterSave = False
+# Options to export all embedded images displayed on Study Window: True / False
+if not hasattr(config, "exportEmbeddedImages"):
+    config.exportEmbeddedImages = False
+# Options to add open image action with a single click: True / False
+if not hasattr(config, "clickToOpenImage"):
+    config.clickToOpenImage = False
 # Options to use landscape mode: True / False
 if not hasattr(config, "landscapeMode"):
     config.landscapeMode = True
@@ -333,6 +339,8 @@ def saveDataOnExit():
         ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput),
         ("showVerseNumbersInRange", config.showVerseNumbersInRange),
         ("openBibleNoteAfterSave", config.openBibleNoteAfterSave),
+        ("exportEmbeddedImages", config.exportEmbeddedImages),
+        ("clickToOpenImage", config.clickToOpenImage),
         ("landscapeMode", config.landscapeMode),
         ("noToolBar", config.noToolBar),
         ("topToolBarOnly", config.topToolBarOnly),
