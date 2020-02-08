@@ -5,6 +5,90 @@ from BibleVerseParser import BibleVerseParser
 
 class Converter:
 
+    # create UniqueBible.app commentary module
+    def createCommentaryModule(self, abbreviation, title, description, content):
+        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
+        if os.path.isfile(ubCommentary):
+            os.remove(ubCommentary)
+        with sqlite3.connect(ubCommentary) as connection:
+            # create a cusor object
+            cursor = connection.cursor()
+            # create two tables: "Details" & "Commentary"
+            statements = (
+                "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)",
+                "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
+            )
+            for create in statements:
+                cursor.execute(create)
+                connection.commit()
+            # insert data to table "Details"
+            insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
+            connection.commit()
+            # insert data to table "Commentary"
+            if content:
+                insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+                cursor.executemany(insert, content)
+                connection.commit()
+
+    # create UniqueBible.app book modules
+    def createBookModule(self, module, content, blobData=None):
+        content = [(re.sub("['{0}]".format('"'), "_", chapter), chapterContent) for chapter, chapterContent in content]
+        book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
+        if os.path.isfile(book):
+            os.remove(book)
+        with sqlite3.connect(book) as connection:
+            cursor = connection.cursor()
+            # Create table for book content
+            create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
+            cursor.execute(create)
+            connection.commit()
+            # insert data for book content
+            insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
+            cursor.executemany(insert, content)
+            connection.commit()
+            if blobData:
+                # Create table for book content
+                create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
+                cursor.execute(create)
+                connection.commit()
+                # insert data for book content
+                insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
+                cursor.executemany(insert, blobData)
+                connection.commit()
+
+    # create UniqueBible.app dictionary module
+    def createDictionaryModule(self, module, content):
+        filename = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
+        if os.path.isfile(filename):
+            os.remove(filename)
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+            # create table "Dictionary"
+            create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
+            cursor.execute(create)
+            connection.commit()
+            # insert data to table "Dictionary"
+            insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
+            cursor.executemany(insert, content)
+            connection.commit()
+
+    # create UniqueBible.app lexicon modules
+    def createLexiconModule(self, module, content):
+        book = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
+        if os.path.isfile(book):
+            os.remove(book)
+        with sqlite3.connect(book) as connection:
+            cursor = connection.cursor()
+            # create table "Lexicon"
+            create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
+            cursor.execute(create)
+            connection.commit()
+            # insert data to table "Lexicon
+            insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
+            cursor.executemany(insert, content)
+            connection.commit()
+
     # Export from installed bibles into JSON format; for use with DartBible project.
     # usage:
     # from ThirdParty import Converter
@@ -244,31 +328,6 @@ class Converter:
             text = re.sub(search, replace, text)
         text = text.strip()
         return text
-
-    def createCommentaryModule(self, abbreviation, title, description, content):
-        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
-        if os.path.isfile(ubCommentary):
-            os.remove(ubCommentary)
-        with sqlite3.connect(ubCommentary) as ubFileConnection:
-            # create a cusor object
-            ubFileCursor = ubFileConnection.cursor()
-            # create two tables: "Details" & "Commentary"
-            statements = (
-                "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)",
-                "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
-            )
-            for create in statements:
-                ubFileCursor.execute(create)
-                ubFileConnection.commit()
-            # insert data to table "Details"
-            insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
-            ubFileConnection.commit()
-            # insert data to table "Commentary"
-            if content:
-                insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-                ubFileCursor.executemany(insert, content)
-                ubFileConnection.commit()
 
     # Import e-Sword Commentaries
     def importESwordCommentary(self, filename):
@@ -635,89 +694,66 @@ class Converter:
 
     # Import MySword Commentaries
     def importMySwordCommentary(self, filename):
+        # variable to hold commentary content
+        commentaryContent = []
         # connect MySword commentary
-        connection = sqlite3.connect(filename)
-        cursor = connection.cursor()
-
-        # process 2 tables: details, commentary
-        query = "SELECT title, abbreviation, description FROM details"
-        cursor.execute(query)
-        title, abbreviation, description = cursor.fetchone()
-        abbreviation = abbreviation.replace(" ", "_")
-        query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
-        cursor.execute(query)
-        chapters = cursor.fetchall()
-
-        # check if table "data" exists; (mainly contain images)
-        query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
-        cursor.execute(query, ("table",))
-        tables = cursor.fetchall()
-        tables = [table[0] for table in tables]
-        if "data" in tables:
-            query = "SELECT filename, content FROM data"
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+            # process 2 tables: details, commentary
+            query = "SELECT title, abbreviation, description FROM details"
             cursor.execute(query)
-            images = cursor.fetchall()
-            if images:
-                self.exportImageData(abbreviation, images)
-
-        # create an UB commentary
-        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
-        if os.path.isfile(ubCommentary):
-            os.remove(ubCommentary)
-        ubFileConnection = sqlite3.connect(ubCommentary)
-        ubFileCursor = ubFileConnection.cursor()
-
-        statements = (
-            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
-        )
-        for create in statements:
-            ubFileCursor.execute(create)
-            ubFileConnection.commit()
-        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
-        ubFileConnection.commit()
-
-        for chapter in chapters:
-            b, c = chapter
+            title, abbreviation, description = cursor.fetchone()
+            abbreviation = abbreviation.replace(" ", "_")
+            query = "SELECT DISTINCT book, chapter FROM commentary ORDER BY book, chapter, fromverse, toverse"
+            cursor.execute(query)
+            chapters = cursor.fetchall()
+            # check if table "data" exists; (mainly contain images)
+            query = "SELECT name FROM sqlite_master WHERE type=? ORDER BY name"
+            cursor.execute(query, ("table",))
+            tables = cursor.fetchall()
+            tables = [table[0] for table in tables]
+            if "data" in tables:
+                query = "SELECT filename, content FROM data"
+                cursor.execute(query)
+                images = cursor.fetchall()
+                if images:
+                    self.exportImageData(abbreviation, images)
+            # format chapters
             biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
-            del biblesSqlite
-
-            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
-
-            query = "SELECT book, chapter, fromverse, toverse, data FROM commentary WHERE book=? AND chapter=? ORDER BY book, chapter, fromverse, toverse"
-            cursor.execute(query, chapter)
-            verses = cursor.fetchall()
-
-            for verse in verses:
-                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
-                # convert imageTag
-                verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation), verseContent)
-                # convert from MySword format
-                verseContent = self.formatMySwordCommentaryVerse(verseContent)
-
-                fromverse = verse[2]
-                item = verseDict.get(fromverse, "not found")
-                if item == "not found":
-                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
-                else:
-                    item.append(verseContent)
-
-            sortedVerses = sorted(verseDict.keys())
-
-            chapterText = ""
-            for sortedVerse in sortedVerses:
-                chapterText += "｛｝".join(verseDict[sortedVerse])
-            chapterText = self.fixCommentaryScrolling(chapterText)
-
-            # write in UB commentary file
-            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-            ubFileCursor.execute(insert, (b, c, chapterText))
-            ubFileConnection.commit()
-
-        connection.close()
-        ubFileConnection.close()
+            for chapter in chapters:
+                b, c = chapter
+                verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
+                # create a dictionary to hold verse content
+                verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+                # get verse data of a specific book and chapter
+                query = "SELECT book, chapter, fromverse, toverse, data FROM commentary WHERE book=? AND chapter=? ORDER BY book, chapter, fromverse, toverse"
+                cursor.execute(query, chapter)
+                verses = cursor.fetchall()
+                # format verse content
+                for verse in verses:
+                    verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
+                    # convert imageTag
+                    verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation), verseContent)
+                    # check if verse number is a standard kjv verse number
+                    fromverse = verse[2]
+                    item = verseDict.get(fromverse, "not found")
+                    if item == "not found":
+                        verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                    else:
+                        item.append(verseContent)
+                # sorty verse numbers
+                sortedVerses = sorted(verseDict.keys())
+                # format chapter text
+                chapterText = ""
+                for sortedVerse in sortedVerses:
+                    chapterText += "｛｝".join(verseDict[sortedVerse])
+                chapterText = self.fixCommentaryScrolling(chapterText)
+                # add to commentary content
+                commentaryContent.append((b, c, chapterText))
+            # convert MySword format to UniqueBible format
+            commentaryContent = [(b, c, self.formatMySwordCommentaryVerse(chapterText)) for b, c, chapterText in commentaryContent]
+            # write to a UB commentary file
+            self.createCommentaryModule(abbreviation, title, description, commentaryContent)
 
     def formatMySwordCommentaryVerse(self, text):
         text = re.sub(r"<u><b>([0-9]+?):([0-9]+?)-\2</b></u>", r"<u><b>\1:\2</b></u>", text)
@@ -1271,23 +1307,6 @@ class Converter:
             text = re.sub(search, replace, text)
         return text
 
-    def createDictionaryModule(self, module, content):
-        filename = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
-        if os.path.isfile(filename):
-            os.remove(filename)
-        connection = sqlite3.connect(filename)
-        cursor = connection.cursor()
-
-        create = "CREATE TABLE Dictionary (Topic NVARCHAR(100), Definition TEXT)"
-        cursor.execute(create)
-        connection.commit()
-
-        insert = "INSERT INTO Dictionary (Topic, Definition) VALUES (?, ?)"
-        cursor.executemany(insert, content)
-        connection.commit()
-
-        connection.close()
-
     def importBBPlusLexiconInAFolder(self, folder):
         files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
         validFiles = [filename for filename in files if re.search('^Dict.*?\.json$', filename)]
@@ -1310,24 +1329,6 @@ class Converter:
                 self.createDictionaryModule(module, jsonList)
             return True
 
-    # Create lexicon modules
-    def createLexiconModule(self, module, content):
-        book = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(module))
-        if os.path.isfile(book):
-            os.remove(book)
-        connection = sqlite3.connect(book)
-        cursor = connection.cursor()
-
-        create = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
-        cursor.execute(create)
-        connection.commit()
-
-        insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
-        cursor.executemany(insert, content)
-        connection.commit()
-
-        connection.close()
-
     def convertOldLexiconData(self):
         database = os.path.join(config.marvelData, "data", "lexicon.data")
         connection = sqlite3.connect(database)
@@ -1347,32 +1348,6 @@ class Converter:
             self.createLexiconModule(lexicon, content)
 
         connection.close()
-
-    # Create book modules
-    def createBookModule(self, module, content, blobData=None):
-        content = [(re.sub("['{0}]".format('"'), "_", chapter), chapterContent) for chapter, chapterContent in content]
-        book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
-        if os.path.isfile(book):
-            os.remove(book)
-        with sqlite3.connect(book) as connection:
-            cursor = connection.cursor()
-            # Create table for book content
-            create = "CREATE TABLE Reference (Chapter NVARCHAR(100), Content TEXT)"
-            cursor.execute(create)
-            connection.commit()
-            # insert data for book content
-            insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
-            cursor.executemany(insert, content)
-            connection.commit()
-            if blobData:
-                # Create table for book content
-                create = "CREATE TABLE data (Filename TEXT, Content BLOB)"
-                cursor.execute(create)
-                connection.commit()
-                # insert data for book content
-                insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
-                cursor.executemany(insert, blobData)
-                connection.commit()
 
     def convertOldBookData(self):
         database = os.path.join(config.marvelData, "data", "book.data")

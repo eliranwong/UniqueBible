@@ -1,3 +1,6 @@
+Latest changes in version 13.3:
+* Improved efficiency of importing MySword commentary modules
+
 Latest changes in version 13.2:
 * Improved efficiency of importing e-Sword commentary modules
 
