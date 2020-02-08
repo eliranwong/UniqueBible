@@ -106,10 +106,10 @@ if not hasattr(config, "openBibleNoteAfterSave"):
     config.openBibleNoteAfterSave = False
 # Options to export all embedded images displayed on Study Window: True / False
 if not hasattr(config, "exportEmbeddedImages"):
-    config.exportEmbeddedImages = False
+    config.exportEmbeddedImages = True
 # Options to add open image action with a single click: True / False
 if not hasattr(config, "clickToOpenImage"):
-    config.clickToOpenImage = False
+    config.clickToOpenImage = True
 # Options to use landscape mode: True / False
 if not hasattr(config, "landscapeMode"):
     config.landscapeMode = True

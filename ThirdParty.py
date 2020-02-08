@@ -89,6 +89,17 @@ class Converter:
             cursor.executemany(insert, content)
             connection.commit()
 
+    # export image files
+    def exportImageData(self, module, images):
+        imageFolder = os.path.join("htmlResources", "images", module)
+        if not os.path.isdir(imageFolder):
+            os.makedirs(imageFolder)
+        for filename, blobData in images:
+            imageFilePath = os.path.join(imageFolder, filename)
+            if not os.path.isfile(imageFilePath):
+                with open(imageFilePath, "wb") as imagefile:
+                    imagefile.write(blobData)
+
     # Export from installed bibles into JSON format; for use with DartBible project.
     # usage:
     # from ThirdParty import Converter
@@ -433,14 +444,12 @@ class Converter:
 
     def convertESwordBibleReference(self, match):
         value = match.group(1).replace("_", " ")
-        reference = self.parseESwordReference("{0} ".format(value))
-        #reference = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
-        if reference:
-            return "{0}{1}</ref>".format(reference, value)
-            #bcv = ",".join([str(no) for no in reference[0]])
-            #return "<ref onclick='bcv({0})'>{1}</ref>".format(bcv, value)
-        else:
-            return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value)
+        return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value)
+#        reference = self.parseESwordReference("{0} ".format(value))
+#        if reference:
+#            return "{0}{1}</ref>".format(reference, value)
+#        else:
+#            return "<ref onclick='document.title={0}BIBLE:::{1}{0}'>{1}</ref>".format('"', value)
 
     def parseESwordReference(self, text):
         if re.search("^([1-9A-Z][A-Za-z][a-z]) ([0-9]+?):([0-9]+?)[^0-9].*?$", text):
@@ -790,59 +799,21 @@ class Converter:
             # send data to create a UniqueBible book module
             self.createBookModule(module, content)
 
-    def exportImageData(self, module, images):
-        imageFolder = os.path.join("htmlResources", "images", module)
-        if not os.path.isdir(imageFolder):
-            os.makedirs(imageFolder)
-        for filename, blobData in images:
-            imageFilePath = os.path.join(imageFolder, filename)
-            if not os.path.isfile(imageFilePath):
-                with open(imageFilePath, "wb") as imagefile:
-                    imagefile.write(blobData)
-
     def formatNonBibleMySwordModule(self, text):
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
-        text = re.sub("<a [^<>]*?href=['{0}][#]*?b[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractBibleReferences, text)
+        text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?b([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}BIBLE:::\2{0}'>".format('"'), text)
         # convert bible reference tag like <a class='bible' href='#b1.1.1'>
         text = re.sub("<a [^<>]*?href=['{0}][#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
-
         # convert commentary reference tag like <a href='#c-CSBC Gen 1:1'>
-        text = re.sub("<a [^<>]*?href=['{0}][#]*?c\-([^ ]+?) ([0-9]*?[A-Za-z]+? [0-9][^<>]*?)>".format('"'), self.extractSpecificCommentaryReferences, text)
+        text = re.sub("<a [^<>]*?href=(['{0}])[#]*?c\-([^ ]+?) ([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::\2:::\3{0}'>".format('"'), text)
         # convert commentary reference tag like <a href='#cGen 1:1'>
-        text = re.sub("<a [^<>]*?href=['{0}][#]*?c[0-9]*?[A-Za-z]+? [0-9][^<>]*?>".format('"'), self.extractCommentaryReferences, text)
+        text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?c([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::\2{0}'>".format('"'), text)
         # convert commentary reference tag like <a href='#c1.1.1'>
         text = re.sub("<a [^<>]*?href=['{0}][#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
         # convert Strong's no tag, e.g. <a class='strong' href='#sH1'>H1</a>
         text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?s([HG][0-9a-z\.]+?)\1[^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="lex({0}\2{0})">'.format("'"), text)
-
+        # return formatted text
         return text
-
-    def extractBibleReferences(self, match):
-        value = match.group()
-        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
-        if references:
-            b, c, v = references[0]
-            return '<a href="javascript:void(0)" onclick="bcv({0},{1},{2})">'.format(b, c, v)
-        else:
-            return value
-
-    def extractSpecificCommentaryReferences(self, match):
-        commentary, referenceString = match.groups()
-        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(referenceString)
-        if references:
-            b, c, v = references[0]
-            return '<a href="javascript:void(0)" onclick="ctbcv({4}{0}{4},{1},{2},{3})">'.format(commentary, b, c, v, "'")
-        else:
-            return match.group()
-
-    def extractCommentaryReferences(self, match):
-        value = match.group()
-        references = BibleVerseParser(config.parserStandarisation).extractAllReferences(value)
-        if references:
-            b, c, v = references[0]
-            return '<a href="javascript:void(0)" onclick="cbcv({0},{1},{2})">'.format(b, c, v)
-        else:
-            return value
 
     # Import MyBible Bibles
     def importMyBibleBible(self, filename):
@@ -925,7 +896,7 @@ class Converter:
         if mbBookNoString and reference:
             ubBookNoString = str(self.convertMyBibleBookNo(int(mbBookNoString)))
             ubBookName = BibleVerseParser(config.parserStandarisation).standardAbbreviation[ubBookNoString]
-            value = "<ref onclick='document.title={0}{1} {2}{0}'>{1} {2}</ref>".format('"', ubBookName, reference)
+            value = "<ref onclick='document.title={0}BIBLE:::{1} {2}{0}'>{1} {2}</ref>".format('"', ubBookName, reference)
         return value
 
     def myBibleBibleToPlainFormat(self, description, abbreviation, verses, strong_numbers_prefix):
@@ -1045,82 +1016,64 @@ class Converter:
 
     # Import MyBible Commentaries
     def importMyBibleCommentary(self, filename):
+        # variable to hold commentary content
+        commentaryContent = []
         # connect MySword commentary
-        connection = sqlite3.connect(filename)
-        cursor = connection.cursor()
-
-        # process 2 tables: info, commentaries
-        # 6 columns in commentaries: book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text
-        query = "SELECT value FROM info WHERE name = 'description'"
-        cursor.execute(query)
-        description = cursor.fetchone()[0]
-        title = description
-        *_, inputFileName = os.path.split(filename)
-        abbreviation = inputFileName[:-21]
-        query = "SELECT DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
-        cursor.execute(query)
-        chapters = cursor.fetchall()
-
-        # create an UB commentary
-        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
-        if os.path.isfile(ubCommentary):
-            os.remove(ubCommentary)
-        ubFileConnection = sqlite3.connect(ubCommentary)
-        ubFileCursor = ubFileConnection.cursor()
-
-        statements = (
-            "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
-        )
-        for create in statements:
-            ubFileCursor.execute(create)
-            ubFileConnection.commit()
-        insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        ubFileCursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
-        ubFileConnection.commit()
-
-        for chapter in chapters:
-            b, c = chapter
-            b = self.convertMyBibleBookNo(b)
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+            # draw data from two tables: info, commentaries
+            # table: info
+            query = "SELECT value FROM info WHERE name = 'description'"
+            cursor.execute(query)
+            description = cursor.fetchone()[0]
+            title = description
+            *_, inputFileName = os.path.split(filename)
+            abbreviation = inputFileName[:-21]
+            abbreviation = re.sub("^(.*?)\-c$", r"\1", abbreviation)
+            # table: commentaries
+            # 6 columns in commentaries: book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text
+            query = "SELECT DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
+            cursor.execute(query)
+            chapters = cursor.fetchall()
+            # format chapters
             biblesSqlite = BiblesSqlite()
-            verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
-            del biblesSqlite
-
-            verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
-
-            query = "SELECT book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text FROM commentaries WHERE book_number=? AND chapter_number_from=? ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
-            cursor.execute(query, chapter)
-            verses = cursor.fetchall()
-
-            for verse in verses:
-                book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text = verse
-                book_number = self.convertMyBibleBookNo(book_number)
-                verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text)
-
-                # convert from eSword format
-                verseContent = self.formatMyBibleCommentaryVerse(verseContent, abbreviation)
-
-                fromverse = verse[2]
-                item = verseDict.get(fromverse, "not found")
-                if item == "not found":
-                    verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
-                else:
-                    item.append(verseContent)
-
-            sortedVerses = sorted(verseDict.keys())
-
-            chapterText = ""
-            for sortedVerse in sortedVerses:
-                chapterText += "｛｝".join(verseDict[sortedVerse])
-            chapterText = self.fixCommentaryScrolling(chapterText)
-
-            # write in UB commentary file
-            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
-            ubFileCursor.execute(insert, (b, c, chapterText))
-            ubFileConnection.commit()
-
-        connection.close()
-        ubFileConnection.close()
+            for chapter in chapters:
+                b, c = chapter
+                b = self.convertMyBibleBookNo(b)
+                # get standard kjv verse list for a chapter
+                verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
+                # use a dictionary to hold verse content
+                verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+                # get verse data
+                query = "SELECT book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text FROM commentaries WHERE book_number=? AND chapter_number_from=? ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
+                cursor.execute(query, chapter)
+                verses = cursor.fetchall()
+                # format verses
+                for verse in verses:
+                    book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text = verse
+                    book_number = self.convertMyBibleBookNo(book_number)
+                    verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text)
+                    # check fromverse if it is included in a standard kjv verse list
+                    fromverse = verse[2]
+                    item = verseDict.get(fromverse, "not found")
+                    if item == "not found":
+                        verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                    else:
+                        item.append(verseContent)
+                # sort verse numbers in a chapter
+                sortedVerses = sorted(verseDict.keys())
+                # combine verse content into a single chapter
+                chapterText = ""
+                for sortedVerse in sortedVerses:
+                    chapterText += "｛｝".join(verseDict[sortedVerse])
+                # fix scrolling for commentary modules
+                chapterText = self.fixCommentaryScrolling(chapterText)
+                # add to commentary content
+                commentaryContent.append((b, c, chapterText))
+            # convert MyBible format to UniqueBible format
+            commentaryContent = [(b, c, self.formatMyBibleCommentaryVerse(chapterText, abbreviation)) for b, c, chapterText in commentaryContent]
+            # write to a UB commentary file
+            self.createCommentaryModule(abbreviation, title, description, commentaryContent)
 
     def formatMyBibleCommentaryVerse(self, text, abbreviation):
         text = re.sub(r"<u><b>([0-9]+?:[0-9]+?)-\1</b></u>", r"<u><b>\1</b></u>", text)
@@ -1129,19 +1082,17 @@ class Converter:
         text = text.replace(":0</b></u></ref><br>", "</b></u></ref><br>")
         text = text.replace(":0-0</b></u></ref><br>", "</b></u></ref><br>")
         # deal with internal links like <a class="contents" href="C:@1002 0:0">
-        text = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
+        text = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([\-0-9:]+?)[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
         text = self.formatNonBibleMyBibleModule(text, abbreviation)
         return text
 
     def formatMyBibleCommentaryLink(self, match):
-        value = match.group()
-        bookNo = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) [\-0-9:]+?[^\-0-9:][^<>]*?>".format('"'), r"\1", value)
+        bookNo, cv = match.groups()
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
         if bookNo in standardAbbreviation:
-            value = re.sub("<a [^<>]*?href=['{0}]C:@[0-9]+? ([\-0-9:]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::{1} \1{0}'>".format('"', standardAbbreviation[bookNo]), value)
+            return "<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::{1} {2}{0}'>".format('"', standardAbbreviation[bookNo], cv)
         else:
-            value = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([0-9]+?):([0-9]+?)[^\-0-9:][^<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::\1.\2.\3{0}'>".format('"'), value)
-        return value
+            return "<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY2:::{1}.{2}{0}'>".format('"', bookNo, cv.replace(":", "."))
 
     def formatNonBibleMyBibleModule(self, text, abbreviation):
         searchReplace = (

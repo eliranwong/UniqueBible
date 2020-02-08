@@ -188,6 +188,13 @@ class BibleVerseParser:
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
+        # final clean up
+        searchPattern = '(<ref onclick="bcv[^>]*?)([\(, ])0'
+        searchReplace = (
+            (searchPattern, r'\1\2'),
+        )
+        text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
+
         # return the tagged text, without the extra space added at the beginning of this function.
         return text[:-1]
 
