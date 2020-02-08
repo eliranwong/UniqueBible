@@ -1,3 +1,6 @@
+Latest changes in version 13.2:
+* Improved efficiency of importing e-Sword commentary modules
+
 Latest changes in version 13.1:
 * Support a single click to open image files of images displayed on Study Window
 * Added two config.py options:

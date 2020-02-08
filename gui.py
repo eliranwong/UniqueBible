@@ -2756,9 +2756,9 @@ class MainWindow(QMainWindow):
         self.instantPage.runJavaScript(changeTitle)
 
     def convertCrLink(self, match):
-        value = match.group()
-        bookNo = Converter().convertMyBibleBookNo(int(re.sub('onclick=[{0}"]cr\(([0-9]+?),[ ]*?[0-9]+?,[ ]*?[0-9]+?\)[{0}"]'.format("'"), r'\1', value)))
-        return re.sub('onclick=[{0}"]cr\([0-9]+?,[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv({0},\1,\2)" onmouseover="imv({0},\1,\2)"'.format(bookNo), value)
+        b, c, v = match.groups()
+        bookNo = Converter().convertMyBibleBookNo(int(b))
+        return 'onclick="bcv({0},{1},{2})" onmouseover="imv({0},{1},{2})"'.format(bookNo, c, v)
 
     # add a history record
     def addHistoryRecord(self, view, textCommand):
