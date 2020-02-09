@@ -2721,8 +2721,9 @@ class MainWindow(QMainWindow):
                 "study": self.studyView,
                 "instant": self.instantView,
             }
-            # final touch to transform text HERE
+            # add hovering action to bible reference links
             searchReplace = (
+                ('document.title="BIBLE:::(.*?)"{0}'.format("'"), r'document.title="BIBLE:::\1"{0} onmouseover={0}document.title="_imvr:::\1"{0}'.format("'")),
                 ('onclick=[{0}"]bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv(\1,\2,\3)" onmouseover="imv(\1,\2,\3)"'),
                 ('onclick=[{0}"]cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), self.convertCrLink),
             )

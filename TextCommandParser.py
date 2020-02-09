@@ -337,6 +337,10 @@ class TextCommandParser:
             # e.g. _imv:::1.1.1
             # e.g. _imv:::43.3.16
             "_imv": self.instantMainVerse,
+            # [KEYWORD] _imvr
+            # e.g. _imvr:::Gen 1:1
+            # e.g. _imvr:::John 3:16
+            "_imvr": self.instantMainVerseReference,
             # [KEYWORD] _instantverse
             # e.g. _instantVerse:::KJV:::1.1.1
             "_instantverse": self.instantVerse,
@@ -1151,10 +1155,18 @@ class TextCommandParser:
         else:
             return ("", "")
 
+    # _imvr:::
+    def instantMainVerseReference(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            return self.instantMainVerse("{0}.{1}.{2}".format(*verseList[0]), source)
+        else:
+            return ("", "")
+
     # _imv:::
     def instantMainVerse(self, command, source):
         if config.instantInformationEnabled:
-            b, c, v = [int(i) for i in command.split(".")]
+            b, c, v, *_ = [int(i) for i in command.split(".")]
             biblesSqlite = BiblesSqlite()
             b, c, v, verseText = biblesSqlite.readTextVerse(config.mainText, b, c, v)
             del biblesSqlite
