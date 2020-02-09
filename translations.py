@@ -254,6 +254,7 @@ translations = {
         'message_readWiki': '更多信息请阅读Wiki页面：',
         'menu1_tabNo': '配置分页的数目',
         'menu8_marvelData': '数据库文件',
+        'menu8_download3rdParty': '下载第三方模块',
     },
     "zh-TW": {
        'bar1_chapterNotes': '聖經窗口的聖經章註釋',
@@ -510,6 +511,7 @@ translations = {
         'message_readWiki': '更多信息請閱讀Wiki頁面：',
         'menu1_tabNo': '配置分頁的數目',
         'menu8_marvelData': '數據庫文件',
+        'menu8_download3rdParty': '下載第三方模塊',
     },
     "ko": {
         'bar1_chapterNotes': '성경 윈도우의 성경 장 참고',
@@ -771,5 +773,6 @@ translations = {
         'message_readWiki': '자세한 내용은 위키 페이지를 읽기 :',
         'menu1_tabNo': '탭의 구성 번호',
         'menu8_marvelData': '데이터베이스 파일',
+        "menu8_download3rdParty": "다운로드 타사 모듈",
      },
 }

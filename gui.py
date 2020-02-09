@@ -30,12 +30,12 @@ except:
 # [Optional] Chinese feature - opencc
 # It converts conversion between Traditional Chinese and Simplified Chinese.
 # To enable functions working with "opencc", install python package "opencc" first, e.g. pip3 install OpenCC.
-try:
-    import opencc
-    openccSupport = True
-except:
-    openccSupport = False
-    print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
+#try:
+#    import opencc
+#    openccSupport = True
+#except:
+#    openccSupport = False
+#    print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
 # [Optional] Chinese feature - pypinyin
 # It translates Chinese characters into pinyin.
 # To enable functions working with "pypinyin", install python package "pypinyin" first, e.g. pip3 install pypinyin.
@@ -253,10 +253,10 @@ class MainWindow(QMainWindow):
             # CHINESE TOOL - openCC
             # Convert command line from simplified Chinese to traditional Chinese characters
             # Ctrl + H
-            elif openccSupport and event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
-                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
-                self.textCommandLineEdit.setText(newTextCommand)
-                return True
+#            elif openccSupport and event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
+#                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
+#                self.textCommandLineEdit.setText(newTextCommand)
+#                return True
         return QWidget.event(self, event)
 
     # manage main page
@@ -586,10 +586,10 @@ class MainWindow(QMainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
         menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
-        menu8.addAction(QAction(config.thisTranslation["menu8_moreBooks"], self, triggered=self.moreBooks))
-        menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
         menu8.addAction(QAction(config.thisTranslation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
+        menu8.addSeparator()
+        menu8.addAction(QAction(config.thisTranslation["menu8_download3rdParty"], self, triggered=self.moreBooks))
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_3rdParty"], self, triggered=self.importModules))
         menu8.addAction(QAction(config.thisTranslation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
@@ -2339,7 +2339,7 @@ class MainWindow(QMainWindow):
         webbrowser.open("https://www.paypal.me/MarvelBible")
 
     def moreBooks(self):
-        webbrowser.open("https://github.com/darrelwright/UniqueBible_Books")
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/download_3rd_party_modules")
 
     # Actions - resize the main window
     def fullsizeWindow(self):
@@ -3446,6 +3446,12 @@ class WebEngineView(QWebEngineView):
         return super().createWindow(windowType)
 
     def openPopover(self, name="popover", html="UniqueBible.app"):
+        # image options
+        if config.exportEmbeddedImages:
+            html = self.parent.parent.exportAllImages(html)
+        if config.clickToOpenImage:
+            html = self.parent.parent.addOpenImageAction(html)
+        # format html content
         if self.name == "main":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif self.name == "study":

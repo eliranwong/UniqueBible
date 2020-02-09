@@ -1,3 +1,8 @@
+Latest changes in version 13.7:
+* Added ability to export and open embedded images, when book modules are displayed on new window.
+* Added a menu item to open a wiki page on downloading third-party modules. 
+* Removed used of OpenCC.  Conversion between Chinese characters can be handled with built-in support of Google Translate instead.
+
 Latest changes in version 13.6:
 * Added a config.py option: showGoogleTranslateEnglishOptions.
     - The app now hides option of google translate into English by default, to avoid potential duplication for English users.
