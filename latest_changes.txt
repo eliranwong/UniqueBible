@@ -1,3 +1,10 @@
+Latest changes in version 13.6:
+* Added a config.py option: showGoogleTranslateEnglishOptions.
+    - The app now hides option of google translate into English by default, to avoid potential duplication for English users.
+    - This option can be changed through a gui dialog "Select more ..."
+* Improved display of results of searching books.
+    - The apps now automatically scroll to the first instance of book search result when a chapter is opened.
+
 Latest changes in version 13.5:
 * Fixed hovering over bible links created with import of third-party modules
 

@@ -3098,11 +3098,12 @@ class WebEngineView(QWebEngineView):
 
         # Google Translate
         if googletransSupport:
-            # Translate into English
-            translateText = QAction(self)
-            translateText.setText(config.thisTranslation["context1_english"])
-            translateText.triggered.connect(self.selectedTextToEnglish)
-            self.addAction(translateText)
+            if config.showGoogleTranslateEnglishOptions:
+                # Translate into English
+                translateText = QAction(self)
+                translateText.setText(config.thisTranslation["context1_english"])
+                translateText.triggered.connect(self.selectedTextToEnglish)
+                self.addAction(translateText)
             if config.showGoogleTranslateChineseOptions:
                 # Translate into Traditional Chinese
                 translateText = QAction(self)
@@ -4812,6 +4813,7 @@ class MoreConfigOptions(QDialog):
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
+            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
@@ -4863,6 +4865,10 @@ class MoreConfigOptions(QDialog):
 
     def openBibleNoteAfterSaveChanged(self):
         config.openBibleNoteAfterSave = not config.openBibleNoteAfterSave
+
+    def showGoogleTranslateEnglishOptionsChanged(self):
+        config.showGoogleTranslateEnglishOptions = not config.showGoogleTranslateEnglishOptions
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def showGoogleTranslateChineseOptionsChanged(self):
         config.showGoogleTranslateChineseOptions = not config.showGoogleTranslateChineseOptions
