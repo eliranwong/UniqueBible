@@ -225,6 +225,12 @@ if not hasattr(config, "book"):
 # Option to open book content on a new window
 if not hasattr(config, "bookOnNewWindow"):
     config.bookOnNewWindow = False
+# Option to overwrite font in book modules
+if not hasattr(config, "overwriteBookFont"):
+    config.overwriteBookFont = True
+# Option to overwrite font size in book modules
+if not hasattr(config, "overwriteBookFontSize"):
+    config.overwriteBookFontSize = True
 # List of favourite book modules
 # Only the first 10 books are shown on menu bar
 if not hasattr(config, "favouriteBooks"):
@@ -385,6 +391,8 @@ def saveDataOnExit():
         ("encyclopedia", config.encyclopedia),
         ("book", config.book),
         ("bookOnNewWindow", config.bookOnNewWindow),
+        ("overwriteBookFont", config.overwriteBookFont),
+        ("overwriteBookFontSize", config.overwriteBookFontSize),
         ("favouriteBooks", config.favouriteBooks),
         ("bookSearchString", config.bookSearchString),
         ("noteSearchString", config.noteSearchString),
@@ -405,8 +413,8 @@ def saveDataOnExit():
             fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
         if hasattr(config, "translationLanguage"):
             fileObj.write("{0} = {1}\n".format("translationLanguage", pprint.pformat(config.translationLanguage)))
-        if hasattr(config, "translation"):
-            fileObj.write("{0} = {1}\n".format("translation", pprint.pformat(config.translation)))
+#        if hasattr(config, "translation"):
+#            fileObj.write("{0} = {1}\n".format("translation", pprint.pformat(config.translation)))
 
 # Set Qt input method variable to use ibus if config.ibus is "True"
 if config.ibus:

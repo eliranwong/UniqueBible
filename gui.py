@@ -1,4 +1,4 @@
-import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update
+import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation
 from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
@@ -147,21 +147,27 @@ class MainWindow(QMainWindow):
 
     def setTranslation(self):
         updateNeeded = False
-        if config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage") and hasattr(config, "translation"):
-            # check for missing items; add default English translation if there is a missing one.
+        if config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage") and hasattr(myTranslation, "translation"):
+            # Check for missing items. Use Google Translate to translate the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
             languages = Languages()
             code = languages.codes[config.userLanguage]
             for key, value in languages.translation.items():
-                if not key in config.translation:
+                if not key in myTranslation.translation:
                     if googletransSupport and config.translationLanguage == config.userLanguage:
                         try:
-                            config.translation[key] = Translator().translate(value, dest=code).text
+                            myTranslation.translation[key] = Translator().translate(value, dest=code).text
                         except:
-                            config.translation[key] = value
+                            myTranslation.translation[key] = value
                     else:
-                        config.translation[key] = value
+                        myTranslation.translation[key] = value
                     updateNeeded = True
-            config.thisTranslation = config.translation
+            # update myTranslation.py
+            if updateNeeded:
+                try:
+                    languages.writeMyTranslation(myTranslation.translation)
+                except:
+                    print("Failed to update 'myTranslation.py'.")
+            config.thisTranslation = myTranslation.translation
         elif config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage"):
             languages = Languages()
             code = languages.codes[config.translationLanguage]
@@ -521,6 +527,8 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
         menu10.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
         menu10.addAction(QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
+        menu10.addSeparator()
+        menu10.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearBookHighlights))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
@@ -2151,6 +2159,10 @@ class MainWindow(QMainWindow):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::ALL:::")
         self.textCommandLineEdit.setFocus()
+
+    def clearBookHighlights(self):
+        config.bookSearchString = ""
+        self.reloadCurrentRecord()
 
     def displaySearchFavBookCommand(self):
         config.bookSearchString = ""
@@ -4301,6 +4313,29 @@ class NoteEditor(QMainWindow):
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
 
+        headerButton = QPushButton()
+        headerButton.setToolTip(config.thisTranslation["noteTool_header1"])
+        headerButtonFile = os.path.join("htmlResources", "header1.png")
+        headerButton.setIcon(QIcon(headerButtonFile))
+        headerButton.clicked.connect(self.format_header1)
+        self.toolBar.addWidget(headerButton)
+
+        headerButton = QPushButton()
+        headerButton.setToolTip(config.thisTranslation["noteTool_header2"])
+        headerButtonFile = os.path.join("htmlResources", "header2.png")
+        headerButton.setIcon(QIcon(headerButtonFile))
+        headerButton.clicked.connect(self.format_header2)
+        self.toolBar.addWidget(headerButton)
+
+        headerButton = QPushButton()
+        headerButton.setToolTip(config.thisTranslation["noteTool_header3"])
+        headerButtonFile = os.path.join("htmlResources", "header3.png")
+        headerButton.setIcon(QIcon(headerButtonFile))
+        headerButton.clicked.connect(self.format_header3)
+        self.toolBar.addWidget(headerButton)
+
+        self.toolBar.addSeparator()
+        
         boldButton = QPushButton()
         boldButton.setToolTip("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]))
         boldButtonFile = os.path.join("htmlResources", "bold.png")
@@ -4396,6 +4431,17 @@ class NoteEditor(QMainWindow):
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
+
+        iconFile = os.path.join("htmlResources", "header1.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_header1"], self.format_header1)
+
+        iconFile = os.path.join("htmlResources", "header2.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_header2"], self.format_header2)
+
+        iconFile = os.path.join("htmlResources", "header3.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_header3"], self.format_header3)
+
+        self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "bold.png")
         self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), self.format_bold)
@@ -4628,6 +4674,30 @@ class NoteEditor(QMainWindow):
         self.hide()
         self.show()
 
+    def format_header1(self):
+        if self.html:
+            self.editor.insertHtml("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
+        else:
+            self.editor.insertPlainText("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
+
+    def format_header2(self):
+        if self.html:
+            self.editor.insertHtml("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
+        else:
+            self.editor.insertPlainText("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
+
+    def format_header3(self):
+        if self.html:
+            self.editor.insertHtml("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
+        else:
+            self.editor.insertPlainText("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
+        self.hide()
+        self.show()
+
     def format_bold(self):
         if self.html:
             self.editor.setFontWeight(75)
@@ -4853,6 +4923,8 @@ class MoreConfigOptions(QDialog):
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
+            ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged),
+            ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
@@ -4901,6 +4973,12 @@ class MoreConfigOptions(QDialog):
 
     def bookOnNewWindowChanged(self):
         config.bookOnNewWindow = not config.bookOnNewWindow
+
+    def overwriteBookFontChanged(self):
+        config.overwriteBookFont = not config.overwriteBookFont
+
+    def overwriteBookFontSizeChanged(self):
+        config.overwriteBookFontSize = not config.overwriteBookFontSize
 
     def alwaysDisplayStaticMapsChanged(self):
         config.alwaysDisplayStaticMaps = not config.alwaysDisplayStaticMaps

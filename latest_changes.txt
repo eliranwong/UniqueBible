@@ -1,3 +1,16 @@
+Latest changes in version 13.9:
+* Fixed loading translated program interface on Windows.  For description on translation feature, you may read https://github.com/eliranwong/UniqueBible/wiki/translate_program_interface
+* Moved customised translation of program interface from config.py to myTranslation.py.
+* Added three icons on note editor for formatting selected text into headers:
+    - Header 1
+    - Header 2
+    - Header 3
+* Added two options in a file config.py and a gui dialog box opened via menu "Select More ...":
+    - overwriteBookFont
+    - overwriteBookFontSize
+* Added a menu item "Books > Clear Search Result Highlights".
+* Added French translation of program interface [translated with Google Translate] to translations.py.
+
 Latest changes in version 13.8:
 * Added ability to create reference book modules from the following file types:
     - image files (*.png, *.jpg, *.jpeg, *.bmp, *.gif)

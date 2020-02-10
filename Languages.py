@@ -367,9 +367,13 @@ class Languages:
         "menu5_last3rdDict": "The Last Opened Third Party Dictionary",
         "menu8_marvelData": "Database Files",
         "menu8_download3rdParty": "Download 3rd Party Modules",
-        'menu10_bookFromImages': 'Create a Reference Book from Image Files',
-        'menu10_bookFromHtml': 'Create a Reference Book from HTML Files',
-        'menu10_bookFromNotes': 'Create a Reference Book from Note Files',
+        "menu10_bookFromImages": "Create a Reference Book from Image Files",
+        "menu10_bookFromHtml": "Create a Reference Book from HTML Files",
+        "menu10_bookFromNotes": "Create a Reference Book from Note Files",
+        "noteTool_header1": "Header 1",
+        "noteTool_header2": "Header 2",
+        "noteTool_header3": "Header 3",
+        "menu10_clearBookHighlights": "Clear Search Result Highlights",
     }
 
     def translateInterface(self, language):
@@ -379,7 +383,8 @@ class Languages:
             print("available")
             config.translationLanguage = language
             return True
-        elif not platform.system() == "Windows":
+        else:
+        #elif not platform.system() == "Windows":
             print("translating interface into '{0}' ...".format(language))
             translator = Translator()
             tempDict = {}
@@ -390,10 +395,15 @@ class Languages:
                 except:
                     tempDict[key] = value
             config.translationLanguage = language
-            config.translation = tempDict
+            self.writeMyTranslation(tempDict)
             print("Done")
             return True
         return False
+
+    def writeMyTranslation(self, translationDict):
+        with open("myTranslation.py", "w") as fileObj:
+            content = "translation = {0}\n".format(pprint.pformat(translationDict))
+            fileObj.write(content)
 
     def createTranslationTemplates(self):
         if googletransInstall:
