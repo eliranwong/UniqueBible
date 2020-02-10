@@ -8,7 +8,7 @@ class Twwy:
     def exportTwwyVerses(self, text):
         outputFile = "TWWY_verses_{0}.txt".format(text)
         verses = self.getTwwyVerses(text)
-        f = open(outputFile,'w')
+        f = open(outputFile, "w", encoding="utf-8")
         f.write(verses)
         f.close()
 

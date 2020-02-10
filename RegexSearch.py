@@ -38,14 +38,14 @@ class RegexSearch:
             outputFile = os.path.join(path, outputFilename)
         # open file and read input text
         print("Processing '{0}' ...".format(filename))
-        with open(inputFile,'r') as f:
+        with open(inputFile, "r", encoding="utf-8") as f:
             newData = f.read()
         # work on non-empty text
         if newData:
             # search and replace the text
             newData = self.processInputText(newData, searchReplace, deepSearchPattern)
             # save output text in a separate file
-            with open(outputFile,'w') as f:
+            with open(outputFile, "w", encoding="utf-8") as f:
                 f.write(newData)
                 print("Processed.  Saved output as '{0}'.".format(outputFilename))
         else:

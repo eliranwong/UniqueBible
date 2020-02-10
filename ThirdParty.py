@@ -58,7 +58,7 @@ class Converter:
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() in (".htm", ".html"):
-                with open(os.path.join(folder, filepath), "r") as fileObject:
+                with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
                     html = BibleVerseParser(config.parserStandarisation).parseText(html)
                     bookContent.append((fileName, html))
@@ -75,7 +75,7 @@ class Converter:
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() == ".uba":
-                with open(os.path.join(folder, filepath), "r") as fileObject:
+                with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = BibleVerseParser(config.parserStandarisation).parseText(note)
                     bookContent.append((fileName, note))
@@ -183,7 +183,7 @@ class Converter:
         jsonString += "\n]\n"
 
         jsonFile = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
-        fileObj = open(jsonFile, "w")
+        fileObj = open(jsonFile, "w", encoding="utf-8")
         fileObj.write(jsonString)
         fileObj.close()
 
@@ -209,7 +209,7 @@ class Converter:
         jsonString = json.dumps(jsonObject) # Please note that "json.dumps()" converts unicode characters.
 
         jsonFile = os.path.join(config.marvelData, "bibles", "{0}.json".format(bible))
-        fileObj = open(jsonFile, "w")
+        fileObj = open(jsonFile, "w", encoding="utf-8")
         fileObj.write(jsonString)
         fileObj.close()
 
@@ -1293,7 +1293,7 @@ class Converter:
     # Read BibleBento Plus Json files
     def readJsonFile(self, inputFile):
         try:
-            f = open(inputFile, 'r')
+            f = open(inputFile, "r", encoding="utf-8")
             newData = f.read()
             f.close()
             newData = json.loads(newData)

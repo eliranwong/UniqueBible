@@ -9,12 +9,12 @@ import os
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
 if not os.path.isfile("config.py"):
-    open("config.py", "a").close()
+    open("config.py", "w", encoding="utf-8").close()
 
 import config
 
 # Check current version
-with open("UniqueBibleAppVersion.txt", "r") as fileObject:
+with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
     text = fileObject.read()
     current_version = float(text)
 # update current version in config
@@ -408,7 +408,7 @@ def saveDataOnExit():
         ("history", config.history),
         ("installHistory", config.installHistory),
     )
-    with open("config.py", "w") as fileObj:
+    with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
             fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
         if hasattr(config, "translationLanguage"):

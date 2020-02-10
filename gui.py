@@ -147,38 +147,40 @@ class MainWindow(QMainWindow):
 
     def setTranslation(self):
         updateNeeded = False
-        if config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage") and hasattr(myTranslation, "translation"):
+        languages = Languages()
+        if config.userLanguageInterface and hasattr(myTranslation, "translation"):
             # Check for missing items. Use Google Translate to translate the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
-            languages = Languages()
-            code = languages.codes[config.userLanguage]
             for key, value in languages.translation.items():
                 if not key in myTranslation.translation:
-                    if googletransSupport and config.translationLanguage == config.userLanguage:
+                    if googletransSupport and hasattr(myTranslation, "translationLanguage"):
                         try:
-                            myTranslation.translation[key] = Translator().translate(value, dest=code).text
+                            languageCode = languages.codes[myTranslation.translationLanguage]
+                            myTranslation.translation[key] = Translator().translate(value, dest=languageCode).text
                         except:
                             myTranslation.translation[key] = value
                     else:
                         myTranslation.translation[key] = value
                     updateNeeded = True
+            # set thisTranslation to customised translation
+            config.thisTranslation = myTranslation.translation
             # update myTranslation.py
             if updateNeeded:
                 try:
-                    languages.writeMyTranslation(myTranslation.translation)
+                    languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
                 except:
                     print("Failed to update 'myTranslation.py'.")
-            config.thisTranslation = myTranslation.translation
-        elif config.userLanguage and config.userLanguageInterface and hasattr(config, "translationLanguage"):
-            languages = Languages()
-            code = languages.codes[config.translationLanguage]
-            if code in translations:
-                config.thisTranslation = translations[code]
+                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_newInterfaceItems"], config.thisTranslation["message_improveTrans"]))
+        elif config.userLanguageInterface and hasattr(config, "translationLanguage"):
+            languageCode = languages.codes[config.translationLanguage]
+            if languageCode in translations:
+                # set thisTranslation to provided translation
+                config.thisTranslation = translations[languageCode]
             else:
-                config.thisTranslation = Languages().translation
+                # set thisTranslation to default English translation
+                config.thisTranslation = languages.translation
         else:
-            config.thisTranslation = Languages().translation
-        if updateNeeded:
-            self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_newInterfaceItems"], config.thisTranslation["message_improveTrans"]))
+            # set thisTranslation to default English translation
+            config.thisTranslation = languages.translation
 
     def translateInterface(self):
         if googletransSupport:
@@ -194,14 +196,23 @@ class MainWindow(QMainWindow):
         else:
             self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
 
+    def isMyTranslationAvailable(self):
+        if hasattr(myTranslation, "translation") and hasattr(myTranslation, "translationLanguage"):
+            return True
+        else:
+            return False
+
+    def isOfficialTranslationAvailable(self):
+        if hasattr(config, "translationLanguage") and Languages().codes[config.translationLanguage] in translations:
+            return True
+        else:
+            return False
+
     def toogleInterfaceTranslation(self):
-        if not hasattr(config, "translationLanguage") and not config.userLanguageInterface:
+        if not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable():
             self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_translateFirst"]))
         else:
-            if config.userLanguageInterface:
-                config.userLanguageInterface = False
-            else:
-                config.userLanguageInterface = True
+            config.userLanguageInterface = not config.userLanguageInterface
             self.displayMessage(config.thisTranslation["message_restart"])
 
     # base folder for webViewEngine
@@ -429,7 +440,7 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_moreConfig"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addSeparator()
-        if not hasattr(config, "translationLanguage") or (hasattr(config, "translationLanguage") and not config.translationLanguage == config.userLanguage):
+        if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
             menu1.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
         menu1.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
@@ -1547,7 +1558,7 @@ class MainWindow(QMainWindow):
             # save html in a separate file if text is larger than 2MB
             # reason: setHTML does not work with content larger than 2MB
             outputFile = os.path.join("htmlResources", "main.html")
-            fileObject = open(outputFile, 'w')
+            fileObject = open(outputFile, "w", encoding="utf-8")
             fileObject.write(text)
             fileObject.close()
             # open the text file with webview
@@ -1610,7 +1621,7 @@ class MainWindow(QMainWindow):
             # save html in a separate file if text is larger than 2MB
             # reason: setHTML does not work with content larger than 2MB
             outputFile = os.path.join("htmlResources", "study.html")
-            fileObject = open(outputFile, 'w')
+            fileObject = open(outputFile, "w", encoding="utf-8")
             fileObject.write(text)
             fileObject.close()
             # open the text file with webview
@@ -4593,7 +4604,7 @@ class NoteEditor(QMainWindow):
 
     def openNoteFile(self, fileName):
         try:
-            f = open(fileName, "r")
+            f = open(fileName, "r", encoding="utf-8")
         except:
             print("Failed to open '{0}'".format(fileName))
         note = f.read()
@@ -4654,7 +4665,7 @@ class NoteEditor(QMainWindow):
             note = self.editor.toHtml()
         else:
             note = self.editor.toPlainText()
-        f = open(fileName,'w')
+        f = open(fileName, "w", encoding="utf-8")
         f.write(note)
         f.close()
         self.noteFileName = fileName

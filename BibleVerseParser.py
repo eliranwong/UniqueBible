@@ -40,7 +40,7 @@ import os
 # Create file "config.py" if it is missing.
 # The following two lines are written for use of this parser outside UniqueBible.app
 if not os.path.isfile("config.py"):
-    open("config.py", "a").close()
+    open("config.py", "w", encoding="utf-8").close()
 
 # import modules, which are ESSENTIAL for running BibleVerseParser
 import re, glob, config, sys
@@ -97,7 +97,7 @@ class BibleVerseParser:
     def checkConfig(self):
         if not hasattr(config, "standardAbbreviation"):
             config.standardAbbreviation = "ENG"
-            with open("config.py", "w") as fileObj:
+            with open("config.py", "w", encoding="utf-8") as fileObj:
                 name, value = ("standardAbbreviation = ", config.standardAbbreviation),
                 fileObj.write(name+pprint.pformat(value))
 
@@ -210,7 +210,7 @@ class BibleVerseParser:
         outputFile = os.path.join(path, "tagged_{0}".format(file))
 
         # open file and read input text
-        with open(inputFile, "r") as f:
+        with open(inputFile, "r", encoding="utf-8") as f:
             newData = f.read()
 
         if newData:
@@ -227,7 +227,7 @@ class BibleVerseParser:
                 print("Original verse reference format is reserved.")
 
             # save output text in a separate file
-            with open(outputFile, "w") as f:
+            with open(outputFile, "w", encoding="utf-8") as f:
                 f.write(newData)
                 print("New file is saved as '{0}'.".format(outputFile))
         else:

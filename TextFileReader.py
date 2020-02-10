@@ -22,7 +22,7 @@ class TextFileReader:
 
     def readTxtFile(self, fileName):
         try:
-            f = open(fileName,'r')
+            f = open(fileName, "r", encoding="utf-8")
             text = f.read()
             f.close()
             return text
@@ -31,7 +31,7 @@ class TextFileReader:
 
     def readPdfFile(self, fileName):
         try:
-            pdfObject = open(fileName,'rb')
+            pdfObject = open(fileName, "rb")
             pdfReader = PyPDF2.PdfFileReader(pdfObject)
             text = "\n\n".join([pdfReader.getPage(pageNum).extractText() for pageNum in range(0, pdfReader.numPages)])
             pdfObject.close()

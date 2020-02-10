@@ -380,11 +380,9 @@ class Languages:
         code = self.codes[language]
         print(code)
         if code in translations:
-            print("available")
             config.translationLanguage = language
             return True
         else:
-        #elif not platform.system() == "Windows":
             print("translating interface into '{0}' ...".format(language))
             translator = Translator()
             tempDict = {}
@@ -393,15 +391,15 @@ class Languages:
                     tempDict[key] = translator.translate(value, dest=code).text
                 except:
                     tempDict[key] = value
-            config.translationLanguage = language
-            self.writeMyTranslation(tempDict)
+            #config.translationLanguage = language
+            self.writeMyTranslation(tempDict, language)
             print("Done")
             return True
         return False
 
-    def writeMyTranslation(self, translationDict):
+    def writeMyTranslation(self, translationDict, language):
         with open("myTranslation.py", "w", encoding="utf-8") as fileObj:
-            content = "translation = {0}\n".format(pprint.pformat(translationDict))
+            content = "translationLanguage = {0}\ntranslation = {1}\n".format(pprint.pformat(language), pprint.pformat(translationDict))
             fileObj.write(content)
 
     def createTranslationTemplates(self):
@@ -418,7 +416,7 @@ class Languages:
 #                        tempDict[key] = translator.translate(value, dest=code).text
 #                    except:
 #                        tempDict[key] = value
-                with open("translations.py", "a") as fileObj:
+                with open("translations.py", "a", encoding="utf-8") as fileObj:
                     code = code.replace("-", "")
                     fileObj.write("uB{0} = {1}\n\n".format(code, pprint.pformat(tempDict)))
 

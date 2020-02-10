@@ -1,3 +1,9 @@
+Latest changes in version 14.0:
+* Fixed encoding issue on saving customised program interface translation in myTranslation.py.
+* Corrected checking availability of program interface translation.
+* Removed French and Korean translations from translations.py.
+* All text files are now read / written with encoding "utf-8" specified, to avoid potential encoding issues when the app is running on Windows.
+
 Latest changes in version 13.9:
 * Fixed loading translated program interface on Windows.  For description on translation feature, you may read https://github.com/eliranwong/UniqueBible/wiki/translate_program_interface
 * Moved customised translation of program interface from config.py to myTranslation.py.
@@ -20,7 +26,7 @@ Latest changes in version 13.8:
 * To create a reference book module from file types mentioned above:
     1. create a folder.
     2. name the folder as you want to name the book module you are about to create.
-    3. place files of supported file types in this folder.
+    3. place files of supported file types in this folder.  [Remarks: Individual filenames are used for chapter titles.]
     4. select from menu "Books > Create a Reference Book from ... Files".
     5. select the "folder" created in step (1) above.
 
