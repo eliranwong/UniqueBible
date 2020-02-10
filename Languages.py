@@ -381,6 +381,7 @@ class Languages:
         print(code)
         if code in translations:
             config.translationLanguage = language
+            open("myTranslation.py", "w", encoding="utf-8").close()
             return True
         else:
             print("translating interface into '{0}' ...".format(language))
