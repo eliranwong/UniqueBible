@@ -389,7 +389,6 @@ class Languages:
             translator = Translator()
             tempDict = {}
             for key, value in self.translation.items():
-                tempDict[key] = value
                 try:
                     tempDict[key] = translator.translate(value, dest=code).text
                 except:
@@ -401,7 +400,7 @@ class Languages:
         return False
 
     def writeMyTranslation(self, translationDict):
-        with open("myTranslation.py", "w") as fileObj:
+        with open("myTranslation.py", "w", encoding="utf-8") as fileObj:
             content = "translation = {0}\n".format(pprint.pformat(translationDict))
             fileObj.write(content)
 
