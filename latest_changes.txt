@@ -5,11 +5,11 @@ Latest changes in version 13.8:
     - UniqueBible.app Note Files (*.uba)
 * Book creation features are accessible via menu under section "Books".
 * To create a reference book module from file types mentioned above:
-    1. create a folder
-    2. name the folder as you want to name the book module you want to create
-    3. place files of supported file types in this folder
-    4. select from menu "Books > Create a Reference Book from ... Files"
-    5. select the "folder" created in step 1 above
+    1. create a folder.
+    2. name the folder as you want to name the book module you are about to create.
+    3. place files of supported file types in this folder.
+    4. select from menu "Books > Create a Reference Book from ... Files".
+    5. select the "folder" created in step (1) above.
 
 Latest changes in version 13.7:
 * Added ability to export and open embedded images, when book modules are displayed on new window.
