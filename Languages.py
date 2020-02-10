@@ -1,4 +1,4 @@
-import config, pprint, platform
+import config, pprint, platform, myTranslation
 from translations import translations
 # [Optional] Google-translate
 try:
@@ -378,10 +378,10 @@ class Languages:
 
     def translateInterface(self, language):
         code = self.codes[language]
-        print(code)
         if code in translations:
             config.translationLanguage = language
-            open("myTranslation.py", "w", encoding="utf-8").close()
+            if hasattr(myTranslation, "translation"):
+                open("myTranslation.py", "w", encoding="utf-8").close()
             return True
         else:
             print("translating interface into '{0}' ...".format(language))

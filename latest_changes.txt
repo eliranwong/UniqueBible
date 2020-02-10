@@ -1,3 +1,6 @@
+Latest changes in version 14.1:
+* Removed duplication of program interface translation.
+
 Latest changes in version 14.0:
 * Fixed encoding issue on saving customised program interface translation in myTranslation.py.
 * Corrected checking availability of program interface translation.
