@@ -1,4 +1,4 @@
-import os, sqlite3, config, re, json
+import os, sqlite3, config, re, json, base64
 from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
@@ -30,6 +30,60 @@ class Converter:
                 insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
                 cursor.executemany(insert, content)
                 connection.commit()
+
+    def createBookModuleFromImages(self, folder):
+        module = os.path.basename(folder)
+        bookContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() in (".png", ".jpg", ".jpeg", ".bmp", ".gif"):
+                # read a binary file
+                with open(os.path.join(folder, filepath), "rb") as fileObject:
+                    binaryData = fileObject.read()
+                    encodedData = base64.b64encode(binaryData)
+                    binaryString = encodedData.decode("ascii")
+                    htmlTag = '<img src="data:image/{2};base64,{0}" alt="{1}">'.format(binaryString, fileBasename, fileExtension[1:])
+                    bookContent.append((fileName, htmlTag))
+        if bookContent and module:
+            self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
+
+    def createBookModuleFromHTML(self, folder):
+        module = os.path.basename(folder)
+        bookContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() in (".htm", ".html"):
+                with open(os.path.join(folder, filepath), "r") as fileObject:
+                    html = fileObject.read()
+                    html = BibleVerseParser(config.parserStandarisation).parseText(html)
+                    bookContent.append((fileName, html))
+        if bookContent and module:
+            self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
+
+    def createBookModuleFromNotes(self, folder):
+        module = os.path.basename(folder)
+        bookContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() == ".uba":
+                with open(os.path.join(folder, filepath), "r") as fileObject:
+                    note = fileObject.read()
+                    note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                    bookContent.append((fileName, note))
+        if bookContent and module:
+            self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
 
     # create UniqueBible.app book modules
     def createBookModule(self, module, content, blobData=None):

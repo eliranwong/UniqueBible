@@ -517,7 +517,10 @@ class MainWindow(QMainWindow):
         menu10.addAction(QAction(config.thisTranslation["menu10_dialog"], self, triggered=self.openBookDialog))
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
-        #menu10.addAction(QAction(config.thisTranslation["menu10_displayContent"], self, triggered=self.toggleDisplayBookContent))
+        menu10.addSeparator()
+        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
+        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
+        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
@@ -1909,6 +1912,39 @@ class MainWindow(QMainWindow):
                 self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def createBookModuleFromImages(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                config.thisTranslation["menu10_bookFromImages"],
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createBookModuleFromImages(directory):
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def createBookModuleFromHTML(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                config.thisTranslation["menu10_bookFromHtml"],
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createBookModuleFromHTML(directory):
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def createBookModuleFromNotes(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                config.thisTranslation["menu10_bookFromNotes"],
+                self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createBookModuleFromNotes(directory):
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])

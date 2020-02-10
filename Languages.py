@@ -367,6 +367,9 @@ class Languages:
         "menu5_last3rdDict": "The Last Opened Third Party Dictionary",
         "menu8_marvelData": "Database Files",
         "menu8_download3rdParty": "Download 3rd Party Modules",
+        'menu10_bookFromImages': 'Create a Reference Book from Image Files',
+        'menu10_bookFromHtml': 'Create a Reference Book from HTML Files',
+        'menu10_bookFromNotes': 'Create a Reference Book from Note Files',
     }
 
     def translateInterface(self, language):
