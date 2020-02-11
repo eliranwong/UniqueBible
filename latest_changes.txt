@@ -1,3 +1,6 @@
+Latest changes in version 14.2:
+* Fixed an issue that images cannot be opened with external application when book is loaded on a new window.
+
 Latest changes in version 14.1:
 * Removed duplication of program interface translation.
 

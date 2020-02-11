@@ -2782,12 +2782,13 @@ class MainWindow(QMainWindow):
             }
             # add hovering action to bible reference links
             searchReplace = (
-                ('document.title="BIBLE:::(.*?)"{0}'.format("'"), r'document.title="BIBLE:::\1"{0} onmouseover={0}document.title="_imvr:::\1"{0}'.format("'")),
+                ('{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"), r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
                 ('onclick=[{0}"]bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv(\1,\2,\3)" onmouseover="imv(\1,\2,\3)"'),
                 ('onclick=[{0}"]cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), self.convertCrLink),
             )
             for search, replace in searchReplace:
                 html = re.sub(search, replace, html)
+            print(html)
             # load into widget view
             if view == "study":
                 newCommand = (self.studyView.currentIndex(), textCommand)
@@ -3609,6 +3610,9 @@ class WebEngineViewPopover(QWebEngineView):
         self.addMenuActions()
 
     def popoverTextCommandChanged(self, newTextCommand):
+        config.lastOpenedFile = ""
+        config.lastOpenedUrl = ""
+        config.lastOpenedImage = ""
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
