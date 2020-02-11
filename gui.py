@@ -2788,7 +2788,6 @@ class MainWindow(QMainWindow):
             )
             for search, replace in searchReplace:
                 html = re.sub(search, replace, html)
-            print(html)
             # load into widget view
             if view == "study":
                 newCommand = (self.studyView.currentIndex(), textCommand)
