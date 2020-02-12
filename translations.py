@@ -262,6 +262,7 @@ translations = {
         'noteTool_header2': '标题 2',
         'noteTool_header3': '标题 3',
         'menu10_clearBookHighlights': '清除搜索结果亮点',
+        'menu1_reload': '重新开启上一纪录',
     },
     "zh-TW": {
        'bar1_chapterNotes': '聖經窗口的聖經章註釋',
@@ -526,5 +527,6 @@ translations = {
         'noteTool_header2': '標題 2',
         'noteTool_header3': '標題 3',
         'menu10_clearBookHighlights': '清除搜索結果亮點',
+        'menu1_reload': '重新開啟上一紀錄',
     },
 }

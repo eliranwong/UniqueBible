@@ -485,6 +485,8 @@ class MainWindow(QMainWindow):
         menu3.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
         menu3.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
         menu3.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
+        menu3.addSeparator()
+        menu3.addAction(QAction(config.thisTranslation["menu1_reload"], self, triggered=self.reloadCurrentRecord))
 
         menu4 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu4_further"]))
         menu4.addAction(QAction(config.thisTranslation["menu4_book"], self, triggered=self.bookFeatures))
@@ -900,6 +902,15 @@ class MainWindow(QMainWindow):
 
         self.secondToolBar.addSeparator()
 
+        reloadButton = QPushButton()
+        reloadButton.setToolTip(config.thisTranslation["menu1_reload"])
+        reloadButtonFile = os.path.join("htmlResources", "reload.png")
+        reloadButton.setIcon(QIcon(reloadButtonFile))
+        reloadButton.clicked.connect(self.reloadCurrentRecord)
+        self.secondToolBar.addWidget(reloadButton)
+
+        self.secondToolBar.addSeparator()
+
         self.leftToolBar = QToolBar()
         self.leftToolBar.setWindowTitle(config.thisTranslation["bar3_title"])
         self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -1302,6 +1313,11 @@ class MainWindow(QMainWindow):
 
         iconFile = os.path.join("htmlResources", "youtube.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "reload.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)
 
         self.secondToolBar.addSeparator()
 

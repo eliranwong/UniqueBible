@@ -374,6 +374,7 @@ class Languages:
         "noteTool_header2": "Header 2",
         "noteTool_header3": "Header 3",
         "menu10_clearBookHighlights": "Clear Search Result Highlights",
+        "menu1_reload": "Reload the Last Opened Records",
     }
 
     def translateInterface(self, language):

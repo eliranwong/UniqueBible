@@ -1,3 +1,6 @@
+Latest changes in version 14.4:
+* Added a "Refresh" button on second toolbar.
+
 Latest changes in version 14.3:
 * Fixed automatically scrolling to the first instance of book search result when a chapter is opened.
 * Corrected two chapter titles in Maps_ASB.
