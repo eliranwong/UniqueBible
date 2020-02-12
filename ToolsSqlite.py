@@ -733,7 +733,7 @@ class Book:
                         content = re.sub(p, r"\1\2", content)
                         s = p.search(content)
             # add an id so as to scroll to the first result
-            content = re.sub("^(.*?)<z>", r"\1<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content)
+            content = re.sub("<z>", r"<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
             # return content
             return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, entry, content, '"')
 

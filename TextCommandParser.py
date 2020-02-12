@@ -516,7 +516,7 @@ class TextCommandParser:
         return ((config.marvelData, "collections3.sqlite"), "18dRwEc3SL2Z6JxD1eI1Jm07oIpt9i205")
 
     def getBookInfo(self):
-        return ((config.marvelData, "books", "Kitto_John_Illustrated_History_of_the_Bible.book"), "1g6dUaOz3A71b1gfiFKYvQ2QyH7yeHB9Y")
+        return ((config.marvelData, "books", "Boyce_Abstract_of_Systematic_Theology.book"), "1X-7pkkH10C4AnzxF7wv9kGshlicRmxxN")
 
     def getXRefInfo(self):
         return ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_")
@@ -1664,6 +1664,8 @@ class TextCommandParser:
             modules = ",".join([book for book, *_ in bookData.getBookList()])
         elif modules == "FAV":
             modules = ",".join(config.favouriteBooks)
+            if not config.book in config.favouriteBooks:
+                modules = "{0},{1}".format(config.book, modules)
         if not searchString:
             return self.invalidCommand("study")
         else:

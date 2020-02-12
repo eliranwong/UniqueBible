@@ -1527,7 +1527,7 @@ class MainWindow(QMainWindow):
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
             "Lexicons": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "Atlas, Timelines & Books": ((config.marvelData, "books", "Kitto_John_Illustrated_History_of_the_Bible.book"), "1g6dUaOz3A71b1gfiFKYvQ2QyH7yeHB9Y"),
+            "Atlas, Timelines & Books": ((config.marvelData, "books", "Boyce_Abstract_of_Systematic_Theology.book"), "1X-7pkkH10C4AnzxF7wv9kGshlicRmxxN"),
             "Word Data": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
             "Words Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Clause Data": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
@@ -3603,10 +3603,15 @@ class WebEngineViewPopover(QWebEngineView):
         self.source = source
         self.setWindowTitle("Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
+        self.page().loadFinished.connect(self.finishViewLoading)
 
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
+
+    def finishViewLoading(self):
+        # scroll to the study verse
+        self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def popoverTextCommandChanged(self, newTextCommand):
         config.lastOpenedFile = ""

@@ -1,3 +1,11 @@
+Latest changes in version 14.3:
+* Fixed automatically scrolling to the first instance of book search result when a chapter is opened.
+* Corrected two chapter titles in Maps_ASB.
+* 71 more bible locations added to Maps_NET's Index to enhance search of bible places.
+* Added support of importing multiple MySword book modules placed in a single folder.
+* Renamed a book module from "Boyce.book" to "Boyce_Abstract_of_Systematic_Theology.book".
+* Now include the last open reference book for searching my favourite books.
+
 Latest changes in version 14.2:
 * Fixed an issue that images cannot be opened with external application when book is loaded on a new window.
 
