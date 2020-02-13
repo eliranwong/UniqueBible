@@ -510,6 +510,11 @@ class MainWindow(QMainWindow):
         menu4.addSeparator()
         menu4.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=self.mainRefButtonClicked))
 
+        # check if books in favourite list exist
+        for book in config.favouriteBooks:
+            if not os.path.isfile(os.path.join(config.marvelData, "books", "{0}.book".format(book))):
+                config.favouriteBooks.remove(book)
+
         menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
         if config.favouriteBooks:
             menu10.addAction(QAction(self.getBookName(config.favouriteBooks[0]), self, triggered=self.openFavouriteBook0))
@@ -1543,7 +1548,7 @@ class MainWindow(QMainWindow):
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
             "Lexicons": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "Atlas, Timelines & Books": ((config.marvelData, "books", "Boyce_Abstract_of_Systematic_Theology.book"), "1X-7pkkH10C4AnzxF7wv9kGshlicRmxxN"),
+            "Atlas, Timelines & Books": ((config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd"),
             "Word Data": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
             "Words Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Clause Data": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),

@@ -1,3 +1,8 @@
+Latest changes in version 14.6:
+* The apps now checks availability of books in favourite book list on startup.
+* Added a book module "Maps_ABS.book"
+* Removed some modules from google drive download.  The removed modules will be made available for download in a github repository.
+
 Latest changes in version 14.5:
 * Fixed missing files in version 14.4.
 
