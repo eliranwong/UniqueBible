@@ -511,9 +511,14 @@ class MainWindow(QMainWindow):
         menu4.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=self.mainRefButtonClicked))
 
         # check if books in favourite list exist
-        for book in config.favouriteBooks:
-            if not os.path.isfile(os.path.join(config.marvelData, "books", "{0}.book".format(book))):
-                config.favouriteBooks.remove(book)
+        #for book in config.favouriteBooks:
+            #if not os.path.isfile(os.path.join(config.marvelData, "books", "{0}.book".format(book))):
+                #config.favouriteBooks.remove(book)
+
+        # remove an old book from favourite list if it is not installed
+        book = "Maps_ASB"
+        if not os.path.isfile(os.path.join(config.marvelData, "books", "{0}.book".format(book))) and book in config.favouriteBooks:
+            config.favouriteBooks.remove(book)
 
         menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
         if config.favouriteBooks:

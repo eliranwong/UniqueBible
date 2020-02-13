@@ -234,7 +234,7 @@ if not hasattr(config, "overwriteBookFontSize"):
 # List of favourite book modules
 # Only the first 10 books are shown on menu bar
 if not hasattr(config, "favouriteBooks"):
-    config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ASB", "Maps_NET"]
+    config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ABS", "Maps_NET"]
 # Last string entered for searching book
 if not hasattr(config, "bookSearchString"):
     config.bookSearchString = ""
