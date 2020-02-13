@@ -1,6 +1,6 @@
 Latest changes in version 14.7:
 * Book creation from html files now supports files with extension "*.xhtml"
-******* Tips on converting epub files into UniqueBible.app: *******
+******* Tips on converting epub files into a UniqueBible.app book module: *******
 Step 1. Unzip a epub file:
             - on Windows, you can add an extension ".zip" at the end of a epub filename.  You can then use gui apps to extract all files inside a epub file.
             - on Linux / macOS, you can simply use "unzip" command to unzip an epub file.
