@@ -4,7 +4,7 @@ Latest changes in version 14.7:
 Step 1. Unzip a epub file:
             - on Windows, you can add an extension ".zip" at the end of a epub filename.  You can then use gui apps to extract all files inside a epub file.
             - on Linux / macOS, you can simply use "unzip" command to unzip an epub file.
-Step 2. Locate the folder containing html files (*.htm, *.html, *.xhtml), e.g. \OEBPS\text.
+Step 2. Locate the folder containing html files (*.htm, *.html, *.xhtml), e.g. \OEBPS\Text.  Rename this folder to a name you give to your book module.
 Step 3. Open UniqueBible.app and select from menu "Books > Create a Reference Book from HTML Files".
 Step 4. Select the folder containing html files.  Bible links are automatically parsed in the book creation process.
 
