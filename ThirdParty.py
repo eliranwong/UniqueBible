@@ -57,7 +57,7 @@ class Converter:
         for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
-            if fileExtension.lower() in (".htm", ".html"):
+            if fileExtension.lower() in (".htm", ".html", ".xhtml"):
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
                     html = BibleVerseParser(config.parserStandarisation).parseText(html)
