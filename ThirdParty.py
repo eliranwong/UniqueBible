@@ -145,6 +145,7 @@ class Converter:
 
     # export image files
     def exportImageData(self, module, images):
+        module = module.replace(" ", "_")
         imageFolder = os.path.join("htmlResources", "images", module)
         if not os.path.isdir(imageFolder):
             os.makedirs(imageFolder)
@@ -796,7 +797,7 @@ class Converter:
                 for verse in verses:
                     verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}</b></u></ref><br>{4}'.format(*verse)
                     # convert imageTag
-                    verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation), verseContent)
+                    verseContent = re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(abbreviation.replace(" ", "_")), verseContent)
                     # check if verse number is a standard kjv verse number
                     fromverse = verse[2]
                     item = verseDict.get(fromverse, "not found")
@@ -847,7 +848,7 @@ class Converter:
                 images = cursor.fetchall()
                 if images:
                     # rework imgage link in book content
-                    content = [(chapter, re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(module), chapterContent)) for chapter, chapterContent in content]
+                    content = [(chapter, re.sub(r"<img [^<>]*?src=(['{0}])([^<>]+?)\1[^<>]*?>".format('"'), r"<img src=\1images/{0}/\2\1/>".format(module.replace(" ", "_")), chapterContent)) for chapter, chapterContent in content]
                     # export image data
                     self.exportImageData(module, images)
             # send data to create a UniqueBible book module

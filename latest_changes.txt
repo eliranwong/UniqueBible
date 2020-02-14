@@ -1,3 +1,6 @@
+Latest changes in version 15.0:
+* Improved converter to export images from modules with names containing spaces.
+
 Latest changes in version 14.9:
 * Fixed an issue on opening image file with external application.
 
