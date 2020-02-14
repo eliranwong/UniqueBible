@@ -398,9 +398,13 @@ function bookAbbToNo(bookAbb) {
     return bookNo["b"+bookAbb];
 }
 
+function bcv(b,c,v,opt1,opt2) {
+    tbcv(activeText,b,c,v,opt1,opt2);
+}
+
 function tbcv(text,b,c,v,opt1,opt2) {
     var verseReference = bcvToVerseRefence(b,c,v);
-    if ((opt1 != undefined) && (opt1 != undefined)) {
+    if ((opt1 != undefined) && (opt2 != undefined)) {
         if (c == opt1) {
             verseReference = verseReference+"-"+String(opt2);
         } else {
@@ -412,8 +416,12 @@ function tbcv(text,b,c,v,opt1,opt2) {
     document.title = "BIBLE:::"+text+":::"+verseReference;
 }
 
-function bcv(b,c,v,opt1,opt2) {
-    tbcv(activeText,b,c,v,opt1,opt2);
+function imv(b,c,v,opt1,opt2) {
+    if ((opt1 != undefined) && (opt2 != undefined)) {
+        document.title = "_imv:::"+b+"."+c+"."+v+"."+opt1+"."+opt2;
+    } else {
+        document.title = "_imv:::"+b+"."+c+"."+v;
+    }
 }
 
 function ctbcv(text,b,c,v) {
@@ -472,10 +480,6 @@ function iw(book, wordID) {
     if (book != '' && wordID != '') {
         document.title = "_instantWord:::"+book+":::"+wordID;
     }
-}
-
-function imv(b, c, v) {
-    document.title = "_imv:::"+b+"."+c+"."+v;
 }
 
 function qV(v) {
