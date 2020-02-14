@@ -1,3 +1,6 @@
+Latest changes in version 14.9:
+* Fixed an issue on opening image file with external application.
+
 Latest changes in version 14.8:
 * Improved hovering over bible reference links.  The app now supports display of multiple verses together with favourite version on "Bottom Window".
 

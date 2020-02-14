@@ -1623,7 +1623,7 @@ class MainWindow(QMainWindow):
         return "src={0}images/export/{1}{0}".format(quotationMark, imageFilename)
 
     def addOpenImageAction(self, text):
-        return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick=openHtmlFile('\3')>\1\2\3\2\4</ref>", text)
+        return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
     def openTextOnStudyView(self, text):
         if config.exportEmbeddedImages:
