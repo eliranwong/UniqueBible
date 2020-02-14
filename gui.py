@@ -2809,8 +2809,9 @@ class MainWindow(QMainWindow):
             # add hovering action to bible reference links
             searchReplace = (
                 ('{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"), r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
-                ('onclick=[{0}"]bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), r'onclick="bcv(\1,\2,\3)" onmouseover="imv(\1,\2,\3)"'),
-                ('onclick=[{0}"]cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)[{0}"]'.format("'"), self.convertCrLink),
+                (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
+                (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
+                (r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
             )
             for search, replace in searchReplace:
                 html = re.sub(search, replace, html)
@@ -2842,7 +2843,7 @@ class MainWindow(QMainWindow):
         self.instantPage.runJavaScript(changeTitle)
 
     def convertCrLink(self, match):
-        b, c, v = match.groups()
+        *_, b, c, v = match.groups()
         bookNo = Converter().convertMyBibleBookNo(int(b))
         return 'onclick="bcv({0},{1},{2})" onmouseover="imv({0},{1},{2})"'.format(bookNo, c, v)
 
@@ -3058,7 +3059,7 @@ class CentralWidget(QWidget):
             self.studyView.addTab(WebEngineView(self, "study"), "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
 
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<u><b>Bottom Window</b></u><br>It is designed for displaying instant information, with mouse hovering over verse numbers, tagged words or links.", baseUrl)
+        self.instantView.setHtml("<p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), baseUrl)
 
         self.layout = QGridLayout()
         self.layout.setContentsMargins(0, 10, 0, 3)

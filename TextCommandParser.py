@@ -1159,18 +1159,15 @@ class TextCommandParser:
     def instantMainVerseReference(self, command, source):
         verseList = self.extractAllVerses(command)
         if verseList:
-            return self.instantMainVerse("{0}.{1}.{2}".format(*verseList[0]), source)
+            return self.instantMainVerse(".".join([str(i) for i in verseList[0]]), source)
         else:
             return ("", "")
 
     # _imv:::
     def instantMainVerse(self, command, source):
-        if config.instantInformationEnabled:
-            b, c, v, *_ = [int(i) for i in command.split(".")]
-            biblesSqlite = BiblesSqlite()
-            b, c, v, verseText = biblesSqlite.readTextVerse(config.mainText, b, c, v)
-            del biblesSqlite
-            info = "<hl>{0}</hl> {1}".format(self.bcvToVerseReference(b, c, v), verseText)
+        if config.instantInformationEnabled and command:
+            bcvList = [int(i) for i in command.split(".")]
+            info = BiblesSqlite().readMultipleVerses(config.mainText, [bcvList])
             if config.mainText in config.rtlTexts and b < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
             return ("instant", info)
