@@ -4453,19 +4453,26 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
+        imageButton = QPushButton()
+        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
+        imageButtonFile = os.path.join("htmlResources", "addImage.png")
+        imageButton.setIcon(QIcon(imageButtonFile))
+        imageButton.clicked.connect(self.addInternalImage)
+        self.toolBar.addWidget(imageButton)
+
+        imageButton = QPushButton()
+        imageButton.setToolTip(config.thisTranslation["noteTool_externalImage"])
+        imageButtonFile = os.path.join("htmlResources", "gallery.png")
+        imageButton.setIcon(QIcon(imageButtonFile))
+        imageButton.clicked.connect(self.openImageDialog)
+        self.toolBar.addWidget(imageButton)
+
         hyperlinkButton = QPushButton()
         hyperlinkButton.setToolTip(config.thisTranslation["noteTool_hyperlink"])
         hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
         hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
         hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
         self.toolBar.addWidget(hyperlinkButton)
-
-        imageButton = QPushButton()
-        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
-        imageButtonFile = os.path.join("htmlResources", "gallery.png")
-        imageButton.setIcon(QIcon(imageButtonFile))
-        imageButton.clicked.connect(self.openImageDialog)
-        self.toolBar.addWidget(imageButton)
 
         self.toolBar.addSeparator()
 
@@ -4524,11 +4531,14 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "hyperlink.png")
-        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_hyperlink"], self.openHyperlinkDialog)
+        iconFile = os.path.join("htmlResources", "addImage.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_image"], self.addInternalImage)
 
         iconFile = os.path.join("htmlResources", "gallery.png")
-        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_image"], self.openImageDialog)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_externalImage"], self.openImageDialog)
+
+        iconFile = os.path.join("htmlResources", "hyperlink.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_hyperlink"], self.openHyperlinkDialog)
 
         self.toolBar.addSeparator()
 
@@ -4837,7 +4847,36 @@ class NoteEditor(QMainWindow):
         row = "".join(["<td>{0}</td>".format(cell) for cell in row.split("|")])
         return "<table><tr>{0}</tr></table>".format(row)
 
-    def addImage(self, fileName):
+    def addInternalImage(self):
+        self.openImageDialog(external=False)
+
+    def openImageDialog(self, external=True):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                config.thisTranslation["html_open"],
+                self.parent.openFileNameLabel.text(),
+                "JPG Files (*.jpg);;JPEG Files (*.jpeg);;PNG Files (*.png);;GIF Files (*.gif);;BMP Files (*.bmp);;All Files (*)", "", options)
+        if fileName:
+            if external:
+                self.linkExternalImage(fileName)
+            else:
+                self.embedImage(fileName)
+
+    def embedImage(self, fileName):
+        name, extension = os.path.splitext(os.path.basename(fileName))
+        with open(fileName, "rb") as fileObject:
+            binaryData = fileObject.read()
+            encodedData = base64.b64encode(binaryData)
+            asciiString = encodedData.decode('ascii')
+            imageTag = '<img src="data:image/{2};base64,{0}" alt="{1}">'.format(asciiString, name, extension[1:])
+            if self.html:
+                self.editor.insertHtml(imageTag)
+            else:
+                self.editor.insertPlainText(imageTag)
+        self.hide()
+        self.show()
+
+    def linkExternalImage(self, fileName):
         imageTag = '<img src="{0}" alt="UniqueBible.app">'.format(fileName)
         if self.html:
             self.editor.insertHtml(imageTag)
@@ -4846,14 +4885,7 @@ class NoteEditor(QMainWindow):
         self.hide()
         self.show()
 
-    def openImageDialog(self):
-        options = QFileDialog.Options()
-        fileName, filtr = QFileDialog.getOpenFileName(self,
-                config.thisTranslation["html_open"],
-                self.parent.openFileNameLabel.text(),
-                "JPG Files (*.jpg);;JPEG Files (*.jpeg);;PNG Files (*.png);;GIF Files (*.gif);;BMP Files (*.bmp);;All Files (*)", "", options)
-        if fileName:
-            self.addImage(fileName)
+
 
     def addHyperlink(self, hyperlink):
         hyperlink = '<a href="{0}">{0}</a>'.format(hyperlink)

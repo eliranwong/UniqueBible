@@ -1,3 +1,6 @@
+Latest changes in version 15.1:
+* Note editor can now "Embed an Image" within a note.  "Embed an Image" is different from "Link to an External Image File" that the image is stored within a note.  Remarks: Embedding an image within a note increases file size of the note.
+
 Latest changes in version 15.0:
 * Improved converter to export images from modules with names containing spaces.
 
