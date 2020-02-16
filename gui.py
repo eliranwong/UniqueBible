@@ -3,7 +3,7 @@ from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox, QFontDialog)
+from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox, QFontDialog, QColorDialog)
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -4161,6 +4161,7 @@ class NoteEditor(QMainWindow):
     def switchMode(self):
         if self.html:
             note = self.editor.toHtml()
+            note = re.sub("<body style={0}[ ]*?font-family:[ ]*?'[^']*?';[ ]*?font-size:[ ]*?[0-9]+?pt;".format('"'), "<body style={0}font-family:'{1}'; font-size:{2}pt;".format('"', config.font, config.fontSize), note)
             self.editor.setPlainText(note)
             self.html = False
             self.updateWindowTitle()
@@ -4229,15 +4230,6 @@ class NoteEditor(QMainWindow):
 
         self.menuBar.addSeparator()
 
-        toolBarButton = QPushButton()
-        toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
-        toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
-        toolBarButton.setIcon(QIcon(toolBarButtonFile))
-        toolBarButton.clicked.connect(self.toogleToolbar)
-        self.menuBar.addWidget(toolBarButton)
-
-        self.menuBar.addSeparator()
-
         switchButton = QPushButton()
         switchButton.setToolTip(config.thisTranslation["note_mode"])
         switchButtonFile = os.path.join("htmlResources", "switch.png")
@@ -4247,27 +4239,36 @@ class NoteEditor(QMainWindow):
 
         self.menuBar.addSeparator()
 
-        decreaseFontSizeButton = QPushButton()
-        decreaseFontSizeButton.setToolTip(config.thisTranslation["menu2_smaller"])
-        decreaseFontSizeButtonFile = os.path.join("htmlResources", "fontMinus.png")
-        decreaseFontSizeButton.setIcon(QIcon(decreaseFontSizeButtonFile))
-        decreaseFontSizeButton.clicked.connect(self.decreaseNoteEditorFontSize)
-        self.menuBar.addWidget(decreaseFontSizeButton)
+#        decreaseFontSizeButton = QPushButton()
+#        decreaseFontSizeButton.setToolTip(config.thisTranslation["menu2_smaller"])
+#        decreaseFontSizeButtonFile = os.path.join("htmlResources", "fontMinus.png")
+#        decreaseFontSizeButton.setIcon(QIcon(decreaseFontSizeButtonFile))
+#        decreaseFontSizeButton.clicked.connect(self.decreaseNoteEditorFontSize)
+#        self.menuBar.addWidget(decreaseFontSizeButton)
+#
+#        increaseFontSizeButton = QPushButton()
+#        increaseFontSizeButton.setToolTip(config.thisTranslation["menu2_larger"])
+#        increaseFontSizeButtonFile = os.path.join("htmlResources", "fontPlus.png")
+#        increaseFontSizeButton.setIcon(QIcon(increaseFontSizeButtonFile))
+#        increaseFontSizeButton.clicked.connect(self.increaseNoteEditorFontSize)
+#        self.menuBar.addWidget(increaseFontSizeButton)
 
-        increaseFontSizeButton = QPushButton()
-        increaseFontSizeButton.setToolTip(config.thisTranslation["menu2_larger"])
-        increaseFontSizeButtonFile = os.path.join("htmlResources", "fontPlus.png")
-        increaseFontSizeButton.setIcon(QIcon(increaseFontSizeButtonFile))
-        increaseFontSizeButton.clicked.connect(self.increaseNoteEditorFontSize)
-        self.menuBar.addWidget(increaseFontSizeButton)
-
-        self.menuBar.addSeparator()
+#        self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
         self.searchLineEdit.setToolTip(config.thisTranslation["menu5_search"])
-        self.searchLineEdit.setMaximumWidth(300)
+        self.searchLineEdit.setMaximumWidth(400)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
+
+        self.menuBar.addSeparator()
+
+        toolBarButton = QPushButton()
+        toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
+        toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
+        toolBarButton.setIcon(QIcon(toolBarButtonFile))
+        toolBarButton.clicked.connect(self.toogleToolbar)
+        self.menuBar.addWidget(toolBarButton)
 
         self.menuBar.addSeparator()
 
@@ -4301,29 +4302,29 @@ class NoteEditor(QMainWindow):
 
         self.menuBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "toolbar.png")
-        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toogleToolbar)
-
-        self.menuBar.addSeparator()
-
         iconFile = os.path.join("htmlResources", "switch.png")
         self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_mode"], self.switchMode)
 
         self.menuBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "fontMinus.png")
-        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_smaller"], self.decreaseNoteEditorFontSize)
+#        iconFile = os.path.join("htmlResources", "fontMinus.png")
+#        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_smaller"], self.decreaseNoteEditorFontSize)
+#
+#        iconFile = os.path.join("htmlResources", "fontPlus.png")
+#        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_larger"], self.increaseNoteEditorFontSize)
 
-        iconFile = os.path.join("htmlResources", "fontPlus.png")
-        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_larger"], self.increaseNoteEditorFontSize)
-
-        self.menuBar.addSeparator()
+#        self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
         self.searchLineEdit.setToolTip("{0}\n[Ctrl/Cmd + F]".format(config.thisTranslation["menu5_search"]))
-        self.searchLineEdit.setMaximumWidth(300)
+        self.searchLineEdit.setMaximumWidth(400)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
+
+        self.menuBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "toolbar.png")
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toogleToolbar)
 
         self.menuBar.addSeparator()
 
@@ -4358,6 +4359,29 @@ class NoteEditor(QMainWindow):
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
+
+        fontButton = QPushButton()
+        fontButton.setToolTip(config.thisTranslation["noteTool_textFont"])
+        fontButtonFile = os.path.join("htmlResources", "font.png")
+        fontButton.setIcon(QIcon(fontButtonFile))
+        fontButton.clicked.connect(self.format_font)
+        self.toolBar.addWidget(fontButton)
+
+        fontButton = QPushButton()
+        fontButton.setToolTip(config.thisTranslation["noteTool_textColor"])
+        fontButtonFile = os.path.join("htmlResources", "textColor.png")
+        fontButton.setIcon(QIcon(fontButtonFile))
+        fontButton.clicked.connect(self.format_textColor)
+        self.toolBar.addWidget(fontButton)
+
+        fontButton = QPushButton()
+        fontButton.setToolTip(config.thisTranslation["noteTool_textBackgroundColor"])
+        fontButtonFile = os.path.join("htmlResources", "textBgColor.png")
+        fontButton.setIcon(QIcon(fontButtonFile))
+        fontButton.clicked.connect(self.format_textBackgroundColor)
+        self.toolBar.addWidget(fontButton)
+
+        self.toolBar.addSeparator()
 
         headerButton = QPushButton()
         headerButton.setToolTip(config.thisTranslation["noteTool_header1"])
@@ -4453,12 +4477,12 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        imageButton = QPushButton()
-        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
-        imageButtonFile = os.path.join("htmlResources", "addImage.png")
-        imageButton.setIcon(QIcon(imageButtonFile))
-        imageButton.clicked.connect(self.addInternalImage)
-        self.toolBar.addWidget(imageButton)
+        hyperlinkButton = QPushButton()
+        hyperlinkButton.setToolTip(config.thisTranslation["noteTool_hyperlink"])
+        hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
+        hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
+        hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
+        self.toolBar.addWidget(hyperlinkButton)
 
         imageButton = QPushButton()
         imageButton.setToolTip(config.thisTranslation["noteTool_externalImage"])
@@ -4467,12 +4491,21 @@ class NoteEditor(QMainWindow):
         imageButton.clicked.connect(self.openImageDialog)
         self.toolBar.addWidget(imageButton)
 
-        hyperlinkButton = QPushButton()
-        hyperlinkButton.setToolTip(config.thisTranslation["noteTool_hyperlink"])
-        hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
-        hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
-        hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
-        self.toolBar.addWidget(hyperlinkButton)
+        self.toolBar.addSeparator()
+
+        imageButton = QPushButton()
+        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
+        imageButtonFile = os.path.join("htmlResources", "addImage.png")
+        imageButton.setIcon(QIcon(imageButtonFile))
+        imageButton.clicked.connect(self.addInternalImage)
+        self.toolBar.addWidget(imageButton)
+
+        imageButton = QPushButton()
+        imageButton.setToolTip(config.thisTranslation["noteTool_exportImage"])
+        imageButtonFile = os.path.join("htmlResources", "export.png")
+        imageButton.setIcon(QIcon(imageButtonFile))
+        imageButton.clicked.connect(self.exportNoteImages)
+        self.toolBar.addWidget(imageButton)
 
         self.toolBar.addSeparator()
 
@@ -4484,6 +4517,17 @@ class NoteEditor(QMainWindow):
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
+
+        iconFile = os.path.join("htmlResources", "font.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_textFont"], self.format_font)
+
+        iconFile = os.path.join("htmlResources", "textColor.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_textColor"], self.format_textColor)
+
+        iconFile = os.path.join("htmlResources", "textBgColor.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_textBackgroundColor"], self.format_textBackgroundColor)
+
+        self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "header1.png")
         self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_header1"], self.format_header1)
@@ -4531,14 +4575,19 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "addImage.png")
-        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_image"], self.addInternalImage)
+        iconFile = os.path.join("htmlResources", "hyperlink.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_hyperlink"], self.openHyperlinkDialog)
 
         iconFile = os.path.join("htmlResources", "gallery.png")
         self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_externalImage"], self.openImageDialog)
 
-        iconFile = os.path.join("htmlResources", "hyperlink.png")
-        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_hyperlink"], self.openHyperlinkDialog)
+        self.toolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "addImage.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_image"], self.addInternalImage)
+
+        iconFile = os.path.join("htmlResources", "export.png")
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_exportImage"], self.exportNoteImages)
 
         self.toolBar.addSeparator()
 
@@ -4626,7 +4675,17 @@ class NoteEditor(QMainWindow):
     def newNoteFileAction(self):
         self.noteType = "file"
         self.noteFileName = ""
-        self.editor.clear()
+        #self.editor.clear()
+        defaultText = """
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li {0} white-space: pre-wrap; {1}
+</style></head><body style="font-family:'{2}'; font-size:{3}pt; font-weight:400; font-style:normal;">
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>""".format("{", "}", config.font, config.fontSize)
+        if self.html:
+            self.editor.setHtml(defaultText)
+        else:
+            self.editor.setPlainText(defaultText)
         self.parent.noteSaved = True
         self.updateWindowTitle()
         self.hide()
@@ -4723,92 +4782,118 @@ class NoteEditor(QMainWindow):
     def format_clear(self):
         selectedText = self.editor.textCursor().selectedText()
         if self.html:
+            selectedText = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, selectedText)
             self.editor.insertHtml(selectedText)
         else:
             selectedText = re.sub("<[^\n<>]*?>", "", selectedText)
             self.editor.insertPlainText(selectedText)
-        self.hide()
-        self.show()
 
     def format_header1(self):
         if self.html:
             self.editor.insertHtml("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
         else:
             self.editor.insertPlainText("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_header2(self):
         if self.html:
             self.editor.insertHtml("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
         else:
             self.editor.insertPlainText("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_header3(self):
         if self.html:
             self.editor.insertHtml("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
         else:
             self.editor.insertPlainText("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
+
+    def format_font(self):
+        ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
+        if ok:
+            if self.html:
+                self.editor.setCurrentFont(font)
+            else:
+                fontFamily, fontSize, i1, i2, fontWeight, italic, underline, strikeout, *_ = font.key().split(",")
+                spanTag = """<span style="font-family:'{0}'; font-size:{1}pt;""".format(fontFamily, fontSize)
+                # add font weight
+                if fontWeight == "25":
+                    spanTag += " font-weight:200;"
+                elif fontWeight == "75":
+                    spanTag += " font-weight:600;"
+                # add italic style
+                if italic == "1":
+                    spanTag += " font-style:italic;"
+                # add both underline and strikeout style
+                if underline == "1" and strikeout == "1":
+                    spanTag += " text-decoration: underline line-through;"
+                # add underline style
+                elif underline == "1":
+                    spanTag += " text-decoration: underline;"
+                # add strikeout style
+                elif strikeout == "1":
+                    spanTag += " text-decoration: line-through;"
+                # close tag
+                spanTag += '">'
+                self.editor.insertPlainText("{0}{1}</span>".format(spanTag, self.editor.textCursor().selectedText()))
+
+    def format_textColor(self):
+        color = QColorDialog.getColor(Qt.darkRed, self)
+        if color.isValid():
+            if self.html:
+                self.editor.setTextColor(color)
+            else:
+                self.editor.insertPlainText('<span style="color:{0};">{1}</span>'.format(color.name(), self.editor.textCursor().selectedText()))
+
+    def format_textBackgroundColor(self):
+        color = QColorDialog.getColor(Qt.yellow, self)
+        if color.isValid():
+            if self.html:
+                self.editor.setTextBackgroundColor(color)
+            else:
+                self.editor.insertPlainText('<span style="background-color:{0};">{1}</span>'.format(color.name(), self.editor.textCursor().selectedText()))
 
     def format_bold(self):
         if self.html:
+            # Reference: https://doc.qt.io/qt-5/qfont.html#Weight-enum
+            # Bold = 75
             self.editor.setFontWeight(75)
         else:
             self.editor.insertPlainText("<b>{0}</b>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_italic(self):
         if self.html:
             self.editor.setFontItalic(True)
         else:
             self.editor.insertPlainText("<i>{0}</i>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_underline(self):
         if self.html:
             self.editor.setFontUnderline(True)
         else:
             self.editor.insertPlainText("<u>{0}</u>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_center(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignCenter)
         else:
             self.editor.insertPlainText("<div style='text-align:center;'>{0}</div>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_justify(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignJustify)
         else:
             self.editor.insertPlainText("<div style='text-align:justify;'>{0}</div>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_left(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignLeft)
         else:
             self.editor.insertPlainText("<div style='text-align:left;'>{0}</div>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_right(self):
         if self.html:
             self.editor.setAlignment(Qt.AlignRight)
         else:
             self.editor.insertPlainText("<div style='text-align:right;'>{0}</div>".format(self.editor.textCursor().selectedText()))
-        self.hide()
-        self.show()
 
     def format_custom(self):
         selectedText = self.editor.textCursor().selectedText()
@@ -4817,8 +4902,6 @@ class NoteEditor(QMainWindow):
             self.editor.insertHtml(selectedText)
         else:
             self.editor.insertPlainText(selectedText)
-        self.hide()
-        self.show()
 
     def customFormat(self, text):
         # QTextEdit's line break character by pressing ENTER in plain & html mode " "
@@ -4840,6 +4923,8 @@ class NoteEditor(QMainWindow):
         # convert back to QTextEdit linebreak
         text = text.replace("\n", " ")
 
+        # wrap with default font and font-size
+        text = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, text)
         return text
 
     def formatHTMLTable(self, match):
@@ -4873,8 +4958,25 @@ class NoteEditor(QMainWindow):
                 self.editor.insertHtml(imageTag)
             else:
                 self.editor.insertPlainText(imageTag)
-        self.hide()
-        self.show()
+
+    def exportNoteImages(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                config.thisTranslation["select_a_folder"],
+                self.parent.directoryLabel.text(), options)
+        if directory:
+            if self.html:
+                htmlText = self.editor.toHtml()
+            else:
+                htmlText = self.editor.toPlainText()
+            searchPattern = r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'")
+            for counter, value in enumerate(re.findall(searchPattern, htmlText)):
+                *_, ext, asciiString = value
+                binaryString = asciiString.encode("ascii")
+                binaryData = base64.b64decode(binaryString)
+                imageFilePath = os.path.join(directory, "image{0}.{1}".format(counter + 1, ext))
+                with open(imageFilePath, "wb") as fileObject:
+                    fileObject.write(binaryData)
 
     def linkExternalImage(self, fileName):
         imageTag = '<img src="{0}" alt="UniqueBible.app">'.format(fileName)
@@ -4882,19 +4984,14 @@ class NoteEditor(QMainWindow):
             self.editor.insertHtml(imageTag)
         else:
             self.editor.insertPlainText(imageTag)
-        self.hide()
-        self.show()
-
-
 
     def addHyperlink(self, hyperlink):
-        hyperlink = '<a href="{0}">{0}</a>'.format(hyperlink)
+        hyperlink = '<a href="{0}">{1}</a>'.format(hyperlink, self.editor.textCursor().selectedText())
+        hyperlink = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, hyperlink)
         if self.html:
             self.editor.insertHtml(hyperlink)
         else:
             self.editor.insertPlainText(hyperlink)
-        self.hide()
-        self.show()
 
     def openHyperlinkDialog(self):
         selectedText = self.editor.textCursor().selectedText()
@@ -4902,8 +4999,8 @@ class NoteEditor(QMainWindow):
             hyperlink = selectedText
         else:
             hyperlink = "https://BibleTools.app"
-        text, ok = QInputDialog.getText(self, "Add a hyperlink ...",
-                "Hyperlink:", QLineEdit.Normal,
+        text, ok = QInputDialog.getText(self, "UniqueBible.app",
+                config.thisTranslation["noteTool_hyperlink"], QLineEdit.Normal,
                 hyperlink)
         if ok and text != '':
             self.addHyperlink(text)

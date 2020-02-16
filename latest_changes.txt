@@ -1,3 +1,13 @@
+Latest changes in version 15.2:
+* Improved built-in "Note Editor":
+    - now all new notes use the app's default font and font size.
+    - improved updating of changes in formatting
+    - added a function and a button to export "embedded" embedded images to a folder.
+    - added a function and a button to set font of selected text.
+    - added a function and a button to set colour of selected text.
+    - added a function and a button to set background colour of selected text.
+    - rearranged buttons
+
 Latest changes in version 15.1:
 * Note editor can now "Embed an Image" within a note.  "Embed an Image" is different from "Link to an External Image File" that the image is stored within a note.  Remarks: Embedding an image within a note increases file size of the note.
 
