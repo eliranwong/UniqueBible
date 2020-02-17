@@ -196,12 +196,12 @@ class Languages:
         "menu6_mainVerse": "Bible Window's Bible Verse Notes",
         "menu6_studyVerse": "Study Window's Bible Verse Notes",
         "menu6_searchVerses": "Search Bible Verse Notes",
-        "menu7_topics": "Note Editor",
-        "menu7_create": "Write a New File",
-        "menu7_open": "Open a File",
+        "menu7_topics": "Note Files",
+        "menu7_create": "Create a New File",
+        "menu7_open": "Open an Existing File",
         "menu7_recent": "Recently Opened Files",
-        "menu7_read": "Read Last Opened File",
-        "menu7_edit": "Edit Last Opened File",
+        "menu7_read": "Read the Last Opened File",
+        "menu7_edit": "Edit the Last Opened File",
         "menu7_paste": "Paste from Clipboard",
         "menu8_resources": "Resources",
         "menu8_bibles": "Install Formatted Bible",
@@ -381,6 +381,8 @@ class Languages:
         "menu10_clearBookHighlights": "Clear Search Result Highlights",
         "menu1_reload": "Reload the Last Opened Records",
         "select_a_folder": "Select a Folder",
+        "bar2_commentarySyncEnabled": "Commentary in Sync with Main Window",
+        "bar2_commentarySyncDisabled": "Commentary out of Sync with Main Window",
     }
 
     def translateInterface(self, language):

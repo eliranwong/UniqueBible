@@ -828,6 +828,13 @@ class MainWindow(QMainWindow):
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
 
+        self.enableSyncCommentaryButton = QPushButton()
+        self.enableSyncCommentaryButton.setToolTip(self.getSyncCommentaryDisplayToolTip())
+        enableSyncCommentaryButtonFile = os.path.join("htmlResources", self.getSyncCommentaryDisplay())
+        self.enableSyncCommentaryButton.setIcon(QIcon(enableSyncCommentaryButtonFile))
+        self.enableSyncCommentaryButton.clicked.connect(self.enableSyncCommentaryButtonClicked)
+        self.secondToolBar.addWidget(self.enableSyncCommentaryButton)
+
         self.secondToolBar.addSeparator()
 
         openFileButton = QPushButton()
@@ -1273,6 +1280,9 @@ class MainWindow(QMainWindow):
         self.commentaryRefButton.setStyleSheet(textButtonStyle)
         self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
         self.secondToolBar.addWidget(self.commentaryRefButton)
+
+        iconFile = os.path.join("htmlResources", self.getSyncCommentaryDisplay())
+        self.enableSyncCommentaryButton = self.secondToolBar.addAction(QIcon(iconFile), self.getSyncCommentaryDisplayToolTip(), self.enableSyncCommentaryButtonClicked)
 
         self.secondToolBar.addSeparator()
 
@@ -2443,6 +2453,27 @@ class MainWindow(QMainWindow):
         availableGeometry = qApp.desktop().availableGeometry()
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
+    # Actions - enable or disable sync commentary
+    def getSyncCommentaryDisplay(self):
+        if config.syncCommentaryWithMainWindow:
+            return "sync.png"
+        else:
+            return "noSync.png"
+
+    def getSyncCommentaryDisplayToolTip(self):
+        if config.syncCommentaryWithMainWindow:
+            return config.thisTranslation["bar2_commentarySyncEnabled"]
+        else:
+            return config.thisTranslation["bar2_commentarySyncDisabled"]
+
+    def enableSyncCommentaryButtonClicked(self):
+        config.syncCommentaryWithMainWindow = not config.syncCommentaryWithMainWindow
+        enableSyncCommentaryButtonFile = os.path.join("htmlResources", self.getSyncCommentaryDisplay())
+        self.enableSyncCommentaryButton.setIcon(QIcon(enableSyncCommentaryButtonFile))
+        self.enableSyncCommentaryButton.setToolTip(self.getSyncCommentaryDisplayToolTip())
+        if config.syncCommentaryWithMainWindow:
+            self.reloadCurrentRecord()
+
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
@@ -2621,6 +2652,9 @@ class MainWindow(QMainWindow):
     def updateMainRefButton(self):
         self.mainTextMenuButton.setText(self.verseReference("main")[0])
         self.mainRefButton.setText(self.verseReference("main")[1])
+        if config.syncCommentaryWithMainWindow:
+            newTextCommand = "COMMENTARY2:::{0}.{1}.{2}".format(config.mainB, config.mainC, config.mainV)
+            self.runTextCommand(newTextCommand, True, "study")
 
     def updateStudyRefButton(self):
         self.studyTextMenuButton.setText(self.verseReference("study")[0])
@@ -5095,6 +5129,7 @@ class MoreConfigOptions(QDialog):
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
+            ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow, self.parent.enableSyncCommentaryButtonClicked),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),

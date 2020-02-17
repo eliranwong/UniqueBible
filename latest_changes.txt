@@ -1,3 +1,7 @@
+Latest changes in version 15.3:
+* Added an option to sync commentary with Main Window's verse reference.
+* Revised wordings under menu section "Note Files"
+
 Latest changes in version 15.2:
 * Improved built-in "Note Editor":
     - now all new notes use the app's default font and font size.
