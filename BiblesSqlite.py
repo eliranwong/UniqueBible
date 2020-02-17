@@ -719,7 +719,7 @@ input.addEventListener('keyup', function(event) {0}
                 if not v == 1:
                     chapter += "<br>"
                 chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
-            chapter += "{0}<vid>{1}{2}</ref></vid> ".format(divTag, self.formVerseTag(b, c, v, text), v)
+            chapter += '{0}<vid id="v{1}.{2}.{3}" onclick="luV({3})" onmouseover="qV({3})" ondblclick="mV({3})">{3}</vid> '.format(divTag, b, c, v)
             # add note indicator
             if v in noteVerseList:
                 chapter += '<ref onclick="nV({0})">&#9997</ref> '.format(v)

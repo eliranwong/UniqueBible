@@ -1,3 +1,6 @@
+Latest changes in version 15.5:
+* Corrected Bottom Window's content when a verse number is hovered on a bible chapter in simple style format.
+
 Latest changes in version 15.4:
 * Added an option to show note indicators on bible chapters.  This feature can be enabled / disabled through menu item "Select more ...".  If this feature is enabled, a writing hand icons appear next to verse numbers or chapter heading if notes are available.
 * Items on dialog "Select more ..." are now arranged on two columns.
