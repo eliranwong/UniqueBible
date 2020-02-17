@@ -2474,6 +2474,10 @@ class MainWindow(QMainWindow):
         if config.syncCommentaryWithMainWindow:
             self.reloadCurrentRecord()
 
+    def enableNoteIndicatorButtonClicked(self):
+        config.showNoteIndicatorOnBibleChapter = not config.showNoteIndicatorOnBibleChapter
+        self.reloadCurrentRecord()
+
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
@@ -5124,45 +5128,59 @@ class MoreConfigOptions(QDialog):
 
         readWiki = QLabel(config.thisTranslation["message_readWiki"])
         layout.addWidget(readWiki)
+        readWiki = QLabel("https://github.com/eliranwong/UniqueBible/wiki/config_file")
+        layout.addWidget(readWiki)
 
-        options = (
+        horizontalContainer = QWidget()
+        horizontalContainerLayout = QHBoxLayout()
+
+        leftContainer = QWidget()
+        leftContainerLayout = QVBoxLayout()
+        rightContainer = QWidget()
+        rightContainerLayout = QVBoxLayout()
+
+        options = [
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
+            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
             ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow, self.parent.enableSyncCommentaryButtonClicked),
+            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
             ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged),
             ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
-            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged),
-        )
-        for name, value, function in options:
+        ]
+        if platform.system() == "Linux":
+            options += [
+                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
+                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
+                ("ibus", config.ibus, self.ibusChanged),
+            ]
+        for counter, content in enumerate(options):
+            name, value, function = content
             checkbox = QCheckBox()
             checkbox.setText(name)
             checkbox.setChecked(value)
             checkbox.stateChanged.connect(function)
-            layout.addWidget(checkbox)
+            if counter % 2 == 0:
+                leftContainerLayout.addWidget(checkbox)
+            else:
+                rightContainerLayout.addWidget(checkbox)
 
-        if platform.system() == "Linux":
-            options = (
-                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
-                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
-                ("ibus", config.ibus, self.ibusChanged),
-            )
-            for name, value, function in options:
-                checkbox = QCheckBox()
-                checkbox.setText(name)
-                checkbox.setChecked(value)
-                checkbox.stateChanged.connect(function)
-                layout.addWidget(checkbox)
-
+        leftContainer.setLayout(leftContainerLayout)
+        rightContainer.setLayout(rightContainerLayout)
+        horizontalContainerLayout.addWidget(leftContainer)
+        horizontalContainerLayout.addWidget(rightContainer)
+        horizontalContainer.setLayout(horizontalContainerLayout)
+        layout.addWidget(horizontalContainer)
         self.setLayout(layout)
 
     def virtualKeyboardChanged(self):

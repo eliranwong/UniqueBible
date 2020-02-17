@@ -2,6 +2,7 @@
 Reading data from bibles.sqlite
 """
 import os, sqlite3, config, re
+from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
 try:
@@ -694,9 +695,19 @@ input.addEventListener('keyup', function(event) {0}
         return verses
 
     def readPlainChapter(self, text, verse):
-        # expect bcv is a tuple
+        # expect verse is a tuple
         b, c, v, *_ = verse
-        chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        # format a chapter
+        chapter = "<h2>{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        # get a verse list of available notes
+        noteVerseList = []
+        if config.showNoteIndicatorOnBibleChapter:
+            noteSqlite = NoteSqlite()
+            noteVerseList = noteSqlite.getChapterVerseList(b, c)
+            if noteSqlite.isChapterNote(b, c):
+                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
+            del noteSqlite
+        chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
@@ -708,7 +719,11 @@ input.addEventListener('keyup', function(event) {0}
                 if not v == 1:
                     chapter += "<br>"
                 chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
-            chapter += "{0}<vid>{1}{2}</ref></vid> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), v, verseText)
+            chapter += "{0}<vid>{1}{2}</ref></vid> ".format(divTag, self.formVerseTag(b, c, v, text), v)
+            # add note indicator
+            if v in noteVerseList:
+                chapter += '<ref onclick="nV({0})">&#9997</ref> '.format(v)
+            chapter += "{0}</div>".format(verseText)
         return chapter
 
 
@@ -786,22 +801,35 @@ class Bible:
     def readFormattedChapter(self, verse):
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
-        chapter = "<h2>{0}{1}</ref></h2>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        chapter = "<h2>{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
         del biblesSqlite
+        self.thisVerseNoteList = []
+        if config.showNoteIndicatorOnBibleChapter:
+            noteSqlite = NoteSqlite()
+            self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
+            if noteSqlite.isChapterNote(b, c):
+                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
+            del noteSqlite
+        chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
         if scripture:
-            chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', scripture[0])
-            if not scripture:
-                return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
-            else:
-                divTag = "<div>"
-                if self.text in config.rtlTexts and b < 40:
-                    divTag = "<div style='direction: rtl;'>"
-                return "{0}{1}</div>".format(divTag, chapter)
+            chapter += re.sub('onclick="luV\(([0-9]+?)\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
+            divTag = "<div>"
+            if self.text in config.rtlTexts and b < 40:
+                divTag = "<div style='direction: rtl;'>"
+            return "{0}{1}</div>".format(divTag, chapter)
         else:
             return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
+
+    def formatVerseNumber(self, match):
+        v, tagEnding = match.groups()
+        verseTag = 'onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding)
+        v = int(v)
+        if v in self.thisVerseNoteList:
+            verseTag += ' <ref onclick="nV({0})">&#9997</ref>'.format(v)
+        return verseTag
 
     def readBiblenote(self, bcvi):
         b, c, v, i = bcvi.split(".")

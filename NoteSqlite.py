@@ -88,6 +88,19 @@ class NoteSqlite:
         self.cursor.execute(query, (searchString,))
         return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]
 
+    def getChapterVerseList(self, b, c):
+        query = "SELECT DISTINCT Verse FROM VerseNote WHERE Book=? AND Chapter=? ORDER BY Verse"
+        self.cursor.execute(query, (b, c))
+        return [verse[0] for verse in self.cursor.fetchall()]
+
+    def isChapterNote(self, b, c):
+        query = "SELECT DISTINCT Chapter FROM ChapterNote WHERE Book=? AND Chapter=?"
+        self.cursor.execute(query, (b, c))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
+
     def highlightSearch(self, content):
         highlight = config.noteSearchString
         if highlight and not highlight == "z":

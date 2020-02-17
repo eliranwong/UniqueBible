@@ -201,7 +201,10 @@ if not hasattr(config, "favouriteBible"):
 # Options to display "favouriteBible" together with the main version for reading multiple references: True / False
 if not hasattr(config, "addFavouriteToMultiRef"):
     config.addFavouriteToMultiRef = False
-# sync commentary with changes verse references on Main Window
+# Options to show note indicator on bible chapter: True / False
+if not hasattr(config, "showNoteIndicatorOnBibleChapter"):
+    config.showNoteIndicatorOnBibleChapter = True
+# Options sync commentary with changes verse references on Main Window: True / False
 if not hasattr(config, "syncCommentaryWithMainWindow"):
     config.syncCommentaryWithMainWindow = False
 # Last-opened commentary text and passage
@@ -381,6 +384,7 @@ def saveDataOnExit():
         ("mainV", config.mainV),
         ("favouriteBible", config.favouriteBible),
         ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
+        ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
         ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),
         ("studyText", config.studyText),
         ("studyB", config.studyB),

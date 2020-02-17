@@ -1,3 +1,7 @@
+Latest changes in version 15.4:
+* Added an option to show note indicators on bible chapters.  This feature can be enabled / disabled through menu item "Select more ...".  If this feature is enabled, a writing hand icons appear next to verse numbers or chapter heading if notes are available.
+* Items on dialog "Select more ..." are now arranged on two columns.
+
 Latest changes in version 15.3:
 * Added an option to sync commentary with Main Window's verse reference.
 * Revised wordings under menu section "Note Files"
