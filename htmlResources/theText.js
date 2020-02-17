@@ -490,6 +490,14 @@ function mV(v) {
     document.title = "_menu:::"+activeText+"."+activeB+"."+activeC+"."+v;
 }
 
+function nV(v) {
+    document.title = "_openversenote:::"+activeB+"."+activeC+"."+v;
+}
+
+function nC(v) {
+    document.title = "_openchapternote:::"+activeB+"."+activeC;
+}
+
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
