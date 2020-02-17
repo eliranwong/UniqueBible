@@ -494,7 +494,7 @@ function nV(v) {
     document.title = "_openversenote:::"+activeB+"."+activeC+"."+v;
 }
 
-function nC(v) {
+function nC() {
     document.title = "_openchapternote:::"+activeB+"."+activeC;
 }
 
