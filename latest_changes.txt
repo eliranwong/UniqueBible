@@ -1,3 +1,7 @@
+Latest changes in version 15.6:
+* Fixed loading book commentary.
+* Improved highlighting results of searching bible notes.
+
 Latest changes in version 15.5:
 * Corrected Bottom Window's content when a verse number is hovered on a bible chapter in simple style format.
 

@@ -590,6 +590,8 @@ class MainWindow(QMainWindow):
         menu6.addAction(QAction(config.thisTranslation["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
         menu6.addAction(QAction(config.thisTranslation["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
         menu6.addAction(QAction(config.thisTranslation["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
+        menu6.addSeparator()
+        menu6.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearNoteHighlights))
 
         menu7 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
         menu7.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
@@ -2209,6 +2211,10 @@ class MainWindow(QMainWindow):
 
     def clearBookHighlights(self):
         config.bookSearchString = ""
+        self.reloadCurrentRecord()
+
+    def clearNoteHighlights(self):
+        config.noteSearchString = ""
         self.reloadCurrentRecord()
 
     def displaySearchFavBookCommand(self):

@@ -110,4 +110,6 @@ class NoteSqlite:
             while s:
                 content = re.sub(p, r"\1\2", content)
                 s = p.search(content)
+            # add an id so as to scroll to the first result
+            content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
         return content

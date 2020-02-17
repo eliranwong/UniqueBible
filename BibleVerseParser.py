@@ -189,9 +189,9 @@ class BibleVerseParser:
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
         # final clean up
-        searchPattern = '(<ref onclick="bcv[^>]*?)([\(, ])0'
+        searchPattern = '(<ref onclick="bcv[^>]*?)([\(, ])0([1-9])'
         searchReplace = (
-            (searchPattern, r'\1\2'),
+            (searchPattern, r'\1\2\3'),
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 

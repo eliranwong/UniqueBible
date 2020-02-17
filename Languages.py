@@ -378,7 +378,7 @@ class Languages:
         "noteTool_textFont": "Text Font",
         "noteTool_textColor": "Text Color",
         "noteTool_textBackgroundColor": "Text Background Color",
-        "menu10_clearBookHighlights": "Clear Search Result Highlights",
+        "menu10_clearBookHighlights": "Clear Highlights of Search Result",
         "menu1_reload": "Reload the Last Opened Records",
         "select_a_folder": "Select a Folder",
         "bar2_commentarySyncEnabled": "Commentary in Sync with Main Window",
