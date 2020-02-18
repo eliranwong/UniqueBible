@@ -1720,7 +1720,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)), b, c)
+        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)), b, c, config.font, config.fontSize)
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
@@ -1736,7 +1736,7 @@ class MainWindow(QMainWindow):
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
         noteSqlite = NoteSqlite()
-        note = "<p><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)), b, c, v)
+        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)), b, c, v, config.font, config.fontSize)
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
@@ -4706,8 +4706,11 @@ class NoteEditor(QMainWindow):
         elif self.noteType == "verse":
             note = noteSqlite.getVerseNote((self.b, self.c, self.v))
         del noteSqlite
-        #self.editor.setPlainText(note)
-        self.editor.setHtml(note)
+        note = self.fixNoteFont(note)
+        if self.html:
+            self.editor.setHtml(note)
+        else:
+            self.editor.setPlainText(note)
 
     # File I / O
     def newNoteFile(self):
@@ -4759,6 +4762,7 @@ p, li {0} white-space: pre-wrap; {1}
         f.close()
         self.noteType = "file"
         self.noteFileName = fileName
+        note = self.fixNoteFont(note)
         if self.html:
             self.editor.setHtml(note)
         else:
@@ -4773,6 +4777,7 @@ p, li {0} white-space: pre-wrap; {1}
             note = self.editor.toHtml()
         else:
             note = self.editor.toPlainText()
+        note = self.fixNoteFont(note)
         if self.noteType == "chapter":
             noteSqlite = NoteSqlite()
             noteSqlite.saveChapterNote((self.b, self.c, note))
@@ -4813,6 +4818,7 @@ p, li {0} white-space: pre-wrap; {1}
             note = self.editor.toHtml()
         else:
             note = self.editor.toPlainText()
+        note = self.fixNoteFont(note)
         f = open(fileName, "w", encoding="utf-8")
         f.write(note)
         f.close()
@@ -4821,6 +4827,9 @@ p, li {0} white-space: pre-wrap; {1}
         self.parent.setExternalFileButton()
         self.parent.noteSaved = True
         self.updateWindowTitle()
+
+    def fixNoteFont(self, note):
+        return re.sub("<body style={0}[ ]*?font-family:[ ]*?'[^']*?';[ ]*?font-size:[ ]*?[0-9]+?pt;".format('"'), "<body style={0}font-family:'{1}'; font-size:{2}pt;".format('"', config.font, config.fontSize), note)
 
     # formatting styles
     def format_clear(self):

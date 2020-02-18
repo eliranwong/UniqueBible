@@ -1,3 +1,6 @@
+Latest changes in version 15.7:
+* Improved handing of default font and font-size on note editor.
+
 Latest changes in version 15.6:
 * Fixed loading book commentary.
 * Improved highlighting results of searching bible notes.
