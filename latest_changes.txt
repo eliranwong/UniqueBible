@@ -1,3 +1,6 @@
+Latest changes in version 15.8:
+* Open new chapter / verse note on Note Editor with default font and font-size.
+
 Latest changes in version 15.7:
 * Improved handing of default font and font-size on note editor.
 

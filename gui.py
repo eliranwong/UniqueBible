@@ -4698,6 +4698,14 @@ class NoteEditor(QMainWindow):
 
         self.parent.noteSaved = True
 
+    def getEmptyPage(self):
+        return """
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li {0} white-space: pre-wrap; {1}
+</style></head><body style="font-family:'{2}'; font-size:{3}pt; font-weight:400; font-style:normal;">
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>""".format("{", "}", config.font, config.fontSize)
+
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
         noteSqlite = NoteSqlite()
@@ -4706,7 +4714,10 @@ class NoteEditor(QMainWindow):
         elif self.noteType == "verse":
             note = noteSqlite.getVerseNote((self.b, self.c, self.v))
         del noteSqlite
-        note = self.fixNoteFont(note)
+        if note == config.thisTranslation["empty"]:
+            note = self.getEmptyPage()
+        else:
+            note = self.fixNoteFont(note)
         if self.html:
             self.editor.setHtml(note)
         else:
@@ -4723,12 +4734,7 @@ class NoteEditor(QMainWindow):
         self.noteType = "file"
         self.noteFileName = ""
         #self.editor.clear()
-        defaultText = """
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-<html><head><meta name="qrichtext" content="1" /><style type="text/css">
-p, li {0} white-space: pre-wrap; {1}
-</style></head><body style="font-family:'{2}'; font-size:{3}pt; font-weight:400; font-style:normal;">
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>""".format("{", "}", config.font, config.fontSize)
+        defaultText = self.getEmptyPage()
         if self.html:
             self.editor.setHtml(defaultText)
         else:

@@ -383,6 +383,7 @@ class Languages:
         "select_a_folder": "Select a Folder",
         "bar2_commentarySyncEnabled": "Commentary in Sync with Main Window",
         "bar2_commentarySyncDisabled": "Commentary out of Sync with Main Window",
+        "empty": "[empty]",
     }
 
     def translateInterface(self, language):

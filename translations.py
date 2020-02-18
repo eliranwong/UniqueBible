@@ -271,6 +271,7 @@ translations = {
         'noteTool_textBackgroundColor': '文字背景颜色',
         'bar2_commentarySyncEnabled': '圣经注释现正与圣经窗口同步',
         'bar2_commentarySyncDisabled': '圣经注释没有与圣经窗口同步',
+        'empty': '[空白]',
     },
     "zh-TW": {
        'bar1_chapterNotes': '聖經窗口的聖經章註釋',
@@ -544,5 +545,6 @@ translations = {
         'noteTool_textBackgroundColor': '文字背景顏色',
         'bar2_commentarySyncEnabled': '聖經註釋現正與聖經窗口同步',
         'bar2_commentarySyncDisabled': '聖經註釋沒有與聖經窗口同步',
+        'empty': '[空白]',
     },
 }
