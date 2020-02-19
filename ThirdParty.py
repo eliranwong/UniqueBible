@@ -1043,13 +1043,14 @@ class Converter:
 
     def convertMyBibleBibleTags(self, text, book, strong_numbers_prefix):
         if config.importInterlinear:
-            # deal with format like ΕΝ<S>1722</S><m>PREP</m><n> В</n>
             wordTag = "heb"
             if book >= 40 or strong_numbers_prefix == "G":
                 wordTag = "grk"
-            text = text.replace("<br/>", "＠")
-            text = re.sub("([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)<n>([^<>]+?)</n>", r'<div class="int"><wform><{0}>\1</{0}></wform><br>\2<br>\3<br><wgloss>\4</wgloss></div> '.format(wordTag), text)
-            text = re.sub('(<div class="int"><wform><grk>)(<u><b>.*?</b></u><br><br>)', r"\2\1", text)
+            text = re.sub("<br/>|<br>", "＠", text)
+            # convert format like "The book <n>Βίβλος</n><S>976</S><m>N-NSF</m>"
+            text = re.sub("([^＠]+?)<n>([^<>]+?)</n>(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)", r'<div class="int"><wgloss>\1</wgloss>＠<wform><{0}>\2</{0}></wform>＠\3＠\4</div> '.format(wordTag), text)
+            # convert format like "Βίβλος<S>976</S><m>N-NSF</m> <n>The book</n>"
+            text = re.sub("([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)[ ]*?<n>([^＠]+?)</n>", r'<div class="int"><wform><{0}>\1</{0}></wform><br>\2<br>\3<br><wgloss>\4</wgloss></div> '.format(wordTag), text)
         if book >= 40 or strong_numbers_prefix == "G":
             text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}G\1{0})'>G\1</ref></sup>".format('"'), text)
         else:
