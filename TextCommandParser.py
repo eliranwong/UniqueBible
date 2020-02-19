@@ -143,6 +143,8 @@ class TextCommandParser:
             # To work on multiple bilbes, separate bible versions with a character "_":
             # e.g. SHOWSEARCH:::KJV_WEB:::love
             "showsearch": self.textSearchBasic,
+            # [KEYWORD] SEARCHREFERENCE
+            "searchreference": self.textSearchReference,
             # [KEYWORD] ADVANCEDSEARCH
             # Feature - Search bible / bibles for a sql string
             # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
@@ -1407,6 +1409,10 @@ class TextCommandParser:
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef)
 
+    # SEARCHREFERECE:::
+    def textSearchReference(self, command, source):
+        return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef, referenceOnly=True)
+
     # ADVANCEDSEARCH:::
     def textSearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
@@ -1426,7 +1432,7 @@ class TextCommandParser:
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
     # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH:::
-    def textSearch(self, command, source, mode, interlinear=False):
+    def textSearch(self, command, source, mode, favouriteVersion=False, referenceOnly=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
@@ -1435,7 +1441,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, commandList[1], interlinear) for text in texts])
+            searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, commandList[1], favouriteVersion, referenceOnly) for text in texts])
             del biblesSqlite
             return ("study", searchResult)
 

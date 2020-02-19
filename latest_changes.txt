@@ -1,3 +1,8 @@
+Latest changes in version 16.0:
+* Moved "Wiki Pages" to menu section "Information"
+* Added a command keyword "SEARCHREFERENCE".  For example, entering command "SEARCHREFERENCE:::KJV:::love" shows verse references of verses containing the word "love".
+* "SEARCHREFERENCE" feature is also accessible by selecting "SEARCHREFERENCE" on search bible menu or by clicking the link "***" on search result page.
+
 Latest changes in version 15.9:
 * Fixed errors on hovering over bible references.
 * Added an import option to import Interlinear Bible.  Currently, only MyBible modules formatted as interlinear bibles are supported.

@@ -447,7 +447,6 @@ class MainWindow(QMainWindow):
             menu1.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
         menu1.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
-        menu1.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
         menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, triggered=self.manageRemoteControl))
@@ -640,6 +639,8 @@ class MainWindow(QMainWindow):
 
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
+            menu9.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
+            menu9.addSeparator()
             menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
             menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))
             menu9.addAction(QAction("Marvel.bible", self, triggered=self.openMarvelBible))
@@ -3634,7 +3635,6 @@ class WebEngineView(QWebEngineView):
             references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
             qApp.clipboard().setText(references)
         del parser
-            
 
     def runAsCommand(self):
         selectedText = self.selectedText()

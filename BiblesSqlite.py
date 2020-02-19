@@ -256,7 +256,7 @@ class BiblesSqlite:
                 defaultSearchText = config.mainText
             menu += "<hr><b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(defaultSearchText, config.thisTranslation["html_searchBible2"])
             menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
-            for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
             menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
@@ -267,7 +267,7 @@ class BiblesSqlite:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br><br><input type='text' id='multiBibleSearch' style='width:95%'><br><br>"
-            for searchMode in ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
             menu += self.inputEntered("bibleSearch", "SEARCH")
@@ -512,7 +512,7 @@ input.addEventListener('keyup', function(event) {0}
         searchFunction = "searchBibleBook"
         bookList = self.getBookList(text)
         bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
-        content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}.</p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
+        content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}. <ref onclick='document.title=\"SEARCHREFERENCE:::{1}:::{2}\"'>***</ref></p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
         for counter, bookCount in enumerate(bookCountList):
             book = bookList[counter]
             bookAbb = self.bcvToVerseReference(book, 1, 1)[:-4]
@@ -535,7 +535,7 @@ input.addEventListener('keyup', function(event) {0}
             del bible
             return count
 
-    def searchBible(self, text, mode, searchString, interlinear=False):
+    def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
                 searchString = self.removeVowelAccent(searchString)
 
@@ -547,7 +547,10 @@ input.addEventListener('keyup', function(event) {0}
         elif text in formattedBibleList:
             query = "SELECT * FROM Verses WHERE "
         if mode == "BASIC":
-            searchCommand = "SHOWSEARCH"
+            if referenceOnly:
+                searchCommand = "SEARCHREFERENCE"
+            else:
+                searchCommand = "SHOWSEARCH"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
@@ -564,38 +567,42 @@ input.addEventListener('keyup', function(event) {0}
             verses = bible.getSearchVerses(query, t)
             del bible
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
-        for verse in verses:
-            b, c, v, verseText = verse
-            if b < 40 and text in config.rtlTexts:
-                divTag = "<div style='direction: rtl;'>"
-            else:
-                divTag = "<div>"
-            formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
-            if interlinear and not config.favouriteBible == text:
-                if b < 40 and config.favouriteBible in config.rtlTexts:
-                    divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
+        if referenceOnly:
+            parser = BibleVerseParser(config.parserStandarisation)
+            formatedText += "; ".join(["<ref onclick='bcv({0}, {1}, {2})'>{3}</ref>".format(b, c, v, parser.bcvToVerseReference(b, c, v)) for b, c, v, *_ in verses])
+        else:
+            for verse in verses:
+                b, c, v, verseText = verse
+                if b < 40 and text in config.rtlTexts:
+                    divTag = "<div style='direction: rtl;'>"
                 else:
-                    divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
-                formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, config.favouriteBible), config.favouriteBible, self.readTextVerse(config.favouriteBible, b, c, v)[3])
-        # add highlighting to search string with tags <z>...</z>
-        if mode == "BASIC" and not searchString == "z":
-            for searchWord in searchString.split("%"):
-                formatedText = re.sub("("+searchWord+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
-        elif mode == "ADVANCED":
-            searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
-            searchWords = [m.split("%") for m in searchWords]
-            searchWords = [m2 for m1 in searchWords for m2 in m1]
-            for searchword in searchWords:
-                if not searchword == "z":
-                    formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
-        # fix searching LXX / SBLGNT words
-        formatedText = re.sub("<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
-        # remove misplacement of tags <z> & </z>
-        p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
-        s = p.search(formatedText)
-        while s:
-            formatedText = re.sub(p, r"\1\2", formatedText)
+                    divTag = "<div>"
+                formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
+                if interlinear and not config.favouriteBible == text:
+                    if b < 40 and config.favouriteBible in config.rtlTexts:
+                        divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
+                    else:
+                        divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
+                    formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, config.favouriteBible), config.favouriteBible, self.readTextVerse(config.favouriteBible, b, c, v)[3])
+            # add highlighting to search string with tags <z>...</z>
+            if mode == "BASIC" and not searchString == "z":
+                for searchWord in searchString.split("%"):
+                    formatedText = re.sub("("+searchWord+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
+            elif mode == "ADVANCED":
+                searchWords = [m for m in re.findall("LIKE ['\"]%(.*?)%['\"]", searchString, flags=re.IGNORECASE)]
+                searchWords = [m.split("%") for m in searchWords]
+                searchWords = [m2 for m1 in searchWords for m2 in m1]
+                for searchword in searchWords:
+                    if not searchword == "z":
+                        formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
+            # fix searching LXX / SBLGNT words
+            formatedText = re.sub("<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
+            # remove misplacement of tags <z> & </z>
+            p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
             s = p.search(formatedText)
+            while s:
+                formatedText = re.sub(p, r"\1\2", formatedText)
+                s = p.search(formatedText)
         return formatedText
 
     def getSearchVerses(self, query, binding):
