@@ -168,6 +168,9 @@ if not hasattr(config, "importDoNotStripMorphCode"):
 # Import setting - import text in right-to-left direction: True / False
 if not hasattr(config, "importRtlOT"):
     config.importRtlOT = False
+# Import setting - import interlinear text: True / False
+if not hasattr(config, "importInterlinear"):
+    config.importInterlinear = False
 # List of modules, which contains Hebrew / Greek texts
 if not hasattr(config, "originalTexts"):
     config.originalTexts = ['original', 'MOB', 'MAB', 'MTB', 'MIB', 'MPB', 'OHGB', 'OHGBi', 'LXX', 'LXX1', 'LXX1i', 'LXX2', 'LXX2i']
@@ -204,6 +207,9 @@ if not hasattr(config, "addFavouriteToMultiRef"):
 # Options to show note indicator on bible chapter: True / False
 if not hasattr(config, "showNoteIndicatorOnBibleChapter"):
     config.showNoteIndicatorOnBibleChapter = True
+# Options sync Study Window's with changes verse references on Main Window: True / False
+if not hasattr(config, "syncStudyWindowBibleWithMainWindow"):
+    config.syncStudyWindowBibleWithMainWindow = False
 # Options sync commentary with changes verse references on Main Window: True / False
 if not hasattr(config, "syncCommentaryWithMainWindow"):
     config.syncCommentaryWithMainWindow = False
@@ -375,6 +381,7 @@ def saveDataOnExit():
         ("importDoNotStripMorphCode", config.importDoNotStripMorphCode),
         ("importAddVerseLinebreak", config.importAddVerseLinebreak),
         ("importRtlOT", config.importRtlOT),
+        ("importInterlinear", config.importInterlinear),
         ("originalTexts", config.originalTexts),
         ("rtlTexts", config.rtlTexts),
         ("openBibleInMainViewOnly", config.openBibleInMainViewOnly),
@@ -385,6 +392,7 @@ def saveDataOnExit():
         ("favouriteBible", config.favouriteBible),
         ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
         ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
+        ("syncStudyWindowBibleWithMainWindow", config.syncStudyWindowBibleWithMainWindow),
         ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),
         ("studyText", config.studyText),
         ("studyB", config.studyB),
@@ -411,6 +419,7 @@ def saveDataOnExit():
         ("defaultLexiconLXX", config.defaultLexiconLXX),
         ("defaultLexiconGK", config.defaultLexiconGK),
         ("defaultLexiconLN", config.defaultLexiconLN),
+        ("showInformation", config.showInformation),
         ("historyRecordAllowed", config.historyRecordAllowed),
         ("currentRecord", {'main': 0, 'study': 0}),
         ("history", config.history),

@@ -225,6 +225,7 @@ class Languages:
         "menu10_bookOnNew": "Further book content will be opened on a new window.",
         "menu10_bookOnStudy": "Further book content will be opened on Study Window.",
         "context1_copy": "Copy",
+        "context1_copyReferences": "Copy All Bible References",
         "context1_speak": "Speak",
         "context1_english": "Translate into English",
         "context1_tChinese": "翻譯成繁體中文",
@@ -347,6 +348,7 @@ class Languages:
         "import_strongNo": "Allow search for Strong's numbers",
         "import_morphCode": "Allow search for morphology codes",
         "import_rtl": "Old Testament Text Direction: Right-to-left",
+        "import_interlinear": "Interlinear Bible",
         "message_addFavouriteVersion": "Add as a parallel version for reading multiple bible verse references:",
         "search_notFound": "[no result]",
         "menu11_multimedia": "Multimedia",
@@ -383,6 +385,8 @@ class Languages:
         "select_a_folder": "Select a Folder",
         "bar2_commentarySyncEnabled": "Commentary in Sync with Main Window",
         "bar2_commentarySyncDisabled": "Commentary out of Sync with Main Window",
+        "bar2_studyWindowBibleSyncEnabled": "Study Window's Bible in Sync with Main Window",
+        "bar2_studyWindowBibleSyncDisabled": "Study Window's Bible out of Sync with Main Window",
         "empty": "[empty]",
     }
 

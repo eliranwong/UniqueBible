@@ -123,6 +123,9 @@ class MainWindow(QMainWindow):
         # position views as the last-opened layout
         self.resizeParallel()
         self.resizeInstant()
+        # set variables for sync functions
+        self.syncingBibles = False
+        self.syncButtonChanging = False
 
         # check if newer version is available
         self.checkApplicationUpdate()
@@ -810,6 +813,13 @@ class MainWindow(QMainWindow):
         searchStudyBibleButton.clicked.connect(self.displaySearchBibleMenu)
         self.studyBibleToolBar.addWidget(searchStudyBibleButton)
 
+        self.enableSyncStudyWindowBibleButton = QPushButton()
+        self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
+        enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
+        self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
+        self.enableSyncStudyWindowBibleButton.clicked.connect(self.enableSyncStudyWindowBibleButtonClicked)
+        self.studyBibleToolBar.addWidget(self.enableSyncStudyWindowBibleButton)
+
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -1266,6 +1276,9 @@ class MainWindow(QMainWindow):
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
         self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBibles"], self.displaySearchBibleMenu)
+
+        iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
+        self.enableSyncStudyWindowBibleButton = self.studyBibleToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -2460,6 +2473,30 @@ class MainWindow(QMainWindow):
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
     # Actions - enable or disable sync commentary
+    def getSyncStudyWindowBibleDisplay(self):
+        if config.syncStudyWindowBibleWithMainWindow:
+            return "sync.png"
+        else:
+            return "noSync.png"
+
+    def getSyncStudyWindowBibleDisplayToolTip(self):
+        if config.syncStudyWindowBibleWithMainWindow:
+            return config.thisTranslation["bar2_studyWindowBibleSyncEnabled"]
+        else:
+            return config.thisTranslation["bar2_studyWindowBibleSyncDisabled"]
+
+    def enableSyncStudyWindowBibleButtonClicked(self):
+        config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
+        enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
+        self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
+        self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
+        if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
+            self.syncButtonChanging = True
+            self.enableSyncCommentaryButtonClicked()
+        if config.syncStudyWindowBibleWithMainWindow:
+            self.reloadCurrentRecord()
+        self.syncButtonChanging = False
+
     def getSyncCommentaryDisplay(self):
         if config.syncCommentaryWithMainWindow:
             return "sync.png"
@@ -2477,8 +2514,12 @@ class MainWindow(QMainWindow):
         enableSyncCommentaryButtonFile = os.path.join("htmlResources", self.getSyncCommentaryDisplay())
         self.enableSyncCommentaryButton.setIcon(QIcon(enableSyncCommentaryButtonFile))
         self.enableSyncCommentaryButton.setToolTip(self.getSyncCommentaryDisplayToolTip())
+        if config.syncStudyWindowBibleWithMainWindow and not self.syncButtonChanging:
+            self.syncButtonChanging = True
+            self.enableSyncStudyWindowBibleButtonClicked()
         if config.syncCommentaryWithMainWindow:
             self.reloadCurrentRecord()
+        self.syncButtonChanging = False
 
     def enableNoteIndicatorButtonClicked(self):
         config.showNoteIndicatorOnBibleChapter = not config.showNoteIndicatorOnBibleChapter
@@ -2660,15 +2701,27 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, False, "study")
 
     def updateMainRefButton(self):
-        self.mainTextMenuButton.setText(self.verseReference("main")[0])
-        self.mainRefButton.setText(self.verseReference("main")[1])
-        if config.syncCommentaryWithMainWindow:
-            newTextCommand = "COMMENTARY2:::{0}.{1}.{2}".format(config.mainB, config.mainC, config.mainV)
+        text, verseReference = self.verseReference("main")
+        self.mainTextMenuButton.setText(text)
+        self.mainRefButton.setText(verseReference)
+        if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
+            self.syncingBibles = True
+            newTextCommand = "STUDY:::{0}".format(verseReference)
+            self.runTextCommand(newTextCommand, True, "study")
+            self.syncingBibles = False
+        elif config.syncCommentaryWithMainWindow:
+            newTextCommand = "COMMENTARY:::{0}".format(verseReference)
             self.runTextCommand(newTextCommand, True, "study")
 
     def updateStudyRefButton(self):
-        self.studyTextMenuButton.setText(self.verseReference("study")[0])
-        self.studyRefButton.setText(self.verseReference("study")[1])
+        text, verseReference = self.verseReference("study")
+        self.studyTextMenuButton.setText(text)
+        self.studyRefButton.setText(verseReference)
+        if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
+            self.syncingBibles = True
+            newTextCommand = "MAIN:::{0}".format(verseReference)
+            self.runTextCommand(newTextCommand, True, "main")
+            self.syncingBibles = False
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
@@ -3362,6 +3415,11 @@ class WebEngineView(QWebEngineView):
         searchBibleReferences.triggered.connect(self.extractAllReferences)
         self.addAction(searchBibleReferences)
 
+        copyReferences = QAction(self)
+        copyReferences.setText(config.thisTranslation["context1_copyReferences"])
+        copyReferences.triggered.connect(self.copyAllReferences)
+        self.addAction(copyReferences)
+
         separator = QAction(self)
         separator.setSeparator(True)
         self.addAction(separator)
@@ -3565,6 +3623,18 @@ class WebEngineView(QWebEngineView):
             verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
             del biblesSqlite
             self.openPopover(html=verses)
+
+    def copyAllReferences(self):
+        selectedText = self.selectedText()
+        parser = BibleVerseParser(config.parserStandarisation)
+        verseList = parser.extractAllReferences(selectedText, False)
+        if not verseList:
+            self.displayMessage(config.thisTranslation["message_noReference"])
+        else:
+            references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+            qApp.clipboard().setText(references)
+        del parser
+            
 
     def runAsCommand(self):
         selectedText = self.selectedText()
@@ -5095,6 +5165,10 @@ class ImportSettings(QDialog):
         self.importRtlOT.setText(config.thisTranslation["import_rtl"])
         self.importRtlOT.setChecked(config.importRtlOT)
 
+        self.importInterlinear = QCheckBox()
+        self.importInterlinear.setText(config.thisTranslation["import_interlinear"])
+        self.importInterlinear.setChecked(config.importInterlinear)
+
         saveButton = QPushButton(config.thisTranslation["note_save"])
         saveButton.clicked.connect(self.saveSettings)
 
@@ -5107,8 +5181,9 @@ class ImportSettings(QDialog):
         self.layout.addWidget(self.stripStrNo, 2, 0)
         self.layout.addWidget(self.stripMorphCode, 3, 0)
         self.layout.addWidget(self.importRtlOT, 4, 0)
-        self.layout.addWidget(saveButton, 5, 0)
-        self.layout.addWidget(cancelButton, 6, 0)
+        self.layout.addWidget(self.importInterlinear, 5, 0)
+        self.layout.addWidget(saveButton, 6, 0)
+        self.layout.addWidget(cancelButton, 7, 0)
         self.setLayout(self.layout)
 
     def saveSettings(self):
@@ -5131,6 +5206,11 @@ class ImportSettings(QDialog):
             config.importRtlOT = True
         else:
             config.importRtlOT = False
+
+        if self.importInterlinear.isChecked():
+            config.importInterlinear = True
+        else:
+            config.importInterlinear = False
 
         self.close()
 
@@ -5165,7 +5245,6 @@ class MoreConfigOptions(QDialog):
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
-            ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow, self.parent.enableSyncCommentaryButtonClicked),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),

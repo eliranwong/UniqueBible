@@ -1,3 +1,9 @@
+Latest changes in version 15.9:
+* Fixed errors on hovering over bible references.
+* Added an import option to import Interlinear Bible.  Currently, only MyBible modules formatted as interlinear bibles are supported.
+* Added an option to synchronise verse references between bibles on Bible Window and Study Window.  When this feature is enabled, clicking a verse number on either Bible Window or Study Window synchronises bibles on both windows.
+* Added an option on right-click context menu to copy all bible references within selected text to clipboard.  
+
 Latest changes in version 15.8:
 * Open new chapter / verse note on Note Editor with default font and font-size.
 

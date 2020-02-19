@@ -1168,7 +1168,7 @@ class TextCommandParser:
         if config.instantInformationEnabled and command:
             bcvList = [int(i) for i in command.split(".")]
             info = BiblesSqlite().readMultipleVerses(config.mainText, [bcvList])
-            if config.mainText in config.rtlTexts and b < 40:
+            if config.mainText in config.rtlTexts and bcvList[0] < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
             return ("instant", info)
         else:
