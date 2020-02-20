@@ -1,3 +1,6 @@
+Latest changes in version 16.3:
+* Improved import of interlinear bibles.  Fixed an issue about overflowing translations appearred in some parts of imported interlinear bibles.  Old modules need to be re-imported to apply the fix.
+
 Latest changes in version 16.2:
 * Improved import of interlinear bibles, original words without corresponding translation are now properly aligned after import.
 

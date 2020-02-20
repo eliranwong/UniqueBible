@@ -1047,8 +1047,17 @@ class Converter:
             if book >= 40 or strong_numbers_prefix == "G":
                 wordTag = "grk"
             text = re.sub("<br/>|<br>", "＠", text)
+            text = re.sub("</n>([ ]*?)<n>", r"\1", text)
             # convert format like "The book <n>Βίβλος</n><S>976</S><m>N-NSF</m>"
             text = re.sub("([^＠]+?)<n>([^<>]+?)</n>(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)", r'<div class="int"><wgloss>\1</wgloss>＠<wform><{0}>\2</{0}></wform>＠\3＠\4</div> '.format(wordTag), text)
+            searchPattern = '</div> ([^＠]+?)<n>([^<>]+?)</n>'
+            p = re.compile(searchPattern, flags=re.M)
+            while p.search(text):
+                text = re.sub(searchPattern, r'</div> <div class="int"><wgloss>\1</wgloss>＠<wform><{0}>\2</{0}></wform>＠&nbsp;＠&nbsp;</div> '.format(wordTag), text)
+            searchPattern = '(<div class="int"><wgloss>)(<div class="int">.*?</div> )'
+            p = re.compile(searchPattern, flags=re.M)
+            while p.search(text):
+                text = re.sub(searchPattern, r'\2\1', text)
             # convert format like "Βίβλος<S>976</S><m>N-NSF</m> <n>The book</n>"
             text = re.sub("([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)[ ]*?<n>([^＠]+?)</n>", r'<div class="int"><wform><{0}>\1</{0}></wform>＠\2＠\3＠<wgloss>\4</wgloss></div> '.format(wordTag), text)
             # deal with original words without corresponding translation
