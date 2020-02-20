@@ -901,7 +901,7 @@ class Converter:
         tables = [table[0] for table in tables]
         stories = []
         if "stories" in tables:
-            query = "SELECT * FROM stories ORDER BY book_number, chapter, verse"
+            query = "SELECT book_number, chapter, verse, title FROM stories ORDER BY book_number, chapter, verse"
             #query = "SELECT * FROM stories ORDER BY book_number, chapter, verse, order_if_several"
             cursor.execute(query)
             stories = cursor.fetchall()
@@ -933,7 +933,7 @@ class Converter:
     def storiesToTitles(self, stories):
         titles = {}
         for story in stories:
-            b, c, v, order, title = story
+            b, c, v, title = story
             b = self.convertMyBibleBookNo(b)
             title = re.sub("<x>(.*?)</x>", self.convertMyBibleXRef, title)
             title = "<u><b>{0}</b></u>".format(title)

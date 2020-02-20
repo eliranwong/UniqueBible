@@ -1,3 +1,6 @@
+Latest changes in version 16.4:
+* Fixed an issue about importing MyBible bible modules' sub-headings, which blocked the import process.
+
 Latest changes in version 16.3:
 * Improved import of interlinear bibles.  Fixed an issue about overflowing translations appearred in some parts of imported interlinear bibles.  Old modules need to be re-imported to apply the fix.
 
