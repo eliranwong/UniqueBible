@@ -1050,7 +1050,12 @@ class Converter:
             # convert format like "The book <n>Βίβλος</n><S>976</S><m>N-NSF</m>"
             text = re.sub("([^＠]+?)<n>([^<>]+?)</n>(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)", r'<div class="int"><wgloss>\1</wgloss>＠<wform><{0}>\2</{0}></wform>＠\3＠\4</div> '.format(wordTag), text)
             # convert format like "Βίβλος<S>976</S><m>N-NSF</m> <n>The book</n>"
-            text = re.sub("([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)[ ]*?<n>([^＠]+?)</n>", r'<div class="int"><wform><{0}>\1</{0}></wform><br>\2<br>\3<br><wgloss>\4</wgloss></div> '.format(wordTag), text)
+            text = re.sub("([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)[ ]*?<n>([^＠]+?)</n>", r'<div class="int"><wform><{0}>\1</{0}></wform>＠\2＠\3＠<wgloss>\4</wgloss></div> '.format(wordTag), text)
+            # deal with original words without corresponding translation
+            searchPattern = '<div class="int"><wform><{0}>([^＠]+?)(<S>[^<>]+?</S>)(<m>[^<>]+?</m>)'.format(wordTag)
+            p = re.compile(searchPattern, flags=re.M)
+            while p.search(text):
+                text = re.sub(searchPattern, r'<div class="int"><wform><{0}>\1</{0}></wform>＠\2＠\3＠&nbsp;</div> <div class="int"><wform><{0}>'.format(wordTag), text)
         if book >= 40 or strong_numbers_prefix == "G":
             text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r"<sup><ref onclick='lex({0}G\1{0})'>G\1</ref></sup>".format('"'), text)
         else:

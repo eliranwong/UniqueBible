@@ -1,3 +1,6 @@
+Latest changes in version 16.2:
+* Improved import of interlinear bibles, original words without corresponding translation are now properly aligned after import.
+
 Latest changes in version 16.1:
 * Improved import of MyBible interlinear bibles.
 * Added support of conversion of a reverse-interlinear bible.
