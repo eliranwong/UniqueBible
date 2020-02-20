@@ -266,7 +266,8 @@ class Converter:
                         self.importMyBibleBible(filename)
                     else:
                         print("File type of '{0}' is not supported for conversion.".format(filename))
-                print("Failed to convert '{0}'.".format(filename))
+                except:
+                    print("Failed to convert '{0}'.".format(filename))
             return True
 
     def importThirdPartyDictionary(self, filename):
