@@ -1,3 +1,6 @@
+Latest changes in version 16.5:
+* Added messages to console for monitoring coversion of multiple 3rd-party modules.
+
 Latest changes in version 16.4:
 * Fixed an issue about importing MyBible bible modules' sub-headings, which blocked the import process.
 

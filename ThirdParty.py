@@ -245,24 +245,28 @@ class Converter:
         if validFiles:
             for filename in validFiles:
                 filename = os.path.join(folder, filename)
-                if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', filename):
-                    self.importThirdPartyDictionary(filename)
-                elif filename.endswith(".bbl.mybible"):
-                    self.importMySwordBible(filename)
-                elif filename.endswith(".cmt.mybible"):
-                    self.importMySwordCommentary(filename)
-                elif filename.endswith(".bok.mybible"):
-                    self.importMySwordBook(filename)
-                elif filename.endswith(".bbli"):
-                    self.importESwordBible(filename)
-                elif filename.endswith(".cmti"):
-                    self.importESwordCommentary(filename)
-                elif filename.endswith(".refi"):
-                    self.importESwordBook(filename)
-                elif filename.endswith(".commentaries.SQLite3"):
-                    self.importMyBibleCommentary(filename)
-                elif filename.endswith(".SQLite3"):
-                    self.importMyBibleBible(filename)
+                try:
+                    if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', filename):
+                        self.importThirdPartyDictionary(filename)
+                    elif filename.endswith(".bbl.mybible"):
+                        self.importMySwordBible(filename)
+                    elif filename.endswith(".cmt.mybible"):
+                        self.importMySwordCommentary(filename)
+                    elif filename.endswith(".bok.mybible"):
+                        self.importMySwordBook(filename)
+                    elif filename.endswith(".bbli"):
+                        self.importESwordBible(filename)
+                    elif filename.endswith(".cmti"):
+                        self.importESwordCommentary(filename)
+                    elif filename.endswith(".refi"):
+                        self.importESwordBook(filename)
+                    elif filename.endswith(".commentaries.SQLite3"):
+                        self.importMyBibleCommentary(filename)
+                    elif filename.endswith(".SQLite3"):
+                        self.importMyBibleBible(filename)
+                    else:
+                        print("File type of '{0}' is not supported for conversion.".format(filename))
+                print("Failed to convert '{0}'.".format(filename))
             return True
 
     def importThirdPartyDictionary(self, filename):
@@ -901,9 +905,12 @@ class Converter:
         tables = [table[0] for table in tables]
         stories = []
         if "stories" in tables:
-            query = "SELECT book_number, chapter, verse, title FROM stories ORDER BY book_number, chapter, verse"
-            #query = "SELECT * FROM stories ORDER BY book_number, chapter, verse, order_if_several"
-            cursor.execute(query)
+            try:
+                query = "SELECT book_number, chapter, verse, title FROM stories ORDER BY book_number, chapter, verse"
+                cursor.execute(query)
+            except:
+                query = "SELECT book_number, chapter, verse, text FROM stories ORDER BY book_number, chapter, verse"
+                cursor.execute(query)
             stories = cursor.fetchall()
 
         query = "SELECT * FROM verses ORDER BY book_number, chapter, verse"
