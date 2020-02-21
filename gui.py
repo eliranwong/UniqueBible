@@ -2978,10 +2978,10 @@ class MainWindow(QMainWindow):
 
     # Actions - hide / show / resize study & lightning views
     def instant(self):
-        if config.instantMode == 0:
-            config.instantMode = 1
-        elif config.instantMode == 1:
+        if config.instantMode == 2:
             config.instantMode = 0
+        else:
+            config.instantMode += 1
         self.resizeInstant()
 
     def resizeInstant(self):
@@ -2993,7 +2993,8 @@ class MainWindow(QMainWindow):
     def resizeInstantL(self):
         instantRatio = {
             0: (10, 0, 0),
-            1: (10, 0, 2),
+            1: (10, 0, 3),
+            2: (10, 0, 10),
         }
         top, middle, bottom = instantRatio[config.instantMode]
         self.centralWidget.layout.setRowStretch(0, top)
@@ -3010,10 +3011,14 @@ class MainWindow(QMainWindow):
             (0, 1): (10, 5, 0),
             (0, 2): (5, 5, 0),
             (0, 3): (5, 10, 0),
-            (1, 0): (10, 0, 2),
-            (1, 1): (10, 5, 3),
-            (1, 2): (5, 5, 2),
-            (1, 3): (5, 10, 3),
+            (1, 0): (10, 0, 3),
+            (1, 1): (20, 10, 9),
+            (1, 2): (5, 5, 3),
+            (1, 3): (10, 20, 9),
+            (2, 0): (10, 0, 10),
+            (2, 1): (10, 5, 15),
+            (2, 2): (10, 10, 20),
+            (2, 3): (5, 10, 15),
         }
         top, middle, bottom = instantRatio[(config.instantMode, config.parallelMode)]
         self.centralWidget.layout.setRowStretch(0, top)
@@ -3058,10 +3063,14 @@ class MainWindow(QMainWindow):
             (0, 1): (10, 5, 0),
             (0, 2): (5, 5, 0),
             (0, 3): (5, 10, 0),
-            (1, 0): (10, 0, 2),
-            (1, 1): (10, 5, 3),
-            (1, 2): (5, 5, 2),
-            (1, 3): (5, 10, 3),
+            (1, 0): (10, 0, 3),
+            (1, 1): (20, 10, 9),
+            (1, 2): (5, 5, 3),
+            (1, 3): (10, 20, 9),
+            (2, 0): (10, 0, 10),
+            (2, 1): (10, 5, 15),
+            (2, 2): (10, 10, 20),
+            (2, 3): (5, 10, 15),
         }
         top, middle, bottom = parallelRatio[(config.instantMode, config.parallelMode)]
         self.centralWidget.layout.setRowStretch(0, top)

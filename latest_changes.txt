@@ -1,3 +1,7 @@
+Latest changes in version 16.9:
+* Increased the default height of Bottom Window.
+* Added one more option to resize Bottom Window.
+
 Latest changes in version 16.8:
 * Fixed potential failure to start up when an old module is removed.
 
