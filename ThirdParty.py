@@ -1144,7 +1144,8 @@ class Converter:
                     book_number = self.convertMyBibleBookNo(book_number)
                     verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text)
                     # check fromverse if it is included in a standard kjv verse list
-                    fromverse = verse[2]
+                    # convert to integer below, as some modules are found containing string, probably by mistake
+                    fromverse = int(verse_number_from)
                     item = verseDict.get(fromverse, "not found")
                     if item == "not found":
                         verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]

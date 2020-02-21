@@ -1,3 +1,6 @@
+Latest changes in version 16.8:
+* Fixed potential failure to start up when an old module is removed.
+
 Latest changes in version 16.7:
 * Improved converter to import MyBible bible modules.
 

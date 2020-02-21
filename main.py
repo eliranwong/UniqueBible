@@ -453,17 +453,23 @@ setupMainWindow()
 # Check if migration is needed for version >= 0.56
 mainWindow.checkMigration()
 
-# Execute initial command in main view
+# Execute initial command on Bible Window
 initial_mainTextCommand = " ".join(sys.argv[1:])
 if not initial_mainTextCommand:
     mainHistory = config.history["main"]
     initial_mainTextCommand = mainHistory[-1]
-executeInitialTextCommand(initial_mainTextCommand)
+try:
+    executeInitialTextCommand(initial_mainTextCommand)
+except:
+    print("Failed to execute '{0}' on startup.".format(initial_mainTextCommand))
 
-# Execute initial command in study view
+# Execute initial command on Study Window
 studyHistory = config.history["study"]
 initial_studyTextCommand = studyHistory[-1]
-executeInitialTextCommand(initial_studyTextCommand, "study")
+try:
+    executeInitialTextCommand(initial_studyTextCommand, "study")
+except:
+    print("Failed to execute '{0}' on startup.".format(initial_studyTextCommand))
 
 # Set indexes of history records
 setCurrentRecord()
