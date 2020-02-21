@@ -942,14 +942,15 @@ class Converter:
         titles = {}
         for story in stories:
             b, c, v, title = story
-            b = self.convertMyBibleBookNo(b)
-            title = re.sub("<x>(.*?)</x>", self.convertMyBibleXRef, title)
-            title = "<u><b>{0}</b></u>".format(title)
-            item = titles.get((b, c, v), "not found")
-            if item == "not found":
-                titles[(b, c, v)] = [title]
-            else:
-                item.append(title)
+            if title:
+                b = self.convertMyBibleBookNo(b)
+                title = re.sub("<x>(.*?)</x>", self.convertMyBibleXRef, title)
+                title = "<u><b>{0}</b></u>".format(title)
+                item = titles.get((b, c, v), "not found")
+                if item == "not found":
+                    titles[(b, c, v)] = [title]
+                else:
+                    item.append(title)
         titles = {key: "<br>".join(titles[key]) for key in titles}
         return titles
 
@@ -1027,26 +1028,29 @@ class Converter:
         connection.close()
 
     def stripMyBibleBibleTags(self, text, book, strong_numbers_prefix):
-        if config.importDoNotStripStrongNo:
-            if book >= 40 or strong_numbers_prefix == "G":
-                text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" G\1 ", text)
+        if text:
+            if config.importDoNotStripStrongNo:
+                if book >= 40 or strong_numbers_prefix == "G":
+                    text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" G\1 ", text)
+                else:
+                    text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" H\1 ", text)
             else:
-                text = re.sub("<S>([0-9]+?[a-z]*?)</S>", r" H\1 ", text)
+                text = re.sub("<S>([0-9]+?[a-z]*?)</S>", "", text)
+            if config.importDoNotStripMorphCode:
+                text = re.sub("<m>([^\n<>]*?)</m>", r" \1 ", text)
+            else:
+                text = re.sub("<m>([^\n<>]*?)</m>", "", text)
+            searchReplace = (
+                ("<pb/>|<h>.*?</h>|<t>", " "),
+                ("<f>.*?</f>|<[^\n<>]*?>", ""),
+                (" [ ]+?([^ ])", r" \1"),
+            )
+            text = text.strip()
+            for search, replace in searchReplace:
+                text = re.sub(search, replace, text)
+            text = text.strip()
         else:
-            text = re.sub("<S>([0-9]+?[a-z]*?)</S>", "", text)
-        if config.importDoNotStripMorphCode:
-            text = re.sub("<m>([^\n<>]*?)</m>", r" \1 ", text)
-        else:
-            text = re.sub("<m>([^\n<>]*?)</m>", "", text)
-        searchReplace = (
-            ("<pb/>|<h>.*?</h>|<t>", " "),
-            ("<f>.*?</f>|<[^\n<>]*?>", ""),
-            (" [ ]+?([^ ])", r" \1"),
-        )
-        text = text.strip()
-        for search, replace in searchReplace:
-            text = re.sub(search, replace, text)
-        text = text.strip()
+            text = ""
         return text
 
     def convertMyBibleBibleTags(self, text, book, strong_numbers_prefix):

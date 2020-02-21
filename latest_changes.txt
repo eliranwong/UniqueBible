@@ -1,5 +1,8 @@
+Latest changes in version 16.7:
+* Improved converter to import MyBible bible modules.
+
 Latest changes in version 16.6:
-* Fixed a startup issue in 16.5
+* Fixed a startup issue in 16.5.
 
 Latest changes in version 16.5:
 * Added messages to console for monitoring coversion of multiple 3rd-party modules.
