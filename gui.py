@@ -1,4 +1,5 @@
 import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation
+from datetime import datetime
 from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
@@ -84,8 +85,11 @@ class MainWindow(QMainWindow):
         # setup a global variable "baseURL"
         self.setupBaseUrl()
         # variables for history management
-        self.mainHistoryPage = [False, False, False, False, False]
-        self.studyHistoryPage = [False, False, False, False, False]
+        self.now = datetime.now()
+        self.lastMainTextCommand = ""
+        self.lastStudyTextCommand = ""
+        self.mainHistoryPage = [False] * config.numberOfTab
+        self.studyHistoryPage = [False] * config.numberOfTab
         self.lastLoadedCommand = {"main": None, "study": None}
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
@@ -116,7 +120,11 @@ class MainWindow(QMainWindow):
         # put up central widget
         self.setCentralWidget(self.centralWidget)
         # assign pages
+        if config.openBibleWindowContentOnNextTab:
+            self.mainView.setCurrentIndex(config.numberOfTab - 1)
         self.setMainPage()
+        if config.openStudyWindowContentOnNextTab:
+            self.studyView.setCurrentIndex(config.numberOfTab - 1)
         self.setStudyPage()
         self.instantPage = self.instantView.page()
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
@@ -288,7 +296,9 @@ class MainWindow(QMainWindow):
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
-    def setStudyPage(self):
+    def setStudyPage(self, tabIndex=None):
+        if tabIndex != None:
+            self.studyView.setCurrentIndex(tabIndex)
         # study page changes as tab is changed.
         #print(self.studyView.currentIndex())
         self.studyPage = self.studyView.currentWidget().page()
@@ -1604,6 +1614,11 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text):
+        if config.openBibleWindowContentOnNextTab:
+            nextIndex = self.mainView.currentIndex() + 1
+            if nextIndex >= config.numberOfTab:
+                nextIndex = 0
+            self.mainView.setCurrentIndex(nextIndex)
         if sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
         else:
@@ -1652,20 +1667,19 @@ class MainWindow(QMainWindow):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
     def openTextOnStudyView(self, text):
+        if config.openStudyWindowContentOnNextTab:
+            nextIndex = self.studyView.currentIndex() + 1
+            if nextIndex >= config.numberOfTab:
+                nextIndex = 0
+            self.studyView.setCurrentIndex(nextIndex)
+            #Alternatively,
+            #self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
+        
         if config.exportEmbeddedImages:
             text = self.exportAllImages(text)
 
         if config.clickToOpenImage:
             text = self.addOpenImageAction(text)
-
-        #print(text)
-#        # testing
-#        currentIndex = self.studyView.currentIndex()
-#        if currentIndex == 4:
-#            nextIndex = 0
-#        else:
-#            nextIndex = currentIndex + 1
-#        self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
 
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
@@ -2885,60 +2899,69 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
-        view, content = self.textCommandParser.parser(textCommand, source)
-
-        if content == "INVALID_COMMAND_ENTERED":
-            self.displayMessage(config.thisTranslation["message_invalid"])
-        elif view == "command":
-            self.textCommandLineEdit.setText(content)
-            self.textCommandLineEdit.setFocus()
-        else:
-            activeBCVsettings = ""
-            if view == "main":
-                activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
-            elif view == "study":
-                activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-            html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese)
-            views = {
-                "main": self.mainView,
-                "study": self.studyView,
-                "instant": self.instantView,
-            }
-            # add hovering action to bible reference links
-            searchReplace = (
-                ('{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"), r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
-                (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
-                (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
-                (r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
-            )
-            for search, replace in searchReplace:
-                html = re.sub(search, replace, html)
-            # load into widget view
-            if view == "study":
-                newCommand = (self.studyView.currentIndex(), textCommand)
-                if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-                    self.openTextOnStudyView(html)
-                    self.lastLoadedCommand["study"] = newCommand
-            elif view == "main":
-                newCommand = (self.mainView.currentIndex(), textCommand)
-                if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-                    self.openTextOnMainView(html)
-                    self.lastLoadedCommand["main"] = newCommand
-            elif view.startswith("popover"):
-                view = view.split(".")[1]
-                views[view].currentWidget().openPopover(html=html)
-            # There is a case where view is an empty string "".
-            # The following condition applies where view is not empty only.
-            elif view:
-                views[view].setHtml(html, baseUrl)
-            if addRecord == True and view in ("main", "study"):
-                self.addHistoryRecord(view, textCommand)
-
-        # reset document.title
-        changeTitle = "document.title = 'UniqueBible.app';"
-        self.mainPage.runJavaScript(changeTitle)
-        self.studyPage.runJavaScript(changeTitle)
-        self.instantPage.runJavaScript(changeTitle)
+        now = datetime.now()
+        timeDifference = int((now - self.now).total_seconds())
+        if timeDifference > 3 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
+            # set checking block
+            self.now = now
+            if source == "main":
+                self.lastMainTextCommand = textCommand
+            elif source == "study":
+                self.lastStudyTextCommand = textCommand
+            # parse command
+            view, content = self.textCommandParser.parser(textCommand, source)
+            # process content
+            if content == "INVALID_COMMAND_ENTERED":
+                self.displayMessage(config.thisTranslation["message_invalid"])
+            elif view == "command":
+                self.textCommandLineEdit.setText(content)
+                self.textCommandLineEdit.setFocus()
+            else:
+                activeBCVsettings = ""
+                if view == "main":
+                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+                elif view == "study":
+                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
+                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese)
+                views = {
+                    "main": self.mainView,
+                    "study": self.studyView,
+                    "instant": self.instantView,
+                }
+                # add hovering action to bible reference links
+                searchReplace = (
+                    ('{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"), r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
+                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
+                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
+                    (r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
+                )
+                for search, replace in searchReplace:
+                    html = re.sub(search, replace, html)
+                # load into widget view
+                if view == "study":
+                    newCommand = (self.studyView.currentIndex(), textCommand)
+                    if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+                        self.openTextOnStudyView(html)
+                        self.lastLoadedCommand["study"] = newCommand
+                elif view == "main":
+                    newCommand = (self.mainView.currentIndex(), textCommand)
+                    if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+                        self.openTextOnMainView(html)
+                        self.lastLoadedCommand["main"] = newCommand
+                elif view.startswith("popover"):
+                    view = view.split(".")[1]
+                    views[view].currentWidget().openPopover(html=html)
+                # There is a case where view is an empty string "".
+                # The following condition applies where view is not empty only.
+                elif view:
+                    views[view].setHtml(html, baseUrl)
+                if addRecord == True and view in ("main", "study"):
+                    self.addHistoryRecord(view, textCommand)
+            # reset document.title
+            #changeTitle = "document.title = 'UniqueBible.app';"
+            #self.mainPage.runJavaScript(changeTitle)
+            #self.studyPage.runJavaScript(changeTitle)
+            #self.instantPage.runJavaScript(changeTitle)
 
     def convertCrLink(self, match):
         *_, b, c, v = match.groups()
@@ -4715,7 +4738,8 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
     def setupLayout(self):
-        self.editor = QTextEdit()
+        self.editor = QTextEdit()        
+        self.editor.setStyleSheet("font-family:'{0}'; font-size:{1}pt;".format(config.font, config.fontSize));
         self.editor.textChanged.connect(self.textChanged)
         self.setCentralWidget(self.editor)
 
@@ -5250,7 +5274,8 @@ class MoreConfigOptions(QDialog):
         rightContainerLayout = QVBoxLayout()
 
         options = [
-            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
+            ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged),
+            ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
@@ -5266,6 +5291,7 @@ class MoreConfigOptions(QDialog):
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged),
+            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
         ]
         if platform.system() == "Linux":
             options += [
@@ -5298,6 +5324,12 @@ class MoreConfigOptions(QDialog):
 
     def showVerseNumbersInRangeChanged(self):
         config.showVerseNumbersInRange = not config.showVerseNumbersInRange
+
+    def openBibleWindowContentOnNextTabChanged(self):
+        config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
+
+    def openStudyWindowContentOnNextTabChanged(self):
+        config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef

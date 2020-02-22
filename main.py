@@ -74,6 +74,12 @@ if not hasattr(config, "videoFolder"):
 # Specify the number of tabs for bible reading and workspace
 if not hasattr(config, "numberOfTab"):
     config.numberOfTab = 5
+# Options to open Bible Window's content in the tab next to the current one: True / False
+if not hasattr(config, "openBibleWindowContentOnNextTab"):
+    config.openBibleWindowContentOnNextTab = False
+# Options to open Study Window's content in the tab next to the current one: True / False
+if not hasattr(config, "openStudyWindowContentOnNextTab"):
+    config.openStudyWindowContentOnNextTab = False
 # Options to convert all bible book abbreviations to standard ones: YES / NO
 if not hasattr(config, "parserStandarisation"):
     config.parserStandarisation = "NO"
@@ -351,6 +357,8 @@ def saveDataOnExit():
         ("musicFolder", config.musicFolder),
         ("videoFolder", config.videoFolder),
         ("numberOfTab", config.numberOfTab),
+        ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
+        ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
         ("parserStandarisation", config.parserStandarisation),
         ("standardAbbreviation", config.standardAbbreviation),
         ("userLanguage", config.userLanguage),

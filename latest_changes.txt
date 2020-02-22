@@ -1,3 +1,10 @@
+Latest changes in version 17.0:
+* Fixed previous failure to open content when number of tabs is more than five.
+* Added two new options:
+    - "openBibleWindowContentOnNextTab", which open Bible Window's content on the tab next to the current one when it is enabled.
+    - "openStudyWindowContentOnNextTab", which open Study Window's content on the tab next to the current one when it is enabled.
+    - These two options are configurable from menu "Select more ..."
+
 Latest changes in version 16.9:
 * Increased the default height of Bottom Window.
 * Added one more option to resize Bottom Window.
