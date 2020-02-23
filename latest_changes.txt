@@ -1,3 +1,6 @@
+Latest changes in version 17.2:
+* Improved efficiency of displaying content.
+
 Latest changes in version 17.1:
 * Fixed broken features.
 

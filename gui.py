@@ -88,9 +88,6 @@ class MainWindow(QMainWindow):
         self.now = datetime.now()
         self.lastMainTextCommand = ""
         self.lastStudyTextCommand = ""
-        self.mainHistoryPage = [False] * config.numberOfTab
-        self.studyHistoryPage = [False] * config.numberOfTab
-        self.lastLoadedCommand = {"main": None, "study": None}
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -1752,9 +1749,6 @@ class MainWindow(QMainWindow):
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
-        # prevent blocking of a previously loaded command
-        newCommand = (self.studyView.currentIndex(), "_openchapternote:::{0}.{1}".format(b, c))
-        self.lastLoadedCommand["study"] = newCommand
 
     def openVerseNote(self, b, c, v):
         self.textCommandParser.lastKeyword = "note"
@@ -1768,9 +1762,6 @@ class MainWindow(QMainWindow):
         del noteSqlite
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
-        # prevent blocking of a previously loaded command
-        newCommand = (self.studyView.currentIndex(), "_openversenote:::{0}.{1}.{2}".format(b, c, v))
-        self.lastLoadedCommand["study"] = newCommand
 
     # Actions - open text from external sources
     def htmlWrapper(self, text, parsing=False, view="study", linebreak=True):
@@ -1802,9 +1793,6 @@ class MainWindow(QMainWindow):
         clipboardText = qApp.clipboard().text()
         # note: can use qApp.clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
-        # prevent blocking of a previously loaded command
-        newCommand = (self.studyView.currentIndex(), "_paste:::")
-        self.lastLoadedCommand["study"] = newCommand
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()
@@ -1896,36 +1884,24 @@ class MainWindow(QMainWindow):
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
-            # prevent blocking of a previously loaded command
-            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
-            self.lastLoadedCommand["study"] = newCommand
 
     def openUbaFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text)
-            # prevent blocking of a previously loaded command
-            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
-            self.lastLoadedCommand["study"] = newCommand
 
     def openPdfFile(self, fileName):
         if fileName:
             text = TextFileReader().readPdfFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
-            # prevent blocking of a previously loaded command
-            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
-            self.lastLoadedCommand["study"] = newCommand
 
     def openDocxFile(self, fileName):
         if fileName:
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text, True)
             self.openTextOnStudyView(text)
-            # prevent blocking of a previously loaded command
-            newCommand = (self.studyView.currentIndex(), "_command:::{0}".format(fileName))
-            self.lastLoadedCommand["study"] = newCommand
 
     # Actions - export to pdf
     def printMainPage(self):
@@ -2631,8 +2607,6 @@ class MainWindow(QMainWindow):
         self.reloadCurrentRecord()
 
     def reloadCurrentRecord(self):
-        self.mainHistoryPage[self.mainView.currentIndex()] = True
-        self.studyHistoryPage[self.studyView.currentIndex()] = True
         if config.readFormattedBibles:
             mappedBibles = (
                 ("MIB", "OHGBi"),
@@ -2660,8 +2634,6 @@ class MainWindow(QMainWindow):
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
                     self.runTextCommand(textCommand, False, view)
-        self.mainHistoryPage[self.mainView.currentIndex()] = False
-        self.studyHistoryPage[self.studyView.currentIndex()] = False
 
     # Actions - previous / next chapter
     def previousMainChapter(self):
@@ -2757,10 +2729,6 @@ class MainWindow(QMainWindow):
         self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
-        if view == "main":
-            self.mainHistoryPage[self.mainView.currentIndex()] = True
-        elif view == "study":
-            self.studyHistoryPage[self.studyView.currentIndex()] = True
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
         if view == "external":
             html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(counter, record) for counter, record in reversed(historyRecords)])
@@ -2776,9 +2744,6 @@ class MainWindow(QMainWindow):
         self.runTextCommand(textCommand, False, view)
         if view == "main":
             self.textCommandLineEdit.setText(textCommand)
-            self.mainHistoryPage[self.mainView.currentIndex()] = False
-        elif view == "study":
-            self.studyHistoryPage[self.studyView.currentIndex()] = False
 
     def back(self):
         mainCurrentRecord = config.currentRecord["main"]
@@ -2907,13 +2872,7 @@ class MainWindow(QMainWindow):
         # prevent repetitive command within unreasonable short time
         now = datetime.now()
         timeDifference = int((now - self.now).total_seconds())
-        if timeDifference > 2 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
-            # set checking block
-            self.now = now
-            if source == "main":
-                self.lastMainTextCommand = textCommand
-            elif source == "study":
-                self.lastStudyTextCommand = textCommand
+        if timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
             # parse command
             view, content = self.textCommandParser.parser(textCommand, source)
             # process content
@@ -2945,16 +2904,8 @@ class MainWindow(QMainWindow):
                     html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
-#                    newCommand = (self.studyView.currentIndex(), textCommand)
-#                    if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-#                        self.openTextOnStudyView(html)
-#                        self.lastLoadedCommand["study"] = newCommand
                     self.openTextOnStudyView(html)
                 elif view == "main":
-#                    newCommand = (self.mainView.currentIndex(), textCommand)
-#                    if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-#                        self.openTextOnMainView(html)
-#                        self.lastLoadedCommand["main"] = newCommand
                     self.openTextOnMainView(html)
                 elif view.startswith("popover"):
                     view = view.split(".")[1]
@@ -2965,6 +2916,12 @@ class MainWindow(QMainWindow):
                     views[view].setHtml(html, baseUrl)
                 if addRecord == True and view in ("main", "study"):
                     self.addHistoryRecord(view, textCommand)
+            # set checking blocks to prevent running the same command within unreasonable time frame
+            self.now = now
+            if source == "main":
+                self.lastMainTextCommand = textCommand
+            elif source == "study":
+                self.lastStudyTextCommand = textCommand
 
     def convertCrLink(self, match):
         *_, b, c, v = match.groups()
@@ -3790,9 +3747,10 @@ class WebEngineViewPopover(QWebEngineView):
         self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def popoverTextCommandChanged(self, newTextCommand):
-        config.lastOpenedFile = ""
-        config.lastOpenedUrl = ""
-        config.lastOpenedImage = ""
+        # reset document.title
+        changeTitle = "document.title = 'UniqueBible.app';"
+        self.page().runJavaScript(changeTitle)
+        # run textCommandChanged from parent
         self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):

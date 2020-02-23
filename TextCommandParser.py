@@ -1082,24 +1082,16 @@ class TextCommandParser:
 
     # _open:::
     def openMarvelDataFile(self, command, source):
-        if config.lastOpenedFile == command:
-            config.lastOpenedFile = ""
-        else:
-            config.lastOpenedFile = command
-            fileitems = command.split("/")
-            filePath = os.path.join(config.marvelData, *fileitems)
-            self.parent.openExternalFile(filePath)
+        fileitems = command.split("/")
+        filePath = os.path.join(config.marvelData, *fileitems)
+        self.parent.openExternalFile(filePath)
         return ("", "")
 
     # open:::
     def openExternalFile(self, command, source):
-        if config.lastOpenedFile == command:
-            config.lastOpenedFile = ""
-        else:
-            config.lastOpenedFile = command
-            fileitems = command.split("/")
-            filePath = os.path.join(*fileitems)
-            self.parent.openExternalFile(filePath)
+        fileitems = command.split("/")
+        filePath = os.path.join(*fileitems)
+        self.parent.openExternalFile(filePath)
         return ("", "")
 
     # _openfile:::
@@ -1118,11 +1110,7 @@ class TextCommandParser:
     # _website:::
     def textWebsite(self, command, source):
         if command:
-            if config.lastOpenedUrl == command:
-                config.lastOpenedUrl = ""
-            else:
-                config.lastOpenedUrl = command
-                webbrowser.open(command)
+            webbrowser.open(command)
             return ("", "")
         else:
             return self.invalidCommand()
@@ -1300,13 +1288,8 @@ class TextCommandParser:
 
     # _htmlimage:::
     def textHtmlImage(self, command, source):
-        if config.lastOpenedImage == command:
-            config.lastOpenedImage = ""
-            return ("", "")
-        else:
-            config.lastOpenedImage = command
-            content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
-            return ("popover.{0}".format(source), content)
+        content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
+        return ("popover.{0}".format(source), content)
 
     # _image:::
     def textImage(self, command, source):

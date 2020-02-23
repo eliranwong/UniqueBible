@@ -292,14 +292,8 @@ if not hasattr(config, "history"):
 # Installed Formatted Bibles
 if not hasattr(config, "installHistory"):
     config.installHistory = {}
-# for checking if note editor is currently open
+# for checking if note editor is currently opened
 config.noteOpened = False
-# for checking if external file is repeatedly opened
-config.lastOpenedFile = ""
-# for checking if an url is repeatedly opened
-config.lastOpenedUrl = ""
-# for checking if an image is repeatedly opened
-config.lastOpenedImage = ""
 # set show information to True
 if not hasattr(config, "showInformation"):
     config.showInformation = True
