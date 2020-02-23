@@ -249,6 +249,12 @@ if not hasattr(config, "overwriteBookFont"):
 # Option to overwrite font size in book modules
 if not hasattr(config, "overwriteBookFontSize"):
     config.overwriteBookFontSize = True
+# Option to overwrite font in bible notes
+if not hasattr(config, "overwriteNoteFont"):
+    config.overwriteNoteFont = True
+# Option to overwrite font size in bible notes
+if not hasattr(config, "overwriteNoteFontSize"):
+    config.overwriteNoteFontSize = True
 # List of favourite book modules
 # Only the first 10 books are shown on menu bar
 if not hasattr(config, "favouriteBooks"):
@@ -411,6 +417,8 @@ def saveDataOnExit():
         ("bookOnNewWindow", config.bookOnNewWindow),
         ("overwriteBookFont", config.overwriteBookFont),
         ("overwriteBookFontSize", config.overwriteBookFontSize),
+        ("overwriteNoteFont", config.overwriteNoteFont),
+        ("overwriteNoteFontSize", config.overwriteNoteFontSize),
         ("favouriteBooks", config.favouriteBooks),
         ("bookSearchString", config.bookSearchString),
         ("noteSearchString", config.noteSearchString),

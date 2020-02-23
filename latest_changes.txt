@@ -1,3 +1,9 @@
+Latest changes in version 17.3:
+* Added two more configuration options to config.py and "Select more ..." dialog:
+    - "overwriteNoteFont", which overwrite font of notes displayed on Study Window
+    - "overwriteNoteFontSize", which overwrite font size of notes displayed on Study Window.
+    - These options have no effect on the font settings of Note Editor.
+
 Latest changes in version 17.2:
 * Improved efficiency of displaying content.
 

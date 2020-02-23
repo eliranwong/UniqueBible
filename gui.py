@@ -1737,6 +1737,13 @@ class MainWindow(QMainWindow):
     def openStudyVerseNote(self):
         self.openVerseNote(config.studyB, config.studyC, config.studyV)
 
+    def fixNoteFontDisplay(self, content):
+        if config.overwriteNoteFont:
+            content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font), content)
+        if config.overwriteNoteFontSize:
+            content = re.sub("font-size:[^<>]*?;", "", content)
+        return content
+
     def openChapterNote(self, b, c):
         self.textCommandParser.lastKeyword = "note"
         reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, 1)
@@ -1744,9 +1751,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
-        noteSqlite = NoteSqlite()
-        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], noteSqlite.displayChapterNote((b, c)), b, c, config.font, config.fontSize)
-        del noteSqlite
+        note = self.fixNoteFontDisplay(NoteSqlite().displayChapterNote((b, c)))
+        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
 
@@ -1757,9 +1763,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
-        noteSqlite = NoteSqlite()
-        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, noteSqlite.displayVerseNote((b, c, v)), b, c, v, config.font, config.fontSize)
-        del noteSqlite
+        note = self.fixNoteFontDisplay(NoteSqlite().displayVerseNote((b, c, v)))
+        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
 
@@ -1888,6 +1893,7 @@ class MainWindow(QMainWindow):
     def openUbaFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
+            text = self.fixNoteFontDisplay(text)
             text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text)
 
@@ -5239,20 +5245,22 @@ class MoreConfigOptions(QDialog):
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
-            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
+            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
-            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
+            ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged),
             ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged),
+            ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged),
             ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
-            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
-            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
-            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
-            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
+            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged),
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
+            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
+            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
+            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
+            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
         ]
         if platform.system() == "Linux":
             options += [
@@ -5303,6 +5311,12 @@ class MoreConfigOptions(QDialog):
 
     def bookOnNewWindowChanged(self):
         config.bookOnNewWindow = not config.bookOnNewWindow
+
+    def overwriteNoteFontChanged(self):
+        config.overwriteNoteFont = not config.overwriteNoteFont
+
+    def overwriteNoteFontSizeChanged(self):
+        config.overwriteNoteFontSize = not config.overwriteNoteFontSize
 
     def overwriteBookFontChanged(self):
         config.overwriteBookFont = not config.overwriteBookFont
