@@ -2899,9 +2899,15 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main"):
+        # reset document.title
+        changeTitle = "document.title = 'UniqueBible.app';"
+        self.mainPage.runJavaScript(changeTitle)
+        self.studyPage.runJavaScript(changeTitle)
+        self.instantPage.runJavaScript(changeTitle)
+        # prevent repetitive command within unreasonable short time
         now = datetime.now()
         timeDifference = int((now - self.now).total_seconds())
-        if timeDifference > 3 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
+        if timeDifference > 2 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
             # set checking block
             self.now = now
             if source == "main":
@@ -2939,15 +2945,17 @@ class MainWindow(QMainWindow):
                     html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
-                    newCommand = (self.studyView.currentIndex(), textCommand)
-                    if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-                        self.openTextOnStudyView(html)
-                        self.lastLoadedCommand["study"] = newCommand
+#                    newCommand = (self.studyView.currentIndex(), textCommand)
+#                    if self.studyHistoryPage[self.studyView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+#                        self.openTextOnStudyView(html)
+#                        self.lastLoadedCommand["study"] = newCommand
+                    self.openTextOnStudyView(html)
                 elif view == "main":
-                    newCommand = (self.mainView.currentIndex(), textCommand)
-                    if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
-                        self.openTextOnMainView(html)
-                        self.lastLoadedCommand["main"] = newCommand
+#                    newCommand = (self.mainView.currentIndex(), textCommand)
+#                    if self.mainHistoryPage[self.mainView.currentIndex()] or self.lastLoadedCommand[view] != newCommand:
+#                        self.openTextOnMainView(html)
+#                        self.lastLoadedCommand["main"] = newCommand
+                    self.openTextOnMainView(html)
                 elif view.startswith("popover"):
                     view = view.split(".")[1]
                     views[view].currentWidget().openPopover(html=html)
@@ -2957,11 +2965,6 @@ class MainWindow(QMainWindow):
                     views[view].setHtml(html, baseUrl)
                 if addRecord == True and view in ("main", "study"):
                     self.addHistoryRecord(view, textCommand)
-            # reset document.title
-            #changeTitle = "document.title = 'UniqueBible.app';"
-            #self.mainPage.runJavaScript(changeTitle)
-            #self.studyPage.runJavaScript(changeTitle)
-            #self.instantPage.runJavaScript(changeTitle)
 
     def convertCrLink(self, match):
         *_, b, c, v = match.groups()
