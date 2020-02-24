@@ -1,3 +1,6 @@
+Latest changes in version 17.4:
+* Added some exceptions to the features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab".
+
 Latest changes in version 17.3:
 * Added two more configuration options to config.py and "Select more ..." dialog:
     - "overwriteNoteFont", which overwrite font of notes displayed on Study Window

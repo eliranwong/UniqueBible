@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
         self.now = datetime.now()
         self.lastMainTextCommand = ""
         self.lastStudyTextCommand = ""
+        self.newTabException = False
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -1611,7 +1612,9 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text):
-        if config.openBibleWindowContentOnNextTab:
+        if self.newTabException:
+            self.newTabException = False
+        elif config.openBibleWindowContentOnNextTab:
             nextIndex = self.mainView.currentIndex() + 1
             if nextIndex >= config.numberOfTab:
                 nextIndex = 0
@@ -1664,7 +1667,9 @@ class MainWindow(QMainWindow):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
     def openTextOnStudyView(self, text):
-        if config.openStudyWindowContentOnNextTab:
+        if self.newTabException:
+            self.newTabException = False
+        elif config.openStudyWindowContentOnNextTab:
             nextIndex = self.studyView.currentIndex() + 1
             if nextIndex >= config.numberOfTab:
                 nextIndex = 0
@@ -2879,6 +2884,9 @@ class MainWindow(QMainWindow):
         now = datetime.now()
         timeDifference = int((now - self.now).total_seconds())
         if timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
+            # handle exception for new tab features
+            if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
+                self.newTabException = True
             # parse command
             view, content = self.textCommandParser.parser(textCommand, source)
             # process content
@@ -5296,9 +5304,11 @@ class MoreConfigOptions(QDialog):
 
     def openBibleWindowContentOnNextTabChanged(self):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
+        self.newTabException = False
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab
+        self.newTabException = False
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
