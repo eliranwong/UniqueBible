@@ -500,6 +500,7 @@ function nC() {
 
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
+    document.title = "_stayOnSameTab:::";
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
 }
 
