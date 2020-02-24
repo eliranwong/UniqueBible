@@ -1,3 +1,6 @@
+Latest changes in version 17.6:
+* Fixed a download issue in version 17.5.
+
 Latest changes in version 17.5:
 * Added one more exception to the features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab".  When a verse number is clicked on a bible chapter, update is displayed on the same tab.
 
