@@ -2883,7 +2883,9 @@ class MainWindow(QMainWindow):
         # prevent repetitive command within unreasonable short time
         now = datetime.now()
         timeDifference = int((now - self.now).total_seconds())
-        if timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
+        if textCommand == "_stayOnSameTab:::":
+            self.newTabException = True
+        elif timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
             # handle exception for new tab features
             if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
                 self.newTabException = True
