@@ -1,3 +1,7 @@
+Latest changes in version 17.7:
+* Fine-tuned features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab", with several more exceptions added.
+* Added options "open on Study Window" and "open on Bible Window" to open a selected bible version on chosen window, when "Open Bible References on Study Window" is enabled.
+
 Latest changes in version 17.6:
 * Fixed a download issue in version 17.5.
 

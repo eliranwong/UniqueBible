@@ -477,7 +477,7 @@ class Commentary:
 
     def formVerseTag(self, b, c, v):
         verseReference = self.bcvToVerseReference(b, c, v)
-        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"COMMENTARY:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_commentary:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, self.text, verseReference)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_commentary:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, self.text, verseReference)
 
     def getCommentaryList(self):
         commentaryFolder = os.path.join(config.marvelData, "commentaries")
@@ -522,27 +522,27 @@ class Commentary:
     def getMenu(self, command):
         if self.text in self.getCommentaryList():
             mainVerseReference = self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV)
-            menu = "<ref onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>&lt;&lt;&lt; Go to {0} - {1}</ref>".format(config.commentaryText, mainVerseReference)
+            menu = "<ref onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{1}\"'>&lt;&lt;&lt; {0} - {1}</ref>".format(config.commentaryText, mainVerseReference)
             menu += "<hr><b>{1}</b> {0}".format(self.getCommentaries(), config.thisTranslation["menu4_commentary"])
             items = command.split(".", 3)
             text = items[0]
             if not text == "":
                 # i.e. text specified; add book menu
-                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='commentaryName(\"{0}\")'>{0}</span>  <button class='feature' onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>{3}</button>".format(self.text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='commentaryName(\"{0}\")'>{0}</span>  <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{1}\"'>{3}</button>".format(self.text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
                 menu += "<hr><b>{1}</b> {0}".format(self.getBooks(), config.thisTranslation["html_book"])
                 bcList = [int(i) for i in items[1:]]
                 if bcList:
                     check = len(bcList)
                     if check >= 1:
                         # i.e. book specified; add chapter menu
-                        menu += "<br><br><b>{1}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>   <button class='feature' onclick='document.title=\"COMMENTARY:::{3}:::{0} 1\"'>{2}</button>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], config.thisTranslation["html_current"], config.thisTranslation["html_open"], self.text)
+                        menu += "<br><br><b>{1}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>   <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{3}:::{0} 1\"'>{2}</button>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], config.thisTranslation["html_current"], config.thisTranslation["html_open"], self.text)
                         menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bcList[0]), config.thisTranslation["html_chapter"])
                     if check >= 2:
                         # i.e. both book and chapter specified; add verse menu
-                        menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>  <button class='feature' onclick='document.title=\"COMMENTARY:::{1}:::{2}\"'>{4}</button>".format(bcList[1], self.text, self.bcvToVerseReference(bcList[0], bcList[1], 1)[:-2], config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                        menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>  <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{1}:::{2}\"'>{4}</button>".format(bcList[1], self.text, self.bcvToVerseReference(bcList[0], bcList[1], 1)[:-2], config.thisTranslation["html_current"], config.thisTranslation["html_open"])
                         menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bcList[0], bcList[1]), config.thisTranslation["html_verse"])
                     if check == 3:
-                        menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"COMMENTARY:::{0}:::{4}\"'>{6}</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                        menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{4}\"'>{6}</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
             return menu
         else:
             return "INVALID_COMMAND_ENTERED"

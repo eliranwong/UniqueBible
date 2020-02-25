@@ -117,11 +117,14 @@ class MainWindow(QMainWindow):
         self.instantView = self.centralWidget.instantView
         # put up central widget
         self.setCentralWidget(self.centralWidget)
+        # set variables for sync functions
+        self.syncingBibles = False
+        self.syncButtonChanging = False
         # assign pages
         if config.openBibleWindowContentOnNextTab:
             self.mainView.setCurrentIndex(config.numberOfTab - 1)
         self.setMainPage()
-        if config.openStudyWindowContentOnNextTab:
+        if config.openStudyWindowContentOnNextTab and not config.syncStudyWindowBibleWithMainWindow and not config.syncCommentaryWithMainWindow:
             self.studyView.setCurrentIndex(config.numberOfTab - 1)
         self.setStudyPage()
         self.instantPage = self.instantView.page()
@@ -129,10 +132,6 @@ class MainWindow(QMainWindow):
         # position views as the last-opened layout
         self.resizeParallel()
         self.resizeInstant()
-        # set variables for sync functions
-        self.syncingBibles = False
-        self.syncButtonChanging = False
-
         # check if newer version is available
         self.checkApplicationUpdate()
         # check if newer versions of formatted bibles are available
@@ -1614,11 +1613,14 @@ class MainWindow(QMainWindow):
     def openTextOnMainView(self, text):
         if self.newTabException:
             self.newTabException = False
+        elif self.syncingBibles:
+            self.syncingBibles = False
         elif config.openBibleWindowContentOnNextTab:
             nextIndex = self.mainView.currentIndex() + 1
             if nextIndex >= config.numberOfTab:
                 nextIndex = 0
             self.mainView.setCurrentIndex(nextIndex)
+        # check size of text content
         if sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
         else:
@@ -1669,6 +1671,8 @@ class MainWindow(QMainWindow):
     def openTextOnStudyView(self, text):
         if self.newTabException:
             self.newTabException = False
+        elif self.syncingBibles:
+            self.syncingBibles = False
         elif config.openStudyWindowContentOnNextTab:
             nextIndex = self.studyView.currentIndex() + 1
             if nextIndex >= config.numberOfTab:
@@ -1676,13 +1680,13 @@ class MainWindow(QMainWindow):
             self.studyView.setCurrentIndex(nextIndex)
             #Alternatively,
             #self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
-        
+        # export embedded images if enabled
         if config.exportEmbeddedImages:
             text = self.exportAllImages(text)
-
+        # added links to open image files if enabled
         if config.clickToOpenImage:
             text = self.addOpenImageAction(text)
-
+        # check size of text content
         if sys.getsizeof(text) < 2097152:
             self.studyView.setHtml(text, baseUrl)
         else:
@@ -2568,10 +2572,8 @@ class MainWindow(QMainWindow):
 
     # Actions - enable or disable paragraphs feature
     def displayBiblesInParagraphs(self):
-        if config.readFormattedBibles:
-            config.readFormattedBibles = False
-        else:
-            config.readFormattedBibles = True
+        config.readFormattedBibles = not config.readFormattedBibles
+        self.newTabException = True
         self.reloadCurrentRecord()
 
     def getReadFormattedBibles(self):
@@ -2597,10 +2599,8 @@ class MainWindow(QMainWindow):
             return "subheadingDisable.png"
 
     def enableSubheadingButtonClicked(self):
-        if config.addTitleToPlainChapter:
-            config.addTitleToPlainChapter = False
-        else:
-            config.addTitleToPlainChapter = True
+        config.addTitleToPlainChapter = not config.addTitleToPlainChapter
+        self.newTabException = True        
         self.reloadCurrentRecord()
         enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
         self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
@@ -2653,6 +2653,7 @@ class MainWindow(QMainWindow):
         mainChapterList = biblesSqlite.getChapterList()
         del biblesSqlite
         if newChapter in mainChapterList:
+            self.newTabException = True
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
 
@@ -2662,6 +2663,7 @@ class MainWindow(QMainWindow):
         mainChapterList = biblesSqlite.getChapterList()
         del biblesSqlite
         if newChapter in mainChapterList:
+            self.newTabException = True
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
 
@@ -2706,8 +2708,8 @@ class MainWindow(QMainWindow):
             self.syncingBibles = True
             newTextCommand = "STUDY:::{0}".format(verseReference)
             self.runTextCommand(newTextCommand, True, "study")
-            self.syncingBibles = False
         elif config.syncCommentaryWithMainWindow:
+            self.syncingBibles = True
             newTextCommand = "COMMENTARY:::{0}".format(verseReference)
             self.runTextCommand(newTextCommand, True, "study")
 
@@ -2719,7 +2721,6 @@ class MainWindow(QMainWindow):
             self.syncingBibles = True
             newTextCommand = "MAIN:::{0}".format(verseReference)
             self.runTextCommand(newTextCommand, True, "main")
-            self.syncingBibles = False
 
     def updateCommentaryRefButton(self):
         self.commentaryRefButton.setText(self.verseReference("commentary"))
