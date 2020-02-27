@@ -1701,6 +1701,8 @@ class MainWindow(QMainWindow):
             self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
         if config.parallelMode == 0:
             self.parallel()
+        if self.textCommandParser.lastKeyword == "main":
+            self.textCommandParser.lastKeyword = "study"
         self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
         self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
 

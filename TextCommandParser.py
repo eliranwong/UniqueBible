@@ -975,7 +975,7 @@ class TextCommandParser:
                 passages = bibleVerseParser.extractAllReferences(references)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
-                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+                return ("study", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
 
     # _harmony:::
     def textHarmony(self, command, source):
@@ -1002,7 +1002,7 @@ class TextCommandParser:
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
-                return ("main", "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
+                return ("study", "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
 
     # _promise:::
     def textPromise(self, command, source):
@@ -1027,7 +1027,7 @@ class TextCommandParser:
                 topic, passagesString = cs.readData("PROMISES", references.split("."))
                 del cs
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
-                return ("main", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)))
+                return ("study", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)))
 
     # _biblenote:::
     def textBiblenote(self, command, source):
