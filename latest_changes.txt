@@ -1,3 +1,8 @@
+Latest changes in version 17.8:
+* Turned on "openStudyWindowContentOnNextTab" by default for new users.
+* Now display content of bible promises, harmonies and parallels on Study Window instead of BIble Window.
+* Now display of result of running command with keyword "PASSAGES:::" on Study Window instead of BIble Window.
+
 Latest changes in version 17.7:
 * Fine-tuned features "openBibleWindowContentOnNextTab" and "openStudyWindowContentOnNextTab", with several more exceptions added.
 * Added options "open on Study Window" and "open on Bible Window" to open a selected bible version on chosen window, when "Open Bible References on Study Window" is enabled.

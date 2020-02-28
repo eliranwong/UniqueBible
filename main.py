@@ -79,7 +79,7 @@ if not hasattr(config, "openBibleWindowContentOnNextTab"):
     config.openBibleWindowContentOnNextTab = False
 # Options to open Study Window's content in the tab next to the current one: True / False
 if not hasattr(config, "openStudyWindowContentOnNextTab"):
-    config.openStudyWindowContentOnNextTab = False
+    config.openStudyWindowContentOnNextTab = True
 # Options to convert all bible book abbreviations to standard ones: YES / NO
 if not hasattr(config, "parserStandarisation"):
     config.parserStandarisation = "NO"
