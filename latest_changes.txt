@@ -1,3 +1,6 @@
+Latest changes in version 17.9:
+* Increase the maximum number of tabs allowed from 15 to 20.  This limitation applies only to use gui dialog box to set the number of tabs.  Advanced users may adjust the number directly in config.py.
+
 Latest changes in version 17.8:
 * Turned on "openStudyWindowContentOnNextTab" by default for new users.
 * Now display content of bible promises, harmonies and parallels on Study Window instead of BIble Window.

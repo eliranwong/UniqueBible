@@ -1633,10 +1633,10 @@ class MainWindow(QMainWindow):
             # open the text file with webview
             fullOutputPath = os.path.abspath(outputFile)
             self.mainView.load(QUrl.fromLocalFile(fullOutputPath))
-        reference = " - ".join(self.verseReference("main"))
+        reference = "-".join(self.verseReference("main"))
         if self.textCommandParser.lastKeyword in ("compare", "parallel"):
-            *_, reference2 = reference.split(" - ")
-            reference = "{0} - {1}".format(self.textCommandParser.lastKeyword, reference2)
+            *_, reference2 = reference.split("-")
+            reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
@@ -2285,7 +2285,7 @@ class MainWindow(QMainWindow):
 
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
-                "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1, 15, 1)
+                "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1, 20, 1)
         if ok:
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
