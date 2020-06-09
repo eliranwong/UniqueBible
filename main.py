@@ -71,6 +71,9 @@ if not hasattr(config, "musicFolder"):
 # Specify the folder path of video files
 if not hasattr(config, "videoFolder"):
     config.videoFolder = "video"
+# Specify the file path of note file on bible chapters and verses
+if not hasattr(config, "bibleNotes"):
+    config.bibleNotes = "note.sqlite"
 # Specify the number of tabs for bible reading and workspace
 if not hasattr(config, "numberOfTab"):
     config.numberOfTab = 5
@@ -356,6 +359,7 @@ def saveDataOnExit():
         ("marvelData", config.marvelData),
         ("musicFolder", config.musicFolder),
         ("videoFolder", config.videoFolder),
+        ("bibleNotes", config.bibleNotes),
         ("numberOfTab", config.numberOfTab),
         ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
         ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),

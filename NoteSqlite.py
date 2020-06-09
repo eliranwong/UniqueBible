@@ -4,8 +4,8 @@ from BibleVerseParser import BibleVerseParser
 class NoteSqlite:
 
     def __init__(self):
-        # connect note.sqlite
-        self.database = os.path.join(config.marvelData, "note.sqlite")
+        # connect the note file specified in config.py > config.bibleNotes
+        self.database = os.path.join(config.marvelData, config.bibleNotes)
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         create = (

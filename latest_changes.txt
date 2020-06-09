@@ -1,3 +1,10 @@
+Latest changes in version 18.0:
+* Added an config.py option, bibleNotes, that users may switch between note files on bible chapters and verses.
+Remarks:
+- The note database file by default is named as "note.sqlite", located in folder "marvelData".
+- If users want to have multiple copies of note database in different names.  They have to be located inside the folder specified in option "marvelData" in file config.py.
+- Entry specified in option bibleNotes must be a file path, relative to the marvelData folder.
+
 Latest changes in version 17.9:
 * Increase the maximum number of tabs allowed from 15 to 20.  This limitation applies only to use gui dialog box to set the number of tabs.  Advanced users may adjust the number directly in config.py.
 
