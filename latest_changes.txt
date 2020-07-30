@@ -1,3 +1,6 @@
+Latest changes in version 18.1:
+- Merged tojoRs' fix on updating config.py about module installation.  Thanks to tojoRs.  Appreciate your contribution.
+
 Latest changes in version 18.0:
 * Added an config.py option, bibleNotes, that users may switch between note files on bible chapters and verses.
 Remarks:
