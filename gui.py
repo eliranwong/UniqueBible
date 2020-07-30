@@ -109,7 +109,7 @@ class MainWindow(QMainWindow):
         self.setupToolBar()
         self.setAdditionalToolBar()
         # assign views
-        # mainView & studyView are assigned with class "CentralWidget"
+        # mainView & studyView are assigned with class "CentralWidget"        
         self.mainView = None
         self.studyView = None
         self.noteEditor = None
@@ -425,11 +425,15 @@ class MainWindow(QMainWindow):
         self.downloader = Downloader(self, databaseInfo)
         self.downloader.show()
 
-    def moduleInstalled(self, filename):
+    def moduleInstalled(self, databaseInfo):
         self.downloader.close()
         self.displayMessage(config.thisTranslation["message_done"])
 
-    def moduleInstalledFailed(self, filename):
+        # Update install History
+        fileItems, cloudID, *_ = databaseInfo
+        config.installHistory[fileItems[-1]] = cloudID
+        
+    def moduleInstalledFailed(self, databaseInfo):
         self.downloader.close()
         self.displayMessage(config.thisTranslation["message_fail"])
 
@@ -5386,6 +5390,7 @@ class Downloader(QDialog):
         self.setWindowTitle(config.thisTranslation["message_downloadHelper"])
         self.setModal(True)
 
+        self.databaseInfo = databaseInfo
         fileItems, cloudID, *_ = databaseInfo
         self.cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         self.localFile = "{0}.zip".format(os.path.join(*fileItems))
@@ -5443,7 +5448,7 @@ class Downloader(QDialog):
                 zipObject.close()
                 os.remove(self.localFile)
             if interactWithParent:
-                self.parent.moduleInstalled(self.filename)
+                self.parent.moduleInstalled(self.databaseInfo)
         else:
             if interactWithParent:
-                self.parent.moduleInstalledFailed(self.filename)
+                self.parent.moduleInstalledFailed(self.databaseInfo)
