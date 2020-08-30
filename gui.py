@@ -5,6 +5,7 @@ from PySide2.QtCore import QUrl, Qt, QEvent, QRegExp
 from PySide2.QtGui import QIcon, QGuiApplication, QTextCursor, QFont
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QAction, QGridLayout, QVBoxLayout, QHBoxLayout, QGroupBox, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QDialog, QFileDialog, QLabel, QFrame, QTextEdit, QProgressBar, QCheckBox, QTabWidget, QComboBox, QFontDialog, QColorDialog)
+from PySide2.QtWidgets import QSplitter
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
@@ -111,7 +112,7 @@ class MainWindow(QMainWindow):
         # assign views
         # mainView & studyView are assigned with class "CentralWidget"        
         self.mainView = None
-        self.studyView = None
+        self.studyView = None        
         self.noteEditor = None
         self.centralWidget = CentralWidget(self)
         self.instantView = self.centralWidget.instantView
@@ -130,8 +131,8 @@ class MainWindow(QMainWindow):
         self.instantPage = self.instantView.page()
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         # position views as the last-opened layout
-        self.resizeParallel()
-        self.resizeInstant()
+        self.resizeCentral()
+
         # check if newer version is available
         self.checkApplicationUpdate()
         # check if newer versions of formatted bibles are available
@@ -2979,8 +2980,10 @@ class MainWindow(QMainWindow):
         else:
             config.landscapeMode = True
         self.centralWidget.switchLandscapeMode()
-        self.resizeParallel()
-        self.resizeInstant()
+        self.resizeCentral()
+
+    def resizeCentral(self):
+        self.centralWidget.resizeMe()
 
     # Actions - hide / show / resize study & lightning views
     def instant(self):
@@ -2988,104 +2991,14 @@ class MainWindow(QMainWindow):
             config.instantMode = 0
         else:
             config.instantMode += 1
-        self.resizeInstant()
-
-    def resizeInstant(self):
-        if config.landscapeMode:
-            self.resizeInstantL()
-        else:
-            self.resizeInstantP()
-
-    def resizeInstantL(self):
-        instantRatio = {
-            0: (10, 0, 0),
-            1: (10, 0, 3),
-            2: (10, 0, 10),
-        }
-        top, middle, bottom = instantRatio[config.instantMode]
-        self.centralWidget.layout.setRowStretch(0, top)
-        self.centralWidget.layout.setRowStretch(1, middle)
-        self.centralWidget.layout.setRowStretch(2, bottom)
-        if config.instantMode:
-            self.instantView.show()
-        else:
-            self.instantView.hide()
-
-    def resizeInstantP(self):
-        instantRatio = {
-            (0, 0): (10, 0, 0),
-            (0, 1): (10, 5, 0),
-            (0, 2): (5, 5, 0),
-            (0, 3): (5, 10, 0),
-            (1, 0): (10, 0, 3),
-            (1, 1): (20, 10, 9),
-            (1, 2): (5, 5, 3),
-            (1, 3): (10, 20, 9),
-            (2, 0): (10, 0, 10),
-            (2, 1): (10, 5, 15),
-            (2, 2): (10, 10, 20),
-            (2, 3): (5, 10, 15),
-        }
-        top, middle, bottom = instantRatio[(config.instantMode, config.parallelMode)]
-        self.centralWidget.layout.setRowStretch(0, top)
-        self.centralWidget.layout.setRowStretch(1, middle)
-        self.centralWidget.layout.setRowStretch(2, bottom)
-        if config.instantMode:
-            self.instantView.show()
-        else:
-            self.instantView.hide()
+        self.resizeCentral()
 
     def parallel(self):
         if config.parallelMode == 3:
             config.parallelMode = 0
         else:
             config.parallelMode += 1
-        self.resizeParallel()
-
-    def resizeParallel(self):
-        if config.landscapeMode:
-            self.resizeParallelL()
-        else:
-            self.resizeParallelP()
-
-    def resizeParallelL(self):
-        parallelRatio = {
-            0: (1, 0),
-            1: (2, 1),
-            2: (1, 1),
-            3: (1, 2),
-        }
-        left, right = parallelRatio[config.parallelMode]
-        self.centralWidget.layout.setColumnStretch(0, left)
-        self.centralWidget.layout.setColumnStretch(1, right)
-        if config.parallelMode:
-            self.studyView.show()
-        else:
-            self.studyView.hide()
-
-    def resizeParallelP(self):
-        parallelRatio = {
-            (0, 0): (10, 0, 0),
-            (0, 1): (10, 5, 0),
-            (0, 2): (5, 5, 0),
-            (0, 3): (5, 10, 0),
-            (1, 0): (10, 0, 3),
-            (1, 1): (20, 10, 9),
-            (1, 2): (5, 5, 3),
-            (1, 3): (10, 20, 9),
-            (2, 0): (10, 0, 10),
-            (2, 1): (10, 5, 15),
-            (2, 2): (10, 10, 20),
-            (2, 3): (5, 10, 15),
-        }
-        top, middle, bottom = parallelRatio[(config.instantMode, config.parallelMode)]
-        self.centralWidget.layout.setRowStretch(0, top)
-        self.centralWidget.layout.setRowStretch(1, middle)
-        self.centralWidget.layout.setRowStretch(2, bottom)
-        if config.parallelMode:
-            self.studyView.show()
-        else:
-            self.studyView.hide()
+        self.resizeCentral()
 
     # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
     def openMorphDialog(self, items):
@@ -3160,7 +3073,9 @@ class CentralWidget(QWidget):
         #self.mainView.setHtml(self.html, baseUrl)
         #self.studyView = WebEngineView(self, "study")
         #self.studyView.setHtml("This is '<b>Study View</b>'.", baseUrl)
-
+        self.splitterI = QSplitter(Qt.Vertical, parent)
+        self.splitterS = QSplitter(Qt.Horizontal)
+        
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
         for i in range(config.numberOfTab):
@@ -3174,34 +3089,105 @@ class CentralWidget(QWidget):
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), baseUrl)
 
+        self.splitterS.addWidget(self.mainView)
+        self.splitterS.addWidget(self.studyView)
+        
+        self.splitterS.setHandleWidth(5)
+        self.splitterI.setHandleWidth(5)
+
+        self.splitterI.addWidget(self.splitterS)
+        self.splitterI.addWidget(self.instantView)
+
         self.layout = QGridLayout()
         self.layout.setContentsMargins(0, 10, 0, 3)
-        self.layout.setHorizontalSpacing(0)
-        self.layout.setVerticalSpacing(2)
-        self.addWidgetToLayout()
+        # self.layout.setHorizontalSpacing(0)
+        # self.layout.setVerticalSpacing(2)        
+        self.layout.addWidget(self.splitterI)
+        
         self.setLayout(self.layout)
 
     def switchLandscapeMode(self):
-        for widget in (self.mainView, self.studyView, self.instantView):
-            self.layout.removeWidget(widget)
-        self.addWidgetToLayout()
-
-    def addWidgetToLayout(self):
         if config.landscapeMode:
-            self.addWidgetLandscape()
+            # Switch to Landscape
+            self.splitterS.setOrientation(Qt.Horizontal)
         else:
-            self.addWidgetPortrait()
+            #Switch to Portrait
+            self.splitterS.setOrientation(Qt.Vertical)
 
-    def addWidgetLandscape(self):
-        self.layout.addWidget(self.mainView, 0, 0)
-        self.layout.addWidget(self.studyView, 0, 1)
-        self.layout.addWidget(self.instantView, 2, 0, 1, 2)
+    def resizeMe(self):        
+        if config.landscapeMode:
+            self.resizeAsLandscape()
+        else:
+            self.resizeAsPortrait()    
 
-    def addWidgetPortrait(self):
-        self.layout.addWidget(self.mainView, 0, 0, 1, 2)
-        self.layout.addWidget(self.studyView, 1, 0, 1, 2)
-        self.layout.addWidget(self.instantView, 2, 0, 1, 2)
+    def resizeAsLandscape(self):
+        parallelRatio = {
+            0: (1, 0),
+            1: (2, 1),
+            2: (1, 1),
+            3: (1, 2),
+        }
 
+        # The total space we have.
+        w, h = [ self.splitterS.width(), self.splitterI.height() ]
+
+        left, right = parallelRatio[config.parallelMode]
+        self.splitterS.setSizes([ w * left // (left+right), w * right // (left+right)])
+       
+        if config.parallelMode:
+            self.studyView.show()
+        else:
+            self.studyView.hide()
+
+        # Then resize instantView
+        instantRatio = {
+            0: (2, 0),
+            1: (5, 2),
+            2: (2, 2),
+        }
+        
+        top, bottom = instantRatio[config.instantMode]
+        self.splitterI.setSizes([ h * top // (top + bottom), h * bottom // (top + bottom)])
+        
+        if config.instantMode:
+            self.instantView.show()
+        else:
+            self.instantView.hide()
+
+    def resizeAsPortrait(self):
+        parallelRatio = {
+            (0, 0): (10, 0, 0),
+            (0, 1): (10, 5, 0),
+            (0, 2): (5, 5, 0),
+            (0, 3): (5, 10, 0),
+            (1, 0): (10, 0, 3),
+            (1, 1): (20, 10, 9),
+            (1, 2): (5, 5, 3),
+            (1, 3): (10, 20, 9),
+            (2, 0): (10, 0, 10),
+            (2, 1): (10, 5, 15),
+            (2, 2): (10, 10, 20),
+            (2, 3): (5, 10, 15),
+        }
+
+        h = self.splitterI.height()
+        top, middle, bottom = parallelRatio[(config.instantMode, config.parallelMode)]
+        topH = h * top // (top + middle + bottom)
+        middleH = h * middle // (top + middle + bottom)
+        bottomH = h * bottom // (top + middle + bottom)
+
+        self.splitterI.setSizes([topH + middleH, bottomH])
+        self.splitterS.setSizes([topH, middleH])
+   
+        if config.parallelMode:
+            self.studyView.show()
+        else:
+            self.studyView.hide()
+        
+        if config.instantMode:
+            self.instantView.show()
+        else:
+            self.instantView.hide()
 
 class TabWidget(QTabWidget):
 
