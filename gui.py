@@ -3073,9 +3073,14 @@ class CentralWidget(QWidget):
         #self.mainView.setHtml(self.html, baseUrl)
         #self.studyView = WebEngineView(self, "study")
         #self.studyView.setHtml("This is '<b>Study View</b>'.", baseUrl)
-        self.splitterI = QSplitter(Qt.Vertical, parent)
-        self.splitterS = QSplitter(Qt.Horizontal)
         
+        self.instantSplitter = QSplitter(Qt.Vertical, parent)
+      
+        if config.landscapeMode:            
+            self.parallelSplitter = QSplitter(Qt.Horizontal)
+        else:
+            self.parallelSplitter = QSplitter(Qt.Vertical)
+
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
         for i in range(config.numberOfTab):
@@ -3089,36 +3094,48 @@ class CentralWidget(QWidget):
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), baseUrl)
 
-        self.splitterS.addWidget(self.mainView)
-        self.splitterS.addWidget(self.studyView)
+        self.parallelSplitter.addWidget(self.mainView)
+        self.parallelSplitter.addWidget(self.studyView)
         
-        self.splitterS.setHandleWidth(5)
-        self.splitterI.setHandleWidth(5)
+        self.parallelSplitter.setHandleWidth(5)
+        self.instantSplitter.setHandleWidth(5)
 
-        self.splitterI.addWidget(self.splitterS)
-        self.splitterI.addWidget(self.instantView)
+        self.instantSplitter.addWidget(self.parallelSplitter)
+        self.instantSplitter.addWidget(self.instantView)
+
+        # Adding signals
+        self.instantSplitter.splitterMoved.connect(self.onInstantSplitterMoved)
+        self.parallelSplitter.splitterMoved.connect(self.onParallelSplitterMoved)
 
         self.layout = QGridLayout()
         self.layout.setContentsMargins(0, 10, 0, 3)
         # self.layout.setHorizontalSpacing(0)
         # self.layout.setVerticalSpacing(2)        
-        self.layout.addWidget(self.splitterI)
+        self.layout.addWidget(self.instantSplitter)                
         
-        self.setLayout(self.layout)
+        self.setLayout(self.layout)       
+
+    def onInstantSplitterMoved(self, pos, index):      
+        config.instantMode = -1
+        config.iModeSplitterSizes = self.instantSplitter.sizes()
+
+    def onParallelSplitterMoved(self, pos, index):
+        config.parallelMode = -1
+        config.pModeSplitterSizes = self.parallelSplitter.sizes()
 
     def switchLandscapeMode(self):
         if config.landscapeMode:
             # Switch to Landscape
-            self.splitterS.setOrientation(Qt.Horizontal)
+            self.parallelSplitter.setOrientation(Qt.Horizontal)
         else:
             #Switch to Portrait
-            self.splitterS.setOrientation(Qt.Vertical)
+            self.parallelSplitter.setOrientation(Qt.Vertical)
 
     def resizeMe(self):        
         if config.landscapeMode:
             self.resizeAsLandscape()
         else:
-            self.resizeAsPortrait()    
+            self.resizeAsPortrait()        
 
     def resizeAsLandscape(self):
         parallelRatio = {
@@ -3129,10 +3146,15 @@ class CentralWidget(QWidget):
         }
 
         # The total space we have.
-        w, h = [ self.splitterS.width(), self.splitterI.height() ]
+        w, h = [ self.parallelSplitter.width(), self.instantSplitter.height() ]
 
-        left, right = parallelRatio[config.parallelMode]
-        self.splitterS.setSizes([ w * left // (left+right), w * right // (left+right)])
+        if config.parallelMode == -1:                        
+            left, right = config.pModeSplitterSizes
+            w = left + right
+        else:
+            left, right = parallelRatio[config.parallelMode]
+            
+        self.parallelSplitter.setSizes([ w * left // (left+right), w * right // (left+right)])
        
         if config.parallelMode:
             self.studyView.show()
@@ -3145,9 +3167,14 @@ class CentralWidget(QWidget):
             1: (5, 2),
             2: (2, 2),
         }
-        
-        top, bottom = instantRatio[config.instantMode]
-        self.splitterI.setSizes([ h * top // (top + bottom), h * bottom // (top + bottom)])
+
+        if config.instantMode == -1:        
+            top, bottom = config.iModeSplitterSizes
+            h = top + bottom
+        else:
+            top, bottom = instantRatio[config.instantMode]
+
+        self.instantSplitter.setSizes([ h * top // (top + bottom), h * bottom // (top + bottom)])
         
         if config.instantMode:
             self.instantView.show()
@@ -3155,29 +3182,60 @@ class CentralWidget(QWidget):
             self.instantView.hide()
 
     def resizeAsPortrait(self):
+               
         parallelRatio = {
-            (0, 0): (10, 0, 0),
-            (0, 1): (10, 5, 0),
-            (0, 2): (5, 5, 0),
-            (0, 3): (5, 10, 0),
-            (1, 0): (10, 0, 3),
-            (1, 1): (20, 10, 9),
-            (1, 2): (5, 5, 3),
-            (1, 3): (10, 20, 9),
-            (2, 0): (10, 0, 10),
-            (2, 1): (10, 5, 15),
-            (2, 2): (10, 10, 20),
-            (2, 3): (5, 10, 15),
-        }
+            ( 0,  0): (10, 0, 0),
+            ( 0,  1): (10, 5, 0),
+            ( 0,  2): (5, 5, 0),
+            ( 0,  3): (5, 10, 0),
+            ( 1,  0): (10, 0, 3),            
+            ( 1,  1): (20, 10, 9),
+            ( 1,  2): (5, 5, 3),
+            ( 1,  3): (10, 20, 9),
+            ( 2,  0): (10, 0, 10),
+            ( 2,  1): (10, 5, 15),
+            ( 2,  2): (10, 10, 20),
+            ( 2,  3): (5, 10, 15),
+        }      
 
-        h = self.splitterI.height()
-        top, middle, bottom = parallelRatio[(config.instantMode, config.parallelMode)]
-        topH = h * top // (top + middle + bottom)
-        middleH = h * middle // (top + middle + bottom)
-        bottomH = h * bottom // (top + middle + bottom)
+        h = self.instantSplitter.height()
 
-        self.splitterI.setSizes([topH + middleH, bottomH])
-        self.splitterS.setSizes([topH, middleH])
+        if config.instantMode == -1:
+            i1, i2 = config.iModeSplitterSizes
+            h = i1 + i2
+            bottom = i2 * h // (i1 + i2)
+            remaining = h - bottom
+
+            if config.parallelMode == -1:
+                s1, s2 = config.pModeSplitterSizes
+                top = s1 * remaining // (s1 + s2)
+                middle = s2 * remaining // (s1 + s2)
+
+            else: # i.e. config.parallelMode is not custom
+                _top, _middle, _bottom = parallelRatio[(0, config.parallelMode)]
+                top = _top * remaining // (_top + _middle)
+                middle = _middle * remaining // (_top + _middle)
+
+        else: # i.e. config.instantMode is set
+
+            if config.parallelMode == -1:
+                s1, s2 = config.pModeSplitterSizes
+                _top, _middle, _bottom = parallelRatio[(config.instantMode, 0)]
+
+                bottom = h * _bottom // (_top + _middle + _bottom)
+                remaining = h - bottom
+
+                top = s1 * remaining // (s1 + s2)
+                middle = s2 * remaining // (s1 + s2)
+
+            else:
+                _top, _middle, _bottom = parallelRatio[(config.instantMode, config.parallelMode)]
+                top = h * _top // (_top + _middle + _bottom)
+                middle = h * _middle // (_top + _middle + _bottom)
+                bottom = h * _bottom // (_top + _middle + _bottom)
+
+        self.instantSplitter.setSizes([top + middle, bottom])
+        self.parallelSplitter.setSizes([top, middle])
    
         if config.parallelMode:
             self.studyView.show()

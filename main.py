@@ -444,6 +444,12 @@ def saveDataOnExit():
             fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
         if hasattr(config, "translationLanguage"):
             fileObj.write("{0} = {1}\n".format("translationLanguage", pprint.pformat(config.translationLanguage)))
+        if hasattr(config, "iModeSplitterSizes"):
+            fileObj.write("{0} = {1}\n".format("iModeSplitterSizes", pprint.pformat(config.iModeSplitterSizes)))
+        if hasattr(config, "pModeSplitterSizes"):
+            fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
+
+        
 #        if hasattr(config, "translation"):
 #            fileObj.write("{0} = {1}\n".format("translation", pprint.pformat(config.translation)))
 
