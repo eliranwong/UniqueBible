@@ -1,3 +1,6 @@
+Latest changes in version 18.2:
+- Merged tojoRs' new feature: Movable handles between mainView, studyView and instantView.  Thanks to tojoRs.  Appreciate your contribution.
+
 Latest changes in version 18.1:
 - Merged tojoRs' fix on updating config.py about module installation.  Thanks to tojoRs.  Appreciate your contribution.
 
