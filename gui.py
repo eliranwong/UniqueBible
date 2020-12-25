@@ -18,8 +18,6 @@ from ToolsSqlite import BookData, IndexesSqlite
 from translations import translations
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
-from themes import Themes
-
 # Optional Features
 # [Optional] Text-to-Speech feature
 try:
@@ -131,8 +129,6 @@ class MainWindow(QMainWindow):
             self.studyView.setCurrentIndex(config.numberOfTab - 1)
         self.setStudyPage()
         self.instantPage = self.instantView.page()
-        if config.theme == "dark":
-            self.instantPage.setBackgroundColor(Qt.transparent)
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         # position views as the last-opened layout
         self.resizeCentral()
@@ -294,8 +290,6 @@ class MainWindow(QMainWindow):
         # main page changes as tab is changed.
         #print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
-        if config.theme == "dark":
-            self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
         self.mainPage.loadFinished.connect(self.finishMainViewLoading)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -306,8 +300,6 @@ class MainWindow(QMainWindow):
         # study page changes as tab is changed.
         #print(self.studyView.currentIndex())
         self.studyPage = self.studyView.currentWidget().page()
-        if config.theme == "dark":
-            self.studyPage.setBackgroundColor(Qt.transparent)
         self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
         self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -461,9 +453,6 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction(config.thisTranslation["menu1_tabNo"], self, triggered=self.setTabNumberDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
-        themeMenu = menu1.addMenu(config.thisTranslation["menu1_selectTheme"])
-        themeMenu.addAction(QAction(config.thisTranslation["menu1_default_theme"], self, triggered=self.setDefaultTheme))
-        themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
         menu1.addAction(QAction(config.thisTranslation["menu1_moreConfig"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addSeparator()
         if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
@@ -1655,14 +1644,6 @@ class MainWindow(QMainWindow):
             reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
-            
-    def setDefaultTheme(self):
-        config.theme = "default"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
-
-    def setDarkTheme(self):
-        config.theme = "dark"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
@@ -1826,8 +1807,7 @@ class MainWindow(QMainWindow):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
-        
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese)
         return text
 
     def pasteFromClipboard(self):
@@ -2913,8 +2893,7 @@ class MainWindow(QMainWindow):
         timeDifference = int((now - self.now).total_seconds())
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
-        elif (timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or \
-            (source == "study" and textCommand != self.lastStudyTextCommand)) and textCommand != "main.html":
+        elif timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or (source == "study" and textCommand != self.lastStudyTextCommand):
             # handle exception for new tab features
             if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
                 self.newTabException = True
@@ -2922,7 +2901,7 @@ class MainWindow(QMainWindow):
             view, content = self.textCommandParser.parser(textCommand, source)
             # process content
             if content == "INVALID_COMMAND_ENTERED":
-                self.displayMessage(config.thisTranslation["message_invalid"] + ":" + textCommand)
+                self.displayMessage(config.thisTranslation["message_invalid"])
             elif view == "command":
                 self.textCommandLineEdit.setText(content)
                 self.textCommandLineEdit.setFocus()
@@ -2932,7 +2911,7 @@ class MainWindow(QMainWindow):
                     activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
                 elif view == "study":
                     activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
+                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese)
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,
@@ -3105,17 +3084,15 @@ class CentralWidget(QWidget):
         self.mainView = TabWidget(self, "main")
         self.parent.mainView = self.mainView
         for i in range(config.numberOfTab):
-            tabView = WebEngineView(self, "main")
-            self.mainView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabBible"]))
+            self.mainView.addTab(WebEngineView(self, "main"), "{1}{0}".format(i+1, config.thisTranslation["tabBible"]))
 
         self.studyView = TabWidget(self, "study")
         self.parent.studyView = self.studyView
         for i in range(config.numberOfTab):
-            tabView = WebEngineView(self, "study")
-            self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
+            self.studyView.addTab(WebEngineView(self, "study"), "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
 
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<link rel='stylesheet' type='text/css' href='css/" + config.theme + ".css'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), baseUrl)
+        self.instantView.setHtml("<p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), baseUrl)
 
         self.parallelSplitter.addWidget(self.mainView)
         self.parallelSplitter.addWidget(self.studyView)
@@ -3297,13 +3274,14 @@ class TabWidget(QTabWidget):
         elif self.name == "study":
             self.parent.parent.setStudyPage()
 
+
 class WebEngineView(QWebEngineView):
 
     def __init__(self, parent, name):
         super().__init__()
         self.parent = parent
         self.name = name
-       
+
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.selectionChanged.connect(self.updateContextMenu)
@@ -3737,7 +3715,7 @@ class WebEngineView(QWebEngineView):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif self.name == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/{7}.js'></script><script src='w3.js'></script>{6}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese, activeBCVsettings, config.theme)
+        html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2}</style><link rel='stylesheet' type='text/css' href='theText.css'><script src='theText.js'></script><script src='w3.js'></script>{6}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese, activeBCVsettings)
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, baseUrl)
         self.popoverView.show()
@@ -5116,9 +5094,9 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.insertPlainText(selectedText)
 
     def customFormat(self, text):
-        # QTextEdit's line break character by pressing ENTER in plain & html mode ""
-        # please note that "" is not an empty string
-        text = text.replace("", "\n")
+        # QTextEdit's line break character by pressing ENTER in plain & html mode " "
+        # please note that " " is not an empty string
+        text = text.replace(" ", "\n")
 
         text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
         text = text.replace("</ol>\n<ol>", "\n")
@@ -5133,7 +5111,7 @@ p, li {0} white-space: pre-wrap; {1}
         text = text.replace('<table>', '<table border="1" cellpadding="5">')
 
         # convert back to QTextEdit linebreak
-        text = text.replace("\n", "")
+        text = text.replace("\n", " ")
 
         # wrap with default font and font-size
         text = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, text)
@@ -5316,7 +5294,6 @@ class MoreConfigOptions(QDialog):
         layout.addWidget(readWiki)
 
         horizontalContainer = QWidget()
-        horizontalContainer.setPalette(Themes.getPalette(config.theme))
         horizontalContainerLayout = QHBoxLayout()
 
         leftContainer = QWidget()
@@ -5519,4 +5496,3 @@ class Downloader(QDialog):
         else:
             if interactWithParent:
                 self.parent.moduleInstalledFailed(self.databaseInfo)
-
