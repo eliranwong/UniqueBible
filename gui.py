@@ -5116,9 +5116,9 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.insertPlainText(selectedText)
 
     def customFormat(self, text):
-        # QTextEdit's line break character by pressing ENTER in plain & html mode ""
-        # please note that "" is not an empty string
-        text = text.replace("", "\n")
+        # QTextEdit's line break character by pressing ENTER in plain & html mode " "
+        # please note that " " is not an empty string
+        text = text.replace(" ", "\n")
 
         text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
         text = text.replace("</ol>\n<ol>", "\n")
