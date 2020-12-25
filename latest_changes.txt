@@ -1,3 +1,6 @@
+Latest changes in version 18.3:
+- Merged Oliver Tseng' s contribution on theme development.  Thanks to Oliver.  Appreciate your good work.
+
 Latest changes in version 18.2:
 - Merged tojoRs' new feature: Movable handles between mainView, studyView and instantView.  Thanks to tojoRs.  Appreciate your contribution.
 
