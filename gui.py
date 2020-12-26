@@ -336,11 +336,12 @@ class MainWindow(QMainWindow):
             print("Failed to read '{0}'.".format(checkFile))
 
     def checkModulesUpdate(self):
-        for filename in self.updatedFiles:
-            abb = filename[:-6]
-            if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
-                if self.isNewerAvailable(filename):
-                    self.displayMessage("{1} {0}.  {2} '{3} > {4}'".format(filename, config.thisTranslation["message_newerFile"], config.thisTranslation["message_installFrom"], config.thisTranslation["menu8_resources"], config.thisTranslation["menu8_bibles"]))
+        if not config.disableModulesUpdateCheck:
+            for filename in self.updatedFiles:
+                abb = filename[:-6]
+                if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
+                    if self.isNewerAvailable(filename):
+                        self.displayMessage("{1} {0}.  {2} '{3} > {4}'".format(filename, config.thisTranslation["message_newerFile"], config.thisTranslation["message_installFrom"], config.thisTranslation["menu8_resources"], config.thisTranslation["menu8_bibles"]))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -5345,6 +5346,7 @@ class MoreConfigOptions(QDialog):
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
+            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -5429,6 +5431,9 @@ class MoreConfigOptions(QDialog):
 
     def autoCopyChinesePinyinOutputChanged(self):
         config.autoCopyChinesePinyinOutput = not config.autoCopyChinesePinyinOutput
+
+    def disableModulesUpdateCheckChanged(self):
+        config.disableModulesUpdateCheck = not config.disableModulesUpdateCheck
 
     def parserStandarisationChanged(self):
         if config.parserStandarisation == "YES":
