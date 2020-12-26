@@ -310,6 +310,9 @@ if not hasattr(config, "showInformation"):
 # Theme (default, dark)
 if not hasattr(config, "theme"):
     config.theme = "default"
+# Disable modules update check
+if not hasattr(config, "disableModulesUpdateCheck"):
+    config.disableModulesUpdateCheck = False
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
@@ -442,7 +445,8 @@ def saveDataOnExit():
         ("currentRecord", {'main': 0, 'study': 0}),
         ("history", config.history),
         ("installHistory", config.installHistory),
-        ("theme", config.theme)
+        ("theme", config.theme),
+        ("disableModulesUpdateCheck", config.disableModulesUpdateCheck)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
