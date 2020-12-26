@@ -1,3 +1,6 @@
+Latest changes in version 18.5:
+- Oliver Tseng added an option to disable check for module update on startup.  Thanks for contribution, Oliver.
+
 Latest changes in version 18.4:
 - Fixed font size issued introduced in version 18.3.
 
