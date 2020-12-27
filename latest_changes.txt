@@ -1,3 +1,6 @@
+Latest changes in version 18.6:
+- Fixed broken fonts issue after relocating css since version 18.3.
+
 Latest changes in version 18.5:
 - Oliver Tseng added an option to disable check for module update on startup.  Thanks for contribution, Oliver.
 
