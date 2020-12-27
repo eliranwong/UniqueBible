@@ -1,3 +1,8 @@
+Latest changes in version 18.7:
+- Merged Oliver Tseng's work on text-to-speech feature.  For details, please read: https://github.com/eliranwong/UniqueBible/pull/28
+- This new feature need to install a plugin by running: "pip install langdetect"
+- Thanks to Oliver!
+
 Latest changes in version 18.6:
 - Fixed broken fonts issue after relocating css since version 18.3.
 
