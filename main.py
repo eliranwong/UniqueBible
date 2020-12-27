@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os
+import os, platform
 from themes import Themes
 
 # File "config.py" is essential for running module "config"
@@ -13,6 +13,46 @@ if not os.path.isfile("config.py"):
     open("config.py", "w", encoding="utf-8").close()
 
 import config
+
+# Optional Features
+# [Optional] Text-to-Speech feature
+try:
+    from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+    if platform.system() == "Linux" and not config.showTtsOnLinux:
+        config.ttsSupport = False
+    else:
+        config.ttsSupport = True
+except:
+    config.ttsSupport = False
+    print("Text-to-speech feature is not supported on this operating system.")
+# [Optional] Chinese feature - opencc
+# It converts conversion between Traditional Chinese and Simplified Chinese.
+# To enable functions working with "opencc", install python package "opencc" first, e.g. pip3 install OpenCC.
+#try:
+#    import opencc
+#    openccSupport = True
+#except:
+#    openccSupport = False
+#    print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
+# [Optional] Chinese feature - pypinyin
+# It translates Chinese characters into pinyin.
+# To enable functions working with "pypinyin", install python package "pypinyin" first, e.g. pip3 install pypinyin.
+try:
+    from pypinyin import pinyin
+    config.pinyinSupport = True
+except:
+    config.pinyinSupport = False
+    print("Chinese feature 'pypinyin' is disabled.  To enable it, install python package 'pypinyin' first, by running 'pip3 install pypinyin'.")
+# [Optional] Google-translate
+try:
+    from googletrans import Translator
+    config.googletransSupport = True
+except:
+    config.googletransSupport = False
+    print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
+# import for testing
+if config.testing:
+    import exlbl
 
 # Check current version
 with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
@@ -316,7 +356,7 @@ if not hasattr(config, "disableModulesUpdateCheck"):
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
-from gui import MainWindow
+from gui.MainWindow import MainWindow
 
 # Set screen size at first launch
 def setupMainWindow():

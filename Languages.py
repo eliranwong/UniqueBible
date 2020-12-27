@@ -346,6 +346,7 @@ class Languages:
         "message_remarks": "Remarks:",
         "message_cancel": "Cancel",
         "message_install": "Download and Install",
+        "message_installing": "Installing...",
         "message_downloadHelper": "Download Helper",
         "message_searchMorphology": "Search Morphology",
         "import_linebreak": "Additional linebreak for each bible verse",
