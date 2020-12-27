@@ -26,7 +26,7 @@ background: #ffb7b7;
 
 @font-face {
     font-family: 'KoineGreek';
-    src: url('KoineGreek.ttf');
+    src: url('../fonts/KoineGreek.ttf');
 }
 
 kgrk {
@@ -41,7 +41,7 @@ kgrk, gu, grk {
 
 @font-face {
     font-family: 'Ezra SIL';
-    src: url('sileot.ttf');
+    src: url('../fonts/sileot.ttf');
 }
 
 bdbheb, bdbarc, hu, heb {
