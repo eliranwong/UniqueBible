@@ -312,8 +312,8 @@ class WebEngineView(QWebEngineView):
                     self.engine = QTextToSpeech(engineNames[0])
                     locales = self.engine.availableLocales()
                     # print(locales)
-                    DetectorFactory.seed = 0
                     if config.langdetectSupport:
+                        DetectorFactory.seed = 0
                         # https://pypi.org/project/langdetect/
                         language = detect(self.selectedText())
                         # print(language)
