@@ -49,7 +49,7 @@ class Downloader(QDialog):
         self.downloadButton.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setEnabled(False)
         # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
-        # self.downloadFile(True)
+        self.downloadFile(True)
 
     def downloadFile(self, interactWithParent=True):
         try:
