@@ -1,5 +1,6 @@
 import config, platform
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QDialog, QLabel, QCheckBox)
+from themes import Themes
 
 class MoreConfigOptions(QDialog):
 
