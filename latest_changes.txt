@@ -1,3 +1,7 @@
+Latest changes in version 18.8:
+- Use of plugin "langdetect" is now made optional to avoid startup errors.
+- Merged several fixes contributed by Oliver Tseng.  Thanks to Oliver.
+
 Latest changes in version 18.7:
 - Merged Oliver Tseng's work on text-to-speech feature.  For details, please read: https://github.com/eliranwong/UniqueBible/pull/28
 - This new feature need to install a plugin by running: "pip install langdetect"
