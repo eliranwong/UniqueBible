@@ -40,7 +40,7 @@ class CentralWidget(QWidget):
             self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
 
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<link rel='stylesheet' type='text/css' href='css/" + config.theme + ".css'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font), config.baseUrl)
+        self.instantView.setHtml("<link rel='stylesheet' type='text/css' href='css/{1}.css'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font, config.theme), config.baseUrl)
 
         self.parallelSplitter.addWidget(self.mainView)
         self.parallelSplitter.addWidget(self.studyView)
