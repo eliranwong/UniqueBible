@@ -12,7 +12,7 @@ try:
     config.langdetectSupport = True
 except:
     config.langdetectSupport = False
-    print("Language detect feature is not supported on this operating system.")
+    print("Language detect feature is not supported.  To activate this feature, please install plugin langdetect by running 'pip3 install langdetect' and restart the app.")
 
 class WebEngineView(QWebEngineView):
     
