@@ -6,8 +6,13 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from langdetect import detect, detect_langs, DetectorFactory
 from gui.imports import *
+try:
+    from langdetect import detect, detect_langs, DetectorFactory
+    config.langdetectSupport = True
+except:
+    config.langdetectSupport = False
+    print("Language detect feature is not supported on this operating system.")
 
 class WebEngineView(QWebEngineView):
     
@@ -308,22 +313,23 @@ class WebEngineView(QWebEngineView):
                     locales = self.engine.availableLocales()
                     # print(locales)
                     DetectorFactory.seed = 0
-                    # https://pypi.org/project/langdetect/
-                    language = detect(self.selectedText())
-                    # print(language)
-                    # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-                    if (language == 'zh-cn'):
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
-                    elif (language == 'zh-tw'):
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                    elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                    elif (language == 'el'):
-                        self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
-                        self.engine.setRate(-0.3)
-                    elif (language == 'he'):
-                        self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
-                        self.engine.setRate(-0.3)
+                    if config.langdetectSupport:
+                        # https://pypi.org/project/langdetect/
+                        language = detect(self.selectedText())
+                        # print(language)
+                        # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+                        if (language == 'zh-cn'):
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
+                        elif (language == 'zh-tw'):
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                        elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                        elif (language == 'el'):
+                            self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
+                            self.engine.setRate(-0.3)
+                        elif (language == 'he'):
+                            self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
+                            self.engine.setRate(-0.3)
                     engineVoices = self.engine.availableVoices()
                     self.engine.setVolume(1.0)
                     if engineVoices:
