@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform
+import os, platform, logging
 from themes import Themes
 
 # File "config.py" is essential for running module "config"
@@ -12,7 +12,13 @@ from themes import Themes
 if not os.path.isfile("config.py"):
     open("config.py", "w", encoding="utf-8").close()
 
+logging.basicConfig(filename='uba.log', level=logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 import config
+
+logging.info("!!!1")
 
 # Check current version
 with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
