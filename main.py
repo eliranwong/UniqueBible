@@ -18,8 +18,6 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 import config
 
-logging.info("!!!1")
-
 # Check current version
 with open("UniqueBibleAppVersion.txt", "r", encoding="utf-8") as fileObject:
     text = fileObject.read()
@@ -319,7 +317,8 @@ if not hasattr(config, "theme"):
 # Disable modules update check
 if not hasattr(config, "disableModulesUpdateCheck"):
     config.disableModulesUpdateCheck = False
-
+if not hasattr(config, "enableCopyHtmlCommand"):
+    config.enableCopyHtmlCommand = False
 
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -493,7 +492,8 @@ def saveDataOnExit():
         ("history", config.history),
         ("installHistory", config.installHistory),
         ("theme", config.theme),
-        ("disableModulesUpdateCheck", config.disableModulesUpdateCheck)
+        ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
+        ("enableCopyHtmlCommand", config.enableCopyHtmlCommand)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
