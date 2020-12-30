@@ -1,7 +1,8 @@
-import config
+import config, logging
 from PySide2.QtCore import Qt, QLocale
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from PySide2.QtGui import QDesktopServices
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
@@ -20,6 +21,7 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.setPage(WebEnginePage(self))
        
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -490,3 +492,10 @@ class WebEngineView(QWebEngineView):
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
         self.popoverView.show()
+
+class WebEnginePage(QWebEnginePage):
+    def acceptNavigationRequest(self, url,  _type, isMainFrame):
+        if _type == QWebEnginePage.NavigationTypeLinkClicked:
+            QDesktopServices.openUrl(url);
+            return False
+        return True
