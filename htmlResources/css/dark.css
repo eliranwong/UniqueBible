@@ -404,6 +404,10 @@ ref, entry {
     color: #9a9a9a;
 }
 
+red ref, red entry {
+    color: #f54a4a;
+}
+
 ref:hover, entry:hover {
     color: red;
     cursor: pointer;
