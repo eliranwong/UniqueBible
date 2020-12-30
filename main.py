@@ -4,13 +4,17 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform
+import os, platform, logging
 from themes import Themes
 
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
 if not os.path.isfile("config.py"):
     open("config.py", "w", encoding="utf-8").close()
+
+logging.basicConfig(filename='uba.log', level=logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 import config
 
@@ -313,7 +317,8 @@ if not hasattr(config, "theme"):
 # Disable modules update check
 if not hasattr(config, "disableModulesUpdateCheck"):
     config.disableModulesUpdateCheck = False
-
+if not hasattr(config, "enableCopyHtmlCommand"):
+    config.enableCopyHtmlCommand = False
 
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -487,7 +492,8 @@ def saveDataOnExit():
         ("history", config.history),
         ("installHistory", config.installHistory),
         ("theme", config.theme),
-        ("disableModulesUpdateCheck", config.disableModulesUpdateCheck)
+        ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
+        ("enableCopyHtmlCommand", config.enableCopyHtmlCommand)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:

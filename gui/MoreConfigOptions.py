@@ -1,5 +1,6 @@
 import config, platform
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QDialog, QLabel, QCheckBox)
+from themes import Themes
 
 class MoreConfigOptions(QDialog):
 
@@ -48,7 +49,8 @@ class MoreConfigOptions(QDialog):
             ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
-            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged)
+            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
+            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -136,6 +138,9 @@ class MoreConfigOptions(QDialog):
 
     def disableModulesUpdateCheckChanged(self):
         config.disableModulesUpdateCheck = not config.disableModulesUpdateCheck
+
+    def enableCopyHtmlCommandChanged(self):
+        config.enableCopyHtmlCommand = not config.enableCopyHtmlCommand
 
     def parserStandarisationChanged(self):
         if config.parserStandarisation == "YES":

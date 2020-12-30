@@ -228,6 +228,7 @@ class Languages:
         "menu10_bookOnNew": "Further book content will be opened on a new window.",
         "menu10_bookOnStudy": "Further book content will be opened on Study Window.",
         "context1_copy": "Copy",
+        "context1_copy_html": "Copy HTML",
         "context1_copyReferences": "Copy All Bible References",
         "context1_speak": "Speak",
         "context1_english": "Translate into English",

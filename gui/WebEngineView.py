@@ -1,13 +1,19 @@
-import config
+import config, logging
 from PySide2.QtCore import Qt, QLocale
-from PySide2.QtWidgets import (QAction)
+from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from PySide2.QtGui import QDesktopServices
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from langdetect import detect, detect_langs, DetectorFactory
 from gui.imports import *
+try:
+    from langdetect import detect, detect_langs, DetectorFactory
+    config.langdetectSupport = True
+except:
+    config.langdetectSupport = False
+    print("Language detect feature is not supported.  To activate this feature, please install plugin langdetect by running 'pip3 install langdetect' and restart the app.")
 
 class WebEngineView(QWebEngineView):
     
@@ -15,6 +21,7 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.setPage(WebEnginePage(self))
        
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -57,6 +64,12 @@ class WebEngineView(QWebEngineView):
         copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
+
+        if config.enableCopyHtmlCommand:
+            copyHtml = QAction(self)
+            copyHtml.setText(config.thisTranslation["context1_copy_html"])
+            copyHtml.triggered.connect(self.copyHtmlCode)
+            self.addAction(copyHtml)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -238,6 +251,12 @@ class WebEngineView(QWebEngineView):
         else:
             self.page().triggerAction(self.page().Copy)
 
+    def copyHtmlCode(self):
+        self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
+
+    def copyHtmlToClipboard(self, html):
+        QApplication.clipboard().setText(html)
+
     # Translate selected words into English
     def selectedTextToEnglish(self):
         selectedText = self.selectedText()
@@ -307,23 +326,24 @@ class WebEngineView(QWebEngineView):
                     self.engine = QTextToSpeech(engineNames[0])
                     locales = self.engine.availableLocales()
                     # print(locales)
-                    DetectorFactory.seed = 0
-                    # https://pypi.org/project/langdetect/
-                    language = detect(self.selectedText())
-                    # print(language)
-                    # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-                    if (language == 'zh-cn'):
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
-                    elif (language == 'zh-tw'):
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                    elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
-                        self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                    elif (language == 'el'):
-                        self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
-                        self.engine.setRate(-0.3)
-                    elif (language == 'he'):
-                        self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
-                        self.engine.setRate(-0.3)
+                    if config.langdetectSupport:
+                        DetectorFactory.seed = 0
+                        # https://pypi.org/project/langdetect/
+                        language = detect(self.selectedText())
+                        # print(language)
+                        # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+                        if (language == 'zh-cn'):
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
+                        elif (language == 'zh-tw'):
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                        elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
+                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                        elif (language == 'el'):
+                            self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
+                            self.engine.setRate(-0.3)
+                        elif (language == 'he'):
+                            self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
+                            self.engine.setRate(-0.3)
                     engineVoices = self.engine.availableVoices()
                     self.engine.setVolume(1.0)
                     if engineVoices:
@@ -472,3 +492,10 @@ class WebEngineView(QWebEngineView):
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
         self.popoverView.show()
+
+class WebEnginePage(QWebEnginePage):
+    def acceptNavigationRequest(self, url,  _type, isMainFrame):
+        if _type == QWebEnginePage.NavigationTypeLinkClicked:
+            QDesktopServices.openUrl(url);
+            return False
+        return True
