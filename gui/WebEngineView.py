@@ -1,7 +1,8 @@
-import config
+import config, logging
 from PySide2.QtCore import Qt, QLocale
-from PySide2.QtWidgets import (QAction)
+from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from PySide2.QtGui import QDesktopServices
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
@@ -20,6 +21,7 @@ class WebEngineView(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.setPage(WebEnginePage(self))
        
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -62,6 +64,12 @@ class WebEngineView(QWebEngineView):
         copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
+
+        if config.enableCopyHtmlCommand:
+            copyHtml = QAction(self)
+            copyHtml.setText(config.thisTranslation["context1_copy_html"])
+            copyHtml.triggered.connect(self.copyHtmlCode)
+            self.addAction(copyHtml)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -242,6 +250,12 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             self.page().triggerAction(self.page().Copy)
+
+    def copyHtmlCode(self):
+        self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
+
+    def copyHtmlToClipboard(self, html):
+        QApplication.clipboard().setText(html)
 
     # Translate selected words into English
     def selectedTextToEnglish(self):
@@ -478,3 +492,10 @@ class WebEngineView(QWebEngineView):
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
         self.popoverView.show()
+
+class WebEnginePage(QWebEnginePage):
+    def acceptNavigationRequest(self, url,  _type, isMainFrame):
+        if _type == QWebEnginePage.NavigationTypeLinkClicked:
+            QDesktopServices.openUrl(url);
+            return False
+        return True
