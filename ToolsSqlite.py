@@ -575,10 +575,10 @@ class LexiconData:
 
     def getSelectForm(self, entry, module=""):
         lexiconList = [lexicon for lexicon in self.lexiconList if not lexicon == module]
-        selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><option value="">More lexicons HERE</option>'.format(entry)
+        selectForm = '<p><form action=""><select id="{0}" name="{0}" onchange="lexicon(this.value, this.id)"><optgroup><option value="">More lexicons HERE</option>'.format(entry)
         for lexicon in lexiconList:
             selectForm += '<option value="{0}">{1}</option>'.format(lexicon, Lexicon(lexicon).getInfo())
-        selectForm += '</select></form></p>'
+        selectForm += '</optgroup></select></form></p>'
         return selectForm
 
 
