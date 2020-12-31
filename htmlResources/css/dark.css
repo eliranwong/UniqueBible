@@ -401,7 +401,7 @@ div.e {
 /* general text formatting */
 
 ref, entry {
-    color: #9a9a9a;
+    color: #a2a0a0;
 }
 
 red ref, red entry {
@@ -462,21 +462,21 @@ vid {
 /* unvisited link */
 
 a:link {
-    color: #515790;
+    color: #8e8ebf;
     text-decoration: none;
 }
 
 /* visited link */
 
 a:visited {
-    color: #515790;
+    color: #8e8ebf;
     text-decoration: none;
 }
 
 /* mouse over link */
 
 a:hover, vid:hover {
-    color: red;
+    color: rgb(255, 149, 149);
     text-decoration: none;
     cursor: pointer;
 }
@@ -486,6 +486,14 @@ a:hover, vid:hover {
 a:active {
     color: #515790;
     text-decoration: none;
+}
+
+/* select dropdown */
+
+select {
+    color: rgb(216, 213, 213);
+    background: rgb(58, 53, 53);
+    font-size: 11pt;
 }
 
 /* chapter link */

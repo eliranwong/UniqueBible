@@ -4,3 +4,4 @@
 /dist
 config.py
 **.log
+htmlResources/main.html

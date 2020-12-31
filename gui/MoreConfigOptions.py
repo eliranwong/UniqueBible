@@ -50,7 +50,8 @@ class MoreConfigOptions(QDialog):
             ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
-            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged)
+            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
+            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -141,6 +142,9 @@ class MoreConfigOptions(QDialog):
 
     def enableCopyHtmlCommandChanged(self):
         config.enableCopyHtmlCommand = not config.enableCopyHtmlCommand
+
+    def forceGenerateHtmlChanged(self):
+        config.forceGenerateHtml = not config.forceGenerateHtml
 
     def parserStandarisationChanged(self):
         if config.parserStandarisation == "YES":

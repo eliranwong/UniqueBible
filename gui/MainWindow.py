@@ -24,6 +24,7 @@ from gui.MorphDialog import MorphDialog
 from gui.YouTubePopover import YouTubePopover
 from gui.CentralWidget import CentralWidget
 from gui.imports import *
+from ToolsSqlite import LexiconData
 
 class MainWindow(QMainWindow):
 
@@ -428,6 +429,9 @@ class MainWindow(QMainWindow):
         menu1.addAction(QAction(config.thisTranslation["menu1_tabNo"], self, triggered=self.setTabNumberDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyFavouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1.addAction(QAction(config.thisTranslation["menu1_setMyLanguage"], self, triggered=self.openMyLanguageDialog))
+        lexiconMenu = menu1.addMenu(config.thisTranslation["menu1_selectDefaultLexicon"])
+        lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
+        lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
         themeMenu = menu1.addMenu(config.thisTranslation["menu1_selectTheme"])
         themeMenu.addAction(QAction(config.thisTranslation["menu1_default_theme"], self, triggered=self.setDefaultTheme))
         themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
@@ -1605,7 +1609,7 @@ class MainWindow(QMainWindow):
                 nextIndex = 0
             self.mainView.setCurrentIndex(nextIndex)
         # check size of text content
-        if sys.getsizeof(text) < 2097152:
+        if not config.forceGenerateHtml and sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
         else:
             # save html in a separate file if text is larger than 2MB
@@ -3009,6 +3013,22 @@ class MainWindow(QMainWindow):
             config.userLanguage = item
             if not config.googletransSupport:
                 self.displayMessage("{0}  'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
+
+    # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
+    def openSelectDefaultStrongsGreekLexiconDialog(self):
+        items = LexiconData().lexiconList
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_selectDefaultLexicon"],
+            config.thisTranslation["menu1_setDefaultStrongsGreekLexicon"], items, items.index(config.defaultLexiconStrongG), False)
+        if ok and item:
+            config.defaultLexiconStrongG = item
+
+    # Set default Strongs Hebrew lexicon (config.defaultLexiconStrongH)
+    def openSelectDefaultStrongsHebrewLexiconDialog(self):
+        items = LexiconData().lexiconList
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_selectDefaultLexicon"],
+            config.thisTranslation["menu1_setDefaultStrongsHebrewLexicon"], items, items.index(config.defaultLexiconStrongH), False)
+        if ok and item:
+            config.defaultLexiconStrongH = item
 
     # Set Favourite Bible Version
     def openFavouriteBibleDialog(self):
