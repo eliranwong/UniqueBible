@@ -20,7 +20,7 @@ class MoreConfigOptions(QDialog):
         layout.addWidget(readWiki)
 
         horizontalContainer = QWidget()
-        horizontalContainer.setPalette(Themes.getPalette(config.theme))
+        horizontalContainer.setPalette(Themes.getPalette())
         horizontalContainerLayout = QHBoxLayout()
 
         leftContainer = QWidget()
@@ -51,7 +51,8 @@ class MoreConfigOptions(QDialog):
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
             ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
-            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged)
+            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged),
+            ("logCommands", config.logCommands, self.logCommandsChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -163,3 +164,6 @@ class MoreConfigOptions(QDialog):
     def ibusChanged(self):
         config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def logCommandsChanged(self):
+        config.logCommands = not config.logCommands

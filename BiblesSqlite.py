@@ -1,10 +1,12 @@
 """
 Reading data from bibles.sqlite
 """
-import os, sqlite3, config, re
+import os, sqlite3, config, re, logging
 from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
+from themes import Themes
+
 try:
     from diff_match_patch import diff_match_patch
 except:
@@ -432,7 +434,10 @@ input.addEventListener('keyup', function(event) {0}
                 if row % 2 == 0:
                     chapter += "<tr>"
                 else:
-                    chapter += "<tr style='background-color: #f2f2f2;'>"
+                    if row == 1:
+                        chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonBackgroundColor())
+                    else:
+                        chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonAlternateBackgroundColor())
                 if row == 1:
                     chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
@@ -740,7 +745,28 @@ input.addEventListener('keyup', function(event) {0}
             chapter += "{0}</div>".format(verseText)
         return chapter
 
-
+    def migrateDatabaseContent(self):
+        logger = logging.getLogger('uba')
+        logger.debug("Migrating Bible name to Details table")
+        bibleList = self.getFormattedBibleList()
+        for name in bibleList:
+            bible = Bible(name)
+            if bible.checkTableExists('Verses'):
+                bibleFullname = bible.bibleInfoOld()
+                if bibleFullname:
+                    if not bible.checkTableExists('Details'):
+                        logger.debug("Creating " + name)
+                        bible.createDetailsTable()
+                        bible.insertDetailsTable(bibleFullname, name)
+                    else:
+                        logger.debug("Updating " + name)
+                        bible.updateDetailsTable(bibleFullname, name)
+                    bible.deleteOldBibleInfo()
+                else:
+                    logger.debug("Already migrated:" + name)
+            else:
+                logger.debug("Verses table does not exist:" + name)
+        config.migrateDatabaseBibleNameToDetailsTable = False
 class Bible:
 
     def __init__(self, text):
@@ -751,6 +777,7 @@ class Bible:
         self.cursor = self.connection.cursor()
 
     def __del__(self):
+        self.connection.commit()
         self.connection.close()
 
     def getBookList(self):
@@ -769,6 +796,15 @@ class Bible:
         return [verse[0] for verse in self.cursor.fetchall()]
 
     def bibleInfo(self):
+        query = "SELECT Title FROM Details limit 1"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return ""
+
+    def bibleInfoOld(self):
         query = "SELECT Scripture FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
         self.cursor.execute(query)
         info = self.cursor.fetchone()
@@ -873,6 +909,29 @@ class Bible:
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
+    def checkTableExists(self, table):
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
+
+    def createDetailsTable(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS Details (Title NVARCHAR(100), 
+                               Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL,
+                               NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)''')
+
+    def insertDetailsTable(self, bibleFullname, bibleAbbrev):
+        sql = "INSERT INTO Details VALUES (?, ?, '', 1, 1, 1, 0, 1)"
+        self.cursor.execute(sql, (bibleFullname, bibleAbbrev))
+
+    def updateDetailsTable(self, bibleFullname, bibleAbbrev):
+        sql = "UPDATE Details set Title = ?, Abbreviation = ?"
+        self.cursor.execute(sql, (bibleFullname, bibleAbbrev))
+
+    def deleteOldBibleInfo(self):
+        query = "DELETE FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
+        self.cursor.execute(query)
 
 class ClauseData:
 

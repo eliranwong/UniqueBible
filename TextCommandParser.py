@@ -5,14 +5,13 @@ from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, In
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from Languages import Languages
-
 class TextCommandParser:
 
     def __init__(self, parent):
         self.parent = parent
         self.lastKeyword = None
 
-    def parser(self, textCommad, source="main"):
+    def parser(self, textCommand, source="main"):
         interpreters = {
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
@@ -425,12 +424,12 @@ class TextCommandParser:
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
         }
-        commandList = self.splitCommand(textCommad)
+        commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
             if self.isDatabaseInstalled("bible"):
                 self.lastKeyword = "bible"
-                return self.textBibleVerseParser(textCommad, viewText, source)
+                return self.textBibleVerseParser(textCommand, viewText, source)
             else:
                 return self.databaseNotInstalled("bible")
         else:
@@ -445,7 +444,7 @@ class TextCommandParser:
             else:
                 if self.isDatabaseInstalled("bible"):
                     self.lastKeyword = "bible"
-                    return self.textBibleVerseParser(textCommad, viewText, source)
+                    return self.textBibleVerseParser(textCommand, viewText, source)
                 else:
                     return self.databaseNotInstalled("bible")
 
@@ -906,7 +905,7 @@ class TextCommandParser:
             if confirmedTexts == ["ALL"]:
                 updateViewConfig(viewText, verseList[-1])
             else:
-                updateViewConfig(confirmedTexts[-1], verseList[-1])
+                updateViewConfig(confirmedTexts[0], verseList[-1])
             return (source, verses)
 
     # DIFF:::

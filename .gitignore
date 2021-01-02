@@ -2,6 +2,7 @@
 /marvelData
 /build
 /dist
+/notes
 config.py
 **.log
 htmlResources/main.html

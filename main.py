@@ -13,14 +13,6 @@ from themes import Themes
 if not os.path.isfile("config.py"):
     open("config.py", "w", encoding="utf-8").close()
 
-# Setup logging
-logger = logging.getLogger('uba')
-logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=1)
-logHandler.setLevel(logging.DEBUG)
-logger.addHandler(logHandler)
-logging.getLogger("requests").setLevel(logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
-
 import config
 
 # Check current version
@@ -328,6 +320,21 @@ if not hasattr(config, "enableCopyHtmlCommand"):
 # Force generate main.html for all pages
 if not hasattr(config, "forceGenerateHtml"):
     config.forceGenerateHtml = False
+# Log commands for debugging
+if not hasattr(config, "logCommands"):
+    config.logCommands = False
+# Migrate Bible name from Verses table to Details table
+if not hasattr(config, "migrateDatabaseBibleNameToDetailsTable"):
+    config.migrateDatabaseBibleNameToDetailsTable = True 
+
+# Setup logging
+logger = logging.getLogger('uba')
+logger.setLevel(logging.DEBUG)
+logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=1)
+logHandler.setLevel(logging.DEBUG)
+logger.addHandler(logHandler)
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -503,7 +510,9 @@ def saveDataOnExit():
         ("theme", config.theme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
-        ("forceGenerateHtml", config.forceGenerateHtml)
+        ("forceGenerateHtml", config.forceGenerateHtml),
+        ("logCommands", config.logCommands),
+        ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
@@ -531,7 +540,7 @@ if config.virtualKeyboard:
 app = QApplication(sys.argv)
 # Assign a function to save configurations when the app is closed
 app.aboutToQuit.connect(saveDataOnExit)
-app.setPalette(Themes.getPalette(config.theme))
+app.setPalette(Themes.getPalette())
 
 # Class "MainWindow" is located in file "gui.py"
 mainWindow = MainWindow()

@@ -1,4 +1,4 @@
-import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation
+import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation, logging
 from datetime import datetime
 from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent
@@ -233,6 +233,8 @@ class MainWindow(QMainWindow):
                 self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"], config.thisTranslation["message_willBeNoticed"]))
                 biblesSqlite.proceedMigration(biblesWithBothVersions)
                 self.displayMessage(config.thisTranslation["message_done"])
+            if config.migrateDatabaseBibleNameToDetailsTable:
+                biblesSqlite.migrateDatabaseContent() 
             del biblesSqlite
 
     def displayMessage(self, message, title="UniqueBible"):
@@ -2609,14 +2611,14 @@ class MainWindow(QMainWindow):
         if not config.fontSize == 5:
             config.fontSize = config.fontSize - 1
             self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
-            self.reloadCurrentRecord()
+            self.reloadCurrentRecord(forceExecute=True)
 
     def largerFont(self):
         config.fontSize = config.fontSize + 1
         self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(forceExecute=True)
 
-    def reloadCurrentRecord(self):
+    def reloadCurrentRecord(self, forceExecute=False):
         if config.readFormattedBibles:
             mappedBibles = (
                 ("MIB", "OHGBi"),
@@ -2628,7 +2630,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(plainBible, formattedBible)
-                    self.runTextCommand(textCommand, False, view)
+                    self.runTextCommand(textCommand, False, view, forceExecute)
         else:
             mappedBibles = (
                 ("MIB", "OHGBi"),
@@ -2643,7 +2645,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
-                    self.runTextCommand(textCommand, False, view)
+                    self.runTextCommand(textCommand, False, view, forceExecute)
 
     # Actions - previous / next chapter
     def previousMainChapter(self):
@@ -2874,7 +2876,10 @@ class MainWindow(QMainWindow):
         newTextCommand = self.textCommandLineEdit.text()
         self.runTextCommand(newTextCommand, True, source)
 
-    def runTextCommand(self, textCommand, addRecord=True, source="main"):
+    def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
+        if config.logCommands:
+            logger = logging.getLogger('uba')
+            logger.debug(textCommand[:80])
         # reset document.title
         changeTitle = "document.title = 'UniqueBible.app';"
         self.mainPage.runJavaScript(changeTitle)
@@ -2885,7 +2890,7 @@ class MainWindow(QMainWindow):
         timeDifference = int((now - self.now).total_seconds())
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
-        elif (timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or \
+        elif (forceExecute or timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or \
             (source == "study" and textCommand != self.lastStudyTextCommand)) and textCommand != "main.html":
             # handle exception for new tab features
             if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):

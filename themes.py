@@ -1,10 +1,10 @@
 from PySide2.QtGui import QPalette, QColor
-
+import config
 class Themes():
 
     @staticmethod
-    def getPalette(name):
-        if name == "dark":
+    def getPalette():
+        if config.theme == "dark":
             palette = QPalette()
             palette.setColor(QPalette.Window, QColor(50, 50, 50))
             palette.setColor(QPalette.WindowText, QColor(200, 200, 200))
@@ -25,3 +25,17 @@ class Themes():
             palette = QPalette()
             # palette.setColor(QPalette.Background, QColor("white"))
             return palette
+
+    @staticmethod
+    def getComparisonBackgroundColor():
+        if config.theme == "dark":
+            return "#5f5f5f"
+        else:
+            return "#f2f2f2"
+
+    @staticmethod
+    def getComparisonAlternateBackgroundColor():
+        if config.theme == "dark":
+            return "#1f1f1f"
+        else:
+            return "#f2f2f2"
