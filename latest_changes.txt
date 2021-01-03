@@ -1,3 +1,10 @@
+Latest changes in version 19.0:
+- Merged Oliver Tseng's latest additions
+* Search in remote by lowercase Bible book name
+* Add commentaries to remote
+* Add lexicons to remote
+* Add Bibles to remote
+
 Latest changes in version 18.9:
 - Merged several enhancement done by Oliver Tseng, e.g.:
  * DB migration, dark mode theme fixes
