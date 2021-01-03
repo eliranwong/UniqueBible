@@ -3,6 +3,7 @@
 /build
 /dist
 /notes
+/.idea
 config.py
 **.log
 htmlResources/main.html

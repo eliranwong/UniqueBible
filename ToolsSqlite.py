@@ -443,15 +443,19 @@ class ExlbData:
 
 class Commentary:
 
-    def __init__(self, text):
-        self.text = text
-        if self.text in self.getCommentaryList():
-            self.database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(text))
-            self.connection = sqlite3.connect(self.database)
-            self.cursor = self.connection.cursor()
+    def __init__(self, text=False):
+        if text:
+            self.text = text
+            if self.text in self.getCommentaryList():
+                self.database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(text))
+                self.connection = sqlite3.connect(self.database)
+                self.cursor = self.connection.cursor()
 
     def __del__(self):
-        self.connection.close()
+        try:
+            self.connection.close()
+        except:
+            pass
 
     def commentaryInfo(self):
         query = "SELECT title FROM Details"

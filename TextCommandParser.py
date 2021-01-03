@@ -5,7 +5,10 @@ from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, In
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from Languages import Languages
+
 class TextCommandParser:
+
+    last_lexicon_entry = 'G2424'
 
     def __init__(self, parent):
         self.parent = parent
@@ -427,6 +430,12 @@ class TextCommandParser:
         commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
+            textCommand = textCommand.strip()
+            if ":" not in textCommand:
+                if re.search(".*\d+$", textCommand):
+                    textCommand += ":1"
+                else:
+                    textCommand += " 1:1"
             if self.isDatabaseInstalled("bible"):
                 self.lastKeyword = "bible"
                 return self.textBibleVerseParser(textCommand, viewText, source)
@@ -1460,6 +1469,8 @@ class TextCommandParser:
             defaultLexicon = self.getDefaultLexicons()
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
+        entries = entries.strip()
+        TextCommandParser.last_lexicon_entry = entries
         lexicon = Lexicon(module)
         content = "<hr>".join([lexicon.getContent(entry) for entry in entries.split("_")])
         del lexicon
