@@ -1,3 +1,7 @@
+Latest changes in version 19.1:
+- Merged Oliver Tseng's lastest work:
+Populate Details table when importing a 3rd party Bible
+
 Latest changes in version 19.0:
 - Merged Oliver Tseng's latest additions
 * Search in remote by lowercase Bible book name
