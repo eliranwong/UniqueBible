@@ -1,7 +1,8 @@
-import os, sqlite3, config, re, json, base64
+import os, sqlite3, config, re, json, base64, logging
 from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
+from BiblesSqlite import Bible
 
 class Converter:
 
@@ -280,6 +281,8 @@ class Converter:
 
     # Import e-Sword Bibles [Apple / macOS / iOS]
     def importESwordBible(self, filename):
+        logger = logging.getLogger('uba')
+        logger.info("Importing eSword Bible: " + filename)
         connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
@@ -310,6 +313,7 @@ class Converter:
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
+        logger.info("Importing successful")
 
     def eSwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripESwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
@@ -326,7 +330,9 @@ class Converter:
 
         statements = (
             "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)",
+            ("CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT,"
+             "Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)")
         )
         for create in statements:
             cursor.execute(create)
@@ -361,6 +367,8 @@ class Converter:
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
         connection.commit()
+
+        self.populateDetails(cursor, description, abbreviation)
 
         connection.close()
 
@@ -619,6 +627,8 @@ class Converter:
 
     # Import MySword Bibles
     def importMySwordBible(self, filename):
+        logger = logging.getLogger('uba')
+        logger.info("Importing MySword Bible: " + filename)
         connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
@@ -638,6 +648,7 @@ class Converter:
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
+        logger.info("Import successful")
 
     def mySwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripMySwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
@@ -654,7 +665,9 @@ class Converter:
 
         statements = (
             "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)",
+            ("CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT,"
+                "Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)")
         )
         for create in statements:
             cursor.execute(create)
@@ -690,7 +703,31 @@ class Converter:
         cursor.executemany(insert, formattedChapters)
         connection.commit()
 
+        self.populateDetails(cursor, description, abbreviation)
+
         connection.close()
+
+    def populateDetails(self, cursor, description, abbreviation):
+        cursor.execute("SELECT COUNT(DISTINCT(Book)) FROM Bible")
+        count = cursor.fetchone()[0]
+
+        information = ''
+        version = 1
+        oldTestamentFlag = 1
+        newTestamentFlag = 1
+        apocryphaFlag = 0
+        strongsFlag = 0
+        if count <= 27:
+            oldTestamentFlag = 0
+        elif count == 39:
+            newTestamentFlag = 0
+        elif count > 66:
+            apocryphaFlag = 1
+
+        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
+                                newTestamentFlag, apocryphaFlag, strongsFlag))
+        cursor.connection.commit()
 
     def stripMySwordBibleTags(self, text):
         if config.importDoNotStripStrongNo:

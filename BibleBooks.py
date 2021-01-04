@@ -302,6 +302,8 @@ class BibleBooks:
         "Lv.": "3",
         "nb": "4",
         "no": "4",
+        "num": "4",
+        "numb": "4",
         "numbers": "4",
         "Nb.": "4",
         "Nm.": "4",

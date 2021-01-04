@@ -20,6 +20,7 @@ class BiblesSqlite:
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
+        self.logger = logging.getLogger('uba')
 
     def __del__(self):
         self.connection.close()
@@ -96,10 +97,13 @@ class BiblesSqlite:
             else:
                 return ""
         elif text in formattedBibleList:
-            bible = Bible(text)
-            info = bible.bibleInfo()
-            del bible
-            return info
+            try:
+                bible = Bible(text)
+                info = bible.bibleInfo()
+                del bible
+                return info
+            except:
+                print("Could not open Bible " + text)
 
     def importBible(self, description, abbreviation, verses):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -114,7 +118,6 @@ class BiblesSqlite:
                 create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
                 self.cursor.execute(create)
             self.connection.commit()
-            verses.append((0, 0, 0, description))
             insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
             self.cursor.executemany(insert, verses)
             self.connection.commit()
@@ -746,8 +749,13 @@ input.addEventListener('keyup', function(event) {0}
         return chapter
 
     def migrateDatabaseContent(self):
-        logger = logging.getLogger('uba')
-        logger.debug("Migrating Bible name to Details table")
+        self.logger.debug("Migrating Bible name to Details table")
+        self.migrateFormattedDatabaseContent()
+        self.migratePlainDatabaseContent()
+        config.migrateDatabaseBibleNameToDetailsTable = False
+
+    def migrateFormattedDatabaseContent(self):
+        self.logger.debug("Migrating formatted Bibles")
         bibleList = self.getFormattedBibleList()
         for name in bibleList:
             bible = Bible(name)
@@ -755,18 +763,39 @@ input.addEventListener('keyup', function(event) {0}
                 bibleFullname = bible.bibleInfoOld()
                 if bibleFullname:
                     if not bible.checkTableExists('Details'):
-                        logger.debug("Creating " + name)
+                        self.logger.debug("Creating " + name)
                         bible.createDetailsTable()
                         bible.insertDetailsTable(bibleFullname, name)
                     else:
-                        logger.debug("Updating " + name)
+                        self.logger.debug("Updating " + name)
                         bible.updateDetailsTable(bibleFullname, name)
                     bible.deleteOldBibleInfo()
                 else:
-                    logger.debug("Already migrated:" + name)
+                    self.logger.debug("Already migrated:" + name)
             else:
-                logger.debug("Verses table does not exist:" + name)
-        config.migrateDatabaseBibleNameToDetailsTable = False
+                self.logger.debug("Verses table does not exist:" + name)
+
+    def migratePlainDatabaseContent(self):
+        self.logger.debug("Migrating plain Bibles")
+        bibleList = self.getPlainBibleList()
+        for name in bibleList:
+            bible = Bible(name)
+            if bible.checkTableExists('Verses'):
+                bibleFullname = bible.bibleInfoOld()
+                if bibleFullname:
+                    if not bible.checkTableExists('Details'):
+                        self.logger.debug("Creating " + name)
+                        bible.createDetailsTable()
+                        bible.insertDetailsTable(bibleFullname, name)
+                    else:
+                        self.logger.debug("Updating " + name)
+                        bible.updateDetailsTable(bibleFullname, name)
+                    bible.deleteOldBibleInfo()
+                else:
+                    self.logger.debug("Already migrated:" + name)
+            else:
+                self.logger.debug("Verses table does not exist:" + name)
+
 class Bible:
 
     def __init__(self, text):
@@ -824,8 +853,6 @@ class Bible:
             create = "CREATE TABLE Verses (Book INT, Chapter INT, Verse INT, Scripture TEXT)"
             self.cursor.execute(create)
         self.connection.commit()
-        if description:
-            verses.append((0, 0, 0, description))
         insert = "INSERT INTO Verses (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)"
         self.cursor.executemany(insert, verses)
         self.connection.commit()
