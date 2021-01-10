@@ -5,6 +5,7 @@ from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, In
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from Languages import Languages
+from PySide2.QtWidgets import QApplication
 
 class TextCommandParser:
 
@@ -1470,6 +1471,7 @@ class TextCommandParser:
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
         entries = entries.strip()
+        QApplication.clipboard().setText(entries)
         TextCommandParser.last_lexicon_entry = entries
         lexicon = Lexicon(module)
         content = "<hr>".join([lexicon.getContent(entry) for entry in entries.split("_")])

@@ -9,6 +9,13 @@ from gui.WebEngineView import WebEngineView
 
 class CentralWidget(QWidget):
 
+    instantRatio = {
+        0: (2, 0),
+        1: (10, 1),
+        2: (5, 2),
+        3: (2, 2),
+    }
+
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
@@ -109,18 +116,11 @@ class CentralWidget(QWidget):
         else:
             self.studyView.hide()
 
-        # Then resize instantView
-        instantRatio = {
-            0: (2, 0),
-            1: (5, 2),
-            2: (2, 2),
-        }
-
-        if config.instantMode == -1:        
+        if config.instantMode == -1:
             top, bottom = config.iModeSplitterSizes
             h = top + bottom
         else:
-            top, bottom = instantRatio[config.instantMode]
+            top, bottom = CentralWidget.instantRatio[config.instantMode]
 
         self.instantSplitter.setSizes([ h * top // (top + bottom), h * bottom // (top + bottom)])
         

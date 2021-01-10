@@ -23,11 +23,8 @@ class RemoteControl(QWidget):
         availableGeometry = qApp.desktop().availableGeometry()
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
-    # re-implementing close event, when users close this widget
-    # avoid closing by mistake
-    # this window can be closed via "Remote Control [On / Off]" in menu bar
     def closeEvent(self, event):
-        event.ignore()
+        config.remoteControl = False
 
     # setup ui
     def setupUI(self):

@@ -118,10 +118,14 @@ class Languages:
 
     translation = {
         "menu1_app": "UniqueBible",
+        "menu1_screenSize": "Screen Size",
         "menu1_fullScreen": "Full Screen",
-        "menu1_resize": "Resize",
         "menu1_topHalf": "Top Half",
+        "menu1_bottomHalf": "Bottom Half",
         "menu1_leftHalf": "Left Half",
+        "menu1_rightHalf": "Right Half",
+        "menu1_smallSize": "Small Size",
+        "menu1_resize": "Resize",
         "menu1_remoteControl": "Open / Close Remote Control",
         "menu1_setDefaultFont": "Select Default Font and Size",
         "menu1_setChineseFont": "Select Chinese Font",
@@ -223,6 +227,7 @@ class Languages:
         "menu8_tagFile": "Add Bible Reference Links to a File",
         "menu8_tagFiles": "Add Bible Reference Links to Multiple Files",
         "menu8_tagFolder": "Add Bible Reference Links to a Folder's Files",
+        "menu8_fixDatabase": "Fix Database",
         "menu9_information": "Information",
         "menu9_credits": "Sources",
         "menu9_contact": "Contact us",
