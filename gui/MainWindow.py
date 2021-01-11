@@ -1491,7 +1491,7 @@ class MainWindow(QMainWindow):
         self.enableInstantButton = self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_hover"], self.enableInstantButtonClicked)
 
         iconFile = os.path.join("htmlResources", "lightning.png")
-        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.instant)
+        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.cycleInstant)
 
         self.rightToolBar.addSeparator()
 
