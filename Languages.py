@@ -409,6 +409,8 @@ class Languages:
         "translations": "Translations",
         "commentaries": "Commentaries",
         "lexicons": "Lexicons",
+        "dictionaries": "Dictionaries",
+        "enter": "Enter",
         "enter_command_here": "Enter command here ...",
     }
 

@@ -1,3 +1,6 @@
+Latest change in version 19.3:
+Oliver added tabs to Remote Control.  Thank you.
+
 Latest changes in version 19.2:
 Merged new additions contributed by Oliver Tseng.  Thanks to Oliver for making the app better and better.
 - Add importXMLBible (Zefania Bibles)

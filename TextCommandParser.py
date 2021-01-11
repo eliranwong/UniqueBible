@@ -9,7 +9,8 @@ from PySide2.QtWidgets import QApplication
 
 class TextCommandParser:
 
-    last_lexicon_entry = 'G2424'
+    last_lexicon_entry = ''
+    last_text_search = ''
 
     def __init__(self, parent):
         self.parent = parent
@@ -1358,6 +1359,7 @@ class TextCommandParser:
     # SEARCHTOOL:::
     def textSearchTool(self, command, source):
         module, entry = self.splitCommand(command)
+        TextCommandParser.last_text_search = entry
         indexes = IndexesSqlite()
         toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
         if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
