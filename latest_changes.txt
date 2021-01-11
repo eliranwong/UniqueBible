@@ -1,3 +1,8 @@
+Latest change in version 19.4:
+Merged Oliver's new PR.  Thanks to Oliver.
+- Add number buttons to remote control
+- Add dictionaries to remote control
+
 Latest change in version 19.3:
 Oliver added tabs to Remote Control.  Thank you.
 
