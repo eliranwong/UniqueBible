@@ -1,3 +1,17 @@
+Latest changes in version 19.2:
+Merged new additions contributed by Oliver Tseng.  Thanks to Oliver for making the app better and better.
+- Add importXMLBible (Zefania Bibles)
+- Catch global uncaught exceptions
+- Import bblx Bible
+- Always recreate RemoteControl to show newly installed modules
+- Add bottom, right half screen size
+- Add screen size shortcuts
+- Add small size to instant
+- Bring remote control to foreground
+- Don't show main.html in command bar
+- Add fix database to menu
+- Copy lexicon to clipboard
+
 Latest changes in version 19.1:
 - Merged Oliver Tseng's lastest work:
 Populate Details table when importing a 3rd party Bible
