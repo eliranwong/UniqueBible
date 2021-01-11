@@ -3,6 +3,7 @@ from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import Bible
+from xml.dom import minidom
 
 class Converter:
 
@@ -16,15 +17,15 @@ class Converter:
             cursor = connection.cursor()
             # create two tables: "Details" & "Commentary"
             statements = (
-                "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)",
-                "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)",
+                Bible.CREATE_DETAILS_TABLE,
+                Bible.CREATE_COMMENTARY_TABLE
             )
             for create in statements:
                 cursor.execute(create)
                 connection.commit()
             # insert data to table "Details"
-            insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0))
+            insert = "INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament, Apocrypha, Strongs, Language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(insert, (title, abbreviation, description, 1, 1, 1, 0, 0, ''))
             connection.commit()
             # insert data to table "Commentary"
             if content:
@@ -284,9 +285,10 @@ class Converter:
         logger = logging.getLogger('uba')
         logger.info("Importing eSword Bible: " + filename)
         connection = sqlite3.connect(filename)
+        connection.text_factory = lambda b: b.decode(errors='ignore')
         cursor = connection.cursor()
 
-        query = "SELECT Title, Abbreviation FROM Details"
+        query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
         abbreviation = abbreviation.replace("-", "")
@@ -321,7 +323,7 @@ class Converter:
         biblesSqlite.importBible(description, abbreviation, verses)
         del biblesSqlite
 
-    def eSwordBibleToRichFormat(self, description, abbreviation, verses, notes):
+    def eSwordBibleToRichFormat(self, description, abbreviation, verses, notes, extended=False):
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
@@ -329,10 +331,9 @@ class Converter:
         cursor = connection.cursor()
 
         statements = (
-            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)",
-            ("CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT,"
-             "Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)")
+            Bible.CREATE_BIBLE_TABLE,
+            Bible.CREATE_VERSES_TABLE,
+            Bible.CREATE_DETAILS_TABLE
         )
         for create in statements:
             cursor.execute(create)
@@ -341,6 +342,8 @@ class Converter:
         noteList = []
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
+            if extended:
+                scripture = self.convertSuperStrongs(scripture)
             scripture = self.convertESwordBibleTags(scripture)
 
             if scripture:
@@ -385,6 +388,7 @@ class Converter:
             ("<p>|</p>|<h[0-9]+?>|</h[0-9]+?>|<sup>", " "),
             ("<not>.*?</not>|<[^\n<>]*?>", ""),
             (" [ ]+?([^ ])", r" \1"),
+            ("{.*?super (.*?)}", r"<gloss onclick='lex({0}\1{0})'>\1</gloss>".format('"')),
         )
         text = text.strip()
         for search, replace in searchReplace:
@@ -402,6 +406,7 @@ class Converter:
             ("</blu>", "</esblu>"),
             ("</ref><ref", "</ref>; <ref"),
             ("</ref></sup>[ ]*?<sup><ref", "</ref> <ref"),
+            ("{.*?super (.*?)}", r"<gloss onclick='lex({0}\1{0})'>\1</gloss>".format('"')),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
@@ -664,10 +669,9 @@ class Converter:
         cursor = connection.cursor()
 
         statements = (
-            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)",
-            ("CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT,"
-                "Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)")
+            Bible.CREATE_BIBLE_TABLE,
+            Bible.CREATE_NOTES_TABLE,
+            Bible.CREATE_DETAILS_TABLE
         )
         for create in statements:
             cursor.execute(create)
@@ -707,7 +711,7 @@ class Converter:
 
         connection.close()
 
-    def populateDetails(self, cursor, description, abbreviation):
+    def populateDetails(self, cursor, description, abbreviation, language = ""):
         cursor.execute("SELECT COUNT(DISTINCT(Book)) FROM Bible")
         count = cursor.fetchone()[0]
 
@@ -724,9 +728,9 @@ class Converter:
         elif count > 66:
             apocryphaFlag = 1
 
-        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
-                                newTestamentFlag, apocryphaFlag, strongsFlag))
+                                newTestamentFlag, apocryphaFlag, strongsFlag, language))
         cursor.connection.commit()
 
     def stripMySwordBibleTags(self, text):
@@ -975,6 +979,38 @@ class Converter:
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
 
+
+    # Import Zefania XML Bibles
+    # https://www.ph4.org/b4_mobi.php?q=zefania
+    # http://sourceforge.net/projects/zefania-sharp/files/
+    def importXMLBible(self, filename):
+        logger = logging.getLogger('uba')
+        logger.info("Importing Zefania XML Bible: " + filename)
+        doc = minidom.parse(filename)
+        translation = doc.getElementsByTagName("XMLBIBLE")[0]
+        biblename = translation.getAttribute("biblename")
+        if biblename[:7] == "ENGLISH":
+            biblename = biblename[7:]
+        abbreviation = biblename
+        description = biblename
+        books = doc.getElementsByTagName("BIBLEBOOK")
+        data = []
+        for book in books:
+            book_number = book.getAttribute("bnumber")
+            chapters = book.getElementsByTagName("CHAPTER")
+            book_number = book.getAttribute("bnumber")
+            for chapter in chapters:
+                chapter_number = chapter.getAttribute("cnumber")
+                verses = chapter.getElementsByTagName("VERS")
+                for verse in verses:
+                    verse_number = verse.getAttribute("vnumber")
+                    scripture = verse.firstChild.nodeValue.strip()
+                    row = [book_number, chapter_number, verse_number, scripture]
+                    data.append(row)
+        self.mySwordBibleToRichFormat(description, abbreviation, data)
+        self.mySwordBibleToPlainFormat(description, abbreviation, data)
+        logger.info("Import successful")
+
     def storiesToTitles(self, stories):
         titles = {}
         for story in stories:
@@ -1014,8 +1050,8 @@ class Converter:
         cursor = connection.cursor()
 
         statements = (
-            "CREATE TABLE Bible (Book INT, Chapter INT, Scripture TEXT)",
-            "CREATE TABLE Notes (Book INT, Chapter INT, Verse INT, ID TEXT, Note TEXT)"
+            Bible.CREATE_BIBLE_TABLE,
+            Bible.CREATE_NOTES_TABLE
         )
         for create in statements:
             cursor.execute(create)

@@ -7,6 +7,7 @@
 import os, platform, logging
 import logging.handlers as handlers
 from themes import Themes
+from PySide2.QtWidgets import (QMessageBox)
 
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
@@ -416,7 +417,6 @@ def saveDataOnExit():
         ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
-        ("remoteControl", config.remoteControl),
         ("openWindows", config.openWindows),
         ("openMacos", config.openMacos),
         ("openLinux", config.openLinux),
@@ -569,5 +569,11 @@ except:
 
 # Set indexes of history records
 setCurrentRecord()
+
+def global_excepthook(type, value, traceback):
+    logger.error("Uncaught exception", exc_info=(type, value, traceback))
+    print(traceback.format_exc())
+
+sys.excepthook = global_excepthook
 
 sys.exit(app.exec_())
