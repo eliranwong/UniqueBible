@@ -46,6 +46,14 @@ class NoteEditor(QMainWindow):
         if self.parent.noteSaved:
             config.noteOpened = False
             event.accept()
+            if config.lastOpenedNote:
+                if config.lastOpenedNote[0] == "file":
+                    self.parent.externalFileButtonClicked()
+                elif config.lastOpenedNote[0] == "chapter":
+                    self.parent.openStudyChapterNote()
+                elif config.lastOpenedNote[0] == "verse":
+                    self.parent.openStudyVerseNote()
+
         else:
             if self.parent.warningNotSaved():
                 self.parent.noteSaved = True

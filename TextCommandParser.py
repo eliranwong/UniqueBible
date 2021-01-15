@@ -6,6 +6,7 @@ from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from Languages import Languages
 from PySide2.QtWidgets import QApplication
+from db.Highlight import Highlight
 
 class TextCommandParser:
 
@@ -428,6 +429,15 @@ class TextCommandParser:
             # [KEYWORD] _paste
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
+            # [KEYWORD] _highlight
+            # Feature - Highlight a verse
+            # Usage - _HIGHLIGHT:::[BIBLE_REFERENCE(S)]:::[code]
+            # Examples:
+            # e.g. _HIGHLIGHT:::John 3:16:::hl1
+            # e.g. _HIGHLIGHT:::John 3:16:::hl2
+            # e.g. _HIGHLIGHT:::John 3:16:::ul1
+            # e.g. _HIGHLIGHT:::John 3:16:::delete
+            "_highlight": self.highlightVerse,
         }
         commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -1863,3 +1873,19 @@ class TextCommandParser:
             content = thirdPartyDictionary.getData(entry)
             del thirdPartyDictionary
             return ("study", content)
+
+    # _HIGHLIGHT:::
+    def highlightVerse(self, command, source):
+        hl = Highlight()
+        if command.count(":::") == 0:
+            command = command.strip() + ":::delete"
+        reference, code = self.splitCommand(command)
+        verseList = self.extractAllVerses(reference)
+        for b, c, v in verseList:
+            print("{0}:{1}:{2}:{3}".format(b, c, v, code))
+            if code == "delete":
+                hl.removeHighlight(b, c, v)
+            else:
+                hl.highlightVerse(b, c, v, code)
+        return ("command", "")
+

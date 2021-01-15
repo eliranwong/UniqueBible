@@ -683,6 +683,7 @@ class BibleBooks:
         "LUK.": "42",
         "Luke": "42",
         "jn": "43",
+        "jo": "43",
         "jhn": "43",
         "john": "43",
         "Jhn.": "43",
