@@ -7,6 +7,12 @@ Our Wiki Pages: https://github.com/eliranwong/UniqueBible/wiki
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
+# Development Team
+
+Eliran Wong (https://github.com/eliranwong)
+
+Oliver Tseng (https://github.com/otseng)
+
 # Screenshot:
 
 <img src="screenshots/screenshot.png">

@@ -52,7 +52,8 @@ class MoreConfigOptions(QDialog):
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
             ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
             ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged),
-            ("logCommands", config.logCommands, self.logCommandsChanged)
+            ("logCommands", config.logCommands, self.logCommandsChanged),
+            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -167,3 +168,7 @@ class MoreConfigOptions(QDialog):
 
     def logCommandsChanged(self):
         config.logCommands = not config.logCommands
+
+    def enableVerseHighlightingChanged(self):
+        config.enableVerseHighlighting = not config.enableVerseHighlighting
+        self.parent.displayMessage(config.thisTranslation["message_restart"])

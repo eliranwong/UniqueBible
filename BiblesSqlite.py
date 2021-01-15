@@ -5,6 +5,7 @@ import os, sqlite3, config, re, logging
 from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
+from db.Highlight import Highlight
 from themes import Themes
 
 try:
@@ -723,12 +724,15 @@ input.addEventListener('keyup', function(event) {0}
         chapter = "<h2>{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         # get a verse list of available notes
         noteVerseList = []
+        highlightDict = {}
         if config.showNoteIndicatorOnBibleChapter:
             noteSqlite = NoteSqlite()
             noteVerseList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
             del noteSqlite
+        if config.enableVerseHighlighting:
+            highlightDict = Highlight().getVerseDict(b, c)
         chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
@@ -741,11 +745,22 @@ input.addEventListener('keyup', function(event) {0}
                 if not v == 1:
                     chapter += "<br>"
                 chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
-            chapter += '{0}<vid id="v{1}.{2}.{3}" onclick="luV({3})" onmouseover="qV({3})" ondblclick="mV({3})">{3}</vid> '.format(divTag, b, c, v)
+            chapter += divTag
+            if config.enableVerseHighlighting and config.showHighlightMarkers:
+                chapter += '<ref onclick="hiV({0},{1},{2},\'hl1\')" class="ohl1">&#9678;</ref>'.format(b, c, v)
+                chapter += '<ref onclick="hiV({0},{1},{2},\'hl2\')" class="ohl2">&#9678;</ref>'.format(b, c, v)
+                chapter += '<ref onclick="hiV({0},{1},{2},\'ul1\')" class="oul1">&#9683;</ref>'.format(b, c, v)
+            chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add note indicator
             if v in noteVerseList:
                 chapter += '<ref onclick="nV({0})">&#9997</ref> '.format(v)
-            chapter += "{0}</div>".format(verseText)
+            hlClass = ''
+            if v in highlightDict.keys():
+                hlClass = " class='" + highlightDict[v] + "'"
+            chapter += "<span id='s{0}.{1}.{2}'{3}>".format(b, c, v, hlClass)
+            chapter += "{0}".format(verseText)
+            chapter += "</span>"
+            chapter += "</div>"
         return chapter
 
     def migrateDatabaseContent(self):
@@ -912,7 +927,10 @@ class Bible:
             divTag = "<div>"
             if self.text in config.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
-            return "{0}{1}</div>".format(divTag, chapter)
+            chapter = "{0}{1}</div>".format(divTag, chapter)
+            if config.enableVerseHighlighting:
+                chapter = Highlight().highlightChapter(b, c, chapter)
+            return chapter
         else:
             return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
 

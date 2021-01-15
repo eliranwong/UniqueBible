@@ -721,3 +721,24 @@ mbe {
 mbn {
     color: gray;
 }
+
+.hl1 {
+    background: rgb(100, 100, 0);
+}
+.ohl1 {
+    color: rgba(238, 238, 6, 0.728);
+}
+
+.hl2 {
+    background: rgb(6, 1, 102);
+}
+.ohl2 {
+    color: rgb(13, 0, 255);
+}
+
+.ul1 {
+    text-decoration: underline;
+}
+.oul1 {
+    color: gray;
+}

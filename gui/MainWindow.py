@@ -478,6 +478,9 @@ class MainWindow(QMainWindow):
         menu2.addSeparator()
         menu2.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
         menu2.addAction(QAction(config.thisTranslation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
+        if config.enableVerseHighlighting:
+            menu2.addSeparator()
+            menu2.addAction(QAction(config.thisTranslation["menu2_toggleHighlightMarkers"], self, triggered=self.toggleHighlightMarker))
 
         menu3 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu3_history"]))
         menu3.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
@@ -1816,7 +1819,7 @@ class MainWindow(QMainWindow):
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/common.js'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
 
         return text
 
@@ -2665,6 +2668,10 @@ class MainWindow(QMainWindow):
         self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
         self.reloadCurrentRecord(forceExecute=True)
 
+    def toggleHighlightMarker(self):
+        config.showHighlightMarkers = not config.showHighlightMarkers
+        self.reloadCurrentRecord(forceExecute=True)
+
     def reloadCurrentRecord(self, forceExecute=False):
         if config.readFormattedBibles:
             mappedBibles = (
@@ -2957,7 +2964,7 @@ class MainWindow(QMainWindow):
                     activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
                 elif view == "study":
                     activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
+                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link rel='stylesheet' type='text/css' href='css/{7}.css'><script src='js/common.js'><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,

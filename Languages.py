@@ -161,6 +161,7 @@ class Languages:
         "menu2_smaller": "Decrease Font Size",
         "menu2_format": "Formatted / Simple Style Bible",
         "menu2_subHeadings": "Add Paragraph headings on Simple Style Bible",
+        "menu2_toggleHighlightMarkers": "Toggle Highlight Markers",
         "menu3_history": "History",
         "menu3_main": "Bible Window's History",
         "menu3_mainBack": "Bible Window's Previous Record",
