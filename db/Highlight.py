@@ -48,7 +48,7 @@ class Highlight:
     def highlightChapter(self, b, c, text):
         highlightDict = self.getVerseDict(b, c)
         for v in highlightDict.keys():
-            find = '<verse>((<br>)*<vid id="v' + str(b) + '\.' + str(c) + '\.' + str(v) + '".*?)</verse>'
+            find = '<verse>(.*<vid id="v' + str(b) + '\.' + str(c) + '\.' + str(v) + '".*?)</verse>'
             text = re.sub(find, "<verse class=\"{0}\">\\1</verse>".format(highlightDict[v]), text)
         return text
 
@@ -56,16 +56,11 @@ if __name__ == "__main__":
 
     config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
     hl = Highlight()
-    # hl.deleteAll()
+    hl.deleteAll()
     # hl.highlightVerse(43, 3, 1, 'hl1')
     # hl.highlightVerse(43, 3, 16, 'hl1')
     # hl.highlightVerse(43, 3, 22, 'hl1')
     # hl.highlightVerse(1, 1, 1, 'hl2')
     # hl.highlightVerse(1, 1, 2, 'hl3')
-
-    dict = hl.getVerseDict(50, 4)
-    print(dict)
-
-    chapter = '''<verse><vid id="v50.4.19" onclick="luV(19)" onmouseover="qV(19)" ondblclick="mV(19)">19</vid> And my God shall supply every need of yours according to his riches in glory in Christ Jesus.</verse>'''
-    out = hl.highlightChapter(50, 4, chapter)
-    print(out)
+    # dict = hl.getVerseDict(50, 4)
+    # print(dict)
