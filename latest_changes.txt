@@ -1,4 +1,4 @@
-Latest changes in version 19.6:
+Latest changes in version 19.7:
 Merged Oliver new work on layout:
 - Add Aleph menu layout
 - Fix commentary issue in dark mode
@@ -13,6 +13,7 @@ Merged Oliver's new work on verse highlighting:
 - There are some problems with viewing certain Bibles in formatted chapter view
 - This needs speed improvements. Not sure why it has lag responding to commands.
 
+Latest change in version 19.4:
 Latest changes in version 19.4:
 Merged Oliver's new PR.  Thanks to Oliver.
 - Add number buttons to remote control

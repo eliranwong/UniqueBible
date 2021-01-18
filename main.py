@@ -6,8 +6,10 @@
 
 import os, platform, logging
 import logging.handlers as handlers
+
+from gui.AlephMainWindow import AlephMainWindow
+from gui.ClassicMainWindow import ClassicMainWindow
 from themes import Themes
-from PySide2.QtWidgets import (QMessageBox)
 
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
@@ -333,6 +335,9 @@ if not hasattr(config, "enableVerseHighlighting"):
 # Show verse highlight markers
 if not hasattr(config, "showHighlightMarkers"):
     config.showHighlightMarkers = True
+# Menu layout
+if not hasattr(config, "menuLayout"):
+    config.menuLayout = "classic"
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -385,7 +390,6 @@ if config.testing:
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
-from gui.MainWindow import MainWindow
 
 # Set screen size at first launch
 def setupMainWindow():
@@ -519,7 +523,9 @@ def saveDataOnExit():
         ("forceGenerateHtml", config.forceGenerateHtml),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
-        ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable)
+        ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
+        ("menuLayout", config.menuLayout),
+        ("showHighlightMarkers", config.showHighlightMarkers)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
@@ -549,8 +555,11 @@ app = QApplication(sys.argv)
 app.aboutToQuit.connect(saveDataOnExit)
 app.setPalette(Themes.getPalette())
 
-# Class "MainWindow" is located in file "gui.py"
-mainWindow = MainWindow()
+if config.menuLayout == "aleph":
+    mainWindow = AlephMainWindow()
+else:
+    mainWindow = ClassicMainWindow()
+
 setupMainWindow()
 
 # Check if migration is needed for version >= 0.56
