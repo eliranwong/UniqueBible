@@ -4,9 +4,9 @@ from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
-from Languages import Languages
 from PySide2.QtWidgets import QApplication
 from db.Highlight import Highlight
+
 
 class TextCommandParser:
 
@@ -171,6 +171,24 @@ class TextCommandParser:
             # e.g. ORSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
             "orsearch": self.textOrSearch,
+            # [KEYWORD] SEARCHHIGHLIGHT
+            # Feature - Search for highlight
+            # Usage - SEARCHHIGHLIGHT:::[COLOR]:::[BIBLE_REFERENCE]
+            # To search entire Bible for all highlight
+            # e.g. SEARCHHIGHLIGHT:::all
+            # To search entire Bible for yellow highlight
+            # e.g. SEARCHHIGHLIGHT:::yellow:::all
+            # e.g. SEARCHHIGHLIGHT:::yellow
+            # To search New Testament for blue highlight
+            # e.g. SEARCHHIGHLIGHT:::blue:::nt
+            # To search Old Testament for blue highlight
+            # e.g. SEARCHHIGHLIGHT:::blue:::ot
+            # To search Matthew for blue highlight
+            # e.g. SEARCHHIGHLIGHT:::hl2:::Matthew
+            # To search James for underline highlight
+            # e.g. SEARCHHIGHLIGHT:::underline:::James
+            # e.g. SEARCHHIGHLIGHT:::ul1:::James
+            "searchhighlight": self.highlightSearch,
             # [KEYWORD] INDEX
             # e.g. INDEX:::Gen 1:1
             "index": self.textIndex,
@@ -1449,6 +1467,22 @@ class TextCommandParser:
             del biblesSqlite
             return ("study", searchResult)
 
+    # SEARCHHIGHLIGHT:::
+    def highlightSearch(self, command, source):
+        if config.enableVerseHighlighting:
+            if command.count(":::") == 0:
+                command += ":::all"
+            commandList = self.splitCommand(command)
+            highlight = Highlight()
+            verses = highlight.getHighlightedBcvList(commandList[0], commandList[1])
+            bcv = [(i[0], i[1], i[2]) for i in verses]
+            biblesSqlite = BiblesSqlite()
+            text = biblesSqlite.readMultipleVerses(config.mainText, bcv)
+            text = highlight.highlightSearchResults(text, verses)
+            return ("main", text)
+        else:
+            return ("", "")
+
     # WORD:::
     def textWordData(self, command, source):
         book, wordId = self.splitCommand(command)
@@ -1889,3 +1923,15 @@ class TextCommandParser:
                 hl.highlightVerse(b, c, v, code)
         return ("command", "")
 
+
+if __name__ == "__main__":
+    from Languages import Languages
+
+    config.thisTranslation = Languages.translation
+    config.parserStandarisation = 'NO'
+    config.standardAbbreviation = 'ENG'
+    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+
+    parser = TextCommandParser("")
+    command = "searchhighlight:::all:::mal"
+    parser.parser(command)

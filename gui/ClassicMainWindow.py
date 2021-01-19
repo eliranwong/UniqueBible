@@ -180,6 +180,9 @@ class ClassicMainWindow(MainWindow):
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_last3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
         menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
+        if config.enableVerseHighlighting:
+            menu5.addSeparator()
+            menu5.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.displaySearchHighlightCommand))
 
         menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu6_notes"]))
         menu6.addAction(QAction(config.thisTranslation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))

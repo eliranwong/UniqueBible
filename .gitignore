@@ -8,3 +8,4 @@ config.py
 **.log
 htmlResources/main.html
 htmlResources/study.html
+UniqueBible.app.pdf
