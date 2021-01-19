@@ -1164,8 +1164,20 @@ class MorphologySqlite:
         return formatedText
 
 
-#if __name__ == '__main__':
-    # Bibles = BiblesSqlite()
+if __name__ == '__main__':
+    from Languages import Languages
+
+    config.thisTranslation = Languages.translation
+    config.parserStandarisation = 'NO'
+    config.standardAbbreviation = 'ENG'
+    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+
+    Bibles = BiblesSqlite()
+
+    text = "John"
+    verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(text)
+    result = Bibles.readMultipleVerses("KJV", verses)
+    print(result)
 
     # test search bible - BASIC
     # searchString = input("Search Bible [Basic]\nSearch for: ")

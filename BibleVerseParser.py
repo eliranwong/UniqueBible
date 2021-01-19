@@ -62,6 +62,8 @@ class BibleVerseParser:
         self.updateStandardAbbreviation()
         # set preference of standardisation
         self.standardisation = standardisation
+        sortedNames = sorted(BibleBooks.name2number.keys())
+        self.sortedNames = sorted(sortedNames, key=len, reverse=True)
 
     # function for converting b c v integers to verse reference string
     def bcvToVerseReference(self, b, c, v, *args, isChapter=False):
@@ -125,11 +127,7 @@ class BibleVerseParser:
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
-        # search for books; mark them with book numbers, used by https://marvel.bible
-        # sorting books by alphabet, then by length
-        sortedNames = sorted(BibleBooks.name2number.keys())
-        sortedNames = sorted(sortedNames, key=len, reverse=True)
-        for name in sortedNames:
+        for name in self.sortedNames:
             # get the string of book name
             bookName = name
             searchReplace = (
@@ -239,7 +237,7 @@ class BibleVerseParser:
             if os.path.isfile(file):
                 self.parseFile(file)
 
-    def startParsing(self, inputName):
+    def extractAllReferencesstartParsing(self, inputName):
         # check if input is a file or a folder
         if os.path.isfile(inputName):
             # parse file
@@ -250,6 +248,28 @@ class BibleVerseParser:
         else:
             # input name is neither a file or a folder
             print("'{0}' is not found.".format(inputName))
+
+    def verseReferenceToBCV(self, text):
+        text = text.strip()
+        bible = 0
+        for key in self.sortedNames:
+            if text.startswith(key):
+                bible = int(BibleBooks.name2number[key])
+                break
+        reference = text[len(key):]
+        res = re.search('(\s*)(\d*):*(\d*) *-* *(\d*):*(\d*)', reference).groups()
+        if res[1] == '':
+            return (bible, 1, 1)
+        elif res[2] == '' and res[3] == '':
+            return bible, int(res[1]), 1
+        elif res[2] == '' and not res[3] == '':
+            return bible, int(res[1]), 1, int(res[3]), 1
+        elif res[3] == '' and res[4] == '':
+            return bible, int(res[1]), int(res[2])
+        elif res[4] == '':
+            return bible, int(res[1]), int(res[2]), int(res[1]), int(res[3])
+        else:
+            return bible, int(res[1]), int(res[2]), int(res[3]), int(res[4])
 
 """
 END - class BibleVerseParser
@@ -276,3 +296,7 @@ if __name__ == '__main__':
 
     # delete object
     del parser
+
+    # parser = BibleVerseParser("NO")
+    # text = "John 1:1"
+    # print(parser.parseText(text))

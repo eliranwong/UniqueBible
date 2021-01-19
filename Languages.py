@@ -299,6 +299,8 @@ class Languages:
         "menu_wiki": "Wiki",
         "menu_window": "Window",
 
+        "tab_print": "Print",
+
         "context1_copy": "Copy",
         "context1_copy_html": "Copy HTML",
         "context1_copyReferences": "Copy All Bible References",
