@@ -1,3 +1,20 @@
+Latest changes in version 19.8:
+Added highlight search by @otseng:
+        # Usage - SEARCHHIGHLIGHT:::[COLOR]:::[BIBLE_REFERENCE]
+        # To search entire Bible for all highlight
+        # e.g. SEARCHHIGHLIGHT:::all
+        # To search entire Bible for yellow highlight
+        # e.g. SEARCHHIGHLIGHT:::yellow:::all
+        # e.g. SEARCHHIGHLIGHT:::yellow
+        # To search New Testament for blue highlight
+        # e.g. SEARCHHIGHLIGHT:::blue:::nt
+        # To search Old Testament for blue highlight
+        # e.g. SEARCHHIGHLIGHT:::blue:::ot
+        # To search Matthew for blue highlight
+        # e.g. SEARCHHIGHLIGHT:::blue:::Matthew
+        # To search James for underline highlight
+        # e.g. SEARCHHIGHLIGHT:::underline:::James
+
 Latest changes in version 19.7:
 Merged Oliver new work on layout:
 - Add Aleph menu layout
