@@ -603,12 +603,15 @@ class Lexicon:
         self.connection.close()
 
     def getInfo(self):
-        query = "SELECT Definition FROM Lexicon WHERE Topic = 'info'"
-        self.cursor.execute(query)
-        info = self.cursor.fetchone()
-        if info:
-            return info[0]
-        else:
+        try:
+            query = "SELECT Definition FROM Lexicon WHERE Topic = 'info'"
+            self.cursor.execute(query)
+            info = self.cursor.fetchone()
+            if info:
+                return info[0]
+            else:
+                return self.module
+        except:
             return self.module
 
     def getContent(self, entry):
