@@ -62,7 +62,14 @@ class BibleVerseParser:
         self.updateStandardAbbreviation()
         # set preference of standardisation
         self.standardisation = standardisation
-        sortedNames = sorted(BibleBooks.name2number.keys())
+        self.bibleBooksDict = {}
+        for bible in BibleBooks.name2number.keys():
+            num = BibleBooks.name2number[bible]
+            self.bibleBooksDict[bible] = int(num)
+            if "." in bible:
+                bible = bible.replace(".", "")
+                self.bibleBooksDict[bible] = int(num)
+        sortedNames = sorted(self.bibleBooksDict.keys())
         self.sortedNames = sorted(sortedNames, key=len, reverse=True)
 
     # function for converting b c v integers to verse reference string
@@ -138,7 +145,7 @@ class BibleVerseParser:
             )
             bookName = RegexSearch.replace(bookName, searchReplace)
             # get assigned book number from dictionary
-            bookNumber = BibleBooks.name2number[name]
+            bookNumber = str(self.bibleBooksDict[name])
             # search & replace for marking book
             searchReplace = (
                 ('('+bookName+') ([0-9])', '『'+bookNumber+r'｜\1』 \2'),
@@ -202,6 +209,12 @@ class BibleVerseParser:
         # return a list of tuples (b, c, v)
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 
+    def extractAllReferencesNew(self, text, tagged=False):
+        if tagged:
+            return "This is not supported"
+        ret = [self.verseReferenceToBCV(verse) for verse in text.split(";")]
+        return ret
+
     def parseFile(self, inputFile):
         # set output filename here
         path, file = os.path.split(inputFile)
@@ -254,7 +267,7 @@ class BibleVerseParser:
         bible = 0
         for key in self.sortedNames:
             if text.startswith(key):
-                bible = int(BibleBooks.name2number[key])
+                bible = self.bibleBooksDict[key]
                 break
         reference = text[len(key):]
         res = re.search('(\s*)(\d*):*(\d*) *-* *(\d*):*(\d*)', reference).groups()

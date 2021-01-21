@@ -1,3 +1,6 @@
+Latest changes in version 19.9:
+Added study tab names for bibles, commentaries, lexicons, search (by @otseng)
+
 Latest changes in version 19.8:
 Added highlight search by @otseng:
         # Usage - SEARCHHIGHLIGHT:::[COLOR]:::[BIBLE_REFERENCE]

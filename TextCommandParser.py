@@ -668,12 +668,15 @@ class TextCommandParser:
     def extractAllVerses(self, text, tagged=False):
         return BibleVerseParser(config.parserStandarisation).extractAllReferences(text, tagged)
 
+    def extractAllVersesNew(self, text):
+        return BibleVerseParser(config.parserStandarisation).extractAllReferencesNew(text)
+
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view):
-        verseList = self.extractAllVerses(command)
+        verseList = self.extractAllVersesNew(command)
         if not verseList:
             return self.invalidCommand()
         else:
