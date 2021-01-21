@@ -618,11 +618,11 @@ class TextCommandParser:
     def databaseNotInstalled(self, keyword):
         databaseInfo = self.databaseInfo()[keyword]
         self.parent.downloadHelper(databaseInfo)
-        return ("", "")
+        return ("", "", {})
 
     # return invalid command
     def invalidCommand(self, source="main"):
-        return (source, "INVALID_COMMAND_ENTERED")
+        return (source, "INVALID_COMMAND_ENTERED", {})
 
     # sort out keywords from a single line command
     def splitCommand(self, command):
@@ -698,11 +698,11 @@ class TextCommandParser:
             if config.openBibleInMainViewOnly:
                 self.setMainVerse(text, bcvTuple)
                 self.setStudyVerse(text, bcvTuple)
-                return ("main", content)
+                return ("main", content, {})
             else:
                 updateViewConfig, *_ = self.getViewConfig(view)
                 updateViewConfig(text, bcvTuple)
-                return (view, content)
+                return (view, content, {'tab_title': text})
 
     def hideLexicalEntryInBible(self, text):
         if config.hideLexicalEntryInBible and re.search("onclick=['{0}]lex".format('"'), text):
@@ -762,7 +762,7 @@ class TextCommandParser:
             subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         else:
             os.system(command)
-        return ("", "")
+        return ("", "", {})
 
     # mp3:::
     def mp3Download(self, command, source):
@@ -792,7 +792,7 @@ class TextCommandParser:
             os.system("cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
             self.parent.displayMessage(config.thisTranslation["message_done"])
             os.system("{0} {1}".format(config.open, outputFolder))
-        return ("", "")
+        return ("", "", {})
 
     # functions about bible
 
@@ -815,7 +815,7 @@ class TextCommandParser:
                 if promises:
                     promises = "<hr><p><bb>Bible Promises</bb></p><p>{0}</p>".format(promises)
                 content += "<p><bb>{0}</bb></p>{1}{2}{3}<hr>".format(chapterReference, subheadings, parallels, promises)
-            return ("study", content)
+            return ("study", content, {})
 
     # summary:::
     def textChapterSummary(self, command, source):
@@ -829,7 +829,7 @@ class TextCommandParser:
                 if chapterSummary:
                     chapterSummary = "<p><bb>Complete Summary of the Bible (Brooks)</bb></p><p>{0}</p><hr>".format(chapterSummary)
                 content += chapterSummary
-            return ("study", content)
+            return ("study", content, {})
 
     # BIBLE:::
     def textBible(self, command, source):
@@ -850,7 +850,7 @@ class TextCommandParser:
                 else:
                     databaseInfo = marvelBibles[text]
                     self.parent.downloadHelper(databaseInfo)
-                    return ("", "")
+                    return ("", "", {})
             else:
                 return self.textBibleVerseParser(references, text, source)
 
@@ -870,7 +870,7 @@ class TextCommandParser:
                 else:
                     databaseInfo = marvelBibles[text]
                     self.parent.downloadHelper(databaseInfo)
-                    return ("", "")
+                    return ("", "", {})
             else:
                 updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                 return self.textBibleVerseParser(viewReference, texts[0], source)
@@ -900,7 +900,7 @@ class TextCommandParser:
             self.parent.mainView.translateTextIntoUserLanguage(text, language)
         else:
             self.parent.mainView.displayMessage(config.thisTranslation["message_invalid"])
-        return ("", "")
+        return ("", "", {})
 
     # called by MAIN::: & STUDY:::
     def textAnotherView(self, command, source, target):
@@ -921,7 +921,7 @@ class TextCommandParser:
                 else:
                     databaseInfo = marvelBibles[text]
                     self.parent.downloadHelper(databaseInfo)
-                    return ("", "")
+                    return ("", "", {})
             else:
                 return self.textBibleVerseParser(references, texts[0], target)
 
@@ -945,7 +945,7 @@ class TextCommandParser:
                 updateViewConfig(viewText, verseList[-1])
             else:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
-            return (source, verses)
+            return (source, verses, {})
 
     # DIFF:::
     # DIFFERENCE:::
@@ -968,7 +968,7 @@ class TextCommandParser:
                 updateViewConfig(viewText, verseList[-1])
             else:
                 updateViewConfig(confirmedTexts[-1], verseList[-1])
-            return (source, verses)
+            return (source, verses, {})
 
     # PARALLEL:::
     def textParallel(self, command, source):
@@ -985,11 +985,11 @@ class TextCommandParser:
             if missingMarvelTexts:
                 databaseInfo = marvelBibles[missingMarvelTexts[0]]
                 self.parent.downloadHelper(databaseInfo)
-                return ("", "")
+                return ("", "", {})
             else:
                 tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
                 versions, verses = zip(*tableList)
-                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
     def textPassages(self, command, source):
@@ -1006,14 +1006,14 @@ class TextCommandParser:
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
                 self.parent.downloadHelper(databaseInfo)
-                return ("", "")
+                return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 biblesSqlite = BiblesSqlite()
                 passages = bibleVerseParser.extractAllReferences(references)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
-                return ("study", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)))
+                return ("study", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
     # _harmony:::
     def textHarmony(self, command, source):
@@ -1030,7 +1030,7 @@ class TextCommandParser:
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
                 self.parent.downloadHelper(databaseInfo)
-                return ("", "")
+                return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 biblesSqlite = BiblesSqlite()
@@ -1040,7 +1040,9 @@ class TextCommandParser:
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
-                return ("study", "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses), topic))
+                return ("study",
+                        "<h2>{2}</h2><table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>"
+                        .format("".join(versions), "".join(verses), topic), {})
 
     # _promise:::
     def textPromise(self, command, source):
@@ -1057,7 +1059,7 @@ class TextCommandParser:
             if text in marvelBibles and not os.path.isfile(os.path.join(*marvelBibles[text][0])):
                 databaseInfo = marvelBibles[text]
                 self.parent.downloadHelper(databaseInfo)
-                return ("", "")
+                return ("", "", {})
             else:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 biblesSqlite = BiblesSqlite()
@@ -1065,7 +1067,7 @@ class TextCommandParser:
                 topic, passagesString = cs.readData("PROMISES", references.split("."))
                 del cs
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
-                return ("study", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)))
+                return ("study", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)), {})
 
     # _biblenote:::
     def textBiblenote(self, command, source):
@@ -1077,23 +1079,23 @@ class TextCommandParser:
             bible = Bible(texts[source])
             note = bible.readBiblenote(command)
             del bible
-            return ("study", note)
+            return ("study", note, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _openchapternote:::
     def openChapterNote(self, command, source):
         b, c = command.split(".")
         b, c = int(b), int(c)
         self.parent.openChapterNote(b, c)
-        return ("", "")
+        return ("", "", {})
 
     # _openversenote:::
     def openVerseNote(self, command, source):
         b, c, v = command.split(".")
         b, c, v = int(b), int(c), int(v)
         self.parent.openVerseNote(b, c, v)
-        return ("", "")
+        return ("", "", {})
 
     # _editchapternote:::
     def editChapterNote(self, command, source):
@@ -1104,7 +1106,7 @@ class TextCommandParser:
             b, c, v = None, None, None
         if self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
-        return ("", "")
+        return ("", "", {})
 
     # _editversenote:::
     def editVerseNote(self, command, source):
@@ -1116,40 +1118,40 @@ class TextCommandParser:
             self.parent.openNoteEditor("verse", b=b, c=c, v=v)
         else:
             self.parent.noteEditor.raise_()
-        return ("", "")
+        return ("", "", {})
 
     # _open:::
     def openMarvelDataFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(config.marvelData, *fileitems)
         self.parent.openExternalFile(filePath)
-        return ("", "")
+        return ("", "", {})
 
     # open:::
     def openExternalFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(*fileitems)
         self.parent.openExternalFile(filePath)
-        return ("", "")
+        return ("", "", {})
 
     # _openfile:::
     def textOpenFile(self, command, source):
         fileName = config.history["external"][int(command)]
         if fileName:
             self.parent.openTextFile(fileName)
-        return ("", "")
+        return ("", "", {})
 
     # _editfile:::
     def textEditFile(self, command, source):
         if command:
             self.parent.editExternalFileHistoryRecord(int(command))
-        return ("", "")
+        return ("", "", {})
 
     # _website:::
     def textWebsite(self, command, source):
         if command:
             webbrowser.open(command)
-            return ("", "")
+            return ("", "", {})
         else:
             return self.invalidCommand()
 
@@ -1160,16 +1162,16 @@ class TextCommandParser:
             file = os.path.join(*pathItems)
             config.history["external"].append(file)
             self.parent.openExternalFileHistoryRecord(-1)
-            return ("", "")
+            return ("", "", {})
         else:
             return self.invalidCommand()
 
     # _info:::
     def textInfo(self, command, source):
         if config.instantInformationEnabled:
-            return ("instant", command)
+            return ("instant", command, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _instantverse:::
     def instantVerse(self, command, source):
@@ -1179,9 +1181,9 @@ class TextCommandParser:
             b, c, v = [int(i) for i in commandList[1].split(".")]
             info = morphologySqlite.instantVerse("interlinear", b, c, v)
             del morphologySqlite
-            return ("instant", info)
+            return ("instant", info, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _imvr:::
     def instantMainVerseReference(self, command, source):
@@ -1189,7 +1191,7 @@ class TextCommandParser:
         if verseList:
             return self.instantMainVerse(".".join([str(i) for i in verseList[0]]), source)
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _imv:::
     def instantMainVerse(self, command, source):
@@ -1198,9 +1200,9 @@ class TextCommandParser:
             info = BiblesSqlite().readMultipleVerses(config.mainText, [bcvList])
             if config.mainText in config.rtlTexts and bcvList[0] < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
-            return ("instant", info)
+            return ("instant", info, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _instantword:::
     def instantWord(self, command, source):
@@ -1211,9 +1213,9 @@ class TextCommandParser:
             wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
             info = morphologySqlite.instantWord(int(commandList[0]), int(wordID))
             del morphologySqlite
-            return ("instant", info)
+            return ("instant", info, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # _bibleinfo:::
     def textBibleInfo(self, command, source):
@@ -1222,9 +1224,9 @@ class TextCommandParser:
             info = biblesSqlite.bibleInfo(command)
             del biblesSqlite
             if info:
-                return ("instant", info)
+                return ("instant", info, {})
             else:
-                return ("", "")
+                return ("", "", {})
         else:
             return self.invalidCommand()
 
@@ -1265,15 +1267,15 @@ class TextCommandParser:
         commentaryFile = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(command))
         if os.path.isfile(commentaryFile):
             if command in commentaryName:
-                return ("instant", commentaryName[command])
+                return ("instant", commentaryName[command], {})
             else:
                 commentarySqlite = Commentary(command)
                 info = commentarySqlite.commentaryInfo()
                 del commentarySqlite
                 if info:
-                    return ("instant", info)
+                    return ("instant", info, {})
                 else:
-                    return ("", "")
+                    return ("", "", {})
         else:
             return self.invalidCommand()
 
@@ -1282,7 +1284,7 @@ class TextCommandParser:
         biblesSqlite = BiblesSqlite()
         menu = biblesSqlite.getMenu(command, source)
         del biblesSqlite
-        return (source, menu)
+        return (source, menu, {})
 
     # _commentary:::
     def textCommentaryMenu(self, command, source):
@@ -1290,7 +1292,7 @@ class TextCommandParser:
         commentary = Commentary(text)
         commentaryMenu = commentary.getMenu(command)
         del commentary
-        return ("study", commentaryMenu)
+        return ("study", commentaryMenu, {})
 
     # _book:::
     def textBookMenu(self, command, source):
@@ -1298,12 +1300,12 @@ class TextCommandParser:
         bookMenu = bookData.getMenu(command)
         del bookData
         self.parent.bookButton.setText(config.book)
-        return ("study", bookMenu)
+        return ("study", bookMenu, {})
 
     # _history:::
     def textHistory(self, command, source):
         if command in ("main", "study"):
-            return (command, self.parent.getHistory(command))
+            return (command, self.parent.getHistory(command), {})
         else:
             return self.invalidCommand()
 
@@ -1311,23 +1313,23 @@ class TextCommandParser:
     def textHistoryRecord(self, command, source):
         if source in ("main", "study"):
             self.parent.openHistoryRecord(source, int(command))
-            return ("", "")
+            return ("", "", {})
         else:
             return self.invalidCommand()
 
     # _command:::
     def textCommand(self, command, source):
-        return ("command", command)
+        return ("command", command, {})
 
     # _paste:::
     def pasteFromClipboard(self, command, source):
         self.parent.pasteFromClipboard()
-        return ("", "")
+        return ("", "", {})
 
     # _htmlimage:::
     def textHtmlImage(self, command, source):
         content = "<p align='center'><img src='images/{0}'><br><br><ref onclick='openHtmlFile({1}images/{0}{1})'>{0}</ref></p>".format(command, '"')
-        return ("popover.{0}".format(source), content)
+        return ("popover.{0}".format(source), content, {})
 
     # _image:::
     def textImage(self, command, source):
@@ -1340,7 +1342,7 @@ class TextCommandParser:
         else:
             imageFile = "htmlResources/images/{0}/{0}_{1}".format(module, entry)
         self.openExternalFile(imageFile, source)
-        return ("", "")
+        return ("", "", {})
         #content = "<img src='images/{0}/{0}_{1}'>".format(module, entry)
         #return ("popover.{0}".format(source), content)
 
@@ -1360,7 +1362,7 @@ class TextCommandParser:
             if not content == "INVALID_COMMAND_ENTERED":
                 self.setCommentaryVerse(module, bcvTuple)
             del commentary
-            return ("study", content)
+            return ("study", content, {'tab_title':'Com:' + module})
 
     # COMMENTARY2:::
     def textCommentary2(self, command, source):
@@ -1380,7 +1382,7 @@ class TextCommandParser:
                 if not content == "INVALID_COMMAND_ENTERED":
                     self.setCommentaryVerse(module, bcvTuple)
                 del commentary
-                return ("study", content)
+                return ("study", content, {})
         else:
             return self.invalidCommand()
 
@@ -1404,14 +1406,17 @@ class TextCommandParser:
             exactMatch = searchSqlite.getContent(module, entry)
             similarMatch = searchSqlite.getSimilarContent(module, entry)
             del searchSqlite
-            return ("study", "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList))
+            return ("study",
+                    "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>" +
+                    "<p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}"
+                    .format(module, entry, exactMatch, similarMatch, selectList), {'tab_title': 'Search:' + module + ':' + entry})
         else:
             del indexes
             return self.invalidCommand()
 
     # SEARCH:::
     def textCountSearch(self, command, source):
-        return self.textCount(command, config.addFavouriteToMultiRef)
+        return self.textCount(command, config.addFavouriteToMultiRef, {})
 
     # called by SEARCH:::
     def textCount(self, command, interlinear):
@@ -1425,7 +1430,7 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, commandList[1], interlinear) for text in texts])
             del biblesSqlite
-            return ("study", searchResult)
+            return ("study", searchResult, {})
 
     # SHOWSEARCH:::
     def textSearchBasic(self, command, source):
@@ -1465,7 +1470,7 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, commandList[1], favouriteVersion, referenceOnly) for text in texts])
             del biblesSqlite
-            return ("study", searchResult)
+            return ("study", searchResult, {})
 
     # SEARCHHIGHLIGHT:::
     def highlightSearch(self, command, source):
@@ -1479,9 +1484,9 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             text = biblesSqlite.readMultipleVerses(config.mainText, bcv)
             text = highlight.highlightSearchResults(text, verses)
-            return ("main", text)
+            return ("main", text, {})
         else:
-            return ("", "")
+            return ("", "", {})
 
     # WORD:::
     def textWordData(self, command, source):
@@ -1497,7 +1502,7 @@ class TextCommandParser:
             content += re.sub('^.*?<br><br><b><i>TBESG', '<b><i>TBESG', wordData.getContent("NT", wordId))
 
         self.setStudyVerse(config.studyText, bcvTuple)
-        return ("study", content)
+        return ("study", content, {'tab_title': 'Mor:' + wordId})
 
     # return default lexicons
     def getDefaultLexicons(self):
@@ -1525,7 +1530,7 @@ class TextCommandParser:
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
-            return ("study", content)
+            return ("study", content, {'tab_title': 'Lex:' + module + ':' + entries})
 
     # LMCOMBO:::
     def textLMcombo(self, command, source):
@@ -1546,7 +1551,7 @@ class TextCommandParser:
         searchSqlite = SearchSqlite()
         morphologyDescription = "<hr>".join([searchSqlite.getContent("m"+morphologyModule.upper(), code) for code in morphologyCode.split("_")])
         del searchSqlite
-        return ("study", "{0}<hr>{1}".format(morphologyDescription, lexiconContent))
+        return ("study", "{0}<hr>{1}".format(morphologyDescription, lexiconContent), {})
 
     # _wordnote:::
     def textWordNote(self, command, source):
@@ -1556,7 +1561,7 @@ class TextCommandParser:
             data = bibleSqlite.readWordNote(wordID)
             del bibleSqlite
             if data:
-                return ("study", data)
+                return ("study", data, {})
             else:
                 return self.invalidCommand()
         else:
@@ -1591,14 +1596,14 @@ class TextCommandParser:
         morphologySqlite = MorphologySqlite()
         searchResult = morphologySqlite.searchMorphology(mode, command)
         del morphologySqlite
-        return ("study", searchResult)
+        return ("study", searchResult, {})
 
     # _searchword:::
     def textSearchWord(self, command, source):
         portion, wordID = self.splitCommand(command)
         items = MorphologySqlite().searchWord(portion, wordID)
         self.parent.openMorphDialog(items)
-        return ("", "")
+        return ("", "", {})
 
     # EXLB:::
     def textExlb(self, command, source):
@@ -1611,7 +1616,7 @@ class TextCommandParser:
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
                 del exlbData
-                return ("study", content)
+                return ("study", content, {})
             else:
                 return self.invalidCommand("study")
         else:
@@ -1630,7 +1635,7 @@ class TextCommandParser:
             content = "<h2>Clause id: c{0}</h2>{1}".format(entry, clauseData.getContent(testament, entry))
             del clauseData
             self.setStudyVerse(config.studyText, (b, c, v))
-            return ("study", content)
+            return ("study", content, {})
         else:
             return self.invalidCommand("study")
 
@@ -1646,7 +1651,7 @@ class TextCommandParser:
             dictionaryData = DictionaryData()
             content = dictionaryData.getContent(command)
             del dictionaryData
-            return ("study", content)
+            return ("study", content, {})
         else:
             return self.invalidCommand("study")
 
@@ -1663,7 +1668,7 @@ class TextCommandParser:
                 encyclopediaData = EncyclopediaData()
                 content = encyclopediaData.getContent(module, entry)
                 del encyclopediaData
-                return ("study", content)
+                return ("study", content, {})
             else:
                 return self.invalidCommand("study")
         else:
@@ -1676,7 +1681,7 @@ class TextCommandParser:
         if command.count(":::") == 0 and command in bookList:
             config.book = command
             self.parent.bookButton.setText(config.book)
-            return ("study", bookData.getMenu(module=config.book))
+            return ("study", bookData.getMenu(module=config.book), {})
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
             module, entry = commandList
@@ -1687,10 +1692,10 @@ class TextCommandParser:
             else:
                 if config.bookOnNewWindow:
                     self.parent.bookButton.setText(config.book)
-                    return ("popover.study", content)
+                    return ("popover.study", content, {})
                 else:
                     self.parent.bookButton.setText(config.book)
-                    return ("study", content)
+                    return ("study", content, {})
         else:
             return self.invalidCommand("study")
 
@@ -1718,11 +1723,11 @@ class TextCommandParser:
             content = "<hr>".join([bookData.getSearchedMenu(module, searchString, chapterOnly=chapterOnly) for module in modules])
             del bookData
             if not content:
-                return ("study", config.thisTranslation["search_notFound"])
+                return ("study", config.thisTranslation["search_notFound"], {})
                 #return self.invalidCommand("study")
             else:
                 self.parent.bookButton.setText(config.book)
-                return ("study", content)
+                return ("study", content, {})
 
     # SEARCHCHAPTERNOTE:::
     def textSearchChapterNote(self, command, source):
@@ -1733,7 +1738,7 @@ class TextCommandParser:
             noteSqlite = NoteSqlite()
             chapters = noteSqlite.getSearchedChapterList(command)
             del noteSqlite
-            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)))
+            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)), {})
 
     # SEARCHVERSENOTE:::
     def textSearchVerseNote(self, command, source):
@@ -1744,7 +1749,7 @@ class TextCommandParser:
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
             del noteSqlite
-            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)))
+            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
 
     # CROSSREFERENCE:::
     def textCrossReference(self, command, source):
@@ -1767,7 +1772,7 @@ class TextCommandParser:
             del crossReferenceSqlite
             del biblesSqlite
             self.setStudyVerse(config.studyText, verseList[-1])
-            return ("study", content)
+            return ("study", content, {})
 
     # TSKE:::
     def tske(self, command, source):
@@ -1792,23 +1797,23 @@ class TextCommandParser:
             del crossReferenceSqlite
             del biblesSqlite
             self.setStudyVerse(config.studyText, verseList[-1])
-            return ("study", content)
+            return ("study", content, {})
 
     # COMBO:::
     def textCombo(self, command, source):
-        return ("study", "".join([self.textVerseData(command, source, feature) for feature in ("translation", "discourse", "words")]))
+        return ("study", "".join([self.textVerseData(command, source, feature) for feature in ("translation", "discourse", "words")]), {})
 
     # TRANSLATION:::
     def textTranslation(self, command, source):
-        return ("study", self.textVerseData(command, source, "translation"))
+        return ("study", self.textVerseData(command, source, "translation"), {})
 
     # DISCOURSE:::
     def textDiscourse(self, command, source):
-        return ("study", self.textVerseData(command, source, "discourse"))
+        return ("study", self.textVerseData(command, source, "discourse"), {})
 
     # WORDS:::
     def textWords(self, command, source):
-        return ("study", self.textVerseData(command, source, "words"))
+        return ("study", self.textVerseData(command, source, "words"), {})
 
     # called by TRANSLATION::: & WORDS::: & DISCOURSE::: & COMBO:::
     def textVerseData(self, command, source, filename):
@@ -1840,7 +1845,7 @@ class TextCommandParser:
             del indexesSqlite
             del parser
             self.setStudyVerse(config.studyText, verseList[-1])
-            return ("study", content)
+            return ("study", content, {})
 
     # CHAPTERINDEX:::
     def textChapterIndex(self, command, source):
@@ -1857,7 +1862,7 @@ class TextCommandParser:
             del indexesSqlite
             del parser
             self.setStudyVerse(config.studyText, verseList[-1])
-            return ("study", content)
+            return ("study", content, {})
 
     # Check if a third party dictionary exists:
     def isThridPartyDictionary(self, module):
@@ -1892,7 +1897,7 @@ class TextCommandParser:
             thirdPartyDictionary = ThirdPartyDictionary(module)
             content = thirdPartyDictionary.search(entry)
             del thirdPartyDictionary
-            return ("study", content)
+            return ("study", content, {})
 
     # THIRDDICTIONARY:::
     def thirdDictionaryOpen(self, command, source):
@@ -1906,7 +1911,7 @@ class TextCommandParser:
             thirdPartyDictionary = ThirdPartyDictionary(module)
             content = thirdPartyDictionary.getData(entry)
             del thirdPartyDictionary
-            return ("study", content)
+            return ("study", content, {})
 
     # _HIGHLIGHT:::
     def highlightVerse(self, command, source):
@@ -1921,7 +1926,7 @@ class TextCommandParser:
                 hl.removeHighlight(b, c, v)
             else:
                 hl.highlightVerse(b, c, v, code)
-        return ("command", "")
+        return ("command", "", {})
 
 
 if __name__ == "__main__":

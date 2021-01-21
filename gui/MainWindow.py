@@ -645,7 +645,7 @@ class MainWindow(QMainWindow):
     def addOpenImageAction(self, text):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
-    def openTextOnStudyView(self, text):
+    def openTextOnStudyView(self, text, tab_title=''):
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:
@@ -680,8 +680,10 @@ class MainWindow(QMainWindow):
             self.parallel()
         if self.textCommandParser.lastKeyword == "main":
             self.textCommandParser.lastKeyword = "study"
-        self.studyView.setTabText(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
-        self.studyView.setTabToolTip(self.studyView.currentIndex(), self.textCommandParser.lastKeyword)
+        if tab_title == '':
+            tab_title = self.textCommandParser.lastKeyword
+        self.studyView.setTabText(self.studyView.currentIndex(), tab_title)
+        self.studyView.setTabToolTip(self.studyView.currentIndex(), tab_title)
 
     # warning for next action without saving modified notes
     def warningNotSaved(self):
@@ -1934,7 +1936,7 @@ class MainWindow(QMainWindow):
             if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
                 self.newTabException = True
             # parse command
-            view, content = self.textCommandParser.parser(textCommand, source)
+            view, content, dict = self.textCommandParser.parser(textCommand, source)
             # process content
             if content == "INVALID_COMMAND_ENTERED":
                 self.displayMessage(config.thisTranslation["message_invalid"] + ":" + textCommand)
@@ -1964,7 +1966,10 @@ class MainWindow(QMainWindow):
                     html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
-                    self.openTextOnStudyView(html)
+                    tab_title = ''
+                    if ('tab_title' in dict.keys()):
+                        tab_title = dict['tab_title']
+                    self.openTextOnStudyView(html, tab_title)
                 elif view == "main":
                     self.openTextOnMainView(html)
                 elif view.startswith("popover"):
