@@ -187,7 +187,8 @@ if not hasattr(config, "importInterlinear"):
     config.importInterlinear = False
 # List of modules, which contains Hebrew / Greek texts
 if not hasattr(config, "originalTexts"):
-    config.originalTexts = ['original', 'MOB', 'MAB', 'MTB', 'MIB', 'MPB', 'OHGB', 'OHGBi', 'LXX', 'LXX1', 'LXX1i', 'LXX2', 'LXX2i']
+    config.originalTexts = ['original', 'MOB', 'MAB', 'MTB', 'MIB', 'MPB', 'OHGB', 'OHGBi', 'LXX', 'LXX1', 'LXX1i',
+                            'LXX2', 'LXX2i']
 # List of modules, which contains right-to-left texts on old testament
 if not hasattr(config, "rtlTexts"):
     config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
@@ -302,7 +303,8 @@ if not hasattr(config, "currentRecord"):
     config.currentRecord = {"main": 0, "study": 0}
 # History records are kept in config.history
 if not hasattr(config, "history"):
-    config.history = {"external": ["note_editor.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"], "study": ["BIBLE:::NET:::John 3:16"]}
+    config.history = {"external": ["note_editor.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"],
+                      "study": ["BIBLE:::NET:::John 3:16"]}
 # Installed Formatted Bibles
 if not hasattr(config, "installHistory"):
     config.installHistory = {}
@@ -328,7 +330,7 @@ if not hasattr(config, "logCommands"):
     config.logCommands = False
 # Migrate Bible name from Verses table to Details table
 if not hasattr(config, "migrateDatabaseBibleNameToDetailsTable"):
-    config.migrateDatabaseBibleNameToDetailsTable = True 
+    config.migrateDatabaseBibleNameToDetailsTable = True
 # Verse highlighting functionality
 if not hasattr(config, "enableVerseHighlighting"):
     config.enableVerseHighlighting = False
@@ -338,6 +340,9 @@ if not hasattr(config, "showHighlightMarkers"):
 # Menu layout
 if not hasattr(config, "menuLayout"):
     config.menuLayout = "classic"
+# Verse parsing method
+if not hasattr(config, "useFastVerseParsing"):
+    config.useFastVerseParsing = False
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -352,6 +357,7 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 # [Optional] Text-to-Speech feature
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+
     if platform.system() == "Linux" and not config.showTtsOnLinux:
         config.ttsSupport = False
     else:
@@ -362,10 +368,10 @@ except:
 # [Optional] Chinese feature - opencc
 # It converts conversion between Traditional Chinese and Simplified Chinese.
 # To enable functions working with "opencc", install python package "opencc" first, e.g. pip3 install OpenCC.
-#try:
+# try:
 #    import opencc
 #    openccSupport = True
-#except:
+# except:
 #    openccSupport = False
 #    print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
 # [Optional] Chinese feature - pypinyin
@@ -373,23 +379,28 @@ except:
 # To enable functions working with "pypinyin", install python package "pypinyin" first, e.g. pip3 install pypinyin.
 try:
     from pypinyin import pinyin
+
     config.pinyinSupport = True
 except:
     config.pinyinSupport = False
-    print("Chinese feature 'pypinyin' is disabled.  To enable it, install python package 'pypinyin' first, by running 'pip3 install pypinyin'.")
+    print(
+        "Chinese feature 'pypinyin' is disabled.  To enable it, install python package 'pypinyin' first, by running 'pip3 install pypinyin'.")
 # [Optional] Google-translate
 try:
     from googletrans import Translator
+
     config.googletransSupport = True
 except:
     config.googletransSupport = False
-    print("Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
+    print(
+        "Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
 # import for testing
 if config.testing:
     import exlbl
 
 import sys, pprint, platform
 from PySide2.QtWidgets import QApplication
+
 
 # Set screen size at first launch
 def setupMainWindow():
@@ -400,7 +411,7 @@ def setupMainWindow():
     if platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         # Below is a workaround, loading the app in 4/5 of the screen size.
-        mainWindow.resize(availableGeometry.width() * 4/5, availableGeometry.height() * 4/5)
+        mainWindow.resize(availableGeometry.width() * 4 / 5, availableGeometry.height() * 4 / 5)
     elif platform.system() == "Windows":
         mainWindow.showMaximized()
     else:
@@ -408,22 +419,25 @@ def setupMainWindow():
         mainWindow.resize(availableGeometry.width(), availableGeometry.height())
     mainWindow.show()
 
+
 def executeInitialTextCommand(textCommand, source="main"):
     if source == "main":
         mainWindow.textCommandLineEdit.setText(textCommand)
     mainWindow.runTextCommand(textCommand, True, source)
+
 
 def setCurrentRecord():
     mainRecordPosition = len(config.history["main"]) - 1
     studyRecordPosition = len(config.history["study"]) - 1
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
+
 # Save configurations on exit
 def saveDataOnExit():
     config.bookSearchString = ""
     config.noteSearchString = ""
     configs = (
-        #("version", config.version),
+        # ("version", config.version),
         ("testing", config.testing),
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
@@ -525,7 +539,8 @@ def saveDataOnExit():
         ("enableVerseHighlighting", config.enableVerseHighlighting),
         ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
         ("menuLayout", config.menuLayout),
-        ("showHighlightMarkers", config.showHighlightMarkers)
+        ("showHighlightMarkers", config.showHighlightMarkers),
+        ("useFastVerseParsing", config.useFastVerseParsing)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
@@ -537,7 +552,7 @@ def saveDataOnExit():
         if hasattr(config, "pModeSplitterSizes"):
             fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
 
-        
+
 #        if hasattr(config, "translation"):
 #            fileObj.write("{0} = {1}\n".format("translation", pprint.pformat(config.translation)))
 
@@ -586,9 +601,11 @@ except:
 # Set indexes of history records
 setCurrentRecord()
 
+
 def global_excepthook(type, value, traceback):
     logger.error("Uncaught exception", exc_info=(type, value, traceback))
     print(traceback.format_exc())
+
 
 sys.excepthook = global_excepthook
 
