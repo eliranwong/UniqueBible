@@ -1,5 +1,7 @@
 import config, platform
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QDialog, QLabel, QCheckBox)
+
+from BibleVerseParser import BibleVerseParser
 from themes import Themes
 
 class MoreConfigOptions(QDialog):
@@ -53,7 +55,8 @@ class MoreConfigOptions(QDialog):
             ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
             ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged),
             ("logCommands", config.logCommands, self.logCommandsChanged),
-            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged)
+            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
+            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -172,3 +175,7 @@ class MoreConfigOptions(QDialog):
     def enableVerseHighlightingChanged(self):
         config.enableVerseHighlighting = not config.enableVerseHighlighting
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def useFastVerseParsingChanged(self):
+        config.useFastVerseParsing = not config.useFastVerseParsing
+
