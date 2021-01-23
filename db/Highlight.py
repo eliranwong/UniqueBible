@@ -58,9 +58,11 @@ class Highlight:
 
     def highlightChapter(self, b, c, text):
         highlightDict = self.getVerseDict(b, c)
+        text = re.sub("<verse>", "＠＠＠", text)
         for v in highlightDict.keys():
-            find = '<verse>(.*<vid id="v' + str(b) + '\.' + str(c) + '\.' + str(v) + '".*?)</verse>'
-            text = re.sub(find, "<verse class=\"{0}\">\\1</verse>".format(highlightDict[v]), text)
+            find = '＠＠＠([^＠]*?<vid id="v' + str(b) + '\.' + str(c) + '\.' + str(v) + '")'
+            text = re.sub(find, "<verse class=\"{0}\">\\1".format(highlightDict[v]), text)
+        text = re.sub("＠＠＠", "<verse>", text)
         return text
 
     def highlightSearchResults(self, text, verses):
