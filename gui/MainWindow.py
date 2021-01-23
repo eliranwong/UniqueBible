@@ -4,6 +4,8 @@ from ast import literal_eval
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
+
+from BibleBooks import BibleBooks
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
@@ -1672,8 +1674,14 @@ class MainWindow(QMainWindow):
     # Actions - previous / next chapter
     def previousMainChapter(self):
         newChapter = config.mainC - 1
+        if newChapter == 0:
+            if config.mainB == 1:
+                newChapter = 1
+            else:
+                config.mainB -= 1
+                newChapter = BibleBooks.getLastChapter(config.mainB)
         biblesSqlite = BiblesSqlite()
-        mainChapterList = biblesSqlite.getChapterList()
+        mainChapterList = biblesSqlite.getChapterList(config.mainB)
         del biblesSqlite
         if newChapter in mainChapterList:
             self.newTabException = True
@@ -1681,14 +1689,30 @@ class MainWindow(QMainWindow):
             self.textCommandChanged(newTextCommand, "main")
 
     def nextMainChapter(self):
-        newChapter = config.mainC + 1
+        if config.mainC < BibleBooks.getLastChapter(config.mainB):
+            newChapter = config.mainC + 1
+        elif config.mainB < 66:
+            newChapter = 1
+            config.mainB += 1
         biblesSqlite = BiblesSqlite()
-        mainChapterList = biblesSqlite.getChapterList()
+        mainChapterList = biblesSqlite.getChapterList(config.mainB)
         del biblesSqlite
         if newChapter in mainChapterList:
             self.newTabException = True
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
+
+    def gotoFirstChapter(self):
+        config.mainC = 1
+        self.newTabException = True
+        newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, 1)
+        self.textCommandChanged(newTextCommand, "main")
+
+    def gotoLastChapter(self):
+        config.mainC = BibleBooks.getLastChapter(config.mainB)
+        self.newTabException = True
+        newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, 1)
+        self.textCommandChanged(newTextCommand, "main")
 
     def previousMainBook(self):
         config.mainC = 1
@@ -1861,6 +1885,9 @@ class MainWindow(QMainWindow):
 
     def runTransliteralBible(self):
         self.runFeature("BIBLE:::TRLIT")
+
+    def runKJV2Bible(self):
+        self.runFeature("BIBLE:::KJV*")
 
     def runCOMPARE(self):
         self.runFeature("COMPARE")

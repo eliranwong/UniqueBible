@@ -1,5 +1,5 @@
 import os, config, myTranslation
-from PySide2.QtGui import QIcon, Qt
+from PySide2.QtGui import QIcon, Qt, QFont
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
 
@@ -33,12 +33,13 @@ class AlephMainWindow(MainWindow):
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
 
         navigation_menu = self.menuBar().addMenu(config.thisTranslation["menu_navigation"])
-        prev_chap = QAction(config.thisTranslation["menu4_previous"], self, shortcut='Ctrl+<', triggered=self.previousMainChapter)
-        prev_chap.setShortcuts(["Ctrl+<", "Ctrl+,,"])
-        next_chap = QAction(config.thisTranslation["menu4_next"], self, shortcut='Ctrl+>', triggered=self.nextMainChapter)
-        next_chap.setShortcuts(["Ctrl+>", "Ctrl+."])
+        navigation_menu.addAction(
+            QAction(config.thisTranslation["menu_first_chapter"], self, shortcut='Ctrl+<', triggered=self.gotoFirstChapter))
+        prev_chap = QAction(config.thisTranslation["menu4_previous"], self, shortcut='Ctrl+,', triggered=self.previousMainChapter)
+        # prev_chap.setShortcuts(["Ctrl+,"])
         navigation_menu.addAction(prev_chap)
-        navigation_menu.addAction(next_chap)
+        navigation_menu.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut='Ctrl+.', triggered=self.nextMainChapter))
+        navigation_menu.addAction(QAction(config.thisTranslation["menu_last_chapter"], self, shortcut='Ctrl+>', triggered=self.gotoLastChapter))
         navigation_menu.addAction(QAction(config.thisTranslation["menu_next_book"], self, shortcut='Ctrl+]', triggered=self.nextMainBook))
         navigation_menu.addAction(QAction(config.thisTranslation["menu_previous_book"], self, shortcut='Ctrl+[', triggered=self.previousMainBook))
         scroll_menu = navigation_menu.addMenu("&{0}".format(config.thisTranslation["menu_scroll"]))
@@ -61,10 +62,13 @@ class AlephMainWindow(MainWindow):
         marvel_bible_menu.addAction(QAction("Marvel Interlinear Bible", self, shortcut="Ctrl+B, 2", triggered=self.runMIB))
         marvel_bible_menu.addAction(QAction("Marvel Trilingual Bible", self, shortcut="Ctrl+B, 3", triggered=self.runMTB))
         marvel_bible_menu.addAction(
-            QAction("Marvel Trilingual Bible", self, shortcut="Ctrl+B, 4", triggered=self.runMPB))
+            QAction("Marvel Parallel Bible", self, shortcut="Ctrl+B, 4", triggered=self.runMPB))
         if os.path.isfile(os.path.join(config.marvelData, "bibles/TRLIT.bible")):
             marvel_bible_menu.addAction(
                 QAction("Transliteral Bible", self, shortcut="Ctrl+B, T", triggered=self.runTransliteralBible))
+        if os.path.isfile(os.path.join(config.marvelData, "bibles/KJV*.bible")):
+            marvel_bible_menu.addAction(
+                QAction("KJV* Bible", self, shortcut="Ctrl+B, K", triggered=self.runKJV2Bible))
         history_menu = navigation_menu.addMenu("&{0}".format(config.thisTranslation["menu_history"]))
         history_menu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut="Ctrl+Y, M", triggered=self.mainHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut="Ctrl+Y, 1", triggered=self.back))
@@ -231,12 +235,37 @@ class AlephMainWindow(MainWindow):
         openVerseNoteButton.clicked.connect(self.openMainVerseNote)
         self.firstToolBar.addWidget(openVerseNoteButton)
 
+
         # searchBibleButton = QPushButton()
         # searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBible"])
         # searchBibleButtonFile = os.path.join("htmlResources", "search.png")
         # searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
         # searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
         # self.firstToolBar.addWidget(searchBibleButton)
+
+        previousBookButton = QPushButton()
+        previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])
+        previousBookButton.setText("<<")
+        previousBookButton.clicked.connect(self.previousMainBook)
+        self.firstToolBar.addWidget(previousBookButton)
+
+        previousChapterButton = QPushButton()
+        previousChapterButton.setToolTip(config.thisTranslation["menu_previous_chapter"])
+        previousChapterButton.setText("<")
+        previousChapterButton.clicked.connect(self.previousMainChapter)
+        self.firstToolBar.addWidget(previousChapterButton)
+
+        nextChapterButton = QPushButton()
+        nextChapterButton.setToolTip(config.thisTranslation["menu_next_chapter"])
+        nextChapterButton.setText(">")
+        nextChapterButton.clicked.connect(self.nextMainChapter)
+        self.firstToolBar.addWidget(nextChapterButton)
+
+        nextBookButton = QPushButton()
+        nextBookButton.setToolTip(config.thisTranslation["menu_next_book"])
+        nextBookButton.setText(">>")
+        nextBookButton.clicked.connect(self.nextMainBook)
+        self.firstToolBar.addWidget(nextBookButton)
 
         self.textCommandLineEdit = QLineEdit()
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
@@ -445,14 +474,14 @@ class AlephMainWindow(MainWindow):
         self.enableSubheadingButton.clicked.connect(self.enableSubheadingButtonClicked)
         self.leftToolBar.addWidget(self.enableSubheadingButton)
 
-        self.leftToolBar.addSeparator()
-
-        actionButton = QPushButton()
-        actionButton.setToolTip(config.thisTranslation["menu4_previous"])
-        actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.previousMainChapter)
-        self.leftToolBar.addWidget(actionButton)
+        # self.leftToolBar.addSeparator()
+        #
+        # actionButton = QPushButton()
+        # actionButton.setToolTip(config.thisTranslation["menu4_previous"])
+        # actionButtonFile = os.path.join("htmlResources", "previousChapter.png")
+        # actionButton.setIcon(QIcon(actionButtonFile))
+        # actionButton.clicked.connect(self.previousMainChapter)
+        # self.leftToolBar.addWidget(actionButton)
 
         #        actionButton = QPushButton()
         #        actionButton.setToolTip(config.thisTranslation["bar1_reference"])
@@ -461,12 +490,12 @@ class AlephMainWindow(MainWindow):
         #        actionButton.clicked.connect(self.openMainChapter)
         #        self.leftToolBar.addWidget(actionButton)
 
-        actionButton = QPushButton()
-        actionButton.setToolTip(config.thisTranslation["menu4_next"])
-        actionButtonFile = os.path.join("htmlResources", "nextChapter.png")
-        actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.nextMainChapter)
-        self.leftToolBar.addWidget(actionButton)
+        # actionButton = QPushButton()
+        # actionButton.setToolTip(config.thisTranslation["menu4_next"])
+        # actionButtonFile = os.path.join("htmlResources", "nextChapter.png")
+        # actionButton.setIcon(QIcon(actionButtonFile))
+        # actionButton.clicked.connect(self.nextMainChapter)
+        # self.leftToolBar.addWidget(actionButton)
 
         self.leftToolBar.addSeparator()
 
@@ -839,8 +868,8 @@ class AlephMainWindow(MainWindow):
 
         self.leftToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "previousChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_previous"], self.previousMainChapter)
+        # iconFile = os.path.join("htmlResources", "previousChapter.png")
+        # self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_previous"], self.previousMainChapter)
 
         #        actionButton = QPushButton()
         #        actionButton.setToolTip(config.thisTranslation["bar1_reference"])
@@ -849,8 +878,8 @@ class AlephMainWindow(MainWindow):
         #        actionButton.clicked.connect(self.openMainChapter)
         #        self.leftToolBar.addWidget(actionButton)
 
-        iconFile = os.path.join("htmlResources", "nextChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_next"], self.nextMainChapter)
+        # iconFile = os.path.join("htmlResources", "nextChapter.png")
+        # self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_next"], self.nextMainChapter)
 
         self.leftToolBar.addSeparator()
 
