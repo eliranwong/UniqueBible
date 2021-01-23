@@ -239,6 +239,10 @@ class ClassicMainWindow(MainWindow):
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_fixDatabase"], self, triggered=self.selectDatabaseToFix))
 
+        if config.enableMacros:
+            macros_menu = self.menuBar().addMenu(config.thisTranslation["menu_macros"])
+            self.loadRunMacrosMenu(macros_menu)
+
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
             menu9.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))

@@ -1,3 +1,7 @@
+Latest changes in version 20.3:
+- Added macros
+- Fixed startup if config.py missing
+
 Latest changes in version 20.2:
 - Fixed highlighting for reading bible chapter in formatted style.
 - Added next/previous verse/chapter buttons to Aleph menu.

@@ -7,10 +7,6 @@
 import os, platform, logging
 import logging.handlers as handlers
 
-from gui.AlephMainWindow import AlephMainWindow
-from gui.ClassicMainWindow import ClassicMainWindow
-from themes import Themes
-
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
 if not os.path.isfile("config.py"):
@@ -343,6 +339,9 @@ if not hasattr(config, "menuLayout"):
 # Verse parsing method
 if not hasattr(config, "useFastVerseParsing"):
     config.useFastVerseParsing = False
+# Enable macros
+if not hasattr(config, "enableMacros"):
+    config.enableMacros = False
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -540,7 +539,8 @@ def saveDataOnExit():
         ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
         ("menuLayout", config.menuLayout),
         ("showHighlightMarkers", config.showHighlightMarkers),
-        ("useFastVerseParsing", config.useFastVerseParsing)
+        ("useFastVerseParsing", config.useFastVerseParsing),
+        ("enableMacros", config.enableMacros)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
@@ -563,6 +563,10 @@ if config.ibus:
 # Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"
 if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
+from gui.AlephMainWindow import AlephMainWindow
+from gui.ClassicMainWindow import ClassicMainWindow
+from themes import Themes
 
 # Start PySide2 gui
 app = QApplication(sys.argv)

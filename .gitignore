@@ -3,6 +3,7 @@
 /build
 /dist
 /notes
+/save
 /.idea
 config.py
 **.log

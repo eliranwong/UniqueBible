@@ -173,6 +173,10 @@ class AlephMainWindow(MainWindow):
         display_menu.addAction(
             QAction(config.thisTranslation["menu_reload"], self, shortcut="Ctrl+D, R", triggered=self.reloadCurrentRecord))
 
+        if config.enableMacros:
+            macros_menu = self.menuBar().addMenu(config.thisTranslation["menu_macros"])
+            self.loadRunMacrosMenu(macros_menu)
+
         about_menu = self.menuBar().addMenu(config.thisTranslation["menu_about"])
         about_menu.addAction(QAction(config.thisTranslation["menu_wiki"], self, triggered=self.openUbaWiki))
         apps = about_menu.addMenu(config.thisTranslation["menu_apps"])
