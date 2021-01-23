@@ -62,6 +62,7 @@ class Highlight:
         for v in highlightDict.keys():
             find = '＠＠＠([^＠]*?<vid id="v' + str(b) + '\.' + str(c) + '\.' + str(v) + '")'
             text = re.sub(find, "<verse class=\"{0}\">\\1".format(highlightDict[v]), text)
+        text = re.sub("＠＠＠", "<verse>", text)
         return text
 
     def highlightSearchResults(self, text, verses):
