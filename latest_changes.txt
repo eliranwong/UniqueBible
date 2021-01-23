@@ -1,3 +1,7 @@
+Latest changes in version 20.2:
+- Fixed highlighting for reading bible chapter in formatted style.
+- Added next/previous verse/chapter buttons to Aleph menu.
+
 Latest changes in version 20.1:
 @otseng added a config option, useFastVerseParsing, to allow users to choose a faster parser.  Thank you, Oliver!
 By default, verse parsing will use standard parsing. Fast parsing option can be enabled in config flags.
