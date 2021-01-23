@@ -1,6 +1,8 @@
 import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation, logging
 from datetime import datetime
 from ast import literal_eval
+from functools import partial
+
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
@@ -27,6 +29,8 @@ from gui.YouTubePopover import YouTubePopover
 from gui.CentralWidget import CentralWidget
 from gui.imports import *
 from ToolsSqlite import LexiconData
+from util.MacroParser import MacroParser
+
 
 class MainWindow(QMainWindow):
 
@@ -1462,6 +1466,9 @@ class MainWindow(QMainWindow):
     def moreBooks(self):
         webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/download_3rd_party_modules")
 
+    def openBrowser(self, url):
+        webbrowser.open(url)
+
     # Actions - resize the main window
     def fullsizeWindow(self):
         self.resizeWindow(1, 1)
@@ -1493,8 +1500,8 @@ class MainWindow(QMainWindow):
 
     def moveWindow(self, horizontal, vertical):
         screen = qApp.desktop().availableGeometry()
-        x = screen.width() * horizontal
-        y = screen.height() * vertical
+        x = screen.width() * float(horizontal)
+        y = screen.height() * float(vertical)
         self.move(x, y)
 
     # Actions - enable or disable sync commentary
@@ -2166,3 +2173,19 @@ class MainWindow(QMainWindow):
     def studyPageScrollToTop(self):
         js = "document.body.scrollTop = document.documentElement.scrollTop = 0;"
         self.studyPage.runJavaScript(js)
+
+    def loadRunMacrosMenu(self, run_macro_menu):
+        if config.enableMacros:
+            count = 1
+            macros_dir = MacroParser.macros_dir
+            if not os.path.isdir(macros_dir):
+                os.mkdir(macros_dir)
+            for file in os.listdir(macros_dir):
+                if os.path.isfile(os.path.join(macros_dir, file)) and ".txt" in file:
+                    run_macro_menu.addAction(file.replace(".txt", ""), partial(self.runMacro, file))
+                    # run_macro_menu.addAction(file.replace(".ubm", ""), shortcut="Ctrl+M," + str(count), triggered=partial(self.runMacro, file))
+
+    def runMacro(self, file):
+        if config.enableMacros:
+            MacroParser.parse(self, file)
+
