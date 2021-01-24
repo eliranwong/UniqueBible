@@ -1422,7 +1422,7 @@ class TextCommandParser:
 
     # SEARCH:::
     def textCountSearch(self, command, source):
-        return self.textCount(command, config.addFavouriteToMultiRef, {})
+        return self.textCount(command, config.addFavouriteToMultiRef)
 
     # called by SEARCH:::
     def textCount(self, command, interlinear):
