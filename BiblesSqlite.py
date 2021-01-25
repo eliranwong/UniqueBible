@@ -44,7 +44,8 @@ class BiblesSqlite:
         return [self.getPlainBibleList(), self.getFormattedBibleList(includeMarvelBibles)]
 
     def getPlainBibleList(self):
-        return ["OHGB", "OHGBi", "LXX"]
+        return self.getBibleList2()
+        # return ["OHGB", "OHGBi", "LXX"]
 
     def getFormattedBibleList(self, includeMarvelBibles=True):
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
