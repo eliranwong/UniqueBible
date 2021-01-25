@@ -38,6 +38,8 @@ if not hasattr(config, "alwaysDisplayStaticMaps"):
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
 if not hasattr(config, "remoteControl"):
     config.remoteControl = False
+if not hasattr(config, "preferRemoteControlForCommandLineEntry"):
+    config.preferRemoteControlForCommandLineEntry = False
 # Start full-screen on Linux os
 if not hasattr(config, "linuxStartFullScreen"):
     config.linuxStartFullScreen = False
@@ -502,6 +504,7 @@ def saveDataOnExit():
         ("theme", config.theme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
+        ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry),
         ("forceGenerateHtml", config.forceGenerateHtml),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
