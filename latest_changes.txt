@@ -1,3 +1,9 @@
+Latest changes in version 20.5:
+Added a configuration option: preferRemoteControlForCommandLineEntry
+It is an enhancement in general and a workaround address to a Chrome OS address.
+You may read more about this feature at:
+https://github.com/eliranwong/UniqueBible/wiki/preferRemoteControlForCommandLineEntry
+
 Latest changes in version 20.4:
 Fixes 2 issues found:
     https://github.com/eliranwong/UniqueBible/issues/68
