@@ -1,3 +1,12 @@
+Major changes in version 20.8:
+    config.fcitx [only application on Linux platform, it forces the app to use fcitx as input method.  It works only if fcitx is properly installed.]
+    config.addBreakAfterTheFirstToolBar
+    config.addBreakBeforeTheLastToolBar
+    [The last two above may be useful when user opt for preferRemoteControlForCommandLineEntry, introduced since version 20.5.  From version 20.8, main window command line field is hidden at launch if users enable preferRemoteControlForCommandLineEntry.  The two flags above can help users to arrange toolbar in order to save spaces.]
+
+Major change in version 20.7:
+Added missing macros folder when users update.
+
 Latest changes in version 20.6: 
 Merged @otseng new PR:
     Added Macros shortcut
