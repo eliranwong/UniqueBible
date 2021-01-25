@@ -38,6 +38,8 @@ if not hasattr(config, "alwaysDisplayStaticMaps"):
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
 if not hasattr(config, "remoteControl"):
     config.remoteControl = False
+if not hasattr(config, "preferRemoteControlForCommandLineEntry"):
+    config.preferRemoteControlForCommandLineEntry = False
 # Start full-screen on Linux os
 if not hasattr(config, "linuxStartFullScreen"):
     config.linuxStartFullScreen = False
@@ -342,6 +344,9 @@ if not hasattr(config, "useFastVerseParsing"):
 # Enable macros
 if not hasattr(config, "enableMacros"):
     config.enableMacros = False
+# Startup macro
+if not hasattr(config, "startupMacro"):
+    config.startupMacro = ""
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -397,39 +402,8 @@ except:
 if config.testing:
     import exlbl
 
-import sys, pprint, platform
+import sys, pprint
 from PySide2.QtWidgets import QApplication
-
-
-# Set screen size at first launch
-def setupMainWindow():
-    # check screen size
-    availableGeometry = app.desktop().availableGeometry(mainWindow)
-    # Check os with platform.system() or sys.platform
-    # Linux / Darwin / Windows
-    if platform.system() == "Linux" and not config.linuxStartFullScreen:
-        # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
-        # Below is a workaround, loading the app in 4/5 of the screen size.
-        mainWindow.resize(availableGeometry.width() * 4 / 5, availableGeometry.height() * 4 / 5)
-    elif platform.system() == "Windows":
-        mainWindow.showMaximized()
-    else:
-        # macOS or Linux set to fullscreen
-        mainWindow.resize(availableGeometry.width(), availableGeometry.height())
-    mainWindow.show()
-
-
-def executeInitialTextCommand(textCommand, source="main"):
-    if source == "main":
-        mainWindow.textCommandLineEdit.setText(textCommand)
-    mainWindow.runTextCommand(textCommand, True, source)
-
-
-def setCurrentRecord():
-    mainRecordPosition = len(config.history["main"]) - 1
-    studyRecordPosition = len(config.history["study"]) - 1
-    config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
-
 
 # Save configurations on exit
 def saveDataOnExit():
@@ -533,6 +507,7 @@ def saveDataOnExit():
         ("theme", config.theme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
+        ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry),
         ("forceGenerateHtml", config.forceGenerateHtml),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
@@ -540,7 +515,8 @@ def saveDataOnExit():
         ("menuLayout", config.menuLayout),
         ("showHighlightMarkers", config.showHighlightMarkers),
         ("useFastVerseParsing", config.useFastVerseParsing),
-        ("enableMacros", config.enableMacros)
+        ("enableMacros", config.enableMacros),
+        ("startupMacro", config.startupMacro)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
@@ -564,8 +540,7 @@ if config.ibus:
 if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
-from gui.AlephMainWindow import AlephMainWindow
-from gui.ClassicMainWindow import ClassicMainWindow
+from buffer import BufferWindow
 from themes import Themes
 
 # Start PySide2 gui
@@ -574,15 +549,20 @@ app = QApplication(sys.argv)
 app.aboutToQuit.connect(saveDataOnExit)
 app.setPalette(Themes.getPalette())
 
-if config.menuLayout == "aleph":
-    mainWindow = AlephMainWindow()
-else:
-    mainWindow = ClassicMainWindow()
+# BufferWindow() is an invisble window to wrap the main window.
+# It looks like that it is redundant, but it is created to get around a bug that probably caused by a wayland compositor in Chrome OS's Linux container (version 87).
+# You may read the issue at: https://github.com/eliranwong/UniqueBible/issues/68
+# The bug breaks input method fcitx.  With this BufferWindow in place, fcitx now works properly with Unique Bible App desktop version.
+# It does not sort out all issues caused by the possible bug in the wayland compositor.  At launch the main window closes and reopen when users type in command field.
+# A workaround to type command in Chrome OS is to use remote control, called by "ctrl + o" key combination.
+mainWindow = BufferWindow()
+mainWindow.showMinimized()
+mainWindow.resize(0, 0)
+mainWindow.show()
 
-setupMainWindow()
-
-# Check if migration is needed for version >= 0.56
-mainWindow.checkMigration()
+# check screen size
+availableGeometry = app.desktop().availableGeometry(mainWindow)
+mainWindow.setupMainWindow(availableGeometry)
 
 # Execute initial command on Bible Window
 initial_mainTextCommand = " ".join(sys.argv[1:])
@@ -590,7 +570,7 @@ if not initial_mainTextCommand:
     mainHistory = config.history["main"]
     initial_mainTextCommand = mainHistory[-1]
 try:
-    executeInitialTextCommand(initial_mainTextCommand)
+    mainWindow.executeInitialTextCommand(initial_mainTextCommand)
 except:
     print("Failed to execute '{0}' on startup.".format(initial_mainTextCommand))
 
@@ -598,19 +578,18 @@ except:
 studyHistory = config.history["study"]
 initial_studyTextCommand = studyHistory[-1]
 try:
-    executeInitialTextCommand(initial_studyTextCommand, "study")
+    mainWindow.executeInitialTextCommand(initial_studyTextCommand, "study")
 except:
     print("Failed to execute '{0}' on startup.".format(initial_studyTextCommand))
 
 # Set indexes of history records
-setCurrentRecord()
-
+mainWindow.setCurrentRecord()
 
 def global_excepthook(type, value, traceback):
     logger.error("Uncaught exception", exc_info=(type, value, traceback))
     print(traceback.format_exc())
 
-
 sys.excepthook = global_excepthook
 
 sys.exit(app.exec_())
+

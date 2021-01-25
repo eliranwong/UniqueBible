@@ -5,6 +5,8 @@
 /notes
 /save
 /.idea
+/macros/*.txt
+/macros/save
 config.py
 **.log
 htmlResources/main.html
