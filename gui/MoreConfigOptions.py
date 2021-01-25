@@ -33,6 +33,7 @@ class MoreConfigOptions(QDialog):
         options = [
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
+            ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry, self.preferRemoteControlForCommandLineEntryChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
@@ -94,6 +95,9 @@ class MoreConfigOptions(QDialog):
     def openBibleWindowContentOnNextTabChanged(self):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
         self.newTabException = False
+
+    def preferRemoteControlForCommandLineEntryChanged(self):
+        config.preferRemoteControlForCommandLineEntry = not config.preferRemoteControlForCommandLineEntry
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab
