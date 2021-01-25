@@ -208,13 +208,30 @@ class MainWindow(QMainWindow):
         baseUrl = QUrl.fromLocalFile(absolutePath)
         config.baseUrl = baseUrl
 
+    def focusCommandLineField(self):
+        if config.preferRemoteControlForCommandLineEntry:
+            self.manageRemoteControl()
+        else:
+            self.focusCommandLineField()
+
     def manageRemoteControl(self):
         if config.remoteControl and not self.remoteControl.isActiveWindow():
+            textCommandText = self.textCommandLineEdit.text()
+            if textCommandText:
+                self.remoteControl.searchLineEdit.setText(textCommandText)
             self.remoteControl.raise_()
-            self.remoteControl.activateWindow()
+            # The following line does not work on Chrome OS
+            #self.remoteControl.activateWindow()
+            # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+            # Therefore, we use hide and show instead.
+            self.remoteControl.hide()
+            self.remoteControl.show()
         elif not config.remoteControl:
             self.remoteControl = RemoteControl(self)
             self.remoteControl.show()
+            textCommandText = self.textCommandLineEdit.text()
+            if textCommandText:
+                self.remoteControl.searchLineEdit.setText(textCommandText)
             config.remoteControl = True
         else:
             if self.remoteControl:
@@ -228,6 +245,10 @@ class MainWindow(QMainWindow):
                 qApp.quit()
             else:
                 event.ignore()
+                # Bring forward the note editor.
+                # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+                self.noteEditor.hide()
+                self.noteEditor.show()
         else:
             event.accept()
             qApp.quit()
@@ -252,8 +273,7 @@ class MainWindow(QMainWindow):
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
             if event.key() == Qt.Key_Tab:
-                self.textCommandLineEdit.setFocus()
-                return True
+                self.focusCommandLineField()
             elif event.key() == Qt.Key_Escape:
                 self.setNoToolBar()
                 return True
@@ -263,6 +283,7 @@ class MainWindow(QMainWindow):
         #            elif openccSupport and event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
         #                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
         #                self.textCommandLineEdit.setText(newTextCommand)
+        #                self.focusCommandLineField()
         #                return True
         return QWidget.event(self, event)
 
@@ -1222,12 +1243,12 @@ class MainWindow(QMainWindow):
     def displaySearchBookCommand(self):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def displaySearchAllBookCommand(self):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::ALL:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def clearBookHighlights(self):
         config.bookSearchString = ""
@@ -1240,7 +1261,7 @@ class MainWindow(QMainWindow):
     def displaySearchFavBookCommand(self):
         config.bookSearchString = ""
         self.textCommandLineEdit.setText("SEARCHBOOK:::FAV:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def getBookName(self, book):
         return book.replace("_", " ")
@@ -1317,14 +1338,14 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
-            self.textCommandLineEdit.setFocus()
+            self.focusCommandLineField()
 
     def search3rdDictionaryDialog(self):
         items = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items, items.index(config.thirdDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::{0}:::".format(item))
-            self.textCommandLineEdit.setFocus()
+            self.focusCommandLineField()
 
     def searchDictionaryDialog(self):
         indexes = IndexesSqlite()
@@ -1335,7 +1356,7 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
-            self.textCommandLineEdit.setFocus()
+            self.focusCommandLineField()
 
     def searchEncyclopediaDialog(self):
         indexes = IndexesSqlite()
@@ -1346,7 +1367,7 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
-            self.textCommandLineEdit.setFocus()
+            self.focusCommandLineField()
 
     def searchTopicDialog(self):
         indexes = IndexesSqlite()
@@ -1357,68 +1378,68 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
-            self.textCommandLineEdit.setFocus()
+            self.focusCommandLineField()
 
     # Action - bible search commands
     def displaySearchBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.mainText))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def displaySearchStudyBibleCommand(self):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def displaySearchBibleMenu(self):
         self.runTextCommand("_menu:::", False, "main")
 
     def displaySearchHighlightCommand(self):
         self.textCommandLineEdit.setText("SEARCHHIGHLIGHT:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     # Action - other search commands
     def searchCommandChapterNote(self):
         self.textCommandLineEdit.setText("SEARCHCHAPTERNOTE:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandVerseNote(self):
         self.textCommandLineEdit.setText("SEARCHVERSENOTE:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleDictionary(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.dictionary))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleEncyclopedia(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.encyclopedia))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleCharacter(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBP:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleName(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::HBN:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleLocation(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBL:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandBibleTopic(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(config.topic))
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandAllBibleTopic(self):
         self.textCommandLineEdit.setText("SEARCHTOOL:::EXLBT:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandLexicon(self):
         self.textCommandLineEdit.setText("LEXICON:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     def searchCommandThirdPartyDictionary(self):
         self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::")
-        self.textCommandLineEdit.setFocus()
+        self.focusCommandLineField()
 
     # Actions - open urls
     def openUbaWiki(self):
@@ -1976,7 +1997,7 @@ class MainWindow(QMainWindow):
                 self.displayMessage(config.thisTranslation["message_invalid"] + ":" + textCommand)
             elif view == "command":
                 self.textCommandLineEdit.setText(content)
-                self.textCommandLineEdit.setFocus()
+                self.focusCommandLineField()
             else:
                 activeBCVsettings = ""
                 if view == "main":
