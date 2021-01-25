@@ -1,5 +1,9 @@
 Major changes in version 20.8:
-    config.fcitx [only application on Linux platform, it forces the app to use fcitx as input method.  It works only if fcitx is properly installed.]
+Fixed 1 issue:
+    Fixed set main window command line field to focus when it is hidden.
+Added 3 configuration flags:
+    config.fcitx
+    [only application on Linux platform, it forces the app to use fcitx as input method.  It works only if fcitx is properly installed.  Since ibus is another available option, Linux users can only choose one of them.]
     config.addBreakAfterTheFirstToolBar
     config.addBreakBeforeTheLastToolBar
     [The last two above may be useful when user opt for preferRemoteControlForCommandLineEntry, introduced since version 20.5.  From version 20.8, main window command line field is hidden at launch if users enable preferRemoteControlForCommandLineEntry.  The two flags above can help users to arrange toolbar in order to save spaces.]
