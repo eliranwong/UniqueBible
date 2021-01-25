@@ -282,7 +282,8 @@ class AlephMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
 
         self.firstToolBar.addSeparator()
 
@@ -293,7 +294,8 @@ class AlephMainWindow(MainWindow):
         actionButton.clicked.connect(self.hideShowAdditionalToolBar)
         self.firstToolBar.addWidget(actionButton)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -346,6 +348,9 @@ class AlephMainWindow(MainWindow):
         self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
         self.enableSyncStudyWindowBibleButton.clicked.connect(self.enableSyncStudyWindowBibleButtonClicked)
         self.studyBibleToolBar.addWidget(self.enableSyncStudyWindowBibleButton)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -733,14 +738,17 @@ class AlephMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
+        
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
 
         self.firstToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_toolbars"], self.hideShowAdditionalToolBar)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -773,6 +781,9 @@ class AlephMainWindow(MainWindow):
 
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         self.enableSyncStudyWindowBibleButton = self.studyBibleToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])

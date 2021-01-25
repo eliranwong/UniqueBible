@@ -214,8 +214,8 @@ class MainWindow(QMainWindow):
     def focusCommandLineField(self):
         if config.preferRemoteControlForCommandLineEntry:
             self.manageRemoteControl()
-        else:
-            self.focusCommandLineField()
+        elif self.textCommandLineEdit.isVisible():
+            self.textCommandLineEdit.setFocus()
 
     def manageRemoteControl(self):
         if config.remoteControl and not self.remoteControl.isActiveWindow():
