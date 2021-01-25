@@ -1,3 +1,8 @@
+Latest changes in version 20.6: 
+Merged @otseng new PR:
+    Added Macros shortcut
+    Fixed duplicate listing of Bibles
+
 Latest changes in version 20.5:
 Added a configuration option: preferRemoteControlForCommandLineEntry
 It is an enhancement in general and a workaround address to a Chrome OS address.

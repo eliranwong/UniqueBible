@@ -16,6 +16,7 @@ from NoteSqlite import NoteSqlite
 from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite
+from db.Highlight import Highlight
 from translations import translations
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
@@ -115,6 +116,8 @@ class MainWindow(QMainWindow):
         self.checkModulesUpdate()
         # Remote control
         self.remoteControl = None
+        # Startup macro
+        # self.runMacro(config.startupMacro)
 
     def __del__(self):
         del self.textCommandParser
@@ -252,6 +255,9 @@ class MainWindow(QMainWindow):
         else:
             event.accept()
             qApp.quit()
+
+    def quitApp(self):
+        qApp.quit()
 
     # check migration
     def checkMigration(self):
@@ -2195,6 +2201,44 @@ class MainWindow(QMainWindow):
         js = "document.body.scrollTop = document.documentElement.scrollTop = 0;"
         self.studyPage.runJavaScript(js)
 
+    def setStartupMacro(self):
+        if not os.path.isdir(MacroParser.macros_dir):
+            os.mkdir(MacroParser.macros_dir)
+        files = []
+        for file in os.listdir(MacroParser.macros_dir):
+            if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".txt" in file:
+                files.append(file.replace(".txt", ""))
+        index = 0
+        if config.startupMacro in files:
+            index = files.index(config.startupMacro)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["message_select_macro"], files, index, False)
+        if ok and item:
+            config.startupMacro = item
+
+    def macroBuildHighlights(self):
+        verses = Highlight().getHighlightedVerses()
+        if len(verses) == 0:
+            self.displayMessage("No verses are highlighted")
+        else:
+            filename, ok = QInputDialog.getText(self, "UniqueBible.app",
+                                            config.thisTranslation["message_macro_save_highlights"], QLineEdit.Normal, "")
+            if ok and not filename == "":
+                if not ".txt" in filename:
+                    filename += ".txt"
+                file = os.path.join(MacroParser.macros_dir, filename)
+                if os.path.isfile(file):
+                    self.displayMessage("{0} already exists".format(filename))
+                else:
+                    outfile = open(file, "w")
+                    parser = BibleVerseParser(config.standardAbbreviation)
+                    for (b, c, v, code) in verses:
+                        reference = parser.bcvToVerseReference(b, c, v)
+                        outfile.write("_HIGHLIGHT:::{0}:::{1}\n".format(reference, code))
+                    outfile.write(". displayMessage Highlighted verses loaded\n")
+                    outfile.close()
+                    self.displayMessage("Highlighted verses saved to {0}".format(filename))
+
     def loadRunMacrosMenu(self, run_macro_menu):
         if config.enableMacros:
             count = 1
@@ -2203,10 +2247,14 @@ class MainWindow(QMainWindow):
                 os.mkdir(macros_dir)
             for file in os.listdir(macros_dir):
                 if os.path.isfile(os.path.join(macros_dir, file)) and ".txt" in file:
-                    run_macro_menu.addAction(file.replace(".txt", ""), partial(self.runMacro, file))
-                    # run_macro_menu.addAction(file.replace(".ubm", ""), shortcut="Ctrl+M," + str(count), triggered=partial(self.runMacro, file))
+                    action = QAction(file.replace(".txt", ""), self, triggered=partial(self.runMacro, file))
+                    action.setShortcuts(["Ctrl+M, " + str(count)])
+                    if count < 10:
+                        run_macro_menu.addAction(action)
+                        count += 1
 
-    def runMacro(self, file):
-        if config.enableMacros:
+    def runMacro(self, file=""):
+        if config.enableMacros and not file == "":
             MacroParser.parse(self, file)
+            self.reloadCurrentRecord()
 

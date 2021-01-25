@@ -51,7 +51,7 @@ class Highlight:
         self.cursor.execute(query, (b, c))
         return {res[0]: res[1] for res in self.cursor.fetchall()}
 
-    def getHighlightedVerses(self, where):
+    def getHighlightedVerses(self, where=""):
         query = "SELECT Book, Chapter, Verse, Code FROM Highlight {0} ORDER BY Book, Chapter, Verse".format(where)
         self.cursor.execute(query)
         return [(res[0], res[1], res[2], res[3]) for res in self.cursor.fetchall()]

@@ -253,6 +253,7 @@ class Languages:
         "menu_bible_chapter_notes": "Bible Chapter Notes",
         "menu_bible_notes": "Bible Notes",
         "menu_bible_verse_notes": "Bible Verse Notes",
+        "menu_build_macro": "Build Macro",
         "menu_chapter": "Chapter",
         "menu_chineseFont": "Chinese Font",
         "menu_command": "Command",
@@ -268,6 +269,7 @@ class Languages:
         "menu_font": "Font and Size",
         "menu_font": "Font",
         "menu_highlight": "Highlight",
+        "menu_highlight": "Highlights",
         "menu_history": "History",
         "menu_language": "Language",
         "menu_last_chapter": "Last Chapter",
@@ -287,6 +289,7 @@ class Languages:
         "menu_open_note": "Open Note",
         "menu_previous_book": "Previous Book",
         "menu_previous_chapter": "Previous Chapter",
+        "menu_quit": "Quit",
         "menu_read_note": "Read Note",
         "menu_reload": "Reload",
         "menu_run": "Run",
@@ -294,6 +297,7 @@ class Languages:
         "menu_search": "Search",
         "menu_simple_formatted": "Simple/Formatted",
         "menu_select_default_font": "Set Default Font and Size",
+        "menu_startup_macro": "Startup Macro",
         "menu_study_page_down": "Study Page Scroll Down",
         "menu_study_page_up": "Study Page Page Up",
         "menu_study_scroll_to_top": "Study Scroll To Top",
@@ -483,6 +487,10 @@ class Languages:
         "dictionaries": "Dictionaries",
         "enter": "Enter",
         "enter_command_here": "Enter command here ...",
+        "filename": "Filename",
+
+        "message_select_macro": "Select Macro",
+        "message_macro_save_highlights": "Enter filename to save all highlights as a macro file"
     }
 
     def translateInterface(self, language):
