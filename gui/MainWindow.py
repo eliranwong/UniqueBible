@@ -116,8 +116,6 @@ class MainWindow(QMainWindow):
         self.checkModulesUpdate()
         # Remote control
         self.remoteControl = None
-        # Startup macro
-        # self.runMacro(config.startupMacro)
 
     def __del__(self):
         del self.textCommandParser
@@ -2204,7 +2202,7 @@ class MainWindow(QMainWindow):
     def setStartupMacro(self):
         if not os.path.isdir(MacroParser.macros_dir):
             os.mkdir(MacroParser.macros_dir)
-        files = []
+        files = [""]
         for file in os.listdir(MacroParser.macros_dir):
             if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".txt" in file:
                 files.append(file.replace(".txt", ""))
@@ -2213,31 +2211,53 @@ class MainWindow(QMainWindow):
             index = files.index(config.startupMacro)
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["message_select_macro"], files, index, False)
-        if ok and item:
+        if ok:
             config.startupMacro = item
 
-    def macroBuildHighlights(self):
+    def macroSaveHighlights(self):
         verses = Highlight().getHighlightedVerses()
         if len(verses) == 0:
             self.displayMessage("No verses are highlighted")
         else:
-            filename, ok = QInputDialog.getText(self, "UniqueBible.app",
-                                            config.thisTranslation["message_macro_save_highlights"], QLineEdit.Normal, "")
-            if ok and not filename == "":
-                if not ".txt" in filename:
-                    filename += ".txt"
+            filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_highlights"])
+            if ok:
                 file = os.path.join(MacroParser.macros_dir, filename)
-                if os.path.isfile(file):
-                    self.displayMessage("{0} already exists".format(filename))
+                outfile = open(file, "w")
+                parser = BibleVerseParser(config.standardAbbreviation)
+                for (b, c, v, code) in verses:
+                    reference = parser.bcvToVerseReference(b, c, v)
+                    outfile.write("_HIGHLIGHT:::{0}:::{1}\n".format(reference, code))
+                outfile.write(". displayMessage Highlighted verses loaded\n")
+                outfile.close()
+                self.displayMessage("Highlighted verses saved to {0}".format(filename))
+
+    def macroSaveCommand(self):
+        filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_command"])
+        if ok:
+            file = os.path.join(MacroParser.macros_dir, filename)
+            outfile = open(file, "w")
+            outfile.write(self.textCommandLineEdit.text() + "\n")
+            outfile.close()
+            self.displayMessage("Command saved to {0}".format(filename))
+
+    def openSaveMacroDialog(self, message):
+        filename, ok = QInputDialog.getText(self, "UniqueBible.app", message, QLineEdit.Normal, "")
+        if ok and not filename == "":
+            if not ".txt" in filename:
+                filename += ".txt"
+            file = os.path.join(MacroParser.macros_dir, filename)
+            if os.path.isfile(file):
+                reply = QMessageBox.question(self, "File exists",
+                                             "File currently exists.  Do you want to overwrite it?",
+                                             QMessageBox.Yes | QMessageBox.No)
+                if reply == QMessageBox.Yes:
+                    return filename, True
                 else:
-                    outfile = open(file, "w")
-                    parser = BibleVerseParser(config.standardAbbreviation)
-                    for (b, c, v, code) in verses:
-                        reference = parser.bcvToVerseReference(b, c, v)
-                        outfile.write("_HIGHLIGHT:::{0}:::{1}\n".format(reference, code))
-                    outfile.write(". displayMessage Highlighted verses loaded\n")
-                    outfile.close()
-                    self.displayMessage("Highlighted verses saved to {0}".format(filename))
+                    return "", False
+            else:
+                return filename, True
+        else:
+            return "", False
 
     def loadRunMacrosMenu(self, run_macro_menu):
         if config.enableMacros:
@@ -2254,7 +2274,9 @@ class MainWindow(QMainWindow):
                         count += 1
 
     def runMacro(self, file=""):
-        if config.enableMacros and not file == "":
+        if config.enableMacros and len(file) > 0:
+            if not ".txt" in file:
+                file += ".txt"
             MacroParser.parse(self, file)
             self.reloadCurrentRecord()
 
