@@ -88,8 +88,28 @@ class MoreConfigOptions(QDialog):
         layout.addWidget(horizontalContainer)
         self.setLayout(layout)
 
+    def ibusChanged(self):
+        config.ibus = not config.ibus
+        if config.fcitx and config.ibus:
+            config.fcitx = not config.fcitx
+        if config.virtualKeyboard and config.ibus:
+            config.virtualKeyboard = not config.virtualKeyboard
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def fcitxChanged(self):
+        config.fcitx = not config.fcitx
+        if config.fcitx and config.ibus:
+            config.ibus = not config.ibus
+        if config.fcitx and config.virtualKeyboard:
+            config.virtualKeyboard = not config.virtualKeyboard
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
     def virtualKeyboardChanged(self):
         config.virtualKeyboard = not config.virtualKeyboard
+        if config.fcitx and config.virtualKeyboard:
+            config.fcitx = not config.fcitx
+        if config.virtualKeyboard and config.ibus:
+            config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def showVerseNumbersInRangeChanged(self):
@@ -180,18 +200,6 @@ class MoreConfigOptions(QDialog):
 
     def showTtsOnLinuxChanged(self):
         config.showTtsOnLinux = not config.showTtsOnLinux
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
-    def ibusChanged(self):
-        config.ibus = not config.ibus
-        if config.fcitx and config.ibus:
-            config.fcitx = not config.fcitx
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
-    def fcitxChanged(self):
-        config.fcitx = not config.fcitx
-        if config.fcitx and config.ibus:
-            config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def logCommandsChanged(self):
