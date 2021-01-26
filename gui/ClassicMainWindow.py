@@ -34,7 +34,9 @@ class ClassicMainWindow(MainWindow):
         layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=self.setDefaultMenuLayout))
         layoutMenu.addAction(QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=self.setAlephMenuLayout))
-
+        if config.enableMacros:
+            menu1.addAction(
+                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
         menu1.addAction(QAction(config.thisTranslation["menu1_moreConfig"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addSeparator()
         if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
@@ -240,8 +242,12 @@ class ClassicMainWindow(MainWindow):
         menu8.addAction(QAction(config.thisTranslation["menu8_fixDatabase"], self, triggered=self.selectDatabaseToFix))
 
         if config.enableMacros:
-            macros_menu = self.menuBar().addMenu(config.thisTranslation["menu_macros"])
-            self.loadRunMacrosMenu(macros_menu)
+            macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))
+            run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
+            self.loadRunMacrosMenu(run_macros_menu)
+            build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
 
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
@@ -327,9 +333,9 @@ class ClassicMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
-
-        self.firstToolBar.addSeparator()
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
+            self.firstToolBar.addSeparator()
 
         actionButton = QPushButton()
         actionButton.setToolTip(config.thisTranslation["bar1_toolbars"])
@@ -338,7 +344,8 @@ class ClassicMainWindow(MainWindow):
         actionButton.clicked.connect(self.hideShowAdditionalToolBar)
         self.firstToolBar.addWidget(actionButton)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -391,6 +398,9 @@ class ClassicMainWindow(MainWindow):
         self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
         self.enableSyncStudyWindowBibleButton.clicked.connect(self.enableSyncStudyWindowBibleButtonClicked)
         self.studyBibleToolBar.addWidget(self.enableSyncStudyWindowBibleButton)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -811,14 +821,15 @@ class ClassicMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
-
-        self.firstToolBar.addSeparator()
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
+            self.firstToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_toolbars"], self.hideShowAdditionalToolBar)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -851,6 +862,9 @@ class ClassicMainWindow(MainWindow):
 
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         self.enableSyncStudyWindowBibleButton = self.studyBibleToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])

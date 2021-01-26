@@ -490,7 +490,8 @@ class Languages:
         "filename": "Filename",
 
         "message_select_macro": "Select Macro",
-        "message_macro_save_highlights": "Enter filename to save all highlights as a macro file"
+        "message_macro_save_highlights": "Enter filename to save all highlights as a macro file",
+        "message_macro_save_command": "Enter filename to save current command as a macro file"
     }
 
     def translateInterface(self, language):

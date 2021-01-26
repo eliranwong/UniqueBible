@@ -26,9 +26,9 @@ class AlephMainWindow(MainWindow):
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
-        # if config.enableMacros:
-        #     menu1_defaults.addAction(
-        #         QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
+        if config.enableMacros:
+            menu1_defaults.addAction(
+                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
@@ -182,7 +182,8 @@ class AlephMainWindow(MainWindow):
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
-            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroBuildHighlights))
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["menu_wiki"], self, triggered=self.openUbaWiki))
@@ -282,7 +283,8 @@ class AlephMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
 
         self.firstToolBar.addSeparator()
 
@@ -293,7 +295,8 @@ class AlephMainWindow(MainWindow):
         actionButton.clicked.connect(self.hideShowAdditionalToolBar)
         self.firstToolBar.addWidget(actionButton)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -346,6 +349,9 @@ class AlephMainWindow(MainWindow):
         self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
         self.enableSyncStudyWindowBibleButton.clicked.connect(self.enableSyncStudyWindowBibleButtonClicked)
         self.studyBibleToolBar.addWidget(self.enableSyncStudyWindowBibleButton)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -733,14 +739,17 @@ class AlephMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        self.firstToolBar.addWidget(self.textCommandLineEdit)
+        
+        if not config.preferRemoteControlForCommandLineEntry:
+            self.firstToolBar.addWidget(self.textCommandLineEdit)
 
         self.firstToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_toolbars"], self.hideShowAdditionalToolBar)
 
-        self.addToolBarBreak()
+        if config.addBreakAfterTheFirstToolBar:
+            self.addToolBarBreak()
 
         self.studyBibleToolBar = QToolBar()
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
@@ -773,6 +782,9 @@ class AlephMainWindow(MainWindow):
 
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         self.enableSyncStudyWindowBibleButton = self.studyBibleToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+
+        if config.addBreakBeforeTheLastToolBar:
+            self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
