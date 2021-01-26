@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
         self.setupToolBar()
         self.setAdditionalToolBar()
         # assign views
-        # mainView & studyView are assigned with class "CentralWidget"        
+        # mainView & studyView are assigned with class "CentralWidget"
         self.mainView = None
         self.studyView = None
         self.noteEditor = None
