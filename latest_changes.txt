@@ -1,3 +1,26 @@
+Major changes in version 21.0:
+Added an app icon image
+Added two desktop shortcuts for Chrome users:
+    shortcut_uba_chromeOS.desktop
+    shortcut_uba_chromeOS_fcitx.desktop
+Chrome OS users can launch Unique Bible App through Chrome OS launcher.
+IMPORTANT! Before you can use this file, you need to edit these files and change "yourUserName" to your user name.
+For details, you may read our instructions on installing UBA on Chrome OS at:
+https://github.com/eliranwong/ChromeOSLinux/blob/main/bible/UniqueBibleApp.md
+
+Major changes in version 20.9:
+Fixed Codes:
+    Conflicts between im method settings for Linux users fixed.
+Added files:
+    Two shortcut files to run UBA on Chrome OS:
+    - shortcut_uba_chromeOS.sh
+    - shortcut_uba_chromeOS_fcitx.sh
+Added features:
+    Startup macro
+    Save current command as macro
+    Save highlights as macro
+    Print Remote Control command in command bar
+
 Major changes in version 20.8:
 Fixed 1 issue:
     Fixed set main window command line field to focus when it is hidden.

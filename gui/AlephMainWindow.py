@@ -26,9 +26,9 @@ class AlephMainWindow(MainWindow):
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
-        # if config.enableMacros:
-        #     menu1_defaults.addAction(
-        #         QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
+        if config.enableMacros:
+            menu1_defaults.addAction(
+                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
@@ -182,7 +182,8 @@ class AlephMainWindow(MainWindow):
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
-            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroBuildHighlights))
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
+            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["menu_wiki"], self, triggered=self.openUbaWiki))

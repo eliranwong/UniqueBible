@@ -7,5 +7,5 @@ Terminal=false
 Path=/home/eliranwong/UniqueBible-master/
 Exec=python3 /home/eliranwong/UniqueBible-master/main.py
 Name=Unique Bible App
-Icon=/home/eliranwong/UniqueBible-master/htmlResources/theText.png
+Icon=/home/eliranwong/UniqueBible-master/htmlResources/UniqueBibleApp.png
 Name[en_GB]=Unique Bible App
