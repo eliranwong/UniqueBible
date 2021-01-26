@@ -40,6 +40,10 @@ if not hasattr(config, "remoteControl"):
     config.remoteControl = False
 if not hasattr(config, "preferRemoteControlForCommandLineEntry"):
     config.preferRemoteControlForCommandLineEntry = False
+if not hasattr(config, "addBreakAfterTheFirstToolBar"):
+    config.addBreakAfterTheFirstToolBar = True
+if not hasattr(config, "addBreakBeforeTheLastToolBar"):
+    config.addBreakBeforeTheLastToolBar = False
 # Start full-screen on Linux os
 if not hasattr(config, "linuxStartFullScreen"):
     config.linuxStartFullScreen = False
@@ -50,6 +54,9 @@ if not hasattr(config, "showTtsOnLinux"):
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
     config.ibus = False
+# This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
+if not hasattr(config, "fcitx"):
+    config.fcitx = False
 # Options to use built-in virtual keyboards: True / False
 if not hasattr(config, "virtualKeyboard"):
     config.virtualKeyboard = False
@@ -421,6 +428,7 @@ def saveDataOnExit():
         ("linuxStartFullScreen", config.linuxStartFullScreen),
         ("showTtsOnLinux", config.showTtsOnLinux),
         ("ibus", config.ibus),
+        ("fcitx", config.fcitx),
         ("virtualKeyboard", config.virtualKeyboard),
         ("marvelData", config.marvelData),
         ("musicFolder", config.musicFolder),
@@ -508,6 +516,8 @@ def saveDataOnExit():
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
         ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry),
+        ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
+        ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),
         ("forceGenerateHtml", config.forceGenerateHtml),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
@@ -532,8 +542,10 @@ def saveDataOnExit():
 #        if hasattr(config, "translation"):
 #            fileObj.write("{0} = {1}\n".format("translation", pprint.pformat(config.translation)))
 
-# Set Qt input method variable to use ibus if config.ibus is "True"
-if config.ibus:
+# Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
+if config.fcitx:
+    os.environ["QT_IM_MODULE"] = "fcitx"
+elif config.ibus:
     os.environ["QT_IM_MODULE"] = "ibus"
 
 # Set Qt input method variable to use Qt virtual keyboards if config.virtualKeyboard is "True"

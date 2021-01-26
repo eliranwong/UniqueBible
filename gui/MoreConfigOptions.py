@@ -33,6 +33,8 @@ class MoreConfigOptions(QDialog):
         options = [
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
+            ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged),
+            ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
             ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry, self.preferRemoteControlForCommandLineEntryChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
@@ -64,6 +66,7 @@ class MoreConfigOptions(QDialog):
             options += [
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
                 ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
+                ("fcitx", config.fcitx, self.fcitxChanged),
                 ("ibus", config.ibus, self.ibusChanged),
             ]
         for counter, content in enumerate(options):
@@ -98,6 +101,7 @@ class MoreConfigOptions(QDialog):
 
     def preferRemoteControlForCommandLineEntryChanged(self):
         config.preferRemoteControlForCommandLineEntry = not config.preferRemoteControlForCommandLineEntry
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab
@@ -137,6 +141,14 @@ class MoreConfigOptions(QDialog):
         config.showGoogleTranslateEnglishOptions = not config.showGoogleTranslateEnglishOptions
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
+    def addBreakAfterTheFirstToolBarChanged(self):
+        config.addBreakAfterTheFirstToolBar = not config.addBreakAfterTheFirstToolBar
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def addBreakBeforeTheLastToolBarChanged(self):
+        config.addBreakBeforeTheLastToolBar = not config.addBreakBeforeTheLastToolBar
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
     def showGoogleTranslateChineseOptionsChanged(self):
         config.showGoogleTranslateChineseOptions = not config.showGoogleTranslateChineseOptions
         self.parent.displayMessage(config.thisTranslation["message_restart"])
@@ -172,6 +184,14 @@ class MoreConfigOptions(QDialog):
 
     def ibusChanged(self):
         config.ibus = not config.ibus
+        if config.fcitx and config.ibus:
+            config.fcitx = not config.fcitx
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def fcitxChanged(self):
+        config.fcitx = not config.fcitx
+        if config.fcitx and config.ibus:
+            config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def logCommandsChanged(self):
