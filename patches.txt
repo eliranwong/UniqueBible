@@ -5,6 +5,8 @@
 (18.6, "folder", "htmlResources/fonts")
 (18.3, "folder", "htmlResources/css")
 (18.3, "folder", "htmlResources/js")
+(20.9, "file", "shortcut_uba_chromeOS.sh")
+(20.9, "file", "shortcut_uba_chromeOS_fcitx.sh")
 (20.9, "file", "Languages.py")
 (20.9, "file", "UniqueBibleAppVersion.txt")
 (20.9, "file", "gui/AlephMainWindow.py")
