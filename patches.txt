@@ -6,6 +6,7 @@
 (18.3, "folder", "htmlResources/css")
 (18.3, "folder", "htmlResources/js")
 (21.0, "file", "htmlResources/UniqueBibleApp.png")
+(21.0, "file", "shortcut_uba_Linux.desktop")
 (21.0, "file", "shortcut_uba_chromeOS.desktop")
 (21.0, "file", "shortcut_uba_chromeOS_fcitx.desktop")
 (20.9, "file", "shortcut_uba_chromeOS.sh")
