@@ -232,13 +232,13 @@ class RemoteControl(QWidget):
 
     def searchLineEntered(self):
         searchString = self.searchLineEdit.text()
+        self.parent.textCommandLineEdit.setText(searchString)
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
 
     def bibleBookAction(self, book):
         command = "{0} ".format(self.bookMap[book])
-        self.searchLineEdit.setText(command)
-        self.parent.runTextCommand(command)
+        self.runCommmand(command)
         self.searchLineEdit.setFocus()
 
     def keyEntryAction(self, key):
@@ -253,27 +253,29 @@ class RemoteControl(QWidget):
 
     def bibleAction(self, bible):
         command = "BIBLE:::{0}:::{1}".format(bible, self.parent.verseReference("main")[1])
-        self.searchLineEdit.setText(command)
-        self.parent.runTextCommand(command)
+        self.runCommmand(command)
         command = "_bibleinfo:::{0}".format(bible)
         self.parent.runTextCommand(command)
 
     def commentaryAction(self, commentary):
         command = "COMMENTARY:::{0}:::{1}".format(commentary, self.parent.verseReference("main")[1])
-        self.searchLineEdit.setText(command)
-        self.parent.runTextCommand(command)
+        self.runCommmand(command)
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)
 
+
     def lexiconAction(self, lexicon):
         command = "LEXICON:::{0}:::{1}".format(lexicon, TextCommandParser.last_lexicon_entry)
-        self.searchLineEdit.setText(command)
-        self.parent.runTextCommand(command)
+        self.runCommmand(command)
 
     def dictionaryAction(self, dictionary):
         command = "SEARCHTOOL:::{0}:::{1}".format(dictionary, TextCommandParser.last_text_search)
+        self.runCommmand(command)
+
+    def runCommmand(self, command):
         self.searchLineEdit.setText(command)
         self.parent.runTextCommand(command)
+        self.parent.textCommandLineEdit.setText(command)
 
 ## Standalone development code
 
