@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Path=/home/yourUserName/UniqueBible/
+Exec=/home/yourUserName/UniqueBible/shortcut_uba_chromeOS_fcitx.sh
+Icon=/home/yourUserName/UniqueBible/htmlResources/UniqueBibleApp.png
+Name=Unique Bible App [+fcitx]
