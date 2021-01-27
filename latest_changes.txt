@@ -1,3 +1,11 @@
+Major changes in version 21.03:
+- "Remote Control" is renamed to "Control Panel"
+- Configuration option "preferRemoteControlForCommandLineEntry" introduced in version 20.8 is renamed to "preferControlPanelForCommandLineEntry".
+- Options to enforce comparison / parallel: True / False
+* When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
+* Please note that change in bible version for chapter reading is ignored when this option is enabled.
+* This feature is accessible via a left toolbar button, newly created under the "Comparison / Parallel Reading / Difference" button.
+
 Major changes in version 21.02:
 - Added command prefix to remote control when tab is changed, so as to save time for typing
 - Added ability to run command or parse references directly from clipboard.  Users can now copy text or type command in 3rd party softwares and run in UBA.
