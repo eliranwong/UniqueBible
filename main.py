@@ -33,13 +33,13 @@ if not hasattr(config, "myGoogleApiKey"):
 # Options to always display static maps even "myGoogleApiKey" is not empty: True / False
 if not hasattr(config, "alwaysDisplayStaticMaps"):
     config.alwaysDisplayStaticMaps = False
-# Options to use remote control: True / False
+# Options to use control panel: True / False
 # This feature is created for use in church settings.
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
 if not hasattr(config, "remoteControl"):
     config.remoteControl = False
-if not hasattr(config, "preferRemoteControlForCommandLineEntry"):
-    config.preferRemoteControlForCommandLineEntry = False
+if not hasattr(config, "preferControlPanelForCommandLineEntry"):
+    config.preferControlPanelForCommandLineEntry = False
 if not hasattr(config, "addBreakAfterTheFirstToolBar"):
     config.addBreakAfterTheFirstToolBar = True
 if not hasattr(config, "addBreakBeforeTheLastToolBar"):
@@ -200,6 +200,9 @@ if not hasattr(config, "rtlTexts"):
 # Open bible references on main window instead of workspace: Ture / False
 if not hasattr(config, "openBibleInMainViewOnly"):
     config.openBibleInMainViewOnly = False
+# A temporary history record to work with enforcing comparison or parallel
+if not hasattr(config, "tempRecord"):
+    config.tempRecord = ""
 # Last-opened bible version and passage to be displayed on main window
 if not hasattr(config, "mainText"):
     config.mainText = "KJV"
@@ -224,6 +227,12 @@ if not hasattr(config, "favouriteBible"):
 # Options to display "favouriteBible" together with the main version for reading multiple references: True / False
 if not hasattr(config, "addFavouriteToMultiRef"):
     config.addFavouriteToMultiRef = False
+# Options to enforce comparison / parallel: True / False
+# When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
+# Please note that change in bible version for chapter reading is ignored when this option is enabled.
+# This feature is accessible via a left toolbar button, located under the "Comparison / Parallel Reading / Difference" button.
+if not hasattr(config, "enforceCompareParallel"):
+    config.enforceCompareParallel = False
 # Options to show note indicator on bible chapter: True / False
 if not hasattr(config, "showNoteIndicatorOnBibleChapter"):
     config.showNoteIndicatorOnBibleChapter = True
@@ -478,6 +487,7 @@ def saveDataOnExit():
         ("favouriteBible", config.favouriteBible),
         ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
         ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
+        ("enforceCompareParallel", config.enforceCompareParallel),
         ("syncStudyWindowBibleWithMainWindow", config.syncStudyWindowBibleWithMainWindow),
         ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),
         ("studyText", config.studyText),
@@ -515,7 +525,7 @@ def saveDataOnExit():
         ("theme", config.theme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
-        ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry),
+        ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
         ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
         ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),
         ("forceGenerateHtml", config.forceGenerateHtml),

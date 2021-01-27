@@ -675,7 +675,15 @@ class TextCommandParser:
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     # default function if no special keyword is specified
-    def textBibleVerseParser(self, command, text, view):
+    def textBibleVerseParser(self, command, text, view, parallel=False):
+        compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
+        if (config.enforceCompareParallel) and (view == "main") and (compareMatches) and not (parallel):
+            config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
+            return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
+        parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
+        if (config.enforceCompareParallel) and (view == "main") and (parallelMatches) and not (parallel):
+            config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
+            return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
         if config.useFastVerseParsing:
             verseList = self.extractAllVersesFast(command)
         else:
@@ -978,6 +986,7 @@ class TextCommandParser:
 
     # PARALLEL:::
     def textParallel(self, command, source):
+        print("parallel")
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(viewText, command)
@@ -993,7 +1002,7 @@ class TextCommandParser:
                 self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
-                tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source)[1])) for text in confirmedTexts]
+                tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source, True)[1])) for text in confirmedTexts]
                 versions, verses = zip(*tableList)
                 return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
