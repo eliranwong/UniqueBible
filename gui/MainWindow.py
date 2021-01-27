@@ -821,6 +821,12 @@ class MainWindow(QMainWindow):
         # note: can use qApp.clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
 
+    def parseContentOnClipboard(self):
+        clipboardText = qApp.clipboard().text()
+        self.textCommandLineEdit.setText(clipboardText)
+        self.runTextCommand(clipboardText)
+        self.manageRemoteControl()
+
     def openTextFileDialog(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,

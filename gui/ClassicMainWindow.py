@@ -43,6 +43,8 @@ class ClassicMainWindow(MainWindow):
             menu1.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
         menu1.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
+        menu1.addAction(QAction(config.thisTranslation["menu1_runClipboard"], self, shortcut="Ctrl+M", triggered=self.parseContentOnClipboard))
+        menu1.addSeparator()
         menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))

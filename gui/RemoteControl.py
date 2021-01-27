@@ -69,7 +69,7 @@ class RemoteControl(QWidget):
         commandLayout2 = QBoxLayout(QBoxLayout.LeftToRight)
         commandLayout2.setSpacing(5)
 
-        keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', '-', ' ', '<', 'X']
+        keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', '-', ',', ' ', '<', 'X']
         for key in keys:
             button = QPushButton(key)
             button.setMaximumWidth(30)
@@ -227,8 +227,19 @@ class RemoteControl(QWidget):
         row_layout.setMargin(0)
         return row_layout
 
-    def tabChanged(self):
-        self.searchLineEdit.setText("")
+    def tabChanged(self, index):
+        prefix = ""
+        if index == 0:
+            prefix = "BIBLE:::{0}:::".format(config.mainText)
+        elif index == 1:
+            prefix = "TEXT:::"
+        elif index == 2:
+            prefix = "COMMENTARY:::{0}:::".format(config.commentaryText)
+        elif index == 3:
+            prefix = "LEXICON:::"
+        elif index == 4:
+            prefix = "SEARCHTOOL:::"
+        self.searchLineEdit.setText(prefix)
 
     def searchLineEntered(self):
         searchString = self.searchLineEdit.text()
