@@ -1,3 +1,6 @@
+Major change in version 21.01:
+- Fixed h1 is not defined error message
+
 Major changes in version 21.0:
 Added an app icon image
 Added two desktop shortcuts for Chrome users:
