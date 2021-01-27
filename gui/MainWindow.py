@@ -210,7 +210,7 @@ class MainWindow(QMainWindow):
         config.baseUrl = baseUrl
 
     def focusCommandLineField(self):
-        if config.preferRemoteControlForCommandLineEntry:
+        if config.preferControlPanelForCommandLineEntry:
             self.manageRemoteControl()
         elif self.textCommandLineEdit.isVisible():
             self.textCommandLineEdit.setFocus()
@@ -1535,7 +1535,27 @@ class MainWindow(QMainWindow):
         y = screen.height() * float(vertical)
         self.move(x, y)
 
-    # Actions - enable or disable sync commentary
+    # Actions - enable or disable enforcement of comparison / parallel
+    def getEnableCompareParallelDisplay(self):
+        if config.enforceCompareParallel:
+            return "sync.png"
+        else:
+            return "noSync.png"
+
+    def getEnableCompareParallelDisplayToolTip(self):
+        if config.enforceCompareParallel:
+            return config.thisTranslation["menu4_enableEnforceCompareParallel"]
+        else:
+            return config.thisTranslation["menu4_disableEnforceCompareParallel"]
+
+    def enforceCompareParallelButtonClicked(self):
+        config.enforceCompareParallel = not config.enforceCompareParallel
+        print(config.enforceCompareParallel)
+        enforceCompareParallelButtonFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
+        self.enforceCompareParallelButton.setIcon(QIcon(enforceCompareParallelButtonFile))
+        self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
+
+    # Actions - enable or disable sync main and secondary bibles
     def getSyncStudyWindowBibleDisplay(self):
         if config.syncStudyWindowBibleWithMainWindow:
             return "sync.png"
@@ -2045,7 +2065,11 @@ class MainWindow(QMainWindow):
                 elif view:
                     views[view].setHtml(html, baseUrl)
                 if addRecord == True and view in ("main", "study"):
-                    self.addHistoryRecord(view, textCommand)
+                    if config.tempRecord:
+                        self.addHistoryRecord(view, config.tempRecord)
+                        config.tempRecord = ""
+                    else:
+                        self.addHistoryRecord(view, textCommand)
             # set checking blocks to prevent running the same command within unreasonable time frame
             self.now = now
             if source == "main":

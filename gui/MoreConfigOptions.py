@@ -35,7 +35,7 @@ class MoreConfigOptions(QDialog):
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
-            ("preferRemoteControlForCommandLineEntry", config.preferRemoteControlForCommandLineEntry, self.preferRemoteControlForCommandLineEntryChanged),
+            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
@@ -119,8 +119,8 @@ class MoreConfigOptions(QDialog):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
         self.newTabException = False
 
-    def preferRemoteControlForCommandLineEntryChanged(self):
-        config.preferRemoteControlForCommandLineEntry = not config.preferRemoteControlForCommandLineEntry
+    def preferControlPanelForCommandLineEntryChanged(self):
+        config.preferControlPanelForCommandLineEntry = not config.preferControlPanelForCommandLineEntry
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def openStudyWindowContentOnNextTabChanged(self):

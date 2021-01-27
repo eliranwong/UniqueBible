@@ -335,7 +335,7 @@ class ClassicMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        if not config.preferRemoteControlForCommandLineEntry:
+        if not config.preferControlPanelForCommandLineEntry:
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
@@ -614,6 +614,13 @@ class ClassicMainWindow(MainWindow):
         actionButton.clicked.connect(self.mainRefButtonClicked)
         self.leftToolBar.addWidget(actionButton)
 
+        self.enforceCompareParallelButton = QPushButton()
+        self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
+        enforceCompareParallelButtonFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
+        self.enforceCompareParallelButton.setIcon(QIcon(enforceCompareParallelButtonFile))
+        self.enforceCompareParallelButton.clicked.connect(self.enforceCompareParallelButtonClicked)
+        self.leftToolBar.addWidget(self.enforceCompareParallelButton)
+
         self.leftToolBar.addSeparator()
 
         actionButton = QPushButton()
@@ -823,7 +830,7 @@ class ClassicMainWindow(MainWindow):
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
-        if not config.preferRemoteControlForCommandLineEntry:
+        if not config.preferControlPanelForCommandLineEntry:
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
@@ -993,6 +1000,9 @@ class ClassicMainWindow(MainWindow):
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], self.mainRefButtonClicked)
+
+        iconFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
+        self.enforceCompareParallelButton = self.leftToolBar.addAction(QIcon(iconFile), self.getEnableCompareParallelDisplayToolTip(), self.enforceCompareParallelButtonClicked)
 
         self.leftToolBar.addSeparator()
 
