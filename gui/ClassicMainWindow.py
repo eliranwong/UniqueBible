@@ -46,6 +46,11 @@ class ClassicMainWindow(MainWindow):
         userInterfaceMenu.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
 
+        exportPdfMenu = menu1.addMenu(config.thisTranslation["bar3_pdf"])
+        exportPdfMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.printMainPage))
+        exportPdfMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.printStudyPage))
+        menu1.addSeparator()
+
         menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
@@ -257,25 +262,31 @@ class ClassicMainWindow(MainWindow):
         menu5.addAction(QAction(config.thisTranslation["menu5_last3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
         menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
 
-        menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu6_notes"]))
-        menu6.addAction(QAction(config.thisTranslation["menu6_mainChapter"], self, triggered=self.openMainChapterNote))
-        menu6.addAction(QAction(config.thisTranslation["menu6_studyChapter"], self, triggered=self.openStudyChapterNote))
-        menu6.addAction(QAction(config.thisTranslation["menu6_searchChapters"], self, triggered=self.searchCommandChapterNote))
-        menu6.addSeparator()
-        menu6.addAction(QAction(config.thisTranslation["menu6_mainVerse"], self, triggered=self.openMainVerseNote))
-        menu6.addAction(QAction(config.thisTranslation["menu6_studyVerse"], self, triggered=self.openStudyVerseNote))
-        menu6.addAction(QAction(config.thisTranslation["menu6_searchVerses"], self, triggered=self.searchCommandVerseNote))
-        menu6.addSeparator()
-        menu6.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearNoteHighlights))
+        menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_notes"]))
 
-        menu7 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
-        menu7.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
-        menu7.addAction(QAction(config.thisTranslation["menu7_open"], self, triggered=self.openTextFileDialog))
-        menu7.addSeparator()
-        menu7.addAction(QAction(config.thisTranslation["menu7_read"], self, triggered=self.externalFileButtonClicked))
-        menu7.addAction(QAction(config.thisTranslation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
-        menu7.addSeparator()
-        menu7.addAction(QAction(config.thisTranslation["menu7_recent"], self, triggered=self.openExternalFileHistory))
+        chapterNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_chapterNotes"]))
+        chapterNotesMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.openMainChapterNote))
+        chapterNotesMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.openStudyChapterNote))
+        
+        verseNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_verseNotes"]))
+        verseNotesMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.openMainVerseNote))
+        verseNotesMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.openStudyVerseNote))
+        
+        searchNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_search"]))
+        searchNotesMenu.addAction(QAction(config.thisTranslation["menu_chapterNotes"], self, triggered=self.searchCommandChapterNote))
+        searchNotesMenu.addAction(QAction(config.thisTranslation["menu_verseNotes"], self, triggered=self.searchCommandVerseNote))
+        searchNotesMenu.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearNoteHighlights))
+
+        menu6.addSeparator()
+
+        topicalNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
+        topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_read"], self, triggered=self.externalFileButtonClicked))
+        topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_recent"], self, triggered=self.openExternalFileHistory))
+        topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_open"], self, triggered=self.openTextFileDialog))
+
+        noteEditorMenu = menu6.addMenu("&{0}".format(config.thisTranslation["note_editor"]))
+        noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
+        noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
 
         menu11 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu11_multimedia"]))
         menu11.addAction(QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
