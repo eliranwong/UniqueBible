@@ -1,0 +1,69 @@
+introductionButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_introduction"])
+# build search timelines button
+timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_timelines"])
+# build search dictionary button
+dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookName, config.thisTranslation["context1_dict"])
+# build search encyclopedia button
+encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookName, config.thisTranslation["context1_encyclopedia"])
+
+
+# overview button
+overviewButton = "<button class='feature' onclick='document.title=\"OVERVIEW:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_overview"])
+# chapter index button
+chapterIndexButton = "<button class='feature' onclick='document.title=\"CHAPTERINDEX:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_chapterIndex"])
+# summary button
+summaryButton = "<button class='feature' onclick='document.title=\"SUMMARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_summary"])
+# chapter commentary button
+chapterCommentaryButton = "<button class='feature' onclick='document.title=\"COMMENTARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["menu4_commentary"])
+
+def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
+
+    def runBookFeature1(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(engFullBookName)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+    def runBookFeature2(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(engFullBookName)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+    def runBookFeature3(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary, engFullBookName)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+    def runBookFeature4(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.encyclopedia, engFullBookName)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+    def runChapterFeature1(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "OVERVIEW:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+
+    def runChapterFeature2(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "CHAPTERINDEX:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+    def runChapterFeature3(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "SUMMARY:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+        self.manageRemoteControl()
+
+
+    def runChapterFeature4(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "COMMENTARY:::{0} {1}.format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+        self.manageRemoteControl()

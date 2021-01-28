@@ -90,7 +90,7 @@ Paste the following content, but replace your_username with your usename on your
 > Terminal=false<br>
 > Path=/home/your_username/UniqueBible-master/<br>
 > Exec=python3 /home/your_username/UniqueBible-master/main.py<br>
-> Icon=/home/your_username/UniqueBible-master/htmlResources/theText.png<br>
+> Icon=/home/your_username/UniqueBible-master/htmlResources/UniqueBibleApp.png<br>
 > Name=Unique Bible App<br>
 
 Saves changes by pressing "Ctrl + O"

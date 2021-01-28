@@ -11,6 +11,14 @@ class ClassicMainWindow(MainWindow):
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
 
+        menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
+        menu1.addSeparator()
+
+        clipboardMenu = menu1.addMenu(config.thisTranslation["menu1_clipboard"])
+        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_readClipboard"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
+        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_runClipboard"], self, shortcut="Ctrl+M", triggered=self.parseContentOnClipboard))
+        menu1.addSeparator()
+
         generalPreferencesMenu = menu1.addMenu(config.thisTranslation["menu1_generalPreferences"])
         generalPreferencesMenu.addAction(QAction(config.thisTranslation["menu1_tabNo"], self, triggered=self.setTabNumberDialog))
         generalPreferencesMenu.addAction(QAction(config.thisTranslation["menu1_setAbbreviations"], self, triggered=self.setBibleAbbreviations))
@@ -37,17 +45,10 @@ class ClassicMainWindow(MainWindow):
             userInterfaceMenu.addAction(QAction(config.thisTranslation["menu1_translateInterface"], self, triggered=self.translateInterface))
         userInterfaceMenu.addAction(QAction(config.thisTranslation["menu1_toogleInterface"], self, triggered=self.toogleInterfaceTranslation))
         menu1.addSeparator()
-        
-        clipboardMenu = menu1.addMenu(config.thisTranslation["menu1_clipboard"])
-        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_readClipboard"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
-        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_runClipboard"], self, shortcut="Ctrl+M", triggered=self.parseContentOnClipboard))
-        menu1.addSeparator()
 
         menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
-        menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
-        menu1.addSeparator()
-        appIcon = QIcon(os.path.join("htmlResources", "theText.png"))
+        appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
         quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=qApp.quit)
         menu1.addAction(quit_action)
 
@@ -146,9 +147,18 @@ class ClassicMainWindow(MainWindow):
 
         menu4 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu4_further"]))
 
-        menu4.addAction(QAction(config.thisTranslation["menu4_book"], self, triggered=self.bookFeatures))
-        menu4.addAction(QAction(config.thisTranslation["menu4_chapter"], self, triggered=self.chapterFeatures))
+        bookFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_book"])
+        bookFeaturesMenu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeature1))
+        bookFeaturesMenu.addAction(QAction(config.thisTranslation["html_timelines"], self, triggered=self.runBookFeature2))
+        bookFeaturesMenu.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.runBookFeature3))
+        bookFeaturesMenu.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.runBookFeature4))
         
+        chapterFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_chapter"])
+        chapterFeaturesMenu.addAction(QAction(config.thisTranslation["html_overview"], self, triggered=self.runChapterFeature1))
+        chapterFeaturesMenu.addAction(QAction(config.thisTranslation["html_chapterIndex"], self, triggered=self.runChapterFeature2))
+        chapterFeaturesMenu.addAction(QAction(config.thisTranslation["html_summary"], self, triggered=self.runChapterFeature3))
+        chapterFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_commentary"], self, triggered=self.runChapterFeature4))
+
         verseFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_verse"])
         verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
         verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))

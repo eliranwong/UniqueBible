@@ -77,7 +77,7 @@ class MainWindow(QMainWindow):
 
         # setup UI
         self.setWindowTitle("UniqueBible.app [version {0}]".format(config.version))
-        appIconFile = os.path.join("htmlResources", "theText.png")
+        appIconFile = os.path.join("htmlResources", "UniqueBibleApp.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
@@ -204,7 +204,7 @@ class MainWindow(QMainWindow):
         # External objects, such as stylesheets or images referenced in the HTML document, are located RELATIVE TO baseUrl .
         # e.g. put all local files linked by html's content in folder "htmlResources"
         global baseUrl
-        relativePath = os.path.join("htmlResources", "theText.png")
+        relativePath = os.path.join("htmlResources", "UniqueBibleApp.png")
         absolutePath = os.path.abspath(relativePath)
         baseUrl = QUrl.fromLocalFile(absolutePath)
         config.baseUrl = baseUrl
@@ -866,6 +866,47 @@ class MainWindow(QMainWindow):
             return os.path.split(externalFileHistory[-1])[-1]
         else:
             return "[open file]"
+
+    def runBookFeature1(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(engFullBookName)
+        self.runTextCommand(command)
+
+    def runBookFeature2(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(engFullBookName)
+        self.runTextCommand(command)
+
+    def runBookFeature3(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary, engFullBookName)
+        print(command)
+        self.runTextCommand(command)
+
+    def runBookFeature4(self):
+        engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.encyclopedia, engFullBookName)
+        self.runTextCommand(command)
+
+    def runChapterFeature1(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "OVERVIEW:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+
+    def runChapterFeature2(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "CHAPTERINDEX:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+
+    def runChapterFeature3(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "SUMMARY:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
+
+    def runChapterFeature4(self):
+        bookAbb = BibleBooks().eng[str(config.mainB)][0]
+        command = "COMMENTARY:::{0} {1}".format(bookAbb, config.mainC)
+        self.runTextCommand(command)
 
     def externalFileButtonClicked(self):
         externalFileHistory = config.history["external"]

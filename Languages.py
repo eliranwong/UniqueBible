@@ -127,7 +127,7 @@ class Languages:
         "menu1_rightHalf": "Right Half",
         "menu1_smallSize": "Small Size",
         "menu1_resize": "Resize",
-        "menu1_remoteControl": "Open / Close Control Panel",
+        "menu1_remoteControl": "Open Control Panel",
         "menu1_setDefaultFont": "Default Font and Size",
         "menu1_setChineseFont": "Chinese Font",
         "menu1_setAbbreviations": "Select Bible Abbreviations",
