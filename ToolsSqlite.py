@@ -558,10 +558,10 @@ class Commentary:
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, verse[0:2])
             scripture = self.cursor.fetchone()
-            data = scripture[0]
-            if config.theme == "dark":
-                data = data.replace('color:#000080;', 'color:gray;')
             if scripture:
+                data = scripture[0]
+                if config.theme == "dark":
+                    data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
                 return "<div>{0}</div>".format(chapter)
             else:

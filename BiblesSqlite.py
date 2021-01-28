@@ -1008,7 +1008,7 @@ class Bible:
         query = "DELETE FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
         self.cursor.execute(query)
 
-    def getGount(self, table):
+    def getCount(self, table):
         self.cursor.execute('SELECT COUNT(*) from ' + table)
         count = self.cursor.fetchone()[0]
         return count
@@ -1018,6 +1018,8 @@ class Bible:
             self.createDetailsTable()
         if not self.checkColumnExists("Details", "Language"):
             self.addColumnToTable("Details", "Language", "NVARCHAR(10)")
+        if self.getCount("Details") == 0:
+            self.insertDetailsTable(self.text, self.text)
 
 class ClauseData:
 

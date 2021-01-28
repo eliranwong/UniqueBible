@@ -1741,7 +1741,7 @@ class MainWindow(QMainWindow):
         biblesSqlite = BiblesSqlite()
         mainChapterList = biblesSqlite.getChapterList(config.mainB)
         del biblesSqlite
-        if newChapter in mainChapterList:
+        if newChapter in mainChapterList or config.menuLayout == "aleph":
             self.newTabException = True
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
@@ -1755,7 +1755,7 @@ class MainWindow(QMainWindow):
         biblesSqlite = BiblesSqlite()
         mainChapterList = biblesSqlite.getChapterList(config.mainB)
         del biblesSqlite
-        if newChapter in mainChapterList:
+        if newChapter in mainChapterList or config.menuLayout == "aleph":
             self.newTabException = True
             newTextCommand = self.bcvToVerseReference(config.mainB, newChapter, 1)
             self.textCommandChanged(newTextCommand, "main")
