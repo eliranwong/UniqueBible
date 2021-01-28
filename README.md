@@ -1,7 +1,7 @@
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
-<b>Tested in:</b> Windows, macOS and Linux (Debian, Ubuntu & Mint)
+<b>Tested in:</b> Windows, macOS and Linux (Debian, Ubuntu & Mint), Chrome OS (Debian 10)
 
 Our Wiki Pages: https://github.com/eliranwong/UniqueBible/wiki
 
