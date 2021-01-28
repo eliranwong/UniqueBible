@@ -1550,7 +1550,6 @@ class MainWindow(QMainWindow):
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel
-        print(config.enforceCompareParallel)
         enforceCompareParallelButtonFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
         self.enforceCompareParallelButton.setIcon(QIcon(enforceCompareParallelButtonFile))
         self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
