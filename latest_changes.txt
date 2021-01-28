@@ -1,3 +1,7 @@
+Major changes in version 21.04:
+- Fixed issue when selecting Bible that has no commentary entry #78
+- Improved classic menu layout: new items added; previous items reorganised.
+
 Major changes in version 21.03:
 - "Remote Control" is renamed to "Control Panel"
 - Configuration option "preferRemoteControlForCommandLineEntry" introduced in version 20.8 is renamed to "preferControlPanelForCommandLineEntry".
