@@ -151,7 +151,6 @@ class Languages:
         "menu1_setDefaultStrongsHebrewLexicon": "Set Default Strong's Hebrew Lexicon",
         "menu1_exit": "Exit",
         "menu2_view": "Layout",
-        "menu2_view": "Navigation",
         "menu2_all": "All Toolbars [Show / Hide]",
         "menu2_topOnly": "All Toolbars / Only Top Toolbar",
         "menu2_top": "Top Toolbar [Show / Hide]",
