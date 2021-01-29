@@ -8,6 +8,9 @@
 /.idea
 /macros/*.txt
 /macros/save
+/tmp
+/Documents
+/htmlResources/export
 config.py
 **.log
 htmlResources/main.html

@@ -1,3 +1,4 @@
+# coding=utf-8
 import os, subprocess, re, config, webbrowser, platform
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
@@ -462,7 +463,7 @@ class TextCommandParser:
         if len(commandList) == 1:
             textCommand = textCommand.strip()
             if ":" not in textCommand:
-                if re.search(".*\d+$", textCommand):
+                if re.search(r'.*\d+$', textCommand):
                     textCommand += ":1"
                 else:
                     textCommand += " 1:1"
@@ -692,7 +693,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
-            formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
+            formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
             if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i", "LXX1", "LXX2") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
                 self.parent.enableParagraphButtonAction(False)
@@ -720,22 +721,22 @@ class TextCommandParser:
 
     def hideLexicalEntryInBible(self, text):
         if config.hideLexicalEntryInBible and re.search("onclick=['{0}]lex".format('"'), text):
-            p = re.compile("<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>[ ]*?<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
+            p = re.compile(r"<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>[ ]*?<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
             while p.search(text):
                 text = p.sub(r"<ref onclick='lex({0}\1_\2{0})'>*</ref>".format('"'), text)
-            p = re.compile("<[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>[ ]*?<[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
+            p = re.compile(r"<[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>[ ]*?<[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
             while p.search(text):
                 text = p.sub(r"<ref onclick='rmac({0}\1_\2{0})'>*</ref>".format('"'), text)
             searchReplace = {
-                ("<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?> <[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lmCombo({0}\1{0}, {0}rmac{0}, {0}\2{0})'>*</ref></sup>".format('"')),
-                ("<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lex({0}\1{0})'>*</ref></sup>".format('"')),
+                (r"<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?> <[^\n<>]+?onclick='rmac\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lmCombo({0}\1{0}, {0}rmac{0}, {0}\2{0})'>*</ref></sup>".format('"')),
+                (r"<sup><[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?></sup>".format('"'), r"<sup><ref onclick='lex({0}\1{0})'>*</ref></sup>".format('"')),
             }
             for search, replace in searchReplace:
                 text = re.sub(search, replace, text)
-            p = re.compile("(<sup><ref onclick='bn\([^\n\(\)]*?\)'>&oplus;</ref></sup>|<woj>⸃</woj>|</woj>|</i>|</ot>|</mbe>|</mbn>)(<sup><ref onclick='l[^\r<>]*?>\*</ref></sup>)")
+            p = re.compile(r"(<sup><ref onclick='bn\([^\n\(\)]*?\)'>&oplus;</ref></sup>|<woj>⸃</woj>|</woj>|</i>|</ot>|</mbe>|</mbn>)(<sup><ref onclick='l[^\r<>]*?>\*</ref></sup>)")
             while p.search(text):
                 text = p.sub(r"\2\1", text)
-            p = re.compile("([^\n<>]+?)<sup><ref (onclick='l[^\r<>]*?>)\*</ref></sup>")
+            p = re.compile(r"([^\n<>]+?)<sup><ref (onclick='l[^\r<>]*?>)\*</ref></sup>")
             while p.search(text):
                 text = p.sub(r"<tag \2\1</tag>", text)
         return text
@@ -755,7 +756,7 @@ class TextCommandParser:
 
     def textFormattedBible(self, verse, text):
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
-        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         marvelBibles = list(self.getMarvelBibles().keys())
         if text in formattedBibles and config.readFormattedBibles:
@@ -798,14 +799,14 @@ class TextCommandParser:
                 self.parent.displayMessage(err, title="ERROR:")
         # on Windows
         elif platform.system() == "Windows":
-            os.system("cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
             self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} {1}".format(config.open, outputFolder))
+            os.system(r"{0} {1}".format(config.open, outputFolder))
         # on Unix-based system, like macOS
         else:
-            os.system("cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+            os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
             self.parent.displayMessage(config.thisTranslation["message_done"])
-            os.system("{0} {1}".format(config.open, outputFolder))
+            os.system(r"{0} {1}".format(config.open, outputFolder))
         return ("", "", {})
 
     # functions about bible
@@ -1384,7 +1385,7 @@ class TextCommandParser:
             command = "{0}:::{1}".format(config.commentaryText, command)
         commandList = self.splitCommand(command)
         reference = commandList[1]
-        if re.search("^[0-9]+?\.[0-9]+?\.[0-9]+?$", reference):
+        if re.search(r"^[0-9]+?\.[0-9]+?\.[0-9]+?$", reference):
             verseList = [tuple([int(i) for i in reference.split(".")])]
             if not len(commandList) == 2 or not verseList:
                 return self.invalidCommand()

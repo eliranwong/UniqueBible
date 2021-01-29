@@ -187,7 +187,7 @@ class Languages:
         "menu3_study": "All Records",
         "menu3_studyBack": "Previous Record",
         "menu3_studyForward": "Next Record",
-        "menu4_further": "Gems",
+        "menu4_further": "Details",
         "menu4_book": "Book Features",
         "menu4_chapter": "Chapter Features",
         "menu4_verse": "Verse Features",

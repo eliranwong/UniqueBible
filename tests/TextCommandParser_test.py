@@ -1,7 +1,21 @@
+import os
 import unittest
 
+if not os.path.isfile("config.py"):
+    open("config.py", "w").close()
+
 import config
-from BibleVerseParser import BibleVerseParser
+
+config.mainText = "MOB"
+config.mainB = 1
+config.mainC = 1
+config.mainV = 1
+config.commentaryB = "cEGNT"
+config.commentaryC = "cEGNT"
+config.useFastVerseParsing = True
+config.standardAbbreviation = "ENG"
+config.parserStandarisation = "NO"
+
 from TextCommandParser import TextCommandParser
 
 class TextCommandParserTestCase(unittest.TestCase):
