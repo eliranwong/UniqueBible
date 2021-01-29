@@ -49,7 +49,7 @@ class BiblesSqlite:
 
     def getFormattedBibleList(self, includeMarvelBibles=True):
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
-        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search("^[\._]", f)]
+        formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
         if not includeMarvelBibles:
             formattedBibles = [bible for bible in formattedBibles if not bible in self.marvelBibles]
         return sorted(formattedBibles)
@@ -499,7 +499,7 @@ input.addEventListener('keyup', function(event) {0}
 
     def removeVowelAccent(self, text):
         searchReplace = (
-            ("[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\(\)\[\]\*\־\׀\׃\׆]", ""),
+            (r"[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\(\)\[\]\*\־\׀\׃\׆]", ""),
             ("[שׂשׁ]", "ש"),
             ("[ἀἄᾄἂἆἁἅᾅἃάᾴὰᾶᾷᾳ]", "α"),
             ("[ἈἌἎἉἍἋ]", "Α"),
@@ -517,7 +517,7 @@ input.addEventListener('keyup', function(event) {0}
             ("[ὙὝὟ]", "Υ"),
             ("[ὠὤὢὦᾠὡὥὧᾧώῴὼῶῷῳ]", "ω"),
             ("[ὨὬὪὮὩὭὯ]", "Ω"),
-            ("[\-\—\,\;\:\\\?\.\·\·\‘\’\‹\›\“\”\«\»\(\)\[\]\{\}\⧼\⧽\〈\〉\*\‿\᾽\⇔\¦]", ""),
+            (r"[\-\—\,\;\:\\\?\.\·\·\‘\’\‹\›\“\”\«\»\(\)\[\]\{\}\⧼\⧽\〈\〉\*\‿\᾽\⇔\¦]", ""),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
@@ -613,7 +613,7 @@ input.addEventListener('keyup', function(event) {0}
                     if not searchword == "z":
                         formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
             # fix searching LXX / SBLGNT words
-            formatedText = re.sub("<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
+            formatedText = re.sub(r"<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
             # remove misplacement of tags <z> & </z>
             p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
             s = p.search(formatedText)
@@ -924,7 +924,7 @@ class Bible:
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
         if scripture:
-            chapter += re.sub('onclick="luV\(([0-9]+?)\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
+            chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
             divTag = "<div>"
             if self.text in config.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"

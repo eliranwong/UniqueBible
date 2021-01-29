@@ -2,7 +2,7 @@ import config, logging
 from PySide2.QtCore import Qt, QLocale
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
-from PySide2.QtGui import QDesktopServices
+from PySide2.QtGui import QDesktopServices, QGuiApplication
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
@@ -298,7 +298,7 @@ class WebEngineView(QWebEngineView):
         try:
             translatedText = Translator().translate(text, dest=userLanguage).text
             if config.autoCopyGoogleTranslateOutput:
-                qApp.clipboard().setText(translatedText)
+                QGuiApplication.instance().clipboard().setText(translatedText)
         except:
             translatedText = "ATTENTION! Google Translate is not accessible.  Internet connection is required for this feature."
         self.displayMessage(translatedText)
@@ -312,7 +312,7 @@ class WebEngineView(QWebEngineView):
             pinyinList = [" ".join(list) for list in pinyinList]
             pinyinText = " ".join(pinyinList)
             if config.autoCopyChinesePinyinOutput:
-                qApp.clipboard().setText(pinyinText)
+                QGuiApplication.instance().clipboard().setText(pinyinText)
             self.displayMessage(pinyinText)
 
     # TEXT-TO-SPEECH feature
@@ -465,7 +465,7 @@ class WebEngineView(QWebEngineView):
             self.displayMessage(config.thisTranslation["message_noReference"])
         else:
             references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
-            qApp.clipboard().setText(references)
+            QGuiApplication.instance().clipboard().setText(references)
         del parser
 
     def runAsCommand(self):

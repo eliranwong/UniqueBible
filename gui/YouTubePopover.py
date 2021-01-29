@@ -1,3 +1,5 @@
+from PySide2.QtGui import QGuiApplication
+
 import config
 from PySide2.QtCore import QUrl, Qt
 from PySide2.QtWidgets import (QAction)
@@ -61,7 +63,7 @@ class YouTubePopover(QWebEngineView):
 
     def copy(self):
         if self.urlString:
-            qApp.clipboard().setText(self.urlString)
+            QGuiApplication.instance().clipboard().setText(self.urlString)
 
     def downloadMp3(self):
         if not self.urlString or "/results?search_query=" in self.urlString:

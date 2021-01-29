@@ -243,7 +243,7 @@ class MainWindow(QMainWindow):
         if self.noteEditor:
             if self.noteEditor.close():
                 event.accept()
-                qApp.quit()
+                QGuiApplication.instance().quit()
             else:
                 event.ignore()
                 # Bring forward the note editor.
@@ -252,10 +252,10 @@ class MainWindow(QMainWindow):
                 self.noteEditor.show()
         else:
             event.accept()
-            qApp.quit()
+            QGuiApplication.instance().quit()
 
     def quitApp(self):
-        qApp.quit()
+        QGuiApplication.instance().quit()
 
     # check migration
     def checkMigration(self):
@@ -817,12 +817,12 @@ class MainWindow(QMainWindow):
         return text
 
     def pasteFromClipboard(self):
-        clipboardText = qApp.clipboard().text()
-        # note: can use qApp.clipboard().setText to set text in clipboard
+        clipboardText = QGuiApplication.instance().clipboard().text()
+        # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
 
     def parseContentOnClipboard(self):
-        clipboardText = qApp.clipboard().text()
+        clipboardText = QGuiApplication.instance().clipboard().text()
         self.textCommandLineEdit.setText(clipboardText)
         self.runTextCommand(clipboardText)
         self.manageRemoteControl()
@@ -1580,11 +1580,11 @@ class MainWindow(QMainWindow):
         self.moveWindow(1/2, 0)
 
     def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = qApp.desktop().availableGeometry()
+        availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
     def moveWindow(self, horizontal, vertical):
-        screen = qApp.desktop().availableGeometry()
+        screen = QGuiApplication.instance().desktop().availableGeometry()
         x = screen.width() * float(horizontal)
         y = screen.height() * float(vertical)
         self.move(x, y)

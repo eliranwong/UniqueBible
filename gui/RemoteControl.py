@@ -1,4 +1,5 @@
 from PySide2.QtCore import Qt
+from PySide2.QtGui import QGuiApplication
 
 import config
 from functools import partial
@@ -34,7 +35,7 @@ class RemoteControl(QWidget):
 
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = qApp.desktop().availableGeometry()
+        availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
         self.setMinimumWidth(500)
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
