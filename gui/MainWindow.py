@@ -881,12 +881,18 @@ class MainWindow(QMainWindow):
 
     def runBookFeature3(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
         command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary, engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
     def runBookFeature4(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
         command = "SEARCHTOOL:::{0}:::{1}".format(config.encyclopedia, engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
@@ -1160,7 +1166,7 @@ class MainWindow(QMainWindow):
                                                       self.openFileNameLabel.text(),
                                                       "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
         if fileName:
-            BibleVerseParser(config.parserStandarisation).startParsing(fileName)
+            BibleVerseParser(config.parserStandarisation).extractAllReferencesstartParsing(fileName)
             self.onTaggingCompleted()
 
     def tagFiles(self):
@@ -1171,7 +1177,7 @@ class MainWindow(QMainWindow):
         if files:
             parser = BibleVerseParser(config.parserStandarisation)
             for filename in files:
-                parser.startParsing(filename)
+                parser.extractAllReferencesstartParsing(filename)
             del parser
             self.onTaggingCompleted()
 
@@ -1183,7 +1189,7 @@ class MainWindow(QMainWindow):
         if directory:
             path, filename = os.path.split(directory)
             outputFile = os.path.join(path, "output_{0}".format(filename))
-            BibleVerseParser(config.parserStandarisation).startParsing(directory)
+            BibleVerseParser(config.parserStandarisation).extractAllReferencesstartParsing(directory)
             self.onTaggingCompleted()
 
     # Action - open a dialog box to download a mp3 file from youtube
