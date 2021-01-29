@@ -247,6 +247,8 @@ class RemoteControl(QWidget):
         self.parent.textCommandLineEdit.setText(searchString)
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
+        if config.closeControlPanelAfterRunningCommand:
+            self.hide()
 
     def bibleBookAction(self, book):
         command = "{0} ".format(self.bookMap[book])

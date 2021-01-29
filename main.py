@@ -38,6 +38,8 @@ if not hasattr(config, "alwaysDisplayStaticMaps"):
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
 if not hasattr(config, "remoteControl"):
     config.remoteControl = False
+if not hasattr(config, "closeControlPanelAfterRunningCommand"):
+    config.closeControlPanelAfterRunningCommand = False
 if not hasattr(config, "preferControlPanelForCommandLineEntry"):
     config.preferControlPanelForCommandLineEntry = False
 if not hasattr(config, "addBreakAfterTheFirstToolBar"):
@@ -526,6 +528,7 @@ def saveDataOnExit():
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
         ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
+        ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand),
         ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
         ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),
         ("forceGenerateHtml", config.forceGenerateHtml),
