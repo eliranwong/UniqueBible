@@ -10,6 +10,9 @@
 /macros/save
 config.py
 **.log
+tmp/
+Documents/
+htmlResources/export/
 htmlResources/main.html
 htmlResources/study.html
 UniqueBible.app.pdf
