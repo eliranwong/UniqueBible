@@ -8,11 +8,11 @@
 /.idea
 /macros/*.txt
 /macros/save
+/tmp
+/Documents
+/htmlResources/export
 config.py
 **.log
-tmp/
-Documents/
-htmlResources/export/
 htmlResources/main.html
 htmlResources/study.html
 UniqueBible.app.pdf
