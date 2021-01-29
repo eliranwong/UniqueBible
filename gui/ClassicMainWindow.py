@@ -1,5 +1,5 @@
 import os, config, myTranslation
-from PySide2.QtGui import QIcon, Qt
+from PySide2.QtGui import QIcon, Qt, QGuiApplication
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
 
@@ -54,7 +54,7 @@ class ClassicMainWindow(MainWindow):
         menu1.addAction(QAction(config.thisTranslation["menu1_update"], self, triggered=self.updateUniqueBibleApp))
         menu1.addSeparator()
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
-        quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=qApp.quit)
+        quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=self.quitApp)
         menu1.addAction(quit_action)
 
         menu2 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu2_view"]))

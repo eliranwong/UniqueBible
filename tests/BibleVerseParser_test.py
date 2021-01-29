@@ -1,4 +1,9 @@
+import os
 import unittest
+
+if not os.path.isfile("config.py"):
+    open("config.py", "w").close()
+
 import config
 
 from BibleVerseParser import BibleVerseParser

@@ -320,14 +320,14 @@ class DictionaryData:
             contentText = content[0]
 
             # deal with images
-            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            imageList = [m for m in re.findall(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
             if imageList:
                 imageSqlite = ImageSqlite()
                 for (imgModule, imgEntry) in imageList:
                     imageSqlite.exportImage(imgModule, imgEntry)
                 del imageSqlite
-            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+            contentText = re.sub(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
 
             abb = entry[:3]
             moduleName = dict(IndexesSqlite().dictionaryList)[abb]
@@ -356,14 +356,14 @@ class EncyclopediaData:
             contentText = content[0]
 
             # deal with images
-            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            imageList = [m for m in re.findall(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
             if imageList:
                 imageSqlite = ImageSqlite()
                 for (imgModule, imgEntry) in imageList:
                     imageSqlite.exportImage(imgModule, imgEntry)
                 del imageSqlite
-            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+            contentText = re.sub(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
 
             moduleName = dict(IndexesSqlite().encyclopediaList)[module]
             searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
@@ -425,7 +425,7 @@ class ExlbData:
                 content = content[0]
                 if not config.myGoogleApiKey or not config.internet or config.alwaysDisplayStaticMaps:
                     # display static google map if users do not have a google api key or internet connection
-                    content = re.sub('<blid="(.*?)">.*?MYGOOGLEAPIKEY\]&callback=myMap"></script>', r'<p align="center"><img src="images/exlbl_large/\1.png"></p>', content)
+                    content = re.sub(r'<blid="(.*?)">.*?MYGOOGLEAPIKEY\]&callback=myMap"></script>', r'<p align="center"><img src="images/exlbl_large/\1.png"></p>', content)
                     # adjust zoom level with the following line
                     #content = content.replace("&z=10'", "&z=8'")
                 else:
@@ -485,7 +485,7 @@ class Commentary:
 
     def getCommentaryList(self):
         commentaryFolder = os.path.join(config.marvelData, "commentaries")
-        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search("^[\._]", f)]
+        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
         return sorted(commentaryList)
 
     def getCommentaries(self):
@@ -562,7 +562,7 @@ class Commentary:
                 data = scripture[0]
                 if config.theme == "dark":
                     data = data.replace('color:#000080;', 'color:gray;')
-                chapter += re.sub('onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
+                chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
                 return "<div>{0}</div>".format(chapter)
             else:
                 return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
@@ -577,7 +577,7 @@ class LexiconData:
 
     def getLexiconList(self):
         lexiconFolder = os.path.join(config.marvelData, "lexicons")
-        lexiconList = [f[:-8] for f in os.listdir(lexiconFolder) if os.path.isfile(os.path.join(lexiconFolder, f)) and f.endswith(".lexicon") and not re.search("^[\._]", f)]
+        lexiconList = [f[:-8] for f in os.listdir(lexiconFolder) if os.path.isfile(os.path.join(lexiconFolder, f)) and f.endswith(".lexicon") and not re.search(r"^[\._]", f)]
         return sorted(lexiconList)
 
     def getSelectForm(self, entry, module=""):
@@ -628,14 +628,14 @@ class Lexicon:
         else:
             contentText += information[0]
             # deal with images
-            imageList = [m for m in re.findall('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+            imageList = [m for m in re.findall(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
             if imageList:
                 imageSqlite = ImageSqlite()
                 for (imgModule, imgEntry) in imageList:
                     imageSqlite.exportImage(imgModule, imgEntry)
                 del imageSqlite
-            contentText = re.sub('src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-            contentText = re.sub("src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+            contentText = re.sub(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+            contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
             return contentText
 
 
@@ -646,7 +646,7 @@ class BookData:
 
     def getBookList(self):
         bookFolder = os.path.join(config.marvelData, "books")
-        bookList = [f[:-5] for f in os.listdir(bookFolder) if os.path.isfile(os.path.join(bookFolder, f)) and f.endswith(".book") and not re.search("^[\._]", f)]
+        bookList = [f[:-5] for f in os.listdir(bookFolder) if os.path.isfile(os.path.join(bookFolder, f)) and f.endswith(".book") and not re.search(r"^[\._]", f)]
         bookList = sorted(bookList)
         return [(book, book) for book in bookList]
 

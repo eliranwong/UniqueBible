@@ -1,3 +1,4 @@
+# coding=utf-8
 class BibleBooks:
 
     # English abbreviations according to SBL-style

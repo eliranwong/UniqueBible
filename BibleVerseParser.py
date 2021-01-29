@@ -39,6 +39,8 @@ import os
 # File "config.py" is essential for running module "config"
 # Create file "config.py" if it is missing.
 # The following two lines are written for use of this parser outside UniqueBible.app
+import pprint
+
 if not os.path.isfile("config.py"):
     open("config.py", "w", encoding="utf-8").close()
 
