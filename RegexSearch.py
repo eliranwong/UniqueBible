@@ -38,14 +38,14 @@ class RegexSearch:
             outputFile = os.path.join(path, outputFilename)
         # open file and read input text
         print("Processing '{0}' ...".format(filename))
-        with open(inputFile,'r') as f:
+        with open(inputFile, "r", encoding="utf-8") as f:
             newData = f.read()
         # work on non-empty text
         if newData:
             # search and replace the text
             newData = self.processInputText(newData, searchReplace, deepSearchPattern)
             # save output text in a separate file
-            with open(outputFile,'w') as f:
+            with open(outputFile, "w", encoding="utf-8") as f:
                 f.write(newData)
                 print("Processed.  Saved output as '{0}'.".format(outputFilename))
         else:
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         multiple = (checkMultiple == "yes" or checkMultiple == "y")
         if multiple:
             print("Enter the names of your files / folders, separated by comma ',', for examples:")
-            print("filename1.txt, filename2.txt folderName1 folderName2")
+            print("filename1.txt, filename2.txt, folderName1, folderName2")
             inputNames = input("Enter here: ")
             inputNames = [inputName.strip() for inputName in inputNames.split(",")]
             print("Total of {0} item(s) entered: {1}".format(len(inputNames), inputNames))
