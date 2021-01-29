@@ -1,3 +1,7 @@
+Major changes in version 21.05:
+- Fixed issues #80 and #82
+- Enabled github pipeline build and fix warnings
+
 Major changes in version 21.04:
 - Fixed issue when selecting Bible that has no commentary entry #78
 - Improved classic menu layout: new items added; previous items reorganised.
