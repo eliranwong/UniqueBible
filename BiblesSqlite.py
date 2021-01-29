@@ -164,6 +164,10 @@ class BiblesSqlite:
                 check = len(bcList)
                 bookNo = bcList[0]
                 engFullBookName = BibleBooks().eng[str(bookNo)][-1]
+                engFullBookNameWithoutNumber = engFullBookName
+                matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+                if matches:
+                    engFullBookNameWithoutNumber = matches.group(1)
                 # check book name
                 #print(engFullBookName)
                 if check >= 1:
@@ -184,9 +188,9 @@ class BiblesSqlite:
                     # build search timelines button
                     timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_timelines"])
                     # build search encyclopedia button
-                    encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookName, config.thisTranslation["context1_encyclopedia"])
+                    encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookNameWithoutNumber, config.thisTranslation["context1_encyclopedia"])
                     # build search dictionary button
-                    dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookName, config.thisTranslation["context1_dict"])
+                    dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookNameWithoutNumber, config.thisTranslation["context1_dict"])
                     # display selected book
                     menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}<br>{3} {4} {5} {6}".format(bookAbb, openOption, config.thisTranslation["html_current"], introductionButton, timelinesButton, dictionaryButton, encyclopediaButton)
                     # add chapter menu

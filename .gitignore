@@ -1,6 +1,7 @@
 **/__pycache__/**
 /venv
 /marvelData
+/marvelData_init
 /build
 /dist
 /notes
