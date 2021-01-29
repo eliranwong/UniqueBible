@@ -1421,8 +1421,7 @@ class TextCommandParser:
             similarMatch = searchSqlite.getSimilarContent(module, entry)
             del searchSqlite
             return ("study",
-                    "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2>" +
-                    "<p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}"
+                    "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}"
                     .format(module, entry, exactMatch, similarMatch, selectList), {'tab_title': 'Search:' + module + ':' + entry})
         else:
             del indexes
