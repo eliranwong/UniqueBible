@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-import re, glob, os, sys, pprint
+import re, glob, os, sys, pprint, platform
+if (platform.system() != "Windows"):
+    import readline
 from ast import literal_eval
 
 class RegexSearch:
