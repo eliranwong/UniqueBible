@@ -41,9 +41,16 @@ if not hasattr(config, "remoteControl"):
 if not hasattr(config, "closeControlPanelAfterRunningCommand"):
     config.closeControlPanelAfterRunningCommand = False
 if not hasattr(config, "preferControlPanelForCommandLineEntry"):
-    config.preferControlPanelForCommandLineEntry = False
+    # Check if UniqueBible.app is running on Chrome OS:
+    if (os.path.exists("/mnt/chromeos/")):
+        config.preferControlPanelForCommandLineEntry = True
+    else:
+        config.preferControlPanelForCommandLineEntry = False
 if not hasattr(config, "addBreakAfterTheFirstToolBar"):
-    config.addBreakAfterTheFirstToolBar = True
+    if (os.path.exists("/mnt/chromeos/")):
+        config.addBreakAfterTheFirstToolBar = False
+    else:
+        config.addBreakAfterTheFirstToolBar = True
 if not hasattr(config, "addBreakBeforeTheLastToolBar"):
     config.addBreakBeforeTheLastToolBar = False
 # Start full-screen on Linux os

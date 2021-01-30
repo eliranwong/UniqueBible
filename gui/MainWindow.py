@@ -234,10 +234,9 @@ class MainWindow(QMainWindow):
             if textCommandText:
                 self.remoteControl.searchLineEdit.setText(textCommandText)
             config.remoteControl = True
-        else:
-            if self.remoteControl:
+        elif self.remoteControl:
                 self.remoteControl.close()
-            config.remoteControl = False
+                config.remoteControl = False
 
     def closeEvent(self, event):
         if self.noteEditor:

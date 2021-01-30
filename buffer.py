@@ -1,9 +1,9 @@
-from PySide2.QtWidgets import QMainWindow
+from PySide2.QtWidgets import QWidget
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
 import sys, platform, config
 
-class BufferWindow(QMainWindow):
+class BufferWindow(QWidget):
 
     def __init__(self):
         super().__init__()
