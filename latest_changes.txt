@@ -1,3 +1,6 @@
+Major changes in version 21.07:
+- Now create an empty file custom.css instead of downloading it during upgrading or new installation.
+
 Major changes in version 21.06:
 - Added support of custom css.  Users can now customise fonts, text styles, etc.
 - A wiki page created for custom css feature: https://github.com/eliranwong/UniqueBible/wiki/custom_css
