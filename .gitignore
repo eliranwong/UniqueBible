@@ -17,4 +17,5 @@ config.py
 **.log.**
 htmlResources/main.html
 htmlResources/study.html
+htmlResources/css/custom.css
 UniqueBible.app.pdf

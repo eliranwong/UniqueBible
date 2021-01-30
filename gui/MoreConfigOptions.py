@@ -36,6 +36,7 @@ class MoreConfigOptions(QDialog):
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged),
+            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
@@ -122,6 +123,9 @@ class MoreConfigOptions(QDialog):
     def preferControlPanelForCommandLineEntryChanged(self):
         config.preferControlPanelForCommandLineEntry = not config.preferControlPanelForCommandLineEntry
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def closeControlPanelAfterRunningCommandChanged(self):
+        config.closeControlPanelAfterRunningCommand = not config.closeControlPanelAfterRunningCommand
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab

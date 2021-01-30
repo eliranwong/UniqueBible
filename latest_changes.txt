@@ -1,3 +1,9 @@
+Major changes in version 21.06:
+- Added support of custom css.  Users can now customise fonts, text styles, etc.
+- A wiki page created for custom css feature: https://github.com/eliranwong/UniqueBible/wiki/custom_css
+- Added a configuration flag: closeControlPanelAfterRunningCommand
+- now automatically detects if UniqueBible.app is installed on a chromebook, option "preferRemoteControlForCommandLineEntry" will be automatically configured.
+
 Major changes in version 21.05:
 - Fixed issues #80 and #82
 - Enabled github pipeline build and fix warnings
