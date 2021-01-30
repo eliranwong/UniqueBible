@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import re, glob, os, sys, pprint, readline
+import re, glob, os, sys, pprint
 from ast import literal_eval
 
 class RegexSearch:
