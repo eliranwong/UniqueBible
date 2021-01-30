@@ -385,7 +385,7 @@ class MainWindow(QMainWindow):
         # set executable files on macOS or Linux
         if not platform.system() == "Windows":
             for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh", "shortcut_uba_chromeOS_fcitx.sh"):
-                os.chmod(filename, 0o755)
+                os.chmod(filename, 0o755)        
         # finish message
         self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
         self.openExternalFile("latest_changes.txt")
