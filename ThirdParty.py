@@ -1,4 +1,5 @@
 import os, sqlite3, config, re, json, base64, logging
+from pathlib import Path
 from shutil import copyfile
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
@@ -988,11 +989,14 @@ class Converter:
         logger.info("Importing Zefania XML Bible: " + filename)
         doc = minidom.parse(filename)
         translation = doc.getElementsByTagName("XMLBIBLE")[0]
-        biblename = translation.getAttribute("biblename")
-        if biblename[:7] == "ENGLISH":
-            biblename = biblename[7:]
+        description = translation.getAttribute("biblename")
+        biblename = Path(filename).stem
+        biblename = biblename.replace("Bible_English_", "")
+        biblename = biblename.replace("_", "")
+        if not description:
+            description = biblename
+        logger.info("Creating " + biblename)
         abbreviation = biblename
-        description = biblename
         books = doc.getElementsByTagName("BIBLEBOOK")
         data = []
         for book in books:
@@ -1004,9 +1008,10 @@ class Converter:
                 verses = chapter.getElementsByTagName("VERS")
                 for verse in verses:
                     verse_number = verse.getAttribute("vnumber")
-                    scripture = verse.firstChild.nodeValue.strip()
-                    row = [book_number, chapter_number, verse_number, scripture]
-                    data.append(row)
+                    if verse.firstChild:
+                        scripture = verse.firstChild.nodeValue.strip()
+                        row = [book_number, chapter_number, verse_number, scripture]
+                        data.append(row)
         self.mySwordBibleToRichFormat(description, abbreviation, data)
         self.mySwordBibleToPlainFormat(description, abbreviation, data)
         logger.info("Import successful")
