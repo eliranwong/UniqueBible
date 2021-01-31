@@ -61,7 +61,11 @@ if not hasattr(config, "addBreakBeforeTheLastToolBar"):
     config.addBreakBeforeTheLastToolBar = False
 # Start full-screen on Linux os
 if not hasattr(config, "linuxStartFullScreen"):
-    config.linuxStartFullScreen = False
+    # Check if UniqueBible.app is running on Chrome OS:
+    if (os.path.exists("/mnt/chromeos/")):
+        config.linuxStartFullScreen = True
+    else:
+        config.linuxStartFullScreen = False
 # Show text-to-speech feature on Linux os
 if not hasattr(config, "showTtsOnLinux"):
     config.showTtsOnLinux = False
@@ -596,7 +600,7 @@ app.setPalette(Themes.getPalette())
 mainWindow = BufferWindow()
 mainWindow.showMinimized()
 mainWindow.resize(0, 0)
-mainWindow.show()
+#mainWindow.show()
 
 # check screen size
 availableGeometry = app.desktop().availableGeometry(mainWindow)

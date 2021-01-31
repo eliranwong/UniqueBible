@@ -866,19 +866,19 @@ class MainWindow(QMainWindow):
         else:
             return "[open file]"
 
-    def runBookFeature1(self):
+    def runBookFeatureIntroduction(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
         command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runBookFeature2(self):
+    def runBookFeatureTimelines(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
         command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(engFullBookName)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runBookFeature3(self):
+    def runBookFeatureDictionary(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
@@ -887,7 +887,7 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runBookFeature4(self):
+    def runBookFeatureEncyclopedia(self):
         engFullBookName = BibleBooks().eng[str(config.mainB)][1]
         matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
         if matches:
@@ -896,25 +896,25 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runChapterFeature1(self):
+    def runChapterFeatureOverview(self):
         bookAbb = BibleBooks().eng[str(config.mainB)][0]
         command = "OVERVIEW:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runChapterFeature2(self):
+    def runChapterFeatureChapterIndex(self):
         bookAbb = BibleBooks().eng[str(config.mainB)][0]
         command = "CHAPTERINDEX:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runChapterFeature3(self):
+    def runChapterFeatureSummary(self):
         bookAbb = BibleBooks().eng[str(config.mainB)][0]
         command = "SUMMARY:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
         self.runTextCommand(command)
 
-    def runChapterFeature4(self):
+    def runChapterFeatureCommentary(self):
         bookAbb = BibleBooks().eng[str(config.mainB)][0]
         command = "COMMENTARY:::{0} {1}".format(bookAbb, config.mainC)
         self.textCommandLineEdit.setText(command)
