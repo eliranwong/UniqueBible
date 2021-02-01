@@ -810,7 +810,7 @@ class TextCommandParser:
 
         if platform.system() == "Linux" and config.espeak:
             if self.isEspeakInstalled:
-                if (language == "zh-cn") and ():
+                if (language == "zh-cn"):
                     language = "zh"
                 elif (language == "zh-tw"):
                     language = "zhy"
@@ -837,7 +837,7 @@ class TextCommandParser:
                 self.engine = QTextToSpeech(engineNames[0])
                 #locales = self.engine.availableLocales()
                 #print(locales)
-                if (language == 'zh-cn') and ():
+                if (language == 'zh-cn'):
                     self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
                 elif (language == 'zh-tw'):
                     self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
