@@ -1,5 +1,5 @@
 import config, logging
-from PySide2.QtCore import Qt, QLocale
+from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from PySide2.QtGui import QDesktopServices, QGuiApplication

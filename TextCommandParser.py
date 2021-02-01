@@ -5,6 +5,7 @@ from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
+from PySide2.QtCore import QLocale
 from PySide2.QtWidgets import QApplication
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
