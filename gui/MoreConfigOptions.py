@@ -62,6 +62,10 @@ class MoreConfigOptions(QDialog):
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged)
+            ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged)
+            ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged)
+            ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged)
+            ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -113,6 +117,26 @@ class MoreConfigOptions(QDialog):
         if config.virtualKeyboard and config.ibus:
             config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def ttsEnglishAlwaysUSChanged(self):
+        config.ttsEnglishAlwaysUS = not config.ttsEnglishAlwaysUS
+        if config.ttsEnglishAlwaysUK and config.ttsEnglishAlwaysUS:
+            config.ttsEnglishAlwaysUK = not config.ttsEnglishAlwaysUK
+
+    def ttsEnglishAlwaysUKChanged(self):
+        config.ttsEnglishAlwaysUK = not config.ttsEnglishAlwaysUK
+        if config.ttsEnglishAlwaysUK and config.ttsEnglishAlwaysUS:
+            config.ttsEnglishAlwaysUS = not config.ttsEnglishAlwaysUS
+
+    def ttsChineseAlwaysMandarinChanged(self):
+        config.ttsChineseAlwaysMandarin = not config.ttsChineseAlwaysMandarin
+        if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
+            config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
+
+    def ttsChineseAlwaysCantoneseChanged(self):
+        config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
+        if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
+            config.ttsChineseAlwaysMandarin = not config.ttsChineseAlwaysMandarin
 
     def showVerseNumbersInRangeChanged(self):
         config.showVerseNumbersInRange = not config.showVerseNumbersInRange

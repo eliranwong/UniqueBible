@@ -341,8 +341,8 @@ class TextCommandParser:
             # Feature: run text-to-speech function
             # e.g. SPEAK:::All Scripture is inspired by God
             # e.g. SPEAK:::en-gb:::All Scripture is inspired by God
-            # e.g. SPEAK:::zh:::聖經都是上帝所默示的
-            # e.g. SPEAK:::zhy:::聖經都是上帝所默示的
+            # e.g. SPEAK:::zh-cn:::聖經都是上帝所默示的
+            # e.g. SPEAK:::zh-tw:::聖經都是上帝所默示的
             "speak": self.textToSpeech,
             # [KEYWORD] MP3
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
@@ -830,7 +830,8 @@ class TextCommandParser:
             # Modern Greek
             #language = "el"
             # Ancient Greek
-            # To read accented Greek text, language have to be "grc" instead of "el"
+            # To read accented Greek text, language have to be "grc" instead of "el" for espeak
+            # In dictionary mapping language to qlocale, we use "grc" for Greek language too.
             language = "grc"
 
         if platform.system() == "Linux" and config.espeak:

@@ -1,3 +1,26 @@
+Major changes in version 21.09:
+- Enhance text-to-speech feature:
+    Added support of languages, as many as supported by the tts engine selected by users.
+        * Remarks: espeak users need to install additional data for espeak to read Chinese or Russian texts.
+        * For espeak setup, you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
+    Added config.ttsDefaultLanguage for users to specify the default language for text-to-speech feature
+        * If language is not specified with entered command, e.g. "SPEAK:::testing", ttsDefaultLanguage is used by default.
+        * ttsDefaultLanguage is set to "en" by default, users can edit file config.py to change its value.
+        * References for supported language codes can be found at: https://github.com/eliranwong/UniqueBible/blob/master/TtsLanguages.py
+            If you use espeak, supported languages are the key codes of variable "isoLang2epeakLang" in the file above.
+            If you use built-in qt tts engine, supported languages are the key codes in variable "isoLang2qlocaleLang" in the file above.
+- Added four more configuration flags:
+    You can configure the following new flags through "Select More ..." dialog or by editing file config.py
+        * ttsEnglishAlwaysUS
+            always speak US English when detected/specified language is en or en-gb
+        * ttsEnglishAlwaysUK
+            always speak UK English when detected/specified language is en or en-gb
+        * ttsChineseAlwaysMandarin
+            always speak Mandarin when detected/specified language is zh-cn or zh-tw
+        * ttsChineseAlwaysCantonese
+            always speak Cantonese when detected/specified language is zh-cn or zh-tw
+A note to Windows users, in order for built-in qt tts engine to read text of a particular language, you have to install Windows language package via Windows settings / control panel.
+
 Major changes in version 21.08:
 - Added initial support of "espeak" to run text-to-speech feature.
     * To set up espeak on Linux, you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
