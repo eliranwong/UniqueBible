@@ -853,7 +853,7 @@ class TextCommandParser:
                 self.engine.setVolume(1.0)
                 if engineVoices:
                     self.engine.setVoice(engineVoices[0])
-                    self.engine.say(self.selectedText())
+                    self.engine.say(text)
                 else:
                     self.parent.displayMessage(config.thisTranslation["message_noSupport"])
 
