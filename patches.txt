@@ -9,6 +9,7 @@
 (21.09, "file", "UniqueBibleAppVersion.txt")
 (21.09, "file", "latest_changes.txt")
 (21.09, "file", "patches.txt")
+(21.09, "file", "TtsLanguages.py")
 (21.09, "file", ".gitignore")
 (21.09, "file", "ThirdParty.py")
 (21.09, "file", "gui/MoreConfigOptions.py")

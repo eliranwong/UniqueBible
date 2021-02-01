@@ -862,7 +862,7 @@ class TextCommandParser:
                 elif (language == 'he'):
                     self.engine.setRate(-0.3)
 
-                isoLang2epeakLang = TtsLanguages().isoLang2qlocaleLang
+                isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
                 languages = TtsLanguages().isoLang2qlocaleLang.keys()
                 if not (config.tssDefaultLangauge in languages):
                     config.tssDefaultLangauge = "en"
