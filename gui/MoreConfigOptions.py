@@ -61,11 +61,11 @@ class MoreConfigOptions(QDialog):
             ("logCommands", config.logCommands, self.logCommandsChanged),
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
-            ("enableMacros", config.enableMacros, self.enableMacrosChanged)
-            ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged)
-            ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged)
-            ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged)
-            ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged)
+            ("enableMacros", config.enableMacros, self.enableMacrosChanged),
+            ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged),
+            ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged),
+            ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged),
+            ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged),
         ]
         if platform.system() == "Linux":
             options += [
