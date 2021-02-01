@@ -2,7 +2,7 @@ Major changes in version 21.08:
 - Added initial support of "espeak" to run text-to-speech feature.
     * To set up espeak on Linux, you may read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
     * Further support will be added in next upgrade.
-- Added configuration flag, espeak, for linux users to use espeak as text-to-speech engine instead of qt text-to-speech engine.
+- Added configuration flag, espeak, for linux users to use espeak as text-to-speech engine instead of qt text-to-speech engine.  This is accessible via menu > "Select More ...".
 - Fixed Zefania import
 
 Major changes in version 21.07:

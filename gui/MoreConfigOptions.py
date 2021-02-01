@@ -67,6 +67,7 @@ class MoreConfigOptions(QDialog):
             options += [
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
                 ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
+                ("espeak", config.espeak, self.espeakChanged),
                 ("fcitx", config.fcitx, self.fcitxChanged),
                 ("ibus", config.ibus, self.ibusChanged),
             ]
@@ -205,6 +206,9 @@ class MoreConfigOptions(QDialog):
     def showTtsOnLinuxChanged(self):
         config.showTtsOnLinux = not config.showTtsOnLinux
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def espeakChanged(self):
+        config.espeak = not config.espeak
 
     def logCommandsChanged(self):
         config.logCommands = not config.logCommands
