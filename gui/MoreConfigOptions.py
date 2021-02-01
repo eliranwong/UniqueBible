@@ -62,18 +62,21 @@ class MoreConfigOptions(QDialog):
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged),
-            ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged),
-            ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged),
-            ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged),
-            ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged),
         ]
         if platform.system() == "Linux":
             options += [
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
-                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
-                ("espeak", config.espeak, self.espeakChanged),
                 ("fcitx", config.fcitx, self.fcitxChanged),
                 ("ibus", config.ibus, self.ibusChanged),
+                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
+                ("espeak", config.espeak, self.espeakChanged),
+            ]
+        if config.ttsSupport:
+            options += [
+                ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged),
+                ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged),
+                ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged),
+                ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged),
             ]
         for counter, content in enumerate(options):
             name, value, function = content
