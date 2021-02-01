@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging
+import os, subprocess, platform, logging
 import logging.handlers as handlers
 
 # Create files for user customisation
@@ -38,7 +38,10 @@ if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
 # Options to always display static maps even "myGoogleApiKey" is not empty: True / False
 if not hasattr(config, "alwaysDisplayStaticMaps"):
-    config.alwaysDisplayStaticMaps = False
+    if config.myGoogleApiKey:
+        config.alwaysDisplayStaticMaps = False
+    else:
+        config.alwaysDisplayStaticMaps = True
 # Options to use control panel: True / False
 # This feature is created for use in church settings.
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
@@ -68,7 +71,22 @@ if not hasattr(config, "linuxStartFullScreen"):
         config.linuxStartFullScreen = False
 # Show text-to-speech feature on Linux os
 if not hasattr(config, "showTtsOnLinux"):
-    config.showTtsOnLinux = False
+    # Check if UniqueBible.app is running on Chrome OS:
+    if (os.path.exists("/mnt/chromeos/")):
+        config.showTtsOnLinux = True
+    else:
+        config.showTtsOnLinux = False
+# Use espeak for text-to-speech feature instead of built-in qt tts engine
+# espeak is a text-to-speech tool that can run offline
+# To check for available langauge codes, run on terminal: espeak --voices
+# Notes on espeak setup is available at: https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md
+# If you need text-to-speech features to work on Chinese / Russian text, you may read the link above.
+if not hasattr(config, "espeak"):
+    # Check if UniqueBible.app is running on Chrome OS:
+    if (os.path.exists("/mnt/chromeos/")):
+        config.espeak = True
+    else:
+        config.espeak = False
 # Options to use ibus as input method: True / False
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
@@ -394,16 +412,31 @@ logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 # Optional Features
 # [Optional] Text-to-Speech feature
-try:
-    from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+config.ttsSupport = True
 
-    if platform.system() == "Linux" and not config.showTtsOnLinux:
+if platform.system() == "Linux":
+    if not config.showTtsOnLinux:
         config.ttsSupport = False
-    else:
-        config.ttsSupport = True
-except:
-    config.ttsSupport = False
-    print("Text-to-speech feature is not supported on this operating system.")
+    elif config.espeak:
+        espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
+        if not espeakInstalled:
+            config.ttsSupport = False
+            print("Package 'espeak' is not installed.  To install espeak, read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md")
+
+if not config.espeak:
+    try:
+        from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+    
+        if platform.system() == "Linux" and not config.showTtsOnLinux:
+            config.ttsSupport = False
+        else:
+            config.ttsSupport = True
+    except:
+        config.ttsSupport = False
+
+if not config.ttsSupport:
+    print("Text-to-speech feature is not enabled or supported on this operating system.")
+
 # [Optional] Chinese feature - opencc
 # It converts conversion between Traditional Chinese and Simplified Chinese.
 # To enable functions working with "opencc", install python package "opencc" first, e.g. pip3 install OpenCC.
@@ -455,6 +488,7 @@ def saveDataOnExit():
         ("openLinuxPdf", config.openLinuxPdf),
         ("linuxStartFullScreen", config.linuxStartFullScreen),
         ("showTtsOnLinux", config.showTtsOnLinux),
+        ("espeak", config.espeak),
         ("ibus", config.ibus),
         ("fcitx", config.fcitx),
         ("virtualKeyboard", config.virtualKeyboard),

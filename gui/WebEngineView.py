@@ -317,42 +317,19 @@ class WebEngineView(QWebEngineView):
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
+        selectedText = self.selectedText()
         if config.ttsSupport:
-            if not self.selectedText():
+            if not selectedText:
                 self.messageNoSelection()
+            elif config.langdetectSupport:
+                DetectorFactory.seed = 0
+                # https://pypi.org/project/langdetect/
+                language = detect(selectedText)
+                speakCommand = "SPEAK:::{0}:::{1}".format(language, selectedText)
+                self.parent.parent.textCommandChanged(speakCommand, self.name)
             else:
-                engineNames = QTextToSpeech.availableEngines()
-                if engineNames:
-                    self.engine = QTextToSpeech(engineNames[0])
-                    locales = self.engine.availableLocales()
-                    # print(locales)
-                    if config.langdetectSupport:
-                        DetectorFactory.seed = 0
-                        # https://pypi.org/project/langdetect/
-                        language = detect(self.selectedText())
-                        # print(language)
-                        # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-                        if (language == 'zh-cn'):
-                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
-                        elif (language == 'zh-tw'):
-                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                        elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
-                            self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                        elif (language == 'el'):
-                            self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
-                            self.engine.setRate(-0.3)
-                        elif (language == 'he'):
-                            self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
-                            self.engine.setRate(-0.3)
-                    engineVoices = self.engine.availableVoices()
-                    self.engine.setVolume(1.0)
-                    if engineVoices:
-                        self.engine.setVoice(engineVoices[0])
-                        self.engine.say(self.selectedText())
-                    else:
-                        self.messageNoTtsVoice()
-                else:
-                    self.messageNoTtsEngine()
+                speakCommand = "SPEAK:::{0}".format(selectedText)
+                self.parent.parent.textCommandChanged(speakCommand, self.name)
 
     def searchSelectedText(self):
         selectedText = self.selectedText()

@@ -6,6 +6,10 @@ from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, In
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
 from PySide2.QtWidgets import QApplication
+try:
+    from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+except:
+    pass
 from db.Highlight import Highlight
 
 
@@ -331,6 +335,13 @@ class TextCommandParser:
             # e.g. cmd:::rm -rf myNotes
             # e.g. cmd:::google-chrome https://uniquebible.app
             "cmd": self.osCommand,
+            # [KEYWORD] SPEAK
+            # Feature: run text-to-speech function
+            # e.g. SPEAK:::All Scripture is inspired by God
+            # e.g. SPEAK:::en-gb:::All Scripture is inspired by God
+            # e.g. SPEAK:::zh:::聖經都是上帝所默示的
+            # e.g. SPEAK:::zhy:::聖經都是上帝所默示的
+            "speak": self.textToSpeech,
             # [KEYWORD] MP3
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
             # Usage - MP3:::[youtube_link]
@@ -774,9 +785,77 @@ class TextCommandParser:
     # run os command
     def osCommand(self, command, source):
         if platform.system() == "Linux":
-            subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+            subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
             os.system(command)
+        return ("", "", {})
+
+    # check if espeak is installed.
+    def isEspeakInstalled(self):
+        espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
+        if espeakInstalled:
+            return True
+        else:
+            return False
+
+    # speak:::
+    # run text to speech feature
+    def textToSpeech(self, command, source):
+        # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+        language = "en"
+        text = command
+        if command.count(":::") != 0:
+            language, text = self.splitCommand(command)
+
+        if platform.system() == "Linux" and config.espeak:
+            if self.isEspeakInstalled:
+                if (language == "zh-cn") and ():
+                    language = "zh"
+                elif (language == "zh-tw"):
+                    language = "zhy"
+                elif (language == "ko"): # Incorrectly detects Korean for short Chinese sentences
+                    language = "zhy"
+                elif (language == "el"):
+                    # Modern Greek
+                    #language = "el"
+                    # Ancient Greek
+                    # To read accented Greek text, language have to be "grc" instead of "el"
+                    language = "grc" 
+                elif (language == "he"):
+                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+
+                subprocess.Popen(["espeak -v {0} '{1}'".format(language, text)], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                # TODO: may check if users enter an invalid language
+                # TODO: may add a simple way for users to check for available language codes
+            else:
+                self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
+        else:
+            # use qt built-in tts engine
+            engineNames = QTextToSpeech.availableEngines()
+            if engineNames:
+                self.engine = QTextToSpeech(engineNames[0])
+                #locales = self.engine.availableLocales()
+                #print(locales)
+                if (language == 'zh-cn') and ():
+                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
+                elif (language == 'zh-tw'):
+                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
+                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
+                elif (language == 'el'):
+                    self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
+                    self.engine.setRate(-0.3)
+                elif (language == 'he'):
+                    self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
+                    self.engine.setRate(-0.3)
+                engineVoices = self.engine.availableVoices()
+                self.engine.setVolume(1.0)
+                if engineVoices:
+                    self.engine.setVoice(engineVoices[0])
+                    self.engine.say(self.selectedText())
+                else:
+                    self.parent.displayMessage(config.thisTranslation["message_noSupport"])
+
         return ("", "", {})
 
     # mp3:::
