@@ -87,6 +87,17 @@ if not hasattr(config, "espeak"):
         config.espeak = True
     else:
         config.espeak = False
+# tts language options
+if not hasattr(config, "tssDefaultLangauge"):
+    config.tssDefaultLangauge = "en"
+if not hasattr(config, "ttsChineseAlwaysCantonese"):
+    config.ttsChineseAlwaysCantonese = False
+if not hasattr(config, "ttsChineseAlwaysMandarin"):
+    config.ttsChineseAlwaysMandarin = False
+if not hasattr(config, "ttsEnglishAlwaysUS"):
+    config.ttsEnglishAlwaysUS = False
+if not hasattr(config, "ttsEnglishAlwaysUK"):
+    config.ttsEnglishAlwaysUK = False
 # Options to use ibus as input method: True / False
 # This option may be useful on some Linux systems, where qt4 and qt5 applications use different input method variables.
 if not hasattr(config, "ibus"):
@@ -489,6 +500,11 @@ def saveDataOnExit():
         ("linuxStartFullScreen", config.linuxStartFullScreen),
         ("showTtsOnLinux", config.showTtsOnLinux),
         ("espeak", config.espeak),
+        ("tssDefaultLangauge", config.tssDefaultLangauge)
+        ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese)
+        ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin)
+        ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS)
+        ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK)
         ("ibus", config.ibus),
         ("fcitx", config.fcitx),
         ("virtualKeyboard", config.virtualKeyboard),

@@ -5,6 +5,7 @@ from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from NoteSqlite import NoteSqlite
+from TtsLanguages import TtsLanguages
 from PySide2.QtCore import QLocale
 from PySide2.QtWidgets import QApplication
 try:
@@ -803,31 +804,48 @@ class TextCommandParser:
     # run text to speech feature
     def textToSpeech(self, command, source):
         # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-        language = "en"
+        language = config.tssDefaultLangauge
         text = command
         if command.count(":::") != 0:
             language, text = self.splitCommand(command)
 
+        # espeak has no support of "ko", "ko" here is used to correct detection of traditional chinese
+        # It is not recommended to use "ko" to correct language detection for "zh-tw", if qt built-in tts engine is used.
+        # Different from espeak, Qt text-to-speech has a qlocale on Korean.
+        # If the following two lines are uncommented, Korean text cannot be read.
+        # In case the language is wrongly detected, users can still use command line to specify a correct language.
+        if (config.espeak) and (language == "ko"):
+            language = "zh-tw"
+        if (language == "zh-cn") or (language == "zh-tw"):
+            if config.ttsChineseAlwaysCantonese:
+                language = "zh-tw"
+            elif config.ttsChineseAlwaysMandarin:
+                language = "zh-cn"
+        elif (language == "en") or (language == "en-gb"):
+            if config.ttsEnglishAlwaysUS:
+                language = "en"
+            elif config.ttsEnglishAlwaysUK:
+                language = "en-gb"
+        elif (language == "el"):
+            # Modern Greek
+            #language = "el"
+            # Ancient Greek
+            # To read accented Greek text, language have to be "grc" instead of "el"
+            language = "grc"
+
         if platform.system() == "Linux" and config.espeak:
             if self.isEspeakInstalled:
-                if (language == "zh-cn"):
-                    language = "zh"
-                elif (language == "zh-tw"):
-                    language = "zhy"
-                elif (language == "ko"): # Incorrectly detects Korean for short Chinese sentences
-                    language = "zhy"
-                elif (language == "el"):
-                    # Modern Greek
-                    #language = "el"
-                    # Ancient Greek
-                    # To read accented Greek text, language have to be "grc" instead of "el"
-                    language = "grc" 
-                elif (language == "he"):
+                isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
+                languages = TtsLanguages().isoLang2epeakLang.keys()
+                if not (config.tssDefaultLangauge in languages):
+                    config.tssDefaultLangauge = "en"
+                if not (language in languages):
                     self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
-
+                    language = config.tssDefaultLangauge
+                language = isoLang2epeakLang[language][0]
+                # subprocess is used
                 subprocess.Popen(["espeak -v {0} '{1}'".format(language, text)], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                # TODO: may check if users enter an invalid language
-                # TODO: may add a simple way for users to check for available language codes
+                # TODO: add a way to stop the audio at any time.
             else:
                 self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
         else:
@@ -837,25 +855,29 @@ class TextCommandParser:
                 self.engine = QTextToSpeech(engineNames[0])
                 #locales = self.engine.availableLocales()
                 #print(locales)
-                if (language == 'zh-cn'):
-                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.SimplifiedChineseScript, QLocale.China))
-                elif (language == 'zh-tw'):
-                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                elif (language == 'ko'): # Incorrectly detects Korean for short Chinese sentences
-                    self.engine.setLocale(QLocale(QLocale.Chinese, QLocale.TraditionalChineseScript, QLocale.Taiwan))
-                elif (language == 'el'):
-                    self.engine.setLocale(QLocale(QLocale.Greek, QLocale.GreekScript, QLocale.Greece))
+
+                # Control speed here
+                if (language == 'el'):
                     self.engine.setRate(-0.3)
                 elif (language == 'he'):
-                    self.engine.setLocale(QLocale(QLocale.Hebrew, QLocale.HebrewScript, QLocale.Israel))
                     self.engine.setRate(-0.3)
-                engineVoices = self.engine.availableVoices()
+
+                isoLang2epeakLang = TtsLanguages().isoLang2qlocaleLang
+                languages = TtsLanguages().isoLang2qlocaleLang.keys()
+                if not (config.tssDefaultLangauge in languages):
+                    config.tssDefaultLangauge = "en"
+                if not (language in languages):
+                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                    language = config.tssDefaultLangauge
+                self.engine.setLocale(isoLang2qlocaleLang[language])
+
                 self.engine.setVolume(1.0)
+                engineVoices = self.engine.availableVoices()
                 if engineVoices:
                     self.engine.setVoice(engineVoices[0])
                     self.engine.say(text)
                 else:
-                    self.parent.displayMessage(config.thisTranslation["message_noSupport"])
+                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
 
         return ("", "", {})
 
