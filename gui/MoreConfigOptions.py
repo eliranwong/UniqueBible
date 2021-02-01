@@ -27,6 +27,8 @@ class MoreConfigOptions(QDialog):
 
         leftContainer = QWidget()
         leftContainerLayout = QVBoxLayout()
+        middleContainer = QWidget()
+        middleContainerLayout = QVBoxLayout()
         rightContainer = QWidget()
         rightContainerLayout = QVBoxLayout()
 
@@ -84,14 +86,18 @@ class MoreConfigOptions(QDialog):
             checkbox.setText(name)
             checkbox.setChecked(value)
             checkbox.stateChanged.connect(function)
-            if counter % 2 == 0:
-                leftContainerLayout.addWidget(checkbox)
-            else:
+            if (counter + 1) % 3 == 0:
                 rightContainerLayout.addWidget(checkbox)
+            elif (counter + 1) % 2 == 0:
+                middleContainerLayout.addWidget(checkbox)
+            else:
+                leftContainerLayout.addWidget(checkbox)
 
         leftContainer.setLayout(leftContainerLayout)
+        middleContainer.setLayout(middleContainerLayout)
         rightContainer.setLayout(rightContainerLayout)
         horizontalContainerLayout.addWidget(leftContainer)
+        horizontalContainerLayout.addWidget(middleContainer)
         horizontalContainerLayout.addWidget(rightContainer)
         horizontalContainer.setLayout(horizontalContainerLayout)
         layout.addWidget(horizontalContainer)
