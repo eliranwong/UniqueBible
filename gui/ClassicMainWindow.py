@@ -409,6 +409,7 @@ class ClassicMainWindow(MainWindow):
         self.firstToolBar.addSeparator()
 
         self.textCommandLineEdit = QLineEdit()
+        self.textCommandLineEdit.setClearButtonEnabled(True)
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)

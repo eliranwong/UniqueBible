@@ -1,3 +1,10 @@
+Major change in version 21.12:
+- Added text-to-speech feature to control panel.  Users can now:
+    * set default text-to-speech language through control panel
+    * play audio of entered text in control panel command field.
+    * select lanuage for text-to-speech feature triggered from control panel.
+    * stop text-to-speech audio at any time with the "Stop" button.
+
 Major change in version 21.11:
 - Fixed saving tts settings on exit.
 

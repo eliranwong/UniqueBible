@@ -1,5 +1,5 @@
 # coding=utf-8
-import os, subprocess, re, config, webbrowser, platform
+import os, subprocess, signal, re, config, webbrowser, platform
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
@@ -23,6 +23,8 @@ class TextCommandParser:
     def __init__(self, parent):
         self.parent = parent
         self.lastKeyword = None
+        self.espeakTtsProcess = None
+        self.qtTtsEngine = None
 
     def parser(self, textCommand, source="main"):
         interpreters = {
@@ -803,8 +805,11 @@ class TextCommandParser:
     # speak:::
     # run text to speech feature
     def textToSpeech(self, command, source):
+        # Stop current playing first if any:
+        self.stopTtsAudio()
+
         # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-        language = config.tssDefaultLangauge
+        language = config.ttsDefaultLangauge
         text = command
         if command.count(":::") != 0:
             language, text = self.splitCommand(command)
@@ -838,49 +843,63 @@ class TextCommandParser:
             if self.isEspeakInstalled:
                 isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
                 languages = TtsLanguages().isoLang2epeakLang.keys()
-                if not (config.tssDefaultLangauge in languages):
-                    config.tssDefaultLangauge = "en"
+                if not (config.ttsDefaultLangauge in languages):
+                    config.ttsDefaultLangauge = "en"
                 if not (language in languages):
                     self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
-                    language = config.tssDefaultLangauge
+                    language = config.ttsDefaultLangauge
                 language = isoLang2epeakLang[language][0]
                 # subprocess is used
-                subprocess.Popen(["espeak -v {0} '{1}'".format(language, text)], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                # TODO: add a way to stop the audio at any time.
+                # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
+                self.espeakTtsProcess = subprocess.Popen(["espeak -v {0} '{1}'".format(language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
                 self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
         else:
             # use qt built-in tts engine
             engineNames = QTextToSpeech.availableEngines()
             if engineNames:
-                self.engine = QTextToSpeech(engineNames[0])
-                #locales = self.engine.availableLocales()
+                self.qtTtsEngine = QTextToSpeech(engineNames[0])
+                #locales = self.qtTtsEngine.availableLocales()
                 #print(locales)
 
                 # Control speed here
                 if (language == 'el'):
-                    self.engine.setRate(-0.3)
+                    self.qtTtsEngine.setRate(-0.3)
                 elif (language == 'he'):
-                    self.engine.setRate(-0.3)
+                    self.qtTtsEngine.setRate(-0.3)
 
                 isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
                 languages = TtsLanguages().isoLang2qlocaleLang.keys()
-                if not (config.tssDefaultLangauge in languages):
-                    config.tssDefaultLangauge = "en"
+                if not (config.ttsDefaultLangauge in languages):
+                    config.ttsDefaultLangauge = "en"
                 if not (language in languages):
                     self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
-                    language = config.tssDefaultLangauge
-                self.engine.setLocale(isoLang2qlocaleLang[language])
+                    language = config.ttsDefaultLangauge
+                self.qtTtsEngine.setLocale(isoLang2qlocaleLang[language][0])
 
-                self.engine.setVolume(1.0)
-                engineVoices = self.engine.availableVoices()
+                self.qtTtsEngine.setVolume(1.0)
+                engineVoices = self.qtTtsEngine.availableVoices()
                 if engineVoices:
-                    self.engine.setVoice(engineVoices[0])
-                    self.engine.say(text)
+                    self.qtTtsEngine.setVoice(engineVoices[0])
+                    self.qtTtsEngine.say(text)
                 else:
                     self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
 
         return ("", "", {})
+
+    def stopTtsAudio(self):
+        if config.espeak and (self.espeakTtsProcess is not None):
+            # The following two lines do not work:
+            #self.espeakTtsProcess.kill()
+            #self.espeakTtsProcess.terminate()
+            # Therefore, we use:
+            os.killpg(os.getpgid(self.espeakTtsProcess.pid), signal.SIGTERM)
+            self.espeakTtsProcess = None
+        elif (self.qtTtsEngine is not None) and (self.qtTtsEngine.state == self.qtTtsEngine.State.Speaking):
+            # Note: ".state" and ".State" are different
+            #print(self.qtTtsEngine.state)
+            self.qtTtsEngine.stop()
+            #self.qtTtsEngine = None
 
     # mp3:::
     def mp3Download(self, command, source):

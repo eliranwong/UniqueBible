@@ -510,10 +510,12 @@ class Languages:
         "commentaries": "Commentaries",
         "lexicons": "Lexicons",
         "dictionaries": "Dictionaries",
+        "setDefault": "Set as default",
+        "speak": "Speak",
+        "stop": "Stop",
         "enter": "Enter",
         "enter_command_here": "Enter command here ...",
         "filename": "Filename",
-
         "message_select_macro": "Select Macro",
         "message_macro_save_highlights": "Enter filename to save all highlights as a macro file",
         "message_macro_save_command": "Enter filename to save current command as a macro file"

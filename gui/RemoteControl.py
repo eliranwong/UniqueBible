@@ -1,10 +1,10 @@
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QGuiApplication
-
 import config
 from functools import partial
+from TtsLanguages import TtsLanguages
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QGuiApplication
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
-                               QApplication, QBoxLayout, QGridLayout)
+                               QApplication, QBoxLayout, QGridLayout, QComboBox)
 
 if __name__ == "__main__":
    config.mainText = ""
@@ -56,6 +56,7 @@ class RemoteControl(QWidget):
         commandLayout1 = QBoxLayout(QBoxLayout.LeftToRight)
         commandLayout1.setSpacing(5)
         self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setClearButtonEnabled(True)
         self.searchLineEdit.setToolTip(config.thisTranslation["enter_command_here"])
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.searchLineEdit.setFixedWidth(300)
@@ -65,6 +66,7 @@ class RemoteControl(QWidget):
         enterButton.setFixedWidth(100)
         enterButton.clicked.connect(self.searchLineEntered)
         commandLayout1.addWidget(enterButton)
+
         commandLayout1.addStretch()
 
         commandLayout2 = QBoxLayout(QBoxLayout.LeftToRight)
@@ -79,8 +81,47 @@ class RemoteControl(QWidget):
 
         commandLayout2.addStretch()
 
+        if config.ttsSupport:
+            ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
+            ttsLayout.setSpacing(5)
+    
+            self.languageCombo = QComboBox()
+            ttsLayout.addWidget(self.languageCombo)
+            if config.espeak:
+                languages = TtsLanguages().isoLang2epeakLang
+            else:
+                languages = TtsLanguages().isoLang2qlocaleLang
+            self.languageCodes = list(languages.keys())
+            for code in self.languageCodes:
+                self.languageCombo.addItem(languages[code][1])
+            # Check if selected tts engine has the language user specify.
+            if not (config.ttsDefaultLangauge in self.languageCodes):
+                config.ttsDefaultLangauge = "en"
+            # Set initial item
+            initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+            self.languageCombo.setCurrentIndex(initialIndex)
+    
+            setDefaultButton = QPushButton(config.thisTranslation["setDefault"])
+            setDefaultButton.setFixedWidth(100)
+            setDefaultButton.clicked.connect(self.setTtsDefaultLanguage)
+            ttsLayout.addWidget(setDefaultButton)
+            
+            speakButton = QPushButton(config.thisTranslation["speak"])
+            speakButton.setFixedWidth(100)
+            speakButton.clicked.connect(self.speakCommandFieldText)
+            ttsLayout.addWidget(speakButton)
+    
+            stopButton = QPushButton(config.thisTranslation["stop"])
+            stopButton.setFixedWidth(100)
+            stopButton.clicked.connect(self.parent.textCommandParser.stopTtsAudio)
+            ttsLayout.addWidget(stopButton)
+    
+            ttsLayout.addStretch()
+
         commandBox.addLayout(commandLayout1)
         commandBox.addLayout(commandLayout2)
+        if config.ttsSupport:
+            commandBox.addLayout(ttsLayout)
         commandBar.setLayout(commandBox)
         mainLayout.addWidget(commandBar, 0, 0, Qt.AlignCenter)
 
@@ -249,6 +290,16 @@ class RemoteControl(QWidget):
         self.searchLineEdit.setFocus()
         if config.closeControlPanelAfterRunningCommand:
             self.close()
+
+    def setTtsDefaultLanguage(self):
+        config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]
+
+    def speakCommandFieldText(self):
+        text = self.searchLineEdit.text()
+        if ":::" in text:
+            text = text.split(":::")[-1]
+        command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+        self.runCommmand(command)
 
     def bibleBookAction(self, book):
         command = "{0} ".format(self.bookMap[book])
