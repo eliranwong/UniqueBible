@@ -486,6 +486,8 @@ from PySide2.QtWidgets import QApplication
 
 # Save configurations on exit
 def saveDataOnExit():
+    mainWindow.mainWindow.textCommandParser.stopTtsAudio()
+
     config.bookSearchString = ""
     config.noteSearchString = ""
     configs = (

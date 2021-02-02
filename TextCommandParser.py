@@ -350,6 +350,7 @@ class TextCommandParser:
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
             # Usage - MP3:::[youtube_link]
             "mp3": self.mp3Download,
+            # [KEYWORD] MP4
             # Usage - MP4:::[youtube_link]
             "mp4": self.mp4Download,
             # [KEYWORD] _open
