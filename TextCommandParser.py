@@ -895,11 +895,8 @@ class TextCommandParser:
             # Therefore, we use:
             os.killpg(os.getpgid(self.espeakTtsProcess.pid), signal.SIGTERM)
             self.espeakTtsProcess = None
-        elif (self.qtTtsEngine is not None) and (self.qtTtsEngine.state == self.qtTtsEngine.State.Speaking):
-            # Note: ".state" and ".State" are different
-            #print(self.qtTtsEngine.state)
+        elif (self.qtTtsEngine is not None):
             self.qtTtsEngine.stop()
-            #self.qtTtsEngine = None
 
     # mp3:::
     def mp3Download(self, command, source):
