@@ -80,18 +80,27 @@ class MoreConfigOptions(QDialog):
                 ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged),
                 ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged),
             ]
-        for counter, content in enumerate(options):
+
+        counter = 0
+        for content in options:
             name, value, function = content
             checkbox = QCheckBox()
             checkbox.setText(name)
             checkbox.setChecked(value)
             checkbox.stateChanged.connect(function)
-            if (counter + 1) % 3 == 0:
-                rightContainerLayout.addWidget(checkbox)
-            elif (counter + 1) % 2 == 0:
-                middleContainerLayout.addWidget(checkbox)
-            else:
+            if (counter == 0):
                 leftContainerLayout.addWidget(checkbox)
+                counter += 1
+            elif (counter == 1):
+                middleContainerLayout.addWidget(checkbox)
+                counter += 1
+            elif (counter == 2):
+                rightContainerLayout.addWidget(checkbox)
+                counter = 0
+
+        leftContainerLayout.addStretch()
+        middleContainerLayout.addStretch()
+        rightContainerLayout.addStretch()
 
         leftContainer.setLayout(leftContainerLayout)
         middleContainer.setLayout(middleContainerLayout)
