@@ -500,11 +500,11 @@ def saveDataOnExit():
         ("linuxStartFullScreen", config.linuxStartFullScreen),
         ("showTtsOnLinux", config.showTtsOnLinux),
         ("espeak", config.espeak),
-        ("tssDefaultLangauge", config.tssDefaultLangauge)
-        ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese)
-        ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin)
-        ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS)
-        ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK)
+        ("tssDefaultLangauge", config.tssDefaultLangauge),
+        ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese),
+        ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin),
+        ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),
+        ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK),
         ("ibus", config.ibus),
         ("fcitx", config.fcitx),
         ("virtualKeyboard", config.virtualKeyboard),

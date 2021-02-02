@@ -1,4 +1,7 @@
-Major changes in version 21.10:
+Major change in version 21.11:
+- Fixed saving tts settings on exit.
+
+Major change in version 21.10:
 - Added a column to "Select More ..." dialog
 
 Major changes in version 21.09:
