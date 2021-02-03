@@ -222,9 +222,12 @@ class HebrewTransliteration:
             ("'([^aeiou])", r"e\1"),
             ("([aeiou])'([aeiou])", r"\1 \2"),
             ("'([aeiou])", r"\1"),
+            ("ch |ch$", "k "),
+            ("ch", "h"),
         )
         for search, replace in searchReplace:
             output = re.sub(search, replace, output)
+        #print(output)
         return output
 
 if __name__ == '__main__':
