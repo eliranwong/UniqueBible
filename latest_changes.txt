@@ -1,3 +1,7 @@
+Major change in version 21.16:
+Addreseed an issue: espeak itself does not support Hebrew language
+- Added a workaround on Hebrew text-to-speech feature for users who select espeak as text-to-speech engine.
+
 Major change in version 21.15:
 - Fix an issue to make sure text-to-speech audio is turned off upon closing.
 

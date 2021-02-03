@@ -4,6 +4,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
+from HebrewTransliteration import HebrewTransliteration
 from NoteSqlite import NoteSqlite
 from TtsLanguages import TtsLanguages
 from PySide2.QtCore import QLocale
@@ -13,7 +14,6 @@ try:
 except:
     pass
 from db.Highlight import Highlight
-
 
 class TextCommandParser:
 
@@ -838,6 +838,13 @@ class TextCommandParser:
             # Ancient Greek
             # To read accented Greek text, language have to be "grc" instead of "el" for espeak
             # In dictionary mapping language to qlocale, we use "grc" for Greek language too.
+            language = "grc"
+        elif (config.espeak) and (language == "he"):
+            # espeak itself does not support Hebrew language
+            # Below workaround on Hebrew text-to-speech feature for espeak
+            # Please note this workaround is not a perfect solution, but something workable.
+            text = HebrewTransliteration().transliterateHebrew(text)
+            # Use "grc" to read, becuase it sounds closer to "he" than "en" does.
             language = "grc"
 
         if platform.system() == "Linux" and config.espeak:
