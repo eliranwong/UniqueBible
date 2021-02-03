@@ -13,6 +13,7 @@
 /Documents
 /htmlResources/export
 config.py
+UniqueBible.code-workspace
 **.log
 **.log.**
 htmlResources/main.html
