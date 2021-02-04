@@ -656,7 +656,7 @@ class BookData:
         if module in dict(self.bookList).keys():
             books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
             topicList = Book(module).getTopicList()
-            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
             return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
@@ -666,7 +666,7 @@ class BookData:
         if module in dict(self.bookList).keys():
             books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
             topicList = Book(module).getSearchedTopicList(searchString, chapterOnly=chapterOnly)
-            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{1}</ref>".format(module, topic) for topic in topicList])
+            topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
             if topics:
                 if chapterOnly:
@@ -690,6 +690,7 @@ class BookData:
         return selectForm
 
     def getContent(self, module, entry):
+        entry = re.sub("@", "'", entry)
         return Book(module).getContent(entry)
 
 

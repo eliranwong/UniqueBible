@@ -1,3 +1,7 @@
+Major changes in version 21.18:
+- Fixed pdf file opened twice after export each time.
+- Fixed book chapter with title containing ' not opened.
+
 Major change in version 21.17:
 - A tweak on Hebrew text-to-speech feature.
 
