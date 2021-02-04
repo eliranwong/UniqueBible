@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
         self.lastMainTextCommand = ""
         self.lastStudyTextCommand = ""
         self.newTabException = False
+        self.pdfOpened = False
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -994,6 +995,7 @@ class MainWindow(QMainWindow):
     def printMainPage(self):
         filename = "UniqueBible.app.pdf"
         self.mainPage.printToPdf(filename)
+            
 
     def printStudyPage(self):
         filename = "UniqueBible.app.pdf"
@@ -1968,7 +1970,11 @@ class MainWindow(QMainWindow):
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
         if success:
-            self.openExternalFile(filePath, isPdf=True)
+            if self.pdfOpened:
+                self.pdfOpened = False
+            else:
+                self.openExternalFile(filePath, isPdf=True)
+                self.pdfOpened = True
         else:
             print("Failed to print pdf")
 
