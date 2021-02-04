@@ -514,6 +514,7 @@ class Languages:
         "speak": "Speak",
         "stop": "Stop",
         "enter": "Enter",
+        "downloading": "Downloading ...",
         "enter_command_here": "Enter command here ...",
         "filename": "Filename",
         "message_select_macro": "Select Macro",

@@ -1,5 +1,5 @@
 # coding=utf-8
-import os, subprocess, signal, re, config, webbrowser, platform
+import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
@@ -7,7 +7,6 @@ from ThirdParty import ThirdPartyDictionary
 from HebrewTransliteration import HebrewTransliteration
 from NoteSqlite import NoteSqlite
 from TtsLanguages import TtsLanguages
-from PySide2.QtCore import QLocale
 from PySide2.QtWidgets import QApplication
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
@@ -909,32 +908,34 @@ class TextCommandParser:
     # mp3:::
     def mp3Download(self, command, source):
         downloadCommand = "youtube-dl -x --audio-format mp3"
-        return self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
+        #return self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
+        multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
+        self.parent.displayMessage(config.thisTranslation["downloading"])
+        return ("", "", {})
 
     # mp4:::
     def mp4Download(self, command, source):
         downloadCommand = "youtube-dl -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
-        return self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
+        #return self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
+        multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
+        self.parent.displayMessage(config.thisTranslation["downloading"])
+        return ("", "", {})
 
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         if platform.system() == "Linux":
             try:
                 subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-                self.parent.displayMessage(config.thisTranslation["message_done"])
                 subprocess.Popen([config.open, outputFolder])
             except subprocess.CalledProcessError as err:
                 self.parent.displayMessage(err, title="ERROR:")
         # on Windows
         elif platform.system() == "Windows":
             os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            self.parent.displayMessage(config.thisTranslation["message_done"])
             os.system(r"{0} {1}".format(config.open, outputFolder))
         # on Unix-based system, like macOS
         else:
             os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            self.parent.displayMessage(config.thisTranslation["message_done"])
             os.system(r"{0} {1}".format(config.open, outputFolder))
-        return ("", "", {})
 
     # functions about bible
 

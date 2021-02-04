@@ -650,7 +650,7 @@ app.setPalette(Themes.getPalette())
 # It does not sort out all issues caused by the possible bug in the wayland compositor.  At launch the main window closes and reopen when users type in command field.
 # A workaround to type command in Chrome OS is to use remote control, called by "ctrl + o" key combination.
 mainWindow = BufferWindow()
-mainWindow.showMinimized()
+#mainWindow.showMinimized()
 mainWindow.resize(0, 0)
 #mainWindow.show()
 
