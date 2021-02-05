@@ -1,3 +1,7 @@
+Major changes in version 21.19:
+- separated download process from the main thread, so users can continue reading during downloading files, 
+        e.g. YouTube video / music / bible modules / resources
+
 Major changes in version 21.18:
 - Fixed pdf file opened twice after export each time.
 - Fixed book chapter with title containing ' not opened.

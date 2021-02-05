@@ -1,11 +1,11 @@
-import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, gdown, requests, update, myTranslation, logging
+import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, requests, update, myTranslation, logging
 from datetime import datetime
 from ast import literal_eval
 from functools import partial
 
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
-from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QPushButton, QToolBar, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
+from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
 
 from BibleBooks import BibleBooks
 from TextCommandParser import TextCommandParser
@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         self.lastStudyTextCommand = ""
         self.newTabException = False
         self.pdfOpened = False
+        self.isDownloading = False
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -444,10 +445,12 @@ class MainWindow(QMainWindow):
         # Update install History
         fileItems, cloudID, *_ = databaseInfo
         config.installHistory[fileItems[-1]] = cloudID
+        self.parent.isDownloading = False
 
     def moduleInstalledFailed(self, databaseInfo):
         self.downloader.close()
         self.displayMessage(config.thisTranslation["message_fail"])
+        self.parent.isDownloading = False
 
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro

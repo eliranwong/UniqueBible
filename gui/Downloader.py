@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown
+import os, config, zipfile, gdown, threading
 from PySide2.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QProgressBar)
 
 class Downloader(QDialog):
@@ -26,8 +26,8 @@ class Downloader(QDialog):
         self.downloadButton = QPushButton(config.thisTranslation["message_install"])
         self.downloadButton.clicked.connect(self.startDownloadFile)
 
-        cancelButton = QPushButton(config.thisTranslation["message_cancel"])
-        cancelButton.clicked.connect(self.close)
+        self.cancelButton = QPushButton(config.thisTranslation["message_cancel"])
+        self.cancelButton.clicked.connect(self.close)
 
         remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
 
@@ -35,7 +35,7 @@ class Downloader(QDialog):
         #self.layout.addWidget(self.progressBar, 0, 0)
         self.layout.addWidget(message, 0, 0)
         self.layout.addWidget(self.downloadButton, 1, 0)
-        self.layout.addWidget(cancelButton, 2, 0)
+        self.layout.addWidget(self.cancelButton, 2, 0)
         self.layout.addWidget(remarks, 3, 0)
         self.setLayout(self.layout)
 
@@ -48,15 +48,23 @@ class Downloader(QDialog):
     def startDownloadFile(self):
         self.downloadButton.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setEnabled(False)
+        self.cancelButton.setEnabled(False)
         # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
-        self.downloadFile(True)
+        # self.downloadFile(True)
+        # https://www.linuxjournal.com/content/multiprocessing-python
+        if self.parent.isDownloading:
+            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+        else:
+            threading.Thread(target=self.downloadFile, args=(True,)).start()
+            #self.parent.displayMessage(config.thisTranslation["downloading"])
 
     def downloadFile(self, interactWithParent=True):
+        self.hide()
+        self.parent.isDownloading = True
         try:
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
         except:
-            #connection = False
             try:
                 gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
                 connection = True

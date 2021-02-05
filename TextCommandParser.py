@@ -9,7 +9,7 @@ from NoteSqlite import NoteSqlite
 from TtsLanguages import TtsLanguages
 from PySide2.QtWidgets import QApplication
 try:
-    from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+    from PySide2.QtTextToSpeech import QTextToSpeech
 except:
     pass
 from db.Highlight import Highlight
