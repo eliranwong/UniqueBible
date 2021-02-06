@@ -50,7 +50,7 @@ class RemoteControl(QWidget):
         mainLayout = QGridLayout()
 
         commandBox = QVBoxLayout()
-        commandBox.setSpacing(0)
+        commandBox.setSpacing(3)
 
         commandBar = QWidget()
         commandLayout1 = QBoxLayout(QBoxLayout.LeftToRight)
@@ -68,6 +68,7 @@ class RemoteControl(QWidget):
         commandLayout1.addWidget(enterButton)
 
         commandLayout1.addStretch()
+        commandBox.addLayout(commandLayout1)
 
         commandLayout2 = QBoxLayout(QBoxLayout.LeftToRight)
         commandLayout2.setSpacing(5)
@@ -80,6 +81,7 @@ class RemoteControl(QWidget):
             commandLayout2.addWidget(button)
 
         commandLayout2.addStretch()
+        commandBox.addLayout(commandLayout2)
 
         if config.ttsSupport:
             ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
@@ -118,10 +120,8 @@ class RemoteControl(QWidget):
     
             ttsLayout.addStretch()
 
-        commandBox.addLayout(commandLayout1)
-        commandBox.addLayout(commandLayout2)
-        if config.ttsSupport:
             commandBox.addLayout(ttsLayout)
+
         commandBar.setLayout(commandBox)
         mainLayout.addWidget(commandBar, 0, 0, Qt.AlignCenter)
 
@@ -177,8 +177,8 @@ class RemoteControl(QWidget):
         box_layout.setMargin(0)
         box_layout.setSpacing(0)
         row_layout = self.newRowLayout()
-        bibleSqlite = BiblesSqlite()
-        bibles = bibleSqlite.getBibleList()
+        biblesSqlite = BiblesSqlite()
+        bibles = biblesSqlite.getBibleList()
         count = 0
         for bible in bibles:
             button = QPushButton(bible)

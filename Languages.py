@@ -514,6 +514,8 @@ class Languages:
         "speak": "Speak",
         "stop": "Stop",
         "enter": "Enter",
+        "openInMainWindow": "Open in Main Window",
+        "openInStudyWindow": "Open in Study Window",
         "downloading": "Downloading started!",
         "finishedDownloading": "Downloading finished!",
         "previousDownloadIncomplete": "Downloading in progress!  Please wait for completing the previous download before starting another one.",

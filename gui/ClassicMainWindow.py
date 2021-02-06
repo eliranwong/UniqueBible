@@ -2,6 +2,7 @@ import os, config, myTranslation
 from PySide2.QtGui import QIcon, Qt, QGuiApplication
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
+from gui.BibleExplorer import BibleExplorer
 
 class ClassicMainWindow(MainWindow):
 
@@ -350,7 +351,15 @@ class ClassicMainWindow(MainWindow):
 
         if config.testing:
             menu999 = self.menuBar().addMenu("&Testing")
-            menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
+            #menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
+            menu999.addAction(QAction("testing", self, triggered=self.testing))
+
+    def testing(self):
+        #pass
+        test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        test.show()
+
+
 
     def setupToolBarStandardIconSize(self):
 
