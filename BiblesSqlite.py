@@ -2,11 +2,11 @@
 Reading data from bibles.sqlite
 """
 import os, sqlite3, config, re, logging
-from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
 from db.Highlight import Highlight
 from themes import Themes
+from util.NoteService import NoteService
 
 try:
     from diff_match_patch import diff_match_patch
@@ -731,11 +731,9 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         if config.showNoteIndicatorOnBibleChapter:
-            noteSqlite = NoteSqlite()
-            noteVerseList = noteSqlite.getChapterVerseList(b, c)
-            if noteSqlite.isChapterNote(b, c):
+            noteVerseList = NoteService.getChapterVerseList(b, c)
+            if NoteService.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
-            del noteSqlite
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
         chapter += "</h2>"
@@ -918,11 +916,9 @@ class Bible:
         del biblesSqlite
         self.thisVerseNoteList = []
         if config.showNoteIndicatorOnBibleChapter:
-            noteSqlite = NoteSqlite()
-            self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
-            if noteSqlite.isChapterNote(b, c):
+            self.thisVerseNoteList = NoteService.getChapterVerseList(b, c)
+            if NoteService.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
-            del noteSqlite
         chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])

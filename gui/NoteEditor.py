@@ -3,7 +3,8 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog)
-from NoteSqlite import NoteSqlite
+from util.NoteService import NoteService
+
 
 class NoteEditor(QMainWindow):
 
@@ -605,12 +606,10 @@ p, li {0} white-space: pre-wrap; {1}
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
-        noteSqlite = NoteSqlite()
         if self.noteType == "chapter":
-            note = noteSqlite.getChapterNote((self.b, self.c))
+            note = NoteService.getChapterNote(self.b, self.c)
         elif self.noteType == "verse":
-            note = noteSqlite.getVerseNote((self.b, self.c, self.v))
-        del noteSqlite
+            note = NoteService.getVerseNote(self.b, self.c, self.v)
         if note == config.thisTranslation["empty"]:
             note = self.getEmptyPage()
         else:
@@ -682,17 +681,13 @@ p, li {0} white-space: pre-wrap; {1}
             note = self.editor.toPlainText()
         note = self.fixNoteFont(note)
         if self.noteType == "chapter":
-            noteSqlite = NoteSqlite()
-            noteSqlite.saveChapterNote((self.b, self.c, note))
-            del noteSqlite
+            NoteService.saveChapterNote(self.b, self.c, note)
             if config.openBibleNoteAfterSave:
                 self.parent.openChapterNote(self.b, self.c)
             self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
-            noteSqlite = NoteSqlite()
-            noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
-            del noteSqlite
+            NoteService.saveVerseNote(self.b, self.c, self.v, note)
             if config.openBibleNoteAfterSave:
                 self.parent.openVerseNote(self.b, self.c, self.v)
             self.parent.noteSaved = True

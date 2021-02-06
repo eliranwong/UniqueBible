@@ -115,6 +115,8 @@ class AlephMainWindow(MainWindow):
         external_notes.addAction(QAction(config.thisTranslation["menu_open_note"], self, shortcut="Ctrl+N, O", triggered=self.openTextFileDialog))
         external_notes.addAction(QAction(config.thisTranslation["menu_read_note"], self, shortcut="Ctrl+N, R", triggered=self.externalFileButtonClicked))
         external_notes.addAction(QAction(config.thisTranslation["menu_edit_note"], self, shortcut="Ctrl+N, E", triggered=self.editExternalFileButtonClicked))
+        if config.enableGist:
+            annotate_menu.addAction(QAction(config.thisTranslation["menu_gist"], self, shortcut="Ctrl+N, G", triggered=self.showGistWindow))
 
         library_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_library"]))
         library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut="Ctrl+L, W", triggered=self.runWORDS))

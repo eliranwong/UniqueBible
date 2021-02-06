@@ -6,4 +6,7 @@ PyPDF2
 python-docx
 gdown
 diff_match_patch
+googletrans
+pypinyin
 langdetect
+PyGithub

@@ -2,17 +2,22 @@
 import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
+from NoteSqlite import NoteSqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
 from HebrewTransliteration import HebrewTransliteration
-from NoteSqlite import NoteSqlite
 from TtsLanguages import TtsLanguages
 from PySide2.QtWidgets import QApplication
+
+from util.GitHubGist import GitHubGist
+
 try:
     from PySide2.QtTextToSpeech import QTextToSpeech
 except:
     pass
 from db.Highlight import Highlight
+from util.NoteService import NoteService, SyncNotesWithGist
+
 
 class TextCommandParser:
 
@@ -472,6 +477,25 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::John 3:16:::ul1
             # e.g. _HIGHLIGHT:::John 3:16:::delete
             "_highlight": self.highlightVerse,
+            # [KEYWORD] SYNC
+            # Feature - Synchronize data with Github Gist
+            # To sync everything with Gist
+            # e.g. SYNC:::ALL
+            # To sync Bible chapter and verse notes
+            # e.g. SYNC:::NOTES
+            "sync": self.syncGist,
+            # [KEYWORD] GIST
+            # Feature - Execute commands to Github Gist
+            # To delete all Bible chapter and verse notes in Gist
+            # e.g. GIST:::DELETE:::NOTES
+            # To get information about Gist
+            # e.g. GIST:::INFO
+            "gist": self.gistCommand,
+            # [KEYWORD] NOTES
+            # Feature - Run commands on Bible chapter and verse notes
+            # To get count of number of chapter and verse notes
+            # e.g. NOTES:::COUNT
+            "notes": self.notesCommand,
         }
         commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -1877,9 +1901,7 @@ class TextCommandParser:
             return self.invalidCommand("study")
         else:
             config.noteSearchString = command
-            noteSqlite = NoteSqlite()
-            chapters = noteSqlite.getSearchedChapterList(command)
-            del noteSqlite
+            chapters = NoteService.getSearchedChapterList(command)
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)), {})
 
     # SEARCHVERSENOTE:::
@@ -1888,9 +1910,7 @@ class TextCommandParser:
             return self.invalidCommand("study")
         else:
             config.noteSearchString = command
-            noteSqlite = NoteSqlite()
-            verses = noteSqlite.getSearchedVerseList(command)
-            del noteSqlite
+            verses = NoteService.getSearchedVerseList(command)
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
 
     # CROSSREFERENCE:::
@@ -2063,13 +2083,45 @@ class TextCommandParser:
         reference, code = self.splitCommand(command)
         verseList = self.extractAllVerses(reference)
         for b, c, v in verseList:
-            print("{0}:{1}:{2}:{3}".format(b, c, v, code))
             if code == "delete":
                 hl.removeHighlight(b, c, v)
             else:
                 hl.highlightVerse(b, c, v, code)
         return ("command", "", {})
 
+    # SYNC:::
+    def syncGist(self, command, source):
+        subject = self.splitCommand(command)[0]
+        if subject in ('all', 'notes'):
+            syncNotes = SyncNotesWithGist()
+            syncNotes.run()
+            return ("instant", "Gist sync complete", {})
+
+    # GIST:::
+    def gistCommand(self, command, source):
+        action = self.splitCommand(command)
+        gh = GitHubGist()
+        if action[0] == "delete":
+            if len(action) ==2 and action[1] in ("all", "notes"):
+                print(gh.delete_all_notes())
+                return ("instant", "Gist Bibles notes deleted", {})
+        elif action[0] == "info":
+            if not gh.connected:
+                message = "Could not connect to Gist"
+            else:
+                notes = gh.get_all_note_gists()
+                message = "Connected to Gist with {0} notes".format(len(notes))
+            return ("instant", message, {})
+
+    # NOTES:::
+    def notesCommand(self, command, source):
+        action = self.splitCommand(command)
+        if action[0] == "count":
+            ns = NoteSqlite()
+            chapters = ns.getChapterCount()
+            verses =  ns.getVerseCount()
+            message = "{0} chapter notes and {1} verse notes".format(chapters, verses)
+            return ("instant", message, {})
 
 if __name__ == "__main__":
     from Languages import Languages
