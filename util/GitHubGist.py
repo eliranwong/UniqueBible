@@ -52,6 +52,10 @@ class GitHubGist:
             self.status = "Could not connect"
             self.logger.error(str(error))
 
+    def open_gist_book_note(self, book):
+        self.description = GitHubGist.b_to_book_name(book)
+        self.open_gist_by_description(self.description)
+
     def open_gist_chapter_note(self, book, chapter):
         self.description = GitHubGist.bc_to_chapter_name(book, chapter)
         self.open_gist_by_description(self.description)
@@ -142,11 +146,18 @@ class GitHubGist:
                     g.delete()
             return count
 
+    def b_to_book_name(b):
+        return "UBA-Note-Book-{0}".format(b)
+
     def bc_to_chapter_name(b, c):
         return "UBA-Note-Chapter-{0}-{1}".format(b, c)
 
     def bcv_to_verse_name(b, c, v):
         return "UBA-Note-Verse-{0}-{1}-{2}".format(b, c, v)
+
+    def book_name_to_b(name):
+        res = re.search(r'UBA-Note-Book-(\d*)', name).groups()
+        return res
 
     def chapter_name_to_bc(name):
         res = re.search(r'UBA-Note-Chapter-(\d*)-(\d*)', name).groups()

@@ -89,7 +89,7 @@ class NoteSqlite:
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO BookNote (Book, Note, Updated) VALUES (?, ?, ?)"
-            self.cursor.execute(insert, b, note, updated)
+            self.cursor.execute(insert, (b, note, updated))
             self.connection.commit()
 
     def saveChapterNote(self, b, c, note, updated=DateUtil.epoch()):

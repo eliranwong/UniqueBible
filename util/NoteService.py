@@ -17,6 +17,41 @@ class NoteService:
             NoteService.ns = NoteSqlite()
         return NoteService.ns
 
+    def getBookNote(b):
+        validGist = False
+        noteL = noteG = None
+        if config.enableGist:
+            gh = GitHubGist()
+            gh.open_gist_book_note(b)
+            file = gh.get_file()
+            if file:
+                updatedG = gh.get_updated()
+                noteG = file.content
+                validGist = True
+        ns = NoteService.getNoteSqlite()
+        noteL, updatedL = ns.displayBookNote(b)
+        validLocal = True
+        if noteL == config.thisTranslation["empty"]:
+            validLocal = False
+        if validGist and not validLocal:
+            note = noteG
+        elif not validGist and validLocal:
+            if config.enableGist:
+                gh.update_content(noteL, updatedL)
+            note = noteL
+        elif validGist and validLocal:
+            if updatedL is None and len(noteG) > len(noteL):
+                note = noteG
+            elif updatedG > updatedL:
+                note = noteG
+            else:
+                note = noteL
+        else:
+            note = noteL
+        if noteG and note == noteG:
+            ns.saveBookNote(b, noteG, updatedG)
+        return note
+
     def getChapterNote(b, c):
         validGist = False
         noteL = noteG = None
@@ -51,6 +86,15 @@ class NoteService:
         if noteG and note == noteG:
             ns.saveChapterNote(b, c, noteG, updatedG)
         return note
+
+    def saveBookNote(b, note):
+        now = DateUtil.epoch()
+        if config.enableGist:
+            gh = GitHubGist()
+            gh.open_gist_book_note(b)
+            gh.update_content(note, now)
+        ns = NoteService.getNoteSqlite()
+        ns.saveBookNote(b, note, now)
 
     def saveChapterNote(b, c, note):
         now = DateUtil.epoch()
