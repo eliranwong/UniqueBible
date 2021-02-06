@@ -1266,7 +1266,7 @@ class TextCommandParser:
 
     # _openbooknote:::
     def openBookNote(self, command, source):
-        b = command
+        b, *_ = command.split(".")
         b = int(b)
         self.parent.openBookNote(b)
         return ("", "", {})
@@ -1282,7 +1282,7 @@ class TextCommandParser:
 
     # _openchapternote:::
     def openChapterNote(self, command, source):
-        b, c = command.split(".")
+        b, c, *_ = command.split(".")
         b, c = int(b), int(c)
         self.parent.openChapterNote(b, c)
         return ("", "", {})
@@ -1298,7 +1298,7 @@ class TextCommandParser:
 
     # _openversenote:::
     def openVerseNote(self, command, source):
-        b, c, v = command.split(".")
+        b, c, v, *_ = command.split(".")
         b, c, v = int(b), int(c), int(v)
         self.parent.openVerseNote(b, c, v)
         return ("", "", {})
@@ -1317,7 +1317,7 @@ class TextCommandParser:
     # _editbooknote:::
     def editBookNote(self, command, source):
         if command:
-            b = command
+            b, *_ = command.split(".")
             c = 1
             v = 1
         else:
@@ -1338,7 +1338,7 @@ class TextCommandParser:
     # _editchapternote:::
     def editChapterNote(self, command, source):
         if command:
-            b, c = command.split(".")
+            b, c, *_ = command.split(".")
             v = 1
         else:
             b, c, v = None, None, None
@@ -1358,7 +1358,7 @@ class TextCommandParser:
     # _editversenote:::
     def editVerseNote(self, command, source):
         if command:
-            b, c, v = command.split(".")
+            b, c, v, *_ = command.split(".")
         else:
             b, c, v = None, None, None
         if self.parent.noteSaved or self.parent.warningNotSaved():

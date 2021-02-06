@@ -167,18 +167,22 @@ class BibleExplorer(QWidget):
 
     def bookFeatures(self):
         buttonRow1 = (
+            ("readNotes", lambda: self.openBibleNotes("book")),
+            ("editNotes", lambda: self.editBibleNotes("book")),
+        )
+        buttonRow2 = (
             ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
             ("html_timelines", lambda: self.searchBookChapter("Timelines")),
             ("context1_dict", lambda: self.searchBookName(True)),
             ("context1_encyclopedia", lambda: self.searchBookName(False)),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def chapterFeatures(self):
         buttonRow1 = (
-            ("readNotes", lambda: self.openBibleNotes(True)),
-            ("editNotes", lambda: self.editBibleNotes(True)),
+            ("readNotes", lambda: self.openBibleNotes("chapter")),
+            ("editNotes", lambda: self.editBibleNotes("chapter")),
         )
         buttonRow2 = (
             ("html_overview", lambda: self.chapterAction("OVERVIEW")),
@@ -191,8 +195,8 @@ class BibleExplorer(QWidget):
 
     def verseFeatures(self):
         buttonRow1 = (
-            ("readNotes", lambda: self.openBibleNotes(False)),
-            ("editNotes", lambda: self.editBibleNotes(False)),
+            ("readNotes", lambda: self.openBibleNotes("verse")),
+            ("editNotes", lambda: self.editBibleNotes("verse")),
         )
         buttonRow2 = (
             ("menu4_compareAll", lambda: self.verseAction("COMPARE")),
@@ -250,12 +254,22 @@ class BibleExplorer(QWidget):
         command = "{0}:::{1}:::{2}".format(window, self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
-    def openBibleNotes(self, chapter):
-        command = "{0}:::{1}.{2}".format("_openchapternote" if chapter else "_openversenote", self.b, self.c)
+    def openBibleNotes(self, noteType):
+        keywords = {
+            "book": "_openbooknote",
+            "chapter": "_openchapternote",
+            "verse": "_openversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
         self.parent.runTextCommand(command)
 
-    def editBibleNotes(self, chapter):
-        command = "{0}:::{1}.{2}".format("_editchapternote" if chapter else "_editversenote", self.b, self.c)
+    def editBibleNotes(self, noteType):
+        keywords = {
+            "book": "_editbooknote",
+            "chapter": "_editchapternote",
+            "verse": "_editversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
         self.parent.runTextCommand(command)
 
     def searchBookName(self, dictionary):
