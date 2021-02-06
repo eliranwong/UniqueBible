@@ -751,6 +751,9 @@ class MainWindow(QMainWindow):
             self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
             self.noteEditor.show()
 
+    def openMainBookNote(self):
+        self.openBookNote(config.mainB)
+
     def openMainChapterNote(self):
         self.openChapterNote(config.mainB, config.mainC)
 

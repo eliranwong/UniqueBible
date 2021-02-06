@@ -108,10 +108,10 @@ class AlephMainWindow(MainWindow):
                 QAction(config.thisTranslation["menu2_toggleHighlightMarkers"], self, triggered=self.toggleHighlightMarker))
         bible_notes = annotate_menu.addMenu(config.thisTranslation["menu_bible_notes"])
         bible_notes.addAction(
-            QAction(config.thisTranslation["menu_book"], self, shortcut="Ctrl+N, B", triggered=self.openStudyBookNote))
+            QAction(config.thisTranslation["menu_book"], self, shortcut="Ctrl+N, B", triggered=self.openMainBookNote))
         bible_notes.addAction(
-            QAction(config.thisTranslation["menu_chapter"], self, shortcut="Ctrl+N, C", triggered=self.openStudyChapterNote))
-        bible_notes.addAction(QAction(config.thisTranslation["menu_verse"], self, shortcut="Ctrl+N, V", triggered=self.openStudyVerseNote))
+            QAction(config.thisTranslation["menu_chapter"], self, shortcut="Ctrl+N, C", triggered=self.openMainChapterNote))
+        bible_notes.addAction(QAction(config.thisTranslation["menu_verse"], self, shortcut="Ctrl+N, V", triggered=self.openMainVerseNote))
         external_notes = annotate_menu.addMenu(config.thisTranslation["menu_external_notes"])
         external_notes.addAction(QAction(config.thisTranslation["menu_new_note"], self, shortcut="Ctrl+N, N", triggered=self.createNewNoteFile))
         external_notes.addAction(QAction(config.thisTranslation["menu_open_note"], self, shortcut="Ctrl+N, O", triggered=self.openTextFileDialog))
