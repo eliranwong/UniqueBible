@@ -1,3 +1,21 @@
+Major changes in version 21.20:
+- Added Bible Book notes on top of Chapter Notes & Verse Notes
+    * Read more about notes at: https://github.com/eliranwong/UniqueBible/wiki/Notes
+- New commands added for open / edit / search notes, e.g.:
+    * OPENBOOKNOTE:::John
+    * OPENCHAPTERNOTE:::John 3
+    * OPENVERSENOTE:::John 3:16
+    * EDITBOOKNOTE:::John
+    * EDITCHAPTERNOTE:::John 3
+    * EDITVERSENOTE:::John 3:16
+    * SEARCHBOOKNOTE:::faith
+    * SEARCHCHAPTERNOTE:::faith
+    * SEARCHVERSENOTE:::faith
+    * Read more about notes at: https://github.com/eliranwong/UniqueBible/wiki/Notes
+- Added a developer column in classcial menu layout for testing new features
+    * Developer column is visible only "developer" option in config.py is set to true.
+- New "Bible Explorer" Window added to developer menu
+
 Major changes in version 21.19:
 - separated download process from the main thread, so users can continue reading during downloading files, 
         e.g. YouTube video / music / bible modules / resources

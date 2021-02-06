@@ -50,11 +50,12 @@ class NoteEditor(QMainWindow):
             if config.lastOpenedNote:
                 if config.lastOpenedNote[0] == "file":
                     self.parent.externalFileButtonClicked()
+                elif config.lastOpenedNote[0] == "book":
+                    self.parent.openStudyBookNote()
                 elif config.lastOpenedNote[0] == "chapter":
                     self.parent.openStudyChapterNote()
                 elif config.lastOpenedNote[0] == "verse":
                     self.parent.openStudyVerseNote()
-
         else:
             if self.parent.warningNotSaved():
                 self.parent.noteSaved = True
@@ -92,7 +93,9 @@ class NoteEditor(QMainWindow):
                 title = "NEW"
         else:
             title = self.parent.bcvToVerseReference(self.b, self.c, self.v)
-            if self.noteType == "chapter":
+            if self.noteType == "book":
+                title, *_ = title.split(" ")            
+            elif self.noteType == "chapter":
                 title, *_ = title.split(":")
         mode = {True: "rich", False: "plain"}
         notModified = {True: "", False: " [modified]"}
@@ -606,8 +609,10 @@ p, li {0} white-space: pre-wrap; {1}
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
-        if self.noteType == "chapter":
-            note = NoteService.getChapterNote(self.b, self.c)
+        if self.noteType == "book":
+            note = NoteService.getBookNote((self.b,))
+        elif self.noteType == "chapter":
+            note = NoteService.getChapterNote((self.b, self.c))
         elif self.noteType == "verse":
             note = NoteService.getVerseNote(self.b, self.c, self.v)
         if note == config.thisTranslation["empty"]:
@@ -680,7 +685,13 @@ p, li {0} white-space: pre-wrap; {1}
         else:
             note = self.editor.toPlainText()
         note = self.fixNoteFont(note)
-        if self.noteType == "chapter":
+        if self.noteType == "book":
+            NoteService.saveBookNote(self.b, note)
+            if config.openBibleNoteAfterSave:
+                self.parent.openBookNote(self.b,)
+            self.parent.noteSaved = True
+            self.updateWindowTitle()
+        elif self.noteType == "chapter":
             NoteService.saveChapterNote(self.b, self.c, note)
             if config.openBibleNoteAfterSave:
                 self.parent.openChapterNote(self.b, self.c)
@@ -855,9 +866,9 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.insertPlainText(selectedText)
 
     def customFormat(self, text):
-        # QTextEdit's line break character by pressing ENTER in plain & html mode ""
-        # please note that "" is not an empty string
-        text = text.replace("", "\n")
+        # QTextEdit's line break character by pressing ENTER in plain & html mode " "
+        # please note that " " is not an empty string
+        text = text.replace(" ", "\n")
 
         text = re.sub("^\*[0-9]+? (.*?)$", r"<ol><li>\1</li></ol>", text, flags=re.M)
         text = text.replace("</ol>\n<ol>", "\n")
@@ -872,7 +883,7 @@ p, li {0} white-space: pre-wrap; {1}
         text = text.replace('<table>', '<table border="1" cellpadding="5">')
 
         # convert back to QTextEdit linebreak
-        text = text.replace("\n", "")
+        text = text.replace("\n", " ")
 
         # wrap with default font and font-size
         text = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, text)

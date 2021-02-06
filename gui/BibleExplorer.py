@@ -1,11 +1,8 @@
-import config
-from functools import partial
+import config, re
 from BiblesSqlite import BiblesSqlite
+from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QGuiApplication
-from PySide2.QtWidgets import (QVBoxLayout, QFormLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
-                               QApplication, QBoxLayout, QGridLayout, QComboBox)
+from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
 
@@ -17,6 +14,9 @@ class BibleExplorer(QWidget):
         self.bcvChain = False
         self.biblesSqlite = BiblesSqlite()
         self.bookNo2Abb = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        self.bookLabel = QLabel("")
+        self.chapterLabel = QLabel("")
+        self.verseLabel = QLabel("")
         
         # set title
         self.setWindowTitle(config.thisTranslation["menu_bible"])
@@ -25,7 +25,7 @@ class BibleExplorer(QWidget):
 
     # setup ui
     def setupUI(self):
-        mainLayout = QGridLayout()
+        mainLayout = QHBoxLayout()
         mainLayout.addWidget(self.navigationWidget())
         mainLayout.addWidget(self.featuresWidget())
         self.setLayout(mainLayout)
@@ -70,15 +70,15 @@ class BibleExplorer(QWidget):
         self.updateBookCombo()
         # Interactive update in response to users selection
         versionCombo.currentIndexChanged.connect(self.updateBookCombo)
-        self.bookCombo.currentIndexChanged.connect(lambda index: self.updateChapterCombo(index, True))
-        self.chapterCombo.currentIndexChanged.connect(lambda index: self.updateVerseCombo(index, True))
+        self.bookCombo.currentIndexChanged.connect(lambda index: self.updateChapterCombo(self.bookList[index], True))
+        self.chapterCombo.currentIndexChanged.connect(lambda index: self.updateVerseCombo(self.chapterList[index], True))
         self.verseCombo.currentIndexChanged.connect(self.updateV)
         return navigationLayout1
 
     def navigationLayout2(self):
         buttonElementTuple = (
-            ("openInStudyWindow", self.openInStudyWindow),
-            ("openInMainWindow", self.openInMainWindow),
+            ("openInStudyWindow", lambda: self.openInWindow("BIBLE")),
+            ("openInMainWindow", lambda: self.openInWindow("STUDY")),
         )
         return self.buttonsLayout(buttonElementTuple, True)
 
@@ -89,17 +89,17 @@ class BibleExplorer(QWidget):
             if textIndex is not None:
                 self.text = self.textList[textIndex]
             self.bookCombo.clear()
-            bookList = self.biblesSqlite.getBookList(self.text)
+            self.bookList = self.biblesSqlite.getBookList(self.text)
             # Add only those are recognised by UBA parser
-            for b in bookList:
+            for b in self.bookList:
                 strB = str(b)
                 if strB in self.bookNo2Abb:
                     self.bookCombo.addItem(self.bookNo2Abb[str(b)])
             index = 0
-            if not reset and self.b in bookList:
-                index = bookList.index(self.b)
+            if not reset and self.b in self.bookList:
+                index = self.bookList.index(self.b)
             else:
-                self.b = bookList[index]
+                self.b = self.bookList[index]
                 reset = True
             self.bookCombo.setCurrentIndex(index)
             # check / update
@@ -131,7 +131,7 @@ class BibleExplorer(QWidget):
                 self.bcvChain = True
     
                 if c is not None:
-                    self.c = self.chapterList[c]
+                    self.c = c
                 self.verseCombo.clear()
                 self.verseList = self.biblesSqlite.getVerseList(self.b, self.c, self.text)
                 self.verseCombo.addItems([str(v) for v in self.verseList])
@@ -142,54 +142,78 @@ class BibleExplorer(QWidget):
                     self.v = self.verseList[index]
                 self.verseCombo.setCurrentIndex(index)
                 # Complete update
+                self.updateBcvLabels()
                 self.bcvChain = False
 
     def updateV(self, index):
         if not self.bcvChain and (index >= 0):
             self.v = self.verseList[index]
+            self.verseLabel.setText(self.getSelectedReference())
 
     def featuresWidget(self):
         features = QWidget()
         featuresLayout = QFormLayout()
         featuresLayout.setSpacing(5)
-        featuresLayout.addRow(self.getSelectedReferenceBook(), self.bookFeatures())
-        featuresLayout.addRow(self.getSelectedReferenceChapter(), self.chapterFeatures())
-        featuresLayout.addRow(self.getSelectedReference(), self.verseFeatures())
+        featuresLayout.addRow(self.bookLabel, self.bookFeatures())
+        featuresLayout.addRow(self.chapterLabel, self.chapterFeatures())
+        featuresLayout.addRow(self.verseLabel, self.verseFeatures())
         features.setLayout(featuresLayout)
         return features
     
+    def updateBcvLabels(self):
+        self.bookLabel.setText(self.getSelectedReferenceBook())
+        self.chapterLabel.setText(self.getSelectedReferenceChapter())
+        self.verseLabel.setText(self.getSelectedReference())
+
     def bookFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("readNotes", lambda: self.openBibleNotes("book")),
+            ("editNotes", lambda: self.editBibleNotes("book")),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonRow2 = (
+            ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
+            ("html_timelines", lambda: self.searchBookChapter("Timelines")),
+            ("context1_dict", lambda: self.searchBookName(True)),
+            ("context1_encyclopedia", lambda: self.searchBookName(False)),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def chapterFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("readNotes", lambda: self.openBibleNotes("chapter")),
+            ("editNotes", lambda: self.editBibleNotes("chapter")),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonRow2 = (
+            ("html_overview", lambda: self.chapterAction("OVERVIEW")),
+            ("html_chapterIndex", lambda: self.chapterAction("CHAPTERINDEX")),
+            ("html_summary", lambda: self.chapterAction("SUMMARY")),
+            ("menu4_commentary", lambda: self.chapterAction("COMMENTARY")),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def verseFeatures(self):
         buttonRow1 = (
-            ("menu6_notes", self.openVerseNotes)
-            ("menu4_compareAll", partial(self.verseAction, "COMPARE")),
-            ("menu4_crossRef", partial(self.verseAction, "CROSSREFERENCE")),
-            ("menu4_tske", partial(self.verseAction, "TSKE")),
+            ("readNotes", lambda: self.openBibleNotes("verse")),
+            ("editNotes", lambda: self.editBibleNotes("verse")),
         )
         buttonRow2 = (
-            ("menu4_traslations", partial(self.verseAction, "TRANSLATION")),
-            ("menu4_discourse", partial(self.verseAction, "DISCOURSE")),
-            ("menu4_words", partial(self.verseAction, "WORDS")),
-            ("menu4_tdw", partial(self.verseAction, "COMBO")),
+            ("menu4_compareAll", lambda: self.verseAction("COMPARE")),
+            ("menu4_crossRef", lambda: self.verseAction("CROSSREFERENCE")),
+            ("menu4_tske", lambda: self.verseAction("TSKE")),
         )
         buttonRow3 = (
-            ("menu4_commentary", partial(self.verseAction, "COMMENTARY")),
-            ("menu4_indexes", partial(self.verseAction, "INDEX")),
+            ("menu4_traslations", lambda: self.verseAction("TRANSLATION")),
+            ("menu4_discourse", lambda: self.verseAction("DISCOURSE")),
+            ("menu4_words", lambda: self.verseAction("WORDS")),
+            ("menu4_tdw", lambda: self.verseAction("COMBO")),
         )
-        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3)
+        buttonRow4 = (
+            ("menu4_indexes", lambda: self.verseAction("INDEX")),
+            ("menu4_commentary", lambda: self.verseAction("COMMENTARY")),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3, buttonRow4)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def buttonsWidget(self, buttonElementTupleTuple):
@@ -202,7 +226,7 @@ class BibleExplorer(QWidget):
         return buttons
 
     def buttonsLayout(self, buttonElementTuple, r2l=False):
-        buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft)
+        buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft if r2l else QBoxLayout.LeftToRight)
         buttonsLayout.setSpacing(5)
         for buttonElements in buttonElementTuple:
             button = QPushButton(config.thisTranslation[buttonElements[0]])
@@ -226,26 +250,45 @@ class BibleExplorer(QWidget):
     def dummyAction(self):
         print("testing")
 
-    def openInMainWindow(self):
-        command = "BIBLE:::{0}:::{1}".format(self.text, self.getSelectedReference())
+    def openInWindow(self, window):
+        command = "{0}:::{1}:::{2}".format(window, self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
-    def openInStudyWindow(self):
-        command = "STUDY:::{0}:::{1}".format(self.text, self.getSelectedReference())
+    def openBibleNotes(self, noteType):
+        keywords = {
+            "book": "_openbooknote",
+            "chapter": "_openchapternote",
+            "verse": "_openversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
         self.parent.runTextCommand(command)
 
-    def openVerseNotes(self):
-        command = "_openversenote:::{0}.{1}.{2}".format(self.b, self.c, self.v)
+    def editBibleNotes(self, noteType):
+        keywords = {
+            "book": "_editbooknote",
+            "chapter": "_editchapternote",
+            "verse": "_editversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
+        self.parent.runTextCommand(command)
+
+    def searchBookName(self, dictionary):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary if dictionary else config.encyclopedia, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def searchBookChapter(self, resource):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        command = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def chapterAction(self, keyword):
+        command = "{0}:::{1}".format(keyword, self.getSelectedReferenceChapter())
         self.parent.runTextCommand(command)
 
     def verseAction(self, keyword):
         command = "{0}:::{1}".format(keyword, self.getSelectedReference())
         self.parent.runTextCommand(command)
-
-if __name__ == "__main__":
-   import sys
-
-   app = QApplication(sys.argv)
-   ui = BibleExplorer()
-   ui.show()
-   sys.exit(app.exec_())

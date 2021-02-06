@@ -756,6 +756,9 @@ class MainWindow(QMainWindow):
     def openMainVerseNote(self):
         self.openVerseNote(config.mainB, config.mainC, config.mainV)
 
+    def openStudyBookNote(self):
+        self.openBookNote(config.studyB)
+
     def openStudyChapterNote(self):
         self.openChapterNote(config.studyB, config.studyC)
 
@@ -768,6 +771,18 @@ class MainWindow(QMainWindow):
         if config.overwriteNoteFontSize:
             content = re.sub("font-size:[^<>]*?;", "", content)
         return content
+
+    def openBookNote(self, b):
+        self.textCommandParser.lastKeyword = "note"
+        reference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, 1, 1)
+        config.studyB, config.studyC, config.studyV = b, 1, 1
+        self.updateStudyRefButton()
+        config.commentaryB, config.commentaryC, config.commentaryV = b, 1, 1
+        self.updateCommentaryRefButton()
+        note = self.fixNoteFontDisplay(NoteSqlite().displayBookNote((b,)))
+        note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
+        note = self.htmlWrapper(note, True, "study", False)
+        self.openTextOnStudyView(note)
 
     def openChapterNote(self, b, c):
         self.textCommandParser.lastKeyword = "note"
