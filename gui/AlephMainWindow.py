@@ -739,11 +739,29 @@ class AlephMainWindow(MainWindow):
         iconFile = os.path.join("htmlResources", "noteVerse.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_verseNotes"], self.openMainVerseNote)
 
-        iconFile = os.path.join("htmlResources", "search.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)
+        previousBookButton = QPushButton()
+        previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])
+        previousBookButton.setText("<<")
+        previousBookButton.clicked.connect(self.previousMainBook)
+        self.firstToolBar.addWidget(previousBookButton)
 
-        iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBibles"], self.displaySearchBibleMenu)
+        previousChapterButton = QPushButton()
+        previousChapterButton.setToolTip(config.thisTranslation["menu_previous_chapter"])
+        previousChapterButton.setText("<")
+        previousChapterButton.clicked.connect(self.previousMainChapter)
+        self.firstToolBar.addWidget(previousChapterButton)
+
+        nextChapterButton = QPushButton()
+        nextChapterButton.setToolTip(config.thisTranslation["menu_next_chapter"])
+        nextChapterButton.setText(">")
+        nextChapterButton.clicked.connect(self.nextMainChapter)
+        self.firstToolBar.addWidget(nextChapterButton)
+
+        nextBookButton = QPushButton()
+        nextBookButton.setToolTip(config.thisTranslation["menu_next_book"])
+        nextBookButton.setText(">>")
+        nextBookButton.clicked.connect(self.nextMainBook)
+        self.firstToolBar.addWidget(nextBookButton)
 
         self.firstToolBar.addSeparator()
 
