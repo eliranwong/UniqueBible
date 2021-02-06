@@ -515,6 +515,8 @@ class Languages:
         "stop": "Stop",
         "enter": "Enter",
         "dummy": "dummy",
+        "readNotes": "Read Notes",
+        "editNotes": "Edit Notes",
         "openInMainWindow": "Open in Main Window",
         "openInStudyWindow": "Open in Study Window",
         "downloading": "Downloading started!",

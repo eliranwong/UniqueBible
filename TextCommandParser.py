@@ -370,6 +370,18 @@ class TextCommandParser:
             # e.g. TRANSLATE:::zh-CN:::test
             # e.g. TRANSLATE:::ja:::test
             "translate": self.translateText,
+            # [KEYWORD] editchapternote
+            # e.g. editchapternote:::John 3
+            "editchapternote": self.editChapterNoteRef,
+            # [KEYWORD] editversenote
+            # e.g. editversenote:::John 3:16
+            "editversenote": self.editVerseNoteRef,
+            # [KEYWORD] openchapternote
+            # e.g. openchapternote:::John 3
+            "openchapternote": self.openChapterNoteRef,
+            # [KEYWORD] openversenote
+            # e.g. openversenote:::John 3:16
+            "openversenote": self.openVerseNoteRef,
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -422,10 +434,10 @@ class TextCommandParser:
             # [KEYWORD] _htmlimage
             "_htmlimage": self.textHtmlImage,
             # [KEYWORD] _editchapternote
-            # e.g. _editchapternote:::
+            # e.g. _editchapternote:::43.3
             "_editchapternote": self.editChapterNote,
             # [KEYWORD] _editversenote
-            # e.g. _editversenote:::
+            # e.g. _editversenote:::43.3.16
             "_editversenote": self.editVerseNote,
             # [KEYWORD] _openchapternote
             # e.g. _openchapternote:::43.3
@@ -1226,6 +1238,15 @@ class TextCommandParser:
         else:
             return ("", "", {})
 
+    # openchapternote:::
+    def openChapterNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, *_ = verseList[0]
+            return self.openChapterNote("{0}.{1}".format(b, c), source)
+        else:
+            return self.invalidCommand()
+
     # _openchapternote:::
     def openChapterNote(self, command, source):
         b, c = command.split(".")
@@ -1233,12 +1254,30 @@ class TextCommandParser:
         self.parent.openChapterNote(b, c)
         return ("", "", {})
 
+    # openversenote:::
+    def openVerseNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, v, *_ = verseList[0]
+            return self.openVerseNote("{0}.{1}.{2}".format(b, c, v), source)
+        else:
+            return self.invalidCommand()
+
     # _openversenote:::
     def openVerseNote(self, command, source):
         b, c, v = command.split(".")
         b, c, v = int(b), int(c), int(v)
         self.parent.openVerseNote(b, c, v)
         return ("", "", {})
+
+    # editchapternote:::
+    def editChapterNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, *_ = verseList[0]
+            return self.editChapterNote("{0}.{1}".format(b, c), source)
+        else:
+            return self.invalidCommand()
 
     # _editchapternote:::
     def editChapterNote(self, command, source):
@@ -1250,6 +1289,15 @@ class TextCommandParser:
         if self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
         return ("", "", {})
+
+    # editversenote:::
+    def editVerseNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, v, *_ = verseList[0]
+            return self.editVerseNote("{0}.{1}.{2}".format(b, c, v), source)
+        else:
+            return self.invalidCommand()
 
     # _editversenote:::
     def editVerseNote(self, command, source):

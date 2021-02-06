@@ -1,5 +1,6 @@
-import config
+import config, re
 from BiblesSqlite import BiblesSqlite
+from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
 from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
 
@@ -166,36 +167,49 @@ class BibleExplorer(QWidget):
 
     def bookFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
+            ("html_timelines", lambda: self.searchBookChapter("Timelines")),
+            ("context1_dict", lambda: self.searchBookName(True)),
+            ("context1_encyclopedia", lambda: self.searchBookName(False)),
         )
         buttonElementTupleTuple = (buttonRow1,)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def chapterFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("readNotes", lambda: self.openBibleNotes(True)),
+            ("editNotes", lambda: self.editBibleNotes(True)),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonRow2 = (
+            ("html_overview", lambda: self.chapterAction("OVERVIEW")),
+            ("html_chapterIndex", lambda: self.chapterAction("CHAPTERINDEX")),
+            ("html_summary", lambda: self.chapterAction("SUMMARY")),
+            ("menu4_commentary", lambda: self.chapterAction("COMMENTARY")),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def verseFeatures(self):
         buttonRow1 = (
-            ("menu6_notes", self.openVerseNotes),
+            ("readNotes", lambda: self.openBibleNotes(False)),
+            ("editNotes", lambda: self.editBibleNotes(False)),
+        )
+        buttonRow2 = (
             ("menu4_compareAll", lambda: self.verseAction("COMPARE")),
             ("menu4_crossRef", lambda: self.verseAction("CROSSREFERENCE")),
             ("menu4_tske", lambda: self.verseAction("TSKE")),
         )
-        buttonRow2 = (
+        buttonRow3 = (
             ("menu4_traslations", lambda: self.verseAction("TRANSLATION")),
             ("menu4_discourse", lambda: self.verseAction("DISCOURSE")),
             ("menu4_words", lambda: self.verseAction("WORDS")),
             ("menu4_tdw", lambda: self.verseAction("COMBO")),
         )
-        buttonRow3 = (
+        buttonRow4 = (
             ("menu4_indexes", lambda: self.verseAction("INDEX")),
             ("menu4_commentary", lambda: self.verseAction("COMMENTARY")),
         )
-        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3)
+        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3, buttonRow4)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def buttonsWidget(self, buttonElementTupleTuple):
@@ -236,8 +250,29 @@ class BibleExplorer(QWidget):
         command = "{0}:::{1}:::{2}".format(window, self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
-    def openVerseNotes(self):
-        command = "_openversenote:::{0}.{1}.{2}".format(self.b, self.c, self.v)
+    def openBibleNotes(self, chapter):
+        command = "{0}:::{1}.{2}".format("_openchapternote" if chapter else "_openversenote", self.b, self.c)
+        self.parent.runTextCommand(command)
+
+    def editBibleNotes(self, chapter):
+        command = "{0}:::{1}.{2}".format("_editchapternote" if chapter else "_editversenote", self.b, self.c)
+        self.parent.runTextCommand(command)
+
+    def searchBookName(self, dictionary):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary if dictionary else config.encyclopedia, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def searchBookChapter(self, resource):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        command = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def chapterAction(self, keyword):
+        command = "{0}:::{1}".format(keyword, self.getSelectedReferenceChapter())
         self.parent.runTextCommand(command)
 
     def verseAction(self, keyword):
