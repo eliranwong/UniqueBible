@@ -1,6 +1,7 @@
 import config, re
 from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
+from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
 from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
 
@@ -34,15 +35,29 @@ class BibleExplorer(QWidget):
         navigation = QWidget()
 
         navigationLayouts = QVBoxLayout()
-        navigationLayouts.setSpacing(3)
+        navigationLayouts.setSpacing(20)
 
+        navigationLayoutsSub1 = QVBoxLayout()
+        navigationLayoutsSub1.setSpacing(3)
         navigationLayout1 = self.navigationLayout1()
-        navigationLayout1.addStretch()
-        navigationLayouts.addLayout(navigationLayout1)
-
+        navigationLayoutsSub1.addLayout(navigationLayout1)
         navigationLayout2 = self.navigationLayout2()
-        navigationLayout2.addStretch()
-        navigationLayouts.addLayout(navigationLayout2)
+        navigationLayoutsSub1.addLayout(navigationLayout2)
+        navigationLayouts.addLayout(navigationLayoutsSub1)
+
+        navigationLayout3 = self.navigationLayout3()
+        navigationLayouts.addLayout(navigationLayout3)
+
+        navigationLayout4 = self.navigationLayout4()
+        navigationLayouts.addLayout(navigationLayout4)
+
+        navigationLayout5 = self.navigationLayout5()
+        navigationLayouts.addLayout(navigationLayout5)
+
+        navigationLayout6 = self.navigationLayout6()
+        navigationLayouts.addWidget(navigationLayout6)
+
+        navigationLayouts.addStretch()
 
         navigation.setLayout(navigationLayouts)
         return navigation
@@ -81,6 +96,69 @@ class BibleExplorer(QWidget):
             ("openInMainWindow", lambda: self.openInWindow("STUDY")),
         )
         return self.buttonsLayout(buttonElementTuple, True)
+
+    def navigationLayout3(self):
+        navigationLayout3 = QBoxLayout(QBoxLayout.RightToLeft)
+        navigationLayout3.setSpacing(10)
+        # button
+        button = QPushButton(config.thisTranslation["html_showParallel"])
+        button.clicked.connect(self.dummyAction)
+        navigationLayout3.addWidget(button)
+        # combo
+        combo = CheckableComboBox()
+        combo.addItems(self.textList)
+        navigationLayout3.addWidget(combo)
+        # add stretch
+        navigationLayout3.addStretch()
+        return navigationLayout3
+
+    def navigationLayout4(self):
+        navigationLayout4 = QBoxLayout(QBoxLayout.RightToLeft)
+        navigationLayout4.setSpacing(10)
+        # button
+        button = QPushButton(config.thisTranslation["html_showCompare"])
+        button.clicked.connect(self.dummyAction)
+        navigationLayout4.addWidget(button)
+        # combo
+        combo = CheckableComboBox()
+        combo.addItems(self.textList)
+        navigationLayout4.addWidget(combo)
+        # add stretch
+        navigationLayout4.addStretch()
+        return navigationLayout4
+
+    def navigationLayout5(self):
+        navigationLayout5 = QBoxLayout(QBoxLayout.RightToLeft)
+        navigationLayout5.setSpacing(10)
+        # button
+        button = QPushButton(config.thisTranslation["html_showDifference"])
+        button.clicked.connect(self.dummyAction)
+        navigationLayout5.addWidget(button)
+        # combo
+        combo = CheckableComboBox()
+        combo.addItems(self.textList)
+        navigationLayout5.addWidget(combo)
+        # add stretch
+        navigationLayout5.addStretch()
+        return navigationLayout5
+
+    def navigationLayout6(self):
+        buttonRow1 = (
+            ("MOB", self.dummyAction),
+            ("MIB", self.dummyAction),
+            ("MTB", self.dummyAction),
+            ("MPB", self.dummyAction),
+            ("MAB", self.dummyAction),
+        )
+        buttonRow2 = (
+            ("LXX1", self.dummyAction),
+            ("LXX1i", self.dummyAction),
+            ("LXX2", self.dummyAction),
+            ("LXX2i", self.dummyAction),
+            ("SBLGNTl", self.dummyAction),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
+        return self.buttonsWidget(buttonElementTupleTuple, False, False)
 
     def updateBookCombo(self, textIndex=None, reset=False):
         if textIndex is None or ((textIndex is not None) and textIndex >= 0):
@@ -216,20 +294,22 @@ class BibleExplorer(QWidget):
         buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3, buttonRow4)
         return self.buttonsWidget(buttonElementTupleTuple)
 
-    def buttonsWidget(self, buttonElementTupleTuple):
+    def buttonsWidget(self, buttonElementTupleTuple, r2l=False, translation=True):
         buttons = QWidget()
         buttonsLayouts = QVBoxLayout()
         buttonsLayouts.setSpacing(3)
         for buttonElementTuple in buttonElementTupleTuple:
-            buttonsLayouts.addLayout(self.buttonsLayout(buttonElementTuple))
+            buttonsLayouts.addLayout(self.buttonsLayout(buttonElementTuple, r2l, translation))
         buttons.setLayout(buttonsLayouts)
         return buttons
 
-    def buttonsLayout(self, buttonElementTuple, r2l=False):
+    def buttonsLayout(self, buttonElementTuple, r2l=False, translation=True):
         buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft if r2l else QBoxLayout.LeftToRight)
         buttonsLayout.setSpacing(5)
         for buttonElements in buttonElementTuple:
-            button = QPushButton(config.thisTranslation[buttonElements[0]])
+            buttonLabel = config.thisTranslation[buttonElements[0]] if translation else buttonElements[0]
+            print(buttonLabel)
+            button = QPushButton(buttonLabel)
             button.clicked.connect(buttonElements[1])
             buttonsLayout.addWidget(button)
         return buttonsLayout
