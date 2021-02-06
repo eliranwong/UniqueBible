@@ -20,6 +20,7 @@ class NoteSqlite:
     def __del__(self):
         self.connection.close()
 
+    # add book note
     def getBookNote(self, bTuple):
         query = "SELECT Note FROM BookNote WHERE Book=?"
         self.cursor.execute(query, bTuple)
