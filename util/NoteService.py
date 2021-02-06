@@ -185,9 +185,10 @@ class SyncNotesWithGist(QObject):
             gists[gist.description] = gist
         ns = NoteService.getNoteSqlite()
         count = 0
+        books = ns.getAllBooks()
         chapters = ns.getAllChapters()
         verses = ns.getAllVerses()
-        notes = chapters + verses
+        notes = books + chapters + verses
         for note in notes:
             count += 1
             book = note[0]
@@ -235,7 +236,12 @@ class SyncNotesWithGist(QObject):
             self.progress.emit("Downloading " + gist.description + " ...")
             contentG = GitHubGist.extract_content(gist)
             updatedG = GitHubGist.extract_updated(gist)
-            if "Chapter" in gist.description:
+            if "Book" in gist.description:
+                book = GitHubGist.book_name_to_b(gist.description)
+                chapter = 0
+                verse = 0
+                res = [note for note in books if note[0] == book]
+            elif "Chapter" in gist.description:
                 (book, chapter) = GitHubGist.chapter_name_to_bc(gist.description)
                 verse = 0
                 res = [note for note in chapters if note[0] == book and note[1] == chapter]
@@ -244,7 +250,9 @@ class SyncNotesWithGist(QObject):
                 res = [note for note in verses if note[0] == book and note[1] == chapter and note[2] == verse]
             if len(res) == 0:
                 logger.debug("Creating local " + gist.description)
-                if verse == 0:
+                if chapter == 0:
+                    ns.saveBookNote(book, contentG, updatedG)
+                elif verse == 0:
                     ns.saveChapterNote(book, chapter, contentG, updatedG)
                 else:
                     ns.saveVerseNote(book, chapter, verse, contentG, updatedG)
@@ -260,7 +268,9 @@ class SyncNotesWithGist(QObject):
                     update = True
                 if update:
                     logger.debug("Updating local " + gist.description)
-                    if verse == 0:
+                    if chapter == 0:
+                        ns.setBookNoteUpdate(book, contentG, updatedG)
+                    elif verse == 0:
                         ns.setChapterNoteUpdate(book, chapter, contentG, updatedG)
                     else:
                         ns.setVerseNoteUpdate(book, chapter, verse, contentG, updatedG)

@@ -101,6 +101,11 @@ class NoteSqlite:
             self.cursor.execute(insert, (b, c, note, updated))
             self.connection.commit()
 
+    def setBookNoteUpdate(self, b, c, updated):
+        update = "UPDATE BookNote (Updated) VALUES (?) WHERE Book=?"
+        self.cursor.execute(update, (updated, b))
+        self.connection.commit()
+
     def setChapterNoteUpdate(self, b, c, updated):
         update = "UPDATE ChapterNote (Updated) VALUES (?) WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (updated, b, c))
@@ -183,6 +188,12 @@ class NoteSqlite:
                 s = p.search(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
+        return content
+
+    def getAllBooks(self):
+        query = "SELECT Book, 0, 0, Note, Updated FROM BookNote ORDER BY Book"
+        self.cursor.execute(query)
+        content = self.cursor.fetchall()
         return content
 
     def getAllChapters(self):
