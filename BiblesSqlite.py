@@ -4,6 +4,7 @@ Reading data from bibles.sqlite
 import os, sqlite3, config, re, logging
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
+from NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from themes import Themes
 from util.NoteService import NoteService

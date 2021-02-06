@@ -8,6 +8,7 @@ from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
 
 from BibleBooks import BibleBooks
+from NoteSqlite import NoteSqlite
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
@@ -779,7 +780,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, 1, 1
         self.updateCommentaryRefButton()
-        note = self.fixNoteFontDisplay(NoteSqlite().displayBookNote((b,)))
+        content, updated = NoteSqlite().displayBookNote(b)
+        note = self.fixNoteFontDisplay(content)
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)

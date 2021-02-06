@@ -610,9 +610,9 @@ p, li {0} white-space: pre-wrap; {1}
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
         if self.noteType == "book":
-            note = NoteService.getBookNote((self.b,))
+            note = NoteService.getBookNote(self.b)
         elif self.noteType == "chapter":
-            note = NoteService.getChapterNote((self.b, self.c))
+            note = NoteService.getChapterNote(self.b, self.c)
         elif self.noteType == "verse":
             note = NoteService.getVerseNote(self.b, self.c, self.v)
         if note == config.thisTranslation["empty"]:

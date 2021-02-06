@@ -273,6 +273,7 @@ class Languages:
         "menu_bible_chapter_notes": "Bible Chapter Notes",
         "menu_bible_notes": "Bible Notes",
         "menu_bible_verse_notes": "Bible Verse Notes",
+        "menu_book": "Book",
         "menu_build_macro": "Build Macro",
         "menu_chapter": "Chapter",
         "menu_chineseFont": "Chinese Font",

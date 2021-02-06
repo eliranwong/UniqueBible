@@ -20,8 +20,10 @@ class NoteSqlite:
         if not self.checkColumnExists("ChapterNote", "Updated"):
             self.addColumnToTable("ChapterNote", "Updated", "INT")
             self.addColumnToTable("ChapterNote", "GistId", "NVARCHAR(40)")
+        if not self.checkColumnExists("VerseNote", "Updated"):
             self.addColumnToTable("VerseNote", "Updated", "INT")
             self.addColumnToTable("VerseNote", "GistId", "NVARCHAR(40)")
+        if not self.checkColumnExists("BookNote", "Updated"):
             self.addColumnToTable("BookNote", "Updated", "INT")
             self.addColumnToTable("BookNote", "GistId", "NVARCHAR(40)")
         self.connection.commit()
@@ -30,13 +32,13 @@ class NoteSqlite:
         self.connection.close()
 
     def getBookNote(self, b):
-        query = "SELECT Note FROM BookNote WHERE Book=?"
-        self.cursor.execute(query, b)
+        query = "SELECT Note, Updated FROM BookNote WHERE Book=?"
+        self.cursor.execute(query, (b,))
         content = self.cursor.fetchone()
         if content:
-            return content[0]
+            return content
         else:
-            return config.thisTranslation["empty"]
+            return config.thisTranslation["empty"], 0
 
     def getChapterNote(self, b, c):
         query = "SELECT Note, Updated FROM ChapterNote WHERE Book=? AND Chapter=?"
@@ -63,7 +65,7 @@ class NoteSqlite:
         return content
 
     def displayChapterNote(self, b, c):
-        content = self.getChapterNote(bcTuple)
+        content, updated = self.getChapterNote(b, c)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
         return content, updated
