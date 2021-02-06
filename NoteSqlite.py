@@ -76,7 +76,7 @@ class NoteSqlite:
     def saveBookNote(self, bNoteTuple):
         b, note = bNoteTuple
         delete = "DELETE FROM BookNote WHERE Book=?"
-        self.cursor.execute(delete, (b, c))
+        self.cursor.execute(delete, (b,))
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO BookNote (Book, Note) VALUES (?, ?)"
