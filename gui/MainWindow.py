@@ -783,8 +783,7 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, 1, 1
         self.updateCommentaryRefButton()
-        content, updated = NoteSqlite().displayBookNote(b)
-        note = self.fixNoteFontDisplay(content)
+        note = self.fixNoteFontDisplay(NoteService.getBookNote(b))
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note)
