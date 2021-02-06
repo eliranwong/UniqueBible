@@ -157,7 +157,7 @@ class GitHubGist:
 
     def book_name_to_b(name):
         res = re.search(r'UBA-Note-Book-(\d*)', name).groups()
-        return res
+        return res[0]
 
     def chapter_name_to_bc(name):
         res = re.search(r'UBA-Note-Chapter-(\d*)-(\d*)', name).groups()
