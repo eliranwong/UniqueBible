@@ -480,6 +480,10 @@ function nC() {
     document.title = "_openchapternote:::"+activeB+"."+activeC;
 }
 
+function nB() {
+    document.title = "_openbooknote:::"+activeB;
+}
+
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
     document.title = "_stayOnSameTab:::";

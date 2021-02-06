@@ -20,7 +20,6 @@ class NoteSqlite:
     def __del__(self):
         self.connection.close()
 
-    # add book note
     def getBookNote(self, bTuple):
         query = "SELECT Note FROM BookNote WHERE Book=?"
         self.cursor.execute(query, bTuple)
@@ -108,7 +107,7 @@ class NoteSqlite:
         query = "SELECT DISTINCT Book FROM BookNote WHERE Note LIKE ? ORDER BY Book"
         self.cursor.execute(query, (searchString,))
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
-        return ["<ref onclick='document.title=\"_openbooknote:::{0}\"'>{1}</ref>".format(book, standardAbbreviation[str(book)]) for book in self.cursor.fetchall()]
+        return ["<ref onclick='document.title=\"_openbooknote:::{0}\"'>{1}</ref>".format(book[0], standardAbbreviation[str(book[0])]) for book in self.cursor.fetchall()]
 
     def getSearchedChapterList(self, searchString):
         searchString = "%{0}%".format(searchString)
@@ -129,9 +128,9 @@ class NoteSqlite:
         self.cursor.execute(query, (b, c))
         return [verse[0] for verse in self.cursor.fetchall()]
 
-    def isBookNote(self, b, c):
-        query = "SELECT DISTINCT Chapter FROM BookNote WHERE Book=?"
-        self.cursor.execute(query, (b, c))
+    def isBookNote(self, b):
+        query = "SELECT DISTINCT Book FROM BookNote WHERE Book=?"
+        self.cursor.execute(query, (b,))
         if self.cursor.fetchone():
             return True
         else:
