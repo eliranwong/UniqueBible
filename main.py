@@ -31,8 +31,8 @@ if not hasattr(config, "version") or current_version > config.version:
 # Default settings for configurations:
 
 # Personal google api key for display of google maps
-if not hasattr(config, "testing"):
-    config.testing = False
+if not hasattr(config, "developer"):
+    config.developer = False
 # Personal google api key for display of google maps
 if not hasattr(config, "myGoogleApiKey"):
     config.myGoogleApiKey = ""
@@ -483,9 +483,11 @@ except:
     config.googletransSupport = False
     print(
         "Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
-# import for testing
-if config.testing:
-    import exlbl
+
+# import modules for developer
+if config.developer:
+    #import exlbl
+    pass
 
 import sys, pprint
 from PySide2.QtWidgets import QApplication
@@ -498,7 +500,7 @@ def saveDataOnExit():
     config.noteSearchString = ""
     configs = (
         # ("version", config.version),
-        ("testing", config.testing),
+        ("developer", config.developer),
         ("myGoogleApiKey", config.myGoogleApiKey),
         ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
         ("openWindows", config.openWindows),
