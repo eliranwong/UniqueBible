@@ -514,6 +514,7 @@ class Languages:
         "speak": "Speak",
         "stop": "Stop",
         "enter": "Enter",
+        "dummy": "dummy",
         "openInMainWindow": "Open in Main Window",
         "openInStudyWindow": "Open in Study Window",
         "downloading": "Downloading started!",

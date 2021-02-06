@@ -349,8 +349,8 @@ class ClassicMainWindow(MainWindow):
             menu9.addSeparator()
             menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
 
-        if config.testing:
-            menu999 = self.menuBar().addMenu("&Testing")
+        if config.developer:
+            menu999 = self.menuBar().addMenu("&Developer")
             #menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
             menu999.addAction(QAction("testing", self, triggered=self.testing))
 
