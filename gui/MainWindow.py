@@ -302,8 +302,6 @@ class MainWindow(QMainWindow):
         self.mainPage = self.mainView.currentWidget().page()
         if config.theme == "dark":
             self.mainPage.setBackgroundColor(Qt.transparent)
-        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
-        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     def setStudyPage(self, tabIndex=None):
@@ -314,8 +312,6 @@ class MainWindow(QMainWindow):
         self.studyPage = self.studyView.currentWidget().page()
         if config.theme == "dark":
             self.studyPage.setBackgroundColor(Qt.transparent)
-        self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
-        self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     # manage latest update
