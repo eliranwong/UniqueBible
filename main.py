@@ -387,6 +387,9 @@ if not hasattr(config, "enableCopyHtmlCommand"):
 # Force generate main.html for all pages
 if not hasattr(config, "forceGenerateHtml"):
     config.forceGenerateHtml = False
+# Enable logging
+if not hasattr(config, "enableLogging"):
+    config.enableLogging = False
 # Log commands for debugging
 if not hasattr(config, "logCommands"):
     config.logCommands = False
@@ -414,12 +417,15 @@ if not hasattr(config, "startupMacro"):
 
 # Setup logging
 logger = logging.getLogger('uba')
-logger.setLevel(logging.DEBUG)
-logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=1)
-logHandler.setLevel(logging.DEBUG)
-logger.addHandler(logHandler)
-logging.getLogger("requests").setLevel(logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
+if config.enableLogging:
+    logger.setLevel(logging.DEBUG)
+    logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
+    logHandler.setLevel(logging.DEBUG)
+    logger.addHandler(logHandler)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+else:
+    logger.addHandler(logging.NullHandler())
 
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -603,6 +609,7 @@ def saveDataOnExit():
         ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
         ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),
         ("forceGenerateHtml", config.forceGenerateHtml),
+        ("enableLogging", config.enableLogging),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
         ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),

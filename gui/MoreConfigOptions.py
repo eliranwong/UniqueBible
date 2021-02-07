@@ -60,6 +60,7 @@ class MoreConfigOptions(QDialog):
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
             ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
             ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged),
+            ("enableLogging", config.enableLogging, self.enableLoggingChanged),
             ("logCommands", config.logCommands, self.logCommandsChanged),
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
@@ -251,6 +252,9 @@ class MoreConfigOptions(QDialog):
 
     def espeakChanged(self):
         config.espeak = not config.espeak
+
+    def enableLoggingChanged(self):
+        config.enableLogging = not config.enableLogging
 
     def logCommandsChanged(self):
         config.logCommands = not config.logCommands
