@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.logger = logging.getLogger('uba')
 
         # Repository
         # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
@@ -299,8 +300,6 @@ class MainWindow(QMainWindow):
         self.mainPage = self.mainView.currentWidget().page()
         if config.theme == "dark":
             self.mainPage.setBackgroundColor(Qt.transparent)
-        self.mainPage.titleChanged.connect(self.mainTextCommandChanged)
-        self.mainPage.loadFinished.connect(self.finishMainViewLoading)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     def setStudyPage(self, tabIndex=None):
@@ -311,8 +310,6 @@ class MainWindow(QMainWindow):
         self.studyPage = self.studyView.currentWidget().page()
         if config.theme == "dark":
             self.studyPage.setBackgroundColor(Qt.transparent)
-        self.studyPage.titleChanged.connect(self.studyTextCommandChanged)
-        self.studyPage.loadFinished.connect(self.finishStudyViewLoading)
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
     # manage latest update
@@ -2052,11 +2049,13 @@ class MainWindow(QMainWindow):
 
     # change of unique bible commands
     def mainTextCommandChanged(self, newTextCommand):
-        if not newTextCommand == "main.html":
+        if newTextCommand not in ("main.html", "UniqueBible.app"):
             self.textCommandChanged(newTextCommand, "main")
 
     def studyTextCommandChanged(self, newTextCommand):
-        self.textCommandChanged(newTextCommand, "study")
+        if newTextCommand not in ("main.html", "UniqueBible.app") \
+                and not newTextCommand.endswith("UniqueBibleApp.png"):
+            self.textCommandChanged(newTextCommand, "study")
 
     def instantTextCommandChanged(self, newTextCommand):
         self.textCommandChanged(newTextCommand, "instant")
@@ -2079,8 +2078,7 @@ class MainWindow(QMainWindow):
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:
-            logger = logging.getLogger('uba')
-            logger.debug(textCommand[:80])
+            self.logger.debug(textCommand[:80])
         # reset document.title
         changeTitle = "document.title = 'UniqueBible.app';"
         self.mainPage.runJavaScript(changeTitle)
