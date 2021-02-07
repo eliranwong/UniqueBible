@@ -3,8 +3,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
 from PySide2.QtWidgets import (QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog)
-from util.NoteService import NoteService
-
+from NoteSqlite import NoteSqlite
 
 class NoteEditor(QMainWindow):
 
@@ -614,7 +613,8 @@ p, li {0} white-space: pre-wrap; {1}
         elif self.noteType == "chapter":
             note = NoteService.getChapterNote(self.b, self.c)
         elif self.noteType == "verse":
-            note = NoteService.getVerseNote(self.b, self.c, self.v)
+            note = noteSqlite.getVerseNote((self.b, self.c, self.v))
+        del noteSqlite
         if note == config.thisTranslation["empty"]:
             note = self.getEmptyPage()
         else:
@@ -698,7 +698,9 @@ p, li {0} white-space: pre-wrap; {1}
             self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
-            NoteService.saveVerseNote(self.b, self.c, self.v, note)
+            noteSqlite = NoteSqlite()
+            noteSqlite.saveVerseNote((self.b, self.c, self.v, note))
+            del noteSqlite
             if config.openBibleNoteAfterSave:
                 self.parent.openVerseNote(self.b, self.c, self.v)
             self.parent.noteSaved = True

@@ -1,7 +1,5 @@
 import os, re, sqlite3, config
 from BibleVerseParser import BibleVerseParser
-from util.DateUtil import DateUtil
-
 
 class NoteSqlite:
 
@@ -45,18 +43,18 @@ class NoteSqlite:
         self.cursor.execute(query, (b, c))
         content = self.cursor.fetchone()
         if content:
-            return content
+            return content[0]
         else:
-            return config.thisTranslation["empty"], 0
+            return config.thisTranslation["empty"]
 
-    def getVerseNote(self, b, c, v):
-        query = "SELECT Note, Updated FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
-        self.cursor.execute(query, (b, c, v))
+    def getVerseNote(self, bcvTuple):
+        query = "SELECT Note FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, bcvTuple)
         content = self.cursor.fetchone()
         if content:
-            return content
+            return content[0]
         else:
-            return config.thisTranslation["empty"], 0
+            return config.thisTranslation["empty"]
 
     def displayBookNote(self, b):
         content = self.getBookNote(b)
@@ -68,13 +66,13 @@ class NoteSqlite:
         content, updated = self.getChapterNote(b, c)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
-        return content, updated
+        return content
 
-    def displayVerseNote(self, b, c, v):
-        content, updated = self.getVerseNote(b, c, v)
+    def displayVerseNote(self, bcvTuple):
+        content = self.getVerseNote(bcvTuple)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
-        return content, updated
+        return content
 
     def isNotEmptyNote(self, text):
         p = re.compile("<body[^<>]*?>[ \r\n ]*?<p[^<>]*?>[ \r\n ]*?<br />[ \r\n ]*?</p>[ \r\n ]*?</body>[ \r\n ]*?</html>", flags=re.M)
@@ -97,8 +95,8 @@ class NoteSqlite:
         self.cursor.execute(delete, (b, c))
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
-            insert = "INSERT INTO ChapterNote (Book, Chapter, Note, Updated) VALUES (?, ?, ?, ?)"
-            self.cursor.execute(insert, (b, c, note, updated))
+            insert = "INSERT INTO ChapterNote (Book, Chapter, Note) VALUES (?, ?, ?)"
+            self.cursor.execute(insert, bcNoteTuple)
             self.connection.commit()
 
     def setBookNoteUpdate(self, b, c, updated):
@@ -121,8 +119,8 @@ class NoteSqlite:
         self.cursor.execute(delete, (b, c, v))
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
-            insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note, Updated) VALUES (?, ?, ?, ?, ?)"
-            self.cursor.execute(insert, (b, c, v, note, updated))
+            insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note) VALUES (?, ?, ?, ?)"
+            self.cursor.execute(insert, bcvNoteTuple)
             self.connection.commit()
 
     def setVerseNoteUpdate(self, b, c, v, updated):
@@ -230,4 +228,3 @@ class NoteSqlite:
     def addColumnToTable(self, table, column, column_type):
         sql = "ALTER TABLE " + table + " ADD COLUMN " + column + " " + column_type
         self.cursor.execute(sql)
-

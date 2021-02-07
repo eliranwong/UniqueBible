@@ -106,6 +106,7 @@ if __name__ == "__main__":
     # hl.highlightVerse(1, 1, 1, 'hl2')
     # hl.highlightVerse(1, 1, 2, 'hl3')
     # dict = hl.getVerseDict(50, 4)
+    # print
 
     text = '''
     <div style=''>(<ref id='v39.1.3' onclick='document.title="_stayOnSameTab:::"; document.title="BIBLE:::KJV:::Mal 1:3"' onmouseover='document.title="_instantVerse:::KJV:::39.1.3"' ondblclick='document.title="_menu:::KJV.39.1.3"'>Mal 1:3</ref>) And I hated Esau, and laid his mountains and his heritage waste for the dragons of the wilderness. </div><div style=''>(<ref id='v39.1.5' onclick='document.title="_stayOnSameTab:::"; document.title="BIBLE:::KJV:::Mal 1:5"' onmouseover='document.title="_instantVerse:::KJV:::39.1.5"' ondblclick='document.title="_menu:::KJV.39.1.5"'>Mal 1:5</ref>) And your eyes shall see, and ye shall say, The LORD will be magnified from the border of Israel. </div>

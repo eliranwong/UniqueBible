@@ -47,8 +47,8 @@ class CentralWidget(QWidget):
         for i in range(config.numberOfTab):
             tabView = WebEngineView(self, "study")
             self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
-            tabView.titleChanged.connect(self.studyTextCommandChanged)
-            tabView.loadFinished.connect(self.finishStudyViewLoading)
+            tabView.titleChanged.connect(self.parent.studyTextCommandChanged)
+            tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
 
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{1}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font, config.theme), config.baseUrl)
