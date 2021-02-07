@@ -4,6 +4,7 @@ from PySide2.QtWidgets import QApplication
 from PySide2.QtGui import QGuiApplication, QStandardItem, QPalette, QFontMetrics
 from PySide2.QtWidgets import (QStyledItemDelegate, QComboBox)
 
+# We adpat the script shared from the following source.  We modified a bit to work with our application.
 # Source: https://gis.stackexchange.com/questions/350148/qcombobox-multiple-selection-pyqt5
 # Use QListWidget as an alternative
 # https://stackoverflow.com/questions/4008649/qlistwidget-and-multiple-selection
@@ -17,8 +18,11 @@ class CheckableComboBox(QComboBox):
             size.setHeight(20)
             return size
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, items=[], checkedItems=[], *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Set up initial checked items
+        self.checkItems = checkedItems
 
         # Make the combo editable to set a custom text, but readonly
         self.setEditable(True)
@@ -40,6 +44,9 @@ class CheckableComboBox(QComboBox):
 
         # Prevent popup from closing when clicking on an item
         self.view().viewport().installEventFilter(self)
+
+        # Fill in items
+        self.addItems(items)
 
     def resizeEvent(self, event):
         # Recompute text to elide as needed
@@ -87,11 +94,11 @@ class CheckableComboBox(QComboBox):
         self.closeOnLineEditClick = False
 
     def updateText(self):
-        texts = []
+        self.checkItems = []
         for i in range(self.model().rowCount()):
             if self.model().item(i).checkState() == Qt.Checked:
-                texts.append(self.model().item(i).text())
-        text = ", ".join(texts)
+                self.checkItems.append(self.model().item(i).text())
+        text = ", ".join(self.checkItems)
 
         # Compute elided text (with "...")
         metrics = QFontMetrics(self.lineEdit().font())
@@ -106,7 +113,7 @@ class CheckableComboBox(QComboBox):
         else:
             item.setData(data)
         item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
-        item.setData(Qt.Unchecked, Qt.CheckStateRole)
+        item.setData(Qt.Checked if text in self.checkItems else Qt.Unchecked, Qt.CheckStateRole)
         self.model().appendRow(item)
 
     def addItems(self, texts, datalist=None):

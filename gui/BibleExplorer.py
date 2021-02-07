@@ -3,7 +3,7 @@ from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
-from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
+from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
 
@@ -98,64 +98,43 @@ class BibleExplorer(QWidget):
         return self.buttonsLayout(buttonElementTuple, True)
 
     def navigationLayout3(self):
-        navigationLayout3 = QBoxLayout(QBoxLayout.RightToLeft)
-        navigationLayout3.setSpacing(10)
-        # button
-        button = QPushButton(config.thisTranslation["html_showParallel"])
-        button.clicked.connect(self.dummyAction)
-        navigationLayout3.addWidget(button)
-        # combo
-        combo = CheckableComboBox()
-        combo.addItems(self.textList)
-        navigationLayout3.addWidget(combo)
-        # add stretch
-        navigationLayout3.addStretch()
-        return navigationLayout3
+        feature = "html_showParallel"
+        action = lambda: self.versionsAction("PARALLEL")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.parallelCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.parallelCombo, action)
 
     def navigationLayout4(self):
-        navigationLayout4 = QBoxLayout(QBoxLayout.RightToLeft)
-        navigationLayout4.setSpacing(10)
-        # button
-        button = QPushButton(config.thisTranslation["html_showCompare"])
-        button.clicked.connect(self.dummyAction)
-        navigationLayout4.addWidget(button)
-        # combo
-        combo = CheckableComboBox()
-        combo.addItems(self.textList)
-        navigationLayout4.addWidget(combo)
-        # add stretch
-        navigationLayout4.addStretch()
-        return navigationLayout4
+        feature = "html_showCompare"
+        action = lambda: self.versionsAction("COMPARE")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.compareCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.compareCombo, action)
 
     def navigationLayout5(self):
-        navigationLayout5 = QBoxLayout(QBoxLayout.RightToLeft)
-        navigationLayout5.setSpacing(10)
-        # button
-        button = QPushButton(config.thisTranslation["html_showDifference"])
-        button.clicked.connect(self.dummyAction)
-        navigationLayout5.addWidget(button)
-        # combo
-        combo = CheckableComboBox()
-        combo.addItems(self.textList)
-        navigationLayout5.addWidget(combo)
-        # add stretch
-        navigationLayout5.addStretch()
-        return navigationLayout5
+        feature = "html_showDifference"
+        action = lambda: self.versionsAction("DIFFERENCE")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.differenceCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.differenceCombo, action)
 
     def navigationLayout6(self):
         buttonRow1 = (
-            ("MOB", self.dummyAction),
-            ("MIB", self.dummyAction),
-            ("MTB", self.dummyAction),
-            ("MPB", self.dummyAction),
-            ("MAB", self.dummyAction),
+            ("MOB", lambda: self.openInWindow("BIBLE", "MOB")),
+            ("MIB", lambda: self.openInWindow("BIBLE", "MIB")),
+            ("MTB", lambda: self.openInWindow("BIBLE", "MTB")),
+            ("MPB", lambda: self.openInWindow("BIBLE", "MPB")),
+            ("MAB", lambda: self.openInWindow("BIBLE", "MAB")),
         )
         buttonRow2 = (
-            ("LXX1", self.dummyAction),
-            ("LXX1i", self.dummyAction),
-            ("LXX2", self.dummyAction),
-            ("LXX2i", self.dummyAction),
-            ("SBLGNTl", self.dummyAction),
+            ("LXX1", lambda: self.openInWindow("BIBLE", "LXX1")),
+            ("LXX1i", lambda: self.openInWindow("BIBLE", "LXX1i")),
+            ("LXX2", lambda: self.openInWindow("BIBLE", "LXX2")),
+            ("LXX2i", lambda: self.openInWindow("BIBLE", "LXX2i")),
+            ("SBLGNTl", lambda: self.openInWindow("BIBLE", "SBLGNTl")),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple, False, False)
@@ -314,6 +293,18 @@ class BibleExplorer(QWidget):
             buttonsLayout.addWidget(button)
         return buttonsLayout
 
+    def multipleSelectionFeatureLayout(self, feature, combo, action):
+        # QGridLayout: https://stackoverflow.com/questions/61451279/how-does-setcolumnstretch-and-setrowstretch-works
+        layout = QGridLayout()
+        layout.setSpacing(5)
+        # combo
+        layout.addWidget(combo, 0, 0, 1, 3)
+        # button
+        button = QPushButton(config.thisTranslation[feature])
+        button.clicked.connect(action)
+        layout.addWidget(button, 0, 3, 1, 1)
+        return layout
+
     # Selected Reference
 
     def getSelectedReference(self):
@@ -330,8 +321,8 @@ class BibleExplorer(QWidget):
     def dummyAction(self):
         print("testing")
 
-    def openInWindow(self, window):
-        command = "{0}:::{1}:::{2}".format(window, self.text, self.getSelectedReference())
+    def openInWindow(self, window, text=""):
+        command = "{0}:::{1}:::{2}".format(window, text if text else self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
     def openBibleNotes(self, noteType):
@@ -341,6 +332,16 @@ class BibleExplorer(QWidget):
             "verse": "_openversenote",
         }
         command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
+        self.parent.runTextCommand(command)
+
+    def versionsAction(self, keyword):
+        selectedVersionsMap = {
+            "PARALLEL": self.parallelCombo.checkItems,
+            "COMPARE": self.compareCombo.checkItems,
+            "DIFFERENCE": self.differenceCombo.checkItems,
+        }
+        selectedVersions = "_".join(selectedVersionsMap[keyword])
+        command = "{0}:::{1}:::{2}".format(keyword, selectedVersions, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
     def editBibleNotes(self, noteType):
