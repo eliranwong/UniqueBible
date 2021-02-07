@@ -64,7 +64,6 @@ class MoreConfigOptions(QDialog):
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged),
-            ("enableGist", config.enableGist, self.enableGistChanged)
         ]
         if platform.system() == "Linux":
             options += [
@@ -265,8 +264,4 @@ class MoreConfigOptions(QDialog):
 
     def enableMacrosChanged(self):
         config.enableMacros = not config.enableMacros
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
-    def enableGistChanged(self):
-        config.enableGist = not config.enableGist
         self.parent.displayMessage(config.thisTranslation["message_restart"])
