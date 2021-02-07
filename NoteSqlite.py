@@ -1,5 +1,7 @@
 import os, re, sqlite3, config
 from BibleVerseParser import BibleVerseParser
+from util.DateUtil import DateUtil
+
 
 class NoteSqlite:
 
@@ -96,7 +98,7 @@ class NoteSqlite:
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO ChapterNote (Book, Chapter, Note) VALUES (?, ?, ?)"
-            self.cursor.execute(insert, bcNoteTuple)
+            self.cursor.execute(insert, (b, c, note))
             self.connection.commit()
 
     def setBookNoteUpdate(self, b, c, updated):
@@ -120,7 +122,7 @@ class NoteSqlite:
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note) VALUES (?, ?, ?, ?)"
-            self.cursor.execute(insert, bcvNoteTuple)
+            self.cursor.execute(insert, (b, c, v, note))
             self.connection.commit()
 
     def setVerseNoteUpdate(self, b, c, v, updated):

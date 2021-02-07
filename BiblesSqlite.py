@@ -8,6 +8,7 @@ from BibleBooks import BibleBooks
 from NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from themes import Themes
+from util.NoteService import NoteService
 
 try:
     from diff_match_patch import diff_match_patch
