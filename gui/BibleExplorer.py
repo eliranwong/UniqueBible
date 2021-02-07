@@ -1,7 +1,9 @@
-import config
+import config, re
 from BiblesSqlite import BiblesSqlite
+from BibleBooks import BibleBooks
+from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
-from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
+from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
 
@@ -33,15 +35,29 @@ class BibleExplorer(QWidget):
         navigation = QWidget()
 
         navigationLayouts = QVBoxLayout()
-        navigationLayouts.setSpacing(3)
+        navigationLayouts.setSpacing(20)
 
+        navigationLayoutsSub1 = QVBoxLayout()
+        navigationLayoutsSub1.setSpacing(3)
         navigationLayout1 = self.navigationLayout1()
-        navigationLayout1.addStretch()
-        navigationLayouts.addLayout(navigationLayout1)
-
+        navigationLayoutsSub1.addLayout(navigationLayout1)
         navigationLayout2 = self.navigationLayout2()
-        navigationLayout2.addStretch()
-        navigationLayouts.addLayout(navigationLayout2)
+        navigationLayoutsSub1.addLayout(navigationLayout2)
+        navigationLayouts.addLayout(navigationLayoutsSub1)
+
+        navigationLayout3 = self.navigationLayout3()
+        navigationLayouts.addLayout(navigationLayout3)
+
+        navigationLayout4 = self.navigationLayout4()
+        navigationLayouts.addLayout(navigationLayout4)
+
+        navigationLayout5 = self.navigationLayout5()
+        navigationLayouts.addLayout(navigationLayout5)
+
+        navigationLayout6 = self.navigationLayout6()
+        navigationLayouts.addWidget(navigationLayout6)
+
+        navigationLayouts.addStretch()
 
         navigation.setLayout(navigationLayouts)
         return navigation
@@ -80,6 +96,48 @@ class BibleExplorer(QWidget):
             ("openInMainWindow", lambda: self.openInWindow("STUDY")),
         )
         return self.buttonsLayout(buttonElementTuple, True)
+
+    def navigationLayout3(self):
+        feature = "html_showParallel"
+        action = lambda: self.versionsAction("PARALLEL")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.parallelCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.parallelCombo, action)
+
+    def navigationLayout4(self):
+        feature = "html_showCompare"
+        action = lambda: self.versionsAction("COMPARE")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.compareCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.compareCombo, action)
+
+    def navigationLayout5(self):
+        feature = "html_showDifference"
+        action = lambda: self.versionsAction("DIFFERENCE")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.differenceCombo = CheckableComboBox(items, initialItems)
+        return self.multipleSelectionFeatureLayout(feature, self.differenceCombo, action)
+
+    def navigationLayout6(self):
+        buttonRow1 = (
+            ("MOB", lambda: self.openInWindow("BIBLE", "MOB")),
+            ("MIB", lambda: self.openInWindow("BIBLE", "MIB")),
+            ("MTB", lambda: self.openInWindow("BIBLE", "MTB")),
+            ("MPB", lambda: self.openInWindow("BIBLE", "MPB")),
+            ("MAB", lambda: self.openInWindow("BIBLE", "MAB")),
+        )
+        buttonRow2 = (
+            ("LXX1", lambda: self.openInWindow("BIBLE", "LXX1")),
+            ("LXX1i", lambda: self.openInWindow("BIBLE", "LXX1i")),
+            ("LXX2", lambda: self.openInWindow("BIBLE", "LXX2")),
+            ("LXX2i", lambda: self.openInWindow("BIBLE", "LXX2i")),
+            ("SBLGNTl", lambda: self.openInWindow("BIBLE", "SBLGNTl")),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
+        return self.buttonsWidget(buttonElementTupleTuple, False, False)
 
     def updateBookCombo(self, textIndex=None, reset=False):
         if textIndex is None or ((textIndex is not None) and textIndex >= 0):
@@ -166,55 +224,86 @@ class BibleExplorer(QWidget):
 
     def bookFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("readNotes", lambda: self.openBibleNotes("book")),
+            ("editNotes", lambda: self.editBibleNotes("book")),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonRow2 = (
+            ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
+            ("html_timelines", lambda: self.searchBookChapter("Timelines")),
+            ("context1_dict", lambda: self.searchBookName(True)),
+            ("context1_encyclopedia", lambda: self.searchBookName(False)),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def chapterFeatures(self):
         buttonRow1 = (
-            ("dummy", self.dummyAction),
+            ("readNotes", lambda: self.openBibleNotes("chapter")),
+            ("editNotes", lambda: self.editBibleNotes("chapter")),
         )
-        buttonElementTupleTuple = (buttonRow1,)
+        buttonRow2 = (
+            ("html_overview", lambda: self.chapterAction("OVERVIEW")),
+            ("html_chapterIndex", lambda: self.chapterAction("CHAPTERINDEX")),
+            ("html_summary", lambda: self.chapterAction("SUMMARY")),
+            ("menu4_commentary", lambda: self.chapterAction("COMMENTARY")),
+        )
+        buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.buttonsWidget(buttonElementTupleTuple)
 
     def verseFeatures(self):
         buttonRow1 = (
-            ("menu6_notes", self.openVerseNotes),
+            ("readNotes", lambda: self.openBibleNotes("verse")),
+            ("editNotes", lambda: self.editBibleNotes("verse")),
+        )
+        buttonRow2 = (
             ("menu4_compareAll", lambda: self.verseAction("COMPARE")),
             ("menu4_crossRef", lambda: self.verseAction("CROSSREFERENCE")),
             ("menu4_tske", lambda: self.verseAction("TSKE")),
         )
-        buttonRow2 = (
+        buttonRow3 = (
             ("menu4_traslations", lambda: self.verseAction("TRANSLATION")),
             ("menu4_discourse", lambda: self.verseAction("DISCOURSE")),
             ("menu4_words", lambda: self.verseAction("WORDS")),
             ("menu4_tdw", lambda: self.verseAction("COMBO")),
         )
-        buttonRow3 = (
+        buttonRow4 = (
             ("menu4_indexes", lambda: self.verseAction("INDEX")),
             ("menu4_commentary", lambda: self.verseAction("COMMENTARY")),
         )
-        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3)
+        buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3, buttonRow4)
         return self.buttonsWidget(buttonElementTupleTuple)
 
-    def buttonsWidget(self, buttonElementTupleTuple):
+    def buttonsWidget(self, buttonElementTupleTuple, r2l=False, translation=True):
         buttons = QWidget()
         buttonsLayouts = QVBoxLayout()
         buttonsLayouts.setSpacing(3)
         for buttonElementTuple in buttonElementTupleTuple:
-            buttonsLayouts.addLayout(self.buttonsLayout(buttonElementTuple))
+            buttonsLayouts.addLayout(self.buttonsLayout(buttonElementTuple, r2l, translation))
         buttons.setLayout(buttonsLayouts)
         return buttons
 
-    def buttonsLayout(self, buttonElementTuple, r2l=False):
+    def buttonsLayout(self, buttonElementTuple, r2l=False, translation=True):
         buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft if r2l else QBoxLayout.LeftToRight)
         buttonsLayout.setSpacing(5)
         for buttonElements in buttonElementTuple:
-            button = QPushButton(config.thisTranslation[buttonElements[0]])
+            buttonLabel = config.thisTranslation[buttonElements[0]] if translation else buttonElements[0]
+            print(buttonLabel)
+            button = QPushButton(buttonLabel)
             button.clicked.connect(buttonElements[1])
             buttonsLayout.addWidget(button)
         return buttonsLayout
+
+    def multipleSelectionFeatureLayout(self, feature, combo, action):
+        # QGridLayout: https://stackoverflow.com/questions/61451279/how-does-setcolumnstretch-and-setrowstretch-works
+        layout = QGridLayout()
+        layout.setSpacing(5)
+        # combo
+        layout.addWidget(combo, 0, 0, 1, 3)
+        # button
+        button = QPushButton(config.thisTranslation[feature])
+        button.clicked.connect(action)
+        layout.addWidget(button, 0, 3, 1, 1)
+        return layout
 
     # Selected Reference
 
@@ -232,12 +321,53 @@ class BibleExplorer(QWidget):
     def dummyAction(self):
         print("testing")
 
-    def openInWindow(self, window):
-        command = "{0}:::{1}:::{2}".format(window, self.text, self.getSelectedReference())
+    def openInWindow(self, window, text=""):
+        command = "{0}:::{1}:::{2}".format(window, text if text else self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 
-    def openVerseNotes(self):
-        command = "_openversenote:::{0}.{1}.{2}".format(self.b, self.c, self.v)
+    def openBibleNotes(self, noteType):
+        keywords = {
+            "book": "_openbooknote",
+            "chapter": "_openchapternote",
+            "verse": "_openversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
+        self.parent.runTextCommand(command)
+
+    def versionsAction(self, keyword):
+        selectedVersionsMap = {
+            "PARALLEL": self.parallelCombo.checkItems,
+            "COMPARE": self.compareCombo.checkItems,
+            "DIFFERENCE": self.differenceCombo.checkItems,
+        }
+        selectedVersions = "_".join(selectedVersionsMap[keyword])
+        command = "{0}:::{1}:::{2}".format(keyword, selectedVersions, self.getSelectedReference())
+        self.parent.runTextCommand(command)
+
+    def editBibleNotes(self, noteType):
+        keywords = {
+            "book": "_editbooknote",
+            "chapter": "_editchapternote",
+            "verse": "_editversenote",
+        }
+        command = "{0}:::{1}.{2}.{3}".format(keywords[noteType], self.b, self.c, self.v)
+        self.parent.runTextCommand(command)
+
+    def searchBookName(self, dictionary):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
+        command = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary if dictionary else config.encyclopedia, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def searchBookChapter(self, resource):
+        engFullBookName = BibleBooks().eng[str(self.b)][1]
+        command = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
+        self.parent.runTextCommand(command)
+
+    def chapterAction(self, keyword):
+        command = "{0}:::{1}".format(keyword, self.getSelectedReferenceChapter())
         self.parent.runTextCommand(command)
 
     def verseAction(self, keyword):

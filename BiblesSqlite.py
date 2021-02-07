@@ -726,7 +726,13 @@ input.addEventListener('keyup', function(event) {0}
         # expect verse is a tuple
         b, c, v, *_ = verse
         # format a chapter
-        chapter = "<h2>{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        chapter = "<h2>"
+        if config.showNoteIndicatorOnBibleChapter:
+            noteSqlite = NoteSqlite()
+            if noteSqlite.isBookNote(b):
+                chapter += '<ref onclick="nB()">&#9997</ref> '
+            del noteSqlite
+        chapter += "{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         # get a verse list of available notes
         noteVerseList = []
         highlightDict = {}
@@ -734,7 +740,7 @@ input.addEventListener('keyup', function(event) {0}
             noteSqlite = NoteSqlite()
             noteVerseList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
-                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
+                chapter += ' <ref onclick="nC()">&#9997</ref>'
             del noteSqlite
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
@@ -914,7 +920,13 @@ class Bible:
     def readFormattedChapter(self, verse):
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
-        chapter = "<h2>{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
+        chapter = "<h2>"
+        if config.showNoteIndicatorOnBibleChapter:
+            noteSqlite = NoteSqlite()
+            if noteSqlite.isBookNote(b):
+                chapter += '<ref onclick="nB()">&#9997</ref> '
+            del noteSqlite
+        chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
         del biblesSqlite
         self.thisVerseNoteList = []
         if config.showNoteIndicatorOnBibleChapter:

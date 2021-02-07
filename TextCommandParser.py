@@ -317,12 +317,6 @@ class TextCommandParser:
             # [KEYWORD] SEARCHBOOKCHAPTER
             # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only
             "searchbookchapter": self.textSearchBookChapter,
-            # [KEYWORD] SEARCHCHAPTERNOTE
-            # e.g. SEARCHCHAPTERNOTE:::faith
-            "searchchapternote": self.textSearchChapterNote,
-            # [KEYWORD] SEARCHVERSENOTE
-            # e.g. SEARCHVERSENOTE:::faith
-            "searchversenote": self.textSearchVerseNote,
             # [KEYWORD] cmd
             # Feature - Run an os command
             # Warning! Make sure you know what you are running before you use this keyword.  The running command may affect data outside UniqueBible folder.
@@ -370,6 +364,33 @@ class TextCommandParser:
             # e.g. TRANSLATE:::zh-CN:::test
             # e.g. TRANSLATE:::ja:::test
             "translate": self.translateText,
+            # [KEYWORD] openbooknote
+            # e.g. openbooknote:::John
+            "openbooknote": self.openBookNoteRef,
+            # [KEYWORD] openchapternote
+            # e.g. openchapternote:::John 3
+            "openchapternote": self.openChapterNoteRef,
+            # [KEYWORD] openversenote
+            # e.g. openversenote:::John 3:16
+            "openversenote": self.openVerseNoteRef,
+            # [KEYWORD] editbooknote
+            # e.g. editbooknote:::John
+            "editbooknote": self.editBookNoteRef,
+            # [KEYWORD] editchapternote
+            # e.g. editchapternote:::John 3
+            "editchapternote": self.editChapterNoteRef,
+            # [KEYWORD] editversenote
+            # e.g. editversenote:::John 3:16
+            "editversenote": self.editVerseNoteRef,
+            # [KEYWORD] SEARCHBOOKNOTE
+            # e.g. SEARCHBOOKNOTE:::faith
+            "searchbooknote": self.textSearchBookNote,
+            # [KEYWORD] SEARCHCHAPTERNOTE
+            # e.g. SEARCHCHAPTERNOTE:::faith
+            "searchchapternote": self.textSearchChapterNote,
+            # [KEYWORD] SEARCHVERSENOTE
+            # e.g. SEARCHVERSENOTE:::faith
+            "searchversenote": self.textSearchVerseNote,
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -421,18 +442,24 @@ class TextCommandParser:
             "_image": self.textImage,
             # [KEYWORD] _htmlimage
             "_htmlimage": self.textHtmlImage,
-            # [KEYWORD] _editchapternote
-            # e.g. _editchapternote:::
-            "_editchapternote": self.editChapterNote,
-            # [KEYWORD] _editversenote
-            # e.g. _editversenote:::
-            "_editversenote": self.editVerseNote,
+            # [KEYWORD] _openbooknote
+            # e.g. _openbooknote:::43
+            "_openbooknote": self.openBookNote,
             # [KEYWORD] _openchapternote
             # e.g. _openchapternote:::43.3
             "_openchapternote": self.openChapterNote,
             # [KEYWORD] _openversenote
             # e.g. _openversenote:::43.3.16
             "_openversenote": self.openVerseNote,
+            # [KEYWORD] _editbooknote
+            # e.g. _editbooknote:::43
+            "_editbooknote": self.editBookNote,
+            # [KEYWORD] _editchapternote
+            # e.g. _editchapternote:::43.3
+            "_editchapternote": self.editChapterNote,
+            # [KEYWORD] _editversenote
+            # e.g. _editversenote:::43.3.16
+            "_editversenote": self.editVerseNote,
             # [KEYWORD] _openfile
             # e.g. _openfile:::1
             "_openfile": self.textOpenFile,
@@ -1226,24 +1253,92 @@ class TextCommandParser:
         else:
             return ("", "", {})
 
+    # openbooknote:::
+    def openBookNoteRef(self, command, source):
+        if not " " in command:
+            command = "{0} 1".format(command)
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, *_ = verseList[0]
+            return self.openBookNote(str(b), source)
+        else:
+            return self.invalidCommand()
+
+    # _openbooknote:::
+    def openBookNote(self, command, source):
+        b, *_ = command.split(".")
+        b = int(b)
+        self.parent.openBookNote(b)
+        return ("", "", {})
+
+    # openchapternote:::
+    def openChapterNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, *_ = verseList[0]
+            return self.openChapterNote("{0}.{1}".format(b, c), source)
+        else:
+            return self.invalidCommand()
+
     # _openchapternote:::
     def openChapterNote(self, command, source):
-        b, c = command.split(".")
+        b, c, *_ = command.split(".")
         b, c = int(b), int(c)
         self.parent.openChapterNote(b, c)
         return ("", "", {})
 
+    # openversenote:::
+    def openVerseNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, v, *_ = verseList[0]
+            return self.openVerseNote("{0}.{1}.{2}".format(b, c, v), source)
+        else:
+            return self.invalidCommand()
+
     # _openversenote:::
     def openVerseNote(self, command, source):
-        b, c, v = command.split(".")
+        b, c, v, *_ = command.split(".")
         b, c, v = int(b), int(c), int(v)
         self.parent.openVerseNote(b, c, v)
         return ("", "", {})
 
+    # editbooknote:::
+    def editBookNoteRef(self, command, source):
+        if not " " in command:
+            command = "{0} 1".format(command)
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, *_ = verseList[0]
+            return self.editBookNote(str(b), source)
+        else:
+            return self.invalidCommand()
+
+    # _editbooknote:::
+    def editBookNote(self, command, source):
+        if command:
+            b, *_ = command.split(".")
+            c = 1
+            v = 1
+        else:
+            b, c, v = None, None, None
+        if self.parent.noteSaved or self.parent.warningNotSaved():
+            self.parent.openNoteEditor("book", b=b, c=c, v=v)
+        return ("", "", {})
+
+    # editchapternote:::
+    def editChapterNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, *_ = verseList[0]
+            return self.editChapterNote("{0}.{1}".format(b, c), source)
+        else:
+            return self.invalidCommand()
+
     # _editchapternote:::
     def editChapterNote(self, command, source):
         if command:
-            b, c = command.split(".")
+            b, c, *_ = command.split(".")
             v = 1
         else:
             b, c, v = None, None, None
@@ -1251,10 +1346,19 @@ class TextCommandParser:
             self.parent.openNoteEditor("chapter", b=b, c=c, v=v)
         return ("", "", {})
 
+    # editversenote:::
+    def editVerseNoteRef(self, command, source):
+        verseList = self.extractAllVerses(command)
+        if verseList:
+            b, c, v, *_ = verseList[0]
+            return self.editVerseNote("{0}.{1}.{2}".format(b, c, v), source)
+        else:
+            return self.invalidCommand()
+
     # _editversenote:::
     def editVerseNote(self, command, source):
         if command:
-            b, c, v = command.split(".")
+            b, c, v, *_ = command.split(".")
         else:
             b, c, v = None, None, None
         if self.parent.noteSaved or self.parent.warningNotSaved():
@@ -1871,6 +1975,17 @@ class TextCommandParser:
                 self.parent.bookButton.setText(config.book)
                 return ("study", content, {})
 
+    # SEARCHBOOKNOTE:::
+    def textSearchBookNote(self, command, source):
+        if not command:
+            return self.invalidCommand("study")
+        else:
+            config.noteSearchString = command
+            noteSqlite = NoteSqlite()
+            books = noteSqlite.getSearchedBookList(command)
+            del noteSqlite
+            return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on book(s)</p><p>{2}</p>".format(command, len(books), "; ".join(books)), {})
+
     # SEARCHCHAPTERNOTE:::
     def textSearchChapterNote(self, command, source):
         if not command:
@@ -2063,7 +2178,7 @@ class TextCommandParser:
         reference, code = self.splitCommand(command)
         verseList = self.extractAllVerses(reference)
         for b, c, v in verseList:
-            print("{0}:{1}:{2}:{3}".format(b, c, v, code))
+            #print("{0}:{1}:{2}:{3}".format(b, c, v, code))
             if code == "delete":
                 hl.removeHighlight(b, c, v)
             else:

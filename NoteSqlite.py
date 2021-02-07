@@ -9,6 +9,7 @@ class NoteSqlite:
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         create = (
+            "CREATE TABLE IF NOT EXISTS BookNote (Book INT, Note TEXT)",
             "CREATE TABLE IF NOT EXISTS ChapterNote (Book INT, Chapter INT, Note TEXT)",
             "CREATE TABLE IF NOT EXISTS VerseNote (Book INT, Chapter INT, Verse INT, Note TEXT)",
         )
@@ -18,6 +19,15 @@ class NoteSqlite:
 
     def __del__(self):
         self.connection.close()
+
+    def getBookNote(self, bTuple):
+        query = "SELECT Note FROM BookNote WHERE Book=?"
+        self.cursor.execute(query, bTuple)
+        content = self.cursor.fetchone()
+        if content:
+            return content[0]
+        else:
+            return config.thisTranslation["empty"]
 
     def getChapterNote(self, bcTuple):
         query = "SELECT Note FROM ChapterNote WHERE Book=? AND Chapter=?"
@@ -37,6 +47,12 @@ class NoteSqlite:
         else:
             return config.thisTranslation["empty"]
 
+    def displayBookNote(self, bTuple):
+        content = self.getBookNote(bTuple)
+        #content = self.customFormat(content)
+        content = self.highlightSearch(content)
+        return content
+
     def displayChapterNote(self, bcTuple):
         content = self.getChapterNote(bcTuple)
         #content = self.customFormat(content)
@@ -55,6 +71,16 @@ class NoteSqlite:
             return False
         else:
             return True
+
+    def saveBookNote(self, bNoteTuple):
+        b, note = bNoteTuple
+        delete = "DELETE FROM BookNote WHERE Book=?"
+        self.cursor.execute(delete, (b,))
+        self.connection.commit()
+        if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
+            insert = "INSERT INTO BookNote (Book, Note) VALUES (?, ?)"
+            self.cursor.execute(insert, bNoteTuple)
+            self.connection.commit()
 
     def saveChapterNote(self, bcNoteTuple):
         b, c, note = bcNoteTuple
@@ -76,22 +102,39 @@ class NoteSqlite:
             self.cursor.execute(insert, bcvNoteTuple)
             self.connection.commit()
 
+    def getSearchedBookList(self, searchString):
+        searchString = "%{0}%".format(searchString)
+        query = "SELECT DISTINCT Book FROM BookNote WHERE Note LIKE ? ORDER BY Book"
+        self.cursor.execute(query, (searchString,))
+        standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        return ["<ref onclick='document.title=\"_openbooknote:::{0}\"'>{1}</ref>".format(book[0], standardAbbreviation[str(book[0])]) for book in self.cursor.fetchall()]
+
     def getSearchedChapterList(self, searchString):
         searchString = "%{0}%".format(searchString)
         query = "SELECT DISTINCT Book, Chapter FROM ChapterNote WHERE Note LIKE ? ORDER BY Book, Chapter"
         self.cursor.execute(query, (searchString,))
-        return ["<ref onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</ref>".format(book, chapter, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, 1)[:-2]) for book, chapter in self.cursor.fetchall()]
+        parser = BibleVerseParser(config.parserStandarisation)
+        return ["<ref onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</ref>".format(book, chapter, parser.bcvToVerseReference(book, chapter, 1)[:-2]) for book, chapter in self.cursor.fetchall()]
 
     def getSearchedVerseList(self, searchString):
         searchString = "%{0}%".format(searchString)
         query = "SELECT DISTINCT Book, Chapter, Verse FROM VerseNote WHERE Note LIKE ? ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, (searchString,))
-        return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, BibleVerseParser(config.parserStandarisation).bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]
+        parser = BibleVerseParser(config.parserStandarisation)
+        return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, parser.bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]
 
     def getChapterVerseList(self, b, c):
         query = "SELECT DISTINCT Verse FROM VerseNote WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, (b, c))
         return [verse[0] for verse in self.cursor.fetchall()]
+
+    def isBookNote(self, b):
+        query = "SELECT DISTINCT Book FROM BookNote WHERE Book=?"
+        self.cursor.execute(query, (b,))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
 
     def isChapterNote(self, b, c):
         query = "SELECT DISTINCT Chapter FROM ChapterNote WHERE Book=? AND Chapter=?"
