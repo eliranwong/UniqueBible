@@ -174,6 +174,7 @@ class AlephMainWindow(MainWindow):
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_second"], self, shortcut="Ctrl+T,3", triggered=self.hideShowSecondaryToolBar))
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_left"], self, shortcut="Ctrl+T, L", triggered=self.hideShowLeftToolBar))
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_right"], self, shortcut="Ctrl+T, R", triggered=self.hideShowRightToolBar))
+        toolbar_menu.addAction(QAction(config.thisTranslation["menu2_icons"], self, shortcut="Ctrl+T, I", triggered=self.switchIconSize))
         font_menu = display_menu.addMenu(config.thisTranslation["menu_font"])
         font_menu.addAction(QAction(config.thisTranslation["menu_select_default_font"], self, shortcut="Ctrl+D, F", triggered=self.setDefaultFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))

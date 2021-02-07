@@ -7,8 +7,8 @@ from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
 
+import exlbl
 from BibleBooks import BibleBooks
-from NoteSqlite import NoteSqlite
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.logger = logging.getLogger('uba')
         # Repository
         # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
         self.repository = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/"
@@ -786,7 +787,7 @@ class MainWindow(QMainWindow):
         note = self.fixNoteFontDisplay(NoteService.getBookNote(b))
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note)
+        self.openTextOnStudyView(note, tab_title=reference)
 
     def openChapterNote(self, b, c):
         self.textCommandParser.lastKeyword = "note"
@@ -798,7 +799,7 @@ class MainWindow(QMainWindow):
         note = self.fixNoteFontDisplay(NoteService.getChapterNote(b, c))
         note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note)
+        self.openTextOnStudyView(note, tab_title=reference)
 
     def openVerseNote(self, b, c, v):
         self.textCommandParser.lastKeyword = "note"
@@ -810,7 +811,7 @@ class MainWindow(QMainWindow):
         note = self.fixNoteFontDisplay(NoteService.getVerseNote(b, c, v))
         note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note)
+        self.openTextOnStudyView(note, tab_title=reference)
 
     # Actions - open text from external sources
     def htmlWrapper(self, text, parsing=False, view="study", linebreak=True):
@@ -993,26 +994,26 @@ class MainWindow(QMainWindow):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text)
+            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     def openUbaFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.fixNoteFontDisplay(text)
             text = self.htmlWrapper(text, True, "study", False)
-            self.openTextOnStudyView(text)
+            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     def openPdfFile(self, fileName):
         if fileName:
             text = TextFileReader().readPdfFile(fileName)
             text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text)
+            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     def openDocxFile(self, fileName):
         if fileName:
             text = TextFileReader().readDocxFile(fileName)
             text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text)
+            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     # Actions - export to pdf
     def printMainPage(self):
@@ -1728,7 +1729,7 @@ class MainWindow(QMainWindow):
     def displayBiblesInParagraphs(self):
         config.readFormattedBibles = not config.readFormattedBibles
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def getReadFormattedBibles(self):
         if config.readFormattedBibles:
@@ -2056,8 +2057,9 @@ class MainWindow(QMainWindow):
         self.runFeature("INDEX")
 
     # change of unique bible commands
+
     def mainTextCommandChanged(self, newTextCommand):
-        if not newTextCommand == "main.html":
+        if not (newTextCommand in ("main.html", "UniqueBible.app")):
             self.textCommandChanged(newTextCommand, "main")
 
     def studyTextCommandChanged(self, newTextCommand):
@@ -2096,8 +2098,11 @@ class MainWindow(QMainWindow):
         timeDifference = int((now - self.now).total_seconds())
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
-        elif (forceExecute or timeDifference > 1 or (source == "main" and textCommand != self.lastMainTextCommand) or \
-              (source == "study" and textCommand != self.lastStudyTextCommand)) and textCommand != "main.html":
+        elif not forceExecute and \
+                (timeDifference <= 2 and (source == "main" and textCommand == self.lastMainTextCommand) or
+                (source == "study" and textCommand == self.lastStudyTextCommand) or textCommand == "main.html"):
+            self.logger.debug("Repeated command blocked " + textCommand)
+        else:
             # handle exception for new tab features
             if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
                 self.newTabException = True
