@@ -256,6 +256,7 @@ class MoreConfigOptions(QDialog):
 
     def enableLoggingChanged(self):
         config.enableLogging = not config.enableLogging
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def logCommandsChanged(self):
         config.logCommands = not config.logCommands
