@@ -199,12 +199,13 @@ class SyncNotesWithGist(QObject):
         chapters = ns.getAllChapters()
         verses = ns.getAllVerses()
         notes = books + chapters + verses
+        # Upload from local to Gist
         for note in notes:
             count += 1
             book = note[0]
             chapter = note[1]
             verse = note[2]
-            content = note[3]
+            contentL = note[3]
             updatedL = note[4]
             if chapter == 0:
                 description = GitHubGist.b_to_book_name(book)
@@ -222,21 +223,28 @@ class SyncNotesWithGist(QObject):
                 updateGistFile = True
             else:
                 updatedG = GitHubGist.extract_updated(gist)
+                # if the local updated time is blank
                 if updatedL is None:
-                    content = GitHubGist.extract_content(gist)
-                    sizeG = len(content)
-                    sizeL = len(content)
+                    contentG = GitHubGist.extract_content(gist)
+                    sizeG = len(contentG)
+                    sizeL = len(contentL)
+                    # update the local update time to now
+                    if chapter == 0:
+                        ns.setBookNoteUpdate(book, chapter, updated)
+                    elif verse == 0:
+                        ns.setChapterNoteUpdate(book, chapter, updated)
+                    else:
+                        ns.setVerseNoteUpdate(book, chapter, verse, updated)
+                    # if local size > gist size, then update gist
                     if sizeL > sizeG:
-                        if chapter == 0:
-                            ns.setBookNoteUpdate(book, chapter, updated)
-                        elif verse == 0:
-                            ns.setChapterNoteUpdate(book, chapter, updated)
-                        else:
-                            ns.setVerseNoteUpdate(book, chapter, verse, updated)
                         updateGistFile = True
-                elif updatedG == 0 or updatedL > updatedG:
+                # if the local time > gist time, then update gist
+                elif updatedL > updatedG:
                     updateGistFile = True
                     updated = updatedL
+                # if the local time <= gist time, then don't update gist
+                elif updatedL <= updatedG:
+                    updateGistFile = False
             if updateGistFile:
                 logger.debug("Updating gist " + description)
                 if chapter == 0:
@@ -245,7 +253,8 @@ class SyncNotesWithGist(QObject):
                     gh.open_gist_chapter_note(book, chapter)
                 else:
                     gh.open_gist_verse_note(book, chapter, verse)
-                gh.update_content(content, updated)
+                gh.update_content(contentL, updated)
+        # Download from Gist
         gNotes = gh.get_all_note_gists()
         for gist in gNotes:
             count += 1
@@ -264,6 +273,7 @@ class SyncNotesWithGist(QObject):
             elif "Verse" in gist.description:
                 (book, chapter, verse) = GitHubGist.verse_name_to_bcv(gist.description)
                 res = [note for note in verses if note[0] == book and note[1] == chapter and note[2] == verse]
+            # if local note does not exist, then create local note
             if len(res) == 0:
                 logger.debug("Creating local " + gist.description)
                 if chapter == 0:
@@ -272,14 +282,17 @@ class SyncNotesWithGist(QObject):
                     ns.saveChapterNote(book, chapter, contentG, updatedG)
                 else:
                     ns.saveVerseNote(book, chapter, verse, contentG, updatedG)
+            # if local note already exist
             else:
                 noteL = res[0]
                 contentL = noteL[3]
                 updatedL = noteL[4]
                 update = False
+                # if local update time is blank, then update based on size
                 if updatedL is None:
                     if len(contentG) > len(contentL):
                         update = True
+                # if gist update time > local update time, then update local
                 elif updatedG > updatedL:
                     update = True
                 if update:

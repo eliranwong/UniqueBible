@@ -96,6 +96,7 @@ class GistWindow(QDialog):
     def syncBibleNotes(self):
         self.setStatus("Syncing ...", True)
         self.syncBibleNotesButton.setEnabled(False)
+        QApplication.processEvents()
 
         self.thread = QThread()
         self.worker = SyncNotesWithGist()
