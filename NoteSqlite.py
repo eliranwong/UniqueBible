@@ -59,22 +59,22 @@ class NoteSqlite:
             return config.thisTranslation["empty"], 0
 
     def displayBookNote(self, b):
-        content = self.getBookNote(b)
+        content, updated = self.getBookNote(b)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
-        return content
+        return content, updated
 
     def displayChapterNote(self, b, c):
-        content = self.getChapterNote(b, c)
+        content, updated = self.getChapterNote(b, c)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
-        return content
+        return content, updated
 
     def displayVerseNote(self, b, c, v):
-        content = self.getVerseNote(b, c, v)
+        content, updated = self.getVerseNote(b, c, v)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
-        return content
+        return content, updated
 
     def isNotEmptyNote(self, text):
         p = re.compile("<body[^<>]*?>[ \r\n ]*?<p[^<>]*?>[ \r\n ]*?<br />[ \r\n ]*?</p>[ \r\n ]*?</body>[ \r\n ]*?</html>", flags=re.M)

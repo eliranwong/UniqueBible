@@ -40,8 +40,11 @@ class NoteService:
                 gh.update_content(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
-            if updatedL is None and len(noteG) > len(noteL):
-                note = noteG
+            if updatedL is None:
+                if len(noteG) > len(noteL):
+                    note = noteG
+                else:
+                    note = noteL
             elif updatedG > updatedL:
                 note = noteG
             else:
@@ -75,8 +78,11 @@ class NoteService:
                 gh.update_content(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
-            if updatedL is None and len(noteG) > len(noteL):
-                note = noteG
+            if updatedL is None:
+                if len(noteG) > len(noteL):
+                    note = noteG
+                else:
+                    note = noteL
             elif updatedG > updatedL:
                 note = noteG
             else:
@@ -128,8 +134,11 @@ class NoteService:
                 gh.update_content(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
-            if updatedL is None  and len(noteG) > len(noteL):
-                note = noteG
+            if updatedL is None:
+                if len(noteG) > len(noteL):
+                    note = noteG
+                else:
+                    note = noteL
             elif updatedG > updatedL:
                 note = noteG
             else:
