@@ -173,7 +173,7 @@ class GitHubGist:
     def extract_updated(gist):
         files = gist.files
         file = files["updated"]
-        if file:
+        if file and file.content is not None:
             return int(file.content)
         else:
             return 0
@@ -286,6 +286,7 @@ def test_updated():
 def test_delete():
     gh = GitHubGist()
     print(gh.delete_all_notes())
+
 
 if __name__ == "__main__":
     start = time.time()

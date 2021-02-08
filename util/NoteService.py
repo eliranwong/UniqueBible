@@ -197,7 +197,9 @@ class SyncNotesWithGist(QObject):
             verse = note[2]
             content = note[3]
             updatedL = note[4]
-            if verse == 0:
+            if chapter == 0:
+                description = GitHubGist.b_to_book_name(book)
+            elif verse == 0:
                 description = GitHubGist.bc_to_chapter_name(book, chapter)
             else:
                 description = GitHubGist.bcv_to_verse_name(book, chapter, verse)
@@ -216,7 +218,9 @@ class SyncNotesWithGist(QObject):
                     sizeG = len(content)
                     sizeL = len(content)
                     if sizeL > sizeG:
-                        if verse == 0:
+                        if chapter == 0:
+                            ns.setBookNoteUpdate(book, chapter, updated)
+                        elif verse == 0:
                             ns.setChapterNoteUpdate(book, chapter, updated)
                         else:
                             ns.setVerseNoteUpdate(book, chapter, verse, updated)
@@ -226,7 +230,9 @@ class SyncNotesWithGist(QObject):
                     updated = updatedL
             if updateGistFile:
                 logger.debug("Updating gist " + description)
-                if verse == 0:
+                if chapter == 0:
+                    gh.open_gist_book_note(book)
+                elif verse == 0:
                     gh.open_gist_chapter_note(book, chapter)
                 else:
                     gh.open_gist_verse_note(book, chapter, verse)
