@@ -18,6 +18,7 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite
 from db.Highlight import Highlight
+from gui.GistWindow import GistWindow
 from translations import translations
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree

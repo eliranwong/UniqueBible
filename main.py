@@ -414,8 +414,11 @@ if not hasattr(config, "enableMacros"):
 # Startup macro
 if not hasattr(config, "startupMacro"):
     config.startupMacro = ""
+# Gist synching
 if not hasattr(config, "enableGist"):
     config.enableGist = False
+if not hasattr(config, "gistToken"):
+    config.gistToken = ''
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -620,7 +623,8 @@ def saveDataOnExit():
         ("useFastVerseParsing", config.useFastVerseParsing),
         ("enableMacros", config.enableMacros),
         ("startupMacro", config.startupMacro),
-        ("enableGist", config.enableGist)
+        ("enableGist", config.enableGist),
+        ("gistToken", config.gistToken)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:

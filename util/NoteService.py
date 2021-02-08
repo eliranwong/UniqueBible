@@ -181,8 +181,9 @@ class SyncNotesWithGist(QObject):
         gh = GitHubGist()
         gNotes = gh.get_all_note_gists()
         gists = {}
-        for gist in gNotes:
-            gists[gist.description] = gist
+        if gNotes:
+            for gist in gNotes:
+                gists[gist.description] = gist
         ns = NoteService.getNoteSqlite()
         count = 0
         books = ns.getAllBooks()

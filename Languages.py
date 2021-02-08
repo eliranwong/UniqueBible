@@ -289,6 +289,7 @@ class Languages:
         "menu_first_chapter": "First Chapter",
         "menu_font": "Font and Size",
         "menu_font": "Font",
+        "menu_gist": "Gist",
         "menu_highlight": "Highlight",
         "menu_highlight": "Highlights",
         "menu_history": "History",
