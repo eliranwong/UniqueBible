@@ -102,17 +102,17 @@ class NoteSqlite:
             self.connection.commit()
 
     def setBookNoteUpdate(self, b, c, updated):
-        update = "UPDATE BookNote (Updated) VALUES (?) WHERE Book=?"
+        update = "UPDATE BookNote set Updated=? WHERE Book=?"
         self.cursor.execute(update, (updated, b))
         self.connection.commit()
 
     def setChapterNoteUpdate(self, b, c, updated):
-        update = "UPDATE ChapterNote (Updated) VALUES (?) WHERE Book=? and Chapter=?"
+        update = "UPDATE ChapterNote set Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (updated, b, c))
         self.connection.commit()
 
     def setChapterNoteContent(self, b, c, content, updated):
-        update = "UPDATE ChapterNote (Note, Updated) VALUES (?, ?) WHERE Book=? and Chapter=?"
+        update = "UPDATE ChapterNote set Note=?, Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (content, updated, b, c))
         self.connection.commit()
 
@@ -126,12 +126,12 @@ class NoteSqlite:
             self.connection.commit()
 
     def setVerseNoteUpdate(self, b, c, v, updated):
-        update = "UPDATE VerseNote (Updated) VALUES (?) WHERE Book=? and Chapter=? and Verse=?"
+        update = "UPDATE VerseNote set Updated = ? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (updated, b, c, v))
         self.connection.commit()
 
     def setVerseNoteContent(self, b, c, v, content, updated):
-        update = "UPDATE VerseNote (Note, Updated) VALUES (?, ?) WHERE Book=? and Chapter=? and Verse=?"
+        update = "UPDATE VerseNote set Note=?, Updated=? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (content, updated, b, c, v))
         self.connection.commit()
     
