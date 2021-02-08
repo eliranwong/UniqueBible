@@ -15,6 +15,7 @@
 /Documents
 /htmlResources/images/export
 config.py
+*.pyc
 UniqueBible.code-workspace
 **.log
 **.log.**

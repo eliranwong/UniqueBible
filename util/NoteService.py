@@ -204,9 +204,9 @@ class SyncNotesWithGist(QObject):
 
     def __init__(self):
         super(SyncNotesWithGist, self).__init__()
+        self.logger = logging.getLogger('uba')
 
     def run(self):
-        logger = logging.getLogger('uba')
         gh = GitHubGist()
         gNotes = gh.getAllNoteGists()
         gists = {}
@@ -219,6 +219,7 @@ class SyncNotesWithGist(QObject):
         chapters = ns.getAllChapters()
         verses = ns.getAllVerses()
         notes = books + chapters + verses
+        self.logger.debug("Uploading {0} notes".format(len(notes)))
         # Upload from local to Gist
         for note in notes:
             count += 1
@@ -233,7 +234,9 @@ class SyncNotesWithGist(QObject):
                 description = GitHubGist.bcToChapterName(book, chapter)
             else:
                 description = GitHubGist.bcvToVerseName(book, chapter, verse)
-            self.progress.emit("Uploading " + description + " ...")
+            msg = "Processing upload " + description + " ..."
+            self.progress.emit(msg)
+            self.logger.debug(msg)
             updateGistFile = False
             updated = DateUtil.epoch()
             gist = None
@@ -246,7 +249,7 @@ class SyncNotesWithGist(QObject):
                 # if the local updated time is blank,  merge the local database file with the gist file
                 if updatedL is None:
                     contentG = GitHubGist.extractContent(gist)
-                    contentL = self.mergeNotes(contentL, contentG, "---<br/>")
+                    contentL = NoteService.mergeNotes(contentL, contentG, "---<br/>")
                     if chapter == 0:
                         ns.saveBookNote(book, contentL, updated)
                     elif verse == 0:
@@ -262,7 +265,8 @@ class SyncNotesWithGist(QObject):
                 elif updatedL <= updatedG:
                     updateGistFile = False
             if updateGistFile:
-                logger.debug("Updating gist " + description)
+                msg = "Updating gist " + description
+                self.logger.debug(msg)
                 if chapter == 0:
                     gh.openGistBookNote(book)
                 elif verse == 0:
@@ -274,7 +278,9 @@ class SyncNotesWithGist(QObject):
         gNotes = gh.getAllNoteGists()
         for gist in gNotes:
             count += 1
-            self.progress.emit("Downloading " + gist.description + " ...")
+            msg = "Processing download " + gist.description + " ..."
+            self.progress.emit(msg)
+            self.logger.debug(msg)
             contentG = GitHubGist.extractContent(gist)
             updatedG = GitHubGist.extractUpdated(gist)
             if "Book" in gist.description:
@@ -291,7 +297,8 @@ class SyncNotesWithGist(QObject):
                 res = [note for note in verses if note[0] == book and note[1] == chapter and note[2] == verse]
             # if local note does not exist, then create local note
             if len(res) == 0:
-                logger.debug("Creating local " + gist.description)
+                msg = "Creating local " + gist.description
+                self.logger.debug(msg)
                 if chapter == 0:
                     ns.saveBookNote(book, contentG, updatedG)
                 elif verse == 0:
@@ -304,7 +311,7 @@ class SyncNotesWithGist(QObject):
                 updatedL = noteL[4]
                 # if gist update time > local update time, then update local
                 if updatedG > updatedL:
-                    logger.debug("Updating local " + gist.description)
+                    self.logger.debug("Updating local " + gist.description)
                     if chapter == 0:
                         ns.setBookNoteUpdate(book, contentG, updatedG)
                     elif verse == 0:
@@ -313,6 +320,7 @@ class SyncNotesWithGist(QObject):
                         ns.setVerseNoteUpdate(book, chapter, verse, contentG, updatedG)
 
         self.finished.emit(count)
+        self.logger.debug("Sync done")
 
 
 # Only used for testing
