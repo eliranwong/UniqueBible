@@ -97,8 +97,8 @@ class NoteSqlite:
         self.cursor.execute(delete, (b, c))
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
-            insert = "INSERT INTO ChapterNote (Book, Chapter, Note) VALUES (?, ?, ?)"
-            self.cursor.execute(insert, (b, c, note))
+            insert = "INSERT INTO ChapterNote (Book, Chapter, Note, Updated) VALUES (?, ?, ?, ?)"
+            self.cursor.execute(insert, (b, c, note, updated))
             self.connection.commit()
 
     def setBookNoteUpdate(self, b, c, updated):
@@ -121,8 +121,8 @@ class NoteSqlite:
         self.cursor.execute(delete, (b, c, v))
         self.connection.commit()
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
-            insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note) VALUES (?, ?, ?, ?)"
-            self.cursor.execute(insert, (b, c, v, note))
+            insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note, Updated) VALUES (?, ?, ?, ?, ?)"
+            self.cursor.execute(insert, (b, c, v, note, updated))
             self.connection.commit()
 
     def setVerseNoteUpdate(self, b, c, v, updated):
@@ -208,6 +208,12 @@ class NoteSqlite:
         content = self.cursor.fetchall()
         return content
 
+    def getBookCount(self):
+        query = "SELECT count(*) FROM BookNote"
+        dataCopy = self.cursor.execute(query)
+        result = dataCopy.fetchone()
+        return result[0]
+
     def getChapterCount(self):
         query = "SELECT count(*) FROM ChapterNote"
         dataCopy = self.cursor.execute(query)
@@ -220,6 +226,23 @@ class NoteSqlite:
         result = dataCopy.fetchone()
         return result[0]
 
+    def deleteAllNotes(self):
+        self.deleteBookNotes()
+        self.deleteChapterNotes()
+        self.deleteVerseNotes()
+
+    def deleteBookNotes(self):
+        self.cursor.execute("DELETE FROM BookNote")
+        self.connection.commit()
+
+    def deleteChapterNotes(self):
+        self.cursor.execute("DELETE FROM ChapterNote")
+        self.connection.commit()
+
+    def deleteVerseNotes(self):
+        self.cursor.execute("DELETE FROM VerseNote")
+        self.connection.commit()
+
     def checkColumnExists(self, table, column):
         self.cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))
         if self.cursor.fetchone():
@@ -230,3 +253,23 @@ class NoteSqlite:
     def addColumnToTable(self, table, column, column_type):
         sql = "ALTER TABLE " + table + " ADD COLUMN " + column + " " + column_type
         self.cursor.execute(sql)
+
+
+# Only used for test
+
+def test_deleteAllNotes():
+    ns = NoteSqlite()
+    ns.deleteAllNotes()
+
+def test_printAllCount():
+    ns = NoteSqlite()
+    print("Books: {0}".format(ns.getBookCount()))
+    print("Chapters: {0}".format(ns.getChapterCount()))
+    print("Verses: {0}".format(ns.getVerseCount()))
+
+if __name__ == "__main__":
+
+    test_deleteAllNotes()
+    test_printAllCount()
+
+

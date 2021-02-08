@@ -1,4 +1,5 @@
 import logging
+import re
 import time
 import config
 from Languages import Languages
@@ -22,10 +23,10 @@ class NoteService:
         noteL = noteG = None
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_book_note(b)
-            file = gh.get_file()
+            gh.openGistBookNote(b)
+            file = gh.getFile()
             if file:
-                updatedG = gh.get_updated()
+                updatedG = gh.getUpdated()
                 noteG = file.content
                 validGist = True
         ns = NoteService.getNoteSqlite()
@@ -37,7 +38,7 @@ class NoteService:
             note = noteG
         elif not validGist and validLocal:
             if config.enableGist:
-                gh.update_content(noteL, updatedL)
+                gh.updateContent(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
@@ -60,10 +61,10 @@ class NoteService:
         noteL = noteG = None
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_chapter_note(b, c)
-            file = gh.get_file()
+            gh.openGistChapterNote(b, c)
+            file = gh.getFile()
             if file:
-                updatedG = gh.get_updated()
+                updatedG = gh.getUpdated()
                 noteG = file.content
                 validGist = True
         ns = NoteService.getNoteSqlite()
@@ -75,7 +76,7 @@ class NoteService:
             note = noteG
         elif not validGist and validLocal:
             if config.enableGist:
-                gh.update_content(noteL, updatedL)
+                gh.updateContent(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
@@ -97,8 +98,8 @@ class NoteService:
         now = DateUtil.epoch()
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_book_note(b)
-            gh.update_content(note, now)
+            gh.openGistBookNote(b)
+            gh.updateContent(note, now)
         ns = NoteService.getNoteSqlite()
         ns.saveBookNote(b, note, now)
 
@@ -106,8 +107,8 @@ class NoteService:
         now = DateUtil.epoch()
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_chapter_note(b, c)
-            gh.update_content(note, now)
+            gh.openGistChapterNote(b, c)
+            gh.updateContent(note, now)
         ns = NoteService.getNoteSqlite()
         ns.saveChapterNote(b, c, note, now)
 
@@ -116,10 +117,10 @@ class NoteService:
         noteL = noteG = None
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_verse_note(b, c, v)
-            file = gh.get_file()
+            gh.openGistVerseNote(b, c, v)
+            file = gh.getFile()
             if file:
-                updatedG = gh.get_updated()
+                updatedG = gh.getUpdated()
                 noteG = file.content
                 validGist = True
         ns = NoteService.getNoteSqlite()
@@ -131,7 +132,7 @@ class NoteService:
             note = noteG
         elif not validGist and validLocal:
             if config.enableGist:
-                gh.update_content(noteL, updatedL)
+                gh.updateContent(noteL, updatedL)
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
@@ -153,8 +154,8 @@ class NoteService:
         now = DateUtil.epoch()
         if config.enableGist:
             gh = GitHubGist()
-            gh.open_gist_verse_note(b, c, v)
-            gh.update_content(note, now)
+            gh.openGistVerseNote(b, c, v)
+            gh.updateContent(note, now)
         ns = NoteService.getNoteSqlite()
         ns.saveVerseNote(b, c, v, note, now)
 
@@ -178,6 +179,25 @@ class NoteService:
         result = ns.isChapterNote(b, c)
         return result
 
+    def mergeNotes(note1, note2, separater=""):
+        note1 = note1.replace('\n', '').replace('\r', '')
+        note2 = note2.replace('\n', '').replace('\r', '')
+
+        if "</body>" in note2:
+            note2Body = re.search("<body.*?>(.*)</body>", note2).group(1)
+        else:
+            note2Body = note2
+
+        note2Body = separater + note2Body
+
+        if "</body>" in note2:
+            merged = note1.replace("</body>", note2Body + "</body>")
+        else:
+            merged = note1 + note2Body
+
+        return merged
+
+
 class SyncNotesWithGist(QObject):
     finished = Signal(int)
     progress = Signal(str)
@@ -188,7 +208,7 @@ class SyncNotesWithGist(QObject):
     def run(self):
         logger = logging.getLogger('uba')
         gh = GitHubGist()
-        gNotes = gh.get_all_note_gists()
+        gNotes = gh.getAllNoteGists()
         gists = {}
         if gNotes:
             for gist in gNotes:
@@ -208,11 +228,11 @@ class SyncNotesWithGist(QObject):
             contentL = note[3]
             updatedL = note[4]
             if chapter == 0:
-                description = GitHubGist.b_to_book_name(book)
+                description = GitHubGist.bToBookName(book)
             elif verse == 0:
-                description = GitHubGist.bc_to_chapter_name(book, chapter)
+                description = GitHubGist.bcToChapterName(book, chapter)
             else:
-                description = GitHubGist.bcv_to_verse_name(book, chapter, verse)
+                description = GitHubGist.bcvToVerseName(book, chapter, verse)
             self.progress.emit("Uploading " + description + " ...")
             updateGistFile = False
             updated = DateUtil.epoch()
@@ -222,23 +242,19 @@ class SyncNotesWithGist(QObject):
             if gist is None:
                 updateGistFile = True
             else:
-                updatedG = GitHubGist.extract_updated(gist)
-                # if the local updated time is blank
+                updatedG = GitHubGist.extractUpdated(gist)
+                # if the local updated time is blank,  merge the local database file with the gist file
                 if updatedL is None:
-                    contentG = GitHubGist.extract_content(gist)
-                    sizeG = len(contentG)
-                    sizeL = len(contentL)
-                    # update the local update time to now
+                    contentG = GitHubGist.extractContent(gist)
+                    contentL = self.mergeNotes(contentL, contentG, "---<br/>")
                     if chapter == 0:
-                        ns.setBookNoteUpdate(book, chapter, updated)
+                        ns.saveBookNote(book, contentL, updated)
                     elif verse == 0:
-                        ns.setChapterNoteUpdate(book, chapter, updated)
+                        ns.saveChapterNote(book, chapter, contentL, updated)
                     else:
-                        ns.setVerseNoteUpdate(book, chapter, verse, updated)
-                    # if local size > gist size, then update gist
-                    if sizeL > sizeG:
-                        updateGistFile = True
-                # if the local time > gist time, then update gist
+                        ns.saveVerseNote(book, chapter, verse, contentL, updated)
+                    updateGistFile = True
+                # if the updated time of local database note > gist time, then update gist
                 elif updatedL > updatedG:
                     updateGistFile = True
                     updated = updatedL
@@ -248,30 +264,30 @@ class SyncNotesWithGist(QObject):
             if updateGistFile:
                 logger.debug("Updating gist " + description)
                 if chapter == 0:
-                    gh.open_gist_book_note(book)
+                    gh.openGistBookNote(book)
                 elif verse == 0:
-                    gh.open_gist_chapter_note(book, chapter)
+                    gh.openGistChapterNote(book, chapter)
                 else:
-                    gh.open_gist_verse_note(book, chapter, verse)
-                gh.update_content(contentL, updated)
+                    gh.openGistVerseNote(book, chapter, verse)
+                gh.updateContent(contentL, updated)
         # Download from Gist
-        gNotes = gh.get_all_note_gists()
+        gNotes = gh.getAllNoteGists()
         for gist in gNotes:
             count += 1
             self.progress.emit("Downloading " + gist.description + " ...")
-            contentG = GitHubGist.extract_content(gist)
-            updatedG = GitHubGist.extract_updated(gist)
+            contentG = GitHubGist.extractContent(gist)
+            updatedG = GitHubGist.extractUpdated(gist)
             if "Book" in gist.description:
-                book = GitHubGist.book_name_to_b(gist.description)
+                book = GitHubGist.bookNameToB(gist.description)
                 chapter = 0
                 verse = 0
                 res = [note for note in books if note[0] == book]
             elif "Chapter" in gist.description:
-                (book, chapter) = GitHubGist.chapter_name_to_bc(gist.description)
+                (book, chapter) = GitHubGist.chapterNameToBc(gist.description)
                 verse = 0
                 res = [note for note in chapters if note[0] == book and note[1] == chapter]
             elif "Verse" in gist.description:
-                (book, chapter, verse) = GitHubGist.verse_name_to_bcv(gist.description)
+                (book, chapter, verse) = GitHubGist.verseNameToBcv(gist.description)
                 res = [note for note in verses if note[0] == book and note[1] == chapter and note[2] == verse]
             # if local note does not exist, then create local note
             if len(res) == 0:
@@ -285,17 +301,9 @@ class SyncNotesWithGist(QObject):
             # if local note already exist
             else:
                 noteL = res[0]
-                contentL = noteL[3]
                 updatedL = noteL[4]
-                update = False
-                # if local update time is blank, then update based on size
-                if updatedL is None:
-                    if len(contentG) > len(contentL):
-                        update = True
                 # if gist update time > local update time, then update local
-                elif updatedG > updatedL:
-                    update = True
-                if update:
+                if updatedG > updatedL:
                     logger.debug("Updating local " + gist.description)
                     if chapter == 0:
                         ns.setBookNoteUpdate(book, contentG, updatedG)
@@ -306,6 +314,9 @@ class SyncNotesWithGist(QObject):
 
         self.finished.emit(count)
 
+
+# Only used for testing
+
 def test_note():
     b = 40
     c = 1
@@ -314,19 +325,45 @@ def test_note():
     print(note)
 
     gh = GitHubGist()
-    gh.open_gist_chapter_note(b, c)
-    print(gh.get_updated())
+    gh.openGistChapterNote(b, c)
+    print(gh.getUpdated())
 
-def test_get_all_notes():
+def test_getAllNotes():
     ns = NoteService.getNoteSqlite()
     notes = ns.getAllChapters() + ns.getAllVerses()
     return notes
+
+def test_mergeNotes():
+    note1 = """
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style="font-family:''; font-size:19pt; font-weight:400; font-style:normal;">
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt;">Note1 - line1</span></p>
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;">Note1 - line2</p>
+<p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt;">Note1 - Line 3</span></p></body></html>
+"""
+    note2 = """
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+    <html><head><meta name="qrichtext" content="1" /><style type="text/css">
+    p, li { white-space: pre-wrap; }
+    </style></head><body style="font-family:''; font-size:19pt; font-weight:400; font-style:normal;">
+    <p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt;">Note2 - line1</span></p>
+    <p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;">Note2 - line2</p>
+    <p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:14pt;">Note2 - Line 3</span></p></body></html>
+    """
+
+    merged = NoteService.mergeNotes(note1, note2, "-----<br/>")
+
+    print(merged)
+
 
 if __name__ == "__main__":
     config.thisTranslation = Languages.translation
     start = time.time()
 
-    test_get_all_notes()
+    # test_getAllNotes()
+    test_mergeNotes()
 
     print("---")
     end = time.time()

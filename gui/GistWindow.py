@@ -116,9 +116,11 @@ class GistWindow(QDialog):
         if self.thread and self.thread.isRunning():
             self.thread.quit()
 
+
 if __name__ == '__main__':
+    from Languages import Languages
+    config.thisTranslation = Languages.translation
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     gistWindow = GistWindow()
-    if gistWindow.exec_():
-        print(gistWindow.gistTokenInput.text())
+    gistWindow.exec_()
