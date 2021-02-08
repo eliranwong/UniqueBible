@@ -782,7 +782,7 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, 1, 1
         self.updateCommentaryRefButton()
-        note, updated = NoteSqlite().displayBookNote(b)
+        note, updated = NoteService.displayBookNote(b)
         note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
@@ -795,7 +795,7 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
-        note, updated = NoteSqlite().displayChapterNote(b, c)
+        note, updated = NoteService.displayChapterNote(b, c)
         note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
@@ -808,7 +808,7 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
-        note, updated = NoteSqlite().displayVerseNote(b, c, v)
+        note, updated = NoteService.displayVerseNote(b, c, v)
         note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
