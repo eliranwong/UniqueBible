@@ -1432,7 +1432,7 @@ class MainWindow(QMainWindow):
         dictionaryDict = {abb: name for abb, name in indexes.dictionaryList}
         lastDictionary = dictionaryDict[config.dictionary]
         dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
-        items = [key for key in dictionaryDict.keys()]
+        items = list(dictionaryDict.keys())
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
@@ -1443,7 +1443,7 @@ class MainWindow(QMainWindow):
         dictionaryDict = {abb: name for abb, name in indexes.encyclopediaList}
         lastDictionary = dictionaryDict[config.encyclopedia]
         dictionaryDict = {name: abb for abb, name in indexes.encyclopediaList}
-        items = [key for key in dictionaryDict.keys()]
+        items = list(dictionaryDict.keys())
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
@@ -1454,7 +1454,7 @@ class MainWindow(QMainWindow):
         dictionaryDict = {abb: name for abb, name in indexes.topicList}
         lastDictionary = dictionaryDict[config.topic]
         dictionaryDict = {name: abb for abb, name in indexes.topicList}
-        items = [key for key in dictionaryDict.keys()]
+        items = list(dictionaryDict.keys())
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
         if ok and item:
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
