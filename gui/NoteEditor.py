@@ -699,9 +699,7 @@ p, li {0} white-space: pre-wrap; {1}
             self.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
-            noteSqlite = NoteSqlite()
-            noteSqlite.saveVerseNote(self.b, self.c, self.v, note)
-            del noteSqlite
+            NoteService.saveVerseNote(self.b, self.c, self.v, note)
             if config.openBibleNoteAfterSave:
                 self.parent.openVerseNote(self.b, self.c, self.v)
             self.parent.noteSaved = True

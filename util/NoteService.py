@@ -42,10 +42,7 @@ class NoteService:
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
-                if len(noteG) > len(noteL):
-                    note = noteG
-                else:
-                    note = noteL
+                note = NoteService.mergeNotes(noteL, noteG)
             elif updatedG > updatedL:
                 note = noteG
             else:
@@ -80,10 +77,7 @@ class NoteService:
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
-                if len(noteG) > len(noteL):
-                    note = noteG
-                else:
-                    note = noteL
+                note = NoteService.mergeNotes(noteL, noteG)
             elif updatedG > updatedL:
                 note = noteG
             else:
@@ -93,24 +87,6 @@ class NoteService:
         if noteG and note == noteG:
             ns.saveChapterNote(b, c, noteG, updatedG)
         return note
-
-    def saveBookNote(b, note):
-        now = DateUtil.epoch()
-        if config.enableGist:
-            gh = GitHubGist()
-            gh.openGistBookNote(b)
-            gh.updateContent(note, now)
-        ns = NoteService.getNoteSqlite()
-        ns.saveBookNote(b, note, now)
-
-    def saveChapterNote(b, c, note):
-        now = DateUtil.epoch()
-        if config.enableGist:
-            gh = GitHubGist()
-            gh.openGistChapterNote(b, c)
-            gh.updateContent(note, now)
-        ns = NoteService.getNoteSqlite()
-        ns.saveChapterNote(b, c, note, now)
 
     def getVerseNote(b, c, v):
         validGist = False
@@ -136,10 +112,7 @@ class NoteService:
             note = noteL
         elif validGist and validLocal:
             if updatedL is None:
-                if len(noteG) > len(noteL):
-                    note = noteG
-                else:
-                    note = noteL
+                note = NoteService.mergeNotes(noteL, noteG)
             elif updatedG > updatedL:
                 note = noteG
             else:
@@ -149,6 +122,24 @@ class NoteService:
         if noteG is not None and note == noteG:
             ns.saveVerseNote(b, c, v, noteG, updatedG)
         return note
+
+    def saveBookNote(b, note):
+        now = DateUtil.epoch()
+        if config.enableGist:
+            gh = GitHubGist()
+            gh.openGistBookNote(b)
+            gh.updateContent(note, now)
+        ns = NoteService.getNoteSqlite()
+        ns.saveBookNote(b, note, now)
+
+    def saveChapterNote(b, c, note):
+        now = DateUtil.epoch()
+        if config.enableGist:
+            gh = GitHubGist()
+            gh.openGistChapterNote(b, c)
+            gh.updateContent(note, now)
+        ns = NoteService.getNoteSqlite()
+        ns.saveChapterNote(b, c, note, now)
 
     def saveVerseNote(b, c, v, note):
         now = DateUtil.epoch()
