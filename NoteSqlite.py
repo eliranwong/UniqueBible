@@ -45,18 +45,18 @@ class NoteSqlite:
         self.cursor.execute(query, (b, c))
         content = self.cursor.fetchone()
         if content:
-            return content[0]
+            return content
         else:
-            return config.thisTranslation["empty"]
+            return config.thisTranslation["empty"], 0
 
-    def getVerseNote(self, bcvTuple):
-        query = "SELECT Note FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
-        self.cursor.execute(query, bcvTuple)
+    def getVerseNote(self, b, c, v):
+        query = "SELECT Note, Updated FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
         content = self.cursor.fetchone()
         if content:
-            return content[0]
+            return content
         else:
-            return config.thisTranslation["empty"]
+            return config.thisTranslation["empty"], 0
 
     def displayBookNote(self, b):
         content = self.getBookNote(b)
@@ -65,13 +65,13 @@ class NoteSqlite:
         return content
 
     def displayChapterNote(self, b, c):
-        content, updated = self.getChapterNote(b, c)
+        content = self.getChapterNote(b, c)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
         return content
 
-    def displayVerseNote(self, bcvTuple):
-        content = self.getVerseNote(bcvTuple)
+    def displayVerseNote(self, b, c, v):
+        content = self.getVerseNote(b, c, v)
         #content = self.customFormat(content)
         content = self.highlightSearch(content)
         return content

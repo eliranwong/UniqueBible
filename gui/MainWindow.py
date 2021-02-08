@@ -32,6 +32,7 @@ from gui.CentralWidget import CentralWidget
 from gui.imports import *
 from ToolsSqlite import LexiconData
 from util.MacroParser import MacroParser
+from util.NoteService import NoteService
 
 
 class MainWindow(QMainWindow):
@@ -780,7 +781,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, 1, 1
         self.updateCommentaryRefButton()
-        note = self.fixNoteFontDisplay(NoteService.getBookNote(b))
+        note, updated = NoteSqlite().displayBookNote(b)
+        note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -792,7 +794,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, 1
         self.updateCommentaryRefButton()
-        note = self.fixNoteFontDisplay(NoteSqlite().displayChapterNote((b, c)))
+        note, updated = NoteSqlite().displayChapterNote(b, c)
+        note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -804,7 +807,8 @@ class MainWindow(QMainWindow):
         self.updateStudyRefButton()
         config.commentaryB, config.commentaryC, config.commentaryV = b, c, v
         self.updateCommentaryRefButton()
-        note = self.fixNoteFontDisplay(NoteSqlite().displayVerseNote((b, c, v)))
+        note, updated = NoteSqlite().displayVerseNote(b, c, v)
+        note = self.fixNoteFontDisplay(note)
         note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -2393,3 +2397,8 @@ class MainWindow(QMainWindow):
             MacroParser.parse(self, file)
             self.reloadCurrentRecord()
 
+    def showGistWindow(self):
+        gw = GistWindow()
+        if gw.exec():
+            config.gistToken = gw.gistTokenInput.text()
+        self.reloadCurrentRecord()

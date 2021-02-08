@@ -414,6 +414,8 @@ if not hasattr(config, "enableMacros"):
 # Startup macro
 if not hasattr(config, "startupMacro"):
     config.startupMacro = ""
+if not hasattr(config, "enableGist"):
+    config.enableGist = False
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -617,7 +619,8 @@ def saveDataOnExit():
         ("showHighlightMarkers", config.showHighlightMarkers),
         ("useFastVerseParsing", config.useFastVerseParsing),
         ("enableMacros", config.enableMacros),
-        ("startupMacro", config.startupMacro)
+        ("startupMacro", config.startupMacro),
+        ("enableGist", config.enableGist)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
