@@ -1,5 +1,4 @@
 #!/bin/bash
-export QT_QPA_PLATFORM=wayland
 cd $HOME/UniqueBible
 source venv/bin/activate
-python3 main.py
+/usr/bin/env QT_QPA_PLATFORM=xcb QT_LOGGING_RULES=*=false python3 main.py

@@ -383,14 +383,14 @@ class MainWindow(QMainWindow):
                     self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_fail"], line))
         # set executable files on macOS or Linux
         if not platform.system() == "Windows":
-            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh", "shortcut_uba_chromeOS_fcitx.sh"):
+            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
                 os.chmod(filename, 0o755)        
         # finish message
         self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
         self.openExternalFile("latest_changes.txt")
 
     # old way to do the update, all content will be downloaded to overwrite all current files
-    def updateUniqueBibleApp2(self):
+    def updateUniqueBibleAppOLD(self):
         masterfile = "https://github.com/eliranwong/UniqueBible/archive/master.zip"
         request = requests.get(masterfile)
         if request.status_code == 200:
@@ -414,7 +414,7 @@ class MainWindow(QMainWindow):
                     print("Failed to overwrite files.")
                 # set executable files on macOS or Linux
                 if not platform.system() == "Windows":
-                    for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh", "shortcut_uba_chromeOS_fcitx.sh"):
+                    for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
                         os.chmod(filename, 0o755)
                 # remove download files after upgrade
                 if config.removeBackup:
