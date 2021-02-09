@@ -273,5 +273,13 @@ class MoreConfigOptions(QDialog):
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def enableGistChanged(self):
-        config.enableGist = not config.enableGist
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
+        if not config.enableGist:
+            try:
+                from github import Github, InputFileContent
+                config.enableGist = True
+                self.parent.displayMessage(config.thisTranslation["message_restart"])
+            except:
+                self.parent.displayMessage(config.thisTranslation["installPygithub"])
+        else:
+            config.enableGist = not config.enableGist
+            self.parent.displayMessage(config.thisTranslation["message_restart"])

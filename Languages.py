@@ -520,6 +520,7 @@ class Languages:
         "readNotes": "Open Note",
         "editNotes": "Edit Note",
         "tools": "Tools",
+        "installPygithub": "Install module 'pygithub' before enabling this feature.  You can install by running 'pip3 install pygithub' in terminal.",
         "biblePromises": "Bible Promises",
         "bibleHarmonies": "Harmonies and Parallels",
         "openInMainWindow": "Open in Main Window",
