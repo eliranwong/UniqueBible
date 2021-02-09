@@ -7,3 +7,4 @@ python-docx
 gdown
 diff_match_patch
 langdetect
+pygithub

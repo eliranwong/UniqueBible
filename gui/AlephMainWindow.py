@@ -108,13 +108,18 @@ class AlephMainWindow(MainWindow):
                 QAction(config.thisTranslation["menu2_toggleHighlightMarkers"], self, triggered=self.toggleHighlightMarker))
         bible_notes = annotate_menu.addMenu(config.thisTranslation["menu_bible_notes"])
         bible_notes.addAction(
-            QAction(config.thisTranslation["menu_chapter"], self, shortcut="Ctrl+N, C", triggered=self.openStudyChapterNote))
-        bible_notes.addAction(QAction(config.thisTranslation["menu_verse"], self, shortcut="Ctrl+N, V", triggered=self.openStudyVerseNote))
+            QAction(config.thisTranslation["menu_book"], self, shortcut="Ctrl+N, B", triggered=self.openMainBookNote))
+        bible_notes.addAction(
+            QAction(config.thisTranslation["menu_chapter"], self, shortcut="Ctrl+N, C", triggered=self.openMainChapterNote))
+        bible_notes.addAction(QAction(config.thisTranslation["menu_verse"], self, shortcut="Ctrl+N, V", triggered=self.openMainVerseNote))
         external_notes = annotate_menu.addMenu(config.thisTranslation["menu_external_notes"])
         external_notes.addAction(QAction(config.thisTranslation["menu_new_note"], self, shortcut="Ctrl+N, N", triggered=self.createNewNoteFile))
         external_notes.addAction(QAction(config.thisTranslation["menu_open_note"], self, shortcut="Ctrl+N, O", triggered=self.openTextFileDialog))
         external_notes.addAction(QAction(config.thisTranslation["menu_read_note"], self, shortcut="Ctrl+N, R", triggered=self.externalFileButtonClicked))
         external_notes.addAction(QAction(config.thisTranslation["menu_edit_note"], self, shortcut="Ctrl+N, E", triggered=self.editExternalFileButtonClicked))
+        if config.enableGist:
+            annotate_menu.addAction(
+                QAction(config.thisTranslation["menu_gist"], self, shortcut="Ctrl+N, G", triggered=self.showGistWindow))
 
         library_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_library"]))
         library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut="Ctrl+L, W", triggered=self.runWORDS))
@@ -170,6 +175,7 @@ class AlephMainWindow(MainWindow):
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_second"], self, shortcut="Ctrl+T,3", triggered=self.hideShowSecondaryToolBar))
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_left"], self, shortcut="Ctrl+T, L", triggered=self.hideShowLeftToolBar))
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_right"], self, shortcut="Ctrl+T, R", triggered=self.hideShowRightToolBar))
+        toolbar_menu.addAction(QAction(config.thisTranslation["menu2_icons"], self, shortcut="Ctrl+T, I", triggered=self.switchIconSize))
         font_menu = display_menu.addMenu(config.thisTranslation["menu_font"])
         font_menu.addAction(QAction(config.thisTranslation["menu_select_default_font"], self, shortcut="Ctrl+D, F", triggered=self.setDefaultFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
@@ -735,11 +741,29 @@ class AlephMainWindow(MainWindow):
         iconFile = os.path.join("htmlResources", "noteVerse.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_verseNotes"], self.openMainVerseNote)
 
-        iconFile = os.path.join("htmlResources", "search.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)
+        previousBookButton = QPushButton()
+        previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])
+        previousBookButton.setText("<<")
+        previousBookButton.clicked.connect(self.previousMainBook)
+        self.firstToolBar.addWidget(previousBookButton)
 
-        iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBibles"], self.displaySearchBibleMenu)
+        previousChapterButton = QPushButton()
+        previousChapterButton.setToolTip(config.thisTranslation["menu_previous_chapter"])
+        previousChapterButton.setText("<")
+        previousChapterButton.clicked.connect(self.previousMainChapter)
+        self.firstToolBar.addWidget(previousChapterButton)
+
+        nextChapterButton = QPushButton()
+        nextChapterButton.setToolTip(config.thisTranslation["menu_next_chapter"])
+        nextChapterButton.setText(">")
+        nextChapterButton.clicked.connect(self.nextMainChapter)
+        self.firstToolBar.addWidget(nextChapterButton)
+
+        nextBookButton = QPushButton()
+        nextBookButton.setToolTip(config.thisTranslation["menu_next_book"])
+        nextBookButton.setText(">>")
+        nextBookButton.clicked.connect(self.nextMainBook)
+        self.firstToolBar.addWidget(nextBookButton)
 
         self.firstToolBar.addSeparator()
 
