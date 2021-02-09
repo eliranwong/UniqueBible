@@ -92,11 +92,11 @@ class GistWindow(QDialog):
             self.testStatus.setStyleSheet("color: rgb(128, 255, 7);")
         else:
             self.testStatus.setStyleSheet("color: rgb(253, 128, 8);")
+        QApplication.processEvents()
 
     def syncBibleNotes(self):
         self.setStatus("Syncing ...", True)
         self.syncBibleNotesButton.setEnabled(False)
-        QApplication.processEvents()
 
         self.thread = QThread()
         self.worker = SyncNotesWithGist()
