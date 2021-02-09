@@ -8,7 +8,7 @@ gdown
 diff_match_patch
 langdetect
 pygithub
-qt-material
+qt_material
 googletrans
 pypinyin
 opencc

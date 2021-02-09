@@ -1,11 +1,6 @@
-import config, re
-from BiblesSqlite import BiblesSqlite
-from BibleBooks import BibleBooks
+import config
 from gui.CheckableComboBox import CheckableComboBox
-from BibleVerseParser import BibleVerseParser
 from PySide2.QtWidgets import (QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QWidget, QComboBox, QLineEdit, QRadioButton)
-from ThirdParty import ThirdPartyDictionary
-from ToolsSqlite import LexiconData, BookData, IndexesSqlite
 
 class ToolsLauncher(QWidget):
 
@@ -16,41 +11,15 @@ class ToolsLauncher(QWidget):
 
         # set title
         self.setWindowTitle(config.thisTranslation["tools"])
-        # set up item lists
-        self.setupItemLists()
+        # set up variables
+        self.setupVariables()
         # setup interface
         self.setupUI()
 
-    def setupItemLists(self):
+    def setupVariables(self):
         # Bible Search Mode
         self.bibleSearchModeTuple = ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")
         self.bibleSearchMode = 0
-        # bible versions
-        self.textList = BiblesSqlite().getBibleList()
-        # reference book
-        # menu10_dialog
-        bookData = BookData()
-        self.referenceBookList = [book for book, *_ in bookData.getBookList()]
-        # open database
-        indexes = IndexesSqlite()
-        # topic
-        # menu5_topics
-        self.topicDict = {name: abb for abb, name in indexes.topicList}
-        self.topicList = list(self.topicDict.keys())
-        # lexicon
-        # context1_originalLexicon
-        self.lexiconList = LexiconData().lexiconList
-        # dictionary
-        # context1_dict
-        self.dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
-        self.dictionaryList = list(self.dictionaryDict.keys())
-        # encyclopedia
-        # context1_encyclopedia
-        self.encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
-        self.encyclopediaList = list(self.encyclopediaDict.keys())
-        # 3rd-party dictionary
-        # menu5_3rdDict
-        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
 
     def setupUI(self):
         mainLayout = QHBoxLayout()
@@ -71,9 +40,7 @@ class ToolsLauncher(QWidget):
 
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
-        #combo = CheckableComboBox(items, initialItems)
-        #self.parent.comboFeatureLayout(feature, combo, action)
-        bibleLayout.addLayout(self.multipleSelectionLayout("html_searchBible2", lambda: self.dummyAction(), self.textList, [config.mainText]))
+        bibleLayout.addLayout(self.multipleSelectionLayout("html_searchBible2", lambda: self.dummyAction(), self.parent.textList, [config.mainText]))
         subLayout = QHBoxLayout()
         subLayout.setSpacing(10)
         leftGroupLayout = QVBoxLayout()
@@ -115,11 +82,11 @@ class ToolsLauncher(QWidget):
 
         widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.referenceBookList, config.favouriteBooks))
         features = (
-            ("menu5_topics", lambda: self.dummyAction(), self.topicList, 0),
-            ("menu5_lexicon", lambda: self.dummyAction(), self.lexiconList, 0),
-            ("context1_encyclopedia", lambda: self.dummyAction(), self.encyclopediaList, 0),
-            ("context1_dict", lambda: self.dummyAction(), self.dictionaryList, 0),
-            ("menu5_3rdDict", lambda: self.dummyAction(), self.thirdPartyDictionaryList, 0),
+            ("menu5_topics", lambda: self.dummyAction(), self.parent.topicList, 0),
+            ("menu5_lexicon", lambda: self.dummyAction(), self.parent.lexiconList, 0),
+            ("context1_encyclopedia", lambda: self.dummyAction(), self.parent.encyclopediaList, 0),
+            ("context1_dict", lambda: self.dummyAction(), self.parent.dictionaryList, 0),
+            ("menu5_3rdDict", lambda: self.dummyAction(), self.parent.thirdPartyDictionaryList, 0),
         )
         for feature, action, items, initialIndex in features:
             widgetLayout.addLayout(self.singleSelectionLayout(feature, action, items, initialIndex))
