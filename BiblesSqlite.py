@@ -5,8 +5,10 @@ import os, sqlite3, config, re, logging
 from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
+from NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from themes import Themes
+from util.NoteService import NoteService
 
 try:
     from diff_match_patch import diff_match_patch
@@ -737,11 +739,9 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         if config.showNoteIndicatorOnBibleChapter:
-            noteSqlite = NoteSqlite()
-            noteVerseList = noteSqlite.getChapterVerseList(b, c)
-            if noteSqlite.isChapterNote(b, c):
-                chapter += ' <ref onclick="nC()">&#9997</ref>'
-            del noteSqlite
+            noteVerseList = NoteService.getChapterVerseList(b, c)
+            if NoteService.isChapterNote(b, c):
+                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
         chapter += "</h2>"

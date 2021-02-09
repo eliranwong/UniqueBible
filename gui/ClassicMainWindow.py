@@ -280,6 +280,9 @@ class ClassicMainWindow(MainWindow):
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_verseNotes"], self, triggered=self.searchCommandVerseNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearNoteHighlights))
 
+        if config.enableGist:
+            menu6.addAction(QAction(config.thisTranslation["menu_gist"], self, triggered=self.showGistWindow))
+
         menu6.addSeparator()
 
         topicalNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
