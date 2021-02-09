@@ -1,3 +1,11 @@
+Major changes in version 21.22:
+* Fixed issue https://github.com/eliranwong/UniqueBible/issues/103
+* Fixed issue https://github.com/eliranwong/UniqueBible/issues/106
+* Ability to share Bibles notes across computers is added in last version.
+    To enable it, current users need to install a new module, by running:
+    > pip3 install pygithub
+    After installing pygithub, you need to enable "enableGist" via "Select More ..." settings dialog.
+
 Major changes in version 21.21:
 * Added ability to share Bibles notes across computers.  Thanks to Oliver Tseng for this helpful feature.
     For more details, please read:

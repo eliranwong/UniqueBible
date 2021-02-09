@@ -52,7 +52,7 @@ class Downloader(QDialog):
         # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
         # self.downloadFile(True)
         # https://www.linuxjournal.com/content/multiprocessing-python
-        if self.parent.isDownloading:
+        if config.isDownloading:
             self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
         else:
             threading.Thread(target=self.downloadFile, args=(True,)).start()
@@ -60,7 +60,7 @@ class Downloader(QDialog):
 
     def downloadFile(self, interactWithParent=True):
         self.hide()
-        self.parent.isDownloading = True
+        config.isDownloading = True
         try:
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
@@ -77,9 +77,9 @@ class Downloader(QDialog):
                 zipObject.extractall(path)
                 zipObject.close()
                 os.remove(self.localFile)
-            if interactWithParent:
-                self.parent.moduleInstalled(self.databaseInfo)
-        else:
-            if interactWithParent:
-                self.parent.moduleInstalledFailed(self.databaseInfo)
-
+            #if interactWithParent:
+                #self.parent.moduleInstalled(self.databaseInfo)
+        #else:
+            #if interactWithParent:
+                #self.parent.moduleInstalledFailed(self.databaseInfo)
+        config.isDownloading = False

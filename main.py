@@ -241,9 +241,6 @@ if not hasattr(config, "rtlTexts"):
 # Open bible references on main window instead of workspace: Ture / False
 if not hasattr(config, "openBibleInMainViewOnly"):
     config.openBibleInMainViewOnly = False
-# A temporary history record to work with enforcing comparison or parallel
-if not hasattr(config, "tempRecord"):
-    config.tempRecord = ""
 # Last-opened bible version and passage to be displayed on main window
 if not hasattr(config, "mainText"):
     config.mainText = "KJV"
@@ -412,7 +409,6 @@ if not hasattr(config, "enableGist"):
     config.enableGist = False
 if not hasattr(config, "gistToken"):
     config.gistToken = ''
-
 # Setup logging
 logger = logging.getLogger('uba')
 if config.enableLogging:
@@ -475,17 +471,32 @@ except:
 # [Optional] Google-translate
 try:
     from googletrans import Translator
-
     config.googletransSupport = True
 except:
     config.googletransSupport = False
     print(
         "Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
 
+# [Optional] Gist sync
+try:
+    from github import Github, InputFileContent
+except:
+    if config.enableGist:
+        config.enableGist = False
+    print(
+        "Optional feature 'Gist-synching' is disabled.  To enable it, install python package 'pygithub' first. Run 'pip3 install pygithub' to install.")
+
 # import modules for developer
 if config.developer:
     #import exlbl
     pass
+
+# Temporary configurations
+# These records are not saved on exit.
+if not hasattr(config, "tempRecord"):
+    config.tempRecord = ""
+if not hasattr(config, "isDownloading"):
+    config.isDownloading = False
 
 import sys, pprint
 from PySide2.QtWidgets import QApplication

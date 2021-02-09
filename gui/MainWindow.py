@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
         self.lastStudyTextCommand = ""
         self.newTabException = False
         self.pdfOpened = False
-        self.isDownloading = False
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -436,8 +435,11 @@ class MainWindow(QMainWindow):
 
     # manage download helper
     def downloadHelper(self, databaseInfo):
-        self.downloader = Downloader(self, databaseInfo)
-        self.downloader.show()
+        if config.isDownloading:
+            self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+        else:
+            self.downloader = Downloader(self, databaseInfo)
+            self.downloader.show()
 
     def moduleInstalled(self, databaseInfo):
         self.downloader.close()
@@ -446,12 +448,12 @@ class MainWindow(QMainWindow):
         # Update install History
         fileItems, cloudID, *_ = databaseInfo
         config.installHistory[fileItems[-1]] = cloudID
-        self.parent.isDownloading = False
+        config.isDownloading = False
 
     def moduleInstalledFailed(self, databaseInfo):
         self.downloader.close()
         self.displayMessage(config.thisTranslation["message_fail"])
-        self.parent.isDownloading = False
+        config.isDownloading = False
 
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro
@@ -552,13 +554,16 @@ class MainWindow(QMainWindow):
             self.installAllMarvelCommentaries(commentaries)
 
     def installAllMarvelCommentaries(self, commentaries):
-        toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"], config.thisTranslation["message_willBeNoticed"]))
-        for commentary in toBeInstalled:
-            databaseInfo = commentaries[commentary]
-            downloader = Downloader(self, databaseInfo)
-            downloader.downloadFile(False)
-        self.displayMessage(config.thisTranslation["message_done"])
+        if config.isDownloading:
+            self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+        else:
+            toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
+            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"], config.thisTranslation["message_willBeNoticed"]))
+            for commentary in toBeInstalled:
+                databaseInfo = commentaries[commentary]
+                downloader = Downloader(self, databaseInfo)
+                downloader.downloadFile(False)
+            #self.displayMessage(config.thisTranslation["message_done"])
 
     def installMarvelDatasets(self):
         datasets = {

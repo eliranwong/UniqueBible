@@ -3,7 +3,10 @@ import re
 import time
 import config
 
-from github import Github, InputFileContent
+try:
+    from github import Github, InputFileContent
+except:
+    pass
 
 # https://docs.github.com/en/rest/reference/gists
 # https://pygithub.readthedocs.io/en/latest/introduction.html
