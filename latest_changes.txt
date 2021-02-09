@@ -8,7 +8,7 @@ Major change in version 21.24:
 * Fixed updating download history.
 
 Major change in version 21.23:
-* Notify current users to install module 'pygithbu' if they enalble 'enableGist' on 'Select more ...' dialog.
+* Notify current users to install module 'pygithub' if they enalble 'enableGist' on 'Select more ...' dialog.
 
 Major changes in version 21.22:
 * Fixed issue https://github.com/eliranwong/UniqueBible/issues/103
