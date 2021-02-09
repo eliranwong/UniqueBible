@@ -58,26 +58,6 @@ class ToolsLauncher(QWidget):
         mainLayout.addWidget(self.column2Widget())
         self.setLayout(mainLayout)
 
-    def column2Widget(self):
-        widget = QWidget()
-
-        widgetLayout = QVBoxLayout()
-        widgetLayout.setSpacing(10)
-
-        widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.referenceBookList, config.favouriteBooks))
-        features = (
-            ("menu5_topics", lambda: self.dummyAction(), self.topicList, 0),
-            ("menu5_lexicon", lambda: self.dummyAction(), self.lexiconList, 0),
-            ("context1_encyclopedia", lambda: self.dummyAction(), self.encyclopediaList, 0),
-            ("context1_dict", lambda: self.dummyAction(), self.dictionaryList, 0),
-            ("menu5_3rdDict", lambda: self.dummyAction(), self.thirdPartyDictionaryList, 0),
-        )
-        for feature, action, items, initialIndex in features:
-            widgetLayout.addLayout(self.singleSelectionLayout(feature, action, items, initialIndex))
-
-        widget.setLayout(widgetLayout)
-        return widget
-
     def column1Widget(self):
         widget = QWidget()
 
@@ -91,6 +71,8 @@ class ToolsLauncher(QWidget):
 
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
+        #combo = CheckableComboBox(items, initialItems)
+        #self.parent.comboFeatureLayout(feature, combo, action)
         bibleLayout.addLayout(self.multipleSelectionLayout("html_searchBible2", lambda: self.dummyAction(), self.textList, [config.mainText]))
         subLayout = QHBoxLayout()
         subLayout.setSpacing(10)
@@ -125,6 +107,26 @@ class ToolsLauncher(QWidget):
         widget.setLayout(widgetLayout0)
         return widget
 
+    def column2Widget(self):
+        widget = QWidget()
+
+        widgetLayout = QVBoxLayout()
+        widgetLayout.setSpacing(10)
+
+        widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.referenceBookList, config.favouriteBooks))
+        features = (
+            ("menu5_topics", lambda: self.dummyAction(), self.topicList, 0),
+            ("menu5_lexicon", lambda: self.dummyAction(), self.lexiconList, 0),
+            ("context1_encyclopedia", lambda: self.dummyAction(), self.encyclopediaList, 0),
+            ("context1_dict", lambda: self.dummyAction(), self.dictionaryList, 0),
+            ("menu5_3rdDict", lambda: self.dummyAction(), self.thirdPartyDictionaryList, 0),
+        )
+        for feature, action, items, initialIndex in features:
+            widgetLayout.addLayout(self.singleSelectionLayout(feature, action, items, initialIndex))
+
+        widget.setLayout(widgetLayout)
+        return widget
+
     def searchFieldldWidget(self):
         self.searchFieldld = QLineEdit()
         self.searchFieldld.setClearButtonEnabled(True)
@@ -147,6 +149,9 @@ class ToolsLauncher(QWidget):
     def searchModeChanged(self, checked, mode):
         if checked:
             self.bibleSearchMode = mode
+
+    def searchBible(self):
+        pass
 
     def dummyAction(self):
         print("testing")
