@@ -1,9 +1,7 @@
 import os, config, myTranslation
-from PySide2.QtGui import QIcon, Qt, QGuiApplication
-from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
+from PySide2.QtGui import QIcon, Qt
+from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
 from gui.MainWindow import MainWindow
-from gui.BibleExplorer import BibleExplorer
-from gui.ToolsLauncher import ToolsLauncher
 from gui.MasterControl import MasterControl
 
 class ClassicMainWindow(MainWindow):
@@ -30,9 +28,21 @@ class ClassicMainWindow(MainWindow):
         #lexiconMenu = menu1.addMenu(config.thisTranslation["menu1_selectDefaultLexicon"])
         generalPreferencesMenu.addAction(QAction(config.thisTranslation["menu1_setDefaultStrongsHebrewLexicon"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         generalPreferencesMenu.addAction(QAction(config.thisTranslation["menu1_setDefaultStrongsGreekLexicon"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
+        
+        windowStyleMenu = menu1.addMenu(config.thisTranslation["menu1_selectWindowStyle"])
+        windowStyleMenu.addAction(QAction("default", self, triggered=lambda: self.setAppWindowStyle("default")))
+        for style in QStyleFactory.keys():
+            windowStyleMenu.addAction(QAction(style, self, triggered=lambda style=style: self.setAppWindowStyle(style)))
+
         themeMenu = menu1.addMenu(config.thisTranslation["menu1_selectTheme"])
-        themeMenu.addAction(QAction(config.thisTranslation["menu_light_theme"], self, triggered=self.setDefaultTheme))
-        themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
+        if config.qtMaterial:
+            qtMaterialThemes = ["light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml"]
+            for theme in qtMaterialThemes:
+                themeMenu.addAction(QAction(theme[:-4], self, triggered=lambda theme=theme: self.setQtMaterialTheme(theme)))
+        else:
+            themeMenu.addAction(QAction(config.thisTranslation["menu_light_theme"], self, triggered=self.setDefaultTheme))
+            themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
+        
         layoutMenu = menu1.addMenu(config.thisTranslation["menu1_selectMenuLayout"])
         layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=self.setDefaultMenuLayout))

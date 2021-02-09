@@ -7,7 +7,8 @@
 import os, subprocess, platform, logging
 import logging.handlers as handlers
 
-# Create files for user customisation
+def messageFeatureNotEnabled(feature, module):
+    print("Optional feature '{0}'is not enabled.  To enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
 
 # Create files for user customisation
 # "config.py" is essential for running module "config".
@@ -365,9 +366,19 @@ config.noteOpened = False
 # set show information to True
 if not hasattr(config, "showInformation"):
     config.showInformation = True
+# Window Style
+# Availability of window styles depends on device
+if not hasattr(config, "windowStyle"):
+    config.windowStyle = ""
 # Theme (default, dark)
 if not hasattr(config, "theme"):
     config.theme = "default"
+# qt-material theme
+# qt-material theme is used only qtMaterial is true and qtMaterialTheme is not empty
+if not hasattr(config, "qtMaterial"):
+    config.qtMaterial = False
+if not hasattr(config, "qtMaterialTheme"):
+    config.qtMaterialTheme = ""
 # Disable modules update check
 if not hasattr(config, "disableModulesUpdateCheck"):
     config.disableModulesUpdateCheck = False
@@ -409,6 +420,7 @@ if not hasattr(config, "enableGist"):
     config.enableGist = False
 if not hasattr(config, "gistToken"):
     config.gistToken = ''
+
 # Setup logging
 logger = logging.getLogger('uba')
 if config.enableLogging:
@@ -421,30 +433,30 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
+# Temporary configurations
+# Their values are not saved on exit.
+if not hasattr(config, "tempRecord"):
+    config.tempRecord = ""
+if not hasattr(config, "isDownloading"):
+    config.isDownloading = False
+
 # Optional Features
 # [Optional] Text-to-Speech feature
 config.ttsSupport = True
-
 if platform.system() == "Linux":
     if not config.showTtsOnLinux:
         config.ttsSupport = False
     elif config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
         if not espeakInstalled:
+            config.espeak = False
             config.ttsSupport = False
             print("Package 'espeak' is not installed.  To install espeak, read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md")
-
-if not config.espeak:
+if config.ttsSupport and not config.espeak:
     try:
         from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
-    
-        if platform.system() == "Linux" and not config.showTtsOnLinux:
-            config.ttsSupport = False
-        else:
-            config.ttsSupport = True
     except:
         config.ttsSupport = False
-
 if not config.ttsSupport:
     print("Text-to-speech feature is not enabled or supported on this operating system.")
 
@@ -456,53 +468,55 @@ if not config.ttsSupport:
 #    openccSupport = True
 # except:
 #    openccSupport = False
-#    print("Chinese feature 'opencc' is disabled.  To enable it, install python package 'opencc' first, by running 'pip3 install OpenCC'.")
+#    messageFeatureNotEnabled("Conversion between traditional Chinese and simplified Chinese", "opencc")
+
 # [Optional] Chinese feature - pypinyin
 # It translates Chinese characters into pinyin.
 # To enable functions working with "pypinyin", install python package "pypinyin" first, e.g. pip3 install pypinyin.
 try:
     from pypinyin import pinyin
-
     config.pinyinSupport = True
 except:
     config.pinyinSupport = False
-    print(
-        "Chinese feature 'pypinyin' is disabled.  To enable it, install python package 'pypinyin' first, by running 'pip3 install pypinyin'.")
+    messageFeatureNotEnabled("Translate Chinese words into pinyin", "pypinyin")
+
 # [Optional] Google-translate
 try:
     from googletrans import Translator
     config.googletransSupport = True
 except:
     config.googletransSupport = False
-    print(
-        "Optional feature 'googletrans' is disabled.  To enable it, install python package 'googletrans' first. Run 'pip3 install googletrans' to install.")
+    messageFeatureNotEnabled("Google translate", "googletrans")
 
-# [Optional] Gist sync
-try:
-    from github import Github, InputFileContent
-except:
-    if config.enableGist:
+# [Optional] Gist-syncing notes
+if config.enableGist:
+    try:
+        from github import Github, InputFileContent
+    except:
         config.enableGist = False
-    print(
-        "Optional feature 'Gist-synching' is disabled.  To enable it, install python package 'pygithub' first. Run 'pip3 install pygithub' to install.")
+        messageFeatureNotEnabled("Gist-synching notes across devices", "pygithub")
 
-# import modules for developer
+# Import modules for developer
 if config.developer:
     #import exlbl
     pass
 
-# Temporary configurations
-# These records are not saved on exit.
-if not hasattr(config, "tempRecord"):
-    config.tempRecord = ""
-if not hasattr(config, "isDownloading"):
-    config.isDownloading = False
+
 
 import sys, pprint
-from PySide2.QtWidgets import QApplication
+from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
+
+# [Optional] qt-material
+# qt-material have to be imported after PySide2
+if config.qtMaterial:
+    try:
+        from qt_material import apply_stylesheet
+    except:
+        config.qtMaterial = False
+        messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
@@ -641,7 +655,10 @@ def saveDataOnExit():
         ("currentRecord", {'main': 0, 'study': 0}),
         ("history", config.history),
         ("installHistory", config.installHistory),
+        ("windowStyle", config.windowStyle),
         ("theme", config.theme),
+        ("qtMaterial", config.qtMaterial),
+        ("qtMaterialTheme", config.qtMaterialTheme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
         ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
@@ -687,16 +704,24 @@ if config.virtualKeyboard:
 
 # Start PySide2 gui
 app = QApplication(sys.argv)
-# Assign a function to save configurations when the app is closed
+# Assign a function to save configurations when the app is closed.
 app.aboutToQuit.connect(saveDataOnExit)
-app.setPalette(Themes.getPalette())
-
+# Apply window style
+if config.windowStyle and config.windowStyle in QStyleFactory.keys():
+    app.setStyle(config.windowStyle)
+# Apply theme style
+if config.qtMaterial and config.qtMaterialTheme:
+    apply_stylesheet(app, theme=config.qtMaterialTheme)
+    config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
+else:
+    app.setPalette(Themes.getPalette())
+# Apply window menu layout
 if config.menuLayout == "aleph":
     mainWindow = AlephMainWindow()
 else:
     mainWindow = ClassicMainWindow()
 
-# check screen size
+# Check screen size
 availableGeometry = app.desktop().availableGeometry(mainWindow)
 setupMainWindow(availableGeometry)
 

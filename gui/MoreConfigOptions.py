@@ -22,7 +22,7 @@ class MoreConfigOptions(QDialog):
         layout.addWidget(readWiki)
 
         horizontalContainer = QWidget()
-        horizontalContainer.setPalette(Themes.getPalette())
+        #horizontalContainer.setPalette(Themes.getPalette())
         horizontalContainerLayout = QHBoxLayout()
 
         leftContainer = QWidget()
@@ -39,6 +39,7 @@ class MoreConfigOptions(QDialog):
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged),
+            ("qtMaterial", config.qtMaterial, self.qtMaterialChanged),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
@@ -271,6 +272,19 @@ class MoreConfigOptions(QDialog):
     def enableMacrosChanged(self):
         config.enableMacros = not config.enableMacros
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def qtMaterialChanged(self):
+        if not config.qtMaterial:
+            try:
+                from qt_material import apply_stylesheet
+                config.qtMaterial = True
+                self.parent.displayMessage(config.thisTranslation["message_restart"])
+            except:
+                config.qtMaterial = False
+                self.parent.displayMessage(config.thisTranslation["installQtMaterial"])
+        else:
+            config.qtMaterial = not config.qtMaterial
+            self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def enableGistChanged(self):
         if not config.enableGist:

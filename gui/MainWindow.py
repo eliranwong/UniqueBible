@@ -627,6 +627,14 @@ class MainWindow(QMainWindow):
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
 
+    def setAppWindowStyle(self, style):
+        config.windowStyle = "" if style == "default" else style
+        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
+    def setQtMaterialTheme(self, theme):
+        config.qtMaterialTheme = theme
+        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
     def setDefaultTheme(self):
         config.theme = "default"
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
