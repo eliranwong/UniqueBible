@@ -6,7 +6,7 @@ from gui.ToolsLauncher import ToolsLauncher
 from gui.CheckableComboBox import CheckableComboBox
 from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox, QTabWidget, QLineEdit)
 from ThirdParty import ThirdPartyDictionary
-from ToolsSqlite import LexiconData, BookData, IndexesSqlite
+from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
 from BibleVerseParser import BibleVerseParser
 
 class MasterControl(QWidget):
@@ -26,6 +26,8 @@ class MasterControl(QWidget):
     def setupItemLists(self):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
+        # commentaries
+        self.commentaryList = Commentary().getCommentaryList()
         # reference book
         # menu10_dialog
         bookData = BookData()
@@ -34,6 +36,7 @@ class MasterControl(QWidget):
         indexes = IndexesSqlite()
         # topic
         # menu5_topics
+        self.topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
         self.topicDict = {name: abb for abb, name in indexes.topicList}
         self.topicList = list(self.topicDict.keys())
         # lexicon
@@ -41,10 +44,12 @@ class MasterControl(QWidget):
         self.lexiconList = LexiconData().lexiconList
         # dictionary
         # context1_dict
+        self.dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
         self.dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
         self.dictionaryList = list(self.dictionaryDict.keys())
         # encyclopedia
         # context1_encyclopedia
+        self.encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
         self.encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
         self.encyclopediaList = list(self.encyclopediaDict.keys())
         # 3rd-party dictionary

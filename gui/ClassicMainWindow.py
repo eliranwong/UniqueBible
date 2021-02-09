@@ -382,6 +382,7 @@ class ClassicMainWindow(MainWindow):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
 
         self.firstToolBar = QToolBar()
+        #self.firstToolBar.setFixedHeight(40)
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
