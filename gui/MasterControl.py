@@ -49,7 +49,7 @@ class MasterControl(QWidget):
         self.encyclopediaList = list(self.encyclopediaDict.keys())
         # 3rd-party dictionary
         # menu5_3rdDict
-        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
 
     def setupUI(self):
         mainLayout = QVBoxLayout()

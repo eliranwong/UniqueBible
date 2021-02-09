@@ -80,7 +80,7 @@ class ToolsLauncher(QWidget):
         widgetLayout = QVBoxLayout()
         widgetLayout.setSpacing(10)
 
-        widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.referenceBookList, config.favouriteBooks))
+        widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.parent.referenceBookList, config.favouriteBooks))
         features = (
             ("menu5_topics", lambda: self.dummyAction(), self.parent.topicList, 0),
             ("menu5_lexicon", lambda: self.dummyAction(), self.parent.lexiconList, 0),
