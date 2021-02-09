@@ -65,7 +65,7 @@ class GitHubGist:
         self.openGistByDescription(self.description)
 
     def openGistByDescription(self, description):
-        if self.user:
+        if self.connected and self.user is not None:
             self.gist = None
             gists = self.user.get_gists()
             for g in gists:
@@ -86,7 +86,7 @@ class GitHubGist:
             return None
 
     def getAllNoteGists(self):
-        if self.user:
+        if self.connected and self.user is not None:
             self.gist = None
             self.description = None
             gists = self.user.get_gists()
@@ -103,16 +103,17 @@ class GitHubGist:
             return ""
 
     def updateContent(self, content, updated):
-        if not self.gist:
-            self.gist = self.user.create_gist(self.enablePublicGist, {self.description: InputFileContent(content),
-                                                      "updated": InputFileContent(str(updated))},
-                                                       self.description)
-        else:
-            self.gist.edit(files={self.description: InputFileContent(content),
-                                  "updated": InputFileContent(str(updated))})
+        if self.connected:
+            if self.gist is not None:
+                self.gist = self.user.create_gist(self.enablePublicGist, {self.description: InputFileContent(content),
+                                                          "updated": InputFileContent(str(updated))},
+                                                           self.description)
+            else:
+                self.gist.edit(files={self.description: InputFileContent(content),
+                                      "updated": InputFileContent(str(updated))})
 
     def getFile(self):
-        if self.gist:
+        if self.connected and self.gist is not None:
             files = self.gist.files
             file = files[self.description]
             return file
@@ -121,21 +122,24 @@ class GitHubGist:
 
     def getContent(self):
         file = self.getFile()
-        if file:
+        if file is not None:
             return file.content
         else:
             return ""
 
     def getUpdated(self):
-        if self.gist:
-            files = self.gist.files
-            file = files["updated"]
-            if file and file.content is not None:
-                return int(file.content)
-        return 0
+        if self.connected:
+            if self.gist:
+                files = self.gist.files
+                file = files["updated"]
+                if file and file.content is not None:
+                    return int(file.content)
+            return 0
+        else:
+            return 0
 
     def deleteAllNotes(self):
-        if self.user:
+        if self.connected and self.user:
             self.gist = None
             self.description = None
             gists = self.user.get_gists()
@@ -274,6 +278,12 @@ def test_getNotes():
             (book, chapter, verse) = GitHubGist.verseNameToBcv(gist.description)
             # print("Book {0} Chapter {1} Verse {2}".format(book, chapter, verse))
 
+def test_getCount():
+    gh = GitHubGist()
+    notes = gh.getAllNoteGists()
+    print("Total Gist notes")
+    print(len(notes))
+
 def test_updated():
     gh = GitHubGist()
     book = 40
@@ -284,17 +294,17 @@ def test_updated():
     content = gh.getContent()
     print(content)
 
-def test_delete():
-    gh = GitHubGist()
-    print(gh.deleteAllNotes())
+# def test_delete():
+#     gh = GitHubGist()
+#     print(gh.deleteAllNotes())
 
 
 if __name__ == "__main__":
     start = time.time()
 
-    test_delete()
     # test_write()
     # test_getNotes()
+    test_getCount()
 
     print("---")
 

@@ -257,9 +257,9 @@ class NoteSqlite:
 
 # Only used for test
 
-def test_deleteAllNotes():
-    ns = NoteSqlite()
-    ns.deleteAllNotes()
+# def test_deleteAllNotes():
+#     ns = NoteSqlite()
+#     ns.deleteAllNotes()
 
 def test_printAllCount():
     ns = NoteSqlite()
@@ -269,7 +269,6 @@ def test_printAllCount():
 
 if __name__ == "__main__":
 
-    test_deleteAllNotes()
     test_printAllCount()
 
 

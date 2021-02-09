@@ -2,6 +2,7 @@ import logging
 import re
 import time
 import config
+from BibleBooks import BibleBooks
 from Languages import Languages
 from NoteSqlite import NoteSqlite
 from util.DateUtil import DateUtil
@@ -356,13 +357,34 @@ p, li { white-space: pre-wrap; }
 
     print(merged)
 
+def test_createFakeNotes():
+    maxNotes = 10
+    count = 0
+    for b in range(40, 67):
+        count += 1
+        note = "Test book note {0}".format(b)
+        NoteService.saveBookNote(b, note)
+        print(note)
+        for c in range(1, BibleBooks.chapters[b]):
+            note = "Test chapter note {0}:{1}".format(b, c)
+            NoteService.saveChapterNote(b, c, note)
+            print(note)
+            for v in range(1, 10):
+                note = "Test verse note {0}:{1}:{2}".format(b, c, v)
+                NoteService.saveVerseNote(b, c, v, note)
+                print(note)
+                if count > maxNotes:
+                    return
+
+
 
 if __name__ == "__main__":
     config.thisTranslation = Languages.translation
     start = time.time()
 
     # test_getAllNotes()
-    test_mergeNotes()
+    # test_mergeNotes()
+    test_createFakeNotes()
 
     print("---")
     end = time.time()
