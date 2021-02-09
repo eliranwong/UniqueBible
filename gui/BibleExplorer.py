@@ -92,10 +92,10 @@ class BibleExplorer(QWidget):
 
     def navigationLayout2(self):
         buttonElementTuple = (
-            ("openInStudyWindow", lambda: self.openInWindow("BIBLE")),
-            ("openInMainWindow", lambda: self.openInWindow("STUDY")),
+            ("openInMainWindow", lambda: self.openInWindow("BIBLE")),
+            ("openInStudyWindow", lambda: self.openInWindow("STUDY")),
         )
-        return self.buttonsLayout(buttonElementTuple, True)
+        return self.parent.buttonsLayout(buttonElementTuple)
 
     def navigationLayout3(self):
         feature = "html_showParallel"
@@ -103,7 +103,7 @@ class BibleExplorer(QWidget):
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.parallelCombo = CheckableComboBox(items, initialItems)
-        return self.multipleSelectionFeatureLayout(feature, self.parallelCombo, action)
+        return self.parent.comboFeatureLayout(feature, self.parallelCombo, action)
 
     def navigationLayout4(self):
         feature = "html_showCompare"
@@ -111,7 +111,7 @@ class BibleExplorer(QWidget):
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.compareCombo = CheckableComboBox(items, initialItems)
-        return self.multipleSelectionFeatureLayout(feature, self.compareCombo, action)
+        return self.parent.comboFeatureLayout(feature, self.compareCombo, action)
 
     def navigationLayout5(self):
         feature = "html_showDifference"
@@ -119,7 +119,7 @@ class BibleExplorer(QWidget):
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.differenceCombo = CheckableComboBox(items, initialItems)
-        return self.multipleSelectionFeatureLayout(feature, self.differenceCombo, action)
+        return self.parent.comboFeatureLayout(feature, self.differenceCombo, action)
 
     def navigationLayout6(self):
         buttonRow1 = (
@@ -137,7 +137,7 @@ class BibleExplorer(QWidget):
             ("SBLGNTl", lambda: self.openInWindow("BIBLE", "SBLGNTl")),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
-        return self.buttonsWidget(buttonElementTupleTuple, False, False)
+        return self.parent.buttonsWidget(buttonElementTupleTuple, False, False)
 
     def updateBookCombo(self, textIndex=None, reset=False):
         if textIndex is None or ((textIndex is not None) and textIndex >= 0):
@@ -234,7 +234,7 @@ class BibleExplorer(QWidget):
             ("context1_encyclopedia", lambda: self.searchBookName(False)),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
-        return self.buttonsWidget(buttonElementTupleTuple)
+        return self.parent.buttonsWidget(buttonElementTupleTuple)
 
     def chapterFeatures(self):
         buttonRow1 = (
@@ -248,7 +248,7 @@ class BibleExplorer(QWidget):
             ("menu4_commentary", lambda: self.chapterAction("COMMENTARY")),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
-        return self.buttonsWidget(buttonElementTupleTuple)
+        return self.parent.buttonsWidget(buttonElementTupleTuple)
 
     def verseFeatures(self):
         buttonRow1 = (
@@ -271,39 +271,7 @@ class BibleExplorer(QWidget):
             ("menu4_commentary", lambda: self.verseAction("COMMENTARY")),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2, buttonRow3, buttonRow4)
-        return self.buttonsWidget(buttonElementTupleTuple)
-
-    def buttonsWidget(self, buttonElementTupleTuple, r2l=False, translation=True):
-        buttons = QWidget()
-        buttonsLayouts = QVBoxLayout()
-        buttonsLayouts.setSpacing(3)
-        for buttonElementTuple in buttonElementTupleTuple:
-            buttonsLayouts.addLayout(self.buttonsLayout(buttonElementTuple, r2l, translation))
-        buttons.setLayout(buttonsLayouts)
-        return buttons
-
-    def buttonsLayout(self, buttonElementTuple, r2l=False, translation=True):
-        buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft if r2l else QBoxLayout.LeftToRight)
-        buttonsLayout.setSpacing(5)
-        for buttonElements in buttonElementTuple:
-            buttonLabel = config.thisTranslation[buttonElements[0]] if translation else buttonElements[0]
-            print(buttonLabel)
-            button = QPushButton(buttonLabel)
-            button.clicked.connect(buttonElements[1])
-            buttonsLayout.addWidget(button)
-        return buttonsLayout
-
-    def multipleSelectionFeatureLayout(self, feature, combo, action):
-        # QGridLayout: https://stackoverflow.com/questions/61451279/how-does-setcolumnstretch-and-setrowstretch-works
-        layout = QGridLayout()
-        layout.setSpacing(5)
-        # combo
-        layout.addWidget(combo, 0, 0, 1, 3)
-        # button
-        button = QPushButton(config.thisTranslation[feature])
-        button.clicked.connect(action)
-        layout.addWidget(button, 0, 3, 1, 1)
-        return layout
+        return self.parent.buttonsWidget(buttonElementTupleTuple)
 
     # Selected Reference
 
@@ -318,10 +286,9 @@ class BibleExplorer(QWidget):
 
     # Button actions
 
-    def dummyAction(self):
-        print("testing")
-
     def openInWindow(self, window, text=""):
+        if window == "STUDY" and config.openBibleInMainViewOnly:
+            self.parent.parent.enableStudyBibleButtonClicked()
         command = "{0}:::{1}:::{2}".format(window, text if text else self.text, self.getSelectedReference())
         self.parent.runTextCommand(command)
 

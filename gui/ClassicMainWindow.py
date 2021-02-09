@@ -3,6 +3,8 @@ from PySide2.QtGui import QIcon, Qt, QGuiApplication
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
 from gui.BibleExplorer import BibleExplorer
+from gui.ToolsLauncher import ToolsLauncher
+from gui.MasterControl import MasterControl
 
 class ClassicMainWindow(MainWindow):
 
@@ -359,7 +361,8 @@ class ClassicMainWindow(MainWindow):
 
     def testing(self):
         #pass
-        test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        test = MasterControl(self)
         test.show()
 
 
