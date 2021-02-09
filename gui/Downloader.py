@@ -21,7 +21,7 @@ class Downloader(QDialog):
 
         #self.setupProgressBar()
 
-        message = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
+        self.messageLabel = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
 
         self.downloadButton = QPushButton(config.thisTranslation["message_install"])
         self.downloadButton.clicked.connect(self.startDownloadFile)
@@ -29,14 +29,14 @@ class Downloader(QDialog):
         self.cancelButton = QPushButton(config.thisTranslation["message_cancel"])
         self.cancelButton.clicked.connect(self.close)
 
-        remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
+        self.remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
 
         self.layout = QGridLayout()
         #self.layout.addWidget(self.progressBar, 0, 0)
-        self.layout.addWidget(message, 0, 0)
+        self.layout.addWidget(self.messageLabel, 0, 0)
         self.layout.addWidget(self.downloadButton, 1, 0)
         self.layout.addWidget(self.cancelButton, 2, 0)
-        self.layout.addWidget(remarks, 3, 0)
+        self.layout.addWidget(self.remarks, 3, 0)
         self.setLayout(self.layout)
 
     def setupProgressBar(self):
@@ -46,6 +46,7 @@ class Downloader(QDialog):
         self.progressBar.setValue(0)
 
     def startDownloadFile(self):
+        self.messageLabel.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setEnabled(False)
         self.cancelButton.setEnabled(False)
@@ -58,7 +59,7 @@ class Downloader(QDialog):
             threading.Thread(target=self.downloadFile, args=(True,)).start()
             #self.parent.displayMessage(config.thisTranslation["downloading"])
 
-    def downloadFile(self, interactWithParent=True):
+    def downloadFile(self, notification=True):
         self.hide()
         config.isDownloading = True
         try:
@@ -77,9 +78,18 @@ class Downloader(QDialog):
                 zipObject.extractall(path)
                 zipObject.close()
                 os.remove(self.localFile)
-            #if interactWithParent:
-                #self.parent.moduleInstalled(self.databaseInfo)
-        #else:
-            #if interactWithParent:
-                #self.parent.moduleInstalledFailed(self.databaseInfo)
+            # Update download history
+            # Update install History
+            fileItems, cloudID, *_ = self.databaseInfo
+            config.installHistory[fileItems[-1]] = cloudID
+            if notification:
+                self.messageLabel.setText(config.thisTranslation["message_installed"])
+                self.remarks.setText("")
+                self.downloadButton.setText(config.thisTranslation["message_installed"])
+        else:
+            if notification:
+                self.messageLabel.setText(config.thisTranslation["message_failedToInstall"])
+                self.remarks.setText("")
+                self.downloadButton.setText(config.thisTranslation["message_failedToInstall"])
+        self.show()
         config.isDownloading = False
