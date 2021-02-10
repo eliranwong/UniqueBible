@@ -3,6 +3,7 @@ from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
 from gui.BibleExplorer import BibleExplorer
 from gui.ToolsLauncher import ToolsLauncher
+from gui.LibraryLauncher import LibraryLauncher
 from gui.CheckableComboBox import CheckableComboBox
 from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox, QTabWidget, QLineEdit)
 from ThirdParty import ThirdPartyDictionary
@@ -73,6 +74,8 @@ class MasterControl(QWidget):
         self.tabs = QTabWidget()
         bibleTab = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
         self.tabs.addTab(bibleTab, config.thisTranslation["menu_bible"])
+        libraryTab = LibraryLauncher(self)
+        self.tabs.addTab(libraryTab, config.thisTranslation["menu_library"])
         toolTab = ToolsLauncher(self)
         self.tabs.addTab(toolTab, config.thisTranslation["menu5_lookup"])
         self.tabs.currentChanged.connect(self.tabChanged)
