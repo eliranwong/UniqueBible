@@ -386,10 +386,9 @@ class ClassicMainWindow(MainWindow):
         toolbar.addWidget(button)
 
     def addStandardIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
-        config.fixButtonWidth = True
         if button is None:
             button = QPushButton()
-        if config.fixButtonWidth:
+        if config.qtMaterial and config.qtMaterialTheme:
             #button.setFixedSize(self.buttonWidth, self.buttonWidth)
             button.setFixedWidth(self.buttonWidth)
             #button.setFixedHeight(self.buttonWidth)
