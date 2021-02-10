@@ -1862,6 +1862,8 @@ class TextCommandParser:
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
                 del exlbData
+                if config.theme == "dark":
+                    content = self.adjustDarkThemeColorsForExl(content)
                 return ("study", content, {})
             else:
                 return self.invalidCommand("study")
@@ -1936,6 +1938,8 @@ class TextCommandParser:
             if not content:
                 return self.invalidCommand("study")
             else:
+                if config.theme == "dark":
+                    content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.bookOnNewWindow:
                     self.parent.bookButton.setText(config.book)
                     return ("popover.study", content, {})
@@ -2185,6 +2189,15 @@ class TextCommandParser:
                 hl.highlightVerse(b, c, v, code)
         return ("command", "", {})
 
+    def adjustDarkThemeColorsForExl(self, content):
+        content = content.replace("#FFFFFF", "#555555")
+        content = content.replace("#DFDFDF", "gray")
+        content = content.replace('color="navy"', 'color="#609b00"')
+        return content
+
+    def adjustDarkThemeColorsForExternalBook(self, content):
+        content = content.replace("background-color:#FFFFFF", "background-color:#323232")
+        return content
 
 if __name__ == "__main__":
     from Languages import Languages

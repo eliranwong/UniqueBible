@@ -494,6 +494,8 @@ input.addEventListener('keyup', function(event) {0}
                 if not text == mainText and not text in config.originalTexts:
                     diff = dmp.diff_main(mainVerseText, verseText)
                     verseText = dmp.diff_prettyHtml(diff)
+                    if config.theme == "dark":
+                        verseText = self.adjustDarkThemeColorsForDiff(verseText)
                 divTag = "<div>"
                 if b < 40 and text in config.rtlTexts:
                     divTag = "<div style='direction: rtl;'>"
@@ -822,6 +824,12 @@ input.addEventListener('keyup', function(event) {0}
             else:
                 self.logger.debug("Verses table does not exist:" + name)
 
+    def adjustDarkThemeColorsForDiff(self, content):
+        content = content.replace("#e6ffe6", "#6b8e6b")
+        content = content.replace("#ffe6e6", "#555555")
+        return content
+
+
 class Bible:
 
     CREATE_DETAILS_TABLE = '''CREATE TABLE IF NOT EXISTS Details (Title NVARCHAR(100), 
@@ -1037,6 +1045,7 @@ class Bible:
         if self.getCount("Details") == 0:
             self.insertDetailsTable(self.text, self.text)
 
+
 class ClauseData:
 
     def getContent(self, testament, entry):
@@ -1181,6 +1190,7 @@ class MorphologySqlite:
                 textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
             formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
         return formatedText
+
 
 
 if __name__ == '__main__':

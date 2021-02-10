@@ -83,23 +83,34 @@ class AlephMainWindow(MainWindow):
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
 
         search_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_search"]))
-        search_menu.addAction(QAction(config.thisTranslation["menu5_bible"], self, shortcut="Ctrl+S, B", triggered=self.displaySearchBibleMenu))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_bible"], self, shortcut="Ctrl+S, M", triggered=self.displaySearchBibleMenu))
         search_menu.addAction(QAction(config.thisTranslation["menu_verse_all_versions"], self, shortcut="Ctrl+S, V", triggered=self.runCOMPARE))
+
+        search_resources = search_menu.addMenu("&{0}".format(config.thisTranslation["menu_library"]))
+        search_resources.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
+        search_resources.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
+        search_resources.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, triggered=self.searchBookDialog))
+        search_resources.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
+        search_resources.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
+
         search_command = search_menu.addMenu(config.thisTranslation["menu_command"])
         search_command.addAction(
-            QAction(config.thisTranslation["menu_bible"], self, triggered=self.displaySearchBibleCommand))
+            QAction(config.thisTranslation["menu_bible"], self, shortcut="Ctrl+S, B", triggered=self.displaySearchBibleCommand))
         if config.enableVerseHighlighting:
-            search_command.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.displaySearchHighlightCommand))
-        search_command.addAction(QAction(config.thisTranslation["menu_lexicon"], self, triggered=self.searchCommandLexicon))
+            search_command.addAction(QAction(config.thisTranslation["menu_highlight"], self, shortcut="Ctrl+S, H", triggered=self.displaySearchHighlightCommand))
         search_command.addAction(
-            QAction(config.thisTranslation["menu_bible_chapter_notes"], self, triggered=self.searchCommandChapterNote))
-        search_command.addAction(QAction(config.thisTranslation["menu_bible_verse_notes"], self, triggered=self.searchCommandVerseNote))
-        search_resources = search_menu.addMenu("&{0}".format(config.thisTranslation["menu_library"]))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_topics"], self, shortcut="Ctrl+S, T", triggered=self.searchTopicDialog))
-        search_resources.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, shortcut="Ctrl+S, E", triggered=self.searchEncyclopediaDialog))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, shortcut="Ctrl+S, O", triggered=self.searchBookDialog))
-        search_resources.addAction(QAction(config.thisTranslation["context1_dict"], self, shortcut="Ctrl+S, D", triggered=self.searchDictionaryDialog))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, shortcut="Ctrl+S, 3", triggered=self.search3rdDictionaryDialog))
+                QAction(config.thisTranslation["menu_bible_book_notes"], self, shortcut="Ctrl+S, 1", triggered=self.searchCommandBookNote))
+        search_command.addAction(
+            QAction(config.thisTranslation["menu_bible_chapter_notes"], self, shortcut="Ctrl+S, 2", triggered=self.searchCommandChapterNote))
+        search_command.addAction(QAction(config.thisTranslation["menu_bible_verse_notes"], self, shortcut="Ctrl+S, 3", triggered=self.searchCommandVerseNote))
+        search_command.addAction(QAction(config.thisTranslation["menu_lexicon"], self, shortcut="Ctrl+S, L", triggered=self.searchCommandLexicon))
+        search_command.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+S, C", triggered=self.searchCommandBibleCharacter))
+        search_command.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+S, N",
+                                triggered=self.searchCommandBibleName))
+        search_command.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut="Ctrl+S, O", triggered=self.searchCommandBibleLocation))
+        search_command.addAction(QAction(config.thisTranslation["menu5_allTopics"], self, triggered=self.searchCommandAllBibleTopic))
+        search_command.addAction(
+            QAction(config.thisTranslation["menu5_allBook"], self, shortcut="Ctrl+S, R", triggered=self.displaySearchAllBookCommand))
 
         annotate_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_annotate"]))
         if config.enableVerseHighlighting:
