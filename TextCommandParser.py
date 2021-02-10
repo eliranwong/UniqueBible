@@ -1545,9 +1545,10 @@ class TextCommandParser:
     def textBookMenu(self, command, source):
         bookData = BookData()
         bookMenu = bookData.getMenu(command)
+        config.bookChapNum = 0
         del bookData
         self.parent.bookButton.setText(config.book)
-        return ("study", bookMenu, {})
+        return ("study", bookMenu, {'tab_title':command[:20]})
 
     # _history:::
     def textHistory(self, command, source):
@@ -1929,7 +1930,7 @@ class TextCommandParser:
         if command.count(":::") == 0 and command in bookList:
             config.book = command
             self.parent.bookButton.setText(config.book)
-            return ("study", bookData.getMenu(module=config.book), {})
+            return ("study", bookData.getMenu(module=config.book), {'tab_title': command[:20]})
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
             module, entry = commandList
@@ -1942,10 +1943,10 @@ class TextCommandParser:
                     content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.bookOnNewWindow:
                     self.parent.bookButton.setText(config.book)
-                    return ("popover.study", content, {})
+                    return ("popover.study", content, {'tab_title': module[:20]})
                 else:
                     self.parent.bookButton.setText(config.book)
-                    return ("study", content, {})
+                    return ("study", content, {'tab_title': module[:20]})
         else:
             return self.invalidCommand("study")
 

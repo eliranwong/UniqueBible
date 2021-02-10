@@ -16,7 +16,7 @@ from TextFileReader import TextFileReader
 from NoteSqlite import NoteSqlite
 from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
-from ToolsSqlite import BookData, IndexesSqlite
+from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
 from gui.GistWindow import GistWindow
 from translations import translations
@@ -1328,6 +1328,22 @@ class MainWindow(QMainWindow):
     # Actions - book features
     def openBookMenu(self):
         self.runTextCommand("BOOK:::{0}".format(config.book), True, "main")
+
+    def openBookPreviousChapter(self):
+        if hasattr(config, "bookChapNum"):
+            config.bookChapNum -= 1
+            if config.bookChapNum < 1:
+                config.bookChapNum = 1
+            self.newTabException = True
+            self.runTextCommand("BOOK:::{0}:::{1}".format(config.book, config.bookChapNum), True, "main")
+
+    def openBookNextChapter(self):
+        if hasattr(config, "bookChapNum"):
+            book = Book(config.book)
+            if config.bookChapNum < book.getChapterCount():
+                config.bookChapNum += 1
+            self.newTabException = True
+            self.runTextCommand("BOOK:::{0}:::{1}".format(config.book, config.bookChapNum), True, "main")
 
     def displaySearchBookCommand(self):
         config.bookSearchString = ""
