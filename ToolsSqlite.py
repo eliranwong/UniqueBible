@@ -691,7 +691,10 @@ class BookData:
 
     def getContent(self, module, entry):
         entry = re.sub("@", "'", entry)
-        return Book(module).getContent(entry)
+        if entry.isdecimal():
+            return Book(module).getContentByRowId(entry)
+        else:
+            return Book(module).getContentByChapter(entry)
 
 
 class Book:
@@ -722,15 +725,29 @@ class Book:
             self.cursor.execute(query, (searchString, searchString))
         return [topic[0] for topic in self.cursor.fetchall()]
 
-    def getContent(self, entry):
-        query = "SELECT Content FROM Reference WHERE Chapter=?"
+    def getChapterCount(self):
+        query = "SELECT MAX(ROWID) from Reference"
+        result = self.cursor.execute(query).fetchone()
+        return result[0]
+
+    def getContentByChapter(self, entry):
+        query = "SELECT Chapter, Content, ROWID FROM Reference WHERE Chapter=?"
+        return self.getContentData(query, entry)
+
+    def getContentByRowId(self, entry):
+        query = "SELECT Chapter, Content, ROWID FROM Reference WHERE ROWID=?"
+        return self.getContentData(query, entry)
+
+    def getContentData(self, query, entry):
         self.cursor.execute(query, (entry,))
-        content = self.cursor.fetchone()
-        if not content:
+        row = self.cursor.fetchone()
+        if not row:
             return "[not applicable]"
         else:
             config.book = self.module
-            content = content[0]
+            config.bookChapter = row[0]
+            content = row[1]
+            config.bookChapNum = row[2]
             if config.overwriteBookFont:
                 content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font), content)
             if config.overwriteBookFontSize:
@@ -745,7 +762,13 @@ class Book:
                         s = p.search(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
+            if config.theme == "dark":
+                content = self.adjustDarkThemeColorsForBook(content)
             # return content
-            return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, entry, content, '"')
+            return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, config.bookChapter, content, '"')
 
-
+    def adjustDarkThemeColorsForBook(self, content):
+        content = content.replace('<body style="background-attachment: fixed" background="http://www.swartzentrover.com/cotor/Bootstrap/img/bg/sdf/BK249.GIF">', '<body>')
+        content = content.replace('<body style="background-attachment: fixed" background="http://www.swartzentrover.com/Web Graphics/BackGrounds/concrete/concrete12.jpg">', '<body>')
+        content = content.replace('cellpadding="0"', 'cellpadding="5"')
+        return content
