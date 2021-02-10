@@ -286,6 +286,7 @@ class ClassicMainWindow(MainWindow):
         verseNotesMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.openStudyVerseNote))
         
         searchNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_search"]))
+        searchNotesMenu.addAction(QAction(config.thisTranslation["menu_bookNotes"], self, triggered=self.searchCommandBookNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_chapterNotes"], self, triggered=self.searchCommandChapterNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_verseNotes"], self, triggered=self.searchCommandVerseNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearNoteHighlights))
