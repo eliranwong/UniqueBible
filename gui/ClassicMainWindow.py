@@ -399,8 +399,7 @@ class ClassicMainWindow(MainWindow):
         toolbar.addWidget(button)
 
     def setupToolBarStandardIconSize(self):
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
-
+        
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -410,8 +409,9 @@ class ClassicMainWindow(MainWindow):
         toolTip = "{0} {1}".format(config.thisTranslation["bar1_menu"], config.thisTranslation["menu_bibleMenu"])
         self.addStandardTextButton(toolTip, self.mainTextMenu, self.firstToolBar, self.mainTextMenuButton, False)
 
-        # The height of the first text button is used to fix icon button width
-        self.buttonWidth = self.mainTextMenuButton.height()
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            self.buttonWidth = self.mainTextMenuButton.height()
 
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
         self.addStandardTextButton("bar1_reference", self.mainRefButtonClicked, self.firstToolBar, self.mainRefButton)
@@ -460,6 +460,7 @@ class ClassicMainWindow(MainWindow):
         if config.addBreakBeforeTheLastToolBar:
             self.addToolBarBreak()
 
+        # Second tool bar
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -471,23 +472,16 @@ class ClassicMainWindow(MainWindow):
         self.secondToolBar.addSeparator()
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        self.commentaryRefButton.setToolTip(config.thisTranslation["menu4_commentary"])
-        self.commentaryRefButton.setStyleSheet(textButtonStyle)
-        self.commentaryRefButton.clicked.connect(self.commentaryRefButtonClicked)
-        self.secondToolBar.addWidget(self.commentaryRefButton)
+        self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
 
         self.enableSyncCommentaryButton = QPushButton()
         self.addStandardIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)
-
         self.secondToolBar.addSeparator()
 
         self.addStandardIconButton("menu10_dialog", "open.png", self.openBookDialog, self.secondToolBar)
 
         self.bookButton = QPushButton(config.book)
-        self.bookButton.setToolTip(config.thisTranslation["menu5_book"])
-        self.bookButton.setStyleSheet(textButtonStyle)
-        self.bookButton.clicked.connect(self.openBookMenu)
-        self.secondToolBar.addWidget(self.bookButton)
+        self.addStandardTextButton("menu5_book", self.openBookMenu, self.secondToolBar, self.bookButton)
 
         self.addStandardIconButton("bar2_searchBooks", "search.png", self.displaySearchBookCommand, self.secondToolBar)
 
@@ -497,10 +491,7 @@ class ClassicMainWindow(MainWindow):
         self.addStandardIconButton("menu7_open", "open.png", self.openTextFileDialog, self.secondToolBar)
 
         self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.externalFileButton.setToolTip(config.thisTranslation["menu7_read"])
-        self.externalFileButton.setStyleSheet(textButtonStyle)
-        self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
-        self.secondToolBar.addWidget(self.externalFileButton)
+        self.addStandardTextButton("menu7_read", self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton)
 
         self.addStandardIconButton("menu7_edit", "edit.png", self.editExternalFileButtonClicked, self.secondToolBar)
 
@@ -509,10 +500,7 @@ class ClassicMainWindow(MainWindow):
         self.addStandardIconButton("menu2_smaller", "fontMinus.png", self.smallerFont, self.secondToolBar)
 
         self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
-        self.defaultFontButton.setToolTip(config.thisTranslation["menu1_setDefaultFont"])
-        self.defaultFontButton.setStyleSheet(textButtonStyle)
-        self.defaultFontButton.clicked.connect(self.setDefaultFont)
-        self.secondToolBar.addWidget(self.defaultFontButton)
+        self.addStandardTextButton("menu1_setDefaultFont", self.setDefaultFont, self.secondToolBar, self.defaultFontButton)
 
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
@@ -521,6 +509,7 @@ class ClassicMainWindow(MainWindow):
         self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
+        # Left tool bar
         self.leftToolBar = QToolBar()
         self.leftToolBar.setWindowTitle(config.thisTranslation["bar3_title"])
         self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -551,6 +540,7 @@ class ClassicMainWindow(MainWindow):
         self.addStandardIconButton("Marvel Annotated Bible", "annotated.png", self.runMAB, self.leftToolBar, None, False)
         self.leftToolBar.addSeparator()
 
+        # Right tool bar
         self.rightToolBar = QToolBar()
         self.rightToolBar.setWindowTitle(config.thisTranslation["bar4_title"])
         self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
