@@ -1,6 +1,6 @@
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import (QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QWidget, QComboBox, QLineEdit, QRadioButton)
+from PySide2.QtWidgets import (QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton)
 
 class ToolsLauncher(QWidget):
 
@@ -36,7 +36,7 @@ class ToolsLauncher(QWidget):
         widgetLayout = QVBoxLayout()
         widgetLayout.setSpacing(40)
 
-        widgetLayout.addWidget(self.searchFieldldWidget())
+        widgetLayout.addWidget(self.searchFieldWidget())
 
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
@@ -94,12 +94,12 @@ class ToolsLauncher(QWidget):
         widget.setLayout(widgetLayout)
         return widget
 
-    def searchFieldldWidget(self):
-        self.searchFieldld = QLineEdit()
-        self.searchFieldld.setClearButtonEnabled(True)
-        self.searchFieldld.setToolTip(config.thisTranslation["menu5_searchItems"])
-        self.searchFieldld.returnPressed.connect(self.dummyAction())
-        return self.searchFieldld
+    def searchFieldWidget(self):
+        self.searchField = QLineEdit()
+        self.searchField.setClearButtonEnabled(True)
+        self.searchField.setToolTip(config.thisTranslation["menu5_searchItems"])
+        self.searchField.returnPressed.connect(self.dummyAction())
+        return self.searchField
 
     def singleSelectionLayout(self, feature, action, items, initialIndex=0):
         combo = QComboBox()

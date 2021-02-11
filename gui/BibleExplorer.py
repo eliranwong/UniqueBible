@@ -3,7 +3,7 @@ from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
-from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox)
+from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
 
@@ -92,6 +92,7 @@ class BibleExplorer(QWidget):
 
     def navigationLayout2(self):
         buttonElementTuple = (
+            ("addToCommand", self.addToCommand),
             ("openInMainWindow", lambda: self.openInWindow("BIBLE")),
             ("openInStudyWindow", lambda: self.openInWindow("STUDY")),
         )
@@ -285,6 +286,9 @@ class BibleExplorer(QWidget):
         return self.getSelectedReference().split(":")[0]
 
     # Button actions
+
+    def addToCommand(self):
+        self.parent.commandField.setText("{0} {1}".format(self.parent.commandField.text(), self.getSelectedReference()))
 
     def openInWindow(self, window, text=""):
         if window == "STUDY" and config.openBibleInMainViewOnly:

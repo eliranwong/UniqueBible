@@ -346,12 +346,11 @@ class TextCommandParser:
             # [KEYWORD] MP4
             # Usage - MP4:::[youtube_link]
             "mp4": self.mp4Download,
-            # [KEYWORD] _open
-            # open a file inside marvelData folder
-            # e.g. _open:::.
-            # e.g. _open:::bibles
-            "_open": self.openMarvelDataFile,
+            # [KEYWORD] opennote
+            # e.g. opennote:::file_path
+            "opennote": self.textOpenNoteFile,
             # [KEYWORD] open
+            # open::: is different from opennote::: that open::: uses system default application to open the file.
             # e.g. open:::.
             "open": self.openExternalFile,
             # [KEYWORD] TRANSLATE
@@ -460,7 +459,13 @@ class TextCommandParser:
             # [KEYWORD] _editversenote
             # e.g. _editversenote:::43.3.16
             "_editversenote": self.editVerseNote,
+            # [KEYWORD] _open
+            # open a file inside marvelData folder
+            # e.g. _open:::.
+            # e.g. _open:::bibles
+            "_open": self.openMarvelDataFile,
             # [KEYWORD] _openfile
+            # Usage: _openfile:::[external_note_history_record_index]
             # e.g. _openfile:::1
             "_openfile": self.textOpenFile,
             # [KEYWORD] _editfile
@@ -1379,6 +1384,12 @@ class TextCommandParser:
         fileitems = command.split("/")
         filePath = os.path.join(*fileitems)
         self.parent.openExternalFile(filePath)
+        return ("", "", {})
+
+    # opennote:::
+    def textOpenNoteFile(self, command, source):
+        if command:
+            self.parent.openTextFile(command)
         return ("", "", {})
 
     # _openfile:::

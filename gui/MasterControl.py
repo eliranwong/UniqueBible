@@ -1,28 +1,26 @@
-import config, re
+import config
 from BiblesSqlite import BiblesSqlite
-from BibleBooks import BibleBooks
 from gui.BibleExplorer import BibleExplorer
 from gui.ToolsLauncher import ToolsLauncher
 from gui.LibraryLauncher import LibraryLauncher
-from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QPushButton, QWidget, QComboBox, QTabWidget, QLineEdit)
+from gui.HistoryLauncher import HistoryLauncher
+from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit)
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
-from BibleVerseParser import BibleVerseParser
 
 class MasterControl(QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent, initialTab=0):
         super().__init__()
 
         self.parent = parent
 
         # set title
-        self.setWindowTitle(config.thisTranslation["remote_control"])
+        self.setWindowTitle(config.thisTranslation["controlPanel"])
         # setup item option lists
         self.setupItemLists()
         # setup interface
-        self.setupUI()
+        self.setupUI(initialTab)
 
     def setupItemLists(self):
         # bible versions
@@ -57,10 +55,10 @@ class MasterControl(QWidget):
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
 
-    def setupUI(self):
+    def setupUI(self, initialTab):
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(self.sharedWidget())
-        mainLayout.addWidget(self.tabWidget())
+        mainLayout.addWidget(self.tabWidget(initialTab))
         self.setLayout(mainLayout)
 
     def sharedWidget(self):
@@ -70,22 +68,31 @@ class MasterControl(QWidget):
         sharedWidget.setLayout(sharedWidgetLayout)
         return sharedWidget
 
-    def tabWidget(self):
+    def tabWidget(self, initialTab):
         self.tabs = QTabWidget()
-        bibleTab = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
-        self.tabs.addTab(bibleTab, config.thisTranslation["menu_bible"])
+        # 0
+        self.bibleTab = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        self.tabs.addTab(self.bibleTab, config.thisTranslation["menu_bible"])
+        # 1
         libraryTab = LibraryLauncher(self)
         self.tabs.addTab(libraryTab, config.thisTranslation["menu_library"])
-        toolTab = ToolsLauncher(self)
-        self.tabs.addTab(toolTab, config.thisTranslation["menu5_lookup"])
+        # 2
+        self.toolTab = ToolsLauncher(self)
+        self.tabs.addTab(self.toolTab, config.thisTranslation["menu5_lookup"])
+        # 3
+        self.historyTab = HistoryLauncher(self)
+        self.tabs.addTab(self.historyTab, config.thisTranslation["menu_history"])
+        # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
+        # set initial tab
+        self.tabs.setCurrentIndex(initialTab)
         return self.tabs
 
     def commandFieldWidget(self):
         self.commandField = QLineEdit()
         self.commandField.setClearButtonEnabled(True)
         self.commandField.setToolTip(config.thisTranslation["enter_command_here"])
-        self.commandField.returnPressed.connect(self.dummyAction)
+        self.commandField.returnPressed.connect(lambda: self.parent.runTextCommand(self.commandField.text()))
         return self.commandField
 
     # Common layout
@@ -123,12 +130,14 @@ class MasterControl(QWidget):
 
     # Actions
 
-    def dummyAction(self):
-        print("testing")
-
     def runTextCommand(self, command):
         self.commandField.setText(command)
         self.parent.runTextCommand(command)
 
     def tabChanged(self, index):
-        print(index)
+        if index == 2:
+            self.toolTab.searchField.setFocus()
+        elif index == 3:
+            self.historyTab.refreshHistoryRecords()
+        else:
+            self.commandField.setFocus()

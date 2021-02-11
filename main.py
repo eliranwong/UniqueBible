@@ -302,6 +302,9 @@ if not hasattr(config, "encyclopedia"):
 # Last-opened book module
 if not hasattr(config, "book"):
     config.book = "Harmonies_and_Parallels"
+# Last-opened book chapter
+if not hasattr(config, "bookChapter"):
+    config.bookChapter = "03 - Gospels I"
 # Option to open book content on a new window
 if not hasattr(config, "bookOnNewWindow"):
     config.bookOnNewWindow = False
@@ -635,6 +638,7 @@ def saveDataOnExit():
         ("dictionary", config.dictionary),
         ("encyclopedia", config.encyclopedia),
         ("book", config.book),
+        ("bookChapter", config.bookChapter),
         ("bookOnNewWindow", config.bookOnNewWindow),
         ("overwriteBookFont", config.overwriteBookFont),
         ("overwriteBookFontSize", config.overwriteBookFontSize),
