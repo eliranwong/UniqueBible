@@ -25,6 +25,7 @@ class SearchLauncher(QWidget):
         mainLayout.addWidget(self.column2Widget())
         mainLayout0.addLayout(mainLayout)
         self.setLayout(mainLayout0)
+        self.searchField.clear()
 
     def column1Widget(self):
         widget = QWidget()
@@ -36,7 +37,7 @@ class SearchLauncher(QWidget):
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
         self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText])
-        bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, lambda: self.dummyAction()))
+        bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, self.searchBible))
         subLayout = QHBoxLayout()
         subLayout.setSpacing(5)
         leftGroupLayout = QVBoxLayout()
@@ -57,18 +58,19 @@ class SearchLauncher(QWidget):
         widgetLayout0.addWidget(bibleWidget)
 
         buttonRow1 = (
-            ("menu_bookNotes", lambda: self.dummyAction()),
-            ("menu_chapterNotes", lambda: self.dummyAction()),
-            ("menu_verseNotes", lambda: self.dummyAction()),
+            ("menu_bookNotes", lambda: self.runSearchCommand("SEARCHBOOKNOTE")),
+            ("menu_chapterNotes", lambda: self.runSearchCommand("SEARCHCHAPTERNOTE")),
+            ("menu_verseNotes", lambda: self.runSearchCommand("SEARCHVERSENOTE")),
         )
         buttonRow2 = (
-            ("menu5_names", lambda: self.dummyAction()),
-            ("menu5_characters", lambda: self.dummyAction()),
-            ("menu5_locations", lambda: self.dummyAction()),
+            ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
+            ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
+            ("menu5_locations", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBL")),
         )
         buttonRow3 = (
-            ("biblePromises", lambda: self.dummyAction()),
-            ("bibleHarmonies", lambda: self.dummyAction()),
+            ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
+            ("bibleHarmonies", lambda: self.runSearchCommand("SEARCHBOOK:::Harmonies_and_Parallels")),
+            ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
         )
         widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3)))
 
@@ -82,16 +84,27 @@ class SearchLauncher(QWidget):
         widgetLayout = QVBoxLayout()
         widgetLayout.setSpacing(10)
 
-        widgetLayout.addLayout(self.multipleSelectionLayout("menu5_selectBook", lambda: self.dummyAction(), self.parent.referenceBookList, config.favouriteBooks))
+        self.bookCombo = CheckableComboBox(self.parent.referenceBookList, [config.book])
+        widgetLayout.addLayout(self.parent.comboFeatureLayout("menu5_selectBook", self.bookCombo, self.searchBook))
+        self.topicCombo = QComboBox()
+        initialTopicIndex = self.parent.topicListAbb.index(config.topic) if config.topic in self.parent.topicListAbb else 0
+        self.lexiconCombo = QComboBox()
+        initialLexiconIndex = self.parent.lexiconList.index(config.lexicon) if config.lexicon in self.parent.lexiconList else 0
+        self.encyclopediaCombo = QComboBox()
+        initialEncyclopediaIndex = self.parent.encyclopediaListAbb.index(config.encyclopedia) if config.encyclopedia in self.parent.encyclopediaListAbb else 0
+        self.dictionaryCombo = QComboBox()
+        initialDictionaryIndex = self.parent.dictionaryListAbb.index(config.dictionary) if config.dictionary in self.parent.dictionaryListAbb else 0
+        self.thirdPartyDictionaryCombo = QComboBox()
+        initialThridPartyDictionaryIndex = self.parent.thirdPartyDictionaryList.index(config.thirdDictionary) if config.thirdDictionary in self.parent.thirdPartyDictionaryList else 0
         features = (
-            ("menu5_topics", lambda: self.dummyAction(), self.parent.topicList, 0),
-            ("menu5_lexicon", lambda: self.dummyAction(), self.parent.lexiconList, 0),
-            ("context1_encyclopedia", lambda: self.dummyAction(), self.parent.encyclopediaList, 0),
-            ("context1_dict", lambda: self.dummyAction(), self.parent.dictionaryList, 0),
-            ("menu5_3rdDict", lambda: self.dummyAction(), self.parent.thirdPartyDictionaryList, 0),
+            (self.topicCombo, "menu5_topics", lambda: self.runSearchSelection("topic"), self.parent.topicList, initialTopicIndex),
+            (self.lexiconCombo, "menu5_lexicon", lambda: self.runSearchSelection("lexicon"), self.parent.lexiconList, initialLexiconIndex),
+            (self.encyclopediaCombo, "context1_encyclopedia", lambda: self.runSearchSelection("encyclopedia"), self.parent.encyclopediaList, initialEncyclopediaIndex),
+            (self.dictionaryCombo, "context1_dict", lambda: self.runSearchSelection("dictionary"), self.parent.dictionaryList, initialDictionaryIndex),
+            (self.thirdPartyDictionaryCombo, "menu5_3rdDict", lambda: self.runSearchSelection("thirdPartyDictionary"), self.parent.thirdPartyDictionaryList, initialThridPartyDictionaryIndex),
         )
-        for feature, action, items, initialIndex in features:
-            widgetLayout.addLayout(self.singleSelectionLayout(feature, action, items, initialIndex))
+        for combo, feature, action, items, initialIndex in features:
+            widgetLayout.addLayout(self.singleSelectionLayout(combo, feature, action, items, initialIndex))
 
         widget.setLayout(widgetLayout)
         return widget
@@ -100,17 +113,12 @@ class SearchLauncher(QWidget):
         self.searchField = QLineEdit()
         self.searchField.setClearButtonEnabled(True)
         self.searchField.setToolTip(config.thisTranslation["menu5_searchItems"])
-        self.searchField.returnPressed.connect(self.dummyAction())
+        self.searchField.returnPressed.connect(self.searchBible)
         return self.searchField
 
-    def singleSelectionLayout(self, feature, action, items, initialIndex=0):
-        combo = QComboBox()
+    def singleSelectionLayout(self, combo, feature, action, items, initialIndex=0):
         combo.addItems(items)
         combo.setCurrentIndex(initialIndex)
-        return self.parent.comboFeatureLayout(feature, combo, action)
-
-    def multipleSelectionLayout(self, feature, action, items, initialItems=[]):
-        combo = CheckableComboBox(items, initialItems)
         return self.parent.comboFeatureLayout(feature, combo, action)
 
     # Button actions
@@ -119,8 +127,52 @@ class SearchLauncher(QWidget):
         if checked:
             config.bibleSearchMode = mode
 
-    def searchBible(self):
-        command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], self.bibleCombo.checkItems, self.searchField.text())
+    def getSearchItem(self):
+        searchItem = self.searchField.text()
+        noItemMessage = config.thisTranslation["menu5_searchItems"]
+        if not searchItem:
+            self.searchField.setText(noItemMessage)
+            return ""
+        elif searchItem == noItemMessage:
+            return ""
+        else:
+            return searchItem
 
-    def dummyAction(self):
-        print("testing")
+    def searchBible(self):
+        searchItem = self.getSearchItem()
+        if searchItem:
+            command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], "_".join(self.bibleCombo.checkItems), self.searchField.text())
+            self.parent.runTextCommand(command)
+
+    def searchBook(self):
+        searchItem = self.getSearchItem()
+        if searchItem:
+            command = "{0}:::{1}:::{2}".format("SEARCHBOOK", ",".join(self.bookCombo.checkItems), self.searchField.text())
+            self.parent.runTextCommand(command)
+
+    def runSearchCommand(self, prefix):
+        searchItem = self.getSearchItem()
+        if searchItem:
+            command = "{0}:::{1}".format(prefix, self.searchField.text())
+            self.parent.runTextCommand(command)
+
+    def runSearchSelection(self, resource):
+        searchItem = self.getSearchItem()
+        if searchItem:
+            comboDict = {
+                "topic": (self.topicCombo, self.parent.topicListAbb),
+                "lexicon": (self.lexiconCombo, self.parent.lexiconList),
+                "encyclopedia": (self.encyclopediaCombo, self.parent.encyclopediaListAbb),
+                "dictionary": (self.dictionaryCombo, self.parent.dictionaryListAbb),
+                "thirdPartyDictionary": (self.thirdPartyDictionaryCombo, self.parent.thirdPartyDictionaryList),
+            }
+            combo, resourceList = comboDict[resource]
+            selectedItem = resourceList[combo.currentIndex()]
+            if resource == "lexicon":
+                keyword = "LEXICON"
+            elif resource == "thirdPartyDictionary":
+                keyword = "SEARCHTHIRDDICTIONARY"
+            else:
+                keyword = "SEARCHTOOL"
+            prefix = "{0}:::{1}".format(keyword, selectedItem)
+            self.runSearchCommand(prefix)

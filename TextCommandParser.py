@@ -1782,6 +1782,7 @@ class TextCommandParser:
         entries = entries.strip()
         QApplication.clipboard().setText(entries)
         TextCommandParser.last_lexicon_entry = entries
+        config.lexicon = module
         lexicon = Lexicon(module)
         content = "<hr>".join([lexicon.getContent(entry) for entry in entries.split("_")])
         del lexicon

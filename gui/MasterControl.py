@@ -35,22 +35,25 @@ class MasterControl(QWidget):
         indexes = IndexesSqlite()
         # topic
         # menu5_topics
-        self.topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
-        self.topicDict = {name: abb for abb, name in indexes.topicList}
-        self.topicList = list(self.topicDict.keys())
+        topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
+        self.topicListAbb = list(topicDictAbb2Name.keys())
+        topicDict = {name: abb for abb, name in indexes.topicList}
+        self.topicList = list(topicDict.keys())
         # lexicon
         # context1_originalLexicon
         self.lexiconList = LexiconData().lexiconList
         # dictionary
         # context1_dict
-        self.dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
-        self.dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
-        self.dictionaryList = list(self.dictionaryDict.keys())
+        dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
+        self.dictionaryListAbb = list(dictionaryDictAbb2Name.keys())
+        dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
+        self.dictionaryList = list(dictionaryDict.keys())
         # encyclopedia
         # context1_encyclopedia
-        self.encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
-        self.encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
-        self.encyclopediaList = list(self.encyclopediaDict.keys())
+        encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
+        self.encyclopediaListAbb = list(encyclopediaDictAbb2Name.keys())
+        encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
+        self.encyclopediaList = list(encyclopediaDict.keys())
         # 3rd-party dictionary
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList

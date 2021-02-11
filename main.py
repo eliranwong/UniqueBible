@@ -338,6 +338,9 @@ if not hasattr(config, "noteSearchString"):
 # Last-opened third-party dictionary
 if not hasattr(config, "thirdDictionary"):
     config.thirdDictionary = "webster"
+# Last-opened lexicon
+if not hasattr(config, "lexicon"):
+    config.lexicon = "ConcordanceBook"
 # Default Hebrew lexicon
 if not hasattr(config, "defaultLexiconStrongH"):
     config.defaultLexiconStrongH = "TBESH"
@@ -657,6 +660,7 @@ def saveDataOnExit():
         ("bookSearchString", config.bookSearchString),
         ("noteSearchString", config.noteSearchString),
         ("thirdDictionary", config.thirdDictionary),
+        ("lexicon", config.lexicon),
         ("defaultLexiconStrongH", config.defaultLexiconStrongH),
         ("defaultLexiconStrongG", config.defaultLexiconStrongG),
         ("defaultLexiconETCBC", config.defaultLexiconETCBC),
