@@ -420,6 +420,9 @@ if not hasattr(config, "enableGist"):
     config.enableGist = False
 if not hasattr(config, "gistToken"):
     config.gistToken = ''
+# Clear command entry line by default
+if not hasattr(config, "clearCommandEntry"):
+    config.clearCommandEntry = False
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -676,7 +679,8 @@ def saveDataOnExit():
         ("enableMacros", config.enableMacros),
         ("startupMacro", config.startupMacro),
         ("enableGist", config.enableGist),
-        ("gistToken", config.gistToken)
+        ("gistToken", config.gistToken),
+        ("clearCommandEntry", config.clearCommandEntry)
     )
     with open("config.py", "w", encoding="utf-8") as fileObj:
         for name, value in configs:
