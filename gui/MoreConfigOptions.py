@@ -37,6 +37,7 @@ class MoreConfigOptions(QDialog):
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
+            ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged),
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged),
@@ -166,6 +167,10 @@ class MoreConfigOptions(QDialog):
     def openBibleWindowContentOnNextTabChanged(self):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
         self.newTabException = False
+
+    def showControlPanelOnStartupChanged(self):
+        config.showControlPanelOnStartup = not config.showControlPanelOnStartup
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def preferControlPanelForCommandLineEntryChanged(self):
         config.preferControlPanelForCommandLineEntry = not config.preferControlPanelForCommandLineEntry

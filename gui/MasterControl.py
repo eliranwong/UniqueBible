@@ -10,7 +10,7 @@ from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
 
 class MasterControl(QWidget):
 
-    def __init__(self, parent, initialTab=0):
+    def __init__(self, parent, b=config.mainB, c=config.mainC, v=config.mainV, text=config.mainText, initialTab=0):
         super().__init__()
 
         self.parent = parent
@@ -20,7 +20,13 @@ class MasterControl(QWidget):
         # setup item option lists
         self.setupItemLists()
         # setup interface
-        self.setupUI(initialTab)
+        self.setupUI(b, c, v, text, initialTab)
+
+    def closeEvent(self, event):
+        # Control panel is designed for frequent use
+        # Hiding it instead of closing may save time from reloading
+        event.ignore()
+        self.hide()
 
     def setupItemLists(self):
         # bible versions
@@ -58,10 +64,10 @@ class MasterControl(QWidget):
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
 
-    def setupUI(self, initialTab):
+    def setupUI(self, b, c, v, text, initialTab):
         mainLayout = QVBoxLayout()
         mainLayout.addWidget(self.sharedWidget())
-        mainLayout.addWidget(self.tabWidget(initialTab))
+        mainLayout.addWidget(self.tabWidget(b, c, v, text, initialTab))
         self.setLayout(mainLayout)
 
     def sharedWidget(self):
@@ -71,10 +77,10 @@ class MasterControl(QWidget):
         sharedWidget.setLayout(sharedWidgetLayout)
         return sharedWidget
 
-    def tabWidget(self, initialTab):
+    def tabWidget(self, b, c, v, text, initialTab):
         self.tabs = QTabWidget()
         # 0
-        self.bibleTab = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        self.bibleTab = BibleExplorer(self, (b, c, v, text))
         self.tabs.addTab(self.bibleTab, config.thisTranslation["menu_bible"])
         # 1
         libraryTab = LibraryLauncher(self)
@@ -95,7 +101,7 @@ class MasterControl(QWidget):
         self.commandField = QLineEdit()
         self.commandField.setClearButtonEnabled(True)
         self.commandField.setToolTip(config.thisTranslation["enter_command_here"])
-        self.commandField.returnPressed.connect(lambda: self.parent.runTextCommand(self.commandField.text()))
+        self.commandField.returnPressed.connect(self.commandEntered)
         return self.commandField
 
     # Common layout
@@ -133,9 +139,16 @@ class MasterControl(QWidget):
 
     # Actions
 
-    def runTextCommand(self, command):
-        self.commandField.setText(command)
+    def commandEntered(self):
+        command = self.commandField.text()
+        self.runTextCommand(command, False)
+
+    def runTextCommand(self, command, printCommand=True):
+        if printCommand:
+            self.commandField.setText(command)
         self.parent.runTextCommand(command)
+        if config.closeControlPanelAfterRunningCommand:
+            self.hide()
 
     def tabChanged(self, index):
         if index == 2:

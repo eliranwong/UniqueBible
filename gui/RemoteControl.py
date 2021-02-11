@@ -289,8 +289,6 @@ class RemoteControl(QWidget):
         self.parent.textCommandLineEdit.setText(searchString)
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
-        if config.closeControlPanelAfterRunningCommand:
-            self.close()
 
     def setTtsDefaultLanguage(self):
         config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]

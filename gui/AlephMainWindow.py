@@ -97,6 +97,7 @@ class AlephMainWindow(MainWindow):
         history_menu.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut = 'Ctrl+Y, S', triggered=self.studyHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut="Ctrl+Y, 3", triggered=self.studyBack))
         history_menu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+Y, 4", triggered=self.studyForward))
+        navigation_menu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut="Ctrl+M", triggered=self.manageControlPanel))
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
 
         search_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_search"]))

@@ -12,12 +12,13 @@ class ClassicMainWindow(MainWindow):
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
 
+        menu1.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut="Ctrl+M", triggered=self.manageControlPanel))
         menu1.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
         menu1.addSeparator()
 
         clipboardMenu = menu1.addMenu(config.thisTranslation["menu1_clipboard"])
         clipboardMenu.addAction(QAction(config.thisTranslation["menu1_readClipboard"], self, shortcut="Ctrl+^", triggered=self.pasteFromClipboard))
-        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_runClipboard"], self, shortcut="Ctrl+M", triggered=self.parseContentOnClipboard))
+        clipboardMenu.addAction(QAction(config.thisTranslation["menu1_runClipboard"], self, triggered=self.parseContentOnClipboard))
         menu1.addSeparator()
 
         generalPreferencesMenu = menu1.addMenu(config.thisTranslation["menu1_generalPreferences"])

@@ -46,12 +46,12 @@ if not hasattr(config, "alwaysDisplayStaticMaps"):
 # Options to use control panel: True / False
 # This feature is created for use in church settings.
 # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
-if not hasattr(config, "remoteControl"):
-    config.remoteControl = False
-if not hasattr(config, "closeControlPanelAfterRunningCommand"):
-    config.closeControlPanelAfterRunningCommand = False
+if not hasattr(config, "showControlPanelOnStartup"):
+    config.showControlPanelOnStartup = False
 if not hasattr(config, "preferControlPanelForCommandLineEntry"):
     config.preferControlPanelForCommandLineEntry = False
+if not hasattr(config, "closeControlPanelAfterRunningCommand"):
+    config.closeControlPanelAfterRunningCommand = False
 if not hasattr(config, "addBreakAfterTheFirstToolBar"):
     config.addBreakAfterTheFirstToolBar = True
 if not hasattr(config, "addBreakBeforeTheLastToolBar"):
@@ -449,6 +449,10 @@ else:
 
 # Temporary configurations
 # Their values are not saved on exit.
+if not hasattr(config, "controlPanel"):
+    config.controlPanel = False
+if not hasattr(config, "remoteControl"):
+    config.remoteControl = False
 if not hasattr(config, "tempRecord"):
     config.tempRecord = ""
 if not hasattr(config, "isDownloading"):
@@ -678,6 +682,7 @@ def saveDataOnExit():
         ("qtMaterialTheme", config.qtMaterialTheme),
         ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
         ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
+        ("showControlPanelOnStartup", config.showControlPanelOnStartup),
         ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
         ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand),
         ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),

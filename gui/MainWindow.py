@@ -27,6 +27,7 @@ from gui.Downloader import Downloader
 from gui.MoreConfigOptions import MoreConfigOptions
 from gui.ImportSettings import ImportSettings
 from gui.NoteEditor import NoteEditor
+from gui.MasterControl import MasterControl
 from gui.RemoteControl import RemoteControl
 from gui.MorphDialog import MorphDialog
 from gui.YouTubePopover import YouTubePopover
@@ -121,10 +122,15 @@ class MainWindow(QMainWindow):
         self.checkApplicationUpdate()
         # check if newer versions of formatted bibles are available
         self.checkModulesUpdate()
+        # Control Panel
+        self.controlPanel = None
         # Remote control
         self.remoteControl = None
         # Used in pause() to pause macros
         self.pauseMode = False
+
+        # pre-load control panel
+        self.manageControlPanel(config.showControlPanelOnStartup)
 
     def __del__(self):
         del self.textCommandParser
@@ -220,11 +226,39 @@ class MainWindow(QMainWindow):
 
     def focusCommandLineField(self):
         if config.preferControlPanelForCommandLineEntry:
-            self.manageRemoteControl()
+            self.manageControlPanel()
         elif self.textCommandLineEdit.isVisible():
             self.textCommandLineEdit.setFocus()
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
+
+    def manageControlPanel(self, show=True):
+        if config.controlPanel and not self.controlPanel.isVisible():
+            self.controlPanel.show()
+        elif config.controlPanel and not self.controlPanel.isActiveWindow():
+            textCommandText = self.textCommandLineEdit.text()
+            if textCommandText:
+                self.controlPanel.commandField.setText(textCommandText)
+            self.controlPanel.raise_()
+            # The following line does not work on Chrome OS
+            #self.controlPanel.activateWindow()
+            # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+            # Therefore, we use hide and show instead.
+            self.controlPanel.hide()
+            self.controlPanel.show()
+        elif not config.controlPanel:
+            self.controlPanel = MasterControl(self)
+            if show:
+                self.controlPanel.show()
+            textCommandText = self.textCommandLineEdit.text()
+            if config.clearCommandEntry:
+                self.controlPanel.commandField.setText("")
+            elif textCommandText:
+                self.controlPanel.commandField.setText(textCommandText)
+            config.controlPanel = True
+        elif self.controlPanel:
+                self.controlPanel.close()
+                config.controlPanel = False
 
     def manageRemoteControl(self):
         if config.remoteControl and not self.remoteControl.isActiveWindow():
@@ -242,10 +276,10 @@ class MainWindow(QMainWindow):
             self.remoteControl = RemoteControl(self)
             self.remoteControl.show()
             textCommandText = self.textCommandLineEdit.text()
-            if textCommandText:
-                self.remoteControl.searchLineEdit.setText(textCommandText)
             if config.clearCommandEntry:
                 self.remoteControl.searchLineEdit.setText("")
+            elif textCommandText:
+                self.remoteControl.searchLineEdit.setText(textCommandText)
             config.remoteControl = True
         elif self.remoteControl:
                 self.remoteControl.close()
@@ -857,7 +891,7 @@ class MainWindow(QMainWindow):
         clipboardText = QGuiApplication.instance().clipboard().text()
         self.textCommandLineEdit.setText(clipboardText)
         self.runTextCommand(clipboardText)
-        self.manageRemoteControl()
+        self.manageControlPanel()
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()

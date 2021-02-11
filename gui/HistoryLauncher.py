@@ -2,7 +2,7 @@ import config
 import os.path
 from PySide2.QtCore import QStringListModel
 #from PySide2.QtGui import QStandardItemModel, QStandardItem
-from PySide2.QtWidgets import (QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
+from PySide2.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
 
 class HistoryLauncher(QWidget):
 
@@ -22,16 +22,25 @@ class HistoryLauncher(QWidget):
         leftColumnWidget = QGroupBox(config.thisTranslation["mainWindow"])
         layout = QVBoxLayout()
         layout.addWidget(self.createMainListView())
+        button = QPushButton(config.thisTranslation["open"])
+        button.clicked.connect(lambda: self.openLastRecord("main"))
+        layout.addWidget(button)
         leftColumnWidget.setLayout(layout)
 
         middleColumnWidget = QGroupBox(config.thisTranslation["studyWindow"])
         layout = QVBoxLayout()
         layout.addWidget(self.createStudyListView())
+        button = QPushButton(config.thisTranslation["open"])
+        button.clicked.connect(lambda: self.openLastRecord("study"))
+        layout.addWidget(button)
         middleColumnWidget.setLayout(layout)
 
         rightColumnWidget = QGroupBox(config.thisTranslation["menu_external_notes"])
         layout = QVBoxLayout()
         layout.addWidget(self.createExternalListView())
+        button = QPushButton(config.thisTranslation["open"])
+        button.clicked.connect(lambda: self.openLastRecord("external"))
+        layout.addWidget(button)
         rightColumnWidget.setLayout(layout)
 
         mainLayout.addWidget(leftColumnWidget)
@@ -101,10 +110,17 @@ class HistoryLauncher(QWidget):
         if externalItems:
             self.externalListView.setCurrentIndex(self.externalModel.index(0, 0))
 
+    def openLastRecord(self, key):
+        selectedItem = config.history[key][-1]
+        self.openSelectedItem(selectedItem, key)
+
     def historyAction(self, selection, key):
-            selectedItem = selection[0].indexes()[0].data()
-            if key == "external":
-                command = "OPENNOTE:::{0}".format(selectedItem)
-                self.parent.runTextCommand(command)
-            else:
-                self.parent.runTextCommand(selectedItem)
+        selectedItem = selection[0].indexes()[0].data()
+        self.openSelectedItem(selectedItem, key)
+
+    def openSelectedItem(self, selectedItem, key):
+        if key == "external":
+            command = "OPENNOTE:::{0}".format(selectedItem)
+            self.parent.runTextCommand(command)
+        else:
+            self.parent.runTextCommand(selectedItem)
