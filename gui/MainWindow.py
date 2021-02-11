@@ -275,7 +275,7 @@ class MainWindow(QMainWindow):
                 biblesSqlite.migrateDatabaseContent()
             del biblesSqlite
 
-    def displayMessage(self, message, title="UniqueBible"):
+    def displayMessage(self, message="", title="UniqueBible"):
         reply = QMessageBox.information(self, title, message)
 
     # manage key capture
@@ -2234,6 +2234,10 @@ class MainWindow(QMainWindow):
             config.parallelMode = 0
         else:
             config.parallelMode += 1
+        self.resizeCentral()
+
+    def setParallelMode(self, mode):
+        config.parallelMode = int(mode)
         self.resizeCentral()
 
     # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
