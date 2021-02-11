@@ -1,11 +1,13 @@
 import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, requests, update, myTranslation, logging
 from datetime import datetime
 from ast import literal_eval
+from distutils import util
 from functools import partial
 
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
-from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog)
+from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
+                               QFrame, QFontDialog, QApplication)
 
 import exlbl
 from BibleBooks import BibleBooks
@@ -13,7 +15,6 @@ from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
 from TextFileReader import TextFileReader
-from NoteSqlite import NoteSqlite
 from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
@@ -122,6 +123,8 @@ class MainWindow(QMainWindow):
         self.checkModulesUpdate()
         # Remote control
         self.remoteControl = None
+        # Used in pause() to pause macros
+        self.pauseMode = False
 
     def __del__(self):
         del self.textCommandParser
@@ -220,6 +223,8 @@ class MainWindow(QMainWindow):
             self.manageRemoteControl()
         elif self.textCommandLineEdit.isVisible():
             self.textCommandLineEdit.setFocus()
+        if config.clearCommandEntry:
+            self.textCommandLineEdit.setText("")
 
     def manageRemoteControl(self):
         if config.remoteControl and not self.remoteControl.isActiveWindow():
@@ -239,6 +244,8 @@ class MainWindow(QMainWindow):
             textCommandText = self.textCommandLineEdit.text()
             if textCommandText:
                 self.remoteControl.searchLineEdit.setText(textCommandText)
+            if config.clearCommandEntry:
+                self.remoteControl.searchLineEdit.setText("")
             config.remoteControl = True
         elif self.remoteControl:
                 self.remoteControl.close()
@@ -275,12 +282,13 @@ class MainWindow(QMainWindow):
                 biblesSqlite.migrateDatabaseContent()
             del biblesSqlite
 
-    def displayMessage(self, message, title="UniqueBible"):
+    def displayMessage(self, message="", title="UniqueBible"):
         reply = QMessageBox.information(self, title, message)
 
     # manage key capture
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
+            self.pauseMode = False
             if event.key() == Qt.Key_Tab:
                 self.focusCommandLineField()
             elif event.key() == Qt.Key_Escape:
@@ -1260,6 +1268,12 @@ class MainWindow(QMainWindow):
         else:
             self.firstToolBar.show()
 
+    def showMainToolBar(self):
+        self.firstToolBar.show()
+
+    def hideMainToolBar(self):
+        self.firstToolBar.hide()
+
     def hideShowSecondaryToolBar(self):
         if self.secondToolBar.isVisible():
             self.studyBibleToolBar.hide()
@@ -1268,17 +1282,35 @@ class MainWindow(QMainWindow):
             self.setStudyBibleToolBar()
             self.secondToolBar.show()
 
+    def showSecondaryToolBar(self):
+        self.secondToolBar.show()
+
+    def hideSecondaryToolBar(self):
+        self.secondToolBar.hide()
+
     def hideShowLeftToolBar(self):
         if self.leftToolBar.isVisible():
             self.leftToolBar.hide()
         else:
             self.leftToolBar.show()
 
+    def hideLeftToolBar(self):
+        self.leftToolBar.hide()
+
+    def showLeftToolBar(self):
+        self.leftToolBar.show()
+
     def hideShowRightToolBar(self):
         if self.rightToolBar.isVisible():
             self.rightToolBar.hide()
         else:
             self.rightToolBar.show()
+
+    def hideRightToolBar(self):
+        self.rightToolBar.hide()
+
+    def showRightToolBar(self):
+        self.rightToolBar.show()
 
     def hideShowAdditionalToolBar(self):
         if config.topToolBarOnly:
@@ -2005,11 +2037,11 @@ class MainWindow(QMainWindow):
     # finish view loading
     def finishMainViewLoading(self):
         # scroll to the main verse
-        self.mainPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.mainPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
         # scroll to the study verse
-        self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
@@ -2219,6 +2251,11 @@ class MainWindow(QMainWindow):
         self.centralWidget.switchLandscapeMode()
         self.resizeCentral()
 
+    def setLandscapeMode(self, mode):
+        config.landscapeMode = bool(util.strtobool(mode))
+        self.centralWidget.switchLandscapeMode()
+        self.resizeCentral()
+
     def resizeCentral(self):
         self.centralWidget.resizeMe()
 
@@ -2229,11 +2266,24 @@ class MainWindow(QMainWindow):
             config.instantMode = 0
         self.resizeCentral()
 
+    def setInstantSize(self, size):
+        config.instantMode = int(size)
+        self.resizeCentral()
+
+    def pause(self):
+        self.pauseMode = True
+        while self.pauseMode:
+            QApplication.processEvents()
+
     def parallel(self):
         if config.parallelMode == 3:
             config.parallelMode = 0
         else:
             config.parallelMode += 1
+        self.resizeCentral()
+
+    def setParallelSize(self, mode):
+        config.parallelMode = int(mode)
         self.resizeCentral()
 
     # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
