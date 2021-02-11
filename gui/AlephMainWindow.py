@@ -2,6 +2,8 @@ import os, config, myTranslation
 from PySide2.QtGui import QIcon, Qt, QFont
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
+from gui.MasterControl import MasterControl
+
 
 class AlephMainWindow(MainWindow):
 
@@ -12,8 +14,19 @@ class AlephMainWindow(MainWindow):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
         menu1_defaults = menu1.addMenu(config.thisTranslation["menu_defaults"])
         themeMenu = menu1_defaults.addMenu(config.thisTranslation["menu_theme"])
-        themeMenu.addAction(QAction(config.thisTranslation["menu_light_theme"], self, triggered=self.setDefaultTheme))
-        themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
+        themeMenu = menu1.addMenu(config.thisTranslation["menu1_selectTheme"])
+        if config.qtMaterial:
+            qtMaterialThemes = ["light_amber.xml", "light_blue.xml", "light_cyan.xml", "light_cyan_500.xml",
+                                "light_lightgreen.xml", "light_pink.xml", "light_purple.xml", "light_red.xml",
+                                "light_teal.xml", "light_yellow.xml", "dark_amber.xml", "dark_blue.xml",
+                                "dark_cyan.xml", "dark_lightgreen.xml", "dark_pink.xml", "dark_purple.xml",
+                                "dark_red.xml", "dark_teal.xml", "dark_yellow.xml"]
+            for theme in qtMaterialThemes:
+                themeMenu.addAction(
+                    QAction(theme[:-4], self, triggered=lambda theme=theme: self.setQtMaterialTheme(theme)))
+        else:
+            themeMenu.addAction(QAction(config.thisTranslation["menu_light_theme"], self, triggered=self.setDefaultTheme))
+            themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
         layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=self.setDefaultMenuLayout))
@@ -32,8 +45,12 @@ class AlephMainWindow(MainWindow):
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
+        if config.developer:
+            menu_developer = menu1.addMenu("&Developer")
+            menu_developer.addAction(QAction("Testing", self, triggered=self.testing))
         menu1.addAction(
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
+
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut='Ctrl+Q', triggered=self.quitApp))
 
@@ -231,6 +248,9 @@ class AlephMainWindow(MainWindow):
         self.mainTextMenuButton.setStyleSheet(textButtonStyle)
         self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
         self.firstToolBar.addWidget(self.mainTextMenuButton)
+
+        if config.qtMaterial and config.qtMaterialTheme:
+            self.buttonWidth = self.mainTextMenuButton.height()
 
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
@@ -1057,3 +1077,8 @@ class AlephMainWindow(MainWindow):
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.cycleInstant)
 
         self.rightToolBar.addSeparator()
+
+    def testing(self):
+        #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
+        test = MasterControl(self)
+        test.show()

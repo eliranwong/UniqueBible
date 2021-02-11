@@ -1509,16 +1509,18 @@ class Converter:
 
 class ThirdPartyDictionary:
 
-    def __init__(self, moduleTuple):
-        self.module, self.fileExtension = moduleTuple
+    def __init__(self, moduleTuple=None):
         self.moduleList = self.getModuleList()
-        if self.module in self.moduleList:
-            self.database = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
-            self.connection = sqlite3.connect(self.database)
-            self.cursor = self.connection.cursor()
+        if moduleTuple is not None:
+            self.module, self.fileExtension = moduleTuple
+            if self.module in self.moduleList:
+                self.database = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
+                self.connection = sqlite3.connect(self.database)
+                self.cursor = self.connection.cursor()
 
     def __del__(self):
-        self.connection.close()
+        if self.connection:
+            self.connection.close()
 
     def getModuleList(self):
         moduleFolder = os.path.join("thirdParty", "dictionaries")
