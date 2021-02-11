@@ -1,8 +1,8 @@
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import (QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton)
+from PySide2.QtWidgets import (QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton)
 
-class ToolsLauncher(QWidget):
+class SearchLauncher(QWidget):
 
     def __init__(self, parent):
         super().__init__()
@@ -12,37 +12,33 @@ class ToolsLauncher(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["tools"])
         # set up variables
-        self.setupVariables()
+        self.bibleSearchModeTuple = ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")
         # setup interface
         self.setupUI()
 
-    def setupVariables(self):
-        # Bible Search Mode
-        self.bibleSearchModeTuple = ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")
-        self.bibleSearchMode = 0
-
     def setupUI(self):
+        mainLayout0 = QVBoxLayout()
+        #mainLayout0.setSpacing(5)
+        mainLayout0.addWidget(self.searchFieldWidget())
         mainLayout = QHBoxLayout()
         mainLayout.addWidget(self.column1Widget())
         mainLayout.addWidget(self.column2Widget())
-        self.setLayout(mainLayout)
+        mainLayout0.addLayout(mainLayout)
+        self.setLayout(mainLayout0)
 
     def column1Widget(self):
         widget = QWidget()
 
         widgetLayout0 = QVBoxLayout()
-        widgetLayout0.setSpacing(10)
+        #widgetLayout0.setSpacing(5)
 
-        widgetLayout = QVBoxLayout()
-        widgetLayout.setSpacing(40)
-
-        widgetLayout.addWidget(self.searchFieldWidget())
-
+        bibleWidget = QGroupBox(config.thisTranslation["bible"])
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
-        bibleLayout.addLayout(self.multipleSelectionLayout("html_searchBible2", lambda: self.dummyAction(), self.parent.textList, [config.mainText]))
+        self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText])
+        bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, lambda: self.dummyAction()))
         subLayout = QHBoxLayout()
-        subLayout.setSpacing(10)
+        subLayout.setSpacing(5)
         leftGroupLayout = QVBoxLayout()
         rightGroupLayout = QVBoxLayout()
         subLayout.addLayout(leftGroupLayout)
@@ -50,25 +46,31 @@ class ToolsLauncher(QWidget):
         for index, searchMode in enumerate(self.bibleSearchModeTuple):
             radioButton = QRadioButton(searchMode)
             radioButton.toggled.connect(lambda checked, mode=index: self.searchModeChanged(checked, mode))
-            if index == self.bibleSearchMode:
+            if index == config.bibleSearchMode:
                 radioButton.setChecked(True)
             leftGroupLayout.addWidget(radioButton) if (index % 2 == 0) else rightGroupLayout.addWidget(radioButton)
         leftGroupLayout.addStretch()
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)
-        widgetLayout.addLayout(bibleLayout)
+        bibleWidget.setLayout(bibleLayout)
+        
+        widgetLayout0.addWidget(bibleWidget)
 
-        widgetLayout0.addLayout(widgetLayout)
         buttonRow1 = (
+            ("menu_bookNotes", lambda: self.dummyAction()),
+            ("menu_chapterNotes", lambda: self.dummyAction()),
+            ("menu_verseNotes", lambda: self.dummyAction()),
+        )
+        buttonRow2 = (
             ("menu5_names", lambda: self.dummyAction()),
             ("menu5_characters", lambda: self.dummyAction()),
             ("menu5_locations", lambda: self.dummyAction()),
         )
-        buttonRow2 = (
+        buttonRow3 = (
             ("biblePromises", lambda: self.dummyAction()),
             ("bibleHarmonies", lambda: self.dummyAction()),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2)))
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3)))
 
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
@@ -115,10 +117,10 @@ class ToolsLauncher(QWidget):
 
     def searchModeChanged(self, checked, mode):
         if checked:
-            self.bibleSearchMode = mode
+            config.bibleSearchMode = mode
 
     def searchBible(self):
-        pass
+        command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], self.bibleCombo.checkItems, self.searchField.text())
 
     def dummyAction(self):
         print("testing")

@@ -1,7 +1,7 @@
 import config
 from BiblesSqlite import BiblesSqlite
 from gui.BibleExplorer import BibleExplorer
-from gui.ToolsLauncher import ToolsLauncher
+from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit)
@@ -77,7 +77,7 @@ class MasterControl(QWidget):
         libraryTab = LibraryLauncher(self)
         self.tabs.addTab(libraryTab, config.thisTranslation["menu_library"])
         # 2
-        self.toolTab = ToolsLauncher(self)
+        self.toolTab = SearchLauncher(self)
         self.tabs.addTab(self.toolTab, config.thisTranslation["menu5_lookup"])
         # 3
         self.historyTab = HistoryLauncher(self)

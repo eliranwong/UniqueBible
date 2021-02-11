@@ -26,7 +26,7 @@
 (21.21, "file", "util/DateUtil.py")
 (21.21, "file", "util/NoteService.py")
 (21.21, "file", "gui/MasterControl.py")
-(21.21, "file", "gui/ToolsLauncher.py")
+(21.21, "file", "gui/SearchLauncher.py")
 (21.21, "file", "installation/chrome_os.md")
 (21.21, "file", "shortcut_uba_chromeOS.desktop")
 (21.21, "file", "shortcut_uba_chromeOS.sh")

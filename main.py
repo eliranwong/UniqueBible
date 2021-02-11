@@ -260,6 +260,11 @@ if not hasattr(config, "studyC"):
     config.studyC = 3
 if not hasattr(config, "studyV"):
     config.studyV = 16
+# Search Bible Mode
+# Accept value: 0-4
+# Correspond to ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")
+if not hasattr(config, "bibleSearchMode"):
+    config.bibleSearchMode = 0
 # Set your favourite version here
 if not hasattr(config, "favouriteBible"):
     config.favouriteBible = "OHGBi"
@@ -633,6 +638,7 @@ def saveDataOnExit():
         ("studyB", config.studyB),
         ("studyC", config.studyC),
         ("studyV", config.studyV),
+        ("bibleSearchMode", config.bibleSearchMode),
         ("commentaryText", config.commentaryText),
         ("commentaryB", config.commentaryB),
         ("commentaryC", config.commentaryC),
