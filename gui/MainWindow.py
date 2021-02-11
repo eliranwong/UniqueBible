@@ -2282,7 +2282,7 @@ class MainWindow(QMainWindow):
             config.parallelMode += 1
         self.resizeCentral()
 
-    def setParallelMode(self, mode):
+    def setParallelSize(self, mode):
         config.parallelMode = int(mode)
         self.resizeCentral()
 
