@@ -683,6 +683,7 @@ class TextCommandParser:
             "main": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
             "study": (self.setStudyVerse, config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV), config.studyB, config.studyC, config.studyV),
             "instant": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
+            "cli": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
         }
         return views[view]
 
@@ -750,8 +751,11 @@ class TextCommandParser:
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
-                chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
-                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text))
+                if view in ("cli"):
+                    chapters = ""
+                else:
+                    chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
+                content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text, view))
             else:
                 # i.e. when more than one verse reference is found
                 content = self.textPlainBible(verseList, text)
@@ -801,21 +805,25 @@ class TextCommandParser:
         del biblesSqlite
         return verses
 
-    def textFormattedBible(self, verse, text):
+    def textFormattedBible(self, verse, text, source=""):
         formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         marvelBibles = list(self.getMarvelBibles().keys())
-        if text in formattedBibles and config.readFormattedBibles:
+        bibleSqlite = Bible(text)
+        if source in ("cli"):
+            b, c, v, *_ = verse
             bibleSqlite = Bible(text)
-            chapter = bibleSqlite.readFormattedChapter(verse)
+            b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
+            del bibleSqlite
+        elif text in formattedBibles and config.readFormattedBibles:
+            bibleSqlite = Bible(text)
+            content = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
         else:
             # use plain bibles database when corresponding formatted version is not available
-            biblesSqlite = BiblesSqlite()
-            chapter = biblesSqlite.readPlainChapter(text, verse)
-            del biblesSqlite
-        return chapter
+            content = BiblesSqlite().readPlainChapter(text, verse)
+        return content
 
     # cmd:::
     # run os command
@@ -1162,9 +1170,17 @@ class TextCommandParser:
                 self.parent.downloadHelper(databaseInfo)
                 return ("", "", {})
             else:
-                tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text), "<td style='vertical-align: text-top;'>{0}</td>".format(self.textBibleVerseParser(references, text, source, True)[1])) for text in confirmedTexts]
-                versions, verses = zip(*tableList)
-                return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
+                if source in ('cli'):
+                    tableList = ["{0} {1}".format(text, self.textBibleVerseParser(references, text, source, True)[1])
+                                 for text in confirmedTexts]
+                    return(source, "<br>".join(tableList), {})
+                else:
+                    tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text),
+                                  "<td style='vertical-align: text-top;'>{0}</td>".format(
+                                      self.textBibleVerseParser(references, text, source, True)[1]))
+                                 for text in confirmedTexts]
+                    versions, verses = zip(*tableList)
+                    return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
     def textPassages(self, command, source):
@@ -1780,7 +1796,8 @@ class TextCommandParser:
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
         entries = entries.strip()
-        QApplication.clipboard().setText(entries)
+        if source not in ("cli"):
+            QApplication.clipboard().setText(entries)
         TextCommandParser.last_lexicon_entry = entries
         config.lexicon = module
         lexicon = Lexicon(module)

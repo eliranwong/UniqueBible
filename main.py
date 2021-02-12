@@ -3,9 +3,11 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-
 import os, subprocess, platform, logging
 import logging.handlers as handlers
+import sys
+import socket
+
 
 def messageFeatureNotEnabled(feature, module):
     print("Optional feature '{0}'is not enabled.  To enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
@@ -521,9 +523,7 @@ if config.developer:
     #import exlbl
     pass
 
-
-
-import sys, pprint
+import pprint
 from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
 from gui.ClassicMainWindow import ClassicMainWindow
@@ -567,10 +567,12 @@ def setCurrentRecord():
     studyRecordPosition = len(config.history["study"]) - 1
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
+def exitApplication():
+    mainWindow.textCommandParser.stopTtsAudio()
+    saveDataOnExit()
+
 # Save configurations on exit
 def saveDataOnExit():
-    mainWindow.textCommandParser.stopTtsAudio()
-
     config.bookSearchString = ""
     config.noteSearchString = ""
     configs = (
@@ -728,10 +730,53 @@ elif config.ibus:
 if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
+
+# Remote CLI
+if (len(sys.argv) > 1) and sys.argv[1] == "cli":
+    try:
+        import telnetlib3
+    except:
+        print("Please run 'pip install telnetlib3' to use remote CLI")
+        saveDataOnExit()
+        exit(0)
+
+    try:
+        import telnetlib3
+        import asyncio
+        from util.RemoteCliHandler import RemoteCliHandler
+
+        port = 8888
+        if (len(sys.argv) > 2):
+            port = int(sys.argv[2])
+        print("Running in remote CLI Mode on port {0}".format(port))
+        print("Access by 'telnet {0} {1}'".format(get_ip(), port))
+        print("Press Ctrl-C to stop the server")
+        loop = asyncio.get_event_loop()
+        coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
+        server = loop.run_until_complete(coro)
+        loop.run_until_complete(server.wait_closed())
+        exit(0)
+    except KeyboardInterrupt:
+        exit(0)
+    except Exception as e:
+        print(str(e))
+        exit(-1)
+
 # Start PySide2 gui
 app = QApplication(sys.argv)
 # Assign a function to save configurations when the app is closed.
-app.aboutToQuit.connect(saveDataOnExit)
+app.aboutToQuit.connect(exitApplication)
 # Apply window style
 if config.windowStyle and config.windowStyle in QStyleFactory.keys():
     app.setStyle(config.windowStyle)
