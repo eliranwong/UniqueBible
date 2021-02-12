@@ -388,8 +388,14 @@ class FocusMainWindow(MainWindow):
         self.addStandardIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)
         self.secondToolBar.addSeparator()
 
+        button = QPushButton("<")
+        button.setFixedWidth(40)
+        self.addStandardTextButton("menu_previous_chapter", self.openBookPreviousChapter, self.secondToolBar, button)
         self.bookButton = QPushButton(config.book)
         self.addStandardTextButton("menu5_book", self.openBookMenu, self.secondToolBar, self.bookButton)
+        button = QPushButton(">")
+        button.setFixedWidth(40)
+        self.addStandardTextButton("menu_next_chapter", self.openBookNextChapter, self.secondToolBar, button)
 
         self.addStandardIconButton("bar2_searchBooks", "search.png", self.displaySearchBookCommand, self.secondToolBar)
 
@@ -564,11 +570,17 @@ class FocusMainWindow(MainWindow):
 
         self.secondToolBar.addSeparator()
 
+        button = QPushButton("<")
+        button.setFixedWidth(40)
+        self.addStandardTextButton("menu_previous_chapter", self.openBookPreviousChapter, self.secondToolBar, button)
         self.bookButton = QPushButton(config.book)
         self.bookButton.setToolTip(config.thisTranslation["menu5_book"])
         self.bookButton.setStyleSheet(textButtonStyle)
         self.bookButton.clicked.connect(self.openBookMenu)
         self.secondToolBar.addWidget(self.bookButton)
+        button = QPushButton(">")
+        button.setFixedWidth(40)
+        self.addStandardTextButton("menu_next_chapter", self.openBookNextChapter, self.secondToolBar, button)
 
         iconFile = os.path.join("htmlResources", "search.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBooks"], self.displaySearchBookCommand)

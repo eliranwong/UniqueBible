@@ -1,3 +1,16 @@
+Major changes in version 21.26:
+* Substantial changes in this upgrade.  A total of 36 files changed
+* New exciting featuers, e.g. Remote CLI, 
+* User interface is substantial changed with a newly designed Control Panel
+* A new menu layout name "Focus" is created.
+    This menu is designed to focus on bible study and have quick access to study tools.
+    This menu layout is fully integrated with latest features introduced in recent versions, such as new Control Panel, qt-material themes
+* Important fixes on download issues for new installation.
+* Fixed displaynig html content in dark theme
+* Fixed button width on Focus and classic menu layout, and party Aleph menu layout when qt-material is applied.
+* Added next and previous chapter buttons to navigate reference book content, available on Aleph and Focus Menu Layout
+* Added some bibles and lexicons to be downloaded on fresh installation.
+
 Major changes in version 21.25:
 * Added options to choose application window style, read more at:
     https://github.com/eliranwong/UniqueBible/wiki/Window-Style

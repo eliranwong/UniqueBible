@@ -517,7 +517,7 @@ class Languages:
         "bar2_studyWindowBibleSyncEnabled": "Study Window Bible in Sync with Main Window",
         "bar2_studyWindowBibleSyncDisabled": "Study Window Bible out of Sync with Main Window",
         "empty": "[empty]",
-        "controlPanel": "Control Panel",
+        "controlPanel": "Master Control",
         "cp0": "Bible",
         "cp1": "Library",
         "cp2": "Search",

@@ -89,7 +89,6 @@ class HistoryLauncher(QWidget):
         return [file for file in files if os.path.isfile(file)]
 
     def refreshHistoryRecords(self):
-        print("refresh")
         if not self.startup:
             mainItems = list(reversed(config.history["main"]))
             studyItems = list(reversed(config.history["study"]))
