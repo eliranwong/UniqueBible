@@ -29,9 +29,9 @@ class AlephMainWindow(MainWindow):
             themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
         layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_alpha_menu_layout"], self, triggered=lambda: self.setMenuLayout("alpha")))
-        layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=lambda: self.setMenuLayout("aleph")))
+        layoutMenu.addAction(
+            QAction(config.thisTranslation["menu1_focus_menu_layout"], self, triggered=lambda: self.setMenuLayout("focus")))
         layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=lambda: self.setMenuLayout("classic")))
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])

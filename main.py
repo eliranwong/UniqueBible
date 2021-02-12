@@ -340,7 +340,7 @@ if not hasattr(config, "thirdDictionary"):
     config.thirdDictionary = "webster"
 # Last-opened lexicon
 if not hasattr(config, "lexicon"):
-    config.lexicon = "ConcordanceBook"
+    config.lexicon = "SECE"
 # Default Hebrew lexicon
 if not hasattr(config, "defaultLexiconStrongH"):
     config.defaultLexiconStrongH = "TBESH"
@@ -416,7 +416,7 @@ if not hasattr(config, "showHighlightMarkers"):
     config.showHighlightMarkers = True
 # Menu layout
 if not hasattr(config, "menuLayout"):
-    config.menuLayout = "alpha"
+    config.menuLayout = "focus"
 # Verse parsing method
 if not hasattr(config, "useFastVerseParsing"):
     config.useFastVerseParsing = False
@@ -528,7 +528,7 @@ from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
 from gui.ClassicMainWindow import ClassicMainWindow
 from gui.AlephMainWindow import AlephMainWindow
-from gui.AlphaMainWindow import AlphaMainWindow
+from gui.FocusMainWindow import FocusMainWindow
 
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -742,9 +742,9 @@ if config.qtMaterial and config.qtMaterialTheme:
 else:
     app.setPalette(Themes.getPalette())
 # Apply window menu layout
-if config.menuLayout == "alpha":
+if config.menuLayout == "focus":
     config.noStudyBibleToolbar = True
-    mainWindow = AlphaMainWindow()
+    mainWindow = FocusMainWindow()
 elif config.menuLayout == "aleph":
     mainWindow = AlephMainWindow()
 else:

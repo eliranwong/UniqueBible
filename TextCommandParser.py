@@ -595,7 +595,7 @@ class TextCommandParser:
         }
 
     def getCoreBiblesInfo(self):
-        return ((config.marvelData, "images.sqlite"), "1E7uoGqndCcqdeh8kl5kS0Z9pOTe8iWFp")
+        return ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-")
 
     def getBibleNoteInfo(self):
         return ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW")

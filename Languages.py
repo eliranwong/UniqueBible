@@ -119,7 +119,7 @@ class Languages:
     translation = {
         "menu1_app": "UniqueBible",
         "menu1_screenSize": "Window Size",
-        "menu1_preferences": "Preferences",
+        "menu1_preferences": "UBA Preferences",
         "menu1_generalPreferences": "General",
         "menu1_fullScreen": "Full Screen",
         "menu1_topHalf": "Top Half",
@@ -150,7 +150,7 @@ class Languages:
         "menu1_menuLayout": "Menu Layout",
         "menu1_classic_menu_layout": "Classic",
         "menu1_aleph_menu_layout": "Aleph",
-        "menu1_alpha_menu_layout": "Alpha",
+        "menu1_focus_menu_layout": "Focus",
         "menu1_selectDefaultLexicon": "Select Default Lexicon",
         "menu1_StrongsGreek": "Strong's Greek",
         "menu1_StrongsHebrew": "Strong's Hebrew",

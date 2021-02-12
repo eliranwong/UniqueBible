@@ -61,8 +61,8 @@ class ClassicMainWindow(MainWindow):
         
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")
         items = (
-            ("menu1_alpha_menu_layout", lambda: self.setMenuLayout("alpha"), None),
             ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph"), None),
+            ("menu1_focus_menu_layout", lambda: self.setMenuLayout("focus"), None),
             ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic"), None),
         )
         for feature, action, shortcut in items:

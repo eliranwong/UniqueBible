@@ -5,7 +5,7 @@ from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyle
 from gui.MenuItems import *
 from gui.MainWindow import MainWindow
 
-class AlphaMainWindow(MainWindow):
+class FocusMainWindow(MainWindow):
 
     def __init__(self):
         super().__init__()
@@ -51,8 +51,8 @@ class AlphaMainWindow(MainWindow):
                 addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         items = (
-            ("menu1_alpha_menu_layout", lambda: self.setMenuLayout("alpha")),
             ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph")),
+            ("menu1_focus_menu_layout", lambda: self.setMenuLayout("focus")),
             ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic")),
         )
         for feature, action in items:
