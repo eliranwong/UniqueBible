@@ -232,20 +232,28 @@ class MainWindow(QMainWindow):
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
 
+    def openControlPanelTab(self, index=0):
+        self.controlPanel.tabs.setCurrentIndex(index)
+        self.manageControlPanel()
+
     def manageControlPanel(self, show=True):
         if config.controlPanel and not self.controlPanel.isVisible():
+            self.controlPanel.raise_()
             self.controlPanel.show()
         elif config.controlPanel and not self.controlPanel.isActiveWindow():
             textCommandText = self.textCommandLineEdit.text()
             if textCommandText:
                 self.controlPanel.commandField.setText(textCommandText)
             self.controlPanel.raise_()
-            # The following line does not work on Chrome OS
-            #self.controlPanel.activateWindow()
-            # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
-            # Therefore, we use hide and show instead.
-            self.controlPanel.hide()
-            self.controlPanel.show()
+            if platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland":
+            # Method activateWindow() does not work with qt.qpa.wayland
+            # The error message is received when QT_QPA_PLATFORM=wayland:
+            # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+            # Therefore, we use hide and show methods instead with wayland.
+                self.controlPanel.hide()
+                self.controlPanel.show()
+            else:
+                self.controlPanel.activateWindow()
         elif not config.controlPanel:
             self.controlPanel = MasterControl(self)
             if show:
@@ -683,6 +691,10 @@ class MainWindow(QMainWindow):
 
     def setDarkTheme(self):
         config.theme = "dark"
+        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
+    def setMenuLayout(self, layout):
+        config.menuLayout = layout
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def setDefaultMenuLayout(self):
@@ -1561,7 +1573,7 @@ class MainWindow(QMainWindow):
         self.focusCommandLineField()
 
     def displaySearchBibleMenu(self):
-        self.runTextCommand("_menu:::", False, "main")
+        self.openControlPanelTab(2)
 
     def displaySearchHighlightCommand(self):
         self.textCommandLineEdit.setText("SEARCHHIGHLIGHT:::")
@@ -1652,6 +1664,9 @@ class MainWindow(QMainWindow):
 
     def contactEliranWong(self):
         webbrowser.open("https://marvel.bible/contact/contactform.php")
+
+    def reportAnIssue(self):
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/issues")
 
     def goToSlack(self):
         webbrowser.open("https://marvelbible.slack.com")
@@ -1956,37 +1971,29 @@ class MainWindow(QMainWindow):
 
     # Actions - recently opened bibles & commentary
     def mainTextMenu(self):
-        newTextCommand = "_menu:::"
-        self.runTextCommand(newTextCommand, False, "main")
+        self.openControlPanelTab(0)
 
     def studyTextMenu(self):
-        newTextCommand = "_menu:::"
-        self.runTextCommand(newTextCommand, False, "study")
+        self.openControlPanelTab(0)
 
     def bookFeatures(self):
-        newTextCommand = "_menu:::{0}.{1}".format(config.mainText, config.mainB)
-        self.runTextCommand(newTextCommand, False, "main")
+        self.openControlPanelTab(0)
 
     def chapterFeatures(self):
-        newTextCommand = "_menu:::{0}.{1}.{2}".format(config.mainText, config.mainB, config.mainC)
-        self.runTextCommand(newTextCommand, False, "main")
+        self.openControlPanelTab(0)
 
     def mainRefButtonClicked(self):
-        newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.mainText, config.mainB, config.mainC, config.mainV)
-        self.runTextCommand(newTextCommand, False, "main")
+        self.openControlPanelTab(0)
 
     def studyRefButtonClicked(self):
-        newTextCommand = "_menu:::{0}.{1}.{2}.{3}".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        self.runTextCommand(newTextCommand, False, "study")
+        self.openControlPanelTab(0)
 
     def commentaryRefButtonClicked(self):
-        newTextCommand = "_commentary:::{0}.{1}.{2}.{3}".format(config.commentaryText, config.commentaryB, config.commentaryC, config.commentaryV)
-        self.runTextCommand(newTextCommand, False, "study")
+        self.openControlPanelTab(1)
 
     def updateMainRefButton(self):
         text, verseReference = self.verseReference("main")
-        self.mainTextMenuButton.setText(text)
-        self.mainRefButton.setText(verseReference)
+        self.mainRefButton.setText(":::".join(self.verseReference("main")))
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "STUDY:::{0}".format(verseReference)
@@ -1998,8 +2005,7 @@ class MainWindow(QMainWindow):
 
     def updateStudyRefButton(self):
         text, verseReference = self.verseReference("study")
-        self.studyTextMenuButton.setText(text)
-        self.studyRefButton.setText(verseReference)
+        self.studyRefButton.setText(":::".join(self.verseReference("study")))
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "MAIN:::{0}".format(verseReference)
@@ -2014,7 +2020,7 @@ class MainWindow(QMainWindow):
         elif view == "study":
             return (config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
         elif view == "commentary":
-            return "{0} - {1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
+            return "{0}:::{1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
 
     # Actions - access history records
     def mainHistoryButtonClicked(self):

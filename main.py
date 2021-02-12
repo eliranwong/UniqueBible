@@ -416,7 +416,7 @@ if not hasattr(config, "showHighlightMarkers"):
     config.showHighlightMarkers = True
 # Menu layout
 if not hasattr(config, "menuLayout"):
-    config.menuLayout = "classic"
+    config.menuLayout = "alpha"
 # Verse parsing method
 if not hasattr(config, "useFastVerseParsing"):
     config.useFastVerseParsing = False
@@ -524,8 +524,9 @@ if config.developer:
 import sys, pprint
 from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
-from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
+from gui.AlephMainWindow import AlephMainWindow
+from gui.AlphaMainWindow import AlphaMainWindow
 
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -741,6 +742,8 @@ else:
 # Apply window menu layout
 if config.menuLayout == "aleph":
     mainWindow = AlephMainWindow()
+elif config.menuLayout == "alpha":
+    mainWindow = AlphaMainWindow()
 else:
     mainWindow = ClassicMainWindow()
 

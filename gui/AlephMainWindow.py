@@ -1,9 +1,8 @@
-import os, config, myTranslation
-from PySide2.QtGui import QIcon, Qt, QFont
+import os, config
+from PySide2.QtGui import QIcon, Qt
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
-from gui.MasterControl import MasterControl
-
+from gui.MenuItems import *
 
 class AlephMainWindow(MainWindow):
 
@@ -29,9 +28,11 @@ class AlephMainWindow(MainWindow):
             themeMenu.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
         layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=self.setDefaultMenuLayout))
+            QAction(config.thisTranslation["menu1_alpha_menu_layout"], self, triggered=lambda: self.setMenuLayout("alpha")))
         layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=self.setAlephMenuLayout))
+            QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=lambda: self.setMenuLayout("aleph")))
+        layoutMenu.addAction(
+            QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=lambda: self.setMenuLayout("classic")))
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
@@ -53,6 +54,18 @@ class AlephMainWindow(MainWindow):
 
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut='Ctrl+Q', triggered=self.quitApp))
+
+        # A message to @otseng:
+        # A column of control panel is added for you reference below.  Please feel free to move to where you like or even remove.
+        # Please reserve shortcuts Ctrl+B [Bible], Ctrl+L [Library], Ctrl+F [Search], Ctrl+H [History] & Ctrl+M for control panel.
+        # These shortcut keys are kept for the sake of consistency, because I added the same shortcut keys to file MasterControl.py
+        # so that users can use the same shortcut keys to switch between tabs when Control Panel is opened.
+        # Ctrl+M will be added next upgrade as I am going to add new tab "Miscellaneous".
+        # I will also add highlight search to search tab next update.  I just realised I missed that.
+        # In addition, when Control Panel is opened "Ctrl+X" is the shortcut key to hide the control panel.  "Ctrl+X" is not added to the main window.  It is added to MasterControl.py
+        menu = addMenu(self.menuBar(), "controlPanel")
+        for index, shortcut in enumerate(("B", "L", "F", "H")):
+            addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), "Ctrl+{0}".format(shortcut))
 
         navigation_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
         navigation_menu.addAction(
@@ -97,7 +110,7 @@ class AlephMainWindow(MainWindow):
         history_menu.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut = 'Ctrl+Y, S', triggered=self.studyHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut="Ctrl+Y, 3", triggered=self.studyBack))
         history_menu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+Y, 4", triggered=self.studyForward))
-        navigation_menu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut="Ctrl+M", triggered=self.manageControlPanel))
+        #navigation_menu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut="Ctrl+M", triggered=self.manageControlPanel))
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_remoteControl"], self, shortcut="Ctrl+O", triggered=self.manageRemoteControl))
 
         search_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_search"]))
@@ -244,20 +257,15 @@ class AlephMainWindow(MainWindow):
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
-        self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
-        self.mainTextMenuButton.setToolTip(config.thisTranslation["bar1_menu"])
-        self.mainTextMenuButton.setStyleSheet(textButtonStyle)
-        self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
-        self.firstToolBar.addWidget(self.mainTextMenuButton)
-
-        if config.qtMaterial and config.qtMaterialTheme:
-            self.buttonWidth = self.mainTextMenuButton.height()
-
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
+
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.iconButtonWidth = self.mainRefButton.height()
 
         searchBibleButton = QPushButton()
         searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBibles"])
@@ -341,12 +349,6 @@ class AlephMainWindow(MainWindow):
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.studyBibleToolBar)
-
-        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
-        self.studyTextMenuButton.setToolTip(config.thisTranslation["bar2_menu"])
-        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
-        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
-        self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study")[1])
         self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
@@ -769,12 +771,6 @@ class AlephMainWindow(MainWindow):
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
-        self.mainTextMenuButton = QPushButton(self.verseReference("main")[0])
-        self.mainTextMenuButton.setToolTip(config.thisTranslation["bar1_menu"])
-        self.mainTextMenuButton.setStyleSheet(textButtonStyle)
-        self.mainTextMenuButton.clicked.connect(self.mainTextMenu)
-        self.firstToolBar.addWidget(self.mainTextMenuButton)
-
         self.mainRefButton = QPushButton(self.verseReference("main")[1])
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
@@ -833,12 +829,6 @@ class AlephMainWindow(MainWindow):
         self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.studyBibleToolBar)
-
-        self.studyTextMenuButton = QPushButton(self.verseReference("study")[0])
-        self.studyTextMenuButton.setToolTip(config.thisTranslation["bar2_menu"])
-        self.studyTextMenuButton.setStyleSheet(textButtonStyle)
-        self.studyTextMenuButton.clicked.connect(self.studyTextMenu)
-        self.studyBibleToolBar.addWidget(self.studyTextMenuButton)
 
         self.studyRefButton = QPushButton(self.verseReference("study")[1])
         self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
@@ -1081,5 +1071,4 @@ class AlephMainWindow(MainWindow):
 
     def testing(self):
         #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
-        test = MasterControl(self)
-        test.show()
+        self.manageControlPanel()

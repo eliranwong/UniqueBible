@@ -7,6 +7,7 @@ from gui.HistoryLauncher import HistoryLauncher
 from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit)
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
+from PySide2.QtCore import QUrl, Qt, QEvent
 
 class MasterControl(QWidget):
 
@@ -21,6 +22,22 @@ class MasterControl(QWidget):
         self.setupItemLists()
         # setup interface
         self.setupUI(b, c, v, text, initialTab)
+
+    # manage key capture
+    def event(self, event):
+        if event.type() == QEvent.KeyRelease:
+            if event.modifiers() == Qt.ControlModifier:
+                if event.key() == Qt.Key_B:
+                    self.tabs.setCurrentIndex(0)
+                elif event.key() == Qt.Key_L:
+                    self.tabs.setCurrentIndex(1)
+                elif event.key() == Qt.Key_F:
+                    self.tabs.setCurrentIndex(2)
+                elif event.key() == Qt.Key_H:
+                    self.tabs.setCurrentIndex(3)
+                elif event.key() == Qt.Key_X:
+                    self.hide()
+        return QWidget.event(self, event)
 
     def closeEvent(self, event):
         # Control panel is designed for frequent use
