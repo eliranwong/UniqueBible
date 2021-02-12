@@ -237,36 +237,39 @@ class MainWindow(QMainWindow):
         self.manageControlPanel()
 
     def manageControlPanel(self, show=True):
-        if config.controlPanel and not self.controlPanel.isVisible():
-            self.controlPanel.raise_()
-            self.controlPanel.show()
-        elif config.controlPanel and not self.controlPanel.isActiveWindow():
-            textCommandText = self.textCommandLineEdit.text()
-            if textCommandText:
-                self.controlPanel.commandField.setText(textCommandText)
-            self.controlPanel.raise_()
-            if platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland":
-            # Method activateWindow() does not work with qt.qpa.wayland
-            # The error message is received when QT_QPA_PLATFORM=wayland:
-            # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
-            # Therefore, we use hide and show methods instead with wayland.
-                self.controlPanel.hide()
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            if config.controlPanel and not self.controlPanel.isVisible():
+                self.controlPanel.raise_()
                 self.controlPanel.show()
-            else:
-                self.controlPanel.activateWindow()
-        elif not config.controlPanel:
-            self.controlPanel = MasterControl(self)
-            if show:
-                self.controlPanel.show()
-            textCommandText = self.textCommandLineEdit.text()
-            if config.clearCommandEntry:
-                self.controlPanel.commandField.setText("")
-            elif textCommandText:
-                self.controlPanel.commandField.setText(textCommandText)
-            config.controlPanel = True
-        elif self.controlPanel:
-                self.controlPanel.close()
-                config.controlPanel = False
+            elif config.controlPanel and not self.controlPanel.isActiveWindow():
+                textCommandText = self.textCommandLineEdit.text()
+                if textCommandText:
+                    self.controlPanel.commandField.setText(textCommandText)
+                self.controlPanel.raise_()
+                if platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland":
+                # Method activateWindow() does not work with qt.qpa.wayland
+                # The error message is received when QT_QPA_PLATFORM=wayland:
+                # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+                # Therefore, we use hide and show methods instead with wayland.
+                    self.controlPanel.hide()
+                    self.controlPanel.show()
+                else:
+                    self.controlPanel.activateWindow()
+            elif not config.controlPanel:
+                self.controlPanel = MasterControl(self)
+                if show:
+                    self.controlPanel.show()
+                textCommandText = self.textCommandLineEdit.text()
+                if config.clearCommandEntry:
+                    self.controlPanel.commandField.setText("")
+                elif textCommandText:
+                    self.controlPanel.commandField.setText(textCommandText)
+                config.controlPanel = True
+            elif self.controlPanel:
+                    self.controlPanel.close()
+                    config.controlPanel = False
+        else:
+            self.textCommandParser.databaseNotInstalled("bible")
 
     def manageRemoteControl(self):
         if config.remoteControl and not self.remoteControl.isActiveWindow():
