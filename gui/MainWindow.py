@@ -233,15 +233,20 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setText("")
 
     def openControlPanelTab(self, index=0):
-        self.controlPanel.tabs.setCurrentIndex(index)
-        self.manageControlPanel()
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            #self.controlPanel.tabs.setCurrentIndex(index)
+            self.manageControlPanel(index)
+        else:
+            self.textCommandParser.databaseNotInstalled("bible")
 
-    def manageControlPanel(self, show=True):
+    def manageControlPanel(self, show=True, index=0):
         if self.textCommandParser.isDatabaseInstalled("bible"):
             if config.controlPanel and not self.controlPanel.isVisible():
+                self.controlPanel.tabs.setCurrentIndex(index)
                 self.controlPanel.raise_()
                 self.controlPanel.show()
             elif config.controlPanel and not self.controlPanel.isActiveWindow():
+                self.controlPanel.tabs.setCurrentIndex(index)
                 textCommandText = self.textCommandLineEdit.text()
                 if textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
@@ -256,7 +261,7 @@ class MainWindow(QMainWindow):
                 else:
                     self.controlPanel.activateWindow()
             elif not config.controlPanel:
-                self.controlPanel = MasterControl(self)
+                self.controlPanel = MasterControl(self, initialTab=index)
                 if show:
                     self.controlPanel.show()
                 textCommandText = self.textCommandLineEdit.text()
@@ -265,9 +270,9 @@ class MainWindow(QMainWindow):
                 elif textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
                 config.controlPanel = True
-            elif self.controlPanel:
-                    self.controlPanel.close()
-                    config.controlPanel = False
+            #elif self.controlPanel:
+            #        self.controlPanel.close()
+            #        config.controlPanel = False
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
