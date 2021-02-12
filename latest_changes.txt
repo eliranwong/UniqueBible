@@ -1,3 +1,6 @@
+Major change in version 21.27:
+* Added functions to prompt new users to download book or commentary when one of them is accessed.
+
 Major changes in version 21.26:
 * Substantial changes in this upgrade.  A total of 36 files changed
 * New exciting featuers, e.g. Remote CLI, 

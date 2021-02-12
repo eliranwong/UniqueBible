@@ -1420,7 +1420,10 @@ class MainWindow(QMainWindow):
 
     # Actions - book features
     def openBookMenu(self):
-        self.openControlPanelTab(1)
+        if self.textCommandParser.isDatabaseInstalled("book"):
+            self.openControlPanelTab(1)
+        else:
+            self.textCommandParser.databaseNotInstalled("book")
 
     def openBookPreviousChapter(self):
         if hasattr(config, "bookChapNum"):
@@ -1495,7 +1498,10 @@ class MainWindow(QMainWindow):
         self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[9]), True, "main")
 
     def openBookDialog(self):
-        self.openControlPanelTab(1)
+        if self.textCommandParser.isDatabaseInstalled("book"):
+            self.openControlPanelTab(1)
+        else:
+            self.textCommandParser.databaseNotInstalled("book")
 #        bookData = BookData()
 #        items = [book for book, *_ in bookData.getBookList()]
 #        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
@@ -2013,7 +2019,10 @@ class MainWindow(QMainWindow):
         self.openControlPanelTab(0)
 
     def commentaryRefButtonClicked(self):
-        self.openControlPanelTab(1)
+        if self.textCommandParser.isDatabaseInstalled("commentary"):
+            self.openControlPanelTab(1)
+        else:
+            self.textCommandParser.databaseNotInstalled("commentary")
 
     def updateMainRefButton(self):
         text, verseReference = self.verseReference("main")
