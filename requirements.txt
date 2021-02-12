@@ -12,3 +12,4 @@ qt-material
 googletrans
 pypinyin
 opencc
+telnetlib3

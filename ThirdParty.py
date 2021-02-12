@@ -1510,6 +1510,7 @@ class Converter:
 class ThirdPartyDictionary:
 
     def __init__(self, moduleTuple=None):
+        self.connection = None
         self.moduleList = self.getModuleList()
         if moduleTuple is not None:
             self.module, self.fileExtension = moduleTuple
@@ -1519,7 +1520,7 @@ class ThirdPartyDictionary:
                 self.cursor = self.connection.cursor()
 
     def __del__(self):
-        if self.connection:
+        if self.connection is not None:
             self.connection.close()
 
     def getModuleList(self):
