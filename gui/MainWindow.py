@@ -235,7 +235,7 @@ class MainWindow(QMainWindow):
     def openControlPanelTab(self, index=0):
         if self.textCommandParser.isDatabaseInstalled("bible"):
             #self.controlPanel.tabs.setCurrentIndex(index)
-            self.manageControlPanel(index)
+            self.manageControlPanel(True, index)
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
