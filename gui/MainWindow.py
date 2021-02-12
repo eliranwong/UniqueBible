@@ -1697,7 +1697,7 @@ class MainWindow(QMainWindow):
         webbrowser.open("https://www.paypal.me/MarvelBible")
 
     def moreBooks(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/download_3rd_party_modules")
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Download-3rd-party-modules")
 
     def openBrowser(self, url):
         webbrowser.open(url)
