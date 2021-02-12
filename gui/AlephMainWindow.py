@@ -3,6 +3,7 @@ from PySide2.QtGui import QIcon, Qt
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit)
 from gui.MainWindow import MainWindow
 from gui.MenuItems import *
+from PySide2.QtCore import QSize
 
 class AlephMainWindow(MainWindow):
 
@@ -777,6 +778,10 @@ class AlephMainWindow(MainWindow):
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
 
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.iconButtonWidth = self.mainRefButton.height()
+
         iconFile = os.path.join("htmlResources", "noteChapter.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)
 
@@ -1068,6 +1073,13 @@ class AlephMainWindow(MainWindow):
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.cycleInstant)
 
         self.rightToolBar.addSeparator()
+
+        if config.qtMaterial and config.qtMaterialTheme:
+            for toolbar in (self.firstToolBar, self.studyBibleToolBar, self.secondToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth / 1.33, config.iconButtonWidth / 1.33))
+                toolbar.setFixedHeight(config.iconButtonWidth + 4)
+            for toolbar in (self.leftToolBar, self.rightToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth * 0.6, config.iconButtonWidth * 0.6))
 
     def testing(self):
         #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))

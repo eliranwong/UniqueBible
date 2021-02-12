@@ -524,10 +524,11 @@ class MainWindow(QMainWindow):
             self.setupToolBarStandardIconSize()
 
     def setStudyBibleToolBar(self):
-        if config.openBibleInMainViewOnly:
-            self.studyBibleToolBar.hide()
-        else:
-            self.studyBibleToolBar.show()
+        if not config.noStudyBibleToolbar:
+            if config.openBibleInMainViewOnly:
+                self.studyBibleToolBar.hide()
+            else:
+                self.studyBibleToolBar.show()
 
     # install marvel data
     def installMarvelBibles(self):
@@ -1322,10 +1323,12 @@ class MainWindow(QMainWindow):
 
     def hideShowSecondaryToolBar(self):
         if self.secondToolBar.isVisible():
-            self.studyBibleToolBar.hide()
+            if not config.noStudyBibleToolbar:
+                self.studyBibleToolBar.hide()
             self.secondToolBar.hide()
         else:
-            self.setStudyBibleToolBar()
+            if not config.noStudyBibleToolbar:
+                self.setStudyBibleToolBar()
             self.secondToolBar.show()
 
     def showSecondaryToolBar(self):
@@ -1369,12 +1372,14 @@ class MainWindow(QMainWindow):
         self.firstToolBar.show()
         config.noToolBar = False
         if config.topToolBarOnly:
-            self.studyBibleToolBar.hide()
+            if not config.noStudyBibleToolbar:
+                self.studyBibleToolBar.hide()
             self.secondToolBar.hide()
             self.leftToolBar.hide()
             self.rightToolBar.hide()
         else:
-            self.setStudyBibleToolBar()
+            if not config.noStudyBibleToolbar:
+                self.setStudyBibleToolBar()
             self.secondToolBar.show()
             self.leftToolBar.show()
             self.rightToolBar.show()
@@ -1390,7 +1395,8 @@ class MainWindow(QMainWindow):
     def showAllToolBar(self):
         config.topToolBarOnly = False
         self.firstToolBar.show()
-        self.setStudyBibleToolBar()
+        if not config.noStudyBibleToolbar:
+            self.setStudyBibleToolBar()
         self.secondToolBar.show()
         self.leftToolBar.show()
         self.rightToolBar.show()
@@ -1398,14 +1404,15 @@ class MainWindow(QMainWindow):
     def hideAllToolBar(self):
         config.topToolBarOnly = False
         self.firstToolBar.hide()
-        self.studyBibleToolBar.hide()
+        if not config.noStudyBibleToolbar:
+            self.studyBibleToolBar.hide()
         self.secondToolBar.hide()
         self.leftToolBar.hide()
         self.rightToolBar.hide()
 
     # Actions - book features
     def openBookMenu(self):
-        self.runTextCommand("BOOK:::{0}".format(config.book), True, "main")
+        self.openControlPanelTab(1)
 
     def openBookPreviousChapter(self):
         if hasattr(config, "bookChapNum"):
@@ -1480,11 +1487,12 @@ class MainWindow(QMainWindow):
         self.runTextCommand("BOOK:::{0}".format(config.favouriteBooks[9]), True, "main")
 
     def openBookDialog(self):
-        bookData = BookData()
-        items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
-        if ok and item:
-            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
+        self.openControlPanelTab(1)
+#        bookData = BookData()
+#        items = [book for book, *_ in bookData.getBookList()]
+#        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+#        if ok and item:
+#            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
 
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
@@ -1803,10 +1811,18 @@ class MainWindow(QMainWindow):
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
             config.openBibleInMainViewOnly = False
-            self.studyBibleToolBar.show()
+            if config.noStudyBibleToolbar:
+                self.studyRefButton.setVisible(True)
+                self.enableSyncStudyWindowBibleButton.setVisible(True)
+            else:
+                self.studyBibleToolBar.show()
         else:
             config.openBibleInMainViewOnly = True
-            self.studyBibleToolBar.hide()
+            if config.noStudyBibleToolbar:
+                self.studyRefButton.setVisible(False)
+                self.enableSyncStudyWindowBibleButton.setVisible(False)
+            else:
+                self.studyBibleToolBar.hide()
         enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
@@ -2024,10 +2040,12 @@ class MainWindow(QMainWindow):
 
     # Actions - access history records
     def mainHistoryButtonClicked(self):
-        self.mainView.setHtml(self.getHistory("main"), baseUrl)
+        self.openControlPanelTab(3)
+        #self.mainView.setHtml(self.getHistory("main"), baseUrl)
 
     def studyHistoryButtonClicked(self):
-        self.studyView.setHtml(self.getHistory("study"), baseUrl)
+        self.openControlPanelTab(3)
+        #self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
@@ -2275,11 +2293,12 @@ class MainWindow(QMainWindow):
                 config.currentRecord[view] = len(viewhistory) - 1
 
     # switch between landscape / portrait mode
+    def setFullIconSize(self, full):
+        config.toolBarIconFullSize = full
+        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+    
     def switchIconSize(self):
-        if config.toolBarIconFullSize:
-            config.toolBarIconFullSize = False
-        else:
-            config.toolBarIconFullSize = True
+        config.toolBarIconFullSize = not config.toolBarIconFullSize
         self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
     # switch between landscape / portrait mode

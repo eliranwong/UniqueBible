@@ -1,5 +1,6 @@
 import os, config, myTranslation
 from PySide2.QtGui import QIcon, Qt
+from PySide2.QtCore import QSize
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
 from gui.MainWindow import MainWindow
 from gui.MasterControl import MasterControl
@@ -60,9 +61,9 @@ class ClassicMainWindow(MainWindow):
         
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")
         items = (
-            ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic"), None),
-            ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph"), None),
             ("menu1_alpha_menu_layout", lambda: self.setMenuLayout("alpha"), None),
+            ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph"), None),
+            ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic"), None),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -543,7 +544,8 @@ class ClassicMainWindow(MainWindow):
         self.leftToolBar.addSeparator()
         self.addStandardIconButton("menu4_compareAll", "compare_with.png", self.runCOMPARE, self.leftToolBar)
         self.addStandardIconButton("menu4_moreComparison", "parallel_with.png", self.mainRefButtonClicked, self.leftToolBar)
-        self.addStandardIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, None, False)
+        self.enforceCompareParallelButton = QPushButton()
+        self.addStandardIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
         self.addStandardIconButton("Marvel Original Bible", "original.png", self.runMOB, self.leftToolBar, None, False)
         self.addStandardIconButton("Marvel Interlinear Bible", "interlinear.png", self.runMIB, self.leftToolBar, None, False)
@@ -596,6 +598,10 @@ class ClassicMainWindow(MainWindow):
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
+
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.iconButtonWidth = self.mainRefButton.height()
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)
@@ -868,3 +874,10 @@ class ClassicMainWindow(MainWindow):
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.cycleInstant)
 
         self.rightToolBar.addSeparator()
+
+        if config.qtMaterial and config.qtMaterialTheme:
+            for toolbar in (self.firstToolBar, self.studyBibleToolBar, self.secondToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth / 1.33, config.iconButtonWidth / 1.33))
+                toolbar.setFixedHeight(config.iconButtonWidth + 4)
+            for toolbar in (self.leftToolBar, self.rightToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth * 0.6, config.iconButtonWidth * 0.6))

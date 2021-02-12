@@ -1,4 +1,5 @@
 import os, config, myTranslation
+from PySide2.QtCore import QSize
 from PySide2.QtGui import QIcon, Qt
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
 from gui.MenuItems import *
@@ -56,6 +57,13 @@ class AlphaMainWindow(MainWindow):
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        subMenu = addSubMenu(subMenu0, "toolbarIcon")
+        items = (
+            ("toolbarIconStandard", lambda: self.setFullIconSize(False)),
+            ("toolbarIconFull", lambda: self.setFullIconSize(True)),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu2_fonts")
         items = (
             ("menu1_setDefaultFont", self.setDefaultFont),
@@ -97,8 +105,6 @@ class AlphaMainWindow(MainWindow):
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        subMenu0.addSeparator()
-        addMenuItem(subMenu0, "menu2_icons", self, self.switchIconSize)
         subMenu0.addSeparator()
         items = (
             ("menu2_study", self.parallel, "Ctrl+W"),
@@ -303,15 +309,18 @@ class AlphaMainWindow(MainWindow):
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
+        self.addStandardTextButton("menu_previous_chapter", self.previousMainChapter, self.firstToolBar, QPushButton("<"))
         self.mainRefButton = QPushButton(":::".join(self.verseReference("main")))
         self.addStandardTextButton("bar1_reference", self.mainRefButtonClicked, self.firstToolBar, self.mainRefButton)
+        self.addStandardTextButton("menu_next_chapter", self.nextMainChapter, self.firstToolBar, QPushButton(">"))
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
             config.iconButtonWidth = self.mainRefButton.height()
 
-        self.addStandardIconButton("bar1_chapterNotes", "noteChapter.png", self.openMainChapterNote, self.firstToolBar)
-        self.addStandardIconButton("bar1_verseNotes", "noteVerse.png", self.openMainVerseNote, self.firstToolBar)
+        self.addStandardIconButton("menu_bookNote", "noteBook.png", self.openMainBookNote, self.firstToolBar)
+        self.addStandardIconButton("menu_chapterNote", "noteChapter.png", self.openMainChapterNote, self.firstToolBar)
+        self.addStandardIconButton("menu_verseNote", "noteVerse.png", self.openMainVerseNote, self.firstToolBar)
         self.addStandardIconButton("bar1_searchBible", "search.png", self.displaySearchBibleCommand, self.firstToolBar)
         self.addStandardIconButton("bar1_searchBibles", "search_plus.png", self.displaySearchBibleMenu, self.firstToolBar)
 
@@ -326,29 +335,39 @@ class AlphaMainWindow(MainWindow):
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
+        self.enableStudyBibleButton = QPushButton()
+        self.addStandardIconButton(self.getStudyBibleDisplayToolTip(), self.getStudyBibleDisplay(), self.enableStudyBibleButtonClicked, self.firstToolBar, self.enableStudyBibleButton, False)
+
+        #self.studyRefButton = QPushButton(":::".join(self.verseReference("study")))
+        #self.addStandardTextButton("bar2_reference", self.studyRefButtonClicked, self.firstToolBar, self.studyRefButton)
+        #self.enableSyncStudyWindowBibleButton = QPushButton()
+        #self.addStandardIconButton(self.getSyncStudyWindowBibleDisplayToolTip(), self.getSyncStudyWindowBibleDisplay(), self.enableSyncStudyWindowBibleButtonClicked, self.firstToolBar, self.enableSyncStudyWindowBibleButton, False)
+
+        # Toolbar height here is affected by the actual size of icon file used in a QAction
+        if config.qtMaterial and config.qtMaterialTheme:
+            self.firstToolBar.setFixedHeight(config.iconButtonWidth + 4)
+            self.firstToolBar.setIconSize(QSize(config.iconButtonWidth / 2, config.iconButtonWidth / 2))
+        # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
+        self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClicked)
+        iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
+        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        if config.openBibleInMainViewOnly:
+            self.studyRefButton.setVisible(False)
+            self.enableSyncStudyWindowBibleButton.setVisible(False)
+        self.firstToolBar.addSeparator()
+
         self.addStandardIconButton("bar1_toolbars", "toolbar.png", self.hideShowAdditionalToolBar, self.firstToolBar)
 
         if config.addBreakAfterTheFirstToolBar:
             self.addToolBarBreak()
 
-        self.studyBibleToolBar = QToolBar()
-        self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
-        self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.studyBibleToolBar)
+        #self.studyBibleToolBar = QToolBar()
+        #self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
+        #self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        #self.addToolBar(self.studyBibleToolBar)
 
-        self.studyRefButton = QPushButton(self.verseReference("study")[0])
-        self.addStandardTextButton("bar2_reference", self.studyRefButtonClicked, self.studyBibleToolBar, self.studyRefButton)
-
-        self.addStandardIconButton("bar2_chapterNotes", "noteChapter.png", self.openStudyChapterNote, self.studyBibleToolBar)
-        self.addStandardIconButton("bar2_verseNotes", "noteVerse.png", self.openStudyVerseNote, self.studyBibleToolBar)
-        self.addStandardIconButton("bar2_searchBible", "search.png", self.displaySearchStudyBibleCommand, self.studyBibleToolBar)
-        self.addStandardIconButton("bar2_searchBibles", "search_plus.png", self.displaySearchBibleMenu, self.studyBibleToolBar)
-
-        self.enableSyncStudyWindowBibleButton = QPushButton()
-        self.addStandardIconButton(self.getSyncStudyWindowBibleDisplayToolTip(), self.getSyncStudyWindowBibleDisplay(), self.enableSyncStudyWindowBibleButtonClicked, self.studyBibleToolBar, self.enableSyncStudyWindowBibleButton, False)
-
-        if config.addBreakBeforeTheLastToolBar:
-            self.addToolBarBreak()
+        #if config.addBreakBeforeTheLastToolBar:
+        #    self.addToolBarBreak()
 
         # Second tool bar
         self.secondToolBar = QToolBar()
@@ -356,19 +375,12 @@ class AlphaMainWindow(MainWindow):
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
 
-        self.enableStudyBibleButton = QPushButton()
-        self.addStandardIconButton(self.getStudyBibleDisplayToolTip(), self.getStudyBibleDisplay(), self.enableStudyBibleButtonClicked, self.secondToolBar, self.enableStudyBibleButton, False)
-
-        self.secondToolBar.addSeparator()
-
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
         self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
 
         self.enableSyncCommentaryButton = QPushButton()
         self.addStandardIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)
         self.secondToolBar.addSeparator()
-
-        self.addStandardIconButton("menu10_dialog", "open.png", self.openBookDialog, self.secondToolBar)
 
         self.bookButton = QPushButton(config.book)
         self.addStandardTextButton("menu5_book", self.openBookMenu, self.secondToolBar, self.bookButton)
@@ -416,12 +428,10 @@ class AlphaMainWindow(MainWindow):
         self.enableSubheadingButton = QPushButton()
         self.addStandardIconButton("menu2_subHeadings", self.getAddSubheading(), self.enableSubheadingButtonClicked, self.leftToolBar, self.enableSubheadingButton)
         self.leftToolBar.addSeparator()
-        self.addStandardIconButton("menu4_previous", "previousChapter.png", self.previousMainChapter, self.leftToolBar)
-        self.addStandardIconButton("menu4_next", "nextChapter.png", self.nextMainChapter, self.leftToolBar)
-        self.leftToolBar.addSeparator()
         self.addStandardIconButton("menu4_compareAll", "compare_with.png", self.runCOMPARE, self.leftToolBar)
         self.addStandardIconButton("menu4_moreComparison", "parallel_with.png", self.mainRefButtonClicked, self.leftToolBar)
-        self.addStandardIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, None, False)
+        self.enforceCompareParallelButton = QPushButton()
+        self.addStandardIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
         self.addStandardIconButton("Marvel Original Bible", "original.png", self.runMOB, self.leftToolBar, None, False)
         self.addStandardIconButton("Marvel Interlinear Bible", "interlinear.png", self.runMIB, self.leftToolBar, None, False)
@@ -453,9 +463,6 @@ class AlphaMainWindow(MainWindow):
         self.addStandardIconButton("menu4_words", "words.png", self.runWORDS, self.rightToolBar)
         self.addStandardIconButton("menu4_tdw", "combo.png", self.runCOMBO, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        self.addStandardIconButton("menu2_landscape", "portrait.png", self.switchLandscapeMode, self.rightToolBar)
-        self.addStandardIconButton("menu2_study", "parallel.png", self.parallel, self.rightToolBar)
-        self.rightToolBar.addSeparator()
         self.addStandardIconButton("menu2_hover", self.getInstantInformation(), self.enableInstantButtonClicked, self.rightToolBar)
         self.addStandardIconButton("menu2_bottom", "lightning.png", self.cycleInstant, self.rightToolBar)
         self.rightToolBar.addSeparator()
@@ -469,17 +476,26 @@ class AlphaMainWindow(MainWindow):
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
+        self.addStandardTextButton("menu_previous_chapter", self.previousMainChapter, self.firstToolBar, QPushButton("<"))
         self.mainRefButton = QPushButton(":::".join(self.verseReference("main")))
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
         self.firstToolBar.addWidget(self.mainRefButton)
+        self.addStandardTextButton("menu_next_chapter", self.nextMainChapter, self.firstToolBar, QPushButton(">"))
+
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.iconButtonWidth = self.mainRefButton.height()
+
+        iconFile = os.path.join("htmlResources", "noteBook.png")
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_bookNote"], self.openMainBookNote)
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_chapterNote"], self.openMainChapterNote)
 
         iconFile = os.path.join("htmlResources", "noteVerse.png")
-        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_verseNotes"], self.openMainVerseNote)
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_verseNote"], self.openMainVerseNote)
 
         iconFile = os.path.join("htmlResources", "search.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)
@@ -497,50 +513,35 @@ class AlphaMainWindow(MainWindow):
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
+        iconFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
+        self.enableStudyBibleButton = self.firstToolBar.addAction(QIcon(iconFile), self.getStudyBibleDisplayToolTip(), self.enableStudyBibleButtonClicked)
+        
+        self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClicked)
+        iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
+        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        if config.openBibleInMainViewOnly:
+            self.studyRefButton.setVisible(False)
+            self.enableSyncStudyWindowBibleButton.setVisible(False)
+        self.firstToolBar.addSeparator()
+
         iconFile = os.path.join("htmlResources", "toolbar.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_toolbars"], self.hideShowAdditionalToolBar)
 
         if config.addBreakAfterTheFirstToolBar:
             self.addToolBarBreak()
 
-        self.studyBibleToolBar = QToolBar()
-        self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
-        self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
-        self.addToolBar(self.studyBibleToolBar)
+        #self.studyBibleToolBar = QToolBar()
+        #self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
+        #self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
+        #self.addToolBar(self.studyBibleToolBar)
 
-        self.studyRefButton = QPushButton(self.verseReference("study")[1])
-        self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
-        self.studyRefButton.setStyleSheet(textButtonStyle)
-        self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
-        self.studyBibleToolBar.addWidget(self.studyRefButton)
-
-        iconFile = os.path.join("htmlResources", "noteChapter.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_chapterNotes"], self.openStudyChapterNote)
-
-        iconFile = os.path.join("htmlResources", "noteVerse.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_verseNotes"], self.openStudyVerseNote)
-
-        iconFile = os.path.join("htmlResources", "search.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBible"], self.displaySearchStudyBibleCommand)
-
-        iconFile = os.path.join("htmlResources", "search_plus.png")
-        self.studyBibleToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar2_searchBibles"], self.displaySearchBibleMenu)
-
-        iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        self.enableSyncStudyWindowBibleButton = self.studyBibleToolBar.addAction(QIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
-
-        if config.addBreakBeforeTheLastToolBar:
-            self.addToolBarBreak()
+        #if config.addBreakBeforeTheLastToolBar:
+        #    self.addToolBarBreak()
 
         self.secondToolBar = QToolBar()
         self.secondToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         self.secondToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.secondToolBar)
-
-        iconFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
-        self.enableStudyBibleButton = self.secondToolBar.addAction(QIcon(iconFile), self.getStudyBibleDisplayToolTip(), self.enableStudyBibleButtonClicked)
-
-        self.secondToolBar.addSeparator()
 
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
         self.commentaryRefButton.setToolTip(config.thisTranslation["menu4_commentary"])
@@ -552,9 +553,6 @@ class AlphaMainWindow(MainWindow):
         self.enableSyncCommentaryButton = self.secondToolBar.addAction(QIcon(iconFile), self.getSyncCommentaryDisplayToolTip(), self.enableSyncCommentaryButtonClicked)
 
         self.secondToolBar.addSeparator()
-
-        iconFile = os.path.join("htmlResources", "open.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu10_dialog"], self.openBookDialog)
 
         self.bookButton = QPushButton(config.book)
         self.bookButton.setToolTip(config.thisTranslation["menu5_book"])
@@ -637,21 +635,6 @@ class AlphaMainWindow(MainWindow):
 
         self.leftToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "previousChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_previous"], self.previousMainChapter)
-
-        #        actionButton = QPushButton()
-        #        actionButton.setToolTip(config.thisTranslation["bar1_reference"])
-        #        actionButtonFile = os.path.join("htmlResources", "bible.png")
-        #        actionButton.setIcon(QIcon(actionButtonFile))
-        #        actionButton.clicked.connect(self.openMainChapter)
-        #        self.leftToolBar.addWidget(actionButton)
-
-        iconFile = os.path.join("htmlResources", "nextChapter.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_next"], self.nextMainChapter)
-
-        self.leftToolBar.addSeparator()
-
         iconFile = os.path.join("htmlResources", "compare_with.png")
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compareAll"], self.runCOMPARE)
 
@@ -731,14 +714,6 @@ class AlphaMainWindow(MainWindow):
 
         self.rightToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "portrait.png")
-        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_landscape"], self.switchLandscapeMode)
-
-        iconFile = os.path.join("htmlResources", "parallel.png")
-        self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_study"], self.parallel)
-
-        self.rightToolBar.addSeparator()
-
         iconFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton = self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_hover"], self.enableInstantButtonClicked)
 
@@ -746,3 +721,10 @@ class AlphaMainWindow(MainWindow):
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu2_bottom"], self.cycleInstant)
 
         self.rightToolBar.addSeparator()
+
+        if config.qtMaterial and config.qtMaterialTheme:
+            for toolbar in (self.firstToolBar, self.secondToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth / 1.33, config.iconButtonWidth / 1.33))
+                toolbar.setFixedHeight(config.iconButtonWidth + 4)
+            for toolbar in (self.leftToolBar, self.rightToolBar):
+                toolbar.setIconSize(QSize(config.iconButtonWidth * 0.6, config.iconButtonWidth * 0.6))

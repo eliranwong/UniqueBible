@@ -457,6 +457,8 @@ if not hasattr(config, "tempRecord"):
     config.tempRecord = ""
 if not hasattr(config, "isDownloading"):
     config.isDownloading = False
+if not hasattr(config, "noStudyBibleToolbar"):
+    config.noStudyBibleToolbar = False
 
 # Optional Features
 # [Optional] Text-to-Speech feature
@@ -740,10 +742,11 @@ if config.qtMaterial and config.qtMaterialTheme:
 else:
     app.setPalette(Themes.getPalette())
 # Apply window menu layout
-if config.menuLayout == "aleph":
-    mainWindow = AlephMainWindow()
-elif config.menuLayout == "alpha":
+if config.menuLayout == "alpha":
+    config.noStudyBibleToolbar = True
     mainWindow = AlphaMainWindow()
+elif config.menuLayout == "aleph":
+    mainWindow = AlephMainWindow()
 else:
     mainWindow = ClassicMainWindow()
 
