@@ -106,7 +106,6 @@ class HistoryLauncher(QWidget):
             self.startup = False
 
     def setSelection(self, mainItems, studyItems, externalItems):
-        print("setselection")
         if mainItems:
             self.mainListView.setCurrentIndex(self.mainModel.index(0, 0))
         if studyItems:

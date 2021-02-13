@@ -14,14 +14,17 @@ class MasterControl(QWidget):
     def __init__(self, parent, initialTab=0, b=config.mainB, c=config.mainC, v=config.mainV, text=config.mainText):
         super().__init__()
 
-        self.parent = parent
+        self.isRefreshing = True
 
+        self.parent = parent
         # set title
         self.setWindowTitle(config.thisTranslation["controlPanel"])
         # setup item option lists
         self.setupItemLists()
         # setup interface
         self.setupUI(b, c, v, text, initialTab)
+        
+        self.isRefreshing = False
 
     # manage key capture
     def event(self, event):
@@ -167,13 +170,15 @@ class MasterControl(QWidget):
         if printCommand:
             self.commandField.setText(command)
         self.parent.runTextCommand(command)
-        if config.closeControlPanelAfterRunningCommand:
+        if config.closeControlPanelAfterRunningCommand and not self.isRefreshing:
             self.hide()
 
     def tabChanged(self, index):
         if index == 2:
             self.toolTab.searchField.setFocus()
         elif index == 3:
+            self.isRefreshing = True
             self.historyTab.refreshHistoryRecords()
+            self.isRefreshing = False
         else:
             self.commandField.setFocus()

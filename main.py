@@ -53,7 +53,7 @@ if not hasattr(config, "showControlPanelOnStartup"):
 if not hasattr(config, "preferControlPanelForCommandLineEntry"):
     config.preferControlPanelForCommandLineEntry = False
 if not hasattr(config, "closeControlPanelAfterRunningCommand"):
-    config.closeControlPanelAfterRunningCommand = False
+    config.closeControlPanelAfterRunningCommand = True
 if not hasattr(config, "addBreakAfterTheFirstToolBar"):
     config.addBreakAfterTheFirstToolBar = True
 if not hasattr(config, "addBreakBeforeTheLastToolBar"):
