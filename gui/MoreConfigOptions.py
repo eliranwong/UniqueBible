@@ -7,7 +7,7 @@ class MoreConfigOptions(QDialog):
         super().__init__()
         self.parent = parent
         #self.setModal(True)
-        self.setWindowTitle(config.thisTranslation["menu1_moreConfig"])
+        self.setWindowTitle(config.thisTranslation["menu_config_flags"])
         self.setupLayout()
 
     def setupLayout(self):
@@ -35,8 +35,8 @@ class MoreConfigOptions(QDialog):
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, ""),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, ""),
             ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, ""),
-            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, ""),
-            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, ""),
+            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, "Default: False \nTurn it on to hide the toolbar command field on the main window. \nWhen a command prefix is prompted to add to the command field, control panel is opned with command prefix in its command field."),
+            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, "Default: True \nTurn it on to hide Master Control panel each time when a command is executed from it. \nIt is designed to save time from manually closing control panel and go straight to the selected resource. \nUsers can easily call the Control Panel back to screen with shortcuts, like 'Ctrl+B', 'Ctrl+L', 'Ctrl+F' and 'Ctrl+H'."),
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, ""),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, ""),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, ""),
