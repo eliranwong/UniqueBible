@@ -392,10 +392,10 @@ class ClassicMainWindow(MainWindow):
             menu999.addAction(QAction("testing", self, triggered=self.testing))
 
     def testing(self):
-        #pass
+        pass
         #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
-        test = MasterControl(self)
-        test.show()
+        #test = MasterControl(self)
+        #test.show()
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"

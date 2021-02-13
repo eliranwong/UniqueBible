@@ -11,7 +11,7 @@ from PySide2.QtCore import QUrl, Qt, QEvent
 
 class MasterControl(QWidget):
 
-    def __init__(self, parent, b=config.mainB, c=config.mainC, v=config.mainV, text=config.mainText, initialTab=0):
+    def __init__(self, parent, initialTab=0, b=config.mainB, c=config.mainC, v=config.mainV, text=config.mainText):
         super().__init__()
 
         self.parent = parent
@@ -155,6 +155,9 @@ class MasterControl(QWidget):
         return layout
 
     # Actions
+
+    def updateBCVText(self, b, c, v, text):
+        self.bibleTab.updateBCVText(b, c, v, text)
 
     def commandEntered(self):
         command = self.commandField.text()

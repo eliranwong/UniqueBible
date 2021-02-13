@@ -66,14 +66,14 @@ class BibleExplorer(QWidget):
         navigationLayout1 = QBoxLayout(QBoxLayout.LeftToRight)
         navigationLayout1.setSpacing(5)
         # Version selection
-        versionCombo = QComboBox()
+        self.versionCombo = QComboBox()
         self.textList = self.biblesSqlite.getBibleList()
-        versionCombo.addItems(self.textList)
+        self.versionCombo.addItems(self.textList)
         initialIndex = 0
         if self.text in self.textList:
             initialIndex = self.textList.index(self.text)
-        versionCombo.setCurrentIndex(initialIndex)
-        navigationLayout1.addWidget(versionCombo)
+        self.versionCombo.setCurrentIndex(initialIndex)
+        navigationLayout1.addWidget(self.versionCombo)
         # Book / Chapter / Verse selection
         self.bookCombo = QComboBox()
         navigationLayout1.addWidget(self.bookCombo)
@@ -84,7 +84,7 @@ class BibleExplorer(QWidget):
         # Initial setup
         self.updateBookCombo()
         # Interactive update in response to users selection
-        versionCombo.currentIndexChanged.connect(self.updateBookCombo)
+        self.versionCombo.currentIndexChanged.connect(self.updateBookCombo)
         self.bookCombo.currentIndexChanged.connect(lambda index: self.updateChapterCombo(self.bookList[index], True))
         self.chapterCombo.currentIndexChanged.connect(lambda index: self.updateVerseCombo(self.chapterList[index], True))
         self.verseCombo.currentIndexChanged.connect(self.updateV)
@@ -139,6 +139,21 @@ class BibleExplorer(QWidget):
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.parent.buttonsWidget(buttonElementTupleTuple, False, False)
+
+    def updateBCVText(self, b, c, v, text):
+        if text in self.textList:
+            self.versionCombo.setCurrentIndex(self.textList.index(text))
+            self.text = text
+        if b in self.bookList:
+            self.bookCombo.setCurrentIndex(self.bookList.index(b))
+            self.b = b
+        if c in self.chapterList:
+            self.chapterCombo.setCurrentIndex(self.chapterList.index(c))
+            self.c = c
+        if v in self.verseList:
+            self.verseCombo.setCurrentIndex(self.verseList.index(v))
+            self.v = v
+        self.updateBcvLabels()
 
     def updateBookCombo(self, textIndex=None, reset=False):
         if textIndex is None or ((textIndex is not None) and textIndex >= 0):

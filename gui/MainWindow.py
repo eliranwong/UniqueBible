@@ -232,20 +232,44 @@ class MainWindow(QMainWindow):
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
 
-    def openControlPanelTab(self, index=0):
+    def openControlPanelTab(self, index=None, b=None, c=None, v=None, text=None):
+        if index is None:
+            index = 0
+        if b is None:
+            b = config.mainB
+        if c is None:
+            c = config.mainC
+        if v is None:
+            v = config.mainV
+        if text is None:
+            text = config.mainText
+
         if self.textCommandParser.isDatabaseInstalled("bible"):
             #self.controlPanel.tabs.setCurrentIndex(index)
-            self.manageControlPanel(True, index)
+            self.manageControlPanel(True, index, b, c, v, text)
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
-    def manageControlPanel(self, show=True, index=0):
+    def manageControlPanel(self, show=True, index=None, b=None, c=None, v=None, text=None):
+        if index is None:
+            index = 0
+        if b is None:
+            b = config.mainB
+        if c is None:
+            c = config.mainC
+        if v is None:
+            v = config.mainV
+        if text is None:
+            text = config.mainText
+
         if self.textCommandParser.isDatabaseInstalled("bible"):
             if config.controlPanel and not self.controlPanel.isVisible():
+                self.controlPanel.updateBCVText(b, c, v, text)
                 self.controlPanel.tabs.setCurrentIndex(index)
                 self.controlPanel.raise_()
                 self.controlPanel.show()
             elif config.controlPanel and not self.controlPanel.isActiveWindow():
+                self.controlPanel.updateBCVText(b, c, v, text)
                 self.controlPanel.tabs.setCurrentIndex(index)
                 textCommandText = self.textCommandLineEdit.text()
                 if textCommandText:
@@ -261,7 +285,7 @@ class MainWindow(QMainWindow):
                 else:
                     self.controlPanel.activateWindow()
             elif not config.controlPanel:
-                self.controlPanel = MasterControl(self, initialTab=index)
+                self.controlPanel = MasterControl(self, index, b, c, v, text)
                 if show:
                     self.controlPanel.show()
                 textCommandText = self.textCommandLineEdit.text()
@@ -2051,7 +2075,7 @@ class MainWindow(QMainWindow):
         self.openControlPanelTab(0)
 
     def studyRefButtonClicked(self):
-        self.openControlPanelTab(0)
+        self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
 
     def commentaryRefButtonClicked(self):
         if self.textCommandParser.isDatabaseInstalled("commentary"):
