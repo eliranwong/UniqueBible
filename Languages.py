@@ -526,6 +526,7 @@ class Languages:
         "cp2": "Search",
         "cp3": "History",
         "cp4": "Miscellaneous",
+        "edit": "EDIT",
         "remote_control": "Remote Control",
         "bible": "Bible",
         "translations": "Translations",

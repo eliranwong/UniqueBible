@@ -466,10 +466,13 @@ class TextCommandParser:
             "_open": self.openMarvelDataFile,
             # [KEYWORD] _openfile
             # Usage: _openfile:::[external_note_history_record_index]
-            # e.g. _openfile:::1
+            # e.g. _openfile:::-1
+            # Remarks: -1 is the latest record
             "_openfile": self.textOpenFile,
             # [KEYWORD] _editfile
-            # e.g. _editfile:::1
+            # Usage: _openfile:::[external_note_history_record_index]
+            # e.g. _editfile:::-1
+            # Remarks: -1 is the latest record
             "_editfile": self.textEditFile,
             # [KEYWORD] _website
             # e.g. _website:::https://marvel.bible

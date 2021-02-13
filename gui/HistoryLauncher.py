@@ -38,9 +38,14 @@ class HistoryLauncher(QWidget):
         rightColumnWidget = QGroupBox(config.thisTranslation["menu_external_notes"])
         layout = QVBoxLayout()
         layout.addWidget(self.createExternalListView())
+        subLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
-        button.clicked.connect(lambda: self.openLastRecord("external"))
-        layout.addWidget(button)
+        button.clicked.connect(lambda: self.externalFileAction(False))
+        subLayout.addWidget(button)
+        button = QPushButton(config.thisTranslation["edit"])
+        button.clicked.connect(lambda: self.externalFileAction(True))
+        subLayout.addWidget(button)
+        layout.addLayout(subLayout)
         rightColumnWidget.setLayout(layout)
 
         mainLayout.addWidget(leftColumnWidget)
@@ -112,6 +117,10 @@ class HistoryLauncher(QWidget):
     def openLastRecord(self, key):
         selectedItem = config.history[key][-1]
         self.openSelectedItem(selectedItem, key)
+
+    def externalFileAction(self, edit):
+        command = "{0}:::-1".format("_editfile" if edit else "_openfile")
+        self.parent.runTextCommand(command)
 
     def historyAction(self, selection, key):
         selectedItem = selection[0].indexes()[0].data()
