@@ -238,6 +238,7 @@ class MoreConfigOptions(QDialog):
 
     def enableCopyHtmlCommandChanged(self):
         config.enableCopyHtmlCommand = not config.enableCopyHtmlCommand
+        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def forceGenerateHtmlChanged(self):
         config.forceGenerateHtml = not config.forceGenerateHtml

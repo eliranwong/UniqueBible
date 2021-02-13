@@ -70,7 +70,7 @@ class SearchLauncher(QWidget):
         )
         subLayout.addLayout(self.parent.buttonsLayout(buttonRow))
         subLayout.addWidget(self.highlightNoteSearchResultCheckBox())
-        subLayout.addStretch()
+        #subLayout.addStretch()
         widgetLayout0.addLayout(subLayout)
 
         buttonRow1 = (
@@ -137,19 +137,20 @@ class SearchLauncher(QWidget):
         combo.setCurrentIndex(initialIndex)
         return self.parent.comboFeatureLayout(feature, combo, action)
 
+    def highlightNoteSearchResultCheckBox(self):
+        self.searchNoteCheckbox = QCheckBox()
+        self.searchNoteCheckbox.setMaximumWidth(40)
+        self.searchNoteCheckbox.setToolTip(config.thisTranslation["highlightNoteSearchResult"])
+        self.searchNoteCheckbox.setChecked(True if config.noteSearchString else False)
+        self.searchNoteCheckbox.stateChanged.connect(self.searchNoteCheckboxChanged)
+        return self.searchNoteCheckbox
+
     def highlightBookSearchResultCheckBox(self):
         self.searchBookCheckbox = QCheckBox()
         self.searchBookCheckbox.setToolTip(config.thisTranslation["highlightBookSearchResult"])
         self.searchBookCheckbox.setChecked(True if config.bookSearchString else False)
         self.searchBookCheckbox.stateChanged.connect(self.searchBookCheckboxChanged)
         return self.searchBookCheckbox
-
-    def highlightNoteSearchResultCheckBox(self):
-        self.searchNoteCheckbox = QCheckBox()
-        self.searchNoteCheckbox.setToolTip(config.thisTranslation["highlightNoteSearchResult"])
-        self.searchNoteCheckbox.setChecked(True if config.noteSearchString else False)
-        self.searchNoteCheckbox.stateChanged.connect(self.searchNoteCheckboxChanged)
-        return self.searchNoteCheckbox
 
     # Button actions
 
