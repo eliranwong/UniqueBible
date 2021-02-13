@@ -1,3 +1,14 @@
+Major change in version 21.28:
+* Improved Focus menu layout:
+    - added a dropdown menu on toolbar for quick change of bible versions on main window without opening control panel
+    - added to menu "Enable Qt-material theme" when built-in theme is in use
+    - added to menu "Switch to built-in theme" when qt-material theme theme is use
+    - added selection dialogs of built-in themes and qt-material themes
+    - added a menu item for downloading books
+* Improved Master Control Panel:
+    - added an "EDIT" button on history tab for opening note editor
+    - now automatically update bible reference on Bible tab when it is opened
+
 Major change in version 21.27:
 * Added functions to prompt new users to download book or commentary when one of them is accessed.
 
