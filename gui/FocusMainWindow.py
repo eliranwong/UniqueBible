@@ -39,9 +39,11 @@ class FocusMainWindow(MainWindow):
             addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
         subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
         if config.qtMaterial:
-            qtMaterialThemes = ["light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml"]
+            qtMaterialThemes = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
             for theme in qtMaterialThemes:
                 addMenuItem(subMenu, theme[:-4], self, lambda theme=theme: self.setQtMaterialTheme(theme), None, False)
+            subMenu.addSeparator()
+            addMenuItem(subMenu, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
         else:
             items = (
                 ("menu_light_theme", self.setDefaultTheme),
@@ -49,6 +51,8 @@ class FocusMainWindow(MainWindow):
             )
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
+            subMenu.addSeparator()
+            addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         items = (
             ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph")),
@@ -198,8 +202,7 @@ class FocusMainWindow(MainWindow):
             ("menu8_bibles", self.installMarvelBibles),
             ("menu8_commentaries", self.installMarvelCommentaries),
             ("menu8_datasets", self.installMarvelDatasets),
-            ("menu8_plusLexicons", self.importBBPlusLexiconInAFolder),
-            ("menu8_plusDictionaries", self.importBBPlusDictionaryInAFolder),
+            ("installBooks", self.installBooks),
             ("menu8_download3rdParty", self.moreBooks),
         )
         for feature, action in items:
@@ -207,6 +210,8 @@ class FocusMainWindow(MainWindow):
         menu.addSeparator()
         subMenu = addSubMenu(menu, "import")
         items = (
+            ("menu8_plusDictionaries", self.importBBPlusDictionaryInAFolder),
+            ("menu8_plusLexicons", self.importBBPlusLexiconInAFolder),
             ("menu8_3rdParty", self.importModules),
             ("menu8_3rdPartyInFolder", self.importModulesInFolder),
             ("menu8_settings", self.importSettingsDialog),
@@ -343,11 +348,6 @@ class FocusMainWindow(MainWindow):
 
         self.enableStudyBibleButton = QPushButton()
         self.addStandardIconButton(self.getStudyBibleDisplayToolTip(), self.getStudyBibleDisplay(), self.enableStudyBibleButtonClicked, self.firstToolBar, self.enableStudyBibleButton, False)
-
-        #self.studyRefButton = QPushButton(":::".join(self.verseReference("study")))
-        #self.addStandardTextButton("bar2_reference", self.studyRefButtonClicked, self.firstToolBar, self.studyRefButton)
-        #self.enableSyncStudyWindowBibleButton = QPushButton()
-        #self.addStandardIconButton(self.getSyncStudyWindowBibleDisplayToolTip(), self.getSyncStudyWindowBibleDisplay(), self.enableSyncStudyWindowBibleButtonClicked, self.firstToolBar, self.enableSyncStudyWindowBibleButton, False)
 
         # Toolbar height here is affected by the actual size of icon file used in a QAction
         if config.qtMaterial and config.qtMaterialTheme:

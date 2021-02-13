@@ -694,6 +694,34 @@ class MainWindow(QMainWindow):
         config.qtMaterialTheme = theme
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
+    def enableQtMaterial(self, qtMaterial=True):
+        if qtMaterial:
+            try:
+                from qt_material import apply_stylesheet
+                self.selectQtMaterialTheme()
+            except:
+                self.displayMessage(config.thisTranslation["installQtMaterial"])
+        else:
+            self.selectBuiltinTheme()
+
+    def selectQtMaterialTheme(self):
+        items = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["menu1_selectTheme"], items, items.index(config.qtMaterialTheme) if config.qtMaterialTheme and config.qtMaterialTheme in items else 0, False)
+        if ok and item:
+            config.qtMaterial = True
+            config.qtMaterialTheme = item
+            self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
+    def selectBuiltinTheme(self):
+        items = ("default",  "dark")
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["menu1_selectTheme"], items, items.index(config.theme) if config.theme and config.theme in items else 0, False)
+        if ok and item:
+            config.qtMaterial = False
+            config.theme = item
+            self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
     def setDefaultTheme(self):
         config.theme = "default"
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
@@ -1419,6 +1447,12 @@ class MainWindow(QMainWindow):
         self.rightToolBar.hide()
 
     # Actions - book features
+    def installBooks(self):
+        if self.textCommandParser.isDatabaseInstalled("book"):
+            self.displayMessage(config.thisTranslation["message_installed"])
+        else:
+            self.textCommandParser.databaseNotInstalled("book")
+
     def openBookMenu(self):
         if self.textCommandParser.isDatabaseInstalled("book"):
             self.openControlPanelTab(1)
