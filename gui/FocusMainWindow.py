@@ -1,9 +1,10 @@
 import os, config, myTranslation
 from PySide2.QtCore import QSize
 from PySide2.QtGui import QIcon, Qt
-from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
+from PySide2.QtWidgets import (QComboBox, QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
 from gui.MenuItems import *
 from gui.MainWindow import MainWindow
+from BiblesSqlite import BiblesSqlite
 
 class FocusMainWindow(MainWindow):
 
@@ -319,7 +320,7 @@ class FocusMainWindow(MainWindow):
         button = QPushButton("<")
         button.setFixedWidth(40)
         self.addStandardTextButton("menu_previous_chapter", self.previousMainChapter, self.firstToolBar, button)
-        self.mainRefButton = QPushButton(":::".join(self.verseReference("main")))
+        self.mainRefButton = QPushButton(self.verseReference("main")[-1])
         self.addStandardTextButton("bar1_reference", self.mainRefButtonClicked, self.firstToolBar, self.mainRefButton)
         button = QPushButton(">")
         button.setFixedWidth(40)
@@ -332,6 +333,19 @@ class FocusMainWindow(MainWindow):
         self.addStandardIconButton("menu_bookNote", "noteBook.png", self.openMainBookNote, self.firstToolBar)
         self.addStandardIconButton("menu_chapterNote", "noteChapter.png", self.openMainChapterNote, self.firstToolBar)
         self.addStandardIconButton("menu_verseNote", "noteVerse.png", self.openMainVerseNote, self.firstToolBar)
+
+        # Version selection
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            versionCombo = QComboBox()
+            self.bibleVersions = BiblesSqlite().getBibleList()
+            versionCombo.addItems(self.bibleVersions)
+            initialIndex = 0
+            if config.mainText in self.bibleVersions:
+                initialIndex = self.bibleVersions.index(config.mainText)
+            versionCombo.setCurrentIndex(initialIndex)
+            versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.firstToolBar.addWidget(versionCombo)
+
         self.addStandardIconButton("bar1_searchBible", "search.png", self.displaySearchBibleCommand, self.firstToolBar)
         self.addStandardIconButton("bar1_searchBibles", "search_plus.png", self.displaySearchBibleMenu, self.firstToolBar)
 
@@ -512,6 +526,18 @@ class FocusMainWindow(MainWindow):
 
         iconFile = os.path.join("htmlResources", "noteVerse.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_verseNote"], self.openMainVerseNote)
+
+        # Version selection
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            versionCombo = QComboBox()
+            self.bibleVersions = BiblesSqlite().getBibleList()
+            versionCombo.addItems(self.bibleVersions)
+            initialIndex = 0
+            if config.mainText in self.bibleVersions:
+                initialIndex = self.bibleVersions.index(config.mainText)
+            versionCombo.setCurrentIndex(initialIndex)
+            versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.firstToolBar.addWidget(versionCombo)
 
         iconFile = os.path.join("htmlResources", "search.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)

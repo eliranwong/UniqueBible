@@ -2059,9 +2059,13 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("commentary")
 
+    def changeBibleVersion(self, index):
+        command = "TEXT:::{0}".format(self.bibleVersions[index])
+        self.runTextCommand(command)
+
     def updateMainRefButton(self):
         text, verseReference = self.verseReference("main")
-        self.mainRefButton.setText(":::".join(self.verseReference("main")))
+        self.mainRefButton.setText(self.verseReference("main")[-1])
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "STUDY:::{0}".format(verseReference)
