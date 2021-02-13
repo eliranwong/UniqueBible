@@ -1,4 +1,14 @@
-Major change in version 21.28:
+Major changes in version 21.29:
+Multiple improvement on Master Control Panel:
+* Added search highlight interface to Control Panel Search tab
+* Added support to rename highlight collections by editing config.py manually.  We will add a gui interface for doing that.
+* Added clear note search result checkbox to Control Panel Search tab
+* Added clear book search result checkbox to Control Panel Search tab
+* Added three buttons to control panel 'Library' tab 'Book' section: Show ALL, Favourites ONLY, Add Favourite
+* Integrated 'closeControlPanelAfterRunningCommand' with Master Control Panel
+* Fixed Control Panel didn't not response to shorcut when it is placed behind the main window.
+
+Major changes in version 21.28:
 * Improved Focus menu layout:
     - added a dropdown menu on toolbar for quick change of bible versions on main window without opening control panel
     - added to menu "Enable Qt-material theme" when built-in theme is in use

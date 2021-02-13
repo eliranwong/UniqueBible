@@ -201,6 +201,7 @@ class NoteEditor(QMainWindow):
 #        self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setClearButtonEnabled(True)
         self.searchLineEdit.setToolTip(config.thisTranslation["menu5_search"])
         self.searchLineEdit.setMaximumWidth(400)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)

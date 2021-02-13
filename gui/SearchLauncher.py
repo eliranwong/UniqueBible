@@ -1,6 +1,6 @@
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton
+from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
 
 class SearchLauncher(QWidget):
 
@@ -62,22 +62,28 @@ class SearchLauncher(QWidget):
         
         widgetLayout0.addWidget(bibleWidget)
 
-        buttonRow1 = (
+        subLayout = QHBoxLayout()
+        buttonRow = (
             ("menu_bookNotes", lambda: self.runSearchCommand("SEARCHBOOKNOTE")),
             ("menu_chapterNotes", lambda: self.runSearchCommand("SEARCHCHAPTERNOTE")),
             ("menu_verseNotes", lambda: self.runSearchCommand("SEARCHVERSENOTE")),
         )
-        buttonRow2 = (
+        subLayout.addLayout(self.parent.buttonsLayout(buttonRow))
+        subLayout.addWidget(self.highlightNoteSearchResultCheckBox())
+        subLayout.addStretch()
+        widgetLayout0.addLayout(subLayout)
+
+        buttonRow1 = (
             ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
             ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
             ("menu5_locations", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBL")),
         )
-        buttonRow3 = (
+        buttonRow2 = (
             ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
             ("bibleHarmonies", lambda: self.runSearchCommand("SEARCHBOOK:::Harmonies_and_Parallels")),
             ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3)))
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2)))
 
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
@@ -89,8 +95,13 @@ class SearchLauncher(QWidget):
         widgetLayout = QVBoxLayout()
         widgetLayout.setSpacing(10)
 
+        subLayout = QHBoxLayout()
         self.bookCombo = CheckableComboBox(self.parent.referenceBookList, [config.book])
-        widgetLayout.addLayout(self.parent.comboFeatureLayout("menu5_selectBook", self.bookCombo, self.searchBook))
+        subLayout.addLayout(self.parent.comboFeatureLayout("menu5_selectBook", self.bookCombo, self.searchBook))
+        checkbox = self.highlightBookSearchResultCheckBox()
+        subLayout.addWidget(checkbox)
+        widgetLayout.addLayout(subLayout)
+
         self.topicCombo = QComboBox()
         initialTopicIndex = self.parent.topicListAbb.index(config.topic) if config.topic in self.parent.topicListAbb else 0
         self.lexiconCombo = QComboBox()
@@ -126,6 +137,20 @@ class SearchLauncher(QWidget):
         combo.setCurrentIndex(initialIndex)
         return self.parent.comboFeatureLayout(feature, combo, action)
 
+    def highlightBookSearchResultCheckBox(self):
+        self.searchBookCheckbox = QCheckBox()
+        self.searchBookCheckbox.setToolTip(config.thisTranslation["highlightBookSearchResult"])
+        self.searchBookCheckbox.setChecked(True if config.bookSearchString else False)
+        self.searchBookCheckbox.stateChanged.connect(self.searchBookCheckboxChanged)
+        return self.searchBookCheckbox
+
+    def highlightNoteSearchResultCheckBox(self):
+        self.searchNoteCheckbox = QCheckBox()
+        self.searchNoteCheckbox.setToolTip(config.thisTranslation["highlightNoteSearchResult"])
+        self.searchNoteCheckbox.setChecked(True if config.noteSearchString else False)
+        self.searchNoteCheckbox.stateChanged.connect(self.searchNoteCheckboxChanged)
+        return self.searchNoteCheckbox
+
     # Button actions
 
     def searchModeChanged(self, checked, mode):
@@ -156,12 +181,29 @@ class SearchLauncher(QWidget):
     def searchBook(self):
         searchItem = self.getSearchItem()
         if searchItem:
+            self.searchBookCheckbox.setChecked(True)
             command = "{0}:::{1}:::{2}".format("SEARCHBOOK", ",".join(self.bookCombo.checkItems), self.searchField.text())
             self.parent.runTextCommand(command)
+
+    def searchBookCheckboxChanged(self, state):
+        if not state:
+            config.bookSearchString = ""
+            self.parent.parent.reloadCurrentRecord()
+            if config.closeControlPanelAfterRunningCommand and not self.isRefreshing:
+                self.parent.hide()
+
+    def searchNoteCheckboxChanged(self, state):
+        if not state:
+            config.noteSearchString = ""
+            self.parent.parent.reloadCurrentRecord()
+            if config.closeControlPanelAfterRunningCommand and not self.parent.isRefreshing:
+                self.parent.hide()
 
     def runSearchCommand(self, prefix):
         searchItem = self.getSearchItem()
         if searchItem:
+            if prefix.endswith("NOTE"):
+                self.searchNoteCheckbox.setChecked(True)
             command = "{0}:::{1}".format(prefix, self.searchField.text())
             self.parent.runTextCommand(command)
 

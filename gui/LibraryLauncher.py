@@ -27,15 +27,30 @@ class LibraryLauncher(QWidget):
         leftColumnWidget.setLayout(commentaryLayout)
 
         rightColumnWidget = QGroupBox(config.thisTranslation["menu10_books"])
-        bookLayout0 = QVBoxLayout()
         bookLayout = QHBoxLayout()
-        bookLayout.addWidget(self.bookListView())
-        bookLayout.addWidget(self.chapterListView())
-        bookLayout0.addLayout(bookLayout)
+        subLayout = QVBoxLayout()
+        subLayout.addWidget(self.bookListView())
+
+        subSubLayout = QHBoxLayout()
+        button = QPushButton(config.thisTranslation["showAll"])
+        button.clicked.connect(self.showAllBooks)
+        subSubLayout.addWidget(button)
+        button = QPushButton(config.thisTranslation["favouriteOnly"])
+        button.clicked.connect(self.fvouriteBookOnly)
+        subSubLayout.addWidget(button)
+        button = QPushButton(config.thisTranslation["addFavourite"])
+        button.clicked.connect(self.parent.parent.addFavouriteBookDialog)
+        subSubLayout.addWidget(button)
+        subLayout.addLayout(subSubLayout)
+        bookLayout.addLayout(subLayout)
+
+        subLayout = QVBoxLayout()
+        subLayout.addWidget(self.chapterListView())
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousBookChapter)
-        bookLayout0.addWidget(button)
-        rightColumnWidget.setLayout(bookLayout0)
+        subLayout.addWidget(button)
+        bookLayout.addLayout(subLayout)
+        rightColumnWidget.setLayout(bookLayout)
 
         mainLayout.addWidget(leftColumnWidget, 0, 0)
         mainLayout.addWidget(rightColumnWidget, 0, 1)
@@ -61,14 +76,14 @@ class LibraryLauncher(QWidget):
         return list
 
     def bookListView(self):
-        list = QListView()
-        list.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        model = QStringListModel(self.parent.referenceBookList)
-        list.setModel(model)
+        self.bookList = QListView()
+        self.bookList.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.bookModel = QStringListModel(self.parent.referenceBookList)
+        self.bookList.setModel(self.bookModel)
         if config.book in self.parent.referenceBookList:
-            list.setCurrentIndex(model.index(self.parent.referenceBookList.index(config.book), 0))
-        list.selectionModel().selectionChanged.connect(self.bookSelected)
-        return list
+            self.bookList.setCurrentIndex(self.bookModel.index(self.parent.referenceBookList.index(config.book), 0))
+        self.bookList.selectionModel().selectionChanged.connect(self.bookSelected)
+        return self.bookList
 
     def chapterListView(self):
         self.chapterlist = QListView()
@@ -99,7 +114,16 @@ class LibraryLauncher(QWidget):
         command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
         self.parent.runTextCommand(command)
 
+    def showAllBooks(self):
+        self.bookModel.setStringList(self.parent.referenceBookList)
+        self.bookList.setCurrentIndex(self.bookModel.index(0, 0))
+
+    def fvouriteBookOnly(self):
+        self.bookModel.setStringList(config.favouriteBooks)
+        self.bookList.setCurrentIndex(self.bookModel.index(0, 0))
+
     def bookSelected(self, selection):
+        self.parent.isRefreshing = True
         selectedBook = selection[0].indexes()[0].data()
         if config.book != selectedBook:
             config.book = selectedBook
@@ -111,4 +135,6 @@ class LibraryLauncher(QWidget):
     def chapterSelected(self, selection):
         config.bookChapter = selection[0].indexes()[0].data()
         command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
-        self.parent.runTextCommand(command)
+        if not self.parent.isRefreshing:
+            self.parent.runTextCommand(command)
+        self.parent.isRefreshing = False

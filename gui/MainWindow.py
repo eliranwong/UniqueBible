@@ -275,15 +275,13 @@ class MainWindow(QMainWindow):
                 if textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
                 self.controlPanel.raise_()
-                if platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland":
                 # Method activateWindow() does not work with qt.qpa.wayland
+                # platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland"
                 # The error message is received when QT_QPA_PLATFORM=wayland:
                 # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
                 # Therefore, we use hide and show methods instead with wayland.
-                    self.controlPanel.hide()
-                    self.controlPanel.show()
-                else:
-                    self.controlPanel.activateWindow()
+                self.controlPanel.hide()
+                self.controlPanel.show()
             elif not config.controlPanel:
                 self.controlPanel = MasterControl(self, index, b, c, v, text)
                 if show:
