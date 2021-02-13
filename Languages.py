@@ -128,7 +128,7 @@ class Languages:
         "menu1_rightHalf": "Right Half",
         "menu1_smallSize": "Small Size",
         "menu1_resize": "Resize",
-        "menu1_remoteControl": "Remote Control",
+        "menu1_remoteControl": "Control mini",
         "menu1_setDefaultFont": "Default Font and Size",
         "menu1_setChineseFont": "Chinese Font",
         "menu1_setAbbreviations": "Select Bible Abbreviations",

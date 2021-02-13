@@ -183,7 +183,7 @@ class FocusMainWindow(MainWindow):
         for index, shortcut in enumerate(("B", "L", "F", "H")):
             addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), "Ctrl+{0}".format(shortcut))
         menu.addSeparator()
-        addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, "Ctrl+R")
+        addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, "Ctrl+I")
 
         # 4th column
         menu = addMenu(menuBar, "menu8_resources")
