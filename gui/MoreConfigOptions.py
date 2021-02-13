@@ -30,66 +30,67 @@ class MoreConfigOptions(QDialog):
         rightContainerLayout = QVBoxLayout()
 
         options = [
-            ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged),
-            ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged),
-            ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged),
-            ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged),
-            ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged),
-            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged),
-            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged),
-            ("qtMaterial", config.qtMaterial, self.qtMaterialChanged),
-            ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged),
-            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged),
-            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged),
-            ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged),
-            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked),
-            ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged),
-            ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged),
-            ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged),
-            ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged),
-            ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged),
-            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged),
-            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged),
-            ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged),
-            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged),
-            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged),
-            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged),
-            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged),
-            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged),
-            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged),
-            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged),
-            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged),
-            ("enableLogging", config.enableLogging, self.enableLoggingChanged),
-            ("logCommands", config.logCommands, self.logCommandsChanged),
-            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged),
-            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged),
-            ("enableMacros", config.enableMacros, self.enableMacrosChanged),
-            ("enableGist", config.enableGist, self.enableGistChanged),
-            ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged)
+            ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, ""),
+            ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, ""),
+            ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, ""),
+            ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, ""),
+            ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, ""),
+            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, ""),
+            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, ""),
+            ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, ""),
+            ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, ""),
+            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, ""),
+            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, ""),
+            ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
+            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
+            ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, ""),
+            ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, ""),
+            ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, ""),
+            ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged, ""),
+            ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, ""),
+            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, ""),
+            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, ""),
+            ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, ""),
+            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, ""),
+            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged, ""),
+            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged, ""),
+            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged, ""),
+            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, ""),
+            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, ""),
+            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged, ""),
+            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged, ""),
+            ("enableLogging", config.enableLogging, self.enableLoggingChanged, ""),
+            ("logCommands", config.logCommands, self.logCommandsChanged, ""),
+            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, ""),
+            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, ""),
+            ("enableMacros", config.enableMacros, self.enableMacrosChanged, ""),
+            ("enableGist", config.enableGist, self.enableGistChanged, ""),
+            ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, ""),
         ]
         if platform.system() == "Linux":
             options += [
-                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged),
-                ("fcitx", config.fcitx, self.fcitxChanged),
-                ("ibus", config.ibus, self.ibusChanged),
-                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged),
-                ("espeak", config.espeak, self.espeakChanged),
+                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, ""),
+                ("fcitx", config.fcitx, self.fcitxChanged, ""),
+                ("ibus", config.ibus, self.ibusChanged, ""),
+                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged, ""),
+                ("espeak", config.espeak, self.espeakChanged, ""),
             ]
         if config.ttsSupport:
             options += [
-                ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged),
-                ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged),
-                ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged),
-                ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged),
+                ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, ""),
+                ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged, ""),
+                ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, ""),
+                ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged, ""),
             ]
 
         counter = 0
         for content in options:
-            name, value, function = content
+            name, value, function, toolTip = content
             checkbox = QCheckBox()
             checkbox.setText(name)
             checkbox.setChecked(value)
             checkbox.stateChanged.connect(function)
+            checkbox.setToolTip(toolTip)
             if (counter == 0):
                 leftContainerLayout.addWidget(checkbox)
                 counter += 1

@@ -394,7 +394,7 @@ if not hasattr(config, "qtMaterialTheme"):
     config.qtMaterialTheme = ""
 # Disable modules update check
 if not hasattr(config, "disableModulesUpdateCheck"):
-    config.disableModulesUpdateCheck = False
+    config.disableModulesUpdateCheck = True
 # Enable Copy HTML in popup menu
 if not hasattr(config, "enableCopyHtmlCommand"):
     config.enableCopyHtmlCommand = False
