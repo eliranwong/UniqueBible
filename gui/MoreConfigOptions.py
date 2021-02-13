@@ -284,16 +284,9 @@ class MoreConfigOptions(QDialog):
 
     def qtMaterialChanged(self):
         if not config.qtMaterial:
-            try:
-                from qt_material import apply_stylesheet
-                config.qtMaterial = True
-                self.parent.displayMessage(config.thisTranslation["message_restart"])
-            except:
-                config.qtMaterial = False
-                self.parent.displayMessage(config.thisTranslation["installQtMaterial"])
+            self.parent.enableQtMaterial(True)
         else:
-            config.qtMaterial = not config.qtMaterial
-            self.parent.displayMessage(config.thisTranslation["message_restart"])
+            self.parent.enableQtMaterial(False)
 
     def enableGistChanged(self):
         if not config.enableGist:

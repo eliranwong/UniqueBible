@@ -144,6 +144,8 @@ class Languages:
         "menu1_runClipboard": "Run",
         "menu1_selectWindowStyle": "Select Window Style",
         "menu1_selectTheme": "Select Theme",
+        "menu1_selectThemeBuiltin": "Select a Built-in Theme",
+        "menu1_selectThemeQtMaterial": "Select a Qt-material Theme",
         "menu1_default_theme": "Default Theme",
         "menu1_dark_theme": "Dark Theme",
         "menu1_selectMenuLayout": "Select Menu Layout",

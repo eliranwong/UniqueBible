@@ -700,6 +700,7 @@ class MainWindow(QMainWindow):
                 from qt_material import apply_stylesheet
                 self.selectQtMaterialTheme()
             except:
+                config.qtMaterial = False
                 self.displayMessage(config.thisTranslation["installQtMaterial"])
         else:
             self.selectBuiltinTheme()
@@ -707,7 +708,7 @@ class MainWindow(QMainWindow):
     def selectQtMaterialTheme(self):
         items = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_selectTheme"], items, items.index(config.qtMaterialTheme) if config.qtMaterialTheme and config.qtMaterialTheme in items else 0, False)
+                                        config.thisTranslation["menu1_selectThemeQtMaterial"], items, items.index(config.qtMaterialTheme) if config.qtMaterialTheme and config.qtMaterialTheme in items else 0, False)
         if ok and item:
             config.qtMaterial = True
             config.qtMaterialTheme = item
@@ -716,7 +717,7 @@ class MainWindow(QMainWindow):
     def selectBuiltinTheme(self):
         items = ("default",  "dark")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_selectTheme"], items, items.index(config.theme) if config.theme and config.theme in items else 0, False)
+                                        config.thisTranslation["menu1_selectThemeBuiltin"], items, items.index(config.theme) if config.theme and config.theme in items else 0, False)
         if ok and item:
             config.qtMaterial = False
             config.theme = item
