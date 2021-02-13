@@ -1,9 +1,6 @@
 import config, platform
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QDialog, QLabel, QCheckBox)
 
-from BibleVerseParser import BibleVerseParser
-from themes import Themes
-
 class MoreConfigOptions(QDialog):
 
     def __init__(self, parent):

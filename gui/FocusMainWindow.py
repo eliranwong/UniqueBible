@@ -1,7 +1,7 @@
 import os, config, myTranslation
 from PySide2.QtCore import QSize
 from PySide2.QtGui import QIcon, Qt
-from PySide2.QtWidgets import (QComboBox, QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
+from PySide2.QtWidgets import QComboBox, QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory
 from gui.MenuItems import *
 from gui.MainWindow import MainWindow
 from BiblesSqlite import BiblesSqlite

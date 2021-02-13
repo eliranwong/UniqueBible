@@ -1,6 +1,6 @@
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import (QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton)
+from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton
 
 class SearchLauncher(QWidget):
 
@@ -50,6 +50,11 @@ class SearchLauncher(QWidget):
             if index == config.bibleSearchMode:
                 radioButton.setChecked(True)
             leftGroupLayout.addWidget(radioButton) if (index % 2 == 0) else rightGroupLayout.addWidget(radioButton)
+        if config.enableVerseHighlighting:
+            combo = QComboBox()
+            combo.addItems(config.highlightCollections)
+            combo.currentIndexChanged.connect(self.searchHighlight)
+            rightGroupLayout.addWidget(combo)
         leftGroupLayout.addStretch()
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)
@@ -137,6 +142,10 @@ class SearchLauncher(QWidget):
             return ""
         else:
             return searchItem
+
+    def searchHighlight(self, index):
+        command = "SEARCHHIGHLIGHT:::hl{0}".format(index + 1)
+        self.parent.runTextCommand(command)
 
     def searchBible(self):
         searchItem = self.getSearchItem()

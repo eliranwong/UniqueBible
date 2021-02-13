@@ -547,6 +547,8 @@ class Languages:
         "import": "Import",
         "create": "Create",
         "tag": "Tag",
+        "autoClose": "AutoClose",
+        "autoCloseToolTip": "Automatically close after a command is executed. \nThis checkbox changes the value of configuration flag 'closeControlPanelAfterRunningCommandChanged'.",
         "toolbarIcon": "Toolbar Icons",
         "toolbarIconStandard": "Standard Size",
         "toolbarIconFull": "Full Size",

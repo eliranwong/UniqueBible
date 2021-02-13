@@ -413,6 +413,8 @@ if not hasattr(config, "migrateDatabaseBibleNameToDetailsTable"):
 # Verse highlighting functionality
 if not hasattr(config, "enableVerseHighlighting"):
     config.enableVerseHighlighting = False
+if not hasattr(config, "highlightCollections"):
+    config.highlightCollections = ["Highlight 1", "Highlight 2"]
 # Show verse highlight markers
 if not hasattr(config, "showHighlightMarkers"):
     config.showHighlightMarkers = True
@@ -696,9 +698,10 @@ def saveDataOnExit():
         ("enableLogging", config.enableLogging),
         ("logCommands", config.logCommands),
         ("enableVerseHighlighting", config.enableVerseHighlighting),
+        ("highlightCollections", config.highlightCollections),
+        ("showHighlightMarkers", config.showHighlightMarkers),
         ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
         ("menuLayout", config.menuLayout),
-        ("showHighlightMarkers", config.showHighlightMarkers),
         ("useFastVerseParsing", config.useFastVerseParsing),
         ("enableMacros", config.enableMacros),
         ("startupMacro", config.startupMacro),

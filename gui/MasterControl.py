@@ -4,10 +4,10 @@ from gui.BibleExplorer import BibleExplorer
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
-from PySide2.QtWidgets import (QGridLayout, QBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit)
+from PySide2.QtWidgets import QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
-from PySide2.QtCore import QUrl, Qt, QEvent
+from PySide2.QtCore import Qt, QEvent
 
 class MasterControl(QWidget):
 
@@ -93,7 +93,10 @@ class MasterControl(QWidget):
     def sharedWidget(self):
         sharedWidget = QWidget()
         sharedWidgetLayout = QVBoxLayout()
-        sharedWidgetLayout.addWidget(self.commandFieldWidget())
+        subLayout = QHBoxLayout()
+        subLayout.addWidget(self.commandFieldWidget())
+        subLayout.addWidget(self.autoCloseCheckBox())
+        sharedWidgetLayout.addLayout(subLayout)
         sharedWidget.setLayout(sharedWidgetLayout)
         return sharedWidget
 
@@ -123,6 +126,14 @@ class MasterControl(QWidget):
         self.commandField.setToolTip(config.thisTranslation["enter_command_here"])
         self.commandField.returnPressed.connect(self.commandEntered)
         return self.commandField
+
+    def autoCloseCheckBox(self):
+        checkbox = QCheckBox()
+        checkbox.setText(config.thisTranslation["autoClose"])
+        checkbox.setToolTip(config.thisTranslation["autoCloseToolTip"])
+        checkbox.setChecked(config.closeControlPanelAfterRunningCommand)
+        checkbox.stateChanged.connect(self.closeControlPanelAfterRunningCommandChanged)
+        return checkbox
 
     # Common layout
 
@@ -158,6 +169,9 @@ class MasterControl(QWidget):
         return layout
 
     # Actions
+
+    def closeControlPanelAfterRunningCommandChanged(self):
+        config.closeControlPanelAfterRunningCommand = not config.closeControlPanelAfterRunningCommand
 
     def updateBCVText(self, b, c, v, text):
         self.bibleTab.updateBCVText(b, c, v, text)
