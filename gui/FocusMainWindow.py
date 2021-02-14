@@ -115,10 +115,10 @@ class FocusMainWindow(MainWindow):
         items = (
             ("menu2_all", self.setNoToolBar, sc.setNoToolBar),
             ("menu2_topOnly", self.hideShowAdditionalToolBar, sc.hideShowAdditionalToolBar),
-            ("menu2_top", self.hideShowMainToolBar, None),
-            ("menu2_second", self.hideShowSecondaryToolBar, None),
-            ("menu2_left", self.hideShowLeftToolBar, None),
-            ("menu2_right", self.hideShowRightToolBar, None),
+            ("menu2_top", self.hideShowMainToolBar, sc.hideShowMainToolBar),
+            ("menu2_second", self.hideShowSecondaryToolBar, sc.hideShowSecondaryToolBar),
+            ("menu2_left", self.hideShowLeftToolBar, sc.hideShowLeftToolBar),
+            ("menu2_right", self.hideShowRightToolBar, sc.hideShowRightToolBar),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -148,7 +148,7 @@ class FocusMainWindow(MainWindow):
             ("bar2_menu", self.printStudyPage),
         )
         for feature, action in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
+            addMenuItem(subMenu, feature, self, action)
         menu.addSeparator()
         #addMenuItem(menu, "menu1_update", self, self.updateUniqueBibleApp)
         #menu.addSeparator()
@@ -189,7 +189,7 @@ class FocusMainWindow(MainWindow):
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         if config.enableVerseHighlighting:
-            addMenuItem(subMenu, "menu2_toggleHighlightMarkers", self, self.toggleHighlightMarker)
+            addMenuItem(subMenu, "menu2_toggleHighlightMarkers", self, self.toggleHighlightMarker, sc.toggleHighlightMarker)
 
         # 3rd column
         menu = addMenu(menuBar, "controlPanel")
@@ -197,6 +197,8 @@ class FocusMainWindow(MainWindow):
             addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, sc.manageRemoteControl)
+        menu.addSeparator()
+        addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)
 
         # 4th column
         menu = addMenu(menuBar, "menu8_resources")
