@@ -377,6 +377,7 @@ class ClassicMainWindow(MainWindow):
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
             menu9.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
+            menu9.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))
             menu9.addSeparator()
             menu9.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
             menu9.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))

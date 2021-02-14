@@ -49,7 +49,6 @@ class Highlight:
     def getVerseDict(self, b, c):
         query = "SELECT Verse, Code FROM Highlight WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, (b, c))
-        print(self.cursor.fetchall())
         return {verse: code for verse, code in self.cursor.fetchall()}
 
     def getHighlightedVerses(self, where=""):

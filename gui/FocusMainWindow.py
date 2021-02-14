@@ -261,6 +261,7 @@ class FocusMainWindow(MainWindow):
         if config.showInformation:
             menu = addMenu(menuBar, "menu9_information")
             menu.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
+            menu.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))
             menu.addSeparator()
             subMenu = addSubMenu(menu, "websites")
             items = (
