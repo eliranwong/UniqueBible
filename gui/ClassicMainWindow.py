@@ -1,10 +1,8 @@
-import os, config, myTranslation
-from PySide2.QtGui import QIcon, Qt
 from PySide2.QtCore import QSize
-from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
-from gui.MainWindow import MainWindow
-from gui.MasterControl import MasterControl
 from gui.MenuItems import *
+import shortcut as sc
+from util.ShortcutUtil import ShortcutUtil
+
 
 class ClassicMainWindow(MainWindow):
 
@@ -16,8 +14,8 @@ class ClassicMainWindow(MainWindow):
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
         items = (
-            ("controlPanel", self.manageControlPanel, "Ctrl+M"),
-            ("menu1_remoteControl", self.manageRemoteControl, "Ctrl+O"),
+            ("controlPanel", self.manageControlPanel, sc.manageControlPanel),
+            ("menu1_remoteControl", self.manageRemoteControl, sc.manageRemoteControl),
         )
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)
@@ -25,7 +23,7 @@ class ClassicMainWindow(MainWindow):
         subMenu = addSubMenu(menu, "menu1_clipboard")
         items = (
             ("menu1_readClipboard", self.pasteFromClipboard, None),
-            ("menu1_runClipboard", self.parseContentOnClipboard, "Ctrl+^"),
+            ("menu1_runClipboard", self.parseContentOnClipboard, sc.parseContentOnClipboard),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -67,6 +65,15 @@ class ClassicMainWindow(MainWindow):
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
+        subMenu = addSubMenu(menu, "menu_shortcuts")
+        items = (
+            ("menu_brachys", lambda: self.setShortcuts("brachys")),
+            ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        for shortcut in ShortcutUtil.getListCustomShortcuts():
+            addMenuItem(subMenu, shortcut, self, lambda shortcut=shortcut: self.setShortcuts(shortcut), None, False)
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro, None)
         addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, None)
@@ -88,24 +95,24 @@ class ClassicMainWindow(MainWindow):
         menu.addSeparator()
 
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))
-        quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut="Ctrl+Q", triggered=self.quitApp)
+        quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut=sc.quitApp, triggered=self.quitApp)
         menu.addAction(quit_action)
 
         menu2 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu2_view"]))
 
         screenSizeMenu = menu2.addMenu(config.thisTranslation["menu1_screenSize"])
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_fullScreen"], self, shortcut="Ctrl+S,F", triggered=self.fullsizeWindow))
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_smallSize"], self, shortcut="Ctrl+S,S", triggered=self.twoThirdWindow))
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_topHalf"], self, shortcut="Ctrl+S,1", triggered=self.topHalfScreenHeight))
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_bottomHalf"], self, shortcut="Ctrl+S,2", triggered=self.bottomHalfScreenHeight))
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_leftHalf"], self, shortcut="Ctrl+S,3", triggered=self.leftHalfScreenWidth))
-        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_rightHalf"], self, shortcut="Ctrl+S,4", triggered=self.rightHalfScreenWidth))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_fullScreen"], self, shortcut=sc.fullsizeWindow, triggered=self.fullsizeWindow))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_smallSize"], self, shortcut=sc.twoThirdWindow, triggered=self.twoThirdWindow))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_topHalf"], self, shortcut=sc.topHalfScreenHeight, triggered=self.topHalfScreenHeight))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_bottomHalf"], self, shortcut=sc.bottomHalfScreenHeight, triggered=self.bottomHalfScreenHeight))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_leftHalf"], self, shortcut=sc.leftHalfScreenWidth, triggered=self.leftHalfScreenWidth))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_rightHalf"], self, shortcut=sc.rightHalfScreenWidth, triggered=self.rightHalfScreenWidth))
         
         menu2.addSeparator()
 
         toolbarMenu = menu2.addMenu(config.thisTranslation["menu2_toobars"])
-        toolbarMenu.addAction(QAction(config.thisTranslation["menu2_all"], self, shortcut="Ctrl+J", triggered=self.setNoToolBar))
-        toolbarMenu.addAction(QAction(config.thisTranslation["menu2_topOnly"], self, shortcut="Ctrl+G", triggered=self.hideShowAdditionalToolBar))
+        toolbarMenu.addAction(QAction(config.thisTranslation["menu2_all"], self, shortcut=sc.setNoToolBar, triggered=self.setNoToolBar))
+        toolbarMenu.addAction(QAction(config.thisTranslation["menu2_topOnly"], self, shortcut=sc.hideShowAdditionalToolBar, triggered=self.hideShowAdditionalToolBar))
         toolbarMenu.addAction(QAction(config.thisTranslation["menu2_top"], self, triggered=self.hideShowMainToolBar))
         toolbarMenu.addAction(QAction(config.thisTranslation["menu2_second"], self, triggered=self.hideShowSecondaryToolBar))
         toolbarMenu.addAction(QAction(config.thisTranslation["menu2_left"], self, triggered=self.hideShowLeftToolBar))
@@ -113,17 +120,17 @@ class ClassicMainWindow(MainWindow):
         menu2.addSeparator()
         menu2.addAction(QAction(config.thisTranslation["menu2_icons"], self, triggered=self.switchIconSize))
         menu2.addSeparator()
-        menu2.addAction(QAction(config.thisTranslation["menu2_landscape"], self, shortcut="Ctrl+L", triggered=self.switchLandscapeMode))
+        menu2.addAction(QAction(config.thisTranslation["menu2_landscape"], self, shortcut=sc.switchLandscapeMode, triggered=self.switchLandscapeMode))
         menu2.addSeparator()
-        menu2.addAction(QAction(config.thisTranslation["menu2_study"], self, shortcut="Ctrl+W", triggered=self.parallel))
-        menu2.addAction(QAction(config.thisTranslation["menu2_bottom"], self, shortcut="Ctrl+T", triggered=self.cycleInstant))
+        menu2.addAction(QAction(config.thisTranslation["menu2_study"], self, shortcut=sc.parallel, triggered=self.parallel))
+        menu2.addAction(QAction(config.thisTranslation["menu2_bottom"], self, shortcut=sc.cycleInstant, triggered=self.cycleInstant))
         menu2.addSeparator()
         fontsMenu = menu2.addMenu(config.thisTranslation["menu2_fonts"])
         fontsMenu.addAction(QAction(config.thisTranslation["menu1_setDefaultFont"], self, triggered=self.setDefaultFont))
         fontsMenu.addAction(QAction(config.thisTranslation["menu1_setChineseFont"], self, triggered=self.setChineseFont))
         fontSizeMenu = menu2.addMenu(config.thisTranslation["menu2_fontSize"])
-        fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut="Ctrl++", triggered=self.largerFont))
-        fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut="Ctrl+-", triggered=self.smallerFont))
+        fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut=sc.largerFont, triggered=self.largerFont))
+        fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut=sc.smallerFont, triggered=self.smallerFont))
 
         menu3 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_bible"]))
 
@@ -132,29 +139,29 @@ class ClassicMainWindow(MainWindow):
         bibleMenuMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.studyTextMenu))
 
         bibleNavigationMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
-        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_next_book"], self, shortcut="Ctrl+H,1", triggered=self.nextMainBook))
-        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_previous_book"], self, shortcut="Ctrl+H,2", triggered=self.previousMainBook))
-        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut="Ctrl+>", triggered=self.nextMainChapter))
-        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_previous"], self, shortcut="Ctrl+<", triggered=self.previousMainChapter))
+        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_next_book"], self, shortcut=sc.nextMainBook, triggered=self.nextMainBook))
+        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_previous_book"], self, shortcut=sc.previousMainBook, triggered=self.previousMainBook))
+        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut=sc.nextMainChapter, triggered=self.nextMainChapter))
+        bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_previous"], self, shortcut=sc.previousMainChapter, triggered=self.previousMainChapter))
 
         scrollMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_scroll"]))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_scroll_to_top"], self, shortcut="Ctrl+H,3",
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_scroll_to_top"], self, shortcut=sc.mainPageScrollToTop,
                                           triggered=self.mainPageScrollToTop))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, self, shortcut="Ctrl+H,4",
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, self, shortcut=sc.mainPageScrollPageDown,
                                           triggered=self.mainPageScrollPageDown))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_up"], self, self, shortcut="Ctrl+H,5",
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_up"], self, self, shortcut=sc.mainPageScrollPageUp,
                                           triggered=self.mainPageScrollPageUp))
         scrollMenu.addAction(QAction(config.thisTranslation["menu_study_scroll_to_top"], self,
-                                      self, shortcut="Ctrl+H,6", triggered=self.studyPageScrollToTop))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_down"], self, self, shortcut="Ctrl+H,7",
+                                      self, shortcut=sc.studyPageScrollToTop, triggered=self.studyPageScrollToTop))
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_down"], self, self, shortcut=sc.studyPageScrollPageDown,
                                       triggered=self.studyPageScrollPageDown))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, self, shortcut="Ctrl+H,8",
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, self, shortcut=sc.studyPageScrollPageUp,
                                       triggered=self.studyPageScrollPageUp))
         menu3.addSeparator()
         toggleMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_toggleFeatures"]))
-        toggleMenu.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut="Ctrl+P", triggered=self.enableParagraphButtonClicked))
+        toggleMenu.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut=sc.enableParagraphButtonClicked, triggered=self.enableParagraphButtonClicked))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
-        toggleMenu.addAction(QAction(config.thisTranslation["menu2_hover"], self, shortcut="Ctrl+=", triggered=self.enableInstantButtonClicked))
+        toggleMenu.addAction(QAction(config.thisTranslation["menu2_hover"], self, shortcut=sc.enableInstantButtonClicked, triggered=self.enableInstantButtonClicked))
         if config.enableVerseHighlighting:
             toggleMenu.addAction(QAction(config.thisTranslation["menu2_toggleHighlightMarkers"], self, triggered=self.toggleHighlightMarker))
         toggleMenu.addAction(QAction(config.thisTranslation["menu_toggleEnforceCompareParallel"], self, triggered=self.enforceCompareParallelButtonClicked))
@@ -162,8 +169,8 @@ class ClassicMainWindow(MainWindow):
         toggleMenu.addAction(QAction(config.thisTranslation["menu_syncBibleCommentary"], self, triggered=self.enableSyncCommentaryButtonClicked))
         menu3.addSeparator()
         searchMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
-        searchMenu.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut="Ctrl+1", triggered=self.displaySearchBibleCommand))
-        searchMenu.addAction(QAction(config.thisTranslation["menu5_study"], self, shortcut="Ctrl+2", triggered=self.displaySearchStudyBibleCommand))
+        searchMenu.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut=sc.displaySearchBibleCommand, triggered=self.displaySearchBibleCommand))
+        searchMenu.addAction(QAction(config.thisTranslation["menu5_study"], self, shortcut=sc.displaySearchStudyBibleCommand, triggered=self.displaySearchStudyBibleCommand))
         searchMenu.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
         if config.enableVerseHighlighting:
             searchMenu.addSeparator()
@@ -172,14 +179,14 @@ class ClassicMainWindow(MainWindow):
         menu3.addSeparator()
 
         mainWindowHistoryMenu = menu3.addMenu(config.thisTranslation["menu2_mainWindowHistory"])
-        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut="Ctrl+'", triggered=self.mainHistoryButtonClicked))
-        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut="Ctrl+[", triggered=self.back))
-        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_mainForward"], self, shortcut="Ctrl+]", triggered=self.forward))
+        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut=sc.mainHistoryButtonClicked, triggered=self.mainHistoryButtonClicked))
+        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut=sc.back, triggered=self.back))
+        mainWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_mainForward"], self, shortcut=sc.forward, triggered=self.forward))
         
         studyWindowHistoryMenu = menu3.addMenu(config.thisTranslation["menu2_studyWindowHistory"])
-        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut = 'Ctrl+"', triggered=self.studyHistoryButtonClicked))
-        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut="Ctrl+{", triggered=self.studyBack))
-        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut="Ctrl+}", triggered=self.studyForward))
+        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut=sc.studyHistoryButtonClicked, triggered=self.studyHistoryButtonClicked))
+        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut=sc.studyBack, triggered=self.studyBack))
+        studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut=sc.studyForward, triggered=self.studyForward))
         
         menu3.addSeparator()
         menu3.addAction(QAction(config.thisTranslation["menu1_reload"], self, triggered=self.reloadCurrentRecord))
@@ -199,34 +206,34 @@ class ClassicMainWindow(MainWindow):
         chapterFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_commentary"], self, triggered=self.runChapterFeatureCommentary))
 
         verseFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_verse"])
-        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_indexes"], self, shortcut="Ctrl+.", triggered=self.runINDEX))
-        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut="Ctrl+R", triggered=self.runCROSSREFERENCE))
-        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut="Ctrl+E", triggered=self.runTSKE))
+        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_indexes"], self, shortcut=sc.runINDEX, triggered=self.runINDEX))
+        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut=sc.runCROSSREFERENCE, triggered=self.runCROSSREFERENCE))
+        verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut=sc.runTSKE, triggered=self.runTSKE))
         verseFeaturesMenu.addAction(QAction(config.thisTranslation["menu_more"], self, triggered=self.mainRefButtonClicked))
 
         wordFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_word"])
         wordFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_traslations"], self, triggered=self.runTRANSLATION))
         wordFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, triggered=self.runDISCOURSE))
         wordFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_words"], self, triggered=self.runWORDS))
-        wordFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut="Ctrl+K", triggered=self.runCOMBO))
+        wordFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
         menu4.addSeparator()
 
         compareFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_compareFeatures"])
-        compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut="Ctrl+D", triggered=self.runCOMPARE))
+        compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut=sc.runCOMPARE, triggered=self.runCOMPARE))
         compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=self.mainRefButtonClicked))
         menu4.addSeparator()
 
         marvelBibleMenu = menu4.addMenu(config.thisTranslation["menu_marvelBibles"])
-        marvelBibleMenu.addAction(QAction("Marvel Original Bible", self, shortcut="Ctrl+B, 1", triggered=self.runMOB))
-        marvelBibleMenu.addAction(QAction("Marvel Interlinear Bible", self, shortcut="Ctrl+B, 2", triggered=self.runMIB))
-        marvelBibleMenu.addAction(QAction("Marvel Trilingual Bible", self, shortcut="Ctrl+B, 3", triggered=self.runMTB))
-        marvelBibleMenu.addAction(QAction("Marvel Parallel Bible", self, shortcut="Ctrl+B, 4", triggered=self.runMPB))
-        marvelBibleMenu.addAction(QAction("Marvel Annotated Bible", self, shortcut="Ctrl+B, 5", triggered=self.runMAB))
+        marvelBibleMenu.addAction(QAction("Marvel Original Bible", self, shortcut=sc.runMOB, triggered=self.runMOB))
+        marvelBibleMenu.addAction(QAction("Marvel Interlinear Bible", self, shortcut=sc.runMIB, triggered=self.runMIB))
+        marvelBibleMenu.addAction(QAction("Marvel Trilingual Bible", self, shortcut=sc.runMTB, triggered=self.runMTB))
+        marvelBibleMenu.addAction(QAction("Marvel Parallel Bible", self, shortcut=sc.runMPB, triggered=self.runMPB))
+        marvelBibleMenu.addAction(QAction("Marvel Annotated Bible", self, shortcut=sc.runMAB, triggered=self.runMAB))
         menu4.addSeparator()
 
         commentaryMenu = menu4.addMenu(config.thisTranslation["menu4_commentary"])
-        commentaryMenu.addAction(QAction(config.thisTranslation["menu4_lastCommentary"], self, shortcut="Ctrl+Y", triggered=self.runCOMMENTARY))
-        commentaryMenu.addAction(QAction("{0} {1}".format(config.thisTranslation["menu4_commentary"], config.thisTranslation["menu_bibleMenu"]), self, shortcut="Ctrl+Y", triggered=self.commentaryRefButtonClicked))
+        commentaryMenu.addAction(QAction(config.thisTranslation["menu4_lastCommentary"], self, shortcut=sc.runCOMMENTARY, triggered=self.runCOMMENTARY))
+        commentaryMenu.addAction(QAction("{0} {1}".format(config.thisTranslation["menu4_commentary"], config.thisTranslation["menu_bibleMenu"]), self, shortcut=sc.commentaryRefButtonClicked, triggered=self.commentaryRefButtonClicked))
 
         # check if books in favourite list exist
         #for book in config.favouriteBooks:
@@ -272,26 +279,26 @@ class ClassicMainWindow(MainWindow):
         menu10.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearBookHighlights))
 
         menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_lookup"]))
-        menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut="Ctrl+3", triggered=self.searchCommandBibleDictionary))
+        menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut=sc.searchCommandBibleDictionary, triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut="Ctrl+4", triggered=self.searchCommandBibleEncyclopedia))
+        menu5.addAction(QAction(config.thisTranslation["menu5_encyclopedia"], self, shortcut=sc.searchCommandBibleEncyclopedia, triggered=self.searchCommandBibleEncyclopedia))
         menu5.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut="Ctrl+5", triggered=self.displaySearchBookCommand))
+        menu5.addAction(QAction(config.thisTranslation["menu5_book"], self, shortcut=sc.displaySearchBookCommand, triggered=self.displaySearchBookCommand))
         menu5.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, triggered=self.searchBookDialog))
         menu5.addAction(QAction(config.thisTranslation["menu5_favouriteBook"], self, triggered=self.displaySearchFavBookCommand))
         menu5.addAction(QAction(config.thisTranslation["menu5_allBook"], self, triggered=self.displaySearchAllBookCommand))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_lastTopics"], self, shortcut="Ctrl+6", triggered=self.searchCommandBibleTopic))
+        menu5.addAction(QAction(config.thisTranslation["menu5_lastTopics"], self, shortcut=sc.searchCommandBibleTopic, triggered=self.searchCommandBibleTopic))
         menu5.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
         menu5.addAction(QAction(config.thisTranslation["menu5_allTopics"], self, triggered=self.searchCommandAllBibleTopic))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut="Ctrl+7", triggered=self.searchCommandBibleCharacter))
-        menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut="Ctrl+8", triggered=self.searchCommandBibleName))
-        menu5.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut="Ctrl+9", triggered=self.searchCommandBibleLocation))
+        menu5.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut=sc.searchCommandBibleCharacter, triggered=self.searchCommandBibleCharacter))
+        menu5.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut=sc.searchCommandBibleName, triggered=self.searchCommandBibleName))
+        menu5.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut=sc.searchCommandBibleLocation, triggered=self.searchCommandBibleLocation))
         menu5.addSeparator()
-        menu5.addAction(QAction(config.thisTranslation["menu5_lexicon"], self, shortcut="Ctrl+0", triggered=self.searchCommandLexicon))
+        menu5.addAction(QAction(config.thisTranslation["menu5_lexicon"], self, shortcut=sc.searchCommandLexicon, triggered=self.searchCommandLexicon))
         menu5.addSeparator()
         menu5.addAction(QAction(config.thisTranslation["menu5_last3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
         menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
@@ -323,7 +330,7 @@ class ClassicMainWindow(MainWindow):
         topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_open"], self, triggered=self.openTextFileDialog))
 
         noteEditorMenu = menu6.addMenu("&{0}".format(config.thisTranslation["note_editor"]))
-        noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut="Ctrl+N", triggered=self.createNewNoteFile))
+        noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut=sc.createNewNoteFile, triggered=self.createNewNoteFile))
         noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
 
         menu11 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu11_multimedia"]))
