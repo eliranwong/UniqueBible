@@ -16,6 +16,10 @@ Planned upcoming changes:
 * add ability to customise default text-to-speech voice via menu
 * add ability to customise javascript for interacting with html content.  This may be useful for module creator.
 
+Major change in version 21.31:
+* fixed an issue on enableLogging
+* added a link to discussions
+
 Major change in version 21.30:
 * add ability to customise kyeboard shortcuts
 
