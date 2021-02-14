@@ -242,6 +242,7 @@ class AlephMainWindow(MainWindow):
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["menu_wiki"], self, triggered=self.openUbaWiki))
+        about_menu.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))
         apps = about_menu.addMenu(config.thisTranslation["menu_apps"])
         apps.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
         apps.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))

@@ -1726,6 +1726,9 @@ class MainWindow(QMainWindow):
     def openUbaWiki(self):
         webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki")
 
+    def openUbaDiscussions(self):
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/discussions")
+
     def openBibleTools(self):
         webbrowser.open("https://bibletools.app")
 

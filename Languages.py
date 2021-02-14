@@ -291,6 +291,7 @@ class Languages:
         "menu_data": "Data",
         "menu_defaults": "Defaults",
         "menu_display": "Display",
+        "menu_discussions": "Discussions",
         "menu_donate": "Donate",
         "menu_edit_note": "Edit Note",
         "menu_external_notes": "External Notes",
