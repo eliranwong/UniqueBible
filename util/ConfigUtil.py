@@ -3,12 +3,11 @@ from platform import system
 
 import config
 
-def messageFeatureNotEnabled(feature, module):
-    print(
-        "Optional feature '{0}'is not enabled.  To enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(
-            feature, module))
-
 class ConfigUtil:
+
+    @staticmethod
+    def messageFeatureNotEnabled(feature, module):
+        print("Optional feature '{0}'is not enabled.  To enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
 
     @staticmethod
     def setup():
@@ -479,7 +478,7 @@ class ConfigUtil:
         #    openccSupport = True
         # except:
         #    openccSupport = False
-        #    messageFeatureNotEnabled("Conversion between traditional Chinese and simplified Chinese", "opencc")
+        #    ConfigUtil.messageFeatureNotEnabled("Conversion between traditional Chinese and simplified Chinese", "opencc")
 
         # [Optional] Chinese feature - pypinyin
         # It translates Chinese characters into pinyin.
@@ -489,7 +488,7 @@ class ConfigUtil:
             config.pinyinSupport = True
         except:
             config.pinyinSupport = False
-            messageFeatureNotEnabled("Translate Chinese words into pinyin", "pypinyin")
+            ConfigUtil.messageFeatureNotEnabled("Translate Chinese words into pinyin", "pypinyin")
 
         # [Optional] Google-translate
         try:
@@ -497,7 +496,7 @@ class ConfigUtil:
             config.googletransSupport = True
         except:
             config.googletransSupport = False
-            messageFeatureNotEnabled("Google translate", "googletrans")
+            ConfigUtil.messageFeatureNotEnabled("Google translate", "googletrans")
 
         # [Optional] Gist-syncing notes
         if config.enableGist:
@@ -505,7 +504,7 @@ class ConfigUtil:
                 from github import Github, InputFileContent
             except:
                 config.enableGist = False
-                messageFeatureNotEnabled("Gist-synching notes across devices", "pygithub")
+                ConfigUtil.messageFeatureNotEnabled("Gist-synching notes across devices", "pygithub")
 
         # Import modules for developer
         if config.developer:
@@ -514,12 +513,12 @@ class ConfigUtil:
 
         # [Optional] qt-material
         # qt-material have to be imported after PySide2
-        if config.qtMaterial:
-            try:
-                from qt_material import apply_stylesheet
-            except:
-                config.qtMaterial = False
-                messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
+#        if config.qtMaterial:
+#            try:
+#                from qt_material import apply_stylesheet
+#            except:
+#                config.qtMaterial = False
+#                ConfigUtil.messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
 
     # Save configurations on exit
     @staticmethod

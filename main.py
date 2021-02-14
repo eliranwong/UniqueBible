@@ -41,10 +41,19 @@ ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
-from qt_material import apply_stylesheet
+#from qt_material import apply_stylesheet
 from gui.ClassicMainWindow import ClassicMainWindow
 from gui.AlephMainWindow import AlephMainWindow
 from gui.FocusMainWindow import FocusMainWindow
+
+# [Optional] qt-material
+# qt-material have to be imported after PySide2
+if config.qtMaterial:
+    try:
+        from qt_material import apply_stylesheet
+    except:
+        config.qtMaterial = False
+        ConfigUtil.messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):

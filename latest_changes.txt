@@ -1,15 +1,20 @@
 upcoming changes:
-- add a new tab 'Miscellenous' to 'Master Control' panel with new access of features via Master Control
-- rename 'Remote Control' to 'mini Control'
-- increase the number of verse highlight collections from two to ten
-- add quick access to verse highlight feature via Master Control
-- add ability to customise verse highlight collection name and colours
-- add ability to customise kyeboard shortcuts
-- add ability to customise verse number single-click action
-- add ability to customise verse number double-click action
-- add ability to customise toolbar layouts on startup
-- add ability to customise default text-to-speech voice via menu
-- add ability to customise javascript for interacting with html content.  This may be useful for module creator.
+* add a new tab 'Miscellenous' to 'Master Control' panel with new feature access via Master Control
+* refresh history records when Master Control tab is opened
+* set the search field in focus when Master Control Search tab is opened
+* rename 'Remote Control' to 'mini Control'
+* add an address bar to built*in YouTube downloader window.
+    - The window will then become practically a simple web browser.
+    - Two buttons will be added nex to the address bar: Download mp3, Download mp4
+* increase the number of verse highlight collections from two to ten
+* add quick access to verse highlight feature via Master Control
+* add ability to customise verse highlight collection name and colours
+* add ability to customise kyeboard shortcuts (done by @otseng; pending for merging)
+* add ability to customise verse number single*click action
+* add ability to customise verse number double*click action
+* add ability to customise toolbar layouts on startup
+* add ability to customise default text-to-speech voice via menu
+* add ability to customise javascript for interacting with html content.  This may be useful for module creator.
 
 Major changes in version 21.29:
 Multiple improvement on Master Control Panel:
