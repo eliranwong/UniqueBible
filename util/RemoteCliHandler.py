@@ -1,11 +1,47 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
 import asyncio
 import re
+import sys
+from socket import socket
+
+from util.ConfigUtil import ConfigUtil
 
 CR, LF, NUL = '\r\n\x00'
 CRLF = '\r\n'
 
 class RemoteCliHandler:
+
+    @staticmethod
+    def setup():
+        if (len(sys.argv) > 1) and sys.argv[1] == "cli":
+            try:
+                import telnetlib3
+            except:
+                print("Please run 'pip install telnetlib3' to use remote CLI")
+                ConfigUtil.save()
+                exit(0)
+
+            try:
+                import telnetlib3
+                import asyncio
+                from util.RemoteCliHandler import RemoteCliHandler
+
+                port = 8888
+                if (len(sys.argv) > 2):
+                    port = int(sys.argv[2])
+                print("Running in remote CLI Mode on port {0}".format(port))
+                print("Access by 'telnet {0} {1}'".format(RemoteCliHandler.get_ip(), port))
+                print("Press Ctrl-C to stop the server")
+                loop = asyncio.get_event_loop()
+                coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
+                server = loop.run_until_complete(coro)
+                loop.run_until_complete(server.wait_closed())
+                exit(0)
+            except KeyboardInterrupt:
+                exit(0)
+            except Exception as e:
+                print(str(e))
+                exit(-1)
 
     @asyncio.coroutine
     def shell(reader, writer):
@@ -88,6 +124,20 @@ class RemoteCliHandler:
                 writer.echo(inp)
                 last_inp = inp
                 inp = yield None
+
+    @staticmethod
+    def get_ip():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            # doesn't even have to be reachable
+            s.connect(('10.255.255.255', 1))
+            IP = s.getsockname()[0]
+        except Exception:
+            IP = '127.0.0.1'
+        finally:
+            s.close()
+        return IP
+
 
 class MockWindow:
 

@@ -4,7 +4,10 @@ from PySide2.QtGui import QIcon, Qt
 from PySide2.QtWidgets import QComboBox, QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory
 from gui.MenuItems import *
 from gui.MainWindow import MainWindow
+import shortcut as sc
 from BiblesSqlite import BiblesSqlite
+from util.ShortcutUtil import ShortcutUtil
+
 
 class FocusMainWindow(MainWindow):
 
@@ -16,8 +19,8 @@ class FocusMainWindow(MainWindow):
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
         items = (
-            ("menu7_create", self.createNewNoteFile, "Ctrl+N"),
-            ("menu7_open", self.openTextFileDialog, "Ctrl+O"),
+            ("menu7_create", self.createNewNoteFile, sc.createNewNoteFile),
+            ("menu7_open", self.openTextFileDialog, sc.openTextFileDialog),
         )
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)
@@ -62,6 +65,15 @@ class FocusMainWindow(MainWindow):
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        subMenu = addSubMenu(subMenu0, "menu_shortcuts")
+        items = (
+            ("menu_brachys", lambda: self.setShortcuts("brachys")),
+            ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        for shortcut in ShortcutUtil.getListCustomShortcuts():
+            addMenuItem(subMenu, shortcut, self, lambda shortcut=shortcut: self.setShortcuts(shortcut), None, False)
         subMenu = addSubMenu(subMenu0, "toolbarIcon")
         items = (
             ("toolbarIconStandard", lambda: self.setFullIconSize(False)),
@@ -78,8 +90,8 @@ class FocusMainWindow(MainWindow):
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu2_fontSize")
         items = (
-            ("menu2_larger", self.largerFont, "Ctrl++"),
-            ("menu2_smaller", self.smallerFont, "Ctrl+-"),
+            ("menu2_larger", self.largerFont, sc.largerFont),
+            ("menu2_smaller", self.smallerFont, sc.smallerFont),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -91,18 +103,18 @@ class FocusMainWindow(MainWindow):
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")
         items = (
-            ("menu1_fullScreen", self.fullsizeWindow, "Ctrl+S,F"),
-            ("menu1_topHalf", self.topHalfScreenHeight, "Ctrl+S,1"),
-            ("menu1_bottomHalf", self.bottomHalfScreenHeight, "Ctrl+S,2"),
-            ("menu1_leftHalf", self.leftHalfScreenWidth, "Ctrl+S,3"),
-            ("menu1_rightHalf", self.rightHalfScreenWidth, "Ctrl+S,4"),
+            ("menu1_fullScreen", self.fullsizeWindow, sc.fullsizeWindow),
+            ("menu1_topHalf", self.topHalfScreenHeight, sc.topHalfScreenHeight),
+            ("menu1_bottomHalf", self.bottomHalfScreenHeight, sc.bottomHalfScreenHeight),
+            ("menu1_leftHalf", self.leftHalfScreenWidth, sc.leftHalfScreenWidth),
+            ("menu1_rightHalf", self.rightHalfScreenWidth, sc.rightHalfScreenWidth),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         subMenu = addSubMenu(subMenu0, "menu2_toobars")
         items = (
-            ("menu2_all", self.setNoToolBar, "Ctrl+J"),
-            ("menu2_topOnly", self.hideShowAdditionalToolBar, "Ctrl+G"),
+            ("menu2_all", self.setNoToolBar, sc.setNoToolBar),
+            ("menu2_topOnly", self.hideShowAdditionalToolBar, sc.hideShowAdditionalToolBar),
             ("menu2_top", self.hideShowMainToolBar, None),
             ("menu2_second", self.hideShowSecondaryToolBar, None),
             ("menu2_left", self.hideShowLeftToolBar, None),
@@ -112,8 +124,8 @@ class FocusMainWindow(MainWindow):
             addMenuItem(subMenu, feature, self, action, shortcut)
         subMenu0.addSeparator()
         items = (
-            ("menu2_study", self.parallel, "Ctrl+W"),
-            ("menu2_bottom", self.cycleInstant, "Ctrl+T"),
+            ("menu2_study", self.parallel, sc.parallel),
+            ("menu2_bottom", self.cycleInstant, sc.cycleInstant),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu0, feature, self, action, shortcut)
@@ -126,7 +138,7 @@ class FocusMainWindow(MainWindow):
         subMenu = addSubMenu(menu, "menu1_clipboard")
         items = (
             ("menu1_readClipboard", self.pasteFromClipboard, None),
-            ("menu1_runClipboard", self.parseContentOnClipboard, "Ctrl+^"),
+            ("menu1_runClipboard", self.parseContentOnClipboard, sc.parseContentOnClipboard),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -140,36 +152,36 @@ class FocusMainWindow(MainWindow):
         menu.addSeparator()
         #addMenuItem(menu, "menu1_update", self, self.updateUniqueBibleApp)
         #menu.addSeparator()
-        addIconMenuItem("UniqueBibleApp.png", menu, "menu1_exit", self, self.quitApp, "Ctrl+Q")
+        addIconMenuItem("UniqueBibleApp.png", menu, "menu1_exit", self, self.quitApp, sc.quitApp)
 
         # 2nd column
         menu = addMenu(menuBar, "menu_bible")
         subMenu = addSubMenu(menu, "menu_navigation")
         items = (
-            ("menu_next_book", self.nextMainBook, "Ctrl+H,1"),
-            ("menu_previous_book", self.previousMainBook, "Ctrl+H,2"),
-            ("menu4_next", self.nextMainChapter, "Ctrl+>"),
-            ("menu4_previous", self.previousMainChapter, "Ctrl+<"),
+            ("menu_next_book", self.nextMainBook, sc.nextMainBook),
+            ("menu_previous_book", self.previousMainBook, sc.previousMainBook),
+            ("menu4_next", self.nextMainChapter, sc.nextMainChapter),
+            ("menu4_previous", self.previousMainChapter, sc.previousMainChapter),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         subMenu = addSubMenu(menu, "menu_scroll")
         items = (
-            ("menu_main_scroll_to_top", self.mainPageScrollToTop, "Ctrl+H,3"),
-            ("menu_main_page_up", self.mainPageScrollPageUp, "Ctrl+H,4"),
-            ("menu_main_page_down", self.mainPageScrollPageDown, "Ctrl+H,5"),
-            ("menu_study_scroll_to_top", self.studyPageScrollToTop, "Ctrl+H,6"),
-            ("menu_study_page_up", self.studyPageScrollPageUp, "Ctrl+H,7"),
-            ("menu_study_page_down", self.studyPageScrollPageDown, "Ctrl+H,8"),
+            ("menu_main_scroll_to_top", self.mainPageScrollToTop, sc.mainPageScrollToTop),
+            ("menu_main_page_up", self.mainPageScrollPageUp, sc.mainPageScrollPageUp),
+            ("menu_main_page_down", self.mainPageScrollPageDown, sc.mainPageScrollPageDown),
+            ("menu_study_scroll_to_top", self.studyPageScrollToTop, sc.studyPageScrollToTop),
+            ("menu_study_page_up", self.studyPageScrollPageUp, sc.studyPageScrollPageUp),
+            ("menu_study_page_down", self.studyPageScrollPageDown, sc.studyPageScrollPageDown),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
-            ("menu2_format", self.enableParagraphButtonClicked, "Ctrl+P"),
+            ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
             ("menu2_subHeadings", self.enableSubheadingButtonClicked, None),
-            ("menu2_hover", self.enableInstantButtonClicked, "Ctrl+="),
+            ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
             ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, None),
             ("menu_syncStudyWindowBible", self.enableSyncStudyWindowBibleButtonClicked, None),
             ("menu_syncBibleCommentary", self.enableSyncCommentaryButtonClicked, None),
@@ -181,10 +193,10 @@ class FocusMainWindow(MainWindow):
 
         # 3rd column
         menu = addMenu(menuBar, "controlPanel")
-        for index, shortcut in enumerate(("B", "L", "F", "H")):
-            addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), "Ctrl+{0}".format(shortcut))
+        for index, shortcut in enumerate((sc.masterCurrentIndex0, sc.masterCurrentIndex1, sc.masterCurrentIndex2, sc.masterCurrentIndex3)):
+            addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, "Ctrl+I")
+        addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, sc.manageRemoteControl)
 
         # 4th column
         menu = addMenu(menuBar, "menu8_resources")
