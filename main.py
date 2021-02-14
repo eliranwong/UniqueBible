@@ -18,6 +18,10 @@ for userFile in userFiles:
 
 import config
 
+# Setup config values
+from util.ConfigUtil import ConfigUtil
+ConfigUtil.setup()
+
 # Setup logging
 logger = logging.getLogger('uba')
 if config.enableLogging:
@@ -29,10 +33,6 @@ if config.enableLogging:
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 else:
     logger.addHandler(logging.NullHandler())
-
-# Setup config values
-from util.ConfigUtil import ConfigUtil
-ConfigUtil.setup()
 
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
