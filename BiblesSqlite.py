@@ -767,9 +767,9 @@ input.addEventListener('keyup', function(event) {0}
             # add note indicator
             if v in noteVerseList:
                 chapter += '<ref onclick="nV({0})">&#9997</ref> '.format(v)
-            hlClass = ''
+            hlClass = ""
             if v in highlightDict.keys():
-                hlClass = " class='" + highlightDict[v] + "'"
+                hlClass = " class='{0}'".format(highlightDict[v])
             chapter += "<span id='s{0}.{1}.{2}'{3}>".format(b, c, v, hlClass)
             chapter += "{0}".format(verseText)
             chapter += "</span>"

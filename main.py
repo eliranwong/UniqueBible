@@ -414,7 +414,7 @@ if not hasattr(config, "migrateDatabaseBibleNameToDetailsTable"):
 if not hasattr(config, "enableVerseHighlighting"):
     config.enableVerseHighlighting = False
 if not hasattr(config, "highlightCollections"):
-    config.highlightCollections = ["Highlight 1", "Highlight 2"]
+    config.highlightCollections = ["Highlight 1", "Highlight 2", "Highlight 3", "Highlight 4", "Highlight 5", "Highlight 6", "Highlight 7", "Highlight 8", "Highlight 9", "Highlight 10"]
 # Show verse highlight markers
 if not hasattr(config, "showHighlightMarkers"):
     config.showHighlightMarkers = True
