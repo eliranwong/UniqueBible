@@ -38,6 +38,9 @@ class AlephMainWindow(MainWindow):
             QAction(config.thisTranslation["menu_brachys"], self,
                     triggered=lambda: self.setShortcuts("brachys")))
         shortcutsMenu.addAction(
+            QAction(config.thisTranslation["menu_micron"], self,
+                    triggered=lambda: self.setShortcuts("micron")))
+        shortcutsMenu.addAction(
             QAction(config.thisTranslation["menu_syntemno"], self,
                     triggered=lambda: self.setShortcuts("syntemno")))
         customShortcuts = ShortcutUtil.getListCustomShortcuts()
@@ -229,6 +232,8 @@ class AlephMainWindow(MainWindow):
         font_menu.addAction(QAction(config.thisTranslation["menu_select_default_font"], self, shortcut=sc.setDefaultFont, triggered=self.setDefaultFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut=sc.largerFont, triggered=self.largerFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut=sc.smallerFont, triggered=self.smallerFont))
+        display_menu.addAction(
+            QAction(config.thisTranslation["menu_display_shortcuts"], self, shortcut=sc.displayShortcuts, triggered=self.displayShortcuts))
         display_menu.addAction(
             QAction(config.thisTranslation["menu_reload"], self, shortcut=sc.reloadCurrentRecord, triggered=self.reloadCurrentRecord))
 

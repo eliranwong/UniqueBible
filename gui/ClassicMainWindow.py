@@ -68,12 +68,14 @@ class ClassicMainWindow(MainWindow):
         subMenu = addSubMenu(menu, "menu_shortcuts")
         items = (
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
+            ("menu_micron", lambda: self.setShortcuts("micron")),
             ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         for shortcut in ShortcutUtil.getListCustomShortcuts():
             addMenuItem(subMenu, shortcut, self, lambda shortcut=shortcut: self.setShortcuts(shortcut), None, False)
+        addMenuItem(menu, "menu_display_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro, None)
         addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, None)

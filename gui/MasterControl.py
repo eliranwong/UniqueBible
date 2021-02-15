@@ -32,8 +32,9 @@ class MasterControl(QWidget):
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
             if event.modifiers() == Qt.ControlModifier:
-                if event.key() == ShortcutUtil.keyCode(sc.masterHideKeyCode):
-                    self.hide()
+                if sc.masterHideKeyCode is not None and sc.masterHideKeyCode != '':
+                    if event.key() == ShortcutUtil.keyCode(sc.masterHideKeyCode):
+                        self.hide()
         return QWidget.event(self, event)
 
     def closeEvent(self, event):

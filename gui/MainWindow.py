@@ -19,6 +19,7 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
+from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
 from translations import translations
 from shutil import copyfile, rmtree
@@ -771,6 +772,10 @@ class MainWindow(QMainWindow):
         ShortcutUtil.reset()
         ShortcutUtil.setup(shortcut)
         self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
+
+    def displayShortcuts(self):
+        shortcutWindow = DisplayShortcutsWindow(config.menuShortcuts, ShortcutUtil.getAllShortcuts())
+        shortcutWindow.exec()
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
