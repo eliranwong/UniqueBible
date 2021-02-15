@@ -520,6 +520,8 @@ class Languages:
         "noteTool_textBackgroundColor": "Text Background Color",
         "menu10_clearBookHighlights": "Remove Search Result Highlights",
         "menu1_reload": "Refresh",
+        "highlightEditor": "Highlight Editor",
+        "highlightEditorLabel": "Rename collections or change colour:",
         "select_a_folder": "Select a Folder",
         "bar2_commentarySyncEnabled": "Commentary in Sync with Main Window",
         "bar2_commentarySyncDisabled": "Commentary out of Sync with Main Window",

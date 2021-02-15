@@ -428,8 +428,12 @@ class ConfigUtil:
         if not hasattr(config, "clearCommandEntry"):
             config.clearCommandEntry = False
         # Highlight collections
-        if not hasattr(config, "highlightCollections"):
-            config.highlightCollections = ["Highlight 1", "Highlight 2"]
+        if not hasattr(config, "highlightCollections") or len(config.highlightCollections) < 10:
+            config.highlightCollections = ["Highlight 1", "Highlight 2", "Highlight 3", "Highlight 4", "Highlight 5", "Highlight 6", "Highlight 7", "Highlight 8", "Highlight 9", "Highlight 10"]
+        if not hasattr(config, "highlightLightThemeColours"):
+            config.highlightLightThemeColours = ["#646400", "#060166", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400"]
+        if not hasattr(config, "highlightDarkThemeColours"):
+            config.highlightDarkThemeColours = ["#e8e809", "#4ff7fa", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809"]
         # Default menu shortcuts
         if not hasattr(config, "menuShortcuts"):
             config.menuShortcuts = "brachys"
@@ -510,15 +514,6 @@ class ConfigUtil:
         if config.developer:
             # import exlbl
             pass
-
-        # [Optional] qt-material
-        # qt-material have to be imported after PySide2
-#        if config.qtMaterial:
-#            try:
-#                from qt_material import apply_stylesheet
-#            except:
-#                config.qtMaterial = False
-#                ConfigUtil.messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
 
     # Save configurations on exit
     @staticmethod
@@ -656,6 +651,8 @@ class ConfigUtil:
             ("gistToken", config.gistToken),
             ("clearCommandEntry", config.clearCommandEntry),
             ("highlightCollections", config.highlightCollections),
+            ("highlightLightThemeColours", config.highlightLightThemeColours),
+            ("highlightDarkThemeColours", config.highlightDarkThemeColours),
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("menuShortcuts", config.menuShortcuts)
         )
