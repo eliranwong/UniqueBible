@@ -281,6 +281,7 @@ class Languages:
         "menu_bible_chapter_notes": "Bible Chapter Notes",
         "menu_bible_notes": "Bible Notes",
         "menu_bible_verse_notes": "Bible Verse Notes",
+        "menu_blank": "blank",
         "menu_book": "Book",
         "menu_brachys": "brachys",
         "menu_build_macro": "Build Macro",

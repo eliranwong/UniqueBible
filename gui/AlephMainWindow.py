@@ -35,6 +35,9 @@ class AlephMainWindow(MainWindow):
 
         shortcutsMenu = menu1_defaults.addMenu(config.thisTranslation["menu_shortcuts"])
         shortcutsMenu.addAction(
+            QAction(config.thisTranslation["menu_blank"], self,
+                    triggered=lambda: self.setShortcuts("blank")))
+        shortcutsMenu.addAction(
             QAction(config.thisTranslation["menu_brachys"], self,
                     triggered=lambda: self.setShortcuts("brachys")))
         shortcutsMenu.addAction(
@@ -95,7 +98,7 @@ class AlephMainWindow(MainWindow):
         scroll_menu.addAction(QAction(config.thisTranslation["menu_main_page_up"], self, shortcut=sc.mainPageScrollPageUp,
                                           triggered=self.mainPageScrollPageUp))
         scroll_menu.addAction(QAction(config.thisTranslation["menu_study_scroll_to_top"], self,
-                                      shortcut='Ctrl+8',triggered=self.studyPageScrollToTop))
+                                      shortcut=sc.studyPageScrollToTop,triggered=self.studyPageScrollToTop))
         scroll_menu.addAction(QAction(config.thisTranslation["menu_study_page_down"], self, shortcut=sc.studyPageScrollPageDown,
                                       triggered=self.studyPageScrollPageDown))
         scroll_menu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, shortcut=sc.studyPageScrollPageUp,
