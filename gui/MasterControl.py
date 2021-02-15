@@ -4,6 +4,7 @@ from gui.BibleExplorer import BibleExplorer
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
+from gui.HighlightLauncher import HighlightLauncher
 from PySide2.QtWidgets import QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
@@ -32,9 +33,16 @@ class MasterControl(QWidget):
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
             if event.modifiers() == Qt.ControlModifier:
-                if sc.masterHideKeyCode is not None and sc.masterHideKeyCode != '':
-                    if event.key() == ShortcutUtil.keyCode(sc.masterHideKeyCode):
-                        self.hide()
+                if event.key() == Qt.Key_B:
+                    self.tabs.setCurrentIndex(0)
+                elif event.key() == Qt.Key_L:
+                    self.tabs.setCurrentIndex(1)
+                elif event.key() == Qt.Key_F:
+                    self.tabs.setCurrentIndex(2)
+                elif event.key() == Qt.Key_H:
+                    self.tabs.setCurrentIndex(3)
+            elif event.key() == Qt.Key_Escape:
+                self.hide()
         return QWidget.event(self, event)
 
     def closeEvent(self, event):
@@ -109,6 +117,10 @@ class MasterControl(QWidget):
         # 3
         self.historyTab = HistoryLauncher(self)
         self.tabs.addTab(self.historyTab, config.thisTranslation["menu_history"])
+        # 4
+        if config.developer:
+            self.highlightTab = HighlightLauncher(self)
+            self.tabs.addTab(self.highlightTab, config.thisTranslation["menu_highlight"])
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab

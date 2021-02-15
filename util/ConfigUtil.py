@@ -429,7 +429,7 @@ class ConfigUtil:
             config.clearCommandEntry = False
         # Highlight collections
         if not hasattr(config, "highlightCollections") or len(config.highlightCollections) < 10:
-            config.highlightCollections = ["Highlight 1", "Highlight 2", "Highlight 3", "Highlight 4", "Highlight 5", "Highlight 6", "Highlight 7", "Highlight 8", "Highlight 9", "Highlight 10"]
+            config.highlightCollections = ["Collection 1", "Collection 2", "Collection 3", "Collection 4", "Collection 5", "Collection 6", "Collection 7", "Collection 8", "Collection 9", "Collection 10"]
         if not hasattr(config, "highlightLightThemeColours"):
             config.highlightLightThemeColours = ["#646400", "#060166", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400"]
         if not hasattr(config, "highlightDarkThemeColours"):
