@@ -1,5 +1,6 @@
 if not __name__ == "__main__":
     import config
+from functools import partial
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QPalette, QColor
 from PySide2.QtGui import QGuiApplication
@@ -46,18 +47,18 @@ class HighlightLauncher(QWidget):
                 label.setPalette(QPalette(QColor(config.highlightDarkThemeColours[index] if config.theme == "dark" else config.highlightLightThemeColours[index])))
             subLayout.addWidget(label)
             button = QPushButton("name" if __name__ == "__main__" else config.thisTranslation["rename"])
-            button.clicked.connect(lambda check, index=index: self.rename(check, index))
+            button.clicked.connect(partial(self.rename, index))
             subLayout.addWidget(button)
             subLayout.addWidget(QPushButton("colour" if __name__ == "__main__" else config.thisTranslation["changeColour"]))
             layout.addLayout(subLayout)
 
         self.setLayout(layout)
 
-    def rename(self, check, index):
+    def rename(self, index):
         print(index)
         newName, ok = QInputDialog.getText(self, "QInputDialog.getText()",
                 config.thisTranslation["edit"], QLineEdit.Normal,
-                "test")
+                config.highlightCollections[index])
         if ok and newName:
             config.highlightCollections[index] = newName
             self.collectionLabels[index].setText(newName)
