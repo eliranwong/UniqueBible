@@ -428,12 +428,12 @@ class ConfigUtil:
         if not hasattr(config, "clearCommandEntry"):
             config.clearCommandEntry = False
         # Highlight collections
-        if not hasattr(config, "highlightCollections") or len(config.highlightCollections) < 10:
+        if not hasattr(config, "highlightCollections") or len(config.highlightCollections) < 10 or config.version <= 21.31:
             config.highlightCollections = ["Collection 1", "Collection 2", "Collection 3", "Collection 4", "Collection 5", "Collection 6", "Collection 7", "Collection 8", "Collection 9", "Collection 10"]
-        if not hasattr(config, "highlightLightThemeColours"):
-            config.highlightLightThemeColours = ["#646400", "#060166", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400"]
-        if not hasattr(config, "highlightDarkThemeColours"):
-            config.highlightDarkThemeColours = ["#e8e809", "#4ff7fa", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809"]
+        if not hasattr(config, "highlightDarkThemeColours") or config.version <= 21.31:
+            config.highlightDarkThemeColours = ["#646400", "#060166", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400"]
+        if not hasattr(config, "highlightLightThemeColours") or config.version <= 21.31:
+            config.highlightLightThemeColours = ["#e8e809", "#4ff7fa", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809"]
         # Default menu shortcuts
         if not hasattr(config, "menuShortcuts"):
             config.menuShortcuts = "micron"

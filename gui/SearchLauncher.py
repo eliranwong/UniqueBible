@@ -50,11 +50,6 @@ class SearchLauncher(QWidget):
             if index == config.bibleSearchMode:
                 radioButton.setChecked(True)
             leftGroupLayout.addWidget(radioButton) if (index % 2 == 0) else rightGroupLayout.addWidget(radioButton)
-        if config.enableVerseHighlighting:
-            combo = QComboBox()
-            combo.addItems(config.highlightCollections)
-            combo.currentIndexChanged.connect(self.searchHighlight)
-            rightGroupLayout.addWidget(combo)
         leftGroupLayout.addStretch()
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)

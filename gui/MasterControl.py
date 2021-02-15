@@ -4,7 +4,7 @@ from gui.BibleExplorer import BibleExplorer
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
-from gui.HighlightLauncher import HighlightLauncher
+from gui.MiscellaneousLauncher import MiscellaneousLauncher
 from PySide2.QtWidgets import QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
@@ -25,6 +25,7 @@ class MasterControl(QWidget):
         # setup item option lists
         self.setupItemLists()
         # setup interface
+        self.text = text
         self.setupUI(b, c, v, text, initialTab)
         
         self.isRefreshing = False
@@ -107,20 +108,20 @@ class MasterControl(QWidget):
         self.tabs = QTabWidget()
         # 0
         self.bibleTab = BibleExplorer(self, (b, c, v, text))
-        self.tabs.addTab(self.bibleTab, config.thisTranslation["menu_bible"])
+        self.tabs.addTab(self.bibleTab, config.thisTranslation["cp0"])
         # 1
         libraryTab = LibraryLauncher(self)
-        self.tabs.addTab(libraryTab, config.thisTranslation["menu_library"])
+        self.tabs.addTab(libraryTab, config.thisTranslation["cp1"])
         # 2
         self.toolTab = SearchLauncher(self)
-        self.tabs.addTab(self.toolTab, config.thisTranslation["menu5_lookup"])
+        self.tabs.addTab(self.toolTab, config.thisTranslation["cp2"])
         # 3
         self.historyTab = HistoryLauncher(self)
-        self.tabs.addTab(self.historyTab, config.thisTranslation["menu_history"])
+        self.tabs.addTab(self.historyTab, config.thisTranslation["cp3"])
         # 4
         if config.developer:
-            self.highlightTab = HighlightLauncher(self)
-            self.tabs.addTab(self.highlightTab, config.thisTranslation["menu_highlight"])
+            self.miscellaneousTab = MiscellaneousLauncher(self)
+            self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp4"])
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab
