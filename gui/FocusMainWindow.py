@@ -135,8 +135,6 @@ class FocusMainWindow(MainWindow):
         addMenuItem(subMenu0, "menu2_landscape", self, self.switchLandscapeMode)
         addMenuItem(menu, "menu_config_flags", self, self.moreConfigOptionsDialog)
         menu.addSeparator()
-        addMenuItem(menu, "menu_display_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
-        menu.addSeparator()
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
         subMenu = addSubMenu(menu, "menu1_clipboard")
@@ -266,12 +264,16 @@ class FocusMainWindow(MainWindow):
         # information
         if config.showInformation:
             menu = addMenu(menuBar, "menu9_information")
+            addMenuItem(menu, "menu_keyboard_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
+            menu.addSeparator()
+            subMenu = addSubMenu(menu, "menu_support")
             items = (
                 ("menu1_wikiPages", self.openUbaWiki, sc.ubaWiki),
                 ("menu_discussions", self.openUbaDiscussions, sc.ubaDiscussions),
+                ("report", self.reportAnIssue, None),
             )
             for feature, action, shortcut in items:
-                addMenuItem(menu, feature, self, action, shortcut)
+                addMenuItem(subMenu, feature, self, action, shortcut)
             menu.addSeparator()
             subMenu = addSubMenu(menu, "websites")
             items = (
@@ -286,7 +288,7 @@ class FocusMainWindow(MainWindow):
             subMenu = addSubMenu(menu, "repositories")
             items = (
                 ("GitHub Repositories", self.openSource),
-                ("Unique Bible", self.openUniqueBibleSource),
+                ("Unique Bible App", self.openUniqueBibleSource),
                 ("Open Hebrew Bible", self.openHebrewBibleSource),
                 ("Open Greek New Testament", self.openOpenGNTSource),
             )
@@ -294,7 +296,6 @@ class FocusMainWindow(MainWindow):
                 addMenuItem(subMenu, feature, self, action, None, False)
             menu.addSeparator()
             items = (
-                ("report", self.reportAnIssue),
                 ("menu9_contact", self.contactEliranWong),
             )
             for feature, action in items:
