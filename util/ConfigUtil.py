@@ -385,7 +385,7 @@ class ConfigUtil:
             config.qtMaterialTheme = ""
         # Disable modules update check
         if not hasattr(config, "disableModulesUpdateCheck"):
-            config.disableModulesUpdateCheck = False
+            config.disableModulesUpdateCheck = True
         # Enable Copy HTML in popup menu
         if not hasattr(config, "enableCopyHtmlCommand"):
             config.enableCopyHtmlCommand = False
@@ -432,7 +432,7 @@ class ConfigUtil:
             config.highlightCollections = ["Highlight 1", "Highlight 2"]
         # Default menu shortcuts
         if not hasattr(config, "menuShortcuts"):
-            config.menuShortcuts = "brachys"
+            config.menuShortcuts = "micron"
 
 
         # Temporary configurations

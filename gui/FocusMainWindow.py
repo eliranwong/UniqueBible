@@ -68,6 +68,7 @@ class FocusMainWindow(MainWindow):
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
+            ("menu_micron", lambda: self.setShortcuts("micron")),
             ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
         )
         for feature, action in items:
@@ -132,6 +133,8 @@ class FocusMainWindow(MainWindow):
         subMenu0.addSeparator()
         addMenuItem(subMenu0, "menu2_landscape", self, self.switchLandscapeMode)
         addMenuItem(menu, "menu_config_flags", self, self.moreConfigOptionsDialog)
+        menu.addSeparator()
+        addMenuItem(menu, "menu_display_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
         menu.addSeparator()
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
