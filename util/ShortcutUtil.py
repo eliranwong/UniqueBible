@@ -1,20 +1,125 @@
 import glob
 import pprint
+import sys
 
 from os import path
 from PySide2.QtCore import Qt
 
 import config
-from util.FileUtil import FileUtil
 
 
 # Defined sets of shortcuts:
+# blank
 # brachys
 # micron
 # syntemno
 class ShortcutUtil:
 
     data = {
+        "blank": {
+            "back": "",
+            "bookFeatures": "",
+            "bottomHalfScreenHeight": "",
+            "chapterFeatures": "",
+            "commentaryRefButtonClicked": "",
+            "createNewNoteFile": "",
+            "cycleInstant": "",
+            "displaySearchAllBookCommand": "",
+            "displaySearchBibleCommand": "",
+            "displaySearchBibleMenu": "",
+            "displaySearchBookCommand": "",
+            "displaySearchHighlightCommand": "",
+            "displaySearchStudyBibleCommand": "",
+            "displayShortcuts": "",
+            "editExternalFileButtonClicked": "",
+            "enableInstantButtonClicked": "",
+            "enableParagraphButtonClicked": "",
+            "enableSubheadingButtonClicked": "",
+            "externalFileButtonClicked": "",
+            "forward": "",
+            "fullsizeWindow": "",
+            "gotoFirstChapter": "",
+            "gotoLastChapter": "",
+            "hideShowSideToolBars": "",
+            "hideShowAdditionalToolBar": "",
+            "hideShowLeftToolBar": "",
+            "hideShowMainToolBar": "",
+            "hideShowRightToolBar": "",
+            "hideShowSecondaryToolBar": "",
+            "largerFont": "",
+            "leftHalfScreenWidth": "",
+            "loadRunMacro": "",
+            "mainHistoryButtonClicked": "",
+            "mainPageScrollPageDown": "",
+            "mainPageScrollPageUp": "",
+            "mainPageScrollToTop": "",
+            "manageControlPanel": "",
+            "manageRemoteControl": "",
+            "masterCurrentIndex0": "",
+            "masterCurrentIndex1": "",
+            "masterCurrentIndex2": "",
+            "masterCurrentIndex3": "",
+            "nextChapterButton": "",
+            "nextMainBook": "",
+            "nextMainChapter": "",
+            "openControlPanelTab0": "",
+            "openControlPanelTab1": "",
+            "openControlPanelTab2": "",
+            "openControlPanelTab3": "",
+            "openControlPanelTab4": "",
+            "openMainBookNote": "",
+            "openMainChapterNote": "",
+            "openMainVerseNote": "",
+            "openTextFileDialog": "",
+            "parallel": "",
+            "parseContentOnClipboard": "",
+            "previousChapterButton": "",
+            "previousMainBook": "",
+            "previousMainChapter": "",
+            "quitApp": "",
+            "reloadCurrentRecord": "",
+            "rightHalfScreenWidth": "",
+            "runCOMBO": "",
+            "runCOMMENTARY": "",
+            "runCOMPARE": "",
+            "runCROSSREFERENCE": "",
+            "runDISCOURSE": "",
+            "runINDEX": "",
+            "runKJV2Bible": "",
+            "runMAB": "",
+            "runMIB": "",
+            "runMOB": "",
+            "runMPB": "",
+            "runMTB": "",
+            "runTSKE": "",
+            "runTransliteralBible": "",
+            "runWORDS": "",
+            "searchCommandBibleCharacter": "",
+            "searchCommandBibleDictionary": "",
+            "searchCommandBibleEncyclopedia": "",
+            "searchCommandBibleLocation": "",
+            "searchCommandBibleName": "",
+            "searchCommandBibleTopic": "",
+            "searchCommandBookNote": "",
+            "searchCommandChapterNote": "",
+            "searchCommandLexicon": "",
+            "searchCommandVerseNote": "",
+            "setDefaultFont": "",
+            "setNoToolBar": "",
+            "showGistWindow": "",
+            "smallerFont": "",
+            "studyBack": "",
+            "studyForward": "",
+            "studyHistoryButtonClicked": "",
+            "studyPageScrollPageDown": "",
+            "studyPageScrollPageUp": "",
+            "studyPageScrollToTop": "",
+            "switchIconSize": "",
+            "switchLandscapeMode": "",
+            "toggleHighlightMarker": "",
+            "topHalfScreenHeight": "",
+            "twoThirdWindow": "",
+        },
         "brachys": {
             "back": "Ctrl+[",
             "bookFeatures": "Ctrl+R, F",
@@ -47,6 +152,7 @@ class ShortcutUtil:
             "hideShowSecondaryToolBar": "Ctrl+T, 3",
             "largerFont": "Ctrl++",
             "leftHalfScreenWidth": "Ctrl+S, 3",
+            "loadRunMacro": "",
             "mainHistoryButtonClicked": "Ctrl+'",
             "mainPageScrollPageDown": "Ctrl+H, 5",
             "mainPageScrollPageUp": "Ctrl+H, 4",
@@ -57,7 +163,6 @@ class ShortcutUtil:
             "masterCurrentIndex1": "Ctrl+L",
             "masterCurrentIndex2": "Ctrl+F",
             "masterCurrentIndex3": "Ctrl+Y",
-            "masterHideKeyCode": 'Z',
             "nextChapterButton": "Ctrl+)",
             "nextMainBook": "Ctrl+}",
             "nextMainChapter": "Ctrl+>",
@@ -119,110 +224,6 @@ class ShortcutUtil:
             "topHalfScreenHeight": "Ctrl+S, 1",
             "twoThirdWindow": "Ctrl+S, S",
         },
-        "syntemno": {
-            "back": "Ctrl+Y, 1",
-            "bookFeatures": "Ctrl+L, F",
-            "bottomHalfScreenHeight": "Ctrl+W, B",
-            "chapterFeatures": "Ctrl+L, H",
-            "commentaryRefButtonClicked": "Ctrl+I, C",
-            "createNewNoteFile": "Ctrl+N, N",
-            "cycleInstant": "Ctrl+'",
-            "displaySearchAllBookCommand": "Ctrl+S, R",
-            "displaySearchBibleCommand": "Ctrl+S, B",
-            "displaySearchBibleMenu": "Ctrl+S, M",
-            "displaySearchBookCommand": "Ctrl+E, 5",
-            "displaySearchHighlightCommand": "Ctrl+S, H",
-            "displaySearchStudyBibleCommand": "Ctrl+E, 2",
-            "displayShortcuts": 'Ctrl+|',
-            "editExternalFileButtonClicked": "Ctrl+N, E",
-            "enableInstantButtonClicked": "Ctrl+=",
-            "enableParagraphButtonClicked": "Ctrl+D, S",
-            "enableSubheadingButtonClicked": "Ctrl+D, P",
-            "externalFileButtonClicked": "Ctrl+N, R",
-            "forward": "Ctrl+Y, 2",
-            "fullsizeWindow": "Ctrl+W, F",
-            "gotoFirstChapter": 'Ctrl+<',
-            "gotoLastChapter": 'Ctrl+>',
-            "hideShowSideToolBars": "Ctrl+\\",
-            "hideShowAdditionalToolBar": "Ctrl+T, 2",
-            "hideShowLeftToolBar": "Ctrl+T, L",
-            "hideShowMainToolBar": "Ctrl+T, 1",
-            "hideShowRightToolBar": "Ctrl+T, R",
-            "hideShowSecondaryToolBar": "Ctrl+T, 3",
-            "largerFont": "Ctrl++",
-            "leftHalfScreenWidth": "Ctrl+W, L",
-            "mainHistoryButtonClicked": "Ctrl+Y, M",
-            "mainPageScrollPageDown": 'Ctrl+J',
-            "mainPageScrollPageUp": 'Ctrl+K',
-            "mainPageScrollToTop": 'Ctrl+7',
-            "manageControlPanel": "Ctrl+U, 0",
-            "manageRemoteControl": "Ctrl+O",
-            "masterCurrentIndex0": "Ctrl+U, B",
-            "masterCurrentIndex1": "Ctrl+U, L",
-            "masterCurrentIndex2": "Ctrl+U, F",
-            "masterCurrentIndex3": "Ctrl+U, Y",
-            "masterCurrentIndex4": "Ctrl+U, M",
-            "masterHideKeyCode": "Z",
-            "nextChapterButton": "Ctrl+)",
-            "nextMainBook": 'Ctrl+]',
-            "nextMainChapter": 'Ctrl+.',
-            "openControlPanelTab0": 'Ctrl+U, B',
-            "openControlPanelTab1": 'Ctrl+U, L',
-            "openControlPanelTab2": 'Ctrl+U, S',
-            "openControlPanelTab3": 'Ctrl+U, Y',
-            "openMainBookNote": "Ctrl+N, B",
-            "openMainChapterNote": "Ctrl+N, C",
-            "openMainVerseNote": "Ctrl+N, V",
-            "openTextFileDialog": "Ctrl+N, O",
-            "parallel": "Ctrl+;",
-            "parseContentOnClipboard": "Ctrl+^",
-            "previousChapterButton": "Ctrl+(",
-            "previousMainBook": 'Ctrl+[',
-            "previousMainChapter": "Ctrl+,",
-            "quitApp": "Ctrl+Q",
-            "reloadCurrentRecord": "Ctrl+D, R",
-            "rightHalfScreenWidth": "Ctrl+W, R",
-            "runCOMBO": "Ctrl+L, M",
-            "runCOMMENTARY": "Ctrl+L, C",
-            "runCOMPARE": "Ctrl+S, V",
-            "runCROSSREFERENCE": "Ctrl+L, X",
-            "runDISCOURSE": "Ctrl+L, D",
-            "runINDEX": "Ctrl+.",
-            "runKJV2Bible": "Ctrl+B, K",
-            "runMAB": "Ctrl+B, 5",
-            "runMIB": "Ctrl+B, 2",
-            "runMOB": "Ctrl+B, 1",
-            "runMPB": "Ctrl+B, 4",
-            "runMTB": "Ctrl+B, 3",
-            "runTSKE": "Ctrl+L, T",
-            "runTransliteralBible": "Ctrl+B, T",
-            "runWORDS": "Ctrl+L, W",
-            "searchCommandBibleCharacter": "Ctrl+S, C",
-            "searchCommandBibleDictionary": "Ctrl+E, 3",
-            "searchCommandBibleEncyclopedia": "Ctrl+E, 4",
-            "searchCommandBibleLocation": "Ctrl+S, O",
-            "searchCommandBibleName": "Ctrl+S, N",
-            "searchCommandBibleTopic": "Ctrl+E, 6",
-            "searchCommandBookNote": "Ctrl+S, 1",
-            "searchCommandChapterNote": "Ctrl+S, 2",
-            "searchCommandLexicon": "Ctrl+S, L",
-            "searchCommandVerseNote": "Ctrl+S, 3",
-            "setDefaultFont": "Ctrl+D, F",
-            "setNoToolBar": "Ctrl+T, T",
-            "showGistWindow": "Ctrl+N, G",
-            "smallerFont": "Ctrl+-",
-            "studyBack": "Ctrl+Y, 3",
-            "studyForward": "Ctrl+Y, 4",
-            "studyHistoryButtonClicked": 'Ctrl+Y, S',
-            "studyPageScrollPageDown": 'Ctrl+9',
-            "studyPageScrollPageUp": 'Ctrl+0',
-            "studyPageScrollToTop": "Ctrl+8",
-            "switchIconSize": "Ctrl+T, I",
-            "switchLandscapeMode": "Ctrl+/",
-            "toggleHighlightMarker": "Ctrl+I, I",
-            "topHalfScreenHeight": "Ctrl+W, T",
-            "twoThirdWindow": "Ctrl+W, S",
-        },
         "micron": {
             "back": 'Ctrl+[',
             "bookFeatures": '',
@@ -255,6 +256,7 @@ class ShortcutUtil:
             "hideShowSecondaryToolBar": '',
             "largerFont": 'Ctrl++',
             "leftHalfScreenWidth": '',
+            "loadRunMacro": "",
             "mainHistoryButtonClicked": "Ctrl+'",
             "mainPageScrollPageDown": '',
             "mainPageScrollPageUp": '',
@@ -265,7 +267,6 @@ class ShortcutUtil:
             "masterCurrentIndex1": 'Ctrl+L',
             "masterCurrentIndex2": 'Ctrl+F',
             "masterCurrentIndex3": 'Ctrl+Y',
-            "masterHideKeyCode": 'Z',
             "nextChapterButton": 'Ctrl+)',
             "nextMainBook": 'Ctrl+}',
             "nextMainChapter": 'Ctrl+>',
@@ -326,6 +327,110 @@ class ShortcutUtil:
             "toggleHighlightMarker": '',
             "topHalfScreenHeight": '',
             "twoThirdWindow": '',
+        },
+        "syntemno": {
+            "back": "Ctrl+Y, 1",
+            "bookFeatures": "Ctrl+L, F",
+            "bottomHalfScreenHeight": "Ctrl+W, B",
+            "chapterFeatures": "Ctrl+L, H",
+            "commentaryRefButtonClicked": "",
+            "createNewNoteFile": "Ctrl+N, N",
+            "cycleInstant": "Ctrl+'",
+            "displaySearchAllBookCommand": "Ctrl+S, R",
+            "displaySearchBibleCommand": "Ctrl+S, B",
+            "displaySearchBibleMenu": "Ctrl+S, M",
+            "displaySearchBookCommand": "Ctrl+E, 5",
+            "displaySearchHighlightCommand": "Ctrl+S, H",
+            "displaySearchStudyBibleCommand": "Ctrl+E, 2",
+            "displayShortcuts": 'Ctrl+|',
+            "editExternalFileButtonClicked": "Ctrl+N, E",
+            "enableInstantButtonClicked": "Ctrl+=",
+            "enableParagraphButtonClicked": "Ctrl+D, S",
+            "enableSubheadingButtonClicked": "Ctrl+D, P",
+            "externalFileButtonClicked": "Ctrl+N, R",
+            "forward": "Ctrl+Y, 2",
+            "fullsizeWindow": "Ctrl+W, F",
+            "gotoFirstChapter": 'Ctrl+<',
+            "gotoLastChapter": 'Ctrl+>',
+            "hideShowSideToolBars": "Ctrl+\\",
+            "hideShowAdditionalToolBar": "Ctrl+T, 2",
+            "hideShowLeftToolBar": "Ctrl+T, L",
+            "hideShowMainToolBar": "Ctrl+T, 1",
+            "hideShowRightToolBar": "Ctrl+T, R",
+            "hideShowSecondaryToolBar": "Ctrl+T, 3",
+            "largerFont": "Ctrl++",
+            "leftHalfScreenWidth": "Ctrl+W, L",
+            "loadRunMacro": "Ctrl+M",
+            "mainHistoryButtonClicked": "Ctrl+Y, M",
+            "mainPageScrollPageDown": 'Ctrl+J',
+            "mainPageScrollPageUp": 'Ctrl+K',
+            "mainPageScrollToTop": 'Ctrl+7',
+            "manageControlPanel": "Ctrl+U, 0",
+            "manageRemoteControl": "Ctrl+O",
+            "masterCurrentIndex0": "Ctrl+B",
+            "masterCurrentIndex1": "Ctrl+L",
+            "masterCurrentIndex2": "Ctrl+F",
+            "masterCurrentIndex3": "Ctrl+Y",
+            "nextChapterButton": "Ctrl+)",
+            "nextMainBook": 'Ctrl+]',
+            "nextMainChapter": 'Ctrl+.',
+            "openControlPanelTab0": 'Ctrl+U',
+            "openControlPanelTab1": '',
+            "openControlPanelTab2": '',
+            "openControlPanelTab3": '',
+            "openControlPanelTab4": '',
+            "openMainBookNote": "Ctrl+N, B",
+            "openMainChapterNote": "Ctrl+N, C",
+            "openMainVerseNote": "Ctrl+N, V",
+            "openTextFileDialog": "Ctrl+N, O",
+            "parallel": "Ctrl+;",
+            "parseContentOnClipboard": "Ctrl+^",
+            "previousChapterButton": "Ctrl+(",
+            "previousMainBook": 'Ctrl+[',
+            "previousMainChapter": "Ctrl+,",
+            "quitApp": "Ctrl+Q",
+            "reloadCurrentRecord": "Ctrl+D, R",
+            "rightHalfScreenWidth": "Ctrl+W, R",
+            "runCOMBO": "Ctrl+L, M",
+            "runCOMMENTARY": "Ctrl+L, C",
+            "runCOMPARE": "Ctrl+S, V",
+            "runCROSSREFERENCE": "Ctrl+L, X",
+            "runDISCOURSE": "Ctrl+L, D",
+            "runINDEX": "Ctrl+.",
+            "runKJV2Bible": "Ctrl+B, K",
+            "runMAB": "Ctrl+B, 5",
+            "runMIB": "Ctrl+B, 2",
+            "runMOB": "Ctrl+B, 1",
+            "runMPB": "Ctrl+B, 4",
+            "runMTB": "Ctrl+B, 3",
+            "runTSKE": "Ctrl+L, T",
+            "runTransliteralBible": "Ctrl+B, T",
+            "runWORDS": "Ctrl+L, W",
+            "searchCommandBibleCharacter": "Ctrl+S, C",
+            "searchCommandBibleDictionary": "Ctrl+E, 3",
+            "searchCommandBibleEncyclopedia": "Ctrl+E, 4",
+            "searchCommandBibleLocation": "Ctrl+S, O",
+            "searchCommandBibleName": "Ctrl+S, N",
+            "searchCommandBibleTopic": "Ctrl+E, 6",
+            "searchCommandBookNote": "Ctrl+S, 1",
+            "searchCommandChapterNote": "Ctrl+S, 2",
+            "searchCommandLexicon": "Ctrl+S, L",
+            "searchCommandVerseNote": "Ctrl+S, 3",
+            "setDefaultFont": "Ctrl+D, F",
+            "setNoToolBar": "Ctrl+T, T",
+            "showGistWindow": "Ctrl+N, G",
+            "smallerFont": "Ctrl+-",
+            "studyBack": "Ctrl+Y, 3",
+            "studyForward": "Ctrl+Y, 4",
+            "studyHistoryButtonClicked": 'Ctrl+Y, S',
+            "studyPageScrollPageDown": 'Ctrl+9',
+            "studyPageScrollPageUp": 'Ctrl+0',
+            "studyPageScrollToTop": "Ctrl+8",
+            "switchIconSize": "Ctrl+T, I",
+            "switchLandscapeMode": "Ctrl+/",
+            "toggleHighlightMarker": "",
+            "topHalfScreenHeight": "Ctrl+W, T",
+            "twoThirdWindow": "Ctrl+W, S",
         }
     }
 
@@ -335,12 +440,15 @@ class ShortcutUtil:
             if name not in ShortcutUtil.data.keys():
                 filename = "shortcut_" + name + ".py"
                 if not path.exists(filename):
-                    name = "brachys"
-                elif FileUtil.getLineCount("shortcut.py") < 2:
+                    name = "micron"
+                # elif FileUtil.getLineCount("shortcut.py") < 2 \
+                #         or FileUtil.getLineCount(filename) != len(ShortcutUtil.data['micron']):
+                else:
                     from shutil import copyfile
+                    ShortcutUtil.checkCustomShortcutFileValid(filename)
                     copyfile(filename, "shortcut.py")
         except Exception as e:
-            name = "brachys"
+            name = "micron"
 
         if name in ShortcutUtil.data.keys():
             ShortcutUtil.create(ShortcutUtil.data[name])
@@ -348,12 +456,12 @@ class ShortcutUtil:
 
     @staticmethod
     def create(data):
-        if not path.exists("shortcut.py") or FileUtil.getLineCount("shortcut.py") != len(data):
-            with open("shortcut.py", "w", encoding="utf-8") as fileObj:
-                for name in data.keys():
-                    value = data[name]
-                    fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
-                fileObj.close()
+        # if not path.exists("shortcut.py") or FileUtil.getLineCount("shortcut.py") != len(data):
+        with open("shortcut.py", "w", encoding="utf-8") as fileObj:
+            for name in data.keys():
+                value = data[name]
+                fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
+            fileObj.close()
 
     @staticmethod
     def reset():
@@ -390,48 +498,106 @@ class ShortcutUtil:
             str += "{0} : {1}\n".format(key, command)
         return str
 
+    @staticmethod
+    def checkCustomShortcutFileValid(filename, source="micron"):
+        customShortcuts = ShortcutUtil.readShorcutFile(filename)
+        actions = customShortcuts.keys()
+        for action in ShortcutUtil.data[source]:
+            if action not in actions:
+                ShortcutUtil.addActionToShortcutFile(filename, action, ShortcutUtil.data[source][action])
+
+    @staticmethod
+    def readShorcutFile(filename):
+        file = open(filename, "r")
+        lines = file.readlines()
+        data = {}
+        for line in lines:
+            line = line.strip()
+            if len(line) > 0:
+                values = line.split('=')
+                key = values[0].strip()
+                action = values[1].strip()
+                data[key] = action
+        return data
+
+    @staticmethod
+    def addActionToShortcutFile(filename, action, shortcut=""):
+        with open(filename, "a", encoding="utf-8") as fileObj:
+            print("Added {0} to {1}".format(action, filename))
+            fileObj.write('{0} = "{1}"\n'.format(action, shortcut))
+            fileObj.close()
+
+
 # Test code
 
 def print_info():
-    print("shortcut.py: {0}".format(FileUtil.getLineCount('shortcut.py')))
-    print("brachysData: {0}".format(len(ShortcutUtil.data['brachys'])))
-    print("micronData: {0}".format(len(ShortcutUtil.data['micron'])))
-    print("syntemnoData: {0}".format(len(ShortcutUtil.data['syntemno'])))
+    for name in ShortcutUtil.data.keys():
+        print("{0}: {1}".format(name, len(ShortcutUtil.data[name])))
+    for name in ShortcutUtil.getListCustomShortcuts():
+        print("{0}: {1}".format(name, len(ShortcutUtil.readShorcutFile("shortcut_"+name+".py").keys())))
 
+def print_compare(set1, set2):
+    if set1 in ShortcutUtil.data.keys():
+        keys1 = ShortcutUtil.data[set1].keys()
+    else:
+        keys1 = ShortcutUtil.readShorcutFile("shortcut_"+set1+".py").keys()
+    if set2 in ShortcutUtil.data.keys():
+        keys2 = ShortcutUtil.data[set2].keys()
+    else:
+        keys2 = ShortcutUtil.readShorcutFile("shortcut_"+set2+".py").keys()
+    for key in keys1:
+        if key not in keys2:
+            print(key + " not in " + set2)
+    for key in keys2:
+        if key not in keys1:
+            print(key + " not in " + set1)
 
-def print_data(name):
+def print_shortcuts(name):
     print(name)
     lines = []
-    for key in ShortcutUtil.data[name].keys():
-        lines.append(str(ShortcutUtil.data[name][key]) + " : " + key)
+    if name in ShortcutUtil.data.keys():
+        data = ShortcutUtil.data[name]
+    else:
+        data = ShortcutUtil.readShorcutFile("shortcut_"+name+".py")
+    for key in data.keys():
+        lines.append(str(data[key]) + " : " + key)
     lines.sort()
     print("\n".join(lines))
 
+def fix_custom(name):
+    ShortcutUtil.checkCustomShortcutFileValid("shortcut_"+name+".py")
 
-def test_brachys():
-    ShortcutUtil.setup("brachys")
-    print(ShortcutUtil.getAllShortcutsAsString())
-
-def test_micron():
-    ShortcutUtil.setup("micron")
-    print(ShortcutUtil.getAllShortcutsAsString())
-
-def test_syntemno():
-    ShortcutUtil.setup("syntemno")
-    print(ShortcutUtil.getAllShortcutsAsString())
-
-def test_custom(name):
-    ShortcutUtil.setup(name)
-    print(ShortcutUtil.getAllShortcutsAsString())
-
-def test_printAllShortcuts():
-    print(ShortcutUtil.getAllShortcutsAsString())
-
+# To use:
+# python -m util.ShortcutUtil <command> <shortcut1> <shortcut2>
+#
+# Examples:
+#   python -m util.ShortcutUtil print_info
+#   python -m util.ShortcutUtil print_shortcuts micron
+#   python -m util.ShortcutUtil fix_custom myshortcut
 
 if __name__ == "__main__":
-    # print_info()
-    # print_data("brachys")
-    # print_data("micron")
-    # print_data("syntemno")
-    test_micron()
-    # test_custom("test1")
+    if len(sys.argv) > 1:
+        try:
+            method = sys.argv[1].strip()
+            if len(sys.argv) == 2:
+                globals()[method]()
+            else:
+                name1 = sys.argv[2].strip()
+                if len(sys.argv) == 3:
+                    globals()[method](name1)
+                else:
+                    name2 = sys.argv[3].strip()
+                    globals()[method](name1, name2)
+            print("Done")
+        except Exception as e:
+            print("Error: " + str(e))
+    else:
+        pass
+        # print_info()
+        # print_compare("brachys", "syntemno")
+        # print_shortcuts("blank")
+        # print_shortcuts("brachys")
+        # print_shortcuts("micron")
+        # print_shortcuts("syntemno")
+        print_shortcuts("test1")
+        # fix_custom("test1")

@@ -38,7 +38,7 @@ from ToolsSqlite import LexiconData
 from util.MacroParser import MacroParser
 from util.NoteService import NoteService
 from util.ShortcutUtil import ShortcutUtil
-
+import shortcut as sc
 
 class MainWindow(QMainWindow):
 
@@ -2615,8 +2615,9 @@ class MainWindow(QMainWindow):
             for file in os.listdir(macros_dir):
                 if os.path.isfile(os.path.join(macros_dir, file)) and ".txt" in file:
                     action = QAction(file.replace(".txt", ""), self, triggered=partial(self.runMacro, file))
-                    action.setShortcuts(["Ctrl+M, " + str(count)])
                     if count < 10:
+                        if sc.loadRunMacro is not None and "Ctrl" in sc.loadRunMacro:
+                            action.setShortcuts([sc.loadRunMacro + ", " + str(count)])
                         run_macro_menu.addAction(action)
                         count += 1
 

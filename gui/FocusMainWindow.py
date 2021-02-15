@@ -67,6 +67,7 @@ class FocusMainWindow(MainWindow):
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
+            ("menu_blank", lambda: self.setShortcuts("blank")),
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
             ("menu_micron", lambda: self.setShortcuts("micron")),
             ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
