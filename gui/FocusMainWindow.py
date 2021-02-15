@@ -184,11 +184,11 @@ class FocusMainWindow(MainWindow):
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
             ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
-            ("menu2_subHeadings", self.enableSubheadingButtonClicked, None),
+            ("menu2_subHeadings", self.enableSubheadingButtonClicked, sc.enableSubheadingButtonClicked),
             ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
-            ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, None),
-            ("menu_syncStudyWindowBible", self.enableSyncStudyWindowBibleButtonClicked, None),
-            ("menu_syncBibleCommentary", self.enableSyncCommentaryButtonClicked, None),
+            ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),
+            ("menu_syncStudyWindowBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible),
+            ("menu_syncBibleCommentary", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -266,8 +266,12 @@ class FocusMainWindow(MainWindow):
         # information
         if config.showInformation:
             menu = addMenu(menuBar, "menu9_information")
-            menu.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
-            menu.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))
+            items = (
+                ("menu1_wikiPages", self.openUbaWiki, sc.ubaWiki),
+                ("menu_discussions", self.openUbaDiscussions, sc.ubaDiscussions),
+            )
+            for feature, action, shortcut in items:
+                addMenuItem(menu, feature, self, action, shortcut)
             menu.addSeparator()
             subMenu = addSubMenu(menu, "websites")
             items = (
