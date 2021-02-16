@@ -505,12 +505,12 @@ class TextCommandParser:
             "_paste": self.pasteFromClipboard,
             # [KEYWORD] _highlight
             # Feature - Highlight a verse
-            # Usage - _HIGHLIGHT:::[BIBLE_REFERENCE(S)]:::[code]
+            # Usage - _HIGHLIGHT:::[code]:::[BIBLE_REFERENCE(S)]
             # Examples:
-            # e.g. _HIGHLIGHT:::John 3:16:::hl1
-            # e.g. _HIGHLIGHT:::John 3:16:::hl2
-            # e.g. _HIGHLIGHT:::John 3:16:::ul1
-            # e.g. _HIGHLIGHT:::John 3:16:::delete
+            # e.g. _HIGHLIGHT:::hl1:::John 3:16
+            # e.g. _HIGHLIGHT:::hl2:::John 3:16
+            # e.g. _HIGHLIGHT:::ul1:::John 3:16
+            # e.g. _HIGHLIGHT:::delete:::John 3:16
             "_highlight": self.highlightVerse,
         }
         commandList = self.splitCommand(textCommand)
@@ -2259,8 +2259,8 @@ class TextCommandParser:
     def highlightVerse(self, command, source):
         hl = Highlight()
         if command.count(":::") == 0:
-            command = command.strip() + ":::delete"
-        reference, code = self.splitCommand(command)
+            command = "delete:::" + command.strip()
+        code, reference = self.splitCommand(command)
         verseList = self.extractAllVerses(reference)
         for b, c, v in verseList:
             #print("{0}:{1}:{2}:{3}".format(b, c, v, code))
@@ -2268,7 +2268,7 @@ class TextCommandParser:
                 hl.removeHighlight(b, c, v)
             else:
                 hl.highlightVerse(b, c, v, code)
-        return ("command", "", {})
+        return ("", "", {})
 
     def adjustDarkThemeColorsForExl(self, content):
         content = content.replace("#FFFFFF", "#555555")

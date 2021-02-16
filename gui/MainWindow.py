@@ -2717,7 +2717,7 @@ class MainWindow(QMainWindow):
                 parser = BibleVerseParser(config.standardAbbreviation)
                 for (b, c, v, code) in verses:
                     reference = parser.bcvToVerseReference(b, c, v)
-                    outfile.write("_HIGHLIGHT:::{0}:::{1}\n".format(reference, code))
+                    outfile.write("_HIGHLIGHT:::{0}:::{1}\n".format(code, reference))
                 outfile.write(". displayMessage Highlighted verses loaded\n")
                 outfile.close()
                 self.displayMessage("Highlighted verses saved to {0}".format(filename))

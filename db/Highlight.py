@@ -7,8 +7,7 @@ class Highlight:
 
     CREATE_HIGHLIGHT_TABLE = "CREATE TABLE IF NOT EXISTS Highlight (Book INT, Chapter INT, Verse INT, Code NVARCHAR(5))"
 
-    codes = {"yellow": "hl1", "hl1": "hl1",
-             "blue": "hl2", "hl2": "hl2",
+    codes = {"hl1": "hl1", "hl2": "hl2", "hl3": "hl3", "hl4": "hl4", "hl5": "hl5", "hl6": "hl6", "hl7": "hl7", "hl8": "hl8", "hl9": "hl9", "hl10": "hl10",
              "underline": "ul1", "ul1": "ul1"}
 
     def __init__(self):
@@ -50,6 +49,11 @@ class Highlight:
         query = "SELECT Verse, Code FROM Highlight WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, (b, c))
         return {verse: code for verse, code in self.cursor.fetchall()}
+
+    def isHighlighted(self, b, c, v):
+        query = "SELECT Code FROM Highlight WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
+        return self.cursor.fetchone()
 
     def getHighlightedVerses(self, where=""):
         query = "SELECT Book, Chapter, Verse, Code FROM Highlight {0} ORDER BY Book, Chapter, Verse".format(where)

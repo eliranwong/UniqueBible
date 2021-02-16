@@ -1,11 +1,12 @@
 if not __name__ == "__main__":
     import config
 from functools import partial
-from PySide2.QtGui import QPalette, QColor
+from PySide2.QtGui import QColor
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtWidgets import QRadioButton, QComboBox, QHBoxLayout, QVBoxLayout, QLabel, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
+from db.Highlight import Highlight
 
 class HighlightLauncher(QWidget):
 
@@ -28,10 +29,17 @@ class HighlightLauncher(QWidget):
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
     def setupUI(self):
+        codes = Highlight().isHighlighted(self.parent.parent.bibleTab.b, self.parent.parent.bibleTab.b, self.parent.parent.bibleTab.b)
+        initialCode = None
+        if codes:
+            initialCode = codes[0]
+
         layout = QVBoxLayout()
         
         subLayout = QHBoxLayout()
         radioButton = QRadioButton()
+        radioButton.toggled.connect(self.highlightOptionChanged)
+        radioButton.setToolTip(config.thisTranslation["selectRemoveHighlight"])
         subLayout.addWidget(radioButton)
         subLayout.addWidget(QLabel(config.thisTranslation["noHightlight"]))
         layout.addLayout(subLayout)
@@ -45,6 +53,10 @@ class HighlightLauncher(QWidget):
             
             radioButton = QRadioButton()
             radioButton.setFixedWidth(20)
+            radioButton.toggled.connect(lambda checked, option=index: self.highlightOptionChanged(checked, option))
+            if initialCode is not None and int(initialCode[-1]) - 1 == index:
+                radioButton.setChecked(True)
+            radioButton.setToolTip(config.thisTranslation["selectApplyHighlight"])
             subLayout.addWidget(radioButton)
 
             button.setText("collection" if __name__ == "__main__" else config.highlightCollections[index])
@@ -62,11 +74,32 @@ class HighlightLauncher(QWidget):
             combo = QComboBox()
             combo.addItems(self.searchList)
             combo.setFixedWidth(100)
-            #combo.currentIndexChanged.connect(self.searchHighlight)
+            combo.currentIndexChanged.connect(lambda selectedIndex, index=index: self.searchHighlight(selectedIndex, index))
             subLayout.addWidget(combo)
             layout.addLayout(subLayout)
 
         self.setLayout(layout)
+
+    def highlightOptionChanged(self, checked, option=None):
+        if checked:
+            if option is None:
+                code = "delete"
+            else:
+                code = "hl{0}".format(option + 1)
+            command = "_HIGHLIGHT:::{0}:::{1}".format(code, self.parent.parent.bibleTab.getSelectedReference())
+            self.parent.parent.parent.reloadCurrentRecord()
+            self.parent.parent.runTextCommand(command)
+
+    def searchHighlight(self, selectedIndex, code):
+        if selectedIndex != 0:
+            scopes = {
+                1: "all",
+                2: "ot",
+                3: "nt",
+            }
+            scope = scopes.get(selectedIndex, self.searchList[selectedIndex])
+            command = "SEARCHHIGHLIGHT:::hl{0}:::{1}".format(code + 1, scope)
+            self.parent.parent.runTextCommand(command)
 
     def rename(self, index):
         newName, ok = QInputDialog.getText(self, "QInputDialog.getText()",
@@ -87,8 +120,6 @@ class HighlightLauncher(QWidget):
             button = self.collectionColourButtons[index]
             buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1}".format("{", "}", colorName, "white" if config.theme == "dark" else "black")
             button.setStyleSheet(buttonStyle)
-            return (color.name(), QPalette(color))
-        return ()
 
 if __name__ == "__main__":
     import sys

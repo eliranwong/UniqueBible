@@ -813,5 +813,5 @@ function hiV(b,c,v,code) {
         divEl.className = code;
     }
     verseReference = bcvToVerseRefence(b,c,v);
-    document.title = "_HIGHLIGHT:::"+verseReference+":::"+code;
+    document.title = "_HIGHLIGHT:::"+code+":::"+verseReference;
 }
