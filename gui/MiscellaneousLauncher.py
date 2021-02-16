@@ -19,7 +19,7 @@ class MiscellaneousLauncher(QWidget):
     def setupUI(self):
         mainLayout = QHBoxLayout()
         mainLayout.addWidget(HighlightLauncher(self))
-        mainLayout.addWidget(QLabel("testing"))
+        mainLayout.addWidget(QLabel(""))
         self.setLayout(mainLayout)
 
 

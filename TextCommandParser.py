@@ -1,6 +1,7 @@
 # coding=utf-8
 import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
 from BibleVerseParser import BibleVerseParser
+from BibleBooks import BibleBooks
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
 from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
 from ThirdParty import ThirdPartyDictionary
@@ -1556,12 +1557,39 @@ class TextCommandParser:
         else:
             return self.invalidCommand()
 
+    # mapping verse action
+    def mapVerseAction(self, keyword, verseReference, source):
+        actionMap = {
+            "COMPARE": self.textCompare,
+            "CROSSREFERENCE": self.textCrossReference,
+            "TSKE": self.tske,
+            "TRANSLATION": self.textTranslation,
+            "DISCOURSE": self.textDiscourse,
+            "WORDS": self.textWords,
+            "COMBO": self.textCombo,
+            "INDEX": self.textIndex,
+            "COMMENTARY": self.textCommentary,
+        }
+        return actionMap[keyword](verseReference, source)
+
     # _menu:::
     def textMenu(self, command, source):
-        biblesSqlite = BiblesSqlite()
-        menu = biblesSqlite.getMenu(command, source)
-        del biblesSqlite
-        return (source, menu, {})
+        if config.verseNoDoubleClickAction == "none":
+            return ("", "", {})
+        elif command.count(".") != 3 or config.verseNoDoubleClickAction == "_menu":
+            biblesSqlite = BiblesSqlite()
+            menu = biblesSqlite.getMenu(command, source)
+            del biblesSqlite
+            return (source, menu, {})
+        elif config.verseNoDoubleClickAction.startswith("_cp"):
+            index = int(config.verseNoDoubleClickAction[-1])
+            text, b, c, v = command.split(".")
+            self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
+            return ("", "", {})
+        else:
+            text, b, c, v = command.split(".")
+            verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
+            return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _commentary:::
     def textCommentaryMenu(self, command, source):

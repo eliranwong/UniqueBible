@@ -179,6 +179,14 @@ class FocusMainWindow(MainWindow):
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
+        subMenu = addSubMenu(menu, "verseNoAction")
+        items = (
+            ("singleClick", self.selectSingleClickActionDialog),
+            ("doubleClick", self.selectDoubleClickActionDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
             ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),

@@ -2587,6 +2587,28 @@ class MainWindow(QMainWindow):
                 self.displayMessage("{0}  'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
                                                                      config.thisTranslation["message_installFirst"]))
 
+    # Set verse number single-click action (config.verseNoSingleClickAction)
+    def selectSingleClickActionDialog(self):
+        values = ("_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu")
+        features = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu"]
+        items = [config.thisTranslation[feature] for feature in features]
+        itemsDict = dict(zip(items, values))
+        
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], items, values.index(config.verseNoSingleClickAction), False)
+        if ok and item:
+            config.verseNoSingleClickAction = itemsDict[item]
+
+    # Set verse number double-click action (config.verseNoDoubleClickAction)
+    def selectDoubleClickActionDialog(self):
+        values = ("_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu")
+        features = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu"]
+        items = [config.thisTranslation[feature] for feature in features]
+        itemsDict = dict(zip(items, values))
+        
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], items, values.index(config.verseNoDoubleClickAction), False)
+        if ok and item:
+            config.verseNoDoubleClickAction = itemsDict[item]
+
     # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
     def openSelectDefaultStrongsGreekLexiconDialog(self):
         items = LexiconData().lexiconList

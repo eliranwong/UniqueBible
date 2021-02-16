@@ -61,7 +61,7 @@ class HighlightLauncher(QWidget):
             subLayout.addWidget(button)
             combo = QComboBox()
             combo.addItems(self.searchList)
-            combo.setFixedWidth(90)
+            combo.setFixedWidth(100)
             #combo.currentIndexChanged.connect(self.searchHighlight)
             subLayout.addWidget(combo)
             layout.addLayout(subLayout)

@@ -23,7 +23,7 @@ class ConfigUtil:
 
         # Default settings for configurations:
 
-        # Personal google api key for display of google maps
+        # Developer option
         if not hasattr(config, "developer"):
             config.developer = False
         # Personal google api key for display of google maps
@@ -48,6 +48,13 @@ class ConfigUtil:
             config.addBreakAfterTheFirstToolBar = True
         if not hasattr(config, "addBreakBeforeTheLastToolBar"):
             config.addBreakBeforeTheLastToolBar = False
+        # Configure verse number single-click & double-click action
+        # available options: "_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu"
+        # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu"
+        if not hasattr(config, "verseNoSingleClickAction"):
+            config.verseNoSingleClickAction = "_cp0"
+        if not hasattr(config, "verseNoDoubleClickAction"):
+            config.verseNoDoubleClickAction = "INDEX"
         # Start full-screen on Linux os
         if not hasattr(config, "linuxStartFullScreen"):
             # Check if UniqueBible.app is running on Chrome OS:
@@ -606,6 +613,8 @@ class ConfigUtil:
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("bookOnNewWindow", config.bookOnNewWindow),
+            ("verseNoSingleClickAction", config.verseNoSingleClickAction),
+            ("verseNoDoubleClickAction", config.verseNoDoubleClickAction),
             ("overwriteBookFont", config.overwriteBookFont),
             ("overwriteBookFontSize", config.overwriteBookFontSize),
             ("overwriteNoteFont", config.overwriteNoteFont),
