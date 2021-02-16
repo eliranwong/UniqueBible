@@ -409,6 +409,10 @@ class TextCommandParser:
             # [KEYWORD] _instantword
             # e.g. _instantWord:::1:::h2
             "_instantword": self.instantWord,
+            # [KEYWORD] _vnsc
+            # verse number single-click action
+            # e.g. _vnsc:::KJV.43.3.16.John 3:16
+            "_vnsc": self.verseNoSingleClick,
             # [KEYWORD] _menu
             # e.g. _menu:::
             "_menu": self.textMenu,
@@ -1572,8 +1576,26 @@ class TextCommandParser:
         }
         return actionMap[keyword](verseReference, source)
 
+    # _vnsc:::
+    def verseNoSingleClick(self, command, source):
+        print(0)
+        if command.count(".") != 4:
+            return self.invalidCommand()
+        else:
+            text, b, c, v, verseReference = command.split(".")
+            if config.verseNoSingleClickAction.startswith("_cp"):
+                index = int(config.verseNoSingleClickAction[-1])
+                text, b, c, v = command.split(".")
+                self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
+                return ("", "", {})
+            else:
+                return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
+
     # _menu:::
     def textMenu(self, command, source):
+        # Before version 21.33, _menu::: opens a classic html menu only
+        # From version 21.33, _menu::: open an action users assign to config.verseNoDoubleClickAction
+        # may change the keyword to _vndc::: later
         if config.verseNoDoubleClickAction == "none":
             return ("", "", {})
         elif command.count(".") != 3 or config.verseNoDoubleClickAction == "_menu":
