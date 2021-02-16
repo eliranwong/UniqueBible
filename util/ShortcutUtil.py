@@ -466,11 +466,9 @@ class ShortcutUtil:
                 filename = "shortcut_" + name + ".py"
                 if not path.exists(filename):
                     name = "micron"
-                # elif FileUtil.getLineCount("shortcut.py") < 2 \
-                #         or FileUtil.getLineCount(filename) != len(ShortcutUtil.data['micron']):
                 else:
                     from shutil import copyfile
-                    ShortcutUtil.checkCustomShortcutFileValid(filename)
+                    ShortcutUtil.checkCustomShortcutFileValid(name)
                     copyfile(filename, "shortcut.py")
         except Exception as e:
             name = "micron"
@@ -481,7 +479,6 @@ class ShortcutUtil:
 
     @staticmethod
     def create(data):
-        # if not path.exists("shortcut.py") or FileUtil.getLineCount("shortcut.py") != len(data):
         with open("shortcut.py", "w", encoding="utf-8") as fileObj:
             for name in data.keys():
                 value = data[name]
@@ -512,7 +509,9 @@ class ShortcutUtil:
         lines = []
         for key in sc.__dict__.keys():
             if key[:1] != '_':
-                lines.append((str(sc.__dict__[key]), (key)))
+                short = str(sc.__dict__[key])
+                short = short.replace("\\\\", "\\")
+                lines.append((short, key))
         lines.sort()
         return lines
 
@@ -524,15 +523,19 @@ class ShortcutUtil:
         return str
 
     @staticmethod
-    def checkCustomShortcutFileValid(filename, source="micron"):
-        customShortcuts = ShortcutUtil.readShorcutFile(filename)
+    def checkCustomShortcutFileValid(name, source="micron"):
+        customShortcuts = ShortcutUtil.readShorcutFile(name)
         actions = customShortcuts.keys()
         for action in ShortcutUtil.data[source]:
             if action not in actions:
-                ShortcutUtil.addActionToShortcutFile(filename, action, ShortcutUtil.data[source][action])
+                ShortcutUtil.addActionToShortcutFile(name, action, ShortcutUtil.data[source][action])
 
     @staticmethod
-    def readShorcutFile(filename):
+    def readShorcutFile(name=None):
+        if name is None or name in ShortcutUtil.data.keys():
+            filename = "shortcut.py"
+        else:
+            filename = "shortcut_" + name + ".py"
         file = open(filename, "r")
         lines = file.readlines()
         data = {}
@@ -546,12 +549,29 @@ class ShortcutUtil:
         return data
 
     @staticmethod
-    def addActionToShortcutFile(filename, action, shortcut=""):
+    def loadShortcutFile(name=None):
+        import shortcut
+        customShortcuts = ShortcutUtil.readShorcutFile(name)
+        for key in customShortcuts.keys():
+            action = customShortcuts[key]
+            setattr(shortcut, key, action[1:-1])
+
+    @staticmethod
+    def addActionToShortcutFile(name, action, shortcut=""):
+        filename = "shortcut_" + name + ".py"
         with open(filename, "a", encoding="utf-8") as fileObj:
             print("Added {0} to {1}".format(action, filename))
             fileObj.write('{0} = "{1}"\n'.format(action, shortcut))
             fileObj.close()
 
+    @staticmethod
+    def createShortcutFile(name, shortcuts):
+        shortcuts.sort(key=lambda x: x[1])
+        with open("shortcut_"+name+".py", "w", encoding="utf-8") as fileObj:
+            for key, value in shortcuts:
+                key = key.replace("\\\\", "\\")
+                fileObj.write("{0} = {1}\n".format(value, pprint.pformat(key)))
+            fileObj.close()
 
 # Test code
 
@@ -559,17 +579,17 @@ def print_info():
     for name in ShortcutUtil.data.keys():
         print("{0}: {1}".format(name, len(ShortcutUtil.data[name])))
     for name in ShortcutUtil.getListCustomShortcuts():
-        print("{0}: {1}".format(name, len(ShortcutUtil.readShorcutFile("shortcut_"+name+".py").keys())))
+        print("{0}: {1}".format(name, len(ShortcutUtil.readShorcutFile(name).keys())))
 
 def print_compare(set1, set2):
     if set1 in ShortcutUtil.data.keys():
         keys1 = ShortcutUtil.data[set1].keys()
     else:
-        keys1 = ShortcutUtil.readShorcutFile("shortcut_"+set1+".py").keys()
+        keys1 = ShortcutUtil.readShorcutFile(set1).keys()
     if set2 in ShortcutUtil.data.keys():
         keys2 = ShortcutUtil.data[set2].keys()
     else:
-        keys2 = ShortcutUtil.readShorcutFile("shortcut_"+set2+".py").keys()
+        keys2 = ShortcutUtil.readShorcutFile(set2).keys()
     for key in keys1:
         if key not in keys2:
             print(key + " not in " + set2)
@@ -583,14 +603,14 @@ def print_shortcuts(name):
     if name in ShortcutUtil.data.keys():
         data = ShortcutUtil.data[name]
     else:
-        data = ShortcutUtil.readShorcutFile("shortcut_"+name+".py")
+        data = ShortcutUtil.readShorcutFile(name)
     for key in data.keys():
         lines.append(str(data[key]) + " : " + key)
     lines.sort()
     print("\n".join(lines))
 
 def fix_custom(name):
-    ShortcutUtil.checkCustomShortcutFileValid("shortcut_"+name+".py")
+    ShortcutUtil.checkCustomShortcutFileValid(name)
 
 # To use:
 # python -m util.ShortcutUtil <command> <shortcut1> <shortcut2>
@@ -619,10 +639,12 @@ if __name__ == "__main__":
     else:
         pass
         # print_info()
-        # print_compare("brachys", "syntemno")
+        # print_compare("brachys", "test1")
         # print_shortcuts("blank")
         # print_shortcuts("brachys")
         # print_shortcuts("micron")
         # print_shortcuts("syntemno")
-        print_shortcuts("test1")
+        # print_shortcuts("test1")
         # fix_custom("test1")
+
+    ShortcutUtil.loadShortcutFile("test1")

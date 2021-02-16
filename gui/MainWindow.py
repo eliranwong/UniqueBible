@@ -40,6 +40,7 @@ from util.NoteService import NoteService
 from util.ShortcutUtil import ShortcutUtil
 import shortcut as sc
 
+
 class MainWindow(QMainWindow):
 
     def __init__(self):
@@ -169,7 +170,8 @@ class MainWindow(QMainWindow):
                     languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
                 except:
                     print("Failed to update 'myTranslation.py'.")
-                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_newInterfaceItems"], config.thisTranslation["message_improveTrans"]))
+                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_newInterfaceItems"],
+                                                                  config.thisTranslation["message_improveTrans"]))
         elif config.userLanguageInterface and hasattr(config, "translationLanguage"):
             languageCode = languages.codes[config.translationLanguage]
             if languageCode in translations:
@@ -185,16 +187,21 @@ class MainWindow(QMainWindow):
     def translateInterface(self):
         if config.googletransSupport:
             if not config.userLanguage:
-                self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
+                self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"],
+                                                      config.thisTranslation["message_setLanguage"]))
             else:
                 if Languages().translateInterface(config.userLanguage):
                     config.userLanguageInterface = True
-                    self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
+                    self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"],
+                                                                      config.thisTranslation["message_improveTrans"]))
                 else:
                     config.userLanguageInterface = False
-                    self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
+                    self.displayMessage(
+                        "'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(
+                            config.userLanguage))
         else:
-            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
+            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
+                                                                config.thisTranslation["message_installFirst"]))
 
     def isMyTranslationAvailable(self):
         if hasattr(myTranslation, "translation") and hasattr(myTranslation, "translationLanguage"):
@@ -210,7 +217,8 @@ class MainWindow(QMainWindow):
 
     def toogleInterfaceTranslation(self):
         if not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable():
-            self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_translateFirst"]))
+            self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"],
+                                                  config.thisTranslation["message_translateFirst"]))
         else:
             config.userLanguageInterface = not config.userLanguageInterface
             self.displayMessage(config.thisTranslation["message_restart"])
@@ -247,7 +255,7 @@ class MainWindow(QMainWindow):
             text = config.mainText
 
         if self.textCommandParser.isDatabaseInstalled("bible"):
-            #self.controlPanel.tabs.setCurrentIndex(index)
+            # self.controlPanel.tabs.setCurrentIndex(index)
             self.manageControlPanel(True, index, b, c, v, text)
         else:
             self.textCommandParser.databaseNotInstalled("bible")
@@ -294,7 +302,7 @@ class MainWindow(QMainWindow):
                 elif textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
                 config.controlPanel = True
-            #elif self.controlPanel:
+            # elif self.controlPanel:
             #        self.controlPanel.close()
             #        config.controlPanel = False
         else:
@@ -307,7 +315,7 @@ class MainWindow(QMainWindow):
                 self.remoteControl.searchLineEdit.setText(textCommandText)
             self.remoteControl.raise_()
             # The following line does not work on Chrome OS
-            #self.remoteControl.activateWindow()
+            # self.remoteControl.activateWindow()
             # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
             # Therefore, we use hide and show instead.
             self.remoteControl.hide()
@@ -322,8 +330,8 @@ class MainWindow(QMainWindow):
                 self.remoteControl.searchLineEdit.setText(textCommandText)
             config.remoteControl = True
         elif self.remoteControl:
-                self.remoteControl.close()
-                config.remoteControl = False
+            self.remoteControl.close()
+            config.remoteControl = False
 
     def closeEvent(self, event):
         if self.noteEditor:
@@ -349,7 +357,8 @@ class MainWindow(QMainWindow):
             biblesSqlite = BiblesSqlite()
             biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
             if biblesWithBothVersions:
-                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"], config.thisTranslation["message_willBeNoticed"]))
+                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_migration"],
+                                                      config.thisTranslation["message_willBeNoticed"]))
                 biblesSqlite.proceedMigration(biblesWithBothVersions)
                 self.displayMessage(config.thisTranslation["message_done"])
             if config.migrateDatabaseBibleNameToDetailsTable:
@@ -381,7 +390,7 @@ class MainWindow(QMainWindow):
     # manage main page
     def setMainPage(self):
         # main page changes as tab is changed.
-        #print(self.mainView.currentIndex())
+        # print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
         if config.theme == "dark":
             self.mainPage.setBackgroundColor(Qt.transparent)
@@ -391,7 +400,7 @@ class MainWindow(QMainWindow):
         if tabIndex != None:
             self.studyView.setCurrentIndex(tabIndex)
         # study page changes as tab is changed.
-        #print(self.studyView.currentIndex())
+        # print(self.studyView.currentIndex())
         self.studyPage = self.studyView.currentWidget().page()
         if config.theme == "dark":
             self.studyPage.setBackgroundColor(Qt.transparent)
@@ -426,7 +435,11 @@ class MainWindow(QMainWindow):
                 abb = filename[:-6]
                 if os.path.isfile(os.path.join(*self.bibleInfo[abb][0])):
                     if self.isNewerAvailable(filename):
-                        self.displayMessage("{1} {0}.  {2} '{3} > {4}'".format(filename, config.thisTranslation["message_newerFile"], config.thisTranslation["message_installFrom"], config.thisTranslation["menu8_resources"], config.thisTranslation["menu8_bibles"]))
+                        self.displayMessage(
+                            "{1} {0}.  {2} '{3} > {4}'".format(filename, config.thisTranslation["message_newerFile"],
+                                                               config.thisTranslation["message_installFrom"],
+                                                               config.thisTranslation["menu8_resources"],
+                                                               config.thisTranslation["menu8_bibles"]))
 
     def isNewerAvailable(self, filename):
         abb = filename[:-6]
@@ -441,7 +454,8 @@ class MainWindow(QMainWindow):
 
     def promptUpdate(self, latestVersion):
         reply = QMessageBox.question(self, "Update is available ...",
-                                     "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(latestVersion, config.version),
+                                     "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(
+                                         latestVersion, config.version),
                                      QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.updateUniqueBibleApp()
@@ -468,10 +482,12 @@ class MainWindow(QMainWindow):
                     self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_fail"], line))
         # set executable files on macOS or Linux
         if not platform.system() == "Windows":
-            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
-                os.chmod(filename, 0o755)        
-        # finish message
-        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh",
+                             "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
+                os.chmod(filename, 0o755)
+                # finish message
+        self.displayMessage(
+            "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
         self.openExternalFile("latest_changes.txt")
 
     # old way to do the update, all content will be downloaded to overwrite all current files
@@ -499,7 +515,8 @@ class MainWindow(QMainWindow):
                     print("Failed to overwrite files.")
                 # set executable files on macOS or Linux
                 if not platform.system() == "Windows":
-                    for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh", "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
+                    for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh",
+                                     "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
                         os.chmod(filename, 0o755)
                 # remove download files after upgrade
                 if config.removeBackup:
@@ -508,7 +525,8 @@ class MainWindow(QMainWindow):
                     except:
                         print("Failed to remove downloaded files.")
                 # prompt a restart
-                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+                self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"],
+                                                      config.thisTranslation["message_restart"]))
                 self.openExternalFile("latest_changes.txt")
             else:
                 self.displayMessage(config.thisTranslation["message_fail"])
@@ -539,7 +557,8 @@ class MainWindow(QMainWindow):
             scale = 2
             # get method of requests module
             # return response object
-            fullUrl =  "{0}center={1},{2}&zoom={3}&size={4}&key={5}&scale={6}&markers=color:red%7Clabel:{7}%7C{1},{2}".format(url, lat, lng, zoom, size, config.myGoogleApiKey, scale, location[0])
+            fullUrl = "{0}center={1},{2}&zoom={3}&size={4}&key={5}&scale={6}&markers=color:red%7Clabel:{7}%7C{1},{2}".format(
+                url, lat, lng, zoom, size, config.myGoogleApiKey, scale, location[0])
             r = requests.get(fullUrl)
             # wb mode is stand for write binary mode
             filepath = os.path.join("htmlResources", "images", "exlbl_largeHD", "{0}.png".format(entry))
@@ -564,7 +583,9 @@ class MainWindow(QMainWindow):
 
     # install marvel data
     def installMarvelBibles(self):
-        items = [self.bibleInfo[bible][-1] for bible in self.bibleInfo.keys() if not os.path.isfile(os.path.join(*self.bibleInfo[bible][0])) or self.isNewerAvailable(self.bibleInfo[bible][0][-1])]
+        items = [self.bibleInfo[bible][-1] for bible in self.bibleInfo.keys() if
+                 not os.path.isfile(os.path.join(*self.bibleInfo[bible][0])) or self.isNewerAvailable(
+                     self.bibleInfo[bible][0][-1])]
         if not items:
             items = ["[All Installed]"]
         item, ok = QInputDialog.getItem(self, "UniqueBible",
@@ -575,41 +596,71 @@ class MainWindow(QMainWindow):
                     self.downloadHelper(self.bibleInfo[key])
                     break
 
-
     def installMarvelCommentaries(self):
         commentaries = {
-            "Notes on the Old and New Testaments (Barnes) [26 vol.]": ((config.marvelData, "commentaries", "cBarnes.commentary"), "13uxButnFH2NRUV-YuyRZYCeh1GzWqO5J"),
-            "Commentary on the Old and New Testaments (Benson) [5 vol.]": ((config.marvelData, "commentaries", "cBenson.commentary"), "1MSRUHGDilogk7_iZHVH5GWkPyf8edgjr"),
-            "Biblical Illustrator (Exell) [58 vol.]": ((config.marvelData, "commentaries", "cBI.commentary"), "1DUATP_0M7SwBqsjf20YvUDblg3_sOt2F"),
-            "Complete Summary of the Bible (Brooks) [2 vol.]": ((config.marvelData, "commentaries", "cBrooks.commentary"), "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm"),
-            "John Calvin's Commentaries (Calvin) [22 vol.]": ((config.marvelData, "commentaries", "cCalvin.commentary"), "1FUZGK9n54aXvqMAi3-2OZDtRSz9iZh-j"),
-            "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]": ((config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
-            "Critical And Exegetical Commentary on the NT (Meyer) [20 vol.]": ((config.marvelData, "commentaries", "cCECNT.commentary"), "1MpBx7z6xyJYISpW_7Dq-Uwv0rP8_Mi-r"),
-            "Cambridge Greek Testament for Schools and Colleges (Cambridge) [21 vol.]": ((config.marvelData, "commentaries", "cCGrk.commentary"), "1Jf51O0R911Il0V_SlacLQDNPaRjumsbD"),
-            "Church Pulpit Commentary (Nisbet) [12 vol.]": ((config.marvelData, "commentaries", "cCHP.commentary"), "1dygf2mz6KN_ryDziNJEu47-OhH8jK_ff"),
-            "Commentary on the Bible (Clarke) [6 vol.]": ((config.marvelData, "commentaries", "cClarke.commentary"), "1ZVpLAnlSmBaT10e5O7pljfziLUpyU4Dq"),
-            "College Press Bible Study Textbook Series (College) [59 vol.]": ((config.marvelData, "commentaries", "cCPBST.commentary"), "14zueTf0ioI-AKRo_8GK8PDRKael_kB1U"),
-            "Expositor's Bible Commentary (Nicoll) [49 vol.]": ((config.marvelData, "commentaries", "cEBC.commentary"), "1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r"),
-            "Commentary for English Readers (Ellicott) [8 vol.]": ((config.marvelData, "commentaries", "cECER.commentary"), "1sCJc5xuxqDDlmgSn2SFWTRbXnHSKXeh_"),
-            "Expositor's Greek New Testament (Nicoll) [5 vol.]": ((config.marvelData, "commentaries", "cEGNT.commentary"), "1ZvbWnuy2wwllt-s56FUfB2bS2_rZoiPx"),
-            "Greek Testament Commentary (Alford) [4 vol.]": ((config.marvelData, "commentaries", "cGCT.commentary"), "1vK53UO2rggdcfcDjH6mWXAdYti4UbzUt"),
-            "Exposition of the Entire Bible (Gill) [9 vol.]": ((config.marvelData, "commentaries", "cGill.commentary"), "1O5jnHLsmoobkCypy9zJC-Sw_Ob-3pQ2t"),
-            "Exposition of the Old and New Testaments (Henry) [6 vol.]": ((config.marvelData, "commentaries", "cHenry.commentary"), "1m-8cM8uZPN-fLVcC-a9mhL3VXoYJ5Ku9"),
-            "Horæ Homileticæ (Simeon) [21 vol.]": ((config.marvelData, "commentaries", "cHH.commentary"), "1RwKN1igd1RbN7phiJDiLPhqLXdgOR0Ms"),
-            "International Critical Commentary, NT (1896-1929) [16 vol.]": ((config.marvelData, "commentaries", "cICCNT.commentary"), "1QxrzeeZYc0-GNwqwdDe91H4j1hGSOG6t"),
-            "Jamieson, Fausset, and Brown Commentary (JFB) [6 vol.]": ((config.marvelData, "commentaries", "cJFB.commentary"), "1NT02QxoLeY3Cj0uA_5142P5s64RkRlpO"),
-            "Commentary on the Old Testament (Keil & Delitzsch) [10 vol.]": ((config.marvelData, "commentaries", "cKD.commentary"), "1rFFDrdDMjImEwXkHkbh7-vX3g4kKUuGV"),
-            "Commentary on the Holy Scriptures: Critical, Doctrinal, and Homiletical (Lange) [25 vol.]": ((config.marvelData, "commentaries", "cLange.commentary"), "1_PrTT71aQN5LJhbwabx-kjrA0vg-nvYY"),
-            "Expositions of Holy Scripture (MacLaren) [32 vol.]": ((config.marvelData, "commentaries", "cMacL.commentary"), "1p32F9MmQ2wigtUMdCU-biSrRZWrFLWJR"),
-            "Preacher's Complete Homiletical Commentary (Exell) [37 vol.]": ((config.marvelData, "commentaries", "cPHC.commentary"), "1xTkY_YFyasN7Ks9me3uED1HpQnuYI8BW"),
-            "Pulpit Commentary (Spence) [23 vol.]": ((config.marvelData, "commentaries", "cPulpit.commentary"), "1briSh0oDhUX7QnW1g9oM3c4VWiThkWBG"),
-            "Word Pictures in the New Testament (Robertson) [6 vol.]": ((config.marvelData, "commentaries", "cRob.commentary"), "17VfPe4wsnEzSbxL5Madcyi_ubu3iYVkx"),
-            "Spurgeon's Expositions on the Bible (Spurgeon) [3 vol.]": ((config.marvelData, "commentaries", "cSpur.commentary"), "1OVsqgHVAc_9wJBCcz6PjsNK5v9GfeNwp"),
-            "Word Studies in the New Testament (Vincent) [4 vol.]": ((config.marvelData, "commentaries", "cVincent.commentary"), "1ZZNnCo5cSfUzjdEaEvZ8TcbYa4OKUsox"),
-            "John Wesley's Notes on the Whole Bible (Wesley) [3 vol.]": ((config.marvelData, "commentaries", "cWesley.commentary"), "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5"),
-            "Commentary on the Old and New Testaments (Whedon) [14 vol.]": ((config.marvelData, "commentaries", "cWhedon.commentary"), "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9"),
+            "Notes on the Old and New Testaments (Barnes) [26 vol.]": (
+            (config.marvelData, "commentaries", "cBarnes.commentary"), "13uxButnFH2NRUV-YuyRZYCeh1GzWqO5J"),
+            "Commentary on the Old and New Testaments (Benson) [5 vol.]": (
+            (config.marvelData, "commentaries", "cBenson.commentary"), "1MSRUHGDilogk7_iZHVH5GWkPyf8edgjr"),
+            "Biblical Illustrator (Exell) [58 vol.]": (
+            (config.marvelData, "commentaries", "cBI.commentary"), "1DUATP_0M7SwBqsjf20YvUDblg3_sOt2F"),
+            "Complete Summary of the Bible (Brooks) [2 vol.]": (
+            (config.marvelData, "commentaries", "cBrooks.commentary"), "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm"),
+            "John Calvin's Commentaries (Calvin) [22 vol.]": (
+            (config.marvelData, "commentaries", "cCalvin.commentary"), "1FUZGK9n54aXvqMAi3-2OZDtRSz9iZh-j"),
+            "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]": (
+            (config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
+            "Critical And Exegetical Commentary on the NT (Meyer) [20 vol.]": (
+            (config.marvelData, "commentaries", "cCECNT.commentary"), "1MpBx7z6xyJYISpW_7Dq-Uwv0rP8_Mi-r"),
+            "Cambridge Greek Testament for Schools and Colleges (Cambridge) [21 vol.]": (
+            (config.marvelData, "commentaries", "cCGrk.commentary"), "1Jf51O0R911Il0V_SlacLQDNPaRjumsbD"),
+            "Church Pulpit Commentary (Nisbet) [12 vol.]": (
+            (config.marvelData, "commentaries", "cCHP.commentary"), "1dygf2mz6KN_ryDziNJEu47-OhH8jK_ff"),
+            "Commentary on the Bible (Clarke) [6 vol.]": (
+            (config.marvelData, "commentaries", "cClarke.commentary"), "1ZVpLAnlSmBaT10e5O7pljfziLUpyU4Dq"),
+            "College Press Bible Study Textbook Series (College) [59 vol.]": (
+            (config.marvelData, "commentaries", "cCPBST.commentary"), "14zueTf0ioI-AKRo_8GK8PDRKael_kB1U"),
+            "Expositor's Bible Commentary (Nicoll) [49 vol.]": (
+            (config.marvelData, "commentaries", "cEBC.commentary"), "1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r"),
+            "Commentary for English Readers (Ellicott) [8 vol.]": (
+            (config.marvelData, "commentaries", "cECER.commentary"), "1sCJc5xuxqDDlmgSn2SFWTRbXnHSKXeh_"),
+            "Expositor's Greek New Testament (Nicoll) [5 vol.]": (
+            (config.marvelData, "commentaries", "cEGNT.commentary"), "1ZvbWnuy2wwllt-s56FUfB2bS2_rZoiPx"),
+            "Greek Testament Commentary (Alford) [4 vol.]": (
+            (config.marvelData, "commentaries", "cGCT.commentary"), "1vK53UO2rggdcfcDjH6mWXAdYti4UbzUt"),
+            "Exposition of the Entire Bible (Gill) [9 vol.]": (
+            (config.marvelData, "commentaries", "cGill.commentary"), "1O5jnHLsmoobkCypy9zJC-Sw_Ob-3pQ2t"),
+            "Exposition of the Old and New Testaments (Henry) [6 vol.]": (
+            (config.marvelData, "commentaries", "cHenry.commentary"), "1m-8cM8uZPN-fLVcC-a9mhL3VXoYJ5Ku9"),
+            "Horæ Homileticæ (Simeon) [21 vol.]": (
+            (config.marvelData, "commentaries", "cHH.commentary"), "1RwKN1igd1RbN7phiJDiLPhqLXdgOR0Ms"),
+            "International Critical Commentary, NT (1896-1929) [16 vol.]": (
+            (config.marvelData, "commentaries", "cICCNT.commentary"), "1QxrzeeZYc0-GNwqwdDe91H4j1hGSOG6t"),
+            "Jamieson, Fausset, and Brown Commentary (JFB) [6 vol.]": (
+            (config.marvelData, "commentaries", "cJFB.commentary"), "1NT02QxoLeY3Cj0uA_5142P5s64RkRlpO"),
+            "Commentary on the Old Testament (Keil & Delitzsch) [10 vol.]": (
+            (config.marvelData, "commentaries", "cKD.commentary"), "1rFFDrdDMjImEwXkHkbh7-vX3g4kKUuGV"),
+            "Commentary on the Holy Scriptures: Critical, Doctrinal, and Homiletical (Lange) [25 vol.]": (
+            (config.marvelData, "commentaries", "cLange.commentary"), "1_PrTT71aQN5LJhbwabx-kjrA0vg-nvYY"),
+            "Expositions of Holy Scripture (MacLaren) [32 vol.]": (
+            (config.marvelData, "commentaries", "cMacL.commentary"), "1p32F9MmQ2wigtUMdCU-biSrRZWrFLWJR"),
+            "Preacher's Complete Homiletical Commentary (Exell) [37 vol.]": (
+            (config.marvelData, "commentaries", "cPHC.commentary"), "1xTkY_YFyasN7Ks9me3uED1HpQnuYI8BW"),
+            "Pulpit Commentary (Spence) [23 vol.]": (
+            (config.marvelData, "commentaries", "cPulpit.commentary"), "1briSh0oDhUX7QnW1g9oM3c4VWiThkWBG"),
+            "Word Pictures in the New Testament (Robertson) [6 vol.]": (
+            (config.marvelData, "commentaries", "cRob.commentary"), "17VfPe4wsnEzSbxL5Madcyi_ubu3iYVkx"),
+            "Spurgeon's Expositions on the Bible (Spurgeon) [3 vol.]": (
+            (config.marvelData, "commentaries", "cSpur.commentary"), "1OVsqgHVAc_9wJBCcz6PjsNK5v9GfeNwp"),
+            "Word Studies in the New Testament (Vincent) [4 vol.]": (
+            (config.marvelData, "commentaries", "cVincent.commentary"), "1ZZNnCo5cSfUzjdEaEvZ8TcbYa4OKUsox"),
+            "John Wesley's Notes on the Whole Bible (Wesley) [3 vol.]": (
+            (config.marvelData, "commentaries", "cWesley.commentary"), "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5"),
+            "Commentary on the Old and New Testaments (Whedon) [14 vol.]": (
+            (config.marvelData, "commentaries", "cWhedon.commentary"), "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9"),
         }
-        items = [commentary for commentary in commentaries.keys() if not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
+        items = [commentary for commentary in commentaries.keys() if
+                 not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
         if items:
             commentaries["Install ALL Commentaries Listed Above"] = ""
             items.append("Install ALL Commentaries Listed Above")
@@ -626,13 +677,16 @@ class MainWindow(QMainWindow):
         if config.isDownloading:
             self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
         else:
-            toBeInstalled = [commentary for commentary in commentaries.keys() if not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
-            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"], config.thisTranslation["message_willBeNoticed"]))
+            toBeInstalled = [commentary for commentary in commentaries.keys() if
+                             not commentary == "Install ALL Commentaries Listed Above" and not os.path.isfile(
+                                 os.path.join(*commentaries[commentary][0]))]
+            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_downloadAllFiles"],
+                                                  config.thisTranslation["message_willBeNoticed"]))
             for commentary in toBeInstalled:
                 databaseInfo = commentaries[commentary]
                 downloader = Downloader(self, databaseInfo)
                 downloader.downloadFile(False)
-            #self.displayMessage(config.thisTranslation["message_done"])
+            # self.displayMessage(config.thisTranslation["message_done"])
 
     def installMarvelDatasets(self):
         datasets = {
@@ -642,15 +696,18 @@ class MainWindow(QMainWindow):
             "Chapter & Verse Notes": ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),
             "Bible Background Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
             "Bible Topics Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
-            "Cross-reference Data": ((config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_"),
+            "Cross-reference Data": (
+            (config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_"),
             "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
             "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
             "Lexicons": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "Atlas, Timelines & Books": ((config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd"),
+            "Atlas, Timelines & Books": (
+            (config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd"),
             "Word Data": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
             "Words Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Clause Data": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
-            "Translation Data": ((config.marvelData, "data", "translationNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
+            "Translation Data": (
+            (config.marvelData, "data", "translationNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "Discourse Data": ((config.marvelData, "data", "discourseNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
             "TDW Combo Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
         }
@@ -730,18 +787,24 @@ class MainWindow(QMainWindow):
             self.selectBuiltinTheme()
 
     def selectQtMaterialTheme(self):
-        items = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
+        items = ("light_amber.xml", "light_blue.xml", "light_cyan.xml", "light_cyan_500.xml", "light_lightgreen.xml",
+                 "light_pink.xml", "light_purple.xml", "light_red.xml", "light_teal.xml", "light_yellow.xml",
+                 "dark_amber.xml", "dark_blue.xml", "dark_cyan.xml", "dark_lightgreen.xml", "dark_pink.xml",
+                 "dark_purple.xml", "dark_red.xml", "dark_teal.xml", "dark_yellow.xml")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_selectThemeQtMaterial"], items, items.index(config.qtMaterialTheme) if config.qtMaterialTheme and config.qtMaterialTheme in items else 0, False)
+                                        config.thisTranslation["menu1_selectThemeQtMaterial"], items, items.index(
+                config.qtMaterialTheme) if config.qtMaterialTheme and config.qtMaterialTheme in items else 0, False)
         if ok and item:
             config.qtMaterial = True
             config.qtMaterialTheme = item
             self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def selectBuiltinTheme(self):
-        items = ("default",  "dark")
+        items = ("default", "dark")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_selectThemeBuiltin"], items, items.index(config.theme) if config.theme and config.theme in items else 0, False)
+                                        config.thisTranslation["menu1_selectThemeBuiltin"], items,
+                                        items.index(config.theme) if config.theme and config.theme in items else 0,
+                                        False)
         if ok and item:
             config.qtMaterial = False
             config.theme = item
@@ -771,11 +834,17 @@ class MainWindow(QMainWindow):
         config.menuShortcuts = shortcut
         ShortcutUtil.reset()
         ShortcutUtil.setup(shortcut)
-        self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
+        ShortcutUtil.loadShortcutFile()
+        self.menuBar().clear()
+        self.create_menu()
 
     def displayShortcuts(self):
         shortcutWindow = DisplayShortcutsWindow(config.menuShortcuts, ShortcutUtil.getAllShortcuts())
-        shortcutWindow.exec()
+        if shortcutWindow.exec():
+            ShortcutUtil.setup(config.menuShortcuts)
+            ShortcutUtil.loadShortcutFile(config.menuShortcuts)
+            self.menuBar().clear()
+            self.create_menu()
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
@@ -789,10 +858,10 @@ class MainWindow(QMainWindow):
             os.makedirs(exportFolder)
         quotationMark, ext, asciiString = match.groups()
         # Note the difference between "groups" and "group"
-        #wholeString = match.group(0)
-        #quotationMark = match.group(1)
-        #ext = match.group(2)
-        #asciiString = match.group(3)
+        # wholeString = match.group(0)
+        # quotationMark = match.group(1)
+        # ext = match.group(2)
+        # asciiString = match.group(3)
         self.exportImageNumber += 1
         binaryString = asciiString.encode("ascii")
         binaryData = base64.b64decode(binaryString)
@@ -803,7 +872,8 @@ class MainWindow(QMainWindow):
         return "src={0}images/export/{1}{0}".format(quotationMark, imageFilename)
 
     def addOpenImageAction(self, text):
-        return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'), r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
+        return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'),
+                      r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
     def openTextOnStudyView(self, text, tab_title=''):
         if self.newTabException:
@@ -815,8 +885,8 @@ class MainWindow(QMainWindow):
             if nextIndex >= config.numberOfTab:
                 nextIndex = 0
             self.studyView.setCurrentIndex(nextIndex)
-            #Alternatively,
-            #self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
+            # Alternatively,
+            # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
         # export embedded images if enabled
         if config.exportEmbeddedImages:
             text = self.exportAllImages(text)
@@ -848,7 +918,8 @@ class MainWindow(QMainWindow):
     # warning for next action without saving modified notes
     def warningNotSaved(self):
         msgBox = QMessageBox(QMessageBox.Warning,
-                             "QMessageBox.warning()", "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
+                             "QMessageBox.warning()",
+                             "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
                              QMessageBox.NoButton, self)
         msgBox.addButton("Cancel", QMessageBox.AcceptRole)
         msgBox.addButton("&Continue", QMessageBox.RejectRole)
@@ -895,7 +966,8 @@ class MainWindow(QMainWindow):
 
     def fixNoteFontDisplay(self, content):
         if config.overwriteNoteFont:
-            content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font), content)
+            content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font),
+                             content)
         if config.overwriteNoteFontSize:
             content = re.sub("font-size:[^<>]*?;", "", content)
         return content
@@ -909,7 +981,8 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getBookNote(b)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(reference[:-4], note, b, config.font, config.fontSize)
+        note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(
+            reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
 
@@ -922,7 +995,8 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getChapterNote(b, c)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(reference[:-2], note, b, c, config.font, config.fontSize)
+        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(
+            reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
 
@@ -935,7 +1009,8 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getVerseNote(b, c, v)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(reference, note, b, c, v, config.font, config.fontSize)
+        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(
+            reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
 
@@ -948,7 +1023,8 @@ class MainWindow(QMainWindow):
         searchReplace2 = (
             ("<br>(<table>|<ol>|<ul>)", r"\1"),
             ("(</table>|</ol>|</ul>)<br>", r"\1"),
-            ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'), r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
+            ("<a [^\n<>]*?href=['{0}]([^\n<>]*?)['{0}][^\n<>]*?>".format('"'),
+             r"<a href='javascript:void(0)' onclick='website({0}\1{0})'>".format('"')),
             ("onclick='website\({0}([^\n<>]*?).uba{0}\)'".format('"'), r"onclick='uba({0}\1.uba{0})'".format('"'))
         )
         if linebreak:
@@ -959,10 +1035,13 @@ class MainWindow(QMainWindow):
         if parsing:
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
         if view == "main":
-            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
+                config.mainText, config.mainB, config.mainC, config.mainV)
         elif view == "study":
-            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/common.js'></script><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
+            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
+                config.studyText, config.studyB, config.studyC, config.studyV)
+        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/common.js'></script><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(
+            activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
 
         return text
 
@@ -982,7 +1061,8 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
                                                       self.openFileNameLabel.text(),
-                                                      "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)", "", options)
+                                                      "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)",
+                                                      "", options)
         if fileName:
             self.openTextFile(fileName)
 
@@ -1145,7 +1225,6 @@ class MainWindow(QMainWindow):
     def printMainPage(self):
         filename = "UniqueBible.app.pdf"
         self.mainPage.printToPdf(filename)
-            
 
     def printStudyPage(self):
         filename = "UniqueBible.app.pdf"
@@ -1184,14 +1263,16 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu8_3rdParty"],
                                                       self.openFileNameLabel.text(),
-                                                      ("MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Books (*.bok.mybible);;"
-                                                       "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
-                                                       "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
-                                                       "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
-                                                       "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
-                                                       "Zefania XML (*.xml)"), "", options)
+                                                      (
+                                                          "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Books (*.bok.mybible);;"
+                                                          "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
+                                                          "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
+                                                          "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
+                                                          "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
+                                                          "Zefania XML (*.xml)"), "", options)
         if fileName:
-            if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(".lexi") or fileName.endswith(".dictionary.SQLite3"):
+            if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(
+                    ".lexi") or fileName.endswith(".dictionary.SQLite3"):
                 self.importThirdPartyDictionary(fileName)
             elif fileName.endswith(".bbl.mybible"):
                 self.importMySwordBible(fileName)
@@ -1308,14 +1389,16 @@ class MainWindow(QMainWindow):
 
     # Actions - tag files with BibleVerseParser
     def onTaggingCompleted(self):
-        self.displayMessage("{0}  {1} 'tagged_'".format(config.thisTranslation["message_done"], config.thisTranslation["message_tagged"]))
+        self.displayMessage("{0}  {1} 'tagged_'".format(config.thisTranslation["message_done"],
+                                                        config.thisTranslation["message_tagged"]))
 
     def tagFile(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu8_tagFile"],
                                                       self.openFileNameLabel.text(),
-                                                      "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+                                                      "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)",
+                                                      "", options)
         if fileName:
             BibleVerseParser(config.parserStandarisation).extractAllReferencesstartParsing(fileName)
             self.onTaggingCompleted()
@@ -1324,7 +1407,8 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         files, filtr = QFileDialog.getOpenFileNames(self,
                                                     config.thisTranslation["menu8_tagFiles"], self.openFilesPath,
-                                                    "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)", "", options)
+                                                    "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)",
+                                                    "", options)
         if files:
             parser = BibleVerseParser(config.parserStandarisation)
             for filename in files:
@@ -1345,13 +1429,15 @@ class MainWindow(QMainWindow):
 
     # Action - open a dialog box to download a mp3 file from youtube
     def downloadMp3Dialog(self):
-        text, ok = QInputDialog.getText(self, "YouTube -> mp3", config.thisTranslation["youtube_address"], QLineEdit.Normal, "")
+        text, ok = QInputDialog.getText(self, "YouTube -> mp3", config.thisTranslation["youtube_address"],
+                                        QLineEdit.Normal, "")
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp3:::{0}".format(text))
 
     # Action - open a dialog box to download a youtube video in mp4 format
     def downloadMp4Dialog(self):
-        text, ok = QInputDialog.getText(self, "YouTube -> mp4", config.thisTranslation["youtube_address"], QLineEdit.Normal, "")
+        text, ok = QInputDialog.getText(self, "YouTube -> mp4", config.thisTranslation["youtube_address"],
+                                        QLineEdit.Normal, "")
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp4:::{0}".format(text))
 
@@ -1579,15 +1665,17 @@ class MainWindow(QMainWindow):
             self.openControlPanelTab(1)
         else:
             self.textCommandParser.databaseNotInstalled("book")
-#        bookData = BookData()
-#        items = [book for book, *_ in bookData.getBookList()]
-#        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
-#        if ok and item:
-#            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
+
+    #        bookData = BookData()
+    #        items = [book for book, *_ in bookData.getBookList()]
+    #        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+    #        if ok and item:
+    #            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
 
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
-                                          "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1, 20, 1)
+                                          "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1,
+                                          20, 1)
         if ok:
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
@@ -1599,12 +1687,14 @@ class MainWindow(QMainWindow):
     def addFavouriteBookDialog(self):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_addFavourite"], items, items.index(config.book), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_addFavourite"], items,
+                                        items.index(config.book), False)
         if ok and item:
             config.favouriteBooks.insert(0, item)
             if len(config.favouriteBooks) > 10:
                 config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
-            self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+            self.displayMessage(
+                "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
     def toggleDisplayBookContent(self):
         if config.bookOnNewWindow:
@@ -1617,14 +1707,16 @@ class MainWindow(QMainWindow):
     def searchBookDialog(self):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items, items.index(config.book), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_dialog"], items,
+                                        items.index(config.book), False)
         if ok and item:
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
 
     def search3rdDictionaryDialog(self):
         items = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items, items.index(config.thirdDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items,
+                                        items.index(config.thirdDictionary), False)
         if ok and item:
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::{0}:::".format(item))
@@ -1635,7 +1727,8 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.dictionary]
         dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
         items = list(dictionaryDict.keys())
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_dict"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_dict"], items,
+                                        items.index(lastDictionary), False)
         if ok and item:
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
@@ -1646,7 +1739,8 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.encyclopedia]
         dictionaryDict = {name: abb for abb, name in indexes.encyclopediaList}
         items = list(dictionaryDict.keys())
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_encyclopedia"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["context1_encyclopedia"], items,
+                                        items.index(lastDictionary), False)
         if ok and item:
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
@@ -1657,7 +1751,8 @@ class MainWindow(QMainWindow):
         lastDictionary = dictionaryDict[config.topic]
         dictionaryDict = {name: abb for abb, name in indexes.topicList}
         items = list(dictionaryDict.keys())
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_topics"], items, items.index(lastDictionary), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_topics"], items,
+                                        items.index(lastDictionary), False)
         if ok and item:
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHTOOL:::{0}:::".format(dictionaryDict[item]))
@@ -1788,24 +1883,24 @@ class MainWindow(QMainWindow):
         self.moveWindow(0, 0)
 
     def twoThirdWindow(self):
-        self.resizeWindow(2/3, 2/3)
-        self.moveWindow(1/6, 1/6)
+        self.resizeWindow(2 / 3, 2 / 3)
+        self.moveWindow(1 / 6, 1 / 6)
 
     def topHalfScreenHeight(self):
-        self.resizeWindow(1, 1/2)
+        self.resizeWindow(1, 1 / 2)
         self.moveWindow(0, 0)
 
     def bottomHalfScreenHeight(self):
-        self.resizeWindow(1, 1/2)
-        self.moveWindow(0, 1/2)
+        self.resizeWindow(1, 1 / 2)
+        self.moveWindow(0, 1 / 2)
 
     def leftHalfScreenWidth(self):
-        self.resizeWindow(1/2, 1)
+        self.resizeWindow(1 / 2, 1)
         self.moveWindow(0, 0)
 
     def rightHalfScreenWidth(self):
-        self.resizeWindow(1/2, 1)
-        self.moveWindow(1/2, 0)
+        self.resizeWindow(1 / 2, 1)
+        self.moveWindow(1 / 2, 0)
 
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
@@ -1994,8 +2089,8 @@ class MainWindow(QMainWindow):
             mappedBibles = (
                 ("MIB", "OHGBi"),
                 ("MOB", "OHGB"),
-                #("LXX1", "LXX1i"),
-                #("LXX2i", "LXX2"),
+                # ("LXX1", "LXX1i"),
+                # ("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
@@ -2009,8 +2104,8 @@ class MainWindow(QMainWindow):
                 ("MPB", "OHGB"),
                 ("MTB", "OHGB"),
                 ("MAB", "OHGB"),
-                #("LXX1", "LXX1i"),
-                #("LXX2i", "LXX2"),
+                # ("LXX1", "LXX1i"),
+                # ("LXX2i", "LXX2"),
             )
             for view in ("main", "study"):
                 textCommand = config.history[view][config.currentRecord[view]]
@@ -2137,23 +2232,29 @@ class MainWindow(QMainWindow):
         elif view == "study":
             return (config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
         elif view == "commentary":
-            return "{0}:::{1}".format(config.commentaryText, self.bcvToVerseReference(config.commentaryB, config.commentaryC, config.commentaryV))
+            return "{0}:::{1}".format(config.commentaryText,
+                                      self.bcvToVerseReference(config.commentaryB, config.commentaryC,
+                                                               config.commentaryV))
 
     # Actions - access history records
     def mainHistoryButtonClicked(self):
         self.openControlPanelTab(3)
-        #self.mainView.setHtml(self.getHistory("main"), baseUrl)
+        # self.mainView.setHtml(self.getHistory("main"), baseUrl)
 
     def studyHistoryButtonClicked(self):
         self.openControlPanelTab(3)
-        #self.studyView.setHtml(self.getHistory("study"), baseUrl)
+        # self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
         if view == "external":
-            html = "<br>".join(["<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(counter, record) for counter, record in reversed(historyRecords)])
+            html = "<br>".join([
+                                   "<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(
+                                       counter, record) for counter, record in reversed(historyRecords)])
         else:
-            html = "<br>".join(["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for counter, record in reversed(historyRecords)])
+            html = "<br>".join(
+                ["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for
+                 counter, record in reversed(historyRecords)])
         html = self.htmlWrapper(html)
         return html
 
@@ -2196,11 +2297,15 @@ class MainWindow(QMainWindow):
     # finish view loading
     def finishMainViewLoading(self):
         # scroll to the main verse
-        self.mainPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.mainB)+"."+str(config.mainC)+"."+str(config.mainV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.mainPage.runJavaScript(
+            "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
+                config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
         # scroll to the study verse
-        self.studyPage.runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.studyPage.runJavaScript(
+            "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
+                config.studyV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = 'red'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
@@ -2284,7 +2389,8 @@ class MainWindow(QMainWindow):
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
         exceptionTuple = ("UniqueBible.app", "about:blank", "study.html")
-        if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand[-4:] == ".txt" or newTextCommand in exceptionTuple):
+        if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand[
+                                                                                                         -4:] == ".txt" or newTextCommand in exceptionTuple):
             if source == "main" and not newTextCommand.startswith("_"):
                 self.textCommandLineEdit.setText(newTextCommand)
             if newTextCommand.startswith("_"):
@@ -2329,10 +2435,14 @@ class MainWindow(QMainWindow):
             else:
                 activeBCVsettings = ""
                 if view == "main":
-                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
+                        config.mainText, config.mainB, config.mainC, config.mainV)
                 elif view == "study":
-                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
-                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/common.js'></script><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme)
+                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
+                        config.studyText, config.studyB, config.studyC, config.studyV)
+                html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/common.js'></script><script src='js/{7}.js'></script><script src='w3.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(
+                    activeBCVsettings, content, "{", "}", config.fontSize, config.font, config.fontChinese,
+                    config.theme)
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,
@@ -2340,10 +2450,16 @@ class MainWindow(QMainWindow):
                 }
                 # add hovering action to bible reference links
                 searchReplace = (
-                    ('{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"), r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
-                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
-                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
-                    (r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
+                    (
+                    '{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"),
+                    r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
+                    (
+                    r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format(
+                        "'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
+                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"),
+                     r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
+                    (
+                    r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
                 )
                 for search, replace in searchReplace:
                     html = re.sub(search, replace, html)
@@ -2396,11 +2512,13 @@ class MainWindow(QMainWindow):
     # switch between landscape / portrait mode
     def setFullIconSize(self, full):
         config.toolBarIconFullSize = full
-        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
-    
+        self.displayMessage(
+            "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+
     def switchIconSize(self):
         config.toolBarIconFullSize = not config.toolBarIconFullSize
-        self.displayMessage("{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+        self.displayMessage(
+            "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
     # switch between landscape / portrait mode
     def switchLandscapeMode(self):
@@ -2449,7 +2567,7 @@ class MainWindow(QMainWindow):
     # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
     def openMorphDialog(self, items):
         self.morphDialog = MorphDialog(self, items)
-        #self.morphDialog.setModal(True)
+        # self.morphDialog.setModal(True)
         self.morphDialog.show()
 
     # Set my language (config.userLanguage)
@@ -2461,17 +2579,20 @@ class MainWindow(QMainWindow):
             userLanguage = "English"
         items = [language for language in languages.codes.keys()]
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage), False)
+                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage),
+                                        False)
         if ok and item:
             config.userLanguage = item
             if not config.googletransSupport:
-                self.displayMessage("{0}  'googletrans'\n{1}".format(config.thisTranslation["message_missing"], config.thisTranslation["message_installFirst"]))
+                self.displayMessage("{0}  'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
+                                                                     config.thisTranslation["message_installFirst"]))
 
     # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
     def openSelectDefaultStrongsGreekLexiconDialog(self):
         items = LexiconData().lexiconList
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_selectDefaultLexicon"],
-                                        config.thisTranslation["menu1_setDefaultStrongsGreekLexicon"], items, items.index(config.defaultLexiconStrongG), False)
+                                        config.thisTranslation["menu1_setDefaultStrongsGreekLexicon"], items,
+                                        items.index(config.defaultLexiconStrongG), False)
         if ok and item:
             config.defaultLexiconStrongG = item
 
@@ -2479,7 +2600,8 @@ class MainWindow(QMainWindow):
     def openSelectDefaultStrongsHebrewLexiconDialog(self):
         items = LexiconData().lexiconList
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_selectDefaultLexicon"],
-                                        config.thisTranslation["menu1_setDefaultStrongsHebrewLexicon"], items, items.index(config.defaultLexiconStrongH), False)
+                                        config.thisTranslation["menu1_setDefaultStrongsHebrewLexicon"], items,
+                                        items.index(config.defaultLexiconStrongH), False)
         if ok and item:
             config.defaultLexiconStrongH = item
 
@@ -2487,7 +2609,8 @@ class MainWindow(QMainWindow):
     def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible"],
-                                        config.thisTranslation["message_addFavouriteVersion"], items, items.index(config.favouriteBible), False)
+                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        items.index(config.favouriteBible), False)
         if ok and item:
             config.favouriteBible = item
             config.addFavouriteToMultiRef = True
@@ -2499,7 +2622,8 @@ class MainWindow(QMainWindow):
     def setBibleAbbreviations(self):
         items = ("ENG", "TC", "SC")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_setAbbreviations"], items, items.index(config.standardAbbreviation), False)
+                                        config.thisTranslation["menu1_setAbbreviations"], items,
+                                        items.index(config.standardAbbreviation), False)
         if ok and item:
             config.standardAbbreviation = item
             self.reloadCurrentRecord()
@@ -2508,7 +2632,7 @@ class MainWindow(QMainWindow):
     def setDefaultFont(self):
         ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
         if ok:
-            #print(font.key())
+            # print(font.key())
             config.font, fontSize, *_ = font.key().split(",")
             config.fontSize = int(fontSize)
             self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
@@ -2518,7 +2642,7 @@ class MainWindow(QMainWindow):
     def setChineseFont(self):
         ok, font = QFontDialog.getFont(QFont(config.fontChinese, config.fontSize), self)
         if ok:
-            #print(font.key())
+            # print(font.key())
             config.fontChinese, *_ = font.key().split(",")
             self.reloadCurrentRecord()
 
