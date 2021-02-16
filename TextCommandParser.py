@@ -1578,14 +1578,12 @@ class TextCommandParser:
 
     # _vnsc:::
     def verseNoSingleClick(self, command, source):
-        print(0)
         if command.count(".") != 4:
             return self.invalidCommand()
         else:
             text, b, c, v, verseReference = command.split(".")
             if config.verseNoSingleClickAction.startswith("_cp"):
                 index = int(config.verseNoSingleClickAction[-1])
-                text, b, c, v = command.split(".")
                 self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:

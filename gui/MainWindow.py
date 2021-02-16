@@ -2422,7 +2422,7 @@ class MainWindow(QMainWindow):
         #     self.logger.debug("Repeated command blocked " + textCommand)
         else:
             # handle exception for new tab features
-            if re.search('^(_commentary:::|_menu:::)', textCommand.lower()):
+            if re.search('^(_commentary:::|_menu:::|_vnsc:::)', textCommand.lower()):
                 self.newTabException = True
             # parse command
             view, content, dict = self.textCommandParser.parser(textCommand, source)
@@ -2593,8 +2593,7 @@ class MainWindow(QMainWindow):
         features = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu"]
         items = [config.thisTranslation[feature] for feature in features]
         itemsDict = dict(zip(items, values))
-        
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], items, values.index(config.verseNoSingleClickAction), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["assignSingleClick"], items, values.index(config.verseNoSingleClickAction), False)
         if ok and item:
             config.verseNoSingleClickAction = itemsDict[item]
 
@@ -2604,8 +2603,7 @@ class MainWindow(QMainWindow):
         features = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu"]
         items = [config.thisTranslation[feature] for feature in features]
         itemsDict = dict(zip(items, values))
-        
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], items, values.index(config.verseNoDoubleClickAction), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["assignDoubleClick"], items, values.index(config.verseNoDoubleClickAction), False)
         if ok and item:
             config.verseNoDoubleClickAction = itemsDict[item]
 
