@@ -87,7 +87,6 @@ class HighlightLauncher(QWidget):
             else:
                 code = "hl{0}".format(option + 1)
             command = "_HIGHLIGHT:::{0}:::{1}".format(code, self.parent.parent.bibleTab.getSelectedReference())
-            self.parent.parent.parent.reloadCurrentRecord()
             self.parent.parent.runTextCommand(command)
 
     def searchHighlight(self, selectedIndex, code):

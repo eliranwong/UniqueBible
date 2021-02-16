@@ -1809,7 +1809,7 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             text = biblesSqlite.readMultipleVerses(config.mainText, bcv)
             text = highlight.highlightSearchResults(text, verses)
-            return ("main", text, {})
+            return ("study", text, {})
         else:
             return ("", "", {})
 

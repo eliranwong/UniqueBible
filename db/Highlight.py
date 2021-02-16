@@ -83,8 +83,6 @@ class Highlight:
 
     def getHighlightedBcvList(self, highlight, reference):
         highlight = highlight.lower()
-        reference = reference.lower()
-        parser = BibleVerseParser(config.standardAbbreviation)
         if highlight == "" or highlight == "all":
             where = "WHERE 1=1 "
         else:
@@ -95,8 +93,9 @@ class Highlight:
         elif reference == "ot":
             where += "AND Book < 40"
         elif not(reference == "" or reference == "all"):
-            ref = parser.verseReferenceToBCV(reference)
-            where += "AND Book={0}".format(ref[0])
+            ref = BibleVerseParser(config.standardAbbreviation).extractAllReferences("{0} 1".format(reference))
+            if ref:
+                where += "AND Book={0}".format(ref[0][0])
         return self.getHighlightedVerses(where)
 
 if __name__ == "__main__":
