@@ -10,9 +10,11 @@ import sys
 # Create files for user customisation
 # "config.py" is essential for running module "config".
 # "custom.css" is essential for custom css feature.
+# "custom.js" is essential for custom javascript feature.
 
 customCssFile = os.path.join("htmlResources", "css", "custom.css")
-userFiles = ("config.py", customCssFile)
+customJsFile = os.path.join("htmlResources", "js", "custom.js")
+userFiles = ("config.py", customCssFile, customJsFile)
 for userFile in userFiles:
     if not os.path.isfile(userFile):
         open(userFile, "w", encoding="utf-8").close()
