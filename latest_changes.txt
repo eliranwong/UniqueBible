@@ -1,3 +1,26 @@
+Major changes in version 21.33:
+Substantial update: a total of 32 files changes:
+* now support dynamic change of menu layout without restart
+* now support dynamic change of keyboard shortcut set without restart
+* added ability to edit cutom shortcuts with double-clicking on display shortcut window
+* added a new tab 'Miscellenous' to 'Master Control' panel
+* added highlights feature to Master Control
+* added YouTube downloader buttons to Master Control
+* added text-to-speech feature to Master Control
+* fixed keyboard shortcuts to switch between tabs of Master Control
+* refresh history records when Master Control tab is opened
+* set the search field in focus when Master Control Search tab is opened
+* renamed 'Remote Control' to 'mini Control'
+* increase the number of verse highlight collections from two to twelve
+* added quick access to verse highlight feature via Master Control
+* added ability to customise verse highlight collection name and colours
+* added ability to customise verse number single-click action (via Focus menu layout)
+* added ability to customise verse number double-click action (via Focus menu layout)
+* added ability to customise default text-to-speech voice (via Focus menu layout)
+* improved start-up speed
+* fixed known startup issues
+* revised shortcut set 'micron'
+
 Major changes in version 21.32:
 * Multiple fixes of custom shortcuts
 * Added a new shortcut set 'micron'
