@@ -35,6 +35,8 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
+from gui.MainWindow import MainWindow
+
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
@@ -109,7 +111,6 @@ else:
     app.setPalette(Themes.getPalette())
 
 # Setup main window
-from gui.MainWindow import MainWindow
 mainWindow = MainWindow()
 
 # Check screen size
