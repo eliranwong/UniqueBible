@@ -4,10 +4,7 @@ import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
 
 
-class AlephMainWindow(MainWindow):
-
-    def __init__(self):
-        super().__init__()
+class AlephMainWindow:
 
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
@@ -66,7 +63,6 @@ class AlephMainWindow(MainWindow):
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
         if config.developer:
             menu_developer = menu1.addMenu("&Developer")
-            menu_developer.addAction(QAction("Testing", self, triggered=self.testing))
         menu1.addAction(
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
 
@@ -1090,7 +1086,3 @@ class AlephMainWindow(MainWindow):
                 toolbar.setFixedHeight(config.iconButtonWidth + 4)
             for toolbar in (self.leftToolBar, self.rightToolBar):
                 toolbar.setIconSize(QSize(config.iconButtonWidth * 0.6, config.iconButtonWidth * 0.6))
-
-    def testing(self):
-        #test = BibleExplorer(self, (config.mainB, config.mainC, config.mainV, config.mainText))
-        self.manageControlPanel()

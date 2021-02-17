@@ -4,10 +4,7 @@ import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
 
 
-class ClassicMainWindow(MainWindow):
-
-    def __init__(self):
-        super().__init__()
+class ClassicMainWindow:
 
     def create_menu(self):
         menuBar = self.menuBar()

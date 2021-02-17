@@ -10,6 +10,8 @@ import sys
 # Create files for user customisation
 # "config.py" is essential for running module "config".
 # "custom.css" is essential for custom css feature.
+from gui.MainWindow import MainWindow
+
 customCssFile = os.path.join("htmlResources", "css", "custom.css")
 userFiles = ("config.py", customCssFile)
 for userFile in userFiles:
@@ -41,10 +43,6 @@ ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
-#from qt_material import apply_stylesheet
-from gui.ClassicMainWindow import ClassicMainWindow
-from gui.AlephMainWindow import AlephMainWindow
-from gui.FocusMainWindow import FocusMainWindow
 
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -110,14 +108,9 @@ if config.qtMaterial and config.qtMaterialTheme:
     config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
 else:
     app.setPalette(Themes.getPalette())
-# Apply window menu layout
-if config.menuLayout == "focus":
-    config.noStudyBibleToolbar = True
-    mainWindow = FocusMainWindow()
-elif config.menuLayout == "aleph":
-    mainWindow = AlephMainWindow()
-else:
-    mainWindow = ClassicMainWindow()
+
+# Setup main window
+mainWindow = MainWindow()
 
 # Check screen size
 availableGeometry = app.desktop().availableGeometry(mainWindow)
