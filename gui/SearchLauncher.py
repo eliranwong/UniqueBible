@@ -46,6 +46,7 @@ class SearchLauncher(QWidget):
         subLayout.addLayout(rightGroupLayout)
         for index, searchMode in enumerate(self.bibleSearchModeTuple):
             radioButton = QRadioButton(searchMode)
+            radioButton.setToolTip(config.thisTranslation["searchRB{0}".format(index)])
             radioButton.toggled.connect(lambda checked, mode=index: self.searchModeChanged(checked, mode))
             if index == config.bibleSearchMode:
                 radioButton.setChecked(True)
