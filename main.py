@@ -10,7 +10,6 @@ import sys
 # Create files for user customisation
 # "config.py" is essential for running module "config".
 # "custom.css" is essential for custom css feature.
-from gui.MainWindow import MainWindow
 
 customCssFile = os.path.join("htmlResources", "css", "custom.css")
 userFiles = ("config.py", customCssFile)
@@ -110,6 +109,7 @@ else:
     app.setPalette(Themes.getPalette())
 
 # Setup main window
+from gui.MainWindow import MainWindow
 mainWindow = MainWindow()
 
 # Check screen size
