@@ -35,7 +35,7 @@ from gui.NoteEditor import NoteEditor
 from gui.MasterControl import MasterControl
 from gui.MiniControl import MiniControl
 from gui.MorphDialog import MorphDialog
-from gui.YouTubePopover import YouTubePopover
+from gui.MiniBrowser import MiniBrowser
 from gui.CentralWidget import CentralWidget
 from gui.imports import *
 from ToolsSqlite import LexiconData
@@ -1485,7 +1485,8 @@ class MainWindow(QMainWindow):
         webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
 
     def openYouTube(self):
-        self.youTubeView = YouTubePopover(self)
+        #self.youTubeView = YouTubePopover(self)
+        self.youTubeView = MiniBrowser(self)
         self.youTubeView.show()
 
     # Action - open "images" directory

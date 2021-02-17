@@ -11,7 +11,7 @@ class YouTubePopover(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["menu11_youtube"])
-        self.load(QUrl("https://www.youtube.com/"))
+        #self.load(QUrl("https://www.youtube.com/"))
         self.urlString = ""
         self.urlChanged.connect(self.videoLinkChanged)
         # add context menu (triggered by right-clicking)
@@ -20,6 +20,7 @@ class YouTubePopover(QWebEngineView):
 
     def videoLinkChanged(self, url):
         self.urlString = url.toString()
+        self.parent.addressBar.setText(self.urlString)
 
     def addMenuActions(self):
         goBack = QAction(self)
@@ -46,13 +47,13 @@ class YouTubePopover(QWebEngineView):
         self.addAction(separator)
 
         mp3 = QAction(self)
-        mp3.setText(config.thisTranslation["youtube_mp3"])
-        mp3.triggered.connect(self.downloadMp3)
+        mp3.setText(config.thisTranslation["youtubeMp3"])
+        mp3.triggered.connect(lambda: self.downloadMpFile("mp3"))
         self.addAction(mp3)
 
         video = QAction(self)
-        video.setText(config.thisTranslation["youtube_mp4"])
-        video.triggered.connect(self.downloadVideo)
+        video.setText(config.thisTranslation["youtubeMp4"])
+        video.triggered.connect(lambda: self.downloadMpFile("mp4"))
         self.addAction(video)
 
     def back(self):
@@ -65,14 +66,5 @@ class YouTubePopover(QWebEngineView):
         if self.urlString:
             QGuiApplication.instance().clipboard().setText(self.urlString)
 
-    def downloadMp3(self):
-        if not self.urlString or "/results?search_query=" in self.urlString:
-            self.parent.displayMessage(config.thisTranslation["message_invalid"])
-        else:
-            self.parent.runTextCommand("mp3:::{0}".format(self.urlString))
-
-    def downloadVideo(self):
-        if not self.urlString or "/results?search_query=" in self.urlString:
-            self.parent.displayMessage(config.thisTranslation["message_invalid"])
-        else:
-            self.parent.runTextCommand("mp4:::{0}".format(self.urlString))
+    def downloadMpFile(self, fileType):
+        self.parent.downloadMpFile(fileType, self.urlString)
