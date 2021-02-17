@@ -1,3 +1,6 @@
+Major change in version 21.34:
+* fixed missing shortcut file
+
 Major changes in version 21.33:
 Substantial update: a total of 32 files changes:
 * now support dynamic change of menu layout without restart
