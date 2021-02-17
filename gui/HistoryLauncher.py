@@ -1,7 +1,6 @@
 import config
 import os.path
 from PySide2.QtCore import QStringListModel
-#from PySide2.QtGui import QStandardItemModel, QStandardItem
 from PySide2.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
 
 class HistoryLauncher(QWidget):

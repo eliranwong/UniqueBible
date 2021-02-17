@@ -95,6 +95,8 @@ class FocusMainWindow:
         if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
             addMenuItem(subMenu, "menu1_translateInterface", self, self.translateInterface)
         addMenuItem(subMenu, "menu1_toogleInterface", self, self.toogleInterfaceTranslation)
+        if config.ttsSupport:
+            addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguage)
 
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")
@@ -197,7 +199,7 @@ class FocusMainWindow:
 
         # 3rd column
         menu = addMenu(menuBar, "controlPanel")
-        for index, shortcut in enumerate((sc.masterCurrentIndex0, sc.masterCurrentIndex1, sc.masterCurrentIndex2, sc.masterCurrentIndex3)):
+        for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2, sc.openControlPanelTab3, sc.openControlPanelTab4)):
             addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)

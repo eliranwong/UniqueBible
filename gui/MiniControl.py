@@ -106,10 +106,11 @@ class MiniControl(QWidget):
             initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
             self.languageCombo.setCurrentIndex(initialIndex)
     
-            setDefaultButton = QPushButton(config.thisTranslation["setDefault"])
-            setDefaultButton.setFixedWidth(130)
-            setDefaultButton.clicked.connect(self.setTtsDefaultLanguage)
-            ttsLayout.addWidget(setDefaultButton)
+            # setting tts default language here is confusing; better place in menu
+            #setDefaultButton = QPushButton(config.thisTranslation["setDefault"])
+            #setDefaultButton.setFixedWidth(130)
+            #setDefaultButton.clicked.connect(self.setTtsDefaultLanguage)
+            #ttsLayout.addWidget(setDefaultButton)
             
             speakButton = QPushButton(config.thisTranslation["speak"])
             speakButton.setFixedWidth(100)
@@ -293,8 +294,8 @@ class MiniControl(QWidget):
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
 
-    def setTtsDefaultLanguage(self):
-        config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]
+    #def setTtsDefaultLanguage(self):
+        #config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]
 
     def speakCommandFieldText(self):
         text = self.searchLineEdit.text()

@@ -39,6 +39,7 @@ from gui.YouTubePopover import YouTubePopover
 from gui.CentralWidget import CentralWidget
 from gui.imports import *
 from ToolsSqlite import LexiconData
+from TtsLanguages import TtsLanguages
 from util.MacroParser import MacroParser
 from util.NoteService import NoteService
 from util.ShortcutUtil import ShortcutUtil
@@ -313,6 +314,7 @@ class MainWindow(QMainWindow):
                 self.controlPanel.tabs.setCurrentIndex(index)
                 self.controlPanel.raise_()
                 self.controlPanel.show()
+                self.controlPanel.tabChanged(index)
             elif config.controlPanel and not self.controlPanel.isActiveWindow():
                 self.controlPanel.updateBCVText(b, c, v, text)
                 self.controlPanel.tabs.setCurrentIndex(index)
@@ -327,10 +329,12 @@ class MainWindow(QMainWindow):
                 # Therefore, we use hide and show methods instead with wayland.
                 self.controlPanel.hide()
                 self.controlPanel.show()
+                self.controlPanel.tabChanged(index)
             elif not config.controlPanel:
                 self.controlPanel = MasterControl(self, index, b, c, v, text)
                 if show:
                     self.controlPanel.show()
+                    self.controlPanel.tabChanged(index)
                 textCommandText = self.textCommandLineEdit.text()
                 if config.clearCommandEntry:
                     self.controlPanel.commandField.setText("")
@@ -1045,7 +1049,7 @@ class MainWindow(QMainWindow):
 
     def getHighlightCss(self):
         css = ""
-        for i in range(10):
+        for i in range(len(config.highlightCollections)):
             code = "hl{0}".format(i + 1)
             css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
         return css
@@ -1478,7 +1482,7 @@ class MainWindow(QMainWindow):
             self.runTextCommand("mp4:::{0}".format(text))
 
     def setupYouTube(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video")
+        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
 
     def openYouTube(self):
         self.youTubeView = YouTubePopover(self)
@@ -2672,6 +2676,25 @@ class MainWindow(QMainWindow):
         else:
             config.addFavouriteToMultiRef = False
         self.reloadCurrentRecord()
+
+    # Set bible book abbreviations
+    def setDefaultTtsLanguage(self):
+        if config.espeak:
+            languages = TtsLanguages().isoLang2epeakLang
+        else:
+            languages = TtsLanguages().isoLang2qlocaleLang
+        self.languageCodes = list(languages.keys())
+        items = [languages[code][1] for code in self.languageCodes]
+        # Check if selected tts engine has the language user specify.
+        if not (config.ttsDefaultLangauge in self.languageCodes):
+            config.ttsDefaultLangauge = "en"
+        # Initial index
+        initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["setDefaultTtsLanguage"], items,
+                                        initialIndex, False)
+        if ok and item:
+            config.ttsDefaultLangauge = self.languageCodes[items.index(item)]
 
     # Set bible book abbreviations
     def setBibleAbbreviations(self):

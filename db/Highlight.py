@@ -7,10 +7,12 @@ class Highlight:
 
     CREATE_HIGHLIGHT_TABLE = "CREATE TABLE IF NOT EXISTS Highlight (Book INT, Chapter INT, Verse INT, Code NVARCHAR(5))"
 
-    codes = {"hl1": "hl1", "hl2": "hl2", "hl3": "hl3", "hl4": "hl4", "hl5": "hl5", "hl6": "hl6", "hl7": "hl7", "hl8": "hl8", "hl9": "hl9", "hl10": "hl10",
-             "underline": "ul1", "ul1": "ul1"}
+    codes = {"underline": "ul1", "ul1": "ul1"}
 
     def __init__(self):
+        for i in range(len(config.highlightCollections)):
+            code = "hl{0}".format(i + 1)
+            self.codes[code] = code
         self.filename = os.path.join(config.marvelData, "highlights.bible")
         self.connection = sqlite3.connect(self.filename)
         self.cursor = self.connection.cursor()

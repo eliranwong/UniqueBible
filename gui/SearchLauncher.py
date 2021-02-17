@@ -134,7 +134,7 @@ class SearchLauncher(QWidget):
 
     def highlightNoteSearchResultCheckBox(self):
         self.searchNoteCheckbox = QCheckBox()
-        self.searchNoteCheckbox.setMaximumWidth(40)
+        self.searchNoteCheckbox.setMaximumWidth(30)
         self.searchNoteCheckbox.setToolTip(config.thisTranslation["highlightNoteSearchResult"])
         self.searchNoteCheckbox.setChecked(True if config.noteSearchString else False)
         self.searchNoteCheckbox.stateChanged.connect(self.searchNoteCheckboxChanged)
@@ -142,6 +142,7 @@ class SearchLauncher(QWidget):
 
     def highlightBookSearchResultCheckBox(self):
         self.searchBookCheckbox = QCheckBox()
+        self.searchBookCheckbox.setMaximumWidth(30)
         self.searchBookCheckbox.setToolTip(config.thisTranslation["highlightBookSearchResult"])
         self.searchBookCheckbox.setChecked(True if config.bookSearchString else False)
         self.searchBookCheckbox.stateChanged.connect(self.searchBookCheckboxChanged)

@@ -222,6 +222,7 @@ class BibleExplorer(QWidget):
         if not self.bcvChain and (index >= 0):
             self.v = self.verseList[index]
             self.verseLabel.setText(self.getSelectedReference())
+            self.parent.updateBibleTabText("{0}:::{1}".format(self.text, self.getSelectedReference()))
 
     def featuresWidget(self):
         features = QWidget()
@@ -237,6 +238,7 @@ class BibleExplorer(QWidget):
         self.bookLabel.setText(self.getSelectedReferenceBook())
         self.chapterLabel.setText(self.getSelectedReferenceChapter())
         self.verseLabel.setText(self.getSelectedReference())
+        self.parent.updateBibleTabText("{0}:::{1}".format(self.text, self.getSelectedReference()))
 
     def bookFeatures(self):
         buttonRow1 = (

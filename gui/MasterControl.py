@@ -40,8 +40,10 @@ class MasterControl(QWidget):
                     self.tabs.setCurrentIndex(1)
                 elif event.key() == Qt.Key_F:
                     self.tabs.setCurrentIndex(2)
-                elif event.key() == Qt.Key_H:
+                elif event.key() == Qt.Key_Y:
                     self.tabs.setCurrentIndex(3)
+                elif event.key() == Qt.Key_M:
+                    self.tabs.setCurrentIndex(4)
             elif event.key() == Qt.Key_Escape:
                 self.hide()
         return QWidget.event(self, event)
@@ -104,24 +106,31 @@ class MasterControl(QWidget):
         sharedWidget.setLayout(sharedWidgetLayout)
         return sharedWidget
 
+    def updateBibleTabText(self, reference):
+        self.tabs.setTabText(0, reference)
+
     def tabWidget(self, b, c, v, text, initialTab):
         self.tabs = QTabWidget()
         # 0
         self.bibleTab = BibleExplorer(self, (b, c, v, text))
         self.tabs.addTab(self.bibleTab, config.thisTranslation["cp0"])
+        self.tabs.setTabToolTip(0, config.thisTranslation["cp0Tip"])
         # 1
         libraryTab = LibraryLauncher(self)
         self.tabs.addTab(libraryTab, config.thisTranslation["cp1"])
+        self.tabs.setTabToolTip(1, config.thisTranslation["cp1Tip"])
         # 2
         self.toolTab = SearchLauncher(self)
         self.tabs.addTab(self.toolTab, config.thisTranslation["cp2"])
+        self.tabs.setTabToolTip(2, config.thisTranslation["cp2Tip"])
         # 3
         self.historyTab = HistoryLauncher(self)
         self.tabs.addTab(self.historyTab, config.thisTranslation["cp3"])
+        self.tabs.setTabToolTip(3, config.thisTranslation["cp3Tip"])
         # 4
-        if config.developer:
-            self.miscellaneousTab = MiscellaneousLauncher(self)
-            self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp4"])
+        self.miscellaneousTab = MiscellaneousLauncher(self)
+        self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp4"])
+        self.tabs.setTabToolTip(4, config.thisTranslation["cp4Tip"])
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab
