@@ -125,6 +125,8 @@ class HighlightLauncher(QWidget):
 
     def highlightOptionChanged(self, checked, option=None):
         if checked and not self.isRefreshing:
+            if not config.enableVerseHighlighting:
+                config.enableVerseHighlighting = True
             if option is None:
                 code = "delete"
             else:

@@ -1783,7 +1783,7 @@ class TextCommandParser:
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH:::
+    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH
     def textSearch(self, command, source, mode, favouriteVersion=False, referenceOnly=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)

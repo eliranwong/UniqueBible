@@ -568,9 +568,11 @@ input.addEventListener('keyup', function(event) {0}
 
         formatedText = "<b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(text, config.thisTranslation["html_searchBible2"])
         if text in plainBibleList:
-            query = "SELECT * FROM {0} WHERE ".format(text)
+            query = "SELECT * FROM {0}".format(text)
         elif text in formattedBibleList:
-            query = "SELECT * FROM Verses WHERE "
+            query = "SELECT * FROM Verses"
+        if not mode == "REGEX":
+            query += " WHERE "
         if mode == "BASIC":
             if referenceOnly:
                 searchCommand = "SEARCHREFERENCE"
