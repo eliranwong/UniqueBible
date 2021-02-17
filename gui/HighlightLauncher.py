@@ -136,6 +136,8 @@ class HighlightLauncher(QWidget):
 
     def searchHighlight(self, selectedIndex, code):
         if selectedIndex != 0:
+            if not config.enableVerseHighlighting:
+                config.enableVerseHighlighting = True
             scopes = {
                 1: "all",
                 2: "ot",
