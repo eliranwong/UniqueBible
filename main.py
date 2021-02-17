@@ -35,11 +35,11 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
-from gui.MainWindow import MainWindow
-
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
+
+from gui.MainWindow import MainWindow
 
 # Setup GUI windows
 from PySide2.QtWidgets import QApplication, QStyleFactory
