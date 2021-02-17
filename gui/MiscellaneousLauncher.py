@@ -17,9 +17,12 @@ class MiscellaneousLauncher(QWidget):
         self.setupUI()
 
     def setupUI(self):
-        mainLayout = QHBoxLayout()
-        mainLayout.addWidget(HighlightLauncher(self))
-        mainLayout.addWidget(QLabel(""))
+        mainLayout = QGridLayout()
+        self.highLightLauncher = HighlightLauncher(self)
+        mainLayout.addWidget(self.highLightLauncher, 0, 0, 1, 2)
+        mainLayout.addWidget(QLabel(""), 0, 2, 1, 1)
+        #mainLayout.setColumnStretch(2, 1)
         self.setLayout(mainLayout)
 
-
+    def refresh(self):
+        self.highLightLauncher.refresh()

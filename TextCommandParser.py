@@ -1607,7 +1607,7 @@ class TextCommandParser:
             self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
             return ("", "", {})
         else:
-            text, b, c, v = command.split(".")
+            *_, b, c, v = command.split(".")
             verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
@@ -1802,12 +1802,11 @@ class TextCommandParser:
         if config.enableVerseHighlighting:
             if command.count(":::") == 0:
                 command += ":::all"
-            commandList = self.splitCommand(command)
+            code, reference = self.splitCommand(command)
             highlight = Highlight()
-            verses = highlight.getHighlightedBcvList(commandList[0], commandList[1])
-            bcv = [(i[0], i[1], i[2]) for i in verses]
-            biblesSqlite = BiblesSqlite()
-            text = biblesSqlite.readMultipleVerses(config.mainText, bcv)
+            verses = highlight.getHighlightedBcvList(code, reference)
+            bcv = [(b, c, v) for b, c, v, *_ in verses]
+            text = BiblesSqlite().readMultipleVerses(config.mainText, bcv)
             text = highlight.highlightSearchResults(text, verses)
             return ("study", text, {})
         else:

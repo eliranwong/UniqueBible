@@ -188,19 +188,28 @@ class MasterControl(QWidget):
         command = self.commandField.text()
         self.runTextCommand(command, False)
 
-    def runTextCommand(self, command, printCommand=True):
+    def runTextCommand(self, command, printCommand=True, reloadMainWindow=False):
         if printCommand:
             self.commandField.setText(command)
         self.parent.runTextCommand(command)
+        if reloadMainWindow:
+            self.parent.reloadCurrentRecord()
         if config.closeControlPanelAfterRunningCommand and not self.isRefreshing:
             self.hide()
 
     def tabChanged(self, index):
+        self.isRefreshing = True
+
+        # refresh content
+        if index == 3:
+            self.historyTab.refresh()
+        elif index == 4:
+            self.miscellaneousTab.refresh()
+
+        # set focus
         if index == 2:
             self.toolTab.searchField.setFocus()
-        elif index == 3:
-            self.isRefreshing = True
-            self.historyTab.refreshHistoryRecords()
-            self.isRefreshing = False
         else:
             self.commandField.setFocus()
+
+        self.isRefreshing = False

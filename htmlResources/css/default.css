@@ -716,17 +716,10 @@ testColor{
     color: #4f4c4c;
 }
 
-.hl1 {
-    background: rgb(232, 232, 9);
-}
-
 .ohl1 {
     color: rgb(211, 211, 17);
 }
 
-.hl2 {
-    background: rgb(79, 247, 250);
-}
 .ohl2 {
     color: rgb(79, 247, 250);
 }

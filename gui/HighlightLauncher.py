@@ -3,7 +3,7 @@ if not __name__ == "__main__":
 from functools import partial
 from PySide2.QtGui import QColor
 from PySide2.QtGui import QGuiApplication
-from PySide2.QtWidgets import QRadioButton, QComboBox, QHBoxLayout, QVBoxLayout, QLabel, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
+from PySide2.QtWidgets import QRadioButton, QComboBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from db.Highlight import Highlight
@@ -28,34 +28,32 @@ class HighlightLauncher(QWidget):
         self.setMinimumWidth(500)
         self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
 
-    def setupUI(self):
-        codes = Highlight().isHighlighted(self.parent.parent.bibleTab.b, self.parent.parent.bibleTab.b, self.parent.parent.bibleTab.b)
-        initialCode = None
+    def refresh(self):
+        codes = Highlight().isHighlighted(self.parent.parent.bibleTab.b, self.parent.parent.bibleTab.c, self.parent.parent.bibleTab.v)
         if codes:
-            initialCode = codes[0]
+            index = int(codes[0][-1]) - 1
+            self.collectionRadioButtons[index].setChecked(True)
+        
+    def setupUI(self):
 
         layout = QVBoxLayout()
-        
-        subLayout = QHBoxLayout()
-        radioButton = QRadioButton()
-        radioButton.toggled.connect(self.highlightOptionChanged)
-        radioButton.setToolTip(config.thisTranslation["selectRemoveHighlight"])
-        subLayout.addWidget(radioButton)
-        subLayout.addWidget(QLabel(config.thisTranslation["noHightlight"]))
-        layout.addLayout(subLayout)
+
+        columns = QHBoxLayout()
+        leftColumn = QVBoxLayout()
+        rightColumn = QVBoxLayout()
 
         self.collectionButton1, self.collectionButton2, self.collectionButton3, self.collectionButton4, self.collectionButton5, self.collectionButton6, self.collectionButton7, self.collectionButton8, self.collectionButton9, self.collectionButton10 = QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton()
         self.collectionButtons = (self.collectionButton1, self.collectionButton2, self.collectionButton3, self.collectionButton4, self.collectionButton5, self.collectionButton6, self.collectionButton7, self.collectionButton8, self.collectionButton9, self.collectionButton10)
         self.collectionColourButton1, self.collectionColourButton2, self.collectionColourButton3, self.collectionColourButton4, self.collectionColourButton5, self.collectionColourButton6, self.collectionColourButton7, self.collectionColourButton8, self.collectionColourButton9, self.collectionColourButton10 = QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton(), QPushButton()
         self.collectionColourButtons = (self.collectionColourButton1, self.collectionColourButton2, self.collectionColourButton3, self.collectionColourButton4, self.collectionColourButton5, self.collectionColourButton6, self.collectionColourButton7, self.collectionColourButton8, self.collectionColourButton9, self.collectionColourButton10)
+        self.collectionRadioButton1, self.collectionRadioButton2, self.collectionRadioButton3, self.collectionRadioButton4, self.collectionRadioButton5, self.collectionRadioButton6, self.collectionRadioButton7, self.collectionRadioButton8, self.collectionRadioButton9, self.collectionRadioButton10 = QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton(), QRadioButton()
+        self.collectionRadioButtons = (self.collectionRadioButton1, self.collectionRadioButton2, self.collectionRadioButton3, self.collectionRadioButton4, self.collectionRadioButton5, self.collectionRadioButton6, self.collectionRadioButton7, self.collectionRadioButton8, self.collectionRadioButton9, self.collectionRadioButton10)
         for index, button in enumerate(self.collectionButtons):
             subLayout = QHBoxLayout()
             
-            radioButton = QRadioButton()
+            radioButton = self.collectionRadioButtons[index]
             radioButton.setFixedWidth(20)
             radioButton.toggled.connect(lambda checked, option=index: self.highlightOptionChanged(checked, option))
-            if initialCode is not None and int(initialCode[-1]) - 1 == index:
-                radioButton.setChecked(True)
             radioButton.setToolTip(config.thisTranslation["selectApplyHighlight"])
             subLayout.addWidget(radioButton)
 
@@ -76,7 +74,19 @@ class HighlightLauncher(QWidget):
             combo.setFixedWidth(100)
             combo.currentIndexChanged.connect(lambda selectedIndex, index=index: self.searchHighlight(selectedIndex, index))
             subLayout.addWidget(combo)
-            layout.addLayout(subLayout)
+            
+            leftColumn.addLayout(subLayout) if (index % 2 == 0) else rightColumn.addLayout(subLayout)
+
+        columns.addLayout(leftColumn)
+        columns.addLayout(rightColumn)
+        layout.addLayout(columns)
+
+        button = QPushButton(config.thisTranslation["noHightlight"])
+        button.setToolTip(config.thisTranslation["selectRemoveHighlight"])
+        button.clicked.connect(lambda: self.highlightOptionChanged(True))
+        layout.addWidget(button)
+
+        layout.addStretch()
 
         self.setLayout(layout)
 
@@ -87,7 +97,7 @@ class HighlightLauncher(QWidget):
             else:
                 code = "hl{0}".format(option + 1)
             command = "_HIGHLIGHT:::{0}:::{1}".format(code, self.parent.parent.bibleTab.getSelectedReference())
-            self.parent.parent.runTextCommand(command)
+            self.parent.parent.runTextCommand(command, reloadMainWindow=True)
 
     def searchHighlight(self, selectedIndex, code):
         if selectedIndex != 0:

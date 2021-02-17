@@ -54,37 +54,29 @@ class HistoryLauncher(QWidget):
         self.setLayout(mainLayout)
 
     def createMainListView(self):
-        mainItems = list(reversed(config.history["main"]))
         # Main and study history records are editable, so users can slightly modify a command and execute a new one.
         self.mainListView = QListView()
-        self.mainModel = QStringListModel(mainItems)
+        self.mainModel = QStringListModel()
         self.mainListView.setModel(self.mainModel)
         self.mainListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "main"))
-        if mainItems:
-            self.mainListView.setCurrentIndex(self.mainModel.index(0, 0))
         return self.mainListView
 
     def createStudyListView(self):
-        studyItems = list(reversed(config.history["study"]))
+        #studyItems = list(reversed(config.history["study"]))
         # Main and study history records are editable, so users can slightly modify a command and execute a new one.
         self.studyListView = QListView()
-        self.studyModel = QStringListModel(studyItems)
+        self.studyModel = QStringListModel()
         self.studyListView.setModel(self.studyModel)
         self.studyListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "study"))
-        if studyItems:
-            self.studyListView.setCurrentIndex(self.studyModel.index(0, 0))
         return self.studyListView
 
     def createExternalListView(self):
-        externalItems = self.filterExternalFileRecords()
         self.externalListView = QListView()
         # Only external file history record is not editable
         self.externalListView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.externalModel = QStringListModel(externalItems)
+        self.externalModel = QStringListModel()
         self.externalListView.setModel(self.externalModel)
         self.externalListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "external"))
-        if externalItems:
-            self.externalListView.setCurrentIndex(self.externalModel.index(0, 0))
         return self.externalListView
 
     def filterExternalFileRecords(self):
@@ -93,17 +85,14 @@ class HistoryLauncher(QWidget):
         files = list(reversed(config.history["external"]))
         return [file for file in files if os.path.isfile(file)]
 
-    def refreshHistoryRecords(self):
-        if not self.startup:
-            mainItems = list(reversed(config.history["main"]))
-            studyItems = list(reversed(config.history["study"]))
-            externalItems = self.filterExternalFileRecords()
-            self.mainModel.setStringList(mainItems)
-            self.studyModel.setStringList(studyItems)
-            self.externalModel.setStringList(externalItems)
-            self.setSelection(mainItems, studyItems, externalItems)
-        else:
-            self.startup = False
+    def refresh(self):
+        mainItems = list(reversed(config.history["main"]))
+        studyItems = list(reversed(config.history["study"]))
+        externalItems = self.filterExternalFileRecords()
+        self.mainModel.setStringList(mainItems)
+        self.studyModel.setStringList(studyItems)
+        self.externalModel.setStringList(externalItems)
+        self.setSelection(mainItems, studyItems, externalItems)
 
     def setSelection(self, mainItems, studyItems, externalItems):
         if mainItems:
@@ -122,8 +111,9 @@ class HistoryLauncher(QWidget):
         self.parent.runTextCommand(command)
 
     def historyAction(self, selection, key):
-        selectedItem = selection[0].indexes()[0].data()
-        self.openSelectedItem(selectedItem, key)
+        if not self.parent.isRefreshing:
+            selectedItem = selection[0].indexes()[0].data()
+            self.openSelectedItem(selectedItem, key)
 
     def openSelectedItem(self, selectedItem, key):
         if key == "external":
