@@ -444,7 +444,10 @@ class ConfigUtil:
         # Default menu shortcuts
         if not hasattr(config, "menuShortcuts"):
             config.menuShortcuts = "micron"
-
+        # Option to use flags=re.IGNORECASE with regular expression for searching bible
+        # flags=re.IGNORECASE will be applied only if config.regexCaseSensitive is set to False
+        if not hasattr(config, "regexCaseSensitive"):
+            config.regexCaseSensitive = False
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -603,6 +606,7 @@ class ConfigUtil:
             ("studyC", config.studyC),
             ("studyV", config.studyV),
             ("bibleSearchMode", config.bibleSearchMode),
+            ("regexCaseSensitive", config.regexCaseSensitive),
             ("commentaryText", config.commentaryText),
             ("commentaryB", config.commentaryB),
             ("commentaryC", config.commentaryC),

@@ -586,7 +586,7 @@ class Languages:
         "searchRB2": "AND combination \nUse separator '|' to separate multple search items \ne.g. love|Jesus",
         "searchRB3": "OR combination \nUse separator '|' to separate multple search items \ne.g. love|Jesus",
         "searchRB4": "Advanced search mode: \nEnter condition(s) to complete SQL WHERE statement \ne.g. Scripture LIKE '%love%' AND Scripture LIKE '%Jesus%' \ne.g. Book = 1 AND Scripture LIKE '%love%'",
-        "searchRB5": "Search with regular expression",
+        "searchRB5": "Use standard regular expression for search\nWith regular expression, you have an additional option to search for case-sensitive words by turning on config flag 'regexCaseSensitive' \ne.g. REGEXSEARCH:::KJV:::God.*?heaven",
         "folders": "Folders",
         "speak": "Speak",
         "stop": "Stop",

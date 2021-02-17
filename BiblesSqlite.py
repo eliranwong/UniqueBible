@@ -573,6 +573,8 @@ input.addEventListener('keyup', function(event) {0}
             query = "SELECT * FROM Verses"
         if not mode == "REGEX":
             query += " WHERE "
+        else:
+            t = ()
         if mode == "BASIC":
             if referenceOnly:
                 searchCommand = "SEARCHREFERENCE"
@@ -593,6 +595,9 @@ input.addEventListener('keyup', function(event) {0}
             bible = Bible(text)
             verses = bible.getSearchVerses(query, t)
             del bible
+        # Search fetched result with regular express here
+        if mode == "REGEX":
+            verses = [(b, c, v, re.sub("({0})".format(searchString), r"<z>\1</z>", verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)) for b, c, v, verseText in verses if re.search(searchString, verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)]
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
         if referenceOnly:
             parser = BibleVerseParser(config.parserStandarisation)

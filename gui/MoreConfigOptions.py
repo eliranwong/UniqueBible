@@ -44,6 +44,7 @@ class MoreConfigOptions(QDialog):
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, ""),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, ""),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, ""),
+            ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, "Default: False \nTurn it on to search case sensitive word(s) with regular expression")
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, ""),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
@@ -183,6 +184,9 @@ class MoreConfigOptions(QDialog):
 
     def closeControlPanelAfterRunningCommandChanged(self):
         config.closeControlPanelAfterRunningCommand = not config.closeControlPanelAfterRunningCommand
+
+    def regexCaseSensitiveChanged(self):
+        config.regexCaseSensitive = not config.regexCaseSensitive
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab

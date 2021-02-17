@@ -159,8 +159,13 @@ class TextCommandParser:
             "showsearch": self.textSearchBasic,
             # [KEYWORD] SEARCHREFERENCE
             "searchreference": self.textSearchReference,
+            # [KEYWORD] REGEXSEARCH
+            # Feature - Search bible / bibles with regular expression
+            # Usage - REGEXSEARCH:::[BIBLE_VERSION(S)]:::[REGEX_PATTERN]
+            # e.g. REGEXSEARCH:::KJV:::God.*?heaven
+            "regexsearch": self.textSearchRegex,
             # [KEYWORD] ADVANCEDSEARCH
-            # Feature - Search bible / bibles for a sql string
+            # Feature - Search bible / bibles with a sql string
             # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # e.g. ADVANCEDSEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
             # To work on multiple bibles, separate bible versions with a character "_":
@@ -1765,6 +1770,10 @@ class TextCommandParser:
     def textSearchReference(self, command, source):
         return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef, referenceOnly=True)
 
+    # REGEXSEARCH:::
+    def textSearchRegex(self, command, source):
+        return self.textSearch(command, source, "REGEX", config.addFavouriteToMultiRef)
+
     # ADVANCEDSEARCH:::
     def textSearchAdvanced(self, command, source):
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
@@ -1783,7 +1792,7 @@ class TextCommandParser:
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH
+    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH:::
     def textSearch(self, command, source, mode, favouriteVersion=False, referenceOnly=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)

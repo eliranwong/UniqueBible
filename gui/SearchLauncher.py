@@ -12,7 +12,7 @@ class SearchLauncher(QWidget):
         # set title
         self.setWindowTitle(config.thisTranslation["tools"])
         # set up variables
-        self.bibleSearchModeTuple = ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")
+        self.bibleSearchModeTuple = ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
         # setup interface
         self.setupUI()
 
