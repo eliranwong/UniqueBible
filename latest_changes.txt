@@ -170,7 +170,7 @@ Major changes in version 21.06:
 - Added support of custom css.  Users can now customise fonts, text styles, etc.
 - A wiki page created for custom css feature: https://github.com/eliranwong/UniqueBible/wiki/custom_css
 - Added a configuration flag: closeControlPanelAfterRunningCommand
-- now automatically detects if UniqueBible.app is installed on a chromebook, option "preferRemoteControlForCommandLineEntry" will be automatically configured.
+- now automatically detects if UniqueBible.app is installed on a chromebook, option "preferMiniControlForCommandLineEntry" will be automatically configured.
 
 Major changes in version 21.05:
 - Fixed issues #80 and #82
@@ -182,7 +182,7 @@ Major changes in version 21.04:
 
 Major changes in version 21.03:
 - "Remote Control" is renamed to "Control Panel"
-- Configuration option "preferRemoteControlForCommandLineEntry" introduced in version 20.8 is renamed to "preferControlPanelForCommandLineEntry".
+- Configuration option "preferMiniControlForCommandLineEntry" introduced in version 20.8 is renamed to "preferControlPanelForCommandLineEntry".
 - Options to enforce comparison / parallel: True / False
 * When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
 * Please note that change in bible version for chapter reading is ignored when this option is enabled.
@@ -226,7 +226,7 @@ Added 3 configuration flags:
     [only application on Linux platform, it forces the app to use fcitx as input method.  It works only if fcitx is properly installed.  Since ibus is another available option, Linux users can only choose one of them.]
     config.addBreakAfterTheFirstToolBar
     config.addBreakBeforeTheLastToolBar
-    [The last two above may be useful when user opt for preferRemoteControlForCommandLineEntry, introduced since version 20.5.  From version 20.8, main window command line field is hidden at launch if users enable preferRemoteControlForCommandLineEntry.  The two flags above can help users to arrange toolbar in order to save spaces.]
+    [The last two above may be useful when user opt for preferMiniControlForCommandLineEntry, introduced since version 20.5.  From version 20.8, main window command line field is hidden at launch if users enable preferMiniControlForCommandLineEntry.  The two flags above can help users to arrange toolbar in order to save spaces.]
 
 Major change in version 20.7:
 Added missing macros folder when users update.
@@ -237,10 +237,10 @@ Merged @otseng new PR:
     Fixed duplicate listing of Bibles
 
 Latest changes in version 20.5:
-Added a configuration option: preferRemoteControlForCommandLineEntry
+Added a configuration option: preferMiniControlForCommandLineEntry
 It is an enhancement in general and a workaround address to a Chrome OS address.
 You may read more about this feature at:
-https://github.com/eliranwong/UniqueBible/wiki/preferRemoteControlForCommandLineEntry
+https://github.com/eliranwong/UniqueBible/wiki/preferMiniControlForCommandLineEntry
 
 Latest changes in version 20.4:
 Fixes 2 issues found:
@@ -314,7 +314,7 @@ Merged new additions contributed by Oliver Tseng.  Thanks to Oliver for making t
 - Add importXMLBible (Zefania Bibles)
 - Catch global uncaught exceptions
 - Import bblx Bible
-- Always recreate RemoteControl to show newly installed modules
+- Always recreate MiniControl to show newly installed modules
 - Add bottom, right half screen size
 - Add screen size shortcuts
 - Add small size to instant

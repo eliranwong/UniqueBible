@@ -15,7 +15,7 @@ class ClassicMainWindow(MainWindow):
         menu = addMenu(menuBar, "menu1_app")
         items = (
             ("controlPanel", self.manageControlPanel, sc.manageControlPanel),
-            ("menu1_remoteControl", self.manageRemoteControl, sc.manageRemoteControl),
+            ("menu1_miniControl", self.manageMiniControl, sc.manageMiniControl),
         )
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)

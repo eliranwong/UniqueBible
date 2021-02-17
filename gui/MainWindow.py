@@ -29,7 +29,7 @@ from gui.MoreConfigOptions import MoreConfigOptions
 from gui.ImportSettings import ImportSettings
 from gui.NoteEditor import NoteEditor
 from gui.MasterControl import MasterControl
-from gui.RemoteControl import RemoteControl
+from gui.MiniControl import MiniControl
 from gui.MorphDialog import MorphDialog
 from gui.YouTubePopover import YouTubePopover
 from gui.CentralWidget import CentralWidget
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         # Control Panel
         self.controlPanel = None
         # Remote control
-        self.remoteControl = None
+        self.miniControl = None
         # Used in pause() to pause macros
         self.pauseMode = False
 
@@ -308,30 +308,30 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
-    def manageRemoteControl(self):
-        if config.remoteControl and not self.remoteControl.isActiveWindow():
+    def manageMiniControl(self):
+        if config.miniControl and not self.miniControl.isActiveWindow():
             textCommandText = self.textCommandLineEdit.text()
             if textCommandText:
-                self.remoteControl.searchLineEdit.setText(textCommandText)
-            self.remoteControl.raise_()
+                self.miniControl.searchLineEdit.setText(textCommandText)
+            self.miniControl.raise_()
             # The following line does not work on Chrome OS
-            # self.remoteControl.activateWindow()
+            # self.miniControl.activateWindow()
             # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
             # Therefore, we use hide and show instead.
-            self.remoteControl.hide()
-            self.remoteControl.show()
-        elif not config.remoteControl:
-            self.remoteControl = RemoteControl(self)
-            self.remoteControl.show()
+            self.miniControl.hide()
+            self.miniControl.show()
+        elif not config.miniControl:
+            self.miniControl = MiniControl(self)
+            self.miniControl.show()
             textCommandText = self.textCommandLineEdit.text()
             if config.clearCommandEntry:
-                self.remoteControl.searchLineEdit.setText("")
+                self.miniControl.searchLineEdit.setText("")
             elif textCommandText:
-                self.remoteControl.searchLineEdit.setText(textCommandText)
-            config.remoteControl = True
-        elif self.remoteControl:
-            self.remoteControl.close()
-            config.remoteControl = False
+                self.miniControl.searchLineEdit.setText(textCommandText)
+            config.miniControl = True
+        elif self.miniControl:
+            self.miniControl.close()
+            config.miniControl = False
 
     def closeEvent(self, event):
         if self.noteEditor:

@@ -206,7 +206,7 @@ class FocusMainWindow(MainWindow):
         for index, shortcut in enumerate((sc.masterCurrentIndex0, sc.masterCurrentIndex1, sc.masterCurrentIndex2, sc.masterCurrentIndex3)):
             addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_remoteControl", self, self.manageRemoteControl, sc.manageRemoteControl)
+        addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
         menu.addSeparator()
         addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)
 

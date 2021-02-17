@@ -20,14 +20,17 @@ from TextCommandParser import TextCommandParser
 
 from BiblesSqlite import BiblesSqlite
 
-class RemoteControl(QWidget):
+class MiniControl(QWidget):
 
     def __init__(self, parent):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["remote_control"])
         self.parent = parent
         # specify window size
-        self.resizeWindow(2 / 5, 1 / 3)
+        if config.qtMaterial and config.qtMaterialTheme:
+            self.resizeWindow(1 / 2, 1 / 3)
+        else:
+            self.resizeWindow(2 / 5, 1 / 3)
         self.resizeEvent = (lambda old_method: (lambda event: (self.onResized(event), old_method(event))[-1]))(
             self.resizeEvent)
         # setup interface
@@ -43,7 +46,7 @@ class RemoteControl(QWidget):
         pass
 
     def closeEvent(self, event):
-        config.remoteControl = False
+        config.miniControl = False
 
     # setup ui
     def setupUI(self):
@@ -104,7 +107,7 @@ class RemoteControl(QWidget):
             self.languageCombo.setCurrentIndex(initialIndex)
     
             setDefaultButton = QPushButton(config.thisTranslation["setDefault"])
-            setDefaultButton.setFixedWidth(100)
+            setDefaultButton.setFixedWidth(130)
             setDefaultButton.clicked.connect(self.setTtsDefaultLanguage)
             ttsLayout.addWidget(setDefaultButton)
             
@@ -360,6 +363,6 @@ if __name__ == "__main__":
    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
 
    app = QApplication(sys.argv)
-   ui = RemoteControl(DummyParent())
+   ui = MiniControl(DummyParent())
    ui.show()
    sys.exit(app.exec_())

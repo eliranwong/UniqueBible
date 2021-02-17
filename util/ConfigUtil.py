@@ -450,8 +450,8 @@ class ConfigUtil:
         # Their values are not saved on exit.
         if not hasattr(config, "controlPanel"):
             config.controlPanel = False
-        if not hasattr(config, "remoteControl"):
-            config.remoteControl = False
+        if not hasattr(config, "miniControl"):
+            config.miniControl = False
         if not hasattr(config, "tempRecord"):
             config.tempRecord = ""
         if not hasattr(config, "isDownloading"):

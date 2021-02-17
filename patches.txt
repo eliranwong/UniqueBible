@@ -36,7 +36,7 @@
 (21.28, "file", "TextCommandParser.py")
 (21.26, "file", "gui/MenuItems.py")
 (21.26, "file", "htmlResources/noteBook.png")
-(21.26, "file", "gui/RemoteControl.py")
+(21.26, "file", "gui/MiniControl.py")
 (21.26, "file", "gui/ToolsLauncher.py")
 (21.26, "file", "gui/WebEngineViewPopover.py")
 (21.26, "file", "util/MacroParser.py")
