@@ -8,8 +8,6 @@ from gui.MiscellaneousLauncher import MiscellaneousLauncher
 from PySide2.QtWidgets import QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
-import shortcut as sc
-from util.ShortcutUtil import ShortcutUtil
 from PySide2.QtCore import Qt, QEvent
 
 class MasterControl(QWidget):
