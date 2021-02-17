@@ -1,18 +1,12 @@
-import os, config, myTranslation
 from PySide2.QtCore import QSize
-from PySide2.QtGui import QIcon, Qt
-from PySide2.QtWidgets import QComboBox, QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory
+from PySide2.QtWidgets import QComboBox
 from gui.MenuItems import *
-from gui.MainWindow import MainWindow
 import shortcut as sc
 from BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 
 
-class FocusMainWindow(MainWindow):
-
-    def __init__(self):
-        super().__init__()
+class FocusMainWindow:
 
     def create_menu(self):
         menuBar = self.menuBar()
@@ -316,32 +310,6 @@ class FocusMainWindow(MainWindow):
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
             addMenuItem(menu, "Testing", self, self.testing, None, False)
 
-    def testing(self):
-        #pass
-        print("testing")
-
-    def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
-        if button is None:
-            button = QPushButton()
-        button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
-        button.setStyleSheet(textButtonStyle)
-        button.clicked.connect(action)
-        toolbar.addWidget(button)
-
-    def addStandardIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
-        if button is None:
-            button = QPushButton()
-        if config.qtMaterial and config.qtMaterialTheme:
-            #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
-            button.setFixedWidth(config.iconButtonWidth)
-            #button.setFixedHeight(config.iconButtonWidth)
-        button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
-        buttonIconFile = os.path.join("htmlResources", icon)
-        button.setIcon(QIcon(buttonIconFile))
-        button.clicked.connect(action)
-        toolbar.addWidget(button)
-
     def setupToolBarStandardIconSize(self):
         
         self.firstToolBar = QToolBar()
@@ -413,7 +381,7 @@ class FocusMainWindow(MainWindow):
         if config.addBreakAfterTheFirstToolBar:
             self.addToolBarBreak()
 
-        #self.studyBibleToolBar = QToolBar()
+        self.studyBibleToolBar = QToolBar()
         #self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         #self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         #self.addToolBar(self.studyBibleToolBar)

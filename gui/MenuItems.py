@@ -1,8 +1,6 @@
 import os, config, myTranslation
 from PySide2.QtGui import QIcon, Qt
 from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
-import gui.MenuItems
-from gui.MainWindow import MainWindow
 from gui.MasterControl import MasterControl
 
 def addMenu(menuBar, translation):

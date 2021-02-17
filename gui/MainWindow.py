@@ -7,7 +7,7 @@ from functools import partial
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication)
+                               QFrame, QFontDialog, QApplication, QPushButton)
 
 import exlbl
 from BibleBooks import BibleBooks
@@ -19,6 +19,10 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
+# These "unused" window imports are actually used.  Do not delete these lines.
+from gui.AlephMainWindow import AlephMainWindow
+from gui.ClassicMainWindow import ClassicMainWindow
+from gui.FocusMainWindow import FocusMainWindow
 from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
 from translations import translations
@@ -47,7 +51,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.logger = logging.getLogger('uba')
 
-        self.logger = logging.getLogger('uba')
+        config.inBootupMode = True
+        bootStartTime = datetime.now()
         # Repository
         # Read about downloading a raw github file: https://unix.stackexchange.com/questions/228412/how-to-wget-a-github-file
         self.repository = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/"
@@ -92,9 +97,10 @@ class MainWindow(QMainWindow):
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
-        self.create_menu()
-        self.setupToolBar()
-        self.setAdditionalToolBar()
+
+        # Setup menu layout
+        self.setupMenuLayout(config.menuLayout)
+
         # assign views
         # mainView & studyView are assigned with class "CentralWidget"
         self.mainView = None
@@ -135,8 +141,37 @@ class MainWindow(QMainWindow):
         # pre-load control panel
         self.manageControlPanel(config.showControlPanelOnStartup)
 
+        config.inBootupMode = False
+        bootEndTime = datetime.now()
+        timeDifference = (bootEndTime - bootStartTime).total_seconds()
+
+        self.logger.info("Boot start time: {0}".format(timeDifference))
+
     def __del__(self):
         del self.textCommandParser
+
+    # Dynamically load menu layout
+    def setupMenuLayout(self, layout):
+        try:
+            self.menuBar().clear()
+            self.removeToolBar(self.firstToolBar)
+            self.removeToolBar(self.secondToolBar)
+            self.removeToolBar(self.leftToolBar)
+            self.removeToolBar(self.rightToolBar)
+            self.removeToolBar(self.studyBibleToolBar)
+        except:
+            pass
+        if layout not in ("classic", "focus", "aleph"):
+            raise Exception("{0} is not a valid menu layout")
+        else:
+            windowName = layout.capitalize() + "MainWindow"
+            windowClass = getattr(sys.modules[__name__], windowName)
+            getattr(windowClass, 'create_menu')(self)
+            if config.toolBarIconFullSize:
+                getattr(windowClass, 'setupToolBarFullIconSize')(self)
+            else:
+                getattr(windowClass, 'setupToolBarStandardIconSize')(self)
+            self.setAdditionalToolBar()
 
     def setOsOpenCmd(self):
         if platform.system() == "Linux":
@@ -568,12 +603,6 @@ class MainWindow(QMainWindow):
                 f.write(r.content)
         print("done")
 
-    def setupToolBar(self):
-        if config.toolBarIconFullSize:
-            self.setupToolBarFullIconSize()
-        else:
-            self.setupToolBarStandardIconSize()
-
     def setStudyBibleToolBar(self):
         if not config.noStudyBibleToolbar:
             if config.openBibleInMainViewOnly:
@@ -820,31 +849,31 @@ class MainWindow(QMainWindow):
 
     def setMenuLayout(self, layout):
         config.menuLayout = layout
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.setupMenuLayout(layout)
 
-    def setDefaultMenuLayout(self):
-        config.menuLayout = "classic"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+    def setClassicMenuLayout(self):
+        self.setMenuLayout("classic")
+
+    def setFocusMenuLayout(self):
+        self.setMenuLayout("focus")
 
     def setAlephMenuLayout(self):
-        config.menuLayout = "aleph"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.setMenuLayout("aleph")
 
     def setShortcuts(self, shortcut):
         config.menuShortcuts = shortcut
         ShortcutUtil.reset()
         ShortcutUtil.setup(shortcut)
         ShortcutUtil.loadShortcutFile()
-        self.menuBar().clear()
-        self.create_menu()
+        self.setupMenuLayout(config.menuLayout)
 
     def displayShortcuts(self):
         shortcutWindow = DisplayShortcutsWindow(config.menuShortcuts, ShortcutUtil.getAllShortcuts())
         if shortcutWindow.exec():
             ShortcutUtil.setup(config.menuShortcuts)
             ShortcutUtil.loadShortcutFile(config.menuShortcuts)
-            self.menuBar().clear()
-            self.create_menu()
+            ShortcutUtil.loadShortcutFile()
+            self.setupMenuLayout()
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
@@ -2423,10 +2452,10 @@ class MainWindow(QMainWindow):
         timeDifference = int((now - self.now).total_seconds())
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
-        # elif not forceExecute and \
-        #         (timeDifference <= 2 and (source == "main" and textCommand == self.lastMainTextCommand) or
-        #         (source == "study" and textCommand == self.lastStudyTextCommand) or textCommand == "main.html"):
-        #     self.logger.debug("Repeated command blocked " + textCommand)
+        elif not forceExecute and \
+                (timeDifference <= 2 and (source == "main" and textCommand == self.lastMainTextCommand) or
+                (source == "study" and textCommand == self.lastStudyTextCommand) or textCommand == "main.html"):
+            self.logger.debug("Repeated command blocked {0}:{1}".format(textCommand, source))
         else:
             # handle exception for new tab features
             if re.search('^(_commentary:::|_menu:::|_vnsc:::)', textCommand.lower()):
@@ -2783,3 +2812,30 @@ class MainWindow(QMainWindow):
         if gw.exec():
             config.gistToken = gw.gistTokenInput.text()
         self.reloadCurrentRecord()
+
+    def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        if button is None:
+            button = QPushButton()
+        button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
+        button.setStyleSheet(textButtonStyle)
+        button.clicked.connect(action)
+        toolbar.addWidget(button)
+
+    def addStandardIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
+        if button is None:
+            button = QPushButton()
+        if config.qtMaterial and config.qtMaterialTheme:
+            #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
+            button.setFixedWidth(config.iconButtonWidth)
+            #button.setFixedHeight(config.iconButtonWidth)
+        button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
+        buttonIconFile = os.path.join("htmlResources", icon)
+        button.setIcon(QIcon(buttonIconFile))
+        button.clicked.connect(action)
+        toolbar.addWidget(button)
+
+    def testing(self):
+        #pass
+        print("testing")
+
