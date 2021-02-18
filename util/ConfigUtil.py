@@ -35,6 +35,13 @@ class ConfigUtil:
                 config.alwaysDisplayStaticMaps = False
             else:
                 config.alwaysDisplayStaticMaps = True
+        # IBM Watson service api key
+        if not hasattr(config, "enableIBMWatson"):
+            config.enableIBMWatson = ""
+        if not hasattr(config, "myIBMWatsonApikey"):
+            config.myIBMWatsonApikey = ""
+        if not hasattr(config, "myIBMWatsonUrl"):
+            config.myIBMWatsonUrl = ""
         # Options to use control panel: True / False
         # This feature is created for use in church settings.
         # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen.
@@ -541,6 +548,9 @@ class ConfigUtil:
             ("developer", config.developer),
             ("myGoogleApiKey", config.myGoogleApiKey),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
+            ("enableIBMWatson", config.enableIBMWatson),
+            ("myIBMWatsonApikey", config.myIBMWatsonApikey),
+            ("myIBMWatsonUrl", config.myIBMWatsonUrl),
             ("openWindows", config.openWindows),
             ("openMacos", config.openMacos),
             ("openLinux", config.openLinux),

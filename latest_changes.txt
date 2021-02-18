@@ -1,3 +1,12 @@
+Major change in version 21.44:
+* Fixed TRANSLATE::: command
+* Now use IBM Watson translation service instead of google translate
+* This feature works ONLY if user install python package 'ibm-watson' and enter valid credentials in file config.py.
+* IBM Watson is a translation service.  It is free to use for translating 1 million characters per month.
+* Read details on IBM Watson service at: https://www.ibm.com/cloud/watson-language-translator/pricing
+* We will integrate this feature with right-click menu SEARCHBOOKNOTE
+* We will write a wiki page on it soon.
+
 Major change in version 21.43:
 * added a slider to Master Control Miscellenous tab to adjust text-to-speech speed
 * fixed unit test

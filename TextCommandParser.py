@@ -8,6 +8,7 @@ from ThirdParty import ThirdPartyDictionary
 from HebrewTransliteration import HebrewTransliteration
 from NoteSqlite import NoteSqlite
 from Languages import Languages
+from Translator import Translator
 from TtsLanguages import TtsLanguages
 from PySide2.QtWidgets import QApplication
 try:
@@ -361,14 +362,13 @@ class TextCommandParser:
             # e.g. open:::.
             "open": self.openExternalFile,
             # [KEYWORD] TRANSLATE
-            # Feature - Use google translate to entered text
-            # Usage - TRANSLATE:::[language code]:::[text to be translated]
+            # Feature - Use IBM Watson service to translate entered 
+            # It works only if user install python package 'ibm-watson'
+            # Usage - TRANSLATE:::[text to be translated]
+            # Usage - TRANSLATE:::[source_language_code]-[target_language_code]:::[text to be translated]
             # Language code of config.userLanguage is used by default if language code is not provided.  If config.userLanguage is not defined, "en" is used.
-            # Users may check supported language codes in file Languages.py
             # e.g. TRANSLATE:::測試
-            # e.g. TRANSLATE:::en:::測試
-            # e.g. TRANSLATE:::zh-CN:::test
-            # e.g. TRANSLATE:::ja:::test
+            # e.g. TRANSLATE:::en-zh:::test
             "translate": self.translateText,
             # [KEYWORD] openbooknote
             # e.g. openbooknote:::John
@@ -1078,7 +1078,44 @@ class TextCommandParser:
         return self.textAnotherView(command, source, "study")
 
     # TRANSLATE:::
+    # Translate text using IBM Watson service
+    # It works only if user entered their own personal credential and store in config.py locally on users' computer.
+    # The store credentials are only used only for communicating with IBM Watson service with python package 'ibm-watson'
+    # UBA does not collect any of these data.
     def translateText(self, command, source):
+        translator = Translator()
+        # Use IBM Watson service to translate text
+        if translator.language_translator is not None:
+            # unpack command
+            if command.count(":::") == 0:
+                fromLanguage = translator.identify(command)
+                toLanguage = "en"
+                if not fromLanguage in translator.fromLanguageCodes:
+                    fromLanguage = "en"
+                if config.userLanguage in translator.toLanguageCodes:
+                    toLanguage = config.userLanguage
+                text = command
+            else:
+                language, text = self.splitCommand(command)
+                if language.count("-") != 1:
+                    self.parent.displayMessage(config.thisTranslation["message_invalid"])
+                else:
+                    fromLanguage, toLanguage = language.split("-")
+                    if not fromLanguage in translator.fromLanguageCodes:
+                        fromLanguage = "en"
+                    if not toLanguage in translator.toLanguageCodes:
+                        toLanguage = "en"
+            # translate here
+            translation = translator.translate(text, fromLanguage, toLanguage)
+            self.parent.displayMessage(translation)
+        else:
+            self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+        return ("", "", {})
+
+    # This function below is an old way to process TRANSLATE::: command with goolgetrans
+    # However, we found googletrans no longer works with UBA.
+    # We keep the following function for further reference only.
+    def translateText_old(self, command, source):
         languages = Languages().codes
         # unpack command
         if command.count(":::") == 0:
