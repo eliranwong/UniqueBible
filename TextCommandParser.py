@@ -7,6 +7,7 @@ from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, In
 from ThirdParty import ThirdPartyDictionary
 from HebrewTransliteration import HebrewTransliteration
 from NoteSqlite import NoteSqlite
+from Languages import Languages
 from TtsLanguages import TtsLanguages
 from PySide2.QtWidgets import QApplication
 try:
