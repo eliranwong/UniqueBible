@@ -1,3 +1,9 @@
+Major change in version 21.39:
+* added support of loading website directly on Study Window
+* To use this feature, enter a valid and full url in Main Window command field with prefix "online:::"
+* e.g. online:::https://google.co.uk
+* Remarks: you need to state the protocol, "online:::https://google.co.uk" works, but "online:::google.co.uk" does not.
+
 Major change in version 21.38:
 * added custom javascript feature for developers or module creators, read the following link for more information:
 * https://github.com/eliranwong/UniqueBible/wiki/custom_javascript

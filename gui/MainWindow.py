@@ -82,6 +82,7 @@ class MainWindow(QMainWindow):
         self.lastStudyTextCommand = ""
         self.newTabException = False
         self.pdfOpened = False
+        self.onlineCommand = ""
         # a variable to monitor if new changes made to editor's notes
         self.noteSaved = True
         # variables to work with Qt dialog
@@ -2445,6 +2446,16 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
+        command = self.textCommandLineEdit.text()
+        if not re.match("^online:::", command, flags=re.IGNORECASE):
+            self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
+        else:
+            if self.textCommandLineEdit.text() != self.onlineCommand:
+                self.onlineCommand = command
+                *_, address = command.split(":::")
+                self.studyView.load(QUrl(address))
+
+    def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:
             self.logger.debug(textCommand[:80])
         # reset document.title
