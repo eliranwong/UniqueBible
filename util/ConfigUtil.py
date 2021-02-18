@@ -37,7 +37,7 @@ class ConfigUtil:
                 config.alwaysDisplayStaticMaps = True
         # IBM Watson service api key
         if not hasattr(config, "enableIBMWatson"):
-            config.enableIBMWatson = ""
+            config.enableIBMWatson = True
         if not hasattr(config, "myIBMWatsonApikey"):
             config.myIBMWatsonApikey = ""
         if not hasattr(config, "myIBMWatsonUrl"):
