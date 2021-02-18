@@ -1,3 +1,7 @@
+Major changes in version 21.42:
+* fixed opening website from Master Control panel when 'preferControlPanelForCommandLineEntry' is enabled.
+* open language selection dialog when users choose to change program interface translation.
+
 Major changes in version 21.41:
 * fixed startup issues with Chinese user interface
 * startup with Chinese interface is okay for now; wordings are still needed to be updated.
