@@ -127,7 +127,7 @@ class MiscellaneousLauncher(QWidget):
         self.parent.runTextCommand(command)
 
     def changeQttsSpeed(self, value):
-        config.qttsSpeed = (value - 160) / 150
+        config.qttsSpeed = (value * (1.5/300) - .5)
 
     def changeEspeakSpeed(self, value):
         config.espeakSpeed = value

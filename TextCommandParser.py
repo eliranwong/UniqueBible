@@ -923,9 +923,6 @@ class TextCommandParser:
                 #locales = self.qtTtsEngine.availableLocales()
                 #print(locales)
 
-                # Control speed here
-                self.qtTtsEngine.setRate(config.qttsSpeed)
-
                 isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
                 languages = TtsLanguages().isoLang2qlocaleLang.keys()
                 if not (config.ttsDefaultLangauge in languages):
@@ -939,6 +936,10 @@ class TextCommandParser:
                 engineVoices = self.qtTtsEngine.availableVoices()
                 if engineVoices:
                     self.qtTtsEngine.setVoice(engineVoices[0])
+
+                    # Control speed here
+                    self.qtTtsEngine.setRate(config.qttsSpeed)
+
                     self.qtTtsEngine.say(text)
                 else:
                     self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
