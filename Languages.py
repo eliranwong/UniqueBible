@@ -442,7 +442,7 @@ class Languages:
         "message_setLanguage": "Select your language.",
         "message_translateFirst": "Translate program interface into your language.",
         "message_improveTrans": "To improve the quality of interface translation, you may close this application first and manually edit this file:",
-        "message_newInterfaceItems": "Added new translated items of program interface.",
+        "message_newInterfaceItems": "Missing translation item(s):",
         "message_migration": "Some of your files are old.  We are helping you to upgrade those files.",
         "message_noReference": "Found no bible reference.",
         "message_noSupport": "It looks like that this feature does not work on your device.",

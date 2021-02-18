@@ -188,6 +188,7 @@ class MainWindow(QMainWindow):
         languages = Languages()
         if config.userLanguageInterface and hasattr(myTranslation, "translation"):
             # Check for missing items. Use Google Translate to translate the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
+            missingItems = {}
             for key, value in languages.translation.items():
                 if not key in myTranslation.translation:
                     if config.googletransSupport and hasattr(myTranslation, "translationLanguage"):
@@ -198,17 +199,18 @@ class MainWindow(QMainWindow):
                             myTranslation.translation[key] = value
                     else:
                         myTranslation.translation[key] = value
+                    missingItems[key] = myTranslation.translation[key]
                     updateNeeded = True
             # set thisTranslation to customised translation
             config.thisTranslation = myTranslation.translation
             # update myTranslation.py
             if updateNeeded:
-                try:
-                    languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
-                except:
-                    print("Failed to update 'myTranslation.py'.")
-                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_newInterfaceItems"],
-                                                                  config.thisTranslation["message_improveTrans"]))
+                print(missingItems)
+                #try:
+                #    languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
+                #except:
+                #    print("Failed to update 'myTranslation.py'.")
+                self.displayMessage("{0} {1} {2} 'myTranslation.py'".format(config.thisTranslation["message_newInterfaceItems"], ", ".join(missingItems.keys()), config.thisTranslation["message_improveTrans"]))
         elif config.userLanguageInterface and hasattr(config, "translationLanguage"):
             languageCode = languages.codes[config.translationLanguage]
             if languageCode in translations:
