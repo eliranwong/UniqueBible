@@ -1,5 +1,6 @@
 import config
-from PySide2.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
+from PySide2.QtCore import Qt
+from PySide2.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget)
 from gui.HighlightLauncher import HighlightLauncher
 from TtsLanguages import TtsLanguages
 
@@ -79,6 +80,13 @@ class MiscellaneousLauncher(QWidget):
         subLayout.addWidget(self.ttsEdit)
         layout.addLayout(subLayout)
 
+        self.ttsSlider = QSlider(Qt.Horizontal)
+        self.ttsSlider.setMinimum(10)
+        self.ttsSlider.setMaximum(310)
+        self.ttsSlider.setValue(config.espeakSpeed if config.espeak else (160 + config.qttsSpeed * 150))
+        self.ttsSlider.valueChanged.connect(self.changeEspeakSpeed if config.espeak else self.changeQttsSpeed)
+        layout.addWidget(self.ttsSlider)
+
         subLayout = QHBoxLayout()
 
         self.languageCombo = QComboBox()
@@ -116,6 +124,12 @@ class MiscellaneousLauncher(QWidget):
             text = text.split(":::")[-1]
         command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
         self.parent.runTextCommand(command)
+
+    def changeQttsSpeed(self, value):
+        config.qttsSpeed = (value - 160) / 150
+
+    def changeEspeakSpeed(self, value):
+        config.espeakSpeed = value
 
     def refresh(self):
         self.highLightLauncher.refresh()

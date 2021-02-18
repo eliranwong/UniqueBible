@@ -80,6 +80,12 @@ class ConfigUtil:
                 config.espeak = True
             else:
                 config.espeak = False
+        # espeak speed
+        if not hasattr(config, "espeakSpeed"):
+            config.espeakSpeed = 160
+        # qtts speed
+        if not hasattr(config, "qttsSpeed"):
+            config.qttsSpeed = 0.0
         # tts language options
         if not hasattr(config, "ttsDefaultLangauge"):
             config.ttsDefaultLangauge = "en"
@@ -542,6 +548,8 @@ class ConfigUtil:
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             ("showTtsOnLinux", config.showTtsOnLinux),
             ("espeak", config.espeak),
+            ("espeakSpeed", config.espeakSpeed),
+            ("qttsSpeed", config.qttsSpeed),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
             ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese),
             ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin),

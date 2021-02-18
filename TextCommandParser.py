@@ -912,7 +912,7 @@ class TextCommandParser:
                 language = isoLang2epeakLang[language][0]
                 # subprocess is used
                 # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
-                self.espeakTtsProcess = subprocess.Popen(["espeak -v {0} '{1}'".format(language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                self.espeakTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
                 self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
         else:
@@ -924,10 +924,7 @@ class TextCommandParser:
                 #print(locales)
 
                 # Control speed here
-                if (language == 'el'):
-                    self.qtTtsEngine.setRate(-0.3)
-                elif (language == 'he'):
-                    self.qtTtsEngine.setRate(-0.3)
+                self.qtTtsEngine.setRate(config.qttsSpeed)
 
                 isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
                 languages = TtsLanguages().isoLang2qlocaleLang.keys()
