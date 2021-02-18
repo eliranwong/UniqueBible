@@ -321,15 +321,17 @@ class MainWindow(QMainWindow):
                 # The error message is received when QT_QPA_PLATFORM=wayland:
                 # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
                 # Therefore, we use hide and show methods instead with wayland.
-                if self.controlPanel.isVisible() and not self.controlPanel.isActiveWindow():
-                    self.controlPanel.hide()
+                #if self.controlPanel.isVisible() and not self.controlPanel.isActiveWindow():
+                self.controlPanel.hide()
                 self.controlPanel.show()
                 self.controlPanel.tabChanged(index)
+                self.controlPanel.activateWindow()
             elif not config.controlPanel:
                 self.controlPanel = MasterControl(self, index, b, c, v, text)
                 if show:
                     self.controlPanel.show()
                     self.controlPanel.tabChanged(index)
+                    self.controlPanel.activateWindow()
                 if config.clearCommandEntry:
                     self.controlPanel.commandField.setText("")
                 else:
