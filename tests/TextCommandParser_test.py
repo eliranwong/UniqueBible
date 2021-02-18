@@ -1,8 +1,8 @@
 import os
 import unittest
 
-if not os.path.isfile("config.py"):
-    open("config.py", "w").close()
+from util.FileUtil import FileUtil
+FileUtil.createCustomFiles()
 
 import config
 
