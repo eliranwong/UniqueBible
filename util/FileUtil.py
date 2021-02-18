@@ -1,3 +1,4 @@
+import os
 from itertools import (takewhile, repeat)
 
 
@@ -13,3 +14,17 @@ class FileUtil:
         except Exception as e:
             # print(str(e))
             return -1
+
+    @staticmethod
+    def createCustomFiles():
+        # Create files for user customisation
+        # "config.py" is essential for running module "config".
+        # "myTranslation.py" is essential for running non-English program interface
+        # "custom.css" is essential for custom css feature.
+        # "custom.js" is essential for custom javascript feature.
+        customCssFile = os.path.join("htmlResources", "css", "custom.css")
+        customJsFile = os.path.join("htmlResources", "js", "custom.js")
+        userFiles = ("config.py", "myTranslation.py", customCssFile, customJsFile)
+        for userFile in userFiles:
+            if not os.path.isfile(userFile):
+                open(userFile, "w", encoding="utf-8").close()

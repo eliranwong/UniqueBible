@@ -679,4 +679,3 @@ class ConfigUtil:
             if hasattr(config, "pModeSplitterSizes"):
                 fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
 
-
