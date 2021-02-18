@@ -310,13 +310,7 @@ class MainWindow(QMainWindow):
             text = config.mainText
 
         if self.textCommandParser.isDatabaseInstalled("bible"):
-            if config.controlPanel and not self.controlPanel.isVisible():
-                self.controlPanel.updateBCVText(b, c, v, text)
-                self.controlPanel.tabs.setCurrentIndex(index)
-                self.controlPanel.raise_()
-                self.controlPanel.show()
-                self.controlPanel.tabChanged(index)
-            elif config.controlPanel and not self.controlPanel.isActiveWindow():
+            if config.controlPanel and not (self.controlPanel.isVisible() or self.controlPanel.isActiveWindow()):
                 self.controlPanel.updateBCVText(b, c, v, text)
                 self.controlPanel.tabs.setCurrentIndex(index)
                 textCommandText = self.textCommandLineEdit.text()
@@ -328,7 +322,8 @@ class MainWindow(QMainWindow):
                 # The error message is received when QT_QPA_PLATFORM=wayland:
                 # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
                 # Therefore, we use hide and show methods instead with wayland.
-                self.controlPanel.hide()
+                if self.controlPanel.isVisible() and not self.controlPanel.isActiveWindow():
+                    self.controlPanel.hide()
                 self.controlPanel.show()
                 self.controlPanel.tabChanged(index)
             elif not config.controlPanel:
@@ -336,11 +331,10 @@ class MainWindow(QMainWindow):
                 if show:
                     self.controlPanel.show()
                     self.controlPanel.tabChanged(index)
-                textCommandText = self.textCommandLineEdit.text()
                 if config.clearCommandEntry:
                     self.controlPanel.commandField.setText("")
-                elif textCommandText:
-                    self.controlPanel.commandField.setText(textCommandText)
+                else:
+                    self.controlPanel.commandField.setText(self.textCommandLineEdit.text())
                 config.controlPanel = True
             # elif self.controlPanel:
             #        self.controlPanel.close()

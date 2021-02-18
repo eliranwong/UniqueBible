@@ -198,6 +198,7 @@ class MasterControl(QWidget):
     def runTextCommand(self, command, printCommand=True, reloadMainWindow=False):
         if printCommand:
             self.commandField.setText(command)
+        self.parent.textCommandLineEdit.setText(command)
         self.parent.runTextCommand(command)
         if reloadMainWindow:
             self.parent.reloadCurrentRecord()
