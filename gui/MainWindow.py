@@ -102,6 +102,8 @@ class MainWindow(QMainWindow):
         # setup user menu & toolbars
 
         # Setup menu layout
+        self.refreshing = False
+        self.versionCombo = None
         self.setupMenuLayout(config.menuLayout)
 
         # assign views
@@ -2251,12 +2253,23 @@ class MainWindow(QMainWindow):
             self.textCommandParser.databaseNotInstalled("commentary")
 
     def changeBibleVersion(self, index):
-        command = "TEXT:::{0}".format(self.bibleVersions[index])
-        self.runTextCommand(command)
+        if not self.refreshing:
+            command = "TEXT:::{0}".format(self.bibleVersions[index])
+            self.runTextCommand(command)
+
+    def updateVersionCombo(self):
+        if self.versionCombo is not None:
+            self.refreshing = True
+            textIndex = 0
+            if config.mainText in self.bibleVersions:
+                textIndex = self.bibleVersions.index(config.mainText)
+            self.versionCombo.setCurrentIndex(textIndex)
+            self.refreshing = False
 
     def updateMainRefButton(self):
-        text, verseReference = self.verseReference("main")
+        *_, verseReference = self.verseReference("main")
         self.mainRefButton.setText(self.verseReference("main")[-1])
+        self.updateVersionCombo()
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "STUDY:::{0}".format(verseReference)

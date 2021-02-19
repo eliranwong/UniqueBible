@@ -338,15 +338,15 @@ class FocusMainWindow:
 
         # Version selection
         if self.textCommandParser.isDatabaseInstalled("bible"):
-            versionCombo = QComboBox()
+            self.versionCombo = QComboBox()
             self.bibleVersions = BiblesSqlite().getBibleList()
-            versionCombo.addItems(self.bibleVersions)
+            self.versionCombo.addItems(self.bibleVersions)
             initialIndex = 0
             if config.mainText in self.bibleVersions:
                 initialIndex = self.bibleVersions.index(config.mainText)
-            versionCombo.setCurrentIndex(initialIndex)
-            versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.firstToolBar.addWidget(versionCombo)
+            self.versionCombo.setCurrentIndex(initialIndex)
+            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.firstToolBar.addWidget(self.versionCombo)
 
         self.addStandardIconButton("bar1_searchBible", "search.png", self.displaySearchBibleCommand, self.firstToolBar)
         self.addStandardIconButton("bar1_searchBibles", "search_plus.png", self.displaySearchBibleMenu, self.firstToolBar)
@@ -531,15 +531,15 @@ class FocusMainWindow:
 
         # Version selection
         if self.textCommandParser.isDatabaseInstalled("bible"):
-            versionCombo = QComboBox()
+            self.versionCombo = QComboBox()
             self.bibleVersions = BiblesSqlite().getBibleList()
-            versionCombo.addItems(self.bibleVersions)
+            self.versionCombo.addItems(self.bibleVersions)
             initialIndex = 0
             if config.mainText in self.bibleVersions:
                 initialIndex = self.bibleVersions.index(config.mainText)
-            versionCombo.setCurrentIndex(initialIndex)
-            versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.firstToolBar.addWidget(versionCombo)
+            self.versionCombo.setCurrentIndex(initialIndex)
+            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.firstToolBar.addWidget(self.versionCombo)
 
         iconFile = os.path.join("htmlResources", "search.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)
