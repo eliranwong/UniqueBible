@@ -1095,12 +1095,13 @@ class MainWindow(QMainWindow):
         return text
 
     def pasteFromClipboard(self):
-        clipboardText = QGuiApplication.instance().clipboard().text()
+        clipboardText = QApplication.clipboard().text()
+        #clipboardText = QGuiApplication.instance().clipboard().text()
         # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
         self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
 
     def parseContentOnClipboard(self):
-        clipboardText = QGuiApplication.instance().clipboard().text()
+        clipboardText = QApplication.clipboard().text()
         self.textCommandLineEdit.setText(clipboardText)
         self.runTextCommand(clipboardText)
         self.manageControlPanel()

@@ -2,7 +2,6 @@ import config, logging
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
-from PySide2.QtGui import QDesktopServices, QGuiApplication
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
@@ -291,7 +290,7 @@ class WebEngineView(QWebEngineView):
             translation = translator.translate(text, None, userLanguage)
             self.parent.parent.displayMessage(translation)
             if config.autoCopyTranslateResult:
-                QGuiApplication.instance().clipboard().setText(translation)
+                QApplication.clipboard().setText(translation)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 
@@ -304,7 +303,7 @@ class WebEngineView(QWebEngineView):
             pinyinList = [" ".join(list) for list in pinyinList]
             pinyinText = " ".join(pinyinList)
             if config.autoCopyChinesePinyinOutput:
-                QGuiApplication.instance().clipboard().setText(pinyinText)
+                QApplication.clipboard().setText(pinyinText)
             self.displayMessage(pinyinText)
 
     # TEXT-TO-SPEECH feature
@@ -434,7 +433,7 @@ class WebEngineView(QWebEngineView):
             self.displayMessage(config.thisTranslation["message_noReference"])
         else:
             references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
-            QGuiApplication.instance().clipboard().setText(references)
+            QApplication.clipboard().setText(references)
         del parser
 
     def runAsCommand(self):

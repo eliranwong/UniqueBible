@@ -1117,6 +1117,8 @@ class TextCommandParser:
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)
             self.parent.displayMessage(translation)
+            if config.autoCopyTranslateResult:
+                QApplication.clipboard().setText(translation)
         else:
             self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
         return ("", "", {})

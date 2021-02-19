@@ -1,8 +1,6 @@
-from PySide2.QtGui import QGuiApplication
-
 import config
 from PySide2.QtCore import QUrl, Qt
-from PySide2.QtWidgets import (QAction)
+from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 
 class YouTubePopover(QWebEngineView):
@@ -64,7 +62,7 @@ class YouTubePopover(QWebEngineView):
 
     def copy(self):
         if self.urlString:
-            QGuiApplication.instance().clipboard().setText(self.urlString)
+            QApplication.clipboard().setText(self.urlString)
 
     def downloadMpFile(self, fileType):
         self.parent.downloadMpFile(fileType, self.urlString)
