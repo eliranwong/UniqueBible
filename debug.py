@@ -1,7 +1,10 @@
+import glob
 import locale
+import os
 import platform
 import sys
 import time
+from datetime import datetime
 from os import path, uname
 
 def printValue(object, attribute):
@@ -10,24 +13,42 @@ def printValue(object, attribute):
     else:
         print("{0}.{1} is undefined".format(object.__name__, attribute))
 
+
 print("==============================================================")
 print("Debugging Information")
 print("==============================================================")
+try:
+    print(datetime.now())
+except:
+    pass
+
+print("")
 print("# Platform")
-print("Python={0}".format(sys.version.split('\n')))
-(sysname, nodename, release, version, machine) = uname()
-print("sysname={0}".format(sysname))
-print("release={0}".format(release))
-print("version={0}".format(version))
-print("machine={0}".format(machine))
-print("platform={0}".format(platform.platform()))
+try:
+    print("Python={0}".format(sys.version.split('\n')))
+    (sysname, nodename, release, version, machine) = uname()
+    print("sysname={0}".format(sysname))
+    print("release={0}".format(release))
+    print("version={0}".format(version))
+    print("machine={0}".format(machine))
+except:
+    print("Could not get uname")
+try:
+    print("platform={0}".format(platform.platform()))
+    print("platform={0}".format(os.name))
+    print("platform={0}".format(platform.release()))
+except:
+    print("Could not get platform")
 
 print("")
 print("# Locale")
-print("timezone={0}".format(time.strftime('%Z%z')))
-print("defaultlocale={0}".format(locale.getdefaultlocale()))
-locale.setlocale(locale.LC_ALL, "")
-print("getlocale={0}".format(locale.getlocale(locale.LC_MESSAGES)[0]))
+try:
+    print("timezone={0}".format(time.strftime('%Z%z')))
+    print("defaultlocale={0}".format(locale.getdefaultlocale()))
+    locale.setlocale(locale.LC_ALL, "")
+    print("getlocale={0}".format(locale.getlocale(locale.LC_MESSAGES)[0]))
+except:
+    print("Could not get locale")
 
 print("")
 print("# Version")
@@ -57,8 +78,18 @@ if path.exists("config.py"):
         printValue(config, "enableMacros")
         printValue(config, "useFastVerseParsing")
         printValue(config, "disableModulesUpdateCheck")
-        printValue(config, "translationLanguage")
     except Exception as e:
         print("Error: {0}".format(e))
 else:
     print("config.py does not exist")
+
+print("")
+print("# Marvel data")
+try:
+    print("Bibles: {0}".format(len(glob.glob(config.marvelData+"/bibles/*.bible"))))
+    print("Books: {0}".format(len(glob.glob(config.marvelData+"/books/*.book"))))
+    print("Data: {0}".format(len(glob.glob(config.marvelData+"/data/*.data"))))
+    print("Commentaries: {0}".format(len(glob.glob(config.marvelData+"/commentaries/*.commentary"))))
+    print("Lexicons: {0}".format(len(glob.glob(config.marvelData+"/lexicons/*.lexicon"))))
+except:
+    print("Could not get marvel data")
