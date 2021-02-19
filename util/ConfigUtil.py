@@ -159,15 +159,9 @@ class ConfigUtil:
         # Option to use interface translated into userLanguage: True / False
         if not hasattr(config, "userLanguageInterface"):
             config.userLanguageInterface = False
-        # Option to show English options for google translate on right-click context menu: True / False
-        if not hasattr(config, "showGoogleTranslateEnglishOptions"):
-            config.showGoogleTranslateEnglishOptions = False
-        # Option to show Chinese options for google translate on right-click context menu: True / False
-        if not hasattr(config, "showGoogleTranslateChineseOptions"):
-            config.showGoogleTranslateChineseOptions = False
         # Option to copy automatically to clipboard the result of accessing Google Translate: True / False
-        if not hasattr(config, "autoCopyGoogleTranslateOutput"):
-            config.autoCopyGoogleTranslateOutput = True
+        if not hasattr(config, "autoCopyTranslateResult"):
+            config.autoCopyTranslateResult = True
         # Option to copy automatically to clipboard the output of Chinese pinyin conversion: True / False
         if not hasattr(config, "autoCopyChinesePinyinOutput"):
             config.autoCopyChinesePinyinOutput = True
@@ -568,9 +562,7 @@ class ConfigUtil:
             ("standardAbbreviation", config.standardAbbreviation),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
-            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions),
-            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions),
-            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput),
+            ("autoCopyTranslateResult", config.autoCopyTranslateResult),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave),

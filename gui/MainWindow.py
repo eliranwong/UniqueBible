@@ -2630,8 +2630,8 @@ class MainWindow(QMainWindow):
 
     # Set my language (config.userLanguage)
     def openMyLanguageDialog(self):
-        translator = Translator()
         # Use IBM Watson service to translate text
+        translator = Translator()
         if translator.language_translator is not None:
             if not config.userLanguage or not config.userLanguage in config.toLanguageNames:
                 userLanguage = "English"

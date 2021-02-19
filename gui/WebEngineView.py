@@ -290,6 +290,8 @@ class WebEngineView(QWebEngineView):
         if translator.language_translator is not None:
             translation = translator.translate(text, None, userLanguage)
             self.parent.parent.displayMessage(translation)
+            if config.autoCopyTranslateResult:
+                QGuiApplication.instance().clipboard().setText(translation)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 

@@ -57,9 +57,7 @@ class MoreConfigOptions(QDialog):
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, ""),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, ""),
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, ""),
-            ("showGoogleTranslateEnglishOptions", config.showGoogleTranslateEnglishOptions, self.showGoogleTranslateEnglishOptionsChanged, ""),
-            ("autoCopyGoogleTranslateOutput", config.autoCopyGoogleTranslateOutput, self.autoCopyGoogleTranslateOutputChanged, ""),
-            ("showGoogleTranslateChineseOptions", config.showGoogleTranslateChineseOptions, self.showGoogleTranslateChineseOptionsChanged, ""),
+            ("autoCopyTranslateResult", config.autoCopyTranslateResult, self.autoCopyTranslateResultChanged, ""),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, ""),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, ""),
             ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged, ""),
@@ -222,10 +220,6 @@ class MoreConfigOptions(QDialog):
     def openBibleNoteAfterSaveChanged(self):
         config.openBibleNoteAfterSave = not config.openBibleNoteAfterSave
 
-    def showGoogleTranslateEnglishOptionsChanged(self):
-        config.showGoogleTranslateEnglishOptions = not config.showGoogleTranslateEnglishOptions
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
     def addBreakAfterTheFirstToolBarChanged(self):
         config.addBreakAfterTheFirstToolBar = not config.addBreakAfterTheFirstToolBar
         self.parent.displayMessage(config.thisTranslation["message_restart"])
@@ -234,12 +228,8 @@ class MoreConfigOptions(QDialog):
         config.addBreakBeforeTheLastToolBar = not config.addBreakBeforeTheLastToolBar
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
-    def showGoogleTranslateChineseOptionsChanged(self):
-        config.showGoogleTranslateChineseOptions = not config.showGoogleTranslateChineseOptions
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
-    def autoCopyGoogleTranslateOutputChanged(self):
-        config.autoCopyGoogleTranslateOutput = not config.autoCopyGoogleTranslateOutput
+    def autoCopyTranslateResultChanged(self):
+        config.autoCopyTranslateResult = not config.autoCopyTranslateResult
 
     def autoCopyChinesePinyinOutputChanged(self):
         config.autoCopyChinesePinyinOutput = not config.autoCopyChinesePinyinOutput
