@@ -1,11 +1,11 @@
 import config, pprint, platform, myTranslation
 from translations import translations
 # [Optional] Google-translate
-try:
-    from googletrans import Translator
-    googletransInstall = True
-except:
-    googletransInstall = False
+#try:
+#    from googletrans import Translator
+#    googletransInstall = True
+#except:
+#    googletransInstall = False
 
 class Languages:
 
@@ -672,22 +672,23 @@ class Languages:
             fileObj.write(content)
 
     def createTranslationTemplates(self):
-        if googletransInstall:
-            for code in self.codes.values():
-                print("creating '{0}' template ...".format(code))
-                translator = Translator()
-                tempDict = {}
-                for key, value in self.translation.items():
-                    tempDict[key] = value
-# Note: Attempted to use Google Translate to translate interface into all languages, but access is blocked in the middle of the operation.  It looks like Google blocks access by ip, when there are too many queries within a short time.
-# Don't use the following 4 lines, or ip will be blocked for Google Translate
-#                    try:
-#                        tempDict[key] = translator.translate(value, dest=code).text
-#                    except:
-#                        tempDict[key] = value
-                with open("translations.py", "a", encoding="utf-8") as fileObj:
-                    code = code.replace("-", "")
-                    fileObj.write("uB{0} = {1}\n\n".format(code, pprint.pformat(tempDict)))
+        pass
+#        if googletransInstall:
+#            for code in self.codes.values():
+#                print("creating '{0}' template ...".format(code))
+#                translator = Translator()
+#                tempDict = {}
+#                for key, value in self.translation.items():
+#                    tempDict[key] = value
+## Note: Attempted to use Google Translate to translate interface into all languages, but access is blocked in the middle of the operation.  It looks like Google blocks access by ip, when there are too many queries within a short time.
+## Don't use the following 4 lines, or ip will be blocked for Google Translate
+##                    try:
+##                        tempDict[key] = translator.translate(value, dest=code).text
+##                    except:
+##                        tempDict[key] = value
+#                with open("translations.py", "a", encoding="utf-8") as fileObj:
+#                    code = code.replace("-", "")
+#                    fileObj.write("uB{0} = {1}\n\n".format(code, pprint.pformat(tempDict)))
 
 
 if __name__ == '__main__':

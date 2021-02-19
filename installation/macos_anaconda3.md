@@ -37,7 +37,7 @@ Enter the following command in terminal, one by one:
 > conda install -c conda-forge pypdf2<br>
 > conda install -c conda-forge python-docx<br>
 > conda install -c conda-forge diff-match-patch<br>
-> conda install -c conda-forge googletrans<br>
+> conda install -c conda-forge ibm-watson<br>
 
 <b>Remarks:</b>  When question "Proceed ([y]/n)?" comes up, simply enter "y".
 

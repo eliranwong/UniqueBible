@@ -49,7 +49,7 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 
 > .\venv\Scripts\activate
 
-> pip3 install gdown PySide2 PyPDF2 python-docx diff_match_patch googletrans
+> pip3 install gdown PySide2 PyPDF2 python-docx diff_match_patch ibm-watson
 
 Read more about dependencies at https://github.com/eliranwong/UniqueBible#install-dependencies
 

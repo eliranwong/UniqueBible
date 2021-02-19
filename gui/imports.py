@@ -7,8 +7,3 @@ try:
     from pypinyin import pinyin
 except:
     pass
-
-try:
-    from googletrans import Translator
-except:
-    pass

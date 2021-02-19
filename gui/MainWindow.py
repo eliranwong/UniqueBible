@@ -237,20 +237,21 @@ class MainWindow(QMainWindow):
             config.thisTranslation = languages.translation
 
     def translateInterface(self):
-        if config.googletransSupport:
-            if not config.userLanguage:
-                self.openMyLanguageDialog()
-                #self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
-            #else:
-            if Languages().translateInterface(config.userLanguage):
-                config.userLanguageInterface = True
-                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
-            else:
-                config.userLanguageInterface = False
-                self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
-        else:
-            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
-                                                                config.thisTranslation["message_installFirst"]))
+        pass
+#        if config.googletransSupport:
+#            if not config.userLanguage:
+#                self.openMyLanguageDialog()
+#                #self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
+#            #else:
+#            if Languages().translateInterface(config.userLanguage):
+#                config.userLanguageInterface = True
+#                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
+#            else:
+#                config.userLanguageInterface = False
+#                self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
+#        else:
+#            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
+#                                                                config.thisTranslation["message_installFirst"]))
 
     def isMyTranslationAvailable(self):
         if hasattr(myTranslation, "translation") and hasattr(myTranslation, "translationLanguage"):
