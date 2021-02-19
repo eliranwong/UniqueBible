@@ -6,6 +6,7 @@ from PySide2.QtGui import QDesktopServices, QGuiApplication
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Languages import Languages
+from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from gui.imports import *
 try:
@@ -86,38 +87,22 @@ class WebEngineView(QWebEngineView):
             separator.setSeparator(True)
             self.addAction(separator)
 
-        # Google Translate
-#        if config.googletransSupport:
-#            if config.showGoogleTranslateEnglishOptions:
-#                # Translate into English
-#                translateText = QAction(self)
-#                translateText.setText(config.thisTranslation["context1_english"])
-#                translateText.triggered.connect(self.selectedTextToEnglish)
-#                self.addAction(translateText)
-#            if config.showGoogleTranslateChineseOptions:
-#                # Translate into Traditional Chinese
-#                translateText = QAction(self)
-#                translateText.setText(config.thisTranslation["context1_tChinese"])
-#                translateText.triggered.connect(self.selectedTextToTraditionalChinese)
-#                self.addAction(translateText)
-#                # Translate into Simplified Chinese
-#                translateText = QAction(self)
-#                translateText.setText(config.thisTranslation["context1_sChinese"])
-#                translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
-#                self.addAction(translateText)
-#            # Translate into User-defined Language
-#            if config.userLanguage:
-#                userLanguage = config.userLanguage
-#            else:
-#                userLanguage = config.thisTranslation["context1_my"]
-#            translateText = QAction(self)
-#            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
-#            translateText.triggered.connect(self.checkUserLanguage)
-#            self.addAction(translateText)
-#
-#            separator = QAction(self)
-#            separator.setSeparator(True)
-#            self.addAction(separator)
+        # IBM-Watson Translation Service
+        # Translate into English
+        translateText = QAction(self)
+        translateText.setText(config.thisTranslation["context1_english"])
+        translateText.triggered.connect(self.selectedTextToEnglish)
+        self.addAction(translateText)
+
+        # Translate into User-defined Language
+        if config.userLanguage:
+            userLanguage = config.userLanguage
+        else:
+            userLanguage = config.thisTranslation["context1_my"]
+        translateText = QAction(self)
+        translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
+        translateText.triggered.connect(self.checkUserLanguage)
+        self.addAction(translateText)
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
@@ -279,29 +264,34 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            self.translateTextIntoUserLanguage(selectedText, "zh-CN")
+            self.translateTextIntoUserLanguage(selectedText, "zh")
 
     # Check if config.userLanguage is set
     def checkUserLanguage(self):
-        if config.userLanguage:
-            selectedText = self.selectedText()
-            if not selectedText:
-                self.messageNoSelection()
+        # Use IBM Watson service to translate text
+        translator = Translator()
+        if translator.language_translator is not None:
+            if config.userLanguage and config.userLanguage in config.toLanguageNames:
+                selectedText = self.selectedText()
+                if not selectedText:
+                    self.messageNoSelection()
+                else:
+                    userLanguage = config.toLanguageCodes[config.toLanguageNames.index(config.userLanguage)]
+                    self.translateTextIntoUserLanguage(selectedText, userLanguage)
             else:
-                userLanguage = Languages().codes[config.userLanguage]
-                self.translateTextIntoUserLanguage(selectedText, userLanguage)
+                self.parent.parent.openMyLanguageDialog()
         else:
-            self.parent.parent.openMyLanguageDialog()
+            self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 
     # Translate selected words into user-defined language
     def translateTextIntoUserLanguage(self, text, userLanguage="en"):
-        try:
-            translatedText = Translator().translate(text, dest=userLanguage).text
-            if config.autoCopyGoogleTranslateOutput:
-                QGuiApplication.instance().clipboard().setText(translatedText)
-        except:
-            translatedText = "ATTENTION! Google Translate is not accessible.  Internet connection is required for this feature."
-        self.displayMessage(translatedText)
+        # Use IBM Watson service to translate text
+        translator = Translator()
+        if translator.language_translator is not None:
+            translation = translator.translate(text, None, userLanguage)
+            self.parent.parent.displayMessage(translation)
+        else:
+            self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 
     # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):

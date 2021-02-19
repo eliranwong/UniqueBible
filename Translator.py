@@ -53,7 +53,9 @@ class Translator:
         #print(result["languages"][0]["language"])
         return result["languages"][0]["language"]
 
-    def translate(self, text, fromLanguage, toLanguage):
+    def translate(self, text, fromLanguage=None, toLanguage="en"):
+        if fromLanguage is None:
+            fromLanguage = self.identify(text)
         translation = self.language_translator.translate(
             text=text,
             model_id="{0}-{1}".format(fromLanguage, toLanguage)).get_result()
