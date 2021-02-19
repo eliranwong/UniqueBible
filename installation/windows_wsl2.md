@@ -30,7 +30,7 @@ Setup virtual environment & depedencies
 
 > python3 -m venv venv
 
-> pip3 install PySide2 PyPDF2 gdown python-docx diff-match-patch
+> pip3 install PySide2 PyPDF2 python-docx gdown diff_match_patch langdetect qt-material ibm-watson
 
 # Create a Shortcut
 

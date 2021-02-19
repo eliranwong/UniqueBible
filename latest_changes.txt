@@ -1,3 +1,29 @@
+Major changes in version 21.47:
+* Now playing text-to-speech on Miscellaneous tab won't auto close Master Control panel
+* Removed package googletrans from requirement and related codes
+* Translation feature now use IBM Watson translation service, integrated into TRANSLATE::: command and right-click context menu
+* Fixed auto-copy to clipboard after a translation is done.
+* Fixed Focus menu layout version dropdown menu not updating
+* To use translation interface in UBA, users need to register an IBM Cloud account.
+* IBM Cloud Lite account is FREE! With this, users can translate "1,000,000 characters per month at no cost"
+To enable IBM-Watson Language Trans:
+1) Register an IBM CLoud account (there are several types, the Lite one is FREE)
+   You can find a registration link at https://www.ibm.com/cloud/watson-language-translator/pricing
+2) After registration, go to login page https://cloud.ibm.com/login to login into your IBM cloud account.
+3) Go to Menu > Resource list > Service > Language 
+   We have two screenshots in this wiki page: https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator
+4) Copy the "API key" and "URL"
+5) You are about to edit UBA file config.py, so make sure you are not running UBA while editing this file.
+   Close UBA first if it is running.
+6) Use a simple text editor to open config.py
+7) Paste your apikey to INSIDE the pair of quotation marks of myIBMWatsonApikey = ''
+8) Paste your URL to INSIDE the pair of quotation marks of myIBMWatsonUrl = ''
+9) Save the file config.py
+10) Start UBA
+11) To test, run a command on main window command field, TRANSLATE:::en-zh:::testing
+12) Or, select a word from a bible chapter, right click and select "Translate into my language"
+13) Config flag, 'autoCopyTranslateResult' is turned on for you by default.  Therefore after a translation is done, you can paste the result whereever you like.
+
 Major change in version 21.46:
 * Fixed debug report
 
