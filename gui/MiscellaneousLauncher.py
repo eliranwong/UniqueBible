@@ -124,7 +124,9 @@ class MiscellaneousLauncher(QWidget):
         if ":::" in text:
             text = text.split(":::")[-1]
         command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+        self.parent.isRefreshing = True
         self.parent.runTextCommand(command)
+        self.parent.isRefreshing = False
 
     def changeQttsSpeed(self, value):
         config.qttsSpeed = (value * (1.5/300) - .5)
