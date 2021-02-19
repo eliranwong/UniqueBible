@@ -1169,6 +1169,12 @@ class MorphologySqlite:
         self.cursor.execute(query, t)
         return self.cursor.fetchone()
 
+    def distinctInterlinear(self, lexicalEntry):
+        query = "SELECT DISTINCT Interlinear FROM morphology WHERE LexicalEntry LIKE ?"
+        t = ("%{0},%".format(lexicalEntry),)
+        self.cursor.execute(query, t)
+        return self.cursor.fetchall()
+
     def searchMorphology(self, mode, searchString):
         formatedText = ""
         query = "SELECT * FROM morphology WHERE "
