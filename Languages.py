@@ -653,11 +653,12 @@ class Languages:
             return True
         else:
             print("translating interface into '{0}' ...".format(language))
-            translator = Translator()
+            #translator = Translator()
             tempDict = {}
             for key, value in self.translation.items():
                 try:
-                    tempDict[key] = translator.translate(value, dest=code).text
+                    #tempDict[key] = translator.translate(value, dest=code).text
+                    tempDict[key] = value
                 except:
                     tempDict[key] = value
             #config.translationLanguage = language
