@@ -3,8 +3,6 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 <b>Tested in:</b> Windows, macOS and Linux (Debian, Ubuntu & Mint), Chrome OS (Debian 10)
 
-Our Wiki Pages: https://github.com/eliranwong/UniqueBible/wiki
-
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
 # Development Team
@@ -17,15 +15,17 @@ Oliver Tseng (https://github.com/otseng)
 
 <img src="screenshots/screenshot.png">
 
-# Wiki Pages
+# Features, instructions and how-tos
 
-<a href="https://github.com/eliranwong/UniqueBible/wiki">https://github.com/eliranwong/UniqueBible/wiki</a>
+[Wiki](https://github.com/eliranwong/UniqueBible/wiki)
 
-# Technical Support / Join our Development
+# Help, discussion and support
 
-You are welcome to join our channel:
+[Discussions](https://github.com/eliranwong/UniqueBible/discussions)
 
-<a href="https://join.slack.com/t/marvelbible/shared_invite/enQtNDYyMTAxNTMwNTY2LWU4YzUyMzUxYWQxNDNiNDhjMmYwMjdjZTQ0ZWQyODg3NTA1MWZmZmM1ZThmOWFlMGUzZWUxNTllNmMxNTgzYTU">Click here for an invitation link</a>
+# Feature requests, issues and bug reporting
+
+[Issues](https://github.com/eliranwong/UniqueBible/issues)
 
 # Donations:
 
