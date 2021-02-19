@@ -1,11 +1,11 @@
 import config
-from util.FileUtil import FileUtil
+from util.ConfigUtil import ConfigUtil
 try:
     from ibm_watson import LanguageTranslatorV3
     from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
     config.enableIBMWatson = True
 except:
-    FileUtil.messageFeatureNotEnabled("Translation Service", "ibm-watson")
+    ConfigUtil.messageFeatureNotEnabled("Translation Service", "ibm-watson")
     config.enableIBMWatson = False
 
 class Translator:

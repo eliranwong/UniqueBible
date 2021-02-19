@@ -1,3 +1,6 @@
+Major changes in version 21.48:
+* fixed on a startup issue
+
 Major changes in version 21.47:
 * Now playing text-to-speech on Miscellaneous tab won't auto close Master Control panel
 * Removed package googletrans from requirement and related codes
