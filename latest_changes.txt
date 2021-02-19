@@ -1,3 +1,9 @@
+Major change in version 21.45:
+* Fixed text-to-speech slider for adjusting speed
+* Fixed issue on bringing forward Master Control panel when it is placed behind the main window.
+* Added sending debug report feature.
+* Generated missing translation for Chinese interface.
+
 Major change in version 21.44:
 * Fixed TRANSLATE::: command
 * Now use IBM Watson translation service instead of google translate
