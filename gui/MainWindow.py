@@ -189,24 +189,36 @@ class MainWindow(QMainWindow):
         languages = Languages()
         if config.userLanguageInterface and hasattr(myTranslation, "translation"):
             # Check for missing items. Use Google Translate to translate the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
+            
+            # temporary codes to generate missing items built-in Chinese translation
+            translator = Translator()
             missingItems = {}
+
             for key, value in languages.translation.items():
                 if not key in myTranslation.translation:
-                    if config.googletransSupport and hasattr(myTranslation, "translationLanguage"):
-                        try:
-                            languageCode = languages.codes[myTranslation.translationLanguage]
-                            myTranslation.translation[key] = Translator().translate(value, dest=languageCode).text
-                        except:
-                            myTranslation.translation[key] = value
-                    else:
-                        myTranslation.translation[key] = value
-                    missingItems[key] = myTranslation.translation[key]
+                    # google-translate no longer works here few lines below are commented for now.
+#                    if config.googletransSupport and hasattr(myTranslation, "translationLanguage"):
+#                        try:
+#                            languageCode = languages.codes[myTranslation.translationLanguage]
+#                            myTranslation.translation[key] = Translator().translate(value, dest=languageCode).text
+#                        except:
+#                            myTranslation.translation[key] = value
+#                    else:
+#                        myTranslation.translation[key] = value
+                    myTranslation.translation[key] = value
                     updateNeeded = True
+
+                    # temporary codes to generate missing items built-in Chinese translation
+                    missingItems[key] = translator.translate(value, "en", "zh-TW")
+
             # set thisTranslation to customised translation
             config.thisTranslation = myTranslation.translation
             # update myTranslation.py
             if updateNeeded:
+                
+                # temporary codes to generate missing items built-in Chinese translation
                 print(missingItems)
+
                 #try:
                 #    languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
                 #except:
@@ -2621,22 +2633,15 @@ class MainWindow(QMainWindow):
         translator = Translator()
         # Use IBM Watson service to translate text
         if translator.language_translator is not None:
-            pass
-        
-        languages = Languages()
-        if config.userLanguage:
-            userLanguage = config.userLanguage
+            if not config.userLanguage or not config.userLanguage in config.toLanguageNames:
+                userLanguage = "English"
+            else:
+                userLanguage = config.userLanguage
+            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], config.toLanguageNames, config.toLanguageNames.index(userLanguage), False)
+            if ok and item:
+                config.userLanguage = item
         else:
-            userLanguage = "English"
-        items = [language for language in languages.codes.keys()]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage),
-                                        False)
-        if ok and item:
-            config.userLanguage = item
-            if not config.googletransSupport:
-                self.displayMessage("{0}  'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
-                                                                     config.thisTranslation["message_installFirst"]))
+            self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 
     # Set verse number single-click action (config.verseNoSingleClickAction)
     def selectSingleClickActionDialog(self):
