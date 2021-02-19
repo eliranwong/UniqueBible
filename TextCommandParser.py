@@ -1091,20 +1091,28 @@ class TextCommandParser:
             if command.count(":::") == 0:
                 fromLanguage = translator.identify(command)
                 toLanguage = "en"
-                if not fromLanguage in translator.fromLanguageCodes:
+                if not fromLanguage in config.fromLanguageCodes:
                     fromLanguage = "en"
-                if config.userLanguage in translator.toLanguageCodes:
+                if config.userLanguage in config.toLanguageCodes:
                     toLanguage = config.userLanguage
                 text = command
             else:
                 language, text = self.splitCommand(command)
+                if "fr-CA" in language:
+                    language = language.replace("fr-CA", "fr@CA")
+                if "zh-TW" in language:
+                    language = language.replace("zh-TW", "zh@TW")
                 if language.count("-") != 1:
                     self.parent.displayMessage(config.thisTranslation["message_invalid"])
                 else:
                     fromLanguage, toLanguage = language.split("-")
-                    if not fromLanguage in translator.fromLanguageCodes:
+                    if "@" in fromLanguage:
+                        fromLanguage = fromLanguage.replace("@", "-")
+                    if "@" in toLanguage:
+                        toLanguage = toLanguage.replace("@", "-")
+                    if not fromLanguage in config.fromLanguageCodes:
                         fromLanguage = "en"
-                    if not toLanguage in translator.toLanguageCodes:
+                    if not toLanguage in config.toLanguageCodes:
                         toLanguage = "en"
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)

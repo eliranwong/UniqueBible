@@ -87,37 +87,37 @@ class WebEngineView(QWebEngineView):
             self.addAction(separator)
 
         # Google Translate
-        if config.googletransSupport:
-            if config.showGoogleTranslateEnglishOptions:
-                # Translate into English
-                translateText = QAction(self)
-                translateText.setText(config.thisTranslation["context1_english"])
-                translateText.triggered.connect(self.selectedTextToEnglish)
-                self.addAction(translateText)
-            if config.showGoogleTranslateChineseOptions:
-                # Translate into Traditional Chinese
-                translateText = QAction(self)
-                translateText.setText(config.thisTranslation["context1_tChinese"])
-                translateText.triggered.connect(self.selectedTextToTraditionalChinese)
-                self.addAction(translateText)
-                # Translate into Simplified Chinese
-                translateText = QAction(self)
-                translateText.setText(config.thisTranslation["context1_sChinese"])
-                translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
-                self.addAction(translateText)
-            # Translate into User-defined Language
-            if config.userLanguage:
-                userLanguage = config.userLanguage
-            else:
-                userLanguage = config.thisTranslation["context1_my"]
-            translateText = QAction(self)
-            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
-            translateText.triggered.connect(self.checkUserLanguage)
-            self.addAction(translateText)
-
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+#        if config.googletransSupport:
+#            if config.showGoogleTranslateEnglishOptions:
+#                # Translate into English
+#                translateText = QAction(self)
+#                translateText.setText(config.thisTranslation["context1_english"])
+#                translateText.triggered.connect(self.selectedTextToEnglish)
+#                self.addAction(translateText)
+#            if config.showGoogleTranslateChineseOptions:
+#                # Translate into Traditional Chinese
+#                translateText = QAction(self)
+#                translateText.setText(config.thisTranslation["context1_tChinese"])
+#                translateText.triggered.connect(self.selectedTextToTraditionalChinese)
+#                self.addAction(translateText)
+#                # Translate into Simplified Chinese
+#                translateText = QAction(self)
+#                translateText.setText(config.thisTranslation["context1_sChinese"])
+#                translateText.triggered.connect(self.selectedTextToSimplifiedChinese)
+#                self.addAction(translateText)
+#            # Translate into User-defined Language
+#            if config.userLanguage:
+#                userLanguage = config.userLanguage
+#            else:
+#                userLanguage = config.thisTranslation["context1_my"]
+#            translateText = QAction(self)
+#            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
+#            translateText.triggered.connect(self.checkUserLanguage)
+#            self.addAction(translateText)
+#
+#            separator = QAction(self)
+#            separator.setSeparator(True)
+#            self.addAction(separator)
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin

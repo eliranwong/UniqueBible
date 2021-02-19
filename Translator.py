@@ -1,9 +1,11 @@
 import config
+from util.FileUtil import FileUtil
 try:
     from ibm_watson import LanguageTranslatorV3
     from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
     config.enableIBMWatson = True
 except:
+    FileUtil.messageFeatureNotEnabled("Translation Service", "ibm-watson")
     config.enableIBMWatson = False
 
 class Translator:
@@ -11,7 +13,7 @@ class Translator:
     def __init__(self):
         if config.enableIBMWatson:
             self.authenticate()
-            if self.language_translator is not None:
+            if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
                 self.getLanguageLists()
         else:
             self.language_translator = None
@@ -32,18 +34,18 @@ class Translator:
     def getLanguageLists(self):
         languages = self.language_translator.list_languages().get_result()
         #print(json.dumps(languages, indent=2))
-        self.fromLanguageCodes = []
-        self.fromLanguageNames = []
-        self.toLanguageCodes = []
-        self.toLanguageNames = []
+        config.fromLanguageCodes = []
+        config.fromLanguageNames = []
+        config.toLanguageCodes = []
+        config.toLanguageNames = []
         for i in languages["languages"]:
             if i["supported_as_source"]:
-                self.fromLanguageCodes.append(i["language"])
-                self.fromLanguageNames.append(i["language_name"])
+                config.fromLanguageCodes.append(i["language"])
+                config.fromLanguageNames.append(i["language_name"])
             if i["supported_as_target"]:
-                self.toLanguageCodes.append(i["language"])
-                self.toLanguageNames.append(i["language_name"])
-        #print(self.fromLanguageCodes, self.fromLanguageNames, self.toLanguageCodes, self.toLanguageNames)
+                config.toLanguageCodes.append(i["language"])
+                config.toLanguageNames.append(i["language_name"])
+        #print(config.fromLanguageCodes, config.fromLanguageNames, config.toLanguageCodes, config.toLanguageNames)
 
     def identify(self, text):
         result = self.language_translator.identify(text).get_result()
@@ -62,6 +64,7 @@ class Translator:
 
 if __name__ == "__main__":
     translator = Translator()
-    translator.identify("这是中文")
+    #translator.identify("这是中文")
     #translator.getLanguageLists()
+    #print(config.fromLanguageCodes, config.fromLanguageNames, config.toLanguageCodes, config.toLanguageNames)
     #translator.translate("test", "en", "zh")

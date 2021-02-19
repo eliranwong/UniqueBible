@@ -15,6 +15,7 @@ from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite, Bible
 from TextFileReader import TextFileReader
+from Translator import Translator
 from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
@@ -309,7 +310,7 @@ class MainWindow(QMainWindow):
             text = config.mainText
 
         if self.textCommandParser.isDatabaseInstalled("bible"):
-            if config.controlPanel and not (self.controlPanel.isVisible() or self.controlPanel.isActiveWindow()):
+            if config.controlPanel and not (self.controlPanel.isVisible() and self.controlPanel.isActiveWindow()):
                 self.controlPanel.updateBCVText(b, c, v, text)
                 self.controlPanel.tabs.setCurrentIndex(index)
                 textCommandText = self.textCommandLineEdit.text()
@@ -321,8 +322,8 @@ class MainWindow(QMainWindow):
                 # The error message is received when QT_QPA_PLATFORM=wayland:
                 # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
                 # Therefore, we use hide and show methods instead with wayland.
-                #if self.controlPanel.isVisible() and not self.controlPanel.isActiveWindow():
-                self.controlPanel.hide()
+                if self.controlPanel.isVisible() and not self.controlPanel.isActiveWindow():
+                    self.controlPanel.hide()
                 self.controlPanel.show()
                 self.controlPanel.tabChanged(index)
                 self.controlPanel.activateWindow()
@@ -331,7 +332,6 @@ class MainWindow(QMainWindow):
                 if show:
                     self.controlPanel.show()
                     self.controlPanel.tabChanged(index)
-                    self.controlPanel.activateWindow()
                 if config.clearCommandEntry:
                     self.controlPanel.commandField.setText("")
                 else:
@@ -2618,6 +2618,11 @@ class MainWindow(QMainWindow):
 
     # Set my language (config.userLanguage)
     def openMyLanguageDialog(self):
+        translator = Translator()
+        # Use IBM Watson service to translate text
+        if translator.language_translator is not None:
+            pass
+        
         languages = Languages()
         if config.userLanguage:
             userLanguage = config.userLanguage
