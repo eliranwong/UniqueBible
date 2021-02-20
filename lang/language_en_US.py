@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Chinese Font",
     "menu1_setAbbreviations": "Select Bible Abbreviations",
     "menu1_setMyFavouriteBible": "Select my Favorite Bible",
-    "menu1_setMyLanguage": "Select my Language",
+    "menu1_setMyLanguage": "Select Language for Translation",
     "menu1_programInterface": "Program Interface",
     "menu1_translateInterface": "Translate into my Language",
     "menu1_toogleInterface": "English / My Translation",

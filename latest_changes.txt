@@ -1,3 +1,10 @@
+Major changes in version 21.51:
+* Revised Focus menu layout, can now select interface language without opening a dialog.
+* Fixed translation language selection dialog.
+Translation language is different from interface language.
+# Translation language is used when user translate a selected word with right-click menu or use TRANSLATE::: command
+# For example, a user can use English menu but he can translate a word into Chinese.
+
 Major changes in version 21.50:
 * revised languge codes from zh_CN to zh_HANS, from zh_TW to zh_HANT
 * added config option 'myIBMWatsonVersion' to allow users to specify the IBM Watson version they use.

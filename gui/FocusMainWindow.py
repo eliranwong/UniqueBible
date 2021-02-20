@@ -4,6 +4,7 @@ from gui.MenuItems import *
 import shortcut as sc
 from BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
+from util.LanguageUtil import LanguageUtil
 
 
 class FocusMainWindow:
@@ -25,7 +26,7 @@ class FocusMainWindow:
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
-            ("menu1_setMyLanguage", self.openMyLanguageDialog),
+            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
@@ -92,7 +93,9 @@ class FocusMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         subMenu = addSubMenu(subMenu0, "menu1_programInterface")
-        addMenuItem(subMenu, "menu_language", self, self.openMyLanguageDialog)
+        #addMenuItem(subMenu, "menu_language", self, self.openInterfaceLanguageDialog)
+        for language in LanguageUtil.getNamesSupportedLanguages():
+            addMenuItem(subMenu, language, self, lambda: self.changeInterfaceLanguage(language), translation=False)
         if config.ttsSupport:
             addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguage)
 

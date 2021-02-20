@@ -30,7 +30,7 @@ class ClassicMainWindow:
             ("menu1_tabNo", self.setTabNumberDialog, None),
             ("menu1_setAbbreviations", self.setBibleAbbreviations, None),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog, None),
-            ("menu1_setMyLanguage", self.openMyLanguageDialog, None),
+            ("menu1_setMyLanguage", self.openTranslationLanguageDialog, None),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog, None),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog, None),
         )
@@ -79,7 +79,7 @@ class ClassicMainWindow:
         addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, None)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu1_programInterface")
-        addMenuItem(subMenu, "menu_language", self, self.openMyLanguageDialog)
+        addMenuItem(subMenu, "menu_language", self, self.openInterfaceLanguageDialog)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "bar3_pdf")
         items = (

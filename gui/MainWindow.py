@@ -241,23 +241,6 @@ class MainWindow(QMainWindow):
             # set thisTranslation to default English translation
             config.thisTranslation = languages.translation
 
-    def translateInterface(self):
-        pass
-#        if config.googletransSupport:
-#            if not config.userLanguage:
-#                self.openMyLanguageDialog()
-#                #self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_setLanguage"]))
-#            #else:
-#            if Languages().translateInterface(config.userLanguage):
-#                config.userLanguageInterface = True
-#                self.displayMessage("{0}  {1} 'config.py'".format(config.thisTranslation["message_restart"], config.thisTranslation["message_improveTrans"]))
-#            else:
-#                config.userLanguageInterface = False
-#                self.displayMessage("'{0}' translation have not been added yet.  You can send us an email to request a copy of your language.".format(config.userLanguage))
-#        else:
-#            self.displayMessage("{0} 'googletrans'\n{1}".format(config.thisTranslation["message_missing"],
-#                                                                config.thisTranslation["message_installFirst"]))
-
     def isMyTranslationAvailable(self):
         if hasattr(myTranslation, "translation") and hasattr(myTranslation, "translationLanguage"):
             return True
@@ -2646,23 +2629,27 @@ class MainWindow(QMainWindow):
         # self.morphDialog.setModal(True)
         self.morphDialog.show()
 
-    def openMyLanguageDialog(self):
-        userLanguage = Languages.decode(config.displayLanguage)
+    def openInterfaceLanguageDialog(self):
+        programInterfaceLanguage = Languages.decode(config.displayLanguage)
         items = LanguageUtil.getNamesSupportedLanguages()
         item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage),
+                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(programInterfaceLanguage),
                                         False)
         if ok and item:
             config.displayLanguage = Languages.code[item]
             self.setTranslation()
             self.setupMenuLayout(config.menuLayout)
 
+    def changeInterfaceLanguage(self, language):
+        config.displayLanguage = Languages.code[language]
+        self.setTranslation()
+        self.setupMenuLayout(config.menuLayout)
+
     # Set my language (config.userLanguage)
-    def openMyLanguageDialogOld(self):
-        languages = Languages()
-        if config.userLanguage:
-            userLanguage = config.userLanguage
-        translator = Translator()
+    # This one is different from the language of program interface
+    # userLanguage is used when user translate a selected word with right-click menu or use TRANSLATE::: command
+    # For example, a user can use English menu but he can translate a word into Chinese.
+    def openTranslationLanguageDialog(self):
         # Use IBM Watson service to translate text
         translator = Translator()
         if translator.language_translator is not None:

@@ -278,7 +278,7 @@ class WebEngineView(QWebEngineView):
                     userLanguage = config.toLanguageCodes[config.toLanguageNames.index(config.userLanguage)]
                     self.translateTextIntoUserLanguage(selectedText, userLanguage)
             else:
-                self.parent.parent.openMyLanguageDialog()
+                self.parent.parent.openTranslationLanguageDialog()
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
 

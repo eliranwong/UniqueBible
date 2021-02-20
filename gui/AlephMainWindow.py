@@ -9,7 +9,7 @@ class AlephMainWindow:
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
         menu1_defaults = menu1.addMenu(config.thisTranslation["menu_defaults"])
-        menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
+        menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openInterfaceLanguageDialog))
         selectTheme = menu1_defaults.addMenu(config.thisTranslation["menu1_selectTheme"])
         if config.qtMaterial:
             qtMaterialThemes = ["light_amber.xml", "light_blue.xml", "light_cyan.xml", "light_cyan_500.xml",
