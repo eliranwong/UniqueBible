@@ -3,6 +3,7 @@ from platform import system
 
 import config
 
+
 class ConfigUtil:
 
     @staticmethod
@@ -453,6 +454,8 @@ class ConfigUtil:
         # flags=re.IGNORECASE will be applied only if config.regexCaseSensitive is set to False
         if not hasattr(config, "regexCaseSensitive"):
             config.regexCaseSensitive = False
+        if not hasattr(config, "displayLanguage"):
+            config.displayLanguage = 'en_US'
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -666,7 +669,8 @@ class ConfigUtil:
             ("highlightLightThemeColours", config.highlightLightThemeColours),
             ("highlightDarkThemeColours", config.highlightDarkThemeColours),
             ("showHighlightMarkers", config.showHighlightMarkers),
-            ("menuShortcuts", config.menuShortcuts)
+            ("menuShortcuts", config.menuShortcuts),
+            ("displayLanguage", config.displayLanguage)
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

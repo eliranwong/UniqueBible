@@ -9,6 +9,7 @@ class AlephMainWindow:
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
         menu1_defaults = menu1.addMenu(config.thisTranslation["menu_defaults"])
+        menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
         selectTheme = menu1_defaults.addMenu(config.thisTranslation["menu1_selectTheme"])
         if config.qtMaterial:
             qtMaterialThemes = ["light_amber.xml", "light_blue.xml", "light_cyan.xml", "light_cyan_500.xml",
@@ -47,7 +48,9 @@ class AlephMainWindow:
         for shortcut in customShortcuts:
             shortcutsMenu.addAction(
                 QAction(shortcut, self, triggered=lambda shortcut=shortcut: self.setShortcuts(shortcut)))
-
+        if config.enableMacros:
+            menu1_defaults.addAction(
+                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
@@ -55,10 +58,6 @@ class AlephMainWindow:
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
-        if config.enableMacros:
-            menu1_defaults.addAction(
-                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
-        menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openMyLanguageDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
         if config.developer:

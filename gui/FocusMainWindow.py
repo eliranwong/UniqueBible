@@ -92,9 +92,7 @@ class FocusMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         subMenu = addSubMenu(subMenu0, "menu1_programInterface")
-        if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
-            addMenuItem(subMenu, "menu1_translateInterface", self, self.translateInterface)
-        addMenuItem(subMenu, "menu1_toogleInterface", self, self.toogleInterfaceTranslation)
+        addMenuItem(subMenu, "menu_language", self, self.openMyLanguageDialog)
         if config.ttsSupport:
             addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguage)
 

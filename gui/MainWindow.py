@@ -41,6 +41,7 @@ from gui.CentralWidget import CentralWidget
 from gui.imports import *
 from ToolsSqlite import LexiconData
 from TtsLanguages import TtsLanguages
+from util.LanguageUtil import LanguageUtil
 from util.MacroParser import MacroParser
 from util.NoteService import NoteService
 from util.ShortcutUtil import ShortcutUtil
@@ -187,11 +188,13 @@ class MainWindow(QMainWindow):
             config.open = config.openWindows
 
     def setTranslation(self):
+        config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+
+    def setTranslationOld(self):
         updateNeeded = False
         languages = Languages()
         if config.userLanguageInterface and hasattr(myTranslation, "translation"):
-            # Check for missing items. Use Google Translate to translate the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
-            
+            # Use translation API (Watson) for the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
             # temporary codes to generate missing items built-in Chinese translation
             translator = Translator()
             missingItems = {}
@@ -2643,8 +2646,23 @@ class MainWindow(QMainWindow):
         # self.morphDialog.setModal(True)
         self.morphDialog.show()
 
-    # Set my language (config.userLanguage)
     def openMyLanguageDialog(self):
+        userLanguage = Languages.decode(config.displayLanguage)
+        items = LanguageUtil.getNamesSupportedLanguages()
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["menu1_setMyLanguage"], items, items.index(userLanguage),
+                                        False)
+        if ok and item:
+            config.displayLanguage = Languages.code[item]
+            self.setTranslation()
+            self.setupMenuLayout(config.menuLayout)
+
+    # Set my language (config.userLanguage)
+    def openMyLanguageDialogOld(self):
+        languages = Languages()
+        if config.userLanguage:
+            userLanguage = config.userLanguage
+        translator = Translator()
         # Use IBM Watson service to translate text
         translator = Translator()
         if translator.language_translator is not None:
