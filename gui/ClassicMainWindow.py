@@ -79,9 +79,7 @@ class ClassicMainWindow:
         addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, None)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu1_programInterface")
-        if (not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable()) or (self.isMyTranslationAvailable() and not myTranslation.translationLanguage == config.userLanguage) or (self.isOfficialTranslationAvailable() and not config.translationLanguage == config.userLanguage):
-            addMenuItem(subMenu, "menu1_translateInterface", self, self.translateInterface, None)
-        addMenuItem(subMenu, "menu1_toogleInterface", self, self.toogleInterfaceTranslation, None)
+        addMenuItem(subMenu, "menu_language", self, self.openMyLanguageDialog)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "bar3_pdf")
         items = (
