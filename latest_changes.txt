@@ -1,4 +1,9 @@
-Major changes in version 21.52:
+Major change in version 21.53:
+* Added gui to search selected morphology in combination with selected translation
+* Renamed an existing command keyword from INTERLINEAR::: to DISTINCTINTERLINEAR:::, e.g. DISTINCTINTERLINEAR:::G746
+* Added a command keyword DISTINCTTRANSLATION:::, e.g. DISTINCTTRANSLATION:::G746
+
+Major change in version 21.52:
 * Fixed focus menu layout.  Users can now switch interface language by selecting language directly from menu, without an extra step to open a dialog window for language selection.
 
 Major changes in version 21.51:

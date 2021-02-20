@@ -236,9 +236,12 @@ class TextCommandParser:
             # e.g. COMMENTARY2:::43.3.16
             # e.g. COMMENTARY2:::CBSC:::43.3.16
             "commentary2": self.textCommentary2,
-            # [KEYWORD] INTERLINEAR
-            # e.g. INTERLINEAR:::G1510
-            "interlinear": self.distinctInterlinear,
+            # [KEYWORD] DISTINCTINTERLINEAR
+            # e.g. DISTINCTINTERLINEAR:::G746
+            "distinctinterlinear": self.distinctInterlinear,
+            # [KEYWORD] DISTINCTTRANSLATION
+            # e.g. DISTINCTTRANSLATION:::G746
+            "distincttranslation": self.distinctTranslation,
             # [KEYWORD] COMBO
             # e.g. COMBO:::Gen 1:1
             "combo": self.textCombo,
@@ -1170,10 +1173,15 @@ class TextCommandParser:
             else:
                 return self.textBibleVerseParser(references, texts[0], target)
 
-    # INTERLINEAR:::
+    # distinctinterlinear:::
     def distinctInterlinear(self, command, source):
-        translations = MorphologySqlite().distinctInterlinear(command)
-        translations = list(set([re.sub("^[^A-Za-z]*?([A-Za-z].*?)[^A-Za-z]*?$", r"\1", translation[0]) for translation in translations]))
+        translations = MorphologySqlite().distinctMorphology(command)
+        display = " | ".join(translations)
+        return ("study", display, {})
+
+    # distincttranslation:::
+    def distinctTranslation(self, command, source):
+        translations = MorphologySqlite().distinctMorphology(command, "Translation")
         display = " | ".join(translations)
         return ("study", display, {})
 
@@ -1992,7 +2000,11 @@ class TextCommandParser:
     # _searchword:::
     def textSearchWord(self, command, source):
         portion, wordID = self.splitCommand(command)
-        items = MorphologySqlite().searchWord(portion, wordID)
+        morphologySqlite = MorphologySqlite()
+        lexeme, lexicalEntry, morphologyString = morphologySqlite.searchWord(portion, wordID)
+        lexicalEntry = lexicalEntry.split(",")[0]
+        translations = morphologySqlite.distinctMorphology(lexicalEntry)
+        items = (lexeme, lexicalEntry, morphologyString, translations)
         self.parent.openMorphDialog(items)
         return ("", "", {})
 

@@ -1169,11 +1169,19 @@ class MorphologySqlite:
         self.cursor.execute(query, t)
         return self.cursor.fetchone()
 
-    def distinctInterlinear(self, lexicalEntry):
-        query = "SELECT DISTINCT Interlinear FROM morphology WHERE LexicalEntry LIKE ?"
+    def distinctMorphology(self, lexicalEntry, item="Interlinear"):
+        query = "SELECT DISTINCT {0} FROM morphology WHERE LexicalEntry LIKE ?".format(item)
         t = ("%{0},%".format(lexicalEntry),)
         self.cursor.execute(query, t)
-        return self.cursor.fetchall()
+        return list(set([self.simplifyTranslation(translation[0]) for translation in self.cursor.fetchall()]))
+
+    def simplifyTranslation(self, translation):
+        translation.strip()
+        translation = re.sub("^(.+?) \+\[[^\[\]]*?\]$", r"\1", translation)
+        translation = re.sub("^\+*\[[^\[\]]*?\](.+?)$", r"\1", translation)
+        translation = re.sub("^(.+?)\[[^\[\]]*?\]\+*$", r"\1", translation)
+        translation = re.sub("^[^A-Za-z]*?([A-Za-z].*?)[^A-Za-z]*?$", r"\1", translation)
+        return translation
 
     def searchMorphology(self, mode, searchString):
         formatedText = ""
