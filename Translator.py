@@ -11,7 +11,7 @@ except:
 class Translator:
 
     def __init__(self):
-        if config.enableIBMWatson:
+        if config.enableIBMWatson and config.myIBMWatsonApikey:
             self.authenticate()
             if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
                 self.getLanguageLists()
@@ -22,7 +22,7 @@ class Translator:
         try:
             authenticator = IAMAuthenticator(config.myIBMWatsonApikey)
             language_translator = LanguageTranslatorV3(
-                version='2018-05-01',
+                version=config.myIBMWatsonVersion,
                 authenticator=authenticator
             )
             language_translator.set_service_url(config.myIBMWatsonUrl)

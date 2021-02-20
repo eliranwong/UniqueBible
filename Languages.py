@@ -10,8 +10,8 @@ from translations import translations
 class Languages:
 
     code = {
-        "Chinese (Simplified) 中文": "zh_CN",
-        "Chinese (Traditional) 古文": "zh_TW",
+        "Chinese (Simplified) 简体中文": "zh_HANS",
+        "Chinese (Traditional) 繁體中文": "zh_HANT",
         "English (UK)": "en_GB",
         "English (US)": "en_US",
         "French Français": "fr",

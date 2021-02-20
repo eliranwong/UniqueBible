@@ -1,3 +1,7 @@
+Major changes in version 21.50:
+* revised languge codes from zh_CN to zh_HANS, from zh_TW to zh_HANT
+* added config option 'myIBMWatsonVersion' to allow users to specify the IBM Watson version they use.
+
 Major changes in version 21.49:
 * This version has a new and useful feature.
   @osteng added dynamic selection of program interface languages.  Thank you, Oliver.
