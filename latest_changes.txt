@@ -1,3 +1,20 @@
+Major changes in version 21.49:
+* This version has a new and useful feature.
+  @osteng added dynamic selection of program interface languages.  Thank you, Oliver.
+UBA now has these built-in languages:
+German Deutsch
+English (UK)
+English (US)
+Spanish Español
+French Français
+Hindi हिन्दी
+Italian Italiano
+Japanese 日本語
+Korean 한국어
+Russian Русский язык
+Chinese (Simplified) 中文
+Chinese (Traditional) 古文
+
 Major changes in version 21.48:
 * fixed on a startup issue
 
