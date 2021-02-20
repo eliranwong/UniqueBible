@@ -95,7 +95,7 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_programInterface")
         #addMenuItem(subMenu, "menu_language", self, self.openInterfaceLanguageDialog)
         for language in LanguageUtil.getNamesSupportedLanguages():
-            addMenuItem(subMenu, language, self, lambda: self.changeInterfaceLanguage(language), translation=False)
+            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
         if config.ttsSupport:
             addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguage)
 
