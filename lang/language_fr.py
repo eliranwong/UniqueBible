@@ -523,4 +523,5 @@ translation = {
     "adjustSpeed": "Accélérer la vitesse",
     "ibmWatsonNotEnalbed": "La fonction de traduction utilisant le service IBM Watson n'est pas activée.",
     "translate": "Translate",
+    "note_textUtility": "Afficher / Masquer l'utilitaire de texte",
 }

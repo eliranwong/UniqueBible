@@ -526,4 +526,5 @@ translation = {
     'adjustSpeed': '調整速度',
     'ibmWatsonNotEnalbed': "使用 IBM Watson 的翻譯服務功能未啟用。  \n您需要安裝 python 套件 'ibm-watson' ，並在 config.py 中輸入有效的認證。您可以執行 ' pip3 install ibm-watson' 與終端機，來安裝 'ibm-swatson' 。",
     "translate": "翻译",
+    "note_textUtility": "显示 / 隐藏文本实用程序",
 }

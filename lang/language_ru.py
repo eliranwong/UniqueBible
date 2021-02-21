@@ -523,4 +523,5 @@ translation = {
     "adjustSpeed": "Изменить скорость",
     "ibmWatsonNotEnalbed": "Функция преобразования с использованием службы IBM Watson не включена.",
     "translate": "Перевести",
+    "note_textUtility": "Показать/скрыть текстовую утилиту",
 }

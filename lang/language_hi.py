@@ -523,4 +523,5 @@ translation = {
     "adjustSpeed": "गति समायोजित करें",
     "ibmWatsonNotEnalbed": "आईबीएम वाटसन सेवा का उपयोग करते हुए अनुवाद सुविधा सक्षम नहीं है. ",
     "translate": "अनुवाद",
+    "note_textUtility": "पाठ यूटिलिटी दिखाएँ/छुपाएँ",
 }

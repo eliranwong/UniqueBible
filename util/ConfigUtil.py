@@ -214,6 +214,9 @@ class ConfigUtil:
         # Default font size of content in note editor
         if not hasattr(config, "noteEditorFontSize"):
             config.noteEditorFontSize = 14
+        # Show Note Editor's style toolbar by default
+        if not hasattr(config, "hideNoteEditorStyleToolbar"):
+            config.hideNoteEditorStyleToolbar = False
         # Hide Note Editor's text utility by default
         if not hasattr(config, "hideNoteEditorTextUtility"):
             config.hideNoteEditorTextUtility = True
@@ -588,6 +591,7 @@ class ConfigUtil:
             ("font", config.font),
             ("fontChinese", config.fontChinese),
             ("noteEditorFontSize", config.noteEditorFontSize),
+            ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility),
             ("readFormattedBibles", config.readFormattedBibles),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),

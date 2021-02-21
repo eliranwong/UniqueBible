@@ -23,8 +23,6 @@ class NoteEditor(QMainWindow):
 
         # default - "Rich" mode for editing
         self.html = True
-        # default - show toolbar with formatting items
-        self.showToolBar = True
         # default - text is not modified; no need for saving new content
         self.parent.noteSaved = True
         config.noteOpened = True
@@ -37,6 +35,8 @@ class NoteEditor(QMainWindow):
         self.setupMenuBar()
         self.addToolBarBreak()
         self.setupToolBar()
+        if config.hideNoteEditorStyleToolbar:
+            self.toolBar.hide()
         self.addToolBarBreak()
         self.setupTextUtility()
         if config.hideNoteEditorTextUtility:
@@ -55,9 +55,9 @@ class NoteEditor(QMainWindow):
             config.noteOpened = False
             event.accept()
             if config.lastOpenedNote:
-                if config.lastOpenedNote[0] == "file":
-                    self.parent.externalFileButtonClicked()
-                elif config.lastOpenedNote[0] == "book":
+                #if config.lastOpenedNote[0] == "file":
+                #    self.parent.externalFileButtonClicked()
+                if config.lastOpenedNote[0] == "book":
                     self.parent.openStudyBookNote()
                 elif config.lastOpenedNote[0] == "chapter":
                     self.parent.openStudyChapterNote()
@@ -223,7 +223,7 @@ class NoteEditor(QMainWindow):
         self.menuBar.addWidget(toolBarButton)
 
         toolBarButton = QPushButton()
-        toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
+        toolBarButton.setToolTip(config.thisTranslation["note_textUtility"])
         toolBarButtonFile = os.path.join("htmlResources", "textUtility.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
         toolBarButton.clicked.connect(self.toggleTextUtility)
@@ -288,12 +288,12 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
     def toggleToolbar(self):
-        if self.showToolBar:
-            self.toolBar.hide()
-            self.showToolBar = False
-        else:
+        if config.hideNoteEditorStyleToolbar:
             self.toolBar.show()
-            self.showToolBar = True
+            self.hideNoteEditorStyleToolbar = False
+        else:
+            self.toolBar.hide()
+            self.hideNoteEditorStyleToolbar = True
 
     def toggleTextUtility(self):
         if config.hideNoteEditorTextUtility:

@@ -525,4 +525,5 @@ translation = {
     'ibmWatsonNotEnalbed': "使用 IBM Watson 的翻译服务功能未启用。  \n您需要安装 python 套件 'ibm-watson' ，并在 config.py 中输入有效的认证。您可以执行 ' pip3 install ibm-watson' 与终端机，来安装 'ibm-swatson' 。",
     "menu1_programInterface": "用戶界面",
     "translate": "翻译",
+    "note_textUtility": "显示 / 隐藏文本实用程序",
 }

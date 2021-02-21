@@ -49,6 +49,7 @@ class MoreConfigOptions(QDialog):
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, ""),
+            ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, "Default: False: \nHide 'Style' toolbar in Note Editor."),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, "Default: True: \nHide 'Text Utility' toolbar in Note Editor."),
             ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, ""),
             ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, ""),
@@ -199,6 +200,9 @@ class MoreConfigOptions(QDialog):
 
     def clickToOpenImageChanged(self):
         config.clickToOpenImage = not config.clickToOpenImage
+
+    def hideNoteEditorStyleToolbarChanged(self):
+        config.hideNoteEditorStyleToolbar = not config.hideNoteEditorStyleToolbar
 
     def hideNoteEditorTextUtilityChanged(self):
         config.hideNoteEditorTextUtility = not config.hideNoteEditorTextUtility
