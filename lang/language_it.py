@@ -521,6 +521,6 @@ translation = {
     "message_macro_save_highlights": "Inserisce il nomefile per salvare tutti i momenti salienti come file macro",
     "message_macro_save_command": "Inserisce il filename per salvare il comando corrente come file macro",
     "adjustSpeed": "Velocità di regolazione",
-    "ibmWatsonNotEnalbed": "La funzione di traduzione che utilizza il servizio IBM Watson non è abilitata."
+    "ibmWatsonNotEnalbed": "La funzione di traduzione che utilizza il servizio IBM Watson non è abilitata.",
     "translate": "Translate",
 }
