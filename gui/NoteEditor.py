@@ -40,7 +40,8 @@ class NoteEditor(QMainWindow):
         self.addToolBarBreak()
         self.setupTextUtility()
         if config.hideNoteEditorTextUtility:
-            self.toolBar2.hide()
+            self.ttsToolbar.hide()
+            self.translateToolbar.hide()
         self.setupLayout()
 
         # display content when first launched
@@ -297,10 +298,12 @@ class NoteEditor(QMainWindow):
 
     def toggleTextUtility(self):
         if config.hideNoteEditorTextUtility:
-            self.toolBar2.show()
+            self.ttsToolbar.show()
+            self.translateToolbar.show()
             config.hideNoteEditorTextUtility = False
         else:
-            self.toolBar2.hide()
+            self.ttsToolbar.hide()
+            self.translateToolbar.hide()
             config.hideNoteEditorTextUtility = True
 
     def printNote(self):
@@ -916,15 +919,15 @@ p, li {0} white-space: pre-wrap; {1}
 
     def setupTextUtility(self):
 
-        self.toolBar2 = QToolBar()
-        self.toolBar2.setWindowTitle(config.thisTranslation["noteTool_title"])
-        self.toolBar2.setContextMenuPolicy(Qt.PreventContextMenu)
+        self.ttsToolbar = QToolBar()
+        self.ttsToolbar.setWindowTitle(config.thisTranslation["noteTool_title"])
+        self.ttsToolbar.setContextMenuPolicy(Qt.PreventContextMenu)
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
-        self.addToolBar(self.toolBar2)
+        self.addToolBar(self.ttsToolbar)
 
         self.languageCombo = QComboBox()
-        self.toolBar2.addWidget(self.languageCombo)
+        self.ttsToolbar.addWidget(self.languageCombo)
         if config.espeak:
             languages = TtsLanguages().isoLang2epeakLang
         else:
@@ -942,16 +945,21 @@ p, li {0} white-space: pre-wrap; {1}
         button = QPushButton(config.thisTranslation["speak"])
         button.setToolTip(config.thisTranslation["speak"])
         button.clicked.connect(self.speakText)
-        self.toolBar2.addWidget(button)
+        self.ttsToolbar.addWidget(button)
         button = QPushButton(config.thisTranslation["stop"])
         button.setToolTip(config.thisTranslation["stop"])
         button.clicked.connect(self.parent.textCommandParser.stopTtsAudio)
-        self.toolBar2.addWidget(button)
+        self.ttsToolbar.addWidget(button)
 
-        self.toolBar2.addSeparator()
+        self.translateToolbar = QToolBar()
+        self.translateToolbar.setWindowTitle(config.thisTranslation["noteTool_title"])
+        self.translateToolbar.setContextMenuPolicy(Qt.PreventContextMenu)
+        # self.toolBar can be treated as an individual widget and positioned with a specified layout
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.translateToolbar)
 
         self.fromLanguageCombo = QComboBox()
-        self.toolBar2.addWidget(self.fromLanguageCombo)
+        self.translateToolbar.addWidget(self.fromLanguageCombo)
         self.fromLanguageCombo.addItems(["[Auto]"] +Translator.fromLanguageNames)
         initialIndex = 0
         self.fromLanguageCombo.setCurrentIndex(initialIndex)
@@ -959,10 +967,10 @@ p, li {0} white-space: pre-wrap; {1}
         button = QPushButton(config.thisTranslation["context1_translate"])
         button.setToolTip(config.thisTranslation["context1_translate"])
         button.clicked.connect(self.translateText)
-        self.toolBar2.addWidget(button)
+        self.translateToolbar.addWidget(button)
 
         self.toLanguageCombo = QComboBox()
-        self.toolBar2.addWidget(self.toLanguageCombo)
+        self.translateToolbar.addWidget(self.toLanguageCombo)
         self.toLanguageCombo.addItems(Translator.toLanguageNames)
         initialIndex = Translator.toLanguageNames.index(config.userLanguage)
         self.toLanguageCombo.setCurrentIndex(initialIndex)
