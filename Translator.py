@@ -10,11 +10,19 @@ except:
 
 class Translator:
 
+    fromLanguageCodes = ['ar', 'bg', 'bn', 'bs', 'ca', 'cnr', 'cs', 'cy', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fi', 'fr', 'fr-CA', 'ga', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lt', 'lv', 'ml', 'ms', 'mt', 'nb', 'ne', 'nl', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'sr', 'sv', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'zh', 'zh-TW']
+
+    fromLanguageNames = ['Arabic', 'Bulgarian', 'Bengali', 'Bosnian', 'Catalan', 'Montenegrin', 'Czech', 'Welsh', 'Danish', 'German', 'Greek', 'English', 'Spanish', 'Estonian', 'Basque', 'Finnish', 'French', 'French (Canada)', 'Irish', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Italian', 'Japanese', 'Korean', 'Lithuanian', 'Latvian', 'Malayalam', 'Malay', 'Maltese', 'Norwegian Bokmal', 'Nepali', 'Dutch', 'Polish', 'Portuguese', 'Romanian', 'Russian', 'Sinhala', 'Slovakian', 'Slovenian', 'Serbian', 'Swedish', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese', 'Simplified Chinese', 'Traditional Chinese']
+
+    toLanguageCodes = ['ar', 'bg', 'bn', 'bs', 'ca', 'cnr', 'cs', 'cy', 'da', 'de', 'el', 'en', 'es', 'et', 'eu', 'fi', 'fr', 'fr-CA', 'ga', 'gu', 'he', 'hi', 'hr', 'hu', 'id', 'it', 'ja', 'ko', 'lt', 'lv', 'ml', 'ms', 'mt', 'nb', 'ne', 'nl', 'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sl', 'sr', 'sv', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'vi', 'zh', 'zh-TW']
+
+    toLanguageNames = ['Arabic', 'Bulgarian', 'Bengali', 'Bosnian', 'Catalan', 'Montenegrin', 'Czech', 'Welsh', 'Danish', 'German', 'Greek', 'English', 'Spanish', 'Estonian', 'Basque', 'Finnish', 'French', 'French (Canada)', 'Irish', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Italian', 'Japanese', 'Korean', 'Lithuanian', 'Latvian', 'Malayalam', 'Malay', 'Maltese', 'Norwegian Bokmal', 'Nepali', 'Dutch', 'Polish', 'Portuguese', 'Romanian', 'Russian', 'Sinhala', 'Slovakian', 'Slovenian', 'Serbian', 'Swedish', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese', 'Simplified Chinese', 'Traditional Chinese']
+
     def __init__(self):
         if config.enableIBMWatson and config.myIBMWatsonApikey:
             self.authenticate()
-            if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
-                self.getLanguageLists()
+            #if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
+            #    self.getLanguageLists()
         else:
             self.language_translator = None
 
@@ -32,20 +40,23 @@ class Translator:
             self.language_translator = None
 
     def getLanguageLists(self):
-        languages = self.language_translator.list_languages().get_result()
-        #print(json.dumps(languages, indent=2))
-        config.fromLanguageCodes = []
-        config.fromLanguageNames = []
-        config.toLanguageCodes = []
-        config.toLanguageNames = []
-        for i in languages["languages"]:
-            if i["supported_as_source"]:
-                config.fromLanguageCodes.append(i["language"])
-                config.fromLanguageNames.append(i["language_name"])
-            if i["supported_as_target"]:
-                config.toLanguageCodes.append(i["language"])
-                config.toLanguageNames.append(i["language_name"])
-        #print(config.fromLanguageCodes, config.fromLanguageNames, config.toLanguageCodes, config.toLanguageNames)
+        try:
+            languages = self.language_translator.list_languages().get_result()
+            #print(json.dumps(languages, indent=2))
+            config.fromLanguageCodes = []
+            config.fromLanguageNames = []
+            config.toLanguageCodes = []
+            config.toLanguageNames = []
+            for i in languages["languages"]:
+                if i["supported_as_source"]:
+                    config.fromLanguageCodes.append(i["language"])
+                    config.fromLanguageNames.append(i["language_name"])
+                if i["supported_as_target"]:
+                    config.toLanguageCodes.append(i["language"])
+                    config.toLanguageNames.append(i["language_name"])
+            #print(config.fromLanguageCodes, config.fromLanguageNames, config.toLanguageCodes, config.toLanguageNames)
+        except:
+            self.language_translator = None
 
     def identify(self, text):
         result = self.language_translator.identify(text).get_result()

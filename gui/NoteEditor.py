@@ -2,9 +2,11 @@ import os, re, config, base64
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import (QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog)
+from PySide2.QtWidgets import QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from NoteSqlite import NoteSqlite
 from util.NoteService import NoteService
+from TtsLanguages import TtsLanguages
+from Translator import Translator
 
 
 class NoteEditor(QMainWindow):
@@ -35,6 +37,10 @@ class NoteEditor(QMainWindow):
         self.setupMenuBar()
         self.addToolBarBreak()
         self.setupToolBar()
+        self.addToolBarBreak()
+        self.setupTextUtility()
+        if config.hideNoteEditorTextUtility:
+            self.toolBar2.hide()
         self.setupLayout()
 
         # display content when first launched
@@ -213,7 +219,14 @@ class NoteEditor(QMainWindow):
         toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
         toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
-        toolBarButton.clicked.connect(self.toogleToolbar)
+        toolBarButton.clicked.connect(self.toggleToolbar)
+        self.menuBar.addWidget(toolBarButton)
+
+        toolBarButton = QPushButton()
+        toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
+        toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
+        toolBarButton.setIcon(QIcon(toolBarButtonFile))
+        toolBarButton.clicked.connect(self.toggleTextUtility)
         self.menuBar.addWidget(toolBarButton)
 
         self.menuBar.addSeparator()
@@ -270,17 +283,25 @@ class NoteEditor(QMainWindow):
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "toolbar.png")
-        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toogleToolbar)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toggleToolbar)
 
         self.menuBar.addSeparator()
 
-    def toogleToolbar(self):
+    def toggleToolbar(self):
         if self.showToolBar:
             self.toolBar.hide()
             self.showToolBar = False
         else:
             self.toolBar.show()
             self.showToolBar = True
+
+    def toggleTextUtility(self):
+        if config.hideNoteEditorTextUtility:
+            self.toolBar2.show()
+            config.hideNoteEditorTextUtility = False
+        else:
+            self.toolBar2.hide()
+            config.hideNoteEditorTextUtility = True
 
     def printNote(self):
         #document = QTextDocument("Sample Page")
@@ -305,153 +326,77 @@ class NoteEditor(QMainWindow):
         # self.toolBar can be treated as an individual widget and positioned with a specified layout
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.toolBar)
-
-        fontButton = QPushButton()
-        fontButton.setToolTip(config.thisTranslation["noteTool_textFont"])
-        fontButtonFile = os.path.join("htmlResources", "font.png")
-        fontButton.setIcon(QIcon(fontButtonFile))
-        fontButton.clicked.connect(self.format_font)
-        self.toolBar.addWidget(fontButton)
-
-        fontButton = QPushButton()
-        fontButton.setToolTip(config.thisTranslation["noteTool_textColor"])
-        fontButtonFile = os.path.join("htmlResources", "textColor.png")
-        fontButton.setIcon(QIcon(fontButtonFile))
-        fontButton.clicked.connect(self.format_textColor)
-        self.toolBar.addWidget(fontButton)
-
-        fontButton = QPushButton()
-        fontButton.setToolTip(config.thisTranslation["noteTool_textBackgroundColor"])
-        fontButtonFile = os.path.join("htmlResources", "textBgColor.png")
-        fontButton.setIcon(QIcon(fontButtonFile))
-        fontButton.clicked.connect(self.format_textBackgroundColor)
-        self.toolBar.addWidget(fontButton)
+        
+        items = (
+            ("noteTool_textFont", "font.png", self.format_font),
+            ("noteTool_textColor", "textColor.png", self.format_textColor),
+            ("noteTool_textBackgroundColor", "textBgColor.png", self.format_textBackgroundColor),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        headerButton = QPushButton()
-        headerButton.setToolTip(config.thisTranslation["noteTool_header1"])
-        headerButtonFile = os.path.join("htmlResources", "header1.png")
-        headerButton.setIcon(QIcon(headerButtonFile))
-        headerButton.clicked.connect(self.format_header1)
-        self.toolBar.addWidget(headerButton)
-
-        headerButton = QPushButton()
-        headerButton.setToolTip(config.thisTranslation["noteTool_header2"])
-        headerButtonFile = os.path.join("htmlResources", "header2.png")
-        headerButton.setIcon(QIcon(headerButtonFile))
-        headerButton.clicked.connect(self.format_header2)
-        self.toolBar.addWidget(headerButton)
-
-        headerButton = QPushButton()
-        headerButton.setToolTip(config.thisTranslation["noteTool_header3"])
-        headerButtonFile = os.path.join("htmlResources", "header3.png")
-        headerButton.setIcon(QIcon(headerButtonFile))
-        headerButton.clicked.connect(self.format_header3)
-        self.toolBar.addWidget(headerButton)
+        items = (
+            ("noteTool_header1", "header1.png", self.format_header1),
+            ("noteTool_header2", "header2.png", self.format_header2),
+            ("noteTool_header3", "header3.png", self.format_header3),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
         
-        boldButton = QPushButton()
-        boldButton.setToolTip("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]))
-        boldButtonFile = os.path.join("htmlResources", "bold.png")
-        boldButton.setIcon(QIcon(boldButtonFile))
-        boldButton.clicked.connect(self.format_bold)
-        self.toolBar.addWidget(boldButton)
-
-        italicButton = QPushButton()
-        italicButton.setToolTip("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]))
-        italicButtonFile = os.path.join("htmlResources", "italic.png")
-        italicButton.setIcon(QIcon(italicButtonFile))
-        italicButton.clicked.connect(self.format_italic)
-        self.toolBar.addWidget(italicButton)
-
-        underlineButton = QPushButton()
-        underlineButton.setToolTip("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]))
-        underlineButtonFile = os.path.join("htmlResources", "underline.png")
-        underlineButton.setIcon(QIcon(underlineButtonFile))
-        underlineButton.clicked.connect(self.format_underline)
-        self.toolBar.addWidget(underlineButton)
+        items = (
+            ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "bold.png", self.format_bold),
+            ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "italic.png", self.format_italic),
+            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "underline.png", self.format_underline),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
-        customButton = QPushButton()
-        customButton.setToolTip("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"))
-        customButtonFile = os.path.join("htmlResources", "custom.png")
-        customButton.setIcon(QIcon(customButtonFile))
-        customButton.clicked.connect(self.format_custom)
-        self.toolBar.addWidget(customButton)
+        self.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "custom.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
-        leftButton = QPushButton()
-        leftButton.setToolTip(config.thisTranslation["noteTool_left"])
-        leftButtonFile = os.path.join("htmlResources", "align_left.png")
-        leftButton.setIcon(QIcon(leftButtonFile))
-        leftButton.clicked.connect(self.format_left)
-        self.toolBar.addWidget(leftButton)
-
-        centerButton = QPushButton()
-        centerButton.setToolTip(config.thisTranslation["noteTool_centre"])
-        centerButtonFile = os.path.join("htmlResources", "align_center.png")
-        centerButton.setIcon(QIcon(centerButtonFile))
-        centerButton.clicked.connect(self.format_center)
-        self.toolBar.addWidget(centerButton)
-
-        rightButton = QPushButton()
-        rightButton.setToolTip(config.thisTranslation["noteTool_right"])
-        rightButtonFile = os.path.join("htmlResources", "align_right.png")
-        rightButton.setIcon(QIcon(rightButtonFile))
-        rightButton.clicked.connect(self.format_right)
-        self.toolBar.addWidget(rightButton)
-
-        justifyButton = QPushButton()
-        justifyButton.setToolTip(config.thisTranslation["noteTool_justify"])
-        justifyButtonFile = os.path.join("htmlResources", "align_justify.png")
-        justifyButton.setIcon(QIcon(justifyButtonFile))
-        justifyButton.clicked.connect(self.format_justify)
-        self.toolBar.addWidget(justifyButton)
+        items = (
+            ("noteTool_left", "align_left.png", self.format_left),
+            ("noteTool_centre", "align_center.png", self.format_center),
+            ("noteTool_right", "align_right.png", self.format_right),
+            ("noteTool_justify", "align_justify.png", self.format_justify),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        clearButton = QPushButton()
-        clearButton.setToolTip("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]))
-        clearButtonFile = os.path.join("htmlResources", "clearFormat.png")
-        clearButton.setIcon(QIcon(clearButtonFile))
-        clearButton.clicked.connect(self.format_clear)
-        self.toolBar.addWidget(clearButton)
+        self.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "clearFormat.png", self.format_clear, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
-        hyperlinkButton = QPushButton()
-        hyperlinkButton.setToolTip(config.thisTranslation["noteTool_hyperlink"])
-        hyperlinkButtonFile = os.path.join("htmlResources", "hyperlink.png")
-        hyperlinkButton.setIcon(QIcon(hyperlinkButtonFile))
-        hyperlinkButton.clicked.connect(self.openHyperlinkDialog)
-        self.toolBar.addWidget(hyperlinkButton)
-
-        imageButton = QPushButton()
-        imageButton.setToolTip(config.thisTranslation["noteTool_externalImage"])
-        imageButtonFile = os.path.join("htmlResources", "gallery.png")
-        imageButton.setIcon(QIcon(imageButtonFile))
-        imageButton.clicked.connect(self.openImageDialog)
-        self.toolBar.addWidget(imageButton)
+        items = (
+            ("noteTool_hyperlink", "hyperlink.png", self.openHyperlinkDialog),
+            ("noteTool_externalImage", "gallery.png", self.openImageDialog),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        imageButton = QPushButton()
-        imageButton.setToolTip(config.thisTranslation["noteTool_image"])
-        imageButtonFile = os.path.join("htmlResources", "addImage.png")
-        imageButton.setIcon(QIcon(imageButtonFile))
-        imageButton.clicked.connect(self.addInternalImage)
-        self.toolBar.addWidget(imageButton)
-
-        imageButton = QPushButton()
-        imageButton.setToolTip(config.thisTranslation["noteTool_exportImage"])
-        imageButtonFile = os.path.join("htmlResources", "export.png")
-        imageButton.setIcon(QIcon(imageButtonFile))
-        imageButton.clicked.connect(self.exportNoteImages)
-        self.toolBar.addWidget(imageButton)
+        items = (
+            ("noteTool_image", "addImage.png", self.addInternalImage),
+            ("noteTool_exportImage", "export.png", self.exportNoteImages),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -968,3 +913,75 @@ p, li {0} white-space: pre-wrap; {1}
                 hyperlink)
         if ok and text != '':
             self.addHyperlink(text)
+
+    def setupTextUtility(self):
+
+        self.toolBar2 = QToolBar()
+        self.toolBar2.setWindowTitle(config.thisTranslation["noteTool_title"])
+        self.toolBar2.setContextMenuPolicy(Qt.PreventContextMenu)
+        # self.toolBar can be treated as an individual widget and positioned with a specified layout
+        # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
+        self.addToolBar(self.toolBar2)
+
+        self.languageCombo = QComboBox()
+        self.toolBar2.addWidget(self.languageCombo)
+        if config.espeak:
+            languages = TtsLanguages().isoLang2epeakLang
+        else:
+            languages = TtsLanguages().isoLang2qlocaleLang
+        self.languageCodes = list(languages.keys())
+        for code in self.languageCodes:
+            self.languageCombo.addItem(languages[code][1])
+        # Check if selected tts engine has the language user specify.
+        if not (config.ttsDefaultLangauge in self.languageCodes):
+            config.ttsDefaultLangauge = "en"
+        # Set initial item
+        initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+        self.languageCombo.setCurrentIndex(initialIndex)
+
+        button = QPushButton(config.thisTranslation["speak"])
+        button.setToolTip(config.thisTranslation["speak"])
+        button.clicked.connect(self.speakText)
+        self.toolBar2.addWidget(button)
+        button = QPushButton(config.thisTranslation["stop"])
+        button.setToolTip(config.thisTranslation["stop"])
+        button.clicked.connect(self.parent.textCommandParser.stopTtsAudio)
+        self.toolBar2.addWidget(button)
+
+        self.toolBar2.addSeparator()
+
+        self.fromLanguageCombo = QComboBox()
+        self.toolBar2.addWidget(self.fromLanguageCombo)
+        self.fromLanguageCombo.addItems(["[Auto]"] +Translator.fromLanguageNames)
+        initialIndex = 0
+        self.fromLanguageCombo.setCurrentIndex(initialIndex)
+
+        button = QPushButton(config.thisTranslation["context1_translate"])
+        button.setToolTip(config.thisTranslation["context1_translate"])
+        button.clicked.connect(self.translateText)
+        self.toolBar2.addWidget(button)
+
+        self.toLanguageCombo = QComboBox()
+        self.toolBar2.addWidget(self.toLanguageCombo)
+        self.toLanguageCombo.addItems(Translator.toLanguageNames)
+        initialIndex = Translator.toLanguageNames.index(config.userLanguage)
+        self.toLanguageCombo.setCurrentIndex(initialIndex)
+
+    def speakText(self):
+        text = self.editor.textCursor().selectedText()
+        if ":::" in text:
+            text = text.split(":::")[-1]
+        command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+        self.parent.runTextCommand(command)
+
+    def translateText(self):
+        text = self.editor.textCursor().selectedText()
+        if text:
+            translator = Translator()
+            if translator.language_translator is not None:
+                fromLanguage = Translator.fromLanguageCodes[self.fromLanguageCombo.currentIndex() - 1] if self.fromLanguageCombo.currentIndex() != 0 else translator.identify(text)
+                toLanguage = Translator.toLanguageCodes[self.toLanguageCombo.currentIndex()]
+                result = translator.translate(text, fromLanguage, toLanguage)
+                self.editor.insertPlainText(result)
+            else:
+                self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])

@@ -521,7 +521,7 @@ translation = {
     "message_select_macro": "Select Macro",
     "message_macro_save_highlights": "Enter filename to save all highlights as a macro file",
     "message_macro_save_command": "Enter filename to save current command as a macro file",
-    # Built-in translation updated up-to-here
     "adjustSpeed": "Adjust Speed",
     "ibmWatsonNotEnalbed": "Translation feature using IBM Watson service is not enabled.  \nYou need to install python package 'ibm-watson' and enter valid credentials in config.py. \nYou can install 'ibm-watson' by running 'pip3 install ibm-watson' with terminal.",
+    "translate": "Translate",
 }

@@ -1097,9 +1097,9 @@ class TextCommandParser:
             if command.count(":::") == 0:
                 fromLanguage = translator.identify(command)
                 toLanguage = "en"
-                if not fromLanguage in config.fromLanguageCodes:
+                if not fromLanguage in Translator.fromLanguageCodes:
                     fromLanguage = "en"
-                if config.userLanguage in config.toLanguageCodes:
+                if config.userLanguage in Translator.toLanguageCodes:
                     toLanguage = config.userLanguage
                 text = command
             else:
@@ -1116,9 +1116,9 @@ class TextCommandParser:
                         fromLanguage = fromLanguage.replace("@", "-")
                     if "@" in toLanguage:
                         toLanguage = toLanguage.replace("@", "-")
-                    if not fromLanguage in config.fromLanguageCodes:
+                    if not fromLanguage in Translator.fromLanguageCodes:
                         fromLanguage = "en"
-                    if not toLanguage in config.toLanguageCodes:
+                    if not toLanguage in Translator.toLanguageCodes:
                         toLanguage = "en"
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)

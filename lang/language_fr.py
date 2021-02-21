@@ -522,4 +522,5 @@ translation = {
     "message_macro_save_command": "Entrez le nom de fichier pour sauvegarder la commande en cours en tant que fichier de macro",
     "adjustSpeed": "Accélérer la vitesse",
     "ibmWatsonNotEnalbed": "La fonction de traduction utilisant le service IBM Watson n'est pas activée.",
+    "translate": "Translate",
 }

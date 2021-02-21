@@ -522,4 +522,5 @@ translation = {
     "message_macro_save_command": "현재 명령을 매크로 파일로 저장하기 위한 파일 이름 입력",
     "adjustSpeed": "조정 속도",
     "ibmWatsonNotEnalbed": "서비스를 사용하는 번역 기능은 사용할 수 없습니다."
+    "translate": "번역",
 }

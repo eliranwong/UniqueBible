@@ -214,6 +214,9 @@ class ConfigUtil:
         # Default font size of content in note editor
         if not hasattr(config, "noteEditorFontSize"):
             config.noteEditorFontSize = 14
+        # Hide Note Editor's text utility by default
+        if not hasattr(config, "hideNoteEditorTextUtility"):
+            config.hideNoteEditorTextUtility = True
         # Options to display bibles in formatted layout or paragraphs: True / False
         # "False" here means displaying bible verse in plain format, with each one on a single line.
         if not hasattr(config, "readFormattedBibles"):
@@ -585,6 +588,7 @@ class ConfigUtil:
             ("font", config.font),
             ("fontChinese", config.fontChinese),
             ("noteEditorFontSize", config.noteEditorFontSize),
+            ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility),
             ("readFormattedBibles", config.readFormattedBibles),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),

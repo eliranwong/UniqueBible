@@ -522,4 +522,5 @@ translation = {
     "message_macro_save_command": "Especifique el nombre de archivo para guardar el mandato actual como un archivo de macro",
     "adjustSpeed": "Ajustar velocidad",
     "ibmWatsonNotEnalbed": "La característica de conversión que utiliza el servicio de IBM Watson no está habilitada. ",
+    "translate": "Traducir",
 }

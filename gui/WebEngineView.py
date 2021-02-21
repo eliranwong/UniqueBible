@@ -270,12 +270,12 @@ class WebEngineView(QWebEngineView):
         # Use IBM Watson service to translate text
         translator = Translator()
         if translator.language_translator is not None:
-            if config.userLanguage and config.userLanguage in config.toLanguageNames:
+            if config.userLanguage and config.userLanguage in Translator.toLanguageNames:
                 selectedText = self.selectedText()
                 if not selectedText:
                     self.messageNoSelection()
                 else:
-                    userLanguage = config.toLanguageCodes[config.toLanguageNames.index(config.userLanguage)]
+                    userLanguage = Translator.toLanguageCodes[Translator.toLanguageNames.index(config.userLanguage)]
                     self.translateTextIntoUserLanguage(selectedText, userLanguage)
             else:
                 self.parent.parent.openTranslationLanguageDialog()

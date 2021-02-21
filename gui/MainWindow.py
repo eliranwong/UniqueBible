@@ -2653,11 +2653,11 @@ class MainWindow(QMainWindow):
         # Use IBM Watson service to translate text
         translator = Translator()
         if translator.language_translator is not None:
-            if not config.userLanguage or not config.userLanguage in config.toLanguageNames:
+            if not config.userLanguage or not config.userLanguage in Translator.toLanguageNames:
                 userLanguage = "English"
             else:
                 userLanguage = config.userLanguage
-            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], config.toLanguageNames, config.toLanguageNames.index(userLanguage), False)
+            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu1_setMyLanguage"], Translator.toLanguageNames, Translator.toLanguageNames.index(userLanguage), False)
             if ok and item:
                 config.userLanguage = item
         else:

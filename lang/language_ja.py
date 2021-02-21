@@ -522,4 +522,5 @@ translation = {
     "message_macro_save_command": "現行コマンドをマクロ・ファイルとして保存するファイル名を入力して",
     "adjustSpeed": "調整速度",
     "ibmWatsonNotEnalbed": "IBM Watson サービスを使用する変換機能が有効になっていません。 ",
+    "translate": "トランスレート",
 }
