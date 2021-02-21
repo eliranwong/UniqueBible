@@ -224,7 +224,7 @@ class NoteEditor(QMainWindow):
 
         toolBarButton = QPushButton()
         toolBarButton.setToolTip(config.thisTranslation["note_toolbar"])
-        toolBarButtonFile = os.path.join("htmlResources", "toolbar.png")
+        toolBarButtonFile = os.path.join("htmlResources", "textUtility.png")
         toolBarButton.setIcon(QIcon(toolBarButtonFile))
         toolBarButton.clicked.connect(self.toggleTextUtility)
         self.menuBar.addWidget(toolBarButton)
