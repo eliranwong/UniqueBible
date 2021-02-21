@@ -1,11 +1,13 @@
 import glob
 import importlib
 import locale
+import sys
 from os import path
 
 import config
 from Languages import Languages
 from Translator import Translator
+from util.FileUtil import FileUtil
 
 
 class LanguageUtil:
@@ -101,7 +103,6 @@ class LanguageUtil:
         if not path.exists(filename):
             print(filename + " does not exist")
         else:
-            pass
             english = LanguageUtil.loadTranslation("en_US")
             target = LanguageUtil.loadTranslation(lang)
             missing = ""
@@ -114,31 +115,41 @@ class LanguageUtil:
                     text = english[key]
                     result = translator.translate(text, "en", lang[:2])
                     missing += '    "{0}": "{1}",\n'.format(key, result)
-            targetFile = open(filename, "r")
-            contents = targetFile.readlines()
-            targetFile.close()
-            print(len(contents))
-            contents.insert(len(contents)-1, missing)
-            targetFile = open(filename, "w")
-            targetFile.writelines(contents)
-            targetFile.close()
+            FileUtil.insertStringIntoFile(filename, missing, -1)
             print("{0} lines inserted into {1}".format(count, filename))
+
+
+    @staticmethod
+    def addLanguageStringToAllFiles(key, englishTranslation):
+        codes = LanguageUtil.getCodesSupportedLanguages()
+        translator = Translator()
+        for code in codes:
+            translation = LanguageUtil.loadTranslation(code)
+            if key not in translation.keys():
+                filename = "lang/language_" + code + ".py"
+                if code[:2] == "en":
+                    result = englishTranslation
+                else:
+                    result = translator.translate(englishTranslation, "en", code[:2])
+                data = '    "{0}": "{1}",\n'.format(key, result)
+                FileUtil.insertStringIntoFile(filename, data, -1)
+                print("Inserted '{0}' into {1}".format(result, code))
 
 
 # Test code
 
-def test_getCodesSupportedLanguages():
+def printCodesSupportedLanguages():
     for lang in LanguageUtil.getCodesSupportedLanguages():
         print(lang)
 
-def test_getNamesSupportedLanguages():
+def printNamesSupportedLanguages():
     for lang in LanguageUtil.getNamesSupportedLanguages():
         print(lang)
 
-def test_defaultLanguage():
+def printDefaultLanguage():
     print(LanguageUtil.getSystemDefaultLanguage())
 
-def test_loadTranslation():
+def printLoadTranslation():
     print(LanguageUtil.loadTranslation("en_US"))
 
 def validateLanguageFileSizes():
@@ -153,11 +164,25 @@ def createNewLanguageFile(lang, force=False):
 def updateLanguageFile(lang):
     LanguageUtil.updateLanguageFile(lang)
 
-if __name__ == "__main__":
+def addLanguageStringToAllFiles(key, englishTranslation):
+    LanguageUtil.addLanguageStringToAllFiles(key, englishTranslation)
 
-    # test_defaultLanguage()
-    # test_getNamesSupportedLanguages()
-    # test_loadTranslation()
-    # validateLanguageFileSizes()
-    # createNewLanguageFile("hi")
-    compareLanguageFiles("en_US", "hi")
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        try:
+            method = sys.argv[1].strip()
+            if len(sys.argv) == 2:
+                globals()[method]()
+            else:
+                name1 = sys.argv[2].strip()
+                if len(sys.argv) == 3:
+                    globals()[method](name1)
+                else:
+                    name2 = sys.argv[3].strip()
+                    globals()[method](name1, name2)
+            print("Done")
+        except Exception as e:
+            print("Error executing: " + str(e))
+    else:
+        printCodesSupportedLanguages()
+

@@ -1,4 +1,5 @@
 import os
+
 from itertools import (takewhile, repeat)
 
 
@@ -28,3 +29,31 @@ class FileUtil:
         for userFile in userFiles:
             if not os.path.isfile(userFile):
                 open(userFile, "w", encoding="utf-8").close()
+
+    @staticmethod
+    def insertStringIntoFile(filename, data, offset):
+        try:
+            if not os.path.exists(filename):
+                return
+            targetFile = open(filename, "r")
+            contents = targetFile.readlines()
+            targetFile.close()
+            if offset >= 0:
+                contents.insert(offset, data)
+            else:
+                contents.insert(len(contents) + offset, data)
+            targetFile = open(filename, "w")
+            targetFile.writelines(contents)
+            targetFile.close()
+        except:
+            pass
+
+
+# Test code
+
+def test_insertStringIntoFile(filename, data, offset):
+    FileUtil.insertStringIntoFile(filename, data, offset)
+
+if __name__ == "__main__":
+
+    test_insertStringIntoFile("testing.txt", "ppppp\n", -1)
