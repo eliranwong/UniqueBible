@@ -1,3 +1,6 @@
+Major change in version 21.56:
+* renamed a config flag 'openBibleNoteAfterEditing' to 'openBibleNoteAfterEditorClosed'
+
 Major changes in version 21.55:
 * added filter on shortcut display window
 * added 'Text Utility' toolbars on Note Editor, with which users can play text-to-speech or translate selected text.

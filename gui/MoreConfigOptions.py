@@ -48,7 +48,6 @@ class MoreConfigOptions(QDialog):
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, ""),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
-            ("openBibleNoteAfterEditing", config.openBibleNoteAfterEditing, self.openBibleNoteAfterEditingChanged, "Default: False: \nOpen bible note on Study Window afer it is edited with Note Editor."),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, ""),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, "Default: False: \nHide 'Style' toolbar in Note Editor."),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, "Default: True: \nHide 'Text Utility' toolbar in Note Editor."),
@@ -56,7 +55,8 @@ class MoreConfigOptions(QDialog):
             ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, ""),
             ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged, ""),
             ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, ""),
-            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, ""),
+            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, "Default: False: \nOpen bible note on Study Window each time it is saved."),
+            ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, "Default: False: \nOpen bible note on Study Window afer it is edited with Note Editor."),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, ""),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, ""),
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, ""),
@@ -202,8 +202,8 @@ class MoreConfigOptions(QDialog):
     def clickToOpenImageChanged(self):
         config.clickToOpenImage = not config.clickToOpenImage
 
-    def openBibleNoteAfterEditingChanged(self):
-        config.openBibleNoteAfterEditing = not config.openBibleNoteAfterEditing
+    def openBibleNoteAfterEditorClosedChanged(self):
+        config.openBibleNoteAfterEditorClosed = not config.openBibleNoteAfterEditorClosed
 
     def hideNoteEditorStyleToolbarChanged(self):
         config.hideNoteEditorStyleToolbar = not config.hideNoteEditorStyleToolbar

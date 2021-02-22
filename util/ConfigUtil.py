@@ -175,6 +175,10 @@ class ConfigUtil:
         # Options to open chapter / verse note on Study Window after saving: True / False
         if not hasattr(config, "openBibleNoteAfterSave"):
             config.openBibleNoteAfterSave = False
+        # Default: False: Open bible note on Study Window afer it is edited with Note Editor.
+        # Bible note is opened when Note editor is closed.
+        if not hasattr(config, "openBibleNoteAfterEditorClosed"):
+            config.openBibleNoteAfterEditorClosed = False
         # Options to export all embedded images displayed on Study Window: True / False
         if not hasattr(config, "exportEmbeddedImages"):
             config.exportEmbeddedImages = True
@@ -214,10 +218,6 @@ class ConfigUtil:
         # Default font size of content in note editor
         if not hasattr(config, "noteEditorFontSize"):
             config.noteEditorFontSize = 14
-        # Default: False: Open bible note on Study Window afer it is edited with Note Editor.
-        # Bible note is opened when Note editor is closed.
-        if not hasattr(config, "openBibleNoteAfterEditing"):
-            config.openBibleNoteAfterEditing = False
         # Show Note Editor's style toolbar by default
         if not hasattr(config, "hideNoteEditorStyleToolbar"):
             config.hideNoteEditorStyleToolbar = False
@@ -582,6 +582,7 @@ class ConfigUtil:
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave),
+            ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed),
             ("exportEmbeddedImages", config.exportEmbeddedImages),
             ("clickToOpenImage", config.clickToOpenImage),
             ("landscapeMode", config.landscapeMode),

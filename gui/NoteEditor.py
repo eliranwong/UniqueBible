@@ -55,7 +55,7 @@ class NoteEditor(QMainWindow):
         if self.parent.noteSaved:
             config.noteOpened = False
             event.accept()
-            if config.lastOpenedNote and config.openBibleNoteAfterEditing:
+            if config.lastOpenedNote and config.openBibleNoteAfterEditorClosed:
                 #if config.lastOpenedNote[0] == "file":
                 #    self.parent.externalFileButtonClicked()
                 if config.lastOpenedNote[0] == "book":
