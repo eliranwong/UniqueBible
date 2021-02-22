@@ -321,7 +321,7 @@ class WebEngineView(QWebEngineView):
                 speakCommand = "SPEAK:::{0}".format(selectedText)
                 self.parent.parent.textCommandChanged(speakCommand, self.name)
         else:
-            pass
+            self.messageNoTtsEngine()
 
     def searchSelectedText(self):
         selectedText = self.selectedText()

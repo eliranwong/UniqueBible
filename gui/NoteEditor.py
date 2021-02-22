@@ -1000,10 +1000,13 @@ p, li {0} white-space: pre-wrap; {1}
     def speakText(self):
         text = self.editor.textCursor().selectedText()
         if text:
-            if ":::" in text:
-                text = text.split(":::")[-1]
-            command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
-            self.parent.runTextCommand(command)
+            if config.ttsSupport:
+                if ":::" in text:
+                    text = text.split(":::")[-1]
+                command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                self.parent.runTextCommand(command)
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupport"])
         else:
             self.displayMessage(config.thisTranslation["noteTool_selectTextFirst"])
 
