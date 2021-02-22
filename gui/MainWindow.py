@@ -874,7 +874,7 @@ class MainWindow(QMainWindow):
             ShortcutUtil.setup(config.menuShortcuts)
             ShortcutUtil.loadShortcutFile(config.menuShortcuts)
             ShortcutUtil.loadShortcutFile()
-            self.setupMenuLayout()
+            self.setupMenuLayout(config.menuLayout)
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
