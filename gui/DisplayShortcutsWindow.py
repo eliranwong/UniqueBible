@@ -80,7 +80,7 @@ class DisplayShortcutsModel(QAbstractTableModel):
     def filter(self, text):
         newList = []
         for item in self.fullList:
-            if (text in item[0]):
+            if text.lower() in item[0].lower():
                 newList.append(item)
         self.list = newList
         self.sort(self.col, self.order)
