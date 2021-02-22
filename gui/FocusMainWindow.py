@@ -1,5 +1,4 @@
 from PySide2.QtCore import QSize
-from PySide2.QtWidgets import QComboBox
 from gui.MenuItems import *
 import shortcut as sc
 from BiblesSqlite import BiblesSqlite

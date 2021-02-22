@@ -1,9 +1,6 @@
 import config
-from ast import literal_eval
 from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QGridLayout, QWidget)
-from PySide2.QtWidgets import QSplitter
-from translations import translations
+from PySide2.QtWidgets import QGridLayout, QWidget, QSplitter
 from gui.TabWidget import TabWidget
 from gui.WebEngineView import WebEngineView
 

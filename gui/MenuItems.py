@@ -1,7 +1,7 @@
-import os, config, myTranslation
+import os, config
+# Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
 from PySide2.QtGui import QIcon, Qt
-from PySide2.QtWidgets import (QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory)
-from gui.MasterControl import MasterControl
+from PySide2.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
 
 def addMenu(menuBar, translation):
     return menuBar.addMenu("&{0}".format(config.thisTranslation[translation]))

@@ -37,7 +37,6 @@
 (21.49, "file", "lang/language_ja.py")
 (21.49, "file", "lang/language_ko.py")
 (21.49, "file", "lang/language_ru.py")
-(21.49, "file", "translations.py")
 (21.47, "file", "gui/MiscellaneousLauncher.py")
 (21.47, "file", "gui/MoreConfigOptions.py")
 (21.47, "file", "gui/imports.py")
@@ -120,4 +119,3 @@
 (13.9, "file", "htmlResources/header1.png")
 (13.9, "file", "htmlResources/header2.png")
 (13.9, "file", "htmlResources/header3.png")
-(13.9, "file", "myTranslation.py")

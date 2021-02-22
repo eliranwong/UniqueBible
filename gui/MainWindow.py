@@ -1,4 +1,4 @@
-import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, requests, update, myTranslation, logging
+import os, sys, re, config, base64, webbrowser, platform, subprocess, zipfile, requests, update, logging
 from datetime import datetime
 from ast import literal_eval
 from distutils import util
@@ -26,7 +26,6 @@ from gui.ClassicMainWindow import ClassicMainWindow
 from gui.FocusMainWindow import FocusMainWindow
 from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
-from translations import translations
 from shutil import copyfile, rmtree
 from distutils.dir_util import copy_tree
 from gui.Downloader import Downloader
@@ -189,77 +188,6 @@ class MainWindow(QMainWindow):
 
     def setTranslation(self):
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
-
-    def setTranslationOld(self):
-        updateNeeded = False
-        languages = Languages()
-        if config.userLanguageInterface and hasattr(myTranslation, "translation"):
-            # Use translation API (Watson) for the missing items.  Or use default English translation to fill in missing items if internet connection is not available.
-            # temporary codes to generate missing items built-in Chinese translation
-            translator = Translator()
-            missingItems = {}
-
-            for key, value in languages.translation.items():
-                if not key in myTranslation.translation:
-                    # google-translate no longer works here few lines below are commented for now.
-#                    if config.googletransSupport and hasattr(myTranslation, "translationLanguage"):
-#                        try:
-#                            languageCode = languages.codes[myTranslation.translationLanguage]
-#                            myTranslation.translation[key] = Translator().translate(value, dest=languageCode).text
-#                        except:
-#                            myTranslation.translation[key] = value
-#                    else:
-#                        myTranslation.translation[key] = value
-                    myTranslation.translation[key] = value
-                    updateNeeded = True
-
-                    # temporary codes to generate missing items built-in Chinese translation
-                    missingItems[key] = translator.translate(value, "en", "zh-TW")
-
-            # set thisTranslation to customised translation
-            config.thisTranslation = myTranslation.translation
-            # update myTranslation.py
-            if updateNeeded:
-                
-                # temporary codes to generate missing items built-in Chinese translation
-                print(missingItems)
-
-                #try:
-                #    languages.writeMyTranslation(myTranslation.translation, myTranslation.translationLanguage)
-                #except:
-                #    print("Failed to update 'myTranslation.py'.")
-                self.displayMessage("{0} {1} {2} 'myTranslation.py'".format(config.thisTranslation["message_newInterfaceItems"], ", ".join(missingItems.keys()), config.thisTranslation["message_improveTrans"]))
-        elif config.userLanguageInterface and hasattr(config, "translationLanguage"):
-            languageCode = languages.codes[config.translationLanguage]
-            if languageCode in translations:
-                # set thisTranslation to provided translation
-                config.thisTranslation = translations[languageCode]
-            else:
-                # set thisTranslation to default English translation
-                config.thisTranslation = languages.translation
-        else:
-            # set thisTranslation to default English translation
-            config.thisTranslation = languages.translation
-
-    def isMyTranslationAvailable(self):
-        if hasattr(myTranslation, "translation") and hasattr(myTranslation, "translationLanguage"):
-            return True
-        else:
-            return False
-
-    def isOfficialTranslationAvailable(self):
-        if hasattr(config, "translationLanguage") and Languages().codes[config.translationLanguage] in translations:
-            return True
-        else:
-            return False
-
-    def toogleInterfaceTranslation(self):
-        if not self.isMyTranslationAvailable() and not self.isOfficialTranslationAvailable():
-            self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"],
-                                                  config.thisTranslation["message_translateFirst"]))
-        else:
-            config.userLanguageInterface = not config.userLanguageInterface
-            self.displayMessage(config.thisTranslation["message_restart"])
 
     # base folder for webViewEngine
     def setupBaseUrl(self):
