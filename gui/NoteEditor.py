@@ -45,6 +45,7 @@ class NoteEditor(QMainWindow):
 
         # display content when first launched
         self.displayInitialContent()
+        self.editor.setFocus()
 
         # specify window title
         self.updateWindowTitle()
@@ -355,6 +356,8 @@ class NoteEditor(QMainWindow):
             ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "bold.png", self.format_bold),
             ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "italic.png", self.format_italic),
             ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "underline.png", self.format_underline),
+            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_superscript"]), "superscript.png", self.format_superscript),
+            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_subscript"]), "subscript.png", self.format_subscript),
         )
         for item in items:
             toolTip, icon, action = item
@@ -485,7 +488,7 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
     def setupLayout(self):
-        self.editor = QTextEdit()        
+        self.editor = QTextEdit()  
         self.editor.setStyleSheet("font-family:'{0}'; font-size:{1}pt;".format(config.font, config.fontSize));
         self.editor.textChanged.connect(self.textChanged)
         self.setCentralWidget(self.editor)
@@ -781,6 +784,18 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.setFontUnderline(True)
         else:
             self.editor.insertPlainText("<u>{0}</u>".format(self.editor.textCursor().selectedText()))
+
+    def format_superscript(self):
+        if self.html:
+            self.editor.insertHtml("<sup>{0}</sup>".format(self.editor.textCursor().selectedText()))
+        else:
+            self.editor.insertPlainText("<sup>{0}</sup>".format(self.editor.textCursor().selectedText()))
+
+    def format_subscript(self):
+        if self.html:
+            self.editor.insertHtml("<sub>{0}</sub>".format(self.editor.textCursor().selectedText()))
+        else:
+            self.editor.insertPlainText("<sub>{0}</sub>".format(self.editor.textCursor().selectedText()))
 
     def format_center(self):
         if self.html:

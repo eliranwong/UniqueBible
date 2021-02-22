@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "आईबीएम वाटसन सेवा का उपयोग करते हुए अनुवाद सुविधा सक्षम नहीं है. ",
     "translate": "अनुवाद",
     "note_textUtility": "पाठ यूटिलिटी दिखाएँ/छुपाएँ",
+    "noteTool_superscript": "सुपरस्क्रिप्ट साइटल",
+    "noteTool_subscript": "सबस्क्रिप्ट सिटल",
 }

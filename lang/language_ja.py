@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "IBM Watson サービスを使用する変換機能が有効になっていません。 ",
     "translate": "トランスレート",
     "note_textUtility": "テキストユーティリティの表示 / 非表示",
+    "noteTool_superscript": "肩文字のシトル",
+    "noteTool_subscript": "サブスクリプト・サイトル",
 }

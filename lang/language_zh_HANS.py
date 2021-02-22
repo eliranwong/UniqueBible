@@ -525,4 +525,6 @@ translation = {
     "menu1_programInterface": "用戶界面",
     "translate": "翻译",
     "note_textUtility": "显示 / 隐藏文本实用程序",
+    "noteTool_superscript": "上标系统",
+    "noteTool_subscript": "下标系统",
 }

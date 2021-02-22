@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "La fonction de traduction utilisant le service IBM Watson n'est pas activée.",
     "translate": "Translate",
     "note_textUtility": "Afficher / Masquer l'utilitaire de texte",
+    "noteTool_superscript": "Sytle en exposant",
+    "noteTool_subscript": "Sytle de sous-script",
 }

@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "Translation feature using IBM Watson service is not enabled.  \nYou need to install python package 'ibm-watson' and enter valid credentials in config.py. \nYou can install 'ibm-watson' by running 'pip3 install ibm-watson' with terminal.",
     "translate": "Translate",
     "note_textUtility": "Show / Hide Text Utility",
+    "noteTool_superscript": "Superscript Sytle",
+    "noteTool_subscript": "Subscript Sytle",
 }

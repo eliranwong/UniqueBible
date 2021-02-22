@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "La característica de conversión que utiliza el servicio de IBM Watson no está habilitada. ",
     "translate": "Traducir",
     "note_textUtility": "Mostrar/Ocultar programa de utilidad de texto",
+    "noteTool_superscript": "Superscript Sytle",
+    "noteTool_subscript": "Subíndice Sytle",
 }

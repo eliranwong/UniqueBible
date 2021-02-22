@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "서비스를 사용하는 번역 기능은 사용할 수 없습니다.",
     "translate": "번역",
     "note_textUtility": "텍스트 유틸리티 표시/숨기기",
+    "noteTool_superscript": "윗첨자 시틀",
+    "noteTool_subscript": "하위 스크립트 사이틀",
 }

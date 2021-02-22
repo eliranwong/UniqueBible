@@ -524,4 +524,6 @@ translation = {
     "ibmWatsonNotEnalbed": "Функция преобразования с использованием службы IBM Watson не включена.",
     "translate": "Перевести",
     "note_textUtility": "Показать/скрыть текстовую утилиту",
+    "noteTool_superscript": "Суперскрипт",
+    "noteTool_subscript": "Sytle",
 }
