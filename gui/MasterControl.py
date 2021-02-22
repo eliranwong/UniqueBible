@@ -5,7 +5,7 @@ from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from gui.MiscellaneousLauncher import MiscellaneousLauncher
-from PySide2.QtWidgets import QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
+from PySide2.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
 from ThirdParty import ThirdPartyDictionary
 from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
 from PySide2.QtCore import Qt, QEvent
@@ -221,3 +221,6 @@ class MasterControl(QWidget):
             self.commandField.setFocus()
 
         self.isRefreshing = False
+
+    def displayMessage(self, message="", title="UniqueBible"):
+        reply = QMessageBox.information(self, title, message)

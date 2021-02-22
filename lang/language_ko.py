@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "텍스트 유틸리티 표시/숨기기",
     "noteTool_superscript": "윗첨자 시틀",
     "noteTool_subscript": "하위 스크립트 사이틀",
+    "selectTextFirst": "텍스트를 먼저 선택합니다!",
+    "enterTextFirst": "텍스트를 먼저 입력합니다!",
 }

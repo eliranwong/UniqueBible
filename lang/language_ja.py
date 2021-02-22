@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "テキストユーティリティの表示 / 非表示",
     "noteTool_superscript": "肩文字のシトル",
     "noteTool_subscript": "サブスクリプト・サイトル",
+    "selectTextFirst": "最初にテキストを選択してください",
+    "enterTextFirst": "最初にテキストを入力してください",
 }

@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "Textdienstprogramm anzeigen/verdecken",
     "noteTool_superscript": "Superscript-Sytle",
     "noteTool_subscript": "Subscript-Sytle",
+    "selectTextFirst": "Wählen Sie zuerst Text aus!",
+    "enterTextFirst": "Geben Sie zuerst Text ein!",
 }

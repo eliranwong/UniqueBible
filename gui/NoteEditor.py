@@ -703,139 +703,205 @@ p, li {0} white-space: pre-wrap; {1}
     # formatting styles
     def format_clear(self):
         selectedText = self.editor.textCursor().selectedText()
-        if self.html:
-            selectedText = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, selectedText)
-            self.editor.insertHtml(selectedText)
+        if selectedText:
+            if self.html:
+                selectedText = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, selectedText)
+                self.editor.insertHtml(selectedText)
+            else:
+                selectedText = re.sub("<[^\n<>]*?>", "", selectedText)
+                self.editor.insertPlainText(selectedText)
         else:
-            selectedText = re.sub("<[^\n<>]*?>", "", selectedText)
-            self.editor.insertPlainText(selectedText)
+            self.selectTextFirst()
 
     def format_header1(self):
-        if self.html:
-            self.editor.insertHtml("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.insertHtml("<h1>{0}</h1>".format(selectedText))
+            else:
+                self.editor.insertPlainText("<h1>{0}</h1>".format(selectedText))
         else:
-            self.editor.insertPlainText("<h1>{0}</h1>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_header2(self):
-        if self.html:
-            self.editor.insertHtml("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.insertHtml("<h2>{0}</h2>".format(selectedText))
+            else:
+                self.editor.insertPlainText("<h2>{0}</h2>".format(selectedText))
         else:
-            self.editor.insertPlainText("<h2>{0}</h2>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_header3(self):
-        if self.html:
-            self.editor.insertHtml("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.insertHtml("<h3>{0}</h3>".format(selectedText))
+            else:
+                self.editor.insertPlainText("<h3>{0}</h3>".format(selectedText))
         else:
-            self.editor.insertPlainText("<h3>{0}</h3>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_font(self):
-        ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
-        if ok:
-            if self.html:
-                self.editor.setCurrentFont(font)
-            else:
-                fontFamily, fontSize, i1, i2, fontWeight, italic, underline, strikeout, *_ = font.key().split(",")
-                spanTag = """<span style="font-family:'{0}'; font-size:{1}pt;""".format(fontFamily, fontSize)
-                # add font weight
-                if fontWeight == "25":
-                    spanTag += " font-weight:200;"
-                elif fontWeight == "75":
-                    spanTag += " font-weight:600;"
-                # add italic style
-                if italic == "1":
-                    spanTag += " font-style:italic;"
-                # add both underline and strikeout style
-                if underline == "1" and strikeout == "1":
-                    spanTag += " text-decoration: underline line-through;"
-                # add underline style
-                elif underline == "1":
-                    spanTag += " text-decoration: underline;"
-                # add strikeout style
-                elif strikeout == "1":
-                    spanTag += " text-decoration: line-through;"
-                # close tag
-                spanTag += '">'
-                self.editor.insertPlainText("{0}{1}</span>".format(spanTag, self.editor.textCursor().selectedText()))
-
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
+            if ok:
+                if self.html:
+                    self.editor.setCurrentFont(font)
+                else:
+                    fontFamily, fontSize, i1, i2, fontWeight, italic, underline, strikeout, *_ = font.key().split(",")
+                    spanTag = """<span style="font-family:'{0}'; font-size:{1}pt;""".format(fontFamily, fontSize)
+                    # add font weight
+                    if fontWeight == "25":
+                        spanTag += " font-weight:200;"
+                    elif fontWeight == "75":
+                        spanTag += " font-weight:600;"
+                    # add italic style
+                    if italic == "1":
+                        spanTag += " font-style:italic;"
+                    # add both underline and strikeout style
+                    if underline == "1" and strikeout == "1":
+                        spanTag += " text-decoration: underline line-through;"
+                    # add underline style
+                    elif underline == "1":
+                        spanTag += " text-decoration: underline;"
+                    # add strikeout style
+                    elif strikeout == "1":
+                        spanTag += " text-decoration: line-through;"
+                    # close tag
+                    spanTag += '">'
+                    self.editor.insertPlainText("{0}{1}</span>".format(spanTag, selectedText))
+        else:
+            self.selectTextFirst()
+        
     def format_textColor(self):
-        color = QColorDialog.getColor(Qt.darkRed, self)
-        if color.isValid():
-            if self.html:
-                self.editor.setTextColor(color)
-            else:
-                self.editor.insertPlainText('<span style="color:{0};">{1}</span>'.format(color.name(), self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            color = QColorDialog.getColor(Qt.darkRed, self)
+            if color.isValid():
+                if self.html:
+                    self.editor.setTextColor(color)
+                else:
+                    self.editor.insertPlainText('<span style="color:{0};">{1}</span>'.format(color.name(), self.editor.textCursor().selectedText()))
+        else:
+            self.selectTextFirst()
 
     def format_textBackgroundColor(self):
-        color = QColorDialog.getColor(Qt.yellow, self)
-        if color.isValid():
-            if self.html:
-                self.editor.setTextBackgroundColor(color)
-            else:
-                self.editor.insertPlainText('<span style="background-color:{0};">{1}</span>'.format(color.name(), self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            color = QColorDialog.getColor(Qt.yellow, self)
+            if color.isValid():
+                if self.html:
+                    self.editor.setTextBackgroundColor(color)
+                else:
+                    self.editor.insertPlainText('<span style="background-color:{0};">{1}</span>'.format(color.name(), selectedText))
+        else:
+            self.selectTextFirst()
 
     def format_bold(self):
-        if self.html:
-            # Reference: https://doc.qt.io/qt-5/qfont.html#Weight-enum
-            # Bold = 75
-            self.editor.setFontWeight(75)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                # Reference: https://doc.qt.io/qt-5/qfont.html#Weight-enum
+                # Bold = 75
+                self.editor.setFontWeight(75)
+            else:
+                self.editor.insertPlainText("<b>{0}</b>".format(selectedText))
         else:
-            self.editor.insertPlainText("<b>{0}</b>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_italic(self):
-        if self.html:
-            self.editor.setFontItalic(True)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setFontItalic(True)
+            else:
+                self.editor.insertPlainText("<i>{0}</i>".format(selectedText))
         else:
-            self.editor.insertPlainText("<i>{0}</i>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_underline(self):
-        if self.html:
-            self.editor.setFontUnderline(True)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setFontUnderline(True)
+            else:
+                self.editor.insertPlainText("<u>{0}</u>".format(selectedText))
         else:
-            self.editor.insertPlainText("<u>{0}</u>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_superscript(self):
-        if self.html:
-            self.editor.insertHtml("<sup>{0}</sup>".format(self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.insertHtml("<sup>{0}</sup>".format(selectedText))
+            else:
+                self.editor.insertPlainText("<sup>{0}</sup>".format(selectedText))
         else:
-            self.editor.insertPlainText("<sup>{0}</sup>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_subscript(self):
-        if self.html:
-            self.editor.insertHtml("<sub>{0}</sub>".format(self.editor.textCursor().selectedText()))
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.insertHtml("<sub>{0}</sub>".format(selectedText))
+            else:
+                self.editor.insertPlainText("<sub>{0}</sub>".format(selectedText))
         else:
-            self.editor.insertPlainText("<sub>{0}</sub>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_center(self):
-        if self.html:
-            self.editor.setAlignment(Qt.AlignCenter)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setAlignment(Qt.AlignCenter)
+            else:
+                self.editor.insertPlainText("<div style='text-align:center;'>{0}</div>".format(selectedText))
         else:
-            self.editor.insertPlainText("<div style='text-align:center;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_justify(self):
-        if self.html:
-            self.editor.setAlignment(Qt.AlignJustify)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setAlignment(Qt.AlignJustify)
+            else:
+                self.editor.insertPlainText("<div style='text-align:justify;'>{0}</div>".format(selectedText))
         else:
-            self.editor.insertPlainText("<div style='text-align:justify;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_left(self):
-        if self.html:
-            self.editor.setAlignment(Qt.AlignLeft)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setAlignment(Qt.AlignLeft)
+            else:
+                self.editor.insertPlainText("<div style='text-align:left;'>{0}</div>".format(selectedText))
         else:
-            self.editor.insertPlainText("<div style='text-align:left;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_right(self):
-        if self.html:
-            self.editor.setAlignment(Qt.AlignRight)
+        selectedText = self.editor.textCursor().selectedText()
+        if selectedText:
+            if self.html:
+                self.editor.setAlignment(Qt.AlignRight)
+            else:
+                self.editor.insertPlainText("<div style='text-align:right;'>{0}</div>".format(selectedText))
         else:
-            self.editor.insertPlainText("<div style='text-align:right;'>{0}</div>".format(self.editor.textCursor().selectedText()))
+            self.selectTextFirst()
 
     def format_custom(self):
         selectedText = self.editor.textCursor().selectedText()
-        selectedText = self.customFormat(selectedText)
-        if self.html:
-            self.editor.insertHtml(selectedText)
+        if selectedText:
+            selectedText = self.customFormat(selectedText)
+            if self.html:
+                self.editor.insertHtml(selectedText)
+            else:
+                self.editor.insertPlainText(selectedText)
         else:
-            self.editor.insertPlainText(selectedText)
+            self.selectTextFirst()
 
     def customFormat(self, text):
         # QTextEdit's line break character by pressing ENTER in plain & html mode " "
@@ -919,25 +985,21 @@ p, li {0} white-space: pre-wrap; {1}
         else:
             self.editor.insertPlainText(imageTag)
 
-    def addHyperlink(self, hyperlink):
-        hyperlink = '<a href="{0}">{1}</a>'.format(hyperlink, self.editor.textCursor().selectedText())
-        hyperlink = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, hyperlink)
-        if self.html:
-            self.editor.insertHtml(hyperlink)
-        else:
-            self.editor.insertPlainText(hyperlink)
-
     def openHyperlinkDialog(self):
         selectedText = self.editor.textCursor().selectedText()
         if selectedText:
-            hyperlink = selectedText
+            text, ok = QInputDialog.getText(self, "UniqueBible.app",
+                    config.thisTranslation["noteTool_hyperlink"], QLineEdit.Normal,
+                    selectedText)
+            if ok and text != '':
+                hyperlink = '<a href="{0}">{1}</a>'.format(text, selectedText)
+                hyperlink = """<span style="font-family:'{0}'; font-size:{1}pt;">{2}</span>""".format(config.font, config.fontSize, hyperlink)
+                if self.html:
+                    self.editor.insertHtml(hyperlink)
+                else:
+                    self.editor.insertPlainText(hyperlink)
         else:
-            hyperlink = "https://BibleTools.app"
-        text, ok = QInputDialog.getText(self, "UniqueBible.app",
-                config.thisTranslation["noteTool_hyperlink"], QLineEdit.Normal,
-                hyperlink)
-        if ok and text != '':
-            self.addHyperlink(text)
+            self.selectTextFirst()
 
     def setupTextUtility(self):
 
@@ -1008,7 +1070,7 @@ p, li {0} white-space: pre-wrap; {1}
             else:
                 self.displayMessage(config.thisTranslation["message_noSupport"])
         else:
-            self.displayMessage(config.thisTranslation["noteTool_selectTextFirst"])
+            self.selectTextFirst()
 
     def translateText(self):
         text = self.editor.textCursor().selectedText()
@@ -1022,7 +1084,10 @@ p, li {0} white-space: pre-wrap; {1}
             else:
                 self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
         else:
-            self.displayMessage(config.thisTranslation["noteTool_selectTextFirst"])
+            self.selectTextFirst()
+
+    def selectTextFirst(self):
+        self.displayMessage(config.thisTranslation["selectTextFirst"])
 
     def displayMessage(self, message="", title="UniqueBible"):
         reply = QMessageBox.information(self, title, message)

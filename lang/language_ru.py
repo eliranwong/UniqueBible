@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "Показать/скрыть текстовую утилиту",
     "noteTool_superscript": "Суперскрипт",
     "noteTool_subscript": "Sytle",
+    "selectTextFirst": "Сначала выберите текст!",
+    "enterTextFirst": "Сначала введите текст!",
 }

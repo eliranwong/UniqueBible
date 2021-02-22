@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "पाठ यूटिलिटी दिखाएँ/छुपाएँ",
     "noteTool_superscript": "सुपरस्क्रिप्ट साइटल",
     "noteTool_subscript": "सबस्क्रिप्ट सिटल",
+    "selectTextFirst": "पाठ पहले चुनें!",
+    "enterTextFirst": "पाठ पहले भरें!",
 }

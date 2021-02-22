@@ -528,4 +528,6 @@ translation = {
     "note_textUtility": "显示 / 隐藏文本实用程序",
     "noteTool_superscript": "上标系统",
     "noteTool_subscript": "下标系统",
+    "selectTextFirst": "首先选择文本 !",
+    "enterTextFirst": "首先输入文本 !",
 }

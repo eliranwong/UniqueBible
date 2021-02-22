@@ -22,8 +22,7 @@ class MiscellaneousLauncher(QWidget):
         self.highLightLauncher = HighlightLauncher(self)
         leftLayout.addWidget(self.highLightLauncher)
         rightLayout.addWidget(self.noteEditor())
-        if config.ttsSupport:
-            rightLayout.addWidget(self.textToSpeechUtility())
+        rightLayout.addWidget(self.textToSpeechUtility())
         rightLayout.addWidget(self.youTubeUtility())
         rightLayout.addStretch()
         mainLayout.addLayout(leftLayout, 0, 0, 1, 2)
@@ -121,12 +120,18 @@ class MiscellaneousLauncher(QWidget):
 
     def speakText(self):
         text = self.ttsEdit.text()
-        if ":::" in text:
-            text = text.split(":::")[-1]
-        command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
-        self.parent.isRefreshing = True
-        self.parent.runTextCommand(command)
-        self.parent.isRefreshing = False
+        if text:
+            if config.ttsSupport:
+                if ":::" in text:
+                    text = text.split(":::")[-1]
+                command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                self.parent.isRefreshing = True
+                self.parent.runTextCommand(command)
+                self.parent.isRefreshing = False
+            else:
+                self.parent.displayMessage(config.thisTranslation["message_noSupport"])
+        else:
+            self.parent.displayMessage(config.thisTranslation["enterTextFirst"])
 
     def changeQttsSpeed(self, value):
         config.qttsSpeed = (value * (1.5/300) - .5)

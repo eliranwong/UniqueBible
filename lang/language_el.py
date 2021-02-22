@@ -526,4 +526,6 @@ translation = {
     "note_textUtility": "Εμφάνιση/Απόκρυψη προγράμματος κειμένου",
     "noteTool_superscript": "Sytle Superscript",
     "noteTool_subscript": "Sytle Subscript",
+    "selectTextFirst": "Επιλέξτε πρώτα κείμενο!",
+    "enterTextFirst": "Καταχωρήστε κείμενο πρώτα!",
 }
