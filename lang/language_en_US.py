@@ -183,7 +183,6 @@ translation = {
     "menu_external_notes": "External Notes",
     "menu_favouriteBible": "Favorite Bible",
     "menu_first_chapter": "First Chapter",
-    "menu_font": "Font and Size",
     "menu_font": "Font",
     "menu_gist": "Gist",
     "menu_highlight": "Highlight",
