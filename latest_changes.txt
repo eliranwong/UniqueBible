@@ -1,3 +1,16 @@
+Major changes in version 21.55:
+* added filter on shortcut display window
+* added 'Text Utility' toolbars on Note Editor, with which users can play text-to-speech or translate selected text.
+* added open note commands to history so that reloading works
+* added icon buttons to Note Editor
+* added updateLanguageStringToAllFiles method for developers to update existing language files
+* added message to users if text-to-speech is not enabled on their device
+* added open bible notes commands to history records so reloading records can update their content
+* fixed missing comma in some language files
+* updated language files
+* removed unused codes
+* removed duplicated keys in language files
+
 Major change in version 21.54:
 * Added tool to add string to language files
 
