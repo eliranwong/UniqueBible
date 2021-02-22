@@ -76,15 +76,14 @@ class WebEngineView(QWebEngineView):
         self.addAction(separator)
 
         # TEXT-TO-SPEECH feature
-        if config.ttsSupport:
-            tts = QAction(self)
-            tts.setText(config.thisTranslation["context1_speak"])
-            tts.triggered.connect(self.textToSpeech)
-            self.addAction(tts)
+        tts = QAction(self)
+        tts.setText(config.thisTranslation["context1_speak"])
+        tts.triggered.connect(self.textToSpeech)
+        self.addAction(tts)
 
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         # IBM-Watson Translation Service
         # Translate into English
@@ -221,13 +220,13 @@ class WebEngineView(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["message_selectWord"]))
+        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["noteTool_selectTextFirst"]))
 
     def messageNoTtsEngine(self):
         self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def messageNoTtsVoice(self):
-        self.displayMessage(config.thisTranslation["message_noSupport"])
+        self.displayMessage(config.thisTranslation["message_noTtsVoice"])
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -308,8 +307,8 @@ class WebEngineView(QWebEngineView):
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
-        selectedText = self.selectedText()
         if config.ttsSupport:
+            selectedText = self.selectedText()
             if not selectedText:
                 self.messageNoSelection()
             elif config.langdetectSupport:
@@ -321,6 +320,8 @@ class WebEngineView(QWebEngineView):
             else:
                 speakCommand = "SPEAK:::{0}".format(selectedText)
                 self.parent.parent.textCommandChanged(speakCommand, self.name)
+        else:
+            pass
 
     def searchSelectedText(self):
         selectedText = self.selectedText()

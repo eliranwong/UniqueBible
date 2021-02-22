@@ -56,7 +56,7 @@ class FileUtil:
                 lines = f.readlines()
             with open(filename, "w") as f:
                 for line in lines:
-                    if line.startswith(data.split('": ')[0]):
+                    if line.startswith('{0}"'.format(data.split('": ')[0])):
                         f.write(data)
                     else:
                         f.write(line)

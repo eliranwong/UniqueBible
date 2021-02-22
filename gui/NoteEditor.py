@@ -2,7 +2,7 @@ import os, re, config, base64
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
+from PySide2.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
 from TtsLanguages import TtsLanguages
 from Translator import Translator
@@ -356,12 +356,20 @@ class NoteEditor(QMainWindow):
             ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "bold.png", self.format_bold),
             ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "italic.png", self.format_italic),
             ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "underline.png", self.format_underline),
-            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_superscript"]), "superscript.png", self.format_superscript),
-            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_subscript"]), "subscript.png", self.format_subscript),
         )
         for item in items:
             toolTip, icon, action = item
             self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar, translation=False)
+
+        self.toolBar.addSeparator()
+
+        items = (
+            ("noteTool_superscript", "superscript.png", self.format_superscript),
+            ("noteTool_subscript", "subscript.png", self.format_subscript),
+        )
+        for item in items:
+            toolTip, icon, action = item
+            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -991,10 +999,13 @@ p, li {0} white-space: pre-wrap; {1}
 
     def speakText(self):
         text = self.editor.textCursor().selectedText()
-        if ":::" in text:
-            text = text.split(":::")[-1]
-        command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
-        self.parent.runTextCommand(command)
+        if text:
+            if ":::" in text:
+                text = text.split(":::")[-1]
+            command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+            self.parent.runTextCommand(command)
+        else:
+            self.displayMessage(config.thisTranslation["noteTool_selectTextFirst"])
 
     def translateText(self):
         text = self.editor.textCursor().selectedText()
@@ -1006,4 +1017,9 @@ p, li {0} white-space: pre-wrap; {1}
                 result = translator.translate(text, fromLanguage, toLanguage)
                 self.editor.insertPlainText(result)
             else:
-                self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+                self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+        else:
+            self.displayMessage(config.thisTranslation["noteTool_selectTextFirst"])
+
+    def displayMessage(self, message="", title="UniqueBible"):
+        reply = QMessageBox.information(self, title, message)
