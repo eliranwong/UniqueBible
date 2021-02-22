@@ -13,11 +13,12 @@ class MoreConfigOptions(QDialog):
         self.wikiLink = "https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference"
         self.setupLayout()
 
+    def flagToolTip(self, default, toolTip):
+        return "{0} {1}\n{2}".format(config.thisTranslation["default"], default, config.thisTranslation[toolTip])
+
     def setupLayout(self):
         layout = QVBoxLayout()
 
-        readWiki = QLabel(config.thisTranslation["message_readWiki"])
-        layout.addWidget(readWiki)
         readWiki = QLabel(self.wikiLink)
         readWiki.mouseReleaseEvent = self.openWiki
         layout.addWidget(readWiki)
@@ -34,59 +35,62 @@ class MoreConfigOptions(QDialog):
         rightContainerLayout = QVBoxLayout()
 
         options = [
-            ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, ""),
-            ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, ""),
-            ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, ""),
-            ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, ""),
-            ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, ""),
-            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, "Default: False \nTurn it on to hide the toolbar command field on the main window. \nWhen a command prefix is prompted to add to the command field, control panel is opned with command prefix in its command field."),
-            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, "Default: True \nTurn it on to hide Master Control panel each time when a command is executed from it. \nIt is designed to save time from manually closing control panel and go straight to the selected resource. \nUsers can easily call the Control Panel back to screen with shortcuts, like 'Ctrl+B', 'Ctrl+L', 'Ctrl+F' and 'Ctrl+H'."),
-            ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, ""),
-            ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, ""),
-            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, ""),
-            ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, "Default: False \nTurn it on to search case sensitive word(s) with regular expression"),
-            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, ""),
-            ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
-            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
-            ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, ""),
-            ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, "Default: False: \nHide 'Style' toolbar in Note Editor."),
-            ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, "Default: True: \nHide 'Text Utility' toolbar in Note Editor."),
-            ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, ""),
-            ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, ""),
-            ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged, ""),
-            ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, ""),
-            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, "Default: False: \nOpen bible note on Study Window each time it is saved."),
-            ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, "Default: False: \nOpen bible note on Study Window afer it is edited with Note Editor."),
-            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, ""),
-            ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, ""),
-            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, ""),
-            ("autoCopyTranslateResult", config.autoCopyTranslateResult, self.autoCopyTranslateResultChanged, ""),
-            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, ""),
-            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, ""),
-            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged, ""),
-            ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged, ""),
-            ("enableLogging", config.enableLogging, self.enableLoggingChanged, ""),
-            ("logCommands", config.logCommands, self.logCommandsChanged, ""),
-            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, ""),
-            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, ""),
-            ("enableMacros", config.enableMacros, self.enableMacrosChanged, ""),
-            ("enableGist", config.enableGist, self.enableGistChanged, ""),
-            ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, "")
+            ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, self.flagToolTip(False, "showControlPanelOnStartup")),
+            ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, self.flagToolTip(False, "preferControlPanelForCommandLineEntry")),
+            ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, self.flagToolTip(True, "closeControlPanelAfterRunningCommand")),
+            ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, self.flagToolTip(False, "clearCommandEntry")),
+            ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, self.flagToolTip(False, "openBibleWindowContentOnNextTab")),
+            ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, self.flagToolTip(True, "openStudyWindowContentOnNextTab")),
+            ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, self.flagToolTip(False, "qtMaterial")),
+            ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, self.flagToolTip(True, "addBreakAfterTheFirstToolBar")),
+            ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, self.flagToolTip(False, "addBreakBeforeTheLastToolBar")),
+            ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, self.flagToolTip(False, "parserStandarisation")),
+            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, self.flagToolTip(False, "useFastVerseParsing")),
+            ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, self.flagToolTip(True, "showVerseNumbersInRange")),
+            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, self.flagToolTip(False, "addFavouriteToMultiRef")),
+            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, self.flagToolTip(False, "enableVerseHighlighting")),
+            ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, self.flagToolTip(False, "regexCaseSensitive")),
+            ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, self.flagToolTip(False, "alwaysDisplayStaticMaps")),
+            ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, self.flagToolTip(True, "exportEmbeddedImages")),
+            ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, self.flagToolTip(True, "clickToOpenImage")),
+            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, self.flagToolTip(True, "showNoteIndicatorOnBibleChapter")),
+            ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, self.flagToolTip(False, "openBibleNoteAfterSave")),
+            ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, self.flagToolTip(False, "openBibleNoteAfterEditorClosed")),
+            ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, self.flagToolTip(False, "hideNoteEditorStyleToolbar")),
+            ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, self.flagToolTip(True, "hideNoteEditorTextUtility")),
+            ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, self.flagToolTip(True, "overwriteNoteFont")),
+            ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged, self.flagToolTip(True, "overwriteNoteFontSize")),
+            ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, self.flagToolTip(True, "overwriteBookFont")),
+            ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, self.flagToolTip(True, "overwriteBookFontSize")),
+            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, self.flagToolTip(False, "bookOnNewWindow")),
+            ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, self.flagToolTip(False, "virtualKeyboard")),
+            ("autoCopyTranslateResult", config.autoCopyTranslateResult, self.autoCopyTranslateResultChanged, self.flagToolTip(True, "autoCopyTranslateResult")),
+            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, self.flagToolTip(True, "autoCopyChinesePinyinOutput")),
+            ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, self.flagToolTip(True, "disableModulesUpdateCheck")),
+            ("enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")),
+            ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
         ]
-        if platform.system() == "Linux":
-            options += [
-                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, ""),
-                ("fcitx", config.fcitx, self.fcitxChanged, ""),
-                ("ibus", config.ibus, self.ibusChanged, ""),
-                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged, ""),
-                ("espeak", config.espeak, self.espeakChanged, ""),
-            ]
         if config.ttsSupport:
             options += [
-                ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, ""),
-                ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged, ""),
-                ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, ""),
-                ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged, ""),
+                ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, self.flagToolTip(False, "ttsEnglishAlwaysUS")),
+                ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged, self.flagToolTip(False, "ttsEnglishAlwaysUK")),
+                ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, self.flagToolTip(False, "ttsChineseAlwaysMandarin")),
+                ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged, self.flagToolTip(False, "ttsChineseAlwaysCantonese")),
+            ]
+        if platform.system() == "Linux":
+            options += [
+                ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, self.flagToolTip(False, "linuxStartFullScreen")),
+                ("fcitx", config.fcitx, self.fcitxChanged, self.flagToolTip(False, "fcitx")),
+                ("ibus", config.ibus, self.ibusChanged, self.flagToolTip(False, "ibus")),
+                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged, self.flagToolTip(False, "showTtsOnLinux")),
+                ("espeak", config.espeak, self.espeakChanged, self.flagToolTip(False, "espeak")),
+            ]
+        if config.developer:
+            options += [
+                ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged, self.flagToolTip(False, "enableCopyHtmlCommand")),
+                ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged, self.flagToolTip(False, "forceGenerateHtml")),
+                ("enableLogging", config.enableLogging, self.enableLoggingChanged, self.flagToolTip(False, "enableLogging")),
+                ("logCommands", config.logCommands, self.logCommandsChanged, self.flagToolTip(False, "logCommands")),
             ]
 
         counter = 0

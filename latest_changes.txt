@@ -1,3 +1,7 @@
+Major change in version 21.57:
+* Added tooltips to Config Flags Window's items.
+* Fixed LanguageUtil tranlation code on Traditional Chinese 
+
 Major change in version 21.56:
 * renamed a config flag 'openBibleNoteAfterEditing' to 'openBibleNoteAfterEditorClosed'
 
