@@ -167,6 +167,11 @@ def updateLanguageFile(lang):
 def addLanguageStringToAllFiles(key, englishTranslation):
     LanguageUtil.addLanguageStringToAllFiles(key, englishTranslation)
 
+def translateWord(text, code):
+    translator = Translator()
+    result = translator.translate(text, "en", code)
+    print(result)
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         try:
@@ -184,5 +189,6 @@ if __name__ == "__main__":
         except Exception as e:
             print("Error executing: " + str(e))
     else:
-        printCodesSupportedLanguages()
+        # printCodesSupportedLanguages()
+        translateWord("auto", "zh")
 

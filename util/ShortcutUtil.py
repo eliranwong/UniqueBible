@@ -487,11 +487,11 @@ class ShortcutUtil:
         import shortcut as sc
 
         lines = []
-        for key in sc.__dict__.keys():
-            if key[:1] != '_':
-                short = str(sc.__dict__[key])
-                short = short.replace("\\\\", "\\")
-                lines.append((short, key))
+        for action in sc.__dict__.keys():
+            if action[:1] != '_':
+                key = str(sc.__dict__[action])
+                key = key.replace("\\\\", "\\")
+                lines.append([action, key])
         lines.sort()
         return lines
 
@@ -546,11 +546,11 @@ class ShortcutUtil:
 
     @staticmethod
     def createShortcutFile(name, shortcuts):
-        shortcuts.sort(key=lambda x: x[1])
+        shortcuts.sort(key=lambda x: x[0])
         with open("shortcut_"+name+".py", "w", encoding="utf-8") as fileObj:
-            for key, value in shortcuts:
+            for action, key in shortcuts:
                 key = key.replace("\\\\", "\\")
-                fileObj.write("{0} = {1}\n".format(value, pprint.pformat(key)))
+                fileObj.write("{0} = {1}\n".format(action, pprint.pformat(key)))
             fileObj.close()
 
 # Test code
