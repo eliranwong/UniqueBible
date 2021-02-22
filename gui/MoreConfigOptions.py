@@ -48,6 +48,7 @@ class MoreConfigOptions(QDialog):
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, ""),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, ""),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, ""),
+            ("openBibleNoteAfterEditing", config.openBibleNoteAfterEditing, self.openBibleNoteAfterEditingChanged, "Default: False: \nOpen bible note on Study Window afer it is edited with Note Editor."),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, ""),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, "Default: False: \nHide 'Style' toolbar in Note Editor."),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, "Default: True: \nHide 'Text Utility' toolbar in Note Editor."),
@@ -200,6 +201,9 @@ class MoreConfigOptions(QDialog):
 
     def clickToOpenImageChanged(self):
         config.clickToOpenImage = not config.clickToOpenImage
+
+    def openBibleNoteAfterEditingChanged(self):
+        config.openBibleNoteAfterEditing = not config.openBibleNoteAfterEditing
 
     def hideNoteEditorStyleToolbarChanged(self):
         config.hideNoteEditorStyleToolbar = not config.hideNoteEditorStyleToolbar

@@ -214,6 +214,10 @@ class ConfigUtil:
         # Default font size of content in note editor
         if not hasattr(config, "noteEditorFontSize"):
             config.noteEditorFontSize = 14
+        # Default: False: Open bible note on Study Window afer it is edited with Note Editor.
+        # Bible note is opened when Note editor is closed.
+        if not hasattr(config, "openBibleNoteAfterEditing"):
+            config.openBibleNoteAfterEditing = False
         # Show Note Editor's style toolbar by default
         if not hasattr(config, "hideNoteEditorStyleToolbar"):
             config.hideNoteEditorStyleToolbar = False
