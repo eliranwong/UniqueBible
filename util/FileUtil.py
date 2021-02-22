@@ -47,11 +47,29 @@ class FileUtil:
         except:
             pass
 
+    @staticmethod
+    def updateStringIntoFile(filename, data):
+        try:
+            if not os.path.exists(filename):
+                return
+            with open(filename, "r") as f:
+                lines = f.readlines()
+            with open(filename, "w") as f:
+                for line in lines:
+                    if line.startswith(data.split('": ')[0]):
+                        f.write(data)
+                    else:
+                        f.write(line)
+        except:
+            pass
 
 # Test code
 
 def test_insertStringIntoFile(filename, data, offset):
     FileUtil.insertStringIntoFile(filename, data, offset)
+
+def test_updateStringIntoFile(filename, data, offset):
+    FileUtil.updateStringIntoFile(filename, data, offset)
 
 if __name__ == "__main__":
 

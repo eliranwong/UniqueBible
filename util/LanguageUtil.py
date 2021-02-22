@@ -135,6 +135,21 @@ class LanguageUtil:
                 FileUtil.insertStringIntoFile(filename, data, -1)
                 print("Inserted '{0}' into {1}".format(result, code))
 
+    @staticmethod
+    def updateLanguageStringToAllFiles(key, englishTranslation):
+        codes = LanguageUtil.getCodesSupportedLanguages()
+        translator = Translator()
+        for code in codes:
+            translation = LanguageUtil.loadTranslation(code)
+            if key in translation.keys():
+                filename = "lang/language_" + code + ".py"
+                if code[:2] == "en":
+                    result = englishTranslation
+                else:
+                    result = translator.translate(englishTranslation, "en", code[:2])
+                data = '    "{0}": "{1}",\n'.format(key, result)
+                FileUtil.updateStringIntoFile(filename, data)
+                print("updated '{0}' into {1}".format(result, code))
 
 # Test code
 
@@ -166,6 +181,9 @@ def updateLanguageFile(lang):
 
 def addLanguageStringToAllFiles(key, englishTranslation):
     LanguageUtil.addLanguageStringToAllFiles(key, englishTranslation)
+
+def updateLanguageStringToAllFiles(key, englishTranslation):
+    LanguageUtil.updateLanguageStringToAllFiles(key, englishTranslation)
 
 def translateWord(text, code):
     translator = Translator()
