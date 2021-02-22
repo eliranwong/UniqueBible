@@ -943,6 +943,7 @@ class MainWindow(QMainWindow):
             reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
+        self.addHistoryRecord("study", "OPENBOOKNOTE:::{0}".format(reference[:-4]))
 
     def openChapterNote(self, b, c):
         self.textCommandParser.lastKeyword = "note"
@@ -957,6 +958,7 @@ class MainWindow(QMainWindow):
             reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
+        self.addHistoryRecord("study", "OPENCHAPTERNOTE:::{0}".format(reference[:-2]))
 
     def openVerseNote(self, b, c, v):
         self.textCommandParser.lastKeyword = "note"
@@ -971,6 +973,7 @@ class MainWindow(QMainWindow):
             reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
+        self.addHistoryRecord("study", "OPENVERSENOTE:::{0}".format(reference))
 
     def getHighlightCss(self):
         css = ""
