@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "Das letzte geöffnete Referenzbuch",
     "menu5_selectBook": "Referenzbuch",
     "menu5_favouriteBook": "Meine Lieblings-Referenzbücher",
-    "menu5_allBook": "Alle Referenzbücher",
+    "menu5_allBook": "Alle Bücher",
     "menu5_characters": "Bibelzeichen",
     "menu5_names": "Bibelnamen",
     "menu5_locations": "Bibelstellen",

@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "Последняя открываная справочные книги",
     "menu5_selectBook": "Справочная книга",
     "menu5_favouriteBook": "Мои любимые справочники",
-    "menu5_allBook": "Все справочные книги",
+    "menu5_allBook": "Все книги",
     "menu5_characters": "Библейские персонажи",
     "menu5_names": "Библия",
     "menu5_locations": "Библия",

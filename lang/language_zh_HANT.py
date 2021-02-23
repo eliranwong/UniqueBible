@@ -144,7 +144,7 @@ translation = {
     "menu4_words": "個別單詞",
     "menu5_last3rdDict": "最後打開的第三方詞典",
     "menu5_3rdDict": "第三方詞典",
-    "menu5_allBook": "所有參考書",
+    "menu5_allBook": "所有書籍",
     "menu5_allTopics": "所有的聖經主題",
     "menu5_bible": "聖經",
     "menu5_book": "最後打開的參考書",

@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "Το τελευταίο άνοιγμα του βιβλίου αναφοράς",
     "menu5_selectBook": "Βιβλίο αναφοράς:",
     "menu5_favouriteBook": "Αγαπημένα Βιβλία Αναφοράς",
-    "menu5_allBook": "Όλα τα βιβλία αναφοράς",
+    "menu5_allBook": "Όλα βιβλία!",
     "menu5_characters": "Χαρακτήρες της Βίβλου",
     "menu5_names": "Όνομα Βίβλου:",
     "menu5_locations": "Θέσεις της Βίβλου",

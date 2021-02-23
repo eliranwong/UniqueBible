@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "最後に開かれた参考資料",
     "menu5_selectBook": "参考書",
     "menu5_favouriteBook": "お気に入りの参照資料",
-    "menu5_allBook": "すべての参照ブック",
+    "menu5_allBook": "すべてのブック",
     "menu5_characters": "聖書の登場人物",
     "menu5_names": "聖書の名前",
     "menu5_locations": "聖書の場所",

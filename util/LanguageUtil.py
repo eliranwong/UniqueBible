@@ -151,6 +151,17 @@ class LanguageUtil:
                 FileUtil.updateStringIntoFile(filename, data)
                 print("updated '{0}' into {1}".format(result, code))
 
+    @staticmethod
+    def checkLanguageStringToAllFiles(key):
+        codes = LanguageUtil.getCodesSupportedLanguages()
+        translator = Translator()
+        for code in codes:
+            translation = LanguageUtil.loadTranslation(code)
+            if key in translation.keys():
+                print("Founded '{0}' in {1}".format(translation[key], code))
+            else:
+                print("Not founded in {0}".format(code))
+
 # Test code
 
 def printCodesSupportedLanguages():
@@ -184,6 +195,9 @@ def addLanguageStringToAllFiles(key, englishTranslation):
 
 def updateLanguageStringToAllFiles(key, englishTranslation):
     LanguageUtil.updateLanguageStringToAllFiles(key, englishTranslation)
+
+def checkLanguageStringToAllFiles(key):
+    LanguageUtil.checkLanguageStringToAllFiles(key)
 
 def translateWord(text, code):
     translator = Translator()

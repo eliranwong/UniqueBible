@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "अंतिम खोला संदर्भ पुस्तक",
     "menu5_selectBook": "संदर्भ पुस्तक",
     "menu5_favouriteBook": "मेरा पसंदीदा संदर्भ पुस्तकें",
-    "menu5_allBook": "सभी संदर्भ पुस्तकें",
+    "menu5_allBook": "सभी पुस्तकें",
     "menu5_characters": "बाइबल वर्ण",
     "menu5_names": "बाइबल नाम",
     "menu5_locations": "बाइबल अवस्थिति",

@@ -143,7 +143,7 @@ translation = {
     "menu4_words": "个别单词",
     "menu5_last3rdDict": "最后打开的第三方词典",
     "menu5_3rdDict": "第三方词典",
-    "menu5_allBook": "所有参考书",
+    "menu5_allBook": "所有书籍",
     "menu5_allTopics": "所有的圣经主题",
     "menu5_bible": "圣经",
     "menu5_book": "最后打开的参考书",

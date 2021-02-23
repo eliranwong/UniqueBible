@@ -77,6 +77,7 @@ class SearchLauncher(QWidget):
         buttonRow2 = (
             ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
             ("bibleHarmonies", lambda: self.runSearchCommand("SEARCHBOOK:::Harmonies_and_Parallels")),
+            ("menu5_allBook", lambda: self.runSearchCommand("SEARCHBOOK:::ALL")),
             ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
         )
         widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2)))

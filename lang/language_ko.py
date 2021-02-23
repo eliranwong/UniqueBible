@@ -107,7 +107,7 @@ translation = {
     "menu5_book": "마지막으로 Opened Reference Book",
     "menu5_selectBook": "참조 서적",
     "menu5_favouriteBook": "내가 좋아하는 참조 서적",
-    "menu5_allBook": "모든 참조 서적",
+    "menu5_allBook": "모든 서적",
     "menu5_characters": "성경 문자",
     "menu5_names": "성경명",
     "menu5_locations": "성경위치",

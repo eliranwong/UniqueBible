@@ -1,3 +1,7 @@
+Major change in version 21.58:
+* Add "All Books" button on control panel "Search" tab, for users to search all book modules.
+* Fixed debug report feature.
+
 Major change in version 21.57:
 * Added tooltips to Config Flags Window's items.
 * Fixed LanguageUtil tranlation code on Traditional Chinese 
