@@ -350,6 +350,9 @@ class ConfigUtil:
         # Last string entered for searching book
         if not hasattr(config, "bookSearchString"):
             config.bookSearchString = ""
+        # Instant Highlight: highlighted word in Main Window
+        if not hasattr(config, "instantHighlightString"):
+            config.instantHighlightString = ""
         # Last string entered for searching note
         if not hasattr(config, "noteSearchString"):
             config.noteSearchString = ""
@@ -542,6 +545,7 @@ class ConfigUtil:
     def save():
         config.bookSearchString = ""
         config.noteSearchString = ""
+        config.instantHighlightString = ""
         configs = (
             # ("version", config.version),
             ("developer", config.developer),

@@ -41,7 +41,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["noteTool_selectTextFirst"]))
+        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
 
     def copySelectedText(self):
         if not self.selectedText():

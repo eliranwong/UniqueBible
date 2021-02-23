@@ -1,6 +1,7 @@
 import os, sqlite3, re, config
 from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
+from util.TextUtil import TextUtil
 
 class VerseData:
 
@@ -755,11 +756,7 @@ class Book:
             for searchString in config.bookSearchString.split("%"):
                 if searchString and not searchString == "z":
                     content = re.sub("({0})".format(searchString), r"<z>\1</z>", content, flags=re.IGNORECASE)
-                    p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
-                    s = p.search(content)
-                    while s:
-                        content = re.sub(p, r"\1\2", content)
-                        s = p.search(content)
+                    content = TextUtil.fixTextHighlighting(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
             if config.theme == "dark":

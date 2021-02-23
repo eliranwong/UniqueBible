@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Option to enable logging.",
     "logCommands": "Option to log all commands to uba.log",
     "checked": "checked",
+    "instantHighlight": "Instant Highlight",
+    "removeInstantHighlight": "Remove Instant Highlight",
+    "removeBookHighlight": "Remove Book Highlight",
+    "removeNoteHighlight": "Remove Note Highlight",
+    "SEARCHBOOKNOTE": "Search Book Note",
+    "SEARCHCHAPTERNOTE": "Search Chapter Note",
+    "SEARCHVERSENOTE": "Search Verse Note",
 }

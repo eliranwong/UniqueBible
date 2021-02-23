@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "ロギングを使用可能にするオプション。",
     "logCommands": "すべてのコマンドを uba.log に記録するオプション",
     "checked": "チェック",
+    "instantHighlight": "インスタント・ハイライト",
+    "removeInstantHighlight": "インスタントハイライトの削除",
+    "removeBookHighlight": "ブック・ハイライトの削除",
+    "removeNoteHighlight": "メモの強調表示を解除",
+    "SEARCHBOOKNOTE": "ブック検索の検索",
+    "SEARCHCHAPTERNOTE": "チャプタ注",
+    "SEARCHVERSENOTE": "Verse ノートの検索",
 }

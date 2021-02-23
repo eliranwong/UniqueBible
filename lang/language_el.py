@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Επιλογή ενεργοποίησης της καταγραφής.",
     "logCommands": "Επιλογή καταγραφής όλων των εντολών στο uba.log",
     "checked": "ελεγαν.",
+    "instantHighlight": "Άμεση επισήμανση:",
+    "removeInstantHighlight": "Αφαίρεση άμεσης επισήμανσης",
+    "removeBookHighlight": "Αφαίρεση επισήμανσης βιβλίου",
+    "removeNoteHighlight": "Αφαίρεση επισήμανσης σημείωσης",
+    "SEARCHBOOKNOTE": "Σημείωση βιβλίου αναζήτησης",
+    "SEARCHCHAPTERNOTE": "Αναζήτηση στο κεφάλαιο σημείωση",
+    "SEARCHVERSENOTE": "Αναζήτηση σε Verse",
 }

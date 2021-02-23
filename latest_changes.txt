@@ -1,3 +1,14 @@
+Major changes in version 21.59:
+* Added "Instant Highlight" feature that highlight word(s) on Main Window
+* Added itmes to right-click context menu:
+    - Instant Highlight (Main Window ONLY)
+    - Remove Instant Highlight (Main Window ONLY)
+    - Search Book Note
+    - Search Chapter Note
+    - Search Verse Note
+    - Remove Note Highlight
+    - Remove Book Highlight
+
 Major change in version 21.58:
 * Add "All Books" button on control panel "Search" tab, for users to search all book modules.
 * Fixed debug report feature.

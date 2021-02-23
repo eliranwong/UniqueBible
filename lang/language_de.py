@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Option zum Aktivieren der Protokollierung.",
     "logCommands": "Option zum Protokollieren aller Befehle in uba.log",
     "checked": "Geprüft",
+    "instantHighlight": "Sofortige Hervorhebung",
+    "removeInstantHighlight": "Sofortige Hervorhebung entfernen",
+    "removeBookHighlight": "Buch-Hervorhebung entfernen",
+    "removeNoteHighlight": "Hinweis zur Anmerkung entfernen",
+    "SEARCHBOOKNOTE": "Notizbuch suchen",
+    "SEARCHCHAPTERNOTE": "Hinweis zum Suchkapitel",
+    "SEARCHVERSENOTE": "VerVerse-Hinweis suchen",
 }

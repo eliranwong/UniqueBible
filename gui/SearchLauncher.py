@@ -65,7 +65,7 @@ class SearchLauncher(QWidget):
             ("menu_verseNotes", lambda: self.runSearchCommand("SEARCHVERSENOTE")),
         )
         subLayout.addLayout(self.parent.buttonsLayout(buttonRow))
-        subLayout.addWidget(self.highlightNoteSearchResultCheckBox())
+        #subLayout.addWidget(self.highlightNoteSearchResultCheckBox())
         #subLayout.addStretch()
         widgetLayout0.addLayout(subLayout)
 
@@ -95,8 +95,8 @@ class SearchLauncher(QWidget):
         subLayout = QHBoxLayout()
         self.bookCombo = CheckableComboBox(self.parent.referenceBookList, [config.book])
         subLayout.addLayout(self.parent.comboFeatureLayout("menu5_selectBook", self.bookCombo, self.searchBook))
-        checkbox = self.highlightBookSearchResultCheckBox()
-        subLayout.addWidget(checkbox)
+        #checkbox = self.highlightBookSearchResultCheckBox()
+        #subLayout.addWidget(checkbox)
         widgetLayout.addLayout(subLayout)
 
         self.topicCombo = QComboBox()

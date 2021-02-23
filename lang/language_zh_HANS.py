@@ -578,4 +578,11 @@ translation = {
     "enableLogging": "用于启用日志记录的选项。",
     "logCommands": "用于将所有命令记录到 uba.log 的选项",
     "checked": "查",
+    "instantHighlight": "即时突出显示",
+    "removeInstantHighlight": "除去即时突出显示",
+    "removeBookHighlight": "除去书籍突出显示",
+    "removeNoteHighlight": "除去注释突出显示",
+    "SEARCHBOOKNOTE": "搜索簿记",
+    "SEARCHCHAPTERNOTE": "搜索章节说明",
+    "SEARCHVERSENOTE": "搜索 Verse 注释",
 }

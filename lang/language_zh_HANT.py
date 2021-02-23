@@ -579,4 +579,11 @@ translation = {
     "enableLogging": "啟用記載功能的選項。",
     "logCommands": "用來將所有指令記載到 uba.log 的選項",
     "checked": "checked",
+    "instantHighlight": "即時強調顯示",
+    "removeInstantHighlight": "移除即時強調顯示",
+    "removeBookHighlight": "移除「書籍強調顯示」",
+    "removeNoteHighlight": "移除附註強調顯示",
+    "SEARCHBOOKNOTE": "搜尋書籍附註",
+    "SEARCHCHAPTERNOTE": "搜尋章節附註",
+    "SEARCHVERSENOTE": "搜尋 Verse 附註",
 }

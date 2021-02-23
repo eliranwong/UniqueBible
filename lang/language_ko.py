@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "로깅을 사용하기 위한 옵션입니다.",
     "logCommands": "uba.log에 모든 명령을 로그하기 위한 옵션",
     "checked": "확인됨",
+    "instantHighlight": "인스턴트 강조",
+    "removeInstantHighlight": "인스턴트 강조 제거하기",
+    "removeBookHighlight": "서적 강조표시 제거",
+    "removeNoteHighlight": "노트 강조 제거하기",
+    "SEARCHBOOKNOTE": "서적 검색",
+    "SEARCHCHAPTERNOTE": "검색 장 주",
+    "SEARCHVERSENOTE": "Verse 노트 검색하기",
 }

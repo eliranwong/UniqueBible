@@ -1,6 +1,7 @@
 import os, re, sqlite3, config
 from BibleVerseParser import BibleVerseParser
 from util.DateUtil import DateUtil
+from util.TextUtil import TextUtil
 
 
 class NoteSqlite:
@@ -181,11 +182,7 @@ class NoteSqlite:
         highlight = config.noteSearchString
         if highlight and not highlight == "z":
             content = re.sub("("+highlight+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
-            p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
-            s = p.search(content)
-            while s:
-                content = re.sub(p, r"\1\2", content)
-                s = p.search(content)
+            content = TextUtil.fixTextHighlighting(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
         return content

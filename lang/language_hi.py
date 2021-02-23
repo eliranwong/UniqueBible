@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "लॉगिंग सक्षम करने के लिए विकल्प.",
     "logCommands": "सभी कमांड को ubb.log को लॉग करने के लिए विकल्प",
     "checked": "जाँचा",
+    "instantHighlight": "तत्काल हाइलाइट",
+    "removeInstantHighlight": "झटपट उभारने को मिटाएँ",
+    "removeBookHighlight": "पुस्तक उभारने को मिटाएं",
+    "removeNoteHighlight": "नोट उभारने को मिटाएँ",
+    "SEARCHBOOKNOTE": "खोज पुस्तक नोट",
+    "SEARCHCHAPTERNOTE": "अध्याय नोट खोजें",
+    "SEARCHVERSENOTE": "पृष्ठ नोट खोजें",
 }

@@ -9,6 +9,7 @@ from NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from themes import Themes
 from util.NoteService import NoteService
+from util.TextUtil import TextUtil
 
 try:
     from diff_match_patch import diff_match_patch
@@ -628,14 +629,8 @@ input.addEventListener('keyup', function(event) {0}
                 for searchword in searchWords:
                     if not searchword == "z":
                         formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
-            # fix searching LXX / SBLGNT words
-            formatedText = re.sub(r"<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", formatedText)
-            # remove misplacement of tags <z> & </z>
-            p = re.compile("(<[^<>]*?)<z>(.*?)</z>", flags=re.M)
-            s = p.search(formatedText)
-            while s:
-                formatedText = re.sub(p, r"\1\2", formatedText)
-                s = p.search(formatedText)
+            # fix highlighting
+            formatedText = TextUtil.fixTextHighlighting(formatedText)
         return formatedText
 
     def getSearchVerses(self, query, binding):

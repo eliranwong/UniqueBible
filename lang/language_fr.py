@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Option permettant d'activer la journalisation.",
     "logCommands": "Option permettant de consigner toutes les commandes dans uba.log",
     "checked": "Vérifié",
+    "instantHighlight": "Mise en évidence instantanée",
+    "removeInstantHighlight": "Supprimer la mise en évidence instantanée",
+    "removeBookHighlight": "Supprimer le surligneur de livre",
+    "removeNoteHighlight": "Supprimer la mise en évidence de la note",
+    "SEARCHBOOKNOTE": "Note du cahier de recherche",
+    "SEARCHCHAPTERNOTE": "Rechercher dans la note de chapitre",
+    "SEARCHVERSENOTE": "Rechercher une note en version",
 }

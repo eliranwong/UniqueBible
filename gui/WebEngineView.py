@@ -1,10 +1,10 @@
 import config, logging
+from functools import partial
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
-from Languages import Languages
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from gui.imports import *
@@ -75,6 +75,22 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        if self.name == "main":
+            # Instant highlight feature
+            action = QAction(self)
+            action.setText(config.thisTranslation["instantHighlight"])
+            action.triggered.connect(self.instantHighlight)
+            self.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["removeInstantHighlight"])
+            action.triggered.connect(self.removeInstantHighlight)
+            self.addAction(action)
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
+
         # TEXT-TO-SPEECH feature
         tts = QAction(self)
         tts.setText(config.thisTranslation["context1_speak"])
@@ -133,6 +149,21 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        for keyword in ("SEARCHBOOKNOTE", "SEARCHCHAPTERNOTE", "SEARCHVERSENOTE"):
+            action = QAction(self)
+            action.setText(config.thisTranslation[keyword])
+            action.triggered.connect(partial(self.searchBibleNote, keyword))
+            self.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["removeNoteHighlight"])
+        action.triggered.connect(self.removeNoteHighlight)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         searchTextOriginal = QAction(self)
         searchTextOriginal.setText(config.thisTranslation["context1_original"])
         searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
@@ -156,6 +187,11 @@ class WebEngineView(QWebEngineView):
         searchFavouriteBooks.setText(config.thisTranslation["context1_allBooks"])
         searchFavouriteBooks.triggered.connect(self.searchAllBooks)
         self.addAction(searchFavouriteBooks)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["removeBookHighlight"])
+        action.triggered.connect(self.removeBookHighlight)
+        self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -220,7 +256,7 @@ class WebEngineView(QWebEngineView):
         self.addAction(runAsCommandLine)
 
     def messageNoSelection(self):
-        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["noteTool_selectTextFirst"]))
+        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
 
     def messageNoTtsEngine(self):
         self.displayMessage(config.thisTranslation["message_noSupport"])
@@ -239,6 +275,20 @@ class WebEngineView(QWebEngineView):
 
     def copyHtmlToClipboard(self, html):
         QApplication.clipboard().setText(html)
+
+    # Instant highligh feature
+    def instantHighlight(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            config.instantHighlightString = selectedText
+            self.parent.parent.reloadCurrentRecord()
+
+    def removeInstantHighlight(self):
+        if config.instantHighlightString:
+            config.instantHighlightString = ""
+            self.parent.parent.reloadCurrentRecord()
 
     # Translate selected words into English
     def selectedTextToEnglish(self):
@@ -378,6 +428,24 @@ class WebEngineView(QWebEngineView):
         else:
             searchCommand = "SEARCHBOOK:::ALL:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def removeBookHighlight(self):
+        if config.bookSearchString:
+            config.bookSearchString = ""
+            self.parent.parent.reloadCurrentRecord()
+
+    def searchBibleNote(self, keyword):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "{0}:::{1}".format(keyword, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def removeNoteHighlight(self):
+        if config.noteSearchString:
+            config.noteSearchString = ""
+            self.parent.parent.reloadCurrentRecord()
 
     def searchResource(self, module):
         selectedText = self.selectedText()

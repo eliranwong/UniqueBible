@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Opzione per abilitare la registrazione.",
     "logCommands": "Opzione per registrare tutti i comandi a uba.log",
     "checked": "controllato",
+    "instantHighlight": "Instant Highlight",
+    "removeInstantHighlight": "Rimuovi Instant Highlight",
+    "removeBookHighlight": "Rimuovi Libro Highlight",
+    "removeNoteHighlight": "Rimuovi Note Highlight",
+    "SEARCHBOOKNOTE": "Nota del libro di ricerca",
+    "SEARCHCHAPTERNOTE": "Nota capitolo di ricerca",
+    "SEARCHVERSENOTE": "Ricerca Inversa Note",
 }

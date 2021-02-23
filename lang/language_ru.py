@@ -577,4 +577,11 @@ translation = {
     "enableLogging": "Опция включения записи в журнал.",
     "logCommands": "Опция регистрации всех команд в uba.log",
     "checked": "проверено",
+    "instantHighlight": "Мгновенное выделение",
+    "removeInstantHighlight": "Удалить автовыделение",
+    "removeBookHighlight": "Удалить выделение книги",
+    "removeNoteHighlight": "Удалить выделение примечания",
+    "SEARCHBOOKNOTE": "Примечание для поиска",
+    "SEARCHCHAPTERNOTE": "Поиск в главе Примечание",
+    "SEARCHVERSENOTE": "Обратная заметка поиска",
 }
