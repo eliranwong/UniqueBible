@@ -66,6 +66,8 @@ class MoreConfigOptions(QDialog):
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, self.flagToolTip(False, "virtualKeyboard")),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult, self.autoCopyTranslateResultChanged, self.flagToolTip(True, "autoCopyTranslateResult")),
             ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, self.flagToolTip(True, "autoCopyChinesePinyinOutput")),
+            ("useWebbrowser", config.useWebbrowser, self.useWebbrowserChanged, self.flagToolTip(True, "useWebbrowser")),
+            ("removeHighlightOnExit", config.removeHighlightOnExit, self.removeHighlightOnExitChanged, self.flagToolTip(False, "removeHighlightOnExit")),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, self.flagToolTip(True, "disableModulesUpdateCheck")),
             ("enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
@@ -226,6 +228,12 @@ class MoreConfigOptions(QDialog):
 
     def overwriteBookFontChanged(self):
         config.overwriteBookFont = not config.overwriteBookFont
+
+    def useWebbrowserChanged(self):
+        config.useWebbrowser = not config.useWebbrowser
+
+    def removeHighlightOnExitChanged(self):
+        config.removeHighlightOnExit = not config.removeHighlightOnExit
 
     def overwriteBookFontSizeChanged(self):
         config.overwriteBookFontSize = not config.overwriteBookFontSize

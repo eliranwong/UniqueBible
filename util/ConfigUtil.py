@@ -347,6 +347,9 @@ class ConfigUtil:
         # Only the first 10 books are shown on menu bar
         if not hasattr(config, "favouriteBooks"):
             config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ABS", "Maps_NET"]
+        # Remove book, note and instant highlights on exit.
+        if not hasattr(config, "removeHighlightOnExit"):
+            config.removeHighlightOnExit = False
         # Last string entered for searching book
         if not hasattr(config, "bookSearchString"):
             config.bookSearchString = ""
@@ -393,8 +396,9 @@ class ConfigUtil:
         # Installed Formatted Bibles
         if not hasattr(config, "installHistory"):
             config.installHistory = {}
-        # for checking if note editor is currently opened
-        config.noteOpened = False
+        # Use webbrowser module to open internal website links instead of opening on Study Window
+        if not hasattr(config, "useWebbrowser"):
+            config.useWebbrowser = True
         # set show information to True
         if not hasattr(config, "showInformation"):
             config.showInformation = True
@@ -474,16 +478,12 @@ class ConfigUtil:
 
         # Temporary configurations
         # Their values are not saved on exit.
-        if not hasattr(config, "controlPanel"):
-            config.controlPanel = False
-        if not hasattr(config, "miniControl"):
-            config.miniControl = False
-        if not hasattr(config, "tempRecord"):
-            config.tempRecord = ""
-        if not hasattr(config, "isDownloading"):
-            config.isDownloading = False
-        if not hasattr(config, "noStudyBibleToolbar"):
-            config.noStudyBibleToolbar = False
+        config.controlPanel = False
+        config.miniControl = False
+        config.tempRecord = ""
+        config.isDownloading = False
+        config.noStudyBibleToolbar = False
+        config.noteOpened = False
 
         # Optional Features
         # [Optional] Text-to-Speech feature
@@ -543,9 +543,10 @@ class ConfigUtil:
     # Save configurations on exit
     @staticmethod
     def save():
-        config.bookSearchString = ""
-        config.noteSearchString = ""
-        config.instantHighlightString = ""
+        if config.removeHighlightOnExit:
+            config.bookSearchString = ""
+            config.noteSearchString = ""
+            config.instantHighlightString = ""
         configs = (
             # ("version", config.version),
             ("developer", config.developer),
@@ -646,8 +647,10 @@ class ConfigUtil:
             ("overwriteNoteFont", config.overwriteNoteFont),
             ("overwriteNoteFontSize", config.overwriteNoteFontSize),
             ("favouriteBooks", config.favouriteBooks),
+            ("removeHighlightOnExit", config.removeHighlightOnExit),
             ("bookSearchString", config.bookSearchString),
             ("noteSearchString", config.noteSearchString),
+            ("instantHighlightString", config.instantHighlightString),
             ("thirdDictionary", config.thirdDictionary),
             ("lexicon", config.lexicon),
             ("defaultLexiconStrongH", config.defaultLexiconStrongH),
@@ -656,6 +659,7 @@ class ConfigUtil:
             ("defaultLexiconLXX", config.defaultLexiconLXX),
             ("defaultLexiconGK", config.defaultLexiconGK),
             ("defaultLexiconLN", config.defaultLexiconLN),
+            ("useWebbrowser", config.useWebbrowser),
             ("showInformation", config.showInformation),
             ("historyRecordAllowed", config.historyRecordAllowed),
             ("currentRecord", {'main': 0, 'study': 0}),

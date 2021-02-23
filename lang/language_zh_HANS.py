@@ -585,4 +585,6 @@ translation = {
     "SEARCHBOOKNOTE": "搜索簿记",
     "SEARCHCHAPTERNOTE": "搜索章节说明",
     "SEARCHVERSENOTE": "搜索 Verse 注释",
+    "removeHighlightOnExit": "在出口上除去书籍，注释和即时突出显示。",
+    "useWebbrowser": "使用 Web 浏览器打开内部 Web 站点链接。  如果禁用，将改为在研究窗口上打开 Web 站点。",
 }

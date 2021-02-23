@@ -586,4 +586,6 @@ translation = {
     "SEARCHBOOKNOTE": "搜尋書籍附註",
     "SEARCHCHAPTERNOTE": "搜尋章節附註",
     "SEARCHVERSENOTE": "搜尋 Verse 附註",
+    "removeHighlightOnExit": "在結束時移除書籍、附註及即時強調顯示。",
+    "useWebbrowser": "使用 Web 瀏覽器來開啟內部網站鏈結。  如果停用，則會改為在「學習視窗」上開啟網站。",
 }

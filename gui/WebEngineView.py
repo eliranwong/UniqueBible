@@ -1,6 +1,7 @@
-import config, logging
+import config
 from functools import partial
 from PySide2.QtCore import Qt
+#from PySide2.QtGui import QDesktopServices
 from PySide2.QtWidgets import QAction, QApplication
 from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
@@ -531,8 +532,19 @@ class WebEngineView(QWebEngineView):
         self.popoverView.show()
 
 class WebEnginePage(QWebEnginePage):
+
+    def __init__(self, parent):
+        super().__init__()
+        self.parent = parent
+
     def acceptNavigationRequest(self, url,  _type, isMainFrame):
         if _type == QWebEnginePage.NavigationTypeLinkClicked:
-            QDesktopServices.openUrl(url);
+            # The following line opens a desktop browser
+            #QDesktopServices.openUrl(url);
+
+            # url here is a QUrl
+            # can redirect to another link, e.g.
+            # url = QUrl("https://marvel.bible")
+            self.setUrl(url)
             return False
         return True

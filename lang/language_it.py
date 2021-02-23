@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "Nota del libro di ricerca",
     "SEARCHCHAPTERNOTE": "Nota capitolo di ricerca",
     "SEARCHVERSENOTE": "Ricerca Inversa Note",
+    "removeHighlightOnExit": "Rimuovere il libro, la nota e l'istante evidenzia l'uscita.",
+    "useWebbrowser": "Utilizzare webbrowser per aprire i link del sito web interno.  Se disabilitato, i siti web saranno aperti su Studio Window invece.",
 }

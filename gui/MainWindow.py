@@ -1411,9 +1411,6 @@ class MainWindow(QMainWindow):
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp4:::{0}".format(text))
 
-    def setupYouTube(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
-
     def openYouTube(self):
         #self.youTubeView = YouTubePopover(self)
         self.youTubeView = MiniBrowser(self)
@@ -1794,59 +1791,68 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCHTHIRDDICTIONARY:::")
 
     # Actions - open urls
+    def openWebsite(self, url):
+        if config.useWebbrowser:
+            webbrowser.open(url)
+        else:
+            self.runTextCommand("ONLINE:::{0}".format(url))
+
+    def setupYouTube(self):
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
+
     def openUbaWiki(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki")
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki")
 
     def openUbaDiscussions(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/discussions")
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/discussions")
 
     def openBibleTools(self):
-        webbrowser.open("https://bibletools.app")
+        self.openWebsite("https://bibletools.app")
 
     def openUniqueBible(self):
-        webbrowser.open("https://uniquebible.app")
+        self.openWebsite("https://uniquebible.app")
 
     def openMarvelBible(self):
-        webbrowser.open("https://marvel.bible")
+        self.openWebsite("https://marvel.bible")
 
     def openBibleBento(self):
-        webbrowser.open("https://biblebento.com")
+        self.openWebsite("https://biblebento.com")
 
     def openOpenGNT(self):
-        webbrowser.open("https://opengnt.com")
+        self.openWebsite("https://opengnt.com")
 
     def openSource(self):
-        webbrowser.open("https://github.com/eliranwong/")
+        self.openWebsite("https://github.com/eliranwong/")
 
     def openUniqueBibleSource(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible")
+        self.openWebsite("https://github.com/eliranwong/UniqueBible")
 
     def openHebrewBibleSource(self):
-        webbrowser.open("https://github.com/eliranwong/OpenHebrewBible")
+        self.openWebsite("https://github.com/eliranwong/OpenHebrewBible")
 
     def openOpenGNTSource(self):
-        webbrowser.open("https://github.com/eliranwong/OpenGNT")
+        self.openWebsite("https://github.com/eliranwong/OpenGNT")
 
     def openCredits(self):
-        webbrowser.open("https://marvel.bible/resource.php")
+        self.openWebsite("https://marvel.bible/resource.php")
 
     def contactEliranWong(self):
-        webbrowser.open("https://marvel.bible/contact/contactform.php")
+        self.openWebsite("https://marvel.bible/contact/contactform.php")
 
     def reportAnIssue(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/issues")
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/issues")
 
     def goToSlack(self):
-        webbrowser.open("https://marvelbible.slack.com")
+        self.openWebsite("https://marvelbible.slack.com")
 
     def donateToUs(self):
-        webbrowser.open("https://www.paypal.me/MarvelBible")
+        self.openWebsite("https://www.paypal.me/MarvelBible")
 
     def moreBooks(self):
-        webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Download-3rd-party-modules")
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-3rd-party-modules")
 
     def openBrowser(self, url):
-        webbrowser.open(url)
+        self.openWebsite(url)
 
     # Actions - resize the main window
     def fullsizeWindow(self):
@@ -2389,11 +2395,11 @@ class MainWindow(QMainWindow):
         command = self.textCommandLineEdit.text()
         if not re.match("^online:::", command, flags=re.IGNORECASE):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
-        else:
-            if self.textCommandLineEdit.text() != self.onlineCommand:
-                self.onlineCommand = command
-                *_, address = command.split(":::")
-                self.studyView.load(QUrl(address))
+        elif self.textCommandLineEdit.text() != self.onlineCommand:
+            self.onlineCommand = command    
+            *_, address = command.split(":::")
+            self.studyView.load(QUrl(address))
+            self.addHistoryRecord("study", command)
 
     def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:

@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "ブック検索の検索",
     "SEARCHCHAPTERNOTE": "チャプタ注",
     "SEARCHVERSENOTE": "Verse ノートの検索",
+    "removeHighlightOnExit": "出口のブック、ノート、およびインスタント・ハイライトを削除します",
+    "useWebbrowser": "Web ブラウザーを使用して、内部 Web サイト・リンクを開き  無効にすると、代わりに「スタディー」ウィンドウに Web サイトが開きます。",
 }

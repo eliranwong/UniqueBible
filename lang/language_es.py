@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "Nota del libro de búsqueda",
     "SEARCHCHAPTERNOTE": "Nota del capítulo de búsqueda",
     "SEARCHVERSENOTE": "Ver nota de Verse",
+    "removeHighlightOnExit": "Quitar el libro, la nota y los momentos destacados al instante en la salida",
+    "useWebbrowser": "Utilice webbrowser para abrir enlaces de sitios web internos.  Si está inhabilitado, los sitios web se abrirán en la ventana de estudio en su lugar.",
 }

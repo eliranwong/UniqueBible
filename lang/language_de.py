@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "Notizbuch suchen",
     "SEARCHCHAPTERNOTE": "Hinweis zum Suchkapitel",
     "SEARCHVERSENOTE": "VerVerse-Hinweis suchen",
+    "removeHighlightOnExit": "Entfernen Sie Buch, Notiz und sofortige Highlights am Ausgang.",
+    "useWebbrowser": "Verwenden Sie webbrowser, um interne Webseiten-Links zu öffnen.  Wenn Sie deaktiviert sind, werden stattdessen Webseiten im Studienfenster geöffnet.",
 }

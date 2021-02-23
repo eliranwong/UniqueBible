@@ -3,7 +3,7 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-import os, platform, logging
+import os, platform, logging, re
 import logging.handlers as handlers
 import sys
 
@@ -32,13 +32,10 @@ else:
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
-
-from gui.MainWindow import MainWindow
-
 # Setup GUI windows
+from gui.MainWindow import MainWindow
 from PySide2.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
-
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
 if config.qtMaterial:
@@ -67,7 +64,7 @@ def setupMainWindow(availableGeometry):
     mainWindow.checkMigration()
 
 def executeInitialTextCommand(textCommand, source="main"):
-    if source == "main":
+    if source == "main" or (source == "study" and re.match("^online:::", textCommand, flags=re.IGNORECASE)):
         mainWindow.textCommandLineEdit.setText(textCommand)
     mainWindow.runTextCommand(textCommand, True, source)
 

@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "서적 검색",
     "SEARCHCHAPTERNOTE": "검색 장 주",
     "SEARCHVERSENOTE": "Verse 노트 검색하기",
+    "removeHighlightOnExit": "종료 시 서적, 메모 및 인스턴트 강조표시를 제거하십시오.",
+    "useWebbrowser": "웹 브라우저를 사용하여 내부 웹 사이트 링크를 여십시오.  이 옵션을 사용하지 않으면 웹 사이트가 대신 연구 창에 열립니다.",
 }

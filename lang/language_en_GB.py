@@ -584,4 +584,6 @@ translation = {
     "SEARCHBOOKNOTE": "Search Book Note",
     "SEARCHCHAPTERNOTE": "Search Chapter Note",
     "SEARCHVERSENOTE": "Search Verse Note",
+    "removeHighlightOnExit": "Remove book, note and instant highlights on exit.",
+    "useWebbrowser": "Use webbrowser to open internal website links.  If disabled, websites will be opened on Study Window instead.",
 }
