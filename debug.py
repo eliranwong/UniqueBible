@@ -5,7 +5,14 @@ import platform
 import sys
 import time
 from datetime import datetime
-from os import path, uname
+try:
+    from os import path
+except:
+    pass
+try:
+    from os import uname
+except:
+    pass
 
 def printValue(object, attribute):
     if hasattr(object, attribute):
