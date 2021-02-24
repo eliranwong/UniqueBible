@@ -426,6 +426,18 @@ class MainWindow(QMainWindow):
             self.downloader = Downloader(self, databaseInfo)
             self.downloader.show()
 
+    def moduleInstalled(self, databaseInfo):
+        self.downloader.close()
+        self.displayMessage(config.thisTranslation["message_done"])
+
+        # Update install History
+        fileItems, cloudID, *_ = databaseInfo
+        config.installHistory[fileItems[-1]] = cloudID
+        
+    def moduleInstalledFailed(self, databaseInfo):
+        self.downloader.close()
+        self.displayMessage(config.thisTranslation["message_fail"])
+
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro
         # https://developers.google.com/maps/documentation/maps-static/dev-guide

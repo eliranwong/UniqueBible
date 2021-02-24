@@ -46,26 +46,21 @@ class Downloader(QDialog):
         self.progressBar.setValue(0)
 
     def startDownloadFile(self):
+        self.hide()
+        self.setWindowTitle(config.thisTranslation["message_installing"])
         self.messageLabel.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setText(config.thisTranslation["message_installing"])
         self.downloadButton.setEnabled(False)
         self.cancelButton.setEnabled(False)
-        # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
-        # self.downloadFile(True)
-        # https://www.linuxjournal.com/content/multiprocessing-python
-        if config.isDownloading:
-            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
-        else:
-            threading.Thread(target=self.downloadFile, args=(True,)).start()
-            #self.parent.displayMessage(config.thisTranslation["downloading"])
+        self.show()
+        self.downloadFile(True)
 
-    def downloadFile(self, notification=True):
-        self.hide()
-        config.isDownloading = True
+    def downloadFile(self, interactWithParent=True):
         try:
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
         except:
+            #connection = False
             try:
                 gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
                 connection = True
@@ -78,18 +73,58 @@ class Downloader(QDialog):
                 zipObject.extractall(path)
                 zipObject.close()
                 os.remove(self.localFile)
-            # Update download history
-            # Update install History
-            fileItems, cloudID, *_ = self.databaseInfo
-            config.installHistory[fileItems[-1]] = cloudID
-            if notification:
-                self.messageLabel.setText(config.thisTranslation["message_installed"])
-                self.remarks.setText("")
-                self.downloadButton.setText(config.thisTranslation["message_installed"])
+            if interactWithParent:
+                self.parent.moduleInstalled(self.databaseInfo)
         else:
-            if notification:
-                self.messageLabel.setText(config.thisTranslation["message_failedToInstall"])
-                self.remarks.setText("")
-                self.downloadButton.setText(config.thisTranslation["message_failedToInstall"])
-        self.show()
-        config.isDownloading = False
+            if interactWithParent:
+                self.parent.moduleInstalledFailed(self.databaseInfo)
+
+# It looks multithreading below does not work on Windows.  Put back old codes above first, check further later.
+#    def startDownloadFile(self):
+#        self.messageLabel.setText(config.thisTranslation["message_installing"])
+#        self.downloadButton.setText(config.thisTranslation["message_installing"])
+#        self.downloadButton.setEnabled(False)
+#        self.cancelButton.setEnabled(False)
+#        # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
+#        # self.downloadFile(True)
+#        # https://www.linuxjournal.com/content/multiprocessing-python
+#        if config.isDownloading:
+#            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+#        else:
+#            threading.Thread(target=self.downloadFile, args=(True,)).start()
+#            #self.parent.displayMessage(config.thisTranslation["downloading"])
+#
+#    def downloadFile(self, notification=True):
+#        self.hide()
+#        config.isDownloading = True
+#        try:
+#            gdown.download(self.cloudFile, self.localFile, quiet=True)
+#            connection = True
+#        except:
+#            try:
+#                gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
+#                connection = True
+#            except:
+#                connection = False
+#        if connection:
+#            if self.localFile.endswith(".zip"):
+#                zipObject = zipfile.ZipFile(self.localFile, "r")
+#                path, *_ = os.path.split(self.localFile)
+#                zipObject.extractall(path)
+#                zipObject.close()
+#                os.remove(self.localFile)
+#            # Update download history
+#            # Update install History
+#            fileItems, cloudID, *_ = self.databaseInfo
+#            config.installHistory[fileItems[-1]] = cloudID
+#            if notification:
+#                self.messageLabel.setText(config.thisTranslation["message_installed"])
+#                self.remarks.setText("")
+#                self.downloadButton.setText(config.thisTranslation["message_installed"])
+#        else:
+#            if notification:
+#                self.messageLabel.setText(config.thisTranslation["message_failedToInstall"])
+#                self.remarks.setText("")
+#                self.downloadButton.setText(config.thisTranslation["message_failedToInstall"])
+#        self.show()
+#        config.isDownloading = False
