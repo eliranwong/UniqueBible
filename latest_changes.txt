@@ -1,3 +1,7 @@
+Major changes in version 21.61:
+* Added update control
+* Added subprocess to install missing module for existing users, using pip3 command.
+
 Major changes in version 21.60:
 * Fixed opening websites with ONLINE::: keyword.
 * Added two new config flats, 'useWebbrowser' and 'removeHighlightOnExit'.

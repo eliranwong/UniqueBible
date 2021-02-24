@@ -7,6 +7,7 @@ class ConfigUtil:
 
     @staticmethod
     def pip3InstallModule(module):
+        print("Installing missing module '{0}' ...".format(module))
         # implement pip3 as a subprocess:
         install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         *_, stderr = install.communicate()
@@ -14,7 +15,6 @@ class ConfigUtil:
 
     @staticmethod
     def optionalFeatureNotEnabled(feature, module):
-        print("Installing missing module '{0}' ...".format(module))
         if ConfigUtil.pip3InstallModule(module):
             print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
         else:
@@ -22,7 +22,6 @@ class ConfigUtil:
 
     @staticmethod
     def requiredFeatureNotEnabled(feature, module):
-        print("Installing missing module '{0}' ...".format(module))
         if ConfigUtil.pip3InstallModule(module):
             print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
         else:
