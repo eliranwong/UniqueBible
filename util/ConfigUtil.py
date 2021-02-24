@@ -175,8 +175,8 @@ class ConfigUtil:
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
         # Use gui "Set my Language" dialog, from menu bar, to set "userLanguage".
-        if not hasattr(config, "userLanguage"):
-            config.userLanguage = ""
+        if not hasattr(config, "userLanguage") or not config.userLanguage:
+            config.userLanguage = "English"
         # Option to use interface translated into userLanguage: True / False
         if not hasattr(config, "userLanguageInterface"):
             config.userLanguageInterface = False

@@ -1,3 +1,6 @@
+Major change in version 21.65:
+* Fixed an issue introduced from version 21.55 that cause Note Editor not able to be opened.
+
 Major change in version 21.64:
 * Dynamic changing program interface now applies to Master Control panel.
 * Add "Reload Resources" under "Master Control" section on "Focus menu layout".
