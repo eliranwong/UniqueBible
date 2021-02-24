@@ -30,11 +30,7 @@ On mac, open "Applications > Utilities > Terminal.app"
 > python3 -m venv venv<br>
 > source venv/bin/activate<br>
 > pip3 install PySide2<br>
-> pip3 install PyPDF2<br>
-> pip3 install python-docx<br>
-> pip3 install gdown<br>
-> pip3 install diff-match-patch<br>
-> pip3 install ibm-watson<br>
+> pip3 install PyPDF2 python-docx gdown diff_match_patch langdetect pygithub qt-material pypinyin opencc telnetlib3 ibm-watson
 
 # 5. Run the app
 
