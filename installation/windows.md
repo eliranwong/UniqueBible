@@ -49,7 +49,7 @@ For details on installing Chocolatey, please read: https://chocolatey.org/instal
 
 > .\venv\Scripts\activate
 
-> pip3 install PySide2 PyPDF2 python-docx gdown diff_match_patch langdetect pygithub qt-material pypinyin opencc telnetlib3 ibm-watson
+> pip3 install PySide2 PyPDF2 python-docx gdown diff_match_patch langdetect pygithub qt-material pypinyin opencc telnetlib3 ibm-watson babel
 
 Read more about dependencies at https://github.com/eliranwong/UniqueBible#install-dependencies
 
