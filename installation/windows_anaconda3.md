@@ -42,7 +42,7 @@ Unzip it and place in a location you like.  In this example, we put it on deskto
 
 > .\venv\Scripts\activate
 
-> pip install PySide2 PyPDF2 python-docx gdown diff_match_patch langdetect qt-material ibm-watson
+> pip install PySide2 PyPDF2 python-docx gdown diff_match_patch langdetect pygithub qt-material pypinyin opencc telnetlib3 ibm-watson babel
 
 <img src="screenshots/command_prompt3.png">
 
