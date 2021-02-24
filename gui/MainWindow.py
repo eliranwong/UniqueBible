@@ -155,6 +155,7 @@ class MainWindow(QMainWindow):
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
+        config.noStudyBibleToolbar = True if layout == "focus" else False
         try:
             self.menuBar().clear()
             self.removeToolBar(self.firstToolBar)

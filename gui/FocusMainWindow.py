@@ -384,7 +384,7 @@ class FocusMainWindow:
         if config.addBreakAfterTheFirstToolBar:
             self.addToolBarBreak()
 
-        self.studyBibleToolBar = QToolBar()
+        #self.studyBibleToolBar = QToolBar()
         #self.studyBibleToolBar.setWindowTitle(config.thisTranslation["bar2_title"])
         #self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         #self.addToolBar(self.studyBibleToolBar)

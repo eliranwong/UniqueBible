@@ -1,3 +1,7 @@
+Major change in version 21.67:
+* Fixed Focus menu layout enable study window bible button
+* Removed extra window when focus menu layout is used.
+
 Major change in version 21.66:
 * Now add verse number single-click and double-click actions to history.
 * Now open Master Control panel "Bible" tab by default when a bible chapter heading is clicked.
