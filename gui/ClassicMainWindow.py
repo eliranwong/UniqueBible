@@ -89,7 +89,7 @@ class ClassicMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_update", self, self.updateUniqueBibleApp, None)
+        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow, None)
         menu.addSeparator()
 
         appIcon = QIcon(os.path.join("htmlResources", "UniqueBibleApp.png"))

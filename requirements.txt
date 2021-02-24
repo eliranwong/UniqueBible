@@ -13,3 +13,4 @@ pypinyin
 opencc
 telnetlib3
 ibm-watson
+babel

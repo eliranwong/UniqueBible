@@ -5,7 +5,7 @@ try:
     from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
     config.enableIBMWatson = True
 except:
-    ConfigUtil.messageFeatureNotEnabled("Translation Service", "ibm-watson")
+    ConfigUtil.optionalFeatureNotEnabled("Translation Service", "ibm-watson")
     config.enableIBMWatson = False
 
 class Translator:
