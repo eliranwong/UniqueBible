@@ -442,7 +442,7 @@ translation = {
     "rename": '請按一下這裡重新命名',
     "colour": '顏色',
     "changeColour": '請按一下這裡以變更顏色',
-    "verseNoAction": 'Verse no。 行動',
+    "verseNoAction": "Verse 號碼動作",
     "assignSingleClick": '指派動作',
     "singleClick": '單點選',
     "assignDoubleClick": '指派動作',
@@ -599,4 +599,5 @@ translation = {
     "Days_between_checks": "檢查之間的天數",
     "Updating": "正在更新",
     "reloadResources": "重新載入資源",
+    "preferHtmlMenu": "按一下 bible 章節標題時，開啟古典 html 功能表而非控制面板的選項。",
 }

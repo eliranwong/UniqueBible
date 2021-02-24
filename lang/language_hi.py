@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "मुख्य विंडो के साथ सिंक से व्याख्या बाहर",
     "bar2_studyWindowBibleSyncEnabled": "मुख्य विंडो के साथ सिंक में विंडो बाइबल का अध्ययन करें",
     "bar2_studyWindowBibleSyncDisabled": "मुख्य विंडो के साथ सिंक से बाहर बाइबल बाइबिल का अध्ययन",
-    "verseNoAction": "कविता नहीं. क्रिया",
+    "verseNoAction": "श्लोक संख्या क्रिया",
     "assignSingleClick": "क्रिया सुपुर्द करें",
     "singleClick": "एकल-क्लिक",
     "assignDoubleClick": "क्रिया सुपुर्द करें",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "चेक के बीच के दिन",
     "Updating": "अद्यतन करना",
     "reloadResources": "संसाधन पुनः लोड",
+    "preferHtmlMenu": "नियंत्रण पैनल के बजाय शास्त्रीय html मेनू खोलने के लिए विकल्प क्लिक करें जब एक बाईबल अध्याय शीर्षक क्लिक किया जाता है.",
 }

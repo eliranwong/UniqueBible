@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Commento su Sync con Finestra principale",
     "bar2_studyWindowBibleSyncEnabled": "Studio Window Bible in Sync con Finestra principale",
     "bar2_studyWindowBibleSyncDisabled": "Studio Window Bible out of Sync con Main Window",
-    "verseNoAction": "Versi no. Azione",
+    "verseNoAction": "Azione numero versi",
     "assignSingleClick": "Assegnare un'azione",
     "singleClick": "Singolo clic",
     "assignDoubleClick": "Assegnare un'azione",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Giorni tra controlli",
     "Updating": "Aggiornamento",
     "reloadResources": "Ricarica risorse",
+    "preferHtmlMenu": "Opzione per aprire il menu html classico invece del pannello di controllo quando si fa clic su una voce di capitolo bibbia.",
 }

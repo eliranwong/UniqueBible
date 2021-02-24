@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "메인 (Main) 윈도와의 싱크 (Commentary out of 싱크)",
     "bar2_studyWindowBibleSyncEnabled": "메인창과의 동기에서의 창 성서 연구",
     "bar2_studyWindowBibleSyncDisabled": "주요 창과의 동기에서의 창 성서 연구",
-    "verseNoAction": "아니야. 행동",
+    "verseNoAction": "Verse Number Action",
     "assignSingleClick": "액션 할당하기",
     "singleClick": "단일 클릭",
     "assignDoubleClick": "액션 할당하기",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "수표 사이의 일",
     "Updating": "업데이트하기",
     "reloadResources": "자원 재로드",
+    "preferHtmlMenu": "성경 장 표제를 클릭하면 제어판 대신에 클래식 html 메뉴를 열 수 있는 옵션입니다.",
 }

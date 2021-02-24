@@ -440,7 +440,7 @@ translation = {
     "rename": '请按一下这里重新命名',
     "colour": '颜色',
     "changeColour": '请按一下这里以变更颜色',
-    "verseNoAction": 'Verse no。 行动',
+    "verseNoAction": "Verse 编号操作",
     "assignSingleClick": '指派动作',
     "singleClick": '单点选',
     "assignDoubleClick": '指派动作',
@@ -598,4 +598,5 @@ translation = {
     "Days_between_checks": "检查之间的天数",
     "Updating": "正在更新",
     "reloadResources": "重新装入资源",
+    "preferHtmlMenu": "单击圣经章节标题时打开古典 html 菜单而不是控制面板的选项。",
 }

@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Σχόλια από το Sync με κύριο παράθυρο",
     "bar2_studyWindowBibleSyncEnabled": "Μελέτη Παράθυρο Βίβλο στο Sync με κύριο παράθυρο",
     "bar2_studyWindowBibleSyncDisabled": "Παράθυρο Μελέτη Παράθυρο από το Sync με κύριο παράθυρο",
-    "verseNoAction": "Βέρσε όχι. ' Ενέργεια",
+    "verseNoAction": "Ενέργεια αριθμού Verse",
     "assignSingleClick": "Ανάθεση ενέργειας:",
     "singleClick": "Εφάπαξ κλικ",
     "assignDoubleClick": "Ανάθεση ενέργειας:",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Ημέρες μεταξύ ελέγχων",
     "Updating": "Ενημέρωση.",
     "reloadResources": "Reload Πόροι",
+    "preferHtmlMenu": "Επιλογή για το άνοιγμα του μενού της κλασικής html αντί για τον πίνακα ελέγχου, όταν μια βίβλος κεφάλαιο επικεφαλίδα είναι κλικ.",
 }

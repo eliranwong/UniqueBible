@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Commentaire sur la synchronisation avec la fenêtre principale",
     "bar2_studyWindowBibleSyncEnabled": "Fenêtre d'étude de la Bible en synchronisation avec la fenêtre principale",
     "bar2_studyWindowBibleSyncDisabled": "Fenêtre d'étude de la Bible à partir de la synchronisation avec la fenêtre principale",
-    "verseNoAction": "Verse non. Action",
+    "verseNoAction": "Action de numéro de Verse",
     "assignSingleClick": "Affecter une action",
     "singleClick": "Cliquez sur un seul clic",
     "assignDoubleClick": "Affecter une action",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Jours entre les vérifications",
     "Updating": "Mise à jour",
     "reloadResources": "Rechargés Ressources",
+    "preferHtmlMenu": "Option permettant d'ouvrir le menu HTML classique à la place du panneau de commande lorsque vous cliquez sur un en-tête de chapitre bible.",
 }

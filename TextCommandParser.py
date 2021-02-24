@@ -1656,6 +1656,7 @@ class TextCommandParser:
                 self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:
+                self.parent.addHistoryRecord("study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
 
     # _menu:::
@@ -1663,13 +1664,20 @@ class TextCommandParser:
         # Before version 21.33, _menu::: opens a classic html menu only
         # From version 21.33, _menu::: open an action users assign to config.verseNoDoubleClickAction
         # may change the keyword to _vndc::: later
-        if config.verseNoDoubleClickAction == "none":
+        dotCount = command.count(".")
+        if dotCount != 3 or config.verseNoDoubleClickAction == "_menu":
+            #_menu:::CSB.54.5
+            if dotCount == 2 and not config.preferHtmlMenu:
+                text, b, c = command.split(".")
+                self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
+                return ("", "", {})
+            else:
+                biblesSqlite = BiblesSqlite()
+                menu = biblesSqlite.getMenu(command, source)
+                del biblesSqlite
+                return (source, menu, {})
+        elif config.verseNoDoubleClickAction == "none":
             return ("", "", {})
-        elif command.count(".") != 3 or config.verseNoDoubleClickAction == "_menu":
-            biblesSqlite = BiblesSqlite()
-            menu = biblesSqlite.getMenu(command, source)
-            del biblesSqlite
-            return (source, menu, {})
         elif config.verseNoDoubleClickAction.startswith("_cp"):
             index = int(config.verseNoDoubleClickAction[-1])
             text, b, c, v = command.split(".")
@@ -1678,6 +1686,7 @@ class TextCommandParser:
         else:
             *_, b, c, v = command.split(".")
             verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
+            self.parent.addHistoryRecord("study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _commentary:::

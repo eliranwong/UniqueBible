@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "メイン・ウィンドウと同期していない場合の同期",
     "bar2_studyWindowBibleSyncEnabled": "スタディー・ウィンドウ聖書をメイン・ウィンドウと同期",
     "bar2_studyWindowBibleSyncDisabled": "スタディー・ウィンドウ・バイブル - メイン・ウィンドウと同期",
-    "verseNoAction": "Verse のいいえ。 アクション",
+    "verseNoAction": "Verse 番号アクション",
     "assignSingleClick": "アクションの割り当て",
     "singleClick": "シングルクリック",
     "assignDoubleClick": "アクションの割り当て",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "チェック間の日数",
     "Updating": "更新中",
     "reloadResources": "リソースの再ロード",
+    "preferHtmlMenu": "バイブル・チャプタ見出しをクリックしたときにコントロール・パネルの代わりにクラシック HTML メニューを開くオプション。",
 }

@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Commentary out of Sync with Main Window",
     "bar2_studyWindowBibleSyncEnabled": "Study Window Bible in Sync with Main Window",
     "bar2_studyWindowBibleSyncDisabled": "Study Window Bible out of Sync with Main Window",
-    "verseNoAction": "Verse no. Action",
+    "verseNoAction": "Verse Number Action",
     "assignSingleClick": "Assign an action",
     "singleClick": "Single-click",
     "assignDoubleClick": "Assign an action",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Days between checks",
     "Updating": "Updating",
     "reloadResources": "Reload Resources",
+    "preferHtmlMenu": "Option to open classic html menu instead of control panel when a bible chapter heading is clicked.",
 }

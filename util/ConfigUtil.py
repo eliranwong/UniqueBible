@@ -166,6 +166,10 @@ class ConfigUtil:
         # Options to open Study Window's content in the tab next to the current one: True / False
         if not hasattr(config, "openStudyWindowContentOnNextTab"):
             config.openStudyWindowContentOnNextTab = True
+        # Options to open classic html menu when a bible chapter heading is clicked
+        # It is set to False by default that clicking a chapter heading opens Master Control panel.
+        if not hasattr(config, "preferHtmlMenu"):
+            config.preferHtmlMenu = False
         # Options to convert all bible book abbreviations to standard ones: YES / NO
         if not hasattr(config, "parserStandarisation"):
             config.parserStandarisation = "NO"
@@ -610,6 +614,7 @@ class ConfigUtil:
             ("numberOfTab", config.numberOfTab),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
+            ("preferHtmlMenu", config.preferHtmlMenu),
             ("parserStandarisation", config.parserStandarisation),
             ("standardAbbreviation", config.standardAbbreviation),
             ("userLanguage", config.userLanguage),

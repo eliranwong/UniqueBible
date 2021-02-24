@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Kommentar aus Sync mit Hauptfenster",
     "bar2_studyWindowBibleSyncEnabled": "Studienfenster Bibel in Synchronisation mit Hauptfenster",
     "bar2_studyWindowBibleSyncDisabled": "Studie Fenster Bibel aus Sync mit Hauptfenster",
-    "verseNoAction": "Verse nein. Aktion",
+    "verseNoAction": "Verse-Number-Aktion",
     "assignSingleClick": "Aktion zuordnen",
     "singleClick": "Einklicken",
     "assignDoubleClick": "Aktion zuordnen",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Tage zwischen Prüfungen",
     "Updating": "Aktualisierung",
     "reloadResources": "Ressourcen erneut laden",
+    "preferHtmlMenu": "Option zum Öffnen des klassischen HTML-Menüs anstelle der Systemsteuerung, wenn auf die Überschrift einer Bibel-Kapitel geklickt wird.",
 }

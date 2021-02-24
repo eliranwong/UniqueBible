@@ -44,6 +44,7 @@ class MoreConfigOptions(QDialog):
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, self.flagToolTip(False, "qtMaterial")),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, self.flagToolTip(True, "addBreakAfterTheFirstToolBar")),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, self.flagToolTip(False, "addBreakBeforeTheLastToolBar")),
+            ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, self.flagToolTip(False, "preferHtmlMenu")),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, self.flagToolTip(False, "parserStandarisation")),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, self.flagToolTip(False, "useFastVerseParsing")),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, self.flagToolTip(True, "showVerseNumbersInRange")),
@@ -210,6 +211,9 @@ class MoreConfigOptions(QDialog):
 
     def openBibleNoteAfterEditorClosedChanged(self):
         config.openBibleNoteAfterEditorClosed = not config.openBibleNoteAfterEditorClosed
+
+    def preferHtmlMenuChanged(self):
+        config.preferHtmlMenu = not config.preferHtmlMenu
 
     def hideNoteEditorStyleToolbarChanged(self):
         config.hideNoteEditorStyleToolbar = not config.hideNoteEditorStyleToolbar

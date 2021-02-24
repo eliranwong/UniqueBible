@@ -438,7 +438,7 @@ translation = {
     "bar2_commentarySyncDisabled": "Комментарий из синхронизации с главным окном",
     "bar2_studyWindowBibleSyncEnabled": "Учебное окно Библия в окне Синхронизация с",
     "bar2_studyWindowBibleSyncDisabled": "Изучение Библии окна из синхронизации с главным окном",
-    "verseNoAction": "Стих нет. Действие",
+    "verseNoAction": "Действие Число Verse",
     "assignSingleClick": "Назначить действие",
     "singleClick": "Одиночный щелчок",
     "assignDoubleClick": "Назначить действие",
@@ -597,4 +597,5 @@ translation = {
     "Days_between_checks": "Число дней между проверками",
     "Updating": "Обновление",
     "reloadResources": "Перезагрузить ресурсы",
+    "preferHtmlMenu": "Опция открытия классического html-меню вместо панели управления при щелчке заголовка библевой главы.",
 }

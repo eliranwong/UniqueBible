@@ -156,6 +156,14 @@ class ClassicMainWindow:
         scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, self, shortcut=sc.studyPageScrollPageUp,
                                       triggered=self.studyPageScrollPageUp))
         menu3.addSeparator()
+        subMenu = addSubMenu(menu3, "verseNoAction")
+        items = (
+            ("singleClick", self.selectSingleClickActionDialog),
+            ("doubleClick", self.selectDoubleClickActionDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        menu3.addSeparator()
         toggleMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_toggleFeatures"]))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut=sc.enableParagraphButtonClicked, triggered=self.enableParagraphButtonClicked))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
