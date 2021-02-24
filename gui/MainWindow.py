@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
         self.directoryLabel.setFrameStyle(frameStyle)
 
         # setup UI
-        self.setWindowTitle("UniqueBible.app [version {0}]".format(config.version))
+        self.setWindowTitle("UniqueBible.app [version {0:.2f}]".format(config.version))
         appIconFile = os.path.join("htmlResources", "UniqueBibleApp.png")
         appIcon = QIcon(appIconFile)
         QGuiApplication.setWindowIcon(appIcon)
@@ -372,17 +372,16 @@ class MainWindow(QMainWindow):
     def checkApplicationUpdate(self):
         try:
             checkFile = "{0}UniqueBibleAppVersion.txt".format(UpdateUtil.repository)
-            if UpdateUtil.checkIfShouldCheckForAppUpdate():
-                # latest version number is indicated in file "UniqueBibleAppVersion.txt"
-                request = requests.get(checkFile, timeout=5)
-                if request.status_code == 200:
-                    # tell the rest that internet connection is available
-                    config.internet = True
-                    # compare with user's current version
-                    if not UpdateUtil.currentIsLatest(config.version, request.text):
-                        self.promptUpdate(request.text)
-                else:
-                    config.internet = False
+            # latest version number is indicated in file "UniqueBibleAppVersion.txt"
+            request = requests.get(checkFile, timeout=5)
+            if request.status_code == 200:
+                # tell the rest that internet connection is available
+                config.internet = True
+                # compare with user's current version
+                if UpdateUtil.checkIfShouldCheckForAppUpdate() and not UpdateUtil.currentIsLatest(config.version, request.text):
+                    self.promptUpdate(request.text)
+            else:
+                config.internet = False
         except Exception as e:
             config.internet = False
             print("Failed to read '{0}'.".format(checkFile))
@@ -413,7 +412,7 @@ class MainWindow(QMainWindow):
     def promptUpdate(self, latestVersion):
         config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
         reply = QMessageBox.question(self, "Update is available ...",
-                                     "Update is available ...\n\nLatest version: {0}\nInstalled version: {1}\n\nDo you want to proceed the update?".format(
+                                     "Update is available ...\n\nLatest version: {0}\nInstalled version: {1:.2f}\n\nDo you want to proceed the update?".format(
                                          latestVersion, config.version),
                                      QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
