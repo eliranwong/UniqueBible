@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "비고:",
     "message_cancel": "취소",
     "message_install": "다운로드 및 설치",
-    "message_installing": "설치 중 ...",
+    "message_installing": "설치 중 ... 기다려 주세요!",
     "message_installed": "다운로드 및 설치!",
     "message_failedToInstall": "설치에 실패했습니다!  다시 시도하거나 문제를 당사에 보고할 수 있습니다.",
     "message_downloadHelper": "헬퍼 다운로드",

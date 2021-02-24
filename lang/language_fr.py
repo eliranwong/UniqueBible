@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "Remarques:",
     "message_cancel": "Annuler",
     "message_install": "Téléchargement et installation",
-    "message_installing": "Installation ...",
+    "message_installing": "Installation ... Veuillez patiattendre !",
     "message_installed": "Téléchargé et installé !",
     "message_failedToInstall": "Echec de l'installation !  Vous pouvez essayer de nouveau ou nous faire part de la question.",
     "message_downloadHelper": "Télécharger l'auxiliaire",

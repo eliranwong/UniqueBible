@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "टिप्पणी:",
     "message_cancel": "रद्द करें",
     "message_install": "डाउनलोड और संस्थापित करें",
-    "message_installing": "स्थापित कर रहा",
+    "message_installing": "स्थापित कर रहा कृपया इंतजार करें!",
     "message_installed": "डाउनलोड और स्थापित!",
     "message_failedToInstall": "स्थापित करने में विफल!  आप फिर से कोशिश कर सकते हैं या मुद्दा हमारे सामने रख सकते हैं.",
     "message_downloadHelper": "सहायक डाउनलोड करें",

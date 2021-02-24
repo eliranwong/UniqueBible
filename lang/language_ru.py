@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "Замечания:",
     "message_cancel": "Отмена",
     "message_install": "Загрузить и установить",
-    "message_installing": "Выполняется установка ...",
+    "message_installing": "Выполняется установка ... Пожалуйста, подождите!",
     "message_installed": "Загружен и установлен!",
     "message_failedToInstall": "Не удалось установить!  Вы можете повторить попытку или сообщить о проблеме нам.",
     "message_downloadHelper": "Загрузить вспомогательный объект",

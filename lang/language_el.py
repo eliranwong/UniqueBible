@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "Παρατηρήσεις:",
     "message_cancel": "Ακύρωση.",
     "message_install": "Λήψη και εγκατάσταση:",
-    "message_installing": "Εγκατάσταση ...",
+    "message_installing": "Εγκατάσταση ... Παρακαλώ περιμένετε!",
     "message_installed": "Μεταφορτώθηκε και εγκαταστάθηκε!",
     "message_failedToInstall": "Απέτυχε η εγκατάσταση!  Μπορείτε να προσπαθήσετε ξανά ή να μας αναφέρετε το θέμα.",
     "message_downloadHelper": "Βοήθεια: Λήψη βοήθειας",

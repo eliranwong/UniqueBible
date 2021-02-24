@@ -411,7 +411,7 @@ translation = {
     "message_themeTakeEffectAfterRestart": '佈景主題將在下次重新啟動之後生效',
     "message_configurationTakeEffectAfterRestart": '配置將在下次重新啟動之後生效',
     "open": '開',
-    "message_installing": '正在安裝...',
+    "message_installing": "正在安裝... 請等一下",
     "message_installed": '已下載並安裝！',
     "message_failedToInstall": '無法安裝！  你可以再嘗試一次，或向我們報告這個問題。',
     "youTubeLinkNotFound": '找不到 YouTube 鏈結！',
