@@ -38,6 +38,9 @@ Enter the following command in terminal, one by one:
 > conda install -c conda-forge python-docx<br>
 > conda install -c conda-forge diff-match-patch<br>
 > conda install -c conda-forge ibm-watson<br>
+> conda install -c anaconda babel<br>
+> conda install -c conda-forge langdetect<br>
+> conda install -c conda-forge pygithub
 
 <b>Remarks:</b>  When question "Proceed ([y]/n)?" comes up, simply enter "y".
 
