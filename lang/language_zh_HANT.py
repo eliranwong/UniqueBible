@@ -598,4 +598,5 @@ translation = {
     "Next_check": "下次檢查",
     "Days_between_checks": "檢查之間的天數",
     "Updating": "正在更新",
+    "reloadResources": "重新載入資源",
 }

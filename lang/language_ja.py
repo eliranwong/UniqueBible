@@ -596,4 +596,5 @@ translation = {
     "Next_check": "次のチェック",
     "Days_between_checks": "チェック間の日数",
     "Updating": "更新中",
+    "reloadResources": "リソースの再ロード",
 }

@@ -596,4 +596,5 @@ translation = {
     "Next_check": "다음 확인",
     "Days_between_checks": "수표 사이의 일",
     "Updating": "업데이트하기",
+    "reloadResources": "자원 재로드",
 }

@@ -61,10 +61,10 @@ class FocusMainWindow:
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
-            ("menu_blank", lambda: self.setShortcuts("blank")),
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
             ("menu_micron", lambda: self.setShortcuts("micron")),
             ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
+            ("menu_blank", lambda: self.setShortcuts("blank")),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
@@ -204,6 +204,7 @@ class FocusMainWindow:
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
         menu.addSeparator()
+        addMenuItem(menu, "reloadResources", self, self.reloadControlPanel)
         addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)
 
         # 4th column

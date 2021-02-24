@@ -596,4 +596,5 @@ translation = {
     "Next_check": "अगला चेक",
     "Days_between_checks": "चेक के बीच के दिन",
     "Updating": "अद्यतन करना",
+    "reloadResources": "संसाधन पुनः लोड",
 }

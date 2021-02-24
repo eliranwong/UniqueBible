@@ -596,4 +596,5 @@ translation = {
     "Next_check": "Vérification suivante",
     "Days_between_checks": "Jours entre les vérifications",
     "Updating": "Mise à jour",
+    "reloadResources": "Rechargés Ressources",
 }

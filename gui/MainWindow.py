@@ -224,6 +224,12 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
+    def reloadControlPanel(self, show=True):
+        if self.controlPanel:
+            self.controlPanel.close()
+            config.controlPanel = False
+            self.manageControlPanel(show)
+
     def manageControlPanel(self, show=True, index=None, b=None, c=None, v=None, text=None):
         if index is None:
             index = 0
@@ -1731,7 +1737,9 @@ class MainWindow(QMainWindow):
         if config.useWebbrowser:
             webbrowser.open(url)
         else:
-            self.runTextCommand("ONLINE:::{0}".format(url))
+            command = "ONLINE:::{0}".format(url)
+            self.textCommandLineEdit.setText(command)
+            self.runTextCommand(command)
 
     def setupYouTube(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
@@ -2521,11 +2529,13 @@ class MainWindow(QMainWindow):
             config.displayLanguage = Languages.code[item]
             self.setTranslation()
             self.setupMenuLayout(config.menuLayout)
+            self.reloadControlPanel(False)
 
     def changeInterfaceLanguage(self, language):
         config.displayLanguage = Languages.code[language]
         self.setTranslation()
         self.setupMenuLayout(config.menuLayout)
+        self.reloadControlPanel(False)
 
     # Set my language (config.userLanguage)
     # This one is different from the language of program interface

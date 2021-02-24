@@ -596,4 +596,5 @@ translation = {
     "Next_check": "Επόμενη επιταγή.",
     "Days_between_checks": "Ημέρες μεταξύ ελέγχων",
     "Updating": "Ενημέρωση.",
+    "reloadResources": "Reload Πόροι",
 }
