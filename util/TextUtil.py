@@ -13,3 +13,13 @@ class TextUtil:
             text = re.sub(p, r"\1\2", text)
             s = p.search(text)
         return text
+
+    # Return digits from a string
+    @staticmethod
+    def getDigits(text):
+        return ''.join(c for c in text if c.isdigit())
+
+
+if __name__ == '__main__':
+
+    print(TextUtil.getDigits("abc123def"))

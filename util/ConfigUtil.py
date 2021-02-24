@@ -1,14 +1,18 @@
 import os, pprint
 from platform import system
-
 import config
+from util.DateUtil import DateUtil
 
 
 class ConfigUtil:
 
     @staticmethod
-    def messageFeatureNotEnabled(feature, module):
-        print("Optional feature '{0}'is not enabled.  To enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+    def optionalFeatureNotEnabled(feature, module):
+        print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+
+    @staticmethod
+    def requiredFeatureNotEnabled(feature, module):
+        print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
 
     @staticmethod
     def setup():
@@ -475,6 +479,11 @@ class ConfigUtil:
             config.regexCaseSensitive = False
         if not hasattr(config, "displayLanguage"):
             config.displayLanguage = 'en_US'
+        # App update check
+        if not hasattr(config, "lastAppUpdateCheckDate"):
+            config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
+        if not hasattr(config, "daysElapseForNextAppUpdateCheck"):
+            config.daysElapseForNextAppUpdateCheck = '14'
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -515,7 +524,7 @@ class ConfigUtil:
         #    openccSupport = True
         # except:
         #    openccSupport = False
-        #    ConfigUtil.messageFeatureNotEnabled("Conversion between traditional Chinese and simplified Chinese", "opencc")
+        #    ConfigUtil.optionalFeatureNotEnabled("Conversion between traditional Chinese and simplified Chinese", "opencc")
 
         # [Optional] Chinese feature - pypinyin
         # It translates Chinese characters into pinyin.
@@ -525,7 +534,7 @@ class ConfigUtil:
             config.pinyinSupport = True
         except:
             config.pinyinSupport = False
-            ConfigUtil.messageFeatureNotEnabled("Translate Chinese words into pinyin", "pypinyin")
+            ConfigUtil.optionalFeatureNotEnabled("Translate Chinese words into pinyin", "pypinyin")
 
         # [Optional] Gist-syncing notes
         if config.enableGist:
@@ -533,12 +542,21 @@ class ConfigUtil:
                 from github import Github, InputFileContent
             except:
                 config.enableGist = False
-                ConfigUtil.messageFeatureNotEnabled("Gist-synching notes across devices", "pygithub")
+                ConfigUtil.optionalFeatureNotEnabled("Gist-synching notes across devices", "pygithub")
 
         # Import modules for developer
         if config.developer:
             # import exlbl
             pass
+
+        # [ Required ] babel module
+        # Internationalization and localization library
+        # http://babel.pocoo.org/
+        try:
+            from babel import Locale
+        except:
+            ConfigUtil.requiredFeatureNotEnabled("Internationalization and localization library", "babel")
+            exit(1)
 
     # Save configurations on exit
     @staticmethod
@@ -694,7 +712,9 @@ class ConfigUtil:
             ("highlightDarkThemeColours", config.highlightDarkThemeColours),
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("menuShortcuts", config.menuShortcuts),
-            ("displayLanguage", config.displayLanguage)
+            ("displayLanguage", config.displayLanguage),
+            ("lastAppUpdateCheckDate", config.lastAppUpdateCheckDate),
+            ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck)
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

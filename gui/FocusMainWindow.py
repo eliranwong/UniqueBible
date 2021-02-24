@@ -148,8 +148,8 @@ class FocusMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         menu.addSeparator()
-        #addMenuItem(menu, "menu1_update", self, self.updateUniqueBibleApp)
-        #menu.addSeparator()
+        addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
+        menu.addSeparator()
         addIconMenuItem("UniqueBibleApp.png", menu, "menu1_exit", self, self.quitApp, sc.quitApp)
 
         # 2nd column

@@ -64,6 +64,8 @@ class AlephMainWindow:
             menu_developer = menu1.addMenu("&Developer")
         menu1.addAction(
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
+        menu1.addAction(
+            QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
 
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut=sc.quitApp, triggered=self.quitApp))

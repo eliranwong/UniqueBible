@@ -43,7 +43,7 @@ if config.qtMaterial:
         from qt_material import apply_stylesheet
     except:
         config.qtMaterial = False
-        ConfigUtil.messageFeatureNotEnabled("Qt Materials Themes", "qt-material")
+        ConfigUtil.optionalFeatureNotEnabled("Qt Materials Themes", "qt-material")
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
