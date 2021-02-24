@@ -1,18 +1,32 @@
-import os, pprint
+import os, pprint, config, subprocess, sys
 from platform import system
-import config
 from util.DateUtil import DateUtil
 
 
 class ConfigUtil:
 
     @staticmethod
+    def pip3InstallModule(module):
+        # implement pip3 as a subprocess:
+        install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        *_, stderr = install.communicate()
+        return stderr
+
+    @staticmethod
     def optionalFeatureNotEnabled(feature, module):
-        print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+        print("Installing missing module '{0}' ...".format(module))
+        if ConfigUtil.pip3InstallModule(module):
+            print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+        else:
+            print("Missing module '{0}' is now installed.".format(module))
 
     @staticmethod
     def requiredFeatureNotEnabled(feature, module):
-        print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+        print("Installing missing module '{0}' ...".format(module))
+        if ConfigUtil.pip3InstallModule(module):
+            print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+        else:
+            print("Missing module '{0}' is now installed. Please restart UniqueBible.app!".format(module))
 
     @staticmethod
     def setup():
