@@ -110,13 +110,11 @@ class WebEngineView(QWebEngineView):
         self.addAction(translateText)
 
         # Translate into User-defined Language
-        if config.userLanguage:
+        if config.userLanguage and not config.userLanguage == "English":
             userLanguage = config.userLanguage
-        else:
-            userLanguage = config.thisTranslation["context1_my"]
-        translateText = QAction(self)
-        translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
-        translateText.triggered.connect(self.checkUserLanguage)
+            translateText = QAction(self)
+            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
+            translateText.triggered.connect(self.checkUserLanguage)
         self.addAction(translateText)
 
         # CHINESE TOOL - pinyin
