@@ -598,4 +598,5 @@ translation = {
     "Updating": "更新中",
     "reloadResources": "リソースの再ロード",
     "preferHtmlMenu": "バイブル・チャプタ見出しをクリックしたときにコントロール・パネルの代わりにクラシック HTML メニューを開くオプション。",
+    "setMaximumHistoryRecord": "ヒストリー・レコードの最大数の選択",
 }

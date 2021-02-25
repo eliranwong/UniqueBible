@@ -598,4 +598,5 @@ translation = {
     "Updating": "अद्यतन करना",
     "reloadResources": "संसाधन पुनः लोड",
     "preferHtmlMenu": "नियंत्रण पैनल के बजाय शास्त्रीय html मेनू खोलने के लिए विकल्प क्लिक करें जब एक बाईबल अध्याय शीर्षक क्लिक किया जाता है.",
+    "setMaximumHistoryRecord": "इतिहास अभिलेख की Maxyum संख्या चुनें",
 }

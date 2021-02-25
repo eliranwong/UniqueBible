@@ -598,4 +598,5 @@ translation = {
     "Updating": "업데이트하기",
     "reloadResources": "자원 재로드",
     "preferHtmlMenu": "성경 장 표제를 클릭하면 제어판 대신에 클래식 html 메뉴를 열 수 있는 옵션입니다.",
+    "setMaximumHistoryRecord": "내력 레코드의 Maxium 번호 선택",
 }

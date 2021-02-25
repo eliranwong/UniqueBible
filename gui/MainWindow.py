@@ -162,7 +162,8 @@ class MainWindow(QMainWindow):
             self.removeToolBar(self.secondToolBar)
             self.removeToolBar(self.leftToolBar)
             self.removeToolBar(self.rightToolBar)
-            self.removeToolBar(self.studyBibleToolBar)
+            if not config.noStudyBibleToolbar:
+                self.removeToolBar(self.studyBibleToolBar)
         except:
             pass
         if layout not in ("classic", "focus", "aleph"):
@@ -435,12 +436,11 @@ class MainWindow(QMainWindow):
 
     def moduleInstalled(self, databaseInfo):
         self.downloader.close()
+        self.reloadControlPanel(False)
         self.displayMessage(config.thisTranslation["message_done"])
         # Update install History
         fileItems, cloudID, *_ = databaseInfo
         config.installHistory[fileItems[-1]] = cloudID
-        # reload control panel to get the latest resource list
-        self.reloadControlPanel(False)
         
     def moduleInstalledFailed(self, databaseInfo):
         self.downloader.close()
@@ -1152,6 +1152,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusLexiconInAFolder(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1163,6 +1164,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().importBBPlusDictionaryInAFolder(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1216,6 +1218,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1227,6 +1230,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromImages(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1238,6 +1242,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromHTML(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1249,6 +1254,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromNotes(directory):
+                self.reloadControlPanel(False)
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1299,6 +1305,7 @@ class MainWindow(QMainWindow):
         self.completeImport()
 
     def completeImport(self):
+        self.reloadControlPanel(False)
         self.displayMessage(config.thisTranslation["message_done"])
 
     # Actions - tag files with BibleVerseParser
@@ -1591,6 +1598,13 @@ class MainWindow(QMainWindow):
         if ok:
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
+
+    def setMaximumHistoryRecordDialog(self):
+        integer, ok = QInputDialog.getInt(self,
+                                          "UniqueBible", config.thisTranslation["setMaximumHistoryRecord"], config.maximumHistoryRecord, 5,
+                                          100, 1)
+        if ok:
+            config.maximumHistoryRecord = integer
 
     def moreConfigOptionsDialog(self):
         self.moreConfigOptions = MoreConfigOptions(self)
@@ -2454,9 +2468,9 @@ class MainWindow(QMainWindow):
             if not (viewhistory[-1] == textCommand):
                 viewhistory.append(textCommand)
                 # set maximum number of history records for each view here
-                historyRecordAllowed = config.historyRecordAllowed
-                if len(viewhistory) > historyRecordAllowed:
-                    viewhistory = viewhistory[-historyRecordAllowed:]
+                maximumHistoryRecord = config.maximumHistoryRecord
+                if len(viewhistory) > maximumHistoryRecord:
+                    viewhistory = viewhistory[-maximumHistoryRecord:]
                 config.history[view] = viewhistory
                 config.currentRecord[view] = len(viewhistory) - 1
 

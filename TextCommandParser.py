@@ -1651,12 +1651,17 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             text, b, c, v, verseReference = command.split(".")
-            if config.verseNoSingleClickAction.startswith("_cp"):
+            if config.verseNoSingleClickAction == "_menu":
+                biblesSqlite = BiblesSqlite()
+                menu = biblesSqlite.getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
+                del biblesSqlite
+                return (source, menu, {})
+            elif config.verseNoSingleClickAction.startswith("_cp"):
                 index = int(config.verseNoSingleClickAction[-1])
                 self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
                 return ("", "", {})
             else:
-                self.parent.addHistoryRecord("study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
+                self.parent.addHistoryRecord("main" if config.verseNoSingleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
 
     # _menu:::
@@ -1666,7 +1671,6 @@ class TextCommandParser:
         # may change the keyword to _vndc::: later
         dotCount = command.count(".")
         if dotCount != 3 or config.verseNoDoubleClickAction == "_menu":
-            #_menu:::CSB.54.5
             if dotCount == 2 and not config.preferHtmlMenu:
                 text, b, c = command.split(".")
                 self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
@@ -1686,7 +1690,7 @@ class TextCommandParser:
         else:
             *_, b, c, v = command.split(".")
             verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
-            self.parent.addHistoryRecord("study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
+            self.parent.addHistoryRecord("main" if config.verseNoDoubleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
             return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _commentary:::

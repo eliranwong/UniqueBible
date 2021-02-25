@@ -487,8 +487,8 @@ function nB() {
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
     document.title = "_stayOnSameTab:::";
-    document.title = "_vnsc:::"+activeText+"."+activeB+"."+activeC+"."+v+"."+verseReference;
     document.title = "BIBLE:::"+activeText+":::"+verseReference;
+    document.title = "_vnsc:::"+activeText+"."+activeB+"."+activeC+"."+v+"."+verseReference;
 }
 
 function luW(v,wid,cl,lex,morph,bdb) {

@@ -598,4 +598,5 @@ translation = {
     "Updating": "Aggiornamento",
     "reloadResources": "Ricarica risorse",
     "preferHtmlMenu": "Opzione per aprire il menu html classico invece del pannello di controllo quando si fa clic su una voce di capitolo bibbia.",
+    "setMaximumHistoryRecord": "Seleziona Maxium Number of History Records",
 }

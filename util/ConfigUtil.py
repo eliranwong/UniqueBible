@@ -406,8 +406,8 @@ class ConfigUtil:
         if not hasattr(config, "defaultLexiconLN"):
             config.defaultLexiconLN = "LN"
         # Maximum number of history records allowed to be stored
-        if not hasattr(config, "historyRecordAllowed"):
-            config.historyRecordAllowed = 50
+        if not hasattr(config, "maximumHistoryRecord"):
+            config.maximumHistoryRecord = 50
         # Indexes of last-opened records
         if not hasattr(config, "currentRecord"):
             config.currentRecord = {"main": 0, "study": 0}
@@ -697,7 +697,7 @@ class ConfigUtil:
             ("defaultLexiconLN", config.defaultLexiconLN),
             ("useWebbrowser", config.useWebbrowser),
             ("showInformation", config.showInformation),
-            ("historyRecordAllowed", config.historyRecordAllowed),
+            ("maximumHistoryRecord", config.maximumHistoryRecord),
             ("currentRecord", {'main': 0, 'study': 0}),
             ("history", config.history),
             ("installHistory", config.installHistory),

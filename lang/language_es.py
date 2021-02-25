@@ -598,4 +598,5 @@ translation = {
     "Updating": "Actualización",
     "reloadResources": "Recargar recursos",
     "preferHtmlMenu": "Opción para abrir el menú HTML clásico en lugar del panel de control cuando se pulsa una cabecera de capítulo de la biblia.",
+    "setMaximumHistoryRecord": "Seleccionar número máximo de registros de historial",
 }

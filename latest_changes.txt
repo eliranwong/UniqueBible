@@ -1,3 +1,11 @@
+Major changes in version 21.69:
+* Master Control panel now reloads resources after downloading a module with download helper or importing a module through our menu.
+* Fixed verse number single-click action to open classic menu
+* Fixed the issue that COMPARE::: was misplaced in study window history records with verse number single-click or double-click action
+* Fixed some of verse number single-click actions were not displayed on screen.
+* Added an option to specify maximum number of history records, from 5 to 100, with a gui dialog.
+    This dialog is now accessible via Focus menu layout > UBA Preferences > General > Select Maxium Number of History Records.
+
 Major change in version 21.68:
 * Now automatically reload Master Control panel after a module is downloaded with download helper.
 

@@ -23,6 +23,7 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_generalPreferences")
         items = (
             ("menu1_tabNo", self.setTabNumberDialog),
+            ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
