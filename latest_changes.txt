@@ -1,3 +1,8 @@
+Major changes in version 21.71:
+* Revised Aleph menu layout
+* Revised App Update Dialog
+* Fixed commands were blocked to execute from note hyperlinks.
+
 Major change in version 21.70:
 * Now convert text string formatted as ***[uba_command@display_text] into hyperlink automatically.  This feature works on all content displayed on Study Window.
 * Check our sample file "note_command_hyperlink_example.uba" if you are interested.

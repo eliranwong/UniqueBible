@@ -2375,9 +2375,7 @@ class MainWindow(QMainWindow):
         timeDifference = int((now - self.now).total_seconds())
         if textCommand == "_stayOnSameTab:::":
             self.newTabException = True
-        elif not forceExecute and \
-                (timeDifference <= 2 and (source == "main" and textCommand == self.lastMainTextCommand) or
-                (source == "study" and textCommand == self.lastStudyTextCommand) or textCommand == "main.html"):
+        elif (not forceExecute and (timeDifference <= 1 and ((source == "main" and textCommand == self.lastMainTextCommand) or (source == "study" and textCommand == self.lastStudyTextCommand)))) or textCommand == "main.html":
             self.logger.debug("Repeated command blocked {0}:{1}".format(textCommand, source))
         else:
             # handle exception for new tab features
