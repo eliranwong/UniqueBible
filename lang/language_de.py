@@ -599,4 +599,5 @@ translation = {
     "reloadResources": "Ressourcen erneut laden",
     "preferHtmlMenu": "Option zum Öffnen des klassischen HTML-Menüs anstelle der Systemsteuerung, wenn auf die Überschrift einer Bibel-Kapitel geklickt wird.",
     "setMaximumHistoryRecord": "Maxium-Anzahl der Protokollsätze auswählen",
+    "menu_convert": "Konvertieren",
 }

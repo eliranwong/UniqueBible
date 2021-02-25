@@ -599,4 +599,5 @@ translation = {
     "reloadResources": "Reload Πόροι",
     "preferHtmlMenu": "Επιλογή για το άνοιγμα του μενού της κλασικής html αντί για τον πίνακα ελέγχου, όταν μια βίβλος κεφάλαιο επικεφαλίδα είναι κλικ.",
     "setMaximumHistoryRecord": "Επιλογή Εγγραφών ιστορικού Maxium",
+    "menu_convert": "Μετατροπή:",
 }

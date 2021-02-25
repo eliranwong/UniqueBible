@@ -81,6 +81,7 @@ class Converter:
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                    note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)
@@ -1761,3 +1762,10 @@ class ThirdPartyDictionary:
             config.thirdDictionary = self.module
             content = Converter().formatNonBibleMyBibleModule(content[0], self.module)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
+
+
+if __name__ == '__main__':
+
+    note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
+    note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
+    print(note)

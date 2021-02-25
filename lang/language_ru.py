@@ -599,4 +599,5 @@ translation = {
     "reloadResources": "Перезагрузить ресурсы",
     "preferHtmlMenu": "Опция открытия классического html-меню вместо панели управления при щелчке заголовка библевой главы.",
     "setMaximumHistoryRecord": "Выбрать число записей хронологии Maxium",
+    "menu_convert": "Преобразовать",
 }

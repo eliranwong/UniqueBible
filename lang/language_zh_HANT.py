@@ -601,4 +601,5 @@ translation = {
     "reloadResources": "重新載入資源",
     "preferHtmlMenu": "按一下 bible 章節標題時，開啟古典 html 功能表而非控制面板的選項。",
     "setMaximumHistoryRecord": "選取歷程記錄數上限",
+    "menu_convert": "轉換",
 }

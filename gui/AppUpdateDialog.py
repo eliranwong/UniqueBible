@@ -40,7 +40,10 @@ class AppUpdateDialog(QDialog):
             self.updateNowButton.clicked.connect(self.updateNow)
             if self.uptodate:
                 ubaUptodate = QLabel(config.thisTranslation["UBA_is_uptodate"])
-                ubaUptodate.setStyleSheet("color: rgb(128, 255, 7);")
+                if config.theme == "dark":
+                    ubaUptodate.setStyleSheet("color: green;")
+                else:
+                    ubaUptodate.setStyleSheet("color: blue;")
                 self.layout.addWidget(ubaUptodate)
             else:
                 self.layout.addWidget(self.updateNowButton)
@@ -95,6 +98,7 @@ class AppUpdateDialog(QDialog):
 
 if __name__ == '__main__':
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
+    config.theme = 'default'
     app = QApplication(sys.argv)
     window = AppUpdateDialog(None)
     window.exec_()
