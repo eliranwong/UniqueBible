@@ -436,10 +436,11 @@ class MainWindow(QMainWindow):
     def moduleInstalled(self, databaseInfo):
         self.downloader.close()
         self.displayMessage(config.thisTranslation["message_done"])
-
         # Update install History
         fileItems, cloudID, *_ = databaseInfo
         config.installHistory[fileItems[-1]] = cloudID
+        # reload control panel to get the latest resource list
+        self.reloadControlPanel(False)
         
     def moduleInstalledFailed(self, databaseInfo):
         self.downloader.close()
