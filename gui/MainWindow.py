@@ -779,6 +779,7 @@ class MainWindow(QMainWindow):
                       r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
     def openTextOnStudyView(self, text, tab_title=''):
+        text = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:
