@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Chinesische Schriftart",
     "menu1_setAbbreviations": "Bibelabkürzungen auswählen",
     "menu1_setMyFavouriteBible": "Wählen Sie meine Favoritenbibel aus",
-    "menu1_setMyLanguage": "Meine Sprache auswählen",
+    "menu1_setMyLanguage": "Zielsprache für Übersetzung",
     "menu1_programInterface": "Programmschnittstelle",
     "menu1_translateInterface": "Übersetzen in meine Sprache",
     "menu1_toogleInterface": "Englisch/Meine Übersetzung",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "Maxium-Anzahl der Protokollsätze auswählen",
     "menu_convert": "Konvertieren",
     "searchPanel": "Suchanzeige",
+    "languageSettings": "Spracheinstellungen",
+    "watsonTranslator": "Watson-Umsetzer",
 }

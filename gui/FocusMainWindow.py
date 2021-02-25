@@ -92,12 +92,6 @@ class FocusMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        subMenu = addSubMenu(subMenu0, "menu1_programInterface")
-        #addMenuItem(subMenu, "menu_language", self, self.openInterfaceLanguageDialog)
-        for language in LanguageUtil.getNamesSupportedLanguages():
-            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
-        if config.ttsSupport:
-            addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguage)
 
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")
@@ -130,6 +124,29 @@ class FocusMainWindow:
             addMenuItem(subMenu0, feature, self, action, shortcut)
         subMenu0.addSeparator()
         addMenuItem(subMenu0, "menu2_landscape", self, self.switchLandscapeMode)
+
+        subMenu0 = addSubMenu(menu, "languageSettings")
+        subMenu = addSubMenu(subMenu0, "menu1_programInterface")
+        for language in LanguageUtil.getNamesSupportedLanguages():
+            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
+        subMenu = addSubMenu(subMenu0, "watsonTranslator")
+        items = (
+            ("setup", self.setupWatsonTranslator),
+            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        if config.ttsSupport:
+            languages = self.getTtsLanguages()
+            languageCodes = list(languages.keys())
+            items = [languages[code][1] for code in languageCodes]
+            
+            subMenu = addSubMenu(subMenu0, "ttsLanguage")
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                addMenuItem(subMenu, item, self, lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode), translation=False)
+            #addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguageDialog)
+
         addMenuItem(menu, "menu_config_flags", self, self.moreConfigOptionsDialog)
         menu.addSeparator()
         if config.enableMacros:

@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "चीनी फ़ॉन्ट",
     "menu1_setAbbreviations": "बाइबल का चयन करें",
     "menu1_setMyFavouriteBible": "मेरी पसंदीदा बाइबल चुनें",
-    "menu1_setMyLanguage": "मेरी भाषा चुनें",
+    "menu1_setMyLanguage": "अनुवाद के लिए लक्ष्य भाषा",
     "menu1_programInterface": "प्रोग्राम इंटरफेस",
     "menu1_translateInterface": "मेरी भाषा में अनुवाद करें",
     "menu1_toogleInterface": "अंग्रेजी/मेरा अनुवाद",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "इतिहास अभिलेख की Maxyum संख्या चुनें",
     "menu_convert": "बदलें",
     "searchPanel": "खोज फलक",
+    "languageSettings": "भाषा विन्यास",
+    "watsonTranslator": "वाटसन अनुवादक",
 }

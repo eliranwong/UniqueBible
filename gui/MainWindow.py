@@ -1761,6 +1761,9 @@ class MainWindow(QMainWindow):
     def setupYouTube(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
 
+    def setupWatsonTranslator(self):
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
+
     def openUbaWiki(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki")
 
@@ -2621,24 +2624,27 @@ class MainWindow(QMainWindow):
             config.addFavouriteToMultiRef = False
         self.reloadCurrentRecord()
 
-    # Set bible book abbreviations
-    def setDefaultTtsLanguage(self):
-        if config.espeak:
-            languages = TtsLanguages().isoLang2epeakLang
-        else:
-            languages = TtsLanguages().isoLang2qlocaleLang
-        self.languageCodes = list(languages.keys())
-        items = [languages[code][1] for code in self.languageCodes]
+    # Set text-to-speech default language
+    def getTtsLanguages(self):
+        return TtsLanguages().isoLang2epeakLang if config.espeak else TtsLanguages().isoLang2qlocaleLang
+
+    def setDefaultTtsLanguage(self, language):
+        config.ttsDefaultLangauge = language
+
+    def setDefaultTtsLanguageDialog(self):
+        languages = self.getTtsLanguages()
+        languageCodes = list(languages.keys())
+        items = [languages[code][1] for code in languageCodes]
         # Check if selected tts engine has the language user specify.
-        if not (config.ttsDefaultLangauge in self.languageCodes):
+        if not (config.ttsDefaultLangauge in languageCodes):
             config.ttsDefaultLangauge = "en"
         # Initial index
-        initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+        initialIndex = languageCodes.index(config.ttsDefaultLangauge)
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["setDefaultTtsLanguage"], items,
                                         initialIndex, False)
         if ok and item:
-            config.ttsDefaultLangauge = self.languageCodes[items.index(item)]
+            config.ttsDefaultLangauge = languageCodes[items.index(item)]
 
     # Set bible book abbreviations
     def setBibleAbbreviations(self):

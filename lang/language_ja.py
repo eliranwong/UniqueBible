@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "中国語フォント",
     "menu1_setAbbreviations": "聖書の省略形の選択",
     "menu1_setMyFavouriteBible": "お気に入りのバイブルを選択",
-    "menu1_setMyLanguage": "言語の選択",
+    "menu1_setMyLanguage": "翻訳のターゲット言語",
     "menu1_programInterface": "プログラム・インターフェース",
     "menu1_translateInterface": "自分の言語への変換",
     "menu1_toogleInterface": "英語 / マイ・トランスレーション",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "ヒストリー・レコードの最大数の選択",
     "menu_convert": "コンバート",
     "searchPanel": "検索パネル",
+    "languageSettings": "言語設定",
+    "watsonTranslator": "ワトソン翻訳家",
 }

@@ -86,7 +86,7 @@ translation = {
     "menu1_setChineseFont": "中文字體",
     "menu1_setDefaultFont": "默認字體和大小",
     "menu1_setMyFavouriteBible": "配置我最喜歡的聖經",
-    "menu1_setMyLanguage": "配置我的語言",
+    "menu1_setMyLanguage": "翻譯的目標語言",
     "menu1_programInterface": "用戶界面",
     "menu1_translateInterface": "翻譯成我的語言",
     "menu1_toogleInterface": "英語/我的翻譯",
@@ -603,4 +603,6 @@ translation = {
     "setMaximumHistoryRecord": "選取歷程記錄數上限",
     "menu_convert": "轉換",
     "searchPanel": "搜尋畫面",
+    "languageSettings": "語言設定",
+    "watsonTranslator": "Watson Translator",
 }

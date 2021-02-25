@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Китайский шрифт",
     "menu1_setAbbreviations": "Выбрать аббревиатуры Библии",
     "menu1_setMyFavouriteBible": "Выбрать мою любимую Библию",
-    "menu1_setMyLanguage": "Выберите мой язык",
+    "menu1_setMyLanguage": "Целевой язык для перевода",
     "menu1_programInterface": "Интерфейс программы",
     "menu1_translateInterface": "Перевод на мой язык",
     "menu1_toogleInterface": "Английский/Мой перевод",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "Выбрать число записей хронологии Maxium",
     "menu_convert": "Преобразовать",
     "searchPanel": "Панель поиска",
+    "languageSettings": "Параметры языка",
+    "watsonTranslator": "Переводчик Watson",
 }

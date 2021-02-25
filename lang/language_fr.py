@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Police chinoise",
     "menu1_setAbbreviations": "Sélectionner les abréviations de la Bible",
     "menu1_setMyFavouriteBible": "Sélectionnez ma Bible préférée",
-    "menu1_setMyLanguage": "Sélectionner ma langue",
+    "menu1_setMyLanguage": "Langue cible pour la traduction",
     "menu1_programInterface": "Interface de programme",
     "menu1_translateInterface": "Transmettre dans ma langue",
     "menu1_toogleInterface": "Anglais / Ma traduction",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "Sélectionner le nombre maximal d'enregistrements d'historique",
     "menu_convert": "Convertir",
     "searchPanel": "Panneau de recherche",
+    "languageSettings": "Paramètres linguistiques",
+    "watsonTranslator": "Traducteur Watson",
 }

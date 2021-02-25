@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Κινεζική Font",
     "menu1_setAbbreviations": "Επιλογή Συντομογραφίες Αγίας Γραφής",
     "menu1_setMyFavouriteBible": "Επιλέξτε την αγαπημένη μου Βίβλο.",
-    "menu1_setMyLanguage": "Επιλογή γλώσσας για μετάφραση",
+    "menu1_setMyLanguage": "Γλώσσα προορισμού για μετάφραση:",
     "menu1_programInterface": "Περιβάλλον προγράμματος",
     "menu1_translateInterface": "Μεταφράζονται στη γλώσσα μου.",
     "menu1_toogleInterface": "Αγγλικά/Μετάφραση μου",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "Επιλογή Εγγραφών ιστορικού Maxium",
     "menu_convert": "Μετατροπή:",
     "searchPanel": "Πίνακας αναζήτησης",
+    "languageSettings": "Ρυθμίσεις γλώσσας",
+    "watsonTranslator": "Watson Translator",
 }

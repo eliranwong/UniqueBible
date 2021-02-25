@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "Fuente China",
     "menu1_setAbbreviations": "Seleccionar abreviaturas de la Biblia",
     "menu1_setMyFavouriteBible": "Seleccione mi Biblia favorita",
-    "menu1_setMyLanguage": "Seleccione mi idioma",
+    "menu1_setMyLanguage": "Idioma de destino para la traducción",
     "menu1_programInterface": "Interfaz de programa",
     "menu1_translateInterface": "Traducir a mi idioma",
     "menu1_toogleInterface": "Inglés/Mi traducción",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "Seleccionar número máximo de registros de historial",
     "menu_convert": "Convertir",
     "searchPanel": "Panel de búsqueda",
+    "languageSettings": "Configuración del idioma",
+    "watsonTranslator": "Traductor de Watson",
 }

@@ -15,7 +15,7 @@ translation = {
     "menu1_setChineseFont": "중국어 폰트",
     "menu1_setAbbreviations": "성경 약어 선택",
     "menu1_setMyFavouriteBible": "내가 좋아하는 성경을 선택하다",
-    "menu1_setMyLanguage": "내 언어 선택하기",
+    "menu1_setMyLanguage": "변환을 위한 대상 언어",
     "menu1_programInterface": "프로그램 인터페이스",
     "menu1_translateInterface": "내 언어로 번역하기",
     "menu1_toogleInterface": "영어/내 번역",
@@ -601,4 +601,6 @@ translation = {
     "setMaximumHistoryRecord": "내력 레코드의 Maxium 번호 선택",
     "menu_convert": "변환하기",
     "searchPanel": "검색 패널",
+    "languageSettings": "언어 설정",
+    "watsonTranslator": "Watson Translator",
 }
