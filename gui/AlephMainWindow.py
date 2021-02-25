@@ -1,6 +1,7 @@
 from gui.MenuItems import *
 from PySide2.QtCore import QSize
 import shortcut as sc
+from util.LanguageUtil import LanguageUtil
 from util.ShortcutUtil import ShortcutUtil
 
 
@@ -9,7 +10,14 @@ class AlephMainWindow:
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
         menu1_defaults = menu1.addMenu(config.thisTranslation["menu_defaults"])
-        menu1_defaults.addAction(QAction(config.thisTranslation["menu_language"], self, triggered=self.openInterfaceLanguageDialog))
+        subMenu = addSubMenu(menu1_defaults, "menu1_programInterface")
+        for language in LanguageUtil.getNamesSupportedLanguages():
+            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
+        subMenu = addSubMenu(menu1, "menu1_selectWindowStyle")
+        addMenuItem(subMenu, "default", self, lambda: self.setAppWindowStyle("default"), None, False)
+        for style in QStyleFactory.keys():
+            addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
+
         selectTheme = menu1_defaults.addMenu(config.thisTranslation["menu1_selectTheme"])
         if config.qtMaterial:
             qtMaterialThemes = ["light_amber.xml", "light_blue.xml", "light_cyan.xml", "light_cyan_500.xml",
@@ -48,10 +56,10 @@ class AlephMainWindow:
         for shortcut in customShortcuts:
             shortcutsMenu.addAction(
                 QAction(shortcut, self, triggered=lambda shortcut=shortcut: self.setShortcuts(shortcut)))
+        lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         if config.enableMacros:
             menu1_defaults.addAction(
                 QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
-        lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
         menu1_defaults.addAction(
@@ -195,6 +203,12 @@ class AlephMainWindow:
         menu_data.addAction(QAction(config.thisTranslation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
         menu_data.addAction(QAction(config.thisTranslation["menu8_settings"], self, triggered=self.importSettingsDialog))
         menu_data.addSeparator()
+        submenu = menu_data.addMenu(config.thisTranslation["menu_convert"])
+        submenu.addAction(
+            QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
+        submenu.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
+        submenu.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
+        menu_data.addSeparator()
         menu_data.addAction(QAction(config.thisTranslation["menu8_fixDatabase"], self, triggered=self.selectDatabaseToFix))
 
         display_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_display"]))
@@ -235,6 +249,7 @@ class AlephMainWindow:
         font_menu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut=sc.smallerFont, triggered=self.smallerFont))
         display_menu.addAction(
             QAction(config.thisTranslation["menu_display_shortcuts"], self, shortcut=sc.displayShortcuts, triggered=self.displayShortcuts))
+        addMenuItem(display_menu, "reloadResources", self, self.reloadControlPanel)
         display_menu.addAction(
             QAction(config.thisTranslation["menu_reload"], self, shortcut=sc.reloadCurrentRecord, triggered=self.reloadCurrentRecord))
 
@@ -247,8 +262,14 @@ class AlephMainWindow:
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
-        about_menu.addAction(QAction(config.thisTranslation["menu_wiki"], self, triggered=self.openUbaWiki))
-        about_menu.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))
+        subMenu = addSubMenu(about_menu, "menu_support")
+        items = (
+            ("menu1_wikiPages", self.openUbaWiki, sc.ubaWiki),
+            ("menu_discussions", self.openUbaDiscussions, sc.ubaDiscussions),
+            ("report", self.reportAnIssue, None),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
         apps = about_menu.addMenu(config.thisTranslation["menu_apps"])
         apps.addAction(QAction("BibleTools.app", self, triggered=self.openBibleTools))
         apps.addAction(QAction("UniqueBible.app", self, triggered=self.openUniqueBible))

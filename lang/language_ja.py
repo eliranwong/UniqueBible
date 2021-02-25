@@ -599,4 +599,5 @@ translation = {
     "reloadResources": "リソースの再ロード",
     "preferHtmlMenu": "バイブル・チャプタ見出しをクリックしたときにコントロール・パネルの代わりにクラシック HTML メニューを開くオプション。",
     "setMaximumHistoryRecord": "ヒストリー・レコードの最大数の選択",
+    "menu_convert": "コンバート",
 }
