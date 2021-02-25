@@ -601,4 +601,5 @@ translation = {
     "preferHtmlMenu": "单击圣经章节标题时打开古典 html 菜单而不是控制面板的选项。",
     "setMaximumHistoryRecord": "选择历史记录的最大数量",
     "menu_convert": "转换",
+    "searchPanel": "搜索面板",
 }

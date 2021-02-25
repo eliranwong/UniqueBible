@@ -1,5 +1,7 @@
 Major changes in version 21.72:
-* Hide "Translation" option from right-click context menu if user does not select language for translation.
+Revised right-click context menu:
+- Added "Search Panel" to context menu so that users can select word(s) and launch Master Control Search panel with selected word(s) placed in search field.
+- Hide "Translation" option from right-click context menu if user does not select language for translation.
 
 Major changes in version 21.71:
 * Revised Aleph menu layout

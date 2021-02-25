@@ -600,4 +600,5 @@ translation = {
     "preferHtmlMenu": "Option to open classic html menu instead of control panel when a bible chapter heading is clicked.",
     "setMaximumHistoryRecord": "Select Maxium Number of History Records",
     "menu_convert": "Convert",
+    "searchPanel": "Search Panel",
 }

@@ -508,6 +508,7 @@ class ConfigUtil:
         config.controlPanel = False
         config.miniControl = False
         config.tempRecord = ""
+        config.contextItem = ""
         config.isDownloading = False
         config.noStudyBibleToolbar = False
         config.noteOpened = False

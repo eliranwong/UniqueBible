@@ -115,7 +115,7 @@ class WebEngineView(QWebEngineView):
             translateText = QAction(self)
             translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
             translateText.triggered.connect(self.checkUserLanguage)
-        self.addAction(translateText)
+            self.addAction(translateText)
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
@@ -125,9 +125,18 @@ class WebEngineView(QWebEngineView):
             pinyinText.triggered.connect(self.pinyinSelectedText)
             self.addAction(pinyinText)
 
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["searchPanel"])
+        action.triggered.connect(self.searchPanel)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         self.searchText = QAction(self)
         self.searchText.setText(config.thisTranslation["context1_search"])
@@ -371,6 +380,14 @@ class WebEngineView(QWebEngineView):
                 self.parent.parent.textCommandChanged(speakCommand, self.name)
         else:
             self.messageNoTtsEngine()
+
+    def searchPanel(self):
+        selectedText = self.selectedText()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            config.contextItem = selectedText
+            self.parent.parent.openControlPanelTab(2)
 
     def searchSelectedText(self):
         selectedText = self.selectedText()

@@ -217,6 +217,9 @@ class MasterControl(QWidget):
         # set focus
         if index == 2:
             self.toolTab.searchField.setFocus()
+            if config.contextItem:
+                self.toolTab.searchField.setText(config.contextItem)
+                config.contextItem = ""
         else:
             self.commandField.setFocus()
 
