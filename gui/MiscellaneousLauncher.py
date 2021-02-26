@@ -101,9 +101,12 @@ class MiscellaneousLauncher(QWidget):
         # Check if selected tts engine has the language user specify.
         if not (config.ttsDefaultLangauge in self.languageCodes):
             config.ttsDefaultLangauge = "en"
-        # Set initial item
-        initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
-        self.languageCombo.setCurrentIndex(initialIndex)
+        # Set initial index
+        # It is essential.  Otherwise, default tts language is changed by defaultTtsLanguageChanged method.
+        ttsLanguageIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+        self.languageCombo.setCurrentIndex(ttsLanguageIndex)
+        # Change default tts language as users select a new language
+        self.languageCombo.currentIndexChanged.connect(self.defaultTtsLanguageChanged)
 
         button = QPushButton(config.thisTranslation["speak"])
         button.setToolTip(config.thisTranslation["speak"])
@@ -117,6 +120,9 @@ class MiscellaneousLauncher(QWidget):
 
         box.setLayout(layout)
         return box
+
+    def defaultTtsLanguageChanged(self, index):
+        config.ttsDefaultLangauge = self.languageCodes[index]
 
     def speakText(self):
         text = self.ttsEdit.text()
@@ -140,4 +146,6 @@ class MiscellaneousLauncher(QWidget):
         config.espeakSpeed = value
 
     def refresh(self):
+        ttsLanguageIndex = self.languageCodes.index(config.ttsDefaultLangauge)
+        self.languageCombo.setCurrentIndex(ttsLanguageIndex)
         self.highLightLauncher.refresh()

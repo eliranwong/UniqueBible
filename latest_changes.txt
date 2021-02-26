@@ -1,3 +1,8 @@
+Major change in version 21.78:
+* Now changing text-to-speech language on Master Control Miscellaneous tab changes default text-to-speech language.
+    Therefore, users can allow quickly change the default text-to-speech language by calling Miscellaneous tab with keyboard shortcut Ctrl+M.
+* Read more at: https://github.com/eliranwong/UniqueBible/wiki/Text-to-Speech
+
 Major change in version 21.77:
 * Added a config flag "useLangDetectOnTts", It is set to False by default, because the feature is not always reliable.
     - Turning it on will use python module "langdetect" to detect language on selected text when user uses "Speak" feature from right-click context menu.
