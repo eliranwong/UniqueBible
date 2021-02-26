@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "입력된 명령이 올바르지 않습니다!",
     "message_missing": "누락된 구성요소:",
     "message_installFirst": "먼저 설치한 후 다시 시도하십시오.",
-    "message_restart": "새 변경사항을 적용하려면 이 애플리케이션을 다시 시작하십시오.",
+    "message_restart": "사용자의 변경사항은 다음에 고유 Bible.app을 다시 실행할 때 적용됩니다.",
     "message_run": "이 기능을 실행하려면:",
     "message_selectWord": "단어 또는 몇 개의 단어를 선택합니다.",
     "message_setLanguage": "언어를 선택한다.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "최신 변경 사항",
     "info": "정보",
     "gistSync": "Gist-syncing",
+    "latestChanges": "최신 변경 사항",
+    "ibmWatsonCredentials": "-Watson Translator Credentils",
+    "enterCredentials": "크링크를 입력하십시오.",
 }

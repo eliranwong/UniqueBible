@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "Введенная команда недопустима!",
     "message_missing": "Отсутствует компонент:",
     "message_installFirst": "Установите его сначала и повторите попытку.",
-    "message_restart": "Перезапустите это приложение, чтобы применить новые изменения.",
+    "message_restart": "Изменения вступят в силу при следующем повторном запуске UniqueBle.app",
     "message_run": "Для запуска этой функции выполните следующие действия:",
     "message_selectWord": "Выберите слово или несколько слов.",
     "message_setLanguage": "Выберите язык.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "Последние изменения",
     "info": "Информация",
     "gistSync": "Объединение с гистом",
+    "latestChanges": "Последние изменения",
+    "ibmWatsonCredentials": "Преобразователи IBM-Watson Translator",
+    "enterCredentials": "Введите Credentils",
 }

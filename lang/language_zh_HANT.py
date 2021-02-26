@@ -209,7 +209,7 @@ translation = {
     "message_noSupport": "您的設備上未啓用此功能。",
     "message_noSupportedFile": "沒有有效的文件。",
     "message_remarks": "備註：",
-    "message_restart": "重新啟動該應用程序，應用新的變化。",
+    "message_restart": "下次您重新啟動 UniqueBible.app 時，您的變更將生效",
     "message_run": "要運行此功能，請執行以下操作 :",
     "message_searchMorphology": "搜索形態",
     "message_selectWord": "選擇一個單詞或一些單詞。",
@@ -609,4 +609,7 @@ translation = {
     "latest_changes": "最新變更",
     "info": "資訊",
     "gistSync": "Gist-同步",
+    "latestChanges": "最新變更",
+    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "enterCredentials": "輸入認證",
 }

@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "La commande entrée n'est pas valide.",
     "message_missing": "Composant manquant:",
     "message_installFirst": "Installez d'abord et faites une nouvelle tentative.",
-    "message_restart": "Redémarrez cette application pour appliquer les nouveaux changements.",
+    "message_restart": "Vos modifications prendront effet la prochaine fois que vous relancez UniqueBible.app",
     "message_run": "Pour exécuter cette fonction:",
     "message_selectWord": "Sélectionnez un mot ou quelques mots.",
     "message_setLanguage": "Sélectionnez votre langue.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "Dernières modifications",
     "info": "Information",
     "gistSync": "Gist-syncing",
+    "latestChanges": "Dernières modifications",
+    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "enterCredentials": "Entrez Credentils",
 }

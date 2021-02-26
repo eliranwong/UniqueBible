@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "Η καθορισμένη εντολή δεν είναι έγκυρη!",
     "message_missing": "Λείπει το στοιχείο:",
     "message_installFirst": "Εγκαταστήστε το πρώτα και προσπαθήστε ξανά.",
-    "message_restart": "Επανεκκινήστε αυτή την εφαρμογή για να εφαρμόσετε τις νέες αλλαγές.",
+    "message_restart": "Οι αλλαγές σας θα εφαρμοστούν την επόμενη φορά που θα επανεκκινήσετε το UniqueBible.app",
     "message_run": "Για να εκτελέσετε αυτή τη λειτουργία:",
     "message_selectWord": "Επιλέξτε μια λέξη ή μερικές λέξεις.",
     "message_setLanguage": "Επιλέξτε τη γλώσσα.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "Αλλαγές",
     "info": "' Πληροφορίες",
     "gistSync": "Gist-συγχρονισμός",
+    "latestChanges": "' Αλλαγές",
+    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "enterCredentials": "Καταχώρηση στοιχείων ταυτότητας",
 }

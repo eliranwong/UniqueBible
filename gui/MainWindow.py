@@ -28,6 +28,7 @@ from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
 from shutil import copyfile
 from gui.Downloader import Downloader
+from gui.WatsonCredentialWindow import WatsonCredentialWindow
 from gui.MoreConfigOptions import MoreConfigOptions
 from gui.ImportSettings import ImportSettings
 from gui.NoteEditor import NoteEditor
@@ -2793,6 +2794,11 @@ class MainWindow(QMainWindow):
         if gw.exec():
             config.gistToken = gw.gistTokenInput.text()
         self.reloadCurrentRecord()
+
+    def showWatsonCredentialWindow(self):
+        window = WatsonCredentialWindow()
+        if window.exec():
+            config.myIBMWatsonApikey, config.myIBMWatsonUrl, config.myIBMWatsonVersion = window.inputApiKey.text(), window.inputURL.text(), window.inputVersion.text()
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"

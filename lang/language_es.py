@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "El mandato especificado no es válido.",
     "message_missing": "Falta el componente:",
     "message_installFirst": "Instálelo primero e inténtelo de nuevo.",
-    "message_restart": "Reinicie esta aplicación para aplicar los nuevos cambios.",
+    "message_restart": "Los cambios entrarán en vigor la próxima vez que relance UniqueBiblie.app",
     "message_run": "Para ejecutar esta característica:",
     "message_selectWord": "Seleccione una palabra o algunas palabras.",
     "message_setLanguage": "Seleccione su idioma.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "Últimos cambios",
     "info": "Información",
     "gistSync": "Gist-syncing",
+    "latestChanges": "Últimos cambios",
+    "ibmWatsonCredentials": "Credenciales del traductor de IBM-Watson",
+    "enterCredentials": "Especificar credenciales",
 }

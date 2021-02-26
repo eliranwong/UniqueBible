@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "入力されたコマンドが無効です。",
     "message_missing": "欠落したコンポーネント:",
     "message_installFirst": "最初にインストールして、再試行してください。",
-    "message_restart": "このアプリケーションを再始動して、新しい変更を適用します",
+    "message_restart": "次回の UniqueBible.app の再起動時に、変更内容が有効になります。",
     "message_run": "この機能を実行するには",
     "message_selectWord": "単語または単語を選択してください。",
     "message_setLanguage": "言語を選択します。",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "最新の変更",
     "info": "利用情報",
     "gistSync": "Gist 同期",
+    "latestChanges": "最新の変更",
+    "ibmWatsonCredentials": "IBM-Watson トランスレーターの Credentils",
+    "enterCredentials": "資格情報の入力",
 }

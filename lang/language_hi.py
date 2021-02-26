@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "दाखिल कमांड अवैध है!",
     "message_missing": "अनुपस्थित घटक:",
     "message_installFirst": "पहले इसे स्थापित करें और फिर कोशिश करें.",
-    "message_restart": "नए परिवर्तनों को लागू करने के लिए इस अनुप्रयोग को पुनः आरंभ करें.",
+    "message_restart": "आपका परिवर्तन अगले समय प्रभावी होगा जब आप यूनिबायोब्ली.app को पुनः लॉन्च करेंगे.",
     "message_run": "इस सुविधा को चलाने के लिए:",
     "message_selectWord": "एक शब्द या कुछ शब्द का चयन करें.",
     "message_setLanguage": "अपनी भाषा का चयन करें.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "नवीनतम परिवर्तन",
     "info": "सूचना",
     "gistSync": "सारांश-सिंक्रनाइज़",
+    "latestChanges": "नवीनतम परिवर्तन",
+    "ibmWatsonCredentials": "आईबीएम-वाटसन अनुवादक क्रिडेंटिल्स",
+    "enterCredentials": "क्रीडेंटिल्स दाखिल करें",
 }

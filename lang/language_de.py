@@ -317,7 +317,7 @@ translation = {
     "message_invalid": "Der eingegebene Befehl ist ungültig!",
     "message_missing": "Fehlende Komponente:",
     "message_installFirst": "Installieren Sie es zuerst und versuchen Sie es erneut.",
-    "message_restart": "Starten Sie diese Anwendung erneut, um die neuen Änderungen anzuwenden.",
+    "message_restart": "Ihre Änderungen werden wirksam, wenn Sie das nächste Mal die UniqueBible.app erneut starten.",
     "message_run": "So führen Sie diese Funktion aus:",
     "message_selectWord": "Wählen Sie ein Wort oder ein Wort aus.",
     "message_setLanguage": "Wählen Sie Ihre Sprache aus.",
@@ -607,4 +607,7 @@ translation = {
     "latest_changes": "Letzte Änderungen",
     "info": "Informationen",
     "gistSync": "Gist-Syncing",
+    "latestChanges": "Letzte Änderungen",
+    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "enterCredentials": "Geben Sie Credentils ein",
 }

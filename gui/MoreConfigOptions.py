@@ -1,6 +1,4 @@
-import webbrowser
-
-import config, platform
+import config, platform, webbrowser
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QWidget, QDialog, QLabel, QCheckBox)
 
 class MoreConfigOptions(QDialog):

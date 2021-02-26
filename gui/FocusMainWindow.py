@@ -139,6 +139,7 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "watsonTranslator")
         items = (
             ("setup", self.setupWatsonTranslator),
+            ("enterCredentials", self.showWatsonCredentialWindow),
             ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
         )
         for feature, action in items:
@@ -295,6 +296,8 @@ class FocusMainWindow:
         if config.showInformation:
             menu = addMenu(menuBar, "menu9_information")
             addMenuItem(menu, "menu_keyboard_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
+            menu.addSeparator()
+            addMenuItem(menu, "latestChanges", self, self.showInfo)
             menu.addSeparator()
             subMenu = addSubMenu(menu, "menu_support")
             items = (

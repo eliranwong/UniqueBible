@@ -1,6 +1,10 @@
+Major changes in version 21.75:
+* Added app information / latest changes dialog to Focus and Classic menu layouts
+
 Major changes in version 21.74:
 * Revised Aleph menu layout
-* Added app information / latest changes dialog, accessible from all menu layouts
+* Revised Focus menu layout
+* Added app information / latest changes dialog, accessible from Aleph menu layout
 
 Major changes in version 21.73:
 * Revised Focus menu layout

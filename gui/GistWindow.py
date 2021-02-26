@@ -3,7 +3,7 @@ import config
 
 from PySide2.QtCore import QThread
 from PySide2 import QtCore
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QCheckBox, QLabel, QLineEdit, \
+from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, \
     QPushButton
 from util.GitHubGist import GitHubGist
 from util.LanguageUtil import LanguageUtil
