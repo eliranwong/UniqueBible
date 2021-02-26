@@ -611,4 +611,5 @@ translation = {
     "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
     "enterCredentials": "Geben Sie Credentils ein",
     "useLangDetectOnTts": "Verwenden Sie langdetect-Modul, um Sprache für Text-zu-Sprache-Feature zu erkennen.",
+    "miniControlTabs": "Mini Control Tabs",
 }

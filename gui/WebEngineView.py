@@ -130,6 +130,15 @@ class WebEngineView(QWebEngineView):
         self.addAction(separator)
 
         action = QAction(self)
+        action.setText(config.thisTranslation["menu7_create"])
+        action.triggered.connect(self.insertIntoNewNote)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        action = QAction(self)
         action.setText(config.thisTranslation["searchPanel"])
         action.triggered.connect(self.searchPanel)
         self.addAction(action)
@@ -383,11 +392,15 @@ class WebEngineView(QWebEngineView):
 
     def searchPanel(self):
         selectedText = self.selectedText()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
+        if selectedText:
             config.contextItem = selectedText
-            self.parent.parent.openControlPanelTab(2)
+        self.parent.parent.openControlPanelTab(2)
+
+    def insertIntoNewNote(self):
+        selectedText = self.selectedText()
+        if selectedText:
+            config.contextItem = selectedText
+        self.parent.parent.createNewNoteFile()
 
     def searchSelectedText(self):
         selectedText = self.selectedText()

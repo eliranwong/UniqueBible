@@ -611,4 +611,5 @@ translation = {
     "ibmWatsonCredentials": "Преобразователи IBM-Watson Translator",
     "enterCredentials": "Введите Credentils",
     "useLangDetectOnTts": "Используйте модуль langdetect для определения языка для функции text-to-speece.",
+    "miniControlTabs": "Вкладки мини-элемента управления",
 }

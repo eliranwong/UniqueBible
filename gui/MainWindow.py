@@ -138,7 +138,7 @@ class MainWindow(QMainWindow):
         self.checkModulesUpdate()
         # Control Panel
         self.controlPanel = None
-        # Remote control
+        # Mini control
         self.miniControl = None
         # Used in pause() to pause macros
         self.pauseMode = False
@@ -209,6 +209,10 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setFocus()
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
+
+    def openMiniControlTab(self, index):
+        config.miniControlInitialTab = index
+        self.manageMiniControl()
 
     def openControlPanelTab(self, index=None, b=None, c=None, v=None, text=None):
         if index is None:
@@ -281,18 +285,13 @@ class MainWindow(QMainWindow):
             self.textCommandParser.databaseNotInstalled("bible")
 
     def manageMiniControl(self):
-        if config.miniControl and not self.miniControl.isActiveWindow():
+        if config.miniControl:
             textCommandText = self.textCommandLineEdit.text()
             if textCommandText:
                 self.miniControl.searchLineEdit.setText(textCommandText)
-            self.miniControl.raise_()
-            # The following line does not work on Chrome OS
-            # self.miniControl.activateWindow()
-            # Reason: qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
-            # Therefore, we use hide and show instead.
-            self.miniControl.hide()
-            self.miniControl.show()
-        elif not config.miniControl:
+            self.miniControl.tabs.setCurrentIndex(config.miniControlInitialTab)
+            self.bringToForeground(self.miniControl)
+        else:
             self.miniControl = MiniControl(self)
             self.miniControl.show()
             textCommandText = self.textCommandLineEdit.text()
@@ -301,9 +300,6 @@ class MainWindow(QMainWindow):
             elif textCommandText:
                 self.miniControl.searchLineEdit.setText(textCommandText)
             config.miniControl = True
-        elif self.miniControl:
-            self.miniControl.close()
-            config.miniControl = False
 
     def closeEvent(self, event):
         if self.noteEditor:
@@ -844,12 +840,31 @@ class MainWindow(QMainWindow):
     def createNewNoteFile(self):
         if self.noteSaved:
             self.noteEditor = NoteEditor(self, "file")
+            if config.contextItem:
+                self.noteEditor.editor.insertPlainText(config.contextItem)
+                config.contextItem = ""
             self.noteEditor.show()
         elif self.warningNotSaved():
             self.noteEditor = NoteEditor(self, "file")
+            if config.contextItem:
+                self.noteEditor.editor.insertPlainText(config.contextItem)
+                config.contextItem = ""
             self.noteEditor.show()
         else:
-            self.noteEditor.raise_()
+            self.bringToForeground(self.noteEditor)
+
+    def bringToForeground(self, window):
+        if config.controlPanel and not (window.isVisible() and window.isActiveWindow()):
+            window.raise_()
+            # Method activateWindow() does not work with qt.qpa.wayland
+            # platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland"
+            # The error message is received when QT_QPA_PLATFORM=wayland:
+            # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+            # Therefore, we use hide and show methods instead with wayland.
+            if window.isVisible() and not window.isActiveWindow():
+                window.hide()
+            window.show()
+            window.activateWindow()
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None):
         if not (config.noteOpened and config.lastOpenedNote == (noteType, b, c, v)):
@@ -1098,7 +1113,7 @@ class MainWindow(QMainWindow):
                 self.noteEditor = NoteEditor(self, "file", filename)
                 self.noteEditor.show()
             else:
-                self.noteEditor.raise_()
+                self.bringToForeground(self.noteEditor)
         else:
             self.openExternalFile(filename)
 

@@ -611,4 +611,5 @@ translation = {
     "ibmWatsonCredentials": "IBM-Watson トランスレーターの Credentils",
     "enterCredentials": "資格情報の入力",
     "useLangDetectOnTts": "音声合成モジュールを使用して、音声合成機能の言語を検出します。",
+    "miniControlTabs": "ミニ・コントロール・タブ",
 }

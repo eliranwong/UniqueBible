@@ -229,6 +229,10 @@ class FocusMainWindow:
             addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
+        tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries")
+        subMenu = addSubMenu(menu, "miniControlTabs")
+        for index, tab in enumerate(tabs):
+            addMenuItem(subMenu, tab, self, lambda index=index: self.openMiniControlTab(index))
         menu.addSeparator()
         addMenuItem(menu, "reloadResources", self, self.reloadControlPanel)
         addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)

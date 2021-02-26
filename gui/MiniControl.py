@@ -1,7 +1,7 @@
 import config
 from functools import partial
 from TtsLanguages import TtsLanguages
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt, QEvent
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
                                QApplication, QBoxLayout, QGridLayout, QComboBox)
@@ -47,6 +47,24 @@ class MiniControl(QWidget):
 
     def closeEvent(self, event):
         config.miniControl = False
+
+    # manage key capture
+    def event(self, event):
+        if event.type() == QEvent.KeyRelease:
+            if event.modifiers() == Qt.ControlModifier:
+                if event.key() == Qt.Key_B:
+                    self.tabs.setCurrentIndex(0)
+                elif event.key() == Qt.Key_T:
+                    self.tabs.setCurrentIndex(1)
+                elif event.key() == Qt.Key_C:
+                    self.tabs.setCurrentIndex(2)
+                elif event.key() == Qt.Key_L:
+                    self.tabs.setCurrentIndex(3)
+                elif event.key() == Qt.Key_D:
+                    self.tabs.setCurrentIndex(4)
+            elif event.key() == Qt.Key_Escape:
+                self.close()
+        return QWidget.event(self, event)
 
     # setup ui
     def setupUI(self):
@@ -129,9 +147,9 @@ class MiniControl(QWidget):
         commandBar.setLayout(commandBox)
         mainLayout.addWidget(commandBar, 0, 0, Qt.AlignCenter)
 
-        tabs = QTabWidget()
-        tabs.currentChanged.connect(self.tabChanged)
-        mainLayout.addWidget(tabs, 1, 0, Qt.AlignCenter)
+        self.tabs = QTabWidget()
+        self.tabs.currentChanged.connect(self.tabChanged)
+        mainLayout.addWidget(self.tabs, 1, 0, Qt.AlignCenter)
 
         parser = BibleVerseParser(config.parserStandarisation)
         self.bookMap = parser.standardAbbreviation
@@ -174,7 +192,7 @@ class MiniControl(QWidget):
 
         bible_layout.addStretch()
         bible.setLayout(bible_layout)
-        tabs.addTab(bible, config.thisTranslation["bible"])
+        self.tabs.addTab(bible, config.thisTranslation["bible"])
 
         bibles_box = QWidget()
         box_layout = QVBoxLayout()
@@ -197,7 +215,7 @@ class MiniControl(QWidget):
         box_layout.addStretch()
         bibles_box.setLayout(box_layout)
 
-        tabs.addTab(bibles_box, config.thisTranslation["translations"])
+        self.tabs.addTab(bibles_box, config.thisTranslation["translations"])
 
         commentaries_box = QWidget()
         box_layout = QVBoxLayout()
@@ -219,7 +237,7 @@ class MiniControl(QWidget):
         box_layout.addStretch()
         commentaries_box.setLayout(box_layout)
 
-        tabs.addTab(commentaries_box, config.thisTranslation["commentaries"])
+        self.tabs.addTab(commentaries_box, config.thisTranslation["commentaries"])
 
         lexicons_box = QWidget()
         box_layout = QVBoxLayout()
@@ -241,7 +259,7 @@ class MiniControl(QWidget):
         box_layout.addStretch()
         lexicons_box.setLayout(box_layout)
 
-        tabs.addTab(lexicons_box, config.thisTranslation["lexicons"])
+        self.tabs.addTab(lexicons_box, config.thisTranslation["lexicons"])
 
         dictionaries_box = QWidget()
         box_layout = QVBoxLayout()
@@ -264,7 +282,8 @@ class MiniControl(QWidget):
         box_layout.addStretch()
         dictionaries_box.setLayout(box_layout)
 
-        tabs.addTab(dictionaries_box, config.thisTranslation["dictionaries"])
+        self.tabs.addTab(dictionaries_box, config.thisTranslation["dictionaries"])
+        self.tabs.setCurrentIndex(config.miniControlInitialTab)
         self.setLayout(mainLayout)
 
     def newRowLayout(self):

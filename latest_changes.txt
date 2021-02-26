@@ -1,3 +1,15 @@
+Major changes in version 21.79:
+* Added config.miniControlInitialTab, options 0-4, to specify the initial tab to be displayed when miniControl is opened.
+* Added options to Focus menu layout, to open individual tabs of mini Control window
+* Added built-in keyboard shortcuts to switch between tabs on miniControl when miniControl is opened.
+    - Ctrl+B - Bible
+    - Ctrl+T - Translations
+    - Ctrl+C - Commentaries
+    - Ctrl+L - lexicons
+    - Ctrl+D - Dictionaries
+* Added "New Note" to right-click context menu, to open a new note and insert selected text into it.
+* Fixed the issue that note editor was not bring to foreground after user being warned of unsaved changes.
+
 Major change in version 21.78:
 * Now changing text-to-speech language on Master Control Miscellaneous tab changes default text-to-speech language.
     Therefore, users can allow quickly change the default text-to-speech language by calling Miscellaneous tab with keyboard shortcut Ctrl+M.

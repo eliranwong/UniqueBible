@@ -612,4 +612,5 @@ translation = {
     "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
     "enterCredentials": "输入 Credentils",
     "useLangDetectOnTts": "使用 langdetect 模块来检测文本到语音功能的语言。",
+    "miniControlTabs": "迷你控制选项卡",
 }
