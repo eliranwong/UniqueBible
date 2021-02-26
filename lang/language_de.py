@@ -603,4 +603,7 @@ translation = {
     "searchPanel": "Suchanzeige",
     "languageSettings": "Spracheinstellungen",
     "watsonTranslator": "Watson-Umsetzer",
+    "version": "Version",
+    "latest_changes": "Letzte Änderungen",
+    "info": "Informationen",
 }

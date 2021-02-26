@@ -603,4 +603,7 @@ translation = {
     "searchPanel": "검색 패널",
     "languageSettings": "언어 설정",
     "watsonTranslator": "Watson Translator",
+    "version": "버전",
+    "latest_changes": "최신 변경 사항",
+    "info": "정보",
 }
