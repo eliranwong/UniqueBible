@@ -1,3 +1,9 @@
+Major change in version 21.77:
+* Added a config flag "useLangDetectOnTts", It is set to False by default, because the feature is not always reliable.
+    - Turning it on will use python module "langdetect" to detect language on selected text when user uses "Speak" feature from right-click context menu.
+    - Turning it off will use Default Text-to-Speech language specified by user.
+    - Default text-to-speech language is configurable via Focus menu layout: UniqueBible > Language Settings > Text-to-Speech Language
+
 Major change in version 21.76:
 * Fixed the issue that bible format switch didn't work on Aleph and Classic menu layouts
 

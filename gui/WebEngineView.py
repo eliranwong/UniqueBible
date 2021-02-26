@@ -369,7 +369,7 @@ class WebEngineView(QWebEngineView):
             selectedText = self.selectedText()
             if not selectedText:
                 self.messageNoSelection()
-            elif config.langdetectSupport:
+            elif config.langdetectSupport and config.useLangDetectOnTts:
                 DetectorFactory.seed = 0
                 # https://pypi.org/project/langdetect/
                 language = detect(selectedText)

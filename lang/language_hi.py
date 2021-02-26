@@ -610,4 +610,5 @@ translation = {
     "latestChanges": "नवीनतम परिवर्तन",
     "ibmWatsonCredentials": "आईबीएम-वाटसन अनुवादक क्रिडेंटिल्स",
     "enterCredentials": "क्रीडेंटिल्स दाखिल करें",
+    "useLangDetectOnTts": "पाठ-टू-टू-स्पीच सुविधा के लिए भाषा का पता लगाने के लिए लंगर का प्रयोग करें",
 }

@@ -610,4 +610,5 @@ translation = {
     "latestChanges": "' Αλλαγές",
     "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
     "enterCredentials": "Καταχώρηση στοιχείων ταυτότητας",
+    "useLangDetectOnTts": "Χρησιμοποιήστε τη λειτουργική μονάδα langdetect για να εντοπίσετε τη γλώσσα για τη λειτουργία κειμένου σε ομιλία.",
 }

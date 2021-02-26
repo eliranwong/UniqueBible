@@ -610,4 +610,5 @@ translation = {
     "latestChanges": "Dernières modifications",
     "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
     "enterCredentials": "Entrez Credentils",
+    "useLangDetectOnTts": "Utilisez le module de détection de langue pour détecter la langue pour la fonction texte-parole.",
 }

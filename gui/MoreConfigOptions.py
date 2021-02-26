@@ -73,6 +73,7 @@ class MoreConfigOptions(QDialog):
         ]
         if config.ttsSupport:
             options += [
+                ("useLangDetectOnTts", config.useLangDetectOnTts, self.useLangDetectOnTtsChanged, self.flagToolTip(False, "useLangDetectOnTts")),
                 ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, self.flagToolTip(False, "ttsEnglishAlwaysUS")),
                 ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK, self.ttsEnglishAlwaysUKChanged, self.flagToolTip(False, "ttsEnglishAlwaysUK")),
                 ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, self.flagToolTip(False, "ttsChineseAlwaysMandarin")),
@@ -152,6 +153,9 @@ class MoreConfigOptions(QDialog):
         if config.virtualKeyboard and config.ibus:
             config.ibus = not config.ibus
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def useLangDetectOnTtsChanged(self):
+        config.useLangDetectOnTts = not config.useLangDetectOnTts
 
     def ttsEnglishAlwaysUSChanged(self):
         config.ttsEnglishAlwaysUS = not config.ttsEnglishAlwaysUS

@@ -113,6 +113,8 @@ class ConfigUtil:
         if not hasattr(config, "qttsSpeed"):
             config.qttsSpeed = 0.0
         # tts language options
+        if not hasattr(config, "useLangDetectOnTts"):
+            config.useLangDetectOnTts = False
         if not hasattr(config, "ttsDefaultLangauge"):
             config.ttsDefaultLangauge = "en"
         if not hasattr(config, "ttsChineseAlwaysCantonese"):
@@ -600,6 +602,7 @@ class ConfigUtil:
             ("espeak", config.espeak),
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),
+            ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
             ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),
             ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK),
