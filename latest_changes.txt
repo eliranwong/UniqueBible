@@ -1,5 +1,9 @@
 Major changes in version 21.75:
+* Added download utility
 * Added app information / latest changes dialog to Focus and Classic menu layouts
+* Added Watson Translator Credential Window
+* Now automatically print selected text from Main Window or Study Window when to search field when Master Control Search tab is opened.
+    - If both Main Window and Study Window have text selected, Main Window selected text will be printed.
 
 Major changes in version 21.74:
 * Revised Aleph menu layout

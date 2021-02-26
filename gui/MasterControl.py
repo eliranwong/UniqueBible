@@ -220,6 +220,10 @@ class MasterControl(QWidget):
             if config.contextItem:
                 self.toolTab.searchField.setText(config.contextItem)
                 config.contextItem = ""
+            elif self.parent.mainView.currentWidget().selectedText():
+                self.toolTab.searchField.setText(self.parent.mainView.currentWidget().selectedText())
+            elif self.parent.studyView.currentWidget().selectedText():
+                self.toolTab.searchField.setText(self.parent.studyView.currentWidget().selectedText())
         else:
             self.commandField.setFocus()
 
