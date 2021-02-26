@@ -222,5 +222,5 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("menu_convert", "Convert")
+        addLanguageStringToAllFiles("info", "Information")
 

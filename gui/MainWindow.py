@@ -19,6 +19,7 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
+from gui.InfoDialog import InfoDialog
 # These "unused" window imports are actually used.  Do not delete these lines.
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
@@ -748,6 +749,10 @@ class MainWindow(QMainWindow):
             ShortcutUtil.loadShortcutFile(config.menuShortcuts)
             ShortcutUtil.loadShortcutFile()
             self.setupMenuLayout(config.menuLayout)
+
+    def showInfo(self):
+        infoDialog = InfoDialog()
+        infoDialog.exec()
 
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0

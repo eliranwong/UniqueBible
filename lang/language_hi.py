@@ -603,4 +603,7 @@ translation = {
     "searchPanel": "खोज फलक",
     "languageSettings": "भाषा विन्यास",
     "watsonTranslator": "वाटसन अनुवादक",
+    "version": "संस्करण",
+    "latest_changes": "नवीनतम परिवर्तन",
+    "info": "सूचना",
 }

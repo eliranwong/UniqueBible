@@ -13,7 +13,7 @@ class AlephMainWindow:
         subMenu = addSubMenu(menu1_defaults, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
             addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
-        subMenu = addSubMenu(menu1, "menu1_selectWindowStyle")
+        subMenu = addSubMenu(menu1_defaults, "menu1_selectWindowStyle")
         addMenuItem(subMenu, "default", self, lambda: self.setAppWindowStyle("default"), None, False)
         for style in QStyleFactory.keys():
             addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
@@ -56,6 +56,13 @@ class AlephMainWindow:
         for shortcut in customShortcuts:
             shortcutsMenu.addAction(
                 QAction(shortcut, self, triggered=lambda shortcut=shortcut: self.setShortcuts(shortcut)))
+        subMenu = addSubMenu(menu1_defaults, "verseNoAction")
+        items = (
+            ("singleClick", self.selectSingleClickActionDialog),
+            ("doubleClick", self.selectDoubleClickActionDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         if config.enableMacros:
             menu1_defaults.addAction(
@@ -247,6 +254,13 @@ class AlephMainWindow:
         font_menu.addAction(QAction(config.thisTranslation["menu_select_default_font"], self, shortcut=sc.setDefaultFont, triggered=self.setDefaultFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut=sc.largerFont, triggered=self.largerFont))
         font_menu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut=sc.smallerFont, triggered=self.smallerFont))
+        subMenu = addSubMenu(display_menu, "bar3_pdf")
+        items = (
+            ("bar1_menu", self.printMainPage),
+            ("bar2_menu", self.printStudyPage),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
         display_menu.addAction(
             QAction(config.thisTranslation["menu_display_shortcuts"], self, shortcut=sc.displayShortcuts, triggered=self.displayShortcuts))
         addMenuItem(display_menu, "reloadResources", self, self.reloadControlPanel)
@@ -262,6 +276,7 @@ class AlephMainWindow:
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
+        about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))
         subMenu = addSubMenu(about_menu, "menu_support")
         items = (
             ("menu1_wikiPages", self.openUbaWiki, sc.ubaWiki),
