@@ -606,4 +606,5 @@ translation = {
     "version": "버전",
     "latest_changes": "최신 변경 사항",
     "info": "정보",
+    "gistSync": "Gist-syncing",
 }

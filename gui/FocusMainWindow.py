@@ -92,6 +92,13 @@ class FocusMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
+        subMenu = addSubMenu(subMenu0, "gistSync")
+        items = (
+            ("setup", self.setupGist),
+            ("menu_gist", self.showGistWindow),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
 
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")

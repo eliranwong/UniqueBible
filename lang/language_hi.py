@@ -606,4 +606,5 @@ translation = {
     "version": "संस्करण",
     "latest_changes": "नवीनतम परिवर्तन",
     "info": "सूचना",
+    "gistSync": "सारांश-सिंक्रनाइज़",
 }

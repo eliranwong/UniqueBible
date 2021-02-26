@@ -607,4 +607,5 @@ translation = {
     "version": "版本",
     "latest_changes": "最新更改",
     "info": "资料",
+    "gistSync": "主旨 - 同步",
 }

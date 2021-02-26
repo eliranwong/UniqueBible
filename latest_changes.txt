@@ -1,6 +1,10 @@
+Major changes in version 21.74:
+* Revised Aleph menu layout
+* Added app information / latest changes dialog, accessible from all menu layouts
+
 Major changes in version 21.73:
-- Revised Focus menu layout
-- Reorganised Language Setttings, now quicker choosing default text-to-speech language
+* Revised Focus menu layout
+* Reorganised Language Setttings, now quicker choosing default text-to-speech language
 
 Major changes in version 21.72:
 Revised right-click context menu:

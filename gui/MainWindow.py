@@ -1766,6 +1766,9 @@ class MainWindow(QMainWindow):
     def setupYouTube(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
 
+    def setupGist(self):
+        self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Gist-synching")
+
     def setupWatsonTranslator(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 

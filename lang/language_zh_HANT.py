@@ -608,4 +608,5 @@ translation = {
     "version": "版本",
     "latest_changes": "最新變更",
     "info": "資訊",
+    "gistSync": "Gist-同步",
 }

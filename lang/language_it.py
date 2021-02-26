@@ -606,4 +606,5 @@ translation = {
     "version": "Versione",
     "latest_changes": "Ultime modifiche",
     "info": "Informazioni",
+    "gistSync": "Gist - syncing",
 }
