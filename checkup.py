@@ -151,10 +151,12 @@ required = (
     ("babel", "Internationalization and localization library", isBabelInstalled),
 )
 for module, feature, isInstalled in required:
-    isInstalled = isInstalled()
-    if not isInstalled:
-        if pip3InstallModule(module):
-            print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+    if not isInstalled():
+        pip3InstallModule(module)
+        if isInstalled():
+            print("Installed")
+        else:
+            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
             exit(1)
 
 # Check if optional modules are installed
@@ -171,14 +173,10 @@ optional = (
     ("pypinyin", "Chinese pinyin", isPypinyinInstalled),
 )
 for module, feature, isInstalled in optional:
-    isInstalled = isInstalled()
-    if not isInstalled:
-        if pip3InstallModule(module):
-            available = False
-            print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
-        else:
-            available = True
-            print("Missing module '{0}' is now installed.".format(module))
+    if not isInstalled():
+        pip3InstallModule(module)
+        available = isInstalled()
+        print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
     else:
         available = True
     setInstallConfig(module, available)
@@ -193,5 +191,3 @@ if not config.isTtsInstalled:
 if config.developer:
     # import exlbl
     pass
-
-
