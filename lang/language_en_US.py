@@ -326,7 +326,7 @@ translation = {
     "message_newInterfaceItems": "Missing translation item(s):",
     "message_migration": "Some of your files are old.  We are helping you to upgrade those files.",
     "message_noReference": "Found no bible reference.",
-    "message_noSupport": "It looks like that this feature is not enabled on your device.",
+    "message_noSupport": "Selected feature is not enabled!",
     "message_noTtsVoice": "No voice is installed for the selected language.",
     "message_noEspeak": "Package 'espeak' is not installed.  To install espeak, read https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md",
     "message_newerFile": "This file has a newer version:",

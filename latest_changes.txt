@@ -1,5 +1,6 @@
-Major change in version 21.88:
-* adding support to automate installation
+Major change in version 21.88, 21.89:
+* Added support to automate installation
+* Running "python3 main.py" now automatically install missing modules for users.
 
 Major change in version 21.87:
 * Added font styling for individual bibles

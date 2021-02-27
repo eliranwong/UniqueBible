@@ -8,13 +8,10 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
-from gui.imports import *
-try:
+if config.isPypinyinInstalled:
+    from pypinyin import pinyin
+if config.isLangdetectInstalled:
     from langdetect import detect, detect_langs, DetectorFactory
-    config.langdetectSupport = True
-except:
-    config.langdetectSupport = False
-    print("Language detect feature is not supported.  To activate this feature, please install plugin langdetect by running 'pip3 install langdetect' and restart the app.")
 
 class WebEngineView(QWebEngineView):
     
@@ -378,7 +375,7 @@ class WebEngineView(QWebEngineView):
             selectedText = self.selectedText()
             if not selectedText:
                 self.messageNoSelection()
-            elif config.langdetectSupport and config.useLangDetectOnTts:
+            elif config.isLangdetectInstalled and config.useLangDetectOnTts:
                 DetectorFactory.seed = 0
                 # https://pypi.org/project/langdetect/
                 language = detect(selectedText)

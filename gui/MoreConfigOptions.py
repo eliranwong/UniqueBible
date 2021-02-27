@@ -314,13 +314,11 @@ class MoreConfigOptions(QDialog):
             self.parent.enableQtMaterial(False)
 
     def enableGistChanged(self):
-        if not config.enableGist:
-            try:
-                from github import Github, InputFileContent
-                config.enableGist = True
-                self.parent.displayMessage(config.thisTranslation["message_restart"])
-            except:
-                self.parent.displayMessage(config.thisTranslation["installPygithub"])
-        else:
+        if not config.enableGist and config.isPygithubInstalled:
+            config.enableGist = True
+            self.parent.displayMessage(config.thisTranslation["message_restart"])            
+        elif config.enableGist:
             config.enableGist = not config.enableGist
             self.parent.displayMessage(config.thisTranslation["message_restart"])
+        else:
+            self.parent.displayMessage(config.thisTranslation["message_noSupport"])

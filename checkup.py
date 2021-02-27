@@ -33,6 +33,13 @@ def isBabelInstalled():
     except:
         return False
 
+def isRequestsInstalled():
+    try:
+        import requests
+        return True
+    except:
+        return False
+
 def isPyPDF2Installed():
     try:
         import PyPDF2
@@ -90,13 +97,6 @@ def isIbmWatsonInstalled():
     except:
         return False
 
-def isRequestsInstalled():
-    try:
-        import requests
-        return True
-    except:
-        return False
-
 # [Optional] Translates Chinese characters into pinyin.
 def isPypinyinInstalled():
     try:
@@ -139,8 +139,6 @@ def setInstallConfig(module, isInstalled):
         config.isTelnetlib3Installed = isInstalled
     elif module == "ibm-watson":
         config.isIbmWatsonInstalled = isInstalled
-    elif module == "requests":
-        config.isRequestsInstalled = isInstalled
     elif module == "pypinyin":
         config.isPypinyinInstalled = isInstalled
 
@@ -149,6 +147,7 @@ required = (
     ("PySide2", "Graphical Interface", isPySide2Installed),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
+    ("requests", "Download / Update files", isRequestsInstalled),
 )
 for module, feature, isInstalled in required:
     if not isInstalled():
@@ -169,7 +168,6 @@ optional = (
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("requests", "Download missing files", isRequestsInstalled),
     ("pypinyin", "Chinese pinyin", isPypinyinInstalled),
 )
 for module, feature, isInstalled in optional:

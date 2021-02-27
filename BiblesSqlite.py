@@ -11,10 +11,8 @@ from themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
 
-try:
+if config.isDiffMatchPatchInstalled:
     from diff_match_patch import diff_match_patch
-except:
-    print("Package 'diff_match_patch' is missing.  Read https://github.com/eliranwong/UniqueBible#install-dependencies for guideline on installation.")
 
 class BiblesSqlite:
 
@@ -427,7 +425,10 @@ input.addEventListener('keyup', function(event) {0}
             return "".join([self.readTranslations(b, c, v, texts) for b, c, v in verseList])
 
     def diffVerse(self, verseList, texts=["ALL"]):
-        return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v in verseList])
+        if config.isDiffMatchPatchInstalled:
+            return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v in verseList])
+        else:
+            return config.thisTranslation["message_noSupport"]
 
     def compareVerseChapter(self, b, c, v, texts):
         # get a combined verse list without duplication
@@ -487,24 +488,21 @@ input.addEventListener('keyup', function(event) {0}
         texts.insert(0, mainText)
 
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
-        try:
-            dmp = diff_match_patch()
-            *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
-            for text in texts:
-                book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
-                if not text == mainText and not text in config.originalTexts:
-                    diff = dmp.diff_main(mainVerseText, verseText)
-                    verseText = dmp.diff_prettyHtml(diff)
-                    if config.theme == "dark":
-                        verseText = self.adjustDarkThemeColorsForDiff(verseText)
-                divTag = "<div>"
-                if b < 40 and text in config.rtlTexts:
-                    divTag = "<div style='direction: rtl;'>"
-                verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
-            config.mainText = mainText
-            return verses
-        except:
-            return "Package 'diff_match_patch' is missing.  Read <ref onclick={0}website('https://github.com/eliranwong/UniqueBible#install-dependencies'){0}>https://github.com/eliranwong/UniqueBible#install-dependencies</ref> for guideline on installation.".format('"')
+        dmp = diff_match_patch()
+        *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
+        for text in texts:
+            book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
+            if not text == mainText and not text in config.originalTexts:
+                diff = dmp.diff_main(mainVerseText, verseText)
+                verseText = dmp.diff_prettyHtml(diff)
+                if config.theme == "dark":
+                    verseText = self.adjustDarkThemeColorsForDiff(verseText)
+            divTag = "<div>"
+            if b < 40 and text in config.rtlTexts:
+                divTag = "<div style='direction: rtl;'>"
+            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
+        config.mainText = mainText
+        return verses
 
     def removeVowelAccent(self, text):
         searchReplace = (
