@@ -1,6 +1,5 @@
 import config, subprocess
 from platform import system
-from util.ConfigUtil import ConfigUtil
 
 def pip3InstallModule(module):
     print("Installing missing module '{0}' ...".format(module))

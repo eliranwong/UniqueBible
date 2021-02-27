@@ -576,7 +576,7 @@ translation = {
     "forceGenerateHtml": "Option to generate a html file each time new html content is displayed.",
     "enableLogging": "Option to enable logging.",
     "logCommands": "Option to log all commands to uba.log",
-    "checked": "checked",
+    "checked": "CHECKED!",
     "instantHighlight": "Instant Highlight",
     "removeInstantHighlight": "Remove Instant Highlight",
     "removeBookHighlight": "Remove Book Highlight",
