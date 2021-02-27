@@ -1138,16 +1138,26 @@ class MainWindow(QMainWindow):
             self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     def openPdfFile(self, fileName):
-        if fileName:
-            text = TextFileReader().readPdfFile(fileName)
-            text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+        if config.isPyPDF2Installed:
+            if fileName:
+                text = TextFileReader().readPdfFile(fileName)
+                text = self.htmlWrapper(text, True)
+                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def openDocxFile(self, fileName):
-        if fileName:
-            text = TextFileReader().readDocxFile(fileName)
-            text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+        if config.isPythonDocxInstalled:
+            if fileName:
+                text = TextFileReader().readDocxFile(fileName)
+                text = self.htmlWrapper(text, True)
+                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupport"])
 
     # Actions - export to pdf
     def printMainPage(self):

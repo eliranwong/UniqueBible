@@ -154,7 +154,7 @@ for module, feature, isInstalled in required:
     if not isInstalled():
         pip3InstallModule(module)
         if isInstalled():
-            print("Installed")
+            print("Installed!")
         else:
             print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
             exit(1)

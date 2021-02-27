@@ -6,18 +6,21 @@ from __future__ import (
     absolute_import, division, print_function, unicode_literals
 )
 
-import PyPDF2
-from docx import Document
-from docx.document import Document as _Document
-from docx.oxml.text.paragraph import CT_P
-from docx.oxml.table import CT_Tbl
-from docx.table import _Cell, Table
-from docx.text.paragraph import Paragraph
+import config
+if config.isPyPDF2Installed:
+    import PyPDF2
+if config.isPythonDocxInstalled:
+    from docx import Document
+    from docx.document import Document as _Document
+    from docx.oxml.text.paragraph import CT_P
+    from docx.oxml.table import CT_Tbl
+    from docx.table import _Cell, Table
+    from docx.text.paragraph import Paragraph
 
 class TextFileReader:
 
     def errorReadingFile(self, fileName):
-        print('Failed to open file "{0}".'.format(fileName))
+        print('Failed to open file "{0}"!'.format(fileName))
         return ""
 
     def readTxtFile(self, fileName):
