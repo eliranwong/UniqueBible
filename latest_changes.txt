@@ -1,3 +1,6 @@
+Major change in version 21.87:
+* Added font styling for individual bibles
+
 Major change in version 21.86:
 * Fixed pytest
 * Adding support of installing missing modules 
