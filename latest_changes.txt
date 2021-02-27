@@ -1,4 +1,4 @@
-Major change in version 21.88, 21.89:
+Major change in version 21.88, 21.89, 21.90:
 * Added support to automate installation
 * Running "python3 main.py" now automatically install missing modules for users.
 
