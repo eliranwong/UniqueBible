@@ -8,8 +8,6 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
-if config.isLangdetectInstalled:
-    from langdetect import detect, detect_langs, DetectorFactory
 
 class WebEngineView(QWebEngineView):
     
@@ -375,6 +373,7 @@ class WebEngineView(QWebEngineView):
             if not selectedText:
                 self.messageNoSelection()
             elif config.isLangdetectInstalled and config.useLangDetectOnTts:
+                from langdetect import detect, DetectorFactory
                 DetectorFactory.seed = 0
                 # https://pypi.org/project/langdetect/
                 language = detect(selectedText)
