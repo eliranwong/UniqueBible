@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "Καταχώρηση στοιχείων ταυτότητας",
     "useLangDetectOnTts": "Χρησιμοποιήστε τη λειτουργική μονάδα langdetect για να εντοπίσετε τη γλώσσα για τη λειτουργία κειμένου σε ομιλία.",
     "miniControlTabs": "Μίνι Control Tabs",
+    "modify_database": "Τροποποίηση βάσης δεδομένων",
+    "font_name": "Όνομα γραμματοσειράς",
+    "title": "' Τίτλος",
 }

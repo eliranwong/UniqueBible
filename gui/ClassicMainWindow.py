@@ -370,7 +370,7 @@ class ClassicMainWindow:
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFiles"], self, triggered=self.tagFiles))
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
         menu8.addSeparator()
-        menu8.addAction(QAction(config.thisTranslation["menu8_fixDatabase"], self, triggered=self.selectDatabaseToFix))
+        menu8.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 
         if config.enableMacros:
             macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))

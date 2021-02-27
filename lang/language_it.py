@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "Entra Credentils",
     "useLangDetectOnTts": "Utilizzare il modulo langdetect per rilevare la lingua per la funzione text-to-speech.",
     "miniControlTabs": "mini schede di controllo",
+    "modify_database": "Modifica database",
+    "font_name": "Nome font",
+    "title": "Titolo",
 }

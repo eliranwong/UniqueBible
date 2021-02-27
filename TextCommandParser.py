@@ -768,6 +768,20 @@ class TextCommandParser:
             elif (text in ("OHGBi", "OHGB") or not text in formattedBibles) and config.readFormattedBibles:
                 config.readFormattedBibles = False
                 self.parent.enableParagraphButtonAction(False)
+
+            # Custom font styling for Bible
+            (fontFile, fontSize) = Bible(text).getFontInfo()
+            fontFormat = ''
+            if fontFile and len(fontFile) > 0:
+                if ".ttf" in fontFile:
+                    fontName = fontFile.replace(".ttf", "")
+                    fontFormat = "font-family: '{0}'; src: url('htmlResources/fonts/{1}') format('truetype');".format(
+                                 fontName, fontFile)
+            css = "{0} {1} {2} font-size: {3}; {4}".format(text, "{", fontFormat, fontSize, "}")
+            if view == "main":
+                config.mainCssBibleFontStyle = css
+            elif view == "study":
+                config.studyCssBibleFontStyle = css
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
@@ -781,6 +795,8 @@ class TextCommandParser:
                 content = self.textPlainBible(verseList, text)
                 bcvTuple = verseList[-1]
             content = self.hideLexicalEntryInBible(content)
+            # Add text tag for custom font styling
+            content = "<{0}>{1}</{0}>".format(text, content)
             if config.openBibleInMainViewOnly:
                 self.setMainVerse(text, bcvTuple)
                 self.setStudyVerse(text, bcvTuple)

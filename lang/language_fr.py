@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "Entrez Credentils",
     "useLangDetectOnTts": "Utilisez le module de détection de langue pour détecter la langue pour la fonction texte-parole.",
     "miniControlTabs": "Mini-onglets de contrôle",
+    "modify_database": "Modifier base de données",
+    "font_name": "Nom de police",
+    "title": "Titre",
 }

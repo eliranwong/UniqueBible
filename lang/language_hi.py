@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "क्रीडेंटिल्स दाखिल करें",
     "useLangDetectOnTts": "पाठ-टू-टू-स्पीच सुविधा के लिए भाषा का पता लगाने के लिए लंगर का प्रयोग करें",
     "miniControlTabs": "मिनी नियंत्रण टैब",
+    "modify_database": "डाटाबेस परिवर्धित करें",
+    "font_name": "फ़ॉन्ट नाम",
+    "title": "शीर्षक",
 }

@@ -216,7 +216,7 @@ class AlephMainWindow:
         submenu.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
         submenu.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
         menu_data.addSeparator()
-        menu_data.addAction(QAction(config.thisTranslation["menu8_fixDatabase"], self, triggered=self.selectDatabaseToFix))
+        menu_data.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 
         display_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_display"]))
         bible_format_menu = display_menu.addMenu(config.thisTranslation["menu_bible_format"])

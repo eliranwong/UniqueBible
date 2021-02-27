@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "Введите Credentils",
     "useLangDetectOnTts": "Используйте модуль langdetect для определения языка для функции text-to-speece.",
     "miniControlTabs": "Вкладки мини-элемента управления",
+    "modify_database": "Изменить базу данных",
+    "font_name": "Имя шрифта",
+    "title": "Название",
 }
