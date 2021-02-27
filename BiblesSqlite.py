@@ -11,9 +11,6 @@ from themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
 
-if config.isDiffMatchPatchInstalled:
-    from diff_match_patch import diff_match_patch
-
 class BiblesSqlite:
 
     def __init__(self):
@@ -488,6 +485,7 @@ input.addEventListener('keyup', function(event) {0}
         texts.insert(0, mainText)
 
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+        from diff_match_patch import diff_match_patch
         dmp = diff_match_patch()
         *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
         for text in texts:
