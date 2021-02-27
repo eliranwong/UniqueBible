@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "크링크를 입력하십시오.",
     "useLangDetectOnTts": "언어-음성 기능에 대한 언어를 발견하려면 언어 검색 모듈을 사용하십시오.",
     "miniControlTabs": "미니 제어 탭",
+    "modify_database": "데이터베이스 수정하기",
+    "font_name": "글꼴 이름",
+    "title": "제목",
 }

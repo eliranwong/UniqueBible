@@ -614,4 +614,7 @@ translation = {
     "enterCredentials": "輸入認證",
     "useLangDetectOnTts": "使用lang偵測模組來偵測文字到語音特性的語言。",
     "miniControlTabs": "迷你控制標籤",
+    "modify_database": "修改資料庫",
+    "font_name": "字型名稱",
+    "title": "Title",
 }

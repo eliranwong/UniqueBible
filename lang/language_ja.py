@@ -612,4 +612,7 @@ translation = {
     "enterCredentials": "資格情報の入力",
     "useLangDetectOnTts": "音声合成モジュールを使用して、音声合成機能の言語を検出します。",
     "miniControlTabs": "ミニ・コントロール・タブ",
+    "modify_database": "データベースの変更",
+    "font_name": "フォント名",
+    "title": "書名",
 }

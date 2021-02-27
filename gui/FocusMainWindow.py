@@ -286,6 +286,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        addMenuItem(menu, "modify_database", self, self.selectDatabaseToModify)
 
         # macros
         if config.enableMacros:

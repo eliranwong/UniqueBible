@@ -613,4 +613,7 @@ translation = {
     "enterCredentials": "输入 Credentils",
     "useLangDetectOnTts": "使用 langdetect 模块来检测文本到语音功能的语言。",
     "miniControlTabs": "迷你控制选项卡",
+    "modify_database": "修改数据库",
+    "font_name": "字体名称",
+    "title": "标题",
 }
