@@ -3,19 +3,21 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-import os, platform, logging, re
+
+import os, platform, logging, re, sys
 import logging.handlers as handlers
-import sys
 
 # Create custom files
 from util.FileUtil import FileUtil
 FileUtil.createCustomFiles()
 
+# Make sure config.py exists before importing config and all other scripts which depends on config
 import config
-
 # Setup config values
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
+# Setup dependencies
+import util.setup
 
 # Setup logging
 logger = logging.getLogger('uba')

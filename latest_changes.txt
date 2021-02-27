@@ -1,3 +1,7 @@
+Major change in version 21.80:
+* Reorganised files and codes to prepare for next update.
+* No practical change in this version.
+
 Major changes in version 21.79:
 * Added config.miniControlInitialTab, options 0-4, to specify the initial tab to be displayed when miniControl is opened.
 * Added options to Focus menu layout, to open individual tabs of mini Control window
