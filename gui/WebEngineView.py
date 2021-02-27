@@ -8,8 +8,6 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
-if config.isPypinyinInstalled:
-    from pypinyin import pinyin
 if config.isLangdetectInstalled:
     from langdetect import detect, detect_langs, DetectorFactory
 
@@ -117,6 +115,7 @@ class WebEngineView(QWebEngineView):
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if config.isPypinyinInstalled:
+            from pypinyin import pinyin
             pinyinText = QAction(self)
             pinyinText.setText(config.thisTranslation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
