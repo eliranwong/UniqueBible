@@ -35,24 +35,28 @@ def isBabelInstalled():
 
 def isPyPDF2Installed():
     try:
+        import PyPDF2
         return True
     except:
         return False
 
 def isPythonDocxInstalled():
     try:
+        from docx import Document
         return True
     except:
         return False
 
 def isDiffMatchPatchInstalled():
     try:
+        from diff_match_patch import diff_match_patch
         return True
     except:
         return False
 
 def isLangdetectInstalled():
     try:
+        from langdetect import detect, detect_langs, DetectorFactory
         return True
     except:
         return False
@@ -73,6 +77,7 @@ def isQtMaterialInstalled():
 
 def isTelnetlib3Installed():
     try:
+        import telnetlib3
         return True
     except:
         return False
@@ -87,6 +92,7 @@ def isIbmWatsonInstalled():
 
 def isRequestsInstalled():
     try:
+        import requests
         return True
     except:
         return False
@@ -145,6 +151,7 @@ required = (
     ("babel", "Internationalization and localization library", isBabelInstalled),
 )
 for module, feature, isInstalled in required:
+    isInstalled = isInstalled()
     if not isInstalled:
         if pip3InstallModule(module):
             print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
@@ -164,6 +171,7 @@ optional = (
     ("pypinyin", "Chinese pinyin", isPypinyinInstalled),
 )
 for module, feature, isInstalled in optional:
+    isInstalled = isInstalled()
     if not isInstalled:
         if pip3InstallModule(module):
             available = False
