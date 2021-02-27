@@ -1,7 +1,4 @@
 import config
-if config.isIbmWatsonInstalled:
-    from ibm_watson import LanguageTranslatorV3
-    from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 class Translator:
 
@@ -14,23 +11,24 @@ class Translator:
     toLanguageNames = ['Arabic', 'Bulgarian', 'Bengali', 'Bosnian', 'Catalan', 'Montenegrin', 'Czech', 'Welsh', 'Danish', 'German', 'Greek', 'English', 'Spanish', 'Estonian', 'Basque', 'Finnish', 'French', 'French (Canada)', 'Irish', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Italian', 'Japanese', 'Korean', 'Lithuanian', 'Latvian', 'Malayalam', 'Malay', 'Maltese', 'Norwegian Bokmal', 'Nepali', 'Dutch', 'Polish', 'Portuguese', 'Romanian', 'Russian', 'Sinhala', 'Slovakian', 'Slovenian', 'Serbian', 'Swedish', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese', 'Simplified Chinese', 'Traditional Chinese']
 
     def __init__(self):
-        if config.isIbmWatsonInstalled and config.myIBMWatsonApikey:
-            self.authenticate()
-            #if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
-            #    self.getLanguageLists()
-        else:
-            self.language_translator = None
+        self.authenticate()
 
     def authenticate(self):
         try:
-            authenticator = IAMAuthenticator(config.myIBMWatsonApikey)
-            language_translator = LanguageTranslatorV3(
-                version=config.myIBMWatsonVersion,
-                authenticator=authenticator
-            )
-            language_translator.set_service_url(config.myIBMWatsonUrl)
-            #print(language_translator)
-            self.language_translator = language_translator
+            if config.isIbmWatsonInstalled and config.myIBMWatsonApikey:
+                from ibm_watson import LanguageTranslatorV3
+                from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+                authenticator = IAMAuthenticator(config.myIBMWatsonApikey)
+                language_translator = LanguageTranslatorV3(
+                    version=config.myIBMWatsonVersion,
+                    authenticator=authenticator
+                )
+                language_translator.set_service_url(config.myIBMWatsonUrl)
+                #print(language_translator)
+                self.language_translator = language_translator
+            else:
+                self.language_translator = None
         except:
             self.language_translator = None
 
@@ -62,17 +60,21 @@ class Translator:
     def translate(self, text, fromLanguage=None, toLanguage="en"):
         if fromLanguage is None:
             fromLanguage = self.identify(text)
-        translation = self.language_translator.translate(
-            text=text,
-            model_id="{0}-{1}".format(fromLanguage, toLanguage)).get_result()
-        #print(json.dumps(translation, indent=2, ensure_ascii=False))
-        #print(translation["translations"][0]["translation"])
-        return translation["translations"][0]["translation"]
+        if self.language_translator:
+            translation = self.language_translator.translate(
+                text=text,
+                model_id="{0}-{1}".format(fromLanguage, toLanguage)).get_result()
+            #print(json.dumps(translation, indent=2, ensure_ascii=False))
+            #print(translation["translations"][0]["translation"])
+            return translation["translations"][0]["translation"]
+        else:
+            return "<Translator not enabled>"
 
 
 if __name__ == "__main__":
+    config.isIbmWatsonInstalled = True
     translator = Translator()
     #translator.identify("这是中文")
     #translator.getLanguageLists()
     #print(config.fromLanguageCodes, config.fromLanguageNames, config.toLanguageCodes, config.toLanguageNames)
-    #translator.translate("test", "en", "zh")
+    print(translator.translate("test", "en", "zh"))

@@ -1172,10 +1172,10 @@ class MorphologySqlite:
 
     def simplifyTranslation(self, translation):
         translation.strip()
-        translation = re.sub("^(.+?) \+\[[^\[\]]*?\]$", r"\1", translation)
-        translation = re.sub("^\+*\[[^\[\]]*?\](.+?)$", r"\1", translation)
-        translation = re.sub("^(.+?)\[[^\[\]]*?\]\+*$", r"\1", translation)
-        translation = re.sub("^[^A-Za-z]*?([A-Za-z].*?)[^A-Za-z]*?$", r"\1", translation)
+        translation = re.sub(r"^(.+?) \+\[[^\[\]]*?\]$", r"\1", translation)
+        translation = re.sub(r"^\+*\[[^\[\]]*?\](.+?)$", r"\1", translation)
+        translation = re.sub(r"^(.+?)\[[^\[\]]*?\]\+*$", r"\1", translation)
+        translation = re.sub(r"^[^A-Za-z]*?([A-Za-z].*?)[^A-Za-z]*?$", r"\1", translation)
         return translation
 
     def searchMorphology(self, mode, searchString):
