@@ -374,7 +374,7 @@ class WebEngineView(QWebEngineView):
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
-        if config.ttsSupport:
+        if config.isTtsInstalled:
             selectedText = self.selectedText()
             if not selectedText:
                 self.messageNoSelection()

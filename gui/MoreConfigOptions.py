@@ -71,7 +71,7 @@ class MoreConfigOptions(QDialog):
             ("enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
         ]
-        if config.ttsSupport:
+        if config.isTtsInstalled:
             options += [
                 ("useLangDetectOnTts", config.useLangDetectOnTts, self.useLangDetectOnTtsChanged, self.flagToolTip(False, "useLangDetectOnTts")),
                 ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, self.flagToolTip(False, "ttsEnglishAlwaysUS")),
@@ -84,7 +84,6 @@ class MoreConfigOptions(QDialog):
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, self.flagToolTip(False, "linuxStartFullScreen")),
                 ("fcitx", config.fcitx, self.fcitxChanged, self.flagToolTip(False, "fcitx")),
                 ("ibus", config.ibus, self.ibusChanged, self.flagToolTip(False, "ibus")),
-                ("showTtsOnLinux", config.showTtsOnLinux, self.showTtsOnLinuxChanged, self.flagToolTip(False, "showTtsOnLinux")),
                 ("espeak", config.espeak, self.espeakChanged, self.flagToolTip(False, "espeak")),
             ]
         if config.developer:
@@ -282,10 +281,6 @@ class MoreConfigOptions(QDialog):
 
     def linuxStartFullScreenChanged(self):
         config.linuxStartFullScreen = not config.linuxStartFullScreen
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
-
-    def showTtsOnLinuxChanged(self):
-        config.showTtsOnLinux = not config.showTtsOnLinux
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def espeakChanged(self):

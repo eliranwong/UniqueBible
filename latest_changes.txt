@@ -1,3 +1,6 @@
+Major change in version 21.81:
+* Install required modules for new users
+
 Major change in version 21.80:
 * Reorganised files and codes to prepare for next update.
 * No practical change in this version.

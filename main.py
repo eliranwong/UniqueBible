@@ -16,8 +16,8 @@ import config
 # Setup config values
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
-# Setup dependencies
-import util.setup
+# Check for dependencies and other essential elements
+from checkup import *
 
 # Setup logging
 logger = logging.getLogger('uba')

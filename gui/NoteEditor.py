@@ -1062,7 +1062,7 @@ p, li {0} white-space: pre-wrap; {1}
     def speakText(self):
         text = self.editor.textCursor().selectedText()
         if text:
-            if config.ttsSupport:
+            if config.isTtsInstalled:
                 if ":::" in text:
                     text = text.split(":::")[-1]
                 command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)

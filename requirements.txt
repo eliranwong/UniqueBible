@@ -10,7 +10,6 @@ langdetect
 pygithub
 qt-material
 pypinyin
-opencc
 telnetlib3
 ibm-watson
 babel

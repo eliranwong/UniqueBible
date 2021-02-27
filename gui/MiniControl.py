@@ -104,7 +104,7 @@ class MiniControl(QWidget):
         commandLayout2.addStretch()
         commandBox.addLayout(commandLayout2)
 
-        if config.ttsSupport:
+        if config.isTtsInstalled:
             ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
             ttsLayout.setSpacing(5)
     

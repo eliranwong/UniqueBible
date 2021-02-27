@@ -144,7 +144,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if config.ttsSupport:
+        if config.isTtsInstalled:
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]

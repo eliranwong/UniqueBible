@@ -345,14 +345,6 @@ class MainWindow(QMainWindow):
             elif event.key() == Qt.Key_Escape:
                 self.setNoToolBar()
                 return True
-            # CHINESE TOOL - openCC
-            # Convert command line from simplified Chinese to traditional Chinese characters
-            # Ctrl + H
-        #            elif openccSupport and event.modifiers() == Qt.ControlModifier and event.key() == Qt.Key_H:
-        #                newTextCommand = opencc.convert(self.textCommandLineEdit.text(), config="s2t.json")
-        #                self.textCommandLineEdit.setText(newTextCommand)
-        #                self.focusCommandLineField()
-        #                return True
         return QWidget.event(self, event)
 
     # manage main page
