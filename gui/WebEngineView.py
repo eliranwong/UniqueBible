@@ -119,7 +119,7 @@ class WebEngineView(QWebEngineView):
 
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
-        if config.pinyinSupport:
+        if config.isPypinyinInstalled:
             pinyinText = QAction(self)
             pinyinText.setText(config.thisTranslation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
