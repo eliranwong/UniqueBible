@@ -6,29 +6,6 @@ from util.DateUtil import DateUtil
 class ConfigUtil:
 
     @staticmethod
-    def pip3InstallModule(module):
-        print("Installing missing module '{0}' ...".format(module))
-        # implement pip3 as a subprocess:
-        install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        *_, stderr = install.communicate()
-        return stderr
-
-    @staticmethod
-    def optionalFeatureNotEnabled(feature, module):
-        if ConfigUtil.pip3InstallModule(module):
-            print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
-        else:
-            print("Missing module '{0}' is now installed.".format(module))
-
-    @staticmethod
-    def requiredFeatureNotEnabled(feature, module):
-        if ConfigUtil.pip3InstallModule(module):
-            print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
-            exit(1)
-        else:
-            print("Missing module '{0}' is now installed. Please restart UniqueBible.app!".format(module))
-
-    @staticmethod
     def setup():
 
         # Check current version

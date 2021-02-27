@@ -2,10 +2,16 @@ import config, subprocess
 from platform import system
 from util.ConfigUtil import ConfigUtil
 
+def pip3InstallModule(module):
+    print("Installing missing module '{0}' ...".format(module))
+    # implement pip3 as a subprocess:
+    install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    *_, stderr = install.communicate()
+    return stderr
 
 def isPySide2Installed():
     try:
-        from PySide2.QtWidgets import QWidget
+        from PySide2.QtWidgets import QApplication, QStyleFactory
         return True
     except:
         return False
@@ -60,6 +66,7 @@ def isPygithubInstalled():
 
 def isQtMaterialInstalled():
     try:
+        from qt_material import apply_stylesheet
         return True
     except:
         return False
@@ -72,6 +79,7 @@ def isTelnetlib3Installed():
 
 def isIbmWatsonInstalled():
     try:
+        from ibm_watson import LanguageTranslatorV3
         return True
     except:
         return False
@@ -137,7 +145,9 @@ required = (
 )
 for module, feature, isInstalled in required:
     if not isInstalled:
-        ConfigUtil.requiredFeatureNotEnabled(feature, module)
+        if pip3InstallModule(module):
+            print("Required feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
+            exit(1)
 
 # Check if optional modules are installed
 optional = (
@@ -154,7 +164,7 @@ optional = (
 )
 for module, feature, isInstalled in optional:
     if not isInstalled:
-        if ConfigUtil.pip3InstallModule(module):
+        if pip3InstallModule(module):
             available = False
             print("Optional feature '{0}' is not enabled.\nTo enable it, install python package '{1}' first, by running 'pip3 install {1}' with terminal.".format(feature, module))
         else:

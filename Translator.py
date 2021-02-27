@@ -1,12 +1,8 @@
 import config
 from util.ConfigUtil import ConfigUtil
-try:
+if config.isIbmWatsonInstalled:
     from ibm_watson import LanguageTranslatorV3
     from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-    config.enableIBMWatson = True
-except:
-    ConfigUtil.optionalFeatureNotEnabled("Translation Service", "ibm-watson")
-    config.enableIBMWatson = False
 
 class Translator:
 
@@ -19,7 +15,7 @@ class Translator:
     toLanguageNames = ['Arabic', 'Bulgarian', 'Bengali', 'Bosnian', 'Catalan', 'Montenegrin', 'Czech', 'Welsh', 'Danish', 'German', 'Greek', 'English', 'Spanish', 'Estonian', 'Basque', 'Finnish', 'French', 'French (Canada)', 'Irish', 'Gujarati', 'Hebrew', 'Hindi', 'Croatian', 'Hungarian', 'Indonesian', 'Italian', 'Japanese', 'Korean', 'Lithuanian', 'Latvian', 'Malayalam', 'Malay', 'Maltese', 'Norwegian Bokmal', 'Nepali', 'Dutch', 'Polish', 'Portuguese', 'Romanian', 'Russian', 'Sinhala', 'Slovakian', 'Slovenian', 'Serbian', 'Swedish', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Vietnamese', 'Simplified Chinese', 'Traditional Chinese']
 
     def __init__(self):
-        if config.enableIBMWatson and config.myIBMWatsonApikey:
+        if config.isIbmWatsonInstalled and config.myIBMWatsonApikey:
             self.authenticate()
             #if self.language_translator is not None and not hasattr(config, "fromLanguageCodes"):
             #    self.getLanguageLists()
