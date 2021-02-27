@@ -115,7 +115,6 @@ class WebEngineView(QWebEngineView):
         # CHINESE TOOL - pinyin
         # Convert Chinese characters into pinyin
         if config.isPypinyinInstalled:
-            from pypinyin import pinyin
             pinyinText = QAction(self)
             pinyinText.setText(config.thisTranslation["context1_pinyin"])
             pinyinText.triggered.connect(self.pinyinSelectedText)
@@ -358,6 +357,7 @@ class WebEngineView(QWebEngineView):
 
     # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):
+        from pypinyin import pinyin
         if not self.selectedText():
             self.messageNoSelection()
         else:
