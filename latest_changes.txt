@@ -1,5 +1,5 @@
 Major change in version 21.83:
-* Adding support of installing missing modules
+* Adding support of installing missing modules 
 
 Major change in version 21.82:
 * Added initial support of installing optional modules for new users.
