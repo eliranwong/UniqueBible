@@ -1,6 +1,9 @@
 import os, sys, subprocess, platform
 from shutil import copyfile
 
+fullPath = os.path.realpath(__file__)
+os.chdir(fullPath[:-6])
+
 # Tested on Linux & Windows
 # TODO: To be tested on macOS
 
