@@ -1,3 +1,7 @@
+Major change in version 21.92:
+* Added automation to create virtual environment for users.  Tested on Linux.  Pending test on macOS and Windows.
+* Changed config.removeHighlightOnExit default value to True for new users.
+
 Major change in version 21.91:
 * Fixed LanguageUtil.py
 

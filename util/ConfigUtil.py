@@ -352,7 +352,7 @@ class ConfigUtil:
             config.favouriteBooks = ["Harmonies_and_Parallels", "Bible_Promises", "Timelines", "Maps_ABS", "Maps_NET"]
         # Remove book, note and instant highlights on exit.
         if not hasattr(config, "removeHighlightOnExit"):
-            config.removeHighlightOnExit = False
+            config.removeHighlightOnExit = True
         # Last string entered for searching book
         if not hasattr(config, "bookSearchString"):
             config.bookSearchString = ""
