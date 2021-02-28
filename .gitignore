@@ -28,3 +28,5 @@ UniqueBible.app.pdf
 thirdParty/dictionaries/*
 shortcut*.py
 morphology.sqlite
+htmlResources/fonts/*
+

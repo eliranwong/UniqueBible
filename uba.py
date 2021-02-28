@@ -3,9 +3,11 @@
 import os, sys, subprocess, platform
 from shutil import copyfile
 
-wd = os.path.realpath(__file__)[:-6]
+thisFile = os.path.realpath(__file__)
+wd = thisFile[:-6]
 if os.getcwd() != wd:
     os.chdir(wd)
+os.chmod(thisFile, 0o755)
 
 # Tested on Linux & Windows
 # TODO: To be tested on macOS
