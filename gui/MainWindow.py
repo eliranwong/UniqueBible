@@ -2014,6 +2014,16 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
 
+    def enableBiblesInParagraphs(self):
+        config.readFormattedBibles = True
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+
+    def disableBiblesInParagraphs(self):
+        config.readFormattedBibles = False
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+
     def getReadFormattedBibles(self):
         if config.readFormattedBibles:
             return "paragraph.png"

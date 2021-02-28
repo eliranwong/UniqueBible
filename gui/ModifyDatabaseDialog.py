@@ -50,7 +50,7 @@ class ModifyDatabaseDialog(QDialog):
             row.addWidget(self.fontSize)
             self.layout.addLayout(row)
 
-            fonts = sorted(glob.glob("htmlResources/fonts/*.ttf"))
+            fonts = sorted(glob.glob(r"htmlResources/fonts/*.*"))
             self.fonts = [''] + [os.path.basename(font) for font in fonts]
             try:
                 index = self.fonts.index(fontName)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     ConfigUtil.setup()
     config.thisTranslation = LanguageUtil.loadTranslation("en_GB")
 
-    config.mainText = "MOV"
+    config.mainText = "KJV"
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     window = ModifyDatabaseDialog("bible", config.mainText)
