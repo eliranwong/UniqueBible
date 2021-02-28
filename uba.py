@@ -3,8 +3,9 @@
 import os, sys, subprocess, platform
 from shutil import copyfile
 
-fullPath = os.path.realpath(__file__)
-os.chdir(fullPath[:-6])
+wd = os.path.realpath(__file__)[:-6]
+if os.getcwd() != wd:
+    os.chdir(wd)
 
 # Tested on Linux & Windows
 # TODO: To be tested on macOS
