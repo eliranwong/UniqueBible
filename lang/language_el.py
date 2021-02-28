@@ -615,4 +615,5 @@ translation = {
     "modify_database": "Τροποποίηση βάσης δεδομένων",
     "font_name": "Όνομα γραμματοσειράς",
     "title": "' Τίτλος",
+    "individualBibles": "Ατομικές Bibles",
 }

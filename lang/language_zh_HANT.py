@@ -617,4 +617,5 @@ translation = {
     "modify_database": "修改資料庫",
     "font_name": "字型名稱",
     "title": "Title",
+    "individualBibles": "個人聖經",
 }

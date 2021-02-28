@@ -615,4 +615,5 @@ translation = {
     "modify_database": "डाटाबेस परिवर्धित करें",
     "font_name": "फ़ॉन्ट नाम",
     "title": "शीर्षक",
+    "individualBibles": "व्यक्तिगत बिल्स",
 }

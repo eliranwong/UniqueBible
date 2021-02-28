@@ -615,4 +615,5 @@ translation = {
     "modify_database": "データベースの変更",
     "font_name": "フォント名",
     "title": "書名",
+    "individualBibles": "個別のバイブル",
 }

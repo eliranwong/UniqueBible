@@ -616,4 +616,5 @@ translation = {
     "modify_database": "修改数据库",
     "font_name": "字体名称",
     "title": "标题",
+    "individualBibles": "个人圣经",
 }

@@ -27,4 +27,7 @@ htmlResources/js/custom.js
 UniqueBible.app.pdf
 thirdParty/dictionaries/*
 shortcut*.py
+shortcut_*
+UniqueBibleApp.desktop
+UniqueBibleApp.sh
 morphology.sqlite

@@ -7,6 +7,11 @@
 import os, platform, logging, re, sys
 import logging.handlers as handlers
 
+thisFile = os.path.realpath(__file__)
+wd = thisFile[:-7]
+if os.getcwd() != wd:
+    os.chdir(wd)
+
 # Create custom files
 from util.FileUtil import FileUtil
 FileUtil.createCustomFiles()

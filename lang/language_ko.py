@@ -615,4 +615,5 @@ translation = {
     "modify_database": "데이터베이스 수정하기",
     "font_name": "글꼴 이름",
     "title": "제목",
+    "individualBibles": "개별 입찰",
 }

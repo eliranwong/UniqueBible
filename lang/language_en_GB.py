@@ -615,4 +615,5 @@ translation = {
     "modify_database": "Modify Database",
     "font_name": "Font Name",
     "title": "Title",
+    "individualBibles": "Individual Bibles",
 }
