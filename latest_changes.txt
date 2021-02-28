@@ -1,7 +1,8 @@
 Major changes in version 21.95:
 * Tested installation automation on Windows, macOS and Linux
 * Now automate creation of application shortcuts
-* Add support for builtin fonts for Bible display
+* Added support for builtin fonts for Bible display
+* Moved Individual Bibles font settings under UniqueBible > UBA Preferences > Fonts on Focus menu layout
 
 Major changes in version 21.94:
 * Fixed font issue

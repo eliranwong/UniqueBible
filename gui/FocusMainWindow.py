@@ -82,6 +82,7 @@ class FocusMainWindow:
         items = (
             ("menu1_setDefaultFont", self.setDefaultFont),
             ("menu1_setChineseFont", self.setChineseFont),
+            ("individualBibles", self.selectDatabaseToModify),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
@@ -286,7 +287,6 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        addMenuItem(menu, "modify_database", self, self.selectDatabaseToModify)
 
         # macros
         if config.enableMacros:
