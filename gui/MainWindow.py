@@ -1998,6 +1998,16 @@ class MainWindow(QMainWindow):
         enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
         self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
+    def enableInstantInformation(self):
+        config.instantInformationEnabled = True
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+
+    def disableInstantInformation(self):
+        config.instantInformationEnabled = False
+        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+
     # Actions - enable or disable paragraphs feature
     def displayBiblesInParagraphs(self):
         config.readFormattedBibles = not config.readFormattedBibles
@@ -2182,7 +2192,10 @@ class MainWindow(QMainWindow):
 
     def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
-        self.mainRefButton.setText(self.verseReference("main")[-1])
+        if config.menuLayout == "aleph":
+            self.mainRefButton.setText(":::".join(self.verseReference("main")))
+        else:
+            self.mainRefButton.setText(self.verseReference("main")[-1])
         self.updateVersionCombo()
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
@@ -2434,8 +2447,8 @@ class MainWindow(QMainWindow):
                         bibleCss = config.studyCssBibleFontStyle
                 html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
                         "<style>body {2} font-size: {4}px; font-family:'{5}';{3} "
-                        "zh {2} font-family:'{6}'; {3}"
-                        "{8}{9}</style>"
+                        "zh {2} font-family:'{6}'; {3} "
+                        "{8} {9}</style>"
                         "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
                         "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>"
                         "<script src='js/common.js'></script>"

@@ -772,12 +772,17 @@ class TextCommandParser:
             # Custom font styling for Bible
             (fontFile, fontSize) = Bible(text).getFontInfo()
             fontFormat = ''
+            fontDefinition = ''
+            fontSizeFormat = ''
             if fontFile and len(fontFile) > 0:
                 if ".ttf" in fontFile:
                     fontName = fontFile.replace(".ttf", "")
-                    fontFormat = "font-family: '{0}'; src: url('htmlResources/fonts/{1}') format('truetype');".format(
-                                 fontName, fontFile)
-            css = "{0} {1} {2} font-size: {3}; {4}".format(text, "{", fontFormat, fontSize, "}")
+                    fontDefinition = "@font-face {0} font-family: '{1}'; src: url('fonts/{2}') format('truetype'); {3}".format(
+                                 "{", fontName, fontFile, "}")
+                    fontFormat = "font-family: '{0}';".format(fontName)
+            if fontSize and len(fontSize) > 0:
+                fontSizeFormat = "font-size: {0};".format(fontSize)
+            css = "{0} {1} {2} {3} {4} {5}".format(fontDefinition, text, "{", fontFormat, fontSizeFormat, "}", )
             if view == "main":
                 config.mainCssBibleFontStyle = css
             elif view == "study":
