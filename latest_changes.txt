@@ -1,3 +1,7 @@
+Major changes in version 21.94:
+* Fixed font issue
+* Revised Aleph menu layout
+
 Major change in version 21.93:
 * Fixed setup automation on Windows
 
