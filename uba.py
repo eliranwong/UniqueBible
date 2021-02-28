@@ -1,4 +1,4 @@
-import os, sys, subprocess
+import os, sys, subprocess, platform
 from shutil import copyfile
 
 # Tested on Linux
@@ -18,6 +18,7 @@ python = os.path.basename(sys.executable)
 #print(python)
 mainFile = os.path.join(os.getcwd(), "main.py")
 venvDir = "venv"
+binDir = "Scripts" if platform.system() == "Windows" else "bin"
 
 def pip3IsInstalled():
     isInstalled, _ = subprocess.Popen("pip3 -V", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
@@ -42,8 +43,7 @@ def pip3InstallModule(module):
 # Check if virtual environment is being used
 if sys.prefix == sys.base_prefix:
     # Check if virtual environment is available
-    # TODO: check if the following path works on Windows
-    venvPython = os.path.join(os.getcwd(), venvDir, "bin", python)
+    venvPython = os.path.join(os.getcwd(), venvDir, binDir, "{0}.exe".format(python) if platform.system() == "Windows" else python)
     if not os.path.exists(venvPython):
         # Installing virtual environment
         # https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
@@ -56,7 +56,7 @@ if sys.prefix == sys.base_prefix:
         import venv
         venv.create(env_dir=venvDir, with_pip=True)
     # Check if activate script exists
-    activator = os.path.join(os.getcwd(), venvDir, "bin", "activate_this.py")
+    activator = os.path.join(os.getcwd(), venvDir, binDir, "activate_this.py")
     if not os.path.exists(activator):
         copyfile("activate_this.py", activator)
     with open(activator) as f:
