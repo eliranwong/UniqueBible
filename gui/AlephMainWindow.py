@@ -241,6 +241,8 @@ class AlephMainWindow:
         window_menu.addAction(QAction(config.thisTranslation["menu2_study"], self, shortcut=sc.parallel, triggered=self.parallel))
         window_menu.addAction(QAction(config.thisTranslation["menu2_bottom"], self, shortcut=sc.cycleInstant, triggered=self.cycleInstant))
         window_menu.addAction(QAction(config.thisTranslation["menu2_landscape"], self, shortcut=sc.switchLandscapeMode, triggered=self.switchLandscapeMode))
+        window_menu.addAction(QAction(config.thisTranslation["menu2_hover"], self, shortcut=sc.enableInstantButtonClicked, triggered=self.enableInstantButtonClicked))
+
         toolbar_menu = display_menu.addMenu(config.thisTranslation["menu_toolbar"])
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_all"], self, shortcut=sc.setNoToolBar, triggered=self.setNoToolBar))
         toolbar_menu.addAction(QAction(config.thisTranslation["menu2_top"], self, shortcut=sc.hideShowMainToolBar, triggered=self.hideShowMainToolBar))
@@ -307,7 +309,7 @@ class AlephMainWindow:
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
-        self.mainRefButton = QPushButton(self.verseReference("main")[1])
+        self.mainRefButton = QPushButton(":::".join(self.verseReference("main")))
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
@@ -400,7 +402,7 @@ class AlephMainWindow:
         self.studyBibleToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.studyBibleToolBar)
 
-        self.studyRefButton = QPushButton(self.verseReference("study")[1])
+        self.studyRefButton = QPushButton(":::".join(self.verseReference("study")))
         self.studyRefButton.setToolTip(config.thisTranslation["bar2_reference"])
         self.studyRefButton.setStyleSheet(textButtonStyle)
         self.studyRefButton.clicked.connect(self.studyRefButtonClicked)
@@ -821,7 +823,7 @@ class AlephMainWindow:
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(self.firstToolBar)
 
-        self.mainRefButton = QPushButton(self.verseReference("main")[1])
+        self.mainRefButton = QPushButton(":::".join(self.verseReference("main")))
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
