@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "Bemerkungen:",
     "message_cancel": "Abbrechen",
     "message_install": "Herunterladen und installieren",
-    "message_installing": "Installation läuft ... Bitte warten Sie!",
+    "message_installing": "Herunterladen ... Bitte warten!",
     "message_installed": "Heruntergeladen und installiert!",
     "message_failedToInstall": "Installation fehlgeschlagen!  Sie können es erneut versuchen oder das Problem an uns melden.",
     "message_downloadHelper": "Download-Helper",

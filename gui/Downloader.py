@@ -1,4 +1,5 @@
-import os, config, zipfile, gdown, threading
+import os, config, zipfile, gdown
+# import threading
 from PySide2.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QProgressBar)
 
 class Downloader(QDialog):
@@ -60,12 +61,7 @@ class Downloader(QDialog):
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
         except:
-            #connection = False
-            try:
-                gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
-                connection = True
-            except:
-                connection = False
+            connection = False
         if connection:
             if self.localFile.endswith(".zip"):
                 zipObject = zipfile.ZipFile(self.localFile, "r")

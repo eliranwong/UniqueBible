@@ -1,5 +1,31 @@
-import config, subprocess
+import config, subprocess, os, zipfile
 from platform import system
+
+def downloadFileIfNotFound(databaseInfo):
+    fileItems, cloudID, *_ = databaseInfo
+    targetFile = os.path.join(*fileItems)
+    if not os.path.isfile(targetFile):
+        cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
+        localFile = "{0}.zip".format(targetFile)
+        # Download from google drive
+        import gdown
+        try:
+            print("Downloading initial content '{0}' ...".format(fileItems[-1]))
+            gdown.download(cloudFile, localFile, quiet=True)
+            print("Downloaded!")
+            connection = True
+        except:
+            print("Failed to download '{0}'!".format(fileItems[-1]))
+            connection = False
+        if connection:
+            if localFile.endswith(".zip"):
+                print("Unpacking ...")
+                zipObject = zipfile.ZipFile(localFile, "r")
+                path, *_ = os.path.split(localFile)
+                zipObject.extractall(path)
+                zipObject.close()
+                os.remove(localFile)
+                print("'{0}' is installed!".format(fileItems[-1]))
 
 def pip3InstallModule(module):
     print("Installing missing module '{0}' ...".format(module))
@@ -188,3 +214,11 @@ if not config.isTtsInstalled:
 if config.developer:
     # import exlbl
     pass
+
+# Download initial content for fresh installation
+files = (
+    # Core bible functionality
+    ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),
+)
+for file in files:
+    downloadFileIfNotFound(file)

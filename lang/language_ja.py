@@ -362,7 +362,7 @@ translation = {
     "message_remarks": "備考",
     "message_cancel": "キャンセル",
     "message_install": "ダウンロードおよびインストール",
-    "message_installing": "インストール中 ... お待ちください !",
+    "message_installing": "ダウンロードしています ... お待ちください !",
     "message_installed": "ダウンロードおよびインストール済みです。",
     "message_failedToInstall": "インストールできませんでした。  もう一度試すか、問題を私たちに報告してください。",
     "message_downloadHelper": "ダウンロード・ヘルパー",

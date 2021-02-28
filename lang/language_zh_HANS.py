@@ -409,7 +409,7 @@ translation = {
     "message_themeTakeEffectAfterRestart": '布景主题将在下次重新启动之后生效',
     "message_configurationTakeEffectAfterRestart": '配置将在下次重新启动之后生效',
     "open": '开',
-    "message_installing": "正在安装... 请等一下",
+    "message_installing": "正在下载 ... 请稍候!",
     "message_installed": '已下载并安装！',
     "message_failedToInstall": '无法安装！  你可以再尝试一次，或向我们报告这个问题。',
     "youTubeLinkNotFound": '找不到 YouTube 链结！',
