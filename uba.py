@@ -1,8 +1,8 @@
 import os, sys, subprocess, platform
 from shutil import copyfile
 
-# Tested on Linux
-# TODO: To be tested on macOS and Windows
+# Tested on Linux & Windows
+# TODO: To be tested on macOS
 
 # Required minimum python version: 3.7
 if sys.version_info < (3, 7):
