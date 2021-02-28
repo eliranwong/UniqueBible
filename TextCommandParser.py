@@ -780,6 +780,9 @@ class TextCommandParser:
                     fontDefinition = "@font-face {0} font-family: '{1}'; src: url('fonts/{2}') format('truetype'); {3}".format(
                                  "{", fontName, fontFile, "}")
                     fontFormat = "font-family: '{0}';".format(fontName)
+                if ".builtin" in fontFile:
+                    fontName = fontFile.replace(".builtin", "")
+                    fontFormat = "font-family: '{0}';".format(fontName)
             if fontSize and len(fontSize) > 0:
                 fontSizeFormat = "font-size: {0};".format(fontSize)
             css = "{0} {1} {2} {3} {4} {5}".format(fontDefinition, text, "{", fontFormat, fontSizeFormat, "}", )
