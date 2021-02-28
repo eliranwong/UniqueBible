@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os, sys, subprocess, platform
 from shutil import copyfile
 
