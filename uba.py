@@ -138,7 +138,7 @@ else:
     # Fixed fcitx for Linux users
     fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
     ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/PySide2/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor))
-    ubaFcitxPlugin = os.path.join(os.getcwd(), venvDir, ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
+    ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
     #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
     if platform.system() == "Linux" and os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
         try:
