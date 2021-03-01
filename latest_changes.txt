@@ -2,6 +2,7 @@ Major changes in version 22.02:
 * Fixed Modify Database Dialog
 * Fixed retrieving full name of bible modules
 * Added displaying bible full names as tooltip in bible version dropdown menu on Master Control and Focus menu
+* Show English translation in EditGuiLanguageFileDialog popup
 
 Major changes in version 22.01:
 * Master Control Library tab now display commentary full names and abbreviations as tooltips
