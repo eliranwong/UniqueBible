@@ -30,6 +30,10 @@ class ModifyDatabaseDialog(QDialog):
             self.bible = Bible(filename)
             self.bible.addMissingColumns()
             (fontName, fontSize) = self.bible.getFontInfo()
+            if fontName is None:
+                fontName = ""
+            if fontSize is None:
+                fontSize = ""
 
             self.layout.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["name"], filename)))
 
