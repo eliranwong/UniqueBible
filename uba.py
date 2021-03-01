@@ -143,6 +143,7 @@ else:
     if platform.system() == "Linux" and os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
         try:
             copyfile(fcitxPlugin, ubaFcitxPlugin)
+            os.chmod(ubaFcitxPlugin, 0o755)
         except:
             pass
     # Run main file
