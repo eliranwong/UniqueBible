@@ -18,6 +18,7 @@ class EditGuiLanguageFileDialog(QDialog):
 
         self.parent = parent
         self.language = language
+        self.english = LanguageUtil.loadTranslation("en_US")
         langDefinition = LanguageUtil.loadTranslation(language)
         self.languages = []
         for key in langDefinition.keys():
@@ -59,7 +60,7 @@ class EditGuiLanguageFileDialog(QDialog):
         row = self.model.getRow(index.row())
         (key, value) = row
         width = len(value)
-        keyDisplay = key + ' ' * width + '    '
+        keyDisplay = key + '\n\n' + self.english[key] + "\n"
         newValue, ok = QInputDialog.getText(self, 'Translation', keyDisplay, QLineEdit.Normal, value)
         if ok:
             self.model.list[index.row()] = (key, newValue)
@@ -145,6 +146,6 @@ if __name__ == '__main__':
     LanguageUtil.loadTranslation("en_US")
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
-    window = EditGuiLanguageFileDialog(None, "en_US")
+    window = EditGuiLanguageFileDialog(None, "zh_HANS")
     window.exec_()
     window.close()
