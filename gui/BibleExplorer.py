@@ -3,6 +3,7 @@ from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
+from PySide2.QtCore import Qt
 from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
@@ -67,8 +68,11 @@ class BibleExplorer(QWidget):
         navigationLayout1.setSpacing(5)
         # Version selection
         self.versionCombo = QComboBox()
-        self.textList = self.biblesSqlite.getBibleList()
+        #self.textList = self.biblesSqlite.getBibleList()
+        self.textList = self.parent.textList
         self.versionCombo.addItems(self.textList)
+        for index, fullName in enumerate(self.parent.textFullNameList):
+            self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         initialIndex = 0
         if self.text in self.textList:
             initialIndex = self.textList.index(self.text)

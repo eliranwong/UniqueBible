@@ -1,5 +1,5 @@
 import config
-from BiblesSqlite import BiblesSqlite
+from BiblesSqlite import BiblesSqlite, Bible
 from gui.BibleExplorer import BibleExplorer
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
@@ -55,6 +55,10 @@ class MasterControl(QWidget):
     def setupItemLists(self):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
+        self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
+        if self.parent.versionCombo is not None and config.menuLayout == 'focus':
+            for index, fullName in enumerate(self.textFullNameList):
+                self.parent.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         # commentaries
         self.commentaryList = Commentary().getCommentaryList()
         #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]

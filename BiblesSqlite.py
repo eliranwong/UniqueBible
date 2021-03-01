@@ -871,13 +871,22 @@ class Bible:
         return [verse[0] for verse in self.cursor.fetchall()]
 
     def bibleInfo(self):
-        query = "SELECT Title FROM Details limit 1"
-        self.cursor.execute(query)
-        info = self.cursor.fetchone()
+        # It is observed that some files have Details table and some do not.
+        try:
+            query = "SELECT Title FROM Details limit 1"
+            self.cursor.execute(query)
+            info = self.cursor.fetchone()
+        except:
+            try:
+                query = "SELECT Scripture FROM Verses WHERE Book=? AND Chapter=? AND Verse=? limit 1"
+                self.cursor.execute(query, (0, 0, 0))
+                info = self.cursor.fetchone()
+            except:
+                info = self.text
         if info:
             return info[0]
         else:
-            return ""
+            return self.text
 
     def getLanguage(self):
         query = "SELECT Language FROM Details limit 1"
