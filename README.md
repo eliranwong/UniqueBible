@@ -1,7 +1,7 @@
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
-<b>Tested in:</b> Windows, macOS and Linux (Debian, Ubuntu & Mint), Chrome OS (Debian 10)
+<b>Tested in:</b> Windows 10, Windows WSL2, macOS and Linux (Debian, Ubuntu & Mint), Chrome OS (Debian 10)
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
