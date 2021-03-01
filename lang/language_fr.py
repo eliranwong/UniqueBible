@@ -616,4 +616,5 @@ translation = {
     "font_name": "Nom de police",
     "title": "Titre",
     "individualBibles": "Bibles individuelles",
+    "edit_language_file": "Editer le fichier de langue",
 }

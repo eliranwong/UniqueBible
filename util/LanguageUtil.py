@@ -6,13 +6,12 @@ from util.FileUtil import FileUtil
 
 config.isIbmWatsonInstalled = True
 
+
 class LanguageUtil:
 
     @staticmethod
     def getCodesSupportedLanguages():
         files = sorted(glob.glob("lang/language_*.py"))
-        # for file in files:
-        #     print(file[14:-3])
         return [file[14:-3] for file in files]
 
     @staticmethod
@@ -81,8 +80,6 @@ class LanguageUtil:
                 for key in master.keys():
                     count += 1
                     print(count)
-                    if count > 1000:
-                        break
                     text = master[key]
                     if key in ["menu1_app"]:
                         result = text
@@ -158,6 +155,20 @@ class LanguageUtil:
             else:
                 print("Not founded in {0}".format(code))
 
+    @staticmethod
+    def saveLanguageFile(lang, data):
+        filename = "lang/language_" + lang + ".py"
+        with open(filename, "w", encoding="utf-8") as fileObj:
+            fileObj.write("translation = {\n")
+            for line in data:
+                key = line[0]
+                text = line[1]
+                text = text.replace("\n", "\\n")
+                fileObj.write('    "{0}": "{1}",\n'.format(key, text))
+            fileObj.write("}")
+            fileObj.close()
+
+
 # Test code
 
 def printCodesSupportedLanguages():
@@ -218,5 +229,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("title", "Title")
+        addLanguageStringToAllFiles("edit_language_file", "Edit language file")
+        # createNewLanguageFile("ml")
+        # validateLanguageFileSizes()
 

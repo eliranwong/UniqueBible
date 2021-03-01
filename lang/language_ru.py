@@ -616,4 +616,5 @@ translation = {
     "font_name": "Имя шрифта",
     "title": "Название",
     "individualBibles": "Отдельные библии",
+    "edit_language_file": "Изменить файл языка",
 }

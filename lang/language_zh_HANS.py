@@ -617,4 +617,5 @@ translation = {
     "font_name": "字体名称",
     "title": "标题",
     "individualBibles": "个人圣经",
+    "edit_language_file": "编辑语言文件",
 }

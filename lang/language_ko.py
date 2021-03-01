@@ -616,4 +616,5 @@ translation = {
     "font_name": "글꼴 이름",
     "title": "제목",
     "individualBibles": "개별 입찰",
+    "edit_language_file": "언어 파일 편집하기",
 }
