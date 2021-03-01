@@ -1671,7 +1671,7 @@ class TextCommandParser:
             }
             return actionMap[keyword](verseReference, source)
         else:
-            return self.databaseNotInstalled(keyword)
+            return self.databaseNotInstalled(keyword.lower())
 
     # _vnsc:::
     def verseNoSingleClick(self, command, source):
