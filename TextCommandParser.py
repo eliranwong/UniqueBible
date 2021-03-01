@@ -1656,18 +1656,22 @@ class TextCommandParser:
 
     # mapping verse action
     def mapVerseAction(self, keyword, verseReference, source):
-        actionMap = {
-            "COMPARE": self.textCompare,
-            "CROSSREFERENCE": self.textCrossReference,
-            "TSKE": self.tske,
-            "TRANSLATION": self.textTranslation,
-            "DISCOURSE": self.textDiscourse,
-            "WORDS": self.textWords,
-            "COMBO": self.textCombo,
-            "INDEX": self.textIndex,
-            "COMMENTARY": self.textCommentary,
-        }
-        return actionMap[keyword](verseReference, source)
+        if self.isDatabaseInstalled(keyword.lower()):
+            self.lastKeyword = keyword
+            actionMap = {
+                "COMPARE": self.textCompare,
+                "CROSSREFERENCE": self.textCrossReference,
+                "TSKE": self.tske,
+                "TRANSLATION": self.textTranslation,
+                "DISCOURSE": self.textDiscourse,
+                "WORDS": self.textWords,
+                "COMBO": self.textCombo,
+                "INDEX": self.textIndex,
+                "COMMENTARY": self.textCommentary,
+            }
+            return actionMap[keyword](verseReference, source)
+        else:
+            return self.databaseNotInstalled(keyword)
 
     # _vnsc:::
     def verseNoSingleClick(self, command, source):
