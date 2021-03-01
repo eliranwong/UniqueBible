@@ -77,6 +77,8 @@ class AlephMainWindow:
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
         if config.developer:
             menu_developer = menu1.addMenu("&Developer")
+            menu_developer.addAction(
+                QAction(config.thisTranslation["edit_language_file"], self, triggered=self.selectLanguageFileToEdit))
         menu1.addAction(
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addAction(

@@ -616,4 +616,5 @@ translation = {
     "font_name": "फ़ॉन्ट नाम",
     "title": "शीर्षक",
     "individualBibles": "व्यक्तिगत बिल्स",
+    "edit_language_file": "भाषा फ़ाइल संपादित करें",
 }

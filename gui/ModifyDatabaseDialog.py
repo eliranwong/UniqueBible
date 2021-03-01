@@ -2,15 +2,13 @@ import glob
 import os
 import sys
 
-from PySide2.QtCore import Qt
+from PySide2.QtGui import QFontDatabase
 
 import config
 
 from PySide2 import QtCore
 from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
-    QComboBox, QSpacerItem, QSizePolicy
-
-from util.TextUtil import TextUtil
+    QComboBox, QRadioButton, QGridLayout
 
 
 class ModifyDatabaseDialog(QDialog):
@@ -19,6 +17,7 @@ class ModifyDatabaseDialog(QDialog):
         super().__init__()
 
         from BiblesSqlite import Bible
+        self.fontDatabase = QFontDatabase()
 
         self.filetype = filetype
         self.filename = filename
@@ -30,6 +29,7 @@ class ModifyDatabaseDialog(QDialog):
         if filetype == "bible":
             self.bible = Bible(filename)
             self.bible.addMissingColumns()
+            (fontName, fontSize) = self.bible.getFontInfo()
 
             self.layout.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["name"], filename)))
 
@@ -41,30 +41,49 @@ class ModifyDatabaseDialog(QDialog):
             row.addWidget(self.bibleTitle)
             self.layout.addLayout(row)
 
-            (fontName, fontSize) = self.bible.getFontInfo()
-            row = QHBoxLayout()
-            row.addWidget(QLabel("{0}: ".format(config.thisTranslation["menu2_fontSize"])))
-            self.fontSize = QLineEdit()
-            self.fontSize.setText(fontSize)
-            self.fontSize.setMaxLength(20)
-            row.addWidget(self.fontSize)
-            self.layout.addLayout(row)
+            grid = QGridLayout()
+
+            self.builtinFonts = [""] + self.fontDatabase.families()
+            try:
+                index = self.builtinFonts.index(fontName.replace(".builtin", ""))
+            except:
+                index = 0
+            self.useBuiltinFont = QRadioButton()
+            self.useBuiltinFont.clicked.connect(lambda: self.selectRadio("builtin"))
+            grid.addWidget(self.useBuiltinFont, 0, 0)
+            grid.addWidget(QLabel("{0}: ".format("Built-in font")), 0, 1)
+            self.builtinFontList = QComboBox()
+            self.builtinFontList.addItems(self.builtinFonts)
+            self.builtinFontList.setCurrentIndex(index)
+            grid.addWidget(self.builtinFontList, 0, 2)
 
             fonts = sorted(glob.glob(r"htmlResources/fonts/*.*"))
-            self.fonts = [''] + [os.path.basename(font) for font in fonts]
+            self.fontFiles = [''] + [os.path.basename(font) for font in fonts]
             try:
-                index = self.fonts.index(fontName)
+                index = self.fontFiles.index(fontName)
             except:
                 index = 0
             row = QHBoxLayout()
-            row.addWidget(QLabel("{0}: ".format(config.thisTranslation["font_name"])))
-            self.fontList = QComboBox()
-            self.fontList.addItems(self.fonts)
-            self.fontList.setCurrentIndex(index)
-            row.addWidget(self.fontList)
-            self.layout.addLayout(row)
+            self.useFileFont = QRadioButton()
+            self.useFileFont.clicked.connect(lambda: self.selectRadio("file"))
+            grid.addWidget(self.useFileFont, 1, 0)
+            row.addStretch(1)
+            grid.addWidget(QLabel("{0}: ".format("Font file")), 1, 1)
+            self.fileFontList = QComboBox()
+            self.fileFontList.addItems(self.fontFiles)
+            self.fileFontList.setCurrentIndex(index)
+            grid.addWidget(self.fileFontList, 1, 2)
+            self.layout.addLayout(grid)
         else:
             self.layout.addWidget(QLabel("{0} is not supported".format(filetype)))
+
+        row = QHBoxLayout()
+        row.addWidget(QLabel("{0}: ".format(config.thisTranslation["menu2_fontSize"])))
+        self.fontSize = QLineEdit()
+        self.fontSize.setText(fontSize)
+        self.fontSize.setMaxLength(20)
+        row.addWidget(self.fontSize)
+        self.layout.addLayout(row)
 
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
@@ -74,11 +93,30 @@ class ModifyDatabaseDialog(QDialog):
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
+        if ".ttf" in fontName:
+            self.selectRadio("file")
+        else:
+            self.selectRadio("builtin")
+
+    def selectRadio(self, option):
+        if option == "builtin":
+            self.useBuiltinFont.setChecked(True)
+            self.builtinFontList.setEnabled(True)
+            self.fileFontList.setEnabled(False)
+        else:
+            self.useFileFont.setChecked(True)
+            self.builtinFontList.setEnabled(False)
+            self.fileFontList.setEnabled(True)
+
     def save(self):
         if self.filetype == "bible":
+            if self.useBuiltinFont.isChecked():
+                font = self.builtinFonts[self.builtinFontList.currentIndex()]
+                font += ".builtin"
+            else:
+                font = self.fontFiles[self.fileFontList.currentIndex()]
             self.bible.updateTitleAndFontInfo(self.bibleTitle.text(),
-                                              self.fontSize.text(),
-                                              self.fonts[self.fontList.currentIndex()])
+                                              self.fontSize.text(), font)
 
 if __name__ == '__main__':
     from util.ConfigUtil import ConfigUtil

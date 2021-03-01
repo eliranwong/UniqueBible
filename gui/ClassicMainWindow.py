@@ -406,6 +406,8 @@ class ClassicMainWindow:
             menu999 = self.menuBar().addMenu("&Developer")
             #menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
             menu999.addAction(QAction("testing", self, triggered=self.testing))
+            addMenuItem(menu999, "edit_language_file", self, self.selectLanguageFileToEdit)
+
 
     def testing(self):
         pass

@@ -6,7 +6,7 @@ from functools import partial
 from PySide2.QtCore import QUrl, Qt, QEvent
 from PySide2.QtGui import QIcon, QGuiApplication, QFont
 from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton)
+                               QFrame, QFontDialog, QApplication, QPushButton, QDialog)
 
 import exlbl
 from BibleBooks import BibleBooks
@@ -19,6 +19,7 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
+from gui.EditGuiLanguageFileDialog import EditGuiLanguageFileDialog
 from gui.InfoDialog import InfoDialog
 # These "unused" window imports are actually used.  Do not delete these lines.
 from gui.AlephMainWindow import AlephMainWindow
@@ -616,6 +617,16 @@ class MainWindow(QMainWindow):
                                         config.thisTranslation["modify_database"], items, 0, False)
         if ok and item:
             dialog = ModifyDatabaseDialog("bible", item)
+            dialog.exec_()
+
+    # Select language file to edit
+    def selectLanguageFileToEdit(self):
+        items = LanguageUtil.getCodesSupportedLanguages()
+        index = items.index(config.displayLanguage)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["edit_language_file"], items, index, False)
+        if ok and item:
+            dialog = EditGuiLanguageFileDialog(self, item)
             dialog.exec_()
 
     # convert bible references to string

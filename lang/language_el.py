@@ -616,4 +616,5 @@ translation = {
     "font_name": "Όνομα γραμματοσειράς",
     "title": "' Τίτλος",
     "individualBibles": "Ατομικές Bibles",
+    "edit_language_file": "Τροποποίηση αρχείου γλώσσας",
 }

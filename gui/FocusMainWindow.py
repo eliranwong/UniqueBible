@@ -345,6 +345,8 @@ class FocusMainWindow:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
             addMenuItem(menu, "Check language files", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"), None, False)
+            addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
+
 
     def setupToolBarStandardIconSize(self):
         
