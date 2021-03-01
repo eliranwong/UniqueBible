@@ -1,3 +1,6 @@
+Major changes in version 22.01:
+* Master Control Library tab now display commentary full names and abbreviations as tooltips
+
 Major changes in version 22.0:
 * Added Malayalam, built-in font, EditGuiLanguageFileDialog
 

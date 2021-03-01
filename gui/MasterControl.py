@@ -57,6 +57,13 @@ class MasterControl(QWidget):
         self.textList = BiblesSqlite().getBibleList()
         # commentaries
         self.commentaryList = Commentary().getCommentaryList()
+        #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]
+        self.commentaryFullNameList = []
+        for module in self.commentaryList:
+            info = Commentary(module).commentaryInfo()
+            if info == "https://Marvel.Bible Commentary" and module in Commentary.marvelCommentaries:
+                info = Commentary.marvelCommentaries[module]
+            self.commentaryFullNameList.append(info)
         # reference book
         # menu10_dialog
         bookData = BookData()

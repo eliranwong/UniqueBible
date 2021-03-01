@@ -1,6 +1,6 @@
 import config
 from PySide2.QtCore import QStringListModel
-#from PySide2.QtGui import QStandardItemModel, QStandardItem
+from PySide2.QtGui import QStandardItemModel, QStandardItem
 from PySide2.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
 from ToolsSqlite import Book
 
@@ -63,12 +63,14 @@ class LibraryLauncher(QWidget):
         # https://www.pythoncentral.io/pyside-pyqt-tutorial-qlistview-and-qstandarditemmodel/
         list = QListView()
         list.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        #model = QStandardItemModel(list)
-        #for item in items:
-        #    item = QStandardItem(item)
-        #    item.setCheckable(True)
-        #    model.appendRow(item)
-        model = QStringListModel(self.parent.commentaryList)
+        model = QStandardItemModel(list)
+        for index, commentary in enumerate(self.parent.commentaryFullNameList):
+            item = QStandardItem(commentary)
+            item.setToolTip(self.parent.commentaryList[index])
+        #    commentary.setCheckable(True)
+            model.appendRow(item)
+        #model = QStringListModel(self.parent.commentaryList)
+        #model = QStringListModel(self.parent.commentaryFullNameList)
         list.setModel(model)
         if config.commentaryText in self.parent.commentaryList:
             list.setCurrentIndex(model.index(self.parent.commentaryList.index(config.commentaryText), 0))
@@ -110,7 +112,9 @@ class LibraryLauncher(QWidget):
         self.parent.runTextCommand(command)
 
     def commentarySelected(self, selection):
-        config.commentaryText = selection[0].indexes()[0].data()
+        #config.commentaryText = selection[0].indexes()[0].data()
+        index = selection[0].indexes()[0].row()
+        config.commentaryText = self.parent.commentaryList[index]
         command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
         self.parent.runTextCommand(command)
 
