@@ -1,4 +1,4 @@
-import config, subprocess, os, zipfile
+import config, subprocess, os, zipfile, platform
 from platform import system
 
 def downloadFileIfNotFound(databaseInfo):
@@ -131,7 +131,7 @@ def isPypinyinInstalled():
         return False
 
 def isTtsInstalled():
-    if system() == "Linux" and config.espeak:
+    if platform.system() == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
         if not espeakInstalled:
             config.espeak = False

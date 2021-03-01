@@ -17,8 +17,20 @@ if sys.version_info < (3, 7):
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 # For ChromeOS Linux (Debian 10) ONLY:
-if platform.system() == "Linux" and (os.path.exists("/mnt/chromeos/")):
+if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
+    # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
+    # If QT_QPA_PLATFORM is set to wayland, UBA does not work with touchscreen and its main window closes and opens unexpectedly.
     os.environ["QT_QPA_PLATFORM"] = "xcb"
+    # Trouble-shoot an issue: https://github.com/eliranwong/ChromeOSLinux/blob/main/troubleshooting/qt.qpa.plugin_cannot_load_xcb.md
+    # The issue causes UBA unable to start up.
+    libxcbUtil0 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.0"
+    libxcbUtil1 = "/usr/lib/x86_64-linux-gnu/libxcb-util.so.1"
+    if os.path.exists(libxcbUtil0) and not os.path.exists(libxcbUtil1):
+        try:
+            subprocess.Popen("sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so.0 /usr/lib/x86_64-linux-gnu/libxcb-util.so.1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except:
+            pass
+
 
 #python = "py" if platform.system() == "Windows" else "python3"
 # Do NOT use sys.executable directly
@@ -123,5 +135,14 @@ else:
     with open(activator) as f:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
+    # Fixed fcitx for Linux users
+    fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
+    ubaInputPluginDir = "lib/python{0}.{1}/site-packages/PySide2/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor)
+    ubaFcitxPlugin = os.path.join(os.getcwd(), venvDir, ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
+    if platform.system() == "Linux" and os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
+        try:
+            copyfile(fcitxPlugin, ubaFcitxPlugin)
+        except:
+            pass
     # Run main file
     subprocess.Popen([python, mainFile])
