@@ -219,6 +219,7 @@ if config.developer:
 files = (
     # Core bible functionality
     ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),
+    ((config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
 )
 for file in files:
     downloadFileIfNotFound(file)

@@ -1657,7 +1657,7 @@ class TextCommandParser:
     # mapping verse action
     def mapVerseAction(self, keyword, verseReference, source):
         if self.isDatabaseInstalled(keyword.lower()):
-            self.lastKeyword = keyword
+            self.lastKeyword = keyword.lower()
             actionMap = {
                 "COMPARE": self.textCompare,
                 "CROSSREFERENCE": self.textCrossReference,

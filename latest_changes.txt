@@ -1,3 +1,6 @@
+Major change in version 21.98:
+* Added commentary "CBSC" to automatic setup for fresh installation.
+
 Major change in version 21.97:
 * Fixed an issue that new users were not able to use Smart Index feature and some other features due to missing files.
 
