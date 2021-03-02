@@ -135,6 +135,12 @@ else:
     with open(activator) as f:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
+    try:
+        # Automatic setup does not start on some device because pip tool is too old
+        # will add control later and update pip tool once
+        subprocess.Popen("pip install --upgrade pip", shell=True)
+    except:
+        pass
     # Fixed fcitx for Linux users
     if platform.system() == "Linux":
         fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
