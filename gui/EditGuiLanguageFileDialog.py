@@ -18,13 +18,23 @@ class EditGuiLanguageFileDialog(QDialog):
 
         self.parent = parent
         self.language = language
-        self.english = LanguageUtil.loadTranslation("en_US")
-        langDefinition = LanguageUtil.loadTranslation(language)
+        self.reference = LanguageUtil.loadTranslation(config.referenceTranslation)
+        targetLanguage = LanguageUtil.loadTranslation(language)
         self.languages = []
-        for key in langDefinition.keys():
-            value = langDefinition[key]
-            value = value.replace("\n", "\\n")
-            self.languages.append([key, value])
+        self.toolTips = []
+        if config.displayReferenceOnEditGuiLanguage:
+            for key in self.reference:
+                if key in targetLanguage:
+                    self.languages.append((self.reference[key].replace("\n", "\\n"), targetLanguage[key].replace("\n", "\\n")))
+                    self.toolTips.append((key, key))
+        else:
+            # Cannot use the following two lines directly because target language file and reference file are most likely in different order
+            #self.languages = [(key, value.replace("\n", "\\n")) for key, value in targetLanguage.items()]
+            #self.toolTips = [(value.replace("\n", "\\n"), value.replace("\n", "\\n")) for value in self.reference.values()]
+            for key in self.reference:
+                if key in targetLanguage:
+                    self.languages.append((key, targetLanguage[key].replace("\n", "\\n")))
+                    self.toolTips.append((self.reference[key].replace("\n", "\\n"), self.reference[key].replace("\n", "\\n")))
 
         self.setWindowTitle("Edit GUI Language File")
         self.setMinimumWidth(1000)
@@ -41,7 +51,7 @@ class EditGuiLanguageFileDialog(QDialog):
         self.layout.addLayout(row)
 
         self.table = QTableView()
-        self.model = DisplayLanguagesModel(self, self.languages)
+        self.model = DisplayLanguagesModel(self, self.languages, self.toolTips)
         self.table.setModel(self.model)
         self.table.resizeColumnsToContents()
         self.table.setSortingEnabled(True)
@@ -60,7 +70,7 @@ class EditGuiLanguageFileDialog(QDialog):
         row = self.model.getRow(index.row())
         (key, value) = row
         width = len(value)
-        keyDisplay = key + '\n\n' + self.english[key] + "\n"
+        keyDisplay = key + '\n\n' + self.reference[key] + "\n"
         newValue, ok = QInputDialog.getText(self, 'Translation', keyDisplay, QLineEdit.Normal, value)
         if ok:
             self.model.list[index.row()] = (key, newValue)
@@ -90,20 +100,25 @@ class EditGuiLanguageFileDialog(QDialog):
 
 class DisplayLanguagesModel(QAbstractTableModel):
 
-    def __init__(self, parent, data, *args):
+    def __init__(self, parent, data, toolTips, *args):
         QAbstractTableModel.__init__(self, parent, *args)
         self.fullList = data
         self.list = data
+        self.fullToolTips = toolTips
+        self.toolTips = toolTips
         self.header = ['key', Languages.decode(parent.language)]
         self.col = 0
         self.order = None
 
     def filter(self, col, text):
         newList = []
+        newToolTipList = []
         for item in self.fullList:
             if text.lower() in item[col].lower():
                 newList.append(item)
+                newToolTipList.append(self.fullToolTips[self.fullList.index(item)])
         self.list = newList
+        self.fullToolTips = newToolTipList
         self.sort(self.col, self.order)
 
     def rowCount(self, parent):
@@ -118,6 +133,8 @@ class DisplayLanguagesModel(QAbstractTableModel):
     def data(self, index, role):
         if not index.isValid():
             return None
+        elif role == Qt.ToolTipRole:
+            return self.toolTips[index.row()][index.column()]
         elif role != Qt.DisplayRole:
             return None
         return self.list[index.row()][index.column()]
@@ -138,8 +155,11 @@ class DisplayLanguagesModel(QAbstractTableModel):
         self.col = col
         self.order = order
         self.list = sorted(self.list, key=operator.itemgetter(col))
+        #self.toolTips = sorted(self.toolTips, key=operator.itemgetter(col))
         if order == Qt.DescendingOrder:
             self.list.reverse()
+            #self.toolTips.reverse()
+        self.toolTips = [self.fullToolTips[self.fullList.index(i)] for i in self.list]
         self.emit(SIGNAL("layoutChanged()"))
 
 if __name__ == '__main__':

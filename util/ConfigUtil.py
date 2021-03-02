@@ -19,9 +19,13 @@ class ConfigUtil:
 
         # Default settings for configurations:
 
-        # Developer option
+        # Developer options
         if not hasattr(config, "developer"):
             config.developer = False
+        if not hasattr(config, "referenceTranslation"):
+            config.referenceTranslation = "en_US"
+        if not hasattr(config, "displayReferenceOnEditGuiLanguage"):
+            config.displayReferenceOnEditGuiLanguage = False
         # Personal google api key for display of google maps
         if not hasattr(config, "myGoogleApiKey"):
             config.myGoogleApiKey = ""
@@ -505,6 +509,8 @@ class ConfigUtil:
         configs = (
             # ("version", config.version),
             ("developer", config.developer),
+            ("referenceTranslation", config.referenceTranslation),
+            ("displayReferenceOnEditGuiLanguage", config.displayReferenceOnEditGuiLanguage),
             ("myGoogleApiKey", config.myGoogleApiKey),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
             ("myIBMWatsonApikey", config.myIBMWatsonApikey),
