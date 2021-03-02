@@ -59,8 +59,7 @@ def pip3IsInstalled():
 
 # A method to install 
 def pip3InstallModule(module):
-    if not pip3IsInstalled():
-        subprocess.Popen([sys.executable, "-m", "pip", "install", "--user", "--upgrade pip"])
+    subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # run pip3IsInstalled again to check if pip3 is installed successfully for users in case they didn't have it.
     if pip3IsInstalled():
         print("Installing missing module '{0}' ...".format(module))
@@ -137,8 +136,7 @@ else:
         exec(code, dict(__file__=activator))
     try:
         # Automatic setup does not start on some device because pip tool is too old
-        # will add control later and update pip tool once
-        subprocess.Popen("pip install --upgrade pip", shell=True)
+        subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     except:
         pass
     # Fixed fcitx for Linux users
