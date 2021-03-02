@@ -2899,6 +2899,8 @@ class MainWindow(QMainWindow):
             #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
             button.setFixedWidth(config.iconButtonWidth)
             #button.setFixedHeight(config.iconButtonWidth)
+        elif platform.system() == "Darwin":
+            button.setFixedWidth(40)
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         buttonIconFile = os.path.join("htmlResources", icon)
         button.setIcon(QIcon(buttonIconFile))
