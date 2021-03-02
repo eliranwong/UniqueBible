@@ -1,5 +1,6 @@
-import config, subprocess, os, zipfile, platform
-from platform import system
+import config, subprocess, os, zipfile, platform, sys
+from shutil import copyfile
+
 
 def downloadFileIfNotFound(databaseInfo):
     fileItems, cloudID, *_ = databaseInfo
@@ -28,6 +29,16 @@ def downloadFileIfNotFound(databaseInfo):
                 print("'{0}' is installed!".format(fileItems[-1]))
 
 def pip3InstallModule(module):
+    if not config.pipIsUpdated:
+        try:
+            # Automatic setup does not start on some device because pip tool is too old
+            updatePip = subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            *_, stderr = updatePip.communicate()
+            if not stderr:
+                print("pip tool updated!")
+        except:
+            pass
+        config.pipIsUpdated = True
     print("Installing missing module '{0}' ...".format(module))
     # implement pip3 as a subprocess:
     install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -37,6 +48,21 @@ def pip3InstallModule(module):
 def isPySide2Installed():
     try:
         from PySide2.QtWidgets import QApplication, QStyleFactory
+
+        # Fixed fcitx for Linux users
+        if platform.system() == "Linux":
+            fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
+            ubaInputPluginDir = os.path.join(os.getcwd(), "venv", "lib/python{0}.{1}/site-packages/PySide2/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor))
+            ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
+            #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
+            if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
+                try:
+                    copyfile(fcitxPlugin, ubaFcitxPlugin)
+                    os.chmod(ubaFcitxPlugin, 0o755)
+                    print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
+                except:
+                    pass
+
         return True
     except:
         return False

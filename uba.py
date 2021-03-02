@@ -53,15 +53,20 @@ Icon={3}
 Name=Unique Bible App
 """.format(wd, sys.executable, thisFile, iconPath)
 
-def pip3IsInstalled():
-    isInstalled, _ = subprocess.Popen("pip3 -V", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    return isInstalled
-
 # A method to install 
 def pip3InstallModule(module):
-    subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # run pip3IsInstalled again to check if pip3 is installed successfully for users in case they didn't have it.
-    if pip3IsInstalled():
+    # update pip tool
+    try:
+        # Automatic setup does not start on some device because pip tool is too old
+        updatePip = subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        *_, stderr = updatePip.communicate()
+        if not stderr:
+            print("pip tool updated!")
+    except:
+        pass
+    # Check if pip tool is available
+    isInstalled, _ = subprocess.Popen("pip3 -V", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    if isInstalled():
         print("Installing missing module '{0}' ...".format(module))
         # implement pip3 as a subprocess:
         install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -85,8 +90,11 @@ if sys.prefix == sys.base_prefix:
             pip3InstallModule("virtualenv")
         #subprocess.Popen([python, "-m", "venv", venvDir])
         print("Setting up environment ...")
-        import venv
-        venv.create(env_dir=venvDir, with_pip=True)
+        try:
+            import venv
+            venv.create(env_dir=venvDir, with_pip=True)
+        except:
+            pass
 
 # Run main.py
 if platform.system() == "Windows":
@@ -134,23 +142,5 @@ else:
     with open(activator) as f:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
-    try:
-        # Automatic setup does not start on some device because pip tool is too old
-        subprocess.Popen("pip install --upgrade pip", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except:
-        pass
-    # Fixed fcitx for Linux users
-    if platform.system() == "Linux":
-        fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
-        ubaInputPluginDir = os.path.join(os.getcwd(), venvDir, "lib/python{0}.{1}/site-packages/PySide2/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor))
-        ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
-        #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
-        if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
-            try:
-                copyfile(fcitxPlugin, ubaFcitxPlugin)
-                os.chmod(ubaFcitxPlugin, 0o755)
-                print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
-            except:
-                pass
     # Run main file
     subprocess.Popen([python, mainFile])

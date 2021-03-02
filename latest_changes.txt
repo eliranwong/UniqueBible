@@ -1,3 +1,7 @@
+Major changes in version 22.06:
+* Fixed automatic setup
+* Fixed Edit Gui Language File Dialog
+
 Major changes in version 22.05:
 * Fixed old pip tool unable to install package for users.
 * Fixed button width on macOS for Focus menu layout.

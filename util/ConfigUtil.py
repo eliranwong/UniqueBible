@@ -499,6 +499,7 @@ class ConfigUtil:
         config.isDownloading = False
         config.noStudyBibleToolbar = False
         config.noteOpened = False
+        config.pipIsUpdated = False
 
 
     # Save configurations on exit
