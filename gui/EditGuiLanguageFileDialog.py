@@ -113,12 +113,12 @@ class DisplayLanguagesModel(QAbstractTableModel):
     def filter(self, col, text):
         newList = []
         newToolTipList = []
-        for item in self.fullList:
-            if text.lower() in item[col].lower():
+        for itemIndex, item in enumerate(self.fullList):
+            if text.lower() in item[col].lower() or text.lower() in self.fullToolTips[itemIndex][col].lower():
                 newList.append(item)
-                newToolTipList.append(self.fullToolTips[self.fullList.index(item)])
+                newToolTipList.append(self.fullToolTips[itemIndex])
         self.list = newList
-        self.fullToolTips = newToolTipList
+        self.toolTips = newToolTipList
         self.sort(self.col, self.order)
 
     def rowCount(self, parent):

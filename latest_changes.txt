@@ -1,3 +1,8 @@
+Major changes in version 22.04:
+* Added filtering of tooltips in Edit Gui Language File Dialog
+* Added config.workingTranslation
+* Added a method to open working translation directly on Focus menu layout
+
 Major changes in version 22.03:
 * added tooltips to Edit Gui Language File Dialog
 * added config flags: referenceTranslation, displayReferenceOnEditGuiLanguage

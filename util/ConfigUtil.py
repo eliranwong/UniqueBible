@@ -24,6 +24,8 @@ class ConfigUtil:
             config.developer = False
         if not hasattr(config, "referenceTranslation"):
             config.referenceTranslation = "en_US"
+        if not hasattr(config, "workingTranslation"):
+            config.workingTranslation = "en_US"
         if not hasattr(config, "displayReferenceOnEditGuiLanguage"):
             config.displayReferenceOnEditGuiLanguage = False
         # Personal google api key for display of google maps
@@ -510,6 +512,7 @@ class ConfigUtil:
             # ("version", config.version),
             ("developer", config.developer),
             ("referenceTranslation", config.referenceTranslation),
+            ("workingTranslation", config.workingTranslation),
             ("displayReferenceOnEditGuiLanguage", config.displayReferenceOnEditGuiLanguage),
             ("myGoogleApiKey", config.myGoogleApiKey),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),

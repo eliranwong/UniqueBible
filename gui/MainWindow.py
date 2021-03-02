@@ -629,6 +629,11 @@ class MainWindow(QMainWindow):
             dialog = EditGuiLanguageFileDialog(self, item)
             dialog.exec_()
 
+    def editWorkingTranslation(self):
+        dialog = EditGuiLanguageFileDialog(self, config.workingTranslation)
+        dialog.exec_()
+        
+
     # convert bible references to string
     def bcvToVerseReference(self, b, c, v):
         parser = BibleVerseParser(config.parserStandarisation)
