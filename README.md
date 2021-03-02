@@ -1,7 +1,7 @@
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
-<b>Tested in:</b> Windows 10, Windows WSL2, macOS and Linux (Debian, Ubuntu & Mint), Chrome OS (Debian 10)
+<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10)
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
@@ -14,6 +14,12 @@ Oliver Tseng (https://github.com/otseng)
 # Screenshot:
 
 <img src="screenshots/screenshot.png">
+
+# Automatic Setup
+
+You can simply download & run UBA if you have python in place, read our examples at:
+
+https://github.com/eliranwong/UniqueBible/wiki/Installation
 
 # Features, instructions and how-tos
 
