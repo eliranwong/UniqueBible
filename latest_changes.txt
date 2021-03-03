@@ -1,3 +1,6 @@
+Major change in version 22.13:
+* Fixed signal syntax
+
 Major change in version 22.12:
 * Added support of text-to-speech feature to PyQt5 users.
 
