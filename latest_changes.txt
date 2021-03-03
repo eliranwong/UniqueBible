@@ -1,3 +1,6 @@
+Major change in version 22.08:
+* Added "Select Tooltip Translation" in developer menu.
+
 Major changes in version 22.07:
 * Added Macro support commands, Createed Book Module From Hymn Lyrics File
 * Now automatically save option of language file as config.workingTranslation when user select a language from dropdown menu displayed with "Edit language file".

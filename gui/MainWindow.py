@@ -622,13 +622,21 @@ class MainWindow(QMainWindow):
     # Select language file to edit
     def selectLanguageFileToEdit(self):
         items = LanguageUtil.getCodesSupportedLanguages()
-        index = items.index(config.displayLanguage)
+        index = items.index(config.workingTranslation)
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["edit_language_file"], items, index, False)
         if ok and item:
             config.workingTranslation = item
             dialog = EditGuiLanguageFileDialog(self, item)
             dialog.exec_()
+
+    def selectReferenceTranslation(self):
+        items = LanguageUtil.getCodesSupportedLanguages()
+        index = items.index(config.referenceTranslation)
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        "Select Tooltip Translation", items, index, False)
+        if ok and item:
+            config.referenceTranslation = item
 
     def editWorkingTranslation(self):
         dialog = EditGuiLanguageFileDialog(self, config.workingTranslation)
