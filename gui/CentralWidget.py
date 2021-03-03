@@ -99,6 +99,7 @@ class CentralWidget(QWidget):
             1: (2, 1),
             2: (1, 1),
             3: (1, 2),
+            4: (0, 1),
         }
 
         # The total space we have.

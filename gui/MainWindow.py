@@ -2083,6 +2083,12 @@ class MainWindow(QMainWindow):
             self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
         self.reloadCurrentRecord(forceExecute=True)
 
+    def setFontSize(self, size):
+        config.fontSize = size
+        if hasattr(self, 'defaultFontButton'):
+            self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
+        self.reloadCurrentRecord(forceExecute=True)
+
     def toggleHighlightMarker(self):
         config.showHighlightMarkers = not config.showHighlightMarkers
         self.reloadCurrentRecord(forceExecute=True)
@@ -2613,7 +2619,7 @@ class MainWindow(QMainWindow):
             QApplication.processEvents()
 
     def parallel(self):
-        if config.parallelMode == 3:
+        if config.parallelMode >= 3:
             config.parallelMode = 0
         else:
             config.parallelMode += 1
@@ -2870,7 +2876,6 @@ class MainWindow(QMainWindow):
             if not ".txt" in file:
                 file += ".txt"
             MacroParser.parse(self, file)
-            self.reloadCurrentRecord()
 
     def showGistWindow(self):
         gw = GistWindow()

@@ -88,6 +88,39 @@ class Converter:
         else:
             return False
 
+    def createBookModuleFromHymnLyricsFile(self, inputFile):
+        filename = os.path.join(inputFile)
+        file = open(filename, "r")
+        module = Path(filename).stem
+        lines = file.readlines()
+        bookContent = []
+        count = 0
+        chapter = ""
+        readLyrics = False
+        for line in lines:
+            if line.startswith("Title:"):
+                title = line[7:].strip()
+                # title = title.replace("'", "")
+            elif line.startswith("Author:") and len(line) > 9:
+                chapter += line + "<br><br>"
+            elif line.startswith("Lyrics:"):
+                readLyrics = True
+            elif line.startswith('---'):
+                bookContent.append((title, chapter))
+                readLyrics = False
+                chapter = ""
+                count += 1
+                print(title)
+            elif readLyrics:
+                line = re.sub("<.*?>", "", line)
+                chapter += line + "<br>"
+        if bookContent and module:
+            print(count)
+            self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
+
     # create UniqueBible.app book modules
     def createBookModule(self, module, content, blobData=None):
         content = [(re.sub("['{0}]".format('"'), "_", chapter), chapterContent) for chapter, chapterContent in content]
@@ -1765,6 +1798,7 @@ class ThirdPartyDictionary:
 
 if __name__ == '__main__':
 
-    note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
-    note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
-    print(note)
+    # note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
+    # note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
+    # print(note)
+    Converter().createBookModuleFromHymnLyricsFile("Hymn Lyrics.txt")
