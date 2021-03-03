@@ -83,7 +83,7 @@ def isQtpyInstalled():
 
 def isPyQt5Installed():
     try:
-        from PyQt5.QtWidgets import QApplication
+        from PyQt5 import QtGui
         return True
     except:
         return False
@@ -188,11 +188,15 @@ def isTtsInstalled():
             return True
     else:
         try:
-            # TODO: qtpy.QtTextToSpeech is not found
+            # Note: qtpy.QtTextToSpeech is not found!
             from PySide2.QtTextToSpeech import QTextToSpeech
             return True
         except:
-            return False
+            try:
+                from PyQt5.QtTextToSpeech import QTextToSpeech
+                return True
+            except:
+                return False
 
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):

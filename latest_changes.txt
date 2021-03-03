@@ -1,8 +1,10 @@
+Major change in version 22.12:
+* Added support of text-to-speech feature to PyQt5 users.
+
 Major change in version 22.11:
 * Added support of using PyQt5 as an alternative to PySide2
 * Module 'PyQt5' is installed automatically ONLY if PySide2 is not supported on user's device.
 * It is a big issue.  Welcome report of issues if any
-* pending: support QTextToSpeech with PyQt5
 
 Major change in version 22.10:
 * Added support of arguments to uba.py, can now run,

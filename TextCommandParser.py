@@ -9,14 +9,18 @@ from HebrewTransliteration import HebrewTransliteration
 from NoteSqlite import NoteSqlite
 from Languages import Languages
 from Translator import Translator
+from db.Highlight import Highlight
 from TtsLanguages import TtsLanguages
 from qtpy.QtWidgets import QApplication
 try:
-    # TODO: There is no qtpy.QtTextToSpeech
+    # Note: qtpy.QtTextToSpeech is not found!
     from PySide2.QtTextToSpeech import QTextToSpeech
 except:
-    pass
-from db.Highlight import Highlight
+    try:
+        from PyQt5.QtTextToSpeech import QTextToSpeech
+    except:
+        pass
+
 
 class TextCommandParser:
 
