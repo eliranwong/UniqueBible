@@ -218,8 +218,8 @@ def setInstallConfig(module, isInstalled):
 # Check if required modules are installed
 required = (
     ("config", "Configurations", isConfigInstalled),
-    ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("PySide2", "Qt Graphical Interface Library", isPySide2Installed),
+    ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
