@@ -1,7 +1,7 @@
 import operator
 import sys
 
-from qtpy.QtCore import QAbstractTableModel, Qt, SIGNAL
+from qtpy.QtCore import QAbstractTableModel, Qt, Signal
 
 from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
@@ -113,13 +113,13 @@ class DisplayShortcutsModel(QAbstractTableModel):
         return None
 
     def sort(self, col, order):
-        self.emit(SIGNAL("layoutAboutToBeChanged()"))
+        self.emit(Signal("layoutAboutToBeChanged()"))
         self.col = col
         self.order = order
         self.list = sorted(self.list, key=operator.itemgetter(col))
         if order == Qt.DescendingOrder:
             self.list.reverse()
-        self.emit(SIGNAL("layoutChanged()"))
+        self.emit(Signal("layoutChanged()"))
 
 if __name__ == '__main__':
     from util.LanguageUtil import LanguageUtil

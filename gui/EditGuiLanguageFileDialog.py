@@ -1,7 +1,7 @@
 import operator
 import sys
 
-from qtpy.QtCore import QAbstractTableModel, Qt, SIGNAL
+from qtpy.QtCore import QAbstractTableModel, Qt, Signal
 from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit, \
     QHBoxLayout
@@ -145,7 +145,7 @@ class DisplayLanguagesModel(QAbstractTableModel):
         return None
 
     def sort(self, col, order):
-        self.emit(SIGNAL("layoutAboutToBeChanged()"))
+        self.emit(Signal("layoutAboutToBeChanged()"))
         self.col = col
         self.order = order
         self.list = sorted(self.list, key=operator.itemgetter(col))
@@ -154,7 +154,7 @@ class DisplayLanguagesModel(QAbstractTableModel):
             self.list.reverse()
             #self.toolTips.reverse()
         self.toolTips = [self.fullToolTips[self.fullList.index(i)] for i in self.list]
-        self.emit(SIGNAL("layoutChanged()"))
+        self.emit(Signal("layoutChanged()"))
 
 if __name__ == '__main__':
     LanguageUtil.loadTranslation("en_US")
