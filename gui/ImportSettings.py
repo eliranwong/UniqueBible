@@ -1,5 +1,5 @@
 import config
-from PySide2.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QCheckBox)
+from qtpy.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel, QCheckBox
 
 class ImportSettings(QDialog):
 

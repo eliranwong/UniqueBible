@@ -1,4 +1,4 @@
-from PySide2.QtGui import QPalette, QColor
+from qtpy.QtGui import QPalette, QColor
 import config
 class Themes():
 

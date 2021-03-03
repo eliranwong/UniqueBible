@@ -1,8 +1,8 @@
 import os, re, config, base64
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
-from PySide2.QtPrintSupport import QPrinter, QPrintDialog
-from PySide2.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
+from qtpy.QtCore import Qt
+from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
+from qtpy.QtPrintSupport import QPrinter, QPrintDialog
+from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
 from TtsLanguages import TtsLanguages
 from Translator import Translator

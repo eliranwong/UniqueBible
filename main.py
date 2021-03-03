@@ -41,7 +41,7 @@ from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from gui.MainWindow import MainWindow
-from PySide2.QtWidgets import QApplication, QStyleFactory
+from qtpy.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2

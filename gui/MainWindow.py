@@ -3,10 +3,10 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 
-from PySide2.QtCore import QUrl, Qt, QEvent
-from PySide2.QtGui import QIcon, QGuiApplication, QFont
-from PySide2.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton, QDialog)
+from qtpy.QtCore import QUrl, Qt, QEvent
+from qtpy.QtGui import QIcon, QGuiApplication, QFont
+from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
+                               QFrame, QFontDialog, QApplication, QPushButton)
 
 import exlbl
 from BibleBooks import BibleBooks

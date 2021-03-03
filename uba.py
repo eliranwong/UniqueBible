@@ -14,11 +14,11 @@ if sys.version_info < (3, 7):
     exit(1)
 
 # Set environment variable
+os.environ["QT_API"] = "pyside2"
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 # Take arguments
 initialCommand = " ".join(sys.argv[1:])
-
 # For ChromeOS Linux (Debian 10) ONLY:
 if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
     # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
@@ -94,7 +94,8 @@ if sys.prefix == sys.base_prefix:
         #subprocess.Popen([python, "-m", "venv", venvDir])
         print("Setting up environment ...")
         try:
-            import venv
+            if not "venv" in sys.modules:
+                import venv
             venv.create(env_dir=venvDir, with_pip=True)
         except:
             pass

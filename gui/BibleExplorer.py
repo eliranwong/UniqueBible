@@ -3,8 +3,8 @@ from BiblesSqlite import BiblesSqlite
 from BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox)
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox)
 
 class BibleExplorer(QWidget):
 

@@ -1,6 +1,6 @@
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from PySide2.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
 
 class SearchLauncher(QWidget):
 

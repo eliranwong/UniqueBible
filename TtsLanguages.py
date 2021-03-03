@@ -7,7 +7,7 @@
 # pt, ro, ru, sk, sl, so, sq, sv, sw, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw
 # ISO codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
-from PySide2.QtCore import QLocale
+from qtpy.QtCore import QLocale
 
 class TtsLanguages:
 

@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import (QTabWidget)
+from qtpy.QtWidgets import QTabWidget
 
 class TabWidget(QTabWidget):
 

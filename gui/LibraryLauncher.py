@@ -1,7 +1,7 @@
 import config
-from PySide2.QtCore import QStringListModel
-from PySide2.QtGui import QStandardItemModel, QStandardItem
-from PySide2.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
+from qtpy.QtCore import QStringListModel
+from qtpy.QtGui import QStandardItemModel, QStandardItem
+from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
 from ToolsSqlite import Book
 
 class LibraryLauncher(QWidget):

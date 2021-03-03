@@ -67,6 +67,27 @@ def isPySide2Installed():
     except:
         return False
 
+def isConfigInstalled():
+    try:
+        import config
+        return True
+    except:
+        return False
+
+def isQtpyInstalled():
+    try:
+        import qtpy
+        return True
+    except:
+        return False
+
+def isPyQt5Installed():
+    try:
+        from PyQt5.QtWidgets import QApplication
+        return True
+    except:
+        return False
+
 def isGdownInstalled():
     try:
         import gdown
@@ -167,7 +188,8 @@ def isTtsInstalled():
             return True
     else:
         try:
-            from PySide2.QtTextToSpeech import QTextToSpeech, QVoice
+            # TODO: qtpy.QtTextToSpeech is not found
+            from PySide2.QtTextToSpeech import QTextToSpeech
             return True
         except:
             return False
@@ -195,7 +217,9 @@ def setInstallConfig(module, isInstalled):
 
 # Check if required modules are installed
 required = (
-    ("PySide2", "Graphical Interface", isPySide2Installed),
+    ("config", "Configurations", isConfigInstalled),
+    ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
+    ("PySide2", "Qt Graphical Interface Library", isPySide2Installed),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
@@ -203,10 +227,21 @@ required = (
 for module, feature, isInstalled in required:
     if not isInstalled():
         pip3InstallModule(module)
+        if module == "PySide2" and not isInstalled():
+            module = "PyQt5"
+            isInstalled = isPyQt5Installed
+            if not isInstalled():
+                print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
+                pip3InstallModule(module)
+                if isInstalled():
+                    print("Installed!")
+                else:
+                    print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
+                    exit(1)
         if isInstalled():
             print("Installed!")
         else:
-            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))
+            print("Required feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first!".format(feature, module))
             exit(1)
 
 # Check if optional modules are installed

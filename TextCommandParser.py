@@ -10,8 +10,9 @@ from NoteSqlite import NoteSqlite
 from Languages import Languages
 from Translator import Translator
 from TtsLanguages import TtsLanguages
-from PySide2.QtWidgets import QApplication
+from qtpy.QtWidgets import QApplication
 try:
+    # TODO: There is no qtpy.QtTextToSpeech
     from PySide2.QtTextToSpeech import QTextToSpeech
 except:
     pass

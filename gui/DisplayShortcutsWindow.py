@@ -1,10 +1,10 @@
 import operator
 import sys
 
-from PySide2.QtCore import QAbstractTableModel, Qt, SIGNAL
+from qtpy.QtCore import QAbstractTableModel, Qt, SIGNAL
 
-from PySide2 import QtCore
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
+from qtpy import QtCore
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
 
 from util.ShortcutUtil import ShortcutUtil
 

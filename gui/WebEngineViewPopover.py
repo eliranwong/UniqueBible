@@ -1,7 +1,7 @@
 import config
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QAction)
-from PySide2.QtWebEngineWidgets import QWebEngineView
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QAction
+from qtpy.QtWebEngineWidgets import QWebEngineView
 
 class WebEngineViewPopover(QWebEngineView):
 

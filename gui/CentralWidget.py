@@ -1,6 +1,6 @@
 import config
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QGridLayout, QWidget, QSplitter
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QGridLayout, QWidget, QSplitter
 from gui.TabWidget import TabWidget
 from gui.WebEngineView import WebEngineView
 

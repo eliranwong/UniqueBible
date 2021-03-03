@@ -1,4 +1,4 @@
-from PySide2.QtCore import QSize
+from qtpy.QtCore import QSize
 from gui.MenuItems import *
 import shortcut as sc
 from BiblesSqlite import BiblesSqlite

@@ -1,7 +1,7 @@
 import config
-from PySide2.QtCore import QUrl, Qt
-from PySide2.QtWidgets import QAction, QApplication
-from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from qtpy.QtCore import QUrl, Qt
+from qtpy.QtWidgets import QAction, QApplication
+from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 
 class YouTubePopover(QWebEngineView):
 

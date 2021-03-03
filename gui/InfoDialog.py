@@ -2,8 +2,8 @@ import sys
 import webbrowser
 import config
 
-from PySide2 import QtCore
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPlainTextEdit
+from qtpy.QtCore import QCoreApplication, Qt
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPlainTextEdit
 
 
 class InfoDialog(QDialog):
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     ConfigUtil.setup()
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
 
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     window = InfoDialog()
     window.exec_()

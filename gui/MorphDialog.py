@@ -1,5 +1,5 @@
 import config
-from PySide2.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QDialog, QLabel, QCheckBox
+from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QDialog, QLabel, QCheckBox
 from gui.CheckableComboBox import CheckableComboBox
 
 class MorphDialog(QDialog):

@@ -1,9 +1,9 @@
 import config
 from functools import partial
-from PySide2.QtCore import Qt
-#from PySide2.QtGui import QDesktopServices
-from PySide2.QtWidgets import QAction, QApplication
-from PySide2.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from qtpy.QtCore import Qt
+#from qtpy.QtGui import QDesktopServices
+from qtpy.QtWidgets import QAction, QApplication
+from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator

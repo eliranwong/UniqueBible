@@ -1,9 +1,9 @@
 # documentation: https://doc.qt.io/qtforpython/PySide2/QtWebEngineWidgets/QWebEngineView.html#PySide2.QtWebEngineWidgets.PySide2.QtWebEngineWidgets.QWebEngineView.setHtml
 
 import os
-from PySide2.QtWidgets import QApplication
-from PySide2.QtWebEngineWidgets import QWebEngineView
-from PySide2.QtCore import QUrl, Slot
+from qtpy.QtWidgets import QApplication
+from qtpy.QtWebEngineWidgets import QWebEngineView
+from qtpy.QtCore import QUrl, Slot
 
 def finishLoading():
     print("loadFinished")

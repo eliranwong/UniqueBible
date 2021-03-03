@@ -1,6 +1,6 @@
 import config
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget)
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget)
 from gui.HighlightLauncher import HighlightLauncher
 from TtsLanguages import TtsLanguages
 

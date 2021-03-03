@@ -1,9 +1,9 @@
 import config
 from functools import partial
 from TtsLanguages import TtsLanguages
-from PySide2.QtCore import Qt, QEvent
-from PySide2.QtGui import QGuiApplication
-from PySide2.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
+from qtpy.QtCore import Qt, QEvent
+from qtpy.QtGui import QGuiApplication
+from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
                                QApplication, QBoxLayout, QGridLayout, QComboBox)
 
 if __name__ == "__main__":

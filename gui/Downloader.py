@@ -1,6 +1,6 @@
 import os, config, zipfile, gdown
 # import threading
-from PySide2.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QProgressBar)
+from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QProgressBar)
 
 class Downloader(QDialog):
 

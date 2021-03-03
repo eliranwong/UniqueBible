@@ -1,8 +1,8 @@
 import sys
-from PySide2.QtCore import Qt, QEvent
-from PySide2.QtWidgets import QApplication
-from PySide2.QtGui import QGuiApplication, QStandardItem, QPalette, QFontMetrics
-from PySide2.QtWidgets import (QStyledItemDelegate, QComboBox)
+from qtpy.QtCore import Qt, QEvent
+from qtpy.QtWidgets import QApplication
+from qtpy.QtGui import QGuiApplication, QStandardItem, QPalette, QFontMetrics
+from qtpy.QtWidgets import (QStyledItemDelegate, QComboBox)
 
 # We adpat the script shared from the following source.  We modified a bit to work with our application.
 # Source: https://gis.stackexchange.com/questions/350148/qcombobox-multiple-selection-pyqt5

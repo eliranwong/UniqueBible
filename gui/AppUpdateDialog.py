@@ -1,7 +1,7 @@
 import sys
 import config
 
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton, QLineEdit, \
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton, QLineEdit, \
     QHBoxLayout
 from util.DateUtil import DateUtil
 from util.LanguageUtil import LanguageUtil

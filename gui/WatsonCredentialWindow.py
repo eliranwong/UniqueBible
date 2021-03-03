@@ -1,7 +1,7 @@
 import config, webbrowser
 
-from PySide2.QtGui import QMouseEvent
-from PySide2.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
+from qtpy.QtGui import QMouseEvent
+from qtpy.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
 
 
 class WatsonCredentialWindow(QDialog):

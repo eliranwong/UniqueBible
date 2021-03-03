@@ -1,5 +1,5 @@
 from gui.MenuItems import *
-from PySide2.QtCore import QSize
+from qtpy.QtCore import QSize
 import shortcut as sc
 from util.LanguageUtil import LanguageUtil
 from util.ShortcutUtil import ShortcutUtil

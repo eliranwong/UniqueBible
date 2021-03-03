@@ -1,7 +1,10 @@
 # Requirements
 # https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format
 
+config
+qtpy
 PySide2
+PyQt5
 PyPDF2
 python-docx
 gdown

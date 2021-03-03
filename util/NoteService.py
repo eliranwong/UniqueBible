@@ -7,7 +7,7 @@ from Languages import Languages
 from NoteSqlite import NoteSqlite
 from util.DateUtil import DateUtil
 from util.GitHubGist import GitHubGist
-from PySide2.QtCore import QObject, Signal
+from qtpy.QtCore import QObject, Signal
 
 
 class NoteService:

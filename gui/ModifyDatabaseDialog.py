@@ -2,12 +2,12 @@ import glob
 import os
 import sys
 
-from PySide2.QtGui import QFontDatabase
+from qtpy.QtGui import QFontDatabase
 
 import config
 
-from PySide2 import QtCore
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
+from qtpy import QtCore
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
     QComboBox, QRadioButton, QGridLayout
 
 

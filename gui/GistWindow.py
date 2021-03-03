@@ -1,9 +1,9 @@
 import sys
 import config
 
-from PySide2.QtCore import QThread
-from PySide2 import QtCore
-from PySide2.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, \
+from qtpy.QtCore import QThread, QCoreApplication, Qt
+#from qtpy import QtCore
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, \
     QPushButton
 from util.GitHubGist import GitHubGist
 from util.LanguageUtil import LanguageUtil
@@ -120,7 +120,7 @@ class GistWindow(QDialog):
 
 if __name__ == '__main__':
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts)
+    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
     gistWindow = GistWindow()
     gistWindow.exec_()

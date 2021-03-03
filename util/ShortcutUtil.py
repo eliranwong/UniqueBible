@@ -3,7 +3,7 @@ import pprint
 import sys
 
 from os import path
-from PySide2.QtCore import Qt
+from qtpy.QtCore import Qt
 
 import config
 

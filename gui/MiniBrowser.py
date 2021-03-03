@@ -1,7 +1,8 @@
 import config, re
-from PySide2.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget)
+from qtpy.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget)
+from qtpy.QtCore import QUrl
 from gui.YouTubePopover import YouTubePopover
-from PySide2.QtCore import QUrl
+
 
 class MiniBrowser(QWidget):
 
