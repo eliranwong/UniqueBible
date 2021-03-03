@@ -1,6 +1,9 @@
 Major change in version 22.10:
-* Added support of arguments to uba.py, can now run, e.g.
-    uba.py John 3:16 Rm 5:8
+* Added support of arguments to uba.py, can now run,
+    For example:
+        uba.py John 3:16 Rm 5:8
+    or if you set uba as an alias:
+        uba John 3:16 Rm 5:8
     Remarks: do not use comma as part of argument.
 
 Major change in version 22.09:
