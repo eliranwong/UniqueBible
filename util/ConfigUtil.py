@@ -26,8 +26,6 @@ class ConfigUtil:
             config.referenceTranslation = "en_US"
         if not hasattr(config, "workingTranslation"):
             config.workingTranslation = "en_US"
-        if not hasattr(config, "displayReferenceOnEditGuiLanguage"):
-            config.displayReferenceOnEditGuiLanguage = False
         # Personal google api key for display of google maps
         if not hasattr(config, "myGoogleApiKey"):
             config.myGoogleApiKey = ""
@@ -514,7 +512,6 @@ class ConfigUtil:
             ("developer", config.developer),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
-            ("displayReferenceOnEditGuiLanguage", config.displayReferenceOnEditGuiLanguage),
             ("myGoogleApiKey", config.myGoogleApiKey),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps),
             ("myIBMWatsonApikey", config.myIBMWatsonApikey),

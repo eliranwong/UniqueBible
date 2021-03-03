@@ -22,19 +22,13 @@ class EditGuiLanguageFileDialog(QDialog):
         targetLanguage = LanguageUtil.loadTranslation(language)
         self.languages = []
         self.toolTips = []
-        if config.displayReferenceOnEditGuiLanguage:
-            for key in self.reference:
-                if key in targetLanguage:
-                    self.languages.append((self.reference[key].replace("\n", "\\n"), targetLanguage[key].replace("\n", "\\n")))
-                    self.toolTips.append((key, key))
-        else:
-            # Cannot use the following two lines directly because target language file and reference file are most likely in different order
-            #self.languages = [(key, value.replace("\n", "\\n")) for key, value in targetLanguage.items()]
-            #self.toolTips = [(value.replace("\n", "\\n"), value.replace("\n", "\\n")) for value in self.reference.values()]
-            for key in self.reference:
-                if key in targetLanguage:
-                    self.languages.append([key, targetLanguage[key].replace("\n", "\\n")])
-                    self.toolTips.append([self.reference[key].replace("\n", "\\n"), self.reference[key].replace("\n", "\\n")])
+        # Cannot use the following two lines directly because target language file and reference file are most likely in different order
+        #self.languages = [(key, value.replace("\n", "\\n")) for key, value in targetLanguage.items()]
+        #self.toolTips = [(value.replace("\n", "\\n"), value.replace("\n", "\\n")) for value in self.reference.values()]
+        for key in self.reference:
+            if key in targetLanguage:
+                self.languages.append([key, targetLanguage[key].replace("\n", "\\n")])
+                self.toolTips.append([self.reference[key].replace("\n", "\\n"), self.reference[key].replace("\n", "\\n")])
 
         self.setWindowTitle("Edit GUI Language File")
         self.setMinimumWidth(1000)

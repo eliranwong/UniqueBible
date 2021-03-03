@@ -23,8 +23,7 @@ Major changes in version 22.04:
 
 Major changes in version 22.03:
 * added tooltips to Edit Gui Language File Dialog
-* added config flags: referenceTranslation, displayReferenceOnEditGuiLanguage
-* testing config.displayReferenceOnEditGuiLanguage
+* added config flags: referenceTranslation
 
 Major changes in version 22.02:
 * Fixed Modify Database Dialog
