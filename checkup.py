@@ -45,27 +45,20 @@ def pip3InstallModule(module):
     *_, stderr = install.communicate()
     return stderr
 
-def isPySide2Installed():
-    try:
-        from PySide2.QtWidgets import QApplication, QStyleFactory
-
-        # Fixed fcitx for Linux users
-        if platform.system() == "Linux":
-            fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
-            ubaInputPluginDir = os.path.join(os.getcwd(), "venv", "lib/python{0}.{1}/site-packages/PySide2/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor))
-            ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
-            #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
-            if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
-                try:
-                    copyfile(fcitxPlugin, ubaFcitxPlugin)
-                    os.chmod(ubaFcitxPlugin, 0o755)
-                    print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
-                except:
-                    pass
-
-        return True
-    except:
-        return False
+def fixFcitxOnLinux(module):
+    # Fixed fcitx for Linux users
+    if platform.system() == "Linux":
+        fcitxPlugin = "/usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so"
+        ubaInputPluginDir = os.path.join(os.getcwd(), "venv", "lib/python{0}.{1}/site-packages/{2}/Qt/plugins/platforminputcontexts".format(sys.version_info.major, sys.version_info.minor, module))
+        ubaFcitxPlugin = os.path.join(ubaInputPluginDir, "libfcitxplatforminputcontextplugin.so")
+        #print(os.path.exists(fcitxPlugin), os.path.exists(ubaInputPluginDir), os.path.exists(ubaFcitxPlugin))
+        if os.path.exists(fcitxPlugin) and os.path.exists(ubaInputPluginDir) and not os.path.exists(ubaFcitxPlugin):
+            try:
+                copyfile(fcitxPlugin, ubaFcitxPlugin)
+                os.chmod(ubaFcitxPlugin, 0o755)
+                print("'fcitx' input plugin is installed. This will take effect the next time you relaunch Unique Bible App!")
+            except:
+                pass
 
 def isConfigInstalled():
     try:
@@ -74,9 +67,10 @@ def isConfigInstalled():
     except:
         return False
 
-def isQtpyInstalled():
+def isPySide2Installed():
     try:
-        import qtpy
+        from PySide2.QtWidgets import QApplication, QStyleFactory
+        fixFcitxOnLinux("PySide2")
         return True
     except:
         return False
@@ -84,6 +78,14 @@ def isQtpyInstalled():
 def isPyQt5Installed():
     try:
         from PyQt5 import QtGui
+        fixFcitxOnLinux("PyQt5")
+        return True
+    except:
+        return False
+
+def isQtpyInstalled():
+    try:
+        from qtpy import QtGui
         return True
     except:
         return False

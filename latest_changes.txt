@@ -1,3 +1,6 @@
+Major change in version 22.15:
+* Fixed fcitx input plugin for PyQt5 users on Linux platform.
+
 Major change in version 22.13, 14:
 * Fixed signal syntax
 
