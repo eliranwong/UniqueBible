@@ -626,6 +626,7 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["edit_language_file"], items, index, False)
         if ok and item:
+            config.workingTranslation = item
             dialog = EditGuiLanguageFileDialog(self, item)
             dialog.exec_()
 
