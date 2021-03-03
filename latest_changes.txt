@@ -1,4 +1,4 @@
-Major change in version 22.13:
+Major change in version 22.13, 14:
 * Fixed signal syntax
 
 Major change in version 22.12:
