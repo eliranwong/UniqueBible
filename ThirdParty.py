@@ -81,6 +81,7 @@ class Converter:
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                    note = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), note)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)
