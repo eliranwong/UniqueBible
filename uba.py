@@ -16,6 +16,9 @@ if sys.version_info < (3, 7):
 # Set environment variable
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
+# Take arguments
+initialCommand = " ".join(sys.argv[1:])
+
 # For ChromeOS Linux (Debian 10) ONLY:
 if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
     # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
@@ -106,10 +109,11 @@ if platform.system() == "Windows":
             fileObj.write("{0} {1}".format(python, thisFile))
     # Activate virtual environment
     activator = os.path.join(os.getcwd(), venvDir, binDir, "activate")
+    mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
     if os.path.exists(activator):
-        subprocess.Popen("{0} & {1} main.py".format(activator, python), shell=True)
+        subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
     else:
-        subprocess.Popen("{0} main.py".format(python), shell=True)
+        subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
 else:
     # Create application shortcuts and set file permission
     shortcutSh = os.path.join(os.getcwd(), "UniqueBibleApp.sh")
@@ -143,4 +147,4 @@ else:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
     # Run main file
-    subprocess.Popen([python, mainFile])
+    subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
