@@ -1,5 +1,5 @@
 Major change in version 22.09:
-* Added support converting command during book creation.
+* Added support converting commands during book creation.
 
 Major change in version 22.08:
 * Added "Select Tooltip Translation" in developer menu.
