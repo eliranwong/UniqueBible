@@ -145,7 +145,8 @@ class DisplayLanguagesModel(QAbstractTableModel):
         return None
 
     def sort(self, col, order):
-        self.emit(Signal("layoutAboutToBeChanged()"))
+        layoutAboutToBeChanged = Signal()
+        self.layoutAboutToBeChanged.emit()
         self.col = col
         self.order = order
         self.list = sorted(self.list, key=operator.itemgetter(col))
@@ -154,7 +155,8 @@ class DisplayLanguagesModel(QAbstractTableModel):
             self.list.reverse()
             #self.toolTips.reverse()
         self.toolTips = [self.fullToolTips[self.fullList.index(i)] for i in self.list]
-        self.emit(Signal("layoutChanged()"))
+        layoutChanged = Signal()
+        self.layoutChanged.emit()
 
 if __name__ == '__main__':
     LanguageUtil.loadTranslation("en_US")

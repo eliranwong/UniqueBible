@@ -113,13 +113,15 @@ class DisplayShortcutsModel(QAbstractTableModel):
         return None
 
     def sort(self, col, order):
-        self.emit(Signal("layoutAboutToBeChanged()"))
+        layoutAboutToBeChanged = Signal()
+        self.layoutAboutToBeChanged.emit()
         self.col = col
         self.order = order
         self.list = sorted(self.list, key=operator.itemgetter(col))
         if order == Qt.DescendingOrder:
             self.list.reverse()
-        self.emit(Signal("layoutChanged()"))
+        layoutChanged = Signal()
+        self.layoutChanged.emit()
 
 if __name__ == '__main__':
     from util.LanguageUtil import LanguageUtil
