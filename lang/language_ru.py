@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "Выбрать перевод подсказки",
     "editWorkingTranslation": "Изменить рабочий перевод",
     "checkLanguageFiles": "Проверить языковые файлы",
+    "hymn_lyrics": "Скачать минусовку.",
 }

@@ -256,6 +256,7 @@ class FocusMainWindow:
             ("menu8_commentaries", self.installMarvelCommentaries),
             ("menu8_datasets", self.installMarvelDatasets),
             ("installBooks", self.installBooks),
+            ("hymn_lyrics", self.installHymnLyrics),
             ("menu8_download3rdParty", self.moreBooks),
         )
         for feature, action in items:

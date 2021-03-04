@@ -564,6 +564,20 @@ class MainWindow(QMainWindow):
         elif item == "Install ALL Commentaries Listed Above":
             self.installAllMarvelCommentaries(commentaries)
 
+    def installHymnLyrics(self):
+        hymnLyrics = {
+            "Hymn Lyrics - English":
+                ((config.marvelData, "books", "Hymn Lyrics - English.book"), "1jO2-akZYgR7xl0ROIVMrjitDTVkEq6LJ"),
+        }
+        items = [book for book in hymnLyrics.keys() if
+                 not os.path.isfile(os.path.join(*hymnLyrics[book][0]))]
+        if not items:
+            items = ["[All Installed]"]
+        item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                        config.thisTranslation["hymn_lyrics"], items, 0, False)
+        if ok and item and not item in ("[All Installed]"):
+            self.downloadHelper(hymnLyrics[item])
+
     def installAllMarvelCommentaries(self, commentaries):
         if config.isDownloading:
             self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])

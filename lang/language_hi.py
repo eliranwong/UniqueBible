@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "टूलटिप अनुवाद चुनें",
     "editWorkingTranslation": "कार्य अनुवाद संपादित करें",
     "checkLanguageFiles": "भाषा फ़ाइलें जाँचें",
+    "hymn_lyrics": "भजन गीत",
 }

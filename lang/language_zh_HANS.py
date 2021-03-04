@@ -622,4 +622,5 @@ translation = {
     "selectTooltipTranslation": "选择工具提示翻译",
     "editWorkingTranslation": "编辑工作翻译",
     "checkLanguageFiles": "检查语言文件",
+    "hymn_lyrics": "Hymn 歌词",
 }

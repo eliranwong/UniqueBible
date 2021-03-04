@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "Sélectionner la traduction d'infobulle",
     "editWorkingTranslation": "Editer la traduction de travail",
     "checkLanguageFiles": "Vérifier les fichiers de langue",
+    "hymn_lyrics": "Hymn Lyrics",
 }

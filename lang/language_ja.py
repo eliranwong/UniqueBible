@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "ツールチップ翻訳の選択",
     "editWorkingTranslation": "作業翻訳の編集",
     "checkLanguageFiles": "言語ファイルの検査",
+    "hymn_lyrics": "賛歌ライルクス",
 }

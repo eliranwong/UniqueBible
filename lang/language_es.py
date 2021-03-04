@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "Seleccione Conversión de ayuda flotante",
     "editWorkingTranslation": "Editar traducción de trabajo",
     "checkLanguageFiles": "Comprobar archivos de idioma",
+    "hymn_lyrics": "Letra de himno",
 }

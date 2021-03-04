@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "選取工具提示翻譯",
     "editWorkingTranslation": "編輯工作轉換",
     "checkLanguageFiles": "檢查語言檔案",
+    "hymn_lyrics": "Hymn Lyrics",
 }

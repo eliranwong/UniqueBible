@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "Επιλογή μετατροπής πίνακα εργαλείων",
     "editWorkingTranslation": "Επεξεργασία εργασίας μετάφρασης",
     "checkLanguageFiles": "Έλεγχος αρχείων γλώσσας",
+    "hymn_lyrics": "Στίχοι Hymn",
 }

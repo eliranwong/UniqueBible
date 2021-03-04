@@ -204,14 +204,20 @@ class AlephMainWindow:
         menu_data.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
         menu_data.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
         menu_data.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
         menu_data.addSeparator()
-        menu_data.addAction(QAction(config.thisTranslation["menu8_download3rdParty"], self, triggered=self.moreBooks))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_3rdParty"], self, triggered=self.importModules))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_3rdPartyInFolder"], self, triggered=self.importModulesInFolder))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_settings"], self, triggered=self.importSettingsDialog))
+        menu_data.addAction(QAction(config.thisTranslation["hymn_lyrics"], self, triggered=self.installHymnLyrics))
         menu_data.addSeparator()
+        subMenu = addSubMenu(menu_data, "import")
+        items = (
+            ("menu8_plusDictionaries", self.importBBPlusDictionaryInAFolder),
+            ("menu8_plusLexicons", self.importBBPlusLexiconInAFolder),
+            ("menu8_3rdParty", self.importModules),
+            ("menu8_download3rdParty", self.moreBooks),
+            ("menu8_3rdPartyInFolder", self.importModulesInFolder),
+            ("menu8_settings", self.importSettingsDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
         submenu = menu_data.addMenu(config.thisTranslation["menu_convert"])
         submenu.addAction(
             QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
