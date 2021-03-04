@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "कार्य अनुवाद संपादित करें",
     "checkLanguageFiles": "भाषा फ़ाइलें जाँचें",
     "hymn_lyrics": "भजन गीत",
+    "populateTabsOnStartup": "नवीनतम इतिहास रिकॉर्ड के साथ स्टार्टअप पर सभी विलेबल टैब लोकप्रिय. टिप्पणियां: यह सुविधा यूबीए शुरू करने में अधिक समय लगता है. इसके अलावा, यदि यह सही पर सेट किया जाता है, दोनों 'openBblewebwebentnexttटैब' और 'openSextywebrenententanttenttentttटैब' स्वचालित रूप से स्टार्टअप पर सही करने के लिए सेट कर रहे हैं.",
 }

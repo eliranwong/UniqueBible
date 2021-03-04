@@ -70,6 +70,7 @@ class NoteEditor(QMainWindow):
                 config.noteOpened = False
                 event.accept()
             else:
+                self.parent.bringToForeground(self)
                 event.ignore()
 
     # re-implement keyPressEvent, control+S for saving file

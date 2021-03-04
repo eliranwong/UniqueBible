@@ -68,10 +68,26 @@ def setupMainWindow(availableGeometry):
     # Check if migration is needed for version >= 0.56
     mainWindow.checkMigration()
 
-def executeInitialTextCommand(textCommand, source="main"):
-    if source == "main" or (source == "study" and re.match("^online:::", textCommand, flags=re.IGNORECASE)):
-        mainWindow.textCommandLineEdit.setText(textCommand)
-    mainWindow.runTextCommand(textCommand, True, source)
+def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
+    try:
+        if source == "main" or (source == "study" and re.match("^online:::", textCommand, flags=re.IGNORECASE)):
+            mainWindow.textCommandLineEdit.setText(textCommand)
+        mainWindow.runTextCommand(textCommand, addRecord, source)
+    except:
+        print("Failed to execute '{0}' on startup.".format(textCommand))
+
+def populateTabsOnStartup(source="main"):
+    history = config.history[source]
+    for i in reversed(range(config.numberOfTab)):
+        index = i + 1
+        if len(history) >= index:
+            command = history[0 - index]
+            executeInitialTextCommand(command, False, source)
+
+def runLastHistoryRecord(source="main"):
+    history = config.history[source]
+    command = history[-1]
+    executeInitialTextCommand(command, False, source)
 
 def setCurrentRecord():
     mainRecordPosition = len(config.history["main"]) - 1
@@ -113,23 +129,25 @@ mainWindow = MainWindow()
 availableGeometry = app.desktop().availableGeometry(mainWindow)
 setupMainWindow(availableGeometry)
 
-# Execute initial command on Bible Window
-initial_mainTextCommand = " ".join(sys.argv[1:])
-if not initial_mainTextCommand:
-    mainHistory = config.history["main"]
-    initial_mainTextCommand = mainHistory[-1]
-try:
-    executeInitialTextCommand(initial_mainTextCommand)
-except:
-    print("Failed to execute '{0}' on startup.".format(initial_mainTextCommand))
+if config.populateTabsOnStartup:
+    if not config.openBibleWindowContentOnNextTab:
+        config.openBibleWindowContentOnNextTab = True
+    if not config.openStudyWindowContentOnNextTab:
+        config.openStudyWindowContentOnNextTab = True
+    # Execute initial command on Bible Window
+    populateTabsOnStartup("main")
+    # Execute initial command on Study Window
+    populateTabsOnStartup("study")
+else:
+    # Execute initial command on Bible Window
+    runLastHistoryRecord("main")
+    # Execute initial command on Study Window
+    runLastHistoryRecord("study")
 
-# Execute initial command on Study Window
-studyHistory = config.history["study"]
-initial_studyTextCommand = studyHistory[-1]
-try:
-    executeInitialTextCommand(initial_studyTextCommand, "study")
-except:
-    print("Failed to execute '{0}' on startup.".format(initial_studyTextCommand))
+# Execute initial command passed to UBA as a parameter
+initial_mainTextCommand = " ".join(sys.argv[1:])
+if initial_mainTextCommand:
+    executeInitialTextCommand(initial_mainTextCommand, True)
 
 # Set indexes of history records
 setCurrentRecord()

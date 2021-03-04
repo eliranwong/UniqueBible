@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Επεξεργασία εργασίας μετάφρασης",
     "checkLanguageFiles": "Έλεγχος αρχείων γλώσσας",
     "hymn_lyrics": "Στίχοι Hymn",
+    "populateTabsOnStartup": "Συμπληρώνει όλες τις avilable καρτέλες κατά την εκκίνηση με τις τελευταίες εγγραφές ιστορικού. Παρατηρήσεις: Αυτή η λειτουργία χρειάζεται περισσότερο χρόνο για να ξεκινήσει η UBA. Επιπλέον, αν λάβει την τιμή True, τόσο η τιμή 'openBibleWindowContentOnNextTab' όσο και 'openStudyWindowContentOnNextTab' ορίζεται αυτόματα ως True κατά την εκκίνηση.",
 }

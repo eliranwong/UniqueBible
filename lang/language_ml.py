@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "ജോലിക്കുള്ള പരിഭാഷ ചിട്ടപ്പെടുത്തുക",
     "checkLanguageFiles": "ഭാഷ ഫയലുകള് പരിശോധിക്കുക",
     "hymn_lyrics": "Hymn Lyrics",
+    "populateTabsOnStartup": "പുതിയ നാള്വഴിയുള്ള റെക്കോര്ഡുകളുമായുള്ള തുടക്കത്തില് എല്ലാ പ്രാവശ്യം ടാബുകള് പകര്ത്തുന്നു. റിമർക്സ്: UBA തുടങ്ങാൻ ഈ പ്രത്യേകത കൂടുതൽ സമയമെടുക്കുന്നു. കൂടാതെ, യഥാർത്ഥത്തിൽ സജ്ജമാക്കിയാൽ, 'openBibleWindowContentOnNextടാബ്', 'openStudyWindowContentOnNextTab' എന്നിവ തുടക്കത്തിൽ യഥാർത്ഥമായി സജ്ജമാക്കുന്നു.",
 }

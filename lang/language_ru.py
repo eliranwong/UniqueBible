@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Изменить рабочий перевод",
     "checkLanguageFiles": "Проверить языковые файлы",
     "hymn_lyrics": "Скачать минусовку.",
+    "populateTabsOnStartup": "Заполняет все отображаемые вкладки при запуске с последними записями хронологии. Замечания: Эта функция занимает больше времени для запуска UBA. Кроме того, если значение равно True, то и 'openBlebleWindowContentOnNextTab', и 'openStudyWindowContentOnNextTab' автоматически настраиваются на True при запуске.",
 }

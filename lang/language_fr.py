@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Editer la traduction de travail",
     "checkLanguageFiles": "Vérifier les fichiers de langue",
     "hymn_lyrics": "Hymn Lyrics",
+    "populateTabsOnStartup": "Remplit tous les onglets avilables au démarrage avec les enregistrements d'historique les plus récents. Remarques: Cette fonction prend plus de temps pour démarrer l'UBA. De plus, si elle est définie sur True,'openBibleWindowContentOnNextTab'et'openStudyWindowContentOnNextTab'sont automatiquement définis sur True au démarrage.",
 }

@@ -145,6 +145,9 @@ class ConfigUtil:
         # Specify the number of tabs for bible reading and workspace
         if not hasattr(config, "numberOfTab"):
             config.numberOfTab = 5
+        # Options to populate tabs with latest history records on start up: True / False
+        if not hasattr(config, "populateTabsOnStartup"):
+            config.populateTabsOnStartup = False
         # Options to open Bible Window's content in the tab next to the current one: True / False
         if not hasattr(config, "openBibleWindowContentOnNextTab"):
             config.openBibleWindowContentOnNextTab = False
@@ -540,6 +543,7 @@ class ConfigUtil:
             ("videoFolder", config.videoFolder),
             ("bibleNotes", config.bibleNotes),
             ("numberOfTab", config.numberOfTab),
+            ("populateTabsOnStartup", config.populateTabsOnStartup),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
             ("preferHtmlMenu", config.preferHtmlMenu),

@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "작업 변환 편집",
     "checkLanguageFiles": "언어 파일 검사",
     "hymn_lyrics": "찬송가",
+    "populateTabsOnStartup": "시작 시 사용 가능한 모든 탭을 최신 히스토리 레코드로 채웁니다. 비고: 이 기능은 UBA를 시작하는 데 오랜 시간이 걸린다. 또한 True로 설정되면 시작 시 'openBibleWindowContentOnNextTab' 과 'openStudyWindowContentOnNextTab' 이 모두 자동으로 설정된다.",
 }

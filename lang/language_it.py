@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Modifica Traduzione di lavoro",
     "checkLanguageFiles": "Verifica file di lingua",
     "hymn_lyrics": "Imn Lyrics",
+    "populateTabsOnStartup": "Popola tutte le schede avilabili all'avvio con i record di cronologia più recenti. Osservazioni: Questa funzione richiede più tempo per avviare l'UBA. Inoltre, se è impostato su True, sia 'openBibleWindowContentOnNextTab' che 'openStudyWindowContentOnNextTab' vengono impostati automaticamente su True on startup.",
 }

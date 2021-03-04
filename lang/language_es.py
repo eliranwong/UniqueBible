@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Editar traducción de trabajo",
     "checkLanguageFiles": "Comprobar archivos de idioma",
     "hymn_lyrics": "Letra de himno",
+    "populateTabsOnStartup": "Llena todas las pestañas disponibles en el inicio con los últimos registros de historial. Observaciones: Esta característica tarda más tiempo en comenzar la UBA. Además, si se establece en True, tanto 'openBibleWindowContentOnNextTab' como 'openStudyWindowContentOnNextTab' se establecen automáticamente en True durante el inicio.",
 }

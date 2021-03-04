@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Edit Working Translation",
     "checkLanguageFiles": "Check Language Files",
     "hymn_lyrics": "Hymn Lyrics",
+    "populateTabsOnStartup": "Populates all avilable tabs on startup with latest history records. Remarks: This feature takes longer time to start up UBA. In addition, if it is set to True, both 'openBibleWindowContentOnNextTab' and 'openStudyWindowContentOnNextTab' are automatically set to True on startup.",
 }

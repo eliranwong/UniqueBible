@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "Arbeitsübersetzung bearbeiten",
     "checkLanguageFiles": "Sprachdateien prüfen",
     "hymn_lyrics": "Hymn Lyrics",
+    "populateTabsOnStartup": "Füllt alle aufsehbaren Registerkarten beim Start mit den neuesten Protokollsätzen. Bemerkungen: Diese Funktion benötigt längere Zeit, um UBA zu starten. Wenn sie auf True gesetzt ist, werden sowohl 'openBibleWindowContentOnNextTab' als auch 'openStudyWindowContentOnNextTab' beim Start automatisch auf 'True' gesetzt.",
 }

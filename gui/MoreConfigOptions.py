@@ -39,6 +39,7 @@ class MoreConfigOptions(QDialog):
             ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, self.flagToolTip(False, "clearCommandEntry")),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, self.flagToolTip(False, "openBibleWindowContentOnNextTab")),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, self.flagToolTip(True, "openStudyWindowContentOnNextTab")),
+            ("populateTabsOnStartup", config.populateTabsOnStartup, self.populateTabsOnStartupChanged, self.flagToolTip(False, "populateTabsOnStartup")), 
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, self.flagToolTip(False, "qtMaterial")),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, self.flagToolTip(True, "addBreakAfterTheFirstToolBar")),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, self.flagToolTip(False, "addBreakBeforeTheLastToolBar")),
@@ -221,6 +222,9 @@ class MoreConfigOptions(QDialog):
 
     def hideNoteEditorTextUtilityChanged(self):
         config.hideNoteEditorTextUtility = not config.hideNoteEditorTextUtility
+
+    def populateTabsOnStartupChanged(self):
+        config.populateTabsOnStartup = not config.populateTabsOnStartup
 
     def bookOnNewWindowChanged(self):
         config.bookOnNewWindow = not config.bookOnNewWindow

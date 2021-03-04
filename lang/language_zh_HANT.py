@@ -622,4 +622,5 @@ translation = {
     "editWorkingTranslation": "編輯修改中的翻譯檔案",
     "checkLanguageFiles": "檢查語言檔案",
     "hymn_lyrics": "詩歌歌詞",
+    "populateTabsOnStartup": "在啟動時，把最新的歷史記錄載入所有頁籤中。備註：此功能需要較長的時間來啟動 UBA。此外，如果 'populateTabsOnStartup' 被設定為 True，在啟動時，'openBileWindowContentOnNextTab' 和 'openStudyWindowContentOnNextTab' 也將會自動被設定爲 True 。",
 }

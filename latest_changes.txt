@@ -1,3 +1,9 @@
+Major changes in version 22.19:
+* Added a config flat "populateTabsOnStartup", configurable via "Set Config Flags" window.  It is set to False by default.
+* Added ability to start up UBA with all tabs populated with latest history records by setting "config.populateTabsOnStartup" to True
+    Remarks: Turning on this feature takes longer time to start up UBA, especially if you have a lots of tabs.
+* Note Editor is now brought to foreground when user cancel closing it if changes are not saved.
+
 Major changes in version 22.18:
 * Revised traditional Chinese interface
 * Revised simplified Chinese interface
