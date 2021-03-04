@@ -54,6 +54,16 @@ class WebEngineView(QWebEngineView):
         return book[self.name]
 
     def addMenuActions(self):
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openOnNewWindow"])
+        action.triggered.connect(self.openOnNewWindow)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         copyText = QAction(self)
         copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
@@ -255,15 +265,6 @@ class WebEngineView(QWebEngineView):
         copyReferences.setText(config.thisTranslation["context1_copyReferences"])
         copyReferences.triggered.connect(self.copyAllReferences)
         self.addAction(copyReferences)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["openOnNewWindow"])
-        action.triggered.connect(self.openOnNewWindow)
-        self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)

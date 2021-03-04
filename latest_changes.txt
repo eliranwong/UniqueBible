@@ -1,3 +1,9 @@
+Major changes in version 22.17:
+* Added Hymm Lyrics; downloadable via "Resources" menu.
+* Renamed "Open on New Window" to "New Window"
+* Relocated "New Window" on right-click context menu.
+* Updated language files
+
 Major changes in version 22.16:
 * Added "Open on New Window" on right-click context menu.
 * Updated language files.
