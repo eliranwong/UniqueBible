@@ -146,7 +146,7 @@ class MainWindow(QMainWindow):
         self.pauseMode = False
 
         # pre-load control panel
-        self.manageControlPanel(config.showControlPanelOnStartup)
+        #self.manageControlPanel(config.showControlPanelOnStartup)
 
         config.inBootupMode = False
         bootEndTime = datetime.now()

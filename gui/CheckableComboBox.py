@@ -18,7 +18,7 @@ class CheckableComboBox(QComboBox):
             size.setHeight(20)
             return size
 
-    def __init__(self, items=[], checkedItems=[], *args, **kwargs):
+    def __init__(self, items=[], checkedItems=[], toolTips=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Set up initial checked items
@@ -46,7 +46,7 @@ class CheckableComboBox(QComboBox):
         self.view().viewport().installEventFilter(self)
 
         # Fill in items
-        self.addItems(items)
+        self.addItems(items, toolTips=toolTips)
 
     def resizeEvent(self, event):
         # Recompute text to elide as needed
@@ -105,24 +105,26 @@ class CheckableComboBox(QComboBox):
         elidedText = metrics.elidedText(text, Qt.ElideRight, self.lineEdit().width())
         self.lineEdit().setText(elidedText)
 
-    def addItem(self, text, data=None):
+    def addItem(self, text, data=None, toolTip=None):
         item = QStandardItem()
         item.setText(text)
         if data is None:
             item.setData(text)
         else:
             item.setData(data)
+        if toolTip is not None:
+            item.setToolTip(toolTip)
         item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
         item.setData(Qt.Checked if text in self.checkItems else Qt.Unchecked, Qt.CheckStateRole)
         self.model().appendRow(item)
 
-    def addItems(self, texts, datalist=None):
+    def addItems(self, texts, datalist=None, toolTips=None):
         for i, text in enumerate(texts):
             try:
                 data = datalist[i]
             except (TypeError, IndexError):
                 data = None
-            self.addItem(text, data)
+            self.addItem(text, data, None if toolTips is None else toolTips[i])
 
     def currentData(self):
         # Return the list of selected items data

@@ -1,6 +1,7 @@
 if not __name__ == "__main__":
     import config
 from functools import partial
+#from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 from qtpy.QtWidgets import QRadioButton, QComboBox, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
 from BibleVerseParser import BibleVerseParser
@@ -20,9 +21,12 @@ class HighlightLauncher(QWidget):
 
     def setupVariables(self):
         self.isRefreshing = False
-        bookNo2Abb = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        bookNo2Abb = bibleVerseParser.standardAbbreviation
+        #bookNo2Name = bibleVerseParser.standardFullBookName
         bookList = [i + 1 for i in range(66)]
         self.searchList = [config.thisTranslation["filter"], "{0}-{1}".format(bookNo2Abb["1"], bookNo2Abb["66"]), "{0}-{1}".format(bookNo2Abb["1"], bookNo2Abb["39"]), "{0}-{1}".format(bookNo2Abb["40"], bookNo2Abb["66"])] + [bookNo2Abb[str(b)] for b in bookList]
+        #self.searchListToolTips = [config.thisTranslation["filter"], "{0}-{1}".format(bookNo2Name["1"], bookNo2Name["66"]), "{0}-{1}".format(bookNo2Name["1"], bookNo2Name["39"]), "{0}-{1}".format(bookNo2Name["40"], bookNo2Name["66"])] + [bookNo2Name[str(b)] for b in bookList]
 
     def refresh(self):
         self.isRefreshing = True
@@ -75,6 +79,8 @@ class HighlightLauncher(QWidget):
             combo = QComboBox()
             combo.setToolTip(config.thisTranslation["filterHighlight"])
             combo.addItems(self.searchList)
+            #for index, toolTip in enumerate(self.searchListToolTips):
+                #combo.setItemData(index, toolTip, Qt.ToolTipRole)
             combo.setFixedWidth(100)
             combo.currentIndexChanged.connect(lambda selectedIndex, index=index: self.searchHighlight(selectedIndex, index))
             subLayout.addWidget(combo)

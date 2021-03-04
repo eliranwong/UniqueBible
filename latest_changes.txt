@@ -1,3 +1,6 @@
+Major changes in version 22.22:
+* Added tooltips to Master Control tabs
+
 Major changes in version 22.21:
 * Added a column to "Set Config Flags" window.
 

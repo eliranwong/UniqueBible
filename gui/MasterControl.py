@@ -20,6 +20,9 @@ class MasterControl(QWidget):
         self.parent = parent
         # set title
         self.setWindowTitle(config.thisTranslation["controlPanel"])
+        #self.setFixedWidth(int(config.appWidth  * 19 / 20))
+        #self.setMinimumWidth(int(config.appWidth  * 1 / 2))
+        self.setMaximumWidth(int(config.appWidth  * 19 / 20))
         # setup item option lists
         self.setupItemLists()
         # setup interface

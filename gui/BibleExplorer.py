@@ -4,7 +4,7 @@ from BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from BibleVerseParser import BibleVerseParser
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import (QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox)
+from qtpy.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox
 
 class BibleExplorer(QWidget):
 
@@ -15,7 +15,9 @@ class BibleExplorer(QWidget):
         self.b, self.c, self.v, self.text = bcvTextTuple
         self.bcvChain = False
         self.biblesSqlite = BiblesSqlite()
-        self.bookNo2Abb = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        self.bookNo2Abb = bibleVerseParser.standardAbbreviation
+        self.bookNo2Name = bibleVerseParser.standardFullBookName
         self.bookLabel = QLabel("")
         self.chapterLabel = QLabel("")
         self.verseLabel = QLabel("")
@@ -107,7 +109,7 @@ class BibleExplorer(QWidget):
         action = lambda: self.versionsAction("PARALLEL")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
-        self.parallelCombo = CheckableComboBox(items, initialItems)
+        self.parallelCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
         return self.parent.comboFeatureLayout(feature, self.parallelCombo, action)
 
     def navigationLayout4(self):
@@ -115,7 +117,7 @@ class BibleExplorer(QWidget):
         action = lambda: self.versionsAction("COMPARE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
-        self.compareCombo = CheckableComboBox(items, initialItems)
+        self.compareCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
         return self.parent.comboFeatureLayout(feature, self.compareCombo, action)
 
     def navigationLayout5(self):
@@ -123,7 +125,7 @@ class BibleExplorer(QWidget):
         action = lambda: self.versionsAction("DIFFERENCE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
-        self.differenceCombo = CheckableComboBox(items, initialItems)
+        self.differenceCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
         return self.parent.comboFeatureLayout(feature, self.differenceCombo, action)
 
     def navigationLayout6(self):
@@ -168,10 +170,11 @@ class BibleExplorer(QWidget):
             self.bookCombo.clear()
             self.bookList = self.biblesSqlite.getBookList(self.text)
             # Add only those are recognised by UBA parser
-            for b in self.bookList:
+            for index, b in enumerate(self.bookList):
                 strB = str(b)
                 if strB in self.bookNo2Abb:
                     self.bookCombo.addItem(self.bookNo2Abb[str(b)])
+                    self.bookCombo.setItemData(index, self.bookNo2Name[str(b)], Qt.ToolTipRole)
             index = 0
             if not reset and self.b in self.bookList:
                 index = self.bookList.index(self.b)

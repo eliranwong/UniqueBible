@@ -36,7 +36,7 @@ class SearchLauncher(QWidget):
         bibleWidget = QGroupBox(config.thisTranslation["bible"])
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
-        self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText])
+        self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText], toolTips=self.parent.textFullNameList)
         bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, self.searchBible))
         subLayout = QHBoxLayout()
         subLayout.setSpacing(5)

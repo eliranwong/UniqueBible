@@ -57,17 +57,21 @@ if config.qtMaterial:
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
+    config.appWidth = availableGeometry.width()
+    config.appHeight = availableGeometry.height()
     # Check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
     if platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         # Below is a workaround, loading the app in 4/5 of the screen size.
-        mainWindow.resize(availableGeometry.width() * 4 / 5, availableGeometry.height() * 4 / 5)
+        mainWindow.resize(config.appWidth * 4 / 5, config.appHeight)
     elif platform.system() == "Windows":
         mainWindow.showMaximized()
     else:
         # macOS or Linux set to fullscreen
-        mainWindow.resize(availableGeometry.width(), availableGeometry.height())
+        mainWindow.resize(config.appWidth, config.appHeight)
+    # pre-load control panel
+    mainWindow.manageControlPanel(config.showControlPanelOnStartup)
     mainWindow.show()
 
     # Check if migration is needed for version >= 0.56

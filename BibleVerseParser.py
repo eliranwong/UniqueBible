@@ -105,6 +105,7 @@ class BibleVerseParser:
         }
         self.checkConfig()
         self.standardAbbreviation = standardAbbreviations[config.standardAbbreviation]
+        self.standardFullBookName = {key: value[1] for key, value in self.standardAbbreviation.items()}
         self.standardAbbreviation = {key: value[0] for key, value in self.standardAbbreviation.items()}
 
     # The following two lines are written for use of this parser outside UniqueBible.app
