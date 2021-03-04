@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "제어판 탭이 열릴 때 명령 텍스트를 비우는 옵션입니다.",
     "openBibleWindowContentOnNextTab": "새 명령이 실행되면 기본 창의 새 탭에 컨텐츠가 표시됩니다.",
     "openStudyWindowContentOnNextTab": "새 명령이 실행되면 학습 창의 새 탭에 컨텐츠가 표시됩니다.",
-    "qtMaterial": "기본 제공 테마 대신 써드파티 qt-자재 테마를 사용하는 선택사항입니다.",
+    "qtMaterial": "기본 제공 테마 대신 써드파티 qt-material 테마를 사용하는 옵션입니다.",
     "addBreakAfterTheFirstToolBar": "첫 번째 메뉴 도구 모음 다음에 줄 바꿈을 추가합니다.",
     "addBreakBeforeTheLastToolBar": "마지막 메뉴 도구 모음 앞에 줄 바꿈을 추가합니다.",
     "parserStandarisation": "UBA 표준에 따라 성경 서적 약어를 변환하는 UBA파서에 대한 옵션.",

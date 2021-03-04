@@ -1,3 +1,6 @@
+Major changes in version 22.21:
+* Added a column to "Set Config Flags" window.
+
 Major changes in version 22.19, 20:
 * Added a config flat "populateTabsOnStartup", configurable via "Set Config Flags" window.  It is set to False by default.
 * Added ability to start up UBA with all tabs populated with latest history records by setting "config.populateTabsOnStartup" to True

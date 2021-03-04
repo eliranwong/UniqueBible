@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "Option zum leeren Befehlstext, wenn eine Steuerkonsolregisterkarte geöffnet wird.",
     "openBibleWindowContentOnNextTab": "Der Inhalt wird auf einer neuen Registerkarte im Hauptfenster angezeigt, wenn ein neuer Befehl ausgeführt wird.",
     "openStudyWindowContentOnNextTab": "Der Inhalt wird auf einer neuen Registerkarte im Studienfenster angezeigt, wenn ein neuer Befehl ausgeführt wird.",
-    "qtMaterial": "Optional für die Verwendung von Qt-Material-Themen von Drittanbietern anstelle von integrierten Motiven.",
+    "qtMaterial": "Option zur Verwendung von Qt-Material-Themen anderer Anbieter anstelle von integrierten Motiven.",
     "addBreakAfterTheFirstToolBar": "Fügen Sie nach der ersten Menüsymbolleiste einen Zeilenumbruch hinzu.",
     "addBreakBeforeTheLastToolBar": "Fügen Sie vor der letzten Menüsymbolleiste einen Zeilenumbruch hinzu.",
     "parserStandarisation": "Option für UBA-Parser, Bibelbuchabkürzungen nach UBA-Standard zu konvertieren.",

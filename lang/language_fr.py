@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "Option de vide du texte de commande lorsqu'un onglet de panneau de commande est ouvert.",
     "openBibleWindowContentOnNextTab": "Le contenu s'affiche dans un nouvel onglet de la fenêtre principale si une nouvelle commande est exécutée.",
     "openStudyWindowContentOnNextTab": "Le contenu s'affiche dans un nouvel onglet de la fenêtre d'étude si une nouvelle commande est exécutée.",
-    "qtMaterial": "Facultatif pour utiliser des thèmes de matériel qt tiers au lieu de thèmes intégrés.",
+    "qtMaterial": "Option permettant d'utiliser des thèmes de matériel qt tiers au lieu de thèmes intégrés.",
     "addBreakAfterTheFirstToolBar": "Ajoutez une rupture de ligne après la première barre d'outils du menu.",
     "addBreakBeforeTheLastToolBar": "Ajoutez une rupture de ligne avant la dernière barre d'outils du menu.",
     "parserStandarisation": "Option permettant à l'analyseur UBA de convertir des abréviations de livre bible en fonction de la norme UBA.",

@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "Option to empty command text when a control panel tab is opened.",
     "openBibleWindowContentOnNextTab": "Content is displayed on a new tab on Main Window if a new command is executed.",
     "openStudyWindowContentOnNextTab": "Content is displayed on a new tab on Study Window if a new command is executed.",
-    "qtMaterial": "Optional to use third-party qt-materials themes instead of built-in themes.",
+    "qtMaterial": "Option to use third-party qt-material themes instead of built-in themes.",
     "addBreakAfterTheFirstToolBar": "Add a line-break after the first menu toolbar.",
     "addBreakBeforeTheLastToolBar": "Add a line-break before the last menu toolbar.",
     "parserStandarisation": "Option for UBA parser to convert bible book abbreviations according to UBA standard.",

@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "當開啟控制面板時，清空指令文字欄。",
     "openBibleWindowContentOnNextTab": "在主要視窗使用新頁籤來顯示內容。",
     "openStudyWindowContentOnNextTab": "在研究視窗使用新頁籤來顯示內容。",
-    "qtMaterial": "使用 qt-material 佈景主題，而不是內建佈景主題。",
+    "qtMaterial": "使用第三方 Qt 物料佈景主題，取代內建的佈景主題。",
     "addBreakAfterTheFirstToolBar": "在第一個工具列之後新增換行。",
     "addBreakBeforeTheLastToolBar": "在最後一個工具列之前新增換行。",
     "parserStandarisation": "根據 UBA 標準，應用書卷書卷縮寫到經文參照剖析器。",

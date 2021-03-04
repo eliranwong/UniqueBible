@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "コントロール・パネル・タブが開いたときに、コマンド・テキストを空にするオプション。",
     "openBibleWindowContentOnNextTab": "新規コマンドが実行されると、メイン・ウィンドウ上の新しいタブにコンテンツが表示されます。",
     "openStudyWindowContentOnNextTab": "新規コマンドが実行された場合、「学習」ウィンドウの新しいタブにコンテンツが表示されます。",
-    "qtMaterial": "組み込みテーマの代わりにサード・パーティーの qt - 素材テーマを使用するオプション。",
+    "qtMaterial": "組み込みテーマではなくサード・パーティーの qt - マテリアルなテーマを使用するオプション。",
     "addBreakAfterTheFirstToolBar": "最初のメニュー・ツールバーの後に改行を追加します。",
     "addBreakBeforeTheLastToolBar": "最後のメニュー・ツールバーの前に改行を追加します。",
     "parserStandarisation": "UBA パーサーのオプション。 UBA 標準に従って聖書の省略形を変換します。",

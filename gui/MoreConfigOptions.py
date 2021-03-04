@@ -25,13 +25,6 @@ class MoreConfigOptions(QDialog):
         #horizontalContainer.setPalette(Themes.getPalette())
         horizontalContainerLayout = QHBoxLayout()
 
-        leftContainer = QWidget()
-        leftContainerLayout = QVBoxLayout()
-        middleContainer = QWidget()
-        middleContainerLayout = QVBoxLayout()
-        rightContainer = QWidget()
-        rightContainerLayout = QVBoxLayout()
-
         options = [
             ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, self.flagToolTip(False, "showControlPanelOnStartup")),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, self.flagToolTip(False, "preferControlPanelForCommandLineEntry")),
@@ -43,9 +36,9 @@ class MoreConfigOptions(QDialog):
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, self.flagToolTip(False, "qtMaterial")),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, self.flagToolTip(True, "addBreakAfterTheFirstToolBar")),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, self.flagToolTip(False, "addBreakBeforeTheLastToolBar")),
-            ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, self.flagToolTip(False, "preferHtmlMenu")),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, self.flagToolTip(False, "parserStandarisation")),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, self.flagToolTip(False, "useFastVerseParsing")),
+            ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, self.flagToolTip(False, "preferHtmlMenu")),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, self.flagToolTip(True, "showVerseNumbersInRange")),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, self.flagToolTip(False, "addFavouriteToMultiRef")),
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, self.flagToolTip(False, "enableVerseHighlighting")),
@@ -95,6 +88,8 @@ class MoreConfigOptions(QDialog):
                 ("logCommands", config.logCommands, self.logCommandsChanged, self.flagToolTip(False, "logCommands")),
             ]
 
+        columns = (QVBoxLayout(), QVBoxLayout(), QVBoxLayout(), QVBoxLayout())
+
         counter = 0
         for content in options:
             name, value, function, toolTip = content
@@ -103,26 +98,16 @@ class MoreConfigOptions(QDialog):
             checkbox.setChecked(value)
             checkbox.stateChanged.connect(function)
             checkbox.setToolTip(toolTip)
-            if (counter == 0):
-                leftContainerLayout.addWidget(checkbox)
-                counter += 1
-            elif (counter == 1):
-                middleContainerLayout.addWidget(checkbox)
-                counter += 1
-            elif (counter == 2):
-                rightContainerLayout.addWidget(checkbox)
+
+            columns[counter].addWidget(checkbox)
+            if counter == len(columns) - 1:
                 counter = 0
+            else:
+                counter += 1
 
-        leftContainerLayout.addStretch()
-        middleContainerLayout.addStretch()
-        rightContainerLayout.addStretch()
-
-        leftContainer.setLayout(leftContainerLayout)
-        middleContainer.setLayout(middleContainerLayout)
-        rightContainer.setLayout(rightContainerLayout)
-        horizontalContainerLayout.addWidget(leftContainer)
-        horizontalContainerLayout.addWidget(middleContainer)
-        horizontalContainerLayout.addWidget(rightContainer)
+        for column in columns:
+            column.addStretch()
+            horizontalContainerLayout.addLayout(column)
         horizontalContainer.setLayout(horizontalContainerLayout)
         layout.addWidget(horizontalContainer)
         self.setLayout(layout)

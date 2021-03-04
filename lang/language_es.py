@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "Opción para vaciar texto de mandato cuando se abre una pestaña de panel de control.",
     "openBibleWindowContentOnNextTab": "El contenido se visualiza en una nueva pestaña en la ventana principal si se ejecuta un nuevo mandato.",
     "openStudyWindowContentOnNextTab": "El contenido se visualiza en una nueva pestaña en Ventana de estudio si se ejecuta un nuevo mandato.",
-    "qtMaterial": "Opcional para utilizar temas de materiales qt de terceros en lugar de temas incorporados.",
+    "qtMaterial": "Opción de utilizar temas qt-materiales de terceros en lugar de temas incorporados.",
     "addBreakAfterTheFirstToolBar": "Añada un salto de línea después de la primera barra de herramientas del menú.",
     "addBreakBeforeTheLastToolBar": "Añada un salto de línea antes de la última barra de herramientas del menú.",
     "parserStandarisation": "Opción para que el analizador de la UBA convierta las abreviaturas de libros de biblia de acuerdo a la norma",

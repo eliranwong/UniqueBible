@@ -535,7 +535,7 @@ translation = {
     "clearCommandEntry": "Opzione per svuotare il testo del comando quando si apre una scheda del pannello di controllo.",
     "openBibleWindowContentOnNextTab": "Il contenuto viene visualizzato su una nuova scheda su Main Window se viene eseguito un nuovo comando.",
     "openStudyWindowContentOnNextTab": "Il contenuto viene visualizzato su una nuova scheda sullo Studio Window se viene eseguito un nuovo comando.",
-    "qtMaterial": "Opzionale per utilizzare temi qt - materiali di terze parti invece di temi integrati.",
+    "qtMaterial": "Opzione per utilizzare temi di materiale qt - materiale di terze parti invece di temi integrati.",
     "addBreakAfterTheFirstToolBar": "Aggiungere una riga - break dopo la barra degli strumenti del primo menu.",
     "addBreakBeforeTheLastToolBar": "Aggiungere una riga - break prima dell'ultima barra degli strumenti del menu.",
     "parserStandarisation": "Opzione per parser UBA per convertire abbreviazioni di libro bibbia secondo standard UBA.",
