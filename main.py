@@ -12,6 +12,9 @@ wd = thisFile[:-7]
 if os.getcwd() != wd:
     os.chdir(wd)
 
+# Check initial command passed to UBA as a parameter
+initial_mainTextCommand = " ".join(sys.argv[1:])
+
 # Create custom files
 from util.FileUtil import FileUtil
 FileUtil.createCustomFiles()
@@ -43,6 +46,8 @@ ShortcutUtil.setup(config.menuShortcuts)
 from gui.MainWindow import MainWindow
 from qtpy.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
+
+
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
 if config.qtMaterial and not config.isQtMaterialInstalled:
@@ -78,7 +83,7 @@ def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
 
 def populateTabsOnStartup(source="main"):
     history = config.history[source]
-    for i in reversed(range(config.numberOfTab)):
+    for i in reversed(range(config.numberOfTab - 1 if initial_mainTextCommand and source == "main" else config.numberOfTab)):
         index = i + 1
         if len(history) >= index:
             command = history[0 - index]
@@ -129,6 +134,7 @@ mainWindow = MainWindow()
 availableGeometry = app.desktop().availableGeometry(mainWindow)
 setupMainWindow(availableGeometry)
 
+# Run initial commands
 if config.populateTabsOnStartup:
     if not config.openBibleWindowContentOnNextTab:
         config.openBibleWindowContentOnNextTab = True
@@ -140,12 +146,11 @@ if config.populateTabsOnStartup:
     populateTabsOnStartup("study")
 else:
     # Execute initial command on Bible Window
-    runLastHistoryRecord("main")
+    if not initial_mainTextCommand:
+        runLastHistoryRecord("main")
     # Execute initial command on Study Window
     runLastHistoryRecord("study")
 
-# Execute initial command passed to UBA as a parameter
-initial_mainTextCommand = " ".join(sys.argv[1:])
 if initial_mainTextCommand:
     executeInitialTextCommand(initial_mainTextCommand, True)
 
