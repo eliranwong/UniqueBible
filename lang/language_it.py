@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "Seleziona Traduzione Suggerimento",
     "editWorkingTranslation": "Modifica Traduzione di lavoro",
     "checkLanguageFiles": "Verifica file di lingua",
+    "hymn_lyrics": "Imn Lyrics",
 }

@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "도구 팁 변환 선택",
     "editWorkingTranslation": "작업 변환 편집",
     "checkLanguageFiles": "언어 파일 검사",
+    "hymn_lyrics": "찬송가",
 }

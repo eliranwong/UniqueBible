@@ -621,4 +621,5 @@ translation = {
     "selectTooltipTranslation": "സൂചനയുടെ പരിഭാഷ തെരഞ്ഞെടുക്കുക",
     "editWorkingTranslation": "ജോലിക്കുള്ള പരിഭാഷ ചിട്ടപ്പെടുത്തുക",
     "checkLanguageFiles": "ഭാഷ ഫയലുകള് പരിശോധിക്കുക",
+    "hymn_lyrics": "Hymn Lyrics",
 }
