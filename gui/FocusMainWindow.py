@@ -26,7 +26,6 @@ class FocusMainWindow:
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
-            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )

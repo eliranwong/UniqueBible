@@ -1,12 +1,8 @@
-import operator
-import sys
-
+import operator, sys, config
 from qtpy.QtCore import QAbstractTableModel, Qt
 from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit, \
     QHBoxLayout
-
-import config
 from Languages import Languages
 from util.LanguageUtil import LanguageUtil
 

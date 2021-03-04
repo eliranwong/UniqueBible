@@ -1,3 +1,7 @@
+Major changes in version 22.18:
+* Revised traditional Chinese interface
+* Revised simplified Chinese interface
+
 Major changes in version 22.17:
 * Added Hymm Lyrics; downloadable via "Resources" menu.
 * Renamed "Open on New Window" to "New Window"
