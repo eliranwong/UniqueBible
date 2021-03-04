@@ -617,4 +617,8 @@ translation = {
     "title": "शीर्षक",
     "individualBibles": "व्यक्तिगत बिल्स",
     "edit_language_file": "भाषा फ़ाइल संपादित करें",
+    "openOnNewWindow": "नई विंडो पर खोलें",
+    "selectTooltipTranslation": "टूलटिप अनुवाद चुनें",
+    "editWorkingTranslation": "कार्य अनुवाद संपादित करें",
+    "checkLanguageFiles": "भाषा फ़ाइलें जाँचें",
 }

@@ -260,6 +260,15 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        action = QAction(self)
+        action.setText(config.thisTranslation["openOnNewWindow"])
+        action.triggered.connect(self.openOnNewWindow)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         runAsCommandLine = QAction(self)
         runAsCommandLine.setText(config.thisTranslation["context1_command"])
         runAsCommandLine.triggered.connect(self.runAsCommand)
@@ -504,6 +513,12 @@ class WebEngineView(QWebEngineView):
         else:
             searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def openOnNewWindow(self):
+        self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
+
+    def openNewWindow(self, html):
+        self.openPopover(html=html)
 
     def extractAllReferences(self):
         selectedText = self.selectedText()

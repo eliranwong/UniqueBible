@@ -344,10 +344,10 @@ class FocusMainWindow:
         if config.developer:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
-            addMenuItem(menu, "Check language files", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"), translation=False)
+            addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
-            addMenuItem(menu, "Select Tooltip Translation", self, self.selectReferenceTranslation, translation=False)
-            addMenuItem(menu, "Edit Working Translation", self, self.editWorkingTranslation, translation=False)
+            addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)
+            addMenuItem(menu, "editWorkingTranslation", self, self.editWorkingTranslation)
 
     def setupToolBarStandardIconSize(self):
         

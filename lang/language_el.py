@@ -617,4 +617,8 @@ translation = {
     "title": "' Τίτλος",
     "individualBibles": "Ατομικές Bibles",
     "edit_language_file": "Τροποποίηση αρχείου γλώσσας",
+    "openOnNewWindow": "Άνοιγμα σε νέο παράθυρο",
+    "selectTooltipTranslation": "Επιλογή μετατροπής πίνακα εργαλείων",
+    "editWorkingTranslation": "Επεξεργασία εργασίας μετάφρασης",
+    "checkLanguageFiles": "Έλεγχος αρχείων γλώσσας",
 }

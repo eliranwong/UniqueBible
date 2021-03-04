@@ -618,4 +618,8 @@ translation = {
     "title": "标题",
     "individualBibles": "个人圣经",
     "edit_language_file": "编辑语言文件",
+    "openOnNewWindow": "在新窗口上打开",
+    "selectTooltipTranslation": "选择工具提示翻译",
+    "editWorkingTranslation": "编辑工作翻译",
+    "checkLanguageFiles": "检查语言文件",
 }

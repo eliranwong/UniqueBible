@@ -617,4 +617,8 @@ translation = {
     "title": "Titel",
     "individualBibles": "Einzelne Bibeln",
     "edit_language_file": "Sprachdatei bearbeiten",
+    "openOnNewWindow": "In neuem Fenster öffnen",
+    "selectTooltipTranslation": "Tooltip-Übersetzung auswählen",
+    "editWorkingTranslation": "Arbeitsübersetzung bearbeiten",
+    "checkLanguageFiles": "Sprachdateien prüfen",
 }

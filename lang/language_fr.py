@@ -617,4 +617,8 @@ translation = {
     "title": "Titre",
     "individualBibles": "Bibles individuelles",
     "edit_language_file": "Editer le fichier de langue",
+    "openOnNewWindow": "Ouvrir dans une nouvelle fenêtre",
+    "selectTooltipTranslation": "Sélectionner la traduction d'infobulle",
+    "editWorkingTranslation": "Editer la traduction de travail",
+    "checkLanguageFiles": "Vérifier les fichiers de langue",
 }

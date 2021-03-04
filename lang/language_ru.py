@@ -617,4 +617,8 @@ translation = {
     "title": "Название",
     "individualBibles": "Отдельные библии",
     "edit_language_file": "Изменить файл языка",
+    "openOnNewWindow": "Открыть в новом окне",
+    "selectTooltipTranslation": "Выбрать перевод подсказки",
+    "editWorkingTranslation": "Изменить рабочий перевод",
+    "checkLanguageFiles": "Проверить языковые файлы",
 }

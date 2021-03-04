@@ -617,4 +617,8 @@ translation = {
     "title": "書名",
     "individualBibles": "個別のバイブル",
     "edit_language_file": "言語ファイルの編集",
+    "openOnNewWindow": "新規ウィンドウで開く",
+    "selectTooltipTranslation": "ツールチップ翻訳の選択",
+    "editWorkingTranslation": "作業翻訳の編集",
+    "checkLanguageFiles": "言語ファイルの検査",
 }

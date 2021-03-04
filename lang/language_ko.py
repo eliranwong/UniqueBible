@@ -617,4 +617,8 @@ translation = {
     "title": "제목",
     "individualBibles": "개별 입찰",
     "edit_language_file": "언어 파일 편집하기",
+    "openOnNewWindow": "새 창에서 열기",
+    "selectTooltipTranslation": "도구 팁 변환 선택",
+    "editWorkingTranslation": "작업 변환 편집",
+    "checkLanguageFiles": "언어 파일 검사",
 }

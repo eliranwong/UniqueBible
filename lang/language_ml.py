@@ -617,4 +617,8 @@ translation = {
     "title": "തലക്കെട്ടു്",
     "individualBibles": "വ്യക്തിപരമായ ബൈബിളുകള്",
     "edit_language_file": "ഭാഷ ഫയല് ചിട്ടപ്പെടുത്തുക",
+    "openOnNewWindow": "പുതിയ ജാലകത്തില് തുറക്കുക",
+    "selectTooltipTranslation": "സൂചനയുടെ പരിഭാഷ തെരഞ്ഞെടുക്കുക",
+    "editWorkingTranslation": "ജോലിക്കുള്ള പരിഭാഷ ചിട്ടപ്പെടുത്തുക",
+    "checkLanguageFiles": "ഭാഷ ഫയലുകള് പരിശോധിക്കുക",
 }

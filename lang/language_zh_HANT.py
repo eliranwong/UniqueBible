@@ -617,4 +617,8 @@ translation = {
     "title": "Title",
     "individualBibles": "個人聖經",
     "edit_language_file": "編輯語言檔案",
+    "openOnNewWindow": "在新視窗開啟",
+    "selectTooltipTranslation": "選取工具提示翻譯",
+    "editWorkingTranslation": "編輯工作轉換",
+    "checkLanguageFiles": "檢查語言檔案",
 }
