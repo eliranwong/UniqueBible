@@ -1,3 +1,9 @@
+There are two different plugins in UBA, UBA plugins and UBA context plugins.
+
+Read about UBA plugins at https://github.com/eliranwong/UniqueBible/blob/master/plugins/Readme.md
+
+Below is description on UBA context plugins.
+
 # UBA Context Plugins
 
 UBA context plugins are plugins used with right-click context menu.
