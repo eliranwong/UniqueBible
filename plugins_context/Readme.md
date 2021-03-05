@@ -1,3 +1,5 @@
+# TWO Types of Plugins
+
 There are two different plugins in UBA, UBA plugins and UBA context plugins.
 
 Read about UBA plugins at https://github.com/eliranwong/UniqueBible/blob/master/plugins/Readme.md
