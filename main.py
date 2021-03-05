@@ -13,7 +13,7 @@ if os.getcwd() != wd:
     os.chdir(wd)
 
 # Check initial command passed to UBA as a parameter
-initialCommand = " ".join(sys.argv[1:])
+initialCommand = " ".join(sys.argv[1:]).strip()
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Create custom files
