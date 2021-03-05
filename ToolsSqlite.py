@@ -783,9 +783,19 @@ class Book:
             content = row[1]
             config.bookChapNum = row[2]
             if config.overwriteBookFont:
-                content = re.sub("font-family:[^<>]*?([;'{0}])".format('"'), r"font-family:{0}\1".format(config.font), content)
+                fontFamily = config.font
+                if config.overwriteBookFontFamily:
+                    fontFamily = config.overwriteBookFontFamily
+                content = re.sub("font-family:[^<>]*?;", r"font-family:'{0}';".format(fontFamily), content)
             if config.overwriteBookFontSize:
-                content = re.sub("font-size:[^<>]*?;", "", content)
+                if type(config.overwriteBookFontSize) == bool:
+                    content = re.sub("font-size:[^<>]*?;", "", content)
+                elif type(config.overwriteBookFontSize) == int:
+                    content = re.sub("font-size:[^<>]*?;", r"font-size:'{0}px';".format(config.overwriteBookFontSize),
+                                     content)
+                elif type(config.overwriteBookFontSize) == str:
+                    content = re.sub("font-size:[^<>]*?;", r"font-size:'{0}';".format(config.overwriteBookFontSize),
+                                     content)
             for searchString in config.bookSearchString.split("%"):
                 if searchString and not searchString == "z":
                     content = re.sub("({0})".format(searchString), r"<z>\1</z>", content, flags=re.IGNORECASE)

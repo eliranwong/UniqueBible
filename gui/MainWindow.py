@@ -2500,8 +2500,18 @@ class MainWindow(QMainWindow):
                         config.studyText, config.studyB, config.studyC, config.studyV)
                     if hasattr(config, "studyCssBibleFontStyle"):
                         bibleCss = config.studyCssBibleFontStyle
+                fontFamily = config.font
+                fontSize = "{0}px".format(config.fontSize)
+                if textCommand.startswith("BOOK:::"):
+                    if config.overwriteBookFontFamily:
+                        fontFamily = config.overwriteBookFontFamily
+                    if config.overwriteBookFontSize:
+                        if type(config.overwriteBookFontSize) == str:
+                            fontSize = config.overwriteBookFontSize
+                        elif type(config.overwriteBookFontSize) == int:
+                            fontSize = "{0}px".format(config.overwriteBookFontSize)
                 html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
-                        "<style>body {2} font-size: {4}px; font-family:'{5}';{3} "
+                        "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                         "zh {2} font-family:'{6}'; {3} "
                         "{8} {9}</style>"
                         "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
@@ -2518,8 +2528,8 @@ class MainWindow(QMainWindow):
                                  content,
                                  "{",
                                  "}",
-                                 config.fontSize,
-                                 config.font,
+                                 fontSize,
+                                 fontFamily,
                                  config.fontChinese,
                                  config.theme,
                                  self.getHighlightCss(),

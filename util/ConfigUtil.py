@@ -350,6 +350,9 @@ class ConfigUtil:
         # Option to overwrite font in book modules
         if not hasattr(config, "overwriteBookFont"):
             config.overwriteBookFont = True
+        # Overwrite book font family
+        if not hasattr(config, "overwriteBookFontFamily"):
+            config.overwriteBookFontFamily = ""
         # Option to overwrite font size in book modules
         if not hasattr(config, "overwriteBookFontSize"):
             config.overwriteBookFontSize = True
@@ -622,6 +625,7 @@ class ConfigUtil:
             ("verseNoSingleClickAction", config.verseNoSingleClickAction),
             ("verseNoDoubleClickAction", config.verseNoDoubleClickAction),
             ("overwriteBookFont", config.overwriteBookFont),
+            ("overwriteBookFontFamily", config.overwriteBookFontFamily),
             ("overwriteBookFontSize", config.overwriteBookFontSize),
             ("overwriteNoteFont", config.overwriteNoteFont),
             ("overwriteNoteFontSize", config.overwriteNoteFontSize),
