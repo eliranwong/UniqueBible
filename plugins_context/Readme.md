@@ -1,6 +1,16 @@
-UBA plugins for use with right-click context menu are placed in this directory.
+# UBA Context Plugins
+
+UBA context plugins are plugins used with right-click context menu.
 
 A valid plugin file should be a python script with file extension ".py".
+
+# File Location
+
+All UBA context plugins are placed in folder "plugins_context" inside UniqueBible home directory.
+
+# Enable Plugins
+
+You need to enable this feature by checking "enablePlugins" on "Set Config Flags" window.
 
 # config.pluginContext
 
