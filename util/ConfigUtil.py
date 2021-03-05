@@ -341,6 +341,12 @@ class ConfigUtil:
         # Option to open book content on a new window
         if not hasattr(config, "bookOnNewWindow"):
             config.bookOnNewWindow = False
+        # Popover Windows width
+        if not hasattr(config, "popoverWindowWidth"):
+            config.popoverWindowWidth = 1000
+        # Popover Windows height
+        if not hasattr(config, "popoverWindowHeight"):
+            config.popoverWindowHeight = 700
         # Option to overwrite font in book modules
         if not hasattr(config, "overwriteBookFont"):
             config.overwriteBookFont = True
@@ -608,6 +614,8 @@ class ConfigUtil:
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("bookOnNewWindow", config.bookOnNewWindow),
+            ("popoverWindowWidth", config.popoverWindowWidth),
+            ("popoverWindowHeight", config.popoverWindowHeight),
             ("verseNoSingleClickAction", config.verseNoSingleClickAction),
             ("verseNoDoubleClickAction", config.verseNoDoubleClickAction),
             ("overwriteBookFont", config.overwriteBookFont),
