@@ -20,7 +20,7 @@ class MasterControl(QWidget):
         self.parent = parent
         # set title
         self.setWindowTitle(config.thisTranslation["controlPanel"])
-        windowWidth = 1215
+        windowWidth = 1255
         if config.appWidth > windowWidth:
             self.setFixedWidth(windowWidth)
         # setup item option lists
