@@ -57,31 +57,31 @@ if config.qtMaterial:
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
-    config.appWidth = availableGeometry.width()
-    config.appHeight = availableGeometry.height()
+    config.screenWidth = availableGeometry.width()
+    config.screenHeight = availableGeometry.height()
     # Check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
     if platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         # Below is a workaround, loading the app in 4/5 of the screen size.
-        mainWindow.resize(config.appWidth * 4 / 5, config.appHeight)
+        config.mainWindow.resize(config.screenWidth * 4 / 5, config.screenHeight)
     elif platform.system() == "Windows":
-        mainWindow.showMaximized()
+        config.mainWindow.showMaximized()
     else:
         # macOS or Linux set to fullscreen
-        mainWindow.resize(config.appWidth, config.appHeight)
+        config.mainWindow.resize(config.screenWidth, config.screenHeight)
     # pre-load control panel
-    mainWindow.manageControlPanel(config.showControlPanelOnStartup)
-    mainWindow.show()
+    config.mainWindow.manageControlPanel(config.showControlPanelOnStartup)
+    config.mainWindow.show()
 
     # Check if migration is needed for version >= 0.56
-    mainWindow.checkMigration()
+    config.mainWindow.checkMigration()
 
 def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
     try:
         if source == "main" or (source == "study" and re.match("^online:::", textCommand, flags=re.IGNORECASE)):
-            mainWindow.textCommandLineEdit.setText(textCommand)
-        mainWindow.runTextCommand(textCommand, addRecord, source)
+            config.mainWindow.textCommandLineEdit.setText(textCommand)
+        config.mainWindow.runTextCommand(textCommand, addRecord, source)
     except:
         print("Failed to execute '{0}' on startup.".format(textCommand))
 
@@ -104,7 +104,7 @@ def setCurrentRecord():
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
 def exitApplication():
-    mainWindow.textCommandParser.stopTtsAudio()
+    config.mainWindow.textCommandParser.stopTtsAudio()
     ConfigUtil.save()
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
@@ -131,11 +131,11 @@ if config.qtMaterial and config.qtMaterialTheme:
 else:
     app.setPalette(Themes.getPalette())
 
-# Setup main window
-mainWindow = MainWindow()
+# Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
+config.mainWindow = MainWindow()
 
 # Check screen size
-availableGeometry = app.desktop().availableGeometry(mainWindow)
+availableGeometry = app.desktop().availableGeometry(config.mainWindow)
 setupMainWindow(availableGeometry)
 
 # Run initial commands
@@ -166,7 +166,7 @@ if config.customPythonOnStartup:
     from custom import *
 
 # Startup macro
-mainWindow.runMacro(config.startupMacro)
+config.mainWindow.runMacro(config.startupMacro)
 
 def global_excepthook(type, value, traceback):
     logger.error("Uncaught exception", exc_info=(type, value, traceback))

@@ -1,4 +1,10 @@
-Major changes in version 22.24:
+Major change in version 22.25:
+* Now assign UBA's main window to config.mainWindow
+    This opens up a lot of possiblity for users for use "customised python script" on startup.
+    This featuer may also allow python programmers to develop "plugins" for use with UBA.
+    Read https://github.com/eliranwong/UniqueBible/wiki/Custom-Python-Script for more information.
+
+Major change in version 22.24:
 * Add overwriteBookFontFamily to config
 
 Major changes in version 22.23:
