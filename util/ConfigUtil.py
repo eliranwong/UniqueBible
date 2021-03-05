@@ -461,6 +461,9 @@ class ConfigUtil:
         # Verse parsing method
         if not hasattr(config, "useFastVerseParsing"):
             config.useFastVerseParsing = False
+        # Running custom python script "custom.py" on startup
+        if not hasattr(config, "customPythonOnStartup"):
+            config.customPythonOnStartup = False
         # Enable macros
         if not hasattr(config, "enableMacros"):
             config.enableMacros = False
@@ -661,6 +664,7 @@ class ConfigUtil:
             ("menuLayout", config.menuLayout),
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("useFastVerseParsing", config.useFastVerseParsing),
+            ("customPythonOnStartup", config.customPythonOnStartup),
             ("enableMacros", config.enableMacros),
             ("startupMacro", config.startupMacro),
             ("enableGist", config.enableGist),

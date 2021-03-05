@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "La característica de conversión que utiliza el servicio de IBM Watson no está habilitada. ",
     "translate": "Traducir",
     "note_textUtility": "Mostrar/Ocultar programa de utilidad de texto",
-    "noteTool_superscript": "Superscript Sytle",
-    "noteTool_subscript": "Subíndice Sytle",
+    "noteTool_superscript": "Estilo Superíndice",
+    "noteTool_subscript": "Estilo de subíndice",
     "selectTextFirst": "Seleccione el texto primero.",
     "enterTextFirst": "Introduzca el texto primero.",
     "default": "Valor predeterminado:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "Editar traducción de trabajo",
     "checkLanguageFiles": "Comprobar archivos de idioma",
     "hymn_lyrics": "Letra de himno",
-    "populateTabsOnStartup": "Llena todas las pestañas disponibles en el inicio con los últimos registros de historial. Observaciones: Esta característica tarda más tiempo en comenzar la UBA. Además, si se establece en True, tanto 'openBibleWindowContentOnNextTab' como 'openStudyWindowContentOnNextTab' se establecen automáticamente en True durante el inicio.",
+    "populateTabsOnStartup": "Llena todas las pestañas disponibles en el inicio con los últimos registros de historial. Observaciones: Esta característica tarda más tiempo en comenzar la UBA.",
+    "customPythonOnStartup": "Opción para ejecutar el script python personalizado 'custom.py' en el inicio.",
 }

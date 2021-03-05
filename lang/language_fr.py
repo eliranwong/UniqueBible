@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "La fonction de traduction utilisant le service IBM Watson n'est pas activée.",
     "translate": "Translate",
     "note_textUtility": "Afficher / Masquer l'utilitaire de texte",
-    "noteTool_superscript": "Sytle en exposant",
-    "noteTool_subscript": "Sytle de sous-script",
+    "noteTool_superscript": "Style de l'exposant",
+    "noteTool_subscript": "Style de sous-script",
     "selectTextFirst": "Sélectionnez d'abord le texte !",
     "enterTextFirst": "Entrez d'abord le texte !",
     "default": "Valeur par défaut:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "Editer la traduction de travail",
     "checkLanguageFiles": "Vérifier les fichiers de langue",
     "hymn_lyrics": "Hymn Lyrics",
-    "populateTabsOnStartup": "Remplit tous les onglets avilables au démarrage avec les enregistrements d'historique les plus récents. Remarques: Cette fonction prend plus de temps pour démarrer l'UBA. De plus, si elle est définie sur True,'openBibleWindowContentOnNextTab'et'openStudyWindowContentOnNextTab'sont automatiquement définis sur True au démarrage.",
+    "populateTabsOnStartup": "Remplit tous les onglets avilables au démarrage avec les enregistrements d'historique les plus récents. Remarques: Cette fonction prend plus de temps pour démarrer l'UBA.",
+    "customPythonOnStartup": "Option permettant d'exécuter le script Python personnalisé'custom.py'au démarrage.",
 }

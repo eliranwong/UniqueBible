@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "Δεν έχει ενεργοποιηθεί η λειτουργία μετάφρασης με χρήση της υπηρεσίας IBM Watson.",
     "translate": "Μετάφραση:",
     "note_textUtility": "Εμφάνιση/Απόκρυψη προγράμματος κειμένου",
-    "noteTool_superscript": "Sytle Superscript",
-    "noteTool_subscript": "Sytle Subscript",
+    "noteTool_superscript": "Στυλ Superscript",
+    "noteTool_subscript": "Στυλ υποσεναρίου",
     "selectTextFirst": "Επιλέξτε πρώτα κείμενο!",
     "enterTextFirst": "Καταχωρήστε κείμενο πρώτα!",
     "default": "Προεπιλογή:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "Επεξεργασία εργασίας μετάφρασης",
     "checkLanguageFiles": "Έλεγχος αρχείων γλώσσας",
     "hymn_lyrics": "Στίχοι Hymn",
-    "populateTabsOnStartup": "Συμπληρώνει όλες τις avilable καρτέλες κατά την εκκίνηση με τις τελευταίες εγγραφές ιστορικού. Παρατηρήσεις: Αυτή η λειτουργία χρειάζεται περισσότερο χρόνο για να ξεκινήσει η UBA. Επιπλέον, αν λάβει την τιμή True, τόσο η τιμή 'openBibleWindowContentOnNextTab' όσο και 'openStudyWindowContentOnNextTab' ορίζεται αυτόματα ως True κατά την εκκίνηση.",
+    "populateTabsOnStartup": "Συμπληρώνει όλες τις avilable καρτέλες κατά την εκκίνηση με τις τελευταίες εγγραφές ιστορικού. Παρατηρήσεις: Αυτή η λειτουργία χρειάζεται περισσότερο χρόνο για να ξεκινήσει η UBA.",
+    "customPythonOnStartup": "Επιλογή εκτέλεσης προσαρμοσμένα σεναρίου python 'custom.py' κατά την εκκίνηση.",
 }

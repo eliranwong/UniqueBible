@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "Функция преобразования с использованием службы IBM Watson не включена.",
     "translate": "Перевести",
     "note_textUtility": "Показать/скрыть текстовую утилиту",
-    "noteTool_superscript": "Суперскрипт",
-    "noteTool_subscript": "Sytle",
+    "noteTool_superscript": "Стиль верхнего индекса",
+    "noteTool_subscript": "Стиль подсценария",
     "selectTextFirst": "Сначала выберите текст!",
     "enterTextFirst": "Сначала введите текст!",
     "default": "По умолчанию:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "Изменить рабочий перевод",
     "checkLanguageFiles": "Проверить языковые файлы",
     "hymn_lyrics": "Скачать минусовку.",
-    "populateTabsOnStartup": "Заполняет все отображаемые вкладки при запуске с последними записями хронологии. Замечания: Эта функция занимает больше времени для запуска UBA. Кроме того, если значение равно True, то и 'openBlebleWindowContentOnNextTab', и 'openStudyWindowContentOnNextTab' автоматически настраиваются на True при запуске.",
+    "populateTabsOnStartup": "Заполняет все отображаемые вкладки при запуске с последними записями хронологии. Замечания: Эта функция занимает больше времени для запуска UBA.",
+    "customPythonOnStartup": "Опция запуска пользовательского сценария python 'custom.py' при запуске.",
 }

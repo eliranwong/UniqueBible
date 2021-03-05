@@ -140,14 +140,14 @@ setupMainWindow(availableGeometry)
 
 # Run initial commands
 if config.populateTabsOnStartup:
-    if not config.openBibleWindowContentOnNextTab:
-        config.openBibleWindowContentOnNextTab = True
-    if not config.openStudyWindowContentOnNextTab:
-        config.openStudyWindowContentOnNextTab = True
+    openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab
+    config.openBibleWindowContentOnNextTab = True
+    config.openStudyWindowContentOnNextTab = True
     # Execute initial command on Bible Window
     populateTabsOnStartup("main")
     # Execute initial command on Study Window
     populateTabsOnStartup("study")
+    config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
 else:
     # Execute initial command on Bible Window
     if not initial_mainTextCommand:
@@ -160,6 +160,10 @@ if initial_mainTextCommand:
 
 # Set indexes of history records
 setCurrentRecord()
+
+# Startup custom python script
+if config.customPythonOnStartup:
+    from custom import *
 
 # Startup macro
 mainWindow.runMacro(config.startupMacro)

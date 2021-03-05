@@ -15,6 +15,7 @@
 /Documents
 /htmlResources/images/export
 config.py
+custom.py
 myTranslation.py
 *.pyc
 UniqueBible.code-workspace

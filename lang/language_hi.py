@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "आईबीएम वाटसन सेवा का उपयोग करते हुए अनुवाद सुविधा सक्षम नहीं है. ",
     "translate": "अनुवाद",
     "note_textUtility": "पाठ यूटिलिटी दिखाएँ/छुपाएँ",
-    "noteTool_superscript": "सुपरस्क्रिप्ट साइटल",
-    "noteTool_subscript": "सबस्क्रिप्ट सिटल",
+    "noteTool_superscript": "सुपरस्क्रिप्ट शैली",
+    "noteTool_subscript": "सबस्क्रिप्टComment",
     "selectTextFirst": "पाठ पहले चुनें!",
     "enterTextFirst": "पाठ पहले भरें!",
     "default": "डिफ़ॉल्टः",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "कार्य अनुवाद संपादित करें",
     "checkLanguageFiles": "भाषा फ़ाइलें जाँचें",
     "hymn_lyrics": "भजन गीत",
-    "populateTabsOnStartup": "नवीनतम इतिहास रिकॉर्ड के साथ स्टार्टअप पर सभी विलेबल टैब लोकप्रिय. टिप्पणियां: यह सुविधा यूबीए शुरू करने में अधिक समय लगता है. इसके अलावा, यदि यह सही पर सेट किया जाता है, दोनों 'openBblewebwebentnexttटैब' और 'openSextywebrenententanttenttentttटैब' स्वचालित रूप से स्टार्टअप पर सही करने के लिए सेट कर रहे हैं.",
+    "populateTabsOnStartup": "नवीनतम इतिहास रिकॉर्ड के साथ स्टार्टअप पर सभी विलेबल टैब लोकप्रिय. टिप्पणियां: यह सुविधा यूबीए शुरू करने में अधिक समय लगता है.",
+    "customPythonOnStartup": "कस्टम python स्क्रिप्ट 'custom.py' को स्टार्टअप पर चलाने के लिए विकल्प.",
 }

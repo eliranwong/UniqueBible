@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "서비스를 사용하는 번역 기능은 사용할 수 없습니다.",
     "translate": "번역",
     "note_textUtility": "텍스트 유틸리티 표시/숨기기",
-    "noteTool_superscript": "윗첨자 시틀",
-    "noteTool_subscript": "하위 스크립트 사이틀",
+    "noteTool_superscript": "윗첨자 스타일",
+    "noteTool_subscript": "하위 스크립트 스타일",
     "selectTextFirst": "텍스트를 먼저 선택합니다!",
     "enterTextFirst": "텍스트를 먼저 입력합니다!",
     "default": "기본값:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "작업 변환 편집",
     "checkLanguageFiles": "언어 파일 검사",
     "hymn_lyrics": "찬송가",
-    "populateTabsOnStartup": "시작 시 사용 가능한 모든 탭을 최신 히스토리 레코드로 채웁니다. 비고: 이 기능은 UBA를 시작하는 데 오랜 시간이 걸린다. 또한 True로 설정되면 시작 시 'openBibleWindowContentOnNextTab' 과 'openStudyWindowContentOnNextTab' 이 모두 자동으로 설정된다.",
+    "populateTabsOnStartup": "시작 시 사용 가능한 모든 탭을 최신 히스토리 레코드로 채웁니다. 비고: 이 기능은 UBA를 시작하는 데 오랜 시간이 걸린다.",
+    "customPythonOnStartup": "시작 시 사용자 정의 python 스크립트 'custom.py' 를 실행하는 옵션입니다.",
 }

@@ -524,8 +524,8 @@ translation = {
     "ibmWatsonNotEnalbed": "IBM Watson サービスを使用する変換機能が有効になっていません。 ",
     "translate": "トランスレート",
     "note_textUtility": "テキストユーティリティの表示 / 非表示",
-    "noteTool_superscript": "肩文字のシトル",
-    "noteTool_subscript": "サブスクリプト・サイトル",
+    "noteTool_superscript": "肩文字スタイル",
+    "noteTool_subscript": "下付きスタイル",
     "selectTextFirst": "最初にテキストを選択してください",
     "enterTextFirst": "最初にテキストを入力してください",
     "default": "デフォルト:",
@@ -622,5 +622,6 @@ translation = {
     "editWorkingTranslation": "作業翻訳の編集",
     "checkLanguageFiles": "言語ファイルの検査",
     "hymn_lyrics": "賛歌ライルクス",
-    "populateTabsOnStartup": "始動時にすべての使用可能なタブを最新のヒストリー・レコードで取り込みます。 注釈: この機能は、 UBA の開始に時間がかかります。 また、 Trueに設定すると、開始時に「openBibleWindowContentOnNextTab 」と「openStudyWindowContentOnNextTab」の両方が自動的に True に設定されます。",
+    "populateTabsOnStartup": "始動時にすべての使用可能なタブを最新のヒストリー・レコードで取り込みます。 注釈: この機能は、 UBA の開始に時間がかかります。",
+    "customPythonOnStartup": "始動時にカスタム python スクリプト「custom.py」を実行するためのオプション。",
 }
