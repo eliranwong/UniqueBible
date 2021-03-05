@@ -9,6 +9,8 @@
 /notes
 /save
 /.idea
+/plugins/*.py
+/plugins_context/*.py
 /macros/*.txt
 /macros/save
 /tmp

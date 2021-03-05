@@ -2910,6 +2910,18 @@ class MainWindow(QMainWindow):
                 file += ".txt"
             MacroParser.parse(self, file)
 
+    def runPlugin(self, fileName):
+        script = os.path.join(os.getcwd(), "plugins", "{0}.py".format(fileName))
+        self.execPythonFile(script)
+
+    def execPythonFile(self, script):
+        try:
+            with open(script) as f:
+                code = compile(f.read(), script, 'exec')
+                exec(code)
+        except:
+            self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
+
     def showGistWindow(self):
         gw = GistWindow()
         if gw.exec():

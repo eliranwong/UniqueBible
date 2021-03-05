@@ -4,6 +4,7 @@ import shortcut as sc
 from BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
+from util.FileUtil import FileUtil
 
 
 class FocusMainWindow:
@@ -296,6 +297,12 @@ class FocusMainWindow:
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
+
+        # plugins
+        if config.enablePlugins:
+            menu = addMenu(menuBar, "menu_plugins")
+            for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
+                addMenuItem(menu, plugin, self, lambda: self.runPlugin(plugin), translation=False)
 
         # information
         if config.showInformation:

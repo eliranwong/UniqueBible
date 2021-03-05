@@ -467,6 +467,9 @@ class ConfigUtil:
         # Running custom python script "custom.py" on startup
         if not hasattr(config, "customPythonOnStartup"):
             config.customPythonOnStartup = False
+        # Enable plugins
+        if not hasattr(config, "enablePlugins"):
+            config.enablePlugins = False
         # Enable macros
         if not hasattr(config, "enableMacros"):
             config.enableMacros = False
@@ -669,6 +672,7 @@ class ConfigUtil:
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("useFastVerseParsing", config.useFastVerseParsing),
             ("customPythonOnStartup", config.customPythonOnStartup),
+            ("enablePlugins", config.enablePlugins),
             ("enableMacros", config.enableMacros),
             ("startupMacro", config.startupMacro),
             ("enableGist", config.enableGist),

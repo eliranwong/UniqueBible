@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "詩歌歌詞",
     "populateTabsOnStartup": "在啟動時，把最新的歷史記錄載入所有頁籤中。備註：此功能需要較長的時間來啟動 UBA。",
     "customPythonOnStartup": "在啟動時執行自訂的 python 檔案 'custom.py'。",
+    "menu_plugins": "外掛程式",
+    "enablePlugins": "啟用 UBA 外掛程式",
 }

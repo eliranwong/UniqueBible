@@ -1,9 +1,14 @@
-import os
+import os, glob
 
 from itertools import (takewhile, repeat)
 
 
 class FileUtil:
+
+    @staticmethod
+    def fileNamesWithoutExtension(dir, ext):
+        files = glob.glob(os.path.join(dir, "*.{0}".format(ext)))
+        return [file[len(dir)+1:-(len(ext)+1)] for file in files if os.path.isfile(file)]
 
     # https://stackoverflow.com/a/27518377/1397431
     @staticmethod

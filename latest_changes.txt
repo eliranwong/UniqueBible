@@ -1,3 +1,11 @@
+Major changes in version 22.26:
+* Added "UBA Plugins"
+    Read more at: https://github.com/eliranwong/UniqueBible/wiki/UBA-Plugins
+* Added "UBA Context Plugins"
+    Read more at: https://github.com/eliranwong/UniqueBible/wiki/UBA-Context-Plugins
+* Added support of passing a python script to uba.py on startup
+    Read more at: https://github.com/eliranwong/UniqueBible/wiki/Pass-Argument-to-uba.py
+
 Major change in version 22.25:
 * Now assign UBA's main window to config.mainWindow
     This opens up a lot of possiblity for users for use "customised python script" on startup.

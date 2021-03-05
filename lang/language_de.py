@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Hymn Lyrics",
     "populateTabsOnStartup": "Füllt alle aufsehbaren Registerkarten beim Start mit den neuesten Protokollsätzen. Bemerkungen: Diese Funktion benötigt längere Zeit, um UBA zu starten.",
     "customPythonOnStartup": "Option zum Ausführen des angepassten Python-Skripts 'custom.py' beim Start.",
+    "menu_plugins": "Plugins",
+    "enablePlugins": "UBA-Plugins aktivieren",
 }

@@ -2,6 +2,7 @@ from qtpy.QtCore import QSize
 from gui.MenuItems import *
 import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
+from util.FileUtil import FileUtil
 
 
 class ClassicMainWindow:
@@ -381,6 +382,12 @@ class ClassicMainWindow:
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
+
+        # plugins
+        if config.enablePlugins:
+            menu = addMenu(self.menuBar(), "menu_plugins")
+            for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
+                addMenuItem(menu, plugin, self, lambda: self.runPlugin(plugin), translation=False)
 
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))

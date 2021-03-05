@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Hymn Lyrics",
     "populateTabsOnStartup": "Populates all avilable tabs on startup with latest history records. Remarks: This feature takes longer time to start up UBA.",
     "customPythonOnStartup": "Option to run custom python script 'custom.py' on startup.",
+    "menu_plugins": "Plugins",
+    "enablePlugins": "Enable UBA Plugins",
 }

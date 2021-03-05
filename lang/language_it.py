@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Imn Lyrics",
     "populateTabsOnStartup": "Popola tutte le schede avilabili all'avvio con i record di cronologia più recenti. Osservazioni: Questa funzione richiede più tempo per avviare l'UBA.",
     "customPythonOnStartup": "Opzione per eseguire script python personalizzato 'custom.py' all'avvio.",
+    "menu_plugins": "Plugin",
+    "enablePlugins": "Abilitare Plugins UBA",
 }

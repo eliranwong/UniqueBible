@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "诗歌歌词",
     "populateTabsOnStartup": "在启动时，把最新的历史记录载入所有页签中。备注：此功能需要较长的时间来启动 UBA。",
     "customPythonOnStartup": "在启动时执行自定的 python 档案 'custom.py'。",
+    "menu_plugins": "插件",
+    "enablePlugins": "启用 UBA 插件",
 }

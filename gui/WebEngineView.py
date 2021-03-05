@@ -1,4 +1,4 @@
-import config
+import config, os
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
@@ -8,6 +8,7 @@ from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
+from util.FileUtil import FileUtil
 
 class WebEngineView(QWebEngineView):
     
@@ -274,6 +275,24 @@ class WebEngineView(QWebEngineView):
         runAsCommandLine.setText(config.thisTranslation["context1_command"])
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        # Context menu plugins
+        if config.enablePlugins:
+            for plugin in FileUtil.fileNamesWithoutExtension("plugins_context", "py"):
+                action = QAction(self)
+                action.setText(plugin)
+                action.triggered.connect(lambda: self.runPlugin(plugin))
+                self.addAction(action)
+
+    def runPlugin(self, fileName):
+        config.pluginContext = self.selectedText()
+        script = os.path.join(os.getcwd(), "plugins_context", "{0}.py".format(fileName))
+        self.parent.parent.execPythonFile(script)
+        config.pluginContext = ""
 
     def messageNoSelection(self):
         self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))

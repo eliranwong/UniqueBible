@@ -64,6 +64,7 @@ class MoreConfigOptions(QDialog):
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, self.flagToolTip(True, "disableModulesUpdateCheck")),
             ("enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
+            ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(False, "enablePlugins")),
             ("customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")),
         ]
         if config.isTtsInstalled:
@@ -296,6 +297,9 @@ class MoreConfigOptions(QDialog):
     def enableMacrosChanged(self):
         config.enableMacros = not config.enableMacros
         self.parent.displayMessage(config.thisTranslation["message_restart"])
+
+    def enablePluginsChanged(self):
+        config.enablePlugins = not config.enablePlugins
 
     def clearCommandEntryChanged(self):
         config.clearCommandEntry = not config.clearCommandEntry

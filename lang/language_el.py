@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Στίχοι Hymn",
     "populateTabsOnStartup": "Συμπληρώνει όλες τις avilable καρτέλες κατά την εκκίνηση με τις τελευταίες εγγραφές ιστορικού. Παρατηρήσεις: Αυτή η λειτουργία χρειάζεται περισσότερο χρόνο για να ξεκινήσει η UBA.",
     "customPythonOnStartup": "Επιλογή εκτέλεσης προσαρμοσμένα σεναρίου python 'custom.py' κατά την εκκίνηση.",
+    "menu_plugins": "Plugins",
+    "enablePlugins": "Ενεργοποίηση προσθέτων UBA",
 }

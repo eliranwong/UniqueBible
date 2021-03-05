@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Hymn Lyrics",
     "populateTabsOnStartup": "Remplit tous les onglets avilables au démarrage avec les enregistrements d'historique les plus récents. Remarques: Cette fonction prend plus de temps pour démarrer l'UBA.",
     "customPythonOnStartup": "Option permettant d'exécuter le script Python personnalisé'custom.py'au démarrage.",
+    "menu_plugins": "Plug-ins",
+    "enablePlugins": "Activer les plug-ins UBA",
 }

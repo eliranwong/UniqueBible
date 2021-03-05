@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "찬송가",
     "populateTabsOnStartup": "시작 시 사용 가능한 모든 탭을 최신 히스토리 레코드로 채웁니다. 비고: 이 기능은 UBA를 시작하는 데 오랜 시간이 걸린다.",
     "customPythonOnStartup": "시작 시 사용자 정의 python 스크립트 'custom.py' 를 실행하는 옵션입니다.",
+    "menu_plugins": "명왕성",
+    "enablePlugins": "UBA 플러그인 사용",
 }

@@ -3,6 +3,7 @@ from qtpy.QtCore import QSize
 import shortcut as sc
 from util.LanguageUtil import LanguageUtil
 from util.ShortcutUtil import ShortcutUtil
+from util.FileUtil import FileUtil
 
 
 class AlephMainWindow:
@@ -284,6 +285,12 @@ class AlephMainWindow:
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
+
+        # plugins
+        if config.enablePlugins:
+            menu = addMenu(self.menuBar(), "menu_plugins")
+            for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
+                addMenuItem(menu, plugin, self, lambda: self.runPlugin(plugin), translation=False)
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))

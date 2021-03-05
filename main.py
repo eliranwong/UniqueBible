@@ -13,7 +13,8 @@ if os.getcwd() != wd:
     os.chdir(wd)
 
 # Check initial command passed to UBA as a parameter
-initial_mainTextCommand = " ".join(sys.argv[1:])
+initialCommand = " ".join(sys.argv[1:])
+initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Create custom files
 from util.FileUtil import FileUtil
@@ -87,7 +88,7 @@ def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
 
 def populateTabsOnStartup(source="main"):
     history = config.history[source]
-    for i in reversed(range(config.numberOfTab - 1 if initial_mainTextCommand and source == "main" else config.numberOfTab)):
+    for i in reversed(range(config.numberOfTab - 1 if initialCommand and not initialCommandIsPython and source == "main" else config.numberOfTab)):
         index = i + 1
         if len(history) >= index:
             command = history[0 - index]
@@ -150,20 +151,25 @@ if config.populateTabsOnStartup:
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
 else:
     # Execute initial command on Bible Window
-    if not initial_mainTextCommand:
+    if not initialCommand or initialCommandIsPython:
         runLastHistoryRecord("main")
     # Execute initial command on Study Window
     runLastHistoryRecord("study")
 
-if initial_mainTextCommand:
-    executeInitialTextCommand(initial_mainTextCommand, True)
-
-# Set indexes of history records
-setCurrentRecord()
+if initialCommand and initialCommandIsPython:
+    config.mainWindow.execPythonFile(initialCommand)
+elif initialCommand:
+    executeInitialTextCommand(initialCommand, True)
 
 # Startup custom python script
 if config.customPythonOnStartup:
-    from custom import *
+    try:
+        from custom import *
+    except:
+        print("Failed to run custom python script on startup!")
+
+# Set indexes of history records
+setCurrentRecord()
 
 # Startup macro
 config.mainWindow.runMacro(config.startupMacro)

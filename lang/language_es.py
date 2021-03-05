@@ -624,4 +624,6 @@ translation = {
     "hymn_lyrics": "Letra de himno",
     "populateTabsOnStartup": "Llena todas las pestañas disponibles en el inicio con los últimos registros de historial. Observaciones: Esta característica tarda más tiempo en comenzar la UBA.",
     "customPythonOnStartup": "Opción para ejecutar el script python personalizado 'custom.py' en el inicio.",
+    "menu_plugins": "Plugins",
+    "enablePlugins": "Habilitar Plugins de UBA",
 }
