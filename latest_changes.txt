@@ -1,3 +1,6 @@
+Major changes in version 22.24:
+* Add overwriteBookFontFamily to config
+
 Major changes in version 22.23:
 * Added config options, popoverWindowWidth & popoverWindowHeight, to set popover window height and width.
 * Fixed width of Master Control window.
