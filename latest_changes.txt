@@ -1,5 +1,7 @@
-Major change in version 22.31:
+Major changes in version 22.31, 32:
 * Improved Backup Notes to Google Drive, automatically updated an existing files without duplication.
+* Improved feedback message displayed to users with using Google Drive Notes backup / restore.
+* Fixed checking credential file location.
 
 Major changes in version 22.29, 30:
 * Fixed loading plugins from menu.

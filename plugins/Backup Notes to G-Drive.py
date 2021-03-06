@@ -30,7 +30,7 @@ def uploadNotes():
         upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = upload.communicate()
         if not stderr:
-            config.mainWindow.displayMessage("Uploaded! File ID: {0}".format(stdout.decode("utf-8")[:-1]))
+            config.mainWindow.displayMessage("Uploaded 'note.sqlite' to Google Drive!\nFile ID: {0}".format(stdout.decode("utf-8")[:-1]))
             with open(noteFileCloudId, "wb") as f:
                 f.write(stdout)
         else:
@@ -38,9 +38,13 @@ def uploadNotes():
     except:
         config.mainWindow.displayMessage("Failed to upload bible notes!")
 
-credentials = os.path.join("plugins", "NotesUtility", "credentials.json")
+
+credentials = os.path.join("credentials.json")
+noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
 if not os.path.isfile(credentials):
-    print("Turn ON Goolge Drive API first!  You need to download 'credentials.json' from https://developers.google.com/drive/api/v3/quickstart/python and place it in UniqueBible root directory.")
+    config.mainWindow.displayMessage("You have not yet enabled Goolge Drive API! \nBefore you can use this feature, you need to: \ndownload 'credentials.json' from \nhttps://developers.google.com/drive/api/v3/quickstart/python \nand place it in UniqueBible root directory.")
+elif not os.path.isfile(noteFile):
+    config.mainWindow.displayMessage("You have not created a bible note yet!")
 else:
     if not modulesInstalled:
         print("Installing missing modules ...")

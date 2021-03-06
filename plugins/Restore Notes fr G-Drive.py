@@ -35,9 +35,12 @@ def downloadNotes():
     except:
         config.mainWindow.displayMessage("Failed to download bible notes!")
 
-credentials = os.path.join("plugins", "NotesUtility", "credentials.json")
+credentials = os.path.join("credentials.json")
+noteFileCloudId = os.path.join("plugins", "NotesUtility", "noteFileGoogleCloudId.txt")
 if not os.path.isfile(credentials):
-    print("Turn ON Goolge Drive API first!  You need to download 'credentials.json' from https://developers.google.com/drive/api/v3/quickstart/python and place it in UniqueBible root directory.")
+    config.mainWindow.displayMessage("You have not yet enabled Goolge Drive API! \nBefore you can use this feature, you need to: \ndownload 'credentials.json' from \nhttps://developers.google.com/drive/api/v3/quickstart/python \nand place it in UniqueBible root directory.")
+elif not os.path.isfile(noteFileCloudId):
+    config.mainWindow.displayMessage("You do not have a backup in Google Drive yet!")
 else:
     if not modulesInstalled:
         print("Installing missing modules ...")
