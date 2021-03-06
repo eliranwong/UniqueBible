@@ -374,6 +374,8 @@ class ClassicMainWindow:
         menu8.addAction(QAction(config.thisTranslation["menu8_tagFolder"], self, triggered=self.tagFolder))
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
+        menu8.addSeparator()
+        addMenuItem(menu8, "reloadResources", self, self.reloadResources)
 
         if config.enableMacros:
             macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))

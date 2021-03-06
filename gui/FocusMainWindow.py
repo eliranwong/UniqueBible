@@ -235,7 +235,7 @@ class FocusMainWindow:
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, lambda index=index: self.openMiniControlTab(index))
         menu.addSeparator()
-        addMenuItem(menu, "reloadResources", self, self.reloadControlPanel)
+        addMenuItem(menu, "reloadResources", self, self.reloadResources)
         addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)
 
         # 4th column

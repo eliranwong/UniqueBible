@@ -1,3 +1,7 @@
+Major change in version 22.28:
+* Added options to specify the width and height of mini Control window
+* Revised Aleph menu layout
+
 Major change in version 22.27:
 * Added config.masterControlWidth to specify the width of Master Control panel.
 
