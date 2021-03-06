@@ -37,7 +37,7 @@ class Converter:
     def createBookModuleFromImages(self, folder):
         module = os.path.basename(folder)
         bookContent = []
-        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() in (".png", ".jpg", ".jpeg", ".bmp", ".gif"):
@@ -57,7 +57,7 @@ class Converter:
     def createBookModuleFromHTML(self, folder):
         module = os.path.basename(folder)
         bookContent = []
-        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() in (".htm", ".html", ".xhtml"):
@@ -74,14 +74,14 @@ class Converter:
     def createBookModuleFromNotes(self, folder):
         module = os.path.basename(folder)
         bookContent = []
-        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search("^[\._]", f)]):
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() == ".uba":
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = BibleVerseParser(config.parserStandarisation).parseText(note)
-                    note = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), note)
+                    note = re.sub(r"\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format(r'"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), note)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)
@@ -267,7 +267,7 @@ class Converter:
         return text
 
     def fixCommentaryScrolling(self, chapterText):
-        p = re.compile('｛｝([^｛｝]*?)(<vid id="v[0-9]+?\.[0-9]+?\.[0-9]+?"></vid>)(<vid)')
+        p = re.compile(r'｛｝([^｛｝]*?)(<vid id="v[0-9]+?\.[0-9]+?\.[0-9]+?"></vid>)(<vid)')
         s = p.search(chapterText)
         while s:
             chapterText = p.sub(r"｛｝\2｜\1\3", chapterText)
@@ -277,13 +277,13 @@ class Converter:
         return chapterText
 
     def importAllFilesInAFolder(self, folder):
-        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
-        validFiles = [filename for filename in files if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', filename)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search(r"^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', filename)]
         if validFiles:
             for filename in validFiles:
                 filename = os.path.join(folder, filename)
                 try:
-                    if re.search('(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', filename):
+                    if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3)$', filename):
                         self.importThirdPartyDictionary(filename)
                     elif filename.endswith(".bbl.mybible"):
                         self.importMySwordBible(filename)
@@ -804,13 +804,13 @@ class Converter:
             ("<Fr>", "</woj>"),
             ("<FU>", "<u>"),
             ("<Fu>", "</u>"),
-            ("<W([GH][0-9]+?[a-z]*?)>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
-            ("<WT([^\n<>]*?)>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
-            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)>", r"『\1｜\2｜\3』"),
-            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?>", r"『\1｜\2｜\3』"),
-            ("<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?:[0-9]+?>", r"『\1｜\2｜\3』"),
-            ("『([0-9]+?)｜([0-9]+?)｜([0-9]+?)』", self.convertMySwordRxTag),
-            ("<sup>(<RF[^\n<>]*?>)|(<RF[^\n<>]*?>)<sup>", r"\1"),
+            (r"<W([GH][0-9]+?[a-z]*?)>", r"<sup><ref onclick='lex({0}\1{0})'>\1</ref></sup>".format('"')),
+            (r"<WT([^\n<>]*?)>", r"<sup><ref onclick='rmac({0}\1{0})'>\1</ref></sup>".format('"')),
+            (r"<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)>", r"『\1｜\2｜\3』"),
+            (r"<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?>", r"『\1｜\2｜\3』"),
+            (r"<RX ([0-9]+?)\.([0-9]+?)\.([0-9]+?)-[0-9]+?:[0-9]+?>", r"『\1｜\2｜\3』"),
+            (r"『([0-9]+?)｜([0-9]+?)｜([0-9]+?)』", self.convertMySwordRxTag),
+            (r"<sup>(<RF[^\n<>]*?>)|(<RF[^\n<>]*?>)<sup>", r"\1"),
             ("<Rf></sup>|</sup><Rf>", "<Rf>"),
         )
         for search, replace in searchReplace:
@@ -939,13 +939,13 @@ class Converter:
         # convert bible reference tag like <a class='bible' href='#bGen 1:1'>
         text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?b([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}BIBLE:::\2{0}'>".format('"'), text)
         # convert bible reference tag like <a class='bible' href='#b1.1.1'>
-        text = re.sub("<a [^<>]*?href=['{0}][#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
+        text = re.sub(r"<a [^<>]*?href=['{0}][#]*?b([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="bcv(\1,\2,\3)">', text)
         # convert commentary reference tag like <a href='#c-CSBC Gen 1:1'>
-        text = re.sub("<a [^<>]*?href=(['{0}])[#]*?c\-([^ ]+?) ([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::\2:::\3{0}'>".format('"'), text)
+        text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?c\-([^ ]+?) ([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::\2:::\3{0}'>".format('"'), text)
         # convert commentary reference tag like <a href='#cGen 1:1'>
         text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?c([0-9]*?[A-Za-z]+? [0-9][^<>]*?)\1>".format('"'), r"<a href='javascript:void(0)' onclick='document.title={0}COMMENTARY:::\2{0}'>".format('"'), text)
         # convert commentary reference tag like <a href='#c1.1.1'>
-        text = re.sub("<a [^<>]*?href=['{0}][#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
+        text = re.sub(r"<a [^<>]*?href=['{0}][#]*?c([0-9]+?)\.([0-9]+?)\.([0-9]+?)[^0-9][^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="cbcv(\1,\2,\3)">', text)
         # convert Strong's no tag, e.g. <a class='strong' href='#sH1'>H1</a>
         text = re.sub(r"<a [^<>]*?href=(['{0}])[#]*?s([HG][0-9a-z\.]+?)\1[^<>]*?>".format('"'), r'<a href="javascript:void(0)" onclick="lex({0}\2{0})">'.format("'"), text)
         # return formatted text
@@ -1231,7 +1231,7 @@ class Converter:
             title = description
             *_, inputFileName = os.path.split(filename)
             abbreviation = inputFileName[:-21]
-            abbreviation = re.sub("^(.*?)\-c$", r"\1", abbreviation)
+            abbreviation = re.sub(r"^(.*?)\-c$", r"\1", abbreviation)
             # table: commentaries
             # 6 columns in commentaries: book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text
             query = "SELECT DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
@@ -1285,7 +1285,7 @@ class Converter:
         text = text.replace(":0</b></u></ref><br>", "</b></u></ref><br>")
         text = text.replace(":0-0</b></u></ref><br>", "</b></u></ref><br>")
         # deal with internal links like <a class="contents" href="C:@1002 0:0">
-        text = re.sub("<a [^<>]*?href=['{0}]C:@([0-9]+?) ([\-0-9:]+?)[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
+        text = re.sub(r"<a [^<>]*?href=['{0}]C:@([0-9]+?) ([\-0-9:]+?)[^\-0-9:][^<>]*?>".format('"'), self.formatMyBibleCommentaryLink, text)
         text = self.formatNonBibleMyBibleModule(text, abbreviation)
         return text
 
@@ -1453,17 +1453,17 @@ class Converter:
 
     def convertBibleBentoPlusTag(self, text):
         searchReplace = (
-            ("href=['{0}]ref://([0-9]+?)\.([0-9]+?)\.([0-9]+?);['{0}]".format('"'), r'href="javascript:void(0)" onclick="bcv(\1,\2,\3)"'),
-            ("href=['{0}]lexi://(.*?)['{0}]".format('"'), r'href="javascript:void(0)" onclick="lex({0}\1{0})"'.format("'")),
-            ("href=['{0}]gk://(.*?)['{0}]".format('"'), r'href="javascript:void(0)" onclick="lex({0}gk\1{0})"'.format("'")),
+            (r"href=['{0}]ref://([0-9]+?)\.([0-9]+?)\.([0-9]+?);['{0}]".format('"'), r'href="javascript:void(0)" onclick="bcv(\1,\2,\3)"'),
+            (r"href=['{0}]lexi://(.*?)['{0}]".format('"'), r'href="javascript:void(0)" onclick="lex({0}\1{0})"'.format("'")),
+            (r"href=['{0}]gk://(.*?)['{0}]".format('"'), r'href="javascript:void(0)" onclick="lex({0}gk\1{0})"'.format("'")),
         )
         for search, replace in searchReplace:
             text = re.sub(search, replace, text)
         return text
 
     def importBBPlusLexiconInAFolder(self, folder):
-        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
-        validFiles = [filename for filename in files if re.search('^Dict.*?\.json$', filename)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search(r"^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search(r'^Dict.*?\.json$', filename)]
         if validFiles:
             for filename in validFiles:
                 module = filename[4:-5]
@@ -1473,8 +1473,8 @@ class Converter:
             return True
 
     def importBBPlusDictionaryInAFolder(self, folder):
-        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search("^[\._]", filename)]
-        validFiles = [filename for filename in files if re.search('^Dict.*?\.json$', filename)]
+        files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search(r"^[\._]", filename)]
+        validFiles = [filename for filename in files if re.search(r'^Dict.*?\.json$', filename)]
         if validFiles:
             for filename in validFiles:
                 module = filename[4:-5]
@@ -1559,11 +1559,11 @@ class ThirdPartyDictionary:
 
     def getModuleList(self):
         moduleFolder = os.path.join("thirdParty", "dictionaries")
-        bbPlusDictionaries = [f[:-8] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dic.bbp") and not re.search("^[\._]", f)]
-        mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible") and not re.search("^[\._]", f)]
-        eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti") and not re.search("^[\._]", f)]
-        eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi") and not re.search("^[\._]", f)]
-        myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3") and not re.search("^[\._]", f)]
+        bbPlusDictionaries = [f[:-8] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dic.bbp") and not re.search(r"^[\._]", f)]
+        mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible") and not re.search(r"^[\._]", f)]
+        eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti") and not re.search(r"^[\._]", f)]
+        eSwordLexicons = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".lexi") and not re.search(r"^[\._]", f)]
+        myBibleDictionaries = [f[:-19] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dictionary.SQLite3") and not re.search(r"^[\._]", f)]
         moduleList = set(bbPlusDictionaries + mySwordDictionaries + eSwordDictionaries + eSwordLexicons + myBibleDictionaries)
         moduleList = sorted(list(moduleList))
         return moduleList
