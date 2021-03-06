@@ -9,6 +9,7 @@
 /notes
 /save
 /.idea
+/plugins/NotesUtility/noteFileGoogleCloudId.txt
 /plugins/*.py
 /plugins_context/*.py
 /macros/*.ubam
@@ -18,6 +19,8 @@
 /htmlResources/images/export
 config.py
 custom.py
+credentials.json
+token.pickle
 myTranslation.py
 *.pyc
 UniqueBible.code-workspace

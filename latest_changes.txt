@@ -1,3 +1,9 @@
+Major change in version 22.29:
+* Fixed loading plugins from menu.
+* To use plugins, you need to check "enablePlugins" via "Set Config Flags" window.
+* Added a couple of plugins: "Backup Notes to GDrive" and "Restore Notes to GDrive".  (Remarks: GDrive means Google Drive).
+  To use these new plugins, you need to download 'credentials.json' from https://developers.google.com/drive/api/v3/quickstart/python and place it in UniqueBible root directory.
+
 Major change in version 22.28:
 * Added options to specify the width and height of mini Control window
 * Revised Aleph menu layout

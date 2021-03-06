@@ -292,7 +292,7 @@ class AlephMainWindow:
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
             for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
-                addMenuItem(menu, plugin, self, lambda: self.runPlugin(plugin), translation=False)
+                addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))

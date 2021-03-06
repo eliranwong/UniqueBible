@@ -389,7 +389,7 @@ class ClassicMainWindow:
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
             for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
-                addMenuItem(menu, plugin, self, lambda: self.runPlugin(plugin), translation=False)
+                addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         if config.showInformation:
             menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
