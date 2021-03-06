@@ -1,3 +1,8 @@
+Major changes in version 22.34:
+* Now restoring notes from Google Drive automatically refreshs current content.
+* A wiki page is written about Notes Backup / Restore with Google drive
+    https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive
+
 Major changes in version 22.31, 32, 33:
 * Improved Backup Notes to Google Drive, automatically updated an existing files without duplication.
 * Improved feedback message displayed to users with using Google Drive Notes backup / restore.

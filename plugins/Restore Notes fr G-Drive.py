@@ -30,6 +30,7 @@ def downloadNotes():
         *_, stderr = upload.communicate()
         if not stderr:
             config.mainWindow.displayMessage("Restored!")
+            config.mainWindow.reloadCurrentRecord()
         else:
             config.mainWindow.displayMessage("Failed to download bible notes!")
     except:
