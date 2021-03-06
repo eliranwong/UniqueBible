@@ -144,31 +144,29 @@ class AlephMainWindow:
         search_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_search"]))
         search_menu.addAction(QAction(config.thisTranslation["menu5_bible"], self, shortcut=sc.displaySearchBibleMenu, triggered=self.displaySearchBibleMenu))
         search_menu.addAction(QAction(config.thisTranslation["menu_verse_all_versions"], self, shortcut=sc.runCOMPARE, triggered=self.runCOMPARE))
-
-        search_resources = search_menu.addMenu("&{0}".format(config.thisTranslation["menu_library"]))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
-        search_resources.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, triggered=self.searchBookDialog))
-        search_resources.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
-        search_resources.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
-
-        search_command = search_menu.addMenu(config.thisTranslation["menu_command"])
-        search_command.addAction(
+        search_menu.addSeparator()
+        search_menu.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
+        search_menu.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_selectBook"], self, triggered=self.searchBookDialog))
+        search_menu.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
+        search_menu.addSeparator()
+        search_menu.addAction(
             QAction(config.thisTranslation["menu_bible"], self, shortcut=sc.displaySearchBibleCommand, triggered=self.displaySearchBibleCommand))
         if config.enableVerseHighlighting:
-            search_command.addAction(QAction(config.thisTranslation["menu_highlight"], self, shortcut=sc.displaySearchHighlightCommand, triggered=self.displaySearchHighlightCommand))
-        search_command.addAction(
+            search_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, shortcut=sc.displaySearchHighlightCommand, triggered=self.displaySearchHighlightCommand))
+        search_menu.addAction(
                 QAction(config.thisTranslation["menu_bible_book_notes"], self, shortcut=sc.searchCommandBookNote, triggered=self.searchCommandBookNote))
-        search_command.addAction(
+        search_menu.addAction(
             QAction(config.thisTranslation["menu_bible_chapter_notes"], self, shortcut=sc.searchCommandChapterNote, triggered=self.searchCommandChapterNote))
-        search_command.addAction(QAction(config.thisTranslation["menu_bible_verse_notes"], self, shortcut=sc.searchCommandVerseNote, triggered=self.searchCommandVerseNote))
-        search_command.addAction(QAction(config.thisTranslation["menu_lexicon"], self, shortcut=sc.searchCommandLexicon, triggered=self.searchCommandLexicon))
-        search_command.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut=sc.searchCommandBibleCharacter, triggered=self.searchCommandBibleCharacter))
-        search_command.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut=sc.searchCommandBibleName,
+        search_menu.addAction(QAction(config.thisTranslation["menu_bible_verse_notes"], self, shortcut=sc.searchCommandVerseNote, triggered=self.searchCommandVerseNote))
+        search_menu.addAction(QAction(config.thisTranslation["menu_lexicon"], self, shortcut=sc.searchCommandLexicon, triggered=self.searchCommandLexicon))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_characters"], self, shortcut=sc.searchCommandBibleCharacter, triggered=self.searchCommandBibleCharacter))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_names"], self, shortcut=sc.searchCommandBibleName,
                                 triggered=self.searchCommandBibleName))
-        search_command.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut=sc.searchCommandBibleLocation, triggered=self.searchCommandBibleLocation))
-        search_command.addAction(QAction(config.thisTranslation["menu5_allTopics"], self, triggered=self.searchCommandAllBibleTopic))
-        search_command.addAction(
+        search_menu.addAction(QAction(config.thisTranslation["menu5_locations"], self, shortcut=sc.searchCommandBibleLocation, triggered=self.searchCommandBibleLocation))
+        search_menu.addAction(QAction(config.thisTranslation["menu5_allTopics"], self, triggered=self.searchCommandAllBibleTopic))
+        search_menu.addAction(
             QAction(config.thisTranslation["menu5_allBook"], self, shortcut=sc.displaySearchAllBookCommand, triggered=self.displaySearchAllBookCommand))
 
         annotate_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_annotate"]))
@@ -202,12 +200,16 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_chapter"], self, shortcut=sc.chapterFeatures, triggered=self.chapterFeatures))
 
         menu_data = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_data"]))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
-        menu_data.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
-        menu_data.addSeparator()
-        menu_data.addAction(QAction(config.thisTranslation["hymn_lyrics"], self, triggered=self.installHymnLyrics))
-        menu_data.addSeparator()
+        subMenu = addSubMenu(menu_data, "add")
+        items = (
+            ("menu8_bibles", self.installMarvelBibles),
+            ("menu8_commentaries", self.installMarvelCommentaries),
+            ("menu8_datasets", self.installMarvelDatasets),
+            ("installBooks", self.installBooks),
+            ("hymn_lyrics", self.installHymnLyrics),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(menu_data, "import")
         items = (
             ("menu8_plusDictionaries", self.importBBPlusDictionaryInAFolder),
@@ -274,7 +276,7 @@ class AlephMainWindow:
             addMenuItem(subMenu, feature, self, action)
         display_menu.addAction(
             QAction(config.thisTranslation["menu_display_shortcuts"], self, shortcut=sc.displayShortcuts, triggered=self.displayShortcuts))
-        addMenuItem(display_menu, "reloadResources", self, self.reloadControlPanel)
+        addMenuItem(display_menu, "reloadResources", self, self.reloadResources)
         display_menu.addAction(
             QAction(config.thisTranslation["menu_reload"], self, shortcut=sc.reloadCurrentRecord, triggered=self.reloadCurrentRecord))
 

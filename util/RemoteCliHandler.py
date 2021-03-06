@@ -4,6 +4,7 @@ import re
 import sys
 from socket import socket
 
+from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
 
 CR, LF, NUL = '\r\n\x00'
@@ -144,10 +145,9 @@ class MockWindow:
     def __init__(self):
         import update
         import config
-        from Languages import Languages
 
         self.bibleInfo = update.bibleInfo
-        config.thisTranslation = Languages.translation
+        config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
     def updateMainRefButton(self):
         pass
@@ -166,9 +166,8 @@ class MockWindow:
 
 if __name__ == "__main__":
     import config
-    from Languages import Languages
-    
-    config.thisTranslation = Languages.translation
+
+    config.thisTranslation = LanguageUtil.loadTranslation("en_US")
     config.parserStandarisation = 'NO'
     config.standardAbbreviation = 'ENG'
     config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"

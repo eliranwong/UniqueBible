@@ -234,6 +234,10 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
+    def reloadResources(self):
+        self.setMenuLayout(config.menuLayout)
+        self.reloadControlPanel(False)
+
     def reloadControlPanel(self, show=True):
         if self.controlPanel:
             self.controlPanel.close()
@@ -295,6 +299,8 @@ class MainWindow(QMainWindow):
             self.bringToForeground(self.miniControl)
         else:
             self.miniControl = MiniControl(self)
+            self.miniControl.setMinimumHeight(config.minicontrolWindowHeight)
+            self.miniControl.setMinimumWidth(config.minicontrolWindowWidth)
             self.miniControl.show()
             textCommandText = self.textCommandLineEdit.text()
             if config.clearCommandEntry:
@@ -2114,6 +2120,7 @@ class MainWindow(QMainWindow):
 
     def toggleHighlightMarker(self):
         config.showHighlightMarkers = not config.showHighlightMarkers
+        config.readFormattedBibles = False
         self.reloadCurrentRecord(forceExecute=True)
 
     def reloadCurrentRecord(self, forceExecute=False):
@@ -2896,8 +2903,8 @@ class MainWindow(QMainWindow):
             if not os.path.isdir(macros_dir):
                 os.mkdir(macros_dir)
             for file in os.listdir(macros_dir):
-                if os.path.isfile(os.path.join(macros_dir, file)) and ".txt" in file:
-                    action = QAction(file.replace(".txt", ""), self, triggered=partial(self.runMacro, file))
+                if os.path.isfile(os.path.join(macros_dir, file)) and ".ubam" in file:
+                    action = QAction(file.replace(".ubam", ""), self, triggered=partial(self.runMacro, file))
                     if count < 10:
                         if sc.loadRunMacro is not None and "Ctrl" in sc.loadRunMacro:
                             action.setShortcuts([sc.loadRunMacro + ", " + str(count)])
@@ -2906,8 +2913,8 @@ class MainWindow(QMainWindow):
 
     def runMacro(self, file=""):
         if config.enableMacros and len(file) > 0:
-            if not ".txt" in file:
-                file += ".txt"
+            if not ".ubam" in file:
+                file += ".ubam"
             MacroParser.parse(self, file)
 
     def runPlugin(self, fileName):

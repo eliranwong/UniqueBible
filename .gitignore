@@ -11,7 +11,7 @@
 /.idea
 /plugins/*.py
 /plugins_context/*.py
-/macros/*.txt
+/macros/*.ubam
 /macros/save
 /tmp
 /Documents

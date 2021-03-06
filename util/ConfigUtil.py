@@ -507,6 +507,10 @@ class ConfigUtil:
             config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
         if not hasattr(config, "daysElapseForNextAppUpdateCheck"):
             config.daysElapseForNextAppUpdateCheck = '14'
+        if not hasattr(config, "minicontrolWindowWidth"):
+            config.minicontrolWindowWidth = 450
+        if not hasattr(config, "minicontrolWindowHeight"):
+            config.minicontrolWindowHeight = 400
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -688,7 +692,9 @@ class ConfigUtil:
             ("menuShortcuts", config.menuShortcuts),
             ("displayLanguage", config.displayLanguage),
             ("lastAppUpdateCheckDate", config.lastAppUpdateCheckDate),
-            ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck)
+            ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck),
+            ("minicontrolWindowWidth", config.minicontrolWindowWidth),
+            ("minicontrolWindowHeight", config.minicontrolWindowHeight),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
