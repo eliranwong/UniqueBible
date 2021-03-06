@@ -1,4 +1,4 @@
-import subprocess, sys, os
+import subprocess, sys, os, config
 try:
     from googleapiclient.discovery import build
     from google_auth_oauthlib.flow import InstalledAppFlow
@@ -30,13 +30,13 @@ def uploadNotes():
         upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = upload.communicate()
         if not stderr:
-            print("Uploaded! File ID: {0}".format(stdout.decode("utf-8")[:-1]))
+            config.mainWindow.displayMessage("Uploaded! File ID: {0}".format(stdout.decode("utf-8")[:-1]))
             with open(noteFileCloudId, "wb") as f:
                 f.write(stdout)
         else:
-            print("Failed to upload bible notes!")
+            config.mainWindow.displayMessage("Failed to upload bible notes!")
     except:
-        print("Failed to upload bible notes!")
+        config.mainWindow.displayMessage("Failed to upload bible notes!")
 
 credentials = os.path.join("plugins", "NotesUtility", "credentials.json")
 if not os.path.isfile(credentials):

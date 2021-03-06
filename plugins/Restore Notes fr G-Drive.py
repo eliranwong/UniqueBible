@@ -29,11 +29,11 @@ def downloadNotes():
         upload = subprocess.Popen("{0} {1} download".format(sys.executable, os.path.join("plugins", "NotesUtility", "access_google_drive.py")), shell=True)
         *_, stderr = upload.communicate()
         if not stderr:
-            print("Downloaded!")
+            config.mainWindow.displayMessage("Restored!")
         else:
-            print("Failed to download bible notes!")
+            config.mainWindow.displayMessage("Failed to download bible notes!")
     except:
-        print("Failed to download bible notes!")
+        config.mainWindow.displayMessage("Failed to download bible notes!")
 
 credentials = os.path.join("plugins", "NotesUtility", "credentials.json")
 if not os.path.isfile(credentials):
