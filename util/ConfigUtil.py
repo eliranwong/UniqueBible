@@ -471,7 +471,7 @@ class ConfigUtil:
             config.customPythonOnStartup = False
         # Enable plugins
         if not hasattr(config, "enablePlugins"):
-            config.enablePlugins = False
+            config.enablePlugins = True
         # Enable macros
         if not hasattr(config, "enableMacros"):
             config.enableMacros = False
