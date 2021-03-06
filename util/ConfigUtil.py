@@ -51,6 +51,8 @@ class ConfigUtil:
             config.preferControlPanelForCommandLineEntry = False
         if not hasattr(config, "closeControlPanelAfterRunningCommand"):
             config.closeControlPanelAfterRunningCommand = True
+        if not hasattr(config, "masterControlWidth"):
+            config.masterControlWidth = 1255
         if not hasattr(config, "miniControlInitialTab"):
             config.miniControlInitialTab = 0
         if not hasattr(config, "addBreakAfterTheFirstToolBar"):
@@ -660,6 +662,7 @@ class ConfigUtil:
             ("showControlPanelOnStartup", config.showControlPanelOnStartup),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand),
+            ("masterControlWidth", config.masterControlWidth),
             ("miniControlInitialTab", config.miniControlInitialTab),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),

@@ -1,3 +1,6 @@
+Major change in version 22.27:
+* Added config.masterControlWidth to specify the width of Master Control panel.
+
 Major changes in version 22.26:
 * Added "UBA Plugins"
     Read more at: https://github.com/eliranwong/UniqueBible/wiki/UBA-Plugins
