@@ -6,13 +6,6 @@ from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
                                QApplication, QBoxLayout, QGridLayout, QComboBox)
 
-if __name__ == "__main__":
-   config.mainText = ""
-   config.mainB = ""
-   config.mainC = ""
-   config.mainV = ""
-   config.commentaryB = ""
-   config.commentaryC = ""
 
 from BibleVerseParser import BibleVerseParser
 from ToolsSqlite import Commentary, LexiconData, IndexesSqlite
@@ -375,14 +368,24 @@ class DummyParent():
 
 if __name__ == "__main__":
    import sys
-   from Languages import Languages
+   import config
+   from util.LanguageUtil import LanguageUtil
 
-   config.thisTranslation = Languages.translation
+   config.mainText = ""
+   config.mainB = ""
+   config.mainC = ""
+   config.mainV = ""
+   config.commentaryB = ""
+   config.commentaryC = ""
+   config.thisTranslation = LanguageUtil.loadTranslation("en_US")
    config.parserStandarisation = 'NO'
    config.standardAbbreviation = 'ENG'
    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+   config.isTtsInstalled = False
 
    app = QApplication(sys.argv)
    ui = MiniControl(DummyParent())
+   ui.setMinimumHeight(400)
+   ui.setMinimumWidth(450)
    ui.show()
    sys.exit(app.exec_())
