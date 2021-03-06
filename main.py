@@ -40,6 +40,36 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
+# Remote CLI
+if initialCommand == "cli":
+    try:
+        import telnetlib3
+    except:
+        print("Please run 'pip install telnetlib3' to use remote CLI")
+        exit(0)
+
+    try:
+        import telnetlib3
+        import asyncio
+        from util.RemoteCliHandler import RemoteCliHandler
+
+        port = 8888
+        if (len(sys.argv) > 2):
+            port = int(sys.argv[2])
+        print("Running in remote CLI Mode on port {0}".format(port))
+        print("Access by 'telnet {0} {1}'".format(get_ip(), port))
+        print("Press Ctrl-C to stop the server")
+        loop = asyncio.get_event_loop()
+        coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
+        server = loop.run_until_complete(coro)
+        loop.run_until_complete(server.wait_closed())
+        exit(0)
+    except KeyboardInterrupt:
+        exit(0)
+    except Exception as e:
+        print(str(e))
+        exit(-1)
+
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
