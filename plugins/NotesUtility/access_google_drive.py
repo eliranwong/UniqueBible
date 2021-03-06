@@ -44,17 +44,10 @@ def getService():
     return build('drive', 'v3', credentials=creds)
 
 def listFiles(service):
-    # Call the Drive v3 API
-    results = service.files().list(
-        pageSize=10, fields="nextPageToken, files(id, name)").execute()
+    # query: https://developers.google.com/drive/api/v3/search-files
+    results = service.files().list(q="name='note.sqlite'", fields="files(id, name)").execute()
     items = results.get('files', [])
-
-    if not items:
-        print('No files found.')
-    else:
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
+    return [item["id"] for item in items]
 
 def uploadNotes(service):
     # Check cloud id of old notes
@@ -62,6 +55,10 @@ def uploadNotes(service):
     if os.path.isfile(noteFileCloudId):
         with open(noteFileCloudId, "r", encoding="utf-8") as fileObject:
             oldFile_id = fileObject.readline().rstrip()
+    
+    # Check if an older version exists
+    currentFiles = listFiles(service)
+    fileExists = oldFile_id in currentFiles
 
     file_metadata = {
         "name": "note.sqlite",
@@ -71,16 +68,13 @@ def uploadNotes(service):
     media = MediaFileUpload(noteFile,
                             mimetype="application/x-sqlite3",
                             resumable=True)
-    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    # update an existing file / create a new file
+    if fileExists:
+        file = service.files().update(fileId=oldFile_id, body=file_metadata, media_body=media, fields='id').execute()
+    else:
+        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     # Return new file id
     print(file.get('id'))
-
-    # Remove old note file from cloud storage
-    try:
-        if oldFile_id:
-            service.files().delete(fileId=oldFile_id)
-    except:
-        pass
 
 def downloadNotes(service):
     with open(noteFileCloudId, "r", encoding="utf-8") as fileObject:

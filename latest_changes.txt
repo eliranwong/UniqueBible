@@ -1,4 +1,7 @@
-Major change in version 22.29, 30:
+Major change in version 22.31:
+* Improved Backup Notes to Google Drive, automatically updated an existing files without duplication.
+
+Major changes in version 22.29, 30:
 * Fixed loading plugins from menu.
 * To use plugins, you need to check "enablePlugins" via "Set Config Flags" window.
 * Added a couple of plugins: "Backup Notes to GDrive" and "Restore Notes to G-Drive".  (Remarks: G-Drive denotes Google Drive).
