@@ -30,9 +30,12 @@ def uploadNotes():
         upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = upload.communicate()
         if not stderr:
-            config.mainWindow.displayMessage("Uploaded 'note.sqlite' to Google Drive!\nFile ID: {0}".format(stdout.decode("utf-8")[:-1]))
-            with open(noteFileCloudId, "wb") as f:
-                f.write(stdout)
+            text = stdout.decode("utf-8")
+            if text.startswith("Please visit this URL"):
+                text = "{0}\n".format(text.split("\n")[1])
+            with open(noteFileCloudId, "w") as f:
+                f.write(text)
+            config.mainWindow.displayMessage("Uploaded 'note.sqlite' to Google Drive!\nFile ID: {0}".format(text[:-1]))
         else:
             config.mainWindow.displayMessage("Failed to upload bible notes!")
     except:
