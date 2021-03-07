@@ -209,6 +209,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        addMenuItem(menu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (

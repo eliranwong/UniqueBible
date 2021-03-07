@@ -10,10 +10,30 @@ class AlephMainWindow:
 
     def create_menu(self):
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
-        menu1_defaults = menu1.addMenu(config.thisTranslation["menu_defaults"])
-        subMenu = addSubMenu(menu1_defaults, "menu1_programInterface")
+        menu1_language = addSubMenu(menu1, "languageSettings")
+        subMenu = addSubMenu(menu1_language, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
             addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
+        subMenu = addSubMenu(menu1_language, "watsonTranslator")
+        items = (
+            ("setup", self.setupWatsonTranslator),
+            ("enterCredentials", self.showWatsonCredentialWindow),
+            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        if config.isTtsInstalled:
+            languages = self.getTtsLanguages()
+            languageCodes = list(languages.keys())
+            items = [languages[code][1] for code in languageCodes]
+            subMenu = addSubMenu(menu1_language, "ttsLanguage")
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                addMenuItem(subMenu, item, self,
+                            lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode),
+                            translation=False)
+
+        menu1_defaults = addSubMenu(menu1, "menu1_preferences")
         subMenu = addSubMenu(menu1_defaults, "menu1_selectWindowStyle")
         addMenuItem(subMenu, "default", self, lambda: self.setAppWindowStyle("default"), None, False)
         for style in QStyleFactory.keys():
@@ -57,7 +77,6 @@ class AlephMainWindow:
         for shortcut in customShortcuts:
             shortcutsMenu.addAction(
                 QAction(shortcut, self, triggered=lambda shortcut=shortcut: self.setShortcuts(shortcut)))
-        addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(menu1_defaults, "verseNoAction")
         items = (
             ("singleClick", self.selectSingleClickActionDialog),
@@ -66,21 +85,32 @@ class AlephMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
-        if config.enableMacros:
-            menu1_defaults.addAction(
-                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
+        subMenu = addSubMenu(menu1_defaults, "gistSync")
+        items = (
+            ("setup", self.setupGist),
+            ("menu_gist", self.showGistWindow),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
+
         if config.developer:
             menu_developer = menu1.addMenu("&Developer")
             menu_developer.addAction(
                 QAction(config.thisTranslation["edit_language_file"], self, triggered=self.selectLanguageFileToEdit))
+
+        if config.enableMacros:
+            menu1.addAction(
+                QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
+
         menu1.addAction(
             QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
         menu1.addAction(

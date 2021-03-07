@@ -2896,8 +2896,8 @@ class MainWindow(QMainWindow):
             os.mkdir(MacroParser.macros_dir)
         files = [""]
         for file in os.listdir(MacroParser.macros_dir):
-            if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".txt" in file:
-                files.append(file.replace(".txt", ""))
+            if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".ubam" in file:
+                files.append(file.replace(".ubam", ""))
         index = 0
         if config.startupMacro in files:
             index = files.index(config.startupMacro)
