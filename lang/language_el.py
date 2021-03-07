@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "Επιλογή εκτέλεσης προσαρμοσμένα σεναρίου python 'custom.py' κατά την εκκίνηση.",
     "menu_plugins": "Plugins",
     "enablePlugins": "Ενεργοποίηση προσθέτων UBA",
+    "refButtonAction": "Ενέργεια κουμπιού αναφοράς",
+    "direct": "' μεσο",
 }

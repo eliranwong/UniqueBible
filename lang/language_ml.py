@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "തുടക്കത്തില് ഇഷ്ടപ്പെട്ട പൈത്തണ് സ്ക്രിപ്റ്റ് 'custom.py' പ്രവര്ത്തിപ്പിക്കാന് ഉപാധി.",
     "menu_plugins": "പ്ലഗിനുകള്",
     "enablePlugins": "UBA പ്ലഗിനുകള് സജ്ജമാക്കുക",
+    "refButtonAction": "റഫറന്സ് ബട്ടണ് നടപടി",
+    "direct": "നേരിട്ടുള്ള",
 }

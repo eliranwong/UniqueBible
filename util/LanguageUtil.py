@@ -229,7 +229,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("hymn_lyrics", "Hymn Lyrics")
+        addLanguageStringToAllFiles("direct", "Direct")
         # createNewLanguageFile("ml")
         # validateLanguageFileSizes()
 
