@@ -1,3 +1,6 @@
+Major changes in version 22.40:
+* Fixed LXX cannot be displayed on simple mode.
+
 Major changes in version 22.39:
 * Added config.contextSource.  This could be helpful to tell a context plugin from where it is called from.
 
