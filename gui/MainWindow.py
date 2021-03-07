@@ -2923,6 +2923,9 @@ class MainWindow(QMainWindow):
         self.execPythonFile(script)
 
     def execPythonFile(self, script):
+        #with open(script) as f:
+        #    code = compile(f.read(), script, 'exec')
+        #    exec(code)
         try:
             with open(script) as f:
                 code = compile(f.read(), script, 'exec')

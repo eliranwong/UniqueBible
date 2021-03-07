@@ -20,9 +20,17 @@ All UBA context plugins are placed in folder "plugins_context" inside UniqueBibl
 
 You need to enable this feature by checking "enablePlugins" on "Set Config Flags" window.
 
+# config.mainWindow
+
+config.mainWindow points to the mainWindow of UBA.
+
 # config.pluginContext
 
 The text selected by user before a right-click is assigned to config.pluginContext, with which plugin could process selected text.
+
+# config.contextSource
+
+The widget where context menu is called from is pointed by config.contextSource, so developer can distinguish whether it is called from bible window or study window.
 
 # An example
 
