@@ -24,6 +24,7 @@ credentials = os.path.join("credentials.json")
 noteFileCloudId = os.path.join("plugins", "NotesUtility", "noteFileGoogleCloudId.txt")
 if not os.path.isfile(credentials):
     config.mainWindow.displayMessage("You have not yet enabled Goolge Drive API! \nRead for more information at: https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")
+    config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")
 elif not os.path.isfile(noteFileCloudId):
     config.mainWindow.displayMessage("You do not have a backup in Google Drive yet!")
 else:

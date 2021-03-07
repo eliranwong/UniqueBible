@@ -285,14 +285,16 @@ class WebEngineView(QWebEngineView):
             for plugin in FileUtil.fileNamesWithoutExtension("plugins_context", "py"):
                 action = QAction(self)
                 action.setText(plugin)
-                action.triggered.connect(lambda plugin=plugin: self.runPlugin(plugin))
+                action.triggered.connect(partial(self.runPlugin, plugin))
                 self.addAction(action)
 
     def runPlugin(self, fileName):
+        config.contextSource = self
         config.pluginContext = self.selectedText()
         script = os.path.join(os.getcwd(), "plugins_context", "{0}.py".format(fileName))
         self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
+        config.contextSource = None
 
     def messageNoSelection(self):
         self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
@@ -369,6 +371,7 @@ class WebEngineView(QWebEngineView):
                 self.parent.parent.openTranslationLanguageDialog()
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # Translate selected words into user-defined language
     def translateTextIntoUserLanguage(self, text, userLanguage="en"):
@@ -381,6 +384,7 @@ class WebEngineView(QWebEngineView):
                 QApplication.clipboard().setText(translation)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):
