@@ -2229,6 +2229,12 @@ class MainWindow(QMainWindow):
     def mainRefButtonClicked(self):
         self.openControlPanelTab(0)
 
+    def mainRefButtonSingleClick(self):
+        self.openControlPanelTab(0)
+
+    def mainRefButtonDoubleClick(self):
+        self.openControlPanelTab(0)
+
     def studyRefButtonClicked(self):
         self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
 

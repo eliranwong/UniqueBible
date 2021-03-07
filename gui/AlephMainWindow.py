@@ -330,6 +330,7 @@ class AlephMainWindow:
         self.mainRefButton.setToolTip(config.thisTranslation["bar1_reference"])
         self.mainRefButton.setStyleSheet(textButtonStyle)
         self.mainRefButton.clicked.connect(self.mainRefButtonClicked)
+        self.mainRefButton.mouseDoubleClickEvent.connext(self.mainRefButtonDoubleClick)
         self.firstToolBar.addWidget(self.mainRefButton)
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
