@@ -292,10 +292,10 @@ class NoteEditor(QMainWindow):
     def toggleToolbar(self):
         if config.hideNoteEditorStyleToolbar:
             self.toolBar.show()
-            self.hideNoteEditorStyleToolbar = False
+            config.hideNoteEditorStyleToolbar = False
         else:
             self.toolBar.hide()
-            self.hideNoteEditorStyleToolbar = True
+            config.hideNoteEditorStyleToolbar = True
 
     def toggleTextUtility(self):
         if config.hideNoteEditorTextUtility:
