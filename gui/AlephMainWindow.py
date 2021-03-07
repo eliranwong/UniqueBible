@@ -103,9 +103,11 @@ class AlephMainWindow:
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
 
         if config.developer:
-            menu_developer = menu1.addMenu("&Developer")
-            menu_developer.addAction(
-                QAction(config.thisTranslation["edit_language_file"], self, triggered=self.selectLanguageFileToEdit))
+            menu = addMenu(menu1, "developer")
+            addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
+            addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
+            addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)
+            addMenuItem(menu, "editWorkingTranslation", self, self.editWorkingTranslation)
 
         if config.enableMacros:
             menu1.addAction(
@@ -121,6 +123,7 @@ class AlephMainWindow:
 
         navigation_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
         masterControlMenu = addMenu(navigation_menu, "controlPanel")
+        masterControlMenu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut=sc.manageControlPanel, triggered=lambda: self.manageControlPanel()))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp0"], self, shortcut=sc.openControlPanelTab0, triggered=lambda: self.openControlPanelTab(0)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp1"], self, shortcut=sc.openControlPanelTab1, triggered=lambda: self.openControlPanelTab(1)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp2"], self, shortcut=sc.openControlPanelTab2, triggered=lambda: self.openControlPanelTab(2)))
