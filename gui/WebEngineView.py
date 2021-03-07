@@ -369,6 +369,7 @@ class WebEngineView(QWebEngineView):
                 self.parent.parent.openTranslationLanguageDialog()
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # Translate selected words into user-defined language
     def translateTextIntoUserLanguage(self, text, userLanguage="en"):
@@ -381,6 +382,7 @@ class WebEngineView(QWebEngineView):
                 QApplication.clipboard().setText(translation)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # Translate Chinese characters into pinyin
     def pinyinSelectedText(self):

@@ -30,6 +30,7 @@ credentials = os.path.join("credentials.json")
 noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
 if not os.path.isfile(credentials):
     config.mainWindow.displayMessage("You have not yet enabled Goolge Drive API! \nRead for more information at: https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")
+    config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")
 elif not os.path.isfile(noteFile):
     config.mainWindow.displayMessage("You have not created a bible note yet!")
 else:

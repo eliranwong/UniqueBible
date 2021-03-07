@@ -1,3 +1,6 @@
+Major changes in version 22.37:
+* Now open setup instructions on Watson translator and google drive for users.
+
 Major changes in version 22.34, 35, 36:
 * Now restoring notes from Google Drive automatically refreshs current content.
 * A wiki page is written about Notes Backup / Restore with Google drive

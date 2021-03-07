@@ -2710,6 +2710,7 @@ class MainWindow(QMainWindow):
                 config.userLanguage = item
         else:
             self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # Set verse number single-click action (config.verseNoSingleClickAction)
     def selectSingleClickActionDialog(self):

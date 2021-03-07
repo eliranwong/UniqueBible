@@ -1,4 +1,4 @@
-import os, re, config, base64
+import os, re, config, base64, webbrowser
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from qtpy.QtPrintSupport import QPrinter, QPrintDialog
@@ -1084,6 +1084,7 @@ p, li {0} white-space: pre-wrap; {1}
                 self.editor.insertPlainText(result)
             else:
                 self.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+                webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
         else:
             self.selectTextFirst()
 

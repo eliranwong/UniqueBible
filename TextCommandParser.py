@@ -1156,6 +1156,7 @@ class TextCommandParser:
                 QApplication.clipboard().setText(translation)
         else:
             self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
+            self.parent.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
         return ("", "", {})
 
     # This function below is an old way to process TRANSLATE::: command with goolgetrans
