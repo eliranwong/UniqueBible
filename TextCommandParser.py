@@ -767,12 +767,6 @@ class TextCommandParser:
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
-            if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i", "LXX1", "LXX2") and not config.readFormattedBibles:
-                config.readFormattedBibles = True
-                self.parent.enableParagraphButtonAction(False)
-            elif (text in ("OHGBi", "OHGB") or not text in formattedBibles) and config.readFormattedBibles:
-                config.readFormattedBibles = False
-                self.parent.enableParagraphButtonAction(False)
 
             # Custom font styling for Bible
             (fontFile, fontSize) = Bible(text).getFontInfo()
@@ -865,7 +859,7 @@ class TextCommandParser:
             bibleSqlite = Bible(text)
             b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
             del bibleSqlite
-        elif text in formattedBibles and config.readFormattedBibles:
+        elif text in formattedBibles and text not in ("OHGB", "OGHBi") and config.readFormattedBibles:
             bibleSqlite = Bible(text)
             content = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
