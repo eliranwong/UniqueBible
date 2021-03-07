@@ -1,3 +1,7 @@
+Major changes in version 22.38:
+* Fixed running UBA Context Plugins from right-click context menu
+* Added two sample context plugins, "Speak Hebrew" and "Speak Greek"
+
 Major changes in version 22.37:
 * Now open setup instructions on Watson translator and google drive for users.
 

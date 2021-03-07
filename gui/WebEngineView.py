@@ -285,7 +285,7 @@ class WebEngineView(QWebEngineView):
             for plugin in FileUtil.fileNamesWithoutExtension("plugins_context", "py"):
                 action = QAction(self)
                 action.setText(plugin)
-                action.triggered.connect(lambda plugin=plugin: self.runPlugin(plugin))
+                action.triggered.connect(partial(self.runPlugin, plugin))
                 self.addAction(action)
 
     def runPlugin(self, fileName):
