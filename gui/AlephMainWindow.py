@@ -49,9 +49,15 @@ class AlephMainWindow:
             for theme in qtMaterialThemes:
                 selectTheme.addAction(
                     QAction(theme[:-4], self, triggered=lambda theme=theme: self.setQtMaterialTheme(theme)))
+            addMenuItem(selectTheme, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
         else:
-            selectTheme.addAction(QAction(config.thisTranslation["menu_light_theme"], self, triggered=self.setDefaultTheme))
-            selectTheme.addAction(QAction(config.thisTranslation["menu1_dark_theme"], self, triggered=self.setDarkTheme))
+            items = (
+                ("menu_light_theme", self.setDefaultTheme),
+                ("menu1_dark_theme", self.setDarkTheme),
+            )
+            for feature, action in items:
+                addMenuItem(selectTheme, feature, self, action)
+            addMenuItem(selectTheme, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
         layoutMenu.addAction(
             QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=lambda: self.setMenuLayout("aleph")))
