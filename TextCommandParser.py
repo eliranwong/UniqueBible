@@ -859,7 +859,7 @@ class TextCommandParser:
             bibleSqlite = Bible(text)
             b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
             del bibleSqlite
-        elif text in formattedBibles and text not in ("OHGB", "OGHBi") and config.readFormattedBibles:
+        elif text in formattedBibles and text not in ("OHGB", "OHGBi") and config.readFormattedBibles:
             bibleSqlite = Bible(text)
             content = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
