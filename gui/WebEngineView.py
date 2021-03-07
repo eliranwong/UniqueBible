@@ -289,10 +289,12 @@ class WebEngineView(QWebEngineView):
                 self.addAction(action)
 
     def runPlugin(self, fileName):
+        config.contextSource = self
         config.pluginContext = self.selectedText()
         script = os.path.join(os.getcwd(), "plugins_context", "{0}.py".format(fileName))
         self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
+        config.contextSource = None
 
     def messageNoSelection(self):
         self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))

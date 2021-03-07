@@ -1,3 +1,6 @@
+Major changes in version 22.39:
+* Added config.contextSource.  This could be helpful to tell a context plugin from where it is called from.
+
 Major changes in version 22.38:
 * Fixed running UBA Context Plugins from right-click context menu
 * Added two sample context plugins, "Speak Hebrew" and "Speak Greek"
