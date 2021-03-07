@@ -129,9 +129,9 @@ class AlephMainWindow:
         if os.path.isfile(os.path.join(config.marvelData, "bibles/TRLIT.bible")):
             marvel_bible_menu.addAction(
                 QAction("Transliteral Bible", self, shortcut=sc.runTransliteralBible, triggered=self.runTransliteralBible))
-        if os.path.isfile(os.path.join(config.marvelData, "bibles/KJV*.bible")):
+        if os.path.isfile(os.path.join(config.marvelData, "bibles/KJV+.bible")):
             marvel_bible_menu.addAction(
-                QAction("KJV* Bible", self, shortcut=sc.runKJV2Bible, triggered=self.runKJV2Bible))
+                QAction("KJV+ Bible", self, shortcut=sc.runKJV2Bible, triggered=self.runKJV2Bible))
         history_menu = navigation_menu.addMenu("&{0}".format(config.thisTranslation["menu_history"]))
         history_menu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut=sc.mainHistoryButtonClicked, triggered=self.mainHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut=sc.back, triggered=self.back))
