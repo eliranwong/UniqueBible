@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "कस्टम python स्क्रिप्ट 'custom.py' को स्टार्टअप पर चलाने के लिए विकल्प.",
     "menu_plugins": "प्लगइन्स",
     "enablePlugins": "यूबीए प्लगइन्स सक्षम करें",
+    "refButtonAction": "संदर्भ बटन क्रिया",
+    "direct": "Direct",
 }

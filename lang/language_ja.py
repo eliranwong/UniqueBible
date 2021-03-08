@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "始動時にカスタム python スクリプト「custom.py」を実行するためのオプション。",
     "menu_plugins": "プラグイン",
     "enablePlugins": "UBA プラグインを使用可能にする",
+    "refButtonAction": "参照ボタン・アクション",
+    "direct": "ダイレクト",
 }

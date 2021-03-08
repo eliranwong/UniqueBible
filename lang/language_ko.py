@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "시작 시 사용자 정의 python 스크립트 'custom.py' 를 실행하는 옵션입니다.",
     "menu_plugins": "명왕성",
     "enablePlugins": "UBA 플러그인 사용",
+    "refButtonAction": "참조 단추 조치",
+    "direct": "직접적인",
 }

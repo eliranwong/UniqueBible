@@ -511,6 +511,8 @@ class ConfigUtil:
             config.minicontrolWindowWidth = 450
         if not hasattr(config, "minicontrolWindowHeight"):
             config.minicontrolWindowHeight = 400
+        if not hasattr(config, "refButtonClickAction"):
+            config.refButtonClickAction = "direct"
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -695,6 +697,7 @@ class ConfigUtil:
             ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck),
             ("minicontrolWindowWidth", config.minicontrolWindowWidth),
             ("minicontrolWindowHeight", config.minicontrolWindowHeight),
+            ("refButtonClickAction", config.refButtonClickAction)
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
