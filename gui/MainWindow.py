@@ -166,8 +166,7 @@ class MainWindow(QMainWindow):
             self.removeToolBar(self.secondToolBar)
             self.removeToolBar(self.leftToolBar)
             self.removeToolBar(self.rightToolBar)
-            if not config.noStudyBibleToolbar:
-                self.removeToolBar(self.studyBibleToolBar)
+            self.removeToolBar(self.studyBibleToolBar)
         except:
             pass
         if layout not in ("classic", "focus", "aleph"):
