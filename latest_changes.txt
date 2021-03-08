@@ -1,3 +1,6 @@
+Major changes in version 22.41:
+* Fixed an issue switching from Aleph menu layout to Focus menu layout.
+
 Major changes in version 22.40:
 * Fixed LXX cannot be displayed on simple mode.
 
