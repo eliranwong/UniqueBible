@@ -608,7 +608,7 @@ translation = {
     "info": "资讯",
     "gistSync": "Gist-同步",
     "latestChanges": "最新变更",
-    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "ibmWatsonCredentials": "IBM-Watson Translator 认证",
     "enterCredentials": "输入认证",
     "useLangDetectOnTts": "使用 langdetect 语文侦测模组来侦测文字的语言。",
     "miniControlTabs": "迷你控制页签",

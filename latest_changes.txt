@@ -1,5 +1,6 @@
 Major changes in version 22.43:
 * Added RefButtonSingleClickAction selection
+* Fixed typos in language files
 * Added install module utility
 
 Major changes in version 22.42:

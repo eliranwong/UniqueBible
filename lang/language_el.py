@@ -608,7 +608,7 @@ translation = {
     "info": "' Πληροφορίες",
     "gistSync": "Gist-συγχρονισμός",
     "latestChanges": "' Αλλαγές",
-    "ibmWatsonCredentials": "IBM-Watson Translator Credentils",
+    "ibmWatsonCredentials": "Στοιχεία ταυτότητας IBM-Watson Translator",
     "enterCredentials": "Καταχώρηση στοιχείων ταυτότητας",
     "useLangDetectOnTts": "Χρησιμοποιήστε τη λειτουργική μονάδα langdetect για να εντοπίσετε τη γλώσσα για τη λειτουργία κειμένου σε ομιλία.",
     "miniControlTabs": "Μίνι Control Tabs",

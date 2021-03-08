@@ -608,7 +608,7 @@ translation = {
     "info": "Información",
     "gistSync": "Gist-syncing",
     "latestChanges": "Últimos cambios",
-    "ibmWatsonCredentials": "Credenciales del traductor de IBM-Watson",
+    "ibmWatsonCredentials": "Credenciales del conversor de IBM-Watson",
     "enterCredentials": "Especificar credenciales",
     "useLangDetectOnTts": "Utilice el módulo de detección de langdetección para detectar el lenguaje para la función de texto a voz.",
     "miniControlTabs": "mini Tabs de control",
