@@ -1,3 +1,13 @@
+Major changes in version 22.42:
+* Fixed a missing button in note editor.
+* Fixed the issue that toolbar was unable to be made visible.
+
+Major changes in version 22.41:
+* Fixed an issue switching from Aleph menu layout to Focus menu layout.
+
+Major changes in version 22.40:
+* Fixed LXX cannot be displayed on simple mode.
+
 Major changes in version 22.39:
 * Added config.contextSource.  This could be helpful to tell a context plugin from where it is called from.
 

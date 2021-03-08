@@ -287,15 +287,18 @@ class NoteEditor(QMainWindow):
         iconFile = os.path.join("htmlResources", "toolbar.png")
         self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_toolbar"], self.toggleToolbar)
 
+        iconFile = os.path.join("htmlResources", "textUtility.png")
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_textUtility"], self.toggleTextUtility)
+
         self.menuBar.addSeparator()
 
     def toggleToolbar(self):
         if config.hideNoteEditorStyleToolbar:
             self.toolBar.show()
-            self.hideNoteEditorStyleToolbar = False
+            config.hideNoteEditorStyleToolbar = False
         else:
             self.toolBar.hide()
-            self.hideNoteEditorStyleToolbar = True
+            config.hideNoteEditorStyleToolbar = True
 
     def toggleTextUtility(self):
         if config.hideNoteEditorTextUtility:
