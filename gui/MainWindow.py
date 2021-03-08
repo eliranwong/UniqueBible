@@ -1571,9 +1571,22 @@ class MainWindow(QMainWindow):
 
     def openBookMenu(self):
         if self.textCommandParser.isDatabaseInstalled("book"):
-            self.openControlPanelTab(1)
+            if config.refButtonClickAction == "master":
+                self.openControlPanelTab(1)
+            elif config.refButtonClickAction == "mini":
+                self.openControlPanelTab(1)
+            elif config.refButtonClickAction == "direct":
+                self.openBook()
+            else:
+                self.openControlPanelTab(1)
         else:
             self.textCommandParser.databaseNotInstalled("book")
+
+    def openBook(self):
+        if hasattr(config, "bookChapNum"):
+            self.runTextCommand("BOOK:::{0}:::{1}".format(config.book, config.bookChapNum), True, "main")
+        else:
+            self.runTextCommand("BOOK:::{0}".format(config.book), True, "main")
 
     def openBookPreviousChapter(self):
         if hasattr(config, "bookChapNum"):
@@ -2212,6 +2225,16 @@ class MainWindow(QMainWindow):
         newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         self.textCommandChanged(newTextCommand, "main")
 
+    def openStudyChapter(self):
+        newTextCommand = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+        self.textCommandChanged(newTextCommand, "study")
+
+    def openCommentary(self):
+        command = "COMMENTARY:::{0}".format(self.verseReference("main")[1])
+        self.textCommandChanged(command, "study")
+        command = "_commentaryinfo:::{0}".format(config.commentaryText)
+        self.runTextCommand(command)
+
     # Actions - recently opened bibles & commentary
     def mainTextMenu(self):
         self.openControlPanelTab(0)
@@ -2226,14 +2249,35 @@ class MainWindow(QMainWindow):
         self.openControlPanelTab(0)
 
     def mainRefButtonClicked(self):
-        self.openControlPanelTab(0)
+        if config.refButtonClickAction == "master":
+            self.openControlPanelTab(0)
+        elif config.refButtonClickAction == "mini":
+            self.openMiniControlTab(0)
+        elif config.refButtonClickAction == "direct":
+            self.openMainChapter()
+        else:
+            self.openControlPanelTab(0)
 
     def studyRefButtonClicked(self):
-        self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
+        if config.refButtonClickAction == "master":
+            self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
+        elif config.refButtonClickAction == "mini":
+            self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
+        elif config.refButtonClickAction == "direct":
+            self.openStudyChapter()
+        else:
+            self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
 
     def commentaryRefButtonClicked(self):
         if self.textCommandParser.isDatabaseInstalled("commentary"):
-            self.openControlPanelTab(1)
+            if config.refButtonClickAction == "master":
+                self.openControlPanelTab(1)
+            elif config.refButtonClickAction == "mini":
+                self.openMiniControlTab(2)
+            elif config.refButtonClickAction == "direct":
+                self.openCommentary()
+            else:
+                self.openControlPanelTab(1)
         else:
             self.textCommandParser.databaseNotInstalled("commentary")
 
@@ -2731,6 +2775,16 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.verseNoDoubleClickAction = itemsDict[item]
 
+    # Set reference button single-click action (config.refButtonClickAction)
+    def selectRefButtonSingleClickActionDialog(self):
+        values = ("master", "mini", "direct")
+        features = ["controlPanel", "menu1_miniControl", "direct"]
+        items = [config.thisTranslation[feature] for feature in features]
+        itemsDict = dict(zip(items, values))
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["refButtonAction"], items, values.index(config.refButtonClickAction), False)
+        if ok and item:
+            config.refButtonClickAction = itemsDict[item]
+
     # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
     def openSelectDefaultStrongsGreekLexiconDialog(self):
         items = LexiconData().lexiconList
@@ -2841,8 +2895,8 @@ class MainWindow(QMainWindow):
             os.mkdir(MacroParser.macros_dir)
         files = [""]
         for file in os.listdir(MacroParser.macros_dir):
-            if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".txt" in file:
-                files.append(file.replace(".txt", ""))
+            if os.path.isfile(os.path.join(MacroParser.macros_dir, file)) and ".ubam" in file:
+                files.append(file.replace(".ubam", ""))
         index = 0
         if config.startupMacro in files:
             index = files.index(config.startupMacro)

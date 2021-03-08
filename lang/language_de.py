@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "Option zum Ausführen des angepassten Python-Skripts 'custom.py' beim Start.",
     "menu_plugins": "Plugins",
     "enablePlugins": "UBA-Plugins aktivieren",
+    "refButtonAction": "Aktion 'Referenzschaltfläche'",
+    "direct": "Direkt",
 }

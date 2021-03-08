@@ -626,4 +626,6 @@ translation = {
     "customPythonOnStartup": "Опция запуска пользовательского сценария python 'custom.py' при запуске.",
     "menu_plugins": "Модули",
     "enablePlugins": "Включить модули UBA",
+    "refButtonAction": "Действие кнопки ссылки",
+    "direct": "Прямой",
 }
