@@ -63,6 +63,8 @@ class ClassicMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
+        subMenu.addSeparator()
+        addMenuItem(subMenu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(menu, "menu_shortcuts")
         items = (
             ("menu_blank", lambda: self.setShortcuts("blank")),
@@ -164,7 +166,6 @@ class ClassicMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        addMenuItem(menu3, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         menu3.addSeparator()
         toggleMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_toggleFeatures"]))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut=sc.enableParagraphButtonClicked, triggered=self.enableParagraphButtonClicked))

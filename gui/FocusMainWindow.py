@@ -60,6 +60,8 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        subMenu.addSeparator()
+        addMenuItem(subMenu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
@@ -209,7 +211,6 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        addMenuItem(menu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (

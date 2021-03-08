@@ -512,7 +512,7 @@ class ConfigUtil:
         if not hasattr(config, "minicontrolWindowHeight"):
             config.minicontrolWindowHeight = 400
         if not hasattr(config, "refButtonClickAction"):
-            config.refButtonClickAction = "direct"
+            config.refButtonClickAction = "master"
 
         # Temporary configurations
         # Their values are not saved on exit.
