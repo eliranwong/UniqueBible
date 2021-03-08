@@ -626,6 +626,6 @@ translation = {
     "customPythonOnStartup": "在启动时执行自定的 python 档案 'custom.py'。",
     "menu_plugins": "插件",
     "enablePlugins": "启用 UBA 插件",
-    "refButtonAction": "引用按钮操作",
+    "refButtonAction": "参照按钮操作",
     "direct": "直接",
 }

@@ -626,6 +626,6 @@ translation = {
     "customPythonOnStartup": "在啟動時執行自訂的 python 檔案 'custom.py'。",
     "menu_plugins": "外掛程式",
     "enablePlugins": "啟用 UBA 外掛程式",
-    "refButtonAction": "參照按鈕動作",
+    "refButtonAction": "參照按鈕操作",
     "direct": "直接",
 }
