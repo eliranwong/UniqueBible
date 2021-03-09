@@ -11,6 +11,8 @@ Eliran Wong (https://github.com/eliranwong)
 
 Oliver Tseng (https://github.com/otseng)
 
+<a href="https://github.com/eliranwong/UniqueBible/wiki/Translators">Program Interfacce Translators</a>
+
 # Screenshot:
 
 <img src="screenshots/screenshot.png">
