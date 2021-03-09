@@ -33,8 +33,7 @@ def wrapHtml(content):
                      "")
     return html
 
-def extractAllReferences():
-    selectedText = config.contextSource.selectedText()
+def extractAllReferences(selectedText):
     parser = BibleVerseParser(config.parserStandarisation)
     verseList = parser.extractAllReferences(selectedText, False)
     del parser
@@ -46,8 +45,11 @@ def extractAllReferences():
         del biblesSqlite
         return verses
 
-html = extractAllReferences()
-if html:
-    config.mainWindow.instantView.setHtml(wrapHtml(html), config.baseUrl)
+if config.pluginContext:
+    html = extractAllReferences(config.pluginContext)
+    if html:
+        config.mainWindow.instantView.setHtml(wrapHtml(html), config.baseUrl)
+    else:
+        config.contextSource.displayMessage(config.thisTranslation["message_noReference"])
 else:
-    config.contextSource.displayMessage(config.thisTranslation["message_noReference"])
+    config.contextSource.messageNoSelection()
