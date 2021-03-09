@@ -573,6 +573,12 @@ class MainWindow(QMainWindow):
         hymnLyrics = {
             "Hymn Lyrics - English":
                 ((config.marvelData, "books", "Hymn Lyrics - English.book"), "1jO2-akZYgR7xl0ROIVMrjitDTVkEq6LJ"),
+            "Hymn Lyrics - Chinese - 迦南诗选":
+                ((config.marvelData, "books", "Hymn Lyrics - Chinese.book"), "1NXyLJ-OdKmOdc1CErbsaIT-egz0q9n6l"),
+            "Hymn Lyrics - French - Les Chants Joyeux":
+                ((config.marvelData, "books", "Hymn Lyrics - French.book"), "1MCHGo7-7wyR2tkXjEim36TffyKnzeGd-"),
+            "Hymn Lyrics - Spanish - Himnos Letras":
+                ((config.marvelData, "books", "Hymn Lyrics - Spanish.book"), "11_H2BxoSdWdcmZ2nv3E3vh9uaXBeyfE8"),
         }
         items = [book for book in hymnLyrics.keys() if
                  not os.path.isfile(os.path.join(*hymnLyrics[book][0]))]
