@@ -1,3 +1,6 @@
+Major changes in version 22.46:
+* Added translation on program interface in Malayalam.
+
 Major changes in version 22.45:
 * Added Chinese, French, Spanish hymn lyrics.
 * UBA now runs startup plugins before running initial commands.
