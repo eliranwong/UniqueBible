@@ -11,3 +11,5 @@ Context plugins are accessible through right-click context menu.
 Startup plugins are loaded on startup.
 
 Shutdown plugins are loaded on exit.
+
+Read https://github.com/eliranwong/UniqueBible/wiki/UBA-Plugins for more information.
