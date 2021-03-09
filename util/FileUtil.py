@@ -25,12 +25,11 @@ class FileUtil:
     def createCustomFiles():
         # Create files for user customisation
         # "config.py" is essential for running module "config".
-        # "custom.py" is essential for custom python script feature.
         # "custom.css" is essential for custom css feature.
         # "custom.js" is essential for custom javascript feature.
         customCssFile = os.path.join("htmlResources", "css", "custom.css")
         customJsFile = os.path.join("htmlResources", "js", "custom.js")
-        userFiles = ("config.py", "custom.py", customCssFile, customJsFile)
+        userFiles = ("config.py", customCssFile, customJsFile)
         for userFile in userFiles:
             if not os.path.isfile(userFile):
                 open(userFile, "w", encoding="utf-8").close()

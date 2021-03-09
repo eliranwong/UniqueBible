@@ -331,7 +331,7 @@ class AlephMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
                 addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))

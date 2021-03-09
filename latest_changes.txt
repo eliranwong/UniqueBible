@@ -1,3 +1,9 @@
+Major changes in version 22.44:
+* reorganised plugins folders
+* added two more types of plugins, startup plugins and shutdown plugins
+* added access points for plugins to process bible window and study window content before they are displayed
+    They are config.bibleWindowContentTransformers and config.studyWindowContentTransformers
+
 Major changes in version 22.43:
 * Added RefButtonSingleClickAction selection
 * Fixed typos in language files

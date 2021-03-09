@@ -1,5 +1,5 @@
 import subprocess, sys, os, config
-from plugins.NotesUtility.install import *
+from plugins.menu.NotesUtility.install import *
 try:
     from googleapiclient.discovery import build
     from google_auth_oauthlib.flow import InstalledAppFlow
@@ -10,8 +10,8 @@ except:
 
 def uploadNotes():
     try:
-        noteFileCloudId = os.path.join("plugins", "NotesUtility", "noteFileGoogleCloudId.txt")
-        upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        noteFileCloudId = os.path.join("plugins", "menu", "NotesUtility", "noteFileGoogleCloudId.txt")
+        upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "menu", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = upload.communicate()
         if not stderr:
             text = stdout.decode("utf-8")

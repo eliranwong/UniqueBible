@@ -65,7 +65,7 @@ class MoreConfigOptions(QDialog):
             ("enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
             ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(True, "enablePlugins")),
-            ("customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")),
+            #("customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")),
         ]
         if config.isTtsInstalled:
             options += [
@@ -167,8 +167,8 @@ class MoreConfigOptions(QDialog):
     def showVerseNumbersInRangeChanged(self):
         config.showVerseNumbersInRange = not config.showVerseNumbersInRange
 
-    def customPythonOnStartupChanged(self):
-        config.customPythonOnStartup = not config.customPythonOnStartup
+    #def customPythonOnStartupChanged(self):
+    #    config.customPythonOnStartup = not config.customPythonOnStartup
 
     def openBibleWindowContentOnNextTabChanged(self):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab

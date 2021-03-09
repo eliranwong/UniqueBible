@@ -467,8 +467,8 @@ class ConfigUtil:
         if not hasattr(config, "useFastVerseParsing"):
             config.useFastVerseParsing = False
         # Running custom python script "custom.py" on startup
-        if not hasattr(config, "customPythonOnStartup"):
-            config.customPythonOnStartup = False
+        #if not hasattr(config, "customPythonOnStartup"):
+        #    config.customPythonOnStartup = False
         # Enable plugins
         if not hasattr(config, "enablePlugins"):
             config.enablePlugins = True
@@ -524,7 +524,8 @@ class ConfigUtil:
         config.noStudyBibleToolbar = False
         config.noteOpened = False
         config.pipIsUpdated = False
-
+        config.bibleWindowContentTransformers = []
+        config.studyWindowContentTransformers = []
 
     # Save configurations on exit
     @staticmethod
@@ -680,7 +681,7 @@ class ConfigUtil:
             ("menuLayout", config.menuLayout),
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("useFastVerseParsing", config.useFastVerseParsing),
-            ("customPythonOnStartup", config.customPythonOnStartup),
+            #("customPythonOnStartup", config.customPythonOnStartup),
             ("enablePlugins", config.enablePlugins),
             ("enableMacros", config.enableMacros),
             ("startupMacro", config.startupMacro),

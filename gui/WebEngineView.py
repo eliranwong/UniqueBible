@@ -282,7 +282,7 @@ class WebEngineView(QWebEngineView):
 
         # Context menu plugins
         if config.enablePlugins:
-            for plugin in FileUtil.fileNamesWithoutExtension("plugins_context", "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
                 action = QAction(self)
                 action.setText(plugin)
                 action.triggered.connect(partial(self.runPlugin, plugin))
@@ -291,7 +291,7 @@ class WebEngineView(QWebEngineView):
     def runPlugin(self, fileName):
         config.contextSource = self
         config.pluginContext = self.selectedText()
-        script = os.path.join(os.getcwd(), "plugins_context", "{0}.py".format(fileName))
+        script = os.path.join(os.getcwd(), "plugins", "context", "{0}.py".format(fileName))
         self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
         config.contextSource = None

@@ -149,6 +149,11 @@ def setCurrentRecord():
 
 def exitApplication():
     config.mainWindow.textCommandParser.stopTtsAudio()
+    # Run shutdown plugins
+    if config.enablePlugins:
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "shutdown"), "py"):
+            script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
+            config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
@@ -204,12 +209,11 @@ if initialCommand and initialCommandIsPython:
 elif initialCommand:
     executeInitialTextCommand(initialCommand, True)
 
-# Startup custom python script
-if config.customPythonOnStartup:
-    try:
-        from custom import *
-    except:
-        print("Failed to run custom python script on startup!")
+# Run startup plugins
+if config.enablePlugins:
+    for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+        script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+        config.mainWindow.execPythonFile(script)
 
 # Set indexes of history records
 setCurrentRecord()

@@ -671,6 +671,9 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text):
+        if config.enablePlugins and config.bibleWindowContentTransformers:
+            for transformer in config.bibleWindowContentTransformers:
+                text = transformer(text)
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:
@@ -818,6 +821,9 @@ class MainWindow(QMainWindow):
 
     def openTextOnStudyView(self, text, tab_title=''):
         text = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
+        if config.enablePlugins and config.studyWindowContentTransformers:
+            for transformer in config.studyWindowContentTransformers:
+                text = transformer(text)
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:
@@ -2972,19 +2978,21 @@ class MainWindow(QMainWindow):
             MacroParser.parse(self, file)
 
     def runPlugin(self, fileName):
-        script = os.path.join(os.getcwd(), "plugins", "{0}.py".format(fileName))
+        script = os.path.join(os.getcwd(), "plugins", "menu", "{0}.py".format(fileName))
         self.execPythonFile(script)
 
     def execPythonFile(self, script):
-        #with open(script) as f:
-        #    code = compile(f.read(), script, 'exec')
-        #    exec(code)
-        try:
+        if config.developer:
             with open(script) as f:
                 code = compile(f.read(), script, 'exec')
                 exec(code)
-        except:
-            self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
+        else:
+            try:
+                with open(script) as f:
+                    code = compile(f.read(), script, 'exec')
+                    exec(code)
+            except:
+                self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
 
     def showGistWindow(self):
         gw = GistWindow()

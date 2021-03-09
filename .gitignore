@@ -9,11 +9,9 @@
 /notes
 /save
 /.idea
-/plugins/NotesUtility/noteFileGoogleCloudId.txt
+/plugins/menu/NotesUtility/noteFileGoogleCloudId.txt
 /plugins/*.py
-/plugins_context/*.py
 /plugins/*.zip
-/plugins_context/*.zip
 /macros/*.ubam
 /macros/save
 /tmp

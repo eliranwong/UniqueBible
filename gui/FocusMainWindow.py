@@ -303,7 +303,7 @@ class FocusMainWindow:
         # plugins
         if config.enablePlugins:
             menu = addMenu(menuBar, "menu_plugins")
-            for plugin in FileUtil.fileNamesWithoutExtension("plugins", "py"):
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
                 addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         # information
