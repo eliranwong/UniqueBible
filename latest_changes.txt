@@ -1,3 +1,9 @@
+Major changes in version 22.45:
+* Added Chinese, French, Spanish hymn lyrics.
+* UBA now runs startup plugins before running initial commands.
+* Added two startup plugins to enhance hovering feature of bible links, "addHoverFeatureToBibleLinks.py" and "transformSingleVerseLinkToRange.py".
+Remarks: To use plugins, make sure you have "enablePlugins" checked on "Set Config Flags" window.
+
 Major changes in version 22.44:
 * reorganised plugins folders
 * added two more types of plugins, startup plugins and shutdown plugins

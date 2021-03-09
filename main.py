@@ -187,6 +187,12 @@ config.mainWindow = MainWindow()
 availableGeometry = app.desktop().availableGeometry(config.mainWindow)
 setupMainWindow(availableGeometry)
 
+# Run startup plugins
+if config.enablePlugins:
+    for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+        script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+        config.mainWindow.execPythonFile(script)
+
 # Run initial commands
 if config.populateTabsOnStartup:
     openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab
@@ -208,12 +214,6 @@ if initialCommand and initialCommandIsPython:
     config.mainWindow.execPythonFile(initialCommand)
 elif initialCommand:
     executeInitialTextCommand(initialCommand, True)
-
-# Run startup plugins
-if config.enablePlugins:
-    for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
-        script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
-        config.mainWindow.execPythonFile(script)
 
 # Set indexes of history records
 setCurrentRecord()
