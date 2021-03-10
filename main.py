@@ -220,7 +220,10 @@ def switchToCli():
     else:
         print(html_text.extract_text(config.bibleWindowContent))
     # Hide gui
-    config.mainWindow.hide()
+    if platform.system() == "Darwin":
+        config.mainWindow.showMinimized()
+    else:
+        config.mainWindow.hide()
     # Cli input
     config.cli = True
     toQuit = False
@@ -248,7 +251,11 @@ def switchToCli():
         config.mainWindow.quitApp()
     else:
         app.setApplicationName("UniqueBible.app")
-        config.mainWindow.show()
+        if platform.system() == "Darwin":
+            config.mainWindow.showMaximized()
+            config.mainWindow.raise_()
+        else:
+            config.mainWindow.show()
 
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
