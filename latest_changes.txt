@@ -1,3 +1,8 @@
+Major changes in version 22.47:
+* Added local cli feature.
+* Now run "uba.py cli" to run UBA with command line interface.
+* Now run "uba.py telnet-server" to run UBA as a telnet server.
+
 Major changes in version 22.46:
 * Added translation on program interface in Malayalam.
 

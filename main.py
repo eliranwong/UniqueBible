@@ -15,6 +15,8 @@ if os.getcwd() != wd:
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
+if initialCommand == "cli":
+    initialCommand = "cli.py"
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Create custom files
@@ -54,7 +56,7 @@ def get_ip():
     return IP
 
 # Remote CLI
-if (len(sys.argv) > 1) and sys.argv[1] == "cli":
+if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
     try:
         import telnetlib3
     except:

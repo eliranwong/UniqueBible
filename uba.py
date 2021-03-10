@@ -18,7 +18,10 @@ os.environ["QT_API"] = "pyside2"
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 # Take arguments
-initialCommand = " ".join(sys.argv[1:])
+initialCommand = " ".join(sys.argv[1:]).strip()
+if initialCommand == "-i":
+    initialCommand = input("Enter command: ").strip()
+
 # For ChromeOS Linux (Debian 10) ONLY:
 if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
     # On ChromeOS, there are two major options of QT_QPA_PLATFORM: xcb and wayland
@@ -110,11 +113,19 @@ if platform.system() == "Windows":
             fileObj.write("{0} {1}".format(python, thisFile))
     # Activate virtual environment
     activator = os.path.join(os.getcwd(), venvDir, binDir, "activate")
-    mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
-    if os.path.exists(activator):
-        subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
+    
+    if initialCommand == "cli" or initialCommand == "cli.py":
+        mainPy = "main.py cli.py"
+        if os.path.exists(activator):
+            os.system("{0} & {1} {2}".format(activator, python, mainPy))
+        else:
+            os.system("{0} {1}".format(python, mainPy))
     else:
-        subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
+        mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
+        if os.path.exists(activator):
+            subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
+        else:
+            subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
 else:
     # Create application shortcuts and set file permission
     shortcutSh = os.path.join(os.getcwd(), "UniqueBibleApp.sh")
@@ -148,4 +159,7 @@ else:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
     # Run main file
-    subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
+    if initialCommand == "cli" or initialCommand == "cli.py":
+        os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
+    else:
+        subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])

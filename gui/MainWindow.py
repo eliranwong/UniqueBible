@@ -341,7 +341,10 @@ class MainWindow(QMainWindow):
             del biblesSqlite
 
     def displayMessage(self, message="", title="UniqueBible"):
-        reply = QMessageBox.information(self, title, message)
+        if hasattr(config, "cli") and config.cli:
+            print(message)
+        else:
+            reply = QMessageBox.information(self, title, message)
 
     # manage key capture
     def event(self, event):
