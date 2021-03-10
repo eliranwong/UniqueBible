@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging, re, sys, readline
+import os, platform, logging, re, sys
 import logging.handlers as handlers
 import socket
 
