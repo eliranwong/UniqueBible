@@ -21,6 +21,7 @@ os.environ["QT_LOGGING_RULES"] = "*=false"
 initialCommand = " ".join(sys.argv[1:]).strip()
 if initialCommand == "-i":
     initialCommand = input("Enter command: ").strip()
+enableCli = True if initialCommand == "cli" or initialCommand == "cli.py" or initialCommand == "gui" else False
 
 # For ChromeOS Linux (Debian 10) ONLY:
 if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
@@ -113,15 +114,14 @@ if platform.system() == "Windows":
             fileObj.write("{0} {1}".format(python, thisFile))
     # Activate virtual environment
     activator = os.path.join(os.getcwd(), venvDir, binDir, "activate")
-    
-    if initialCommand == "cli" or initialCommand == "cli.py":
-        mainPy = "main.py cli.py"
+    # Run main.py
+    mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
+    if enableCli:
         if os.path.exists(activator):
             os.system("{0} & {1} {2}".format(activator, python, mainPy))
         else:
             os.system("{0} {1}".format(python, mainPy))
     else:
-        mainPy = "main.py {0}".format(initialCommand) if initialCommand else "main.py"
         if os.path.exists(activator):
             subprocess.Popen("{0} & {1} {2}".format(activator, python, mainPy), shell=True)
         else:
@@ -158,8 +158,8 @@ else:
     with open(activator) as f:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
-    # Run main file
-    if initialCommand == "cli" or initialCommand == "cli.py":
+    # Run main.py
+    if enableCli:
         os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
     else:
         subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])

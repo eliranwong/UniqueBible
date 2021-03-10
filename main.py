@@ -30,6 +30,9 @@ initialCommand = " ".join(sys.argv[1:]).strip()
 if initialCommand == "cli":
     initialCommand = "cli.py"
     config.cli = True
+elif initialCommand == "gui":
+    initialCommand = ""
+    config.cli = False
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Setup logging
@@ -174,14 +177,22 @@ def printContentOnConsole(text):
 def switchToCli():
     if not "html-text" in sys.modules:
         import html_text
+
+    # Print content where is context menu was called from
+    if config.pluginContext == "study":
+        print(html_text.extract_text(config.studyWindowContent))
+    else:
+        print(html_text.extract_text(config.bibleWindowContent))
+
     config.mainWindow.hide()
     config.cli = True
+    toQuit = False
     #config.printContentOnConsole = printContentOnConsole
     config.bibleWindowContentTransformers.append(printContentOnConsole)
     config.studyWindowContentTransformers.append(printContentOnConsole)
     while config.cli:
         print("--------------------")
-        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to go back to gui,")
+        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to launch gui, '.quit' to quit,")
         command = input("or UBA command: ").strip()
         if command == ".gui":
             del config.bibleWindowContentTransformers[-1]
@@ -191,11 +202,16 @@ def switchToCli():
             print(html_text.extract_text(config.bibleWindowContent))
         elif command == ".study":
             print(html_text.extract_text(config.studyWindowContent))
+        elif command == ".quit":
+            toQuit = True
+            config.cli = False
         else:
             config.mainWindow.runTextCommand(command)
-    app.setApplicationName("UniqueBible.app")
-    config.mainWindow.show()
-
+    if toQuit:
+        config.mainWindow.quitApp()
+    else:
+        app.setApplicationName("UniqueBible.app")
+        config.mainWindow.show()
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
 if config.fcitx:

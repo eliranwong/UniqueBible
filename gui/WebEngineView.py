@@ -55,12 +55,17 @@ class WebEngineView(QWebEngineView):
         }
         return book[self.name]
 
+    def switchToCli(self):
+        config.pluginContext = self.name
+        QGuiApplication.instance().setApplicationName("UniqueBible.app CLI")
+        config.pluginContext = ""
+
     def addMenuActions(self):
 
         if hasattr(config, "cli"):
             action = QAction(self)
             action.setText(config.thisTranslation["cli"])
-            action.triggered.connect(lambda: QGuiApplication.instance().setApplicationName("UniqueBible.app CLI"))
+            action.triggered.connect(self.switchToCli)
             self.addAction(action)
 
         action = QAction(self)
