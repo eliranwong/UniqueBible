@@ -58,7 +58,7 @@ class MasterControl(QWidget):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
         self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
-        if self.parent.versionCombo is not None and config.menuLayout == 'focus':
+        if self.parent.versionCombo is not None and (config.menuLayout == 'focus' or config.menuLayout == 'Starter'):
             for index, fullName in enumerate(self.textFullNameList):
                 self.parent.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         # commentaries

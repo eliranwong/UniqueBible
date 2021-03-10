@@ -93,6 +93,9 @@ class Starter:
         self.mainRefButton = QPushButton(self.verseReference("main")[-1])
         self.addStandardTextButton("bar1_reference", lambda: self.runTextCommand("_menu:::{0}.{1}".format(config.mainText, config.mainB)),
                                     self.firstToolBar, self.mainRefButton)
+        # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.iconButtonWidth = self.mainRefButton.height()
         button = QPushButton(">")
         button.setFixedWidth(40)
         self.addStandardTextButton("menu_next_chapter", self.nextMainChapter, self.firstToolBar, button)

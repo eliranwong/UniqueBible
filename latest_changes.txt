@@ -1,3 +1,7 @@
+Major changes in version 22.50:
+* Fixed the issue that starter menu layout cannot start with qt-material theme.
+* Added bible version full names as tooltips to starter menu layout dropdown menu.
+
 Major changes in version 22.49:
 * Added support of "uba.py gui" to launch straight with gui, but also have cli enabled.
     The difference between "uba.py" and "uba.py gui" is that the later have an extra option to switch to cli by selecting "Command Line Interface" from context menu.
