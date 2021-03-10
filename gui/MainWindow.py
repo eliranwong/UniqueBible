@@ -2313,7 +2313,7 @@ class MainWindow(QMainWindow):
             self.runTextCommand(command)
 
     def updateVersionCombo(self):
-        if self.versionCombo is not None and config.menuLayout == 'focus':
+        if self.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
             self.refreshing = True
             textIndex = 0
             if config.mainText in self.bibleVersions:
