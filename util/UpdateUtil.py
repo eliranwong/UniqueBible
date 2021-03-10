@@ -82,9 +82,9 @@ class UpdateUtil:
                         return "Could not update"
         # set executable files on macOS or Linux
         if not platform.system() == "Windows":
-            for filename in ("main.py", "BibleVerseParser.py", "RegexSearch.py", "shortcut_uba_Windows_wsl2.sh",
-                             "shortcut_uba_macOS_Linux.sh", "shortcut_uba_chromeOS.sh"):
-                os.chmod(filename, 0o755)
+            for filename in ("uba.py", "main.py", "BibleVerseParser.py", "RegexSearch.py"):
+                if os.path.isfile(filename):
+                    os.chmod(filename, 0o755)
                 # finish message
         config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
         if parent is not None:

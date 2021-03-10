@@ -1,3 +1,6 @@
+Major change in version 22.54:
+* Fixed an update issue
+
 Major changes in version 22.52, 53:
 * Fixed running Command Line Interface on Windows and macOS
 
