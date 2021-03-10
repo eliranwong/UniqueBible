@@ -1762,8 +1762,23 @@ class BibleBooks:
         66:22
     }
 
+    @staticmethod
     def getLastChapter(book):
         if book in BibleBooks.chapters.keys():
             return BibleBooks.chapters[book]
         else:
             return 100
+
+    @staticmethod
+    def getStandardBookAbbreviations():
+        books = []
+        for item in BibleBooks.eng.keys():
+            books.append(BibleBooks.eng[item][0])
+            if item == "66":
+                break
+        return books
+
+if __name__ == "__main__":
+
+    for item in BibleBooks.getStandardBookAbbreviations():
+        print(item)

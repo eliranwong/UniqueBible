@@ -10,6 +10,9 @@ from util.FileUtil import FileUtil
 class FocusMainWindow:
 
     def create_menu(self):
+
+        config.topToolBarOnly = False
+        
         menuBar = self.menuBar()
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
@@ -53,13 +56,8 @@ class FocusMainWindow:
             subMenu.addSeparator()
             addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
-        items = (
-            ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph")),
-            ("menu1_focus_menu_layout", lambda: self.setMenuLayout("focus")),
-            ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic")),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+        addMenuLayoutItems(self, subMenu)
+
         subMenu.addSeparator()
         addMenuItem(subMenu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")

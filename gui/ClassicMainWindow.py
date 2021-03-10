@@ -8,6 +8,9 @@ from util.FileUtil import FileUtil
 class ClassicMainWindow:
 
     def create_menu(self):
+
+        config.topToolBarOnly = False
+
         menuBar = self.menuBar()
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
@@ -56,13 +59,7 @@ class ClassicMainWindow:
                 addMenuItem(subMenu, feature, self, action, shortcut)
         
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")
-        items = (
-            ("menu1_aleph_menu_layout", lambda: self.setMenuLayout("aleph"), None),
-            ("menu1_focus_menu_layout", lambda: self.setMenuLayout("focus"), None),
-            ("menu1_classic_menu_layout", lambda: self.setMenuLayout("classic"), None),
-        )
-        for feature, action, shortcut in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
+        addMenuLayoutItems(self, subMenu)
         subMenu.addSeparator()
         addMenuItem(subMenu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(menu, "menu_shortcuts")

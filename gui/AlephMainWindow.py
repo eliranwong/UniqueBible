@@ -1,3 +1,4 @@
+from BiblesSqlite import BiblesSqlite
 from gui.MenuItems import *
 from qtpy.QtCore import QSize
 import shortcut as sc
@@ -9,6 +10,9 @@ from util.FileUtil import FileUtil
 class AlephMainWindow:
 
     def create_menu(self):
+
+        config.topToolBarOnly = False
+
         menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
         menu1_language = addSubMenu(menu1, "languageSettings")
         subMenu = addSubMenu(menu1_language, "menu1_programInterface")
@@ -59,12 +63,7 @@ class AlephMainWindow:
                 addMenuItem(selectTheme, feature, self, action)
             addMenuItem(selectTheme, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
-        layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_aleph_menu_layout"], self, triggered=lambda: self.setMenuLayout("aleph")))
-        layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_focus_menu_layout"], self, triggered=lambda: self.setMenuLayout("focus")))
-        layoutMenu.addAction(
-            QAction(config.thisTranslation["menu1_classic_menu_layout"], self, triggered=lambda: self.setMenuLayout("classic")))
+        addMenuLayoutItems(self, layoutMenu)
 
         shortcutsMenu = menu1_defaults.addMenu(config.thisTranslation["menu_shortcuts"])
         shortcutsMenu.addAction(
@@ -383,32 +382,38 @@ class AlephMainWindow:
         searchBibleButton.clicked.connect(self.displaySearchBibleMenu)
         self.firstToolBar.addWidget(searchBibleButton)
 
-        openChapterNoteButton = QPushButton()
-        #openChapterNoteButton.setFixedSize(40, 40)
-        #openChapterNoteButton.setBaseSize(70, 70)
-        openChapterNoteButton.setToolTip(config.thisTranslation["bar1_chapterNotes"])
-        openChapterNoteButtonFile = os.path.join("htmlResources", "noteChapter.png")
-        openChapterNoteButton.setIcon(QIcon(openChapterNoteButtonFile))
-        openChapterNoteButton.clicked.connect(self.openMainChapterNote)
-        self.firstToolBar.addWidget(openChapterNoteButton)
-        #t = self.firstToolBar.addAction(QIcon(openChapterNoteButtonFile), "Main View Chapter Notes", self.openMainChapterNote)
-        #openChapterNoteButtonFile = os.path.join("htmlResources", "search.png")
-        #t.setIcon(QIcon(openChapterNoteButtonFile))
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["menu_bookNote"])
+        buttonFile = os.path.join("htmlResources", "noteBook.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(self.openMainBookNote)
+        self.firstToolBar.addWidget(button)
 
-        openVerseNoteButton = QPushButton()
-        openVerseNoteButton.setToolTip(config.thisTranslation["bar1_verseNotes"])
-        openVerseNoteButtonFile = os.path.join("htmlResources", "noteVerse.png")
-        openVerseNoteButton.setIcon(QIcon(openVerseNoteButtonFile))
-        openVerseNoteButton.clicked.connect(self.openMainVerseNote)
-        self.firstToolBar.addWidget(openVerseNoteButton)
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["menu_chapterNote"])
+        buttonFile = os.path.join("htmlResources", "noteChapter.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(self.openMainChapterNote)
+        self.firstToolBar.addWidget(button)
 
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["menu_verseNote"])
+        buttonFile = os.path.join("htmlResources", "noteVerse.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(self.openMainVerseNote)
+        self.firstToolBar.addWidget(button)
 
-        # searchBibleButton = QPushButton()
-        # searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBible"])
-        # searchBibleButtonFile = os.path.join("htmlResources", "search.png")
-        # searchBibleButton.setIcon(QIcon(searchBibleButtonFile))
-        # searchBibleButton.clicked.connect(self.displaySearchBibleCommand)
-        # self.firstToolBar.addWidget(searchBibleButton)
+        # Version selection
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            self.versionCombo = QComboBox()
+            self.bibleVersions = BiblesSqlite().getBibleList()
+            self.versionCombo.addItems(self.bibleVersions)
+            initialIndex = 0
+            if config.mainText in self.bibleVersions:
+                initialIndex = self.bibleVersions.index(config.mainText)
+            self.versionCombo.setCurrentIndex(initialIndex)
+            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.firstToolBar.addWidget(self.versionCombo)
 
         previousBookButton = QPushButton()
         previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])
@@ -889,6 +894,9 @@ class AlephMainWindow:
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
             config.iconButtonWidth = self.mainRefButton.height()
+
+        iconFile = os.path.join("htmlResources", "noteBook.png")
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_bookNote"], self.openMainBookNote)
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)
