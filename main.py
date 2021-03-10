@@ -4,17 +4,19 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging, re, sys
+import os, platform, logging, re, sys, socket
 import logging.handlers as handlers
-import socket
+from util.FileUtil import FileUtil
+if not platform.system() == "Windows":
+    import readline
 
+# Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
 wd = thisFile[:-7]
 if os.getcwd() != wd:
     os.chdir(wd)
 
 # Create custom files
-from util.FileUtil import FileUtil
 FileUtil.createCustomFiles()
 
 # Make sure config.py exists before importing config and all other scripts which depends on config
@@ -88,6 +90,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         print(str(e))
         exit(-1)
 
+
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
@@ -95,14 +98,13 @@ ShortcutUtil.setup(config.menuShortcuts)
 from gui.MainWindow import MainWindow
 from qtpy.QtWidgets import QApplication, QStyleFactory
 from themes import Themes
-
-
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
 if config.qtMaterial and not config.isQtMaterialInstalled:
     config.qtMaterial = False
 if config.qtMaterial:
     from qt_material import apply_stylesheet
+
 
 # Set screen size at first launch
 def setupMainWindow(availableGeometry):
@@ -121,7 +123,10 @@ def setupMainWindow(availableGeometry):
         config.mainWindow.resize(config.screenWidth, config.screenHeight)
     # pre-load control panel
     config.mainWindow.manageControlPanel(config.showControlPanelOnStartup)
-    config.mainWindow.show()
+    if config.cli:
+        config.mainWindow.hide()
+    else:
+        config.mainWindow.show()
 
     # Check if migration is needed for version >= 0.56
     config.mainWindow.checkMigration()
@@ -174,7 +179,12 @@ def printContentOnConsole(text):
     return text
 
 def startWithCli():
-    config.mainWindow.hide()
+    if not "html-text" in sys.modules:
+        import html_text
+    # Assign content to config.bibleWindowContent and config.studyWindowContent on startup
+    config.mainWindow.reloadCurrentRecord()
+    # Cli input
+    #config.mainWindow.hide()
     #config.cli = True
     #config.printContentOnConsole = printContentOnConsole
     config.bibleWindowContentTransformers.append(printContentOnConsole)
@@ -188,9 +198,13 @@ def startWithCli():
             del config.studyWindowContentTransformers[-1]
             config.cli = False
         elif command == ".bible":
-            config.mainWindow.mainPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+            print(html_text.extract_text(config.bibleWindowContent))
+            # The following line does not work on Windows on UBA startup
+            #config.mainWindow.mainPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
         elif command == ".study":
-            config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+            print(html_text.extract_text(config.studyWindowContent))
+            # The following line does not work on Windows on UBA startup
+            #config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
         elif command == ".quit":
             exit()
         else:
@@ -200,14 +214,14 @@ def startWithCli():
 def switchToCli():
     if not "html-text" in sys.modules:
         import html_text
-
     # Print content where is context menu was called from
     if config.pluginContext == "study":
         print(html_text.extract_text(config.studyWindowContent))
     else:
         print(html_text.extract_text(config.bibleWindowContent))
-
+    # Hide gui
     config.mainWindow.hide()
+    # Cli input
     config.cli = True
     toQuit = False
     #config.printContentOnConsole = printContentOnConsole
@@ -235,6 +249,7 @@ def switchToCli():
     else:
         app.setApplicationName("UniqueBible.app")
         config.mainWindow.show()
+
 
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
 if config.fcitx:
