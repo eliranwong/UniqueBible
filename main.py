@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging, re, sys
+import os, platform, logging, re, sys, readline
 import logging.handlers as handlers
 import socket
 
@@ -28,7 +28,6 @@ from checkup import *
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
 if initialCommand == "cli":
-    initialCommand = "cli.py"
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
@@ -174,6 +173,30 @@ def printContentOnConsole(text):
     #sys.stdout.flush()
     return text
 
+def startWithCli():
+    config.mainWindow.hide()
+    #config.cli = True
+    #config.printContentOnConsole = printContentOnConsole
+    config.bibleWindowContentTransformers.append(printContentOnConsole)
+    config.studyWindowContentTransformers.append(printContentOnConsole)
+    while config.cli:
+        print("--------------------")
+        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to launch gui, '.quit' to quit,")
+        command = input("or UBA command: ").strip()
+        if command == ".gui":
+            del config.bibleWindowContentTransformers[-1]
+            del config.studyWindowContentTransformers[-1]
+            config.cli = False
+        elif command == ".bible":
+            config.mainWindow.mainPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+        elif command == ".study":
+            config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+        elif command == ".quit":
+            exit()
+        else:
+            config.mainWindow.runTextCommand(command)
+    config.mainWindow.show()
+
 def switchToCli():
     if not "html-text" in sys.modules:
         import html_text
@@ -272,7 +295,14 @@ else:
     # Execute initial command on Study Window
     runLastHistoryRecord("study")
 
-if initialCommand and initialCommandIsPython:
+
+if initialCommand == "cli":
+    if config.isHtmlTextInstalled:
+        startWithCli()
+    else:
+        config.cli = False
+        print("CLI feature is not enabled!  Install module 'html-text' first, by running 'pip3 install html-text'!")
+elif initialCommand and initialCommandIsPython:
     config.mainWindow.execPythonFile(initialCommand)
 elif initialCommand:
     executeInitialTextCommand(initialCommand, True)

@@ -171,7 +171,13 @@ def isIbmWatsonInstalled():
     except:
         return False
 
-# [Optional] Translates Chinese characters into pinyin.
+def isHtmlTextInstalled():
+    try:
+        import html_text
+        return True
+    except:
+        return False
+
 def isPypinyinInstalled():
     try:
         from pypinyin import pinyin
@@ -220,6 +226,8 @@ def setInstallConfig(module, isInstalled):
         config.isIbmWatsonInstalled = isInstalled
     elif module == "pypinyin":
         config.isPypinyinInstalled = isInstalled
+    elif module == "html-text":
+        config.isHtmlTextInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -252,6 +260,7 @@ for module, feature, isInstalled in required:
 
 # Check if optional modules are installed
 optional = (
+    ("html-text", "Read html text", isHtmlTextInstalled),
     ("PyPDF2", "Open PDF file", isPyPDF2Installed),
     ("python-docx", "Open DOCX file", isPythonDocxInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),

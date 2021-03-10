@@ -56,9 +56,12 @@ class WebEngineView(QWebEngineView):
         return book[self.name]
 
     def switchToCli(self):
-        config.pluginContext = self.name
-        QGuiApplication.instance().setApplicationName("UniqueBible.app CLI")
-        config.pluginContext = ""
+        if config.isHtmlTextInstalled:
+            config.pluginContext = self.name
+            QGuiApplication.instance().setApplicationName("UniqueBible.app CLI")
+            config.pluginContext = ""
+        else:
+            self.displayMessage("CLI feature is not enabled! \n Install module 'html-text' first, by running 'pip3 install html-text'!")
 
     def addMenuActions(self):
 
