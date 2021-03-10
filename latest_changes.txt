@@ -1,5 +1,5 @@
-Major changes in version 22.52:
-* Fixed running Command Line Interface on Windows
+Major changes in version 22.52, 53:
+* Fixed running Command Line Interface on Windows and macOS
 
 Major changes in version 22.51:
 * Fixed updating issues with starter menu layout.

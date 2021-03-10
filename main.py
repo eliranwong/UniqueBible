@@ -116,7 +116,7 @@ def setupMainWindow(availableGeometry):
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         # Below is a workaround, loading the app in 4/5 of the screen size.
         config.mainWindow.resize(config.screenWidth * 4 / 5, config.screenHeight)
-    elif platform.system() == "Windows":
+    elif platform.system() == "Windows" and not config.cli:
         config.mainWindow.showMaximized()
     else:
         # macOS or Linux set to fullscreen
@@ -210,6 +210,8 @@ def startWithCli():
         else:
             config.mainWindow.runTextCommand(command)
     config.mainWindow.show()
+    if platform.system() == "Windows":
+        config.mainWindow.showMaximized()
 
 def switchToCli():
     if not "html-text" in sys.modules:
