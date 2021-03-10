@@ -690,6 +690,8 @@ class MainWindow(QMainWindow):
         if config.enablePlugins and config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 text = transformer(text)
+        if hasattr(config, "cli"):
+            config.bibleWindowContent = text
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:
@@ -840,6 +842,8 @@ class MainWindow(QMainWindow):
         if config.enablePlugins and config.studyWindowContentTransformers:
             for transformer in config.studyWindowContentTransformers:
                 text = transformer(text)
+        if hasattr(config, "cli"):
+            config.studyWindowContent = text
         if self.newTabException:
             self.newTabException = False
         elif self.syncingBibles:

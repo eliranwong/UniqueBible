@@ -7,14 +7,6 @@ try:
 except:
     moduleInstalled = False
 
-def getBibleWindowContent(content):
-    config.bibleWindowContent = content
-    return content
-
-def getStudyWindowContent(content):
-    config.studyWindowContent = content
-    return content
-
 def printContentOnConsole(text):
     if not "html-text" in sys.modules:
         import html_text
@@ -27,13 +19,11 @@ if not moduleInstalled:
 config.mainWindow.hide()
 #config.cli = True
 #config.printContentOnConsole = printContentOnConsole
-config.bibleWindowContentTransformers.append(getBibleWindowContent)
 config.bibleWindowContentTransformers.append(printContentOnConsole)
-config.studyWindowContentTransformers.append(getStudyWindowContent)
 config.studyWindowContentTransformers.append(printContentOnConsole)
 while config.cli:
     print("--------------------")
-    print("Enter '.bible' to print bible content, '.study' to print study content, '.gui' to launch gui, '.quit' to quit")
+    print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to launch gui, '.quit' to quit,")
     command = input("or UBA command: ").strip()
     if command == ".gui":
         del config.bibleWindowContentTransformers[-1]

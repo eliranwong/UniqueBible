@@ -181,20 +181,16 @@ def switchToCli():
     config.studyWindowContentTransformers.append(printContentOnConsole)
     while config.cli:
         print("--------------------")
-        print("Enter '.bible' to print bible content, '.study' to print study content, '.gui' to go back to gui")
+        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to go back to gui,")
         command = input("or UBA command: ").strip()
         if command == ".gui":
             del config.bibleWindowContentTransformers[-1]
             del config.studyWindowContentTransformers[-1]
             config.cli = False
         elif command == ".bible":
-            #config.mainWindow.mainPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
             print(html_text.extract_text(config.bibleWindowContent))
         elif command == ".study":
-            #config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
             print(html_text.extract_text(config.studyWindowContent))
-        elif command == ".quit":
-            exit()
         else:
             config.mainWindow.runTextCommand(command)
     app.setApplicationName("UniqueBible.app")
@@ -213,6 +209,7 @@ if config.virtualKeyboard:
 
 # Start PySide2 gui
 app = QApplication(sys.argv)
+# Set application name
 app.setApplicationName("UniqueBible.app")
 app.setApplicationDisplayName("UniqueBible.app")
 # When application name is changed

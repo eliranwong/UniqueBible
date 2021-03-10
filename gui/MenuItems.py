@@ -1,10 +1,9 @@
 import os, config
+from util.FileUtil import FileUtil
+
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
 from qtpy.QtGui import QIcon, Qt
 from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
-
-from util.PluginsUtil import PluginsUtil
-
 
 def addMenu(menuBar, translation):
     return menuBar.addMenu("&{0}".format(config.thisTranslation[translation]))
@@ -27,8 +26,8 @@ def addMenuLayoutItems(parent, menu):
     )
     for feature, action in items:
         addMenuItem(menu, feature, parent, action)
-    layouts = PluginsUtil.getLayouts()
+    layouts = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "layout"), "py")
     if layouts:
         menu.addSeparator()
-        for pluginLayout in PluginsUtil.getLayouts():
+        for pluginLayout in layouts:
             addMenuItem(menu, pluginLayout, parent, lambda: parent.setMenuLayout(pluginLayout), translation=False)

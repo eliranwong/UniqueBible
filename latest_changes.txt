@@ -1,3 +1,9 @@
+Major changes in version 22.48:
+* Added layout plugin
+* Added starter menu layout
+* Added ability to switch between cli and gui at any time.
+    To start uba with "uba.py cli", users can select "Command Line Interface" from right-click context menu to switch to cli.
+
 Major changes in version 22.47:
 * Added local cli feature.
 * Now run "uba.py cli" to run UBA with command line interface.
