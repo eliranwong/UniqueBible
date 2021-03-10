@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "यूबीए प्लगइन्स सक्षम करें",
     "refButtonAction": "संदर्भ बटन क्रिया",
     "direct": "Direct",
+    "cli": "कमांड लाइन इंटरफेस",
 }

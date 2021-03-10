@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "UBA 플러그인 사용",
     "refButtonAction": "참조 단추 조치",
     "direct": "직접적인",
+    "cli": "커맨드 라인 인터페이스",
 }

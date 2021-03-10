@@ -1,10 +1,19 @@
 import config, readline, sys
+from qtpy.QtGui import QGuiApplication
 from install.module import *
 try:
     import html_text
     moduleInstalled = True
 except:
     moduleInstalled = False
+
+def getBibleWindowContent(content):
+    config.bibleWindowContent = content
+    return content
+
+def getStudyWindowContent(content):
+    config.studyWindowContent = content
+    return content
 
 def printContentOnConsole(text):
     if not "html-text" in sys.modules:
@@ -16,9 +25,11 @@ if not moduleInstalled:
     installmodule("html-text")
 
 config.mainWindow.hide()
-config.cli = True
+#config.cli = True
 #config.printContentOnConsole = printContentOnConsole
+config.bibleWindowContentTransformers.append(getBibleWindowContent)
 config.bibleWindowContentTransformers.append(printContentOnConsole)
+config.studyWindowContentTransformers.append(getStudyWindowContent)
 config.studyWindowContentTransformers.append(printContentOnConsole)
 while config.cli:
     print("--------------------")

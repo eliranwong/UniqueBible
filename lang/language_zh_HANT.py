@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "啟用 UBA 外掛程式",
     "refButtonAction": "參照按鈕操作",
     "direct": "直接",
+    "cli": "指令執行介面",
 }

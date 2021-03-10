@@ -2,6 +2,7 @@ import config, os
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
+from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import QAction, QApplication
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
@@ -55,6 +56,12 @@ class WebEngineView(QWebEngineView):
         return book[self.name]
 
     def addMenuActions(self):
+
+        if hasattr(config, "cli"):
+            action = QAction(self)
+            action.setText(config.thisTranslation["cli"])
+            action.triggered.connect(lambda: QGuiApplication.instance().setApplicationName("UniqueBible.app CLI"))
+            self.addAction(action)
 
         action = QAction(self)
         action.setText(config.thisTranslation["openOnNewWindow"])

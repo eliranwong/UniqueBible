@@ -13,12 +13,6 @@ wd = thisFile[:-7]
 if os.getcwd() != wd:
     os.chdir(wd)
 
-# Check argument passed to UBA as a parameter
-initialCommand = " ".join(sys.argv[1:]).strip()
-if initialCommand == "cli":
-    initialCommand = "cli.py"
-initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
-
 # Create custom files
 from util.FileUtil import FileUtil
 FileUtil.createCustomFiles()
@@ -30,6 +24,13 @@ from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
 # Check for dependencies and other essential elements
 from checkup import *
+
+# Check argument passed to UBA as a parameter
+initialCommand = " ".join(sys.argv[1:]).strip()
+if initialCommand == "cli":
+    initialCommand = "cli.py"
+    config.cli = True
+initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -158,6 +159,48 @@ def exitApplication():
             config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
 
+def nameChanged():
+    if app.applicationName() == "UniqueBible.app CLI":
+        switchToCli()
+
+def printContentOnConsole(text):
+    if not "html-text" in sys.modules:
+        import html_text
+    print(html_text.extract_text(text))
+    #subprocess.Popen(["echo", html_text.extract_text(text)])
+    #sys.stdout.flush()
+    return text
+
+def switchToCli():
+    if not "html-text" in sys.modules:
+        import html_text
+    config.mainWindow.hide()
+    config.cli = True
+    #config.printContentOnConsole = printContentOnConsole
+    config.bibleWindowContentTransformers.append(printContentOnConsole)
+    config.studyWindowContentTransformers.append(printContentOnConsole)
+    while config.cli:
+        print("--------------------")
+        print("Enter '.bible' to print bible content, '.study' to print study content, '.gui' to go back to gui")
+        command = input("or UBA command: ").strip()
+        if command == ".gui":
+            del config.bibleWindowContentTransformers[-1]
+            del config.studyWindowContentTransformers[-1]
+            config.cli = False
+        elif command == ".bible":
+            #config.mainWindow.mainPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+            print(html_text.extract_text(config.bibleWindowContent))
+        elif command == ".study":
+            #config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+            print(html_text.extract_text(config.studyWindowContent))
+        elif command == ".quit":
+            exit()
+        else:
+            config.mainWindow.runTextCommand(command)
+    app.setApplicationName("UniqueBible.app")
+    config.mainWindow.show()
+
+
 # Set Qt input method variable to use fcitx / ibus if config.fcitx / config.ibus is "True"
 if config.fcitx:
     os.environ["QT_IM_MODULE"] = "fcitx"
@@ -170,6 +213,10 @@ if config.virtualKeyboard:
 
 # Start PySide2 gui
 app = QApplication(sys.argv)
+app.setApplicationName("UniqueBible.app")
+app.setApplicationDisplayName("UniqueBible.app")
+# When application name is changed
+app.applicationNameChanged.connect(nameChanged)
 # Assign a function to save configurations when the app is closed.
 app.aboutToQuit.connect(exitApplication)
 # Apply window style

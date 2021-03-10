@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "UBA プラグインを使用可能にする",
     "refButtonAction": "参照ボタン・アクション",
     "direct": "ダイレクト",
+    "cli": "コマンド行インターフェース",
 }

@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "UBA-Plugins aktivieren",
     "refButtonAction": "Aktion 'Referenzschaltfläche'",
     "direct": "Direkt",
+    "cli": "Befehlszeilenschnittstelle",
 }

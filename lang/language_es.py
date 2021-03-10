@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "Habilitar Plugins de UBA",
     "refButtonAction": "Acción del botón de referencia",
     "direct": "Directa",
+    "cli": "Interfaz de línea de mandatos",
 }

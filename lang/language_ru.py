@@ -628,4 +628,5 @@ translation = {
     "enablePlugins": "Включить модули UBA",
     "refButtonAction": "Действие кнопки ссылки",
     "direct": "Прямой",
+    "cli": "Интерфейс командной строки",
 }
