@@ -115,7 +115,7 @@ class Starter:
         self.firstToolBar.addWidget(self.textCommandLineEdit)
 
         self.studyBibleToolBar = QToolBar()
-        self.studyRefButton = QPushButton()
+        self.studyRefButton, self.enableParagraphButton = QPushButton(), QPushButton()
         self.secondToolBar = QToolBar()
         self.leftToolBar = QToolBar()
         self.rightToolBar = QToolBar()

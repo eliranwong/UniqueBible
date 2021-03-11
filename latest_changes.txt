@@ -1,3 +1,6 @@
+Major change in version 22.60:
+* Fixed missing enableParagraphButton in start menu layout.
+
 Major change in version 22.59:
 * Optimised cli feature.
 
