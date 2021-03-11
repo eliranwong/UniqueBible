@@ -1,11 +1,14 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
-import asyncio
-import re
-import sys
+import asyncio, re, sys
+from checkup import isHtmlTextInstalled
 from socket import socket
-
 from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
+try:
+    import html_text
+    isHtmlTextInstalled = True
+except:
+    isHtmlTextInstalled = False
 
 CR, LF, NUL = '\r\n\x00'
 CRLF = '\r\n'
@@ -69,28 +72,39 @@ class RemoteCliHandler:
             writer.write(CRLF)
             command = re.sub("\[[ABCD]", "", command)
             command = command.strip()
-            if command.lower() in ('quit', 'exit', 'bye'):
+            if command.lower() in ('.quit', '.exit', '.bye'):
                 break
-            elif command.lower() in ('help', '?'):
+            elif command.lower() in ('.help', '?'):
                 RemoteCliHandler.help(writer)
             elif len(command) > 0:
                 view, content, dict = textCommandParser.parser(command, "cli")
-                content = re.sub("<br/?>", CRLF, content)
-                content = re.sub('<[^<]+?>', '', content)
+                if isHtmlTextInstalled:
+                    content = html_text.extract_text(content)
+                    content = re.sub(r"\n", CRLF, content)
+                else:
+                    content = re.sub("<br/?>", CRLF, content)
+                    content = re.sub('<[^<]+?>', '', content)
                 content = content.strip()
                 writer.write(content)
         writer.close()
 
     def help(writer):
-        writer.write("Type 'quit' to exit" + CRLF)
+        writer.write("Type '.quit' to exit" + CRLF)
         writer.write("All other commands will be processed by UBA" + CRLF)
         writer.write("Examples:" + CRLF)
         writer.write("BIBLE:::KJV:::John 3:16" + CRLF)
+        writer.write("BIBLE:::KJV:::John 3:16-16" + CRLF)
+        writer.write("BIBLE:::KJV:::John 3:16-18" + CRLF)
         writer.write("BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4" + CRLF)
-        writer.write("PARALLEL:::NIV_KJV:::John 3:16" + CRLF)
+        writer.write("CROSSREFERENCE:::Jn 3:16" + CRLF)
+        writer.write("COMPARE:::John 3:16" + CRLF)
+        writer.write("COMPARE:::KJV_NET:::John 3" + CRLF)
+        writer.write("COMPARE:::KJV_NET:::John 3:16-16" + CRLF)
         writer.write("SHOWSEARCH:::KJV:::omnipotent" + CRLF)
         writer.write("ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'" + CRLF)
-        writer.write("WORDS:::Gen 1:1")
+        writer.write("WORDS:::Gen 1:1" + CRLF)
+        writer.write("Command Reference [1]: https://github.com/eliranwong/UniqueBible/wiki/Command-line" + CRLF)
+        writer.write("Command Reference [2]: https://github.com/eliranwong/UniqueBible/blob/master/TextCommandParser.py")
 
     @asyncio.coroutine
     def readline(reader, writer):

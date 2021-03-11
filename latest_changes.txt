@@ -1,3 +1,6 @@
+Major change in version 22.61:
+* Enhanced remote cli feature used with telnet-server.
+
 Major change in version 22.60:
 * Fixed missing enableParagraphButton in start menu layout.
 

@@ -806,10 +806,10 @@ class TextCommandParser:
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
-                if view in ("cli"):
-                    chapters = ""
-                else:
-                    chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
+                #if view in ("cli"):
+                #    chapters = ""
+                #else:
+                chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
                 content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text, view))
             else:
                 # i.e. when more than one verse reference is found
@@ -868,12 +868,12 @@ class TextCommandParser:
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         #marvelBibles = list(self.getMarvelBibles().keys())
         bibleSqlite = Bible(text)
-        if source in ("cli"):
-            b, c, v, *_ = verse
-            bibleSqlite = Bible(text)
-            b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
-            del bibleSqlite
-        elif text in formattedBibles and text not in ("OHGB", "OHGBi", "LXX") and config.readFormattedBibles:
+        #if source in ("cli"):
+        #    b, c, v, *_ = verse
+        #    bibleSqlite = Bible(text)
+        #    b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
+        #    del bibleSqlite
+        if text in formattedBibles and text not in ("OHGB", "OHGBi", "LXX") and config.readFormattedBibles:
             bibleSqlite = Bible(text)
             content = bibleSqlite.readFormattedChapter(verse)
             del bibleSqlite
