@@ -82,7 +82,7 @@ class RemoteCliHandler:
                     content = html_text.extract_text(content)
                     content = re.sub(r"\n", CRLF, content)
                 else:
-                    content = re.sub("<br/?>", CRLF, content)
+                    content = re.sub("<br/?>|<br>", CRLF, content)
                     content = re.sub('<[^<]+?>', '', content)
                 content = content.strip()
                 writer.write(content)

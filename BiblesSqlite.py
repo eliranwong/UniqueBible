@@ -660,7 +660,7 @@ input.addEventListener('keyup', function(event) {0}
                     verseText += " "
                 elif len(verse) == 4:
                     b, c, vs, ve = verse
-                    verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
+                    verseReference = self.bcvToVerseReference(b, c, vs) if vs == ve else "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
                     v = vs
                     while (v <= ve):
                         if config.showVerseNumbersInRange:
@@ -675,7 +675,7 @@ input.addEventListener('keyup', function(event) {0}
                     if (cs > ce):
                         pass
                     elif (cs == ce):
-                        verseReference = "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
+                        verseReference = self.bcvToVerseReference(b, cs, vs) if vs == ve else "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
                         v = vs
                         while (v <= ve):
                             if config.showVerseNumbersInRange:

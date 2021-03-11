@@ -1,3 +1,6 @@
+Major change in version 22.62:
+* Improved verse reference display.
+
 Major change in version 22.61:
 * Enhanced remote cli feature used with telnet-server.
 
