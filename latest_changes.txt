@@ -1,3 +1,6 @@
+Major change in version 22.55:
+* Fixed an issue launching UBA without cli feature.
+
 Major change in version 22.54:
 * Fixed an update issue
 
