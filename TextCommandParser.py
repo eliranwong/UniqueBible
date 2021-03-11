@@ -542,7 +542,9 @@ class TextCommandParser:
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
             textCommand = textCommand.strip()
-            if ":" not in textCommand:
+            if re.match("^http[s]+:", textCommand):
+                return ("", "", {})
+            elif ":" not in textCommand:
                 if re.search(r'.*\d+$', textCommand):
                     textCommand += ":1"
                 else:
@@ -778,7 +780,7 @@ class TextCommandParser:
             if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i", "LXX1", "LXX2") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
                 self.parent.enableParagraphButtonAction(False)
-            elif (text in ("OHGBi", "OHGB", "LXX") or not text in formattedBibles) and config.readFormattedBibles:
+            elif (text in ("OHGBi", "OHGB", "LXX") or not text in formattedBibles) and config.readFormattedBibles and view == "main":
                 config.readFormattedBibles = False
                 self.parent.enableParagraphButtonAction(False)
 
