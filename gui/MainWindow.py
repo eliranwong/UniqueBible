@@ -687,7 +687,7 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text):
-        if config.enablePlugins and config.bibleWindowContentTransformers:
+        if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 text = transformer(text)
         if hasattr(config, "cli"):
@@ -839,7 +839,7 @@ class MainWindow(QMainWindow):
 
     def openTextOnStudyView(self, text, tab_title=''):
         text = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
-        if config.enablePlugins and config.studyWindowContentTransformers:
+        if config.studyWindowContentTransformers:
             for transformer in config.studyWindowContentTransformers:
                 text = transformer(text)
         if hasattr(config, "cli"):

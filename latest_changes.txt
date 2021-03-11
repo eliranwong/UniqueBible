@@ -1,5 +1,10 @@
+Major change in version 22.56:
+* Added "Command Line Interface" to menu, visible only when cli feature is enabled.
+* Added command keywords "_cp" and "_mastercontrol"
+
 Major change in version 22.55:
 * Fixed an issue launching UBA without cli feature.
+* Read about Command Line Interface at https://github.com/eliranwong/UniqueBible/wiki/Command-Line-Interface
 
 Major change in version 22.54:
 * Fixed an update issue

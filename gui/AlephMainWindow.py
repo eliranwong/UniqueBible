@@ -128,6 +128,9 @@ class AlephMainWindow:
 
         navigation_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
         masterControlMenu = addMenu(navigation_menu, "controlPanel")
+        if hasattr(config, "cli"):
+            addMenuItem(masterControlMenu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
+            masterControlMenu.addSeparator()
         masterControlMenu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut=sc.manageControlPanel, triggered=lambda: self.manageControlPanel()))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp0"], self, shortcut=sc.openControlPanelTab0, triggered=lambda: self.openControlPanelTab(0)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp1"], self, shortcut=sc.openControlPanelTab1, triggered=lambda: self.openControlPanelTab(1)))

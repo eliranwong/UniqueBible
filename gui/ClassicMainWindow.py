@@ -14,6 +14,9 @@ class ClassicMainWindow:
         menuBar = self.menuBar()
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
+        if hasattr(config, "cli"):
+            addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
+            menu.addSeparator()
         items = (
             ("controlPanel", self.manageControlPanel, sc.manageControlPanel),
             ("menu1_miniControl", self.manageMiniControl, sc.manageMiniControl),
