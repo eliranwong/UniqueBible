@@ -121,6 +121,7 @@ class ShortcutUtil:
             "twoThirdWindow": "",
             "ubaWiki": '',
             "ubaDiscussions": '',
+            "commandLineInterface": '',
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -226,6 +227,7 @@ class ShortcutUtil:
             "twoThirdWindow": "Ctrl+S, S",
             "ubaWiki": '',
             "ubaDiscussions": '',
+            "commandLineInterface": '',
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -280,7 +282,7 @@ class ShortcutUtil:
             "openMainVerseNote": '',
             "openTextFileDialog": 'Ctrl+O',
             "parallel": 'Ctrl+W',
-            "parseContentOnClipboard": 'Ctrl+^',
+            "parseContentOnClipboard": '',
             "previousChapterButton": '',
             "previousMainBook": 'Ctrl+{',
             "previousMainChapter": 'Ctrl+<',
@@ -331,6 +333,7 @@ class ShortcutUtil:
             "twoThirdWindow": '',
             "ubaWiki": 'Ctrl+H',
             "ubaDiscussions": 'Ctrl+D',
+            "commandLineInterface": 'Ctrl+^',
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -436,6 +439,7 @@ class ShortcutUtil:
             "twoThirdWindow": "Ctrl+W, S",
             "ubaWiki": '',
             "ubaDiscussions": '',
+            "commandLineInterface": '',
         }
     }
 

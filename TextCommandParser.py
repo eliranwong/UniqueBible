@@ -520,6 +520,14 @@ class TextCommandParser:
             # [KEYWORD] _paste
             # e.g. _paste:::
             "_paste": self.pasteFromClipboard,
+            # [KEYWORD] _cp
+            # Usage: _cp:::
+            # Usage: _cp:::[0-4]
+            "_cp": self.openMasterControl,
+            # [KEYWORD] _mastercontrol
+            # Usage: _mastercontrol:::
+            # Usage: _mastercontrol:::[0-4]
+            "_mastercontrol": self.openMasterControl,
             # [KEYWORD] _highlight
             # Feature - Highlight a verse
             # Usage - _HIGHLIGHT:::[code]:::[BIBLE_REFERENCE(S)]
@@ -1667,6 +1675,19 @@ class TextCommandParser:
             else:
                 self.parent.addHistoryRecord("main" if config.verseNoSingleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoSingleClickAction, verseReference))
                 return self.mapVerseAction(config.verseNoSingleClickAction, verseReference, source)
+
+    # _cp:::
+    # _mastercontrol:::
+    def openMasterControl(self, command, source):
+        try:
+            if command and int(command) < 5:
+                index = int(command)
+            else:
+                index = 0
+            self.parent.openControlPanelTab(index, config.mainB, config.mainC, config.mainV, config.mainText),
+            return ("", "", {})
+        except:
+            return self.invalidCommand()
 
     # _menu:::
     def textMenu(self, command, source):
