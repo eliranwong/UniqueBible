@@ -141,7 +141,7 @@ def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
 
 def populateTabsOnStartup(source="main"):
     history = config.history[source]
-    for i in reversed(range(config.numberOfTab - 1 if initialCommand and not initialCommandIsPython and source == "main" else config.numberOfTab)):
+    for i in reversed(range(config.numberOfTab - 1 if initialCommand and not initialCommandIsPython and not (hasattr(config, "cli") and config.cli) and source == "main" else config.numberOfTab)):
         index = i + 1
         if len(history) >= index:
             command = history[0 - index]
@@ -181,8 +181,6 @@ def printContentOnConsole(text):
 def startWithCli():
     if not "html-text" in sys.modules:
         import html_text
-    # Assign content to config.bibleWindowContent and config.studyWindowContent on startup
-    config.mainWindow.reloadCurrentRecord()
     # Cli input
     #config.mainWindow.hide()
     #config.cli = True
@@ -314,7 +312,7 @@ if config.populateTabsOnStartup:
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
 else:
     # Execute initial command on Bible Window
-    if not initialCommand or initialCommandIsPython:
+    if not initialCommand or initialCommandIsPython or (hasattr(config, "cli") and config.cli):
         runLastHistoryRecord("main")
     # Execute initial command on Study Window
     runLastHistoryRecord("study")
