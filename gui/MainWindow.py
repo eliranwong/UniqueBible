@@ -2527,7 +2527,7 @@ class MainWindow(QMainWindow):
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         command = self.textCommandLineEdit.text()
-        if not re.match(r"(^online:::)|(^http[s]+:)", command, flags=re.IGNORECASE):
+        if not re.match("^online:::", command, flags=re.IGNORECASE):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
         elif self.textCommandLineEdit.text() != self.onlineCommand:
             self.onlineCommand = command    
@@ -2558,7 +2558,8 @@ class MainWindow(QMainWindow):
             view, content, dict = self.textCommandParser.parser(textCommand, source)
             # process content
             if content == "INVALID_COMMAND_ENTERED":
-                self.logger.info(config.thisTranslation["message_invalid"] + ":" + textCommand)
+                self.displayMessage("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))
+                self.logger.info("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))
             elif view == "command":
                 self.focusCommandLineField()
                 self.textCommandLineEdit.setText(content)

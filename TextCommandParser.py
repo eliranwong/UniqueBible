@@ -542,9 +542,7 @@ class TextCommandParser:
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
             textCommand = textCommand.strip()
-            if re.match("^http[s]+:", textCommand):
-                return ("", "", {})
-            elif ":" not in textCommand:
+            if ":" not in textCommand:
                 if re.search(r'.*\d+$', textCommand):
                     textCommand += ":1"
                 else:

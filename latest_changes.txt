@@ -1,3 +1,6 @@
+Major change in version 22.57:
+* Fixed href hyperlinks in user-created modules.
+
 Major change in version 22.56:
 * Added "Command Line Interface" to menu, visible only when cli feature is enabled.
 * Added command keywords "_cp" and "_mastercontrol"
