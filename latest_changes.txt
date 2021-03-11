@@ -1,3 +1,6 @@
+Major change in version 22.58:
+* Open website on a new tab in UBA if config.openStudyWindowContentOnNextTab is True and config.useWebbrowser is False
+
 Major change in version 22.57:
 * Fixed href hyperlinks in user-created modules.
 

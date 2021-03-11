@@ -2530,6 +2530,11 @@ class MainWindow(QMainWindow):
         if not re.match("^online:::", command, flags=re.IGNORECASE):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
         elif self.textCommandLineEdit.text() != self.onlineCommand:
+            if config.openStudyWindowContentOnNextTab:
+                nextIndex = self.studyView.currentIndex() + 1
+                if nextIndex >= config.numberOfTab:
+                    nextIndex = 0
+                self.studyView.setCurrentIndex(nextIndex)
             self.onlineCommand = command    
             *_, address = command.split(":::")
             self.studyView.load(QUrl(address))
