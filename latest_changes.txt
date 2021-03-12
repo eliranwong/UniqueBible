@@ -1,3 +1,6 @@
+Major change in version 22.63:
+* Fixed an issue that telnet-server was not able to be stopped with Ctrl+C.
+
 Major change in version 22.62:
 * Improved verse reference display.
 
