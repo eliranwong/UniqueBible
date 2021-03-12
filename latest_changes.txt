@@ -1,3 +1,8 @@
+Major change in version 22.64:
+* Added in-app reference on UBA commands:
+    A window showing UBA commands is accessible through menu under "Information" or "About" section.
+    On cli, users can enter ".help" to view documentation on UBA commands.
+
 Major change in version 22.63:
 * Fixed an issue that telnet-server was not able to be stopped with Ctrl+C.
 

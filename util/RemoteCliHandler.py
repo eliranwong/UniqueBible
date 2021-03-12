@@ -89,22 +89,15 @@ class RemoteCliHandler:
         writer.close()
 
     def help(writer):
+        from TextCommandParser import TextCommandParser
+        textCommandParser = TextCommandParser(MockWindow())
+
         writer.write("Type '.quit' to exit" + CRLF)
         writer.write("All other commands will be processed by UBA" + CRLF)
-        writer.write("Examples:" + CRLF)
-        writer.write("BIBLE:::KJV:::John 3:16" + CRLF)
-        writer.write("BIBLE:::KJV:::John 3:16-16" + CRLF)
-        writer.write("BIBLE:::KJV:::John 3:16-18" + CRLF)
-        writer.write("BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4" + CRLF)
-        writer.write("CROSSREFERENCE:::Jn 3:16" + CRLF)
-        writer.write("COMPARE:::John 3:16" + CRLF)
-        writer.write("COMPARE:::KJV_NET:::John 3" + CRLF)
-        writer.write("COMPARE:::KJV_NET:::John 3:16-16" + CRLF)
-        writer.write("SHOWSEARCH:::KJV:::omnipotent" + CRLF)
-        writer.write("ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'" + CRLF)
-        writer.write("WORDS:::Gen 1:1" + CRLF)
-        writer.write("Command Reference [1]: https://github.com/eliranwong/UniqueBible/wiki/Command-line" + CRLF)
-        writer.write("Command Reference [2]: https://github.com/eliranwong/UniqueBible/blob/master/TextCommandParser.py")
+        writer.write(CRLF + "UBA commands:" + CRLF)
+        content = "\n".join([re.sub("            #", "#", value[-1]) for value in textCommandParser.interpreters.values()])
+        content = re.sub(r"\n", CRLF, content)
+        writer.write(content)
 
     @asyncio.coroutine
     def readline(reader, writer):

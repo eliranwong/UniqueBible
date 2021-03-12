@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "Ενέργεια κουμπιού αναφοράς",
     "direct": "' μεσο",
     "cli": "Περιβάλλον γραμμής εντολών",
+    "ubaCommands": "Εντολές UBA",
 }

@@ -8,7 +8,7 @@ from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout,
 
 class InfoDialog(QDialog):
 
-    def __init__(self):
+    def __init__(self, content=None, description=None):
         super(InfoDialog, self).__init__()
 
         self.wikiLink = "https://github.com/eliranwong/UniqueBible/wiki"
@@ -21,9 +21,12 @@ class InfoDialog(QDialog):
         self.appName.mouseReleaseEvent = self.openWiki
         self.layout.addWidget(self.appName)
 
-        with open("latest_changes.txt", "r", encoding="utf-8") as fileObject:
-            text = fileObject.read()
-        self.layout.addWidget(QLabel("{0}:".format(config.thisTranslation["latest_changes"])))
+        if content is None:
+            with open("latest_changes.txt", "r", encoding="utf-8") as fileObject:
+                text = fileObject.read()
+        else:
+            text = content
+        self.layout.addWidget(QLabel("{0}:".format(config.thisTranslation["latest_changes"] if description is None else description)))
         self.latestChanges = QPlainTextEdit()
         self.latestChanges.setPlainText(text)
         self.latestChanges.setReadOnly(True)

@@ -808,6 +808,11 @@ class MainWindow(QMainWindow):
         infoDialog = InfoDialog()
         infoDialog.exec()
 
+    def showCommandDocumentation(self):
+        content = "UBA commands:\n{0}".format("\n".join([re.sub("            #", "#", value[-1]) for value in config.mainWindow.textCommandParser.interpreters.values()]))
+        infoDialog = InfoDialog(content, config.thisTranslation["ubaCommands"])
+        infoDialog.exec()
+
     def exportAllImages(self, htmlText):
         self.exportImageNumber = 0
         searchPattern = r'src=(["{0}])data:image/([^<>]+?);[ ]*?base64,[ ]*?([^ <>]+?)\1'.format("'")

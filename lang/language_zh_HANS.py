@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "参照按钮操作",
     "direct": "直接",
     "cli": "指令执行界面",
+    "ubaCommands": "UBA 指令",
 }

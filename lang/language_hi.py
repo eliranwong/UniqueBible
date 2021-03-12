@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "संदर्भ बटन क्रिया",
     "direct": "Direct",
     "cli": "कमांड लाइन इंटरफेस",
+    "ubaCommands": "UBA कमांड्स",
 }

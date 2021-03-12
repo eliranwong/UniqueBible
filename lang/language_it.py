@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "Azione Pulsante Di Riferimento",
     "direct": "Diretto",
     "cli": "Interfaccia Linea di comando",
+    "ubaCommands": "Comandi UBA",
 }

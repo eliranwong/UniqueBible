@@ -33,7 +33,6 @@ class TextCommandParser:
         self.espeakTtsProcess = None
         self.qtTtsEngine = None
 
-    def parser(self, textCommand, source="main"):
         self.interpreters = {
             "bible": (self.textBible, """
             # [KEYWORD] BIBLE
@@ -538,6 +537,8 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::ul1:::John 3:16
             # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
         }
+
+    def parser(self, textCommand, source="main"):
         commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:

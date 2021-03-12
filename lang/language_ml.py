@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "റഫറൻസ് ബട്ടൺ നടപടി",
     "direct": "നേരിട്ടുള്ള",
     "cli": "കമാന്ഡ് ലൈന് ഇന്റര്ഫേസ്",
+    "ubaCommands": "UBA ആജ്ഞകള്",
 }

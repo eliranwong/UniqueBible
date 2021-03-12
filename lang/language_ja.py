@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "参照ボタン・アクション",
     "direct": "ダイレクト",
     "cli": "コマンド行インターフェース",
+    "ubaCommands": "UBA コマンド",
 }

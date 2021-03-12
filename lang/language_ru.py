@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "Действие кнопки ссылки",
     "direct": "Прямой",
     "cli": "Интерфейс командной строки",
+    "ubaCommands": "Команды UBA",
 }

@@ -629,4 +629,5 @@ translation = {
     "refButtonAction": "Aktion 'Referenzschaltfläche'",
     "direct": "Direkt",
     "cli": "Befehlszeilenschnittstelle",
+    "ubaCommands": "UBA-Befehle",
 }

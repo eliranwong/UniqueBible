@@ -178,6 +178,10 @@ def printContentOnConsole(text):
     #sys.stdout.flush()
     return text
 
+def getCommandDocumentation():
+    print("\nUBA commands:")
+    print("\n".join([re.sub("            #", "#", value[-1]) for value in config.mainWindow.textCommandParser.interpreters.values()]))
+
 def startWithCli():
     if not "html-text" in sys.modules:
         import html_text
@@ -189,7 +193,7 @@ def startWithCli():
     config.studyWindowContentTransformers.append(printContentOnConsole)
     while config.cli:
         print("--------------------")
-        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to launch gui, '.quit' to quit,")
+        print("Enter '.bible' to read bible text, '.study' to read study resource, '.help' to read UBA command reference, '.gui' to launch gui, '.quit' to quit,")
         command = input("or UBA command: ").strip()
         if command == ".gui":
             del config.bibleWindowContentTransformers[-1]
@@ -203,6 +207,8 @@ def startWithCli():
             print(html_text.extract_text(config.studyWindowContent))
             # The following line does not work on Windows on UBA startup
             #config.mainWindow.studyPage.runJavaScript("document.documentElement.outerHTML", 0, printContentOnConsole)
+        elif command in (".help", ".command"):
+            getCommandDocumentation()
         elif command == ".quit":
             exit()
         else:
@@ -232,7 +238,7 @@ def switchToCli():
     config.studyWindowContentTransformers.append(printContentOnConsole)
     while config.cli:
         print("--------------------")
-        print("Enter '.bible' to read bible content, '.study' to read study content, '.gui' to launch gui, '.quit' to quit,")
+        print("Enter '.bible' to read bible text, '.study' to read study resource, '.help' to read UBA command reference, '.gui' to launch gui, '.quit' to quit,")
         command = input("or UBA command: ").strip()
         if command == ".gui":
             del config.bibleWindowContentTransformers[-1]
@@ -242,6 +248,8 @@ def switchToCli():
             print(html_text.extract_text(config.bibleWindowContent))
         elif command == ".study":
             print(html_text.extract_text(config.studyWindowContent))
+        elif command in (".help", ".command"):
+            getCommandDocumentation()
         elif command == ".quit":
             toQuit = True
             config.cli = False

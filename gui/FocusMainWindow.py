@@ -313,6 +313,7 @@ class FocusMainWindow:
             addMenuItem(menu, "menu_keyboard_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
             menu.addSeparator()
             addMenuItem(menu, "latestChanges", self, self.showInfo)
+            addMenuItem(menu, "ubaCommands", self, self.showCommandDocumentation)
             menu.addSeparator()
             subMenu = addSubMenu(menu, "menu_support")
             items = (
