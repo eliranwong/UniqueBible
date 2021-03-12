@@ -8,4 +8,4 @@ shortcuts = (
 )
 
 for alias, keyword, function in shortcuts:
-    config.mainWindow.textCommandParser.interpreters[alias] = (function, "An alias to command keyword '{0}'".format(keyword))
+    config.mainWindow.textCommandParser.interpreters[alias] = (function, "\n# [KEYWORD] {0}\n# An alias to command keyword '{1}'".format(alias, keyword))
