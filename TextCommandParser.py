@@ -34,7 +34,8 @@ class TextCommandParser:
         self.qtTtsEngine = None
 
     def parser(self, textCommand, source="main"):
-        interpreters = {
+        self.interpreters = {
+            "bible": (self.textBible, """
             # [KEYWORD] BIBLE
             # Feature - Open a bible chapter or multiples verses on main or study view.
             # Usage - BIBLE:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -50,8 +51,8 @@ class TextCommandParser:
             # e.g. BIBLE:::John 3:16
             # e.g. BIBLE:::Jn 3:16; Rm 5:8; Deu 6:4
             # e.g. BIBLE:::KJV:::John 3:16
-            # e.g. BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
-            "bible": self.textBible,
+            # e.g. BIBLE:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4"""),
+            "main": (self.textMain, """
             # [KEYWORD] MAIN
             # Feature - Open a bible chapter or multiples verses on main view.
             # Usage - MAIN:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -64,8 +65,8 @@ class TextCommandParser:
             # e.g. MAIN:::John 3:16
             # e.g. MAIN:::Jn 3:16; Rm 5:8; Deu 6:4
             # e.g. MAIN:::KJV:::John 3:16
-            # e.g. MAIN:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
-            "main": self.textMain,
+            # e.g. MAIN:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4"""),
+            "study": (self.textStudy, """
             # [KEYWORD] STUDY
             # Feature - Open a bible chapter or multiples verses on study / main view.
             # Usage - STUDY:::[BIBLE_VERSION]:::[BIBLE_REFERENCE(S)]
@@ -78,14 +79,14 @@ class TextCommandParser:
             # e.g. STUDY:::John 3:16
             # e.g. STUDY:::Jn 3:16; Rm 5:8; Deu 6:4
             # e.g. STUDY:::KJV:::John 3:16
-            # e.g. STUDY:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4
-            "study": self.textStudy,
+            # e.g. STUDY:::KJV:::Jn 3:16; Rm 5:8; Deu 6:4"""),
+            "text": (self.textText, """
             # [KEYWORD] TEXT
             # Feature - Change the bible version of the last opened passage on main view.
             # Usage - TEXT:::[BIBLE_VERSION]
             # e.g. TEXT:::KJV
-            # e.g. TEXT:::NET
-            "text": self.textText,
+            # e.g. TEXT:::NET"""),
+            "compare": (self.textCompare, """
             # [KEYWORD] COMPARE
             # Feature - Compare bible versions of a single or multiple references.
             # Usage - COMPARE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
@@ -96,8 +97,8 @@ class TextCommandParser:
             # 4) Muliple verse references are supported for comparison.
             # e.g. COMPARE:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
-            # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8
-            "compare": self.textCompare,
+            # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8"""),
+            "diff": (self.textDiff, """
             # [KEYWORD] DIFF
             # Feature - Compare bible versions against the last opened version, with highlights of differences.
             # Dependency - This feature is available since the release of version 5.7.  You have to install package 'diff_match_patch' to run this feature.  Read https://github.com/eliranwong/UniqueBible#install-dependencies for guideline on installation.
@@ -108,14 +109,14 @@ class TextCommandParser:
             # 3) Multiple bible versions for comparison are separated by "_".
             # 4) Muliple verse references are supported for comparison.
             # e.g. DIFF:::Joh 3:16
-            # e.g. DIFF:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
-            "diff": self.textDiff,
+            # e.g. DIFF:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8"""),
+            "difference": (self.textDiff, """
             # [KEYWORD] DIFFERENCE
             # Feature - same as [KEYWORD] DIFF
             # Usage - DIFFERENCE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
             # e.g. DIFFERENCE:::Joh 3:16
-            # e.g. DIFFERENCE:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8
-            "difference": self.textDiff,
+            # e.g. DIFFERENCE:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8"""),
+            "parallel": (self.textParallel, """
             # [KEYWORD] PARALLEL
             # Feature - Display bible versions of the same chapter in parallel columns.
             # Usage - PARALLEL:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
@@ -125,8 +126,8 @@ class TextCommandParser:
             # 3) Muliple verse references are supported for comparison.
             # 4) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
-            # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8
-            "parallel": self.textParallel,
+            # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8"""),
+            "passages": (self.textPassages, """
             # [KEYWORD] PASSAGES
             # Feature - Display different bible passages of the same bible version in parallel columns. It is created for studying similar passages.
             # Usage - PARALLEL:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
@@ -137,14 +138,14 @@ class TextCommandParser:
             # 4) Book abbreviations and ranges of verses are supported for bible references.
             # 5) If a chapter reference is entered, only verse 1 of the chapter specified is displayed.
             # e.g. PASSAGES:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
-            # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23
-            "passages": self.textPassages,
+            # e.g. PASSAGES:::KJV:::Mat 3:13-17; Mark 1:9-11; Luk 3:21-23"""),
+            "overview": (self.textChapterOverview, """
             # [KEYWORD] OVERVIEW
-            # e.g. overview:::John 3
-            "overview": self.textChapterOverview,
+            # e.g. overview:::John 3"""),
+            "summary": (self.textChapterSummary, """
             # [KEYWORD] SUMMARY
-            # e.g. summary:::John 3
-            "summary": self.textChapterSummary,
+            # e.g. summary:::John 3"""),
+            "search": (self.textCountSearch, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
             # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
@@ -154,44 +155,44 @@ class TextCommandParser:
             # e.g. SEARCH:::KJV:::Christ%Jesus
             # To search multiple bibles, separate versions with a character "_"
             # e.g. SEARCH:::KJV_WEB:::love
-            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus
-            "search": self.textCountSearch,
+            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus"""),
+            "showsearch": (self.textSearchBasic, """
             # [KEYWORD] SHOWSEARCH
             # Feature - Search bible / bibles for a string
             # Usage - SHOWSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # SHOWSEARCH::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SHOWSEARCH::: display all texts of the result.
             # e.g. SHOWSEARCH:::KJV:::love
             # To work on multiple bilbes, separate bible versions with a character "_":
-            # e.g. SHOWSEARCH:::KJV_WEB:::love
-            "showsearch": self.textSearchBasic,
-            # [KEYWORD] SEARCHREFERENCE
-            "searchreference": self.textSearchReference,
+            # e.g. SHOWSEARCH:::KJV_WEB:::love"""),
+            "searchreference": (self.textSearchReference, """
+            # [KEYWORD] SEARCHREFERENCE"""),
+            "regexsearch": (self.textSearchRegex, """
             # [KEYWORD] REGEXSEARCH
             # Feature - Search bible / bibles with regular expression
             # Usage - REGEXSEARCH:::[BIBLE_VERSION(S)]:::[REGEX_PATTERN]
-            # e.g. REGEXSEARCH:::KJV:::God.*?heaven
-            "regexsearch": self.textSearchRegex,
+            # e.g. REGEXSEARCH:::KJV:::God.*?heaven"""),
+            "advancedsearch": (self.textSearchAdvanced, """
             # [KEYWORD] ADVANCEDSEARCH
             # Feature - Search bible / bibles with a sql string
             # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # e.g. ADVANCEDSEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
             # To work on multiple bibles, separate bible versions with a character "_":
-            # e.g. ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'
-            "advancedsearch": self.textSearchAdvanced,
+            # e.g. ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'"""),
+            "andsearch": (self.textAndSearch, """
             # [KEYWORD] ANDSEARCH
             # Feature - Search bible / bibles for combinations of words without taking order into consideration
             # Usage - ANDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # Words are separated by a character "|" in a search string.
             # e.g. ANDSEARCH:::KJV:::love|Jesus
-            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%"
-            "andsearch": self.textAndSearch,
+            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%" """),
+            "orsearch": (self.textOrSearch, """
             # [KEYWORD] ORSEARCH
             # Feature - Search bible / bibles for verses containing at least on of the words given in a string
             # Usage - ORSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
             # Words are separated by a character "|" in a search string.
             # e.g. ORSEARCH:::KJV:::love|Jesus
-            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%"
-            "orsearch": self.textOrSearch,
+            # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%" """),
+            "searchhighlight": (self.highlightSearch, """
             # [KEYWORD] SEARCHHIGHLIGHT
             # Feature - Search for highlight
             # Usage - SEARCHHIGHLIGHT:::[COLOR]:::[BIBLE_REFERENCE]
@@ -208,20 +209,20 @@ class TextCommandParser:
             # e.g. SEARCHHIGHLIGHT:::hl2:::Matthew
             # To search James for underline highlight
             # e.g. SEARCHHIGHLIGHT:::underline:::James
-            # e.g. SEARCHHIGHLIGHT:::ul1:::James
-            "searchhighlight": self.highlightSearch,
+            # e.g. SEARCHHIGHLIGHT:::ul1:::James"""),
+            "index": (self.textIndex, """
             # [KEYWORD] INDEX
-            # e.g. INDEX:::Gen 1:1
-            "index": self.textIndex,
+            # e.g. INDEX:::Gen 1:1"""),
+            "chapterindex": (self.textChapterIndex, """
             # [KEYWORD] CHAPTERINDEX
-            # e.g. CHAPTERINDEX:::Gen 1
-            "chapterindex": self.textChapterIndex,
+            # e.g. CHAPTERINDEX:::Gen 1"""),
+            "crossreference": (self.textCrossReference, """
             # [KEYWORD] CROSSREFERENCE
-            # e.g. CROSSREFERENCE:::Gen 1:1
-            "crossreference": self.textCrossReference,
+            # e.g. CROSSREFERENCE:::Gen 1:1"""),
+            "tske": (self.tske, """
             # [KEYWORD] TSKE
-            # e.g. TSKE:::Gen 1:1
-            "tske": self.tske,
+            # e.g. TSKE:::Gen 1:1"""),
+            "commentary": (self.textCommentary, """
             # [KEYWORD] COMMENTARY
             # Feature - Open commentary of a bible reference.
             # Usage - COMMENTARY:::[COMMENTARY_MODULE]:::[BIBLE_REFERENCE]
@@ -229,8 +230,8 @@ class TextCommandParser:
             # 1) The last opened commentary module is opened if "[COMMENTARY_MODULE]:::" is omitted.
             # 2) Commentary is opened on study view.
             # e.g. COMMENTARY:::John 3:16
-            # e.g. COMMENTARY:::CBSC:::John 3:16
-            "commentary": self.textCommentary,
+            # e.g. COMMENTARY:::CBSC:::John 3:16"""),
+            "commentary2": (self.textCommentary2, """
             # [KEYWORD] COMMENTARY2
             # Feature - Open commentary of a bible reference.
             # Usage - COMMENTARY2:::[COMMENTARY_MODULE]:::[BIBLE_REFERENCE]
@@ -239,55 +240,55 @@ class TextCommandParser:
             # 2) Commentary is opened on study view.
             # 3) Bible reference used with "COMMENTARY2:::" is formatted as [BOOK_NUMBER.CHAPTER_NUMBER.VERSE_NUMBER], see examples below.
             # e.g. COMMENTARY2:::43.3.16
-            # e.g. COMMENTARY2:::CBSC:::43.3.16
-            "commentary2": self.textCommentary2,
+            # e.g. COMMENTARY2:::CBSC:::43.3.16"""),
+            "distinctinterlinear": (self.distinctInterlinear, """
             # [KEYWORD] DISTINCTINTERLINEAR
-            # e.g. DISTINCTINTERLINEAR:::G746
-            "distinctinterlinear": self.distinctInterlinear,
+            # e.g. DISTINCTINTERLINEAR:::G746"""),
+            "distincttranslation": (self.distinctTranslation, """
             # [KEYWORD] DISTINCTTRANSLATION
-            # e.g. DISTINCTTRANSLATION:::G746
-            "distincttranslation": self.distinctTranslation,
+            # e.g. DISTINCTTRANSLATION:::G746"""),
+            "combo": (self.textCombo, """
             # [KEYWORD] COMBO
-            # e.g. COMBO:::Gen 1:1
-            "combo": self.textCombo,
+            # e.g. COMBO:::Gen 1:1"""),
+            "translation": (self.textTranslation, """
             # [KEYWORD] TRANSLATION
-            # e.g. TRANSLATION:::Gen 1:1
-            "translation": self.textTranslation,
+            # e.g. TRANSLATION:::Gen 1:1"""),
+            "discourse": (self.textDiscourse, """
             # [KEYWORD] DISCOURSE
-            # e.g. DISCOURSE:::Gen 1:1
-            "discourse": self.textDiscourse,
+            # e.g. DISCOURSE:::Gen 1:1"""),
+            "words": (self.textWords, """
             # [KEYWORD] WORDS
-            # e.g. WORDS:::Gen 1:1
-            "words": self.textWords,
+            # e.g. WORDS:::Gen 1:1"""),
+            "lexicon": (self.textLexicon, """
             # [KEYWORD] LEXICON
-            # e.g. LEXICON:::BDB:::H7225
-            "lexicon": self.textLexicon,
+            # e.g. LEXICON:::BDB:::H7225"""),
+            "lmcombo": (self.textLMcombo, """
             # [KEYWORD] LMCOMBO
-            # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a
-            "lmcombo": self.textLMcombo,
+            # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a"""),
+            "lemma": (self.textLemma, """
             # [KEYWORD] LEMMA
             # e.g. LEMMA:::E70002
-            # e.g. LEMMA:::H7225
-            "lemma": self.textLemma,
+            # e.g. LEMMA:::H7225"""),
+            "morphologycode": (self.textMorphologyCode, """
             # [KEYWORD] MORPHOLOGYCODE
-            # e.g. MORPHOLOGYCODE:::E70002,subs.f.sg.a
-            "morphologycode": self.textMorphologyCode,
+            # e.g. MORPHOLOGYCODE:::E70002,subs.f.sg.a"""),
+            "morphology": (self.textMorphology, """
             # [KEYWORD] MORPHOLOGY
-            # e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND Morphology LIKE '%feminine%'
-            "morphology": self.textMorphology,
+            # e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND Morphology LIKE '%feminine%'"""),
+            "searchmorphology": (self.textSearchMorphology, """
             # [KEYWORD] SEARCHMORPHOLOGY
             # e.g. SEARCHMORPHOLOGY:::E70002:::feminine
             # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%")
             # e.g. SEARCHMORPHOLOGY:::E70002:::feminine|noun
-            # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%" OR Morphology LIKE "%noun%")
-            "searchmorphology": self.textSearchMorphology,
+            # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%" OR Morphology LIKE "%noun%")"""),
+            "word": (self.textWordData, """
             # [KEYWORD] WORD
-            # e.g. WORD:::1:::2
-            "word": self.textWordData,
+            # e.g. WORD:::1:::2"""),
+            "clause": (self.textClause, """
             # [KEYWORD] CLAUSE
             # e.g. Embed in the first clause of Gen 1:1 in MAB
-            # e.g. CLAUSE:::1.1.1:::1
-            "clause": self.textClause,
+            # e.g. CLAUSE:::1.1.1:::1"""),
+            "searchtool": (self.textSearchTool, """
             # [KEYWORD] SEARCHTOOL
             # e.g. SEARCHTOOL:::EXLBP:::Jesus
             # e.g. SEARCHTOOL:::HBN:::Jesus
@@ -295,31 +296,31 @@ class TextCommandParser:
             # e.g. SEARCHTOOL:::EXLBT:::faith
             # e.g. SEARCHTOOL:::EAS:::faith
             # e.g. SEARCHTOOL:::ISB:::faith
-            # e.g. SEARCHTOOL:::mETCBC:::prep
-            "searchtool": self.textSearchTool,
+            # e.g. SEARCHTOOL:::mETCBC:::prep"""),
+            "exlb": (self.textExlb, """
             # [KEYWORD] EXLB
             # e.g. EXLB:::exlbp:::BP904
-            # e.g. EXLB:::exlbl:::BL636
-            "exlb": self.textExlb,
+            # e.g. EXLB:::exlbl:::BL636"""),
+            "dictionary": (self.textDictionary, """
             # [KEYWORD] DICTIONARY
-            # e.g. DICTIONARY:::EAS1312
-            "dictionary": self.textDictionary,
+            # e.g. DICTIONARY:::EAS1312"""),
+            "encyclopedia": (self.textEncyclopedia, """
             # [KEYWORD] ENCYCLOPEDIA
-            # e.g. ENCYCLOPEDIA:::ISB:::ISBE3333
-            "encyclopedia": self.textEncyclopedia,
+            # e.g. ENCYCLOPEDIA:::ISB:::ISBE3333"""),
+            "searchthirddictionary": (self.thirdDictionarySearch, """
             # [KEYWORD] SEARCHTHIRDDICTIONARY
-            # e.g. SEARCHTHIRDDICTIONARY:::faith
-            "searchthirddictionary": self.thirdDictionarySearch,
+            # e.g. SEARCHTHIRDDICTIONARY:::faith"""),
+            "thirddictionary": (self.thirdDictionaryOpen, """
             # [KEYWORD] THIRDDICTIONARY
-            # e.g. THIRDDICTIONARY:::webster:::FAITH
-            "thirddictionary": self.thirdDictionaryOpen,
+            # e.g. THIRDDICTIONARY:::webster:::FAITH"""),
+            "book": (self.textBook, """
             # [KEYWORD] BOOK
             # Usage - BOOK:::[BOOK_MODULE]:::[OPTIONAL_TOPIC]
             # To view all the available topics of a book
             # e.g. BOOK:::Timelines
             # To specify a particular topic
-            # e.g. BOOK:::Timelines:::2210-2090_BCE
-            "book": self.textBook,
+            # e.g. BOOK:::Timelines:::2210-2090_BCE"""),
+            "searchbook": (self.textSearchBook, """
             # [KEYWORD] SEARCHBOOK
             # To search the last opened book module
             # e.g. SEARCHBOOK:::Abraham
@@ -331,11 +332,11 @@ class TextCommandParser:
             # e.g. SEARCHBOOK:::FAV:::Jerusalem
             # To search all installed book modules
             # e.g. SEARCHBOOK:::ALL:::Jerusalem
-            # Remarks: Module creator should avoid comma for naming a book module.
-            "searchbook": self.textSearchBook,
+            # Remarks: Module creator should avoid comma for naming a book module."""),
+            "searchbookchapter": (self.textSearchBookChapter, """
             # [KEYWORD] SEARCHBOOKCHAPTER
-            # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only
-            "searchbookchapter": self.textSearchBookChapter,
+            # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only"""),
+            "cmd": (self.osCommand, """
             # [KEYWORD] cmd
             # Feature - Run an os command
             # Warning! Make sure you know what you are running before you use this keyword.  The running command may affect data outside UniqueBible folder.
@@ -349,29 +350,29 @@ class TextCommandParser:
             # e.g. cmd:::firefox
             # e.g. cmd:::mkdir -p myNotes; cd myNotes; gedit test.txt
             # e.g. cmd:::rm -rf myNotes
-            # e.g. cmd:::google-chrome https://uniquebible.app
-            "cmd": self.osCommand,
+            # e.g. cmd:::google-chrome https://uniquebible.app"""),
+            "speak": (self.textToSpeech, """
             # [KEYWORD] SPEAK
             # Feature: run text-to-speech function
             # e.g. SPEAK:::All Scripture is inspired by God
             # e.g. SPEAK:::en-gb:::All Scripture is inspired by God
             # e.g. SPEAK:::zh-cn:::聖經都是上帝所默示的
-            # e.g. SPEAK:::zh-tw:::聖經都是上帝所默示的
-            "speak": self.textToSpeech,
+            # e.g. SPEAK:::zh-tw:::聖經都是上帝所默示的"""),
+            "mp3": (self.mp3Download, """
             # [KEYWORD] MP3
             # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
-            # Usage - MP3:::[youtube_link]
-            "mp3": self.mp3Download,
+            # Usage - MP3:::[youtube_link]"""),
+            "mp4": (self.mp4Download, """
             # [KEYWORD] MP4
-            # Usage - MP4:::[youtube_link]
-            "mp4": self.mp4Download,
+            # Usage - MP4:::[youtube_link]"""),
+            "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote
-            # e.g. opennote:::file_path
-            "opennote": self.textOpenNoteFile,
+            # e.g. opennote:::file_path"""),
+            "open": (self.openExternalFile, """
             # [KEYWORD] open
             # open::: is different from opennote::: that open::: uses system default application to open the file.
-            # e.g. open:::.
-            "open": self.openExternalFile,
+            # e.g. open:::."""),
+            "translate": (self.translateText, """
             # [KEYWORD] TRANSLATE
             # Feature - Use IBM Watson service to translate entered 
             # It works only if user install python package 'ibm-watson'
@@ -379,155 +380,155 @@ class TextCommandParser:
             # Usage - TRANSLATE:::[source_language_code]-[target_language_code]:::[text to be translated]
             # Language code of config.userLanguage is used by default if language code is not provided.  If config.userLanguage is not defined, "en" is used.
             # e.g. TRANSLATE:::測試
-            # e.g. TRANSLATE:::en-zh:::test
-            "translate": self.translateText,
+            # e.g. TRANSLATE:::en-zh:::test"""),
+            "openbooknote": (self.openBookNoteRef, """
             # [KEYWORD] openbooknote
-            # e.g. openbooknote:::John
-            "openbooknote": self.openBookNoteRef,
+            # e.g. openbooknote:::John"""),
+            "openchapternote": (self.openChapterNoteRef, """
             # [KEYWORD] openchapternote
-            # e.g. openchapternote:::John 3
-            "openchapternote": self.openChapterNoteRef,
+            # e.g. openchapternote:::John 3"""),
+            "openversenote": (self.openVerseNoteRef, """
             # [KEYWORD] openversenote
-            # e.g. openversenote:::John 3:16
-            "openversenote": self.openVerseNoteRef,
+            # e.g. openversenote:::John 3:16"""),
+            "editbooknote": (self.editBookNoteRef, """
             # [KEYWORD] editbooknote
-            # e.g. editbooknote:::John
-            "editbooknote": self.editBookNoteRef,
+            # e.g. editbooknote:::John"""),
+            "editchapternote": (self.editChapterNoteRef, """
             # [KEYWORD] editchapternote
-            # e.g. editchapternote:::John 3
-            "editchapternote": self.editChapterNoteRef,
+            # e.g. editchapternote:::John 3"""),
+            "editversenote": (self.editVerseNoteRef, """
             # [KEYWORD] editversenote
-            # e.g. editversenote:::John 3:16
-            "editversenote": self.editVerseNoteRef,
+            # e.g. editversenote:::John 3:16"""),
+            "searchbooknote": (self.textSearchBookNote, """
             # [KEYWORD] SEARCHBOOKNOTE
-            # e.g. SEARCHBOOKNOTE:::faith
-            "searchbooknote": self.textSearchBookNote,
+            # e.g. SEARCHBOOKNOTE:::faith"""),
+            "searchchapternote": (self.textSearchChapterNote, """
             # [KEYWORD] SEARCHCHAPTERNOTE
-            # e.g. SEARCHCHAPTERNOTE:::faith
-            "searchchapternote": self.textSearchChapterNote,
+            # e.g. SEARCHCHAPTERNOTE:::faith"""),
+            "searchversenote": (self.textSearchVerseNote, """
             # [KEYWORD] SEARCHVERSENOTE
-            # e.g. SEARCHVERSENOTE:::faith
-            "searchversenote": self.textSearchVerseNote,
+            # e.g. SEARCHVERSENOTE:::faith"""),
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
             #
+            "_imv": (self.instantMainVerse, """
             # [KEYWORD] _imv
             # e.g. _imv:::1.1.1
-            # e.g. _imv:::43.3.16
-            "_imv": self.instantMainVerse,
+            # e.g. _imv:::43.3.16"""),
+            "_imvr": (self.instantMainVerseReference, """
             # [KEYWORD] _imvr
             # e.g. _imvr:::Gen 1:1
-            # e.g. _imvr:::John 3:16
-            "_imvr": self.instantMainVerseReference,
+            # e.g. _imvr:::John 3:16"""),
+            "_instantverse": (self.instantVerse, """
             # [KEYWORD] _instantverse
-            # e.g. _instantVerse:::KJV:::1.1.1
-            "_instantverse": self.instantVerse,
+            # e.g. _instantVerse:::KJV:::1.1.1"""),
+            "_instantword": (self.instantWord, """
             # [KEYWORD] _instantword
-            # e.g. _instantWord:::1:::h2
-            "_instantword": self.instantWord,
+            # e.g. _instantWord:::1:::h2"""),
+            "_vnsc": (self.verseNoSingleClick, """
             # [KEYWORD] _vnsc
             # verse number single-click action
-            # e.g. _vnsc:::KJV.43.3.16.John 3:16
-            "_vnsc": self.verseNoSingleClick,
+            # e.g. _vnsc:::KJV.43.3.16.John 3:16"""),
+            "_menu": (self.textMenu, """
             # [KEYWORD] _menu
-            # e.g. _menu:::
-            "_menu": self.textMenu,
+            # e.g. _menu:::"""),
+            "_commentary": (self.textCommentaryMenu, """
             # [KEYWORD] _commentary
-            # e.g. _commentary:::CBSC.1.1.1
-            "_commentary": self.textCommentaryMenu,
+            # e.g. _commentary:::CBSC.1.1.1"""),
+            "_book": (self.textBookMenu, """
             # [KEYWORD] _book
-            # e.g. _book:::
-            "_book": self.textBookMenu,
+            # e.g. _book:::"""),
+            "_info": (self.textInfo, """
             # [KEYWORD] _info
-            # e.g. _info:::Genesis
-            "_info": self.textInfo,
+            # e.g. _info:::Genesis"""),
+            "_bibleinfo": (self.textBibleInfo, """
             # [KEYWORD] _bibleinfo
-            # e.g. _bibleinfo:::KJV
-            "_bibleinfo": self.textBibleInfo,
+            # e.g. _bibleinfo:::KJV"""),
+            "_commentaryinfo": (self.textCommentaryInfo, """
             # [KEYWORD] _commentaryinfo
-            # e.g. _commentaryinfo:::CBSC
-            "_commentaryinfo": self.textCommentaryInfo,
+            # e.g. _commentaryinfo:::CBSC"""),
+            "_command": (self.textCommand, """
             # [KEYWORD] _command
-            # e.g. _command:::testing
-            "_command": self.textCommand,
+            # e.g. _command:::testing"""),
+            "_history": (self.textHistory, """
             # [KEYWORD] _history
             # e.g. _history:::main
-            # e.g. _history:::study
-            "_history": self.textHistory,
+            # e.g. _history:::study"""),
+            "_historyrecord": (self.textHistoryRecord, """
             # [KEYWORD] _historyrecord
-            # e.g. _historyrecord:::1
-            "_historyrecord": self.textHistoryRecord,
+            # e.g. _historyrecord:::1"""),
+            "_image": (self.textImage, """
             # [KEYWORD] _image
-            # e.g. _image:::EXLBL:::1.jpg
-            "_image": self.textImage,
-            # [KEYWORD] _htmlimage
-            "_htmlimage": self.textHtmlImage,
+            # e.g. _image:::EXLBL:::1.jpg"""),
+            "_htmlimage": (self.textHtmlImage, """
+            # [KEYWORD] _htmlimage"""),
+            "_openbooknote": (self.openBookNote, """
             # [KEYWORD] _openbooknote
-            # e.g. _openbooknote:::43
-            "_openbooknote": self.openBookNote,
+            # e.g. _openbooknote:::43"""),
+            "_openchapternote": (self.openChapterNote, """
             # [KEYWORD] _openchapternote
-            # e.g. _openchapternote:::43.3
-            "_openchapternote": self.openChapterNote,
+            # e.g. _openchapternote:::43.3"""),
+            "_openversenote": (self.openVerseNote, """
             # [KEYWORD] _openversenote
-            # e.g. _openversenote:::43.3.16
-            "_openversenote": self.openVerseNote,
+            # e.g. _openversenote:::43.3.16"""),
+            "_editbooknote": (self.editBookNote, """
             # [KEYWORD] _editbooknote
-            # e.g. _editbooknote:::43
-            "_editbooknote": self.editBookNote,
+            # e.g. _editbooknote:::43"""),
+            "_editchapternote": (self.editChapterNote, """
             # [KEYWORD] _editchapternote
-            # e.g. _editchapternote:::43.3
-            "_editchapternote": self.editChapterNote,
+            # e.g. _editchapternote:::43.3"""),
+            "_editversenote": (self.editVerseNote, """
             # [KEYWORD] _editversenote
-            # e.g. _editversenote:::43.3.16
-            "_editversenote": self.editVerseNote,
+            # e.g. _editversenote:::43.3.16"""),
+            "_open": (self.openMarvelDataFile, """
             # [KEYWORD] _open
             # open a file inside marvelData folder
             # e.g. _open:::.
-            # e.g. _open:::bibles
-            "_open": self.openMarvelDataFile,
+            # e.g. _open:::bibles"""),
+            "_openfile": (self.textOpenFile, """
             # [KEYWORD] _openfile
             # Usage: _openfile:::[external_note_history_record_index]
             # e.g. _openfile:::-1
-            # Remarks: -1 is the latest record
-            "_openfile": self.textOpenFile,
+            # Remarks: -1 is the latest record"""),
+            "_editfile": (self.textEditFile, """
             # [KEYWORD] _editfile
             # Usage: _openfile:::[external_note_history_record_index]
             # e.g. _editfile:::-1
-            # Remarks: -1 is the latest record
-            "_editfile": self.textEditFile,
+            # Remarks: -1 is the latest record"""),
+            "_website": (self.textWebsite, """
             # [KEYWORD] _website
-            # e.g. _website:::https://marvel.bible
-            "_website": self.textWebsite,
+            # e.g. _website:::https://marvel.bible"""),
+            "_uba": (self.textUba, """
             # [KEYWORD] _uba
             # e.g. _uba:::file://notes.uba
-            # e.g. _uba:::file://note_editor_key_combo.uba
-            "_uba": self.textUba,
+            # e.g. _uba:::file://note_editor_key_combo.uba"""),
+            "_biblenote": (self.textBiblenote, """
             # [KEYWORD] _biblenote
-            # e.g. _biblenote:::1.1.1.[1]
-            "_biblenote": self.textBiblenote,
+            # e.g. _biblenote:::1.1.1.[1]"""),
+            "_wordnote": (self.textWordNote, """
             # [KEYWORD] _wordnote
-            # e.g. _wordnote:::LXX1:::l1
-            "_wordnote": self.textWordNote,
+            # e.g. _wordnote:::LXX1:::l1"""),
+            "_searchword": (self.textSearchWord, """
             # [KEYWORD] _searchword
             # Usage: _searchword:::[1=OT, 2=NT]:::[wordID]
-            # e.g. _searchword:::1:::1
-            "_searchword": self.textSearchWord,
-            # [KEYWORD] _harmony
-            "_harmony": self.textHarmony,
-            # [KEYWORD] _promise
-            "_promise": self.textPromise,
+            # e.g. _searchword:::1:::1"""),
+            "_harmony": (self.textHarmony, """
+            # [KEYWORD] _harmony"""),
+            "_promise": (self.textPromise, """
+            # [KEYWORD] _promise"""),
+            "_paste": (self.pasteFromClipboard, """
             # [KEYWORD] _paste
-            # e.g. _paste:::
-            "_paste": self.pasteFromClipboard,
+            # e.g. _paste:::"""),
+            "_cp": (self.openMasterControl, """
             # [KEYWORD] _cp
             # Usage: _cp:::
-            # Usage: _cp:::[0-4]
-            "_cp": self.openMasterControl,
+            # Usage: _cp:::[0-4]"""),
+            "_mastercontrol": (self.openMasterControl, """
             # [KEYWORD] _mastercontrol
             # Usage: _mastercontrol:::
-            # Usage: _mastercontrol:::[0-4]
-            "_mastercontrol": self.openMasterControl,
+            # Usage: _mastercontrol:::[0-4]"""),
+            "_highlight": (self.highlightVerse, """
             # [KEYWORD] _highlight
             # Feature - Highlight a verse
             # Usage - _HIGHLIGHT:::[code]:::[BIBLE_REFERENCE(S)]
@@ -535,8 +536,7 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::hl1:::John 3:16
             # e.g. _HIGHLIGHT:::hl2:::John 3:16
             # e.g. _HIGHLIGHT:::ul1:::John 3:16
-            # e.g. _HIGHLIGHT:::delete:::John 3:16
-            "_highlight": self.highlightVerse,
+            # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
         }
         commandList = self.splitCommand(textCommand)
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
@@ -555,10 +555,10 @@ class TextCommandParser:
         else:
             keyword, command = commandList
             keyword = keyword.lower()
-            if keyword in interpreters:
+            if keyword in self.interpreters:
                 if self.isDatabaseInstalled(keyword):
                     self.lastKeyword = keyword
-                    return interpreters[keyword](command, source)
+                    return self.interpreters[keyword][0](command, source)
                 else:
                     return self.databaseNotInstalled(keyword)
             else:
