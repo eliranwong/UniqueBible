@@ -779,7 +779,7 @@ class TextCommandParser:
             if text in ("MOB", "MIB", "MTB", "MPB", "MAB", "LXX1i", "LXX2i", "LXX1", "LXX2") and not config.readFormattedBibles:
                 config.readFormattedBibles = True
                 self.parent.enableParagraphButtonAction(False)
-            elif (text in ("OHGBi", "OHGB", "LXX") or not text in formattedBibles) and config.readFormattedBibles and view == "main":
+            elif config.readFormattedBibles and (((text in ("OHGBi", "OHGB") or not text in formattedBibles) and view == "main") or text == "LXX"):
                 config.readFormattedBibles = False
                 self.parent.enableParagraphButtonAction(False)
 

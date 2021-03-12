@@ -2531,19 +2531,23 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
+        commandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
         command = self.textCommandLineEdit.text()
-        if not re.match("^online:::", command, flags=re.IGNORECASE):
+        if not re.match("^online:::", command, flags=re.IGNORECASE) or (":::" in textCommand and commandKeyword in self.textCommandParser.interpreters):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
         elif self.textCommandLineEdit.text() != self.onlineCommand:
-            if config.openStudyWindowContentOnNextTab:
-                nextIndex = self.studyView.currentIndex() + 1
-                if nextIndex >= config.numberOfTab:
-                    nextIndex = 0
-                self.studyView.setCurrentIndex(nextIndex)
-            self.onlineCommand = command    
             *_, address = command.split(":::")
-            self.studyView.load(QUrl(address))
-            self.addHistoryRecord("study", command)
+            if config.useWebbrowser:
+                webbrowser.open(address)
+            else:
+                if config.openStudyWindowContentOnNextTab:
+                    nextIndex = self.studyView.currentIndex() + 1
+                    if nextIndex >= config.numberOfTab:
+                        nextIndex = 0
+                    self.studyView.setCurrentIndex(nextIndex)
+                self.onlineCommand = command
+                self.studyView.load(QUrl(address))
+                self.addHistoryRecord("study", command)
 
     def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:

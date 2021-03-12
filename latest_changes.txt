@@ -1,3 +1,7 @@
+Major change in version 22.65:
+* Fixed an issue that new command was ignored.
+* Fixe use of config flag "useWebbrowser"
+
 Major change in version 22.64:
 * Added in-app reference on UBA commands:
     A window showing UBA commands is accessible through menu under "Information" or "About" section.
