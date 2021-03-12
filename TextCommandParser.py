@@ -97,22 +97,15 @@ class TextCommandParser:
             # e.g. COMPARE:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8"""),
-            "diff": (self.textDiff, """
-            # [KEYWORD] DIFF
-            # Feature - Compare bible versions against the last opened version, with highlights of differences.
-            # Dependency - This feature is available since the release of version 5.7.  You have to install package 'diff_match_patch' to run this feature.  Read https://github.com/eliranwong/UniqueBible#install-dependencies for guideline on installation.
-            # Usage - DIFF:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            "difference": (self.textDiff, """
+            # [KEYWORD] DIFFERENCE
+            # Feature - same as [KEYWORD] DIFF
+            # Usage - DIFFERENCE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
             # Remarks:
             # 1) Last-opened bible version is always displayed at the top for comparison.
             # 2) All installed bible versions are opened for comparison if "[BIBLE_VERSION(S)]:::" is omitted.
             # 3) Multiple bible versions for comparison are separated by "_".
             # 4) Muliple verse references are supported for comparison.
-            # e.g. DIFF:::Joh 3:16
-            # e.g. DIFF:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8"""),
-            "difference": (self.textDiff, """
-            # [KEYWORD] DIFFERENCE
-            # Feature - same as [KEYWORD] DIFF
-            # Usage - DIFFERENCE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
             # e.g. DIFFERENCE:::Joh 3:16
             # e.g. DIFFERENCE:::KJV_ASV_WEB:::Joh 3:16; Rm 5:8"""),
             "parallel": (self.textParallel, """
@@ -519,10 +512,6 @@ class TextCommandParser:
             "_paste": (self.pasteFromClipboard, """
             # [KEYWORD] _paste
             # e.g. _paste:::"""),
-            "_cp": (self.openMasterControl, """
-            # [KEYWORD] _cp
-            # Usage: _cp:::
-            # Usage: _cp:::[0-4]"""),
             "_mastercontrol": (self.openMasterControl, """
             # [KEYWORD] _mastercontrol
             # Usage: _mastercontrol:::
