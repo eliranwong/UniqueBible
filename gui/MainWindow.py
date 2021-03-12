@@ -1862,12 +1862,9 @@ class MainWindow(QMainWindow):
 
     # Actions - open urls
     def openWebsite(self, url):
-        if config.useWebbrowser:
-            webbrowser.open(url)
-        else:
-            command = "ONLINE:::{0}".format(url)
-            self.textCommandLineEdit.setText(command)
-            self.runTextCommand(command)
+        command = "ONLINE:::{0}".format(url)
+        self.textCommandLineEdit.setText(command)
+        self.runTextCommand(command)
 
     def setupYouTube(self):
         self.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video")
@@ -2531,12 +2528,12 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
-        commandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
-        command = self.textCommandLineEdit.text()
-        if not re.match("^online:::", command, flags=re.IGNORECASE) or (":::" in textCommand and commandKeyword in self.textCommandParser.interpreters):
+        textCommandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
+        commandFieldText = self.textCommandLineEdit.text()
+        if not re.match("^online:::", commandFieldText, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword in self.textCommandParser.interpreters):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
-        elif self.textCommandLineEdit.text() != self.onlineCommand:
-            *_, address = command.split(":::")
+        elif commandFieldText != self.onlineCommand:
+            *_, address = commandFieldText.split(":::")
             if config.useWebbrowser:
                 webbrowser.open(address)
             else:
@@ -2545,9 +2542,9 @@ class MainWindow(QMainWindow):
                     if nextIndex >= config.numberOfTab:
                         nextIndex = 0
                     self.studyView.setCurrentIndex(nextIndex)
-                self.onlineCommand = command
+                self.onlineCommand = commandFieldText
                 self.studyView.load(QUrl(address))
-                self.addHistoryRecord("study", command)
+                self.addHistoryRecord("study", commandFieldText)
 
     def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:

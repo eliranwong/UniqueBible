@@ -302,6 +302,10 @@ config.mainWindow = MainWindow()
 availableGeometry = app.desktop().availableGeometry(config.mainWindow)
 setupMainWindow(availableGeometry)
 
+# A container of functions to be run after UBA loaded history records on startup
+# This offers a way for startup plugins to run codes after history records being loaded.
+config.actionsRightAfterLoadingHistoryRecords = []
+
 # Run startup plugins
 if config.enablePlugins:
     for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
@@ -325,6 +329,13 @@ else:
     # Execute initial command on Study Window
     runLastHistoryRecord("study")
 
+# Run functions placed with startup plugins
+if config.actionsRightAfterLoadingHistoryRecords:
+    for action in config.actionsRightAfterLoadingHistoryRecords:
+        action()
+
+# Startup macro
+config.mainWindow.runMacro(config.startupMacro)
 
 if initialCommand == "cli":
     if config.isHtmlTextInstalled:
@@ -339,9 +350,6 @@ elif initialCommand:
 
 # Set indexes of history records
 setCurrentRecord()
-
-# Startup macro
-config.mainWindow.runMacro(config.startupMacro)
 
 def global_excepthook(type, value, traceback):
     logger.error("Uncaught exception", exc_info=(type, value, traceback))
