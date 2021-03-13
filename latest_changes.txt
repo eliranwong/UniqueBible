@@ -1,3 +1,6 @@
+Major changes in version 22.70:
+* Fixed an issue config values "presentationColorOnDarkTheme" and "presentationColorOnLightTheme" were ignored.
+
 Major changes in version 22.69:
 * Loading a new SCREEN::: command now does not close currently opened window.
 * SCREEN::: command now supports multiple screen, e.g. SCREEN:::1:::John 3:16.  Read documentation for more information.
