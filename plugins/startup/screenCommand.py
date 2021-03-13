@@ -14,6 +14,10 @@ def presentReferenceOnFullScreen(command, source):
         content = "<div style='display:flex;'><div style='position: absolute;top: {2}%;transform: translateY(-50%);{1}'>{0}</div></div>".format(re.sub("\n", "<br>", command), style, config.presentationVerticalPosition)
         return ("popover.fullscreen".format(screenNo), content, {})
     else:
+        if command.count(":::") == 2:
+            style = command.split(":::")[2]
+        else:
+            style = "font-size:{0}em;margin-left:{1}px;margin-right:{1}px;color:{2}".format(config.presentationFontSize, config.presentationMargin, config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme)
         verses = BiblesSqlite().readMultipleVerses(config.mainText, verseList, options={"presentMode": True, "style": style})
         return ("popover.fullscreen".format(screenNo), verses, {})
 

@@ -49,6 +49,7 @@ from util.ShortcutUtil import ShortcutUtil
 from util.TextUtil import TextUtil
 import shortcut as sc
 from util.UpdateUtil import UpdateUtil
+from util.DateUtil import DateUtil
 
 
 class MainWindow(QMainWindow):
@@ -142,7 +143,7 @@ class MainWindow(QMainWindow):
         # Mini control
         self.miniControl = None
         # Used in pause() to pause macros
-        self.pauseMode = False
+        config.pauseMode = False
 
         # pre-load control panel
         #self.manageControlPanel(config.showControlPanelOnStartup)
@@ -356,11 +357,13 @@ class MainWindow(QMainWindow):
     # manage key capture
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
-            self.pauseMode = False
+            if config.pauseMode:
+                config.pauseMode = False
             if event.key() == Qt.Key_Tab:
                 self.focusCommandLineField()
             elif event.key() == Qt.Key_Escape:
                 self.setNoToolBar()
+                config.quitMacro = True
                 return True
         return QWidget.event(self, event)
 
@@ -2679,6 +2682,14 @@ class MainWindow(QMainWindow):
             elif source == "study":
                 self.lastStudyTextCommand = textCommand
 
+    def closePopover(self, view="main"):
+        views = {
+            "main": self.mainView,
+            "study": self.studyView,
+            "instant": self.instantView,
+        }
+        views[view].currentWidget().closePopover()
+
     def instantHighlight(self, text):
         if config.instantHighlightString:
             text = re.sub(config.instantHighlightString, "<z>{0}</z>".format(config.instantHighlightString), text)
@@ -2741,10 +2752,15 @@ class MainWindow(QMainWindow):
         config.instantMode = int(size)
         self.resizeCentral()
 
-    def pause(self):
-        self.pauseMode = True
-        while self.pauseMode:
+    def pause(self, seconds=0):
+        seconds = int(seconds)
+        config.pauseMode = True
+        start = DateUtil.epoch()
+        while config.pauseMode:
             QApplication.processEvents()
+            elapsedSecs = DateUtil.epoch() - start
+            if (seconds > 0 and elapsedSecs > seconds) or config.quitMacro:
+                config.pauseMode = False
 
     def parallel(self):
         if config.parallelMode >= 3:
@@ -3014,7 +3030,7 @@ class MainWindow(QMainWindow):
         if config.enableMacros and len(file) > 0:
             if not ".ubam" in file:
                 file += ".ubam"
-            MacroParser.parse(self, file)
+            MacroParser(self).parse(file)
 
     def runPlugin(self, fileName):
         script = os.path.join(os.getcwd(), "plugins", "menu", "{0}.py".format(fileName))

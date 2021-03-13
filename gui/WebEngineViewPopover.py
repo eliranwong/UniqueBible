@@ -1,3 +1,5 @@
+from PySide2.QtGui import QKeySequence
+
 import config
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction
@@ -40,6 +42,22 @@ class WebEngineViewPopover(QWebEngineView):
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
 
+        if config.macroIsRunning:
+            spaceBar = QAction(self)
+            spaceBar.setShortcut(QKeySequence(" "))
+            spaceBar.triggered.connect(self.spaceBarPressed)
+            self.addAction(spaceBar)
+    
+            escKey = QAction(self)
+            escKey.setShortcut(QKeySequence(Qt.Key_Escape))
+            escKey.triggered.connect(self.escKeyPressed)
+            self.addAction(escKey)
+
+            qKey = QAction(self)
+            qKey.setShortcut(QKeySequence(Qt.Key_Q))
+            qKey.triggered.connect(self.escKeyPressed)
+            self.addAction(qKey)
+
     def messageNoSelection(self):
         self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
 
@@ -52,4 +70,18 @@ class WebEngineViewPopover(QWebEngineView):
     def runAsCommand(self):
         selectedText = self.selectedText()
         self.parent.parent.parent.textCommandChanged(selectedText, "main")
+
+    def closeEvent(self, event):
+        if config.macroIsRunning:
+            config.pauseMode = False
+
+    def spaceBarPressed(self):
+        if config.macroIsRunning:
+            config.pauseMode = False
+
+    def escKeyPressed(self):
+        if config.macroIsRunning:
+            config.quitMacro = True
+            config.pauseMode = False
+        self.close()
 

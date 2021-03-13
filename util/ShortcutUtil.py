@@ -400,7 +400,7 @@ class ShortcutUtil:
             "runCOMPARE": "Ctrl+S, V",
             "runCROSSREFERENCE": "Ctrl+L, X",
             "runDISCOURSE": "Ctrl+L, D",
-            "runINDEX": "Ctrl+.",
+            "runINDEX": "Ctrl+L, I",
             "runKJV2Bible": "Ctrl+B, K",
             "runMAB": "Ctrl+B, 5",
             "runMIB": "Ctrl+B, 2",
