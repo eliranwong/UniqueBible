@@ -722,7 +722,7 @@ input.addEventListener('keyup', function(event) {0}
                 if "presentMode" in options:
                     verses += ("<div style='display:flex;'>"
                                "<div style='position: absolute;top: {4}%;transform: translateY(-50%);{3}'>"
-                               "{2}<br/>({0}, {1})"
+                               "{2} ({0}, {1})"
                                "</div></div>").format(verseReference, text, verseText, options["style"], config.presentationVerticalTopPosition)
                 elif not displayRef or (counter == 1 and text == config.favouriteBible):
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
