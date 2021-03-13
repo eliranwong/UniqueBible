@@ -633,9 +633,9 @@ input.addEventListener('keyup', function(event) {0}
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
-    def readMultipleVerses(self, inputText, verseList, displayRef=True):
+    def readMultipleVerses(self, inputText, verseList, displayRef=True, options={}):
         verses = ""
-        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible:
+        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible and "presentMode" not in options:
             textList = [inputText, config.favouriteBible]
         else:
             textList = [inputText]
@@ -719,7 +719,12 @@ input.addEventListener('keyup', function(event) {0}
                             v += 1
                         c = cs
                         v = vs
-                if not displayRef or (counter == 1 and text == config.favouriteBible):
+                if "presentMode" in options:
+                    verses += ("<div style='display:flex;'>"
+                               "<div style='position: absolute;top: 50%;transform: translateY(-50%);{3}'>"
+                               "{0} ({1})<br/>{2}"
+                               "</div></div>").format(verseReference, text, verseText, options["style"])
+                elif not displayRef or (counter == 1 and text == config.favouriteBible):
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
