@@ -1,3 +1,9 @@
+Major changes in version 22.68:
+* Added two startup plugins to add initial support of presentation mode.
+* Two command keywords are added through startup plugins, "SCREEN:::" and "PRESENT:::".
+    "SCREEN:::" presents verse reference in fullscreen with a new window, "PRESENT:::" mainly works with macros.
+    Use in-app reference on UBA commands to read more about documentation on these two command keywords.
+
 Major change in version 22.67:
 * Added a startup plugin on command keyword alias.
 

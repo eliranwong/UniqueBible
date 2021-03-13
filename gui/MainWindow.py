@@ -2652,7 +2652,10 @@ class MainWindow(QMainWindow):
                     self.openTextOnMainView(html)
                 elif view.startswith("popover"):
                     view = view.split(".")[1]
-                    views[view].currentWidget().openPopover(html=html)
+                    if view == "fullscreen":
+                        views["main"].currentWidget().openPopover(html=html, fullScreen=True)
+                    else:
+                        views[view].currentWidget().openPopover(html=html)
                 # There is a case where view is an empty string "".
                 # The following condition applies where view is not empty only.
                 elif view:

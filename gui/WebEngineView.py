@@ -592,7 +592,7 @@ class WebEngineView(QWebEngineView):
             self.openPopover()
         return super().createWindow(windowType)
 
-    def openPopover(self, name="popover", html="UniqueBible.app"):
+    def openPopover(self, name="popover", html="UniqueBible.app", fullScreen=False):
         # image options
         if config.exportEmbeddedImages:
             html = self.parent.parent.exportAllImages(html)
@@ -606,8 +606,13 @@ class WebEngineView(QWebEngineView):
         html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2} {8}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/{7}.js'></script><script src='w3.js'></script><script src='js/custom.js'></script>{6}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese, activeBCVsettings, config.theme, self.parent.parent.getHighlightCss())
         self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
-        self.popoverView.setMinimumWidth(config.popoverWindowWidth)
-        self.popoverView.setMinimumHeight(config.popoverWindowHeight)
+        if fullScreen:
+            # showFullScreen does not work on Linux; will test further later.
+            #self.popoverView.showFullScreen()
+            self.popoverView.showMaximized()
+        else:
+            self.popoverView.setMinimumWidth(config.popoverWindowWidth)
+            self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.show()
 
 class WebEnginePage(QWebEnginePage):
