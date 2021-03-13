@@ -1,3 +1,6 @@
+Major change in version 22.74:
+* Strip white spaces of selected text for context menu actions.
+
 Major changes in version 22.73:
 * Added config.presentationScreenNo - default screen number if users does not specify one; -1 by default; 0 = 1st screen, 1 = 2nd screen, 3 = 3rd screen, etc.
 * Revised documentation on command keyword "SCREEN:::"
