@@ -639,7 +639,7 @@ input.addEventListener('keyup', function(event) {0}
             textList = [inputText, config.favouriteBible]
         else:
             textList = [inputText]
-        for verse in verseList:
+        for index, verse in enumerate(verseList):
             for counter, text in enumerate(textList):
                 b = verse[0]
                 # format opening tag
@@ -720,14 +720,15 @@ input.addEventListener('keyup', function(event) {0}
                         c = cs
                         v = vs
                 if "presentMode" in options:
-                    verses += ("<div style='display:flex;'>"
-                               "<div style='position: absolute;top: {4}%;transform: translateY(-50%);{3}'>"
-                               "{2} ({0}, {1})"
-                               "</div></div>").format(verseReference, text, verseText, options["style"], config.presentationVerticalPosition)
+                    verses += "{2} ({0}, {1})".format(verseReference, text, verseText)
+                    if index != len(verseList) - 1:
+                        verses += "<br><br>"
                 elif not displayRef or (counter == 1 and text == config.favouriteBible):
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+        if "presentMode" in options:
+            verses = "<div style='display:flex;'><div style='position: absolute;top: {2}%;transform: translateY(-50%);{1}'>{0}</div></div>".format(verses, options["style"], config.presentationVerticalPosition)
         return verses
 
     def readPlainChapter(self, text, verse):

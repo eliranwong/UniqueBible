@@ -1,3 +1,6 @@
+Major changes in version 22.72:
+* Fixed an issue multiple references overlaps on presentation mode.
+
 Major changes in version 22.71:
 * Renamed a config variable from "presentationVerticalTopPosition" to "presentationVerticalPosition"
 
