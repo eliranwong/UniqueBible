@@ -1,3 +1,6 @@
+Major changes in version 22.71:
+* Renamed a config variable from "presentationVerticalTopPosition" to "presentationVerticalPosition"
+
 Major changes in version 22.70:
 * Fixed an issue config values "presentationColorOnDarkTheme" and "presentationColorOnLightTheme" were ignored.
 
@@ -11,7 +14,7 @@ Major changes in version 22.69:
     presentationMargin - left and right margins of displayed text; 50 by default
     presentationColorOnLightTheme - text color applied when light theme is used; 'magenta' by default 
     presentationColorOnDarkTheme - text color applied when dark theme is used; 'black' by default
-    presentationVerticalTopPosition - the top position where text starts to be displayed; 50 by default
+    presentationVerticalPosition - the position where text is displayed vertically; 50 by default placing the text in the centre
 * TODO: a gui window to change these values when UBA is running.
 
 Major changes in version 22.68:

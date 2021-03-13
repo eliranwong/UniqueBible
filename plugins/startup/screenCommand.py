@@ -36,6 +36,6 @@ config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOn
 #    presentationMargin - left and right margins of displayed text; 50 by default
 #    presentationColorOnLightTheme - text color applied when light theme is used; 'magenta' by default 
 #    presentationColorOnDarkTheme - text color applied when dark theme is used; 'black' by default
-#    presentationVerticalTopPosition - the top position where text starts to be displayed; 50 by default
+#    presentationVerticalPosition - the position where text is displayed vertically; 50 by default placing the text in the centre
 # TODO: test on different platforms
 # TODO: add a gui to work with this command keyword""")

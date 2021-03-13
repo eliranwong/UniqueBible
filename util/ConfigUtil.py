@@ -521,8 +521,8 @@ class ConfigUtil:
             config.presentationColorOnLightTheme = "black"
         if not hasattr(config, "presentationColorOnDarkTheme"):
             config.presentationColorOnDarkTheme = "magenta"
-        if not hasattr(config, "presentationVerticalTopPosition"):
-            config.presentationVerticalTopPosition = 50
+        if not hasattr(config, "presentationVerticalPosition"):
+            config.presentationVerticalPosition = 50
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -713,7 +713,7 @@ class ConfigUtil:
             ("presentationMargin", config.presentationMargin),
             ("presentationColorOnLightTheme", config.presentationColorOnLightTheme),
             ("presentationColorOnDarkTheme", config.presentationColorOnDarkTheme),
-            ("presentationVerticalTopPosition", config.presentationVerticalTopPosition),
+            ("presentationVerticalPosition", config.presentationVerticalPosition),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
