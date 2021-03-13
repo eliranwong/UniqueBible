@@ -513,6 +513,8 @@ class ConfigUtil:
             config.minicontrolWindowHeight = 400
         if not hasattr(config, "refButtonClickAction"):
             config.refButtonClickAction = "master"
+        if not hasattr(config, "presentationScreenNo"):
+            config.presentationScreenNo = -1
         if not hasattr(config, "presentationFontSize"):
             config.presentationFontSize = 3.0
         if not hasattr(config, "presentationMargin"):
@@ -709,6 +711,7 @@ class ConfigUtil:
             ("minicontrolWindowWidth", config.minicontrolWindowWidth),
             ("minicontrolWindowHeight", config.minicontrolWindowHeight),
             ("refButtonClickAction", config.refButtonClickAction),
+            ("presentationScreenNo", config.presentationScreenNo),
             ("presentationFontSize", config.presentationFontSize),
             ("presentationMargin", config.presentationMargin),
             ("presentationColorOnLightTheme", config.presentationColorOnLightTheme),

@@ -1,4 +1,11 @@
-Major changes in version 22.72:
+Major changes in version 22.73:
+* Added config.presentationScreenNo - default screen number if users does not specify one; -1 by default; 0 = 1st screen, 1 = 2nd screen, 3 = 3rd screen, etc.
+* Revised documentation on command keyword "SCREEN:::"
+* Added a context plugin "Go to Presentation".
+    This displays bible verse(s) in presentation mode if the selected text contains bible reference(s).
+    If the selected text does not contain a bible reference, selected text is displayed in presentation mode.
+
+Major change in version 22.72:
 * Fixed an issue multiple references overlaps on presentation mode.
 
 Major changes in version 22.71:
