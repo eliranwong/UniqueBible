@@ -3,7 +3,7 @@ from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
 from qtpy.QtGui import QGuiApplication
-from qtpy.QtWidgets import QAction, QApplication
+from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -592,7 +592,7 @@ class WebEngineView(QWebEngineView):
             self.openPopover()
         return super().createWindow(windowType)
 
-    def openPopover(self, name="popover", html="UniqueBible.app", fullScreen=False):
+    def openPopover(self, name="popover", html="UniqueBible.app", fullScreen=False, screenNo=-1):
         # image options
         if config.exportEmbeddedImages:
             html = self.parent.parent.exportAllImages(html)
@@ -604,9 +604,12 @@ class WebEngineView(QWebEngineView):
         elif self.name == "study":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.studyText, config.studyB, config.studyC, config.studyV)
         html = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {1} font-size: {3}px; font-family:'{4}'; {2} zh {1} font-family:'{5}'; {2} {8}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/{7}.js'></script><script src='w3.js'></script><script src='js/custom.js'></script>{6}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{0}</body></html>".format(html, "{", "}", config.fontSize, config.font, config.fontChinese, activeBCVsettings, config.theme, self.parent.parent.getHighlightCss())
-        self.popoverView = WebEngineViewPopover(self, name, self.name)
+        if not hasattr(self, "popoverView") or not self.popoverView.isVisible:
+            self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
         if fullScreen:
+            monitor = QDesktopWidget().screenGeometry(screenNo)
+            self.popoverView.move(monitor.left(), monitor.top())
             # showFullScreen does not work on Linux; will test further later.
             #self.popoverView.showFullScreen()
             self.popoverView.showMaximized()

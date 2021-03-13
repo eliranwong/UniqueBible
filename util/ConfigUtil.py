@@ -513,6 +513,16 @@ class ConfigUtil:
             config.minicontrolWindowHeight = 400
         if not hasattr(config, "refButtonClickAction"):
             config.refButtonClickAction = "master"
+        if not hasattr(config, "presentationFontSize"):
+            config.presentationFontSize = 3.0
+        if not hasattr(config, "presentationMargin"):
+            config.presentationMargin = 50
+        if not hasattr(config, "presentationColorOnLightTheme"):
+            config.presentationColorOnLightTheme = "black"
+        if not hasattr(config, "presentationColorOnDarkTheme"):
+            config.presentationColorOnDarkTheme = "magenta"
+        if not hasattr(config, "presentationVerticalTopPosition"):
+            config.presentationVerticalTopPosition = 50
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -698,7 +708,12 @@ class ConfigUtil:
             ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck),
             ("minicontrolWindowWidth", config.minicontrolWindowWidth),
             ("minicontrolWindowHeight", config.minicontrolWindowHeight),
-            ("refButtonClickAction", config.refButtonClickAction)
+            ("refButtonClickAction", config.refButtonClickAction),
+            ("presentationFontSize", config.presentationFontSize),
+            ("presentationMargin", config.presentationMargin),
+            ("presentationColorOnLightTheme", config.presentationColorOnLightTheme),
+            ("presentationColorOnDarkTheme", config.presentationColorOnDarkTheme),
+            ("presentationVerticalTopPosition", config.presentationVerticalTopPosition),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
