@@ -633,9 +633,9 @@ input.addEventListener('keyup', function(event) {0}
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
-    def readMultipleVerses(self, inputText, verseList, displayRef=True, options={}):
+    def readMultipleVerses(self, inputText, verseList, displayRef=True, presentMode=False):
         verses = ""
-        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible and "presentMode" not in options:
+        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible and not presentMode:
             textList = [inputText, config.favouriteBible]
         else:
             textList = [inputText]
@@ -719,7 +719,7 @@ input.addEventListener('keyup', function(event) {0}
                             v += 1
                         c = cs
                         v = vs
-                if "presentMode" in options:
+                if presentMode:
                     verses += "{2} ({0}, {1})".format(verseReference, text, verseText)
                     if index != len(verseList) - 1:
                         verses += "<br><br>"
@@ -727,8 +727,6 @@ input.addEventListener('keyup', function(event) {0}
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
-        if "presentMode" in options:
-            verses = "<div style='display:flex;'><div style='position: absolute;top: {2}%;transform: translateY(-50%);{1}'>{0}</div></div>".format(verses, options["style"], config.presentationVerticalPosition)
         return verses
 
     def readPlainChapter(self, text, verse):

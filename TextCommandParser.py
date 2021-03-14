@@ -747,7 +747,7 @@ class TextCommandParser:
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
     # default function if no special keyword is specified
-    def textBibleVerseParser(self, command, text, view, parallel=False, options={}):
+    def textBibleVerseParser(self, command, text, view, parallel=False):
         compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
         if (config.enforceCompareParallel) and (view == "main") and (compareMatches) and not (parallel):
             config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
@@ -795,7 +795,7 @@ class TextCommandParser:
                 config.mainCssBibleFontStyle = css
             elif view == "study":
                 config.studyCssBibleFontStyle = css
-            if (len(verseList) == 1) and (len(verseList[0]) == 3) and "presentMode" not in options:
+            if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
                 #if view in ("cli"):
@@ -805,7 +805,7 @@ class TextCommandParser:
                 content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text, view))
             else:
                 # i.e. when more than one verse reference is found
-                content = self.textPlainBible(verseList, text, options)
+                content = self.textPlainBible(verseList, text)
                 bcvTuple = verseList[-1]
             content = self.hideLexicalEntryInBible(content)
             # Add text tag for custom font styling
@@ -848,9 +848,9 @@ class TextCommandParser:
         return chapteruMenu
 
     # access to formatted chapter or plain verses of a bible text, called by textBibleVerseParser
-    def textPlainBible(self, verseList, text, options={}):
+    def textPlainBible(self, verseList, text):
         biblesSqlite = BiblesSqlite()
-        verses = biblesSqlite.readMultipleVerses(text, verseList, options=options)
+        verses = biblesSqlite.readMultipleVerses(text, verseList)
         del biblesSqlite
         return verses
 
@@ -1181,7 +1181,7 @@ class TextCommandParser:
         return ("", "", {})
 
     # called by MAIN::: & STUDY:::
-    def textAnotherView(self, command, source, target, options={}):
+    def textAnotherView(self, command, source, target):
         if command.count(":::") == 0:
             updateViewConfig, viewText, *_ = self.getViewConfig(target)
             command = "{0}:::{1}".format(viewText, command)
@@ -1195,13 +1195,13 @@ class TextCommandParser:
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
                 if os.path.isfile(os.path.join(*fileItems)):
-                    return self.textBibleVerseParser(references, texts[0], target, options=options)
+                    return self.textBibleVerseParser(references, texts[0], target)
                 else:
                     databaseInfo = marvelBibles[text]
                     self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
-                return self.textBibleVerseParser(references, texts[0], target, options=options)
+                return self.textBibleVerseParser(references, texts[0], target)
 
     # distinctinterlinear:::
     def distinctInterlinear(self, command, source):

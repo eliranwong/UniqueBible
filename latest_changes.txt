@@ -1,3 +1,7 @@
+Major change in version 22.76:
+* Added config.presentationHorizontalPosition
+* Revised documentation on SCREEN::: command
+
 Major change in version 22.75:
 * Added goto and config to macros
 

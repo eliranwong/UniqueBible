@@ -2,6 +2,8 @@ import config, re
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 
+config.presentationParser = True
+
 def presentReferenceOnFullScreen(command, source):
     if ":::" in command:
         screenNo, reference, *_ = command.split(":::")
@@ -13,12 +15,9 @@ def presentReferenceOnFullScreen(command, source):
             style = command.split(":::")[2]
     else:
         style = "font-size:{0}em;margin-left:{1}px;margin-right:{1}px;color:{2}".format(config.presentationFontSize, config.presentationMargin, config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme)
-    if not verseList:
-        content = "<div style='display:flex;'><div style='position: absolute;top: {2}%;transform: translateY(-50%);{1}'>{0}</div></div>".format(re.sub("\n", "<br>", command), style, config.presentationVerticalPosition)
-        return ("popover.fullscreen".format(screenNo), content, {})
-    else:
-        verses = BiblesSqlite().readMultipleVerses(config.mainText, verseList, options={"presentMode": True, "style": style})
-        return ("popover.fullscreen".format(screenNo), verses, {})
+    content = command if not verseList or not config.presentationParser else BiblesSqlite().readMultipleVerses(config.mainText, verseList, presentMode=True)
+    content = "<div style='display:flex;'><div style='position: absolute;top: {2}%;transform: translateY(-{3}%);{1}'>{0}</div></div>".format(re.sub("\n", "<br>", content), style, config.presentationVerticalPosition, config.presentationHorizontalPosition)
+    return ("popover.fullscreen".format(screenNo), content, {})
 
 config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOnFullScreen, """
 # [KEYWORD] SCREEN
@@ -30,22 +29,31 @@ config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOn
 # Usage - SCREEN:::[TEXT_TO_BE_DISPLAYED]
 # Usage - SCREEN:::[SCREEN_NO]:::[BIBLE_REFERENCE(S)]
 # Usage - SCREEN:::[SCREEN_NO]:::[TEXT_TO_BE_DISPLAYED]
+# Usage - SCREEN:::[SCREEN_NO]:::[BIBLE_REFERENCE(S)]:::[CUSTOM_STYLE]
+# Usage - SCREEN:::[SCREEN_NO]:::[TEXT_TO_BE_DISPLAYED]:::[CUSTOM_STYLE]
+# SCREEN_NO is optional if custom style is not given
+# If SCREEN_NO is not given, SCREEN_NO is determined by config.presentationScreenNo
 # e.g. SCREEN:::Jesus is the BEST!
 # e.g. SCREEN:::John 3:16
 # e.g. SCREEN:::John 3:16-18
 # e.g. SCREEN:::John 3:16; Rm 5:8
-# SCREEN_NO is optional; users can use it to specify on which screen reference is displayed in case users have multiple screens.
+# SCREEN_NO is optional if custom style is not given; users can use it to specify on which screen reference is displayed in case users have multiple screens.
 # 0 = 1st screen, 1 = 2nd screen, 3 = 3rd screen, etc.
 # e.g. SCREEN:::1:::Jesus is the BEST!
 # e.g. SCREEN:::1:::John 3:16
 # e.g. SCREEN:::1:::John 3:16-18
 # e.g. SCREEN:::1:::John 3:16; Rm 5:8
+# SCREEN_NO must be given if CUSTOM_STYLE is given
+# When CUSTOM_STYLE is specified
+# e.g. SCREEN:::1:::Rom 5:8, Rom 5:12:::font-size:1.5em;margin-left:50px;margin-right:50px;color:red
 # Customisation: The following values are configuration by editing config.py:
+# When CUSTOM_STYLE is given, the following values are ignored.
 #    presentationScreenNo - default screen number if users does not specify one; -1 by default; 0 = 1st screen, 1 = 2nd screen, 3 = 3rd screen, etc.
 #    presentationFontSize - font size of bible text; 3.0 by default
 #    presentationMargin - left and right margins of displayed text; 50 by default
 #    presentationColorOnLightTheme - text color applied when light theme is used; 'magenta' by default 
 #    presentationColorOnDarkTheme - text color applied when dark theme is used; 'black' by default
 #    presentationVerticalPosition - the position where text is displayed vertically; 50 by default placing the text in the centre
+#    presentationHorizontalPosition - the position where text is displayed horizontally; 50 by default placing the text in the centre
 # TODO: test on different platforms
 # TODO: add a gui to work with this command keyword""")
