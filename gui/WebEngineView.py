@@ -71,10 +71,11 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(self.switchToCli)
             self.addAction(action)
 
-        action = QAction(self)
-        action.setText(config.thisTranslation["openOnNewWindow"])
-        action.triggered.connect(self.openOnNewWindow)
-        self.addAction(action)
+        if self.name in ("main", "study"):
+            action = QAction(self)
+            action.setText(config.thisTranslation["openOnNewWindow"])
+            action.triggered.connect(self.openOnNewWindow)
+            self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)

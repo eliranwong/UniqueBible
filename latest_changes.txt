@@ -1,3 +1,6 @@
+Major change in version 22.75:
+* Added goto and config to macros
+
 Major change in version 22.74:
 * Strip white spaces of selected text for context menu actions.
 
