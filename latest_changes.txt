@@ -1,3 +1,6 @@
+Major change in version 22.78:
+* Set default config.windowStyle to "Fusion"
+
 Major change in version 22.77:
 * Fixed SCREEN::: command after merging the last PR.
 * Added a context plugin "Go to Presentation TEXT ONLY

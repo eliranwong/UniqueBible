@@ -426,7 +426,7 @@ class ConfigUtil:
         # Window Style
         # Availability of window styles depends on device
         if not hasattr(config, "windowStyle"):
-            config.windowStyle = ""
+            config.windowStyle = "Fusion"
         # Theme (default, dark)
         if not hasattr(config, "theme"):
             config.theme = "default"

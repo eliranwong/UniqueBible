@@ -48,15 +48,15 @@ class WebEngineViewPopover(QWebEngineView):
             spaceBar.triggered.connect(self.spaceBarPressed)
             self.addAction(spaceBar)
     
-            escKey = QAction(self)
-            escKey.setShortcut(QKeySequence(Qt.Key_Escape))
-            escKey.triggered.connect(self.escKeyPressed)
-            self.addAction(escKey)
+        escKey = QAction(self)
+        escKey.setShortcut(QKeySequence(Qt.Key_Escape))
+        escKey.triggered.connect(self.escKeyPressed)
+        self.addAction(escKey)
 
-            qKey = QAction(self)
-            qKey.setShortcut(QKeySequence(Qt.Key_Q))
-            qKey.triggered.connect(self.escKeyPressed)
-            self.addAction(qKey)
+        qKey = QAction(self)
+        qKey.setShortcut(QKeySequence(Qt.Key_Q))
+        qKey.triggered.connect(self.escKeyPressed)
+        self.addAction(qKey)
 
     def messageNoSelection(self):
         self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
