@@ -1,3 +1,6 @@
+Major change in version 22.80:
+* Sorts plugins alphabetically.
+
 Major change in version 22.79:
 * Added a context plugin "Go to Presentation TEXT ONLY
 

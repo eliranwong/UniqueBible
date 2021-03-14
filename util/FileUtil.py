@@ -8,7 +8,7 @@ class FileUtil:
     # Note: pathlib.Path(file).stem does not work with file name containg more than one dot, e.g. "*.bible.sqlite"
     def fileNamesWithoutExtension(dir, ext):
         files = glob.glob(os.path.join(dir, "*.{0}".format(ext)))
-        return [file[len(dir)+1:-(len(ext)+1)] for file in files if os.path.isfile(file)]
+        return sorted([file[len(dir)+1:-(len(ext)+1)] for file in files if os.path.isfile(file)])
 
     # https://stackoverflow.com/a/27518377/1397431
     @staticmethod
