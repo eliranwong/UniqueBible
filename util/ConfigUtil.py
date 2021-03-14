@@ -540,6 +540,7 @@ class ConfigUtil:
         config.pipIsUpdated = False
         config.bibleWindowContentTransformers = []
         config.studyWindowContentTransformers = []
+        config.macroIsRunning = False
 
     # Save configurations on exit
     @staticmethod
