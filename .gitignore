@@ -44,5 +44,6 @@ shortcut*.py
 shortcut_*
 UniqueBibleApp.desktop
 UniqueBibleApp.sh
+ubacli.sh
 morphology.sqlite
 htmlResources/fonts/*
