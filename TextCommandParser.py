@@ -758,6 +758,8 @@ class TextCommandParser:
             return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
         if config.useFastVerseParsing:
             verseList = self.extractAllVersesFast(command)
+            if verseList[0][0] == 0:
+                return "", "", {}
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
@@ -1640,6 +1642,7 @@ class TextCommandParser:
                 "COMBO": self.textCombo,
                 "INDEX": self.textIndex,
                 "COMMENTARY": self.textCommentary,
+                "_noAction": self.noAction,
             }
             return actionMap[keyword](verseReference, source)
         else:
@@ -2381,6 +2384,9 @@ class TextCommandParser:
     def adjustDarkThemeColorsForExternalBook(self, content):
         content = content.replace("background-color:#FFFFFF", "background-color:#323232")
         return content
+
+    def noAction(self):
+        pass
 
 if __name__ == "__main__":
     from Languages import Languages

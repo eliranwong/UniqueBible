@@ -618,6 +618,10 @@ class WebEngineView(QWebEngineView):
             self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.show()
 
+    def closePopover(self):
+        if hasattr(self, "popoverView"):
+            self.popoverView.close()
+
 class WebEnginePage(QWebEnginePage):
 
     def __init__(self, parent):
@@ -635,3 +639,4 @@ class WebEnginePage(QWebEnginePage):
             self.setUrl(url)
             return False
         return True
+

@@ -211,6 +211,27 @@ class AlephMainWindow:
         search_menu.addAction(
             QAction(config.thisTranslation["menu5_allBook"], self, shortcut=sc.displaySearchAllBookCommand, triggered=self.displaySearchAllBookCommand))
 
+        library_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_library"]))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_book"], self, shortcut=sc.bookFeatures, triggered=self.bookFeatures))
+        library_menu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeatureIntroduction))
+        library_menu.addAction(QAction(config.thisTranslation["html_timelines"], self, triggered=self.runBookFeatureTimelines))
+        library_menu.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.runBookFeatureDictionary))
+        library_menu.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.runBookFeatureEncyclopedia))
+        library_menu.addSeparator()
+        library_menu.addAction(QAction(config.thisTranslation["menu4_chapter"], self, shortcut=sc.chapterFeatures, triggered=self.chapterFeatures))
+        library_menu.addAction(QAction(config.thisTranslation["html_overview"], self, triggered=self.runChapterFeatureOverview))
+        library_menu.addAction(QAction(config.thisTranslation["html_summary"], self, triggered=self.runChapterFeatureSummary))
+        library_menu.addAction(QAction(config.thisTranslation["html_chapterIndex"], self, triggered=self.runChapterFeatureChapterIndex))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_commentary"], self, triggered=self.runChapterFeatureCommentary))
+        library_menu.addSeparator()
+        library_menu.addAction(QAction(config.thisTranslation["menu4_indexes"], self, shortcut=sc.runINDEX, triggered=self.runINDEX))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_commentary"], self, shortcut=sc.runCOMMENTARY, triggered=self.runCOMMENTARY))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut=sc.runCROSSREFERENCE, triggered=self.runCROSSREFERENCE))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut=sc.runTSKE, triggered=self.runTSKE))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut=sc.runWORDS, triggered=self.runWORDS))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, shortcut=sc.runDISCOURSE, triggered=self.runDISCOURSE))
+        library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
+
         annotate_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_annotate"]))
         if config.enableVerseHighlighting:
             highlight = annotate_menu.addMenu(config.thisTranslation["menu_highlight"])
@@ -230,16 +251,6 @@ class AlephMainWindow:
         if config.enableGist:
             annotate_menu.addAction(
                 QAction(config.thisTranslation["menu_gist"], self, shortcut=sc.showGistWindow, triggered=self.showGistWindow))
-
-        library_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_library"]))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut=sc.runWORDS, triggered=self.runWORDS))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_commentary"], self, shortcut=sc.runCOMMENTARY, triggered=self.runCOMMENTARY))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_crossRef"], self, shortcut=sc.runCROSSREFERENCE, triggered=self.runCROSSREFERENCE))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_tske"], self, shortcut=sc.runTSKE, triggered=self.runTSKE))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, shortcut=sc.runDISCOURSE, triggered=self.runDISCOURSE))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_book"], self, shortcut=sc.bookFeatures, triggered=self.bookFeatures))
-        library_menu.addAction(QAction(config.thisTranslation["menu4_chapter"], self, shortcut=sc.chapterFeatures, triggered=self.chapterFeatures))
 
         menu_data = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_data"]))
         subMenu = addSubMenu(menu_data, "add")
