@@ -618,6 +618,7 @@ class WebEngineView(QWebEngineView):
             self.popoverView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
                 self.popoverView.showMaximized()
+                self.popoverView.escKeyPressed()
             else:
                 self.popoverView.showFullScreen()
         else:
