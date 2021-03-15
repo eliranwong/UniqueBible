@@ -1802,4 +1802,4 @@ if __name__ == '__main__':
     # note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
     # note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
     # print(note)
-    Converter().createBookModuleFromHymnLyricsFile("Hymn Lyrics.txt")
+    Converter().createBookModuleFromHymnLyricsFile("Hymn Lyrics - Romanian.txt")
