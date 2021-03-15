@@ -617,6 +617,7 @@ class WebEngineView(QWebEngineView):
             monitor = QDesktopWidget().screenGeometry(screenNo)
             self.popoverView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
+                # Using self.popoverView.showFullScreen() directly does not work on Linux
                 self.popoverView.showMaximized()
                 self.popoverView.escKeyPressed()
             else:
