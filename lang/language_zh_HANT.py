@@ -630,4 +630,6 @@ translation = {
     "direct": "直接",
     "cli": "指令執行介面",
     "ubaCommands": "UBA 指令",
+    "presentation": "演示",
+    "speakLanguage": "說",
 }

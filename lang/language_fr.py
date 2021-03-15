@@ -630,4 +630,6 @@ translation = {
     "direct": "Direct",
     "cli": "Interface de ligne de commande",
     "ubaCommands": "Commandes UBA",
+    "presentation": "Présentation",
+    "speakLanguage": "Parler",
 }

@@ -630,4 +630,6 @@ translation = {
     "direct": "നേരിട്ടുള്ള",
     "cli": "കമാന്ഡ് ലൈന് ഇന്റര്ഫേസ്",
     "ubaCommands": "UBA ആജ്ഞകള്",
+    "presentation": "അവതരണം",
+    "speakLanguage": "സംസാരം",
 }

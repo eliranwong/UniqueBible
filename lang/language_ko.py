@@ -630,4 +630,6 @@ translation = {
     "direct": "직접적인",
     "cli": "커맨드 라인 인터페이스",
     "ubaCommands": "UBA 명령어",
+    "presentation": "프레젠테이션",
+    "speakLanguage": "소피",
 }

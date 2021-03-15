@@ -630,4 +630,6 @@ translation = {
     "direct": "' μεσο",
     "cli": "Περιβάλλον γραμμής εντολών",
     "ubaCommands": "Εντολές UBA",
+    "presentation": "Παρουσίαση:",
+    "speakLanguage": "Μίλα!",
 }

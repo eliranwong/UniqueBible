@@ -1,3 +1,14 @@
+Major changes in version 22.82:
+* Added support of keyboard shortcuts to run menu / context plugins.
+* Added a submenu of text-to-speech languages on right-click context menu.
+* Added shortcuts to two menu plugins:
+    Notes from Google Drive: Ctrl+Shift+R
+    Notes to Google Drive: Ctrl+Shift+B
+* Added shortcuts to two context plugins:
+    Go to Presentation: Ctrl+Shift+P
+    Go to Presentation TEXT ONLY: Ctrl+Alt+P
+* Deleted duplicated plugins.
+
 Major changes in version 22.81:
 * Added IF command to macros, Romanian language, Hymn lyrics
 

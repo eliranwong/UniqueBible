@@ -36,7 +36,6 @@ class FocusMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
-        addMenuItem(subMenu, "default", self, lambda: self.setAppWindowStyle("default"), None, False)
         for style in QStyleFactory.keys():
             addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
         subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
@@ -305,7 +304,11 @@ class FocusMainWindow:
         if config.enablePlugins:
             menu = addMenu(menuBar, "menu_plugins")
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
-                addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+                if "_" in plugin:
+                    feature, shortcut = plugin.split("_", 1)
+                    addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                else:
+                    addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         # information
         if config.showInformation:

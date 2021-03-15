@@ -39,7 +39,6 @@ class AlephMainWindow:
 
         menu1_defaults = addSubMenu(menu1, "menu1_preferences")
         subMenu = addSubMenu(menu1_defaults, "menu1_selectWindowStyle")
-        addMenuItem(subMenu, "default", self, lambda: self.setAppWindowStyle("default"), None, False)
         for style in QStyleFactory.keys():
             addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
 
@@ -345,7 +344,11 @@ class AlephMainWindow:
         if config.enablePlugins:
             menu = addMenu(self.menuBar(), "menu_plugins")
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
-                addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+                if "_" in plugin:
+                    feature, shortcut = plugin.split("_", 1)
+                    addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                else:
+                    addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))

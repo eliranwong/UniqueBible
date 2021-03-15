@@ -3,9 +3,9 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from qtpy.QtCore import QUrl, Qt, QEvent
-from qtpy.QtGui import QIcon, QGuiApplication, QFont
+from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton)
+                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut)
 
 import exlbl
 from BibleBooks import BibleBooks
@@ -110,6 +110,7 @@ class MainWindow(QMainWindow):
 
         # assign views
         # mainView & studyView are assigned with class "CentralWidget"
+        self.pluginShortcuts = []
         self.mainView = None
         self.studyView = None
         self.noteEditor = None
@@ -146,6 +147,7 @@ class MainWindow(QMainWindow):
         config.pauseMode = False
 
         # pre-load control panel
+        # This is now implemented in main.py instead
         #self.manageControlPanel(config.showControlPanelOnStartup)
 
         config.inBootupMode = False
@@ -353,6 +355,19 @@ class MainWindow(QMainWindow):
             print(message)
         else:
             reply = QMessageBox.information(self, title, message)
+
+    def addContextPluginShortcut(self, plugin, shortcut):
+        if not shortcut in self.pluginShortcuts:
+            sc = QShortcut(QKeySequence(shortcut), self)
+            sc.activated.connect(lambda : self.runContextPlugin(plugin))
+            self.pluginShortcuts.append(shortcut)
+
+    def runContextPlugin(self, plugin):
+        mainWindowSelectedText = self.mainView.currentWidget().selectedText().strip()
+        if mainWindowSelectedText:
+            self.mainView.currentWidget().runPlugin(plugin)
+        else:
+            self.studyView.currentWidget().runPlugin(plugin)
 
     # manage key capture
     def event(self, event):
@@ -3084,7 +3099,7 @@ class MainWindow(QMainWindow):
             #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
             button.setFixedWidth(config.iconButtonWidth)
             #button.setFixedHeight(config.iconButtonWidth)
-        elif platform.system() == "Darwin":
+        elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
             button.setFixedWidth(40)
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         buttonIconFile = os.path.join("htmlResources", icon)

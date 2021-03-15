@@ -83,8 +83,9 @@ class TtsLanguages:
         "vi": ("vi", "vietnam", "asia/vi"),
         "vi-hue": ("vi-hue", "vietnam_hue", "asia/vi-hue"),
         "vi-sgn": ("vi-sgn", "vietnam_sgn", "asia/vi-sgn"),
-        "zh-cn": ("zh", "Mandarin", "asia/zh"),
+        "zh-cn": ("zh", "mandarin", "asia/zh"),
         "zh-tw": ("zh-yue", "cantonese", "asia/zh-yue"),
+        "he": ("he", "hebrew", "he"),
     }
 
     # QLocale: https://doc-snapshots.qt.io/qtforpython-5.14/PySide2/QtCore/QLocale.html

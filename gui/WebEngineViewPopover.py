@@ -1,4 +1,4 @@
-import config, platform
+import config
 from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction
@@ -62,7 +62,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(escKey)
 
         qKey = QAction(self)
-        qKey.setShortcut(QKeySequence("Ctrl+Q"))
+        qKey.setShortcut(QKeySequence("Shift+Q"))
         qKey.triggered.connect(self.qKeyPressed)
         self.addAction(qKey)
 

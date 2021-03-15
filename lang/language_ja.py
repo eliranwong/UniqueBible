@@ -630,4 +630,6 @@ translation = {
     "direct": "ダイレクト",
     "cli": "コマンド行インターフェース",
     "ubaCommands": "UBA コマンド",
+    "presentation": "表示",
+    "speakLanguage": "スピーク",
 }

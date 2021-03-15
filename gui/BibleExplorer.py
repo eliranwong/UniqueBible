@@ -98,9 +98,10 @@ class BibleExplorer(QWidget):
 
     def navigationLayout2(self):
         buttonElementTuple = (
+            ("bar1_menu", lambda: self.openInWindow("BIBLE")),
+            ("bar2_menu", lambda: self.openInWindow("STUDY")),
             ("addToCommand", self.addToCommand),
-            ("openInMainWindow", lambda: self.openInWindow("BIBLE")),
-            ("openInStudyWindow", lambda: self.openInWindow("STUDY")),
+            ("presentation", self.present),
         )
         return self.parent.buttonsLayout(buttonElementTuple)
 
@@ -318,6 +319,10 @@ class BibleExplorer(QWidget):
         if window == "STUDY" and config.openBibleInMainViewOnly:
             self.parent.parent.enableStudyBibleButtonClicked()
         command = "{0}:::{1}:::{2}".format(window, text if text else self.text, self.getSelectedReference())
+        self.parent.runTextCommand(command)
+
+    def present(self):
+        command = "SCREEN:::{0}".format(self.getSelectedReference())
         self.parent.runTextCommand(command)
 
     def openBibleNotes(self, noteType):

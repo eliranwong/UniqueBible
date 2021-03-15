@@ -425,7 +425,7 @@ class ConfigUtil:
             config.showInformation = True
         # Window Style
         # Availability of window styles depends on device
-        if not hasattr(config, "windowStyle"):
+        if not hasattr(config, "windowStyle") or not config.windowStyle:
             config.windowStyle = "Fusion"
         # Theme (default, dark)
         if not hasattr(config, "theme"):
@@ -540,7 +540,6 @@ class ConfigUtil:
         config.pipIsUpdated = False
         config.bibleWindowContentTransformers = []
         config.studyWindowContentTransformers = []
-        config.macroIsRunning = False
 
     # Save configurations on exit
     @staticmethod

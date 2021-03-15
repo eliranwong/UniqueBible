@@ -3,7 +3,7 @@ from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
 from qtpy.QtGui import QGuiApplication, QKeySequence
-from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget
+from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -113,10 +113,27 @@ class WebEngineView(QWebEngineView):
             self.addAction(separator)
 
         # TEXT-TO-SPEECH feature
+        languages = self.parent.parent.getTtsLanguages()
         tts = QAction(self)
-        tts.setText(config.thisTranslation["context1_speak"])
+        tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
         tts.triggered.connect(self.textToSpeech)
         self.addAction(tts)
+
+        if config.isTtsInstalled:
+            ttsMenu = QMenu()
+            languageCodes = list(languages.keys())
+            items = [languages[code][1] for code in languageCodes]
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                action = QAction(self)
+                action.setText(item.capitalize())
+                action.triggered.connect(partial(self.textToSpeechLanguage, languageCode))
+                ttsMenu.addAction(action)
+
+            tts = QAction(self)
+            tts.setText(config.thisTranslation["context1_speak"])
+            tts.setMenu(ttsMenu)
+            self.addAction(tts)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -303,7 +320,9 @@ class WebEngineView(QWebEngineView):
                 if "_" in plugin:
                     feature, shortcut = plugin.split("_", 1)
                     action.setText(feature)
-                    action.setShortcut(QKeySequence(shortcut))
+                    # The following line does not work
+                    #action.setShortcut(QKeySequence(shortcut))
+                    self.parent.parent.addContextPluginShortcut(plugin, shortcut)
                 else:
                     action.setText(plugin)
                 action.triggered.connect(partial(self.runPlugin, plugin))
@@ -436,6 +455,16 @@ class WebEngineView(QWebEngineView):
             else:
                 speakCommand = "SPEAK:::{0}".format(selectedText)
                 self.parent.parent.textCommandChanged(speakCommand, self.name)
+        else:
+            self.messageNoTtsEngine()
+
+    def textToSpeechLanguage(self, language):
+        if config.isTtsInstalled:
+            selectedText = self.selectedText().strip()
+            if not selectedText:
+                self.messageNoSelection()
+            speakCommand = "SPEAK:::{0}:::{1}".format(language, selectedText)
+            self.parent.parent.textCommandChanged(speakCommand, self.name)
         else:
             self.messageNoTtsEngine()
 
