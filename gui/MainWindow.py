@@ -590,6 +590,10 @@ class MainWindow(QMainWindow):
                 ((config.marvelData, "books", "Hymn Lyrics - Chinese.book"), "1NXyLJ-OdKmOdc1CErbsaIT-egz0q9n6l"),
             "Hymn Lyrics - French - Les Chants Joyeux":
                 ((config.marvelData, "books", "Hymn Lyrics - French.book"), "1MCHGo7-7wyR2tkXjEim36TffyKnzeGd-"),
+            "Hymn Lyrics - Hausa - Rubutacciyar wak'a":
+                ((config.marvelData, "books", "Hymn Lyrics - Hausa.book"), "1buBHoUlYhrMEEsjGHd3u5sFmZIgipBgb"),
+            "Hymn Lyrics - Romanian - Harfa de cantari":
+                ((config.marvelData, "books", "Hymn Lyrics - Romanian.book"), "1TYS00uhnPmBoi8vqhJzt0H9u7NySx-5w"),
             "Hymn Lyrics - Spanish - Himnos Letras":
                 ((config.marvelData, "books", "Hymn Lyrics - Spanish.book"), "11_H2BxoSdWdcmZ2nv3E3vh9uaXBeyfE8"),
         }
@@ -2456,6 +2460,10 @@ class MainWindow(QMainWindow):
 
     def runMIB(self):
         self.runFeature("BIBLE:::MIB")
+
+    def runMIBStudy(self):
+        mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        self.runTextCommand("STUDY:::MIB:::{0}".format(mainVerseReference), addRecord=True, source="study", forceExecute=True)
 
     def runMAB(self):
         self.runFeature("BIBLE:::MAB")

@@ -13,6 +13,7 @@ class Languages:
         "Italian Italiano": "it",
         "Japanese 日本語": "ja",
         "Malayalam മലയാളം": "ml",
+        "Romanian Limba Română": "ro",
         "Russian Русский язык": "ru",
         "Spanish Español": "es",
     }

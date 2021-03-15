@@ -759,7 +759,8 @@ class TextCommandParser:
         if config.useFastVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
-                return "", "", {}
+                search = re.sub(r" \d+:?\d?$", "", command)
+                return self.textCountSearch("{0}:::{1}".format(text, search), "main")
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
@@ -2385,8 +2386,9 @@ class TextCommandParser:
         content = content.replace("background-color:#FFFFFF", "background-color:#323232")
         return content
 
-    def noAction(self):
+    def noAction(self, command, source):
         pass
+
 
 if __name__ == "__main__":
     from Languages import Languages

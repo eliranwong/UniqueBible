@@ -9,6 +9,7 @@ class MacroParser:
     def __init__(self, parent):
         self.lines = None
         self.parent = parent
+        self.ifState = IF.na
 
     def parse(self, file):
         filename = os.path.join(MacroParser.macros_dir, file)
@@ -28,13 +29,33 @@ class MacroParser:
             line = self.lines[currentLine].strip()
             if line.startswith("#") or line.startswith("!") or len(line) == 0:
                 pass
+            elif line.lower().startswith("if "):
+                if eval(line[3:]):
+                    self.ifState = IF.match
+                else:
+                    self.ifState = IF.nomatch
+            elif line.lower().startswith("elif "):
+                if self.ifState == IF.match:
+                    return self.goto("fi", currentLine)
+                elif eval(line[4:]):
+                    self.ifState = IF.match
+                else:
+                    self.ifState = IF.nomatch
+            elif line.lower().startswith("else"):
+                if self.ifState == IF.match:
+                    return self.goto("fi", currentLine)
+                else:
+                    self.ifState = IF.match
+            elif line.lower().strip() == "fi":
+                self.ifState = IF.na
+            elif self.ifState == IF.nomatch:
+                pass
             elif line.lower().startswith("goto "):
                 num = self.findLabel(line[5:])
                 if num >= 0:
                     return num
             elif line.startswith("config."):
                 exec(line)
-                pass
             elif line.startswith("."):
                 command = line[1:].strip()
                 if len(command) > 0:
@@ -62,4 +83,20 @@ class MacroParser:
             if line.startswith(":"+label):
                 return index
             index += 1
+        print("Could not find label {0}".format(label))
         return -1
+
+    def goto(self, label, startFrom):
+        index = startFrom
+        while index < len(self.lines):
+            line = self.lines[index]
+            if line.strip() == label:
+                return index
+            index += 1
+        print("Could not go to {0}".format(label))
+        return -1
+
+class IF:
+    na = 0
+    match = 1
+    nomatch = 2
