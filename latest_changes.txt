@@ -1,3 +1,6 @@
+Major changes in version 22.81:
+* Added IF command to macros, Romanian language, Hymn lyrics
+
 Major change in version 22.80:
 * Sorts plugins alphabetically.
 

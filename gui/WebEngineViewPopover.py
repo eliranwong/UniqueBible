@@ -1,4 +1,4 @@
-import config
+import config, platform
 from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction
@@ -14,7 +14,6 @@ class WebEngineViewPopover(QWebEngineView):
         self.setWindowTitle("Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
         self.page().loadFinished.connect(self.finishViewLoading)
-
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
@@ -47,14 +46,24 @@ class WebEngineViewPopover(QWebEngineView):
             spaceBar.triggered.connect(self.spaceBarPressed)
             self.addAction(spaceBar)
     
+            escKey = QAction(self)
+            escKey.setShortcut(QKeySequence(Qt.Key_Escape))
+            escKey.triggered.connect(self.escKeyPressed)
+            self.addAction(escKey)
+
+            qKey = QAction(self)
+            qKey.setShortcut(QKeySequence(Qt.Key_Q))
+            qKey.triggered.connect(self.qKeyPressed)
+            self.addAction(qKey)
+        
         escKey = QAction(self)
         escKey.setShortcut(QKeySequence(Qt.Key_Escape))
         escKey.triggered.connect(self.escKeyPressed)
         self.addAction(escKey)
 
         qKey = QAction(self)
-        qKey.setShortcut(QKeySequence(Qt.Key_Q))
-        qKey.triggered.connect(self.escKeyPressed)
+        qKey.setShortcut(QKeySequence("Ctrl+Q"))
+        qKey.triggered.connect(self.qKeyPressed)
         self.addAction(qKey)
 
     def messageNoSelection(self):
@@ -78,9 +87,14 @@ class WebEngineViewPopover(QWebEngineView):
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
             config.pauseMode = False
 
-    def escKeyPressed(self):
+    def qKeyPressed(self):
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
             config.quitMacro = True
             config.pauseMode = False
         self.close()
 
+    def escKeyPressed(self):
+        if self.isMaximized():
+            self.showFullScreen()
+        else:
+            self.showMaximized()

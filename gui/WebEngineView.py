@@ -1,8 +1,8 @@
-import config, os
+import config, os, platform
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
-from qtpy.QtGui import QGuiApplication
+from qtpy.QtGui import QGuiApplication, QKeySequence
 from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from BibleVerseParser import BibleVerseParser
@@ -300,7 +300,12 @@ class WebEngineView(QWebEngineView):
         if config.enablePlugins:
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
                 action = QAction(self)
-                action.setText(plugin)
+                if "_" in plugin:
+                    feature, shortcut = plugin.split("_", 1)
+                    action.setText(feature)
+                    action.setShortcut(QKeySequence(shortcut))
+                else:
+                    action.setText(plugin)
                 action.triggered.connect(partial(self.runPlugin, plugin))
                 self.addAction(action)
 
@@ -611,9 +616,10 @@ class WebEngineView(QWebEngineView):
         if fullScreen:
             monitor = QDesktopWidget().screenGeometry(screenNo)
             self.popoverView.move(monitor.left(), monitor.top())
-            # showFullScreen does not work on Linux; will test further later.
-            #self.popoverView.showFullScreen()
-            self.popoverView.showMaximized()
+            if platform.system() == "Linux":
+                self.popoverView.showMaximized()
+            else:
+                self.popoverView.showFullScreen()
         else:
             self.popoverView.setMinimumWidth(config.popoverWindowWidth)
             self.popoverView.setMinimumHeight(config.popoverWindowHeight)

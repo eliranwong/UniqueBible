@@ -417,6 +417,8 @@ class FocusMainWindow:
         if config.qtMaterial and config.qtMaterialTheme:
             self.firstToolBar.setFixedHeight(config.iconButtonWidth + 4)
             self.firstToolBar.setIconSize(QSize(config.iconButtonWidth / 2, config.iconButtonWidth / 2))
+        else:
+            self.firstToolBar.setIconSize(QSize(17, 17))
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
         self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClicked)
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
