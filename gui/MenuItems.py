@@ -12,9 +12,19 @@ def addSubMenu(parentMenu, translation):
     return parentMenu.addMenu(config.thisTranslation[translation])
 
 def addMenuItem(menu, feature, object, action, shortcut=None, translation=True):
+    if shortcut:
+        if shortcut in config.shortcutList:
+            shortcut = None
+        else:
+            config.shortcutList.append(shortcut)
     return menu.addAction(QAction(config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
 
 def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translation=True):
+    if shortcut:
+        if shortcut in config.shortcutList:
+            shortcut = None
+        else:
+            config.shortcutList.append(shortcut)
     icon = QIcon(os.path.join("htmlResources", icon))
     return menu.addAction(QAction(icon, config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
 

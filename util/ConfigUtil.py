@@ -536,6 +536,7 @@ class ConfigUtil:
         config.pipIsUpdated = False
         config.bibleWindowContentTransformers = []
         config.studyWindowContentTransformers = []
+        config.shortcutList = []
 
     # Save configurations on exit
     @staticmethod

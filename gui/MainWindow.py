@@ -110,7 +110,6 @@ class MainWindow(QMainWindow):
 
         # assign views
         # mainView & studyView are assigned with class "CentralWidget"
-        self.pluginShortcuts = []
         self.mainView = None
         self.studyView = None
         self.noteEditor = None
@@ -357,10 +356,10 @@ class MainWindow(QMainWindow):
             reply = QMessageBox.information(self, title, message)
 
     def addContextPluginShortcut(self, plugin, shortcut):
-        if not shortcut in self.pluginShortcuts:
+        if not shortcut in config.shortcutList:
             sc = QShortcut(QKeySequence(shortcut), self)
             sc.activated.connect(lambda : self.runContextPlugin(plugin))
-            self.pluginShortcuts.append(shortcut)
+            config.shortcutList.append(shortcut)
 
     def runContextPlugin(self, plugin):
         mainWindowSelectedText = self.mainView.currentWidget().selectedText().strip()

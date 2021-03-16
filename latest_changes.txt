@@ -1,3 +1,8 @@
+Major changes in version 22.84:
+* Filter out duplication of shortcuts when menu is built.
+* It is implemented on all menu layouts, which use MenuItems.py to build menu.
+* Currently, only 'Focus menu layout' has full support of this feature.
+
 Major changes in version 22.83:
 * Reorganised right-click context menu.
 * Added sub-menus to right-click context menu.
