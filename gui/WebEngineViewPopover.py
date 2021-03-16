@@ -57,12 +57,14 @@ class WebEngineViewPopover(QWebEngineView):
             self.addAction(qKey)
         
         escKey = QAction(self)
+        escKey.setText(config.thisTranslation["menu1_fullScreen"])
         escKey.setShortcut(QKeySequence(Qt.Key_Escape))
         escKey.triggered.connect(self.escKeyPressed)
         self.addAction(escKey)
 
         qKey = QAction(self)
-        qKey.setShortcut(QKeySequence("Shift+Q"))
+        qKey.setText(config.thisTranslation["close"])
+        qKey.setShortcut(QKeySequence("Alt+Q"))
         qKey.triggered.connect(self.qKeyPressed)
         self.addAction(qKey)
 

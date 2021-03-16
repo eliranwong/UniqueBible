@@ -29,6 +29,7 @@ class MoreConfigOptions(QDialog):
             ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, self.flagToolTip(False, "showControlPanelOnStartup")),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, self.flagToolTip(False, "preferControlPanelForCommandLineEntry")),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, self.flagToolTip(True, "closeControlPanelAfterRunningCommand")),
+            ("restrictControlPanelWidth", config.restrictControlPanelWidth, self.restrictControlPanelWidthChanged, self.flagToolTip(False, "restrictControlPanelWidth")),
             ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, self.flagToolTip(False, "clearCommandEntry")),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, self.flagToolTip(False, "openBibleWindowContentOnNextTab")),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, self.flagToolTip(True, "openStudyWindowContentOnNextTab")),
@@ -57,8 +58,6 @@ class MoreConfigOptions(QDialog):
             ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, self.flagToolTip(True, "overwriteBookFontSize")),
             ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, self.flagToolTip(False, "bookOnNewWindow")),
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, self.flagToolTip(False, "virtualKeyboard")),
-            ("autoCopyTranslateResult", config.autoCopyTranslateResult, self.autoCopyTranslateResultChanged, self.flagToolTip(True, "autoCopyTranslateResult")),
-            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput, self.autoCopyChinesePinyinOutputChanged, self.flagToolTip(True, "autoCopyChinesePinyinOutput")),
             ("useWebbrowser", config.useWebbrowser, self.useWebbrowserChanged, self.flagToolTip(True, "useWebbrowser")),
             ("removeHighlightOnExit", config.removeHighlightOnExit, self.removeHighlightOnExitChanged, self.flagToolTip(False, "removeHighlightOnExit")),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, self.flagToolTip(True, "disableModulesUpdateCheck")),
@@ -84,7 +83,6 @@ class MoreConfigOptions(QDialog):
             ]
         if config.developer:
             options += [
-                ("enableCopyHtmlCommand", config.enableCopyHtmlCommand, self.enableCopyHtmlCommandChanged, self.flagToolTip(False, "enableCopyHtmlCommand")),
                 ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged, self.flagToolTip(False, "forceGenerateHtml")),
                 ("enableLogging", config.enableLogging, self.enableLoggingChanged, self.flagToolTip(False, "enableLogging")),
                 ("logCommands", config.logCommands, self.logCommandsChanged, self.flagToolTip(False, "logCommands")),
@@ -185,6 +183,10 @@ class MoreConfigOptions(QDialog):
     def closeControlPanelAfterRunningCommandChanged(self):
         config.closeControlPanelAfterRunningCommand = not config.closeControlPanelAfterRunningCommand
 
+    def restrictControlPanelWidthChanged(self):
+        config.restrictControlPanelWidth = not config.restrictControlPanelWidth
+        self.parent.reloadControlPanel(False)
+
     def regexCaseSensitiveChanged(self):
         config.regexCaseSensitive = not config.regexCaseSensitive
 
@@ -251,18 +253,8 @@ class MoreConfigOptions(QDialog):
         config.addBreakBeforeTheLastToolBar = not config.addBreakBeforeTheLastToolBar
         self.parent.displayMessage(config.thisTranslation["message_restart"])
 
-    def autoCopyTranslateResultChanged(self):
-        config.autoCopyTranslateResult = not config.autoCopyTranslateResult
-
-    def autoCopyChinesePinyinOutputChanged(self):
-        config.autoCopyChinesePinyinOutput = not config.autoCopyChinesePinyinOutput
-
     def disableModulesUpdateCheckChanged(self):
         config.disableModulesUpdateCheck = not config.disableModulesUpdateCheck
-
-    def enableCopyHtmlCommandChanged(self):
-        config.enableCopyHtmlCommand = not config.enableCopyHtmlCommand
-        self.parent.displayMessage(config.thisTranslation["message_restart"])
 
     def forceGenerateHtmlChanged(self):
         config.forceGenerateHtml = not config.forceGenerateHtml

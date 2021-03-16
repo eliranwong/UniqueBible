@@ -12,7 +12,7 @@ diff_match_patch
 langdetect
 pygithub
 qt-material
-pypinyin
+html-text
 telnetlib3
 ibm-watson
 babel

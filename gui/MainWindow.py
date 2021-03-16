@@ -2725,6 +2725,40 @@ class MainWindow(QMainWindow):
         bookNo = Converter().convertMyBibleBookNo(int(b))
         return 'onclick="bcv({0},{1},{2})" onmouseover="imv({0},{1},{2})"'.format(bookNo, c, v)
 
+    def displayPlainTextOnBottomWindow(self, content):
+        html = self.wrapHtml(content)
+        self.instantView.setHtml(html, config.baseUrl)
+
+    def wrapHtml(self, content):
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+        fontFamily = config.font
+        fontSize = "{0}px".format(config.fontSize)
+        html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
+                "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
+                "zh {2} font-family:'{6}'; {3} "
+                "{8} {9}</style>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>"
+                "<script src='js/common.js'></script>"
+                "<script src='js/{7}.js'></script>"
+                "<script src='w3.js'></script>"
+                "<script src='js/custom.js'></script>"
+                "{0}"
+                "<script>var versionList = []; var compareList = []; var parallelList = []; "
+                "var diffList = []; var searchList = [];</script></head>"
+                "<body><span id='v0.0.0'></span>{1}</body></html>"
+                ).format(activeBCVsettings,
+                         content,
+                         "{",
+                         "}",
+                         fontSize,
+                         fontFamily,
+                         config.fontChinese,
+                         config.theme,
+                         config.mainWindow.getHighlightCss(),
+                         "")
+        return html
+
     # add a history record
     def addHistoryRecord(self, view, textCommand):
         if not textCommand.startswith("_"):

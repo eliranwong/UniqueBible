@@ -51,6 +51,8 @@ class ConfigUtil:
             config.preferControlPanelForCommandLineEntry = False
         if not hasattr(config, "closeControlPanelAfterRunningCommand"):
             config.closeControlPanelAfterRunningCommand = True
+        if not hasattr(config, "restrictControlPanelWidth"):
+            config.restrictControlPanelWidth = False
         if not hasattr(config, "masterControlWidth"):
             config.masterControlWidth = 1255
         if not hasattr(config, "miniControlInitialTab"):
@@ -177,9 +179,6 @@ class ConfigUtil:
         # Option to copy automatically to clipboard the result of accessing Google Translate: True / False
         if not hasattr(config, "autoCopyTranslateResult"):
             config.autoCopyTranslateResult = True
-        # Option to copy automatically to clipboard the output of Chinese pinyin conversion: True / False
-        if not hasattr(config, "autoCopyChinesePinyinOutput"):
-            config.autoCopyChinesePinyinOutput = True
         # Option to display verse number in a range of verses: True / False
         # e.g. Try entering in command field "Ps 23:1; Ps 23:1-3; Ps 23:1-24:3"
         if not hasattr(config, "showVerseNumbersInRange"):
@@ -345,10 +344,10 @@ class ConfigUtil:
             config.bookOnNewWindow = False
         # Popover Windows width
         if not hasattr(config, "popoverWindowWidth"):
-            config.popoverWindowWidth = 1000
+            config.popoverWindowWidth = 640
         # Popover Windows height
         if not hasattr(config, "popoverWindowHeight"):
-            config.popoverWindowHeight = 700
+            config.popoverWindowHeight = 480
         # Option to overwrite font in book modules
         if not hasattr(config, "overwriteBookFont"):
             config.overwriteBookFont = True
@@ -439,9 +438,6 @@ class ConfigUtil:
         # Disable modules update check
         if not hasattr(config, "disableModulesUpdateCheck"):
             config.disableModulesUpdateCheck = True
-        # Enable Copy HTML in popup menu
-        if not hasattr(config, "enableCopyHtmlCommand"):
-            config.enableCopyHtmlCommand = False
         # Force generate main.html for all pages
         if not hasattr(config, "forceGenerateHtml"):
             config.forceGenerateHtml = False
@@ -590,7 +586,6 @@ class ConfigUtil:
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),
-            ("autoCopyChinesePinyinOutput", config.autoCopyChinesePinyinOutput),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed),
@@ -679,10 +674,10 @@ class ConfigUtil:
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
-            ("enableCopyHtmlCommand", config.enableCopyHtmlCommand),
             ("showControlPanelOnStartup", config.showControlPanelOnStartup),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand),
+            ("restrictControlPanelWidth", config.restrictControlPanelWidth),
             ("masterControlWidth", config.masterControlWidth),
             ("miniControlInitialTab", config.miniControlInitialTab),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),

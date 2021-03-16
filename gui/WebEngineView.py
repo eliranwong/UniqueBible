@@ -65,32 +65,27 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
 
-        if hasattr(config, "cli"):
-            action = QAction(self)
-            action.setText(config.thisTranslation["cli"])
-            action.triggered.connect(self.switchToCli)
-            self.addAction(action)
-
-        if self.name in ("main", "study"):
-            action = QAction(self)
-            action.setText(config.thisTranslation["openOnNewWindow"])
-            action.triggered.connect(self.openOnNewWindow)
-            self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        subMenu = QMenu()
 
         copyText = QAction(self)
-        copyText.setText(config.thisTranslation["context1_copy"])
+        copyText.setText(config.thisTranslation["text"])
         copyText.triggered.connect(self.copySelectedText)
-        self.addAction(copyText)
+        subMenu.addAction(copyText)
 
-        if config.enableCopyHtmlCommand:
-            copyHtml = QAction(self)
-            copyHtml.setText(config.thisTranslation["context1_copy_html"])
-            copyHtml.triggered.connect(self.copyHtmlCode)
-            self.addAction(copyHtml)
+        copyReferences = QAction(self)
+        copyReferences.setText(config.thisTranslation["bibleReferences"])
+        copyReferences.triggered.connect(self.copyAllReferences)
+        subMenu.addAction(copyReferences)
+
+        copyHtml = QAction(self)
+        copyHtml.setText(config.thisTranslation["htmlCode"])
+        copyHtml.triggered.connect(self.copyHtmlCode)
+        subMenu.addAction(copyHtml)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_copy"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -140,181 +135,207 @@ class WebEngineView(QWebEngineView):
         self.addAction(separator)
 
         # IBM-Watson Translation Service
-        # Translate into English
-        translateText = QAction(self)
-        translateText.setText(config.thisTranslation["context1_english"])
-        translateText.triggered.connect(self.selectedTextToEnglish)
-        self.addAction(translateText)
 
         # Translate into User-defined Language
-        if config.userLanguage and not config.userLanguage == "English":
-            userLanguage = config.userLanguage
-            translateText = QAction(self)
-            translateText.setText("{0} {1}".format(config.thisTranslation["context1_translate"], userLanguage))
-            translateText.triggered.connect(self.checkUserLanguage)
-            self.addAction(translateText)
+        userLanguage = config.userLanguage
+        translateText = QAction(self)
+        translateText.setText("{0} [{1}]".format(config.thisTranslation["context1_translate"], userLanguage))
+        translateText.triggered.connect(self.checkUserLanguage)
+        self.addAction(translateText)
 
-        # CHINESE TOOL - pinyin
-        # Convert Chinese characters into pinyin
-        if config.isPypinyinInstalled:
-            pinyinText = QAction(self)
-            pinyinText.setText(config.thisTranslation["context1_pinyin"])
-            pinyinText.triggered.connect(self.pinyinSelectedText)
-            self.addAction(pinyinText)
+        translateMenu = QMenu()
+        for index, item in enumerate(Translator.toLanguageNames):
+            languageCode = Translator.toLanguageCodes[index]
+            action = QAction(self)
+            action.setText(item)
+            action.triggered.connect(partial(self.selectedTextToSelectedLanguage, languageCode))
+            translateMenu.addAction(action)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["menu7_create"])
-        action.triggered.connect(self.insertIntoNewNote)
-        self.addAction(action)
+        translate = QAction(self)
+        translate.setText(config.thisTranslation["context1_translate"])
+        translate.setMenu(translateMenu)
+        self.addAction(translate)
 
         separator = QAction(self)
         separator.setSeparator(True)
         self.addAction(separator)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["searchPanel"])
+        action.setText(config.thisTranslation["context1_search"])
         action.triggered.connect(self.searchPanel)
         self.addAction(action)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        subMenu = QMenu()
 
         self.searchText = QAction(self)
-        self.searchText.setText(config.thisTranslation["context1_search"])
+        self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
         self.searchText.triggered.connect(self.searchSelectedText)
-        self.addAction(self.searchText)
+        subMenu.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
         self.searchTextInBook.setText(config.thisTranslation["context1_current"])
         self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
-        self.addAction(self.searchTextInBook)
+        subMenu.addAction(self.searchTextInBook)
 
         searchFavouriteBible = QAction(self)
         searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
         searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
-        self.addAction(searchFavouriteBible)
+        subMenu.addAction(searchFavouriteBible)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        action = QAction(self)
+        action.setText(config.thisTranslation["bibleText"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
+        subMenu = QMenu()
         for keyword in ("SEARCHBOOKNOTE", "SEARCHCHAPTERNOTE", "SEARCHVERSENOTE"):
             action = QAction(self)
             action.setText(config.thisTranslation[keyword])
             action.triggered.connect(partial(self.searchBibleNote, keyword))
-            self.addAction(action)
+            subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
 
         action = QAction(self)
         action.setText(config.thisTranslation["removeNoteHighlight"])
         action.triggered.connect(self.removeNoteHighlight)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu6_notes"])
+        action.setMenu(subMenu)
         self.addAction(action)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        searchTextOriginal = QAction(self)
-        searchTextOriginal.setText(config.thisTranslation["context1_original"])
-        searchTextOriginal.triggered.connect(self.searchSelectedTextOriginal)
-        self.addAction(searchTextOriginal)
-
-        self.searchLexicon = QAction(self)
-        self.searchLexicon.setText(config.thisTranslation["context1_originalLexicon"])
-        self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
-        self.addAction(self.searchLexicon)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
+        subMenu = QMenu()
         searchFavouriteBooks = QAction(self)
         searchFavouriteBooks.setText(config.thisTranslation["context1_favouriteBooks"])
         searchFavouriteBooks.triggered.connect(self.searchSearchFavouriteBooks)
-        self.addAction(searchFavouriteBooks)
+        subMenu.addAction(searchFavouriteBooks)
 
         searchFavouriteBooks = QAction(self)
         searchFavouriteBooks.setText(config.thisTranslation["context1_allBooks"])
         searchFavouriteBooks.triggered.connect(self.searchAllBooks)
-        self.addAction(searchFavouriteBooks)
+        subMenu.addAction(searchFavouriteBooks)
 
         action = QAction(self)
         action.setText(config.thisTranslation["removeBookHighlight"])
         action.triggered.connect(self.removeBookHighlight)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["installBooks"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        searchBibleCharacter = QAction(self)
+        searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
+        searchBibleCharacter.triggered.connect(self.searchCharacter)
+        subMenu.addAction(searchBibleCharacter)
+
+        searchBibleName = QAction(self)
+        searchBibleName.setText(config.thisTranslation["menu5_names"])
+        searchBibleName.triggered.connect(self.searchName)
+        subMenu.addAction(searchBibleName)
+
+        searchBibleLocation = QAction(self)
+        searchBibleLocation.setText(config.thisTranslation["menu5_locations"])
+        searchBibleLocation.triggered.connect(self.searchLocation)
+        subMenu.addAction(searchBibleLocation)
+
+        self.searchBibleTopic = QAction(self)
+        self.searchBibleTopic.setText(config.thisTranslation["menu5_topics"])
+        self.searchBibleTopic.triggered.connect(self.searchTopic)
+        subMenu.addAction(self.searchBibleTopic)
+
+        self.searchBibleDictionary = QAction(self)
+        self.searchBibleDictionary.setText(config.thisTranslation["context1_dict"])
+        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
+        subMenu.addAction(self.searchBibleDictionary)
+
+        self.searchBibleEncyclopedia = QAction(self)
+        self.searchBibleEncyclopedia.setText(config.thisTranslation["context1_encyclopedia"])
+        self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
+        subMenu.addAction(self.searchBibleEncyclopedia)
+
+        self.searchLexicon = QAction(self)
+        self.searchLexicon.setText(config.thisTranslation["menu5_lexicon"])
+        self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
+        subMenu.addAction(self.searchLexicon)
+
+        self.searchThirdDictionary = QAction(self)
+        self.searchThirdDictionary.setText(config.thisTranslation["menu5_3rdDict"])
+        self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
+        subMenu.addAction(self.searchThirdDictionary)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu5_lookup"])
+        action.setMenu(subMenu)
         self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
         self.addAction(separator)
 
-        searchBibleCharacter = QAction(self)
-        searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
-        searchBibleCharacter.triggered.connect(self.searchCharacter)
-        self.addAction(searchBibleCharacter)
-
-        searchBibleName = QAction(self)
-        searchBibleName.setText(config.thisTranslation["menu5_names"])
-        searchBibleName.triggered.connect(self.searchName)
-        self.addAction(searchBibleName)
-
-        searchBibleLocation = QAction(self)
-        searchBibleLocation.setText(config.thisTranslation["menu5_locations"])
-        searchBibleLocation.triggered.connect(self.searchLocation)
-        self.addAction(searchBibleLocation)
-
-        self.searchBibleTopic = QAction(self)
-        self.searchBibleTopic.setText(config.thisTranslation["menu5_topics"])
-        self.searchBibleTopic.triggered.connect(self.searchTopic)
-        self.addAction(self.searchBibleTopic)
-
-        self.searchBibleEncyclopedia = QAction(self)
-        self.searchBibleEncyclopedia.setText(config.thisTranslation["context1_encyclopedia"])
-        self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
-        self.addAction(self.searchBibleEncyclopedia)
-
-        self.searchBibleDictionary = QAction(self)
-        self.searchBibleDictionary.setText(config.thisTranslation["context1_dict"])
-        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
-        self.addAction(self.searchBibleDictionary)
-
-        self.searchThirdDictionary = QAction(self)
-        self.searchThirdDictionary.setText(config.thisTranslation["menu5_3rdDict"])
-        self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
-        self.addAction(self.searchThirdDictionary)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        subMenu = QMenu()
 
         searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["context1_extract"])
-        searchBibleReferences.triggered.connect(self.extractAllReferences)
-        self.addAction(searchBibleReferences)
+        searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
+        subMenu.addAction(searchBibleReferences)
 
-        copyReferences = QAction(self)
-        copyReferences.setText(config.thisTranslation["context1_copyReferences"])
-        copyReferences.triggered.connect(self.copyAllReferences)
-        self.addAction(copyReferences)
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
+        subMenu.addAction(searchBibleReferences)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bottomWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBottomWindow)
+        subMenu.addAction(searchBibleReferences)
 
-        runAsCommandLine = QAction(self)
-        runAsCommandLine.setText(config.thisTranslation["context1_command"])
-        runAsCommandLine.triggered.connect(self.runAsCommand)
-        self.addAction(runAsCommandLine)
+        action = QAction(self)
+        action.setText(config.thisTranslation["displayVerses"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+        if self.name in ("main", "study"):
+
+            subMenu = QMenu()
+    
+            if hasattr(config, "cli"):
+                action = QAction(self)
+                action.setText(config.thisTranslation["cli"])
+                action.triggered.connect(self.switchToCli)
+                subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["openOnNewWindow"])
+            action.triggered.connect(self.openOnNewWindow)
+            subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["pdfDocument"])
+            action.triggered.connect(self.exportToPdf)
+            subMenu.addAction(action)
+    
+            action = QAction(self)
+            action.setText(config.thisTranslation["displayContent"])
+            action.setMenu(subMenu)
+            self.addAction(action)
 
         # Context menu plugins
         if config.enablePlugins:
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
+
+            subMenu = QMenu()
+
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
                 action = QAction(self)
                 if "_" in plugin:
@@ -326,7 +347,12 @@ class WebEngineView(QWebEngineView):
                 else:
                     action.setText(plugin)
                 action.triggered.connect(partial(self.runPlugin, plugin))
-                self.addAction(action)
+                subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["menu_plugins"])
+            action.setMenu(subMenu)
+            self.addAction(action)
 
     def runPlugin(self, fileName):
         config.contextSource = self
@@ -371,29 +397,13 @@ class WebEngineView(QWebEngineView):
             config.instantHighlightString = ""
             self.parent.parent.reloadCurrentRecord()
 
-    # Translate selected words into English
-    def selectedTextToEnglish(self):
+    # Translate selected words into Selected Language
+    def selectedTextToSelectedLanguage(self, language):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
         else:
-            self.translateTextIntoUserLanguage(selectedText)
-
-    # Translate selected words into Traditional Chinese
-    def selectedTextToTraditionalChinese(self):
-        selectedText = self.selectedText().strip()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            self.translateTextIntoUserLanguage(selectedText, "zh-TW")
-
-    # Translate selected words into Simplified Chinese
-    def selectedTextToSimplifiedChinese(self):
-        selectedText = self.selectedText().strip()
-        if not selectedText:
-            self.messageNoSelection()
-        else:
-            self.translateTextIntoUserLanguage(selectedText, "zh")
+            self.translateTextIntoUserLanguage(selectedText, language)
 
     # Check if config.userLanguage is set
     def checkUserLanguage(self):
@@ -419,25 +429,10 @@ class WebEngineView(QWebEngineView):
         translator = Translator()
         if translator.language_translator is not None:
             translation = translator.translate(text, None, userLanguage)
-            self.parent.parent.displayMessage(translation)
-            if config.autoCopyTranslateResult:
-                QApplication.clipboard().setText(translation)
+            self.openPopover(html=translation)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
             config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
-
-    # Translate Chinese characters into pinyin
-    def pinyinSelectedText(self):
-        from pypinyin import pinyin
-        if not self.selectedText():
-            self.messageNoSelection()
-        else:
-            pinyinList = pinyin(self.selectedText())
-            pinyinList = [" ".join(list) for list in pinyinList]
-            pinyinText = " ".join(pinyinList)
-            if config.autoCopyChinesePinyinOutput:
-                QApplication.clipboard().setText(pinyinText)
-            self.displayMessage(pinyinText)
 
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
@@ -473,12 +468,6 @@ class WebEngineView(QWebEngineView):
         if selectedText:
             config.contextItem = selectedText
         self.parent.parent.openControlPanelTab(2)
-
-    def insertIntoNewNote(self):
-        selectedText = self.selectedText().strip()
-        if selectedText:
-            config.contextItem = selectedText
-        self.parent.parent.createNewNoteFile()
 
     def searchSelectedText(self):
         selectedText = self.selectedText().strip()
@@ -588,39 +577,63 @@ class WebEngineView(QWebEngineView):
             searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
+    def exportToPdf(self):
+        if self.name == "main":
+            self.parent.parent.printMainPage()
+        elif self.name == "study":
+            self.parent.parent.printStudyPage()
+
     def openOnNewWindow(self):
         self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
 
     def openNewWindow(self, html):
         self.openPopover(html=html)
 
-    def extractAllReferences(self):
+    def displayVersesInBottomWindow(self):
         selectedText = self.selectedText().strip()
-        parser = BibleVerseParser(config.parserStandarisation)
-        verseList = parser.extractAllReferences(selectedText, False)
-        del parser
-        if not verseList:
-            self.displayMessage(config.thisTranslation["message_noReference"])
+        if selectedText:
+            verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+            if verses:
+                html = BiblesSqlite().readMultipleVerses(self.getText(), verses)
+                self.parent.parent.displayPlainTextOnBottomWindow(html)
         else:
-            biblesSqlite = BiblesSqlite()
-            verses = biblesSqlite.readMultipleVerses(self.getText(), verseList)
-            del biblesSqlite
-            self.openPopover(html=verses)
+            self.messageNoSelection()
+
+    def displayVersesInNewWindow(self):
+        selectedText = self.selectedText().strip()
+        if selectedText:
+            verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+            if verses:
+                html = BiblesSqlite().readMultipleVerses(self.getText(), verses)
+                self.openPopover(html=html)
+        else:
+            self.messageNoSelection()
+
+    def displayVersesInBibleWindow(self):
+        selectedText = self.selectedText().strip()
+        if selectedText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verses = parser.extractAllReferences(selectedText, False)
+            if verses:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verses])
+                self.parent.parent.textCommandChanged(references, "main")
+            del parser
+        else:
+            self.messageNoSelection()
 
     def copyAllReferences(self):
         selectedText = self.selectedText().strip()
-        parser = BibleVerseParser(config.parserStandarisation)
-        verseList = parser.extractAllReferences(selectedText, False)
-        if not verseList:
-            self.displayMessage(config.thisTranslation["message_noReference"])
+        if selectedText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verseList = parser.extractAllReferences(selectedText, False)
+            if not verseList:
+                self.displayMessage(config.thisTranslation["message_noReference"])
+            else:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+                QApplication.clipboard().setText(references)
+            del parser
         else:
-            references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
-            QApplication.clipboard().setText(references)
-        del parser
-
-    def runAsCommand(self):
-        selectedText = self.selectedText().strip()
-        self.parent.parent.textCommandChanged(selectedText, "main")
+            self.messageNoSelection()
 
     def createWindow(self, windowType):
         if windowType == QWebEnginePage.WebBrowserWindow or windowType == QWebEnginePage.WebBrowserTab:

@@ -178,13 +178,6 @@ def isHtmlTextInstalled():
     except:
         return False
 
-def isPypinyinInstalled():
-    try:
-        from pypinyin import pinyin
-        return True
-    except:
-        return False
-
 def isTtsInstalled():
     if platform.system() == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
@@ -224,8 +217,6 @@ def setInstallConfig(module, isInstalled):
         config.isTelnetlib3Installed = isInstalled
     elif module == "ibm-watson":
         config.isIbmWatsonInstalled = isInstalled
-    elif module == "pypinyin":
-        config.isPypinyinInstalled = isInstalled
     elif module == "html-text":
         config.isHtmlTextInstalled = isInstalled
 
@@ -269,7 +260,6 @@ optional = (
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("pypinyin", "Chinese pinyin", isPypinyinInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():

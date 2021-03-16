@@ -1,3 +1,10 @@
+Major changes in version 22.83:
+* Reorganised right-click context menu.
+* Added sub-menus to right-click context menu.
+* Move several context menu items to context plugins, where users can remove them if they don't use, e.g. Chinese pinyin.
+* Added a config flag 'restrictControlPanelWidth'.  When it is set to True, config.masterControlWidth is applied to restrict the width of Master Control panel.
+* Added two context menu item to popover window to toggle fullscreen or close it.
+
 Major changes in version 22.82:
 * Added support of keyboard shortcuts to run menu / context plugins.
 * Added a submenu of text-to-speech languages on right-click context menu.
