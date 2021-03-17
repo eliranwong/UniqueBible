@@ -642,4 +642,5 @@ translation = {
     "bottomWindow": "Παράθυρο κάτω.",
     "restrictControlPanelWidth": "Εφαρμογή config.restrictControlPanelWidth για να περιορίσετε το πλάτος του κύριου πίνακα ελέγχου.",
     "close": "Κλείσιμο",
+    "hideBlankVerseCompare": "Απόκρυψη στίχων αν κενά κατά τη σύγκριση",
 }

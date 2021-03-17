@@ -523,6 +523,8 @@ class ConfigUtil:
             config.presentationVerticalPosition = 50
         if not hasattr(config, "presentationHorizontalPosition"):
             config.presentationHorizontalPosition = 50
+        if not hasattr(config, "hideBlankVerseCompare"):
+            config.hideBlankVerseCompare = False
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -716,6 +718,7 @@ class ConfigUtil:
             ("presentationColorOnDarkTheme", config.presentationColorOnDarkTheme),
             ("presentationVerticalPosition", config.presentationVerticalPosition),
             ("presentationHorizontalPosition", config.presentationHorizontalPosition),
+            ("hideBlankVerseCompare", config.hideBlankVerseCompare)
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

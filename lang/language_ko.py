@@ -642,4 +642,5 @@ translation = {
     "bottomWindow": "맨 아래 창",
     "restrictControlPanelWidth": "config.restrictControlPanelWidth를 적용하여 마스터 제어 패널의 너비를 제한한다.",
     "close": "닫기",
+    "hideBlankVerseCompare": "비교 중에 공백이 있는 경우 숨기기",
 }

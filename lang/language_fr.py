@@ -642,4 +642,5 @@ translation = {
     "bottomWindow": "Fenêtre inférieure",
     "restrictControlPanelWidth": "Appliquez config.restrictControlPanelWidth pour limiter la largeur du panneau de commande maître.",
     "close": "Fermer",
+    "hideBlankVerseCompare": "Masquer les versets s'ils sont vides pendant la comparaison",
 }
