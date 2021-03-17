@@ -642,4 +642,5 @@ translation = {
     "bottomWindow": "底部视窗",
     "restrictControlPanelWidth": "套用 config.restrictControlPanelWidth 来限制主控制面板的宽度。",
     "close": "关闭",
+    "hideBlankVerseCompare": "在比较期间隐藏动词 ( 如果空格 )",
 }

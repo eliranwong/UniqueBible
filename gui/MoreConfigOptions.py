@@ -65,6 +65,7 @@ class MoreConfigOptions(QDialog):
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")),
             ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(True, "enablePlugins")),
             #("customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")),
+            ("hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare"))
         ]
         if config.isTtsInstalled:
             options += [
@@ -312,3 +313,6 @@ class MoreConfigOptions(QDialog):
             self.parent.displayMessage(config.thisTranslation["message_restart"])
         else:
             self.parent.displayMessage(config.thisTranslation["message_noSupport"])
+
+    def hideBlankVerseCompareChanged(self):
+        config.hideBlankVerseCompare = not config.hideBlankVerseCompare

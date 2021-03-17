@@ -642,4 +642,5 @@ translation = {
     "bottomWindow": "Bottom Window",
     "restrictControlPanelWidth": "Apply config.restrictControlPanelWidth to restrict the width of Master Control panel.",
     "close": "Close",
+    "hideBlankVerseCompare": "Hide verses if blank during compare",
 }

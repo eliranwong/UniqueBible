@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        # addLanguageStringToAllFiles("direct", "Direct")
+        addLanguageStringToAllFiles("hideBlankVerseCompare", "Hide verses if blank during compare")
         # createNewLanguageFile("ro")
-        validateLanguageFileSizes()
+        # validateLanguageFileSizes()
 
