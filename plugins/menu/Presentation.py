@@ -81,7 +81,7 @@ class ConfigurePresentationWindow(QWidget):
 
         layout2 = QFormLayout()
 
-        self.textEntry = QPlainTextEdit("John 3:16")
+        self.textEntry = QPlainTextEdit("John 3:16; Rm 5:8")
         layout2.addWidget(self.textEntry)
 
         button = QPushButton("Presentation")
