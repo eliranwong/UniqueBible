@@ -1,3 +1,7 @@
+Major changes in version 22.86:
+* Renamed menu plugin "Configure Presentation" to "Presentation" so that it is visible on menu on mac platform.
+* Revised documentation on screen command.
+
 Major changes in version 22.85:
 * Added a gui menu plugin "Configure Presentation".
 * Added option to hide blank verses when bible versions are compared.

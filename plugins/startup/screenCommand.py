@@ -54,6 +54,4 @@ config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOn
 #    presentationColorOnLightTheme - text color applied when light theme is used; 'magenta' by default 
 #    presentationColorOnDarkTheme - text color applied when dark theme is used; 'black' by default
 #    presentationVerticalPosition - the position where text is displayed vertically; 50 by default placing the text in the centre
-#    presentationHorizontalPosition - the position where text is displayed horizontally; 50 by default placing the text in the centre
-# TODO: test on different platforms
-# TODO: add a gui to work with this command keyword""")
+#    presentationHorizontalPosition - the position where text is displayed horizontally; 50 by default placing the text in the centre""")
