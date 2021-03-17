@@ -1,3 +1,7 @@
+Major changes in version 22.85:
+* Added a gui menu plugin "Configure Presentation".
+* Added option to hide blank verses when bible versions are compared.
+
 Major changes in version 22.84:
 * Filter out duplication of shortcuts when menu is built.
 * It is implemented on all menu layouts, which use MenuItems.py to build menu.
