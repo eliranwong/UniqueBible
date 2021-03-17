@@ -17,7 +17,7 @@
 (22.85, "file", "UniqueBibleAppVersion.txt")
 (22.85, "file", "latest_changes.txt")
 (22.85, "file", "patches.txt")
-(22.85, "file", "plugins/menu/Configure Presentation.py")
+(22.85, "file", "plugins/menu/Presentation.py")
 (22.85, "file", "plugins/context/Go to Presentation_Ctrl+Shift+P.py")
 (22.85, "file", "lang/language_ro.py")
 (22.85, "file", "lang/language_ml.py")
