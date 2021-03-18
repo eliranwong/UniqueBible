@@ -1,3 +1,5 @@
+# This plugin search currently opened bible for all forms of selected English word.
+
 import config, sys
 from install.module import *
 try:

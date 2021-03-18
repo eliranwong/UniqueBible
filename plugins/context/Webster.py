@@ -1,3 +1,9 @@
+# This plugin does three things:
+# 1) Lemmatise selected English word
+# 2) Read lemmatised word with text-to-speech engine
+# 3) Lookup lemmatised word in third-party dictionary "webster"
+# User can change or add more dictionaries in the tuple on line 29
+
 import config, sys
 from install.module import *
 try:

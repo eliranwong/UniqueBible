@@ -1,3 +1,14 @@
+Major changes in version 22.90:
+* Added two more context plugins:
+1) Webster
+# This plugin does three things:
+# 1) Lemmatise selected English word
+# 2) Read lemmatised word with text-to-speech engine
+# 3) Lookup lemmatised word in third-party dictionary "webster"
+# User can change or add more dictionaries in the tuple on line 29
+2) Search ALL English forms
+# This plugin search currently opened bible for all forms of selected English word.
+
 Major changes in version 22.89:
 * Fixed an issue that keyboard shortcuts are not enabled after switching menu layouts without restart.
 
