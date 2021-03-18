@@ -2555,7 +2555,7 @@ class MainWindow(QMainWindow):
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         textCommandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
         commandFieldText = self.textCommandLineEdit.text()
-        if not re.match("^online:::", commandFieldText, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword in self.textCommandParser.interpreters):
+        if not re.match("^online:::", commandFieldText, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword.lower() in self.textCommandParser.interpreters):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
         elif commandFieldText != self.onlineCommand:
             *_, address = commandFieldText.split(":::")

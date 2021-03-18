@@ -1,3 +1,6 @@
+Major changes in version 22.87:
+* Fixed an issues some UBA commands were ignored after a website is opened.
+
 Major changes in version 22.86:
 * Renamed menu plugin "Configure Presentation" to "Presentation" so that it is visible on menu on mac platform.
 * Revised documentation on screen command.
