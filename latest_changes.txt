@@ -1,3 +1,6 @@
+Major changes in version 22.89:
+* Fixed an issue that keyboard shortcuts are not enabled after switching menu layouts without restart.
+
 Major changes in version 22.88:
 * Now allow downloading modules in background without blocking the main window.
 

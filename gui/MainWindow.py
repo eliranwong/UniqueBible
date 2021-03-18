@@ -160,6 +160,7 @@ class MainWindow(QMainWindow):
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
+        config.shortcutList = []
         config.noStudyBibleToolbar = True if layout == "focus" else False
         try:
             self.menuBar().clear()
