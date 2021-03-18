@@ -642,5 +642,7 @@ translation = {
     "bottomWindow": "底部視窗",
     "restrictControlPanelWidth": "套用 config.restrictControlPanelWidth 來限制主控制版面的寬度。",
     "close": "關閉",
-    "hideBlankVerseCompare": "比較時隱藏空白（如果空白）",
+    "hideBlankVerseCompare": "比較譯本時，隱藏沒有相關節數的譯本",
+    "wait": "等一下",
+    "runInBackground": "在背景執行",
 }

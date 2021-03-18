@@ -1,62 +1,18 @@
 import os, config, zipfile, gdown
 # import threading
-from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QProgressBar)
+from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel)
+from qtpy.QtCore import QObject, Signal
 
-class Downloader(QDialog):
 
-    def __init__(self, parent, databaseInfo):
+class DownloadProcess(QObject):
+
+    finished = Signal()
+
+    def __init__(self, cloudFile, localFile):
         super().__init__()
-        self.parent = parent
-        self.setWindowTitle(config.thisTranslation["message_downloadHelper"])
-        self.setModal(True)
+        self.cloudFile, self.localFile = cloudFile, localFile
 
-        self.databaseInfo = databaseInfo
-        fileItems, cloudID, *_ = databaseInfo
-        self.cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
-        self.localFile = "{0}.zip".format(os.path.join(*fileItems))
-        self.filename = fileItems[-1]
-
-        self.setupLayout()
-
-    def setupLayout(self):
-
-        #self.setupProgressBar()
-
-        self.messageLabel = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
-
-        self.downloadButton = QPushButton(config.thisTranslation["message_install"])
-        self.downloadButton.clicked.connect(self.startDownloadFile)
-
-        self.cancelButton = QPushButton(config.thisTranslation["message_cancel"])
-        self.cancelButton.clicked.connect(self.close)
-
-        self.remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
-
-        self.layout = QGridLayout()
-        #self.layout.addWidget(self.progressBar, 0, 0)
-        self.layout.addWidget(self.messageLabel, 0, 0)
-        self.layout.addWidget(self.downloadButton, 1, 0)
-        self.layout.addWidget(self.cancelButton, 2, 0)
-        self.layout.addWidget(self.remarks, 3, 0)
-        self.setLayout(self.layout)
-
-    def setupProgressBar(self):
-        self.progressBar = QProgressBar()
-        self.progressBar.setMinimum(0)
-        self.progressBar.setMaximum(100)
-        self.progressBar.setValue(0)
-
-    def startDownloadFile(self):
-        self.hide()
-        self.setWindowTitle(config.thisTranslation["message_installing"])
-        self.messageLabel.setText(config.thisTranslation["message_installing"])
-        self.downloadButton.setText(config.thisTranslation["message_installing"])
-        self.downloadButton.setEnabled(False)
-        self.cancelButton.setEnabled(False)
-        self.show()
-        self.downloadFile(True)
-
-    def downloadFile(self, interactWithParent=True):
+    def downloadFile(self):
         try:
             gdown.download(self.cloudFile, self.localFile, quiet=True)
             connection = True
@@ -69,58 +25,53 @@ class Downloader(QDialog):
                 zipObject.extractall(path)
                 zipObject.close()
                 os.remove(self.localFile)
-            if interactWithParent:
-                self.parent.moduleInstalled(self.databaseInfo)
-        else:
-            if interactWithParent:
-                self.parent.moduleInstalledFailed(self.databaseInfo)
+        # Emit a signal to notify that download process is finished
+        self.finished.emit()
 
-# It looks multithreading below does not work on Windows.  Put back old codes above first, check further later.
-#    def startDownloadFile(self):
-#        self.messageLabel.setText(config.thisTranslation["message_installing"])
-#        self.downloadButton.setText(config.thisTranslation["message_installing"])
-#        self.downloadButton.setEnabled(False)
-#        self.cancelButton.setEnabled(False)
-#        # self.downloadButton.setStyleSheet("background-color: rgb(255,255,102)")
-#        # self.downloadFile(True)
-#        # https://www.linuxjournal.com/content/multiprocessing-python
-#        if config.isDownloading:
-#            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
-#        else:
-#            threading.Thread(target=self.downloadFile, args=(True,)).start()
-#            #self.parent.displayMessage(config.thisTranslation["downloading"])
-#
-#    def downloadFile(self, notification=True):
-#        self.hide()
-#        config.isDownloading = True
-#        try:
-#            gdown.download(self.cloudFile, self.localFile, quiet=True)
-#            connection = True
-#        except:
-#            try:
-#                gdown.download(self.cloudFile, self.localFile, quiet=True, proxy=None)
-#                connection = True
-#            except:
-#                connection = False
-#        if connection:
-#            if self.localFile.endswith(".zip"):
-#                zipObject = zipfile.ZipFile(self.localFile, "r")
-#                path, *_ = os.path.split(self.localFile)
-#                zipObject.extractall(path)
-#                zipObject.close()
-#                os.remove(self.localFile)
-#            # Update download history
-#            # Update install History
-#            fileItems, cloudID, *_ = self.databaseInfo
-#            config.installHistory[fileItems[-1]] = cloudID
-#            if notification:
-#                self.messageLabel.setText(config.thisTranslation["message_installed"])
-#                self.remarks.setText("")
-#                self.downloadButton.setText(config.thisTranslation["message_installed"])
-#        else:
-#            if notification:
-#                self.messageLabel.setText(config.thisTranslation["message_failedToInstall"])
-#                self.remarks.setText("")
-#                self.downloadButton.setText(config.thisTranslation["message_failedToInstall"])
-#        self.show()
-#        config.isDownloading = False
+
+class Downloader(QDialog):
+
+    def __init__(self, parent, databaseInfo):
+        super().__init__()
+        self.parent = parent
+        self.setWindowTitle(config.thisTranslation["message_downloadHelper"])
+        self.setModal(True)
+
+        self.databaseInfo = databaseInfo
+        fileItems, *_ = databaseInfo
+        self.filename = fileItems[-1]
+
+        self.setupLayout()
+
+    def setupLayout(self):
+
+        self.messageLabel = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
+
+        self.downloadButton = QPushButton(config.thisTranslation["message_install"])
+        self.downloadButton.clicked.connect(self.startDownloadFile)
+
+        self.cancelButton = QPushButton(config.thisTranslation["message_cancel"])
+        self.cancelButton.clicked.connect(self.close)
+
+        self.remarks = QLabel("{0} {1}".format(config.thisTranslation["message_remarks"], config.thisTranslation["message_downloadAllFiles"]))
+
+        self.layout = QGridLayout()
+        self.layout.addWidget(self.messageLabel, 0, 0)
+        self.layout.addWidget(self.downloadButton, 1, 0)
+        self.layout.addWidget(self.cancelButton, 2, 0)
+        self.layout.addWidget(self.remarks, 3, 0)
+        self.setLayout(self.layout)
+
+    def startDownloadFile(self):
+        self.hide()
+        self.setWindowTitle(config.thisTranslation["message_installing"])
+        self.messageLabel.setText(config.thisTranslation["message_installing"])
+        self.downloadButton.setText(config.thisTranslation["message_installing"])
+        self.downloadButton.setEnabled(False)
+        self.cancelButton.setText(config.thisTranslation["runInBackground"])
+        self.show()
+        self.downloadFile(True)
+
+    # Put in a separate funtion to allow downloading file without gui
+    def downloadFile(self, notification=True):
+        self.parent.downloadFile(self.databaseInfo, notification)

@@ -2,7 +2,7 @@ import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, 
 from datetime import datetime
 from distutils import util
 from functools import partial
-from qtpy.QtCore import QUrl, Qt, QEvent
+from qtpy.QtCore import QUrl, Qt, QEvent, QThread
 from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
                                QFrame, QFontDialog, QApplication, QPushButton, QShortcut)
@@ -27,7 +27,7 @@ from gui.FocusMainWindow import FocusMainWindow
 from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
 from shutil import copyfile
-from gui.Downloader import Downloader
+from gui.Downloader import Downloader, DownloadProcess
 from gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from gui.WatsonCredentialWindow import WatsonCredentialWindow
 from gui.MoreConfigOptions import MoreConfigOptions
@@ -458,17 +458,42 @@ class MainWindow(QMainWindow):
             self.downloader = Downloader(self, databaseInfo)
             self.downloader.show()
 
-    def moduleInstalled(self, databaseInfo):
-        self.downloader.close()
-        self.reloadControlPanel(False)
-        self.displayMessage(config.thisTranslation["message_done"])
-        # Update install History
+    def downloadFile(self, databaseInfo, notification=True):
+        # Prevent downloading multiple files at the same time.
+        config.isDownloading = True
+        # Retrieve file information
         fileItems, cloudID, *_ = databaseInfo
-        config.installHistory[fileItems[-1]] = cloudID
-        
-    def moduleInstalledFailed(self, databaseInfo):
-        self.downloader.close()
-        self.displayMessage(config.thisTranslation["message_fail"])
+        cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
+        localFile = "{0}.zip".format(os.path.join(*fileItems))
+        # Configure a QThread
+        self.downloadthread = QThread()
+        self.downloadProcess = DownloadProcess(cloudFile, localFile)
+        self.downloadProcess.moveToThread(self.downloadthread)
+        # Connect actions
+        self.downloadthread.started.connect(self.downloadProcess.downloadFile)
+        self.downloadProcess.finished.connect(self.downloadthread.quit)
+        self.downloadProcess.finished.connect(lambda: self.moduleInstalled(fileItems, cloudID, notification))
+        self.downloadProcess.finished.connect(self.downloadProcess.deleteLater)
+        self.downloadthread.finished.connect(self.downloadthread.deleteLater)
+        # Start a QThread
+        self.downloadthread.start()
+
+    def moduleInstalled(self, fileItems, cloudID, notification=True):
+        if self.downloader.isVisible():
+            self.downloader.close()
+        # Check if file is successfully installed
+        localFile = os.path.join(*fileItems)
+        if os.path.isfile(localFile):
+            # Reload Master Control
+            self.reloadControlPanel(False)
+            # Update install history
+            config.installHistory[fileItems[-1]] = cloudID
+            # Notify users
+            if notification:
+                self.displayMessage(config.thisTranslation["message_installed"])
+        elif notification:
+            self.displayMessage(config.thisTranslation["message_failedToInstall"])
+        config.isDownloading = False
 
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro

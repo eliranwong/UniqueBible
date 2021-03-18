@@ -1,3 +1,6 @@
+Major changes in version 22.88:
+* Now allow downloading modules in background without blocking the main window.
+
 Major changes in version 22.87:
 * Fixed an issues some UBA commands were ignored after a website is opened.
 

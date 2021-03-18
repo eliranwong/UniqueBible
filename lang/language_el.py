@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Εφαρμογή config.restrictControlPanelWidth για να περιορίσετε το πλάτος του κύριου πίνακα ελέγχου.",
     "close": "Κλείσιμο",
     "hideBlankVerseCompare": "Απόκρυψη στίχων αν κενά κατά τη σύγκριση",
+    "wait": "Περίμενε!",
+    "runInBackground": "Εκτέλεση στο παρασκήνιο",
 }

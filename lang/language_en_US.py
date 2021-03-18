@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Apply config.restrictControlPanelWidth to restrict the width of Master Control panel.",
     "close": "Close",
     "hideBlankVerseCompare": "Hide verses if blank during compare",
+    "wait": "Wait",
+    "runInBackground": "Run in background",
 }

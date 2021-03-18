@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Applicare config.restritControlPanelLarghezza per limitare la larghezza del pannello di controllo principale.",
     "close": "Chiudi",
     "hideBlankVerseCompare": "Nascondi versi se vuoto durante il confronto",
+    "wait": "Aspetta",
+    "runInBackground": "Esecuzione in background",
 }

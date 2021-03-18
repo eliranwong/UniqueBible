@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "config.restrictControlPanelWidth を適用して、マスター・コントロール・パネルの幅を制限してください。",
     "close": "クローズ",
     "hideBlankVerseCompare": "比較中にブランクがある場合は非表示",
+    "wait": "待って",
+    "runInBackground": "バックグラウンドで実行",
 }

@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Aplicaţi config.restrictControlPanelWidth pentru a restricţiona lăţimea panoului Control master.",
     "close": "Închidere",
     "hideBlankVerseCompare": "Ascundere versete dacă este gol în timpul",
+    "wait": "Aşteptare",
+    "runInBackground": "Rulare în fundal",
 }

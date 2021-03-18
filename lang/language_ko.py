@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "config.restrictControlPanelWidth를 적용하여 마스터 제어 패널의 너비를 제한한다.",
     "close": "닫기",
     "hideBlankVerseCompare": "비교 중에 공백이 있는 경우 숨기기",
+    "wait": "대기",
+    "runInBackground": "백그라운드에서 실행하기",
 }

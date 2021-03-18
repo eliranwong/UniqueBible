@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "कॉन्फ़िगर करें के लिए मास्टर नियंत्रण पैनल की चौड़ाई को प्रतिबंधित करने के लिए toptro.Popertptroldelचौड़ाई लागू करें",
     "close": "बंद करें",
     "hideBlankVerseCompare": "यदि तुलना के दौरान रिक्त छंदों को छुपाएँ",
+    "wait": "प्रतीक्षा करें",
+    "runInBackground": "पृष्ठभूमि में चलाएँ",
 }

@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Примените config.restrictControlPanelWidth для ограничения ширины панели главного управления.",
     "close": "Закрыть",
     "hideBlankVerseCompare": "Скрыть стихи, если в ходе сравнения пустое значение",
+    "wait": "Ожидание",
+    "runInBackground": "Выполнить в фоновом режиме",
 }

@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Wenden Sie die Option config.restrictControlPanelWidth an, um die Breite der Master-Steuerkonsole zu beschränken.",
     "close": "Schließen",
     "hideBlankVerseCompare": "Verses ausblenden, wenn während des Vergleichs leer",
+    "wait": "Warten",
+    "runInBackground": "Im Hintergrund ausführen",
 }

@@ -643,4 +643,6 @@ translation = {
     "restrictControlPanelWidth": "Aplique config.restrictControlPanelWidth para restringir el ancho del panel Control maestro.",
     "close": "Cierre",
     "hideBlankVerseCompare": "Ocultar versículos si está en blanco durante la comparación",
+    "wait": "Esperar",
+    "runInBackground": "Ejecutar en segundo plano",
 }
