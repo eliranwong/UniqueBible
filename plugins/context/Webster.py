@@ -16,7 +16,7 @@ except:
 # Install essential module if it is absent
 if not moduleInstalled:
     installmodule("lemmagen3")
-if not "pypinyin" in sys.modules:
+if not "lemmagen3" in sys.modules:
     try:
         from lemmagen3 import Lemmatizer
     except:

@@ -12,7 +12,7 @@ except:
 # Install essential module if it is absent
 if not moduleInstalled:
     installmodule("-U word_forms")
-if not "pypinyin" in sys.modules:
+if not "word_forms" in sys.modules:
     try:
         from word_forms.word_forms import get_word_forms
     except:
