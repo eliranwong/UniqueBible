@@ -996,17 +996,25 @@ class TextCommandParser:
     # mp3:::
     def mp3Download(self, command, source):
         downloadCommand = "youtube-dl -x --audio-format mp3"
-        #return self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
-        multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
-        self.parent.displayMessage(config.thisTranslation["downloading"])
+        if not platform.system() == "Linux":
+            # version 1: known issue - the download process blocks the main window
+            self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
+        else:
+            # version 2: known issue - only works on Linux, but not macOS or Windows
+            multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
+            self.parent.displayMessage(config.thisTranslation["downloading"])
         return ("", "", {})
 
     # mp4:::
     def mp4Download(self, command, source):
         downloadCommand = "youtube-dl -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
-        #return self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
-        multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
-        self.parent.displayMessage(config.thisTranslation["downloading"])
+        if not platform.system() == "Linux":
+            # version 1: known issue - the download process blocks the main window
+            self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
+        else:
+            # version 2: known issue - only works on Linux, but not macOS or Windows
+            multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
+            self.parent.displayMessage(config.thisTranslation["downloading"])
         return ("", "", {})
 
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):

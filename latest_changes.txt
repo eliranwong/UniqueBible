@@ -1,3 +1,6 @@
+Major change in version 22.93:
+* Fixed youtube-dl gui for macOS and Windows.
+
 Major change in version 22.92:
 * Fixed shortcut creation for macOS users.
 
