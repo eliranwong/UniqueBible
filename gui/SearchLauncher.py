@@ -180,7 +180,6 @@ class SearchLauncher(QWidget):
     def searchBook(self):
         searchItem = self.getSearchItem()
         if searchItem:
-            self.searchBookCheckbox.setChecked(True)
             command = "{0}:::{1}:::{2}".format("SEARCHBOOK", ",".join(self.bookCombo.checkItems), self.searchField.text())
             self.parent.runTextCommand(command)
 
@@ -201,8 +200,6 @@ class SearchLauncher(QWidget):
     def runSearchCommand(self, prefix):
         searchItem = self.getSearchItem()
         if searchItem:
-            if prefix.endswith("NOTE"):
-                self.searchNoteCheckbox.setChecked(True)
             command = "{0}:::{1}".format(prefix, self.searchField.text())
             self.parent.runTextCommand(command)
 
