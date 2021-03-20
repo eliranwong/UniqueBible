@@ -1,3 +1,6 @@
+Major change in version 22.94:
+* Automatically download / upgrade to the latest version of youtube-dl, for downloading YouTube content.
+
 Major change in version 22.93:
 * Fixed youtube-dl gui for macOS and Windows.
 

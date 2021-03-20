@@ -12,6 +12,7 @@ from Translator import Translator
 from db.Highlight import Highlight
 from TtsLanguages import TtsLanguages
 from qtpy.QtWidgets import QApplication
+from install.module import *
 try:
     # Note: qtpy.QtTextToSpeech is not found!
     from PySide2.QtTextToSpeech import QTextToSpeech
@@ -1018,6 +1019,8 @@ class TextCommandParser:
         return ("", "", {})
 
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
+        # Download / upgrade to the latest version
+        installmodule("--upgrade youtube_dl")
         if platform.system() == "Linux":
             try:
                 subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
