@@ -1,4 +1,7 @@
-Major changes in version 22.91:
+Major change in version 22.92:
+* Fixed shortcut creation for macOS users.
+
+Major change in version 22.91:
 * Fixed searching reference books and notes with Master Control Search tab.
 
 Major changes in version 22.90:

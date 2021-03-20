@@ -8,10 +8,13 @@ wd = thisFile[:-6]
 if os.getcwd() != wd:
     os.chdir(wd)
 
-# Required minimum python version: 3.7
-if sys.version_info < (3, 7):
-    print("UniqueBible.app runs only with Python 3.7 or later")
+# Required minimum python version: 3.5
+if sys.version_info < (3, 5):
+    print("UniqueBible.app runs only with Python 3.5 or later")
     exit(1)
+# Message for running python version lower than 3.7
+if sys.version_info < (3, 7):
+    print("You are running a python version lower than 3.7.  Some optional features may not be enabled.  UniqueBible.app requires python version 3.7+ to run all its features.")
 
 # Set environment variable
 os.environ["QT_API"] = "pyside2"
@@ -37,7 +40,6 @@ if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
             subprocess.Popen("sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so.0 /usr/lib/x86_64-linux-gnu/libxcb-util.so.1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
             pass
-
 
 #python = "py" if platform.system() == "Windows" else "python3"
 # Do NOT use sys.executable directly
@@ -132,7 +134,7 @@ else:
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1}".format(sys.executable, thisFile))
+            fileObj.write("#!{0}\n{1} {2}".format(os.environ["SHELL"], sys.executable, thisFile))
         # Set permission
         for file in (thisFile, "main.py", "BibleVerseParser.py", "RegexSearch.py", shortcutSh):
             os.chmod(file, 0o755)
