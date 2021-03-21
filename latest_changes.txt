@@ -1,3 +1,6 @@
+Major change in version 23.02:
+* Fixed a bug introduced in version 23.01 about opening YouTube Downloader.
+
 Major changes in version 23.01:
 * Added two context plugins "YouTube" and "YouTube Downloader" for searching selected text in YouTube.
 

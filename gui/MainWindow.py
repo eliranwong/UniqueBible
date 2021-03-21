@@ -1508,8 +1508,10 @@ class MainWindow(QMainWindow):
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp4:::{0}".format(text))
 
-    def openYouTube(self, initialUrl=None):
-        #self.youTubeView = YouTubePopover(self)
+    def openYouTube(self):
+        self.openMiniBrowser()
+
+    def openMiniBrowser(self, initialUrl=None):
         self.youTubeView = MiniBrowser(self, initialUrl)
         self.youTubeView.show()
 
