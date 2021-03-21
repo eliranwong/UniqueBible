@@ -1,3 +1,6 @@
+Major change in version 22.95:
+* Check if ffmpeg is installed to work with downloading YouTube content.
+
 Major change in version 22.94:
 * Automatically download / upgrade to the latest version of youtube-dl, for downloading YouTube content.
 

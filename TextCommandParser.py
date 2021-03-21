@@ -1018,23 +1018,34 @@ class TextCommandParser:
             self.parent.displayMessage(config.thisTranslation["downloading"])
         return ("", "", {})
 
+    def isFfmpegInstalled(self):
+        ffmpegVersion = subprocess.Popen("ffmpeg -version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        *_, stderr = ffmpegVersion.communicate()
+        return False if stderr else True
+
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder):
         # Download / upgrade to the latest version
-        installmodule("--upgrade youtube_dl")
-        if platform.system() == "Linux":
-            try:
-                subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-                subprocess.Popen([config.open, outputFolder])
-            except subprocess.CalledProcessError as err:
-                self.parent.displayMessage(err, title="ERROR:")
-        # on Windows
-        elif platform.system() == "Windows":
-            os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            os.system(r"{0} {1}".format(config.open, outputFolder))
-        # on Unix-based system, like macOS
+        if not hasattr(config, "youtubeDlIsUpdated") or (hasattr(config, "youtubeDlIsUpdated") and not config.youtubeDlIsUpdated):
+            installmodule("--upgrade youtube_dl")
+            config.youtubeDlIsUpdated = True
+        if self.isFfmpegInstalled:
+            if platform.system() == "Linux":
+                try:
+                    subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+                    subprocess.Popen([config.open, outputFolder])
+                except subprocess.CalledProcessError as err:
+                    self.parent.displayMessage(err, title="ERROR:")
+            # on Windows
+            elif platform.system() == "Windows":
+                os.system(r"cd .\{2}\ & {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+                os.system(r"{0} {1}".format(config.open, outputFolder))
+            # on Unix-based system, like macOS
+            else:
+                os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
+                os.system(r"{0} {1}".format(config.open, outputFolder))
         else:
-            os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-            os.system(r"{0} {1}".format(config.open, outputFolder))
+            self.parent.displayMessage("'ffmpeg' is required but not found! \nYou may follow our instructions to install 'ffmpeg'.")
+            webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg")
 
     # functions about bible
 
