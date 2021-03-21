@@ -1508,9 +1508,9 @@ class MainWindow(QMainWindow):
         if ok and text and QUrl.fromUserInput(text).isValid():
             self.runTextCommand("mp4:::{0}".format(text))
 
-    def openYouTube(self):
+    def openYouTube(self, initialUrl=None):
         #self.youTubeView = YouTubePopover(self)
-        self.youTubeView = MiniBrowser(self)
+        self.youTubeView = MiniBrowser(self, initialUrl)
         self.youTubeView.show()
 
     # Action - open "images" directory

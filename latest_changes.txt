@@ -1,3 +1,6 @@
+Major changes in version 23.01:
+* Added two context plugins "YouTube" and "YouTube Downloader" for searching selected text in YouTube.
+
 Major changes in version 23.0:
 * Revised right-click context menu of built-in YouTube browser
 * Replace 'YouTube Downloader' section with 'Utilities' section in Master Control Miscellaneous tab.

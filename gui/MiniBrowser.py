@@ -50,7 +50,7 @@ class YouTubeDownloadOptions(QDialog):
 
 class MiniBrowser(QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent, initialUrl=None):
         super().__init__()
         # Set title
         self.setWindowTitle(config.thisTranslation["miniBrowser"])
@@ -58,11 +58,11 @@ class MiniBrowser(QWidget):
         self.parent = parent
         self.isFfmpegInstalled = self.parent.textCommandParser.isFfmpegInstalled()
         # Setup interface
-        self.setupUI()
+        self.setupUI(initialUrl)
 
-    def setupUI(self):
+    def setupUI(self, initialUrl=None):
         self.youTubeView = YouTubePopover(self)
-        
+
         mainLayout = QVBoxLayout()
 
         layout = QHBoxLayout()
@@ -99,7 +99,7 @@ class MiniBrowser(QWidget):
         layout.addWidget(button)
         mainLayout.addLayout(layout)
 
-        self.addressBar.setText("https://www.youtube.com/")
+        self.addressBar.setText("https://www.youtube.com/" if initialUrl is None else initialUrl)
         self.openURL()
         mainLayout.addWidget(self.youTubeView)
 
