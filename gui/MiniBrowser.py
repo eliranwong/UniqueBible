@@ -1,16 +1,17 @@
 import config, re, subprocess
-from qtpy.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel)
+from qtpy.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog)
 from qtpy.QtCore import QUrl, QStringListModel
 from gui.YouTubePopover import YouTubePopover
 
 
-class YouTubeDownloadOptions(QWidget):
+class YouTubeDownloadOptions(QDialog):
 
     def __init__(self, parent, options):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["menu_more"])
         self.parent = parent
         self.options = options
+        self.setModal(True)
         self.setupUI()
 
     def setupUI(self):
