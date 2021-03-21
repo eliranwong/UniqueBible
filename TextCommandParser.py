@@ -2409,7 +2409,7 @@ class TextCommandParser:
         return content
 
     def noAction(self, command, source):
-        pass
+        return ("", "", {})
 
 
 if __name__ == "__main__":

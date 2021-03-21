@@ -18,6 +18,7 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
+from gui.DisplayConfigOptionsWindow import DisplayConfigOptionsWindow
 from gui.EditGuiLanguageFileDialog import EditGuiLanguageFileDialog
 from gui.InfoDialog import InfoDialog
 # These "unused" window imports are actually used.  Do not delete these lines.
@@ -30,7 +31,6 @@ from shutil import copyfile
 from gui.Downloader import Downloader, DownloadProcess
 from gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from gui.WatsonCredentialWindow import WatsonCredentialWindow
-from gui.MoreConfigOptions import MoreConfigOptions
 from gui.ImportSettings import ImportSettings
 from gui.NoteEditor import NoteEditor
 from gui.MasterControl import MasterControl
@@ -1766,7 +1766,7 @@ class MainWindow(QMainWindow):
             config.maximumHistoryRecord = integer
 
     def moreConfigOptionsDialog(self):
-        self.moreConfigOptions = MoreConfigOptions(self)
+        self.moreConfigOptions = DisplayConfigOptionsWindow(self)
         self.moreConfigOptions.show()
 
     def addFavouriteBookDialog(self):
