@@ -1,3 +1,6 @@
+Major change in version 22.97:
+* Fixed checking if 'ffmpeg' is installed.
+
 Major change in version 22.96:
 * Redesigned 'Set Config Flags' window.
 

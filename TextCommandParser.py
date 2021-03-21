@@ -1028,7 +1028,7 @@ class TextCommandParser:
         if not hasattr(config, "youtubeDlIsUpdated") or (hasattr(config, "youtubeDlIsUpdated") and not config.youtubeDlIsUpdated):
             installmodule("--upgrade youtube_dl")
             config.youtubeDlIsUpdated = True
-        if self.isFfmpegInstalled:
+        if self.isFfmpegInstalled():
             if platform.system() == "Linux":
                 try:
                     subprocess.run(["cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder)], shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
