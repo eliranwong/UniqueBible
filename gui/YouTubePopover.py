@@ -45,13 +45,23 @@ class YouTubePopover(QWebEngineView):
         self.addAction(separator)
 
         mp3 = QAction(self)
-        mp3.setText(config.thisTranslation["youtubeMp3"])
-        mp3.triggered.connect(lambda: self.downloadMpFile("mp3"))
+        mp3.setText(config.thisTranslation["youtube_mp3"])
+        mp3.triggered.connect(lambda: self.convertToFormat("mp3"))
         self.addAction(mp3)
 
+        if self.parent.isFfmpegInstalled:
+            video = QAction(self)
+            video.setText(config.thisTranslation["youtube_mp4"])
+            video.triggered.connect(lambda: self.convertToFormat("mp4"))
+            self.addAction(video)
+        else:
+            video = QAction(self)
+            video.setText(config.thisTranslation["downloadVideo"])
+            video.triggered.connect(self.parent.downloadLastOption)
+            self.addAction(video)
         video = QAction(self)
-        video.setText(config.thisTranslation["youtubeMp4"])
-        video.triggered.connect(lambda: self.downloadMpFile("mp4"))
+        video.setText(config.thisTranslation["downloadOptions"])
+        video.triggered.connect(self.parent.downloadOptions)
         self.addAction(video)
 
     def back(self):
@@ -64,5 +74,5 @@ class YouTubePopover(QWebEngineView):
         if self.urlString:
             QApplication.clipboard().setText(self.urlString)
 
-    def downloadMpFile(self, fileType):
-        self.parent.downloadMpFile(fileType, self.urlString)
+    def convertToFormat(self, fileType):
+        self.parent.convertToFormat(fileType, self.urlString)

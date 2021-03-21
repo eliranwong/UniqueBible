@@ -1032,6 +1032,12 @@ class TextCommandParser:
         *_, stderr = ffmpegVersion.communicate()
         return False if stderr else True
 
+    def getYouTubeDownloadOptions(self, url):
+        options = subprocess.Popen("youtube-dl -F {0}".format(url), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, *_ = options.communicate()
+        options = stdout.decode("utf-8").split("\n")
+        return [option for option in options if re.search(r"^[0-9]+? ", option)]
+
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder, noFfmpeg=False):
         # Download / upgrade to the latest version
         if not hasattr(config, "youtubeDlIsUpdated") or (hasattr(config, "youtubeDlIsUpdated") and not config.youtubeDlIsUpdated):
@@ -1059,7 +1065,7 @@ class TextCommandParser:
                 except:
                     self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
         else:
-            self.parent.displayMessage("'ffmpeg' is required but not found! \nYou may follow our instructions to install 'ffmpeg'.")
+            self.parent.displayMessage(config.thisTranslation["ffmpegNotFound"])
             webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg")
 
     # functions about bible

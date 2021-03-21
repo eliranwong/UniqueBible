@@ -1,4 +1,4 @@
-import config, re, subprocess
+import config, re, webbrowser
 from qtpy.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog)
 from qtpy.QtCore import QUrl, QStringListModel
 from gui.YouTubePopover import YouTubePopover
@@ -8,7 +8,7 @@ class YouTubeDownloadOptions(QDialog):
 
     def __init__(self, parent, options):
         super().__init__()
-        self.setWindowTitle(config.thisTranslation["menu_more"])
+        self.setWindowTitle(config.thisTranslation["downloadOptions"])
         self.parent = parent
         self.options = options
         self.setModal(True)
@@ -17,7 +17,7 @@ class YouTubeDownloadOptions(QDialog):
     def setupUI(self):
         layout = QVBoxLayout()
         # Add a label
-        layout.addWidget(QLabel(config.thisTranslation["menu_more"]))
+        layout.addWidget(QLabel(config.thisTranslation["downloadOptions"]))
         # Add a list view
         list = QListView()
         list.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -52,11 +52,12 @@ class MiniBrowser(QWidget):
 
     def __init__(self, parent):
         super().__init__()
-        # set title
+        # Set title
         self.setWindowTitle(config.thisTranslation["miniBrowser"])
-        # set up variables
+        # Set up variables
         self.parent = parent
-        # setup interface
+        self.isFfmpegInstalled = self.parent.textCommandParser.isFfmpegInstalled()
+        # Setup interface
         self.setupUI()
 
     def setupUI(self):
@@ -80,14 +81,20 @@ class MiniBrowser(QWidget):
         layout.addWidget(self.addressBar)
         button = QPushButton("mp3")
         button.setToolTip(config.thisTranslation["youtube_mp3"])
-        button.clicked.connect(lambda: self.downloadMpFromURL("mp3"))
+        button.clicked.connect(lambda: self.convertToFormat("mp3"))
         layout.addWidget(button)
-        button = QPushButton("mp4")
-        button.setToolTip(config.thisTranslation["youtube_mp4"])
-        button.clicked.connect(lambda: self.downloadMpFromURL("mp4"))
-        layout.addWidget(button)
+        if self.isFfmpegInstalled:
+            button = QPushButton("mp4")
+            button.setToolTip(config.thisTranslation["youtube_mp4"])
+            button.clicked.connect(lambda: self.convertToFormat("mp4"))
+            layout.addWidget(button)
+        else:
+            button = QPushButton(config.thisTranslation["menu11_video"])
+            button.setToolTip(config.thisTranslation["downloadVideo"])
+            button.clicked.connect(self.downloadLastOption)
+            layout.addWidget(button)
         button = QPushButton("+")
-        button.setToolTip(config.thisTranslation["menu_more"])
+        button.setToolTip(config.thisTranslation["downloadOptions"])
         button.clicked.connect(self.downloadOptions)
         layout.addWidget(button)
         mainLayout.addLayout(layout)
@@ -98,19 +105,25 @@ class MiniBrowser(QWidget):
 
         self.setLayout(mainLayout)
 
+    def getYouTubeDownloadOptions(self):
+        url = self.addressBar.text()
+        return self.parent.textCommandParser.getYouTubeDownloadOptions(url)
+
     def downloadSelectedOption(self, option):
         self.youTubeDownloadOptions.close()
         option = re.sub("^([0-9]+?) .*?$", r"\1", option)
         downloadCommand = "youtube-dl -f {0}".format(option)
         self.parent.textCommandParser.youtubeDownload(downloadCommand, self.addressBar.text())
 
+    def downloadLastOption(self):
+        options = self.getYouTubeDownloadOptions()
+        if options:
+            self.downloadSelectedOption(options[-1])
+        else:
+            self.displayMessage(config.thisTranslation["noSupportedUrlFormat"])
+
     def downloadOptions(self):
-        address = self.addressBar.text()
-        options = subprocess.Popen("youtube-dl -F {0}".format(address), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, *_ = options.communicate()
-        options = stdout.decode("utf-8").split("\n")
-        options = [option for option in options if re.search(r"^[0-9]+? ", option)]
-        
+        options = self.getYouTubeDownloadOptions()
         if options:
             self.youTubeDownloadOptions = YouTubeDownloadOptions(self, options)
             self.youTubeDownloadOptions.show()
@@ -129,12 +142,16 @@ class MiniBrowser(QWidget):
         if address:
             self.youTubeView.load(QUrl(address))
 
-    def downloadMpFromURL(self, fileType):
-        address = self.addressBar.text()
-        self.downloadMpFile(fileType, address)
+    def convertToFormat(self, fileType):
+        if self.isFfmpegInstalled:
+            address = self.addressBar.text()
+            self.downloadMpFile(fileType, address)
+        else:
+            self.displayMessage(config.thisTranslation["ffmpegNotFound"])
+            webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg")
 
     def downloadMpFile(self, fileType, address):
         if not address or not re.search("youtube", address, flags=re.IGNORECASE) or "/results?search_query=" in address:
-            self.parent.displayMessage(config.thisTranslation["youTubeLinkNotFound"])
+            self.displayMessage(config.thisTranslation["youTubeLinkNotFound"])
         else:
             self.parent.runTextCommand("{0}:::{1}".format(fileType, address))

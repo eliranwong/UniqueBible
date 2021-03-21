@@ -1,3 +1,7 @@
+Major changes in version 23.0:
+* Revised right-click context menu of built-in YouTube browser
+* Replace 'YouTube Downloader' section with 'Utilities' section in Master Control Miscellaneous tab.
+
 Major change in version 22.99:
 * Set YouTubeDownloadOptions window as a modal dialog.
 
