@@ -338,7 +338,7 @@ class DisplayConfigOptionsModel(QAbstractTableModel):
     def filter(self, text):
         newList = []
         for item in self.fullList:
-            if text.lower() in item[0].lower():
+            if text.lower() in item[0].lower() or text.lower() in item[3].lower():
                 newList.append(item)
         self.list = newList
         self.sort(self.col, self.order)

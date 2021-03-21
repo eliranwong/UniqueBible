@@ -1,3 +1,6 @@
+Major change in version 22.96:
+* Redesigned 'Set Config Flags' window.
+
 Major change in version 22.95:
 * Check if ffmpeg is installed to work with downloading YouTube content.
 
