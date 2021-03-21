@@ -968,7 +968,7 @@ class MainWindow(QMainWindow):
             self.bringToForeground(self.noteEditor)
 
     def bringToForeground(self, window):
-        if config.controlPanel and not (window.isVisible() and window.isActiveWindow()):
+        if window and not (window.isVisible() and window.isActiveWindow()):
             window.raise_()
             # Method activateWindow() does not work with qt.qpa.wayland
             # platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland"

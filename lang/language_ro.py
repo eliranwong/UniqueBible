@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "Ascundere versete dacă este gol în timpul",
     "wait": "Aşteptare",
     "runInBackground": "Rulare în fundal",
+    "noSupportedUrlFormat": "URL-ul sau formatul suportat nu este găsit!",
+    "download": "Descărcare",
 }

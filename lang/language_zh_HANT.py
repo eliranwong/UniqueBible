@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "比較譯本時，隱藏沒有相關節數的譯本",
     "wait": "等一下",
     "runInBackground": "在背景執行",
+    "noSupportedUrlFormat": "找不到支援的 URL 或格式！",
+    "download": "下載",
 }

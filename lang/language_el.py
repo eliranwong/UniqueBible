@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "Απόκρυψη στίχων αν κενά κατά τη σύγκριση",
     "wait": "Περίμενε!",
     "runInBackground": "Εκτέλεση στο παρασκήνιο",
+    "noSupportedUrlFormat": "Η υποστηριζόμενη διεύθυνση URL ή μορφή δεν βρέθηκε!",
+    "download": "& Λήψη",
 }

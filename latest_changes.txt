@@ -1,3 +1,7 @@
+Major changes in version 22.98:
+* Added a button to built-in YouTube browser to show all downloadable formats.
+* Users can now select a format to download from a popup window.
+
 Major change in version 22.97:
 * Fixed checking if 'ffmpeg' is installed.
 

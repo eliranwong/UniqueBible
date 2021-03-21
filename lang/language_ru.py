@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "Скрыть стихи, если в ходе сравнения пустое значение",
     "wait": "Ожидание",
     "runInBackground": "Выполнить в фоновом режиме",
+    "noSupportedUrlFormat": "Поддерживаемый URL или формат не найден!",
+    "download": "Загрузить",
 }

@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "Nascondi versi se vuoto durante il confronto",
     "wait": "Aspetta",
     "runInBackground": "Esecuzione in background",
+    "noSupportedUrlFormat": "L'url o il formato supportati non è trovato!",
+    "download": "Scarica",
 }

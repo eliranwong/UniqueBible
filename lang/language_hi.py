@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "यदि तुलना के दौरान रिक्त छंदों को छुपाएँ",
     "wait": "प्रतीक्षा करें",
     "runInBackground": "पृष्ठभूमि में चलाएँ",
+    "noSupportedUrlFormat": "समर्थित यूआरएल या प्रारूप नहीं मिला है!",
+    "download": "डाउनलोड करें",
 }

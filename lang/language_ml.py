@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "താരതമ്യം ചെയ്യുന്നതില് ഒഴിഞ്ഞാല് രഹസ്യം മറയ്ക്കുക",
     "wait": "നില്ക്ക്",
     "runInBackground": "പശ്ചാത്തലത്തില് പ്രവര്ത്തിപ്പിക്കുക",
+    "noSupportedUrlFormat": "പിന്തുണയുള്ള url അല്ലെങ്കില് ഫോര്മാറ്റ് ലഭ്യമല്ല!",
+    "download": "ഡൌണ്ലോട്",
 }

@@ -645,4 +645,6 @@ translation = {
     "hideBlankVerseCompare": "Ocultar versículos si está en blanco durante la comparación",
     "wait": "Esperar",
     "runInBackground": "Ejecutar en segundo plano",
+    "noSupportedUrlFormat": "No se ha encontrado el URL o el formato soportado.",
+    "download": "Descargar",
 }
