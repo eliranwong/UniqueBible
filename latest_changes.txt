@@ -1,3 +1,7 @@
+Major change in version 23.08:
+* Added config option 'miniBrowserHome'.  Its value is "https://www.youtube.com/" by default.
+    A church or an organisation may change to its home page by editing its value.
+
 Major change in version 23.07:
 * Fixed the issue that music was keep playing after YouTube Downloader window is closed.
 

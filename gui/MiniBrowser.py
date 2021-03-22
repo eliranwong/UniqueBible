@@ -61,7 +61,7 @@ class MiniBrowser(QWidget):
         self.setupUI(initialUrl)
 
     def closeEvent(self, event):
-        self.youTubeView.load(QUrl("https://github.com/eliranwong/UniqueBible"))
+        self.youTubeView.load(QUrl("about:blank"))
 
     def setupUI(self, initialUrl=None):
         self.youTubeView = YouTubePopover(self)
@@ -102,7 +102,7 @@ class MiniBrowser(QWidget):
         layout.addWidget(button)
         mainLayout.addLayout(layout)
 
-        self.addressBar.setText("https://www.youtube.com/" if initialUrl is None else initialUrl)
+        self.addressBar.setText(config.miniBrowserHome if initialUrl is None else initialUrl)
         self.openURL()
         mainLayout.addWidget(self.youTubeView)
 

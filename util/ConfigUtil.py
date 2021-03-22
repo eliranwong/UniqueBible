@@ -525,6 +525,8 @@ class ConfigUtil:
             config.presentationHorizontalPosition = 50
         if not hasattr(config, "hideBlankVerseCompare"):
             config.hideBlankVerseCompare = False
+        if not hasattr(config, "miniBrowserHome"):
+            config.miniBrowserHome = "https://www.youtube.com/"
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -601,6 +603,7 @@ class ConfigUtil:
             ("parallelMode", config.parallelMode),
             ("instantMode", config.instantMode),
             ("instantInformationEnabled", config.instantInformationEnabled),
+            ("miniBrowserHome", config.miniBrowserHome),
             ("fontSize", config.fontSize),
             ("font", config.font),
             ("fontChinese", config.fontChinese),
@@ -626,6 +629,7 @@ class ConfigUtil:
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
             ("enforceCompareParallel", config.enforceCompareParallel),
+            ("hideBlankVerseCompare", config.hideBlankVerseCompare),
             ("syncStudyWindowBibleWithMainWindow", config.syncStudyWindowBibleWithMainWindow),
             ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),
             ("studyText", config.studyText),
@@ -668,10 +672,6 @@ class ConfigUtil:
             ("defaultLexiconLN", config.defaultLexiconLN),
             ("useWebbrowser", config.useWebbrowser),
             ("showInformation", config.showInformation),
-            ("maximumHistoryRecord", config.maximumHistoryRecord),
-            ("currentRecord", {'main': 0, 'study': 0}),
-            ("history", config.history),
-            ("installHistory", config.installHistory),
             ("windowStyle", config.windowStyle),
             ("theme", config.theme),
             ("qtMaterial", config.qtMaterial),
@@ -718,7 +718,10 @@ class ConfigUtil:
             ("presentationColorOnDarkTheme", config.presentationColorOnDarkTheme),
             ("presentationVerticalPosition", config.presentationVerticalPosition),
             ("presentationHorizontalPosition", config.presentationHorizontalPosition),
-            ("hideBlankVerseCompare", config.hideBlankVerseCompare)
+            ("maximumHistoryRecord", config.maximumHistoryRecord),
+            ("currentRecord", {'main': 0, 'study': 0}),
+            ("history", config.history),
+            ("installHistory", config.installHistory),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
