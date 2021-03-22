@@ -60,6 +60,9 @@ class MiniBrowser(QWidget):
         # Setup interface
         self.setupUI(initialUrl)
 
+    def closeEvent(self, event):
+        self.youTubeView.load(QUrl("https://github.com/eliranwong/UniqueBible"))
+
     def setupUI(self, initialUrl=None):
         self.youTubeView = YouTubePopover(self)
 

@@ -1,3 +1,6 @@
+Major change in version 23.07:
+* Fixed the issue that music was keep playing after YouTube Downloader window is closed.
+
 Major change in version 23.06:
 * Added a context plugin 'MS Outlook'.  This plugin works properly only if you sign in your microsoft outlook account on your default web browser.
     This plugins:
