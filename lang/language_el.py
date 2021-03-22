@@ -652,4 +652,5 @@ translation = {
     "downloadOptions": "Επιλογές λήψης:",
     "utilities": "Utilities:",
     "googleTranslate": "Μετάδοση Google",
+    "remove": "Αφαίρεση:",
 }

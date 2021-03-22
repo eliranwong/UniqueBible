@@ -652,4 +652,5 @@ translation = {
     "downloadOptions": "下載選項",
     "utilities": "公共事業",
     "googleTranslate": "Google 翻譯",
+    "remove": "移除",
 }

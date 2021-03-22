@@ -11,6 +11,7 @@ from BiblesSqlite import BiblesSqlite
 from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.FileUtil import FileUtil
+from util.TextUtil import TextUtil
 
 class WebEngineView(QWebEngineView):
     
@@ -93,15 +94,22 @@ class WebEngineView(QWebEngineView):
         self.addAction(separator)
 
         if self.name == "main":
+            subMenu = QMenu()
+
             # Instant highlight feature
             action = QAction(self)
-            action.setText(config.thisTranslation["instantHighlight"])
+            action.setText(config.thisTranslation["menu_highlight"])
             action.triggered.connect(self.instantHighlight)
-            self.addAction(action)
+            subMenu.addAction(action)
 
             action = QAction(self)
-            action.setText(config.thisTranslation["removeInstantHighlight"])
+            action.setText(config.thisTranslation["remove"])
             action.triggered.connect(self.removeInstantHighlight)
+            subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["instantHighlight"])
+            action.setMenu(subMenu)
             self.addAction(action)
 
             separator = QAction(self)
@@ -422,7 +430,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            selectedText = selectedText.replace("\n", "%0D%0A")
+            selectedText = TextUtil.plainTextToUrl(selectedText)
             url = "https://translate.google.com/?sl=origin_language_or_auto&tl={0}&text={1}&op=translate".format(language, selectedText)
             webbrowser.open(url)
 

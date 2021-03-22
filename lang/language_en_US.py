@@ -652,4 +652,5 @@ translation = {
     "downloadOptions": "Download Options",
     "utilities": "Utilities",
     "googleTranslate": "Google Translate",
+    "remove": "Remove",
 }

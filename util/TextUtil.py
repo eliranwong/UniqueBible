@@ -1,4 +1,4 @@
-import re
+import re, html
 
 class TextUtil:
 
@@ -12,6 +12,18 @@ class TextUtil:
         while s:
             text = re.sub(p, r"\1\2", text)
             s = p.search(text)
+        return text
+
+    @staticmethod
+    def plainTextToUrl(text):
+        # https://wiki.python.org/moin/EscapingHtml
+        text = html.escape(text)
+        searchReplace = (
+            (" ", "%20"),
+            ("\n", "%0D%0A"),
+        )
+        for search, replace in searchReplace:
+            text = text.replace(search, replace)
         return text
 
     # Return digits from a string

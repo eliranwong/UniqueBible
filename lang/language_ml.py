@@ -652,4 +652,5 @@ translation = {
     "downloadOptions": "ഡൌണ്ലോട് ചെയ്യുക",
     "utilities": "ഉപകരണങ്ങള്",
     "googleTranslate": "ഗൂഗിള് പരിഭാഷപ്പെടുത്തുകQuery",
+    "remove": "നീക്കം ചെയ്യുക",
 }
