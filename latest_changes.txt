@@ -1,3 +1,9 @@
+Major change in version 23.06:
+* Added a context plugin 'MS Outlook'.  This plugin works properly only if you sign in your microsoft outlook account on your default web browser.
+    This plugins:
+    - opens 'Compose New Email window' with web browser.
+    - paste selected text into the body of the email if text is selected.
+
 Major change in version 23.05:
 * Improved url format for online quries.
 * Minor touch on right-click context menu.
