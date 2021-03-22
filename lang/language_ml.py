@@ -651,4 +651,5 @@ translation = {
     "ffmpegNotFound": "Ffmpeg ആവശ്യമാണ് പക്ഷേ കിട്ടിയില്ല!",
     "downloadOptions": "ഡൌണ്ലോട് ചെയ്യുക",
     "utilities": "ഉപകരണങ്ങള്",
+    "googleTranslate": "ഗൂഗിള് പരിഭാഷപ്പെടുത്തുകQuery",
 }

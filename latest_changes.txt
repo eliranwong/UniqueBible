@@ -1,3 +1,6 @@
+Major change in version 23.04:
+* Added 'Google Translate' to right-click context menu, which can easily translate selected text into 120+ languages.
+
 Major change in version 23.03:
 * Added a context plugin 'Gmail'.  This plugin works properly only if you sign in your gmail account on your default web browser.
     This plugins:

@@ -651,4 +651,5 @@ translation = {
     "ffmpegNotFound": "ffmpeg が必要ですが見つかりません。 \nffmpegをインストールするための説明に従うことができます。",
     "downloadOptions": "ダウンロード・オプション",
     "utilities": "ユーティリティー",
+    "googleTranslate": "Google 翻訳",
 }

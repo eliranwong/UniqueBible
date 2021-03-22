@@ -651,4 +651,5 @@ translation = {
     "ffmpegNotFound": "找不到視頻轉換工具 ffmpeg！ \n您可以參考我們的指示先安裝 ffmpeg，然後才使用此功能。",
     "downloadOptions": "下載選項",
     "utilities": "公共事業",
+    "googleTranslate": "Google 翻譯",
 }

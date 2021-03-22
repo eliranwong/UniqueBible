@@ -651,4 +651,5 @@ translation = {
     "ffmpegNotFound": "Ffmpeg की आवश्यकता नहीं है, लेकिन नहीं मिला!",
     "downloadOptions": "विकल्प डाउनलोड करें",
     "utilities": "यूटिलिटी",
+    "googleTranslate": "गूगल अनुवाद",
 }

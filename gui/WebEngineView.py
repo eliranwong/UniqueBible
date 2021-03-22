@@ -1,4 +1,5 @@
-import config, os, platform
+from Languages import Languages
+import config, os, platform, webbrowser
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
@@ -152,7 +153,19 @@ class WebEngineView(QWebEngineView):
             translateMenu.addAction(action)
 
         translate = QAction(self)
-        translate.setText(config.thisTranslation["context1_translate"])
+        translate.setText(config.thisTranslation["watsonTranslator"])
+        translate.setMenu(translateMenu)
+        self.addAction(translate)
+
+        translateMenu = QMenu()
+        for language, languageCode in Languages.googleTranslateCodes.items():
+            action = QAction(self)
+            action.setText(language)
+            action.triggered.connect(partial(self.googleTranslate, languageCode))
+            translateMenu.addAction(action)
+
+        translate = QAction(self)
+        translate.setText(config.thisTranslation["googleTranslate"])
         translate.setMenu(translateMenu)
         self.addAction(translate)
 
@@ -397,7 +410,23 @@ class WebEngineView(QWebEngineView):
             config.instantHighlightString = ""
             self.parent.parent.reloadCurrentRecord()
 
-    # Translate selected words into Selected Language
+    # Translate selected words into Selected Language (Google Translate)
+    # Url format to translate a phrase:
+    # http://translate.google.com/#origin_language_or_auto|destination_language|encoded_phrase
+    # or
+    # http://translate.google.com/translate?js=n&sl=auto&tl=destination_language&text=encoded_phrase
+    # Url format to translate a webpage:
+    # http://translate.google.com/translate?js=n&sl=auto&tl=destination_language&u=http://example.net
+    def googleTranslate(self, language):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            selectedText = selectedText.replace("\n", "%0D%0A")
+            url = "https://translate.google.com/?sl=origin_language_or_auto&tl={0}&text={1}&op=translate".format(language, selectedText)
+            webbrowser.open(url)
+
+    # Translate selected words into Selected Language (Watson Translator)
     def selectedTextToSelectedLanguage(self, language):
         selectedText = self.selectedText().strip()
         if not selectedText:

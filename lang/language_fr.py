@@ -651,4 +651,5 @@ translation = {
     "ffmpegNotFound": "Ffmpeg est obligatoire mais non trouvé ! \nVous pouvez suivre nos instructions pour installer ffmpeg.",
     "downloadOptions": "Options de téléchargement",
     "utilities": "Utilitaires",
+    "googleTranslate": "Google Translate",
 }
