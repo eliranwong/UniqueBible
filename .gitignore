@@ -25,6 +25,7 @@
 /tmp
 /Documents
 /htmlResources/images/export
+uba.spec
 config.py
 custom.py
 credentials.json

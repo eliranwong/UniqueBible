@@ -1,3 +1,9 @@
+Major change in version 23.03:
+* Added a context plugin 'Gmail'.  This plugin works properly only if you sign in your gmail account on your default web browser.
+    This plugins:
+    - opens 'Compose New Email window' with web browser.
+    - paste selected text into the body of the email if text is selected.
+
 Major change in version 23.02:
 * Fixed a bug introduced in version 23.01 about opening YouTube Downloader.
 
