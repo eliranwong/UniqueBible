@@ -1,3 +1,7 @@
+Major change in version 23.09:
+* Added a context plugin 'Insert into Note Editor', which can be activated with keyboard shortcut 'Ctrl+Shift+N'.
+    This inserts selected text into opened note editor.  If note editor is not currently opened, a new note will be opened.
+
 Major change in version 23.08:
 * Added config option 'miniBrowserHome'.  Its value is "https://www.youtube.com/" by default.
     A church or an organisation may change to its home page by editing its value.
