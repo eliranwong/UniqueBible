@@ -1,6 +1,7 @@
 Major change in version 23.09:
 * Added a context plugin 'Insert into Note Editor', which can be activated with keyboard shortcut 'Ctrl+Shift+N'.
-    This inserts selected text into opened note editor.  If note editor is not currently opened, a new note will be opened.
+    This inserts selected text into note editor if it is opened.
+    If note editor is not currently opened, note editor will be opened with selected text pasted into a new note file.
 
 Major change in version 23.08:
 * Added config option 'miniBrowserHome'.  Its value is "https://www.youtube.com/" by default.
