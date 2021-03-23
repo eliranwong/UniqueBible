@@ -1,6 +1,7 @@
 Major change in version 23.09:
 * Added a context plugin 'Insert into Note Editor', which can be activated with keyboard shortcut 'Ctrl+Shift+N'.
-    This inserts selected text into opened note editor.  If note editor is not currently opened, a new note will be opened.
+    This inserts selected text into opened note editor. 
+    If note editor is not currently opened, a new note will be opened with selected text placed into it.
 
 Major change in version 23.08:
 * Added config option 'miniBrowserHome'.  Its value is "https://www.youtube.com/" by default.
@@ -13,7 +14,7 @@ Major change in version 23.06:
 * Added a context plugin 'MS Outlook'.  This plugin works properly only if you sign in your microsoft outlook account on your default web browser.
     This plugins:
     - opens 'Compose New Email window' with web browser.
-    - paste selected text into the body of the email if text is selected.
+    - places selected text into the body of the email if text is selected.
 
 Major change in version 23.05:
 * Improved url format for online quries.
@@ -26,7 +27,7 @@ Major change in version 23.03:
 * Added a context plugin 'Gmail'.  This plugin works properly only if you sign in your gmail account on your default web browser.
     This plugins:
     - opens 'Compose New Email window' with web browser.
-    - paste selected text into the body of the email if text is selected.
+    - places selected text into the body of the email if text is selected.
 
 Major change in version 23.02:
 * Fixed a bug introduced in version 23.01 about opening YouTube Downloader.
