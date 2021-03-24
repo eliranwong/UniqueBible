@@ -1311,6 +1311,7 @@ class TextCommandParser:
 
     # PARALLEL:::
     def textParallel(self, command, source):
+        config.compareTexts = ""
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(viewText, command)
