@@ -98,6 +98,17 @@ class AlephMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        subMenu = addSubMenu(menu1_defaults, "menu_toggleFeatures")
+        items = (
+            ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
+            ("menu2_subHeadings", self.enableSubheadingButtonClicked, sc.enableSubheadingButtonClicked),
+            ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
+            ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),
+            ("menu_syncStudyWindowBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible),
+            ("menu_syncBibleCommentary", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
         addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
@@ -118,7 +129,7 @@ class AlephMainWindow:
                 QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
 
         menu1.addAction(
-            QAction(config.thisTranslation["menu_config_flags"], self, triggered=self.moreConfigOptionsDialog))
+            QAction(config.thisTranslation["menu_config_flags"], self, shortcut=sc.moreConfigOptionsDialog, triggered=self.moreConfigOptionsDialog))
         menu1.addAction(
             QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
 

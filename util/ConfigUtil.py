@@ -541,6 +541,7 @@ class ConfigUtil:
         config.bibleWindowContentTransformers = []
         config.studyWindowContentTransformers = []
         config.shortcutList = []
+        config.compareTexts = ""
 
     # Save configurations on exit
     @staticmethod
