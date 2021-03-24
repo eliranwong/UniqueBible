@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Μετάδοση Google",
     "remove": "Αφαίρεση:",
     "enforceCompareParallel": "Δύναμη οθόνη της Βίβλου για να μείνετε σε κατάσταση σύγκρισης.",
+    "configFlags": "Σημαίες ρύθμισης",
 }

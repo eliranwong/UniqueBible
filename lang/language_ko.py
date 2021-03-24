@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "구글 번역",
     "remove": "제거",
     "enforceCompareParallel": "비교 모드로 유지하기 위해 성경 표시를 강제 실행합니다.",
+    "configFlags": "구성 플래그",
 }

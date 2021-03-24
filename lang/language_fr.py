@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Google Translate",
     "remove": "Supprimer",
     "enforceCompareParallel": "Forcer l'affichage de la Bible à rester en mode de comparaison",
+    "configFlags": "Indicateurs de configuration",
 }

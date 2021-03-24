@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Google 翻譯",
     "remove": "移除",
     "enforceCompareParallel": "強制聖經顯示停留在比較模式",
+    "configFlags": "配置旗標",
 }

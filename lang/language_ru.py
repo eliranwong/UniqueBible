@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Перевод Google Translate",
     "remove": "Удалить",
     "enforceCompareParallel": "Принудительное отображение Библии для пребывания в режиме сравнения",
+    "configFlags": "Флаги конфигурации",
 }

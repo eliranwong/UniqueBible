@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Google-Übersetzung",
     "remove": "Entfernen",
     "enforceCompareParallel": "Bibelanzeige erzwingen, um im Vergleichsmodus zu bleiben",
+    "configFlags": "Konfigurationsmarkierungen",
 }

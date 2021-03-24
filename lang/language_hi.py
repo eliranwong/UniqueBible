@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "गूगल अनुवाद",
     "remove": "हटाएँ",
     "enforceCompareParallel": "तुलना मोड में रहने के लिए बाइबल प्रदर्शन को बाध्य करें",
+    "configFlags": "कॉन्फ़िग फ्लैगComment",
 }

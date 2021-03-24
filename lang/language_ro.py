@@ -654,4 +654,5 @@ translation = {
     "googleTranslate": "Traducere Google",
     "remove": "Înlăturare",
     "enforceCompareParallel": "Forţare afişare Biblie pentru a rămâne în modul de comparare",
+    "configFlags": "Steguleţe",
 }

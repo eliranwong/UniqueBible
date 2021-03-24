@@ -1,3 +1,6 @@
+Major change in version 23.10:
+* 
+
 Major change in version 23.09:
 * Added a context plugin 'Insert into Note Editor', which can be activated with keyboard shortcut 'Ctrl+Shift+N'.
     This inserts selected text into opened note editor. 
