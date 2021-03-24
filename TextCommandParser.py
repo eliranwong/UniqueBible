@@ -750,11 +750,11 @@ class TextCommandParser:
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view, parallel=False):
         compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
-        if (config.enforceCompareParallel) and (view == "main") and (compareMatches) and not (parallel):
+        if config.enforceCompareParallel and view == "main" and compareMatches and not parallel:
             config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
             return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
         parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
-        if (config.enforceCompareParallel) and (view == "main") and (parallelMatches) and not (parallel):
+        if config.enforceCompareParallel and view == "main" and parallelMatches and not parallel:
             config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
             return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
         if config.useFastVerseParsing:
@@ -1139,6 +1139,8 @@ class TextCommandParser:
             if text in marvelBibles:
                 fileItems = marvelBibles[text][0]
                 if os.path.isfile(os.path.join(*fileItems)):
+                    if config.enforceCompareParallel:
+                        self.parent.enforceCompareParallelButtonClicked()
                     updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                     return self.textBibleVerseParser(viewReference, texts[0], source)
                 else:
@@ -1146,6 +1148,8 @@ class TextCommandParser:
                     self.parent.downloadHelper(databaseInfo)
                     return ("", "", {})
             else:
+                if config.enforceCompareParallel:
+                    self.parent.enforceCompareParallelButtonClicked()
                 updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                 return self.textBibleVerseParser(viewReference, texts[0], source)
 

@@ -2720,10 +2720,18 @@ class MainWindow(QMainWindow):
                 elif view:
                     views[view].setHtml(html, baseUrl)
                 if addRecord == True and view in ("main", "study"):
+                    compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
+                    if config.enforceCompareParallel and not config.tempRecord:
+                        if not ":::" in textCommand:
+                            view = "study"
+                            textCommand = "STUDY:::{0}".format(textCommand)
+                        elif textCommand.lower().startswith("bible:::"):
+                            view = "study"
+                            textCommand = re.sub("^.*?:::", "STUDY:::", textCommand)
                     if config.tempRecord:
-                        self.addHistoryRecord(view, config.tempRecord)
+                        self.addHistoryRecord("main", config.tempRecord)
                         config.tempRecord = ""
-                    elif not (view == "main" and config.enforceCompareParallel) or textCommand.lower().startswith("compare") or textCommand.lower().startswith("parallel"):
+                    elif not (view == "main" and config.enforceCompareParallel) or compareParallel:
                         self.addHistoryRecord(view, textCommand)
             # set checking blocks to prevent running the same command within unreasonable time frame
             self.now = now

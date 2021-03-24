@@ -1,3 +1,7 @@
+Major changes in version 23.11:
+* Fixed misplacement of history records when both Keep Compare / Parallel View and Sync Study Window Bible are enabled. 
+* Now text::: command can disable Keep Compare / Parallel View if previously enabled.
+
 Major change in version 23.10:
 * Fixed forcing bible window to stay in Compare / Parallel view.
 
