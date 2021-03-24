@@ -889,6 +889,14 @@ class MainWindow(QMainWindow):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'),
                       r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
 
+    def nextStudyWindowTab(self):
+        nextIndex = self.studyView.currentIndex() + 1
+        if nextIndex >= config.numberOfTab:
+            nextIndex = 0
+        self.studyView.setCurrentIndex(nextIndex)
+        # Alternatively,
+        # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
+
     def openTextOnStudyView(self, text, tab_title=''):
         text = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
         if config.studyWindowContentTransformers:
@@ -901,12 +909,7 @@ class MainWindow(QMainWindow):
         elif self.syncingBibles:
             self.syncingBibles = False
         elif config.openStudyWindowContentOnNextTab:
-            nextIndex = self.studyView.currentIndex() + 1
-            if nextIndex >= config.numberOfTab:
-                nextIndex = 0
-            self.studyView.setCurrentIndex(nextIndex)
-            # Alternatively,
-            # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
+            self.nextStudyWindowTab()
         # export embedded images if enabled
         if config.exportEmbeddedImages:
             text = self.exportAllImages(text)
@@ -2591,10 +2594,7 @@ class MainWindow(QMainWindow):
                 webbrowser.open(address)
             else:
                 if config.openStudyWindowContentOnNextTab:
-                    nextIndex = self.studyView.currentIndex() + 1
-                    if nextIndex >= config.numberOfTab:
-                        nextIndex = 0
-                    self.studyView.setCurrentIndex(nextIndex)
+                    self.nextStudyWindowTab()
                 self.onlineCommand = commandFieldText
                 self.studyView.load(QUrl(address))
                 self.addHistoryRecord("study", commandFieldText)
