@@ -2581,7 +2581,8 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
-        if config.enforceCompareParallel and source == "main" and not textCommand.startswith("_") and config.compareTexts:
+        if config.enforceCompareParallel and source == "main" and not textCommand.startswith("_")\
+                and config.compareTexts != "":
             verse = ""
             if ":::" not in textCommand:
                 verse = textCommand
