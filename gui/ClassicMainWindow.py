@@ -78,7 +78,7 @@ class ClassicMainWindow:
         addMenuItem(menu, "menu_display_shortcuts", self, self.displayShortcuts, sc.displayShortcuts)
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro, None)
-        addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, None)
+        addMenuItem(menu, "menu1_moreConfig", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu1_programInterface")
         addMenuItem(subMenu, "menu_language", self, self.openInterfaceLanguageDialog)

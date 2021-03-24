@@ -155,7 +155,7 @@ class FocusMainWindow:
                 addMenuItem(subMenu, item, self, lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode), translation=False)
             #addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguageDialog)
 
-        addMenuItem(menu, "menu_config_flags", self, self.moreConfigOptionsDialog)
+        addMenuItem(menu, "configFlags", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
         menu.addSeparator()
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)

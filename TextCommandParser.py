@@ -749,18 +749,14 @@ class TextCommandParser:
 
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view, parallel=False):
-        if config.enforceCompareParallel and view == "main" and not parallel:
-            parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
-            compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
-            if parallelMatches:
-                config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
-                return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
-            elif compareMatches:
-                config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
-                return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
-            else:
-                pass
-
+        compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
+        if (config.enforceCompareParallel) and (view == "main") and (compareMatches) and not (parallel):
+            config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
+            return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
+        parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
+        if (config.enforceCompareParallel) and (view == "main") and (parallelMatches) and not (parallel):
+            config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
+            return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
         if config.useFastVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
@@ -1270,7 +1266,6 @@ class TextCommandParser:
             verseList = self.extractAllVerses(command)
         else:
             texts, references = self.splitCommand(command)
-            config.compareTexts = texts
             confirmedTexts = self.getConfirmedTexts(texts)
             verseList = self.extractAllVerses(references)
         if not confirmedTexts or not verseList:
