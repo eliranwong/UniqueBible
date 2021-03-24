@@ -653,4 +653,5 @@ translation = {
     "utilities": "Коммунальные услуги",
     "googleTranslate": "Перевод Google Translate",
     "remove": "Удалить",
+    "enforceCompareParallel": "Принудительное отображение Библии для пребывания в режиме сравнения",
 }

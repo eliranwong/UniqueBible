@@ -653,4 +653,5 @@ translation = {
     "utilities": "ユーティリティー",
     "googleTranslate": "Google 翻訳",
     "remove": "削除",
+    "enforceCompareParallel": "強制的なバイブル表示を比較モードにする",
 }

@@ -653,4 +653,5 @@ translation = {
     "utilities": "ഉപകരണങ്ങള്",
     "googleTranslate": "ഗൂഗിള് പരിഭാഷപ്പെടുത്തുകQuery",
     "remove": "നീക്കം ചെയ്യുക",
+    "enforceCompareParallel": "ബൈബിളിന്റെ പ്രദര്ശനം താരതമ്യേന ദൃശ്യം",
 }

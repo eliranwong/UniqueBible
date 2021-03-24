@@ -653,4 +653,5 @@ translation = {
     "utilities": "Dienstprogramme",
     "googleTranslate": "Google-Übersetzung",
     "remove": "Entfernen",
+    "enforceCompareParallel": "Bibelanzeige erzwingen, um im Vergleichsmodus zu bleiben",
 }
