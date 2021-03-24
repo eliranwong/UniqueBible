@@ -2581,15 +2581,6 @@ class MainWindow(QMainWindow):
         self.runTextCommand(newTextCommand, True, source)
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
-        if config.enforceCompareParallel and source == "main" and not textCommand.startswith("_")\
-                and config.compareTexts != "":
-            verse = ""
-            if ":::" not in textCommand:
-                verse = textCommand
-            elif textCommand.lower().startswith("bible:::"):
-                verse = textCommand.split(":::")[2]
-            if verse != "":
-                textCommand = "COMPARE:::{0}:::{1}".format(config.compareTexts, verse)
         textCommandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
         commandFieldText = self.textCommandLineEdit.text()
         if not re.match("^online:::", commandFieldText, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword.lower() in self.textCommandParser.interpreters):
@@ -2732,7 +2723,7 @@ class MainWindow(QMainWindow):
                     if config.tempRecord:
                         self.addHistoryRecord(view, config.tempRecord)
                         config.tempRecord = ""
-                    else:
+                    elif not (view == "main" and config.enforceCompareParallel) or textCommand.lower().startswith("compare") or textCommand.lower().startswith("parallel"):
                         self.addHistoryRecord(view, textCommand)
             # set checking blocks to prevent running the same command within unreasonable time frame
             self.now = now
