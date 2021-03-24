@@ -653,4 +653,5 @@ translation = {
     "utilities": "公用事业",
     "googleTranslate": "Google 翻译",
     "remove": "移除",
+    "enforceCompareParallel": "强制圣经显示在比较模式中停留",
 }

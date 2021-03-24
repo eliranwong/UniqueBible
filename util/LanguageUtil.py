@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("hideBlankVerseCompare", "Hide verses if blank during compare")
+        addLanguageStringToAllFiles("enforceCompareParallel", "Force Bible display to stay in compare mode")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

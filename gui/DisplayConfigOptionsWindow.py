@@ -61,7 +61,8 @@ class DisplayConfigOptionsWindow(QDialog):
             ["enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")],
             ["enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(True, "enablePlugins")],
             #["customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")],
-            ["hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare")]
+            ["hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare")],
+            ["enforceCompareParallel", config.enforceCompareParallel, self.parent.enforceCompareParallelButtonClicked, self.flagToolTip(False, "enforceCompareParallel")],
         ]
         if config.isTtsInstalled:
             options += [
