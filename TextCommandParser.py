@@ -873,7 +873,8 @@ class TextCommandParser:
             del bibleSqlite
         else:
             # use plain bibles database when corresponding formatted version is not available
-            content = BiblesSqlite().readPlainChapter(text, verse)
+            language = Bible(text).getLanguage()
+            content = BiblesSqlite(language).readPlainChapter(text, verse)
         return content
 
     # cmd:::
@@ -1310,6 +1311,7 @@ class TextCommandParser:
 
     # PARALLEL:::
     def textParallel(self, command, source):
+        config.compareTexts = ""
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(viewText, command)
