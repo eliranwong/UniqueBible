@@ -15,12 +15,9 @@ class BiblesSqlite:
 
     def __init__(self, language=""):
         # connect bibles.sqlite
-        if language == "":
-            self.database = os.path.join(config.marvelData, "bibles.sqlite")
-        else:
-            self.database = os.path.join(config.marvelData, "bibles_{0}.sqlite".format(language))
-            if not os.path.exists(self.database):
-                self.database = os.path.join(config.marvelData, "bibles.sqlite")
+        defaultDatabase = os.path.join(config.marvelData, "bibles.sqlite")
+        langDatabase = os.path.join(config.marvelData, "bibles_{0}.sqlite".format(language))
+        self.database = langDatabase if language and os.path.isfile(langDatabase) else defaultDatabase
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
         self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")

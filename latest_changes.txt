@@ -1,3 +1,6 @@
+Major change in version 23.13:
+* Added support of custom bible chapter sub-headings for individual languages.
+
 Major change in version 23.12:
 * Fixed Sync Study Window Bible display when verse number single-click action is configured.
 
