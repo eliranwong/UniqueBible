@@ -10,6 +10,8 @@ from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
     QComboBox, QRadioButton, QGridLayout
 
+from Languages import Languages
+
 
 class ModifyDatabaseDialog(QDialog):
 
@@ -89,6 +91,16 @@ class ModifyDatabaseDialog(QDialog):
         row.addWidget(self.fontSize)
         self.layout.addLayout(row)
 
+        self.languageCodes = [""] + [value for value in Languages.code.values()]
+
+        row = QHBoxLayout()
+        row.addWidget(QLabel("{0}: ".format(config.thisTranslation["menu_language"])))
+        self.languageList = QComboBox()
+        row.addWidget(self.languageList)
+        self.languageList.addItems(self.languageCodes)
+        self.languageList.setCurrentIndex(self.languageCodes.index(self.bible.getLanguage()))
+        self.layout.addLayout(row)
+
         buttons = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.save)
@@ -121,6 +133,8 @@ class ModifyDatabaseDialog(QDialog):
                 font = self.fontFiles[self.fileFontList.currentIndex()]
             self.bible.updateTitleAndFontInfo(self.bibleTitle.text(),
                                               self.fontSize.text(), font)
+            language = self.languageCodes[self.languageList.currentIndex()]
+            self.bible.updateLanguage(language)
 
 if __name__ == '__main__':
     from util.ConfigUtil import ConfigUtil
