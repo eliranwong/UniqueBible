@@ -684,6 +684,7 @@ class WebEngineView(QWebEngineView):
         if config.clickToOpenImage:
             html = self.parent.parent.addOpenImageAction(html)
         # format html content
+        activeBCVsettings = ""
         if self.name == "main":
             activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
         elif self.name == "study":

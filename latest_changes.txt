@@ -1,4 +1,8 @@
-Major change in version 23.16:
+Major changes in version 23.17:
+* Added a context plugin "Strong Number Concordance AV1769" for lookup of Strong's numbers.
+* Fixed an issue about opening popover window.
+
+Major changes in version 23.16:
 * Added a startup plugin "plugins/startup/fixNonHtmlColour.py" to fix non-html colour codes in some 3rd-party resources.
 * Added a context plugin "plugins/context/Strong Number to CSV.py" to generate CSV spreadsheet by selecting a Strong's number and selecting the plugin from right-click context menu.
     A wiki page is created about the use of this plugin: https://github.com/eliranwong/UniqueBible/wiki/Strong-Number-to-CSV
