@@ -1,3 +1,9 @@
+Major change in version 23.16:
+* Added a startup plugin "plugins/startup/fixNonHtmlColour.py" to fix non-html colour codes in some 3rd-party resources.
+* Added a context plugin "plugins/context/Strong Number to CSV.py" to generate CSV spreadsheet by selecting a Strong's number and selecting the plugin from right-click context menu.
+    A wiki page is created about the use of this plugin: https://github.com/eliranwong/UniqueBible/wiki/Strong-Number-to-CSV
+    Special thanks to Tim Morton, who shared his work on Strongs2csv at: https://github.com/tsmorton60/Strongs2csv
+
 Major change in version 23.15:
 * Fixed compare all version feature regarding text direction.
 

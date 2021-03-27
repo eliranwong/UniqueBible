@@ -16,6 +16,7 @@
 /plugins/menu/*.zip
 /plugins/context/*.py
 /plugins/context/*.zip
+/plugins/context/Strongs2csv/*.csv
 /plugins/startup/*.py
 /plugins/startup/*.zip
 /plugins/shutdown/*.py
