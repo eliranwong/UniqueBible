@@ -1,3 +1,6 @@
+Major change in version 23.18:
+* Added data for display with plugin "Strong Number Concordance AV1769".
+
 Major changes in version 23.17:
 * Added a context plugin "Strong Number Concordance AV1769" for lookup of Strong's numbers.
 * Fixed an issue about opening popover window.

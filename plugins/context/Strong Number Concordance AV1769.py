@@ -1,5 +1,5 @@
 import config, re, os
-
+from plugins.context.Strongs2csv.strongsData import *
 
 def search(sNumList):
 
@@ -53,9 +53,14 @@ def search(sNumList):
 
 if config.pluginContext:
     if re.match("^[GH][0-9]+?$", config.pluginContext):
+        lexeme, pronunciation = ("", "")
+        if config.pluginContext in strongsData:
+            lexeme, pronunciation, *_ = strongsData[config.pluginContext]
+            lexeme = "<heb>{0}</heb>".format(lexeme) if config.pluginContext.startswith("H") else "<grk>{0}</grk>".format(lexeme)
+            pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
         sNumList = ["[{0}]".format(config.pluginContext)]
         verseHits, snHits, uniqueWdList, verses = search(sNumList)
-        html = "<h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>Unique translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(config.pluginContext, verseHits, snHits, ", ".join(uniqueWdList), "<br>".join(verses))
+        html = "<h1>Strong's Concordance - AV1769</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(config.pluginContext, verseHits, snHits, ", ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation)
         config.contextSource.openPopover(html=html)
     else:
         config.mainWindow.displayMessage("Selected text is not a Strong's number!")
