@@ -2750,7 +2750,7 @@ class MainWindow(QMainWindow):
 
     def instantHighlight(self, text):
         if config.instantHighlightString:
-            text = re.sub(config.instantHighlightString, "<z>{0}</z>".format(config.instantHighlightString), text)
+            text = re.sub("({0})".format(config.instantHighlightString), r"<z>\1</z>", text, flags=re.IGNORECASE)
             return TextUtil.fixTextHighlighting(text)
         else:
             return text
