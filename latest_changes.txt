@@ -1,3 +1,6 @@
+Major change in version 23.15:
+* Fixed compare all version feature regarding text direction.
+
 Major change in version 23.14:
 * Instant highlight feature is now case-insensitive.
 
