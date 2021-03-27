@@ -1,5 +1,4 @@
 import config, re, os
-from BibleVerseParser import BibleVerseParser
 
 
 def search(sNumList):
