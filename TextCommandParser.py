@@ -13,6 +13,7 @@ from db.Highlight import Highlight
 from TtsLanguages import TtsLanguages
 from qtpy.QtWidgets import QApplication
 from install.module import *
+from plugins.context.Strongs2csv.strongsData import *
 try:
     # Note: qtpy.QtTextToSpeech is not found!
     from PySide2.QtTextToSpeech import QTextToSpeech
@@ -138,6 +139,11 @@ class TextCommandParser:
             "summary": (self.textChapterSummary, """
             # [KEYWORD] SUMMARY
             # e.g. summary:::John 3"""),
+            "strongbible": (self.textStrongBible, """
+            # [KEYWORD] STRONGBIBLE
+            # Feature - Search a Strong's number bible
+            # Usage - STRONGBIBLE:::[BIBLE_VERSION]:::[STRONG_NUMBER]
+            # e.g. STRONGBIBLE:::KJVx:::G1234"""),
             "search": (self.textCountSearch, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
@@ -1105,6 +1111,30 @@ class TextCommandParser:
                     chapterSummary = "<p><bb>Complete Summary of the Bible (Brooks)</bb></p><p>{0}</p><hr>".format(chapterSummary)
                 content += chapterSummary
             return ("study", content, {})
+
+    # STRONGBIBLE:::
+    def textStrongBible(self, command, source):
+        if command.count(":::") == 0:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, reference = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts)
+        if not texts:
+            return self.invalidCommand()
+        else:
+            text = texts[0]
+            if not text in self.parent.strongBibles or not re.match("^[GH][0-9]+?$", reference):
+                return self.invalidCommand()
+            else:
+                lexeme, pronunciation = ("", "")
+                if reference in strongsData:
+                    lexeme, pronunciation, *_ = strongsData[reference]
+                    lexeme = "<heb>{0}</heb>".format(lexeme) if reference.startswith("H") else "<grk>{0}</grk>".format(lexeme)
+                    pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
+                sNumList = ["[{0}]".format(reference)]
+                verseHits, snHits, uniqueWdList, verses = Bible(text).searchStrongNumber(sNumList)
+                html = "<h1>Strong's Concordance - {7}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(reference, verseHits, snHits, ", ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation, text)
+                return ("study", html, {})
 
     # BIBLE:::
     def textBible(self, command, source):

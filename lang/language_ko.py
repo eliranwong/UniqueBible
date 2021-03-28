@@ -655,4 +655,6 @@ translation = {
     "remove": "제거",
     "enforceCompareParallel": "비교/병렬 모드로 유지하기 위해 성경 창 표시를 유지합니다.",
     "configFlags": "구성 플래그",
+    "bibleStrongNumber": "성경 스트롱의 수",
+    "notStrongNumber": "선택한 텍스트가 강력한 숫자가 아닙니다!",
 }

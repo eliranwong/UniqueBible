@@ -1,5 +1,5 @@
 from Languages import Languages
-import config, os, platform, webbrowser
+import config, os, platform, webbrowser, re
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
@@ -207,6 +207,20 @@ class WebEngineView(QWebEngineView):
         action.setText(config.thisTranslation["bibleText"])
         action.setMenu(subMenu)
         self.addAction(action)
+
+        # Search Strong's number bibles, if installed
+        if self.parent.parent.strongBibles:
+            subMenu = QMenu()
+            for text in self.parent.parent.strongBibles:
+                action = QAction(self)
+                action.setText(text)
+                action.triggered.connect(partial(self.searchStrongBible, text))
+                subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["bibleStrongNumber"])
+            action.setMenu(subMenu)
+            self.addAction(action)
 
         subMenu = QMenu()
         for keyword in ("SEARCHBOOKNOTE", "SEARCHCHAPTERNOTE", "SEARCHVERSENOTE"):
@@ -579,6 +593,16 @@ class WebEngineView(QWebEngineView):
         if config.noteSearchString:
             config.noteSearchString = ""
             self.parent.parent.reloadCurrentRecord()
+
+    def searchStrongBible(self, module):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        elif re.match("^[GH][0-9]+?$", selectedText):
+            searchCommand = "STRONGBIBLE:::{0}:::{1}".format(module, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+        else:
+            self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])
 
     def searchResource(self, module):
         selectedText = self.selectedText().strip()

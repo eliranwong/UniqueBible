@@ -655,4 +655,6 @@ translation = {
     "remove": "削除",
     "enforceCompareParallel": "比較 / パラレル・モードでバイブル・ウィンドウの表示を保持",
     "configFlags": "構成フラグ",
+    "bibleStrongNumber": "バイブル・ストロング・ナンバー",
+    "notStrongNumber": "選択したテキストはストロングの数値ではありません。",
 }

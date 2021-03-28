@@ -655,4 +655,6 @@ translation = {
     "remove": "Entfernen",
     "enforceCompareParallel": "Fenster 'Bibelfenster beibehalten' im Vergleich/Parallelmodus anzeigen",
     "configFlags": "Konfigurationsmarkierungen",
+    "bibleStrongNumber": "Bibel Strong's Number",
+    "notStrongNumber": "Ausgewählter Text ist keine Starke Nummer!",
 }

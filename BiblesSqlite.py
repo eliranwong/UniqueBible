@@ -887,11 +887,22 @@ class Bible:
                 self.cursor.execute(query, (0, 0, 0))
                 info = self.cursor.fetchone()
             except:
-                info = self.text
+                return self.text
         if info:
             return info[0]
         else:
             return self.text
+
+    def bibleStrong(self):
+        # It is observed that some files have Details table and some do not.
+        try:
+            query = "SELECT Strongs FROM Details limit 1"
+            self.cursor.execute(query)
+            strong = self.cursor.fetchone()
+            if strong:
+                return strong[0]
+        except:
+            return 0
 
     def getLanguage(self):
         try:
@@ -917,14 +928,50 @@ class Bible:
         except:
             return ("", "")
 
-    def bibleInfoOld(self):
-        query = "SELECT Scripture FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
-        self.cursor.execute(query)
-        info = self.cursor.fetchone()
-        if info:
-            return info[0]
-        else:
-            return ""
+    def searchStrongNumber(self, sNumList):    
+        self.cursor.execute('SELECT * FROM Verses')
+    
+        #csv = ['Idx,Book,Ref.,KJB Verse,KJB Word,Original,Transliteration,Definition']
+        csv = []
+        wdListAll = []
+        verseHits = 0
+        snHits = 0
+        for row in self.cursor:
+            #vsTxt = row[3]
+            vsTxt = re.sub(" ([HG][0-9]+?) ", r" [\1] ", row[3])
+            
+            if any(sn in vsTxt for sn in sNumList):
+                vsTxt = re.sub(r'\[\([HG]\d+\)\]', r'', vsTxt)
+                vsTxt = re.sub(r'\[\([GH]\d+\)\]|<fn>\d+</fn>|<.+?>|[\r\n]', r'', vsTxt)
+                wdGrpList = re.findall(r'[^\]]+\]', vsTxt)
+                
+                wdList = []
+                wdGrpListFix = []
+                for wdGrp in wdGrpList:
+                    if all(sn not in wdGrp for sn in sNumList):
+                        wdGrp = re.sub(r'\[[GH]\d+\]', r'', wdGrp)
+                    else:
+                        wds, *_ = wdGrp.split('[')
+                        #wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1**\2**', wdGrp )
+                        wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1<z>\2</z>', wdGrp )
+                        if wds:
+                            wdList.append( '%s' % (re.sub(r'[^\w\s]','', wds).strip()))
+                        
+                    wdGrpListFix.append(wdGrp)
+                
+                vsTxtFix = ''.join(wdGrpListFix)
+                
+                #wdHits = re.findall(r'[^\s]\*\*([^\[]+)', vsTxtFix)
+                snHits += len(re.findall(r'\[[GH]\d+\]', vsTxtFix))
+                #', '.join(wdList)
+                wdListAll += wdList
+                
+                line = """<ref onclick="document.title='MAIN:::{0}'">({0})</ref> {1}""".format(row[1], vsTxtFix)
+                
+                csv.append(line)
+                verseHits +=1
+        
+        return (verseHits, snHits, list(set(wdListAll)), csv)
 
     def importPlainFormat(self, verses, description=""):
         query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"

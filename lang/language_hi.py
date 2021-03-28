@@ -655,4 +655,6 @@ translation = {
     "remove": "हटाएँ",
     "enforceCompareParallel": "तुलना में रहने के लिए बाइबल विंडो प्रदर्शन रखें/समानांतर मोड में रखें",
     "configFlags": "कॉन्फ़िग फ्लैगComment",
+    "bibleStrongNumber": "बाइबल मजबूत की संख्या",
+    "notStrongNumber": "चुना गया पाठ एक मजबूत संख्या नहीं है!",
 }

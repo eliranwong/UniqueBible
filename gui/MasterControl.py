@@ -23,7 +23,7 @@ class MasterControl(QWidget):
         if config.restrictControlPanelWidth and config.screenWidth > config.masterControlWidth:
             self.setFixedWidth(config.masterControlWidth)
         # setup item option lists
-        self.setupItemLists()
+        self.setupResourceLists()
         # setup interface
         self.text = text
         self.setupUI(b, c, v, text, initialTab)
@@ -54,52 +54,88 @@ class MasterControl(QWidget):
         event.ignore()
         self.hide()
 
-    def setupItemLists(self):
+    def setupResourceLists(self):
+        self.parent.setupResourceLists()
         # bible versions
-        self.textList = BiblesSqlite().getBibleList()
-        self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
-        if self.parent.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
+        self.textList = self.parent.textList
+        self.textFullNameList = self.parent.textFullNameList
+        self.strongBibles =  self.parent.strongBibles
+        if self.parent.versionCombo is not None and config.menuLayout in ("classic", "focus", "aleph"):
             for index, fullName in enumerate(self.textFullNameList):
                 self.parent.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         # commentaries
-        self.commentaryList = Commentary().getCommentaryList()
+        self.commentaryList = self.parent.commentaryList
         #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]
-        self.commentaryFullNameList = []
-        for module in self.commentaryList:
-            info = Commentary(module).commentaryInfo()
-            if info == "https://Marvel.Bible Commentary" and module in Commentary.marvelCommentaries:
-                info = Commentary.marvelCommentaries[module]
-            self.commentaryFullNameList.append(info)
+        self.commentaryFullNameList = self.parent.commentaryFullNameList
         # reference book
         # menu10_dialog
-        bookData = BookData()
-        self.referenceBookList = [book for book, *_ in bookData.getBookList()]
-        # open database
-        indexes = IndexesSqlite()
+        self.referenceBookList = self.parent.referenceBookList
         # topic
         # menu5_topics
-        topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
-        self.topicListAbb = list(topicDictAbb2Name.keys())
-        topicDict = {name: abb for abb, name in indexes.topicList}
-        self.topicList = list(topicDict.keys())
+        self.topicListAbb = self.parent.topicListAbb
+        self.topicList = self.parent.topicList
         # lexicon
         # context1_originalLexicon
-        self.lexiconList = LexiconData().lexiconList
+        self.lexiconList = self.parent.lexiconList
         # dictionary
         # context1_dict
-        dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
-        self.dictionaryListAbb = list(dictionaryDictAbb2Name.keys())
-        dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
-        self.dictionaryList = list(dictionaryDict.keys())
+        self.dictionaryListAbb = self.parent.dictionaryListAbb
+        self.dictionaryList = self.parent.dictionaryList
         # encyclopedia
         # context1_encyclopedia
-        encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
-        self.encyclopediaListAbb = list(encyclopediaDictAbb2Name.keys())
-        encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
-        self.encyclopediaList = list(encyclopediaDict.keys())
+        self.encyclopediaListAbb = self.parent.encyclopediaListAbb
+        self.encyclopediaList = self.parent.encyclopediaList
         # 3rd-party dictionary
         # menu5_3rdDict
-        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        self.thirdPartyDictionaryList = self.parent.thirdPartyDictionaryList
+
+#    def setupItemLists(self):
+#        # bible versions
+#        self.textList = BiblesSqlite().getBibleList()
+#        self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
+#        self.strongBibles =  [text for text in self.textList if Bible(text).bibleStrong()]
+#        if self.parent.versionCombo is not None and config.menuLayout in ("classic", "focus", "aleph"):
+#            for index, fullName in enumerate(self.textFullNameList):
+#                self.parent.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
+#        # commentaries
+#        self.commentaryList = Commentary().getCommentaryList()
+#        #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]
+#        self.commentaryFullNameList = []
+#        for module in self.commentaryList:
+#            info = Commentary(module).commentaryInfo()
+#            if info == "https://Marvel.Bible Commentary" and module in Commentary.marvelCommentaries:
+#                info = Commentary.marvelCommentaries[module]
+#            self.commentaryFullNameList.append(info)
+#        # reference book
+#        # menu10_dialog
+#        bookData = BookData()
+#        self.referenceBookList = [book for book, *_ in bookData.getBookList()]
+#        # open database
+#        indexes = IndexesSqlite()
+#        # topic
+#        # menu5_topics
+#        topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
+#        self.topicListAbb = list(topicDictAbb2Name.keys())
+#        topicDict = {name: abb for abb, name in indexes.topicList}
+#        self.topicList = list(topicDict.keys())
+#        # lexicon
+#        # context1_originalLexicon
+#        self.lexiconList = LexiconData().lexiconList
+#        # dictionary
+#        # context1_dict
+#        dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
+#        self.dictionaryListAbb = list(dictionaryDictAbb2Name.keys())
+#        dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
+#        self.dictionaryList = list(dictionaryDict.keys())
+#        # encyclopedia
+#        # context1_encyclopedia
+#        encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
+#        self.encyclopediaListAbb = list(encyclopediaDictAbb2Name.keys())
+#        encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
+#        self.encyclopediaList = list(encyclopediaDict.keys())
+#        # 3rd-party dictionary
+#        # menu5_3rdDict
+#        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.parent.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
 
     def setupUI(self, b, c, v, text, initialTab):
         mainLayout = QVBoxLayout()

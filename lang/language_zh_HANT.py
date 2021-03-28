@@ -655,4 +655,6 @@ translation = {
     "remove": "移除",
     "enforceCompareParallel": "保持聖經視窗顯示在比較 / 平行模式",
     "configFlags": "配置旗標",
+    "bibleStrongNumber": "聖經原文編號",
+    "notStrongNumber": "選取的文字不是一個原文編號！",
 }

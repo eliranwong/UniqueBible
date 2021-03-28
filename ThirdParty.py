@@ -323,7 +323,7 @@ class Converter:
         connection.text_factory = lambda b: b.decode(errors='ignore')
         cursor = connection.cursor()
 
-        query = "SELECT Description, Abbreviation FROM Details"
+        query = "SELECT Title, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
         abbreviation = abbreviation.replace("-", "")
@@ -368,7 +368,8 @@ class Converter:
         statements = (
             Bible.CREATE_BIBLE_TABLE,
             Bible.CREATE_VERSES_TABLE,
-            Bible.CREATE_DETAILS_TABLE
+            Bible.CREATE_DETAILS_TABLE,
+            Bible.CREATE_NOTES_TABLE,
         )
         for create in statements:
             cursor.execute(create)
@@ -706,7 +707,7 @@ class Converter:
         statements = (
             Bible.CREATE_BIBLE_TABLE,
             Bible.CREATE_NOTES_TABLE,
-            Bible.CREATE_DETAILS_TABLE
+            Bible.CREATE_DETAILS_TABLE,
         )
         for create in statements:
             cursor.execute(create)
@@ -750,12 +751,12 @@ class Converter:
         cursor.execute("SELECT COUNT(DISTINCT(Book)) FROM Bible")
         count = cursor.fetchone()[0]
 
-        information = ''
+        information = description
         version = 1
         oldTestamentFlag = 1
         newTestamentFlag = 1
         apocryphaFlag = 0
-        strongsFlag = 0
+        strongsFlag = 1 if config.importDoNotStripStrongNo else 0
         if count <= 27:
             oldTestamentFlag = 0
         elif count == 39:
@@ -763,9 +764,9 @@ class Converter:
         elif count > 66:
             apocryphaFlag = 1
 
-        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
-                                newTestamentFlag, apocryphaFlag, strongsFlag, language))
+                                newTestamentFlag, apocryphaFlag, strongsFlag, language, "", ""))
         cursor.connection.commit()
 
     def stripMySwordBibleTags(self, text):
@@ -1090,7 +1091,9 @@ class Converter:
 
         statements = (
             Bible.CREATE_BIBLE_TABLE,
-            Bible.CREATE_NOTES_TABLE
+            Bible.CREATE_VERSES_TABLE,
+            Bible.CREATE_DETAILS_TABLE,
+            Bible.CREATE_NOTES_TABLE,
         )
         for create in statements:
             cursor.execute(create)
@@ -1136,6 +1139,8 @@ class Converter:
         insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
         cursor.executemany(insert, formattedChapters)
         connection.commit()
+
+        self.populateDetails(cursor, description, abbreviation)
 
         connection.close()
 

@@ -655,4 +655,6 @@ translation = {
     "remove": "Înlăturare",
     "enforceCompareParallel": "Păstrare fereastră biblică pentru a rămâne în modul comparare/paralel",
     "configFlags": "Steguleţe",
+    "bibleStrongNumber": "Numărul lui Strong Strong",
+    "notStrongNumber": "Textul selectat nu este un număr puternic!",
 }

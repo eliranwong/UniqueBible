@@ -655,4 +655,6 @@ translation = {
     "remove": "Rimuovi",
     "enforceCompareParallel": "Mantieni il display della Bible Window per rimanere in modalità confronto / parallelo",
     "configFlags": "Indicatori Config",
+    "bibleStrongNumber": "Numero Della Bibbia Forte",
+    "notStrongNumber": "Il testo selezionato non è un numero di Strong!",
 }

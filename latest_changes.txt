@@ -1,3 +1,15 @@
+Major changes in version 23.19:
+* Fixed importing e-Sword bible modules
+* Fixed importing MyBible bible modules
+* Added right-click context menu to search for a Strong number in Strong's number bibles.
+            # Support bibles with Strong's numbers and Strong in 'Details' table set to 1.
+            # Select "Allow search for Strong's number" when importing 3rd-party bibles to support this feature.
+* Added a command keyword to search for a Strong's number in a Strong's nubmer bible
+            # [KEYWORD] STRONGBIBLE
+            # Feature - Search a Strong's number bible
+            # Usage - STRONGBIBLE:::[BIBLE_VERSION]:::[STRONG_NUMBER]
+            # e.g. STRONGBIBLE:::KJVx:::G1234
+
 Major change in version 23.18:
 * Added data for display with plugin "Strong Number Concordance AV1769".
 
