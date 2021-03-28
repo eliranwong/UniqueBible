@@ -763,9 +763,9 @@ class Converter:
         elif count > 66:
             apocryphaFlag = 1
 
-        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, (description[:100], abbreviation[:50], information, version, oldTestamentFlag,
-                                newTestamentFlag, apocryphaFlag, strongsFlag, language))
+                                newTestamentFlag, apocryphaFlag, strongsFlag, language, "", ""))
         cursor.connection.commit()
 
     def stripMySwordBibleTags(self, text):
@@ -1034,7 +1034,6 @@ class Converter:
         books = doc.getElementsByTagName("BIBLEBOOK")
         data = []
         for book in books:
-            book_number = book.getAttribute("bnumber")
             chapters = book.getElementsByTagName("CHAPTER")
             book_number = book.getAttribute("bnumber")
             for chapter in chapters:
