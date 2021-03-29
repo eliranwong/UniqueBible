@@ -50,3 +50,6 @@ UniqueBibleApp.sh
 ubacli.sh
 morphology.sqlite
 htmlResources/fonts/*
+htmlResources/images/Bridgeway/*
+htmlResources/images/BiblePic/*
+
