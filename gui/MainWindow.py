@@ -164,7 +164,8 @@ class MainWindow(QMainWindow):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
         self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
-        self.strongBibles =  [text for text in self.textList if Bible(text).bibleStrong()]
+        self.strongBibles = ["OHGBi"] if os.path.isfile(os.path.join("marvelData", "bibles", "OHGBi.bible")) else []
+        self.strongBibles += [text for text in self.textList if Bible(text).bibleStrong()]
         #if self.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
         #    for index, fullName in enumerate(self.textFullNameList):
         #        self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)

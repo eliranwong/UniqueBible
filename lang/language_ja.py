@@ -657,4 +657,5 @@ translation = {
     "configFlags": "構成フラグ",
     "bibleStrongNumber": "バイブル・ストロング・ナンバー",
     "notStrongNumber": "選択したテキストはストロングの数値ではありません。",
+    "all": "オール",
 }

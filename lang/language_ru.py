@@ -657,4 +657,5 @@ translation = {
     "configFlags": "Флаги конфигурации",
     "bibleStrongNumber": "Библейский сильный номер",
     "notStrongNumber": "Выбранный текст не является номером сильного!",
+    "all": "ВСЕ",
 }

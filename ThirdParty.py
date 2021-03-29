@@ -375,7 +375,6 @@ class Converter:
             cursor.execute(create)
             connection.commit()
 
-        noteList = []
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
             if extended:
@@ -1101,7 +1100,6 @@ class Converter:
         if stories:
             stories = self.storiesToTitles(stories)
 
-        noteList = []
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
 

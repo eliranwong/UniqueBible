@@ -657,4 +657,5 @@ translation = {
     "configFlags": "കോണ്ഫിഗ് ഫ്ലാഗ്",
     "bibleStrongNumber": "ബൈബിൾ സ്ട്രോങ്ങിന്റെ നമ്പർ",
     "notStrongNumber": "തെരഞ്ഞെടുത്ത വാചകം സ്ട്രോങ്ങിന്റെ നമ്പർ അല്ല!",
+    "all": "എല്ലാം",
 }

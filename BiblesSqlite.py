@@ -10,6 +10,7 @@ from db.Highlight import Highlight
 from themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
+from strongsData import *
 
 class BiblesSqlite:
 
@@ -928,6 +929,19 @@ class Bible:
         except:
             return ("", "")
 
+    def formatStrongConcordance(self, strongNo):
+        if self.text == "OHGBi":
+            return MorphologySqlite().formatConcordance(strongNo)
+        lexeme, pronunciation = ("", "")
+        if strongNo in strongsData:
+            lexeme, pronunciation, *_ = strongsData[strongNo]
+            lexeme = "<heb>{0}</heb>".format(lexeme) if strongNo.startswith("H") else "<grk>{0}</grk>".format(lexeme)
+            pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
+        sNumList = ["[{0}]".format(strongNo)]
+        verseHits, snHits, uniqueWdList, verses = Bible(self.text).searchStrongNumber(sNumList)
+        html = "<h1>Strong's Concordance - {7}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " | ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation, self.text)
+        return html
+
     def searchStrongNumber(self, sNumList):    
         self.cursor.execute('SELECT * FROM Verses')
     
@@ -936,9 +950,12 @@ class Bible:
         wdListAll = []
         verseHits = 0
         snHits = 0
-        for row in self.cursor:
+        biblesSqlite = BiblesSqlite()
+
+        for b, c, v, vsTxt in self.cursor:
             #vsTxt = row[3]
-            vsTxt = re.sub(" ([HG][0-9]+?) ", r" [\1] ", row[3])
+            vsTxt = re.sub("([HG][0-9]+?) ", r" [\1] ", vsTxt)
+            vsTxt = re.sub("([HG][0-9]+?)[a-z] ", r" [\1] ", vsTxt)
             
             if any(sn in vsTxt for sn in sNumList):
                 vsTxt = re.sub(r'\[\([HG]\d+\)\]', r'', vsTxt)
@@ -949,7 +966,7 @@ class Bible:
                 wdGrpListFix = []
                 for wdGrp in wdGrpList:
                     if all(sn not in wdGrp for sn in sNumList):
-                        wdGrp = re.sub(r'\[[GH]\d+\]', r'', wdGrp)
+                        wdGrp = re.sub(r'\[[HG][0-9]+?\]|\[[HG][0-9]+?[a-z]\]', r'', wdGrp)
                     else:
                         wds, *_ = wdGrp.split('[')
                         #wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1**\2**', wdGrp )
@@ -966,7 +983,8 @@ class Bible:
                 #', '.join(wdList)
                 wdListAll += wdList
                 
-                line = """<ref onclick="document.title='MAIN:::{0}'">({0})</ref> {1}""".format(row[1], vsTxtFix)
+                verseReference = biblesSqlite.bcvToVerseReference(b, c, v)
+                line = """<ref onclick="document.title='BIBLE:::{0}'">({0})</ref> {1}""".format(verseReference, vsTxtFix)
                 
                 csv.append(line)
                 verseHits +=1
@@ -1268,6 +1286,52 @@ class MorphologySqlite:
         t = (wordID,)
         self.cursor.execute(query, t)
         return self.cursor.fetchone()
+
+    def formatOHGBiVerseText(self, bcv):
+        query = "SELECT WordID, Word, LexicalEntry, Interlinear FROM morphology WHERE Book=? AND Chapter=? AND Verse=? ORDER BY WordID"
+        self.cursor.execute(query, bcv)
+        verseText = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(BiblesSqlite().bcvToVerseReference(*bcv))
+        for wordID, word, lexicalEntry, interlinear in self.cursor:
+            b = bcv[0]
+            action = ' onclick="w({0},{1})" onmouseover="iw({0},{1})"'.format(b, wordID)
+            word = "<heb{1}>{0}</heb>".format(word, action) if b < 40 else "<grk{1}>{0}</grk>".format(word, action)
+            interlinear = "<gloss>{0}</gloss>".format(interlinear)
+            lexicalEntry = " ".join(["[{0}]".format(entry) for entry in lexicalEntry.split(",") if entry])
+            verseText += "{0}{1} {2} ".format(word, interlinear, lexicalEntry)
+        return verseText
+
+    def formatConcordance(self, lexicalEntry):
+        query = "SELECT COUNT(LexicalEntry) FROM morphology WHERE LexicalEntry LIKE ?"
+        t = ("%{0},%".format(lexicalEntry),)
+        self.cursor.execute(query, t)
+        snHits = self.cursor.fetchone()[0]
+
+        verses = self.distinctMorphologyVerse(lexicalEntry)
+        verseHits = len(verses)
+        higlightedVerses = []
+        for verse in verses:
+            verse = self.formatOHGBiVerseText(verse)
+            verse = re.sub("(\[{0}\])".format(lexicalEntry), r"<z>\1</z>", verse)
+            verse = re.sub("\[[EHG][0-9]+?\] ", "", verse)
+            higlightedVerses.append(verse)
+        verses = "<br>".join(higlightedVerses)
+
+        lexeme, pronunciation = ("", "")
+        if lexicalEntry in strongsData:
+            lexeme, pronunciation, *_ = strongsData[lexicalEntry]
+            lexeme = "<heb>{0}</heb>".format(lexeme) if lexicalEntry.startswith("H") else "<grk>{0}</grk>".format(lexeme)
+            pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
+
+        literalTranslation = " | ".join(self.distinctMorphology(lexicalEntry))
+        dynamicTranslation = " | ".join(self.distinctMorphology(lexicalEntry, "Translation"))
+        html = "<h1>OHGB Concordance</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)
+        return html
+
+    def distinctMorphologyVerse(self, lexicalEntry):
+        query = "SELECT DISTINCT Book, Chapter, Verse FROM morphology WHERE LexicalEntry LIKE ?"
+        t = ("%{0},%".format(lexicalEntry),)
+        self.cursor.execute(query, t)
+        return self.cursor.fetchall()
 
     def distinctMorphology(self, lexicalEntry, item="Interlinear"):
         query = "SELECT DISTINCT {0} FROM morphology WHERE LexicalEntry LIKE ?".format(item)

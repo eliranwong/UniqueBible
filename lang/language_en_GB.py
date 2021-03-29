@@ -657,4 +657,5 @@ translation = {
     "configFlags": "Config Flags",
     "bibleStrongNumber": "Bible Strong's Number",
     "notStrongNumber": "Selected text is not a Strong's number!",
+    "all": "ALL",
 }

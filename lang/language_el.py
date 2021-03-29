@@ -657,4 +657,5 @@ translation = {
     "configFlags": "Σημαίες ρύθμισης",
     "bibleStrongNumber": "Αριθμός της Βίβλου Ισχυρός",
     "notStrongNumber": "Το επιλεγμένο κείμενο δεν είναι αριθμός ισχυρού!",
+    "all": "ΌΛΑ!",
 }

@@ -657,4 +657,5 @@ translation = {
     "configFlags": "Steguleţe",
     "bibleStrongNumber": "Numărul lui Strong Strong",
     "notStrongNumber": "Textul selectat nu este un număr puternic!",
+    "all": "TOATE",
 }

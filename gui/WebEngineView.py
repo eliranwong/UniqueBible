@@ -217,6 +217,15 @@ class WebEngineView(QWebEngineView):
                 action.triggered.connect(partial(self.searchStrongBible, text))
                 subMenu.addAction(action)
 
+            separator = QAction(self)
+            separator.setSeparator(True)
+            subMenu.addAction(separator)
+    
+            action = QAction(self)
+            action.setText(config.thisTranslation["all"])
+            action.triggered.connect(self.searchAllStrongBible)
+            subMenu.addAction(action)
+
             action = QAction(self)
             action.setText(config.thisTranslation["bibleStrongNumber"])
             action.setMenu(subMenu)
@@ -600,6 +609,16 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         elif re.match("^[GH][0-9]+?$", selectedText):
             searchCommand = "STRONGBIBLE:::{0}:::{1}".format(module, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+        else:
+            self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])
+
+    def searchAllStrongBible(self):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        elif re.match("^[GH][0-9]+?$", selectedText):
+            searchCommand = "STRONGBIBLE:::ALL:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])

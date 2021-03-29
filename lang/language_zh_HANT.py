@@ -657,4 +657,5 @@ translation = {
     "configFlags": "配置旗標",
     "bibleStrongNumber": "聖經原文編號",
     "notStrongNumber": "選取的文字不是一個原文編號！",
+    "all": "全部",
 }

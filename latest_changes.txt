@@ -1,9 +1,15 @@
+Major changes in version 23.20:
+* Improved display of Strong's number concordance content.
+* Fixed verse reference links in Strong's number concordance.
+* Added support to search multiple anad all versions with command keyword "STRONGBIBLE:::"
+* Added OHGBi and ALL to Strong's number bibles list on right-click context menu.
+
 Major changes in version 23.19:
 * Fixed importing e-Sword bible modules
 * Fixed importing MyBible bible modules
 * Added right-click context menu to search for a Strong number in Strong's number bibles.
             # Support bibles with Strong's numbers and Strong in 'Details' table set to 1.
-            # Select "Allow search for Strong's number" when importing 3rd-party bibles to support this feature.
+            # Select "Allow search for Strong's number" when importing 3rd-party bibles to support this feature.  By doing this imported bible will appear on the right-click context menu.
 * Added a command keyword to search for a Strong's number in a Strong's nubmer bible
             # [KEYWORD] STRONGBIBLE
             # Feature - Search a Strong's number bible
