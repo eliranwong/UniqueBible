@@ -275,8 +275,6 @@ class AlephMainWindow:
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(menu_data, "import")
         items = (
-            ("menu8_plusDictionaries", self.importBBPlusDictionaryInAFolder),
-            ("menu8_plusLexicons", self.importBBPlusLexiconInAFolder),
             ("menu8_3rdParty", self.importModules),
             ("menu8_download3rdParty", self.moreBooks),
             ("menu8_3rdPartyInFolder", self.importModulesInFolder),

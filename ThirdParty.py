@@ -1035,7 +1035,6 @@ class Converter:
         books = doc.getElementsByTagName("BIBLEBOOK")
         data = []
         for book in books:
-            book_number = book.getAttribute("bnumber")
             chapters = book.getElementsByTagName("CHAPTER")
             book_number = book.getAttribute("bnumber")
             for chapter in chapters:
