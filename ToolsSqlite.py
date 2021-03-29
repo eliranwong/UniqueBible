@@ -650,7 +650,7 @@ class Lexicon:
 
     def getContent(self, entry):
         lexiconData = LexiconData()
-        lexiconList = lexiconData.lexiconList
+        #lexiconList = lexiconData.lexiconList
 
         query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
         self.cursor.execute(query, (entry,))

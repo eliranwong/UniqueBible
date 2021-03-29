@@ -69,6 +69,74 @@ class WebEngineView(QWebEngineView):
 
         subMenu = QMenu()
 
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.openReferenceInBibleVersion, text))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openReferences"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bottomWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBottomWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["displayVerses"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        if self.name in ("main", "study"):
+
+            subMenu = QMenu()
+    
+            if hasattr(config, "cli"):
+                action = QAction(self)
+                action.setText(config.thisTranslation["cli"])
+                action.triggered.connect(self.switchToCli)
+                subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["openOnNewWindow"])
+            action.triggered.connect(self.openOnNewWindow)
+            subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["pdfDocument"])
+            action.triggered.connect(self.exportToPdf)
+            subMenu.addAction(action)
+    
+            action = QAction(self)
+            action.setText(config.thisTranslation["displayContent"])
+            action.setMenu(subMenu)
+            self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
         copyText = QAction(self)
         copyText.setText(config.thisTranslation["text"])
         copyText.triggered.connect(self.copySelectedText)
@@ -204,7 +272,34 @@ class WebEngineView(QWebEngineView):
         subMenu.addAction(searchFavouriteBible)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["bibleText"])
+        action.setText(config.thisTranslation["cp0"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        for bookNo in range(1, 67):
+            action = QAction(self)
+            action.setText(bibleVerseParser.standardFullBookName[str(bookNo)])
+            action.triggered.connect(partial(self.searchSelectedTextInBook, bookNo))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["bibleBook"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.searchSelectedText, text))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["bibleVersion"])
         action.setMenu(subMenu)
         self.addAction(action)
 
@@ -227,7 +322,7 @@ class WebEngineView(QWebEngineView):
             subMenu.addAction(action)
 
             action = QAction(self)
-            action.setText(config.thisTranslation["bibleStrongNumber"])
+            action.setText(config.thisTranslation["bibleConcordance"])
             action.setMenu(subMenu)
             self.addAction(action)
 
@@ -319,57 +414,6 @@ class WebEngineView(QWebEngineView):
         action.setText(config.thisTranslation["menu5_lookup"])
         action.setMenu(subMenu)
         self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        subMenu = QMenu()
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
-        searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
-        searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["bottomWindow"])
-        searchBibleReferences.triggered.connect(self.displayVersesInBottomWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["displayVerses"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        if self.name in ("main", "study"):
-
-            subMenu = QMenu()
-    
-            if hasattr(config, "cli"):
-                action = QAction(self)
-                action.setText(config.thisTranslation["cli"])
-                action.triggered.connect(self.switchToCli)
-                subMenu.addAction(action)
-
-            action = QAction(self)
-            action.setText(config.thisTranslation["openOnNewWindow"])
-            action.triggered.connect(self.openOnNewWindow)
-            subMenu.addAction(action)
-
-            action = QAction(self)
-            action.setText(config.thisTranslation["pdfDocument"])
-            action.triggered.connect(self.exportToPdf)
-            subMenu.addAction(action)
-    
-            action = QAction(self)
-            action.setText(config.thisTranslation["displayContent"])
-            action.setMenu(subMenu)
-            self.addAction(action)
 
         # Context menu plugins
         if config.enablePlugins:
@@ -529,20 +573,20 @@ class WebEngineView(QWebEngineView):
             config.contextItem = selectedText
         self.parent.parent.openControlPanelTab(2)
 
-    def searchSelectedText(self):
+    def searchSelectedText(self, text=None):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText(), selectedText)
+            searchCommand = "SEARCH:::{0}:::{1}".format(self.getText() if text is None or not text else text, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
-    def searchSelectedTextInBook(self):
+    def searchSelectedTextInBook(self, book=None):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook(), selectedText)
+            searchCommand = "ADVANCEDSEARCH:::{0}:::Book = {1} AND Scripture LIKE '%{2}%'".format(self.getText(), self.getBook() if book is None or not book else book, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedFavouriteBible(self):
@@ -607,8 +651,8 @@ class WebEngineView(QWebEngineView):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
-        elif re.match("^[GH][0-9]+?$", selectedText):
-            searchCommand = "STRONGBIBLE:::{0}:::{1}".format(module, selectedText)
+        elif re.match("^[EGH][0-9]+?$", selectedText):
+            searchCommand = "CONCORDANCE:::{0}:::{1}".format(module, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
         else:
             self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])
@@ -617,7 +661,7 @@ class WebEngineView(QWebEngineView):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
-        elif re.match("^[GH][0-9]+?$", selectedText):
+        elif re.match("^[EGH][0-9]+?$", selectedText):
             searchCommand = "STRONGBIBLE:::ALL:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
         else:
@@ -676,8 +720,16 @@ class WebEngineView(QWebEngineView):
             if verses:
                 html = BiblesSqlite().readMultipleVerses(self.getText(), verses)
                 self.parent.parent.displayPlainTextOnBottomWindow(html)
+            else:
+                self.displayMessage(config.thisTranslation["message_noReference"])
         else:
             self.messageNoSelection()
+
+    def openReferenceInBibleVersion(self, bible):
+        selectedText = self.selectedText().strip()
+        verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        command = "BIBLE:::{0}:::{1}".format(bible, selectedText) if verses else "TEXT:::{0}".format(bible)
+        self.parent.parent.textCommandChanged(command, self.name)
 
     def displayVersesInNewWindow(self):
         selectedText = self.selectedText().strip()
@@ -686,6 +738,8 @@ class WebEngineView(QWebEngineView):
             if verses:
                 html = BiblesSqlite().readMultipleVerses(self.getText(), verses)
                 self.openPopover(html=html)
+            else:
+                self.displayMessage(config.thisTranslation["message_noReference"])
         else:
             self.messageNoSelection()
 
@@ -697,6 +751,8 @@ class WebEngineView(QWebEngineView):
             if verses:
                 references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verses])
                 self.parent.parent.textCommandChanged(references, "main")
+            else:
+                self.displayMessage(config.thisTranslation["message_noReference"])
             del parser
         else:
             self.messageNoSelection()

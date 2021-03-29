@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "インターフェースの変換の品質を向上させるには、最初にこのアプリケーションを閉じて、次のファイルを手動で編集することができます。",
     "message_newInterfaceItems": "次の翻訳項目がありません :",
     "message_migration": "一部のファイルは古くなっています。  これらのファイルのアップグレードを支援しています。",
-    "message_noReference": "バイブル参照が見つかりません。",
+    "message_noReference": "バイブル・逆参照が見つかりません。",
     "message_noSupport": "<Translator not enabled>",
     "message_noTtsVoice": "選択した言語の音声がインストールされていません。",
     "message_noEspeak": "パッケージ「esピーク」がインストールされていません。  esピークをインストールするには、 https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md を",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "バイブル・ストロング・ナンバー",
     "notStrongNumber": "選択したテキストはストロングの数値ではありません。",
     "all": "オール",
+    "bibleBook": "聖書の書",
+    "bibleVersion": "聖書のバージョン",
+    "bibleConcordance": "バイブル・コンコーダンス",
+    "openReferences": "参照を開く",
 }

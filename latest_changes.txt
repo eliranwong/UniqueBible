@@ -1,3 +1,19 @@
+Major changes in version 23.21:
+* Added support of searching Hebrew lexeme codes in OHGB concordance.
+* Added support of searching Hebrew lexeme codes in Strong's number lexicons.
+* Added submenu "Open with" to right-click context menu for opening selected verse references with selected bible version.
+    # This feature works well with standard verse parsing.  To use this feature with fast verse-parser, you need to select verse reference without mixed text.
+    # If no reference is selected this feature will change the bible version displayed in the main window.
+* Added submenu "Bible Book" to right-click context menu for quick search of a bible book.
+* Added submenu "Bible Version" to right-click context menu for quick search of a bible version.
+* Changed command keyword "STRONGBIBLE:::" to "CONCORDANCE:::".
+* Searching for a Strong's number with command keyword "SEARCH:::" activates concordance feature.
+    i.e. SEARCH:::KJVx:::H7225 is effectively equal to CONCORDANCE:::KJVx:::H7225.
+* UBA now re-directs searching for a Strong's number or Hebrew lexeme code in MOB, MIB, MTB, MAB, MPB, OHGB, OHGBi to OHGB concordance feature.
+    i.e. SEARCH:::MOB:::H7225 or SEARCH:::MAB:::H7225 is effectively equal to CONCORDANCE:::OHGBi:::H7225.
+* Fixed OHGB concordance Hebrew text direction, now reading from right to left.
+* "No bible verse reference is found!" message is displayed when users use "Display Verses" feature without selecting a reference.
+
 Major changes in version 23.20:
 * Improved display of Strong's number concordance content.
 * Fixed verse reference links in Strong's number concordance.

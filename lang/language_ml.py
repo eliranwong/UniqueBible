@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "ഇന്റർഫേസ് പരിഭാഷയുടെ ഗുണനിലവാരത്തെ മെച്ചപ്പെടുത്തുന്നതിനായി, ഈ ആപ്പ്  ആദ്യം അടച്ചിട്ടു ഈ ഫയൽ എഡിറ്റ് ചെയ്യുക :",
     "message_newInterfaceItems": "ലഭ്യമാകാത്ത പരിഭാഷ വസ്തു (കൾ):",
     "message_migration": "നിങ്ങളുടെ ചില ഫയലുകൾ പഴയതാണ്.  ആ ഫയലുകൾ അപ്ഗ്രേഡ് ചെയ്യാൻ ഞങ്ങൾ താങ്കളെ സഹായിക്കുന്നു.",
-    "message_noReference": "ഒരു ബൈബിൾ റെഫറൻസും കണ്ടില്ല",
+    "message_noReference": "ബൈബിള് വാഴ്സ് റഫറൻസ് ലഭ്യമല്ല!",
     "message_noSupport": "തെരഞ്ഞെടുത്ത പ്രത്യേകത പ്രവർത്തന സജ്ജമാക്കിയിട്ടില്ല!",
     "message_noTtsVoice": "തെരഞ്ഞെടുത്ത ഭാഷയ്ക്കായുള്ള ശബ്ദം ഇൻസ്റ്റാൾ ചെയ്തിട്ടില്ല.",
     "message_noEspeak": "പാക്കേജ്  'espeak' ഇൻസ്റ്റാൾ ചെയ്തിട്ടില്ല.  espeak ഇൻസ്റ്റാൾ ചെയ്യുവാൻ, https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md വായിക്കുക.",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "ബൈബിൾ സ്ട്രോങ്ങിന്റെ നമ്പർ",
     "notStrongNumber": "തെരഞ്ഞെടുത്ത വാചകം സ്ട്രോങ്ങിന്റെ നമ്പർ അല്ല!",
     "all": "എല്ലാം",
+    "bibleBook": "ബൈബിൾ ബുക്ക്",
+    "bibleVersion": "ബൈബിൾ പതിപ്പ്",
+    "bibleConcordance": "ബൈബിൾ കോൺക്രോഡൻസ്",
+    "openReferences": "മുന്ഗണനകള് തുറക്കുക",
 }

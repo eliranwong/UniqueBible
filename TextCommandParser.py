@@ -138,14 +138,14 @@ class TextCommandParser:
             "summary": (self.textChapterSummary, """
             # [KEYWORD] SUMMARY
             # e.g. summary:::John 3"""),
-            "strongbible": (self.textStrongBible, """
-            # [KEYWORD] STRONGBIBLE
+            "concordance": (self.textConcordance, """
+            # [KEYWORD] CONCORDANCE
             # Feature - Search a Strong's number bible
-            # Usage - STRONGBIBLE:::[BIBLE_VERSION(S)]:::[STRONG_NUMBER]
+            # Usage - CONCORDANCE:::[BIBLE_VERSION(S)]:::[STRONG_NUMBER]
             # Assigning "ALL" as "BIBLE_VERSION(S)" to search all installed Strong's number bibles.
-            # e.g. STRONGBIBLE:::KJVx:::G3087
-            # e.g. STRONGBIBLE:::ESVx_KJVx_NIVx_WEBx:::G3087
-            # e.g. STRONGBIBLE:::ALL:::G3087"""),
+            # e.g. CONCORDANCE:::KJVx:::G3087
+            # e.g. CONCORDANCE:::ESVx_KJVx_NIVx_WEBx:::G3087
+            # e.g. CONCORDANCE:::ALL:::G3087"""),
             "search": (self.textCountSearch, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
@@ -1114,8 +1114,8 @@ class TextCommandParser:
                 content += chapterSummary
             return ("study", content, {})
 
-    # STRONGBIBLE:::
-    def textStrongBible(self, command, source):
+    # CONCORDANCE:::
+    def textConcordance(self, command, source):
         if command.count(":::") == 0:
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             command = "{0}:::{1}".format(viewText, command)
@@ -1124,8 +1124,10 @@ class TextCommandParser:
             texts = self.parent.strongBibles
         else:
             texts = self.getConfirmedTexts(texts)
+            texts = ["OHGBi" if text in ("MOB", "MIB", "MTB", "MAB", "MPB", "OHGB") else text for text in texts]
             texts = [text for text in texts if text in self.parent.strongBibles]
-        if not texts or not re.match("^[GH][0-9]+?$", strongNo):
+            texts = list(set(texts))
+        if not texts or not re.match("^[EGH][0-9]+?$", strongNo):
             return self.invalidCommand()
         else:
             html = "<hr>".join([Bible(text).formatStrongConcordance(strongNo) for text in texts])
@@ -1922,12 +1924,15 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
-        texts = self.getConfirmedTexts(commandList[0])
-        if not len(commandList) == 2 or not texts:
+        texts, searchEntry, *_ = commandList
+        texts = self.getConfirmedTexts(texts)
+        if texts and re.match("^[EHG][0-9]+?$", searchEntry):
+            return self.textConcordance(command, "study")
+        elif not len(commandList) == 2 or not texts:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, commandList[1], interlinear) for text in texts])
+            searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, searchEntry, interlinear) for text in texts])
             del biblesSqlite
             return ("study", searchResult, {})
 
@@ -2029,7 +2034,16 @@ class TextCommandParser:
         TextCommandParser.last_lexicon_entry = entries
         config.lexicon = module
         lexicon = Lexicon(module)
-        content = "<hr>".join([lexicon.getContent(entry) for entry in entries.split("_")])
+        # Convert ETCBC Hebrew lexeme codes, if any, to Hebrew Strong's numbers
+        morphologySqlite = MorphologySqlite()
+        entriesSplit = entries.split("_")
+        entryList = []
+        for entry in entriesSplit:
+            if not module.startswith("Concordance") and entry.startswith("E"):
+                entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
+            else:
+                entryList.append(entry)
+        content = "<hr>".join([lexicon.getContent(entry) for entry in entryList])
         del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()

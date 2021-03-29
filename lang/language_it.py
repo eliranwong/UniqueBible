@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "Per migliorare la qualità della traduzione dell'interfaccia, è possibile chiudere prima questa applicazione e modificare manualmente questo file:",
     "message_newInterfaceItems": "Voce di traduzione mancante:",
     "message_migration": "Alcuni dei tuoi file sono vecchi.  Ti stiamo aiutando ad aggiornare quei file.",
-    "message_noReference": "Trovato nessun riferimento di bibbia.",
+    "message_noReference": "Non si trova alcun riferimento in versi bible!",
     "message_noSupport": "<Translator not enabled>",
     "message_noTtsVoice": "Nessuna voce è installata per la lingua selezionata.",
     "message_noEspeak": "Il pacchetto 'espeak' non è installato.  Per installare espeak, leggi https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "Numero Della Bibbia Forte",
     "notStrongNumber": "Il testo selezionato non è un numero di Strong!",
     "all": "ALL",
+    "bibleBook": "Libro della Bibbia",
+    "bibleVersion": "Versione della Bibbia",
+    "bibleConcordance": "Bibbia Concordanza",
+    "openReferences": "Riferimenti aperti",
 }

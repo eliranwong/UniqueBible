@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "इंटरफ़ेस अनुवाद की गुणवत्ता में सुधार करने के लिए, आप इस अनुप्रयोग को बंद कर सकते हैं पहले और मैन्युअल रूप से इस फ़ाइल को संपादित करें:",
     "message_newInterfaceItems": "अनुपस्थित अनुवाद मद (ओं):",
     "message_migration": "आपकी कुछ फ़ाइलें पुरानी हैं.  हम आप उन फ़ाइलों को उन्नत करने के लिए मदद कर रहे हैं.",
-    "message_noReference": "कोई द्विज संदर्भ नहीं मिला.",
+    "message_noReference": "कोई द्विज छंद संदर्भ नहीं मिला है!",
     "message_noSupport": "<Translator not enabled>",
     "message_noTtsVoice": "चयनित भाषा के लिए कोई आवाज संस्थापित नहीं है.",
     "message_noEspeak": "पैकेज 'एस्पीक' संस्थापित नहीं है.  एस्टीम को स्थापित करने के लिए, पढ़ें https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "बाइबल मजबूत की संख्या",
     "notStrongNumber": "चुना गया पाठ एक मजबूत संख्या नहीं है!",
     "all": "सभी",
+    "bibleBook": "बाइबल पुस्तक",
+    "bibleVersion": "बाइबल संस्करण",
+    "bibleConcordance": "बाइबल कॉनकॉर्नडांस",
+    "openReferences": "संदर्भ खोलें",
 }

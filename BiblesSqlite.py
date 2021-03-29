@@ -504,32 +504,6 @@ input.addEventListener('keyup', function(event) {0}
         config.mainText = mainText
         return verses
 
-    def removeVowelAccent(self, text):
-        searchReplace = (
-            (r"[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\(\)\[\]\*\־\׀\׃\׆]", ""),
-            ("[שׂשׁ]", "ש"),
-            ("[ἀἄᾄἂἆἁἅᾅἃάᾴὰᾶᾷᾳ]", "α"),
-            ("[ἈἌἎἉἍἋ]", "Α"),
-            ("[ἐἔἑἕἓέὲ]", "ε"),
-            ("[ἘἜἙἝἛ]", "Ε"),
-            ("[ἠἤᾔἢἦᾖᾐἡἥἣἧᾗᾑήῄὴῆῇῃ]", "η"),
-            ("[ἨἬἪἮἩἭἫ]", "Η"),
-            ("[ἰἴἶἱἵἳἷίὶῖϊΐῒ]", "ι"),
-            ("[ἸἼἹἽ]", "Ι"),
-            ("[ὀὄὂὁὅὃόὸ]", "ο"),
-            ("[ὈὌὉὍὋ]", "Ο"),
-            ("[ῥ]", "ρ"),
-            ("[Ῥ]", "Ρ"),
-            ("[ὐὔὒὖὑὕὓὗύὺῦϋΰῢ]", "υ"),
-            ("[ὙὝὟ]", "Υ"),
-            ("[ὠὤὢὦᾠὡὥὧᾧώῴὼῶῷῳ]", "ω"),
-            ("[ὨὬὪὮὩὭὯ]", "Ω"),
-            (r"[\-\—\,\;\:\\\?\.\·\·\‘\’\‹\›\“\”\«\»\(\)\[\]\{\}\⧼\⧽\〈\〉\*\‿\᾽\⇔\¦]", ""),
-        )
-        for search, replace in searchReplace:
-            text = re.sub(search, replace, text)
-        return text
-
     def countSearchBible(self, text, searchString, interlinear=False):
         content = "SEARCH:::{0}:::{1}".format(text, searchString)
         showCommand = "SHOWSEARCH"
@@ -553,7 +527,7 @@ input.addEventListener('keyup', function(event) {0}
             return len(self.cursor.fetchall())
         elif text in formattedBibleList:
             if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
-                searchString = self.removeVowelAccent(searchString)
+                searchString = TextUtil.removeVowelAccent(searchString)
             bible = Bible(text)
             count = bible.countSearchBook(book, searchString)
             del bible
@@ -561,7 +535,7 @@ input.addEventListener('keyup', function(event) {0}
 
     def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
-                searchString = self.removeVowelAccent(searchString)
+                searchString = TextUtil.removeVowelAccent(searchString)
 
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
 
@@ -939,7 +913,7 @@ class Bible:
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
         sNumList = ["[{0}]".format(strongNo)]
         verseHits, snHits, uniqueWdList, verses = Bible(self.text).searchStrongNumber(sNumList)
-        html = "<h1>Strong's Concordance - {7}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " | ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation, self.text)
+        html = "<h1>Strong's Concordance - {7}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " <mbn>|</mbn> ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation, self.text)
         return html
 
     def searchStrongNumber(self, sNumList):    
@@ -953,7 +927,6 @@ class Bible:
         biblesSqlite = BiblesSqlite()
 
         for b, c, v, vsTxt in self.cursor:
-            #vsTxt = row[3]
             vsTxt = re.sub("([HG][0-9]+?) ", r" [\1] ", vsTxt)
             vsTxt = re.sub("([HG][0-9]+?)[a-z] ", r" [\1] ", vsTxt)
             
@@ -969,9 +942,8 @@ class Bible:
                         wdGrp = re.sub(r'\[[HG][0-9]+?\]|\[[HG][0-9]+?[a-z]\]', r'', wdGrp)
                     else:
                         wds, *_ = wdGrp.split('[')
-                        #wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1**\2**', wdGrp )
                         wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1<z>\2</z>', wdGrp )
-                        if wds:
+                        if wds.strip():
                             wdList.append( '%s' % (re.sub(r'[^\w\s]','', wds).strip()))
                         
                     wdGrpListFix.append(wdGrp)
@@ -1089,10 +1061,10 @@ class Bible:
         return note
 
     def countSearchBook(self, book, searchString):
-        query = "SELECT Verse FROM Verses WHERE Book = ? AND Scripture LIKE ?"
+        query = "SELECT COUNT(Verse) FROM Verses WHERE Book = ? AND Scripture LIKE ?"
         t = (book, "%{0}%".format(searchString))
         self.cursor.execute(query, t)
-        return len(self.cursor.fetchall())
+        return self.cursor.fetchone()[0]
 
     def getSearchVerses(self, query, binding):
         self.cursor.execute(query, binding)
@@ -1156,8 +1128,7 @@ class Bible:
 
     def getCount(self, table):
         self.cursor.execute('SELECT COUNT(*) from ' + table)
-        count = self.cursor.fetchone()[0]
-        return count
+        return self.cursor.fetchone()[0]
 
     def addMissingColumns(self):
         if not self.checkTableExists("Details"):
@@ -1291,14 +1262,14 @@ class MorphologySqlite:
         query = "SELECT WordID, Word, LexicalEntry, Interlinear FROM morphology WHERE Book=? AND Chapter=? AND Verse=? ORDER BY WordID"
         self.cursor.execute(query, bcv)
         verseText = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(BiblesSqlite().bcvToVerseReference(*bcv))
+        b = bcv[0]
         for wordID, word, lexicalEntry, interlinear in self.cursor:
-            b = bcv[0]
             action = ' onclick="w({0},{1})" onmouseover="iw({0},{1})"'.format(b, wordID)
             word = "<heb{1}>{0}</heb>".format(word, action) if b < 40 else "<grk{1}>{0}</grk>".format(word, action)
             interlinear = "<gloss>{0}</gloss>".format(interlinear)
             lexicalEntry = " ".join(["[{0}]".format(entry) for entry in lexicalEntry.split(",") if entry])
             verseText += "{0}{1} {2} ".format(word, interlinear, lexicalEntry)
-        return verseText
+        return "<div style='direction: rtl;'>{0}</div>".format(verseText) if b < 40 else "<div>{0}</div>".format(verseText)
 
     def formatConcordance(self, lexicalEntry):
         query = "SELECT COUNT(LexicalEntry) FROM morphology WHERE LexicalEntry LIKE ?"
@@ -1322,10 +1293,16 @@ class MorphologySqlite:
             lexeme = "<heb>{0}</heb>".format(lexeme) if lexicalEntry.startswith("H") else "<grk>{0}</grk>".format(lexeme)
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
 
-        literalTranslation = " | ".join(self.distinctMorphology(lexicalEntry))
-        dynamicTranslation = " | ".join(self.distinctMorphology(lexicalEntry, "Translation"))
+        literalTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry))
+        dynamicTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry, "Translation"))
         html = "<h1>OHGB Concordance</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)
         return html
+
+    def etcbcLexemeNo2StrongNo(self, lexicalEntry):
+        query = "SELECT DISTINCT LexicalEntry FROM morphology WHERE LexicalEntry LIKE ?"
+        t = ("{0},%".format(lexicalEntry),)
+        self.cursor.execute(query, t)
+        return [strongNo for entry in self.cursor for strongNo in entry[0].split(",") if strongNo.startswith("H")]
 
     def distinctMorphologyVerse(self, lexicalEntry):
         query = "SELECT DISTINCT Book, Chapter, Verse FROM morphology WHERE LexicalEntry LIKE ?"
@@ -1337,7 +1314,7 @@ class MorphologySqlite:
         query = "SELECT DISTINCT {0} FROM morphology WHERE LexicalEntry LIKE ?".format(item)
         t = ("%{0},%".format(lexicalEntry),)
         self.cursor.execute(query, t)
-        return list(set([self.simplifyTranslation(translation[0]) for translation in self.cursor.fetchall()]))
+        return list(set([self.simplifyTranslation(translation[0]) for translation in self.cursor if translation[0].strip()]))
 
     def simplifyTranslation(self, translation):
         translation.strip()

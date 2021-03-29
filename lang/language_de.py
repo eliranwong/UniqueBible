@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "Um die Qualität der Schnittstellenübersetzung zu verbessern, können Sie diese Anwendung zuerst schließen und diese Datei manuell bearbeiten:",
     "message_newInterfaceItems": "Fehlende (n) Übersetzungsartikel (e):",
     "message_migration": "Einige Ihrer Dateien sind alt.  Wir helfen Ihnen bei der Aktualisierung dieser Dateien.",
-    "message_noReference": "Keine Bibelreferenz gefunden.",
+    "message_noReference": "Es wird kein Bibelvers-Verweis gefunden!",
     "message_noSupport": "Die ausgewählte Komponente ist nicht aktiviert!",
     "message_noTtsVoice": "Für die ausgewählte Sprache wird keine Stimme installiert.",
     "message_noEspeak": "Das Paket 'espeak' ist nicht installiert.  Um ein espeak zu installieren, lesen Sie https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "Bibel Strong's Number",
     "notStrongNumber": "Ausgewählter Text ist keine Starke Nummer!",
     "all": "ALL",
+    "bibleBook": "Bibelbuch",
+    "bibleVersion": "Bibelversion",
+    "bibleConcordance": "Bibel Konkordanz",
+    "openReferences": "Verweise öffnen",
 }

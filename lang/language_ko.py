@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "인터페이스 변환의 품질을 향상시키려면 먼저 이 애플리케이션을 닫고 이 파일을 수동으로 편집할 수 있습니다.",
     "message_newInterfaceItems": "변환 항목 누락:",
     "message_migration": "일부 파일은 이전 버전입니다.  이러한 파일을 업그레이드하는 데 도움이 됩니다.",
-    "message_noReference": "성경 참조를 찾을 수 없습니다.",
+    "message_noReference": "성경 구절 참조를 찾을 수 없습니다!",
     "message_noSupport": "<Translator not enabled>",
     "message_noTtsVoice": "선택한 언어에 대한 음성이 설치되지 않았습니다.",
     "message_noEspeak": "'espeak' 패키지가 설치되어 있지 않다.  espeak를 설치하려면 https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md을 참조하십시오.",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "성경 스트롱의 수",
     "notStrongNumber": "선택한 텍스트가 강력한 숫자가 아닙니다!",
     "all": "모든",
+    "bibleBook": "성경책",
+    "bibleVersion": "성경 버전",
+    "bibleConcordance": "성경 콘코르춤",
+    "openReferences": "참조 열기",
 }

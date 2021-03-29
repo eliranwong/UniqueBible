@@ -325,7 +325,7 @@ translation = {
     "message_improveTrans": "Για να βελτιώσετε την ποιότητα της μετάφρασης, μπορείτε να κλείσετε αυτή την εφαρμογή και να τροποποιήσετε μη αυτόματα αυτό το αρχείο:",
     "message_newInterfaceItems": "Λείπει στοιχείο ή στοιχείο μετάφρασης:",
     "message_migration": "Κάποια αρχεία σου είναι παλιά.  Σας βοηθάμε να αναβαθμίσετε αυτά τα αρχεία.",
-    "message_noReference": "Δεν βρήκα καμία αναφορά.",
+    "message_noReference": "Δεν βρέθηκε παραπομπή σε Βίβλο!",
     "message_noSupport": "<Translator not enabled>",
     "message_noTtsVoice": "Δεν έχει εγκατασταθεί καμία φωνή για την επιλεγμένη γλώσσα.",
     "message_noEspeak": "Το πακέτο 'espeak' δεν έχει εγκατασταθεί.  Για να εγκαταστήσετε το espeak, διαβάστε το https://github.com/eliranwong/ChromeOSLinux/blob/main/multimedia/espeak.md",
@@ -658,4 +658,8 @@ translation = {
     "bibleStrongNumber": "Αριθμός της Βίβλου Ισχυρός",
     "notStrongNumber": "Το επιλεγμένο κείμενο δεν είναι αριθμός ισχυρού!",
     "all": "ΌΛΑ!",
+    "bibleBook": "Βιβλίο της Βίβλου",
+    "bibleVersion": "Έκδοση Αγία Γραφή",
+    "bibleConcordance": "Αγία Γραφή Concordance",
+    "openReferences": "Άνοιγμα παραπομπών",
 }
