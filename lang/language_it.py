@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "Numero Della Bibbia Forte",
     "notStrongNumber": "Il testo selezionato non è un numero di Strong!",
     "all": "ALL",
+    "enableMenuUnderline": "Abilitare la sottolineatura del menu di scelta",
     "bibleBook": "Libro della Bibbia",
     "bibleVersion": "Versione della Bibbia",
     "bibleConcordance": "Bibbia Concordanza",

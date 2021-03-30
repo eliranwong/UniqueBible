@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "बाइबल मजबूत की संख्या",
     "notStrongNumber": "चुना गया पाठ एक मजबूत संख्या नहीं है!",
     "all": "सभी",
+    "enableMenuUnderline": "मेनू शॉर्टकट रेखांकित करें",
     "bibleBook": "बाइबल पुस्तक",
     "bibleVersion": "बाइबल संस्करण",
     "bibleConcordance": "बाइबल कॉनकॉर्नडांस",

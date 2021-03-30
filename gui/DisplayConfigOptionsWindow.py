@@ -63,6 +63,7 @@ class DisplayConfigOptionsWindow(QDialog):
             #["customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")],
             ["hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare")],
             ["enforceCompareParallel", config.enforceCompareParallel, self.parent.enforceCompareParallelButtonClicked, self.flagToolTip(False, "enforceCompareParallel")],
+            ["enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, self.flagToolTip(True, "enableMenuUnderline")],
         ]
         if config.isTtsInstalled:
             options += [
@@ -325,6 +326,13 @@ class DisplayConfigOptionsWindow(QDialog):
     def hideBlankVerseCompareChanged(self):
         config.hideBlankVerseCompare = not config.hideBlankVerseCompare
 
+    def enableMenuUnderlineChanged(self):
+        config.enableMenuUnderline = not config.enableMenuUnderline
+        if config.enableMenuUnderline:
+            config.menuUnderline = "&"
+        else:
+            config.menuUnderline = ""
+        self.parent.setMenuLayout(config.menuLayout)
 
 class DisplayConfigOptionsModel(QAbstractTableModel):
 

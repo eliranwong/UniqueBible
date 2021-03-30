@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "Библейский сильный номер",
     "notStrongNumber": "Выбранный текст не является номером сильного!",
     "all": "ВСЕ",
+    "enableMenuUnderline": "Включить контекстное подчеркивание меню",
     "bibleBook": "Библия",
     "bibleVersion": "Библия",
     "bibleConcordance": "Библия",

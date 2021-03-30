@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "バイブル・ストロング・ナンバー",
     "notStrongNumber": "選択したテキストはストロングの数値ではありません。",
     "all": "オール",
+    "enableMenuUnderline": "メニューのショートカットの下線を使用",
     "bibleBook": "聖書の書",
     "bibleVersion": "聖書のバージョン",
     "bibleConcordance": "バイブル・コンコーダンス",
