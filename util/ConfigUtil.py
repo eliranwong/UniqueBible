@@ -529,6 +529,10 @@ class ConfigUtil:
             config.miniBrowserHome = "https://www.youtube.com/"
         if not hasattr(config, "addOHGBiToMorphologySearch"):
             config.addOHGBiToMorphologySearch = True
+        if not hasattr(config, "activeVerseNoColourLight"):
+            config.activeVerseNoColourLight = "red"
+        if not hasattr(config, "activeVerseNoColourDark"):
+            config.activeVerseNoColourDark = "rgb(197, 197, 56)"
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -703,6 +707,8 @@ class ConfigUtil:
             ("enableGist", config.enableGist),
             ("gistToken", config.gistToken),
             ("clearCommandEntry", config.clearCommandEntry),
+            ("activeVerseNoColourLight", config.activeVerseNoColourLight),
+            ("activeVerseNoColourDark", config.activeVerseNoColourDark),
             ("highlightCollections", config.highlightCollections),
             ("highlightLightThemeColours", config.highlightLightThemeColours),
             ("highlightDarkThemeColours", config.highlightDarkThemeColours),

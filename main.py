@@ -294,6 +294,8 @@ if config.qtMaterial and config.qtMaterialTheme:
     config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
 else:
     app.setPalette(Themes.getPalette())
+# Active verse number colour
+config.activeVerseNoColour = config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight
 
 # Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
 config.mainWindow = MainWindow()

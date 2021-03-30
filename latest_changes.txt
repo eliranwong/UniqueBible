@@ -1,3 +1,6 @@
+Major change in version 23.24:
+* Added config variables "activeVerseNoColourLight" and "activeVerseNoColourDark" to customise active verse number colour.
+
 Major changes in version 23.23:
 * Renamed "Lookup" submenu on right-click context menu to "Bible Resources".
 
