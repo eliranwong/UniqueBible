@@ -82,12 +82,12 @@ points {
 }
 
 bb {
-    color: rgb(160, 160, 160);
+    color: rgb(209, 186, 109);
     font-weight: bold;
 }
 
 hp {
-    color: rgb(160, 160, 160);
+    color: rgb(209, 186, 109);
     font-weight: bold;
     font-size: 80%;
 }

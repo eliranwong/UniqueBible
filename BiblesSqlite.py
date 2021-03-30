@@ -1223,7 +1223,7 @@ class MorphologySqlite:
         else:
             textWord = "<grk>{0}</grk>".format(textWord)
             lexeme = "<grk>{0}</grk>".format(lexeme)
-        return "{0} <span style='color: gray'>{1}</span> {2} {3} <span style='color: brown'>{4}</span> <span style='color: blue'>{5}</span>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
+        return "{0} <transliteration>{1}</transliteration> {2} {3} <e>{4}</e> <esblu>{5}</esblu>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
 
     def wordData(self, book, wordId):
         t = (book, wordId)

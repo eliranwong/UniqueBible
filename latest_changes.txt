@@ -1,3 +1,7 @@
+Major change in version 23.25:
+* Added a startup plugin to fix colours displayed in dark theme.
+* Added config flag "enableMenuUnderline"
+
 Major change in version 23.24:
 * Added config variables "activeVerseNoColourLight" and "activeVerseNoColourDark" to customise active verse number colour.
 
