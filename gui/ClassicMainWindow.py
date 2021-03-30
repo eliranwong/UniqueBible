@@ -98,7 +98,7 @@ class ClassicMainWindow:
         quit_action = QAction(appIcon, config.thisTranslation["menu1_exit"], self, shortcut=sc.quitApp, triggered=self.quitApp)
         menu.addAction(quit_action)
 
-        menu2 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu2_view"]))
+        menu2 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu2_view"]))
 
         screenSizeMenu = menu2.addMenu(config.thisTranslation["menu1_screenSize"])
         screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_fullScreen"], self, shortcut=sc.fullsizeWindow, triggered=self.fullsizeWindow))
@@ -132,19 +132,19 @@ class ClassicMainWindow:
         fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_larger"], self, shortcut=sc.largerFont, triggered=self.largerFont))
         fontSizeMenu.addAction(QAction(config.thisTranslation["menu2_smaller"], self, shortcut=sc.smallerFont, triggered=self.smallerFont))
 
-        menu3 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_bible"]))
+        menu3 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_bible"]))
 
-        bibleMenuMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_bibleMenu"]))
+        bibleMenuMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_bibleMenu"]))
         bibleMenuMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.mainTextMenu))
         bibleMenuMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.studyTextMenu))
 
-        bibleNavigationMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
+        bibleNavigationMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_navigation"]))
         bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_next_book"], self, shortcut=sc.nextMainBook, triggered=self.nextMainBook))
         bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu_previous_book"], self, shortcut=sc.previousMainBook, triggered=self.previousMainBook))
         bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_next"], self, shortcut=sc.nextMainChapter, triggered=self.nextMainChapter))
         bibleNavigationMenu.addAction(QAction(config.thisTranslation["menu4_previous"], self, shortcut=sc.previousMainChapter, triggered=self.previousMainChapter))
 
-        scrollMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_scroll"]))
+        scrollMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_scroll"]))
         scrollMenu.addAction(QAction(config.thisTranslation["menu_main_scroll_to_top"], self, shortcut=sc.mainPageScrollToTop,
                                           triggered=self.mainPageScrollToTop))
         scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, self, shortcut=sc.mainPageScrollPageDown,
@@ -166,7 +166,7 @@ class ClassicMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         menu3.addSeparator()
-        toggleMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu_toggleFeatures"]))
+        toggleMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_toggleFeatures"]))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_format"], self, shortcut=sc.enableParagraphButtonClicked, triggered=self.enableParagraphButtonClicked))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_subHeadings"], self, triggered=self.enableSubheadingButtonClicked))
         toggleMenu.addAction(QAction(config.thisTranslation["menu2_hover"], self, shortcut=sc.enableInstantButtonClicked, triggered=self.enableInstantButtonClicked))
@@ -176,7 +176,7 @@ class ClassicMainWindow:
         toggleMenu.addAction(QAction(config.thisTranslation["menu_syncStudyWindowBible"], self, triggered=self.enableSyncStudyWindowBibleButtonClicked))
         toggleMenu.addAction(QAction(config.thisTranslation["menu_syncBibleCommentary"], self, triggered=self.enableSyncCommentaryButtonClicked))
         menu3.addSeparator()
-        searchMenu = menu3.addMenu("&{0}".format(config.thisTranslation["menu5_search"]))
+        searchMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu5_search"]))
         searchMenu.addAction(QAction(config.thisTranslation["menu5_main"], self, shortcut=sc.displaySearchBibleCommand, triggered=self.displaySearchBibleCommand))
         searchMenu.addAction(QAction(config.thisTranslation["menu5_study"], self, shortcut=sc.displaySearchStudyBibleCommand, triggered=self.displaySearchStudyBibleCommand))
         searchMenu.addAction(QAction(config.thisTranslation["menu5_bible"], self, triggered=self.displaySearchBibleMenu))
@@ -199,7 +199,7 @@ class ClassicMainWindow:
         menu3.addSeparator()
         menu3.addAction(QAction(config.thisTranslation["menu1_reload"], self, triggered=self.reloadCurrentRecord))
 
-        menu4 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu4_further"]))
+        menu4 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu4_further"]))
 
         bookFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_book"])
         bookFeaturesMenu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeatureIntroduction))
@@ -253,7 +253,7 @@ class ClassicMainWindow:
         if not os.path.isfile(os.path.join(config.marvelData, "books", "{0}.book".format(book))) and book in config.favouriteBooks:
             config.favouriteBooks.remove(book)
 
-        menu10 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu10_books"]))
+        menu10 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu10_books"]))
         if config.favouriteBooks:
             menu10.addAction(QAction(self.getBookName(config.favouriteBooks[0]), self, triggered=self.openFavouriteBook0))
         if len(config.favouriteBooks) > 1:
@@ -286,7 +286,7 @@ class ClassicMainWindow:
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearBookHighlights))
 
-        menu5 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu5_lookup"]))
+        menu5 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu5_lookup"]))
         menu5.addAction(QAction(config.thisTranslation["menu5_dictionary"], self, shortcut=sc.searchCommandBibleDictionary, triggered=self.searchCommandBibleDictionary))
         menu5.addAction(QAction(config.thisTranslation["context1_dict"], self, triggered=self.searchDictionaryDialog))
         menu5.addSeparator()
@@ -311,17 +311,17 @@ class ClassicMainWindow:
         menu5.addAction(QAction(config.thisTranslation["menu5_last3rdDict"], self, triggered=self.searchCommandThirdPartyDictionary))
         menu5.addAction(QAction(config.thisTranslation["menu5_3rdDict"], self, triggered=self.search3rdDictionaryDialog))
 
-        menu6 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_notes"]))
+        menu6 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_notes"]))
 
-        chapterNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_chapterNotes"]))
+        chapterNotesMenu = menu6.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_chapterNotes"]))
         chapterNotesMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.openMainChapterNote))
         chapterNotesMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.openStudyChapterNote))
         
-        verseNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_verseNotes"]))
+        verseNotesMenu = menu6.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_verseNotes"]))
         verseNotesMenu.addAction(QAction(config.thisTranslation["bar1_menu"], self, triggered=self.openMainVerseNote))
         verseNotesMenu.addAction(QAction(config.thisTranslation["bar2_menu"], self, triggered=self.openStudyVerseNote))
         
-        searchNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu_search"]))
+        searchNotesMenu = menu6.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_search"]))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_bookNotes"], self, triggered=self.searchCommandBookNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_chapterNotes"], self, triggered=self.searchCommandChapterNote))
         searchNotesMenu.addAction(QAction(config.thisTranslation["menu_verseNotes"], self, triggered=self.searchCommandVerseNote))
@@ -332,16 +332,16 @@ class ClassicMainWindow:
 
         menu6.addSeparator()
 
-        topicalNotesMenu = menu6.addMenu("&{0}".format(config.thisTranslation["menu7_topics"]))
+        topicalNotesMenu = menu6.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu7_topics"]))
         topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_read"], self, triggered=self.externalFileButtonClicked))
         topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_recent"], self, triggered=self.openExternalFileHistory))
         topicalNotesMenu.addAction(QAction(config.thisTranslation["menu7_open"], self, triggered=self.openTextFileDialog))
 
-        noteEditorMenu = menu6.addMenu("&{0}".format(config.thisTranslation["note_editor"]))
+        noteEditorMenu = menu6.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["note_editor"]))
         noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_create"], self, shortcut=sc.createNewNoteFile, triggered=self.createNewNoteFile))
         noteEditorMenu.addAction(QAction(config.thisTranslation["menu7_edit"], self, triggered=self.editExternalFileButtonClicked))
 
-        menu11 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu11_multimedia"]))
+        menu11 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu11_multimedia"]))
         menu11.addAction(QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
@@ -352,7 +352,7 @@ class ClassicMainWindow:
         menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
 
-        menu8 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu8_resources"]))
+        menu8 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu8_resources"]))
         menu8.addAction(QAction(config.thisTranslation["menu8_marvelData"], self, triggered=self.openMarvelDataFolder))
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_bibles"], self, triggered=self.installMarvelBibles))
@@ -379,7 +379,7 @@ class ClassicMainWindow:
         addMenuItem(menu8, "reloadResources", self, self.reloadResources)
 
         if config.enableMacros:
-            macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))
+            macros_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_macros"]))
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
@@ -397,7 +397,7 @@ class ClassicMainWindow:
                     addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
         if config.showInformation:
-            menu9 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu9_information"]))
+            menu9 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu9_information"]))
             addMenuItem(menu9, "latestChanges", self, self.showInfo)
             addMenuItem(menu9, "ubaCommands", self, self.showCommandDocumentation)
             menu9.addSeparator()
@@ -420,7 +420,7 @@ class ClassicMainWindow:
             menu9.addAction(QAction(config.thisTranslation["menu9_donate"], self, triggered=self.donateToUs))
 
         if config.developer:
-            menu999 = self.menuBar().addMenu("&Developer")
+            menu999 = self.menuBar().addMenu("{0}Developer".format(config.menuUnderline))
             #menu999.addAction(QAction("Download Google Static Maps", self, triggered=self.downloadGoogleStaticMaps))
             menu999.addAction(QAction("testing", self, triggered=self.testing))
             addMenuItem(menu999, "edit_language_file", self, self.selectLanguageFileToEdit)

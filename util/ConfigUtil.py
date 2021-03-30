@@ -527,6 +527,8 @@ class ConfigUtil:
             config.hideBlankVerseCompare = False
         if not hasattr(config, "miniBrowserHome"):
             config.miniBrowserHome = "https://www.youtube.com/"
+        if not hasattr(config, "enableMenuUnderline"):
+            config.enableMenuUnderline = True
         if not hasattr(config, "addOHGBiToMorphologySearch"):
             config.addOHGBiToMorphologySearch = True
         if not hasattr(config, "activeVerseNoColourLight"):
@@ -547,6 +549,10 @@ class ConfigUtil:
         config.bibleWindowContentTransformers = []
         config.studyWindowContentTransformers = []
         config.shortcutList = []
+        if config.enableMenuUnderline:
+            config.menuUnderline = "&"
+        else:
+            config.menuUnderline = ""
 
     # Save configurations on exit
     @staticmethod
@@ -731,6 +737,7 @@ class ConfigUtil:
             ("currentRecord", {'main': 0, 'study': 0}),
             ("history", config.history),
             ("installHistory", config.installHistory),
+            ("enableMenuUnderline", config.enableMenuUnderline),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
