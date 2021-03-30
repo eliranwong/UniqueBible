@@ -527,6 +527,8 @@ class ConfigUtil:
             config.hideBlankVerseCompare = False
         if not hasattr(config, "miniBrowserHome"):
             config.miniBrowserHome = "https://www.youtube.com/"
+        if not hasattr(config, "addOHGBiToMorphologySearch"):
+            config.addOHGBiToMorphologySearch = True
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -627,6 +629,7 @@ class ConfigUtil:
             ("mainV", config.mainV),
             ("favouriteBible", config.favouriteBible),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
+            ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
             ("enforceCompareParallel", config.enforceCompareParallel),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),

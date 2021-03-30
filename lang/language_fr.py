@@ -662,4 +662,7 @@ translation = {
     "bibleVersion": "Version biblique",
     "bibleConcordance": "Concordance de la Bible",
     "openReferences": "Ouvrir les références",
+    "addOHGBiToMorphologySearch": "Ajoutez du contenu OHGBi à la recherche de morphologie.",
+    "openBibleInMainViewOnly": "Ouvrir une référence bible dans la fenêtre principale uniquement.",
+    "previous": "Précédent",
 }

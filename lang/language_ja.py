@@ -662,4 +662,7 @@ translation = {
     "bibleVersion": "聖書のバージョン",
     "bibleConcordance": "バイブル・コンコーダンス",
     "openReferences": "参照を開く",
+    "addOHGBiToMorphologySearch": "OHGBi コンテンツを形態学の検索結果に追加します。",
+    "openBibleInMainViewOnly": "メイン・ウィンドウでのみ bible 参照を開きます。",
+    "previous": "前へ",
 }

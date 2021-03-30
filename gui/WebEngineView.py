@@ -12,6 +12,7 @@ from Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
+from BibleBooks import BibleBooks
 
 class WebEngineView(QWebEngineView):
     
@@ -36,10 +37,10 @@ class WebEngineView(QWebEngineView):
         del parser
         self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
         self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, config.thisTranslation["context1_search"]))
-        self.searchBibleTopic.setText("{1} > {0}".format(config.topic, config.thisTranslation["menu5_topics"]))
-        self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, config.thisTranslation["context1_dict"]))
-        self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, config.thisTranslation["context1_encyclopedia"]))
-        self.searchThirdDictionary.setText("{1} > {0}".format(config.thirdDictionary, config.thisTranslation["menu5_3rdDict"]))
+        #self.searchBibleTopic.setText("{1} > {0}".format(config.topic, config.thisTranslation["menu5_topics"]))
+        #self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, config.thisTranslation["context1_dict"]))
+        #self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, config.thisTranslation["context1_encyclopedia"]))
+        #self.searchThirdDictionary.setText("{1} > {0}".format(config.thirdDictionary, config.thisTranslation["menu5_3rdDict"]))
 
     def getText(self):
         text = {
@@ -74,6 +75,15 @@ class WebEngineView(QWebEngineView):
             action.setText(text)
             action.triggered.connect(partial(self.openReferenceInBibleVersion, text))
             subMenu.addAction(action)
+        
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
 
         action = QAction(self)
         action.setText(config.thisTranslation["openReferences"])
@@ -184,71 +194,6 @@ class WebEngineView(QWebEngineView):
             separator.setSeparator(True)
             self.addAction(separator)
 
-        # TEXT-TO-SPEECH feature
-        languages = self.parent.parent.getTtsLanguages()
-        tts = QAction(self)
-        tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
-        tts.triggered.connect(self.textToSpeech)
-        self.addAction(tts)
-
-        if config.isTtsInstalled:
-            ttsMenu = QMenu()
-            languageCodes = list(languages.keys())
-            items = [languages[code][1] for code in languageCodes]
-            for index, item in enumerate(items):
-                languageCode = languageCodes[index]
-                action = QAction(self)
-                action.setText(item.capitalize())
-                action.triggered.connect(partial(self.textToSpeechLanguage, languageCode))
-                ttsMenu.addAction(action)
-
-            tts = QAction(self)
-            tts.setText(config.thisTranslation["context1_speak"])
-            tts.setMenu(ttsMenu)
-            self.addAction(tts)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        # IBM-Watson Translation Service
-
-        # Translate into User-defined Language
-        userLanguage = config.userLanguage
-        translateText = QAction(self)
-        translateText.setText("{0} [{1}]".format(config.thisTranslation["context1_translate"], userLanguage))
-        translateText.triggered.connect(self.checkUserLanguage)
-        self.addAction(translateText)
-
-        translateMenu = QMenu()
-        for index, item in enumerate(Translator.toLanguageNames):
-            languageCode = Translator.toLanguageCodes[index]
-            action = QAction(self)
-            action.setText(item)
-            action.triggered.connect(partial(self.selectedTextToSelectedLanguage, languageCode))
-            translateMenu.addAction(action)
-
-        translate = QAction(self)
-        translate.setText(config.thisTranslation["watsonTranslator"])
-        translate.setMenu(translateMenu)
-        self.addAction(translate)
-
-        translateMenu = QMenu()
-        for language, languageCode in Languages.googleTranslateCodes.items():
-            action = QAction(self)
-            action.setText(language)
-            action.triggered.connect(partial(self.googleTranslate, languageCode))
-            translateMenu.addAction(action)
-
-        translate = QAction(self)
-        translate.setText(config.thisTranslation["googleTranslate"])
-        translate.setMenu(translateMenu)
-        self.addAction(translate)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
         action = QAction(self)
         action.setText(config.thisTranslation["context1_search"])
         action.triggered.connect(self.searchPanel)
@@ -348,15 +293,46 @@ class WebEngineView(QWebEngineView):
         self.addAction(action)
 
         subMenu = QMenu()
-        searchFavouriteBooks = QAction(self)
-        searchFavouriteBooks.setText(config.thisTranslation["context1_favouriteBooks"])
-        searchFavouriteBooks.triggered.connect(self.searchSearchFavouriteBooks)
-        subMenu.addAction(searchFavouriteBooks)
 
-        searchFavouriteBooks = QAction(self)
-        searchFavouriteBooks.setText(config.thisTranslation["context1_allBooks"])
-        searchFavouriteBooks.triggered.connect(self.searchAllBooks)
-        subMenu.addAction(searchFavouriteBooks)
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchPreviousBook)
+        subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        subSubMenu = QMenu()
+
+        for module in config.favouriteBooks:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchSelectedBook, module))
+            subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.searchFavouriteBooks)
+        subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_favouriteBooks"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_allBooks"])
+        action.triggered.connect(self.searchAllBooks)
+        subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
 
         action = QAction(self)
         action.setText(config.thisTranslation["removeBookHighlight"])
@@ -385,35 +361,185 @@ class WebEngineView(QWebEngineView):
         searchBibleLocation.triggered.connect(self.searchLocation)
         subMenu.addAction(searchBibleLocation)
 
-        self.searchBibleTopic = QAction(self)
-        self.searchBibleTopic.setText(config.thisTranslation["menu5_topics"])
-        self.searchBibleTopic.triggered.connect(self.searchTopic)
-        subMenu.addAction(self.searchBibleTopic)
+        subSubMenu = QMenu()
 
-        self.searchBibleDictionary = QAction(self)
-        self.searchBibleDictionary.setText(config.thisTranslation["context1_dict"])
-        self.searchBibleDictionary.triggered.connect(self.searchDictionary)
-        subMenu.addAction(self.searchBibleDictionary)
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchTopic)
+        subSubMenu.addAction(action)
 
-        self.searchBibleEncyclopedia = QAction(self)
-        self.searchBibleEncyclopedia.setText(config.thisTranslation["context1_encyclopedia"])
-        self.searchBibleEncyclopedia.triggered.connect(self.searchEncyclopedia)
-        subMenu.addAction(self.searchBibleEncyclopedia)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
 
-        self.searchLexicon = QAction(self)
-        self.searchLexicon.setText(config.thisTranslation["menu5_lexicon"])
-        self.searchLexicon.triggered.connect(self.searchHebrewGreekLexicon)
-        subMenu.addAction(self.searchLexicon)
+        for module in self.parent.parent.topicListAbb:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchResource, module))
+            subSubMenu.addAction(action)
 
-        self.searchThirdDictionary = QAction(self)
-        self.searchThirdDictionary.setText(config.thisTranslation["menu5_3rdDict"])
-        self.searchThirdDictionary.triggered.connect(self.searchThirdPartyDictionary)
-        subMenu.addAction(self.searchThirdDictionary)
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu5_topics"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        subSubMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchDictionary)
+        subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        for module in self.parent.parent.dictionaryListAbb:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchResource, module))
+            subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_dict"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        subSubMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchEncyclopedia)
+        subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        for module in self.parent.parent.encyclopediaListAbb:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchResource, module))
+            subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_encyclopedia"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        subSubMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchHebrewGreekLexicon)
+        subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        for module in self.parent.parent.lexiconList:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchHebrewGreekLexiconSelected, module))
+            subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu5_lexicon"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        subSubMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchThirdPartyDictionary)
+        subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        for module in self.parent.parent.thirdPartyDictionaryList:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchThirdPartyDictionarySelected, module))
+            subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu5_3rdDict"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
 
         action = QAction(self)
         action.setText(config.thisTranslation["menu5_lookup"])
         action.setMenu(subMenu)
         self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        # TEXT-TO-SPEECH feature
+        languages = self.parent.parent.getTtsLanguages()
+        tts = QAction(self)
+        tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
+        tts.triggered.connect(self.textToSpeech)
+        self.addAction(tts)
+
+        if config.isTtsInstalled:
+            ttsMenu = QMenu()
+            languageCodes = list(languages.keys())
+            items = [languages[code][1] for code in languageCodes]
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                action = QAction(self)
+                action.setText(item.capitalize())
+                action.triggered.connect(partial(self.textToSpeechLanguage, languageCode))
+                ttsMenu.addAction(action)
+
+            tts = QAction(self)
+            tts.setText(config.thisTranslation["context1_speak"])
+            tts.setMenu(ttsMenu)
+            self.addAction(tts)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        # IBM-Watson Translation Service
+
+        # Translate into User-defined Language
+        userLanguage = config.userLanguage
+        translateText = QAction(self)
+        translateText.setText("{0} [{1}]".format(config.thisTranslation["context1_translate"], userLanguage))
+        translateText.triggered.connect(self.checkUserLanguage)
+        self.addAction(translateText)
+
+        translateMenu = QMenu()
+        for index, item in enumerate(Translator.toLanguageNames):
+            languageCode = Translator.toLanguageCodes[index]
+            action = QAction(self)
+            action.setText(item)
+            action.triggered.connect(partial(self.selectedTextToSelectedLanguage, languageCode))
+            translateMenu.addAction(action)
+
+        translate = QAction(self)
+        translate.setText(config.thisTranslation["watsonTranslator"])
+        translate.setMenu(translateMenu)
+        self.addAction(translate)
+
+        translateMenu = QMenu()
+        for language, languageCode in Languages.googleTranslateCodes.items():
+            action = QAction(self)
+            action.setText(language)
+            action.triggered.connect(partial(self.googleTranslate, languageCode))
+            translateMenu.addAction(action)
+
+        translate = QAction(self)
+        translate.setText(config.thisTranslation["googleTranslate"])
+        translate.setMenu(translateMenu)
+        self.addAction(translate)
 
         # Context menu plugins
         if config.enablePlugins:
@@ -613,7 +739,26 @@ class WebEngineView(QWebEngineView):
             searchCommand = "LEXICON:::{0}".format(selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
-    def searchSearchFavouriteBooks(self):
+    def searchHebrewGreekLexiconSelected(self, module):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "LEXICON:::{0}:::{1}".format(module, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchPreviousBook(self):
+        self.searchSelectedBook(config.book)
+
+    def searchSelectedBook(self, book):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHBOOK:::{0}:::{1}".format(book, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def searchFavouriteBooks(self):
         selectedText = self.selectedText().strip()
         if not selectedText:
             self.messageNoSelection()
@@ -701,6 +846,14 @@ class WebEngineView(QWebEngineView):
             searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(config.thirdDictionary, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
+    def searchThirdPartyDictionarySelected(self, module):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            searchCommand = "SEARCHTHIRDDICTIONARY:::{0}:::{1}".format(module, selectedText)
+            self.parent.parent.textCommandChanged(searchCommand, self.name)
+
     def exportToPdf(self):
         if self.name == "main":
             self.parent.parent.printMainPage()
@@ -728,8 +881,25 @@ class WebEngineView(QWebEngineView):
     def openReferenceInBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
-        command = "BIBLE:::{0}:::{1}".format(bible, selectedText) if verses else "TEXT:::{0}".format(bible)
+        if verses:
+            command = "BIBLE:::{0}:::{1}".format(bible, selectedText)
+        elif not config.openBibleInMainViewOnly and self.name == "study":
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+        else:
+            command = "TEXT:::{0}".format(bible)
         self.parent.parent.textCommandChanged(command, self.name)
+
+    def compareAllVersions(self):
+        selectedText = self.selectedText().strip()
+        if selectedText:
+            verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+            if verses:
+                command = "COMPARE:::{0}".format(selectedText)
+                self.parent.parent.textCommandChanged(command, self.name)
+            else:
+                self.displayMessage(config.thisTranslation["message_noReference"])
+        else:
+            self.messageNoSelection()
 
     def displayVersesInNewWindow(self):
         selectedText = self.selectedText().strip()

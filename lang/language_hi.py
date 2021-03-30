@@ -662,4 +662,7 @@ translation = {
     "bibleVersion": "बाइबल संस्करण",
     "bibleConcordance": "बाइबल कॉनकॉर्नडांस",
     "openReferences": "संदर्भ खोलें",
+    "addOHGBiToMorphologySearch": "खोज परिणाम के लिए OHGBi सामग्री जोड़ें.",
+    "openBibleInMainViewOnly": "केवल मुख्य विंडो में द्विबल संदर्भ खोलें.",
+    "previous": "पिछला",
 }

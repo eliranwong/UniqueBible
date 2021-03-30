@@ -662,4 +662,7 @@ translation = {
     "bibleVersion": "圣经版本",
     "bibleConcordance": "圣经原文汇编",
     "openReferences": "开启经文",
+    "addOHGBiToMorphologySearch": "将 OHGBi 内容添加到形态搜索结果中。",
+    "openBibleInMainViewOnly": "仅在主窗口中打开圣经引用。",
+    "previous": "上一个",
 }
