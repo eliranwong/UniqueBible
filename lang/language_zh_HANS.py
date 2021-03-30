@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "圣经原文编号",
     "notStrongNumber": "选取的文字不是一个原文编号！",
     "all": "全部",
+    "enableMenuUnderline": "启用菜单快捷方式下划线",
     "bibleBook": "圣经书卷",
     "bibleVersion": "圣经版本",
     "bibleConcordance": "圣经原文汇编",

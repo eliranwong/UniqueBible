@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "Numărul lui Strong Strong",
     "notStrongNumber": "Textul selectat nu este un număr puternic!",
     "all": "TOATE",
+    "enableMenuUnderline": "Activare subliniere scurtătură meniu",
     "bibleBook": "Cartea Bibliei",
     "bibleVersion": "Versiune biblică",
     "bibleConcordance": "Biblia Concordany",

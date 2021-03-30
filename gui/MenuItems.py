@@ -6,7 +6,7 @@ from qtpy.QtGui import QIcon, Qt
 from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
 
 def addMenu(menuBar, translation):
-    return menuBar.addMenu("&{0}".format(config.thisTranslation[translation]))
+    return menuBar.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation[translation]))
 
 def addSubMenu(parentMenu, translation):
     return parentMenu.addMenu(config.thisTranslation[translation])

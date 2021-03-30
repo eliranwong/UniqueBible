@@ -62,6 +62,7 @@ class DisplayConfigOptionsWindow(QDialog):
             ["enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(True, "enablePlugins")],
             ["hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare")],
             ["enforceCompareParallel", config.enforceCompareParallel, self.parent.enforceCompareParallelButtonClicked, self.flagToolTip(False, "enforceCompareParallel")],
+            ["enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, self.flagToolTip(True, "enableMenuUnderline")],
             ["openBibleInMainViewOnly", config.openBibleInMainViewOnly, self.parent.enableStudyBibleButtonClicked, self.flagToolTip(False, "openBibleInMainViewOnly")],
             ["addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, self.flagToolTip(True, "addOHGBiToMorphologySearch")],
         ]
@@ -329,6 +330,13 @@ class DisplayConfigOptionsWindow(QDialog):
     def hideBlankVerseCompareChanged(self):
         config.hideBlankVerseCompare = not config.hideBlankVerseCompare
 
+    def enableMenuUnderlineChanged(self):
+        config.enableMenuUnderline = not config.enableMenuUnderline
+        if config.enableMenuUnderline:
+            config.menuUnderline = "&"
+        else:
+            config.menuUnderline = ""
+        self.parent.setMenuLayout(config.menuLayout)
 
 class DisplayConfigOptionsModel(QAbstractTableModel):
 

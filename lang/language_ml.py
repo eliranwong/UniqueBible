@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "ബൈബിൾ സ്ട്രോങ്ങിന്റെ നമ്പർ",
     "notStrongNumber": "തെരഞ്ഞെടുത്ത വാചകം സ്ട്രോങ്ങിന്റെ നമ്പർ അല്ല!",
     "all": "എല്ലാം",
+    "enableMenuUnderline": "മെനു കുറുക്കുവഴി അണ്ടര്ലൈന് പ്രാവര്ത്തികമാക്കുക",
     "bibleBook": "ബൈബിൾ ബുക്ക്",
     "bibleVersion": "ബൈബിൾ പതിപ്പ്",
     "bibleConcordance": "ബൈബിൾ കോൺക്രോഡൻസ്",

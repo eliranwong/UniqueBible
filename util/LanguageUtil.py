@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("enforceCompareParallel", "Force Bible display to stay in compare mode")
+        addLanguageStringToAllFiles("enableMenuUnderline", "Enable menu shortcut underline")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

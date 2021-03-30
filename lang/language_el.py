@@ -658,6 +658,7 @@ translation = {
     "bibleStrongNumber": "Αριθμός της Βίβλου Ισχυρός",
     "notStrongNumber": "Το επιλεγμένο κείμενο δεν είναι αριθμός ισχυρού!",
     "all": "ΌΛΑ!",
+    "enableMenuUnderline": "Ενεργοποίηση συντόμευσης μενού συντόμευσης",
     "bibleBook": "Βιβλίο της Βίβλου",
     "bibleVersion": "Έκδοση Αγία Γραφή",
     "bibleConcordance": "Αγία Γραφή Concordance",

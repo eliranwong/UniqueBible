@@ -293,7 +293,7 @@ class FocusMainWindow:
 
         # macros
         if config.enableMacros:
-            macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))
+            macros_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_macros"]))
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])

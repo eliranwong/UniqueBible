@@ -13,7 +13,7 @@ class AlephMainWindow:
 
         config.topToolBarOnly = False
 
-        menu1 = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu1_app"]))
+        menu1 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu1_app"]))
         menu1_language = addSubMenu(menu1, "languageSettings")
         subMenu = addSubMenu(menu1_language, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
@@ -136,7 +136,7 @@ class AlephMainWindow:
         menu1.addAction(
             QAction(config.thisTranslation["menu_quit"], self, shortcut=sc.quitApp, triggered=self.quitApp))
 
-        navigation_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_navigation"]))
+        navigation_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_navigation"]))
         masterControlMenu = addMenu(navigation_menu, "controlPanel")
         if hasattr(config, "cli"):
             addMenuItem(masterControlMenu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
@@ -158,7 +158,7 @@ class AlephMainWindow:
         navigation_menu.addAction(QAction(config.thisTranslation["menu_last_chapter"], self, shortcut=sc.gotoLastChapter, triggered=self.gotoLastChapter))
         navigation_menu.addAction(QAction(config.thisTranslation["menu_next_book"], self, shortcut=sc.nextMainBook, triggered=self.nextMainBook))
         navigation_menu.addAction(QAction(config.thisTranslation["menu_previous_book"], self, shortcut=sc.previousMainBook, triggered=self.previousMainBook))
-        scroll_menu = navigation_menu.addMenu("&{0}".format(config.thisTranslation["menu_scroll"]))
+        scroll_menu = navigation_menu.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_scroll"]))
         scroll_menu.addAction(QAction(config.thisTranslation["menu_main_scroll_to_top"], self, shortcut=sc.mainPageScrollToTop,
                                           triggered=self.mainPageScrollToTop))
         scroll_menu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, shortcut=sc.mainPageScrollPageDown,
@@ -184,7 +184,7 @@ class AlephMainWindow:
         if os.path.isfile(os.path.join(config.marvelData, "bibles/KJV+.bible")):
             marvel_bible_menu.addAction(
                 QAction("KJV+ Bible", self, shortcut=sc.runKJV2Bible, triggered=self.runKJV2Bible))
-        history_menu = navigation_menu.addMenu("&{0}".format(config.thisTranslation["menu_history"]))
+        history_menu = navigation_menu.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_history"]))
         history_menu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut=sc.mainHistoryButtonClicked, triggered=self.mainHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut=sc.back, triggered=self.back))
         history_menu.addAction(QAction(config.thisTranslation["menu3_mainForward"], self, shortcut=sc.forward, triggered=self.forward))
@@ -193,7 +193,7 @@ class AlephMainWindow:
         history_menu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut=sc.studyForward, triggered=self.studyForward))
         #navigation_menu.addAction(QAction(config.thisTranslation["controlPanel"], self, shortcut=sc.manageControlPanel, triggered=self.manageControlPanel))
 
-        search_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_search"]))
+        search_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_search"]))
         search_menu.addAction(QAction(config.thisTranslation["menu5_bible"], self, shortcut=sc.displaySearchBibleMenu, triggered=self.displaySearchBibleMenu))
         search_menu.addAction(QAction(config.thisTranslation["menu_verse_all_versions"], self, shortcut=sc.runCOMPARE, triggered=self.runCOMPARE))
         search_menu.addSeparator()
@@ -221,7 +221,7 @@ class AlephMainWindow:
         search_menu.addAction(
             QAction(config.thisTranslation["menu5_allBook"], self, shortcut=sc.displaySearchAllBookCommand, triggered=self.displaySearchAllBookCommand))
 
-        library_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_library"]))
+        library_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_library"]))
         library_menu.addAction(QAction(config.thisTranslation["menu4_book"], self, shortcut=sc.bookFeatures, triggered=self.bookFeatures))
         library_menu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeatureIntroduction))
         library_menu.addAction(QAction(config.thisTranslation["html_timelines"], self, triggered=self.runBookFeatureTimelines))
@@ -242,7 +242,7 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, shortcut=sc.runDISCOURSE, triggered=self.runDISCOURSE))
         library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
 
-        annotate_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_annotate"]))
+        annotate_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_annotate"]))
         if config.enableVerseHighlighting:
             highlight = annotate_menu.addMenu(config.thisTranslation["menu_highlight"])
             highlight.addAction(
@@ -262,7 +262,7 @@ class AlephMainWindow:
             annotate_menu.addAction(
                 QAction(config.thisTranslation["menu_gist"], self, shortcut=sc.showGistWindow, triggered=self.showGistWindow))
 
-        menu_data = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_data"]))
+        menu_data = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_data"]))
         subMenu = addSubMenu(menu_data, "add")
         items = (
             ("menu8_bibles", self.installMarvelBibles),
@@ -290,7 +290,7 @@ class AlephMainWindow:
         menu_data.addSeparator()
         menu_data.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 
-        display_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_display"]))
+        display_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_display"]))
         bible_format_menu = display_menu.addMenu(config.thisTranslation["menu_bible_format"])
         bible_format_menu.addAction(QAction(config.thisTranslation["menu_simple_formatted"], self, shortcut=sc.enableParagraphButtonClicked,
                                          triggered=self.enableParagraphButtonClicked))
@@ -342,7 +342,7 @@ class AlephMainWindow:
             QAction(config.thisTranslation["menu_reload"], self, shortcut=sc.reloadCurrentRecord, triggered=self.reloadCurrentRecord))
 
         if config.enableMacros:
-            macros_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_macros"]))
+            macros_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_macros"]))
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
@@ -359,7 +359,7 @@ class AlephMainWindow:
                 else:
                     addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
 
-        about_menu = self.menuBar().addMenu("&{0}".format(config.thisTranslation["menu_about"]))
+        about_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))
         addMenuItem(about_menu, "ubaCommands", self, self.showCommandDocumentation)
         subMenu = addSubMenu(about_menu, "menu_support")
