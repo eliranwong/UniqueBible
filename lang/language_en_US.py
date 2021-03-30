@@ -665,4 +665,5 @@ translation = {
     "addOHGBiToMorphologySearch": "Add OHGBi content to morphology search result.",
     "openBibleInMainViewOnly": "Open bible reference in main window only.",
     "previous": "Previous",
+    "bibleResources": "Bible Resources",
 }

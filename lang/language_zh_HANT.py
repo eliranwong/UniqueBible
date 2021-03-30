@@ -665,4 +665,5 @@ translation = {
     "addOHGBiToMorphologySearch": "將 OHGBi 內容新增至形態學搜尋結果。",
     "openBibleInMainViewOnly": "只在主視窗中開啟聖經參照。",
     "previous": "上一個",
+    "bibleResources": "聖經資源",
 }

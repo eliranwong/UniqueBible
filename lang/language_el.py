@@ -665,4 +665,5 @@ translation = {
     "addOHGBiToMorphologySearch": "Προσθέστε το περιεχόμενο του OHGBi στη μορφολογία.",
     "openBibleInMainViewOnly": "Ανοίξτε τη Βίβλο μόνο στο κύριο παράθυρο.",
     "previous": "Προηγούμενο.",
+    "bibleResources": "Πόροι Βίβλου",
 }

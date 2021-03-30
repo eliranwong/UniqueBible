@@ -665,4 +665,5 @@ translation = {
     "addOHGBiToMorphologySearch": "OHGBi 컨텐츠를 모폴로지 검색 결과에 추가합니다.",
     "openBibleInMainViewOnly": "기본 창에서만 사용할 수 있는 참조를 엽니다.",
     "previous": "이전",
+    "bibleResources": "성경자원",
 }

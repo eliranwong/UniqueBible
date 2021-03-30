@@ -1,3 +1,6 @@
+Major changes in version 23.23:
+* Renamed "Lookup" submenu on right-click context menu to "Bible Resources".
+
 Major changes in version 23.22:
 * Support change of Bible Window bible version when "Open with" feature is triggered from Study Window without selecting a bible verse reference and config.openBibleInMainViewOnly is set to True.
 * Improved morphology search result display by including OHGBi verse text as immediate context.

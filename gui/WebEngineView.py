@@ -294,58 +294,6 @@ class WebEngineView(QWebEngineView):
 
         subMenu = QMenu()
 
-        action = QAction(self)
-        action.setText(config.thisTranslation["previous"])
-        action.triggered.connect(self.searchPreviousBook)
-        subMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        subSubMenu = QMenu()
-
-        for module in config.favouriteBooks:
-            action = QAction(self)
-            action.setText(module)
-            action.triggered.connect(partial(self.searchSelectedBook, module))
-            subSubMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subSubMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.searchFavouriteBooks)
-        subSubMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_favouriteBooks"])
-        action.setMenu(subSubMenu)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_allBooks"])
-        action.triggered.connect(self.searchAllBooks)
-        subMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["removeBookHighlight"])
-        action.triggered.connect(self.removeBookHighlight)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["installBooks"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
         searchBibleCharacter = QAction(self)
         searchBibleCharacter.setText(config.thisTranslation["menu5_characters"])
         searchBibleCharacter.triggered.connect(self.searchCharacter)
@@ -472,7 +420,59 @@ class WebEngineView(QWebEngineView):
         subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["menu5_lookup"])
+        action.setText(config.thisTranslation["bibleResources"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchPreviousBook)
+        subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        subSubMenu = QMenu()
+
+        for module in config.favouriteBooks:
+            action = QAction(self)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchSelectedBook, module))
+            subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.searchFavouriteBooks)
+        subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_favouriteBooks"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_allBooks"])
+        action.triggered.connect(self.searchAllBooks)
+        subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["removeBookHighlight"])
+        action.triggered.connect(self.removeBookHighlight)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["installBooks"])
         action.setMenu(subMenu)
         self.addAction(action)
 
