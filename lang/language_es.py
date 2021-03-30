@@ -663,4 +663,8 @@ translation = {
     "bibleVersion": "Versión Bíblica",
     "bibleConcordance": "Concordancia de la Biblia",
     "openReferences": "Referencias abiertas",
+    "addOHGBiToMorphologySearch": "Añadir contenido de OHGBi al resultado de búsqueda de morfología.",
+    "openBibleInMainViewOnly": "Abrir referencia de biblia sólo en la ventana principal.",
+    "previous": "Anterior",
+    "bibleResources": "Recursos Bíblicos",
 }

@@ -262,7 +262,10 @@ class TextCommandParser:
             # e.g. WORDS:::Gen 1:1"""),
             "lexicon": (self.textLexicon, """
             # [KEYWORD] LEXICON
-            # e.g. LEXICON:::BDB:::H7225"""),
+            # Usage - LEXICON:::[LEXICON_MODULE]:::[LEXICAL_ENTRY]
+            # Usage - LEXICON:::[LEXICON_MODULE]:::[LEXICAL_ENTRIES]
+            # e.g. LEXICON:::BDB:::H7225
+            # e.g. LEXICON:::BDB:::H7225_H123"""),
             "lmcombo": (self.textLMcombo, """
             # [KEYWORD] LMCOMBO
             # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a"""),
@@ -1117,8 +1120,7 @@ class TextCommandParser:
     # CONCORDANCE:::
     def textConcordance(self, command, source):
         if command.count(":::") == 0:
-            updateViewConfig, viewText, *_ = self.getViewConfig(source)
-            command = "{0}:::{1}".format(viewText, command)
+            command = "{0}:::{1}".format("OHGBi", command)
         texts, strongNo = self.splitCommand(command)
         if texts == "ALL":
             texts = self.parent.strongBibles
@@ -1311,7 +1313,7 @@ class TextCommandParser:
                 updateViewConfig(viewText, verseList[-1])
             else:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
-            return (source, verses, {})
+            return ("main", verses, {})
 
     # DIFF:::
     # DIFFERENCE:::

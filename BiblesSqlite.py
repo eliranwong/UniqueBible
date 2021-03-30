@@ -422,11 +422,11 @@ input.addEventListener('keyup', function(event) {0}
             b, c, v = verseList[0]
             return self.compareVerseChapter(b, c, v, texts)
         else:
-            return "".join([self.readTranslations(b, c, v, texts) for b, c, v in verseList])
+            return "".join([self.readTranslations(b, c, v, texts) for b, c, v, *_ in verseList])
 
     def diffVerse(self, verseList, texts=["ALL"]):
         if config.isDiffMatchPatchInstalled:
-            return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v in verseList])
+            return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v, *_ in verseList])
         else:
             return config.thisTranslation["message_noSupport"]
 
@@ -1233,7 +1233,14 @@ class MorphologySqlite:
         wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         verseReference = self.bcvToVerseReference(b, c, v)
         firstLexicalEntry = lexicalEntry.split(",")[0]
-        lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
+        lexicalEntryButtons = ""
+        for index, entry in enumerate(lexicalEntry[:-1].split(",")):
+            if index == 0:
+                lexicalEntryButtons += "<button class='feature' onclick='concord(\"{0}\")'>{0}</button>".format(entry)
+            else:
+                lexicalEntryButtons += " <button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry)
+        lexicalEntry = lexicalEntryButtons
+        #lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
         if b < 40:
@@ -1295,7 +1302,7 @@ class MorphologySqlite:
 
         literalTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry))
         dynamicTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry, "Translation"))
-        html = "<h1>OHGB Concordance</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)
+        html = """<h1>OHGB Concordance</h1><h2><ref onclick='lex("{0}")'>{0}</ref> x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>""".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)
         return html
 
     def etcbcLexemeNo2StrongNo(self, lexicalEntry):
@@ -1352,8 +1359,13 @@ class MorphologySqlite:
             else:
                 textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
             formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            if config.addOHGBiToMorphologySearch:
+                # Adding OHGBi verse text as immediate context
+                ohgbi = re.sub("\[[EHG][0-9]+?\]", "", self.formatOHGBiVerseText((b, c, v)))
+                # highlight the matched word
+                ohgbi = re.sub(r"""<(heb|grk)( onclick="w\({0},{1}\)".*?</\1>)""".format(b, wordID), r"<z><\1\2</z>", ohgbi)
+                formatedText += "<br>{0}".format(ohgbi)
         return formatedText
-
 
 
 if __name__ == '__main__':

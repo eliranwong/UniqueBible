@@ -617,6 +617,14 @@ function lex(entry) {
     document.title = "LEXICON:::"+entry;
 }
 
+function concord(entry) {
+    document.title = "CONCORDANCE:::"+entry;
+}
+
+function concordance(module, entry) {
+    document.title = "CONCORDANCE:::"+module+":::"+entry;
+}
+
 function bdbid(entry) {
     document.title = "LEXICON:::BDB:::"+entry;
 }

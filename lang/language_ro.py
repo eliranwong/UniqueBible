@@ -663,4 +663,8 @@ translation = {
     "bibleVersion": "Versiune biblică",
     "bibleConcordance": "Biblia Concordany",
     "openReferences": "Deschidere referinţe",
+    "addOHGBiToMorphologySearch": "Adăugaţi conţinut OHGBi la rezultatul căutării morfologice.",
+    "openBibleInMainViewOnly": "Deschideţi referinţa biblică numai în fereastra principală.",
+    "previous": "Anterior",
+    "bibleResources": "Resurse biblice",
 }

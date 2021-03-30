@@ -1,9 +1,30 @@
+Major change in version 23.24:
+* Added config variables "activeVerseNoColourLight" and "activeVerseNoColourDark" to customise active verse number colour.
+
+Major changes in version 23.23:
+* Renamed "Lookup" submenu on right-click context menu to "Bible Resources".
+
+Major changes in version 23.22:
+* Support change of Bible Window bible version when "Open with" feature is triggered from Study Window without selecting a bible verse reference and config.openBibleInMainViewOnly is set to True.
+* Improved morphology search result display by including OHGBi verse text as immediate context.
+* Added a config flag "addOHGBiToMorphologySearch".  When it is set to True, OHGBi verses are included with morphology search result to provide immediate context.
+* Added "addOHGBiToMorphologySearch" and "openBibleInMainViewOnly" to "Display Config Options Window".
+* Added option "ALL" to "Open with" submenu on right-click context menu, to compare all bible versions of selected reference.
+* Added multiple submenus to right-click context menu, allowing users to quickly search an installed resource:
+    Fvaourite references books, Topics, Dictionaries, Encyclopedia, Lexicons, Thirty-party dictionaries
+* Added a link to lexicon in condorance content.
+* Added a link to concordance in lexicon content.
+* Added two javascript functions for lookup lexical entry in concordance.
+* Set OHGBi as default concordance module on Hebrew / Greek word lookup result.
+* Set OHGBi as default concordance module if module is not specified when command keyword "CONCORDANCE:::" is used.
+* Minor adjustment about interlinear translation display colour in dark theme.
+
 Major changes in version 23.21:
 * Added support of searching Hebrew lexeme codes in OHGB concordance.
 * Added support of searching Hebrew lexeme codes in Strong's number lexicons.
 * Added submenu "Open with" to right-click context menu for opening selected verse references with selected bible version.
     # This feature works well with standard verse parsing.  To use this feature with fast verse-parser, you need to select verse reference without mixed text.
-    # If no reference is selected this feature will change the bible version displayed in the main window.
+    # If no reference is selected this feature opens the current reference with the selected bible version.
 * Added submenu "Bible Book" to right-click context menu for quick search of a bible book.
 * Added submenu "Bible Version" to right-click context menu for quick search of a bible version.
 * Changed command keyword "STRONGBIBLE:::" to "CONCORDANCE:::".

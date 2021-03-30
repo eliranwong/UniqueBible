@@ -60,10 +60,11 @@ class DisplayConfigOptionsWindow(QDialog):
             ["enableGist", config.enableGist, self.enableGistChanged, self.flagToolTip(False, "enableGist")],
             ["enableMacros", config.enableMacros, self.enableMacrosChanged, self.flagToolTip(False, "enableMacros")],
             ["enablePlugins", config.enablePlugins, self.enablePluginsChanged, self.flagToolTip(True, "enablePlugins")],
-            #["customPythonOnStartup", config.customPythonOnStartup, self.customPythonOnStartupChanged, self.flagToolTip(False, "customPythonOnStartup")],
             ["hideBlankVerseCompare", config.hideBlankVerseCompare, self.hideBlankVerseCompareChanged, self.flagToolTip(False, "hideBlankVerseCompare")],
             ["enforceCompareParallel", config.enforceCompareParallel, self.parent.enforceCompareParallelButtonClicked, self.flagToolTip(False, "enforceCompareParallel")],
             ["enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, self.flagToolTip(True, "enableMenuUnderline")],
+            ["openBibleInMainViewOnly", config.openBibleInMainViewOnly, self.parent.enableStudyBibleButtonClicked, self.flagToolTip(False, "openBibleInMainViewOnly")],
+            ["addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, self.flagToolTip(True, "addOHGBiToMorphologySearch")],
         ]
         if config.isTtsInstalled:
             options += [
@@ -206,6 +207,9 @@ class DisplayConfigOptionsWindow(QDialog):
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+
+    def addOHGBiToMorphologySearchChanged(self):
+        config.addOHGBiToMorphologySearch = not config.addOHGBiToMorphologySearch
 
     def exportEmbeddedImagesChanged(self):
         config.exportEmbeddedImages = not config.exportEmbeddedImages
