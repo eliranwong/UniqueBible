@@ -90,10 +90,6 @@ class WebEngineView(QWebEngineView):
         action.setMenu(subMenu)
         self.addAction(action)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
         subMenu = QMenu()
 
         searchBibleReferences = QAction(self)

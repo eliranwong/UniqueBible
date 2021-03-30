@@ -1,4 +1,7 @@
-Major change in version 23.25:
+Major change in version 23.26:
+* Minor touch on right-click context menu.
+
+Major changes in version 23.25:
 * Added a startup plugin to fix colours displayed in dark theme.
 * Added config flag "enableMenuUnderline"
 
