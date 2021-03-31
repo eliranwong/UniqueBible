@@ -68,9 +68,7 @@ class BiblesSqlite:
                 self.cursor.execute(query)
                 verses = self.cursor.fetchall()
                 # import into formatted bible database
-                formattedBible = Bible(bible)
-                formattedBible.importPlainFormat(verses)
-                del formattedBible
+                Bible(bible).importPlainFormat(verses)
                 # delete plain verses from bibles.sqlite
                 delete = "DROP TABLE {0}".format(bible)
                 self.cursor.execute(delete)
@@ -101,10 +99,7 @@ class BiblesSqlite:
                 return ""
         elif text in formattedBibleList:
             try:
-                bible = Bible(text)
-                info = bible.bibleInfo()
-                del bible
-                return info
+                return Bible(text).bibleInfo()
             except:
                 print("Could not open Bible " + text)
 
@@ -125,9 +120,7 @@ class BiblesSqlite:
             self.cursor.executemany(insert, verses)
             self.connection.commit()
         else:
-            bible = Bible(abbreviation)
-            bible.importPlainFormat(verses, description)
-            del bible
+            Bible(abbreviation).importPlainFormat(verses, description)
 
     def bcvToVerseReference(self, b, c, v, *args, isChapter=False):
         if args:
@@ -330,10 +323,7 @@ input.addEventListener('keyup', function(event) {0}
             # return a list of tuple
             return textChapter
         elif text in formattedBibleList:
-            bible = Bible(text)
-            textChapter = bible.readTextChapter(b, c)
-            del bible
-            return textChapter
+            return Bible(text).readTextChapter(b, c)
 
     def readTextVerse(self, text, b, c, v):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -346,10 +336,7 @@ input.addEventListener('keyup', function(event) {0}
             # return a tuple
             return textVerse
         else:
-            bible = Bible(text)
-            textVerse = bible.readTextVerse(b, c, v)
-            del bible
-            return textVerse
+            return Bible(text).readTextVerse(b, c, v)
 
     def getTexts(self):
         textList = self.getBibleList()
@@ -362,10 +349,7 @@ input.addEventListener('keyup', function(event) {0}
             self.cursor.execute(query)
             return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
         elif text in formattedBibleList:
-            bible = Bible(text)
-            bookList = bible.getBookList()
-            del bible
-            return bookList
+            return Bible(text).getBookList()
 
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
@@ -379,10 +363,7 @@ input.addEventListener('keyup', function(event) {0}
             self.cursor.execute(query, (b,))
             return [chapter[0] for chapter in self.cursor.fetchall()]
         elif text in formattedBibleList:
-            bible = Bible(text)
-            chapterList = bible.getChapterList(b)
-            del bible
-            return chapterList
+            return Bible(text).getChapterList(b)
 
     def getChapters(self, b=config.mainB, text=config.mainText):
         chapterList = self.getChapterList(b, text)
@@ -528,10 +509,7 @@ input.addEventListener('keyup', function(event) {0}
         elif text in formattedBibleList:
             if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
                 searchString = TextUtil.removeVowelAccent(searchString)
-            bible = Bible(text)
-            count = bible.countSearchBook(book, searchString)
-            del bible
-            return count
+            return Bible(text).countSearchBook(book, searchString)
 
     def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
@@ -565,9 +543,7 @@ input.addEventListener('keyup', function(event) {0}
         if text in plainBibleList:
             verses = self.getSearchVerses(query, t)
         elif text in formattedBibleList:
-            bible = Bible(text)
-            verses = bible.getSearchVerses(query, t)
-            del bible
+            Bible(text).getSearchVerses(query, t)
         # Search fetched result with regular express here
         if mode == "REGEX":
             formatedText += "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
@@ -711,10 +687,8 @@ input.addEventListener('keyup', function(event) {0}
         # format a chapter
         chapter = "<h2>"
         if config.showNoteIndicatorOnBibleChapter:
-            noteSqlite = NoteSqlite()
-            if noteSqlite.isBookNote(b):
+            if NoteSqlite().isBookNote(b):
                 chapter += '<ref onclick="nB()">&#9997</ref> '
-            del noteSqlite
         chapter += "{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         # get a verse list of available notes
         noteVerseList = []
@@ -835,6 +809,9 @@ class Bible:
         self.connection.commit()
         self.connection.close()
 
+    def bcvToVerseReference(self, b, c, v):
+        return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
+
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
         self.cursor.execute(query)
@@ -903,6 +880,15 @@ class Bible:
         except:
             return ("", "")
 
+    def bibleInfoOld(self):
+        query = "SELECT Scripture FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        if info:
+            return info[0]
+        else:
+            return ""
+
     def formatStrongConcordance(self, strongNo):
         if self.text == "OHGBi":
             return MorphologySqlite().formatConcordance(strongNo)
@@ -924,7 +910,6 @@ class Bible:
         wdListAll = []
         verseHits = 0
         snHits = 0
-        biblesSqlite = BiblesSqlite()
 
         for b, c, v, vsTxt in self.cursor:
             vsTxt = re.sub("([HG][0-9]+?) ", r" [\1] ", vsTxt)
@@ -955,7 +940,7 @@ class Bible:
                 #', '.join(wdList)
                 wdListAll += wdList
                 
-                verseReference = biblesSqlite.bcvToVerseReference(b, c, v)
+                verseReference = self.bcvToVerseReference(b, c, v)
                 line = """<ref onclick="document.title='BIBLE:::{0}'">({0})</ref> {1}""".format(verseReference, vsTxtFix)
                 
                 csv.append(line)
@@ -989,7 +974,7 @@ class Bible:
 
     def getHighlightedOHGBVerse(self, b, c, v, wordID, showReference=False, linkOnly=False):
         if self.text in ("OHGB", "OHGBi"):
-            reference = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(BiblesSqlite().bcvToVerseReference(b, c, v)) if showReference else ""
+            reference = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(self.bcvToVerseReference(b, c, v)) if showReference else ""
             if linkOnly:
                 return """{4} [<ref onclick="tbcv('OHGBi', {0}, {1}, {2})" onmouseover="ohgbi({0}, {1}, {2}, {3})">OHGBi</ref>] """.format(b, c, v, wordID, reference)
             else:
@@ -1018,19 +1003,15 @@ class Bible:
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>"
         if config.showNoteIndicatorOnBibleChapter:
-            noteSqlite = NoteSqlite()
-            if noteSqlite.isBookNote(b):
+            if NoteSqlite().isBookNote(b):
                 chapter += '<ref onclick="nB()">&#9997</ref> '
-            del noteSqlite
-        chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), biblesSqlite.bcvToVerseReference(b, c, v).split(":", 1)[0])
-        del biblesSqlite
+        chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         self.thisVerseNoteList = []
         if config.showNoteIndicatorOnBibleChapter:
             noteSqlite = NoteSqlite()
             self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
-            del noteSqlite
         chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])
@@ -1159,10 +1140,7 @@ class Bible:
 class ClauseData:
 
     def getContent(self, testament, entry):
-        clauseData = ClauseONTData(testament)
-        content = clauseData.getContent(entry)
-        del clauseData
-        return content
+        return ClauseONTData(testament).getContent(entry)
 
 
 class ClauseONTData:
@@ -1264,9 +1242,7 @@ class MorphologySqlite:
             testament = "NT"
             textWord = "<grk>{0}</grk>".format(textWord)
             lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
-        clauseData = ClauseData()
-        clauseContent = clauseData.getContent(testament, clauseID)
-        del clauseData
+        clauseContent = ClauseData().getContent(testament, clauseID)
         return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
 
     def searchWord(self, portion, wordID):
@@ -1281,7 +1257,7 @@ class MorphologySqlite:
     def formatOHGBiVerseText(self, bcv):
         query = "SELECT WordID, Word, LexicalEntry, Interlinear FROM morphology WHERE Book=? AND Chapter=? AND Verse=? ORDER BY WordID"
         self.cursor.execute(query, bcv)
-        verseText = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(BiblesSqlite().bcvToVerseReference(*bcv))
+        verseText = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(self.bcvToVerseReference(*bcv))
         b = bcv[0]
         for wordID, word, lexicalEntry, interlinear in self.cursor:
             action = ' onclick="w({0},{1})" onmouseover="iw({0},{1})"'.format(b, wordID)
@@ -1297,7 +1273,6 @@ class MorphologySqlite:
         verseHits = len(set([verse[:-1] for verse in verses]))
         ohgbiBible = Bible("OHGBi")
         verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
-        del ohgbiBible
         lexeme, pronunciation = ("", "")
         if lexicalEntry in strongsData:
             lexeme, pronunciation, *_ = strongsData[lexicalEntry]
@@ -1371,8 +1346,6 @@ class MorphologySqlite:
             formatedText += "<br>"
         #end = time.time()
         #print(end - start)
-        if config.addOHGBiToMorphologySearch and ohgbiInstalled:
-            del ohgbiBible
         return formatedText
 
 

@@ -1,3 +1,6 @@
+Major change in version 23.28:
+* Place back a function that had been deleted by mistake in an earlier update.
+
 Major changes in version 23.27:
 * Optimised display of OHGBi verses in OHGB concordance and morphology search result.
 * Added config.maximumOHGBiVersesDisplayedInSearchResult
