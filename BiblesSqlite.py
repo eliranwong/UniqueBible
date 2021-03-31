@@ -892,14 +892,14 @@ class Bible:
     def formatStrongConcordance(self, strongNo):
         if self.text == "OHGBi":
             return MorphologySqlite().formatConcordance(strongNo)
-        lexeme, pronunciation = ("", "")
         if strongNo in LexicalData.data or "{0}a".format(strongNo) in LexicalData.data:
-            lexeme, pronunciation, *_ = LexicalData.data[strongNo if strongNo in LexicalData.data else "{0}a".format(strongNo)]
+            lexeme, pos, gloss, transliteration = LexicalData.data[strongNo if strongNo in LexicalData.data else "{0}a".format(strongNo)]
             lexeme = "<heb>{0}</heb>".format(lexeme) if strongNo.startswith("H") else "<grk>{0}</grk>".format(lexeme)
-            pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
+            data = "<transliteration>{2}</transliteration> | <e>{0}</e> | <esblu>{1}</esblu>".format(pos, gloss, transliteration)
+            lexicalData = "<h3>{0}</h3><p>{1}</p>".format(lexeme, data)
         sNumList = ["[{0}]".format(strongNo)]
         verseHits, snHits, uniqueWdList, verses = Bible(self.text).searchStrongNumber(sNumList)
-        html = "<h1>Strong's Concordance - {7}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " <mbn>|</mbn> ".join(uniqueWdList), "<br>".join(verses), lexeme, pronunciation, self.text)
+        html = "<h1>Strong's Concordance - {5}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2>{6}<h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " <mbn>|</mbn> ".join(uniqueWdList), "<br>".join(verses), self.text, lexicalData)
         return html
 
     def searchStrongNumber(self, sNumList):    
@@ -1279,14 +1279,16 @@ class MorphologySqlite:
         verseHits = len(set([verse[:-1] for verse in verses]))
         ohgbiBible = Bible("OHGBi")
         verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
-        lexeme, pronunciation = ("", "")
         if lexicalEntry in LexicalData.data or "{0}a".format(lexicalEntry) in LexicalData.data:
-            lexeme, pronunciation, *_ = LexicalData.data[lexicalEntry if lexicalEntry in LexicalData.data else "{0}a".format(lexicalEntry)]
+            lexeme, pos, gloss, transliteration = LexicalData.data[lexicalEntry if lexicalEntry in LexicalData.data else "{0}a".format(lexicalEntry)]
             lexeme = "<heb>{0}</heb>".format(lexeme) if re.match("^[HE]", lexicalEntry) else "<grk>{0}</grk>".format(lexeme)
-            pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
+            data = "<transliteration>{2}</transliteration> | <e>{0}</e> | <esblu>{1}</esblu>".format(pos, gloss, transliteration)
+            lexicalData = "<h3>{0}</h3><p>{1}</p>".format(lexeme, data)
+        else:
+            lexicalData = ""
         literalTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry))
         dynamicTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry, "Translation"))
-        html = """<h1>OHGB Concordance</h1><h2><ref onclick='lex("{0}")'>{0}</ref> x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>""".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)
+        html = """<h1>OHGB Concordance</h1><h2><ref onclick='lex("{0}")'>{0}</ref> x {2} Hit(s) in {1} Verse(s)</h2>{6}<h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{5}</p><h3>Verses:</h3><p>{4}</p>""".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, dynamicTranslation, lexicalData)
         return html
 
     def etcbcLexemeNo2StrongNo(self, lexicalEntry):

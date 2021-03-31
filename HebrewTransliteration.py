@@ -126,7 +126,7 @@ class HebrewTransliteration:
         return (lv == 'a') and (ll == 'h' or ll == 'ch') and (self.last_index(lv, word) > self.last_index(ll, word))
     
     
-    def transliterateHebrew(self, text):
+    def transliterateHebrew(self, text, tts=True):
         #"""FILE INPUT"""
         
         #made as a map in case more punctuation swaps need to be added
@@ -225,8 +225,9 @@ class HebrewTransliteration:
             ("ch |ch$", "k "),
             ("ch", "h"),
         )
-        for search, replace in searchReplace:
-            output = re.sub(search, replace, output)
+        if tts:
+            for search, replace in searchReplace:
+                output = re.sub(search, replace, output)
         #print(output)
         return output
 
@@ -234,3 +235,16 @@ if __name__ == '__main__':
     #arguments = sys.argv
     print(sys.argv[1])
     print(HebrewTransliteration().transliterateHebrew(sys.argv[1]))
+
+#    import pprint
+#    from HebrewTransliteration import HebrewTransliteration
+#    from LexicalData import LexicalData
+#    newDict = {}
+#    for i in range(70001, 79237):
+#        entry = "E{0}".format(i)
+#        a, b, c = LexicalData.data[entry]
+#        d = HebrewTransliteration().transliterateHebrew(a, tts=False)
+#        newDict[entry] = (a, b, c ,d.strip())
+#    with open("newETCBCdata.py", "w", encoding="utf-8") as fileObj:
+#        fileObj.write(pprint.pformat(newDict))
+#    print("done")

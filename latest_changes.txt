@@ -1,3 +1,8 @@
+Major changes in version 23.32:
+* Added Hebrew lexeme transliteration.
+* Added concordance data for display.
+* Updated a bash script shortcut, launching UBA with gnome-terminal, enabling UBA cli feature.
+
 Major changes in version 23.31:
 * corrected lexical data path for update
 * improved matching lexical data for certain Strong's numbers.
