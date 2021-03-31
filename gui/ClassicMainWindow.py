@@ -40,6 +40,7 @@ class ClassicMainWindow:
             ("menu1_setMyLanguage", self.openTranslationLanguageDialog, None),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog, None),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog, None),
+            ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog, None),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)

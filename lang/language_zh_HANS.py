@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "仅在主窗口中打开圣经引用。",
     "previous": "上一个",
     "bibleResources": "圣经资源",
+    "maximumOHGBiVersesDisplayedInSearchResult": "同页显示OHGBi的节数上限。",
+    "selectMaximumOHGBiVerses": "设定同页显示OHGBi的节数上限",
 }

@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "Ανοίξτε τη Βίβλο μόνο στο κύριο παράθυρο.",
     "previous": "Προηγούμενο.",
     "bibleResources": "Πόροι Βίβλου",
+    "maximumOHGBiVersesDisplayedInSearchResult": "Μέγιστος αριθμός στίχων OHGBi που εμφανίζονται στο αποτέλεσμα αναζήτησης.",
+    "selectMaximumOHGBiVerses": "Επιλέξτε Μέγιστος αριθμός ερίων OHGBi",
 }

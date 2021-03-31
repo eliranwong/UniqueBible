@@ -1,3 +1,10 @@
+Major changes in version 23.27:
+* Optimised display of OHGBi verses in OHGB concordance and morphology search result.
+* Added config.maximumOHGBiVersesDisplayedInSearchResult
+    When search result exceeds this number, a OHGBi link is shown instead of full text.
+* Added "Select Maximum Number of OHGBi Verses" dialog to Focus / Aleph / Classic menu layout.
+* Fixed Focus menu layout about missing 'enableInstantButton'.
+
 Major change in version 23.26:
 * Minor touch on right-click context menu.
 

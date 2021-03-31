@@ -164,8 +164,8 @@ class MainWindow(QMainWindow):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
         self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
-        bibleOHGBiPath = os.path.join("marvelData", "bibles", "OHGBi.bible")
-        morphologyDatabase = os.path.join("marvelData", "morphology.sqlite")
+        bibleOHGBiPath = os.path.join(config.marvelData, "bibles", "OHGBi.bible")
+        morphologyDatabase = os.path.join(config.marvelData, "morphology.sqlite")
         self.strongBibles = ["OHGBi"] if os.path.isfile(bibleOHGBiPath) and os.path.isfile(morphologyDatabase) else []
         self.strongBibles += [text for text in self.textList if Bible(text).bibleStrong()]
         #if self.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
@@ -1139,15 +1139,7 @@ class MainWindow(QMainWindow):
             text = re.sub(search, replace, text)
         if parsing:
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
-        if view == "main":
-            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
-                config.mainText, config.mainB, config.mainC, config.mainV)
-        elif view == "study":
-            activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
-                config.studyText, config.studyB, config.studyC, config.studyV)
-        text = "<!DOCTYPE html><html><head><title>UniqueBible.app</title><style>body {2} font-size: {4}px; font-family:'{5}'; {3} zh {2} font-family:'{6}'; {3} {8}</style><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'><script src='js/common.js'></script><script src='js/{7}.js'></script><script src='w3.js'></script><script src='js/custom.js'></script>{0}<script>var versionList = []; var compareList = []; var parallelList = []; var diffList = []; var searchList = [];</script></head><body><span id='v0.0.0'></span>{1}</body></html>".format(
-            activeBCVsettings, text, "{", "}", config.fontSize, config.font, config.fontChinese, config.theme, self.getHighlightCss())
-
+        text = self.wrapHtml(text, view)
         return text
 
     def pasteFromClipboard(self):
@@ -1808,6 +1800,13 @@ class MainWindow(QMainWindow):
     #        if ok and item:
     #            self.runTextCommand("BOOK:::{0}".format(item), True, "main")
 
+    def setMaximumOHGBiVersesDisplayDialog(self):
+        integer, ok = QInputDialog.getInt(self,
+                                          "UniqueBible", config.thisTranslation["selectMaximumOHGBiVerses"], config.maximumOHGBiVersesDisplayedInSearchResult, 1,
+                                          10000, 50)
+        if ok:
+            config.maximumOHGBiVersesDisplayedInSearchResult = integer
+
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
                                           "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1,
@@ -2181,22 +2180,21 @@ class MainWindow(QMainWindow):
             return "hide.png"
 
     def enableInstantButtonClicked(self):
-        if config.instantInformationEnabled:
-            config.instantInformationEnabled = False
-        else:
-            config.instantInformationEnabled = True
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        config.instantInformationEnabled = not config.instantInformationEnabled
+        self.updateEnableInstantButton()
 
     def enableInstantInformation(self):
         config.instantInformationEnabled = True
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.updateEnableInstantButton()
 
     def disableInstantInformation(self):
         config.instantInformationEnabled = False
-        enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-        self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+        self.updateEnableInstantButton()
+
+    def updateEnableInstantButton(self):
+        if hasattr(self, 'enableInstantButton'):
+            enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
+            self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
 
     # Actions - enable or disable paragraphs feature
     def displayBiblesInParagraphs(self):
@@ -2681,53 +2679,9 @@ class MainWindow(QMainWindow):
                 self.focusCommandLineField()
                 self.textCommandLineEdit.setText(content)
             else:
-                activeBCVsettings = ""
-                bibleCss = ""
                 if view == "main":
                     content = self.instantHighlight(content)
-                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
-                        config.mainText, config.mainB, config.mainC, config.mainV)
-                    if hasattr(config, "mainCssBibleFontStyle"):
-                        bibleCss = config.mainCssBibleFontStyle
-                elif view == "study":
-                    activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(
-                        config.studyText, config.studyB, config.studyC, config.studyV)
-                    if hasattr(config, "studyCssBibleFontStyle"):
-                        bibleCss = config.studyCssBibleFontStyle
-                fontFamily = config.font
-                fontSize = "{0}px".format(config.fontSize)
-                if textCommand.startswith("BOOK:::"):
-                    if config.overwriteBookFontFamily:
-                        fontFamily = config.overwriteBookFontFamily
-                    if config.overwriteBookFontSize:
-                        if type(config.overwriteBookFontSize) == str:
-                            fontSize = config.overwriteBookFontSize
-                        elif type(config.overwriteBookFontSize) == int:
-                            fontSize = "{0}px".format(config.overwriteBookFontSize)
-                html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
-                        "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
-                        "zh {2} font-family:'{6}'; {3} "
-                        "{8} {9}</style>"
-                        "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
-                        "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>"
-                        "<script src='js/common.js'></script>"
-                        "<script src='js/{7}.js'></script>"
-                        "<script src='w3.js'></script>"
-                        "<script src='js/custom.js'></script>"
-                        "{0}"
-                        "<script>var versionList = []; var compareList = []; var parallelList = []; "
-                        "var diffList = []; var searchList = [];</script></head>"
-                        "<body><span id='v0.0.0'></span>{1}</body></html>"
-                        ).format(activeBCVsettings,
-                                 content,
-                                 "{",
-                                 "}",
-                                 fontSize,
-                                 fontFamily,
-                                 config.fontChinese,
-                                 config.theme,
-                                 self.getHighlightCss(),
-                                 bibleCss)
+                html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,
@@ -2817,10 +2771,25 @@ class MainWindow(QMainWindow):
         html = self.wrapHtml(content)
         self.instantView.setHtml(html, config.baseUrl)
 
-    def wrapHtml(self, content):
-        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(config.mainText, config.mainB, config.mainC, config.mainV)
+    def wrapHtml(self, content, view="", book=False):
         fontFamily = config.font
         fontSize = "{0}px".format(config.fontSize)
+        if book:
+            if config.overwriteBookFontFamily:
+                fontFamily = config.overwriteBookFontFamily
+            if config.overwriteBookFontSize:
+                if type(config.overwriteBookFontSize) == str:
+                    fontSize = config.overwriteBookFontSize
+                elif type(config.overwriteBookFontSize) == int:
+                    fontSize = "{0}px".format(config.overwriteBookFontSize)
+        if hasattr(config, "mainCssBibleFontStyle") and view == "main":
+            bibleCss = config.mainCssBibleFontStyle
+        elif hasattr(config, "studyCssBibleFontStyle") and view == "study":
+            bibleCss = config.studyCssBibleFontStyle
+        else:
+            bibleCss = ""
+        bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
@@ -2843,8 +2812,8 @@ class MainWindow(QMainWindow):
                          fontFamily,
                          config.fontChinese,
                          config.theme,
-                         config.mainWindow.getHighlightCss(),
-                         "")
+                         self.getHighlightCss(),
+                         bibleCss)
         return html
 
     # add a history record

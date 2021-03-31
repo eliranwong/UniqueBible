@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "Nur die Bibelreferenz im Hauptfenster öffnen.",
     "previous": "Vorherige",
     "bibleResources": "Bibel-Ressourcen",
+    "maximumOHGBiVersesDisplayedInSearchResult": "Die maximale Anzahl an OHGBi-Versen, die im Suchergebnis angezeigt werden.",
+    "selectMaximumOHGBiVerses": "Maximale Anzahl von OHGBi-Versen auswählen",
 }

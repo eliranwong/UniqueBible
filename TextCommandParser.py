@@ -426,7 +426,7 @@ class TextCommandParser:
             # e.g. _imvr:::John 3:16"""),
             "_instantverse": (self.instantVerse, """
             # [KEYWORD] _instantverse
-            # e.g. _instantVerse:::KJV:::1.1.1"""),
+            # e.g. _instantVerse:::1.1.1"""),
             "_instantword": (self.instantWord, """
             # [KEYWORD] _instantword
             # e.g. _instantWord:::1:::h2"""),
@@ -1635,12 +1635,18 @@ class TextCommandParser:
     # _instantverse:::
     def instantVerse(self, command, source):
         if config.instantInformationEnabled:
-            commandList = self.splitCommand(command)
-            morphologySqlite = MorphologySqlite()
-            b, c, v = [int(i) for i in commandList[1].split(".")]
-            info = morphologySqlite.instantVerse("interlinear", b, c, v)
-            del morphologySqlite
-            return ("instant", info, {})
+            *_, commandList = self.splitCommand(command)
+            elements = commandList.split(".")
+            if len(elements) == 3:
+                b, c, v = [int(i) for i in elements]
+                info = MorphologySqlite().instantVerse("interlinear", b, c, v)
+                return ("instant", info, {})
+            elif len(elements) == 4:
+                b, c, v, wordID = elements
+                info = Bible("OHGBi").getHighlightedOHGBVerse(int(b), int(c), int(v), wordID)
+                return ("instant", info, {})
+            else:
+                return self.invalidCommand()
         else:
             return ("", "", {})
 

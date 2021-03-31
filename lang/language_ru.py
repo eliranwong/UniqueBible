@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "Открытая библия ссылка только в главном окне.",
     "previous": "Предыдущая",
     "bibleResources": "Библия",
+    "maximumOHGBiVersesDisplayedInSearchResult": "Максимальное число стихов OHGBi, отображаемых в результатах поиска.",
+    "selectMaximumOHGBiVerses": "Выбрать максимальное число версов OHGBi",
 }

@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "メイン・ウィンドウでのみ bible 参照を開きます。",
     "previous": "前へ",
     "bibleResources": "バイブル資源",
+    "maximumOHGBiVersesDisplayedInSearchResult": "検索結果に表示される OHGBi ファイルの最大数。",
+    "selectMaximumOHGBiVerses": "OHGBi バージョンの最大数を選択します",
 }

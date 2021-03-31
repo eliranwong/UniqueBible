@@ -32,6 +32,7 @@ class FocusMainWindow:
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
+            ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

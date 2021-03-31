@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "기본 창에서만 사용할 수 있는 참조를 엽니다.",
     "previous": "이전",
     "bibleResources": "성경자원",
+    "maximumOHGBiVersesDisplayedInSearchResult": "검색 결과에 표시되는 최대 OHGBi 버전 수입니다.",
+    "selectMaximumOHGBiVerses": "최대 OHGBi번들 개수 선택",
 }

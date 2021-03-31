@@ -535,6 +535,8 @@ class ConfigUtil:
             config.activeVerseNoColourLight = "red"
         if not hasattr(config, "activeVerseNoColourDark"):
             config.activeVerseNoColourDark = "rgb(197, 197, 56)"
+        if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
+            config.maximumOHGBiVersesDisplayedInSearchResult = 50
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -640,6 +642,7 @@ class ConfigUtil:
             ("favouriteBible", config.favouriteBible),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
+            ("maximumOHGBiVersesDisplayedInSearchResult", config.maximumOHGBiVersesDisplayedInSearchResult),
             ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
             ("enforceCompareParallel", config.enforceCompareParallel),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),

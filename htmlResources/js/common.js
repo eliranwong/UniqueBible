@@ -464,6 +464,10 @@ function iw(book, wordID) {
     }
 }
 
+function ohgbi(b, c, v, wordID) {
+    document.title = "_instantVerse:::"+b+"."+c+"."+v+"."+wordID;
+}
+
 function qV(v) {
     document.title = "_instantVerse:::"+activeText+":::"+activeB+"."+activeC+"."+v;
 }

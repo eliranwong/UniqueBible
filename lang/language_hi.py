@@ -667,4 +667,6 @@ translation = {
     "openBibleInMainViewOnly": "केवल मुख्य विंडो में द्विबल संदर्भ खोलें.",
     "previous": "पिछला",
     "bibleResources": "बाइबल संसाधन",
+    "maximumOHGBiVersesDisplayedInSearchResult": "खोज परिणाम में प्रदर्शित OHGBi छंदों की अधिकतम संख्या.",
+    "selectMaximumOHGBiVerses": "OHGBi वर्सेस की अधिकतम संख्या चुनें",
 }

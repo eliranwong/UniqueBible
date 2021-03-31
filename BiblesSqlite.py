@@ -987,6 +987,19 @@ class Bible:
         # return a list of tuple
         return textChapter
 
+    def getHighlightedOHGBVerse(self, b, c, v, wordID, showReference=False, linkOnly=False):
+        if self.text in ("OHGB", "OHGBi"):
+            reference = """(<ref onclick="document.title='BIBLE:::{0}'">{0}</ref>) """.format(BiblesSqlite().bcvToVerseReference(b, c, v)) if showReference else ""
+            if linkOnly:
+                return """{4} [<ref onclick="tbcv('OHGBi', {0}, {1}, {2})" onmouseover="ohgbi({0}, {1}, {2}, {3})">OHGBi</ref>] """.format(b, c, v, wordID, reference)
+            else:
+                verseText = self.readTextVerse(b, c, v)[-1]
+                ohgbi = "<div style='direction: rtl;' class='remarks'>{0}{1}</div>".format(reference, verseText) if b < 40 else "<div class='remarks'>{0}{1}</div>".format(reference, verseText)
+                # highlight the matched word
+                return re.sub(r"""<(heb|grk)( onclick="w\({0},{1}\)".*?</\1>)""".format(b, wordID), r"<z><\1\2</z>", ohgbi)
+        else:
+            return ""
+
     def readTextVerse(self, b, c, v):
         if self.checkTableExists("Verses"):
             query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
@@ -1279,20 +1292,11 @@ class MorphologySqlite:
         return "<div style='direction: rtl;'>{0}</div>".format(verseText) if b < 40 else "<div>{0}</div>".format(verseText)
 
     def formatConcordance(self, lexicalEntry):
-        query = "SELECT COUNT(LexicalEntry) FROM morphology WHERE LexicalEntry LIKE ?"
-        t = ("%{0},%".format(lexicalEntry),)
-        self.cursor.execute(query, t)
-        snHits = self.cursor.fetchone()[0]
-
         verses = self.distinctMorphologyVerse(lexicalEntry)
-        verseHits = len(verses)
-        higlightedVerses = []
-        for verse in verses:
-            verse = self.formatOHGBiVerseText(verse)
-            verse = re.sub("(\[{0}\])".format(lexicalEntry), r"<z>\1</z>", verse)
-            verse = re.sub("\[[EHG][0-9]+?\] ", "", verse)
-            higlightedVerses.append(verse)
-        verses = "<br>".join(higlightedVerses)
+        snHits = len(verses)
+        verseHits = len(set([verse[:-1] for verse in verses]))
+        ohgbiBible = Bible("OHGBi")
+        verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
 
         lexeme, pronunciation = ("", "")
         if lexicalEntry in strongsData:
@@ -1312,7 +1316,7 @@ class MorphologySqlite:
         return [strongNo for entry in self.cursor for strongNo in entry[0].split(",") if strongNo.startswith("H")]
 
     def distinctMorphologyVerse(self, lexicalEntry):
-        query = "SELECT DISTINCT Book, Chapter, Verse FROM morphology WHERE LexicalEntry LIKE ?"
+        query = "SELECT DISTINCT Book, Chapter, Verse, WordID FROM morphology WHERE LexicalEntry LIKE ?"
         t = ("%{0},%".format(lexicalEntry),)
         self.cursor.execute(query, t)
         return self.cursor.fetchall()
@@ -1332,6 +1336,8 @@ class MorphologySqlite:
         return translation
 
     def searchMorphology(self, mode, searchString):
+        #import time
+        #start = time.time()
         formatedText = ""
         query = "SELECT * FROM morphology WHERE "
         if mode == "LEMMA":
@@ -1351,20 +1357,22 @@ class MorphologySqlite:
         self.cursor.execute(query, t)
         words = self.cursor.fetchall()
         formatedText += "<p>x <b style='color: brown;'>{0}</b> hits</p>".format(len(words))
-        for word in words:
-            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+        ohgbiInstalled = os.path.isfile(os.path.join(config.marvelData, "bibles", "OHGBi.bible"))
+        if config.addOHGBiToMorphologySearch and ohgbiInstalled:
+            ohgbiBible = Bible("OHGBi")
+        for index, word in enumerate(words):
+            #wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, *_ = word
             firstLexicalEntry = lexicalEntry.split(",")[0]
-            if b < 40:
-                textWord = "<heb onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</heb>".format(textWord, b, wordID)
-            else:
-                textWord = "<grk onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</grk>".format(textWord, b, wordID)
-            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref><br>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
-            if config.addOHGBiToMorphologySearch:
-                # Adding OHGBi verse text as immediate context
-                ohgbi = re.sub("\[[EHG][0-9]+?\]", "", self.formatOHGBiVerseText((b, c, v)))
-                # highlight the matched word
-                ohgbi = re.sub(r"""<(heb|grk)( onclick="w\({0},{1}\)".*?</\1>)""".format(b, wordID), r"<z><\1\2</z>", ohgbi)
-                formatedText += "<br>{0}".format(ohgbi)
+            textWord = "<{3} onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</{3}>".format(textWord, b, wordID, "heb" if b < 40 else "grk")
+            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref>".format(self.formVerseTag(b, c, v, config.mainText), self.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            if config.addOHGBiToMorphologySearch and ohgbiInstalled:
+                formatedText += ohgbiBible.getHighlightedOHGBVerse(b, c, v, wordID, False, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult)
+            formatedText += "<br>"
+        #end = time.time()
+        #print(end - start)
+        if config.addOHGBiToMorphologySearch and ohgbiInstalled:
+            del ohgbiBible
         return formatedText
 
 
