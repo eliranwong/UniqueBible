@@ -1297,7 +1297,7 @@ class MorphologySqlite:
         verseHits = len(set([verse[:-1] for verse in verses]))
         ohgbiBible = Bible("OHGBi")
         verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
-
+        del ohgbiBible
         lexeme, pronunciation = ("", "")
         if lexicalEntry in strongsData:
             lexeme, pronunciation, *_ = strongsData[lexicalEntry]
