@@ -10,7 +10,7 @@ from db.Highlight import Highlight
 from themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
-from strongsData import *
+from LexicalData import LexicalData
 
 class BiblesSqlite:
 
@@ -893,8 +893,8 @@ class Bible:
         if self.text == "OHGBi":
             return MorphologySqlite().formatConcordance(strongNo)
         lexeme, pronunciation = ("", "")
-        if strongNo in strongsData:
-            lexeme, pronunciation, *_ = strongsData[strongNo]
+        if strongNo in LexicalData.data:
+            lexeme, pronunciation, *_ = LexicalData.data[strongNo]
             lexeme = "<heb>{0}</heb>".format(lexeme) if strongNo.startswith("H") else "<grk>{0}</grk>".format(lexeme)
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
         sNumList = ["[{0}]".format(strongNo)]
@@ -1266,6 +1266,13 @@ class MorphologySqlite:
             verseText += "{0}{1} {2} ".format(word, interlinear, lexicalEntry)
         return "<div style='direction: rtl;'>{0}</div>".format(verseText) if b < 40 else "<div>{0}</div>".format(verseText)
 
+    def getLexemeData(self, lexicalEntry):
+        query = "SELECT Lexeme FROM morphology WHERE LexicalEntry LIKE ?"
+        t = ("%{0},%".format(lexicalEntry),)
+        self.cursor.execute(query, t)
+        data = self.cursor.fetchone()
+        return "<heb>{0}</heb>".format(data[0]) if data is not None else ""            
+
     def formatConcordance(self, lexicalEntry):
         verses = self.distinctMorphologyVerse(lexicalEntry)
         snHits = len(verses)
@@ -1273,11 +1280,10 @@ class MorphologySqlite:
         ohgbiBible = Bible("OHGBi")
         verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
         lexeme, pronunciation = ("", "")
-        if lexicalEntry in strongsData:
-            lexeme, pronunciation, *_ = strongsData[lexicalEntry]
-            lexeme = "<heb>{0}</heb>".format(lexeme) if lexicalEntry.startswith("H") else "<grk>{0}</grk>".format(lexeme)
+        if lexicalEntry in LexicalData.data:
+            lexeme, pronunciation, *_ = LexicalData.data[lexicalEntry]
+            lexeme = "<heb>{0}</heb>".format(lexeme) if re.match("^[HE]", lexicalEntry) else "<grk>{0}</grk>".format(lexeme)
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
-
         literalTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry))
         dynamicTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry, "Translation"))
         html = """<h1>OHGB Concordance</h1><h2><ref onclick='lex("{0}")'>{0}</ref> x {2} Hit(s) in {1} Verse(s)</h2><h3>{5} {6}</h3><h3>Literal Translation:</h3><p>{3}</p><h3>Dynamic Translation:</h3><p>{7}</p><h3>Verses:</h3><p>{4}</p>""".format(lexicalEntry, verseHits, snHits, literalTranslation, verses, lexeme, pronunciation, dynamicTranslation)

@@ -1,3 +1,6 @@
+Major change in version 23.30:
+* Updated lexical data.
+
 Major change in version 23.29:
 * Improved instant verse display.  A reference link to open OHGBi is added.
 
