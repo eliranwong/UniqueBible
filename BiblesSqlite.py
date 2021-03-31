@@ -897,6 +897,8 @@ class Bible:
             lexeme = "<heb>{0}</heb>".format(lexeme) if strongNo.startswith("H") else "<grk>{0}</grk>".format(lexeme)
             data = "<transliteration>{2}</transliteration> | <e>{0}</e> | <esblu>{1}</esblu>".format(pos, gloss, transliteration)
             lexicalData = "<h3>{0}</h3><p>{1}</p>".format(lexeme, data)
+        else:
+            lexicalData = ""
         sNumList = ["[{0}]".format(strongNo)]
         verseHits, snHits, uniqueWdList, verses = Bible(self.text).searchStrongNumber(sNumList)
         html = "<h1>Strong's Concordance - {5}</h1><h2>{0} x {2} Hit(s) in {1} Verse(s)</h2>{6}<h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>".format(strongNo, verseHits, snHits, " <mbn>|</mbn> ".join(uniqueWdList), "<br>".join(verses), self.text, lexicalData)
