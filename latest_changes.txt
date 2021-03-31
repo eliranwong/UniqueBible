@@ -1,3 +1,6 @@
+Major change in version 23.29:
+* Improved instant verse display.  A reference link to open OHGBi is added.
+
 Major change in version 23.28:
 * Place back a function that had been deleted by mistake in an earlier update.
 

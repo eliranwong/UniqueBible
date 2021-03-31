@@ -422,11 +422,17 @@ class TextCommandParser:
             # e.g. _imv:::43.3.16"""),
             "_imvr": (self.instantMainVerseReference, """
             # [KEYWORD] _imvr
+            # 
             # e.g. _imvr:::Gen 1:1
             # e.g. _imvr:::John 3:16"""),
             "_instantverse": (self.instantVerse, """
             # [KEYWORD] _instantverse
-            # e.g. _instantVerse:::1.1.1"""),
+            # Feature - Display interlinear verse text on bottom window.
+            # OHGB_WORD_ID is optional.  Corresponding Hebrew / Greek word is highlighted if OHGB_WORD_ID is given.
+            # Usage: _instantverse:::[BOOK_NO].[CHAPTER_NO].[VERSE_NO]
+            # Usage: _instantverse:::[BOOK_NO].[CHAPTER_NO].[VERSE_NO].[OHGB_WORD_ID]
+            # e.g. _instantVerse:::1.1.1
+            # e.g. _instantVerse:::1.1.1.1"""),
             "_instantword": (self.instantWord, """
             # [KEYWORD] _instantword
             # e.g. _instantWord:::1:::h2"""),
@@ -497,7 +503,7 @@ class TextCommandParser:
             # Remarks: -1 is the latest record"""),
             "_editfile": (self.textEditFile, """
             # [KEYWORD] _editfile
-            # Usage: _openfile:::[external_note_history_record_index]
+            # Usage: _editfile:::[external_note_history_record_index]
             # e.g. _editfile:::-1
             # Remarks: -1 is the latest record"""),
             "_website": (self.textWebsite, """
@@ -1635,15 +1641,16 @@ class TextCommandParser:
     # _instantverse:::
     def instantVerse(self, command, source):
         if config.instantInformationEnabled:
+            morphologySqlite = MorphologySqlite()
             *_, commandList = self.splitCommand(command)
             elements = commandList.split(".")
             if len(elements) == 3:
                 b, c, v = [int(i) for i in elements]
-                info = MorphologySqlite().instantVerse("interlinear", b, c, v)
+                info = morphologySqlite.instantVerse(b, c, v)
                 return ("instant", info, {})
             elif len(elements) == 4:
                 b, c, v, wordID = elements
-                info = Bible("OHGBi").getHighlightedOHGBVerse(int(b), int(c), int(v), wordID)
+                info = morphologySqlite.instantVerse(int(b), int(c), int(v), wordID)
                 return ("instant", info, {})
             else:
                 return self.invalidCommand()

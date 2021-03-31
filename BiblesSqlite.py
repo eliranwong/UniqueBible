@@ -1192,13 +1192,12 @@ class MorphologySqlite:
         # return a tuple
         return textVerse
 
-    def instantVerse(self, text, b, c, v):
-        interlinearVerse = self.readTextVerse("interlinear", b, c, v)[3]
-        if b < 40:
-            divTag = "<div style='direction: rtl;'>"
-        else:
-            divTag = "<div>"
-        interlinearVerse = "{0}{1}</div>".format(divTag, interlinearVerse)
+    def instantVerse(self, b, c, v, wordID="", text="interlinear"):
+        # Note: Verses drawn from interlinear are suitable to be placed on bottom window, as they have no mouse over feature.
+        *_, verseText = self.readTextVerse(text, b, c, v)
+        interlinearVerse = """{0}(<ref onclick="document.title='MAIN:::OHGBi:::{1}'">{1}</ref>) {2}</div>""".format("<div style='direction: rtl;'>" if b < 40 else "<div>", self.bcvToVerseReference(b, c, v), verseText)
+        if wordID:
+            interlinearVerse = re.sub(r"""<(heb|grk)( onclick="w\({0},{1}\)".*?</\1>)""".format(b, wordID), r"<z><\1\2</z>", interlinearVerse)
         return interlinearVerse
 
     def instantWord(self, book, wordId):
