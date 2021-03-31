@@ -1,3 +1,7 @@
+Major changes in version 23.31:
+* corrected lexical data path for update
+* improved matching lexical data for certain Strong's numbers.
+
 Major change in version 23.30:
 * Updated lexical data.
 

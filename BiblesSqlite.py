@@ -893,8 +893,8 @@ class Bible:
         if self.text == "OHGBi":
             return MorphologySqlite().formatConcordance(strongNo)
         lexeme, pronunciation = ("", "")
-        if strongNo in LexicalData.data:
-            lexeme, pronunciation, *_ = LexicalData.data[strongNo]
+        if strongNo in LexicalData.data or "{0}a".format(strongNo) in LexicalData.data:
+            lexeme, pronunciation, *_ = LexicalData.data[strongNo if strongNo in LexicalData.data else "{0}a".format(strongNo)]
             lexeme = "<heb>{0}</heb>".format(lexeme) if strongNo.startswith("H") else "<grk>{0}</grk>".format(lexeme)
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
         sNumList = ["[{0}]".format(strongNo)]
@@ -1280,8 +1280,8 @@ class MorphologySqlite:
         ohgbiBible = Bible("OHGBi")
         verses = "".join([ohgbiBible.getHighlightedOHGBVerse(*verse, True, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult) for index, verse in enumerate(verses)])
         lexeme, pronunciation = ("", "")
-        if lexicalEntry in LexicalData.data:
-            lexeme, pronunciation, *_ = LexicalData.data[lexicalEntry]
+        if lexicalEntry in LexicalData.data or "{0}a".format(lexicalEntry) in LexicalData.data:
+            lexeme, pronunciation, *_ = LexicalData.data[lexicalEntry if lexicalEntry in LexicalData.data else "{0}a".format(lexicalEntry)]
             lexeme = "<heb>{0}</heb>".format(lexeme) if re.match("^[HE]", lexicalEntry) else "<grk>{0}</grk>".format(lexeme)
             pronunciation = "[<wphono>{0}</wphono>]".format(pronunciation)
         literalTranslation = " <mbn>|</mbn> ".join(self.distinctMorphology(lexicalEntry))
