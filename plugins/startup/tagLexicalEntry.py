@@ -10,6 +10,7 @@ import config, re
 
 def tagLexicalEntry(text):
     searchReplace = (
+        (" [ ]+?([^ ])", r" \1"),
         ("""(<ref onclick=["']lex\(["'])([^\(\)]+?)(["']\)["'])>""", r"""\1\2\3 onmouseover="ld('\2')">"""),
         (" ([EHG][0-9]+?) ", r""" <sup><ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref></sup> """),
         #("([EHG][0-9]+?) ", r"""<ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref> """),
