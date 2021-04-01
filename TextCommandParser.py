@@ -1,4 +1,5 @@
 # coding=utf-8
+from LexicalData import LexicalData
 import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
@@ -436,6 +437,11 @@ class TextCommandParser:
             "_instantword": (self.instantWord, """
             # [KEYWORD] _instantword
             # e.g. _instantWord:::1:::h2"""),
+            "_lexicaldata": (self.instantLexicalData, """
+            # [KEYWORD] _lexicaldata
+            # Feature - Display lexical data on bottom window.
+            # Usage: _lexicaldata:::[LEXICAL_ENTRY]
+            # e.g. _lexicaldata:::G1234"""),
             "_vnsc": (self.verseNoSingleClick, """
             # [KEYWORD] _vnsc
             # verse number single-click action
@@ -1637,6 +1643,11 @@ class TextCommandParser:
             return ("instant", command, {})
         else:
             return ("", "", {})
+
+    # _lexicaldata:::
+    def instantLexicalData(self, command, source):
+        info = LexicalData.getLexicalData(command, True)
+        return ("instant", info, {})
 
     # _instantverse:::
     def instantVerse(self, command, source):

@@ -488,6 +488,10 @@ function nB() {
     document.title = "_openbooknote:::"+activeB;
 }
 
+function ld(lexicalEntry) {
+    document.title = "_lexicaldata:::"+lexicalEntry;
+}
+
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
     document.title = "_stayOnSameTab:::";

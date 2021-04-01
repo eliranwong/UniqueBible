@@ -1,3 +1,11 @@
+Major changes in version 23.33:
+* Added a command keyword "_lexicaldata:::" to display lexical data on bottom window, e.g. _lexicaldata:::G1234
+* Added a startup plugin to do two things:
+    1) add mouse over action to existing links displaying lexical data on bottom window:
+        e.g. <ref onclick="lex('H1234')">
+    2) tag Strong's number / in plain text
+        e.g. H1234
+
 Major changes in version 23.32:
 * Added Hebrew lexeme transliteration.
 * Added concordance data for display.

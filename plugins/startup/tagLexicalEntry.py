@@ -1,6 +1,6 @@
 """
 This plugin does two things:
-1) add mouse over action to existing links to lexical entry: 
+1) add mouse over action to existing links displaying lexical data on bottom window: 
     e.g. <ref onclick="lex('H1234')">
 2) tag Strong's number / in plain text
     e.g. H1234

@@ -1,3 +1,5 @@
+import re
+
 class LexicalData:
 
     data = {
@@ -29364,3 +29366,16 @@ class LexicalData:
         "G21368": ("ὠμόφρων", "", "savage-minded", "ōmophrōn"),
         "G21369": ("ὡραΐζω", "G:V", "to make display", "hōraizō"),
     }
+
+    @staticmethod
+    def getLexicalData(lexicalEntry, singleLine=False):
+        if lexicalEntry in LexicalData.data or "{0}a".format(lexicalEntry) in LexicalData.data:
+            lexeme, pos, gloss, transliteration = LexicalData.data[lexicalEntry if lexicalEntry in LexicalData.data else "{0}a".format(lexicalEntry)]
+            lexeme = "<heb>{0}</heb>".format(lexeme) if re.match("^[HE]", lexicalEntry) else "<grk>{0}</grk>".format(lexeme)
+            data = "<transliteration>{2}</transliteration> | <e>{0}</e> | <esblu>{1}</esblu>".format(pos, gloss, transliteration)
+            if singleLine:
+                return "{0} {1}".format(lexeme, data)
+            else:
+                return "<h3>{0}</h3> <p>{1}</p>".format(lexeme, data)
+        else:
+            return ""
