@@ -1,3 +1,6 @@
+Major changes in version 23.34:
+* Fixed MIB display.
+
 Major changes in version 23.33:
 * Added a command keyword "_lexicaldata:::" to display lexical data on bottom window, e.g. _lexicaldata:::G1234
 * Added a startup plugin to do two things:

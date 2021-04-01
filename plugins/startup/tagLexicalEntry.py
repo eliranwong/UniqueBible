@@ -12,12 +12,11 @@ def tagLexicalEntry(text):
     searchReplace = (
         ("""(<ref onclick=["']lex\(["'])([^\(\)]+?)(["']\)["'])>""", r"""\1\2\3 onmouseover="ld('\2')">"""),
         (" ([EHG][0-9]+?) ", r""" <sup><ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref></sup> """),
-        ("([EHG][0-9]+?) ", r"""<ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref> """),
+        #("([EHG][0-9]+?) ", r"""<ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref> """),
     )
     for search, replace in searchReplace:
         text = re.sub(search, replace, text)
     return text
 
-if config.theme == "dark":
-    config.bibleWindowContentTransformers.append(tagLexicalEntry)
-    config.studyWindowContentTransformers.append(tagLexicalEntry)
+config.bibleWindowContentTransformers.append(tagLexicalEntry)
+config.studyWindowContentTransformers.append(tagLexicalEntry)
