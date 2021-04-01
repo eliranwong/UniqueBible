@@ -1,3 +1,6 @@
+Major change in version 23.35:
+* Important fix about displaying bible search results.
+
 Major changes in version 23.34:
 * Fixed MIB display.
 

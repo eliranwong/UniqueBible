@@ -543,7 +543,7 @@ input.addEventListener('keyup', function(event) {0}
         if text in plainBibleList:
             verses = self.getSearchVerses(query, t)
         elif text in formattedBibleList:
-            Bible(text).getSearchVerses(query, t)
+            verses = Bible(text).getSearchVerses(query, t)
         # Search fetched result with regular express here
         if mode == "REGEX":
             formatedText += "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
