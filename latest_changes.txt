@@ -1,5 +1,5 @@
 Major change in version 23.36:
-* Added a simple context plugin for quickly searching the currently opened bible with keyboard shortcut.
+* Added a simple context plugin for quickly searching for selected text in the currently opened bible, with keyboard shortcut.
     The file is "plugins/context/Search Currently Opened Bible_Ctrl+Shift+F.py"
     User cutomisation:
     * You can change the keyboard shortcut combination by changing "Ctrl+Shift+F" in the filename.
