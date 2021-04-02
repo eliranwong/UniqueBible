@@ -1152,7 +1152,7 @@ class MainWindow(QMainWindow):
         clipboardText = QApplication.clipboard().text()
         self.textCommandLineEdit.setText(clipboardText)
         self.runTextCommand(clipboardText)
-        self.manageControlPanel()
+        #self.manageControlPanel()
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()
