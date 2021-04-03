@@ -1027,8 +1027,40 @@ class Converter:
             self.importZefaniaBible(filename, doc)
         elif len(doc.getElementsByTagName("osis")) > 0:
             self.importOsisBible(filename, doc)
+        elif len(doc.getElementsByTagName("bible")) > 0 and len(doc.getElementsByTagName("testament")) > 0:
+            self.importBebliaBible(filename, doc)
         else:
             self.logger.error("Cannot process XML file {0}".format(filename))
+
+    # Import Beblia XML Bibles
+    # https://github.com/Beblia/Holy-Bible-XML-Format
+    def importBebliaBible(self, filename, doc):
+        self.logger.info("Importing Beblia XML Bible: " + filename)
+        work = doc.getElementsByTagName("bible")[0]
+        description = work.getAttribute("translation")
+        biblename = Path(filename).stem
+        biblename = biblename.upper()
+        if not description:
+            description = biblename
+        self.logger.info("Creating " + biblename)
+        abbreviation = biblename
+        books = doc.getElementsByTagName("book")
+        data = []
+        for book in books:
+            bookNum = book.getAttribute("number")
+            chapters = book.getElementsByTagName("chapter")
+            for chapter in chapters:
+                chapterNum = chapter.getAttribute("number")
+                verses = chapter.getElementsByTagName("verse")
+                for verse in verses:
+                    verseNum = verse.getAttribute("number")
+                    if verse.firstChild:
+                        scripture = verse.firstChild.nodeValue.strip()
+                        row = [bookNum, chapterNum, verseNum, scripture]
+                        data.append(row)
+        self.mySwordBibleToRichFormat(description, abbreviation, data)
+        self.mySwordBibleToPlainFormat(description, abbreviation, data)
+        self.logger.info("Import successful")
 
     # Import OSIS XML Bibles
     # https://github.com/gratis-bible/bible/tree/master/en
