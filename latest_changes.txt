@@ -1,3 +1,7 @@
+Major change in version 23.39:
+* Added a menu plugin "Bible Reading Plan"
+    A wiki page is written about this plugin https://github.com/eliranwong/UniqueBible/wiki/Bible-Reading-Plan
+
 Major change in version 23.38:
 * Added support of importing OSIS format bible modules.
     OSIS format bibles can be found at, for example, https://github.com/gratis-bible/bible

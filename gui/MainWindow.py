@@ -797,10 +797,7 @@ class MainWindow(QMainWindow):
         elif self.syncingBibles:
             self.syncingBibles = False
         elif config.openBibleWindowContentOnNextTab:
-            nextIndex = self.mainView.currentIndex() + 1
-            if nextIndex >= config.numberOfTab:
-                nextIndex = 0
-            self.mainView.setCurrentIndex(nextIndex)
+            self.nextBibleWindowTab()
         # check size of text content
         if not config.forceGenerateHtml and sys.getsizeof(text) < 2097152:
             self.mainView.setHtml(text, baseUrl)
@@ -941,6 +938,12 @@ class MainWindow(QMainWindow):
     def addOpenImageAction(self, text):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'),
                       r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
+
+    def nextBibleWindowTab(self):
+        nextIndex = self.mainView.currentIndex() + 1
+        if nextIndex >= config.numberOfTab:
+            nextIndex = 0
+        self.mainView.setCurrentIndex(nextIndex)
 
     def nextStudyWindowTab(self):
         nextIndex = self.studyView.currentIndex() + 1

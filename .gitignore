@@ -18,6 +18,7 @@
 /plugins/context/*.zip
 /plugins/context/Strongs2csv/*.csv
 /plugins/context/Strongs2csv/NASBs.bib
+/plugins/menu/Bible Reading Plan.txt
 /plugins/startup/*.py
 /plugins/startup/*.zip
 /plugins/shutdown/*.py
