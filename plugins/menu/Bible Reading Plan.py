@@ -480,6 +480,29 @@ class BibleReadingPlan(QWidget):
         self.plan = copy.deepcopy(self.template)
         self.resetItems()
 
+    def translateIntoChinese(self):
+        import copy, pprint
+        from BibleBooks import BibleBooks
+        plan = copy.deepcopy(self.template)
+        filePath = "{0}_zh".format(self.progressFile)
+        with open(filePath, "w", encoding="utf-8") as fileObj:
+            fileObj.write(pprint.pformat(plan))
+        with open(filePath, "r") as fileObj:
+            text = fileObj.read()
+        translateDict = {}
+        bookNames = []
+        for key, value in BibleBooks.eng.items():
+            bookName = value[-1]
+            bookNames.append(bookName)
+            translateDict[bookName] = BibleBooks.sc[key][-1]
+        bookNames = sorted(bookNames, key=len, reverse=True)
+        #print(bookNames)
+        for name in bookNames:
+            text = text.replace(name, translateDict[name])
+        text = text.replace("Psalm", "诗篇")
+        with open(filePath, "w", encoding="utf-8") as fileObj:
+            fileObj.write(text)
+
     def saveProgress(self):
         import pprint
         from qtpy.QtWidgets import QMessageBox
