@@ -1,7 +1,10 @@
 """
 Reading data from bibles.sqlite
 """
+import glob
 import os, sqlite3, config, re, logging
+from pathlib import Path
+
 from NoteSqlite import NoteSqlite
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
@@ -1349,17 +1352,17 @@ class MorphologySqlite:
 if __name__ == '__main__':
     from Languages import Languages
 
-    config.thisTranslation = Languages.translation
-    config.parserStandarisation = 'NO'
-    config.standardAbbreviation = 'ENG'
-    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
-
-    Bibles = BiblesSqlite()
-
-    text = "John"
-    verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(text)
-    result = Bibles.readMultipleVerses("KJV", verses)
-    print(result)
+    # config.thisTranslation = Languages.translation
+    # config.parserStandarisation = 'NO'
+    # config.standardAbbreviation = 'ENG'
+    # config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+    #
+    # Bibles = BiblesSqlite()
+    #
+    # text = "John"
+    # verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(text)
+    # result = Bibles.readMultipleVerses("KJV", verses)
+    # print(result)
 
     # test search bible - BASIC
     # searchString = input("Search Bible [Basic]\nSearch for: ")
@@ -1386,3 +1389,11 @@ if __name__ == '__main__':
     # print(Bibles.searchMorphology("ADVANCED", searchString))
 
     # del Bibles
+
+    fileList = glob.glob(config.marvelData+"/bibles/*.bible")
+    for file in fileList:
+        if os.path.isfile(file):
+            bibleName = Path(file).stem
+            bible = Bible(bibleName)
+            description = bible.bibleInfo()
+            print("{0}:{1}".format(bibleName, description))

@@ -1379,7 +1379,7 @@ class MainWindow(QMainWindow):
                                                           "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
                                                           "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
                                                           "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
-                                                          "Zefania XML (*.xml)"), "", options)
+                                                          "Zefania/OSIS XML (*.xml)"), "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(
                     ".lexi") or fileName.endswith(".dictionary.SQLite3"):
