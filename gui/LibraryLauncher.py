@@ -1,8 +1,9 @@
 import config
-from qtpy.QtCore import QStringListModel
-from qtpy.QtGui import QStandardItemModel, QStandardItem
+from PySide2.QtCore import QStringListModel
+from PySide2.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
 from ToolsSqlite import Book
+from qtpy.QtCore import Qt
 
 class LibraryLauncher(QWidget):
 
@@ -57,6 +58,9 @@ class LibraryLauncher(QWidget):
         mainLayout.setColumnStretch(1, 2)
         self.setLayout(mainLayout)
 
+    def testChecked(self, test):
+        print(test)
+
     def commentaryListView(self):
         # https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtCore/QStringListModel.html
         # https://gist.github.com/minoue/9f384cd36339429eb0bf
@@ -67,7 +71,10 @@ class LibraryLauncher(QWidget):
         for index, commentary in enumerate(self.parent.commentaryFullNameList):
             item = QStandardItem(commentary)
             item.setToolTip(self.parent.commentaryList[index])
-        #    commentary.setCheckable(True)
+            #item.setCheckable(True)
+            #item.setCheckState(Qt.CheckState.Checked)
+            #item.setCheckState(Qt.CheckState.Unchecked)
+            #print(item.checkState() is Qt.CheckState.Checked)
             model.appendRow(item)
         #model = QStringListModel(self.parent.commentaryList)
         #model = QStringListModel(self.parent.commentaryFullNameList)
