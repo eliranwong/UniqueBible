@@ -445,17 +445,21 @@ class BibleReadingPlan(QWidget):
         from qtpy.QtGui import QStandardItem
         from qtpy.QtCore import Qt
         self.roleCount = 0
+        todayIndex = None
         for key, value in self.plan.items():
             checked, passages = value
             if not (hideCheckItems and checked):
                 item = QStandardItem("{0}. {1}".format(key, passages))
                 item.setToolTip("Day {0}".format(key))
+                if key == self.todayNo:
+                    todayIndex = self.roleCount
                 item.setCheckable(True)
                 item.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
                 self.readingListModel.appendRow(item)
                 self.roleCount += 1
         self.readingList.setModel(self.readingListModel)
-        self.readingList.setCurrentIndex(self.readingListModel.index(self.todayNo - 1, 0))
+        if todayIndex is not None:
+            self.readingList.setCurrentIndex(self.readingListModel.index(todayIndex, 0))
 
     def hideCheckedItems(self):
         self.updatePlanData()

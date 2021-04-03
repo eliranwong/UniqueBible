@@ -1,8 +1,11 @@
+Major change in version 23.41:
+* Fixed initial scrolling of plugin "Bible Reading Plan".
+
 Major change in version 23.40:
-* Added Beblia XML import
+* Added Beblia XML import.
 
 Major change in version 23.39:
-* Added a menu plugin "Bible Reading Plan"
+* Added a menu plugin "Bible Reading Plan".
     A wiki page is written about this plugin https://github.com/eliranwong/UniqueBible/wiki/Bible-Reading-Plan
 
 Major change in version 23.38:
