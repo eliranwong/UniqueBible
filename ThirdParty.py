@@ -5,8 +5,12 @@ from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import Bible
 from xml.dom import minidom
+from qtpy.QtWidgets import QMessageBox
 
 class Converter:
+
+    def __init__(self):
+        self.logger = logging.getLogger('uba')
 
     # create UniqueBible.app commentary module
     def createCommentaryModule(self, abbreviation, title, description, content):
@@ -696,7 +700,7 @@ class Converter:
         biblesSqlite.importBible(description, abbreviation, verses)
         del biblesSqlite
 
-    def mySwordBibleToRichFormat(self, description, abbreviation, verses):
+    def mySwordBibleToRichFormat(self, description, abbreviation, verses, strongs=None):
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
@@ -742,11 +746,11 @@ class Converter:
         cursor.executemany(insert, formattedChapters)
         connection.commit()
 
-        self.populateDetails(cursor, description, abbreviation)
+        self.populateDetails(cursor, description, abbreviation, "", 0)
 
         connection.close()
 
-    def populateDetails(self, cursor, description, abbreviation, language = ""):
+    def populateDetails(self, cursor, description, abbreviation, language="", strongs=None):
         cursor.execute("SELECT COUNT(DISTINCT(Book)) FROM Bible")
         count = cursor.fetchone()[0]
 
@@ -755,7 +759,10 @@ class Converter:
         oldTestamentFlag = 1
         newTestamentFlag = 1
         apocryphaFlag = 0
-        strongsFlag = 1 if config.importDoNotStripStrongNo else 0
+        if strongs is None:
+            strongsFlag = 1 if config.importDoNotStripStrongNo else 0
+        else:
+            strongsFlag = strongs
         if count <= 27:
             oldTestamentFlag = 0
         elif count == 39:
@@ -1014,14 +1021,51 @@ class Converter:
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
 
+    def importXMLBible(self, filename):
+        doc = minidom.parse(filename)
+        if len(doc.getElementsByTagName("XMLBIBLE")) > 0:
+            self.importZefaniaBible(filename, doc)
+        elif len(doc.getElementsByTagName("osis")) > 0:
+            self.importOsisBible(filename, doc)
+        else:
+            self.logger.error("Cannot process XML file {0}".format(filename))
+
+    # Import OSIS XML Bibles
+    # https://github.com/gratis-bible/bible/tree/master/en
+    def importOsisBible(self, filename, doc):
+        self.logger.info("Importing OSIS XML Bible: " + filename)
+        work = doc.getElementsByTagName("work")[0]
+        description = work.getElementsByTagName("title")[0].firstChild.nodeValue.strip()
+        biblename = Path(filename).stem
+        biblename = biblename.upper()
+        if not description:
+            description = biblename
+        self.logger.info("Creating " + biblename)
+        abbreviation = biblename
+        books = doc.getElementsByTagName("div")
+        data = []
+        parser = BibleVerseParser(config.parserStandarisation)
+        for book in books:
+            chapters = book.getElementsByTagName("chapter")
+            for chapter in chapters:
+                verses = chapter.getElementsByTagName("verse")
+                for verse in verses:
+                    if verse.firstChild:
+                        osisID = verse.getAttribute("osisID")
+                        (bookName, chapterNum, verseNum) = osisID.split(".")
+                        scripture = verse.firstChild.nodeValue.strip()
+                        bookNum = parser.bookNameToNum(bookName)
+                        row = [bookNum, chapterNum, verseNum, scripture]
+                        data.append(row)
+        self.mySwordBibleToRichFormat(description, abbreviation, data)
+        self.mySwordBibleToPlainFormat(description, abbreviation, data)
+        self.logger.info("Import successful")
 
     # Import Zefania XML Bibles
     # https://www.ph4.org/b4_mobi.php?q=zefania
     # http://sourceforge.net/projects/zefania-sharp/files/
-    def importXMLBible(self, filename):
-        logger = logging.getLogger('uba')
-        logger.info("Importing Zefania XML Bible: " + filename)
-        doc = minidom.parse(filename)
+    def importZefaniaBible(self, filename, doc):
+        self.logger.info("Importing Zefania XML Bible: " + filename)
         translation = doc.getElementsByTagName("XMLBIBLE")[0]
         description = translation.getAttribute("biblename")
         biblename = Path(filename).stem
@@ -1029,7 +1073,7 @@ class Converter:
         biblename = biblename.replace("_", "")
         if not description:
             description = biblename
-        logger.info("Creating " + biblename)
+        self.logger.info("Creating " + biblename)
         abbreviation = biblename
         books = doc.getElementsByTagName("BIBLEBOOK")
         data = []
@@ -1047,7 +1091,7 @@ class Converter:
                         data.append(row)
         self.mySwordBibleToRichFormat(description, abbreviation, data)
         self.mySwordBibleToPlainFormat(description, abbreviation, data)
-        logger.info("Import successful")
+        self.logger.info("Import successful")
 
     def storiesToTitles(self, stories):
         titles = {}

@@ -272,6 +272,12 @@ class BibleVerseParser:
             # input name is neither a file or a folder
             print("'{0}' is not found.".format(inputName))
 
+    def bookNameToNum(self, bookName):
+        for key in self.sortedNames:
+            if bookName.startswith(key):
+                return self.bibleBooksDict[key]
+        return None
+
     def verseReferenceToBCV(self, text):
         text = text.strip()
         bible = 0
