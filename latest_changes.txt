@@ -1,3 +1,8 @@
+Major change in version 23.43:
+* Fixed missing translations in the following plugins:
+    - "plugins/menu/圣经阅读计划.py" <- Simplified Chinese
+    - "plugins/menu/聖經閱讀計劃.py" <- Traditional Chinese
+
 Major changes in version 23.42:
 * Added two Chinese versions of plugin "Bible Reading Plan"
     Non-Chinese users can safely remove them from folder "plugins/menu/"
