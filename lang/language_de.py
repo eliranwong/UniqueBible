@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "Subscript-Stil",
     "selectTextFirst": "Wählen Sie zuerst Text aus!",
     "enterTextFirst": "Geben Sie zuerst Text ein!",
-    "default": "Standardwert:",
+    "default": "Standard",
     "showControlPanelOnStartup": "Option zum Anzeigen von Master Control Panel beim Start.",
     "preferControlPanelForCommandLineEntry": "Option zum Ausblenden des Befehlsfelds des Hauptfensters. \n Wenn ein Befehlspräfix angezeigt wird, wird das Bedienfeld mit dem Befehlspräfix, das automatisch in das Befehlsfeld eingegeben wird, unterdrückt.",
     "closeControlPanelAfterRunningCommand": "Option zum Verdecken der Hauptsteuerungsanzeige jedes Mal, wenn ein Befehl von diesem Befehl gestartet wird.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Bibel-Ressourcen",
     "maximumOHGBiVersesDisplayedInSearchResult": "Die maximale Anzahl an OHGBi-Versen, die im Suchergebnis angezeigt werden.",
     "selectMaximumOHGBiVerses": "Maximale Anzahl von OHGBi-Versen auswählen",
+    "flag": "Markierung",
+    "description": "Beschreibung",
+    "restoreAllDefaults": "Alle Standardwerte wiederherstellen",
 }

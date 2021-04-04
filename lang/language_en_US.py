@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "Subscript Style",
     "selectTextFirst": "Select text first!",
     "enterTextFirst": "Enter text first!",
-    "default": "Default:",
+    "default": "Default",
     "showControlPanelOnStartup": "Option to show Master Control panel on startup.",
     "preferControlPanelForCommandLineEntry": "Option to hide Bible Window's command field. \n When a command prefix is displayed, control panel is opned with the command prefix automatically entered in its command field.",
     "closeControlPanelAfterRunningCommand": "Option to hide Master Control panel each time when a command is launched from it.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Bible Resources",
     "maximumOHGBiVersesDisplayedInSearchResult": "Maximum number of OHGBi verses displayed in search result.",
     "selectMaximumOHGBiVerses": "Select Maximum Number of OHGBi Verses",
+    "flag": "Flag",
+    "description": "Description",
+    "restoreAllDefaults": "Restore All Defaults",
 }

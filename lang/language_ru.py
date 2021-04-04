@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "Стиль подсценария",
     "selectTextFirst": "Сначала выберите текст!",
     "enterTextFirst": "Сначала введите текст!",
-    "default": "По умолчанию:",
+    "default": "По умолчанию",
     "showControlPanelOnStartup": "Опция отображения главной панели управления при запуске.",
     "preferControlPanelForCommandLineEntry": "Опция, чтобы скрыть поле команды Main Window. \n При выводе префикса команды панель управления включается с префиксом команды, автоматически введенным в поле команды.",
     "closeControlPanelAfterRunningCommand": "Позволяет скрыть панель главного управления каждый раз при запуске команды из нее.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Библия",
     "maximumOHGBiVersesDisplayedInSearchResult": "Максимальное число стихов OHGBi, отображаемых в результатах поиска.",
     "selectMaximumOHGBiVerses": "Выбрать максимальное число версов OHGBi",
+    "flag": "Флаг",
+    "description": "Описание",
+    "restoreAllDefaults": "Восстановить все значения по умолчанию",
 }

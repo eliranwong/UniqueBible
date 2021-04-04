@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Πόροι Βίβλου",
     "maximumOHGBiVersesDisplayedInSearchResult": "Μέγιστος αριθμός στίχων OHGBi που εμφανίζονται στο αποτέλεσμα αναζήτησης.",
     "selectMaximumOHGBiVerses": "Επιλέξτε Μέγιστος αριθμός ερίων OHGBi",
+    "flag": "Ενδείκτης:",
+    "description": "Περιγραφή:",
+    "restoreAllDefaults": "Επαναφορά Προεπιλογών '",
 }

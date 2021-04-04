@@ -436,6 +436,7 @@ class BibleReadingPlan(QWidget):
         self.readingList = QListView()
         self.readingList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.readingListModel = QStandardItemModel(self.readingList)
+        self.readingList.setModel(self.readingListModel)
         self.resetItems()
         self.readingListModel.itemChanged.connect(self.itemChanged)
         #print(self.readingList.currentIndex().row())
@@ -495,7 +496,6 @@ class BibleReadingPlan(QWidget):
                 item.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
                 self.readingListModel.appendRow(item)
                 index += 1
-        self.readingList.setModel(self.readingListModel)
         if todayIndex is not None:
             self.readingList.setCurrentIndex(self.readingListModel.index(todayIndex, 0))
 
