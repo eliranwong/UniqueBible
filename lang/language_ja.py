@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "下付きスタイル",
     "selectTextFirst": "最初にテキストを選択してください",
     "enterTextFirst": "最初にテキストを入力してください",
-    "default": "デフォルト:",
+    "default": "デフォルト",
     "showControlPanelOnStartup": "始動時にマスター・コントロール・パネルを表示するオプション。",
     "preferControlPanelForCommandLineEntry": "メインウィンドウのコマンド・フィールドを非表示にするオプション。 \n コマンド接頭部を表示すると、コマンド・フィールドに自動的に入力されたコマンド接頭部を使用してコントロール・パネルが選択されます。",
     "closeControlPanelAfterRunningCommand": "コマンドが起動されるたびに、マスター・コントロール・パネルを非表示にするオプション。",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "バイブル資源",
     "maximumOHGBiVersesDisplayedInSearchResult": "検索結果に表示される OHGBi ファイルの最大数。",
     "selectMaximumOHGBiVerses": "OHGBi バージョンの最大数を選択します",
+    "flag": "フラグ",
+    "description": "解説",
+    "restoreAllDefaults": "デフォルトをすべて復元",
 }

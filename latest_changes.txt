@@ -1,3 +1,8 @@
+Major changes in version 23.45:
+Revised "Set Config Flags" Window:
+* Added a column to show description on individual items.
+* Added a button to restored all config flags default values.
+
 Major changes in version 23.44:
 * Now support XML files for multiple import.
 * Added search field to plugin "Bible Reading Plan".

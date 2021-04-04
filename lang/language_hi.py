@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "सबस्क्रिप्टComment",
     "selectTextFirst": "पाठ पहले चुनें!",
     "enterTextFirst": "पाठ पहले भरें!",
-    "default": "डिफ़ॉल्टः",
+    "default": "डिफ़ॉल्ट",
     "showControlPanelOnStartup": "स्टार्टअप पर मास्टर नियंत्रण पैनल दिखाने के लिए विकल्प.",
     "preferControlPanelForCommandLineEntry": "मुख्य विंडो कमांड क्षेत्र को छुपाने के लिए विकल्प. \n जब एक कमांड उपसर्ग प्रदर्शित होता है, नियंत्रण पैनल को कमांड उपसर्ग के साथ अपने कमांड क्षेत्र में स्वचालित रूप से दाखिल किया जाता है.",
     "closeControlPanelAfterRunningCommand": "जब कोई कमांड इसे से शुरू किया जाता है तो मास्टर कंट्रोल पैनल को हर बार छुपाने के लिए विकल्प.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "बाइबल संसाधन",
     "maximumOHGBiVersesDisplayedInSearchResult": "खोज परिणाम में प्रदर्शित OHGBi छंदों की अधिकतम संख्या.",
     "selectMaximumOHGBiVerses": "OHGBi वर्सेस की अधिकतम संख्या चुनें",
+    "flag": "ध्वज",
+    "description": "वर्णन",
+    "restoreAllDefaults": "सभी तयशुदा बहाल करें",
 }

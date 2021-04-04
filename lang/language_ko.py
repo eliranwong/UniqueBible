@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "하위 스크립트 스타일",
     "selectTextFirst": "텍스트를 먼저 선택합니다!",
     "enterTextFirst": "텍스트를 먼저 입력합니다!",
-    "default": "기본값:",
+    "default": "기본값",
     "showControlPanelOnStartup": "시작 시 마스터 제어 패널을 표시하는 옵션입니다.",
     "preferControlPanelForCommandLineEntry": "기본 창의 명령 필드를 숨기는 옵션입니다. \n 명령 접두부가 표시되면 명령 접두부가 명령 필드에 자동으로 입력되어 제어판이 표시됩니다.",
     "closeControlPanelAfterRunningCommand": "명령이 실행될 때마다 마스터 제어 패널을 숨기는 옵션입니다.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "성경자원",
     "maximumOHGBiVersesDisplayedInSearchResult": "검색 결과에 표시되는 최대 OHGBi 버전 수입니다.",
     "selectMaximumOHGBiVerses": "최대 OHGBi번들 개수 선택",
+    "flag": "플래그",
+    "description": "설명",
+    "restoreAllDefaults": "모든 기본값 복원",
 }

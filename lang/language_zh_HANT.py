@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "下標樣式",
     "selectTextFirst": "首先選擇文本 !",
     "enterTextFirst": "首先輸入文本 !",
-    "default": "預設值 :",
+    "default": "預設值",
     "showControlPanelOnStartup": "啓動時顯示主控制面板的選項。",
     "preferControlPanelForCommandLineEntry": "用來隱藏聖經視窗指令欄的選項。 \n 當需要顯示指令字首時，主控制面板會自動打開，並在其指令欄位中輸入指令字首。",
     "closeControlPanelAfterRunningCommand": "用來在每次從啟動指令時離開主要控制版面的選項。",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "聖經資源",
     "maximumOHGBiVersesDisplayedInSearchResult": "同頁顯示OHGBi的節數上限。",
     "selectMaximumOHGBiVerses": "設定同頁顯示OHGBi的節數上限",
+    "flag": "旗標",
+    "description": "說明",
+    "restoreAllDefaults": "還原所有預設值",
 }

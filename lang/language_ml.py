@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "സബ്സ്ക്രിപ്റ്റ് ശൈലി",
     "selectTextFirst": "ആദ്യം വാചകം തെരഞ്ഞെടുക്കുക!",
     "enterTextFirst": "ആദ്യം വാചകം നല്കുക!",
-    "default": "ഡിഫോൾട്ട് :",
+    "default": "സഹജമായ",
     "showControlPanelOnStartup": "ആപ്പിന്റെ തുടക്കത്തിൽ മാസ്റ്റർ കണ്ട്രോൾ പാനൽ കാണിക്കുവാൻ ഉപാധി.",
     "preferControlPanelForCommandLineEntry": "പ്രധാന ജാലകത്തിന്റെ കമാൻഡ് ഫീൾഡ് മറച്ചുവെക്കുവാൻ  ഉപാധി. \nഒരു കമാൻഡ് പ്രിഫിക്സ് പ്രദർശിപ്പിക്കുമ്പോൾ കമാൻഡ് ഫീൽഡിലേക്കു തനിയെ വരുന്ന കമാൻഡ് പ്രിഫിസ്‌ക്‌മായി കണ്ട്രോൾ പാനൽ തുറക്കും",
     "closeControlPanelAfterRunningCommand": "മാസ്റ്റർ കണ്ട്രോൾ പാനലിൽ നിന്നും ഓരോ പ്രാവശ്യം ആജ്ഞ വിക്ഷേപിക്കുമ്പോളും അതിനെ ഒളിപ്പിക്കാൻ ഉപാധി",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "ബൈബിൾ റിസർവ്",
     "maximumOHGBiVersesDisplayedInSearchResult": "തെരച്ചില് ഫലത്തില് കാണിച്ച OHGBi അക്ഷരങ്ങളുടെ ഏറ്റവും കൂടിയ എണ്ണം.",
     "selectMaximumOHGBiVerses": "OHGBi വെഴ്സിന്റെ ഏറ്റവും കൂടിയ എണ്ണം തെരഞ്ഞെടുക്കുക",
+    "flag": "ഫ്ലാഗ്",
+    "description": "വിവരണം",
+    "restoreAllDefaults": "എല്ലാ ഡീഫോള്ട്ടുകള് വീണ്ടെടുക്കുക",
 }

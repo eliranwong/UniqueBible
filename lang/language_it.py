@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "Stile Subscript",
     "selectTextFirst": "Selezionare prima il testo!",
     "enterTextFirst": "Inserire prima il testo!",
-    "default": "Predefinito:",
+    "default": "Predefinito",
     "showControlPanelOnStartup": "Opzione per mostrare il pannello di controllo Master in fase di avvio.",
     "preferControlPanelForCommandLineEntry": "Opzione per nascondere il campo di comando di Main Window. \n Quando viene visualizzato un prefisso di comando, il pannello di controllo è oppresso con il prefisso di comando inserito automaticamente nel suo campo di comando.",
     "closeControlPanelAfterRunningCommand": "Opzione per nascondere il pannello di controllo Master ogni volta quando viene lanciato un comando da esso.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Risorse della Bibbia",
     "maximumOHGBiVersesDisplayedInSearchResult": "Numero massimo di versi OHGBi visualizzati in risultato di ricerca.",
     "selectMaximumOHGBiVerses": "Seleziona Numero massimo di Verses OHGBi",
+    "flag": "Bandiera",
+    "description": "Descrizione",
+    "restoreAllDefaults": "Ripristinare Tutti I Default",
 }

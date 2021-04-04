@@ -528,7 +528,7 @@ translation = {
     "noteTool_subscript": "Stil subscriptibil",
     "selectTextFirst": "Selectaţi mai întâi textul!",
     "enterTextFirst": "Introduceţi mai întâi textul!",
-    "default": "Implicit:",
+    "default": "Implicit",
     "showControlPanelOnStartup": "Opţiune pentru a afişa panoul Control master la pornire.",
     "preferControlPanelForCommandLineEntry": "Opţiune pentru a ascunde câmpul de comandă al ferestrei Biblice. Când este afişat un prefix de comandă, panoul de control este opat cu prefixul comenzii introdus automat în câmpul său de comandă.",
     "closeControlPanelAfterRunningCommand": "Opţiune pentru a ascunde panoul Control master de fiecare dată când o comandă este lansată de la ea.",
@@ -669,4 +669,7 @@ translation = {
     "bibleResources": "Resurse biblice",
     "maximumOHGBiVersesDisplayedInSearchResult": "Numărul maxim de versete OHGBi afişate în rezultatul căutării.",
     "selectMaximumOHGBiVerses": "Selectare număr maxim de versiuni OHGBi",
+    "flag": "Flag",
+    "description": "Descriere",
+    "restoreAllDefaults": "Restaurare toate valorile implicite",
 }
