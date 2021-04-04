@@ -1135,6 +1135,62 @@ class Bible:
         if self.getCount("Details") == 0:
             self.insertDetailsTable(self.text, self.text)
 
+    def renameGlossToRef(self):
+        description = self.bibleInfo()
+        self.addMissingColumns()
+
+        query = "SELECT * from Details"
+        self.cursor.execute(query)
+        details = self.cursor.fetchone()
+
+        query = "SELECT Book, Chapter, Verse, Scripture FROM Verses ORDER BY Book, Chapter, Verse"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        versesData = []
+        for record in records:
+            scripture = record[3]
+            scripture = scripture.replace("<gloss", "<sup><ref")
+            scripture = scripture.replace("</gloss>", "</ref></sup>")
+            bookNum = record[0]
+            chapterNum = record[1]
+            verseNum = record[2]
+            row = [bookNum, chapterNum, verseNum, scripture]
+            versesData.append(row)
+
+        query = "SELECT Book, Chapter, Scripture FROM Bible ORDER BY Book, Chapter"
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        bibleData = []
+        for record in records:
+            scripture = record[2]
+            scripture = scripture.replace("<gloss", "<sup><ref")
+            scripture = scripture.replace("</gloss>", "</ref></sup>")
+            bookNum = record[0]
+            chapterNum = record[1]
+            row = [bookNum, chapterNum, scripture]
+            bibleData.append(row)
+
+        abbreviation = self.text + ".new"
+        formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
+        if os.path.isfile(formattedBible):
+            os.remove(formattedBible)
+        connection = sqlite3.connect(formattedBible)
+        cursor = connection.cursor()
+
+        cursor.execute(Bible.CREATE_VERSES_TABLE)
+        insert = "INSERT INTO Verses (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)"
+        cursor.executemany(insert, versesData)
+
+        cursor.execute(Bible.CREATE_BIBLE_TABLE)
+        insert = "INSERT INTO Bible (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+        cursor.executemany(insert, bibleData)
+
+        cursor.execute(Bible.CREATE_DETAILS_TABLE)
+        insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        cursor.execute(insert, details)
+
+        connection.commit()
+
 
 class ClauseData:
 
@@ -1390,10 +1446,14 @@ if __name__ == '__main__':
 
     # del Bibles
 
-    fileList = glob.glob(config.marvelData+"/bibles/*.bible")
-    for file in fileList:
-        if os.path.isfile(file):
-            bibleName = Path(file).stem
-            bible = Bible(bibleName)
-            description = bible.bibleInfo()
-            print("{0}:{1}".format(bibleName, description))
+    # fileList = glob.glob(config.marvelData+"/bibles/*.bible")
+    # for file in fileList:
+    #     if os.path.isfile(file):
+    #         bibleName = Path(file).stem
+    #         bible = Bible(bibleName)
+    #         description = bible.bibleInfo()
+    #         print("{0}:{1}".format(bibleName, description))
+
+    bible = Bible("KJVx")
+    bible.renameGlossToRef()
+    print("Done")
