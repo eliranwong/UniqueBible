@@ -2577,7 +2577,7 @@ class MainWindow(QMainWindow):
         self.runFeature("BIBLE:::TRLIT")
 
     def runKJV2Bible(self):
-        self.runFeature("BIBLE:::KJV+")
+        self.runFeature("BIBLE:::KJVx")
 
     def runCOMPARE(self):
         self.runFeature("COMPARE")

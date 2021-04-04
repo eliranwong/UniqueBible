@@ -282,7 +282,7 @@ class Converter:
 
     def importAllFilesInAFolder(self, folder):
         files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search(r"^[\._]", filename)]
-        validFiles = [filename for filename in files if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3)$', filename)]
+        validFiles = [filename for filename in files if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3|.xml)$', filename)]
         if validFiles:
             for filename in validFiles:
                 filename = os.path.join(folder, filename)
@@ -305,6 +305,8 @@ class Converter:
                         self.importMyBibleCommentary(filename)
                     elif filename.endswith(".SQLite3"):
                         self.importMyBibleBible(filename)
+                    elif filename.endswith(".xml"):
+                        self.importXMLBible(filename)
                     else:
                         print("File type of '{0}' is not supported for conversion.".format(filename))
                 except:
