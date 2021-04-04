@@ -1,3 +1,7 @@
+Major changes in version 23.44:
+* Now support XML files for multiple import.
+* Added search field to plugin "Bible Reading Plan".
+
 Major change in version 23.43:
 * Fixed missing translations in the following plugins:
     - "plugins/menu/圣经阅读计划.py" <- Simplified Chinese
