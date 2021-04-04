@@ -713,11 +713,26 @@ class BibleReadingPlan(QWidget):
         365: [False, '尼希米記 13, 啟示錄 22, 詩篇 150:1-6'],
     }
 
+    translation = (
+        "聖經閱讀計劃",
+        "今天是 ",
+        "搜索：",
+        "聖經視窗頁籤中開啓",
+        "隱藏已經閱讀的經文",
+        "顯示已經閱讀的經文",
+        "重新設置",
+        "儲存閱讀進度",
+        "第",
+        "天",
+        "您的閱讀進度儲存在下面這個檔案：",
+        "沒法把您的閱讀進度儲存在您現在使用的電腦上！",
+    )
+
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle("聖經閱讀計劃")
+        self.setWindowTitle(self.translation[0])
         self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
@@ -731,24 +746,32 @@ class BibleReadingPlan(QWidget):
         self.todayNo = int(format(self.today, '%j'))
         if self.todayNo > 365:
             self.todayNo = 365
-        self.progressFile = os.path.join(os.getcwd(), "plugins", "menu", "聖經閱讀計劃.txt")
+        self.progressFile = os.path.join(os.getcwd(), "plugins", "menu", "{0}.txt".format(self.translation[0]))
         if os.path.isfile(self.progressFile):
             from ast import literal_eval
             with open(self.progressFile, "r") as fileObj:
                 self.plan = literal_eval(fileObj.read())
         else:
             self.plan = copy.deepcopy(self.template)
+        self.hideCheckedItems = False
 
     def setupUI(self):
         from qtpy.QtGui import QStandardItemModel
-        from qtpy.QtWidgets import (QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout)
+        from qtpy.QtWidgets import (QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit)
 
         mainLayout = QVBoxLayout()
 
         readingListLayout = QVBoxLayout()
 
-        readingListLayout.addWidget(QLabel("聖經閱讀計劃"))
-        readingListLayout.addWidget(QLabel("今天是 {0}".format(self.today)))
+        readingListLayout.addWidget(QLabel(self.translation[0]))
+        readingListLayout.addWidget(QLabel("{0}{1}".format(self.translation[1], self.today)))
+
+        filterLayout = QHBoxLayout()
+        filterLayout.addWidget(QLabel(self.translation[2]))
+        self.filterEntry = QLineEdit()
+        self.filterEntry.textChanged.connect(self.resetItems)
+        filterLayout.addWidget(self.filterEntry)
+        readingListLayout.addLayout(filterLayout)
 
         self.readingList = QListView()
         self.readingList.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -761,19 +784,19 @@ class BibleReadingPlan(QWidget):
 
         buttonsLayout = QHBoxLayout()
 
-        button = QPushButton("聖經視窗頁籤中開啓")
+        button = QPushButton(self.translation[3])
         button.clicked.connect(self.openInTabs)
         buttonsLayout.addWidget(button)
 
-        button = QPushButton("隱藏已經閱讀的經文")
-        button.clicked.connect(self.hideCheckedItems)
-        buttonsLayout.addWidget(button)
+        self.hideShowButton = QPushButton(self.translation[4])
+        self.hideShowButton.clicked.connect(self.hideShowCheckedItems)
+        buttonsLayout.addWidget(self.hideShowButton)
 
-        button = QPushButton("重新設置")
+        button = QPushButton(self.translation[6])
         button.clicked.connect(self.resetAllItems)
         buttonsLayout.addWidget(button)
 
-        button = QPushButton("儲存閱讀進度")
+        button = QPushButton(self.translation[7])
         button.clicked.connect(self.saveProgress)
         buttonsLayout.addWidget(button)
 
@@ -789,17 +812,23 @@ class BibleReadingPlan(QWidget):
             self.plan[key][0] = True
         elif standardItem.checkState() is Qt.CheckState.Unchecked:
             self.plan[key][0] = False
+        if self.hideCheckedItems:
+            self.resetItems()
 
-    def resetItems(self, hideCheckItems=False):
+    def resetItems(self):
         from qtpy.QtGui import QStandardItem
         from qtpy.QtCore import Qt
+        # Empty the model before reset
+        self.readingListModel.clear()
+        # Reset
         index = 0
         todayIndex = None
+        filterEntry = self.filterEntry.text()
         for key, value in self.plan.items():
             checked, passages = value
-            if not (hideCheckItems and checked):
+            if not (self.hideCheckedItems and checked) and (filterEntry == "" or (filterEntry != "" and filterEntry.lower() in passages.lower())):
                 item = QStandardItem("{0}. {1}".format(key, passages))
-                item.setToolTip("Day {0}".format(key))
+                item.setToolTip("{0}{1}{2}".format(self.translation[8], key, self.translation[9]))
                 if key == self.todayNo:
                     todayIndex = index
                 item.setCheckable(True)
@@ -810,20 +839,19 @@ class BibleReadingPlan(QWidget):
         if todayIndex is not None:
             self.readingList.setCurrentIndex(self.readingListModel.index(todayIndex, 0))
 
-    def hideCheckedItems(self):
-        self.readingListModel.clear()
-        self.resetItems(True)
+    def hideShowCheckedItems(self):
+        self.hideCheckedItems = not self.hideCheckedItems
+        self.resetItems()
+        self.hideShowButton.setText(self.translation[5] if self.hideCheckedItems else self.translation[4])
 
     def resetAllItems(self):
         import copy
-        self.readingListModel.clear()
         self.plan = copy.deepcopy(self.template)
         self.resetItems()
 
-    def translateIntoTraditionalChinese(self):
+    def translateIntoChinese(self):
         import copy, pprint
         from BibleBooks import BibleBooks
-        #self.sortedNames = sorted(sortedNames, key=len, reverse=True)
         plan = copy.deepcopy(self.template)
         filePath = "{0}_zh".format(self.progressFile)
         with open(filePath, "w", encoding="utf-8") as fileObj:
@@ -835,12 +863,12 @@ class BibleReadingPlan(QWidget):
         for key, value in BibleBooks.eng.items():
             bookName = value[-1]
             bookNames.append(bookName)
-            translateDict[bookName] = BibleBooks.tc[key][-1]
+            translateDict[bookName] = BibleBooks.sc[key][-1]
         bookNames = sorted(bookNames, key=len, reverse=True)
         #print(bookNames)
         for name in bookNames:
             text = text.replace(name, translateDict[name])
-        text = text.replace("Psalm", "詩篇")
+        text = text.replace("Psalm", "诗篇")
         with open(filePath, "w", encoding="utf-8") as fileObj:
             fileObj.write(text)
 
@@ -850,10 +878,10 @@ class BibleReadingPlan(QWidget):
         try:
             with open(self.progressFile, "w", encoding="utf-8") as fileObj:
                 fileObj.write(pprint.pformat(self.plan))
-            message = "Your reading progress is saved in the following location:\n'{0}'".format(self.progressFile)
+            message = "{0}\n'{1}'".format(self.translation[10], self.progressFile)
         except:
-            message = "Failed to save your progress locally.  You may need to grant write permission to UBA."
-        QMessageBox.information(self, "Bible Reading Plan", message)
+            message = self.translation[11]
+        QMessageBox.information(self, self.translation[0], message)
 
     def openInTabs(self):
         dayNo = self.readingList.currentIndex().row() + 1
