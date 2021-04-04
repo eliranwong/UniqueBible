@@ -414,6 +414,7 @@ class BibleReadingPlan(QWidget):
         self.readingList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.readingListModel = QStandardItemModel(self.readingList)
         self.resetItems()
+        self.readingListModel.itemChanged.connect(self.itemChanged)
         #print(self.readingList.currentIndex().row())
         #self.readingList.selectionModel().selectionChanged.connect(self.function)
         readingListLayout.addWidget(self.readingList)
@@ -441,10 +442,18 @@ class BibleReadingPlan(QWidget):
 
         self.setLayout(mainLayout)
 
+    def itemChanged(self, standardItem):
+        from qtpy.QtCore import Qt
+        key = int(standardItem.text().split(".")[0])
+        if standardItem.checkState() is Qt.CheckState.Checked:
+            self.plan[key][0] = True
+        elif standardItem.checkState() is Qt.CheckState.Unchecked:
+            self.plan[key][0] = False
+
     def resetItems(self, hideCheckItems=False):
         from qtpy.QtGui import QStandardItem
         from qtpy.QtCore import Qt
-        self.roleCount = 0
+        index = 0
         todayIndex = None
         for key, value in self.plan.items():
             checked, passages = value
@@ -452,27 +461,18 @@ class BibleReadingPlan(QWidget):
                 item = QStandardItem("{0}. {1}".format(key, passages))
                 item.setToolTip("Day {0}".format(key))
                 if key == self.todayNo:
-                    todayIndex = self.roleCount
+                    todayIndex = index
                 item.setCheckable(True)
                 item.setCheckState(Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked)
                 self.readingListModel.appendRow(item)
-                self.roleCount += 1
+                index += 1
         self.readingList.setModel(self.readingListModel)
         if todayIndex is not None:
             self.readingList.setCurrentIndex(self.readingListModel.index(todayIndex, 0))
 
     def hideCheckedItems(self):
-        self.updatePlanData()
         self.readingListModel.clear()
         self.resetItems(True)
-
-    def updatePlanData(self):
-        from qtpy.QtCore import Qt
-        for i in range(self.roleCount):
-            item = self.readingListModel.item(i)
-            if item.checkState() is Qt.CheckState.Checked:
-                key = int(item.text().split(".")[0])
-                self.plan[key][0] = True
 
     def resetAllItems(self):
         import copy
@@ -506,7 +506,6 @@ class BibleReadingPlan(QWidget):
     def saveProgress(self):
         import pprint
         from qtpy.QtWidgets import QMessageBox
-        self.updatePlanData()
         try:
             with open(self.progressFile, "w", encoding="utf-8") as fileObj:
                 fileObj.write(pprint.pformat(self.plan))
