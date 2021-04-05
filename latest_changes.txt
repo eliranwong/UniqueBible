@@ -1,3 +1,6 @@
+Major changes in version 23.47:
+* Added a close button to Config Flags Window.
+
 Major changes in version 23.46:
 * Added bible data converter.
 * Fixed main window resize issue on Linux.

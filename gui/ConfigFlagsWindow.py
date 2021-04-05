@@ -42,9 +42,14 @@ class ConfigFlagsWindow(QDialog):
         self.dataViewModel.itemChanged.connect(self.itemChanged)
         mainLayout.addWidget(self.dataView)
 
+        buttonLayout = QHBoxLayout()
+        button = QPushButton(config.thisTranslation["close"])
+        button.clicked.connect(self.close)
+        buttonLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["restoreAllDefaults"])
         button.clicked.connect(self.restoreAllDefaults)
-        mainLayout.addWidget(button)
+        buttonLayout.addWidget(button)
+        mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
 
