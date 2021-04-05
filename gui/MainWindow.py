@@ -2040,8 +2040,18 @@ class MainWindow(QMainWindow):
 
     # Actions - resize the main window
     def fullsizeWindow(self):
-        self.resizeWindow(1, 1)
-        self.moveWindow(0, 0)
+        if self.isFullScreen():
+            self.showNormal()
+        else:
+            self.showFullScreen()
+
+    def maximizedWindow(self):
+        if self.isMaximized():
+            self.showNormal()
+        else:
+            self.showMaximized()
+            #self.resizeWindow(1, 1)
+            #self.moveWindow(0, 0)
 
     def twoThirdWindow(self):
         self.resizeWindow(2 / 3, 2 / 3)

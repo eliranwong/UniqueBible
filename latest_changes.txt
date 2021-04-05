@@ -1,3 +1,8 @@
+Major changes in version 23.48:
+* Now distinguish full screen feature from maximised window feature triggered through menu.
+* Now toggle full screen through menu.  i.e. when main window is in full screen, it will become normal size or vice versa.
+* Now toggle maximised window through menu.  i.e. when main window is in maximised size, it will become normal size or vice versa.
+
 Major changes in version 23.47:
 * Added a close button to Config Flags Window.
 

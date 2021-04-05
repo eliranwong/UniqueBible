@@ -672,4 +672,5 @@ translation = {
     "flag": "フラグ",
     "description": "解説",
     "restoreAllDefaults": "デフォルトをすべて復元",
+    "menu1_maximized": "最大化",
 }

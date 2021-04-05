@@ -672,4 +672,5 @@ translation = {
     "flag": "旗標",
     "description": "說明",
     "restoreAllDefaults": "還原所有預設值",
+    "menu1_maximized": "最大",
 }

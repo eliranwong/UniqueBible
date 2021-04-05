@@ -672,4 +672,5 @@ translation = {
     "flag": "Bandiera",
     "description": "Descrizione",
     "restoreAllDefaults": "Ripristinare Tutti I Default",
+    "menu1_maximized": "Ingrandito",
 }

@@ -105,6 +105,8 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")
         items = (
             ("menu1_fullScreen", self.fullsizeWindow, sc.fullsizeWindow),
+            ("menu1_maximized", self.maximizedWindow, sc.maximizedWindow),
+            ("menu1_smallSize", self.twoThirdWindow, sc.twoThirdWindow),
             ("menu1_topHalf", self.topHalfScreenHeight, sc.topHalfScreenHeight),
             ("menu1_bottomHalf", self.bottomHalfScreenHeight, sc.bottomHalfScreenHeight),
             ("menu1_leftHalf", self.leftHalfScreenWidth, sc.leftHalfScreenWidth),

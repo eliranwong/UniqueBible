@@ -672,4 +672,5 @@ translation = {
     "flag": "Drapeau",
     "description": "Description",
     "restoreAllDefaults": "Restaurer toutes les valeurs par défaut",
+    "menu1_maximized": "Maximisé",
 }

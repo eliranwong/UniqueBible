@@ -672,4 +672,5 @@ translation = {
     "flag": "ध्वज",
     "description": "वर्णन",
     "restoreAllDefaults": "सभी तयशुदा बहाल करें",
+    "menu1_maximized": "अधिकतम करें",
 }
