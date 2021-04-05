@@ -114,8 +114,9 @@ def setupMainWindow(availableGeometry):
     # Linux / Darwin / Windows
     if platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
-        # Below is a workaround, loading the app in 4/5 of the screen size.
-        config.mainWindow.resize(config.screenWidth * 4 / 5, config.screenHeight)
+        config.mainWindow.resize(config.screenWidth, config.screenHeight - 60)
+        # Below is an alternate workaround, loading the app in 4/5 of the screen size.
+        #config.mainWindow.resize(config.screenWidth * 4 / 5, config.screenHeight)
     elif platform.system() == "Windows" and hasattr(config, "cli") and not config.cli:
         config.mainWindow.showMaximized()
     else:

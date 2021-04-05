@@ -70,18 +70,7 @@ class ConfigUtil:
             config.verseNoDoubleClickAction = "_cp0"
         # Start full-screen on Linux os
         if not hasattr(config, "linuxStartFullScreen"):
-            # Check if UniqueBible.app is running on Chrome OS:
-            if (os.path.exists("/mnt/chromeos/")):
-                config.linuxStartFullScreen = True
-            else:
-                config.linuxStartFullScreen = False
-        # Show text-to-speech feature on Linux os
-        #if not hasattr(config, "showTtsOnLinux"):
-            # Check if UniqueBible.app is running on Chrome OS:
-        #    if (os.path.exists("/mnt/chromeos/")):
-        #        config.showTtsOnLinux = True
-        #    else:
-        #        config.showTtsOnLinux = False
+            config.linuxStartFullScreen = False
         # Use espeak for text-to-speech feature instead of built-in qt tts engine
         # espeak is a text-to-speech tool that can run offline
         # To check for available langauge codes, run on terminal: espeak --voices
