@@ -672,4 +672,5 @@ translation = {
     "flag": "Flag",
     "description": "Description",
     "restoreAllDefaults": "Restore All Defaults",
+    "menu1_maximized": "Maximized",
 }

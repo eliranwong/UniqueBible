@@ -672,4 +672,5 @@ translation = {
     "flag": "플래그",
     "description": "설명",
     "restoreAllDefaults": "모든 기본값 복원",
+    "menu1_maximized": "최대화",
 }

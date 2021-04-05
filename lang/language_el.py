@@ -672,4 +672,5 @@ translation = {
     "flag": "Ενδείκτης:",
     "description": "Περιγραφή:",
     "restoreAllDefaults": "Επαναφορά Προεπιλογών '",
+    "menu1_maximized": "Μεγιστοποίηση",
 }

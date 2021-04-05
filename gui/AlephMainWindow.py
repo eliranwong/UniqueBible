@@ -300,6 +300,8 @@ class AlephMainWindow:
         screenSizeMenu = display_menu.addMenu(config.thisTranslation["menu1_screenSize"])
         screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_fullScreen"], self, shortcut=sc.fullsizeWindow,
                                          triggered=self.fullsizeWindow))
+        screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_maximized"], self, shortcut=sc.maximizedWindow,
+                                         triggered=self.maximizedWindow))
         screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_smallSize"], self, shortcut=sc.twoThirdWindow,
                                          triggered=self.twoThirdWindow))
         screenSizeMenu.addAction(QAction(config.thisTranslation["menu1_topHalf"], self, shortcut=sc.topHalfScreenHeight,

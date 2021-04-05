@@ -672,4 +672,5 @@ translation = {
     "flag": "Pabellón",
     "description": "Descripción",
     "restoreAllDefaults": "Restaurar todos los valores predeterminados",
+    "menu1_maximized": "Maximizada",
 }

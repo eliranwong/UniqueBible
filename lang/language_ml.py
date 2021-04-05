@@ -672,4 +672,5 @@ translation = {
     "flag": "ഫ്ലാഗ്",
     "description": "വിവരണം",
     "restoreAllDefaults": "എല്ലാ ഡീഫോള്ട്ടുകള് വീണ്ടെടുക്കുക",
+    "menu1_maximized": "വലുതാക്കി",
 }

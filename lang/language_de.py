@@ -672,4 +672,5 @@ translation = {
     "flag": "Markierung",
     "description": "Beschreibung",
     "restoreAllDefaults": "Alle Standardwerte wiederherstellen",
+    "menu1_maximized": "Maximiert",
 }
