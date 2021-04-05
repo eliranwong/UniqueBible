@@ -1,3 +1,8 @@
+Major changes in version 23.49:
+* Added two menu plugins:
+  - "plugins/menu/Clear Main Tabs.py
+  - "plugins/menu/Clear Study Tabs.py
+
 Major changes in version 23.48:
 * Now distinguish full screen feature from maximised window feature triggered through menu.
 * Now toggle full screen through menu.  i.e. when main window is in full screen, it will become normal size or vice versa.
