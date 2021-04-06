@@ -534,6 +534,10 @@ class ConfigUtil:
             config.excludeContextPlugins = []
         if not hasattr(config, "excludeShutdownPlugins"):
             config.excludeShutdownPlugins = []
+        if not hasattr(config, "toolbarIconSizeFactor"):
+            config.toolbarIconSizeFactor = 0.75
+        if not hasattr(config, "sidebarIconSizeFactor"):
+            config.sidebarIconSizeFactor = 0.6
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -611,6 +615,8 @@ class ConfigUtil:
             ("noToolBar", config.noToolBar),
             ("topToolBarOnly", config.topToolBarOnly),
             ("toolBarIconFullSize", config.toolBarIconFullSize),
+            ("toolbarIconSizeFactor", config.toolbarIconSizeFactor),
+            ("sidebarIconSizeFactor", config.sidebarIconSizeFactor),
             ("parallelMode", config.parallelMode),
             ("instantMode", config.instantMode),
             ("instantInformationEnabled", config.instantInformationEnabled),

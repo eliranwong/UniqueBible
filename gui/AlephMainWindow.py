@@ -1264,7 +1264,7 @@ class AlephMainWindow:
 
         if config.qtMaterial and config.qtMaterialTheme:
             for toolbar in (self.firstToolBar, self.studyBibleToolBar, self.secondToolBar):
-                toolbar.setIconSize(QSize(config.iconButtonWidth / 1.33, config.iconButtonWidth / 1.33))
+                toolbar.setIconSize(QSize(config.iconButtonWidth * config.toolbarIconSizeFactor, config.iconButtonWidth * config.toolbarIconSizeFactor))
                 toolbar.setFixedHeight(config.iconButtonWidth + 4)
             for toolbar in (self.leftToolBar, self.rightToolBar):
-                toolbar.setIconSize(QSize(config.iconButtonWidth * 0.6, config.iconButtonWidth * 0.6))
+                toolbar.setIconSize(QSize(config.iconButtonWidth * config.sidebarIconSizeFactor, config.iconButtonWidth * config.sidebarIconSizeFactor))

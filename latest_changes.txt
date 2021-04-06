@@ -1,3 +1,8 @@
+Major changes in version 23.55:
+* Added two config values in config.py, with which users can adjust the icon size when Qt-material theme is enabled.
+    1 is original full size; the smaller the values the smaller the icon sizes.
+    toolbarIconSizeFactor [default: 0.75], sidebarIconSizeFactor [default: 0.6]
+
 Major changes in version 23.54:
 * Added a file dialog to "Interlinear Data" plugins.  Users can now specify filepath of the exported spreadsheet.
 * Fixed exporting spreadsheet on Windows.
