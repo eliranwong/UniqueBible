@@ -1,4 +1,4 @@
-import os, pprint, config, subprocess
+import os, pprint, config
 from platform import system
 from util.DateUtil import DateUtil
 
@@ -526,6 +526,14 @@ class ConfigUtil:
             config.activeVerseNoColourDark = "rgb(197, 197, 56)"
         if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
             config.maximumOHGBiVersesDisplayedInSearchResult = 50
+        if not hasattr(config, "excludeStartupPlugins"):
+            config.excludeStartupPlugins = []
+        if not hasattr(config, "excludeMenuPlugins"):
+            config.excludeMenuPlugins = []
+        if not hasattr(config, "excludeContextPlugins"):
+            config.excludeContextPlugins = []
+        if not hasattr(config, "excludeShutdownPlugins"):
+            config.excludeShutdownPlugins = []
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -725,6 +733,10 @@ class ConfigUtil:
             ("presentationColorOnDarkTheme", config.presentationColorOnDarkTheme),
             ("presentationVerticalPosition", config.presentationVerticalPosition),
             ("presentationHorizontalPosition", config.presentationHorizontalPosition),
+            ("excludeStartupPlugins", config.excludeStartupPlugins),
+            ("excludeMenuPlugins", config.excludeMenuPlugins),
+            ("excludeContextPlugins", config.excludeContextPlugins),
+            ("excludeShutdownPlugins", config.excludeShutdownPlugins),
             ("maximumHistoryRecord", config.maximumHistoryRecord),
             ("currentRecord", {'main': 0, 'study': 0}),
             ("history", config.history),

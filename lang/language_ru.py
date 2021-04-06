@@ -673,4 +673,9 @@ translation = {
     "description": "Описание",
     "restoreAllDefaults": "Восстановить все значения по умолчанию",
     "menu1_maximized": "Развернуто",
+    "enableIndividualPlugins": "Включить отдельные модули",
+    "startup": "Запуск",
+    "context": "Контекст",
+    "menu": "Меню",
+    "shutdown": "Завершить работу",
 }

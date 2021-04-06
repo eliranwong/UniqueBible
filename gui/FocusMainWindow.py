@@ -307,11 +307,14 @@ class FocusMainWindow:
         if config.enablePlugins:
             menu = addMenu(menuBar, "menu_plugins")
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "menu"), "py"):
-                if "_" in plugin:
-                    feature, shortcut = plugin.split("_", 1)
-                    addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
-                else:
-                    addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+                if not plugin in config.excludeMenuPlugins:
+                    if "_" in plugin:
+                        feature, shortcut = plugin.split("_", 1)
+                        addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                    else:
+                        addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+            menu.addSeparator()
+            addMenuItem(menu, "enableIndividualPlugins", self, self.enableIndividualPluginsWindow)
 
         # information
         if config.showInformation:

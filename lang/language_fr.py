@@ -673,4 +673,9 @@ translation = {
     "description": "Description",
     "restoreAllDefaults": "Restaurer toutes les valeurs par défaut",
     "menu1_maximized": "Maximisé",
+    "enableIndividualPlugins": "Activer les plug-ins individuels",
+    "startup": "Démarrage",
+    "context": "Contexte",
+    "menu": "Menu",
+    "shutdown": "Arrêt",
 }

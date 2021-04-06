@@ -18,8 +18,8 @@ from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
 from ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
 from db.Highlight import Highlight
-#from gui.DisplayConfigOptionsWindow import DisplayConfigOptionsWindow
 from gui.ConfigFlagsWindow import ConfigFlagsWindow
+from gui.EnableIndividualPlugins import EnableIndividualPlugins
 from gui.EditGuiLanguageFileDialog import EditGuiLanguageFileDialog
 from gui.InfoDialog import InfoDialog
 # These "unused" window imports are actually used.  Do not delete these lines.
@@ -1827,9 +1827,12 @@ class MainWindow(QMainWindow):
             config.maximumHistoryRecord = integer
 
     def moreConfigOptionsDialog(self):
-        #self.moreConfigOptions = DisplayConfigOptionsWindow(self)
-        self.moreConfigOptions = ConfigFlagsWindow(self)
-        self.moreConfigOptions.show()
+        self.configFlagsDialog = ConfigFlagsWindow(self)
+        self.configFlagsDialog.show()
+
+    def enableIndividualPluginsWindow(self):
+        self.individualPluginsWindow = EnableIndividualPlugins(self)
+        self.individualPluginsWindow.show()
 
     def addFavouriteBookDialog(self):
         bookData = BookData()

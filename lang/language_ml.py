@@ -673,4 +673,9 @@ translation = {
     "description": "വിവരണം",
     "restoreAllDefaults": "എല്ലാ ഡീഫോള്ട്ടുകള് വീണ്ടെടുക്കുക",
     "menu1_maximized": "വലുതാക്കി",
+    "enableIndividualPlugins": "ഇന്ത്യ പ്ലഗിനുകള് സജ്ജമാക്കുക",
+    "startup": "ആരംഭം",
+    "context": "കോണ്ടെക്സ്റ്റ്",
+    "menu": "മെനു",
+    "shutdown": "ഷട്ട്ഡാന്ഡ്",
 }

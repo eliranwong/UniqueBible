@@ -547,17 +547,27 @@ class WebEngineView(QWebEngineView):
             subMenu = QMenu()
 
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py"):
-                action = QAction(self)
-                if "_" in plugin:
-                    feature, shortcut = plugin.split("_", 1)
-                    action.setText(feature)
-                    # The following line does not work
-                    #action.setShortcut(QKeySequence(shortcut))
-                    self.parent.parent.addContextPluginShortcut(plugin, shortcut)
-                else:
-                    action.setText(plugin)
-                action.triggered.connect(partial(self.runPlugin, plugin))
-                subMenu.addAction(action)
+                if not plugin in config.excludeContextPlugins:
+                    action = QAction(self)
+                    if "_" in plugin:
+                        feature, shortcut = plugin.split("_", 1)
+                        action.setText(feature)
+                        # The following line does not work
+                        #action.setShortcut(QKeySequence(shortcut))
+                        self.parent.parent.addContextPluginShortcut(plugin, shortcut)
+                    else:
+                        action.setText(plugin)
+                    action.triggered.connect(partial(self.runPlugin, plugin))
+                    subMenu.addAction(action)
+            
+            separator = QAction(self)
+            separator.setSeparator(True)
+            subMenu.addAction(separator)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["enableIndividualPlugins"])
+            action.triggered.connect(self.parent.parent.enableIndividualPluginsWindow)
+            subMenu.addAction(action)
 
             action = QAction(self)
             action.setText(config.thisTranslation["menu_plugins"])

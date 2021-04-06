@@ -673,4 +673,9 @@ translation = {
     "description": "वर्णन",
     "restoreAllDefaults": "सभी तयशुदा बहाल करें",
     "menu1_maximized": "अधिकतम करें",
+    "enableIndividualPlugins": "व्यक्तिगत प्लगिन सक्रिय करें",
+    "startup": "स्टार्टअप",
+    "context": "संदर्भ",
+    "menu": "मेन्यू",
+    "shutdown": "बंद करें",
 }

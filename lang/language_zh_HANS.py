@@ -673,4 +673,9 @@ translation = {
     "description": "描述",
     "restoreAllDefaults": "恢复所有预设值",
     "menu1_maximized": "最大",
+    "enableIndividualPlugins": "启用个别插件",
+    "startup": "启动",
+    "context": "选取文字",
+    "menu": "菜单",
+    "shutdown": "关闭",
 }

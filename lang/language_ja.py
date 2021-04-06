@@ -673,4 +673,9 @@ translation = {
     "description": "解説",
     "restoreAllDefaults": "デフォルトをすべて復元",
     "menu1_maximized": "最大化",
+    "enableIndividualPlugins": "個々のプラグインの有効化",
+    "startup": "スタートアップ",
+    "context": "コンテキスト",
+    "menu": "メニュー",
+    "shutdown": "シャットダウン",
 }

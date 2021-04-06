@@ -673,4 +673,9 @@ translation = {
     "description": "Περιγραφή:",
     "restoreAllDefaults": "Επαναφορά Προεπιλογών '",
     "menu1_maximized": "Μεγιστοποίηση",
+    "enableIndividualPlugins": "Ενεργοποίηση μεμονωμένων πρόσθετων λειτουργιών",
+    "startup": "Εκκίνηση:",
+    "context": "(",
+    "menu": "Μενού:",
+    "shutdown": "Κλείστο!",
 }

@@ -163,8 +163,9 @@ def exitApplication():
     # Run shutdown plugins
     if config.enablePlugins:
         for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "shutdown"), "py"):
-            script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
-            config.mainWindow.execPythonFile(script)
+            if not plugin in config.excludeShutdownPlugins:
+                script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
+                config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
 
 def nameChanged():
@@ -312,8 +313,9 @@ config.actionsRightAfterLoadingHistoryRecords = []
 # Run startup plugins
 if config.enablePlugins:
     for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
-        script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
-        config.mainWindow.execPythonFile(script)
+        if not plugin in config.excludeStartupPlugins:
+            script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+            config.mainWindow.execPythonFile(script)
 
 # Run initial commands
 if config.populateTabsOnStartup:

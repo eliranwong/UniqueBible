@@ -673,4 +673,9 @@ translation = {
     "description": "설명",
     "restoreAllDefaults": "모든 기본값 복원",
     "menu1_maximized": "최대화",
+    "enableIndividualPlugins": "개별 플러그인 사용",
+    "startup": "시작",
+    "context": "컨텍스트",
+    "menu": "메뉴",
+    "shutdown": "종료",
 }

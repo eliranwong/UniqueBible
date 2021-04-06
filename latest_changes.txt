@@ -1,3 +1,7 @@
+Major change in version 23.52:
+* Added "Enable Individual Plugins" Window for users to enable / disable individual plugins.
+* The window is accessible via menu > plugins or context menu > plugins.
+
 Major changes in version 23.51:
 * Fixed spreadsheet export with plugin "Interlinear Data"
 * Added 'xlsxwriter' and 'csv' as alternatives to 'openpyxl' for exporting data into spreadsheet.
