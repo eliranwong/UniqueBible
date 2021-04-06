@@ -18,6 +18,8 @@
 /plugins/context/*.zip
 /plugins/context/Strongs2csv/*.csv
 /plugins/context/Strongs2csv/NASBs.bib
+/plugins/context/Interlinear Data.xlsx
+/plugins/menu/Interlinear Data.xlsx
 /plugins/menu/Bible Reading Plan.txt
 /plugins/menu/圣经阅读计划.txt
 /plugins/menu/聖經閱讀計劃.txt

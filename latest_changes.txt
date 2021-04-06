@@ -1,3 +1,10 @@
+Major changes in version 23.50:
+* Added a menu plugin and a context plugin, to view and export interlinear data:
+  - "plugins/context/Interlinear Data.py")
+  - "plugins/menu/Interlinear Data.py")
+* When plugin "Interlinear Data" is used as context plugin, data of the first bible verse reference in the selected text are displayed.
+* A wiki page is created about this plugin: https://github.com/eliranwong/UniqueBible/wiki/Export-Interlinear-Data
+
 Major changes in version 23.49:
 * Added two menu plugins:
   - "plugins/menu/Clear Main Tabs.py
