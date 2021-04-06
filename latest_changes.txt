@@ -1,3 +1,9 @@
+Major changes in version 23.51:
+* Fixed spreadsheet export with plugin "Interlinear Data"
+* Added 'xlsxwriter' and 'csv' as alternatives to 'openpyxl' for exporting data into spreadsheet.
+  - 'xlsxwriter' is used if 'openpyxl' is not installed.
+  - *.csv file is exported instead of *.xlsx file if neither 'xlsxwriter' or 'openpyxl' is installed.
+
 Major changes in version 23.50:
 * Added a menu plugin and a context plugin, to view and export interlinear data:
   - "plugins/context/Interlinear Data.py")

@@ -29,6 +29,8 @@ class InterlinearDataWindow(QWidget):
         self.database = os.path.join(config.marvelData, "morphology.sqlite")
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
+        # Spreadsheet headers
+        self.headers = ("WordID", "ClauseID", "Book", "Chapter", "Verse", "Word", "LexicalEntry", "MorphologyCode", "Morphology", "Lexeme", "Transliteration", "Pronunciation", "Interlinear", "Translation", "Gloss")
 
     def __del__(self):
         self.connection.close()
@@ -114,24 +116,26 @@ class InterlinearDataWindow(QWidget):
         # Check if essential module is installed
         try:
             from openpyxl import Workbook
-            openpyxlInstalled = True
+            moduleInstalled = True
         except:
-            openpyxlInstalled = False
+            moduleInstalled = False
 
         # Install essential module if it is absent
-        if not openpyxlInstalled:
+        if not moduleInstalled:
             installmodule(module)
         if not module in sys.modules:
             try:
-                from pypinyin import pinyin
+                from openpyxl import Workbook
                 self.runExportSpreadsheet()
             except:
-                self.displayMessage("Package '{0}' is required but not installed!\nRun 'pip3 install {0}' to install it first.".format(module))
+                #self.displayMessage("Package '{0}' is required but not installed!\nRun 'pip3 install {0}' to install it first.".format(module))
+                # openpyxl requires pyton version 3.6+, try alternative 'xlsxwriter'
+                self.exportSpreadsheet2()
         else:
             self.runExportSpreadsheet()
 
     def runExportSpreadsheet(self):
-        import os, platform, subprocess
+        import os
         from openpyxl import Workbook
         from openpyxl.styles import Font
 
@@ -142,14 +146,19 @@ class InterlinearDataWindow(QWidget):
         wb = Workbook()
         # grab the active worksheet
         ws = wb.active
+        ws.title = "UniqueBible.app"
         # Append rows
-        ws.append(["WordID", "ClauseID", "Book", "Chapter", "Verse", "Word", "LexicalEntry", "MorphologyCode", "Morphology", "Lexeme", "Transliteration", "Pronunciation", "Interlinear", "Translation", "Gloss"])
+        ws.append(self.headers)
+        font = Font(bold=True)
+        for i in range(0, len(self.headers)):
+            # row and column number starts from 1 when calling ws.cell
+            ws.cell(row=1, column=i + 1).font = font
         if self.results:
             for result in self.results:
                 ws.append(result)
             # Apply style
             # Documentation: https://openpyxl.readthedocs.io/en/stable/styles.html
-            font = Font(name="Calibri") if self.results[1][2] >= 40 else Font(name="Ezra SIL")
+            font = Font(name="Calibri") if self.results[0][2] >= 40 else Font(name="Ezra SIL")
             for column in ("F", "J"):
                 for row in range(0, len(self.results)):
                     ws["{0}{1}".format(column, row + 2)].font = font
@@ -158,12 +167,94 @@ class InterlinearDataWindow(QWidget):
                 for row in range(0, len(self.results)):
                     ws["{0}{1}".format(column, row + 2)].font = font
 
-        # Save the file
+        # Save and open the file
         wb.save(filePath)
+        self.openFile(filePath)
+
+    # Use 'xlsxwriter' to export excel file if 'openpyxl' is not installed.
+    def exportSpreadsheet2(self):
+        import sys
+        from install.module import installmodule
+
+        module = "xlsxwriter"
+
+        # Check if essential module is installed
+        try:
+            import xlsxwriter
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+
+        # Install essential module if it is absent
+        if not moduleInstalled:
+            installmodule(module)
+        if not module in sys.modules:
+            try:
+                import xlsxwriter
+                self.runExportSpreadsheet2()
+            except:
+                #self.displayMessage("Package '{0}' is required but not installed!\nRun 'pip3 install {0}' to install it first.".format(module))
+                self.exportSpreadsheet3()
+        else:
+            self.runExportSpreadsheet2()
+
+    def runExportSpreadsheet2(self):
+        import os, platform, subprocess
+        import xlsxwriter
+
+        # Specify excel file path
+        filePath = os.path.join("plugins", "menu", "Interlinear Data.xlsx")
+
+        # Create an new Excel file and add a worksheet.
+        # Documentation on xlsxwriter: https://pypi.org/project/XlsxWriter/
+        workbook = xlsxwriter.Workbook(filePath)
+        worksheet = workbook.add_worksheet("UniqueBible.app")
+        
+        # Add formats to cells.
+        bold = workbook.add_format({'bold': True})
+        format_right_to_left = workbook.add_format({'reading_order': 2})
+        
+        # Text with formatting.
+        for index, header in enumerate(self.headers):
+            worksheet.write(0, index, header, bold)
+
+        if self.results:
+            for row, result in enumerate(self.results):
+                for column, item in enumerate(result):
+                    if column in (5, 9) and self.results[0][2] < 40:
+                        worksheet.write(row + 1, column, item, format_right_to_left)
+                    else:
+                        worksheet.write(row + 1, column, item)
+
+        workbook.close()
+
+        # Open the saved file
+        self.openFile(filePath)
+
+    # export to csv when users cannot install either openpyxl or xlsxwriter for some reasons
+    def exportSpreadsheet3(self):
+        import os
+        # Define a file path
+        filePath = os.path.join("plugins", "menu", "Interlinear Data.csv")
+        # Format data
+        fileContent = '"{0}"'.format('","'.join(self.headers))
+        if self.results:
+            for result in self.results:
+                row = [str(item) if index < 5 else item for index, item in enumerate(result)]
+                fileContent += '\n"{0}"'.format('","'.join(row))
+        # Write data into file
+        with open(filePath, "w") as fileObj:
+            fileObj.write(fileContent)
+        self.openFile(filePath)
+
+    def openFile(self, filePath):
+        import platform, subprocess, os
+
         if platform.system() == "Linux":
             subprocess.Popen([config.open, filePath])
         else:
             os.system("{0} {1}".format(config.open, filePath))
+
 
 config.mainWindow.bibleReadingPlan = InterlinearDataWindow(config.mainWindow)
 config.mainWindow.bibleReadingPlan.show()
