@@ -1,3 +1,6 @@
+Major change in version 23.53:
+* Fixed patch file.
+
 Major change in version 23.52:
 * Added "Enable Individual Plugins" Window for users to enable / disable individual plugins.
 * The window is accessible via menu > plugins or context menu > plugins.
