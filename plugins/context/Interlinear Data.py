@@ -140,36 +140,41 @@ class InterlinearDataWindow(QWidget):
         from openpyxl.styles import Font
 
         # Specify excel file path
-        filePath = os.path.join("plugins", "context", "Interlinear Data.xlsx")
+        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
+        filePath = self.getFilePath()
+        if filePath:
+            filePath = filePath.replace(" ", "_")
+            if not filePath.endswith(".xlsx"):
+                filePath = "{0}.xlsx".format(filePath)
 
-        # Documentation on openpyxl: https://openpyxl.readthedocs.io/en/stable/
-        wb = Workbook()
-        # grab the active worksheet
-        ws = wb.active
-        ws.title = "UniqueBible.app"
-        # Append rows
-        ws.append(self.headers)
-        font = Font(bold=True)
-        for i in range(0, len(self.headers)):
-            # row and column number starts from 1 when calling ws.cell
-            ws.cell(row=1, column=i + 1).font = font
-        if self.results:
-            for result in self.results:
-                ws.append(result)
-            # Apply style
-            # Documentation: https://openpyxl.readthedocs.io/en/stable/styles.html
-            font = Font(name="Calibri") if self.results[0][2] >= 40 else Font(name="Ezra SIL")
-            for column in ("F", "J"):
-                for row in range(0, len(self.results)):
-                    ws["{0}{1}".format(column, row + 2)].font = font
-            font = Font(name="Calibri")
-            for column in ("K", "L"):
-                for row in range(0, len(self.results)):
-                    ws["{0}{1}".format(column, row + 2)].font = font
-
-        # Save and open the file
-        wb.save(filePath)
-        self.openFile(filePath)
+            # Documentation on openpyxl: https://openpyxl.readthedocs.io/en/stable/
+            wb = Workbook()
+            # grab the active worksheet
+            ws = wb.active
+            ws.title = "UniqueBible.app"
+            # Append rows
+            ws.append(self.headers)
+            font = Font(bold=True)
+            for i in range(0, len(self.headers)):
+                # row and column number starts from 1 when calling ws.cell
+                ws.cell(row=1, column=i + 1).font = font
+            if self.results:
+                for result in self.results:
+                    ws.append(result)
+                # Apply style
+                # Documentation: https://openpyxl.readthedocs.io/en/stable/styles.html
+                font = Font(name="Calibri") if self.results[0][2] >= 40 else Font(name="Ezra SIL")
+                for column in ("F", "J"):
+                    for row in range(0, len(self.results)):
+                        ws["{0}{1}".format(column, row + 2)].font = font
+                font = Font(name="Calibri")
+                for column in ("K", "L"):
+                    for row in range(0, len(self.results)):
+                        ws["{0}{1}".format(column, row + 2)].font = font
+    
+            # Save and open the file
+            wb.save(filePath)
+            self.openFile(filePath)
 
     # Use 'xlsxwriter' to export excel file if 'openpyxl' is not installed.
     def exportSpreadsheet2(self):
@@ -203,57 +208,91 @@ class InterlinearDataWindow(QWidget):
         import xlsxwriter
 
         # Specify excel file path
-        filePath = os.path.join("plugins", "context", "Interlinear Data.xlsx")
+        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
+        filePath = self.getFilePath()
+        if filePath:
+            filePath = filePath.replace(" ", "_")
+            if not filePath.endswith(".xlsx"):
+                filePath = "{0}.xlsx".format(filePath)
 
-        # Create an new Excel file and add a worksheet.
-        # Documentation on xlsxwriter: https://pypi.org/project/XlsxWriter/
-        workbook = xlsxwriter.Workbook(filePath)
-        worksheet = workbook.add_worksheet("UniqueBible.app")
-        
-        # Add formats to cells.
-        bold = workbook.add_format({'bold': True})
-        format_right_to_left = workbook.add_format({'reading_order': 2})
-        
-        # Text with formatting.
-        for index, header in enumerate(self.headers):
-            worksheet.write(0, index, header, bold)
-
-        if self.results:
-            for row, result in enumerate(self.results):
-                for column, item in enumerate(result):
-                    if column in (5, 9) and self.results[0][2] < 40:
-                        worksheet.write(row + 1, column, item, format_right_to_left)
-                    else:
-                        worksheet.write(row + 1, column, item)
-
-        workbook.close()
-
-        # Open the saved file
-        self.openFile(filePath)
+            # Create an new Excel file and add a worksheet.
+            # Documentation on xlsxwriter: https://pypi.org/project/XlsxWriter/
+            workbook = xlsxwriter.Workbook(filePath)
+            worksheet = workbook.add_worksheet("UniqueBible.app")
+            
+            # Add formats to cells.
+            bold = workbook.add_format({'bold': True})
+            format_right_to_left = workbook.add_format({'reading_order': 2})
+            
+            # Text with formatting.
+            for index, header in enumerate(self.headers):
+                worksheet.write(0, index, header, bold)
+    
+            if self.results:
+                for row, result in enumerate(self.results):
+                    for column, item in enumerate(result):
+                        if column in (5, 9) and self.results[0][2] < 40:
+                            worksheet.write(row + 1, column, item, format_right_to_left)
+                        else:
+                            worksheet.write(row + 1, column, item)
+    
+            workbook.close()
+    
+            # Open the saved file
+            self.openFile(filePath)
 
     # export to csv when users cannot install either openpyxl or xlsxwriter for some reasons
     def exportSpreadsheet3(self):
         import os
         # Define a file path
-        filePath = os.path.join("plugins", "context", "Interlinear Data.csv")
-        # Format data
-        fileContent = '"{0}"'.format('","'.join(self.headers))
-        if self.results:
-            for result in self.results:
-                row = [str(item) if index < 5 else item for index, item in enumerate(result)]
-                fileContent += '\n"{0}"'.format('","'.join(row))
-        # Write data into file
-        with open(filePath, "w") as fileObj:
-            fileObj.write(fileContent)
-        self.openFile(filePath)
+        #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.csv")
+        filePath = self.getFilePath("csv")
+        if filePath:
+            filePath = filePath.replace(" ", "_")
+            if not filePath.endswith(".csv"):
+                filePath = "{0}.csv".format(filePath)
+
+            # Format data
+            fileContent = '"{0}"'.format('","'.join(self.headers))
+            if self.results:
+                for result in self.results:
+                    row = [str(item) if index < 5 else item for index, item in enumerate(result)]
+                    fileContent += '\n"{0}"'.format('","'.join(row))
+            # Write data into file
+            with open(filePath, "w") as fileObj:
+                fileObj.write(fileContent)
+            self.openFile(filePath)
+
+    def getFilePath(self, fileExtension="xlsx"):
+        from qtpy.QtWidgets import QFileDialog
+
+        defaultName = "Interlinear_Data.{0}".format(fileExtension)
+        options = QFileDialog.Options()
+        fileName, *_ = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                defaultName,
+                "Spreadsheet File (*.{0})".format(fileExtension), "", options)
+        if fileName:
+            return fileName
+        else:
+            return ""
 
     def openFile(self, filePath):
         import platform, subprocess, os
 
         if platform.system() == "Linux":
             subprocess.Popen([config.open, filePath])
+        elif platform.system() == "Windows":
+            try:
+                subprocess("excel.exe {0}".format(filePath), shell=True)
+            except:
+                try:
+                    subprocess("start {0}".format(filePath), shell=True)
+                except:
+                    pass
         else:
             os.system("{0} {1}".format(config.open, filePath))
+
 
 config.mainWindow.bibleReadingPlan = InterlinearDataWindow(config.mainWindow, config.pluginContext)
 config.mainWindow.bibleReadingPlan.show()
