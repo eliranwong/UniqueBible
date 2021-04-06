@@ -62,7 +62,7 @@
 (23.33, "file", "LexicalData.py")
 (23.33, "file", "TextCommandParser.py")
 (23.33, "file", "htmlResources/js/common.js")
-(23.32, "file", "HebrewTransliteration.
+(23.32, "file", "HebrewTransliteration.py")
 (23.25, "file", "htmlResources/css/dark.css")
 (23.25, "file", "plugins/startup/fixDisplayColour.py")
 (23.25, "file", "util/LanguageUtil.py")
