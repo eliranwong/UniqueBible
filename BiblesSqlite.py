@@ -403,7 +403,7 @@ input.addEventListener('keyup', function(event) {0}
 
     def compareVerse(self, verseList, texts=["ALL"]):
         if len(verseList) == 1 and not texts == ["ALL"]:
-            b, c, v = verseList[0]
+            b, c, v, *_ = verseList[0]
             return self.compareVerseChapter(b, c, v, texts)
         else:
             return "".join([self.readTranslations(b, c, v, texts) for b, c, v, *_ in verseList])

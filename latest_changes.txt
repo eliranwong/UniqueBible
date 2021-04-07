@@ -1,3 +1,6 @@
+Major change in version 23.57:
+* Fixed loading content with COMPARE::: keyword command, which had an issue on verse reference range.
+
 Major changes in version 23.56:
 * Renamed two plugins "Google Drive Notes Backup / Restore"
 * Added two new features on context menu "Compare Verses with" and "Parallel Verses with"
