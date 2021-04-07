@@ -1,3 +1,6 @@
+Major change in version 23.58:
+* Remind users to restart after changing espeak flag in ConfigFlagsWindow.
+
 Major change in version 23.57:
 * Fixed loading content with COMPARE::: keyword command, which had an issue on verse reference range.
 

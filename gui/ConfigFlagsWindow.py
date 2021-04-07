@@ -334,6 +334,7 @@ class ConfigFlagsWindow(QDialog):
 
     def espeakChanged(self):
         config.espeak = not config.espeak
+        self.displayMessage(config.thisTranslation["message_restart"])
 
     def enableLoggingChanged(self):
         config.enableLogging = not config.enableLogging
