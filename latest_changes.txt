@@ -1,3 +1,6 @@
+Major changes in version 23.61:
+* Added a workaround to several context menu features to work with fast verse parsing.
+
 Major changes in version 23.60:
 * Added two menu plugins, to use keyboard shortcuts to switch to the next tab in Bible / Study Window without using mouse:
   - "plugins/menu/Next Bible Window Tab_Ctrl+Shift+T.py"

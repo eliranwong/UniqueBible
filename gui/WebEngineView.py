@@ -934,7 +934,10 @@ class WebEngineView(QWebEngineView):
 
     def openReferenceInBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
+        useFastVerseParsing = config.useFastVerseParsing
+        config.useFastVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        config.useFastVerseParsing = useFastVerseParsing
         if verses:
             command = "BIBLE:::{0}:::{1}".format(bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
@@ -945,7 +948,10 @@ class WebEngineView(QWebEngineView):
 
     def compareReferenceWithBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
+        useFastVerseParsing = config.useFastVerseParsing
+        config.useFastVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        config.useFastVerseParsing = useFastVerseParsing
         if verses:
             command = "COMPARE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
@@ -956,7 +962,10 @@ class WebEngineView(QWebEngineView):
 
     def parallelReferenceWithBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
+        useFastVerseParsing = config.useFastVerseParsing
+        config.useFastVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        config.useFastVerseParsing = useFastVerseParsing
         if verses:
             command = "PARALLEL:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
