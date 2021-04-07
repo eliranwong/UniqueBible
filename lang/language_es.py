@@ -678,4 +678,6 @@ translation = {
     "context": "Contexto",
     "menu": "Menú",
     "shutdown": "Cierre",
+    "compareReferences": "Comparar versículos con",
+    "parallelReferences": "Versos paralelos con",
 }

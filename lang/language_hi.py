@@ -678,4 +678,6 @@ translation = {
     "context": "संदर्भ",
     "menu": "मेन्यू",
     "shutdown": "बंद करें",
+    "compareReferences": "के साथ की तुलना करें",
+    "parallelReferences": "के साथ समानांतर वर्सेस",
 }

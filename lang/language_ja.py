@@ -678,4 +678,6 @@ translation = {
     "context": "コンテキスト",
     "menu": "メニュー",
     "shutdown": "シャットダウン",
+    "compareReferences": "Verses との比較",
+    "parallelReferences": "パラレル・バージョン",
 }

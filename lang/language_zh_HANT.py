@@ -678,4 +678,6 @@ translation = {
     "context": "選取文字",
     "menu": "功能表",
     "shutdown": "關閉",
+    "compareReferences": "比較經文",
+    "parallelReferences": "並列經文",
 }

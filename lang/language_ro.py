@@ -678,4 +678,6 @@ translation = {
     "context": "Context",
     "menu": "Meniu",
     "shutdown": "Oprire",
+    "compareReferences": "Comparare versete cu",
+    "parallelReferences": "Versete paralele cu",
 }

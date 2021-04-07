@@ -678,4 +678,6 @@ translation = {
     "context": "(",
     "menu": "Μενού:",
     "shutdown": "Κλείστο!",
+    "compareReferences": "Σύγκριση στίχων με",
+    "parallelReferences": "Παράλληλες εκδόσεις με",
 }

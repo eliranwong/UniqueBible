@@ -92,6 +92,54 @@ class WebEngineView(QWebEngineView):
 
         subMenu = QMenu()
 
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.compareReferenceWithBibleVersion, text))
+            subMenu.addAction(action)
+        
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["compareReferences"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.parallelReferenceWithBibleVersion, text))
+            subMenu.addAction(action)
+        
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["parallelReferences"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
         searchBibleReferences = QAction(self)
         searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
         searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
@@ -889,6 +937,28 @@ class WebEngineView(QWebEngineView):
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
         if verses:
             command = "BIBLE:::{0}:::{1}".format(bible, selectedText)
+        elif not config.openBibleInMainViewOnly and self.name == "study":
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+        else:
+            command = "TEXT:::{0}".format(bible)
+        self.parent.parent.textCommandChanged(command, self.name)
+
+    def compareReferenceWithBibleVersion(self, bible):
+        selectedText = self.selectedText().strip()
+        verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        if verses:
+            command = "COMPARE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
+        elif not config.openBibleInMainViewOnly and self.name == "study":
+            command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
+        else:
+            command = "TEXT:::{0}".format(bible)
+        self.parent.parent.textCommandChanged(command, self.name)
+
+    def parallelReferenceWithBibleVersion(self, bible):
+        selectedText = self.selectedText().strip()
+        verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        if verses:
+            command = "PARALLEL:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
             command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
         else:

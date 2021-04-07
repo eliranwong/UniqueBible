@@ -678,4 +678,6 @@ translation = {
     "context": "Контекст",
     "menu": "Меню",
     "shutdown": "Завершить работу",
+    "compareReferences": "Сравнить стихи с",
+    "parallelReferences": "Параллельные стихи с",
 }

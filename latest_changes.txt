@@ -1,3 +1,10 @@
+Major changes in version 23.56:
+* Renamed two plugins "Google Drive Notes Backup / Restore"
+* Added two new features on context menu "Compare Verses with" and "Parallel Verses with"
+    Users can select a verse reference or multiple verse references and compare / parallel the currently opened version with a choosen bible version from the context menu.
+    Remarks: Stardard parsing is recommended for these features for users can quickly select a block of text and trigger these features.
+    Read about standard parsing more at https://github.com/eliranwong/UniqueBible/wiki/Verse-parsing#remarks
+
 Major changes in version 23.55:
 * Added two config values in config.py, with which users can adjust the icon size when Qt-material theme is enabled.
     1 is original full size; the smaller the values the smaller the icon sizes.

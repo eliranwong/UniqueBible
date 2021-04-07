@@ -678,4 +678,6 @@ translation = {
     "context": "컨텍스트",
     "menu": "메뉴",
     "shutdown": "종료",
+    "compareReferences": "Verses와 를 비교하기",
+    "parallelReferences": "병렬 버스",
 }

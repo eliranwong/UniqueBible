@@ -678,4 +678,6 @@ translation = {
     "context": "കോണ്ടെക്സ്റ്റ്",
     "menu": "മെനു",
     "shutdown": "ഷട്ട്ഡാന്ഡ്",
+    "compareReferences": "à '- à', à ', à', à ' à '",
+    "parallelReferences": "സാമാന്യ വേര്സുകള്",
 }
