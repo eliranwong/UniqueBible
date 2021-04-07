@@ -143,9 +143,6 @@ class InterlinearDataWindow(QWidget):
         #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
         filePath = self.getFilePath()
         if filePath:
-            filePath = filePath.replace(" ", "_")
-            if not filePath.endswith(".xlsx"):
-                filePath = "{0}.xlsx".format(filePath)
 
             # Documentation on openpyxl: https://openpyxl.readthedocs.io/en/stable/
             wb = Workbook()
@@ -211,9 +208,6 @@ class InterlinearDataWindow(QWidget):
         #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.xlsx")
         filePath = self.getFilePath()
         if filePath:
-            filePath = filePath.replace(" ", "_")
-            if not filePath.endswith(".xlsx"):
-                filePath = "{0}.xlsx".format(filePath)
 
             # Create an new Excel file and add a worksheet.
             # Documentation on xlsxwriter: https://pypi.org/project/XlsxWriter/
@@ -248,9 +242,6 @@ class InterlinearDataWindow(QWidget):
         #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.csv")
         filePath = self.getFilePath("csv")
         if filePath:
-            filePath = filePath.replace(" ", "_")
-            if not filePath.endswith(".csv"):
-                filePath = "{0}.csv".format(filePath)
 
             # Format data
             fileContent = '"{0}"'.format('","'.join(self.headers))
@@ -268,12 +259,15 @@ class InterlinearDataWindow(QWidget):
 
         defaultName = "Interlinear_Data.{0}".format(fileExtension)
         options = QFileDialog.Options()
-        fileName, *_ = QFileDialog.getSaveFileName(self,
+        filePath, *_ = QFileDialog.getSaveFileName(self,
                 config.thisTranslation["note_saveAs"],
                 defaultName,
                 "Spreadsheet File (*.{0})".format(fileExtension), "", options)
-        if fileName:
-            return fileName
+        if filePath:
+            filePath = filePath.replace(" ", "_")
+            if not filePath.endswith(".{0}".format(fileExtension)):
+                filePath = "{0}.{1}".format(filePath, fileExtension)
+            return filePath
         else:
             return ""
 
