@@ -2,7 +2,7 @@ Major changes in version 23.60:
 * Added two menu plugins, to use keyboard shortcuts to switch to the next tab in Bible / Study Window without using mouse:
   - "plugins/menu/Next Bible Window Tab_Ctrl+Shift+T.py"
   - "plugins/menu/Next Study Window Tab_Ctrl+Alt+T.py"
-* Users can disable these plugins using "Enable Individual Plugins" window.
+* Users can hide these plugins using "Enable Individual Plugins" window.
 * Users can also change the keyboard combintion by renaming these two files.
 
 Major change in version 23.59:
