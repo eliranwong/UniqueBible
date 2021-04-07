@@ -1,4 +1,7 @@
-Major changes in version 23.61:
+Major change in version 23.62:
+* Corrected the file location of plugin "Run as Command".
+
+Major change in version 23.61:
 * Added a workaround to several context menu features to work with fast verse parsing.
 
 Major changes in version 23.60:
