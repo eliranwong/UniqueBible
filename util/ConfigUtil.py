@@ -539,7 +539,7 @@ class ConfigUtil:
         if not hasattr(config, "sidebarIconSizeFactor"):
             config.sidebarIconSizeFactor = 0.6
         if not hasattr(config, "githubAccessToken"):
-            config.githubAccessToken = "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"
+            config.githubAccessToken = ""
 
         # Temporary configurations
         # Their values are not saved on exit.
