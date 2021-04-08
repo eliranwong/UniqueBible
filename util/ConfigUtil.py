@@ -538,6 +538,8 @@ class ConfigUtil:
             config.toolbarIconSizeFactor = 0.75
         if not hasattr(config, "sidebarIconSizeFactor"):
             config.sidebarIconSizeFactor = 0.6
+        if not hasattr(config, "githubAccessToken"):
+            config.githubAccessToken = ""
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -748,6 +750,7 @@ class ConfigUtil:
             ("history", config.history),
             ("installHistory", config.installHistory),
             ("enableMenuUnderline", config.enableMenuUnderline),
+            ("githubAccessToken", config.githubAccessToken),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

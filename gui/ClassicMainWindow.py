@@ -1,4 +1,6 @@
 from qtpy.QtCore import QSize
+
+from checkup import isGithubInstalled
 from gui.MenuItems import *
 import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
@@ -362,6 +364,16 @@ class ClassicMainWindow:
         menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["hymn_lyrics"], self, triggered=self.installHymnLyrics))
+        if isGithubInstalled:
+            menu8.addSeparator()
+            items = (
+                ("githubBibles", self.installGithubBibles),
+                ("githubCommentaries", self.installGithubCommentaries),
+                ("githubBooks", self.installGithubBooks),
+                ("githubMaps", self.installGithubMaps),
+            )
+            for feature, action in items:
+                addMenuItem(menu8, feature, self, action)
         menu8.addSeparator()
         menu8.addAction(QAction(config.thisTranslation["menu8_plusLexicons"], self, triggered=self.importBBPlusLexiconInAFolder))
         menu8.addAction(QAction(config.thisTranslation["menu8_plusDictionaries"], self, triggered=self.importBBPlusDictionaryInAFolder))
