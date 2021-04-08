@@ -274,6 +274,9 @@ class AlephMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+
+        addGithubDownloadMenuItems(self, subMenu)
+
         subMenu = addSubMenu(menu_data, "import")
         items = (
             ("menu8_3rdParty", self.importModules),

@@ -784,7 +784,7 @@ class TextCommandParser:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
                 search = re.sub(r" \d+:?\d?$", "", command)
-                return self.textCountSearch("{0}:::{1}".format(text, search), "main")
+                return self.textSearchRegex("{0}:::{1}".format(text, search), "main")
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:

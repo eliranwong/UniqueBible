@@ -680,4 +680,8 @@ translation = {
     "shutdown": "종료",
     "compareReferences": "Verses와 를 비교하기",
     "parallelReferences": "병렬 버스",
+    "githubBibles": "지투브 바이블",
+    "githubCommentaries": "지투브 컴멘터리",
+    "githubBooks": "지투브 북스",
+    "githubMaps": "지투브 맵",
 }

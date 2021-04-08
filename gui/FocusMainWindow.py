@@ -266,6 +266,9 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+
+        addGithubDownloadMenuItems(self, subMenu)
+
         menu.addSeparator()
         subMenu = addSubMenu(menu, "import")
         items = (

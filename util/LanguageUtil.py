@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("enableMenuUnderline", "Enable menu shortcut underline")
+        addLanguageStringToAllFiles("githubMaps", "Github Maps")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

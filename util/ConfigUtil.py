@@ -1,3 +1,4 @@
+import codecs
 import os, pprint, config
 from platform import system
 from util.DateUtil import DateUtil
@@ -538,6 +539,9 @@ class ConfigUtil:
             config.toolbarIconSizeFactor = 0.75
         if not hasattr(config, "sidebarIconSizeFactor"):
             config.sidebarIconSizeFactor = 0.6
+        if not hasattr(config, "githubAccessToken"):
+            token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
+            config.githubAccessToken = codecs.encode(token, 'rot_13')
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -748,6 +752,7 @@ class ConfigUtil:
             ("history", config.history),
             ("installHistory", config.installHistory),
             ("enableMenuUnderline", config.enableMenuUnderline),
+            ("githubAccessToken", config.githubAccessToken),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

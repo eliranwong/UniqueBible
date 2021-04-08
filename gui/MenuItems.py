@@ -1,4 +1,5 @@
 import os, config
+
 from util.FileUtil import FileUtil
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
@@ -41,3 +42,15 @@ def addMenuLayoutItems(parent, menu):
         menu.addSeparator()
         for pluginLayout in layouts:
             addMenuItem(menu, pluginLayout, parent, lambda: parent.setMenuLayout(pluginLayout), translation=False)
+
+def addGithubDownloadMenuItems(self, subMenu):
+    if config.isPygithubInstalled:
+        subMenu.addSeparator()
+        items = (
+            ("githubBibles", self.installGithubBibles),
+            # ("githubCommentaries", self.installGithubCommentaries),
+            # ("githubBooks", self.installGithubBooks),
+            # ("githubMaps", self.installGithubMaps),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
