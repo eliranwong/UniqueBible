@@ -683,4 +683,5 @@ translation = {
     "githubBibles": "Гитуб Библз",
     "githubCommentaries": "Github Commentas",
     "githubBooks": "Книги Github",
+    "githubMaps": "Карты Github",
 }

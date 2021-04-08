@@ -756,6 +756,9 @@ class MainWindow(QMainWindow):
     def installGithubBooks(self):
         self.installFromGitHub("darrelwright/UniqueBible_Books", "books", "githubBooks")
 
+    def installGithubMaps(self):
+        self.installFromGitHub("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps")
+
     def installFromGitHub(self, repo, directory, title):
         from util.GithubUtil import GithubUtil
 

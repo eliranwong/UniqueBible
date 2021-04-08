@@ -683,4 +683,5 @@ translation = {
     "githubBibles": "ギスブ・ビーブルズ",
     "githubCommentaries": "ギトーブ・コメンチュウ",
     "githubBooks": "ギスブ・ブックス",
+    "githubMaps": "ギトーブ・マップ",
 }

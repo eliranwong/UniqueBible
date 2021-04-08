@@ -370,6 +370,7 @@ class ClassicMainWindow:
                 ("githubBibles", self.installGithubBibles),
                 ("githubCommentaries", self.installGithubCommentaries),
                 ("githubBooks", self.installGithubBooks),
+                ("githubMaps", self.installGithubMaps),
             )
             for feature, action in items:
                 addMenuItem(menu8, feature, self, action)
