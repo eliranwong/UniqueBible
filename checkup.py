@@ -145,7 +145,11 @@ def isLangdetectInstalled():
 def isPygithubInstalled():
     try:
         from github import Github, InputFileContent
-        return True
+        if len(config.githubAccessToken) > 0:
+            return True
+        else:
+            return False
+        #return True
     except:
         return False
 
@@ -199,16 +203,6 @@ def isTtsInstalled():
             except:
                 return False
 
-def isGithubInstalled():
-    try:
-        from github import Github
-        if len(config.githubAccessToken) > 0:
-            return True
-        else:
-            return False
-    except:
-        return False
-
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     if module == "PyPDF2":
@@ -238,7 +232,6 @@ required = (
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
-    ("PyGithub", "PyGithub library", isGithubInstalled),
 )
 for module, feature, isInstalled in required:
     if not isInstalled():
@@ -267,7 +260,7 @@ optional = (
     ("python-docx", "Open DOCX file", isPythonDocxInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
-    ("pygithub", "Gist-synching notes across devices", isPygithubInstalled),
+    ("pygithub", "Github access", isPygithubInstalled),
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),

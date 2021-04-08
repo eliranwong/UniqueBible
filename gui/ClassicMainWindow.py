@@ -1,6 +1,4 @@
 from qtpy.QtCore import QSize
-
-from checkup import isGithubInstalled
 from gui.MenuItems import *
 import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
