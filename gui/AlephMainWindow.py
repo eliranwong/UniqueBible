@@ -275,16 +275,9 @@ class AlephMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if isGithubInstalled:
-            subMenu.addSeparator()
-            items = (
-                ("githubBibles", self.installGithubBibles),
-                ("githubCommentaries", self.installGithubCommentaries),
-                ("githubBooks", self.installGithubBooks),
-                ("githubMaps", self.installGithubMaps),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
+
+        addGithubDownloadMenuItems(self, subMenu)
+
         subMenu = addSubMenu(menu_data, "import")
         items = (
             ("menu8_3rdParty", self.importModules),
