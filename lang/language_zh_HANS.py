@@ -681,7 +681,7 @@ translation = {
     "compareReferences": "比较经文",
     "parallelReferences": "并列经文",
     "githubBibles": "Github 圣经",
-    "githubCommentaries": "Github 评注",
-    "githubBooks": "Github 书籍",
-    "githubMaps": "Github 映射",
+    "githubCommentaries": "Github 圣经注释",
+    "githubBooks": "Github 参考书",
+    "githubMaps": "Github 地图",
 }
