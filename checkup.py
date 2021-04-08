@@ -260,7 +260,7 @@ optional = (
     ("python-docx", "Open DOCX file", isPythonDocxInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
-    ("pygithub", "Gist-synching notes across devices", isPygithubInstalled),
+    ("pygithub", "Github access", isPygithubInstalled),
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
