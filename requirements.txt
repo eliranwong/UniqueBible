@@ -17,3 +17,4 @@ telnetlib3
 ibm-watson
 babel
 requests
+PyGithub

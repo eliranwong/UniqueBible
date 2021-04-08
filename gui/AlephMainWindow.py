@@ -1,4 +1,5 @@
 from BiblesSqlite import BiblesSqlite
+from checkup import isGithubInstalled
 from gui.MenuItems import *
 from qtpy.QtCore import QSize
 import shortcut as sc
@@ -274,6 +275,15 @@ class AlephMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        if isGithubInstalled:
+            subMenu.addSeparator()
+            items = (
+                ("githubBibles", self.installGithubBibles),
+                ("githubCommentaries", self.installGithubCommentaries),
+                ("githubBooks", self.installGithubBooks),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(menu_data, "import")
         items = (
             ("menu8_3rdParty", self.importModules),

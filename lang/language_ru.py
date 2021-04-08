@@ -680,4 +680,7 @@ translation = {
     "shutdown": "Завершить работу",
     "compareReferences": "Сравнить стихи с",
     "parallelReferences": "Параллельные стихи с",
+    "githubBibles": "Гитуб Библз",
+    "githubCommentaries": "Github Commentas",
+    "githubBooks": "Книги Github",
 }

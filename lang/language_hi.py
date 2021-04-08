@@ -680,4 +680,7 @@ translation = {
     "shutdown": "बंद करें",
     "compareReferences": "के साथ की तुलना करें",
     "parallelReferences": "के साथ समानांतर वर्सेस",
+    "githubBibles": "गिथब बाइल्स",
+    "githubCommentaries": "गिताब टीटीएName",
+    "githubBooks": "गिथब बुक्स",
 }

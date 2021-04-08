@@ -680,4 +680,7 @@ translation = {
     "shutdown": "关闭",
     "compareReferences": "比较经文",
     "parallelReferences": "并列经文",
+    "githubBibles": "Github 圣经",
+    "githubCommentaries": "Github 评注",
+    "githubBooks": "Github 书籍",
 }
