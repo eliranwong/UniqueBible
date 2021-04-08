@@ -1,6 +1,4 @@
 from qtpy.QtCore import QSize
-
-from checkup import isGithubInstalled
 from gui.MenuItems import *
 import shortcut as sc
 from BiblesSqlite import BiblesSqlite
@@ -268,7 +266,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if isGithubInstalled:
+        if config.isPygithubInstalled:
             subMenu.addSeparator()
             items = (
                 ("githubBibles", self.installGithubBibles),
