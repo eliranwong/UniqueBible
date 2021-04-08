@@ -779,6 +779,7 @@ class MainWindow(QMainWindow):
             os.remove(file)
             self.reloadControlPanel(False)
             self.displayMessage(item + " " + config.thisTranslation["message_installed"])
+            self.installFromGitHub(repo, directory, title)
 
     # Select database to modify
     def selectDatabaseToModify(self):
