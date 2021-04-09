@@ -1,5 +1,8 @@
+Major change in version 23.64:
+* Added support of downloading commentary, book / maps modules from @darrelwright github repos via UBA menu.
+
 Major change in version 23.63:
-* Added support of downloading bible modules from @osteng github repo from UBA menu.
+* Added support of downloading bible modules from @osteng github repo via UBA menu.
 
 Major change in version 23.62:
 * Corrected the file location of plugin "Run as Command".
