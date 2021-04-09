@@ -48,9 +48,9 @@ def addGithubDownloadMenuItems(self, subMenu):
         subMenu.addSeparator()
         items = (
             ("githubBibles", self.installGithubBibles),
-            # ("githubCommentaries", self.installGithubCommentaries),
-            # ("githubBooks", self.installGithubBooks),
-            # ("githubMaps", self.installGithubMaps),
+            ("githubCommentaries", self.installGithubCommentaries),
+            ("githubBooks", self.installGithubBooks),
+            ("githubMaps", self.installGithubMaps),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
