@@ -1,6 +1,7 @@
 import config
 from qtpy.QtWidgets import QWidget
 
+
 class ConfigurePresentationWindow(QWidget):
 
     def __init__(self, parent):
@@ -19,7 +20,8 @@ class ConfigurePresentationWindow(QWidget):
     def setupUI(self):
 
         from qtpy.QtCore import Qt
-        from qtpy.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox
+        from qtpy.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox, QComboBox
+        from BiblesSqlite import BiblesSqlite
 
         layout = QHBoxLayout()
 
@@ -79,6 +81,16 @@ class ConfigurePresentationWindow(QWidget):
         checkbox.setToolTip("Parse bible verse reference in the entered text")
         layout1.addRow("Bible Reference", checkbox)
 
+        versionCombo = QComboBox()
+        self.bibleVersions = BiblesSqlite().getBibleList()
+        versionCombo.addItems(self.bibleVersions)
+        initialIndex = 0
+        if config.mainText in self.bibleVersions:
+            initialIndex = self.bibleVersions.index(config.mainText)
+        versionCombo.setCurrentIndex(initialIndex)
+        versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+        layout1.addRow("Translation", versionCombo)
+
         layout2 = QFormLayout()
 
         self.textEntry = QPlainTextEdit("John 3:16; Rm 5:8")
@@ -131,6 +143,8 @@ class ConfigurePresentationWindow(QWidget):
     def presentationParserChanged(self):
         config.presentationParser = not config.presentationParser
 
+    def changeBibleVersion(self, index):
+        config.mainText = self.bibleVersions[index]
 
 config.mainWindow.configurePresentationWindow = ConfigurePresentationWindow(config.mainWindow)
 config.mainWindow.configurePresentationWindow.show()
