@@ -1,3 +1,6 @@
+Major change in version 23.65:
+* Added a dropdown menu in plugin "Presentation" for users to select bible version for display.
+
 Major change in version 23.64:
 * Added support of downloading commentary, book / maps modules from @darrelwright github repos via UBA menu.
 

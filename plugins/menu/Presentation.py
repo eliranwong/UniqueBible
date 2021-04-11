@@ -82,14 +82,14 @@ class ConfigurePresentationWindow(QWidget):
         layout1.addRow("Bible Reference", checkbox)
 
         versionCombo = QComboBox()
-        self.bibleVersions = BiblesSqlite().getBibleList()
+        self.bibleVersions = self.parent.textList
         versionCombo.addItems(self.bibleVersions)
         initialIndex = 0
         if config.mainText in self.bibleVersions:
             initialIndex = self.bibleVersions.index(config.mainText)
         versionCombo.setCurrentIndex(initialIndex)
         versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-        layout1.addRow("Translation", versionCombo)
+        layout1.addRow("Bible Version", versionCombo)
 
         layout2 = QFormLayout()
 
@@ -144,7 +144,9 @@ class ConfigurePresentationWindow(QWidget):
         config.presentationParser = not config.presentationParser
 
     def changeBibleVersion(self, index):
-        config.mainText = self.bibleVersions[index]
+        command = "TEXT:::{0}".format(self.bibleVersions[index])
+        self.parent.runTextCommand(command)
+
 
 config.mainWindow.configurePresentationWindow = ConfigurePresentationWindow(config.mainWindow)
 config.mainWindow.configurePresentationWindow.show()
