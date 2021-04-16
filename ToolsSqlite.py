@@ -768,6 +768,26 @@ class Book:
         query = "SELECT Chapter, Content, ROWID FROM Reference WHERE Chapter=?"
         return self.getContentData(query, entry)
 
+    def getParagraphSectionsByChapter(self, entry):
+        query = "SELECT Content FROM Reference WHERE Chapter=?"
+        self.cursor.execute(query, (entry,))
+        data = self.cursor.fetchone()
+        lines = data[0].split('\n')
+        sections = []
+        section = ''
+        for line in lines:
+            if line.startswith("Author:"):
+                pass
+            elif line == '<br>':
+                if len(section) > 0:
+                    sections.append(section)
+                section = ''
+            else:
+                section += line
+        if len(section) > 0:
+            sections.append(section)
+        return sections
+
     def getContentByRowId(self, entry):
         query = "SELECT Chapter, Content, ROWID FROM Reference WHERE ROWID=?"
         return self.getContentData(query, entry)
