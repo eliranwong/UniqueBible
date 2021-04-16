@@ -1,3 +1,6 @@
+Major change in version 23.66:
+* Added hymns to presentation plugin.
+
 Major change in version 23.65:
 * Added a dropdown menu in plugin "Presentation" for users to select bible version for display.
 
