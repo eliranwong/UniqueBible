@@ -1,5 +1,6 @@
 import config
-from qtpy.QtWidgets import QWidget
+import sys
+from qtpy.QtWidgets import QApplication, QWidget
 
 
 class ConfigurePresentationWindow(QWidget):
@@ -11,6 +12,12 @@ class ConfigurePresentationWindow(QWidget):
         self.setWindowTitle("Configure Presentation")
         # set variables
         self.setupVariables()
+        # setup Hymn Lyrics
+        from glob import glob
+        from pathlib import Path
+        self.books = sorted([Path(filename).stem for filename in glob(r"./marvelData/books/Hymn Lyrics*.book")])
+        if len(self.books) > 0:
+            self.setMinimumHeight(550)
         # setup interface
         self.setupUI()
 
@@ -19,9 +26,10 @@ class ConfigurePresentationWindow(QWidget):
 
     def setupUI(self):
 
+        from functools import partial
         from qtpy.QtCore import Qt
         from qtpy.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox, QComboBox
-        from BiblesSqlite import BiblesSqlite
+        from qtpy.QtWidgets import QRadioButton, QWidget, QVBoxLayout, QListView, QSpacerItem, QSizePolicy
 
         layout = QHBoxLayout()
 
@@ -74,12 +82,30 @@ class ConfigurePresentationWindow(QWidget):
         self.horizontalpositionslider.valueChanged.connect(self.presentationHorizontalPositionChanged)
         layout1.addRow("Horizontal Position", self.horizontalpositionslider)
 
+        self.showBibleSelection = QRadioButton()
+        self.showBibleSelection.setChecked(True)
+        self.showBibleSelection.clicked.connect(lambda: self.selectRadio("bible"))
+        layout1.addRow("Bible", self.showBibleSelection)
+
+        if len(self.books) > 0:
+            self.showHymnsSelection = QRadioButton()
+            self.showHymnsSelection.setChecked(False)
+            self.showHymnsSelection.clicked.connect(lambda: self.selectRadio("hymns"))
+            layout1.addRow("Hymns", self.showHymnsSelection)
+
+        # Second column
+
+        layout2 = QVBoxLayout()
+
+        self.bibleWidget = QWidget()
+        self.bibleLayout = QFormLayout()
+
         checkbox = QCheckBox()
         checkbox.setText("")
         checkbox.setChecked(config.presentationParser)
         checkbox.stateChanged.connect(self.presentationParserChanged)
         checkbox.setToolTip("Parse bible verse reference in the entered text")
-        layout1.addRow("Bible Reference", checkbox)
+        self.bibleLayout.addRow("Bible Reference", checkbox)
 
         versionCombo = QComboBox()
         self.bibleVersions = self.parent.textList
@@ -89,21 +115,100 @@ class ConfigurePresentationWindow(QWidget):
             initialIndex = self.bibleVersions.index(config.mainText)
         versionCombo.setCurrentIndex(initialIndex)
         versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-        layout1.addRow("Bible Version", versionCombo)
-
-        layout2 = QFormLayout()
+        self.bibleLayout.addRow("Bible Version", versionCombo)
 
         self.textEntry = QPlainTextEdit("John 3:16; Rm 5:8")
-        layout2.addWidget(self.textEntry)
+        self.bibleLayout.addRow(self.textEntry)
 
         button = QPushButton("Presentation")
         button.setToolTip("Go to Presentation")
         button.clicked.connect(self.goToPresentation)
-        layout2.addWidget(button)
+        self.bibleLayout.addWidget(button)
+
+        self.bibleLayout.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+        self.bibleWidget.setLayout(self.bibleLayout)
+
+        self.hymnWidget = QWidget()
+        self.hymnLayout = QFormLayout()
+
+        selected = 0
+        book = "Hymn Lyrics - English"
+        if book in self.books:
+            selected = self.books.index(book)
+        self.bookList = QComboBox()
+        self.bookList.addItems(self.books)
+        self.bookList.setCurrentIndex(selected)
+        self.bookList.currentIndexChanged.connect(self.selectHymnBook)
+        self.hymnLayout.addWidget(self.bookList)
+
+        self.chapterlist = QListView()
+        self.chapterlist.clicked.connect(self.selectHymn)
+        # self.chapterlist.selectionModel().selectionChanged.connect(self.selectHymn)
+        self.hymnLayout.addWidget(self.chapterlist)
+
+        self.buttons = []
+        for count in range(0, 10):
+            hymnButton = QPushButton()
+            hymnButton.setText(" ")
+            hymnButton.setEnabled(False)
+            hymnButton.clicked.connect(partial(self.selectParagraph, count))
+            self.hymnLayout.addWidget(hymnButton)
+            self.buttons.append(hymnButton)
+
+        self.selectHymnBook(selected)
+
+        self.hymnWidget.setLayout(self.hymnLayout)
+        self.hymnWidget.hide()
+
+        layout2.addWidget(self.bibleWidget)
+        if len(self.books) > 0:
+            layout2.addWidget(self.hymnWidget)
 
         layout.addLayout(layout1)
         layout.addLayout(layout2)
         self.setLayout(layout)
+
+    def selectRadio(self, option):
+        if option == "bible":
+            self.bibleWidget.show()
+            if len(self.books) > 0:
+                self.hymnWidget.hide()
+        elif option == "hymns":
+            self.bibleWidget.hide()
+            if len(self.books) > 0:
+                self.hymnWidget.show()
+
+    def selectHymnBook(self, option):
+        from ToolsSqlite import Book
+        from qtpy.QtCore import QStringListModel
+        if len(self.books) > 0:
+            self.hymnBook = self.books[option]
+            self.hymns = sorted(Book(self.hymnBook).getTopicList())
+            self.chapterModel = QStringListModel(self.hymns)
+            self.chapterlist.setModel(self.chapterModel)
+
+    def selectHymn(self, option):
+        from ToolsSqlite import Book
+        row = option.row()
+        self.hymn = self.hymns[row]
+        book = Book(self.hymnBook)
+        sections = book.getParagraphSectionsByChapter(self.hymn)
+        count = 0
+        for button in self.buttons:
+            if count < len(sections):
+                section = sections[count]
+                text = section.replace("<br>", "")[:30]
+                button.setText(text)
+                button.setEnabled(True)
+            else:
+                button.setText(" ")
+                button.setEnabled(False)
+            count += 1
+
+    def selectParagraph(self, paragraph):
+        command = "SCREENBOOK:::{0}:::{1}:::{2}".format(self.hymnBook, self.hymn, paragraph)
+        self.parent.runTextCommand(command)
 
     def goToPresentation(self):
         command = "SCREEN:::{0}".format(self.textEntry.toPlainText())
@@ -144,9 +249,27 @@ class ConfigurePresentationWindow(QWidget):
         config.presentationParser = not config.presentationParser
 
     def changeBibleVersion(self, index):
-        command = "TEXT:::{0}".format(self.bibleVersions[index])
-        self.parent.runTextCommand(command)
+        if __name__ == '__main__':
+            config.mainText = self.bibleVersions[index]
+        else:
+            command = "TEXT:::{0}".format(self.bibleVersions[index])
+            self.parent.runTextCommand(command)
 
+
+if __name__ == '__main__':
+    import checkup
+    from util.ConfigUtil import ConfigUtil
+    ConfigUtil.setup()
+    config.activeVerseNoColour = "white"
+    from gui.MainWindow import MainWindow
+    app = QApplication(sys.argv)
+    config.mainWindow = MainWindow()
+    config.presentationParser = True
+    from plugins.startup.screenCommand import presentReferenceOnFullScreen
+    config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOnFullScreen, "")
 
 config.mainWindow.configurePresentationWindow = ConfigurePresentationWindow(config.mainWindow)
 config.mainWindow.configurePresentationWindow.show()
+
+if __name__ == '__main__':
+    sys.exit(app.exec_())

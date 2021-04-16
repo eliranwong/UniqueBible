@@ -1,6 +1,7 @@
 import config, re
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
+from ToolsSqlite import Book
 
 config.presentationParser = True
 
@@ -55,3 +56,28 @@ config.mainWindow.textCommandParser.interpreters["screen"] = (presentReferenceOn
 #    presentationColorOnDarkTheme - text color applied when dark theme is used; 'black' by default
 #    presentationVerticalPosition - the position where text is displayed vertically; 50 by default placing the text in the centre
 #    presentationHorizontalPosition - the position where text is displayed horizontally; 50 by default placing the text in the centre""")
+
+def presentBookOnFullScreen(command, source):
+    bookName, chapter, paragraph = command.split(":::")
+    book = Book(bookName)
+    sections = book.getParagraphSectionsByChapter(chapter)
+    para = int(paragraph)
+    if para >= len(sections):
+        para = 0
+    content = sections[para]
+    screenNo = 0
+    marginTop = config.presentationVerticalPosition
+    titleFontSize = config.presentationFontSize
+    titleStyle = "font-size:{0}em;margin-left:{1}px;margin-right:{1}px;color:{2}".format(titleFontSize, config.presentationMargin, config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme)
+    textFontSize = config.presentationFontSize * .9
+    textStyle = "font-size:{0}em;margin-left:{1}px;margin-right:{1}px;color:{2}".format(textFontSize, config.presentationMargin, config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme)
+    content = "<div style='margin-top: {4}px'><div style='{2}'>{0}</div><div style='{3}'>{1}</div></div>".format(chapter, content, titleStyle, textStyle, marginTop)
+    return ("popover.fullscreen".format(screenNo), content, {})
+
+config.mainWindow.textCommandParser.interpreters["screenbook"] = (presentBookOnFullScreen, """
+# [KEYWORD] SCREENBOOK
+# Shows book chapter in a new window for presentation purposes.  
+# Typically used for Hymn Lyrics.
+# Usage - SCREENBOOK:::[BOOK]:::[CHAPTER]:::[PARAGRAPH]
+# e.g. SCREENBOOK:::Hymn Lyrics - English:::Amazing Grace:::0
+""")
