@@ -2695,7 +2695,9 @@ class MainWindow(QMainWindow):
 
     def studyTextCommandChanged(self, newTextCommand):
         if newTextCommand not in ("main.html", "UniqueBible.app") \
-                and not newTextCommand.endswith("UniqueBibleApp.png") and not newTextCommand.startswith("viewer.html"):
+                and not newTextCommand.endswith("UniqueBibleApp.png") \
+                and not newTextCommand.startswith("viewer.html") \
+                and not newTextCommand.endswith(".pdf"):
             self.textCommandChanged(newTextCommand, "study")
 
     def instantTextCommandChanged(self, newTextCommand):
