@@ -457,6 +457,7 @@ translation = {
     "cp2": "搜尋",
     "cp3": "歷史",
     "cp4": "雜項",
+    "cp5": "PDF",
     "edit": "編輯",
     "remote_control": "控制中心",
     "bible": "聖經",
@@ -684,4 +685,5 @@ translation = {
     "githubCommentaries": "Github 聖經註釋",
     "githubBooks": "Github 參考書",
     "githubMaps": "Github 地圖",
+    "githubPdf": "Github PDF",
 }

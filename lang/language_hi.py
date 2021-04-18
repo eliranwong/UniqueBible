@@ -457,6 +457,7 @@ translation = {
     "cp2": "ढूंढें",
     "cp3": "इतिहास",
     "cp4": "विविध",
+    "cp5": "PDF",
     "edit": "संपादित करें",
     "remote_control": "मिनी नियंत्रण",
     "bible": "बाइबल",
@@ -684,4 +685,5 @@ translation = {
     "githubCommentaries": "गिताब टीटीएName",
     "githubBooks": "गिथब बुक्स",
     "githubMaps": "गीतोब मानचित्र",
+    "githubPdf": "गिताब पीडीएफ",
 }

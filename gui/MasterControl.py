@@ -1,13 +1,11 @@
 import config
-from BiblesSqlite import BiblesSqlite, Bible
 from gui.BibleExplorer import BibleExplorer
+from gui.PdfLauncher import PdfLauncher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from gui.MiscellaneousLauncher import MiscellaneousLauncher
 from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
-from ThirdParty import ThirdPartyDictionary
-from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
 from qtpy.QtCore import Qt, QEvent
 
 class MasterControl(QWidget):
@@ -44,6 +42,8 @@ class MasterControl(QWidget):
                     self.tabs.setCurrentIndex(3)
                 elif event.key() == Qt.Key_M:
                     self.tabs.setCurrentIndex(4)
+                elif event.key() == Qt.Key_P:
+                    self.tabs.setCurrentIndex(5)
             elif event.key() == Qt.Key_Escape:
                 self.hide()
         return QWidget.event(self, event)
@@ -178,6 +178,10 @@ class MasterControl(QWidget):
         self.miscellaneousTab = MiscellaneousLauncher(self)
         self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp4"])
         self.tabs.setTabToolTip(4, config.thisTranslation["cp4Tip"])
+        # 5
+        self.toolTab = PdfLauncher(self)
+        self.tabs.addTab(self.toolTab, "PDF")
+        self.tabs.setTabToolTip(2, "Keyboard shortcut: Ctrl+P")
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab

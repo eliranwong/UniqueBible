@@ -549,6 +549,12 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::hl2:::John 3:16
             # e.g. _HIGHLIGHT:::ul1:::John 3:16
             # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
+            "pdf": (self.openPdfReader, """
+            # [KEYWORD] PDF
+            # Feature: Open PDF file
+            # Usage - PDF:::[PDF filename]
+            # Usage - PDF:::[PDF filename]:::[page number]
+            # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
         }
 
     def parser(self, textCommand, source="main"):
@@ -2500,6 +2506,14 @@ class TextCommandParser:
     def adjustDarkThemeColorsForExternalBook(self, content):
         content = content.replace("background-color:#FFFFFF", "background-color:#323232")
         return content
+
+    # PDF:::
+    def openPdfReader(self, command, source):
+        if command.count(":::") == 0:
+            command += ":::1"
+        pdfFile, page = self.splitCommand(command)
+        self.parent.openPdfReader(pdfFile, page)
+        return ("", "", {})
 
     def noAction(self, command, source):
         return ("", "", {})

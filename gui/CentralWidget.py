@@ -44,7 +44,7 @@ class CentralWidget(QWidget):
         for i in range(config.numberOfTab):
             tabView = WebEngineView(self, "study")
             self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
-            tabView.titleChanged.connect(self.parent.studyTextCommandChanged)
+            # tabView.titleChanged.connect(self.parent.studyTextCommandChanged)
             tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
 
         self.instantView = WebEngineView(self, "instant")

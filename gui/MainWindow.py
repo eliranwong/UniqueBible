@@ -1,3 +1,4 @@
+import glob
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging
 from datetime import datetime
 from distutils import util
@@ -759,6 +760,9 @@ class MainWindow(QMainWindow):
     def installGithubMaps(self):
         self.installFromGitHub("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps")
 
+    def installGithubPdf(self):
+        self.installFromGitHub("otseng/UniqueBible_PDF", "pdf", "githubPdf")
+
     def installFromGitHub(self, repo, directory, title):
         from util.GithubUtil import GithubUtil
 
@@ -1367,6 +1371,30 @@ class MainWindow(QMainWindow):
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
+
+    def getPdfFileList(self):
+        return sorted([os.path.basename(file) for file in glob.glob(r"marvelData/pdf/*.pdf")])
+
+    def openPdfFileDialog(self):
+        items = self.getPdfFileList()
+        if items:
+            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["pdfDocument"], items,
+                                            0, False)
+            fileName = item
+            if fileName and ok:
+                command = "PDF:::{0}".format(fileName)
+                self.textCommandLineEdit.setText(command)
+                self.runTextCommand(command)
+
+    def openPdfReader(self, file, page=1):
+        if file:
+            pdfViewer = 'file://' + os.path.join(os.getcwd(), 'htmlResources', 'lib/pdfjs-2.7.570-dist/web/viewer.html')
+            fileName = os.path.join(os.getcwd(), 'marvelData', 'pdf', file)
+            self.studyView.load(QUrl.fromUserInput('{0}?file={1}#page={2}'.format(pdfViewer, fileName, page)))
+            self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
+            self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
     # Actions - export to pdf
     def printMainPage(self):
@@ -2667,7 +2695,7 @@ class MainWindow(QMainWindow):
 
     def studyTextCommandChanged(self, newTextCommand):
         if newTextCommand not in ("main.html", "UniqueBible.app") \
-                and not newTextCommand.endswith("UniqueBibleApp.png"):
+                and not newTextCommand.endswith("UniqueBibleApp.png") and not newTextCommand.startswith("viewer.html"):
             self.textCommandChanged(newTextCommand, "study")
 
     def instantTextCommandChanged(self, newTextCommand):

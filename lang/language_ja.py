@@ -457,6 +457,7 @@ translation = {
     "cp2": "サーチ",
     "cp3": "歴史",
     "cp4": "その他",
+    "cp5": "PDF",
     "edit": "編集",
     "remote_control": "ミニコントロール",
     "bible": "聖書",
@@ -684,4 +685,5 @@ translation = {
     "githubCommentaries": "ギトーブ・コメンチュウ",
     "githubBooks": "ギスブ・ブックス",
     "githubMaps": "ギトーブ・マップ",
+    "githubPdf": "Github PDF",
 }

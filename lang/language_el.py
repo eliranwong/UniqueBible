@@ -457,6 +457,7 @@ translation = {
     "cp2": "Αναζήτηση.",
     "cp3": "' Ιστορία",
     "cp4": "Διάφορα.",
+    "cp5": "PDF",
     "edit": "ΤΡΟΠΟΠΟΊΗΣΗ:",
     "remote_control": "μίνι κέντρο ελέγχου",
     "bible": "-Βίβλος.",
@@ -684,4 +685,5 @@ translation = {
     "githubCommentaries": "Σχόλια Github",
     "githubBooks": "Βιβλία Github",
     "githubMaps": "Χάρτες Github",
+    "githubPdf": "Github PDF",
 }
