@@ -85,7 +85,6 @@
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/ko")
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/lij")
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/lo")
-(23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/locale.properties
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/lt")
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/ltg")
 (23.67, "folder", "htmlResources/lib/pdfjs-2.7.570-dist/web/locale/lv")
