@@ -1375,7 +1375,7 @@ class MainWindow(QMainWindow):
             self.displayMessage(config.thisTranslation["message_noSupport"])
 
     def openPdfFileDialog(self):
-        items = self.getPdfFileList()
+        items = self.pdfList
         if items:
             item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["pdfDocument"], items,
                                             0, False)

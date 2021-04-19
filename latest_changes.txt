@@ -1,3 +1,6 @@
+Major change in version 23.69:
+* Fixed openPdfFileDialog.
+
 Major change in version 23.68:
 * Fixed loading pdf files on Windows.
 
