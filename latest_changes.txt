@@ -1,3 +1,7 @@
+Major changes in version 23.70:
+* Added ability to load pdf files located outside marvelData/pdf, without import.
+* Added ability to import local pdf files into folder marvelData/pdf.
+
 Major change in version 23.69:
 * Fixed openPdfFileDialog.
 

@@ -1352,17 +1352,6 @@ class MainWindow(QMainWindow):
             text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
-    def openPdfFile(self, fileName):
-        if config.isPyPDF2Installed:
-            if fileName:
-                text = TextFileReader().readPdfFile(fileName)
-                text = self.htmlWrapper(text, True)
-                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
-            else:
-                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
-        else:
-            self.displayMessage(config.thisTranslation["message_noSupport"])
-
     def openDocxFile(self, fileName):
         if config.isPythonDocxInstalled:
             if fileName:
@@ -1385,17 +1374,35 @@ class MainWindow(QMainWindow):
                 self.textCommandLineEdit.setText(command)
                 self.runTextCommand(command)
 
-    def openPdfReader(self, file, page=1):
+    def openPdfReader(self, file, page=1, fullPath=False):
         if file:
             pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
             if platform.system() == "Windows":
                 pdfViewer = pdfViewer.replace("\\", "/")
-            fileName = os.path.join(os.getcwd(), "marvelData", "pdf", file)
+            fileName = file if fullPath else os.path.join(os.getcwd(), "marvelData", "pdf", file)
             self.studyView.load(QUrl.fromUserInput("{0}?file={1}#page={2}".format(pdfViewer, fileName, page)))
             self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
             self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
         else:
             self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def importPdf(self, fileName):
+        Converter().importPdf(fileName)
+        self.completeImport()
+
+    def openPdfFile(self, fileName):
+        self.openPdfReader(fileName, fullPath=True)
+
+    def openPdfFileOLD(self, fileName):
+        if config.isPyPDF2Installed:
+            if fileName:
+                text = TextFileReader().readPdfFile(fileName)
+                text = self.htmlWrapper(text, True)
+                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupport"])
 
     # Actions - export to pdf
     def printMainPage(self):
@@ -1447,11 +1454,14 @@ class MainWindow(QMainWindow):
                                                           "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
                                                           "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
                                                           "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
-                                                          "XML [Beblia/OSIS/Zefania] (*.xml)"), "", options)
+                                                          "XML [Beblia/OSIS/Zefania] (*.xml);;"
+                                                          "PDF (*.pdf)"), "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(
                     ".lexi") or fileName.endswith(".dictionary.SQLite3"):
                 self.importThirdPartyDictionary(fileName)
+            elif fileName.endswith(".pdf"):
+                self.importPdf(fileName)
             elif fileName.endswith(".bbl.mybible"):
                 self.importMySwordBible(fileName)
             elif fileName.endswith(".cmt.mybible"):
@@ -1480,8 +1490,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
-                self.reloadControlPanel(False)
-                self.displayMessage(config.thisTranslation["message_done"])
+                self.completeImport()
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
@@ -1522,13 +1531,8 @@ class MainWindow(QMainWindow):
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
     def importThirdPartyDictionary(self, fileName):
-        *_, name = os.path.split(fileName)
-        destination = os.path.join("thirdParty", "dictionaries", name)
-        try:
-            copyfile(fileName, destination)
-            self.completeImport()
-        except:
-            print("Failed to copy '{0}'.".format(fileName))
+        Converter().importThirdPartyDictionary(fileName)
+        self.completeImport()
 
     def importMySwordBible(self, fileName):
         Converter().importMySwordBible(fileName)
