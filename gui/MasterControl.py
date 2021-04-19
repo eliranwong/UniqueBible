@@ -1,7 +1,7 @@
 import config
 import shortcut as sc
 from gui.BibleExplorer import BibleExplorer
-from gui.PdfLauncher import PdfLauncher
+from gui.Library2Launcher import Library2Launcher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
@@ -98,6 +98,8 @@ class MasterControl(QWidget):
         # 3rd-party dictionary
         # menu5_3rdDict
         self.thirdPartyDictionaryList = self.parent.thirdPartyDictionaryList
+        # pdf list
+        self.pdfList = self.parent.pdfList
 
 #    def setupItemLists(self):
 #        # bible versions
@@ -177,7 +179,7 @@ class MasterControl(QWidget):
         self.tabs.addTab(libraryTab1, config.thisTranslation["cp1"])
         self.tabs.setTabToolTip(1, sc.openControlPanelTab1)
         # 2
-        libraryTab2 = PdfLauncher(self)
+        libraryTab2 = Library2Launcher(self)
         self.tabs.addTab(libraryTab2, config.thisTranslation["cp2"])
         self.tabs.setTabToolTip(2, sc.openControlPanelTab2)
         # 3

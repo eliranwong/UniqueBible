@@ -213,6 +213,8 @@ class MainWindow(QMainWindow):
         # 3rd-party dictionary
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        # pdf list
+        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"marvelData/pdf/*.pdf")])
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
@@ -1371,9 +1373,6 @@ class MainWindow(QMainWindow):
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
-
-    def getPdfFileList(self):
-        return sorted([os.path.basename(file) for file in glob.glob(r"marvelData/pdf/*.pdf")])
 
     def openPdfFileDialog(self):
         items = self.getPdfFileList()

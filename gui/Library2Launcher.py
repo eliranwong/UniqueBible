@@ -2,7 +2,7 @@ import config
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
 
-class PdfLauncher(QWidget):
+class Library2Launcher(QWidget):
 
     def __init__(self, parent):
         super().__init__()
@@ -10,7 +10,7 @@ class PdfLauncher(QWidget):
         self.setWindowTitle("PDF")
         # set up variables
         self.parent = parent
-        self.pdfList = self.parent.parent.getPdfFileList()
+        self.pdfList = self.parent.pdfList
         # setup interface
         self.setupUI()
 
