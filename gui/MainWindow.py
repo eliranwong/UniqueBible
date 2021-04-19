@@ -1387,9 +1387,11 @@ class MainWindow(QMainWindow):
 
     def openPdfReader(self, file, page=1):
         if file:
-            pdfViewer = 'file://' + os.path.join(os.getcwd(), 'htmlResources', 'lib/pdfjs-2.7.570-dist/web/viewer.html')
-            fileName = os.path.join(os.getcwd(), 'marvelData', 'pdf', file)
-            self.studyView.load(QUrl.fromUserInput('{0}?file={1}#page={2}'.format(pdfViewer, fileName, page)))
+            pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
+            if platform.system() == "Windows":
+                pdfViewer = pdfViewer.replace("\\", "/")
+            fileName = os.path.join(os.getcwd(), "marvelData", "pdf", file)
+            self.studyView.load(QUrl.fromUserInput("{0}?file={1}#page={2}".format(pdfViewer, fileName, page)))
             self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
             self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
         else:

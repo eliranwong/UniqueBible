@@ -1,3 +1,6 @@
+Major change in version 23.68:
+* Fixed loading pdf files on Windows.
+
 Major changes in version 23.67:
 * Added ability to load pdf files
 * Users can add pdf files to folder marvelData/pdf or download some sample pdf files from github.
