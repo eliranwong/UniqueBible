@@ -1,3 +1,8 @@
+Major changes in version 23.67:
+* Added ability to load pdf files
+* Users can add pdf files to folder marvelData/pdf or download some sample pdf files from github.
+* Added a new tab "Library 2" to master control
+
 Major change in version 23.66:
 * Added hymns to presentation plugin.
 
