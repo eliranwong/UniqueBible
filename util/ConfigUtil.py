@@ -323,6 +323,9 @@ class ConfigUtil:
         # Last-opened encyclopedia module
         if not hasattr(config, "encyclopedia"):
             config.encyclopedia = "ISB"
+        # Last-opened pdf text
+        if not hasattr(config, "pdfText"):
+            config.pdfText = ""
         # Last-opened book module
         if not hasattr(config, "book"):
             config.book = "Harmonies_and_Parallels"
@@ -668,6 +671,7 @@ class ConfigUtil:
             ("topic", config.topic),
             ("dictionary", config.dictionary),
             ("encyclopedia", config.encyclopedia),
+            ("pdfText", config.pdfText),
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("bookOnNewWindow", config.bookOnNewWindow),

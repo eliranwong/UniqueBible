@@ -32,10 +32,12 @@ class Library2Launcher(QWidget):
         list = QListView()
         list.setEditTriggers(QAbstractItemView.NoEditTriggers)
         model = QStandardItemModel(list)
-        for index, pdf in enumerate(self.pdfList):
+        for pdf in self.pdfList:
             item = QStandardItem(pdf)
             model.appendRow(item)
         list.setModel(model)
+        if config.pdfText in self.parent.pdfList:
+            list.setCurrentIndex(model.index(self.parent.pdfList.index(config.pdfText), 0))
         list.selectionModel().selectionChanged.connect(self.pdfSelected)
         return list
 
@@ -46,6 +48,7 @@ class Library2Launcher(QWidget):
         self.parent.runTextCommand(command)
 
     def openPreviousPdf(self):
-        command = "PDF:::{0}".format(config.pdfText)
-        self.parent.runTextCommand(command)
+        if config.pdfText in self.parent.pdfList:
+            command = "PDF:::{0}".format(config.pdfText)
+            self.parent.runTextCommand(command)
 
