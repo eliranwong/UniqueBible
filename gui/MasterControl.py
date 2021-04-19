@@ -1,14 +1,14 @@
 import config
-from BiblesSqlite import BiblesSqlite, Bible
+import shortcut as sc
 from gui.BibleExplorer import BibleExplorer
+from gui.Library2Launcher import Library2Launcher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from gui.MiscellaneousLauncher import MiscellaneousLauncher
-from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
-from ThirdParty import ThirdPartyDictionary
-from ToolsSqlite import Commentary, LexiconData, BookData, IndexesSqlite
+from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QShortcut
 from qtpy.QtCore import Qt, QEvent
+from qtpy.QtGui import QKeySequence
 
 class MasterControl(QWidget):
 
@@ -27,24 +27,34 @@ class MasterControl(QWidget):
         # setup interface
         self.text = text
         self.setupUI(b, c, v, text, initialTab)
+        # setup keyboard shortcuts
+        self.setupKeyboardShortcuts()
         
         self.isRefreshing = False
+
+    def setupKeyboardShortcuts(self):
+        for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2, sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5)):
+            shortcut = QShortcut(QKeySequence(shortcut), self)
+            shortcut.activated.connect(lambda index=index: self.tabs.setCurrentIndex(index))
 
     # manage key capture
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
-            if event.modifiers() == Qt.ControlModifier:
-                if event.key() == Qt.Key_B:
-                    self.tabs.setCurrentIndex(0)
-                elif event.key() == Qt.Key_L:
-                    self.tabs.setCurrentIndex(1)
-                elif event.key() == Qt.Key_F:
-                    self.tabs.setCurrentIndex(2)
-                elif event.key() == Qt.Key_Y:
-                    self.tabs.setCurrentIndex(3)
-                elif event.key() == Qt.Key_M:
-                    self.tabs.setCurrentIndex(4)
-            elif event.key() == Qt.Key_Escape:
+#            if event.modifiers() == Qt.ControlModifier:
+#                if event.key() == Qt.Key_B:
+#                    self.tabs.setCurrentIndex(0)
+#                elif event.key() == Qt.Key_L:
+#                    self.tabs.setCurrentIndex(1)
+#                elif event.key() == Qt.Key_F:
+#                    self.tabs.setCurrentIndex(3)
+#                elif event.key() == Qt.Key_Y:
+#                    self.tabs.setCurrentIndex(4)
+#                elif event.key() == Qt.Key_M:
+#                    self.tabs.setCurrentIndex(5)
+#                elif event.key() == Qt.Key_P:
+#                    self.tabs.setCurrentIndex(2)
+#            elif event.key() == Qt.Key_Escape:
+            if event.key() == Qt.Key_Escape:
                 self.hide()
         return QWidget.event(self, event)
 
@@ -88,6 +98,8 @@ class MasterControl(QWidget):
         # 3rd-party dictionary
         # menu5_3rdDict
         self.thirdPartyDictionaryList = self.parent.thirdPartyDictionaryList
+        # pdf list
+        self.pdfList = self.parent.pdfList
 
 #    def setupItemLists(self):
 #        # bible versions
@@ -161,23 +173,27 @@ class MasterControl(QWidget):
         # 0
         self.bibleTab = BibleExplorer(self, (b, c, v, text))
         self.tabs.addTab(self.bibleTab, config.thisTranslation["cp0"])
-        self.tabs.setTabToolTip(0, config.thisTranslation["cp0Tip"])
+        self.tabs.setTabToolTip(0, sc.openControlPanelTab0)
         # 1
-        libraryTab = LibraryLauncher(self)
-        self.tabs.addTab(libraryTab, config.thisTranslation["cp1"])
-        self.tabs.setTabToolTip(1, config.thisTranslation["cp1Tip"])
+        libraryTab1 = LibraryLauncher(self)
+        self.tabs.addTab(libraryTab1, config.thisTranslation["cp1"])
+        self.tabs.setTabToolTip(1, sc.openControlPanelTab1)
         # 2
-        self.toolTab = SearchLauncher(self)
-        self.tabs.addTab(self.toolTab, config.thisTranslation["cp2"])
-        self.tabs.setTabToolTip(2, config.thisTranslation["cp2Tip"])
+        libraryTab2 = Library2Launcher(self)
+        self.tabs.addTab(libraryTab2, config.thisTranslation["cp2"])
+        self.tabs.setTabToolTip(2, sc.openControlPanelTab2)
         # 3
-        self.historyTab = HistoryLauncher(self)
-        self.tabs.addTab(self.historyTab, config.thisTranslation["cp3"])
-        self.tabs.setTabToolTip(3, config.thisTranslation["cp3Tip"])
+        self.toolTab = SearchLauncher(self)
+        self.tabs.addTab(self.toolTab, config.thisTranslation["cp3"])
+        self.tabs.setTabToolTip(3, sc.openControlPanelTab3)
         # 4
+        self.historyTab = HistoryLauncher(self)
+        self.tabs.addTab(self.historyTab, config.thisTranslation["cp4"])
+        self.tabs.setTabToolTip(4, sc.openControlPanelTab4)
+        # 5
         self.miscellaneousTab = MiscellaneousLauncher(self)
-        self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp4"])
-        self.tabs.setTabToolTip(4, config.thisTranslation["cp4Tip"])
+        self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp5"])
+        self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab
@@ -258,13 +274,13 @@ class MasterControl(QWidget):
         self.isRefreshing = True
 
         # refresh content
-        if index == 3:
+        if index == 4:
             self.historyTab.refresh()
-        elif index == 4:
+        elif index == 5:
             self.miscellaneousTab.refresh()
 
         # set focus
-        if index == 2:
+        if index == 3:
             self.toolTab.searchField.setFocus()
             if config.contextItem:
                 self.toolTab.searchField.setText(config.contextItem)

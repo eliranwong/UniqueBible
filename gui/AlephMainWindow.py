@@ -148,6 +148,7 @@ class AlephMainWindow:
         masterControlMenu.addAction(QAction(config.thisTranslation["cp2"], self, shortcut=sc.openControlPanelTab2, triggered=lambda: self.openControlPanelTab(2)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp3"], self, shortcut=sc.openControlPanelTab3, triggered=lambda: self.openControlPanelTab(3)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp4"], self, shortcut=sc.openControlPanelTab4, triggered=lambda: self.openControlPanelTab(4)))
+        masterControlMenu.addAction(QAction(config.thisTranslation["cp5"], self, shortcut=sc.openControlPanelTab5, triggered=lambda: self.openControlPanelTab(5)))
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=self.manageMiniControl))
         navigation_menu.addSeparator()
         navigation_menu.addAction(
@@ -242,6 +243,9 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut=sc.runWORDS, triggered=self.runWORDS))
         library_menu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, shortcut=sc.runDISCOURSE, triggered=self.runDISCOURSE))
         library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
+        library_menu.addSeparator()
+        library_menu.addAction(
+            QAction(config.thisTranslation["pdfDocument"], self, triggered=self.openPdfFileDialog))
 
         annotate_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_annotate"]))
         if config.enableVerseHighlighting:
@@ -656,6 +660,17 @@ class AlephMainWindow:
         editExternalFileButton.setIcon(QIcon(editExternalFileButtonFile))
         editExternalFileButton.clicked.connect(self.editExternalFileButtonClicked)
         self.secondToolBar.addWidget(editExternalFileButton)
+
+        self.secondToolBar.addSeparator()
+
+        openPdfButton = QPushButton()
+        openPdfButton.setToolTip(config.thisTranslation["pdfDocument"])
+        openPdfButtonFile = os.path.join("htmlResources", "pdfOpen.png")
+        openPdfButton.setIcon(QIcon(openPdfButtonFile))
+        openPdfButton.clicked.connect(self.openPdfFileDialog)
+        self.secondToolBar.addWidget(openPdfButton)
+
+        self.secondToolBar.addSeparator()
 
         reloadButton = QPushButton()
         reloadButton.setToolTip(config.thisTranslation["menu1_reload"])
@@ -1113,6 +1128,11 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "edit.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_edit"], self.editExternalFileButtonClicked)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "pdfOpen.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["pdfDocument"], self.openPdfFileDialog)
 
         self.secondToolBar.addSeparator()
 

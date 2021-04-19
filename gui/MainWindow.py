@@ -1,3 +1,4 @@
+import glob
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging
 from datetime import datetime
 from distutils import util
@@ -212,6 +213,8 @@ class MainWindow(QMainWindow):
         # 3rd-party dictionary
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        # pdf list
+        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"marvelData/pdf/*.pdf")])
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
@@ -414,7 +417,7 @@ class MainWindow(QMainWindow):
     def addContextPluginShortcut(self, plugin, shortcut):
         if not shortcut in config.shortcutList:
             sc = QShortcut(QKeySequence(shortcut), self)
-            sc.activated.connect(lambda : self.runContextPlugin(plugin))
+            sc.activated.connect(lambda: self.runContextPlugin(plugin))
             config.shortcutList.append(shortcut)
 
     def runContextPlugin(self, plugin):
@@ -758,6 +761,9 @@ class MainWindow(QMainWindow):
 
     def installGithubMaps(self):
         self.installFromGitHub("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps")
+
+    def installGithubPdf(self):
+        self.installFromGitHub("otseng/UniqueBible_PDF", "pdf", "githubPdf")
 
     def installFromGitHub(self, repo, directory, title):
         from util.GithubUtil import GithubUtil
@@ -1368,6 +1374,27 @@ class MainWindow(QMainWindow):
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
 
+    def openPdfFileDialog(self):
+        items = self.getPdfFileList()
+        if items:
+            item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["pdfDocument"], items,
+                                            0, False)
+            fileName = item
+            if fileName and ok:
+                command = "PDF:::{0}".format(fileName)
+                self.textCommandLineEdit.setText(command)
+                self.runTextCommand(command)
+
+    def openPdfReader(self, file, page=1):
+        if file:
+            pdfViewer = 'file://' + os.path.join(os.getcwd(), 'htmlResources', 'lib/pdfjs-2.7.570-dist/web/viewer.html')
+            fileName = os.path.join(os.getcwd(), 'marvelData', 'pdf', file)
+            self.studyView.load(QUrl.fromUserInput('{0}?file={1}#page={2}'.format(pdfViewer, fileName, page)))
+            self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
+            self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
     # Actions - export to pdf
     def printMainPage(self):
         filename = "UniqueBible.app.pdf"
@@ -1952,7 +1979,7 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
 
     def displaySearchBibleMenu(self):
-        self.openControlPanelTab(2)
+        self.openControlPanelTab(3)
 
     def displaySearchHighlightCommand(self):
         self.focusCommandLineField()
@@ -2521,11 +2548,11 @@ class MainWindow(QMainWindow):
 
     # Actions - access history records
     def mainHistoryButtonClicked(self):
-        self.openControlPanelTab(3)
+        self.openControlPanelTab(4)
         # self.mainView.setHtml(self.getHistory("main"), baseUrl)
 
     def studyHistoryButtonClicked(self):
-        self.openControlPanelTab(3)
+        self.openControlPanelTab(4)
         # self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
@@ -2667,7 +2694,9 @@ class MainWindow(QMainWindow):
 
     def studyTextCommandChanged(self, newTextCommand):
         if newTextCommand not in ("main.html", "UniqueBible.app") \
-                and not newTextCommand.endswith("UniqueBibleApp.png"):
+                and not newTextCommand.endswith("UniqueBibleApp.png") \
+                and not newTextCommand.startswith("viewer.html") \
+                and not newTextCommand.endswith(".pdf"):
             self.textCommandChanged(newTextCommand, "study")
 
     def instantTextCommandChanged(self, newTextCommand):
