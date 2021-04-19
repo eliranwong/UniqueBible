@@ -148,7 +148,7 @@ class AlephMainWindow:
         masterControlMenu.addAction(QAction(config.thisTranslation["cp2"], self, shortcut=sc.openControlPanelTab2, triggered=lambda: self.openControlPanelTab(2)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp3"], self, shortcut=sc.openControlPanelTab3, triggered=lambda: self.openControlPanelTab(3)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp4"], self, shortcut=sc.openControlPanelTab4, triggered=lambda: self.openControlPanelTab(4)))
-        masterControlMenu.addAction(QAction("PDF", self, shortcut=sc.openControlPanelTab5, triggered=lambda: self.openControlPanelTab(5)))
+        masterControlMenu.addAction(QAction(config.thisTranslation["cp5"], self, shortcut=sc.openControlPanelTab5, triggered=lambda: self.openControlPanelTab(5)))
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=self.manageMiniControl))
         navigation_menu.addSeparator()
         navigation_menu.addAction(
