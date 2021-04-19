@@ -415,7 +415,7 @@ class MainWindow(QMainWindow):
     def addContextPluginShortcut(self, plugin, shortcut):
         if not shortcut in config.shortcutList:
             sc = QShortcut(QKeySequence(shortcut), self)
-            sc.activated.connect(lambda : self.runContextPlugin(plugin))
+            sc.activated.connect(lambda: self.runContextPlugin(plugin))
             config.shortcutList.append(shortcut)
 
     def runContextPlugin(self, plugin):
@@ -1980,7 +1980,7 @@ class MainWindow(QMainWindow):
         self.textCommandLineEdit.setText("SEARCH:::{0}:::".format(config.studyText))
 
     def displaySearchBibleMenu(self):
-        self.openControlPanelTab(2)
+        self.openControlPanelTab(3)
 
     def displaySearchHighlightCommand(self):
         self.focusCommandLineField()
@@ -2549,11 +2549,11 @@ class MainWindow(QMainWindow):
 
     # Actions - access history records
     def mainHistoryButtonClicked(self):
-        self.openControlPanelTab(3)
+        self.openControlPanelTab(4)
         # self.mainView.setHtml(self.getHistory("main"), baseUrl)
 
     def studyHistoryButtonClicked(self):
-        self.openControlPanelTab(3)
+        self.openControlPanelTab(4)
         # self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
