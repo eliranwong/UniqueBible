@@ -687,4 +687,5 @@ translation = {
     "githubMaps": "Карты Github",
     "githubPdf": "Github PDF",
     "others": "Другие",
+    "githubEpub": "Github EPUB",
 }
