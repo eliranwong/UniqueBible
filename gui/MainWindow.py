@@ -765,6 +765,9 @@ class MainWindow(QMainWindow):
     def installGithubPdf(self):
         self.installFromGitHub("otseng/UniqueBible_PDF", "pdf", "githubPdf")
 
+    def installGithubEpub(self):
+        self.installFromGitHub("otseng/UniqueBible_EPUB", "epub", "githubEpub")
+
     def installFromGitHub(self, repo, directory, title):
         from util.GithubUtil import GithubUtil
 
@@ -2723,7 +2726,8 @@ class MainWindow(QMainWindow):
         if newTextCommand not in ("main.html", "UniqueBible.app") \
                 and not newTextCommand.endswith("UniqueBibleApp.png") \
                 and not newTextCommand.startswith("viewer.html") \
-                and not newTextCommand.endswith(".pdf"):
+                and not newTextCommand.endswith(".pdf") \
+                and not newTextCommand.startswith("ePubViewer.html"):
             self.textCommandChanged(newTextCommand, "study")
 
     def instantTextCommandChanged(self, newTextCommand):
