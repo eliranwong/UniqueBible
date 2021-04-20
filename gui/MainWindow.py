@@ -1203,7 +1203,7 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
-                                                      self.openFileNameLabel.text(),
+                                                      os.path.join("notes"),
                                                       "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)",
                                                       "", options)
         if fileName:
@@ -1362,6 +1362,27 @@ class MainWindow(QMainWindow):
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
+
+    def importPdfDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                                                      config.thisTranslation["import"],
+                                                      self.openFileNameLabel.text(),
+                                                      "PDF Files (*.pdf)",
+                                                      "", options)
+        if fileName:
+            self.importPdf(fileName)
+
+
+    def openPdfDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                                                      config.thisTranslation["menu7_open"],
+                                                      os.path.join("marvelData", "pdf"),
+                                                      "PDF Files (*.pdf)",
+                                                      "", options)
+        if fileName:
+            self.openPdfFile(fileName)
 
     def openPdfFileDialog(self):
         items = self.pdfList

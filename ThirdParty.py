@@ -320,7 +320,6 @@ class Converter:
         destination = os.path.join("marvelData", "pdf", name)
         try:
             copyfile(fileName, destination)
-            self.completeImport()
         except:
             print("Failed to copy '{0}'.".format(fileName))
 

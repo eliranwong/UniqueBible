@@ -496,6 +496,7 @@ class FocusMainWindow:
 
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
+        self.addStandardIconButton("pdfDocument", "pdfOpen.png", self.openPdfDialog, self.secondToolBar)
         self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
         self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
@@ -708,6 +709,8 @@ class FocusMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        iconFile = os.path.join("htmlResources", "pdfOpen.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["pdfDocument"], self.openPdfDialog)
         iconFile = os.path.join("htmlResources", "youtube.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
 
