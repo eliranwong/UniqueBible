@@ -1,3 +1,6 @@
+Major change in version 23.76:
+* Plugin "ePub Viewer" does not run on Windows.  It is now prevented from loading, which causes crashes on Windows.
+
 Major changes in version 23.75:
 * Added support of loading Word Document with dark theme.
 * Added a config flag "parseWordDocument", to parse Word Document content on loading.
