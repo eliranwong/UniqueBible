@@ -1446,16 +1446,16 @@ class MainWindow(QMainWindow):
     def openPdfFile(self, fileName):
         self.openPdfReader(fileName, fullPath=True)
 
-    def openPdfFileOLD(self, fileName):
-        if config.isPyPDF2Installed:
-            if fileName:
-                text = TextFileReader().readPdfFile(fileName)
-                text = self.htmlWrapper(text, True)
-                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
-            else:
-                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
-        else:
-            self.displayMessage(config.thisTranslation["message_noSupport"])
+#    def openPdfFileOLD(self, fileName):
+#        if config.isPyPDF2Installed:
+#            if fileName:
+#                text = TextFileReader().readPdfFile(fileName)
+#                text = self.htmlWrapper(text, True)
+#                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+#            else:
+#                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+#        else:
+#            self.displayMessage(config.thisTranslation["message_noSupport"])
 
     # Actions - export to pdf
     def printMainPage(self):

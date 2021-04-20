@@ -1,3 +1,7 @@
+Major change in version 23.74:
+* Added a menu plugin "Word Document EDIT".
+* Removed two unused packages.
+
 Major change in version 23.73:
 * Fixed patch file.
 
