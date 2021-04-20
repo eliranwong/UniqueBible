@@ -1,3 +1,6 @@
+Major change in version 23.73:
+* Fixed patch file.
+
 Major changes in version 23.72:
 * Added a menu plugin to open an ePub viewer on Study Window.
 * Added command keyword DOCX::: to open imported word document on Study Window, e.g. DOCX:::test.docx, where test.docx is placed in marvelData/docx.
