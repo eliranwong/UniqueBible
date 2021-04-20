@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "지투브 EPUB",
     "wordDocument": "워드 문서",
     "import2": "가져오기",
+    "parseWordDocument": "열린 Word 문서 컨텐츠에서 성경 구절을 구문 분석하는 데 사용됩니다.",
 }

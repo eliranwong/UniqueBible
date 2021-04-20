@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "गितोब",
     "wordDocument": "दस्तावेज़ शब्द",
     "import2": "आयात",
+    "parseWordDocument": "खुले शब्द दस्तावेज़ सामग्री के लिए द्विबल पाठ संदर्भों का विश्लेषण करें.",
 }

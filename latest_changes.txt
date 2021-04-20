@@ -1,4 +1,10 @@
-Major change in version 23.74:
+Major changes in version 23.75:
+* Added support of loading Word Document with dark theme.
+* Added a config flag "parseWordDocument", to parse Word Document content on loading.
+Remarks: It takes longer to load a Word document if this option is enabled.
+         Without enabling this option, users can still open bible references by selecting text and use "Open with" feature on right-click context menu.
+
+Major changes in version 23.74:
 * Added a menu plugin "Word Document EDIT".
 * Removed two unused packages.
 

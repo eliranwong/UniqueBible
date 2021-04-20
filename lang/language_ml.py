@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "Github EPUB",
     "wordDocument": "വാക്ക് പ്രമാണം",
     "import2": "ഇറക്കുമതി",
+    "parseWordDocument": "തുറന്ന വാക്ക് ഡോക്യുമെന്റിന്റെ ഉള്ളടക്കത്തില് പാഴ്സ് ബൈബിള് റഫറൻസുകള്.",
 }

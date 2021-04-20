@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "Github EPUB",
     "wordDocument": "Document Word",
     "import2": "IMPORTER",
+    "parseWordDocument": "Analyser des références de vers bible en format Word ouvert.",
 }

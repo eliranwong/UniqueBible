@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "Github EPUB",
     "wordDocument": "Έγγραφο Word",
     "import2": "ΕΙΣΑΓΩΓΉ:",
+    "parseWordDocument": "Ανάλυση παραπομπών σε ανάλυση κειμένου στο ανοικτό περιεχόμενο του Word.",
 }

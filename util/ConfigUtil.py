@@ -326,6 +326,9 @@ class ConfigUtil:
         # Last-opened docx text
         if not hasattr(config, "docxText"):
             config.docxText = ""
+        # Parse Word Document content
+        if not hasattr(config, "parseWordDocument"):
+            config.parseWordDocument = False
         # Last-opened pdf text
         if not hasattr(config, "pdfText"):
             config.pdfText = ""
@@ -676,6 +679,7 @@ class ConfigUtil:
             ("encyclopedia", config.encyclopedia),
             ("pdfText", config.pdfText),
             ("docxText", config.docxText),
+            ("parseWordDocument", config.parseWordDocument),
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("bookOnNewWindow", config.bookOnNewWindow),

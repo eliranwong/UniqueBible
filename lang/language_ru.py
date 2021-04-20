@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "Github EPUB",
     "wordDocument": "Документ Word",
     "import2": "ИМПОРТ",
+    "parseWordDocument": "Синтаксический анализ ссылок на стихи в открытом документе Word.",
 }

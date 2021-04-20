@@ -68,6 +68,7 @@ class ConfigFlagsWindow(QDialog):
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, False, config.thisTranslation["addBreakBeforeTheLastToolBar"]),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, False, config.thisTranslation["parserStandarisation"]),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, False, config.thisTranslation["useFastVerseParsing"]),
+            ("parseWordDocument", config.parseWordDocument, self.parseWordDocumentChanged, False, config.thisTranslation["parseWordDocument"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -198,6 +199,9 @@ class ConfigFlagsWindow(QDialog):
         if config.virtualKeyboard and config.ibus:
             config.ibus = not config.ibus
         self.displayMessage(config.thisTranslation["message_restart"])
+
+    def parseWordDocumentChanged(self):
+        config.parseWordDocument = not config.parseWordDocument
 
     def useLangDetectOnTtsChanged(self):
         config.useLangDetectOnTts = not config.useLangDetectOnTts

@@ -1362,6 +1362,9 @@ class MainWindow(QMainWindow):
         if config.isMammothInstalled:
             if fileName:
                 text = TextFileReader().readDocxFile(fileName)
+                if config.parseWordDocument:
+                    text = BibleVerseParser(config.parserStandarisation).parseText(text)
+                text = self.wrapHtml(text, "study")
                 #text = self.htmlWrapper(text, True)
                 self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
             else:

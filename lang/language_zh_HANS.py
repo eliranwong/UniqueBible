@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "Github EPUB",
     "wordDocument": "Word 文档",
     "import2": "导入",
+    "parseWordDocument": "在打开的 Word 文档内容中剖析经文参照。",
 }

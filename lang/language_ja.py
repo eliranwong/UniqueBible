@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "ギトーブ・ EPUB",
     "wordDocument": "Word 文書",
     "import2": "インポート",
+    "parseWordDocument": "開かれた Word 文書コンテンツ内でバイブルの逆参照を構文解析します。",
 }

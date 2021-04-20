@@ -690,4 +690,5 @@ translation = {
     "githubEpub": "EPUB GIFEB",
     "wordDocument": "Document word",
     "import2": "IMPORT",
+    "parseWordDocument": "Analizaţi referinţele ververse ale Bibliei în conţinutul Word Document deschis.",
 }
