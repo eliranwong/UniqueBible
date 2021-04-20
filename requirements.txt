@@ -5,9 +5,8 @@ config
 qtpy
 PySide2
 PyQt5
-PyPDF2
-python-docx
 gdown
+mammoth
 diff_match_patch
 langdetect
 pygithub
