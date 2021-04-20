@@ -100,6 +100,8 @@ class MasterControl(QWidget):
         self.thirdPartyDictionaryList = self.parent.thirdPartyDictionaryList
         # pdf list
         self.pdfList = self.parent.pdfList
+        # docx list
+        self.docxList = self.parent.docxList
 
 #    def setupItemLists(self):
 #        # bible versions

@@ -688,4 +688,6 @@ translation = {
     "githubPdf": "Github PDF",
     "others": "Altri",
     "githubEpub": "Github EPUB",
+    "wordDocument": "Documento di parola",
+    "import2": "IMPORT",
 }

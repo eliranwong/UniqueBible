@@ -1,3 +1,11 @@
+Major changes in version 23.72:
+* Added a menu plugin to open an ePub viewer on Study Window.
+* Added command keyword DOCX::: to open imported word document on Study Window, e.g. DOCX:::test.docx, where test.docx is placed in marvelData/docx.
+* Added support of loading images and text styles in Microsoft word documents (*.docx).
+* Added support of loading pdf files in customised marvelData path.
+* Added "Word Document" section in Master Control > Libaray 2 for quick access of imported Word documents.
+* Added a menu plugin "Word Document".
+
 Major changes in version 23.71:
 * Focus menu layout "Open File" now open "notes" directory as default.
 * Added PdfDialog to open pdf files located inside / outside "marvelData/pdf", accessible with pdf icon, right next to YouTube icon.

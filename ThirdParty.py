@@ -282,7 +282,7 @@ class Converter:
 
     def importAllFilesInAFolder(self, folder):
         files = [filename for filename in os.listdir(folder) if os.path.isfile(os.path.join(folder, filename)) and not re.search(r"^[\._]", filename)]
-        validFiles = [filename for filename in files if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3|\.xml|\.pdf)$', filename)]
+        validFiles = [filename for filename in files if re.search(r'(\.dct\.mybible|\.dcti|\.lexi|\.dictionary\.SQLite3|\.bbl\.mybible|\.cmt\.mybible|\.bok\.mybible|\.bbli|\.cmti|\.refi|\.commentaries\.SQLite3|\.SQLite3|\.xml|\.pdf|\.docx)$', filename)]
         if validFiles:
             for filename in validFiles:
                 filename = os.path.join(folder, filename)
@@ -291,6 +291,8 @@ class Converter:
                         self.importThirdPartyDictionary(filename)
                     elif filename.endswith(".pdf"):
                         self.importPdf(filename)
+                    elif filename.endswith(".docx"):
+                        self.importDocx(filename)
                     elif filename.endswith(".bbl.mybible"):
                         self.importMySwordBible(filename)
                     elif filename.endswith(".cmt.mybible"):
@@ -314,6 +316,14 @@ class Converter:
                 except:
                     print("Failed to convert '{0}'.".format(filename))
             return True
+
+    def importDocx(self, fileName):
+        *_, name = os.path.split(fileName)
+        destination = os.path.join("marvelData", "docx", name)
+        try:
+            copyfile(fileName, destination)
+        except:
+            print("Failed to copy '{0}'.".format(fileName))
 
     def importPdf(self, fileName):
         *_, name = os.path.split(fileName)

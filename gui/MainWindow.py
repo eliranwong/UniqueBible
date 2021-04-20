@@ -214,7 +214,9 @@ class MainWindow(QMainWindow):
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
         # pdf list
-        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"marvelData/pdf/*.pdf")])
+        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))])
+        # docx list
+        self.docxList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/docx/*.docx".format(config.marvelData))])
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
@@ -1356,15 +1358,41 @@ class MainWindow(QMainWindow):
             self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
 
     def openDocxFile(self, fileName):
-        if config.isPythonDocxInstalled:
+        #if config.isPythonDocxInstalled:
+        if config.isMammothInstalled:
             if fileName:
                 text = TextFileReader().readDocxFile(fileName)
-                text = self.htmlWrapper(text, True)
+                #text = self.htmlWrapper(text, True)
                 self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
+
+    def importDocxDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                                                      config.thisTranslation["import"],
+                                                      self.openFileNameLabel.text(),
+                                                      "Word Documents (*.docx)",
+                                                      "", options)
+        if fileName:
+            self.importDocx(fileName)
+
+
+    def openDocxDialog(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                                                      config.thisTranslation["menu7_open"],
+                                                      os.path.join("marvelData", "docx"),
+                                                      "Word Documents (*.docx)",
+                                                      "", options)
+        if fileName:
+            self.openDocxFile(fileName)
+
+    def importDocx(self, fileName):
+        Converter().importDocx(fileName)
+        self.completeImport()
 
     def importPdfDialog(self):
         options = QFileDialog.Options()
@@ -1403,7 +1431,8 @@ class MainWindow(QMainWindow):
             pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
             if platform.system() == "Windows":
                 pdfViewer = pdfViewer.replace("\\", "/")
-            fileName = file if fullPath else os.path.join(os.getcwd(), "marvelData", "pdf", file)
+            marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
+            fileName = file if fullPath else os.path.join(marvelDataPath, "pdf", file)
             self.studyView.load(QUrl.fromUserInput("{0}?file={1}#page={2}".format(pdfViewer, fileName, page)))
             self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
             self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
@@ -1479,13 +1508,16 @@ class MainWindow(QMainWindow):
                                                           "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
                                                           "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
                                                           "XML [Beblia/OSIS/Zefania] (*.xml);;"
-                                                          "PDF (*.pdf)"), "", options)
+                                                          "Word Documents (*.docx);;"
+                                                          "PDF Documents (*.pdf)"), "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(
                     ".lexi") or fileName.endswith(".dictionary.SQLite3"):
                 self.importThirdPartyDictionary(fileName)
             elif fileName.endswith(".pdf"):
                 self.importPdf(fileName)
+            elif fileName.endswith(".docx"):
+                self.importDocx(fileName)
             elif fileName.endswith(".bbl.mybible"):
                 self.importMySwordBible(fileName)
             elif fileName.endswith(".cmt.mybible"):

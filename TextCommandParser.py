@@ -377,6 +377,17 @@ class TextCommandParser:
             # [KEYWORD] open
             # open::: is different from opennote::: that open::: uses system default application to open the file.
             # e.g. open:::."""),
+            "pdf": (self.openPdfReader, """
+            # [KEYWORD] PDF
+            # Feature: Open PDF file
+            # Usage - PDF:::[PDF_filename]
+            # Usage - PDF:::[PDF_filename]:::[page_number]
+            # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
+            "docx": (self.openDocxReader, """
+            # [KEYWORD] DOCX
+            # Feature: Open Word Document
+            # Usage - DOCX:::[DOCX_filename]
+            # e.g. DOCX:::test.docx"""),
             "translate": (self.translateText, """
             # [KEYWORD] TRANSLATE
             # Feature - Use IBM Watson service to translate entered 
@@ -549,12 +560,6 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::hl2:::John 3:16
             # e.g. _HIGHLIGHT:::ul1:::John 3:16
             # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
-            "pdf": (self.openPdfReader, """
-            # [KEYWORD] PDF
-            # Feature: Open PDF file
-            # Usage - PDF:::[PDF filename]
-            # Usage - PDF:::[PDF filename]:::[page number]
-            # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
         }
 
     def parser(self, textCommand, source="main"):
@@ -1603,6 +1608,12 @@ class TextCommandParser:
         fileitems = command.split("/")
         filePath = os.path.join(*fileitems)
         self.parent.openExternalFile(filePath)
+        return ("", "", {})
+
+    # docx:::
+    def openDocxReader(self, command, source):
+        if command:
+            self.parent.openTextFile(os.path.join(config.marvelData, "docx", command))
         return ("", "", {})
 
     # opennote:::

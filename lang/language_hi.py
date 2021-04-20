@@ -688,4 +688,6 @@ translation = {
     "githubPdf": "गिताब पीडीएफ",
     "others": "अन्य",
     "githubEpub": "गितोब",
+    "wordDocument": "दस्तावेज़ शब्द",
+    "import2": "आयात",
 }

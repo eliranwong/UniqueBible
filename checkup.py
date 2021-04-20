@@ -121,6 +121,13 @@ def isPyPDF2Installed():
     except:
         return False
 
+def isMammothInstalled():
+    try:
+        import mammoth
+        return True
+    except:
+        return False
+
 def isPythonDocxInstalled():
     try:
         from docx import Document
@@ -209,6 +216,8 @@ def setInstallConfig(module, isInstalled):
         config.isPyPDF2Installed = isInstalled
     elif module == "python-docx":
         config.isPythonDocxInstalled = isInstalled
+    elif module == "mammoth":
+        config.isMammothInstalled = isInstalled
     elif module == "diff_match_patch":
         config.isDiffMatchPatchInstalled = isInstalled
     elif module == "langdetect":
@@ -258,6 +267,7 @@ optional = (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("PyPDF2", "Open PDF file", isPyPDF2Installed),
     ("python-docx", "Open DOCX file", isPythonDocxInstalled),
+    ("mammoth", "Open DOCX file", isMammothInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
     ("pygithub", "Github access", isPygithubInstalled),

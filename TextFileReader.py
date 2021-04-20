@@ -7,6 +7,8 @@ from __future__ import (
 )
 
 import config
+if config.isMammothInstalled:
+    import mammoth
 if config.isPyPDF2Installed:
     import PyPDF2
 if config.isPythonDocxInstalled:
@@ -43,6 +45,13 @@ class TextFileReader:
             return self.errorReadingFile(fileName)
 
     def readDocxFile(self, fileName):
+        with open(fileName, "rb") as docx_file:
+            result = mammoth.convert_to_html(docx_file)
+            html = result.value # The generated HTML
+            #messages = result.messages # Any messages, such as warnings during conversion
+        return html
+
+    def readDocxFileOLD(self, fileName):
         document = Document(fileName)
         documentText = ""
         for block in self.iter_block_items(document):
