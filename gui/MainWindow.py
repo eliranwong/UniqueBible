@@ -3307,12 +3307,12 @@ class MainWindow(QMainWindow):
         if config.developer:
             with open(script) as f:
                 code = compile(f.read(), script, 'exec')
-                exec(code)
+                exec(code, globals())
         else:
             try:
                 with open(script) as f:
                     code = compile(f.read(), script, 'exec')
-                    exec(code)
+                    exec(code, globals())
             except:
                 self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
 
