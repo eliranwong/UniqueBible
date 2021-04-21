@@ -13,24 +13,26 @@ def generateCharts(text):
     if verses:
         counts = countVersesByBook(verses)
         data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], counts[bookNo]) for bookNo in sorted(counts)]
-        # Pie Chart
-        html = getPieChartHtml(",\n".join(data))
-        html = config.mainWindow.wrapHtml(html)
-        config.mainWindow.pieChart = QWebEngineView()
-        config.mainWindow.pieChart.setHtml(html, config.baseUrl)
-        config.mainWindow.pieChart.show()
         # Bar Chart
-        html = getBarChartHtml(",\n".join(data))
+        html = getBarChartHtml(",\n".join(data), str(len(verses)))
         html = config.mainWindow.wrapHtml(html)
         config.mainWindow.barChart = QWebEngineView()
         config.mainWindow.barChart.setHtml(html, config.baseUrl)
+        config.mainWindow.barChart.setMinimumSize(900, 550)
         config.mainWindow.barChart.show()
+        # Pie Chart
+        html = getPieChartHtml(",\n".join(data), str(len(verses)))
+        html = config.mainWindow.wrapHtml(html)
+        config.mainWindow.pieChart = QWebEngineView()
+        config.mainWindow.pieChart.setHtml(html, config.baseUrl)
+        config.mainWindow.pieChart.setMinimumSize(700, 380)
+        config.mainWindow.pieChart.show()
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
 
-def getPieChartHtml(data):
+def getPieChartHtml(data, totalVerseCount):
     return """
-<h1>UniqueBible.app</h1>
+<h2>UniqueBible.app</h2>
 
 <div id="piechart"></div>
 
@@ -44,12 +46,12 @@ google.charts.setOnLoadCallback(drawChart);
 // Draw the chart and set the chart values
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
-  ['Book', 'No. of Verse(s)'],
+  ['Book', 'Number of Verse(s)'],
 """+data+"""
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'Bible References', 'width':550, 'height':400};
+  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':700, 'height':500};
 
   // Display the chart inside the <div> element with id="piechart"
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -58,9 +60,9 @@ function drawChart() {
 </script>
 """
 
-def getBarChartHtml(data):
+def getBarChartHtml(data, totalVerseCount):
     return """
-<h1>UniqueBible.app</h1>
+<h2>UniqueBible.app</h2>
 
 <div id="barchart"></div>
 
@@ -74,12 +76,12 @@ google.charts.setOnLoadCallback(drawChart);
 // Draw the chart and set the chart values
 function drawChart() {
   var data = google.visualization.arrayToDataTable([
-  ['Book', 'No. of Verse(s)'],
+  ['Book', 'Number of Verse(s)'],
 """+data+"""
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'Bible References', 'width':800, 'height':500};
+  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':700};
 
   // Display the chart inside the <div> element with id="barchart"
   var chart = new google.visualization.BarChart(document.getElementById('barchart'));
