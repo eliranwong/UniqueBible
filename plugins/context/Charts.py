@@ -81,7 +81,7 @@ function drawChart() {
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':"""+str(noOfBooks * 40)+"""};
+  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':"""+str(noOfBooks * 50 if noOfBooks > 10 else 500)+"""};
 
   // Display the chart inside the <div> element with id="barchart"
   var chart = new google.visualization.BarChart(document.getElementById('barchart'));
