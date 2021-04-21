@@ -14,7 +14,7 @@ def generateCharts(text):
         counts = countVersesByBook(verses)
         data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], counts[bookNo]) for bookNo in sorted(counts)]
         # Bar Chart
-        html = getBarChartHtml(",\n".join(data), str(len(verses)))
+        html = getBarChartHtml(",\n".join(data), str(len(verses)), len(counts.keys()))
         html = config.mainWindow.wrapHtml(html)
         config.mainWindow.barChart = QWebEngineView()
         config.mainWindow.barChart.setHtml(html, config.baseUrl)
@@ -60,7 +60,7 @@ function drawChart() {
 </script>
 """
 
-def getBarChartHtml(data, totalVerseCount):
+def getBarChartHtml(data, totalVerseCount, noOfBooks):
     return """
 <h2>UniqueBible.app</h2>
 
@@ -81,7 +81,7 @@ function drawChart() {
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':700};
+  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':"""+str(noOfBooks * 40)+"""};
 
   // Display the chart inside the <div> element with id="barchart"
   var chart = new google.visualization.BarChart(document.getElementById('barchart'));
