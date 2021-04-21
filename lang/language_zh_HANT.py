@@ -180,7 +180,7 @@ translation = {
     "menu_support": "技術支援",
     "menu_donate": "捐獻支持",
     "menu_edit_note": "編輯筆記",
-    "menu_external_notes": "筆記檔案",
+    "menu_external_notes": "檔案",
     "menu_favouriteBible": "最喜歡的聖經",
     "menu_first_chapter": "第一章",
     "menu_font": "字體",

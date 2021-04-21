@@ -180,7 +180,7 @@ translation = {
     "menu_support": "Apoyo técnico",
     "menu_donate": "Donar",
     "menu_edit_note": "Nota de edición",
-    "menu_external_notes": "Notas externas",
+    "menu_external_notes": "Archivos",
     "menu_favouriteBible": "Biblia favorita",
     "menu_first_chapter": "Primer capítulo",
     "menu_font": "Fuente",

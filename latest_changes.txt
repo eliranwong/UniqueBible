@@ -1,3 +1,7 @@
+Major changes in version 23.77:
+* PDF file paths are now added to "Files" history records when they are loaded with keyword command PDF:::.
+* Word Document file paths are now added to "Files" history records when they are open with open docx file dialog, e.g. plugin "Word Document".
+
 Major change in version 23.76:
 * Plugin "ePub Viewer" does not run on Windows.  It is now prevented from loading, which causes crashes on Windows.
 

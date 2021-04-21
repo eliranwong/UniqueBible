@@ -1392,6 +1392,7 @@ class MainWindow(QMainWindow):
                                                       "", options)
         if fileName:
             self.openDocxFile(fileName)
+            self.addExternalFileHistory(fileName)
 
     def importDocx(self, fileName):
         Converter().importDocx(fileName)
@@ -1439,6 +1440,7 @@ class MainWindow(QMainWindow):
             self.studyView.load(QUrl.fromUserInput("{0}?file={1}#page={2}".format(pdfViewer, fileName, page)))
             self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
             self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
+            self.addExternalFileHistory(fileName)
         else:
             self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 

@@ -180,7 +180,7 @@ translation = {
     "menu_support": "तकनीकी सहायता",
     "menu_donate": "दान",
     "menu_edit_note": "नोट संपादित करें",
-    "menu_external_notes": "बाहरी नोट",
+    "menu_external_notes": "फ़ाइलें",
     "menu_favouriteBible": "पसंदीदा बाइबल",
     "menu_first_chapter": "प्रथम अध्याय",
     "menu_font": "फ़ॉन्ट",

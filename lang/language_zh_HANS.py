@@ -180,7 +180,7 @@ translation = {
     "menu_support": "技术支援",
     "menu_donate": "捐献支持",
     "menu_edit_note": "编辑笔记",
-    "menu_external_notes": "笔记档案",
+    "menu_external_notes": "文件",
     "menu_favouriteBible": "最喜欢的圣经",
     "menu_first_chapter": "第一章",
     "menu_font": "字体",

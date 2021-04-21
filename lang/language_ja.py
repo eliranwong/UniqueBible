@@ -180,7 +180,7 @@ translation = {
     "menu_support": "技術サポート",
     "menu_donate": "ドナーテ",
     "menu_edit_note": "メモの編集",
-    "menu_external_notes": "外部メモ",
+    "menu_external_notes": "ファイル",
     "menu_favouriteBible": "好意的な聖書",
     "menu_first_chapter": "第 1 章",
     "menu_font": "フォント",

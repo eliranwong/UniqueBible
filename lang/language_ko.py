@@ -180,7 +180,7 @@ translation = {
     "menu_support": "기술 지원",
     "menu_donate": "기부하다",
     "menu_edit_note": "노트 편집하기",
-    "menu_external_notes": "외부 Notes",
+    "menu_external_notes": "파일",
     "menu_favouriteBible": "가장 좋아하는 성경책",
     "menu_first_chapter": "제1 장",
     "menu_font": "폰트",

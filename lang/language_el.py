@@ -180,7 +180,7 @@ translation = {
     "menu_support": "Τεχνική υποστήριξη:",
     "menu_donate": "Δότη!",
     "menu_edit_note": "Τροποποίηση σημείωσης",
-    "menu_external_notes": "Εξωτερικά Notes",
+    "menu_external_notes": "' Αρχεία",
     "menu_favouriteBible": "Αγαπημένη Βίβλος.",
     "menu_first_chapter": "Πρώτο κεφάλαιο:",
     "menu_font": "Font.",
