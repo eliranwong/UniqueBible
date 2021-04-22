@@ -1,9 +1,12 @@
+import re
 import sys
 import webbrowser
+
 import config
 
 from qtpy.QtCore import QCoreApplication, Qt
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPlainTextEdit
+from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QTextBrowser
+from qtpy.QtGui import QTextCursor
 
 
 class InfoDialog(QDialog):
@@ -13,7 +16,8 @@ class InfoDialog(QDialog):
 
         self.wikiLink = "https://github.com/eliranwong/UniqueBible/wiki"
 
-        self.setMinimumWidth(350)
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(400)
         self.setWindowTitle(config.thisTranslation["info"])
         self.layout = QVBoxLayout()
 
@@ -26,10 +30,18 @@ class InfoDialog(QDialog):
                 text = fileObject.read()
         else:
             text = content
+        html = text
+        urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$~_?\+-=\\\.&]*)", re.MULTILINE | re.UNICODE)
+        html = urls.sub(r'<a href="\1" >\1</a>', html)
+        html = html.replace("\n", "<br>")
         self.layout.addWidget(QLabel("{0}:".format(config.thisTranslation["latest_changes"] if description is None else description)))
-        self.latestChanges = QPlainTextEdit()
-        self.latestChanges.setPlainText(text)
+        self.latestChanges = QTextBrowser()
+        self.latestChanges.setOpenExternalLinks(True)
+        self.latestChanges.insertHtml(html)
         self.latestChanges.setReadOnly(True)
+        cursor = self.latestChanges.textCursor()
+        cursor.setPosition(0)
+        self.latestChanges.setTextCursor(cursor)
         self.layout.addWidget(self.latestChanges)
 
         buttons = QDialogButtonBox.Ok
