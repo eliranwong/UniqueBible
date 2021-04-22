@@ -1,7 +1,10 @@
+Major change in version 23.87:
+* Added an example of simple bible link in demo Word Document 'marvelData/docx/demo.docx'.
+
 Major changes in version 23.86:
 * Fixed custom UBA command hyperlink containing bible verse references.
 * Added support of custom UBA command hyperlink for loading Word Document (*.docx) content.
-* Added an example of custom UBA command hyperlink in demo Word Document demo.docx.
+* Added an example of custom UBA command hyperlink in demo Word Document 'marvelData/docx/demo.docx'.
 
 Major changes in version 23.85:
 * Fixed loading notes with embedded images.
