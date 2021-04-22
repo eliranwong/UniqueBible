@@ -1,3 +1,9 @@
+Major changes in version 23.88:
+* Added a icon button on Focus menu layout to open Word Document file dialog.
+* Added two menu plugins with keyboard shortcuts:
+    "plugins/menu/Word Document NEW_Ctrl+Shift+D.py"
+    "plugins/menu/Word Document OPEN_Ctrl+Shift+O.py"
+
 Major change in version 23.87:
 * Added an example of simple bible link in demo Word Document 'marvelData/docx/demo.docx'.
 
