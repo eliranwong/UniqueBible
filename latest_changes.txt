@@ -1646,7 +1646,7 @@ Latest changes in version 14.0:
 * All text files are now read / written with encoding "utf-8" specified, to avoid potential encoding issues when the app is running on Windows.
 
 Latest changes in version 13.9:
-* Fixed loading translated program interface on Windows.  For description on translation feature, you may read https://github.com/eliranwong/UniqueBible/wiki/translate_program_interface
+* Fixed loading translated program interface on Windows.  For description on translation feature, you may read https://github.com/eliranwong/UniqueBible/wiki/Translate-program-interface
 * Moved customised translation of program interface from config.py to myTranslation.py.
 * Added three icons on note editor for formatting selected text into headers:
     - Header 1
@@ -1702,7 +1702,7 @@ Latest changes in version 13.1:
 * Added two config.py options:
     - exportEmbeddedImages [Default: False]
     - clickToOpenImage [Default: False]
-    (For description on these options, please read our wiki page: https://github.com/eliranwong/UniqueBible/wiki/config_file)
+    (For description on these options, please read our wiki page: https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference)
 
 Latest changes in version 13.0:
 * Fixed menu items, which are not displayed on macOS.  In previous versions, menu items beginning with English words "Configure" are not displayed.  This issue is now fixed by changing "Configure" to "Select"
@@ -1762,7 +1762,7 @@ Latest changes in version 11.8:
 
 Latest changes in version 11.7:
 * Added a link to Darrel Wright's repository "UniqueBible_Books": https://github.com/darrelwright/UniqueBible_Books
-* Added a wiki page on how to download more books: https://github.com/eliranwong/UniqueBible/wiki/download_more_books
+* Added a wiki page on how to download more books: https://github.com/eliranwong/UniqueBible/wiki/Download-more-books
 * Use google translate to translate a few interface items to Korean.
 
 Latest changes in version 11.6:
@@ -1789,7 +1789,7 @@ Latest changes in version 11.2:
 Latest changes in version 11.1:
 * Enhanced built-in YouTube browser
 * Added instructions for setup and use of built-in YouTube browser for downloading video / audio files:
-    https://github.com/eliranwong/UniqueBible/wiki/download_youtube_audio_video
+    https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video
 * Added a new section "Multimedia" to user menu
 * Added items for interface translation
 * Added "Donate to us" to menu items.
@@ -1865,14 +1865,14 @@ Latest changes in version 10.6:
     - button to open the last opened commentary on chapter
     - added option to display chapter / verse notes on Study Window each time a chapter / verse not is saved
 * new command keywords:
-    (you may find brief description below, more details will be given on https://github.com/eliranwong/UniqueBible/wiki/command_line)
+    (you may find brief description below, more details will be given on https://github.com/eliranwong/UniqueBible/wiki/Command-line)
     - "overview:::" chapter overview
     - "summary:::" chapter summary
     - "chapterindex:::" list all bible characters and locations of a chapter 
     - "_open:::" open a file / directory inside folder "marvelData"
     - "mp3:::" [experimental] integrate youtube-dl in UB to download a mp3 audio file from Youtube.com
 * new config options:
-   (more details will be given on https://github.com/eliranwong/UniqueBible/wiki/config_file)
+   (more details will be given on https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference)
     - openBibleNoteAfterSave
     - openLinux
     - openWindows
