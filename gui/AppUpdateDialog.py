@@ -60,7 +60,7 @@ class AppUpdateDialog(QDialog):
         self.daysInput = QLineEdit()
         self.daysInput.setText(str(config.daysElapseForNextAppUpdateCheck))
         self.daysInput.setMaxLength(3)
-        self.daysInput.setMaximumWidth(40)
+        self.daysInput.setMaximumWidth(60)
         row.addWidget(self.daysInput)
         self.layout.addLayout(row)
 
