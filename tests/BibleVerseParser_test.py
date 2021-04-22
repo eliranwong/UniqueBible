@@ -11,7 +11,7 @@ from BibleVerseParser import BibleVerseParser
 class BibleVerseParserTestCase(unittest.TestCase):
     def setUp(self):
         config.standardAbbreviation = 'ENG'
-        self.parser = BibleVerseParser(config.standardAbbreviation)
+        self.parser = BibleVerseParser(config.standardAbbreviation, 100)
 
     def test_gen_parseText(self):
         input = "Genesis 1:1-3:1"
