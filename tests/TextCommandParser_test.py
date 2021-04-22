@@ -15,6 +15,7 @@ config.commentaryC = "cEGNT"
 config.useFastVerseParsing = True
 config.standardAbbreviation = "ENG"
 config.parserStandarisation = "NO"
+config.noOfLinesPerChunkForParsing = 100
 
 from TextCommandParser import TextCommandParser
 
