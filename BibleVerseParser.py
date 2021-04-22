@@ -59,7 +59,9 @@ class BibleVerseParser:
     standardAbbreviation = {}
 
     # initialisation
-    def __init__(self, standardisation):
+    def __init__(self, standardisation, noOfLinesPerChunkForParsing=None):
+        # noOfLinesPerChunkForParsing
+        self.noOfLinesPerChunkForParsing = config.noOfLinesPerChunkForParsing if noOfLinesPerChunkForParsing is None else noOfLinesPerChunkForParsing
         # set standard abbreviation, displayed in UniqueBible
         self.updateStandardAbbreviation()
         # set preference of standardisation
@@ -129,7 +131,18 @@ class BibleVerseParser:
             text = RegexSearch.replace(text, searchReplace)
         return text
 
-    def parseText(self, text):
+    def parseText(self, text, splitInChunks=True):
+        if splitInChunks:
+            parsedText = ""
+            chunks = text.splitlines(True)
+            chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
+            for chunk in chunks:
+                parsedText += self.runParseText("".join(chunk))
+        else:
+            parsedText = self.runParseText(text)
+        return parsedText
+
+    def runParseText(self, text):
         # Add a space at the end of the text, to avoid indefinite loop in some of the following processes.
         # This extra space will be removed when parsing is finished.
         text = text + " "
@@ -210,9 +223,20 @@ class BibleVerseParser:
         # return the tagged text, without the extra space added at the beginning of this function.
         return text[:-1]
 
-    def extractAllReferences(self, text, tagged=False):
+    def extractAllReferences(self, text, tagged=False, splitInChunks=True):
+        if splitInChunks:
+            allReferences = []
+            chunks = text.splitlines(True)
+            chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
+            for chunk in chunks:
+                allReferences += self.runExtractAllReferences("".join(chunk), tagged)
+        else:
+            allReferences = self.runExtractAllReferences(text, tagged)
+        return allReferences
+    
+    def runExtractAllReferences(self, text, tagged=False):
         if not tagged:
-            text = self.parseText(text)
+            text = self.parseText(text, False)
         # return a list of tuples (b, c, v)
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 
@@ -225,34 +249,44 @@ class BibleVerseParser:
         ret = [self.verseReferenceToBCV(verse) for verse in text.split(sep)]
         return ret
 
-    def parseFile(self, inputFile):
+    def parseFile(self, inputFile, splitInChunks=True):
         # set output filename here
         path, file = os.path.split(inputFile)
         outputFile = os.path.join(path, "tagged_{0}".format(file))
 
         # open file and read input text
         with open(inputFile, "r", encoding="utf-8") as f:
-            newData = f.read()
+            originalText = f.read()
 
-        if newData:
-            # parse the opened text
-            newData = self.parseText(newData)
-            print("'{0}' is parsed.".format(inputFile))
-
-            # standardise the format of bible verse references
-            # standardisation is running only if user's answer is 'YES' [case-insensitive]
+        if originalText:
+            if splitInChunks:
+                # Create or empty a file
+                with open(outputFile, "w", encoding="utf-8") as f:
+                    f.write("")
+                chunks = originalText.splitlines(True)
+                chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
+                with open(outputFile, "a", encoding="utf-8") as f:
+                    for chunk in chunks:
+                        parsedText = self.runParseText("".join(chunk))
+                        # standardise the format of bible verse references
+                        if self.standardisation.lower() == "yes":
+                            parsedText = self.standardReference(parsedText)
+                        f.write(parsedText)
+            else:
+                parsedText = self.runParseText(originalText)
+                # standardise the format of bible verse references
+                if self.standardisation.lower() == "yes":
+                    parsedText = self.standardReference(parsedText)
+                with open(outputFile, "w", encoding="utf-8") as f:
+                    f.write(parsedText)
+            # Notify about the changes
+            print("Text is parsed and saved in '{0}'.".format(outputFile))
             if self.standardisation.lower() == "yes":
-                newData = self.standardReference(newData)
                 print("Verse reference format is standardised.")
             else:
                 print("Original verse reference format is reserved.")
-
-            # save output text in a separate file
-            with open(outputFile, "w", encoding="utf-8") as f:
-                f.write(newData)
-                print("New file is saved as '{0}'.".format(outputFile))
         else:
-            print("No data is read.")
+            print("No text is found in '{0}'!".format(file))
 
     def parseFilesInFolder(self, folder):
         fileList = glob.glob(folder+"/*")
@@ -260,7 +294,7 @@ class BibleVerseParser:
             if os.path.isfile(file):
                 self.parseFile(file)
 
-    def extractAllReferencesstartParsing(self, inputName):
+    def extractAllReferencesStartParsing(self, inputName):
         # check if input is a file or a folder
         if os.path.isfile(inputName):
             # parse file
@@ -319,13 +353,9 @@ if __name__ == '__main__':
         standardisation = input("Do you want to standardise the format of all bible verse references? [YES/NO] ")
 
     # create an instance of BibleVerseParser
-    parser = BibleVerseParser(standardisation)
+    parser = BibleVerseParser(standardisation, noOfLinesPerChunkForParsing=100)
     # start parsing
-    parser.startParsing(inputName)
+    parser.extractAllReferencesStartParsing(inputName)
 
     # delete object
     del parser
-
-    # parser = BibleVerseParser("NO")
-    # text = "John 1:1"
-    # print(parser.parseText(text))

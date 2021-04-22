@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Documento Word",
     "import2": "IMPORT",
     "parseWordDocument": "Analizar referencias de verso de biblia en contenido de documento de Word abierto.",
+    "noOfLinesPerChunkForParsing": "El texto de tamaño grande se divide en trozos antes del análisis, con el fin de mejorar el rendimiento.  Esta opción especifica el número máximo de líneas incluidas en cada fragmento.  Demasiados o demasiado poco pueden afectar al rendimiento.  Elija un valor adecuado para su dispositivo.  Generalmente, el dispositivo con mayor capacidad de memoria puede manejar más números de línea en cada trozo.",
+    "selectNoOfLinesPerChunkForParsing": "Seleccionar número de líneas por Chunk para analizar",
 }

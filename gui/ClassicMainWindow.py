@@ -35,6 +35,8 @@ class ClassicMainWindow:
         subMenu = addSubMenu(menu, "menu1_generalPreferences")
         items = (
             ("menu1_tabNo", self.setTabNumberDialog, None),
+            ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog, None),
+            ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog, None),
             ("menu1_setAbbreviations", self.setBibleAbbreviations, None),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog, None),
             ("menu1_setMyLanguage", self.openTranslationLanguageDialog, None),

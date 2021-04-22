@@ -1648,7 +1648,7 @@ class MainWindow(QMainWindow):
                                                       "All Files (*);;Text Files (*.txt);;CSV Files (*.csv);;TSV Files (*.tsv)",
                                                       "", options)
         if fileName:
-            BibleVerseParser(config.parserStandarisation).extractAllReferencesstartParsing(fileName)
+            BibleVerseParser(config.parserStandarisation).extractAllReferencesStartParsing(fileName)
             self.onTaggingCompleted()
 
     def tagFiles(self):
@@ -1660,7 +1660,7 @@ class MainWindow(QMainWindow):
         if files:
             parser = BibleVerseParser(config.parserStandarisation)
             for filename in files:
-                parser.extractAllReferencesstartParsing(filename)
+                parser.extractAllReferencesStartParsing(filename)
             del parser
             self.onTaggingCompleted()
 
@@ -1672,7 +1672,7 @@ class MainWindow(QMainWindow):
         if directory:
             path, filename = os.path.split(directory)
             outputFile = os.path.join(path, "output_{0}".format(filename))
-            BibleVerseParser(config.parserStandarisation).extractAllReferencesstartParsing(directory)
+            BibleVerseParser(config.parserStandarisation).extractAllReferencesStartParsing(directory)
             self.onTaggingCompleted()
 
     # Action - open a dialog box to download a mp3 file from youtube
@@ -1947,6 +1947,13 @@ class MainWindow(QMainWindow):
         if ok:
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
+
+    def setNoOfLinesPerChunkForParsingDialog(self):
+        integer, ok = QInputDialog.getInt(self,
+                                          "UniqueBible", config.thisTranslation["noOfLinesPerChunkForParsing"], config.noOfLinesPerChunkForParsing, 1,
+                                          2000, 10)
+        if ok:
+            config.noOfLinesPerChunkForParsing = integer
 
     def setMaximumHistoryRecordDialog(self):
         integer, ok = QInputDialog.getInt(self,

@@ -158,6 +158,13 @@ class ConfigUtil:
         # Options of language of book abbreviations: ENG / TC / SC
         if not hasattr(config, "standardAbbreviation"):
             config.standardAbbreviation = "ENG"
+        # Large-size text is divided into chunks before parsing, in order to improve performance.  
+        # This option specify maximum number of lines included into each chunk.  
+        # Too many or too little can affect performance.  
+        # Choose a value suitable for your device.  
+        # Generally, device with higher memory capacity can handle more numbers of line in each chunk.
+        if not hasattr(config, "noOfLinesPerChunkForParsing"):
+            config.noOfLinesPerChunkForParsing = 100
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
         # Use gui "Set my Language" dialog, from menu bar, to set "userLanguage".
@@ -616,6 +623,7 @@ class ConfigUtil:
             ("preferHtmlMenu", config.preferHtmlMenu),
             ("parserStandarisation", config.parserStandarisation),
             ("standardAbbreviation", config.standardAbbreviation),
+            ("noOfLinesPerChunkForParsing", config.noOfLinesPerChunkForParsing),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),

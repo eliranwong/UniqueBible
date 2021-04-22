@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Document Word",
     "import2": "IMPORTER",
     "parseWordDocument": "Analyser des références de vers bible en format Word ouvert.",
+    "noOfLinesPerChunkForParsing": "Le texte de grande taille est divisé en blocs avant l'analyse, afin d'améliorer les performances.  Cette option indique le nombre maximal de lignes incluses dans chaque bloc.  Trop ou trop peu peuvent affecter les performances.  Choisissez une valeur adaptée à votre unité.  En général, l'unité avec une capacité de mémoire supérieure peut gérer un plus grand nombre de lignes dans chaque bloc.",
+    "selectNoOfLinesPerChunkForParsing": "Sélectionner le nombre de lignes par bloc pour l'analyse syntaxique",
 }

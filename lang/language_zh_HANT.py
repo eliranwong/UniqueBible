@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Word 文件",
     "import2": "匯入",
     "parseWordDocument": "在開啟的 Word 文件內容中剖析經文參照。",
+    "noOfLinesPerChunkForParsing": "大型文字在剖析之前會分成片段，以增進效能。  此選項指定每一個區塊中包含的行數上限。  太多或太少會影響效能。  選擇適合您裝置的值。  通常，具有較高記憶體容量的裝置可以處理更多區塊中的行數。",
+    "selectNoOfLinesPerChunkForParsing": "選取剖析的每個區塊的行數",
 }

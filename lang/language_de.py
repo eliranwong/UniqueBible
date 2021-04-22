@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Word-Dokument",
     "import2": "IMPORT",
     "parseWordDocument": "Syntaxanalyse von Bibel-Vers-Referenzen im geöffneten Word-Dokument-Inhalt.",
+    "noOfLinesPerChunkForParsing": "Der Text mit großer Größe wird vor der Syntaxanalyse in Blöcke unterteilt, um die Leistung zu verbessern.  Diese Option gibt die maximale Anzahl von Zeilen an, die in jedem Chunk enthalten sind.  Zu viele oder zu wenig kann die Leistung beeinträchtigen.  Wählen Sie einen für Ihr Gerät geeigneten Wert aus.  Im Allgemeinen kann eine Einheit mit einer höheren Speicherkapazität mehr Zeilenanzahl in jedem Chunk verarbeiten.",
+    "selectNoOfLinesPerChunkForParsing": "Wählen Sie die Anzahl der Zeilen pro Chunk für die Syntaxanalyse aus.",
 }

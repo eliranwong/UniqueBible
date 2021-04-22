@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Documento di parola",
     "import2": "IMPORT",
     "parseWordDocument": "Paralizza i riferimenti in versi bibbia in contenuti di Word Word aperti.",
+    "noOfLinesPerChunkForParsing": "Il testo di grandi dimensioni è diviso in porzioni prima del parsing, al fine di migliorare le prestazioni.  Questa opzione specifica il numero massimo di linee incluse in ciascuna porzione.  Troppi o troppo poco possono influenzare le prestazioni.  Scegli un valore adatto al tuo dispositivo.  Generalmente, il dispositivo con capacità di memoria superiore può gestire più numeri di linea in ogni porzione.",
+    "selectNoOfLinesPerChunkForParsing": "Seleziona Numero di Linee per porzione per Parsing",
 }

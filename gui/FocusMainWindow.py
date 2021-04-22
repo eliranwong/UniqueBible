@@ -28,6 +28,7 @@ class FocusMainWindow:
         items = (
             ("menu1_tabNo", self.setTabNumberDialog),
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
+            ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),

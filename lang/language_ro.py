@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "Document word",
     "import2": "IMPORT",
     "parseWordDocument": "Analizaţi referinţele ververse ale Bibliei în conţinutul Word Document deschis.",
+    "noOfLinesPerChunkForParsing": "Textul de dimensiune mare este împărţit în bucăţi înainte de parsare, pentru a îmbunătăţi performanţa.  Această opţiune specifică numărul maxim de linii incluse în fiecare bucată.  Prea multe sau prea puţin pot afecta performanţa.  Alegeţi o valoare potrivită pentru dispozitivul dumneavoastră.  În general, dispozitivul cu o capacitate de memorie mai mare poate ocupa mai multe numere de linie în fiecare bucată.",
+    "selectNoOfLinesPerChunkForParsing": "Selectare număr de linii per chunk pentru parsare",
 }

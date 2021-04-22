@@ -691,4 +691,6 @@ translation = {
     "wordDocument": "워드 문서",
     "import2": "가져오기",
     "parseWordDocument": "열린 Word 문서 컨텐츠에서 성경 구절을 구문 분석하는 데 사용됩니다.",
+    "noOfLinesPerChunkForParsing": "크기가 큰 텍스트는 성능을 향상시키기 위해 구문 분석 전에 청크로 구분됩니다.  이 옵션은 각 청크에 포함된 최대 행 수를 지정합니다.  너무 많거나 너무 적으면 성능에 영향을 미칠 수 있습니다.  장치에 적합한 값을 선택하십시오.  일반적으로 메모리 용량이 높은 디바이스는 각 청크에서 더 많은 수의 라인을 처리할 수 있습니다.",
+    "selectNoOfLinesPerChunkForParsing": "구문 분석을 위한 청크당 행 수 선택",
 }
