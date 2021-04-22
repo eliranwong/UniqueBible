@@ -3,6 +3,12 @@ import re, html
 class TextUtil:
 
     @staticmethod
+    def formulateUBACommandHyperlink(text):
+        # Create hyperlink to UBA command
+        # work on text formatted like ***[CROSSREFERENCE:::John 3:16@An hyperlink link to open cross-references of John 3:16]
+        return re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
+
+    @staticmethod
     def fixTextHighlighting(text):
         # fix searching LXX / SBLGNT words
         text = re.sub(r"<z>([LS][0-9]+?)</z>'\)"'"'">(.*?)</grk>", r"\1'\)"'"'r"><z>\2</z></grk>", text)

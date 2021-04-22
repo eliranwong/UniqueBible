@@ -1001,7 +1001,6 @@ class MainWindow(QMainWindow):
         # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
 
     def openTextOnStudyView(self, text, tab_title=''):
-        text = re.sub("\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format('"\*\[\]@'), r"<ref onclick={0}document.title='\1'{0}>\2</ref>".format('"'), text)
         if config.studyWindowContentTransformers:
             for transformer in config.studyWindowContentTransformers:
                 text = transformer(text)
@@ -1190,6 +1189,7 @@ class MainWindow(QMainWindow):
         if parsing:
             # Export inline images to external files, so as to improve parsing performance. 
             text = self.exportAllImages(text)
+            text = TextUtil.formulateUBACommandHyperlink(text)
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
         text = self.wrapHtml(text, view)
         return text
@@ -1367,6 +1367,7 @@ class MainWindow(QMainWindow):
                 if config.parseWordDocument:
                     text = self.exportAllImages(text)
                     text = text.replace("</p>", "</p>\n")
+                    text = TextUtil.formulateUBACommandHyperlink(text)
                     text = BibleVerseParser(config.parserStandarisation).parseText(text)
                 text = self.wrapHtml(text, "study")
                 #text = self.htmlWrapper(text, True)

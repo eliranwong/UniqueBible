@@ -219,6 +219,7 @@ class BibleVerseParser:
             (searchPattern, r'\1\2\3'),
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
+        text = RegexSearch.deepReplace(text, "<ref [^>]*?<", (("(<ref [^>]*?)<[^<>]*?>", r"\1"),))
 
         # return the tagged text, without the extra space added at the beginning of this function.
         return text[:-1]
