@@ -1,3 +1,7 @@
+Major changes in version 23.84:
+* Renamed context plugin "Charts" to "Charts and Table"
+* On top of previously available charts, context plugin "Charts and Table" now displays an additional table of bible verse references sorted by books.
+
 Major changes in version 23.83:
 * Improved loading speed loading large-size Word Document when config flag "parseWordDocument" is enabled.
 * Improved loading speed loading Word Document when document contains images.

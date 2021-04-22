@@ -11,16 +11,32 @@ def generateCharts(text):
     verses = parser.extractAllReferences(text, False)
     config.useFastVerseParsing = useFastVerseParsing
     if verses:
+        # Sort by Books
         counts = countVersesByBook(verses)
-        data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], counts[bookNo]) for bookNo in sorted(counts)]
-        # Bar Chart
+        # Formulate Table Data
+        data = []
+        for bookNo in sorted(counts):
+            bookName = parser.standardFullBookName[str(bookNo)]
+            references = []
+            for bcv in sorted(counts[bookNo]):
+                reference = parser.bcvToVerseReference(*bcv)
+                if len(bcv) == 3:
+                    references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
+                else:
+                    references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
+            data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(bookName, "; ".join(references), len(references)))
+        # Display a Table
+        config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses))))
+        # Formulate Charts Data
+        data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
+        # Display a Bar Chart
         html = getBarChartHtml(",\n".join(data), str(len(verses)), len(counts.keys()))
         html = config.mainWindow.wrapHtml(html)
         config.mainWindow.barChart = QWebEngineView()
         config.mainWindow.barChart.setHtml(html, config.baseUrl)
         config.mainWindow.barChart.setMinimumSize(900, 550)
         config.mainWindow.barChart.show()
-        # Pie Chart
+        # Display a Pie Chart
         html = getPieChartHtml(",\n".join(data), str(len(verses)))
         html = config.mainWindow.wrapHtml(html)
         config.mainWindow.pieChart = QWebEngineView()
@@ -29,6 +45,16 @@ def generateCharts(text):
         config.mainWindow.pieChart.show()
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
+
+def getTableHtml(data, totalVerseCount):
+    return """
+<h2>UniqueBible.app</h2>
+<h3>"""+totalVerseCount+""" Bible Reference(s)</h3>
+<table style="width:100%">
+  <tr><th>Book</th><th>Reference</th><th>Count&nbsp;</th></tr>
+"""+data+"""
+</table>
+"""
 
 def getPieChartHtml(data, totalVerseCount):
     return """
@@ -94,8 +120,7 @@ def countVersesByBook(verses):
     counts = {}
     for verse in verses:
         b = verse[0]
-        bookCount = counts.get(b, 0)
-        counts[b] = bookCount + 1
+        counts[b] = counts[b] + [verse] if b in counts else [verse]
     return counts
 
 if config.pluginContext:
