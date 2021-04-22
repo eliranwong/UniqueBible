@@ -619,7 +619,7 @@ p, li {0} white-space: pre-wrap; {1}
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 config.thisTranslation["menu7_open"],
-                self.parent.openFileNameLabel.text(),
+                "notes",
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
             self.openNoteFile(fileName)
@@ -681,9 +681,11 @@ p, li {0} white-space: pre-wrap; {1}
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getSaveFileName(self,
                 config.thisTranslation["note_saveAs"],
-                defaultName,
+                os.path.join("notes", defaultName),
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".uba"
             self.saveAsNote(fileName)
 
     def saveAsNote(self, fileName):

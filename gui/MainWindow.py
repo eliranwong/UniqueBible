@@ -1188,6 +1188,8 @@ class MainWindow(QMainWindow):
         for search, replace in searchReplace2:
             text = re.sub(search, replace, text)
         if parsing:
+            # Export inline images to external files, so as to improve parsing performance. 
+            text = self.exportAllImages(text)
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
         text = self.wrapHtml(text, view)
         return text
@@ -1208,7 +1210,7 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
-                                                      os.path.join("notes"),
+                                                      "notes",
                                                       "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)",
                                                       "", options)
         if fileName:
