@@ -335,7 +335,7 @@ class ConfigUtil:
             config.docxText = ""
         # Parse Word Document content
         if not hasattr(config, "parseWordDocument"):
-            config.parseWordDocument = False
+            config.parseWordDocument = True
         # Last-opened pdf text
         if not hasattr(config, "pdfText"):
             config.pdfText = ""

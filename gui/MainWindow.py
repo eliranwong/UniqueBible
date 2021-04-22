@@ -1363,6 +1363,8 @@ class MainWindow(QMainWindow):
             if fileName:
                 text = TextFileReader().readDocxFile(fileName)
                 if config.parseWordDocument:
+                    text = self.exportAllImages(text)
+                    text = text.replace("</p>", "</p>\n")
                     text = BibleVerseParser(config.parserStandarisation).parseText(text)
                 text = self.wrapHtml(text, "study")
                 #text = self.htmlWrapper(text, True)

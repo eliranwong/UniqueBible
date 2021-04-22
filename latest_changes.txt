@@ -1,3 +1,9 @@
+Major changes in version 23.83:
+* Improved loading speed loading large-size Word Document when config flag "parseWordDocument" is enabled.
+* Improved loading speed loading Word Document when document contains images.
+* Changed default value of config flag "parseWordDocument" to True.
+* Added a demo Word Document "marvelData/docx/demo.docx".
+
 Major changes in version 23.82:
 * UI tweaks, revised Info and Update dialogs.
 * Improved performance of parsing large-size text, by spliting huge text into chunks for parsing.
