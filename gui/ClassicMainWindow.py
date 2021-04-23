@@ -410,6 +410,7 @@ class ClassicMainWindow:
             menu9 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu9_information"]))
             addMenuItem(menu9, "latestChanges", self, self.showInfo)
             addMenuItem(menu9, "ubaCommands", self, self.showCommandDocumentation)
+            addMenuItem(menu, "config.py", self, self.showConfigPyDocumentation, translation=False)
             menu9.addSeparator()
             menu9.addAction(QAction(config.thisTranslation["menu1_wikiPages"], self, triggered=self.openUbaWiki))
             menu9.addAction(QAction(config.thisTranslation["menu_discussions"], self, triggered=self.openUbaDiscussions))

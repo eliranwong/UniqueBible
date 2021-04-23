@@ -376,6 +376,7 @@ class AlephMainWindow:
         about_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_about"]))
         about_menu.addAction(QAction(config.thisTranslation["info"], self, triggered=self.showInfo))
         addMenuItem(about_menu, "ubaCommands", self, self.showCommandDocumentation)
+        addMenuItem(menu, "config.py", self, self.showConfigPyDocumentation, translation=False)
         subMenu = addSubMenu(about_menu, "menu_support")
         items = (
             ("menu1_wikiPages", self.openUbaWiki, sc.ubaWiki),

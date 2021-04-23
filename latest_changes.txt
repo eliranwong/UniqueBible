@@ -1,3 +1,7 @@
+Major changes in version 23.90:
+* Added config.help to hold documentation about file config.py.
+* Added a gui dialog to display documentation about file config.py.  It is accessible via menu > Information > config.py.
+
 Major changes in version 23.88, 89:
 * Added a icon button on Focus menu layout to open Word Document file dialog.
 * Added 1 new plugin and renamed 4 plugins:

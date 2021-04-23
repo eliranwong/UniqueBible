@@ -952,6 +952,12 @@ class MainWindow(QMainWindow):
         infoDialog = InfoDialog()
         infoDialog.exec()
 
+    def showConfigPyDocumentation(self):
+        intro = "File config.py contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)\n\nIndividual items in config.py are briefly described below:\n(You may find more information of boolean settings via 'Config Flags Window'.)"
+        content = "{0}\n\n{1}".format(intro, "\n\n".join(["[ITEM] {0}{1}".format(key, re.sub("        # ", "", value)) for key, value in config.help.items()]))
+        infoDialog = InfoDialog(content, "config.py")
+        infoDialog.exec()
+
     def showCommandDocumentation(self):
         content = "UBA commands:\n{0}".format("\n".join([re.sub("            #", "#", value[-1]) for value in config.mainWindow.textCommandParser.interpreters.values()]))
         infoDialog = InfoDialog(content, config.thisTranslation["ubaCommands"])

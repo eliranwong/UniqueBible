@@ -327,6 +327,7 @@ class FocusMainWindow:
             menu.addSeparator()
             addMenuItem(menu, "latestChanges", self, self.showInfo)
             addMenuItem(menu, "ubaCommands", self, self.showCommandDocumentation)
+            addMenuItem(menu, "config.py", self, self.showConfigPyDocumentation, translation=False)
             menu.addSeparator()
             subMenu = addSubMenu(menu, "menu_support")
             items = (
