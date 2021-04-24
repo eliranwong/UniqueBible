@@ -770,7 +770,7 @@ class WebEngineView(QWebEngineView):
         selectedText = self.selectedText().strip()
         if selectedText:
             config.contextItem = selectedText
-        self.parent.parent.openControlPanelTab(2)
+        self.parent.parent.openControlPanelTab(3)
 
     def searchSelectedText(self, text=None):
         selectedText = self.selectedText().strip()

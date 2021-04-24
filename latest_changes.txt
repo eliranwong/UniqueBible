@@ -1,3 +1,6 @@
+Major change in version 23.93:
+* Fixed opening master control "Search" tab via context menu.
+
 Major changes in version 23.92:
 * Optimised the speed of parsing a single reference. e.g. Rm / Rm 5 / Rm 5:8.
 * Fixed parsing references with books having only one chapter.
