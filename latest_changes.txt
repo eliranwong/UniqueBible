@@ -9,6 +9,7 @@ Major changes in version 23.92:
     This option is especially useful when reading pdf / word document / epub / notes when there are bible verse references without book names
     It is common that references contain only a chapter number and verse number when book name is implied somewhere in the context.
     Users can now select text containing only chapter and verse number, e.g. "3:16" and select a book from context menu "Open in Book", e.g. "John".
+    If a book is selected from context menu "Open in Book" without selected text, the first chapter of the selected book will be opened.
 
 
 Major change in version 23.91:
