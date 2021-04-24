@@ -693,4 +693,6 @@ translation = {
     "parseWordDocument": "Analizaţi referinţele ververse ale Bibliei în conţinutul Word Document deschis.",
     "noOfLinesPerChunkForParsing": "Textul de dimensiune mare este împărţit în bucăţi înainte de parsare, pentru a îmbunătăţi performanţa.  Această opţiune specifică numărul maxim de linii incluse în fiecare bucată.  Prea multe sau prea puţin pot afecta performanţa.  Alegeţi o valoare potrivită pentru dispozitivul dumneavoastră.  În general, dispozitivul cu o capacitate de memorie mai mare poate ocupa mai multe numere de linie în fiecare bucată.",
     "selectNoOfLinesPerChunkForParsing": "Selectare număr de linii per chunk pentru parsare",
+    "convertChapterVerseDotSeparator": "Opţiune pentru a converti semnul punct, care separă numărul de capitol şi numărul de verse din unele referinţe biblice, la semnul de două puncte, astfel încât parserul UBA să poată parsa acele referenţiere.",
+    "openInBook": "Deschidere în carte",
 }

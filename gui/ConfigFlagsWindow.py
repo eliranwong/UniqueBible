@@ -69,6 +69,7 @@ class ConfigFlagsWindow(QDialog):
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, False, config.thisTranslation["parserStandarisation"]),
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, False, config.thisTranslation["useFastVerseParsing"]),
             ("parseWordDocument", config.parseWordDocument, self.parseWordDocumentChanged, True, config.thisTranslation["parseWordDocument"]),
+            ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator, self.convertChapterVerseDotSeparatorChanged, True, config.thisTranslation["convertChapterVerseDotSeparator"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -287,6 +288,9 @@ class ConfigFlagsWindow(QDialog):
 
     def bookOnNewWindowChanged(self):
         config.bookOnNewWindow = not config.bookOnNewWindow
+
+    def convertChapterVerseDotSeparatorChanged(self):
+        config.convertChapterVerseDotSeparator = not config.convertChapterVerseDotSeparator
 
     def overwriteNoteFontChanged(self):
         config.overwriteNoteFont = not config.overwriteNoteFont

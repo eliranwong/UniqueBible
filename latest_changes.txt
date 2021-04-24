@@ -1,4 +1,17 @@
-Major changes in version 23.91:
+Major changes in version 23.92:
+* Optimised the speed of parsing a single reference. e.g. Rm / Rm 5 / Rm 5:8.
+* Fixed parsing references with books having only one chapter.
+* Added "Open in Study Window" to single-click / doublick-click verse action.
+* Added a config flag "convertChapterVerseDotSeparator".
+    This is an option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces.
+    If this option is enabled, UBA parser can parse references like 1Th 3.16-18, Rm 5.8.
+* Added "Open in Book" in right-click context menu.
+    This option is especially useful when reading pdf / word document / epub / notes when there are bible verse references without book names
+    It is common that references contain only a chapter number and verse number when book name is implied somewhere in the context.
+    Users can now select text containing only chapter and verse number, e.g. "3:16" and select a book from context menu "Open in Book", e.g. "John".
+
+
+Major change in version 23.91:
 * Fixed tagging multiple Strong's numbers in simple reading mode.
 
 Major changes in version 23.90:

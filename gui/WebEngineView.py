@@ -70,6 +70,25 @@ class WebEngineView(QWebEngineView):
 
         subMenu = QMenu()
 
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        for bookNo in range(1, 67):
+            action = QAction(self)
+            bookName = bibleVerseParser.standardFullBookName[str(bookNo)]
+            action.setText(bookName)
+            action.triggered.connect(partial(self.openReferencesInBook, bookName))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openInBook"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
         for text in self.parent.parent.textList:
             action = QAction(self)
             action.setText(text)
@@ -760,6 +779,11 @@ class WebEngineView(QWebEngineView):
         else:
             searchCommand = "SEARCH:::{0}:::{1}".format(self.getText() if text is None or not text else text, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
+
+    def openReferencesInBook(self, book):
+        selectedText = self.selectedText().strip()
+        command = "{0} {1}".format(book, selectedText) if selectedText else book
+        self.parent.parent.textCommandChanged(command, self.name)
 
     def searchSelectedTextInBook(self, book=None):
         selectedText = self.selectedText().strip()

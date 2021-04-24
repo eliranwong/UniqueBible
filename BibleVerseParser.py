@@ -115,9 +115,15 @@ class BibleVerseParser:
     def checkConfig(self):
         if not hasattr(config, "standardAbbreviation"):
             config.standardAbbreviation = "ENG"
-            with open("config.py", "w", encoding="utf-8") as fileObj:
-                name, value = ("standardAbbreviation = ", config.standardAbbreviation),
-                fileObj.write(name+pprint.pformat(value))
+            config.convertChapterVerseDotSeparator = True
+            nameValue = (
+                ("standardAbbreviation = ", config.standardAbbreviation),
+                ("convertChapterVerseDotSeparator = ", config.convertChapterVerseDotSeparator),
+            )
+            if not os.path.isfile("config.py"):
+                with open("config.py", "w", encoding="utf-8") as fileObj:
+                    for name, value in nameValue:
+                        fileObj.write(name+pprint.pformat(value))
 
     # To format of all references by using standard abbreviations.
     def standardReference(self, text):
@@ -167,11 +173,17 @@ class BibleVerseParser:
             # get assigned book number from dictionary
             bookNumber = str(self.bibleBooksDict[name])
             # search & replace for marking book
+            # bypass the rest of parsing if input text contains a single book name only
+            if re.match('^('+bookName+') $', text):
+                return RegexSearch.replace(text, (('^('+bookName+') $', r'<ref onclick="bcv({0},1,1)">\1 1:1</ref>'.format(bookNumber)),))
             searchReplace = (
                 ('('+bookName+') ([0-9])', '『'+bookNumber+r'｜\1』 \2'),
             )
             text = RegexSearch.replace(text, searchReplace)
 
+        # In case a dot sign, instead of a colon sign, is used to separate chapter number and verse number.
+        if config.convertChapterVerseDotSeparator:
+            text = RegexSearch.replace(text, (("』 ([0-9]+?)\.([0-9])", r"』 \1:\2"),))
         searchReplace = (
             # 1st set of taggings
             ('『([0-9]+?)｜([^『』]*?)』 ([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\3,\4)">\2 \3:\4</ref｝\5'),
@@ -183,6 +195,11 @@ class BibleVerseParser:
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),\)">', r'<ref onclick="bcv(\1,\2,1)">＊'),
         )
         text = RegexSearch.replace(text, searchReplace)
+
+        # bypass the rest of parsing if input text contains a single reference only
+        if re.match('<ref onclick="bcv[^<>]+?>[^<>]+?</ref｝ ', text):
+            text = text.replace("｝", ">")
+            return text.replace("＊", "")[:-1]
 
         # check if tagged references are followed by untagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         searchPattern = '</ref｝[,-–;][ ]*?[0-9]'

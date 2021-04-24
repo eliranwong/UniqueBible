@@ -199,6 +199,11 @@ class ConfigUtil:
         # Generally, device with higher memory capacity can handle more numbers of line in each chunk."""
         if not hasattr(config, "noOfLinesPerChunkForParsing"):
             config.noOfLinesPerChunkForParsing = 100
+        config.help["convertChapterVerseDotSeparator"] = """
+        # Option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces."""
+        if not hasattr(config, "convertChapterVerseDotSeparator"):
+            config.convertChapterVerseDotSeparator = True
+        config.help["userLanguage"] = """
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
         # Use gui "Set my Language" dialog, from menu bar, to set "userLanguage"."""
@@ -750,6 +755,7 @@ class ConfigUtil:
             ("parserStandarisation", config.parserStandarisation),
             ("standardAbbreviation", config.standardAbbreviation),
             ("noOfLinesPerChunkForParsing", config.noOfLinesPerChunkForParsing),
+            ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),

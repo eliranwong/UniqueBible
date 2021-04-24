@@ -693,4 +693,6 @@ translation = {
     "parseWordDocument": "Parse bible verse references in opened Word Document content.",
     "noOfLinesPerChunkForParsing": "Large-size text is divided into chunks before parsing, in order to improve performance.  \nThis option specify maximum number of lines included into each chunk.  \nToo many or too little can affect performance.  Choose a value suitable for your device.  \nGenerally, device with higher memory capacity can handle more numbers of line in each chunk.",
     "selectNoOfLinesPerChunkForParsing": "Select Number of Lines per Chunk for Parsing",
+    "convertChapterVerseDotSeparator": "Option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces.",
+    "openInBook": "Open in Book",
 }

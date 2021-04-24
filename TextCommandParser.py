@@ -567,11 +567,6 @@ class TextCommandParser:
         updateViewConfig, viewText, *_ = self.getViewConfig(source)
         if len(commandList) == 1:
             textCommand = textCommand.strip()
-            if ":" not in textCommand:
-                if re.search(r'.*\d+$', textCommand):
-                    textCommand += ":1"
-                else:
-                    textCommand += " 1:1"
             if self.isDatabaseInstalled("bible"):
                 self.lastKeyword = "bible"
                 return self.textBibleVerseParser(textCommand, viewText, source)
@@ -1761,7 +1756,7 @@ class TextCommandParser:
                 "COMBO": self.textCombo,
                 "INDEX": self.textIndex,
                 "COMMENTARY": self.textCommentary,
-                "openInStudyWindow": self.textStudy,
+                "STUDY": self.textStudy,
                 "_noAction": self.noAction,
             }
             return actionMap[keyword](verseReference, source)

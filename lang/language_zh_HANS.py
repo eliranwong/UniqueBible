@@ -693,4 +693,6 @@ translation = {
     "parseWordDocument": "在打开的 Word 文档内容中剖析经文参照。",
     "noOfLinesPerChunkForParsing": "大尺寸文本在解析之前分为块，以便提高性能。  此选项指定包含到每个块中的最大行数。  过多或太少会影响性能。  选择适合您设备的值。  通常，具有较高内存容量的设备可以在每个块中处理更多数量的线路。",
     "selectNoOfLinesPerChunkForParsing": "选择用于解析的每个块的行数",
+    "convertChapterVerseDotSeparator": "用来将点符号转换为冒号符号的选项，使UBA剖析器可以剖析那些使用点符号的经文参照。",
+    "openInBook": "在指定书中打开",
 }
