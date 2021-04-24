@@ -16,6 +16,7 @@ config.useFastVerseParsing = True
 config.standardAbbreviation = "ENG"
 config.parserStandarisation = "NO"
 config.noOfLinesPerChunkForParsing = 100
+config.convertChapterVerseDotSeparator = True
 
 from TextCommandParser import TextCommandParser
 
