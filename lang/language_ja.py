@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "構文解析のチャンクごとの行数を選択します",
     "convertChapterVerseDotSeparator": "いくつかのバイブル参照内の章番号と句番号を区切るドット記号を、 UBA パーサーがそれらの指示を解析できるように、コロン記号を変換するオプション。",
     "openInBook": "本で開く",
+    "parseBookChapterWithoutSpace": "ブック名と章番号の間のスペースなしの構文解析。",
 }

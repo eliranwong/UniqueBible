@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "Seleziona Numero di Linee per porzione per Parsing",
     "convertChapterVerseDotSeparator": "Opzione per convertire il segno di puntino, che separa il numero di capitolo e il numero versi in alcuni riferimenti di bibbia, al segno del colon in modo che l'UBA parser possa paralizzare tali referenze.",
     "openInBook": "Aperto nel libro",
+    "parseBookChapterWithoutSpace": "Riferimenti Parse senza spazio tra nome libro e numero di capitolo.",
 }

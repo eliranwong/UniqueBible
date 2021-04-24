@@ -17,6 +17,7 @@ config.standardAbbreviation = "ENG"
 config.parserStandarisation = "NO"
 config.noOfLinesPerChunkForParsing = 100
 config.convertChapterVerseDotSeparator = True
+config.parseBookChapterWithoutSpace = False
 
 from TextCommandParser import TextCommandParser
 

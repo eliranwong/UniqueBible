@@ -70,6 +70,7 @@ class ConfigFlagsWindow(QDialog):
             ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, False, config.thisTranslation["useFastVerseParsing"]),
             ("parseWordDocument", config.parseWordDocument, self.parseWordDocumentChanged, True, config.thisTranslation["parseWordDocument"]),
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator, self.convertChapterVerseDotSeparatorChanged, True, config.thisTranslation["convertChapterVerseDotSeparator"]),
+            ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace, self.parseBookChapterWithoutSpaceChanged, True, config.thisTranslation["parseBookChapterWithoutSpace"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -291,6 +292,9 @@ class ConfigFlagsWindow(QDialog):
 
     def convertChapterVerseDotSeparatorChanged(self):
         config.convertChapterVerseDotSeparator = not config.convertChapterVerseDotSeparator
+
+    def parseBookChapterWithoutSpaceChanged(self):
+        config.parseBookChapterWithoutSpace = not config.parseBookChapterWithoutSpace
 
     def overwriteNoteFontChanged(self):
         config.overwriteNoteFont = not config.overwriteNoteFont

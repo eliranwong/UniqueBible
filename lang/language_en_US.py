@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "Select Number of Lines per Chunk for Parsing",
     "convertChapterVerseDotSeparator": "Option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces.",
     "openInBook": "Open in Book",
+    "parseBookChapterWithoutSpace": "Parse references without space between book name and chapter number.",
 }

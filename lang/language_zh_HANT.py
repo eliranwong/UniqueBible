@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "選取剖析的每個區塊的行數",
     "convertChapterVerseDotSeparator": "用來將點符號轉換為冒號符號的選項，使 UBA 剖析器可以剖析那些使用點符號的經文參照。",
     "openInBook": "在指定書中開啟",
+    "parseBookChapterWithoutSpace": "剖析在書名與章節號碼之間沒有空格的經文參照。",
 }

@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "Selectare număr de linii per chunk pentru parsare",
     "convertChapterVerseDotSeparator": "Opţiune pentru a converti semnul punct, care separă numărul de capitol şi numărul de verse din unele referinţe biblice, la semnul de două puncte, astfel încât parserul UBA să poată parsa acele referenţiere.",
     "openInBook": "Deschidere în carte",
+    "parseBookChapterWithoutSpace": "Analizaţi referinţele fără spaţiu între numele de carte şi numărul de capitol.",
 }

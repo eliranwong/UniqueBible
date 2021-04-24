@@ -180,6 +180,8 @@ class BibleVerseParser:
                 ('('+bookName+') ([0-9])', '『'+bookNumber+r'｜\1』 \2'),
             )
             text = RegexSearch.replace(text, searchReplace)
+            if config.parseBookChapterWithoutSpace:
+                text = RegexSearch.replace(text, (('('+bookName+')([0-9])', '『'+bookNumber+r'｜\1』 \2'),))
 
         # In case a dot sign, instead of a colon sign, is used to separate chapter number and verse number.
         if config.convertChapterVerseDotSeparator:

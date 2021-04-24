@@ -203,6 +203,10 @@ class ConfigUtil:
         # Option to convert the dot sign, which separates chapter number and verse number in some bible references, to colon sign so that UBA parser can parse those referencces."""
         if not hasattr(config, "convertChapterVerseDotSeparator"):
             config.convertChapterVerseDotSeparator = True
+        config.help["parseBookChapterWithoutSpace"] = """
+        # Parse references without space between book name and chapter number."""
+        if not hasattr(config, "parseBookChapterWithoutSpace"):
+            config.parseBookChapterWithoutSpace = True
         config.help["userLanguage"] = """
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
@@ -756,6 +760,7 @@ class ConfigUtil:
             ("standardAbbreviation", config.standardAbbreviation),
             ("noOfLinesPerChunkForParsing", config.noOfLinesPerChunkForParsing),
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator),
+            ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),

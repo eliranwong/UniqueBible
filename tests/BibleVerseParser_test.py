@@ -13,6 +13,7 @@ class BibleVerseParserTestCase(unittest.TestCase):
         config.standardAbbreviation = 'ENG'
         config.noOfLinesPerChunkForParsing = 100
         config.convertChapterVerseDotSeparator = True
+        config.parseBookChapterWithoutSpace = False
         self.parser = BibleVerseParser(config.standardAbbreviation)
 
     def test_gen_parseText(self):

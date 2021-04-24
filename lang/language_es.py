@@ -695,4 +695,5 @@ translation = {
     "selectNoOfLinesPerChunkForParsing": "Seleccionar número de líneas por Chunk para analizar",
     "convertChapterVerseDotSeparator": "Opción para convertir el signo de punto, que separa el número de capítulo y el número de verso en algunas referencias de biblias, a signo de dos puntos para que el analizador UBA pueda analizar esas referencias.",
     "openInBook": "Abierto en el Libro",
+    "parseBookChapterWithoutSpace": "Analizar referencias sin espacio entre el nombre del libro y el número de capítulo.",
 }
