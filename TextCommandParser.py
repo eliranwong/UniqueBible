@@ -1761,6 +1761,7 @@ class TextCommandParser:
                 "COMBO": self.textCombo,
                 "INDEX": self.textIndex,
                 "COMMENTARY": self.textCommentary,
+                "openInStudyWindow": self.textStudy,
                 "_noAction": self.noAction,
             }
             return actionMap[keyword](verseReference, source)
