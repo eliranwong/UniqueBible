@@ -93,7 +93,7 @@ class ConfigFlagsWindow(QDialog):
             ("useWebbrowser", config.useWebbrowser, self.useWebbrowserChanged, True, config.thisTranslation["useWebbrowser"]),
             ("removeHighlightOnExit", config.removeHighlightOnExit, self.removeHighlightOnExitChanged, False, config.thisTranslation["removeHighlightOnExit"]),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, True, config.thisTranslation["disableModulesUpdateCheck"]),
-            ("updateWithGitPull", config.updateWithGitPull, self.updateWithGitPullChanged, True, config.thisTranslation["updateWithGitPull"]),
+            ("updateWithGitPull", config.updateWithGitPull, self.updateWithGitPullChanged, False, config.thisTranslation["updateWithGitPull"]),
             ("enableGist", config.enableGist, self.enableGistChanged, False, config.thisTranslation["enableGist"]),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, False, config.thisTranslation["enableMacros"]),
             ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, True, config.thisTranslation["enablePlugins"]),
