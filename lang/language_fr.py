@@ -696,4 +696,5 @@ translation = {
     "convertChapterVerseDotSeparator": "Option permettant de convertir le signe de point, qui sépare le numéro de chapitre et le numéro de vers dans certaines références bibles, pour le signe deux-points afin que l'analyseur UBA puisse analyser ces références.",
     "openInBook": "Ouvrir dans le livre",
     "parseBookChapterWithoutSpace": "Analyser les références sans espace entre le nom du livre et le numéro de chapitre.",
+    "updateWithGitPull": "Utilisez GIT PULL pour mettre à jour l'UBA.",
 }

@@ -1,9 +1,5 @@
-import os
-import platform
+import os, platform, subprocess, requests, config
 from ast import literal_eval
-import requests
-
-import config
 from util.DateUtil import DateUtil
 
 
@@ -57,29 +53,32 @@ class UpdateUtil:
 
     @staticmethod
     def updateUniqueBibleApp(parent=None, debug=False):
-        requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
-        for line in requestObject.text.split("\n"):
-            if line:
-                try:
-                    version, contentType, filePath = literal_eval(line)
-                    if version > config.version:
-                        localPath = os.path.join(*filePath.split("/"))
-                        if debug:
-                            print("{0}:{1}".format(version, localPath))
+        if config.updateWithGitPull and os.path.isdir(".git"):
+            subprocess.Popen("git pull", shell=True)
+        else:
+            requestObject = requests.get("{0}patches.txt".format(UpdateUtil.repository))
+            for line in requestObject.text.split("\n"):
+                if line:
+                    try:
+                        version, contentType, filePath = literal_eval(line)
+                        if version > config.version:
+                            localPath = os.path.join(*filePath.split("/"))
+                            if debug:
+                                print("{0}:{1}".format(version, localPath))
+                            else:
+                                if contentType == "folder":
+                                    if not os.path.isdir(localPath):
+                                        os.makedirs(localPath)
+                                elif contentType == "file":
+                                    requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
+                                    with open(localPath, "wb") as fileObject:
+                                        fileObject.write(requestObject2.content)
+                    except Exception as e:
+                        # message on failed item
+                        if parent is not None:
+                            parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_fail"], line))
                         else:
-                            if contentType == "folder":
-                                if not os.path.isdir(localPath):
-                                    os.makedirs(localPath)
-                            elif contentType == "file":
-                                requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
-                                with open(localPath, "wb") as fileObject:
-                                    fileObject.write(requestObject2.content)
-                except Exception as e:
-                    # message on failed item
-                    if parent is not None:
-                        parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_fail"], line))
-                    else:
-                        return "Could not update"
+                            return "Could not update"
         # set executable files on macOS or Linux
         if not platform.system() == "Windows":
             for filename in ("uba.py", "main.py", "BibleVerseParser.py", "RegexSearch.py"):

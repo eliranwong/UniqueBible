@@ -648,6 +648,8 @@ class ConfigUtil:
             config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
         if not hasattr(config, "daysElapseForNextAppUpdateCheck"):
             config.daysElapseForNextAppUpdateCheck = '14'
+        if not hasattr(config, "updateWithGitPull"):
+            config.updateWithGitPull = False
         if not hasattr(config, "minicontrolWindowWidth"):
             config.minicontrolWindowWidth = 450
         if not hasattr(config, "minicontrolWindowHeight"):
@@ -895,6 +897,7 @@ class ConfigUtil:
             ("displayLanguage", config.displayLanguage),
             ("lastAppUpdateCheckDate", config.lastAppUpdateCheckDate),
             ("daysElapseForNextAppUpdateCheck", config.daysElapseForNextAppUpdateCheck),
+            ("updateWithGitPull", config.updateWithGitPull),
             ("minicontrolWindowWidth", config.minicontrolWindowWidth),
             ("minicontrolWindowHeight", config.minicontrolWindowHeight),
             ("refButtonClickAction", config.refButtonClickAction),

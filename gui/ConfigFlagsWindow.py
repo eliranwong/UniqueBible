@@ -1,4 +1,4 @@
-import config, platform, webbrowser
+import config, platform, webbrowser, os
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
@@ -93,6 +93,7 @@ class ConfigFlagsWindow(QDialog):
             ("useWebbrowser", config.useWebbrowser, self.useWebbrowserChanged, True, config.thisTranslation["useWebbrowser"]),
             ("removeHighlightOnExit", config.removeHighlightOnExit, self.removeHighlightOnExitChanged, False, config.thisTranslation["removeHighlightOnExit"]),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck, self.disableModulesUpdateCheckChanged, True, config.thisTranslation["disableModulesUpdateCheck"]),
+            ("updateWithGitPull", config.updateWithGitPull, self.updateWithGitPullChanged, True, config.thisTranslation["updateWithGitPull"]),
             ("enableGist", config.enableGist, self.enableGistChanged, False, config.thisTranslation["enableGist"]),
             ("enableMacros", config.enableMacros, self.enableMacrosChanged, False, config.thisTranslation["enableMacros"]),
             ("enablePlugins", config.enablePlugins, self.enablePluginsChanged, True, config.thisTranslation["enablePlugins"]),
@@ -292,6 +293,11 @@ class ConfigFlagsWindow(QDialog):
 
     def convertChapterVerseDotSeparatorChanged(self):
         config.convertChapterVerseDotSeparator = not config.convertChapterVerseDotSeparator
+
+    def updateWithGitPullChanged(self):
+        config.updateWithGitPull = not config.updateWithGitPull
+        if config.updateWithGitPull and not os.path.isdir(".git"):
+            config.updateWithGitPull = False
 
     def parseBookChapterWithoutSpaceChanged(self):
         config.parseBookChapterWithoutSpace = not config.parseBookChapterWithoutSpace

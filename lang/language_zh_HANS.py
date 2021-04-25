@@ -696,4 +696,5 @@ translation = {
     "convertChapterVerseDotSeparator": "用来将点符号转换为冒号符号的选项，使UBA剖析器可以剖析那些使用点符号的经文参照。",
     "openInBook": "在指定书中打开",
     "parseBookChapterWithoutSpace": "解析在书名和章号之间没有空格的经文参照。",
+    "updateWithGitPull": "使用 Git 拉出来更新 UBA。",
 }

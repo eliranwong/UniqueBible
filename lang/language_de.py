@@ -696,4 +696,5 @@ translation = {
     "convertChapterVerseDotSeparator": "Option zum Konvertieren des Punktzeichens, das Kapitelnummer und Versnummer in einigen Bibelreferenzen trennt, auf Doppelpunkt, so dass der UBA-Parser diese Referencces parsen kann.",
     "openInBook": "In Buch öffnen",
     "parseBookChapterWithoutSpace": "Syntaxanalyse von Referenzen ohne Leerzeichen zwischen Buchname und Kapitelnummer.",
+    "updateWithGitPull": "Verwenden Sie GIT PULL, um UBA zu aktualisieren.",
 }

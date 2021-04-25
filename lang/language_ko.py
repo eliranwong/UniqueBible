@@ -696,4 +696,5 @@ translation = {
     "convertChapterVerseDotSeparator": "UBA 구문 분석기가 이러한 참조를 구문 분석할 수 있도록 일부 성경 참조에서 장 번호와 절 수를 구분하는 점 부호를 콜론 부호로 변환하는 옵션입니다.",
     "openInBook": "Book 에서 열기",
     "parseBookChapterWithoutSpace": "서적 이름과 장 번호 사이에 공간이 없는 참조를 구문 분석합니다.",
+    "updateWithGitPull": "GIT PULL을 사용하여 UBA를 업데이트한다.",
 }

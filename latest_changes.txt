@@ -1,3 +1,9 @@
+Major change in version 23.96:
+* Added a config flag config.updateWithGitPull, to update UBA with command "git pull".
+    This option is set to False by default.
+    It works only if users use git clone to install UBA.
+    Read more about use of git at: https://github.com/eliranwong/UniqueBible/wiki/Using-Git
+
 Major changes in version 23.95:
 * Fixed updating toolbar 'external file button' when a pdf or docx file is opened.
 * Added a config variable 'pdfTextPath' to keep a record of the last opened pdf file path.
