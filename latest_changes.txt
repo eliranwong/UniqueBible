@@ -1,3 +1,13 @@
+Major changes in version 23.95:
+* Fixed updating toolbar 'external file button' when a pdf or docx file is opened.
+* Added a config variable 'pdfTextPath' to keep a record of the last opened pdf file path.
+* Added a command keyword ANYPDF::: to open pdf file anywhere locally where users have read permission.
+* Added a context plugin "Save PDF Page History".
+    User can select a page number and select 'Save PDF Page History' from right-click context menu 'plugins', to add a history record for opening pdf file with a specific page number.
+    This plugin works on currently opened / the latest opened pdf, recorded in config.pdfTextPath.
+    If no number is selected, a gui dialog will show up to allow users to specify a page number to be recroded in history.
+    If the specified page number is larger than the pdf file total page number, page 1 is opened by default.
+
 Major change in version 23.94:
 * Added a config flag 'parseBookChapterWithoutSpace'.
     This option enables UBA parser to parser references without space between book name and chapter number.

@@ -379,10 +379,17 @@ class TextCommandParser:
             # e.g. open:::."""),
             "pdf": (self.openPdfReader, """
             # [KEYWORD] PDF
-            # Feature: Open PDF file
+            # Feature: Open PDF file, located in directory marvelData/pdf/
             # Usage - PDF:::[PDF_filename]
             # Usage - PDF:::[PDF_filename]:::[page_number]
             # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
+            "anypdf": (self.openPdfReaderFullpath, """
+            # [KEYWORD] ANYPDF
+            # Feature: Open PDF file, located in local device where users have read permission.
+            # Remarks: It works basically the same as keyword PDF:::, except ANYPDF::: accepts full pdf file path only.
+            # Usage - ANYPDF:::[PDF_filename_fullpath]
+            # Usage - ANYPDF:::[PDF_filename_fullpath]:::[page_number]
+            # e.g. ANYPDF:::file.pdf:::110"""),
             "docx": (self.openDocxReader, """
             # [KEYWORD] DOCX
             # Feature: Open Word Document
@@ -2520,6 +2527,14 @@ class TextCommandParser:
             command += ":::1"
         pdfFile, page = self.splitCommand(command)
         self.parent.openPdfReader(pdfFile, page)
+        return ("", "", {})
+
+    # ANYPDF:::
+    def openPdfReaderFullpath(self, command, source):
+        if command.count(":::") == 0:
+            command += ":::1"
+        pdfFile, page = self.splitCommand(command)
+        self.parent.openPdfReader(pdfFile, page, True)
         return ("", "", {})
 
     def noAction(self, command, source):

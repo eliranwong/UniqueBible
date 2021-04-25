@@ -426,9 +426,13 @@ class ConfigUtil:
         if not hasattr(config, "parseWordDocument"):
             config.parseWordDocument = True
         config.help["pdfText"] = """
-        # Last-opened pdf text"""
+        # Last-opened pdf filename"""
         if not hasattr(config, "pdfText"):
             config.pdfText = ""
+        config.help["pdfTextPath"] = """
+        # Last-opened pdf file path"""
+        if not hasattr(config, "pdfTextPath"):
+            config.pdfTextPath = ""
         config.help["book"] = """
         # Last-opened book module"""
         if not hasattr(config, "book"):
@@ -823,6 +827,7 @@ class ConfigUtil:
             ("dictionary", config.dictionary),
             ("encyclopedia", config.encyclopedia),
             ("pdfText", config.pdfText),
+            ("pdfTextPath", config.pdfTextPath),
             ("docxText", config.docxText),
             ("parseWordDocument", config.parseWordDocument),
             ("book", config.book),
