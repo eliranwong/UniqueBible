@@ -1,3 +1,7 @@
+Major changes in version 23.97:
+* Added command keyword _savepdfcurrentpage:::
+* Added a toolbar icon button to save history of currently opened pdf page number.
+
 Major change in version 23.96:
 * Added a config flag config.updateWithGitPull, to update UBA with command "git pull".
     This option is set to False by default.

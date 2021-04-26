@@ -571,7 +571,7 @@ class TextCommandParser:
             # [KEYWORD] _savePdfCurrentPage
             # Feature - Save the current page of PDF
             # Usage - _SAVEPDFCURRENTPAGE:::[page]
-            # Examples:
+            # Example:
             # e.g. _SAVEPDFCURRENTPAGE:::100""")
         }
 
