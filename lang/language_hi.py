@@ -697,4 +697,6 @@ translation = {
     "openInBook": "पुस्तक में खोलें",
     "parseBookChapterWithoutSpace": "पुस्तक नाम और अध्याय संख्या के बीच स्थान के बिना संदर्भों का विश्लेषण करें.",
     "updateWithGitPull": "UBA को अद्यतन करने के लिए git खींचना इस्तेमाल करें.",
+    "savePdfCurrentPage": "PDF वर्तमान पृष्ठ सहेजें",
+    "saved": "सहेजा गया",
 }

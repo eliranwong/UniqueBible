@@ -697,4 +697,6 @@ translation = {
     "openInBook": "Deschidere în carte",
     "parseBookChapterWithoutSpace": "Analizaţi referinţele fără spaţiu între numele de carte şi numărul de capitol.",
     "updateWithGitPull": "Utilizaţi GIT TRAGE pentru a actualiza UBA.",
+    "savePdfCurrentPage": "Salvare pagină curentă PDF",
+    "saved": "Salvat",
 }

@@ -672,6 +672,13 @@ class AlephMainWindow:
         openPdfButton.clicked.connect(self.openPdfFileDialog)
         self.secondToolBar.addWidget(openPdfButton)
 
+        savePdfButton = QPushButton()
+        savePdfButton.setToolTip(config.thisTranslation["savePdfCurrentPage"])
+        savePdfButtonFile = os.path.join("htmlResources", "pdfSave.png")
+        savePdfButton.setIcon(QIcon(savePdfButtonFile))
+        savePdfButton.clicked.connect(self.invokeSavePdfPage)
+        self.secondToolBar.addWidget(savePdfButton)
+
         self.secondToolBar.addSeparator()
 
         reloadButton = QPushButton()
@@ -1135,6 +1142,9 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "pdfOpen.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["pdfDocument"], self.openPdfFileDialog)
+
+        iconFile = os.path.join("htmlResources", "pdfSave.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["savePdfCurrentPage"], self.invokeSavePdfPage)
 
         self.secondToolBar.addSeparator()
 

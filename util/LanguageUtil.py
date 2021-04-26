@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("githubEpub", "Github EPUB")
+        addLanguageStringToAllFiles("saved", "Saved")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

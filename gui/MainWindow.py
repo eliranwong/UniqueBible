@@ -1465,6 +1465,10 @@ class MainWindow(QMainWindow):
     def openPdfFile(self, fileName):
         self.openPdfReader(fileName, fullPath=True)
 
+    def invokeSavePdfPage(self):
+        pdfPage = self.studyView.currentWidget().page()
+        pdfPage.runJavaScript("if (typeof saveCurrentPage === 'function') { saveCurrentPage() }")
+
 #    def openPdfFileOLD(self, fileName):
 #        if config.isPyPDF2Installed:
 #            if fileName:
