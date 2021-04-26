@@ -697,4 +697,6 @@ translation = {
     "openInBook": "Открыть в книге",
     "parseBookChapterWithoutSpace": "Анализ ссылок без пробела между именем книги и номером главы.",
     "updateWithGitPull": "Используйте GIT PULL для обновления UBA.",
+    "savePdfCurrentPage": "Сохранить текущую страницу в формате PDF",
+    "saved": "Сохранено",
 }
