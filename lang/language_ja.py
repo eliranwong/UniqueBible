@@ -697,4 +697,6 @@ translation = {
     "openInBook": "本で開く",
     "parseBookChapterWithoutSpace": "ブック名と章番号の間のスペースなしの構文解析。",
     "updateWithGitPull": "GIT PULL を使用して、 UBAを更新します。",
+    "savePdfCurrentPage": "PDF 現行ページの保存",
+    "saved": "セイヴド",
 }

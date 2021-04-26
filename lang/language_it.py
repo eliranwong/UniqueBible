@@ -697,4 +697,6 @@ translation = {
     "openInBook": "Aperto nel libro",
     "parseBookChapterWithoutSpace": "Riferimenti Parse senza spazio tra nome libro e numero di capitolo.",
     "updateWithGitPull": "Utilizzare GIT PULL per aggiornare UBA.",
+    "savePdfCurrentPage": "Salva pagina corrente PDF",
+    "saved": "Salvato",
 }

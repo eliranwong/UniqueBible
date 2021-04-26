@@ -567,6 +567,12 @@ class TextCommandParser:
             # e.g. _HIGHLIGHT:::hl2:::John 3:16
             # e.g. _HIGHLIGHT:::ul1:::John 3:16
             # e.g. _HIGHLIGHT:::delete:::John 3:16"""),
+            "_savepdfcurrentpage": (self.savePdfCurrentPage, """
+            # [KEYWORD] _savePdfCurrentPage
+            # Feature - Save the current page of PDF
+            # Usage - _SAVEPDFCURRENTPAGE:::[page]
+            # Examples:
+            # e.g. _SAVEPDFCURRENTPAGE:::100""")
         }
 
     def parser(self, textCommand, source="main"):
@@ -2535,6 +2541,13 @@ class TextCommandParser:
             command += ":::1"
         pdfFile, page = self.splitCommand(command)
         self.parent.openPdfReader(pdfFile, page, True)
+        return ("", "", {})
+
+    # _SAVEPDFCURRENTPAGE:::
+    def savePdfCurrentPage(self, page, source):
+        command = "ANYPDF:::{0}:::{1}".format(config.pdfTextPath, page)
+        self.parent.addHistoryRecord("study", command)
+        self.parent.displayMessage(config.thisTranslation["saved"])
         return ("", "", {})
 
     def noAction(self, command, source):

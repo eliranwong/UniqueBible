@@ -697,4 +697,6 @@ translation = {
     "openInBook": "In Buch öffnen",
     "parseBookChapterWithoutSpace": "Syntaxanalyse von Referenzen ohne Leerzeichen zwischen Buchname und Kapitelnummer.",
     "updateWithGitPull": "Verwenden Sie GIT PULL, um UBA zu aktualisieren.",
+    "savePdfCurrentPage": "PDF-aktuelle Seite speichern",
+    "saved": "Gespeichert",
 }

@@ -697,4 +697,6 @@ translation = {
     "openInBook": "在指定书中打开",
     "parseBookChapterWithoutSpace": "解析在书名和章号之间没有空格的经文参照。",
     "updateWithGitPull": "使用 Git 拉出来更新 UBA。",
+    "savePdfCurrentPage": "保存 PDF 当前页面",
+    "saved": "已保存",
 }
