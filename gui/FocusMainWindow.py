@@ -483,13 +483,13 @@ class FocusMainWindow:
 
         self.addStandardIconButton("menu7_create", "newfile.png", self.createNewNoteFile, self.secondToolBar)
         self.addStandardIconButton("menu7_open", "open.png", self.openTextFileDialog, self.secondToolBar)
-        self.addStandardIconButton("wordDocument", "docx.png", self.openDocxDialog, self.secondToolBar)
-        self.addStandardIconButton("pdfDocument", "pdfOpen.png", self.openPdfDialog, self.secondToolBar)
-        self.addStandardIconButton("savePdfCurrentPage", "save.png", self.invokeSavePdfPage, self.secondToolBar)
 
         self.externalFileButton = QPushButton(self.getLastExternalFileName())
         self.addStandardTextButton("menu7_read", self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton)
 
+        self.addStandardIconButton("wordDocument", "docx.png", self.openDocxDialog, self.secondToolBar)
+        self.addStandardIconButton("pdfDocument", "pdfOpen.png", self.openPdfDialog, self.secondToolBar)
+        self.addStandardIconButton("savePdfCurrentPage", "save.png", self.invokeSavePdfPage, self.secondToolBar)
         self.addStandardIconButton("menu7_edit", "edit.png", self.editExternalFileButtonClicked, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
@@ -686,12 +686,6 @@ class FocusMainWindow:
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_create"], self.createNewNoteFile)
         iconFile = os.path.join("htmlResources", "open.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_open"], self.openTextFileDialog)
-        iconFile = os.path.join("htmlResources", "docx.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["wordDocument"], self.openDocxDialog)
-        iconFile = os.path.join("htmlResources", "pdfOpen.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["pdfDocument"], self.openPdfDialog)
-        iconFile = os.path.join("htmlResources", "save.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["savePdfCurrentPage"], self.invokeSavePdfPage)
 
         self.externalFileButton = QPushButton(self.getLastExternalFileName())
         self.externalFileButton.setToolTip(config.thisTranslation["menu7_read"])
@@ -699,6 +693,12 @@ class FocusMainWindow:
         self.externalFileButton.clicked.connect(self.externalFileButtonClicked)
         self.secondToolBar.addWidget(self.externalFileButton)
 
+        iconFile = os.path.join("htmlResources", "docx.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["wordDocument"], self.openDocxDialog)
+        iconFile = os.path.join("htmlResources", "pdfOpen.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["pdfDocument"], self.openPdfDialog)
+        iconFile = os.path.join("htmlResources", "save.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["savePdfCurrentPage"], self.invokeSavePdfPage)
         iconFile = os.path.join("htmlResources", "edit.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_edit"], self.editExternalFileButtonClicked)
 

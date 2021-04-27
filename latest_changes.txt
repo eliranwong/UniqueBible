@@ -1,3 +1,7 @@
+Major changes in version 23.98:
+* Relocated several toolbar icon buttons on Focus menu layout.
+* Added a message 'No PDF is currently opened!' when there is no pdf activvely opened and users click the 'Save PDF current page' button.
+
 Major changes in version 23.97:
 * Added command keyword _savepdfcurrentpage:::
 * Added a toolbar icon button to save history of currently opened pdf page number.
