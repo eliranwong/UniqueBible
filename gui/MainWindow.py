@@ -1398,7 +1398,7 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
-                                                      os.path.join("marvelData", "docx"),
+                                                      os.path.join(config.marvelData, "docx"),
                                                       "Word Documents (*.docx)",
                                                       "", options)
         if fileName:
@@ -1425,7 +1425,7 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
-                                                      os.path.join("marvelData", "pdf"),
+                                                      os.path.join(config.marvelData, "pdf"),
                                                       "PDF Files (*.pdf)",
                                                       "", options)
         if fileName:

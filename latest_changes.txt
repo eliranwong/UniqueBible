@@ -1,3 +1,6 @@
+Major changes in version 23.99:
+* Fixed using shared marvelData directory in some features.
+
 Major changes in version 23.98:
 * Relocated several toolbar icon buttons on Focus menu layout.
 * Added a message 'No PDF is currently opened!' when there is no pdf activvely opened and users click the 'Save PDF current page' button.

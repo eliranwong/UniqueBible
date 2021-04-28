@@ -319,7 +319,7 @@ class Converter:
 
     def importDocx(self, fileName):
         *_, name = os.path.split(fileName)
-        destination = os.path.join("marvelData", "docx", name)
+        destination = os.path.join(config.marvelData, "docx", name)
         try:
             copyfile(fileName, destination)
         except:
@@ -327,7 +327,7 @@ class Converter:
 
     def importPdf(self, fileName):
         *_, name = os.path.split(fileName)
-        destination = os.path.join("marvelData", "pdf", name)
+        destination = os.path.join(config.marvelData, "pdf", name)
         try:
             copyfile(fileName, destination)
         except:

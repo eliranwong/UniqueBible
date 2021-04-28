@@ -15,7 +15,7 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 #SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
-noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
+#noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
 noteFileCloudId = os.path.join("plugins", "menu", "NotesUtility", "noteFileGoogleCloudId.txt")
 
 def getService():
@@ -96,7 +96,9 @@ def downloadNotes(service):
 
 
 if __name__ == '__main__':
-    argument = " ".join(sys.argv[1:])
+    #argument = " ".join(sys.argv[1:])
+    argument, marvelData = " ".join(sys.argv[1:]).split(" ", 1)
+    noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite") if marvelData == "marvelData" else os.path.join(marvelData, "note.sqlite")
     service = getService()
     options = {
         "upload": uploadNotes,

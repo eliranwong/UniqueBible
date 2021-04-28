@@ -11,7 +11,7 @@ except:
 def uploadNotes():
     try:
         noteFileCloudId = os.path.join("plugins", "menu", "NotesUtility", "noteFileGoogleCloudId.txt")
-        upload = subprocess.Popen("{0} {1} upload".format(sys.executable, os.path.join("plugins", "menu", "NotesUtility", "access_google_drive.py")), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        upload = subprocess.Popen("{0} {1} upload {2}".format(sys.executable, os.path.join("plugins", "menu", "NotesUtility", "access_google_drive.py"), config.marvelData), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = upload.communicate()
         if not stderr:
             text = stdout.decode("utf-8")
@@ -27,7 +27,8 @@ def uploadNotes():
 
 
 credentials = os.path.join("credentials.json")
-noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
+#noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite")
+noteFile = os.path.join(os.getcwd(), "marvelData", "note.sqlite") if config.marvelData == "marvelData" else os.path.join(config.marvelData, "note.sqlite")
 if not os.path.isfile(credentials):
     config.mainWindow.displayMessage("You have not yet enabled Goolge Drive API! \nRead for more information at: https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")
     config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/Notes-Backup-with-Google-Drive")

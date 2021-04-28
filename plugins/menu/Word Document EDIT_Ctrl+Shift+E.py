@@ -5,7 +5,7 @@ from qtpy.QtWidgets import QFileDialog
 options = QFileDialog.Options()
 fileName, filtr = QFileDialog.getOpenFileName(config.mainWindow,
                                               config.thisTranslation["menu7_open"],
-                                              os.path.join("marvelData", "docx"),
+                                              os.path.join(config.marvelData, "docx"),
                                               "Word Documents (*.docx)",
                                               "", options)
 if fileName:

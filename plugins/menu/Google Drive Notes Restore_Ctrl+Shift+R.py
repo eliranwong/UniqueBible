@@ -10,7 +10,7 @@ except:
 
 def downloadNotes():
     try:
-        upload = subprocess.Popen("{0} {1} download".format(sys.executable, os.path.join("plugins", "menu", "NotesUtility", "access_google_drive.py")), shell=True)
+        upload = subprocess.Popen("{0} {1} download {2}".format(sys.executable, os.path.join("plugins", "menu", "NotesUtility", "access_google_drive.py"), config.marvelData), shell=True)
         *_, stderr = upload.communicate()
         if not stderr:
             config.mainWindow.displayMessage("Restored!")
