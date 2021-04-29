@@ -349,7 +349,10 @@ class Converter:
         connection.text_factory = lambda b: b.decode(errors='ignore')
         cursor = connection.cursor()
 
-        query = "SELECT Title, Abbreviation FROM Details"
+        if self.checkColumnExists("Details", "Title", cursor):
+            query = "SELECT Title, Abbreviation FROM Details"
+        else:
+            query = "SELECT Description, Abbreviation FROM Details"
         cursor.execute(query)
         description, abbreviation = cursor.fetchone()
         abbreviation = abbreviation.replace("-", "")
@@ -1640,6 +1643,13 @@ class Converter:
 
         connection.close()
 
+    def checkColumnExists(self, table, column, cursor):
+        cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))
+        if cursor.fetchone():
+            return True
+        else:
+            return False
+
 
 class ThirdPartyDictionary:
 
@@ -1895,7 +1905,6 @@ class ThirdPartyDictionary:
             config.thirdDictionary = self.module
             content = Converter().formatNonBibleMyBibleModule(content[0], self.module)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
-
 
 if __name__ == '__main__':
 
