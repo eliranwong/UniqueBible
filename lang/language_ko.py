@@ -699,4 +699,6 @@ translation = {
     "updateWithGitPull": "GIT PULL을 사용하여 UBA를 업데이트한다.",
     "savePdfCurrentPage": "PDF 현재 페이지 저장하기",
     "saved": "저장된",
+    "marvelData": "marvelData Directory를 선택한다.",
+    "resourceDirectory": "데이터베이스 디렉토리 선택",
 }

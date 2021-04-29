@@ -699,4 +699,6 @@ translation = {
     "updateWithGitPull": "GIT PULL ഉപയോഗിക്കുക UBA.",
     "savePdfCurrentPage": "PDF നിലവിലുള്ള താള് സൂക്ഷിക്കുക",
     "saved": "സേവനം",
+    "marvelData": "മാര്വല് ഡേറ്റാ ഡയറക്ടറി തെരഞ്ഞെടുക്കുക",
+    "resourceDirectory": "ഡാറ്റാബേസ് തട്ട് തെരഞ്ഞെടുക്കുക",
 }

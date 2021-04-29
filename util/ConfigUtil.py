@@ -148,7 +148,7 @@ class ConfigUtil:
             config.openLinuxPdf = "xdg-open"
         config.help["marvelData"] = """
         # Specify the folder path of resources"""
-        if not hasattr(config, "marvelData"):
+        if not hasattr(config, "marvelData") or not os.path.isdir(config.marvelData):
             config.marvelData = "marvelData"
         config.help["musicFolder"] = """
         # Specify the folder path of music files"""

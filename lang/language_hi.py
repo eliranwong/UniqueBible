@@ -699,4 +699,6 @@ translation = {
     "updateWithGitPull": "UBA को अद्यतन करने के लिए git खींचना इस्तेमाल करें.",
     "savePdfCurrentPage": "PDF वर्तमान पृष्ठ सहेजें",
     "saved": "सहेजा गया",
+    "marvelData": "Marvelata निर्देशिका का चयन करें",
+    "resourceDirectory": "डाटाबेस डिरेक्ट्री चुनें",
 }

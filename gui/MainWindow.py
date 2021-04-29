@@ -1562,6 +1562,16 @@ class MainWindow(QMainWindow):
             elif fileName.endswith(".xml"):
                 self.importXMLBible(fileName)
 
+    def customMarvelData(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                                                     "marvelData",
+                                                     self.directoryLabel.text(), options)
+        if directory:
+            config.marvelData = directory
+            self.reloadControlPanel(False)
+
+
     def importModulesInFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,

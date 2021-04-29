@@ -699,4 +699,6 @@ translation = {
     "updateWithGitPull": "Utilizaţi GIT TRAGE pentru a actualiza UBA.",
     "savePdfCurrentPage": "Salvare pagină curentă PDF",
     "saved": "Salvat",
+    "marvelData": "Selectare director marvelData",
+    "resourceDirectory": "Selectare director bază de date",
 }

@@ -699,4 +699,6 @@ translation = {
     "updateWithGitPull": "使用 GIT PULL 來更新 UBA。",
     "savePdfCurrentPage": "儲存 PDF 現行頁面",
     "saved": "已儲存",
+    "marvelData": "選取 marveData 目錄",
+    "resourceDirectory": "選取資料庫目錄",
 }
