@@ -38,6 +38,7 @@ class ClassicMainWindow:
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog, None),
             ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog, None),
             ("menu1_setAbbreviations", self.setBibleAbbreviations, None),
+            ("resourceDirectory", self.customMarvelData, None),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog, None),
             ("menu1_setMyLanguage", self.openTranslationLanguageDialog, None),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog, None),

@@ -110,6 +110,7 @@ class AlephMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
         addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
+        menu1_defaults.addAction(QAction(config.thisTranslation["resourceDirectory"], self, triggered=self.customMarvelData))
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))

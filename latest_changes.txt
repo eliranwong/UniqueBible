@@ -1,5 +1,5 @@
-Major change in version 24.0:
-* Added a file dialog on Focus menu layout to specify custom database directory.
+Major change in version 24.0, 24.01:
+* Added a file dialog to specify custom database directory.
 
 Major changes in version 23.99:
 * Fixed using shared marvelData directory in some features.

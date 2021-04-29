@@ -1565,7 +1565,7 @@ class MainWindow(QMainWindow):
     def customMarvelData(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
-                                                     "marvelData",
+                                                     config.thisTranslation["resourceDirectory"],
                                                      self.directoryLabel.text(), options)
         if directory:
             config.marvelData = directory
