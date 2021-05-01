@@ -137,18 +137,18 @@ class BibleVerseParser:
             text = RegexSearch.replace(text, searchReplace)
         return text
 
-    def parseText(self, text, splitInChunks=True):
+    def parseText(self, text, splitInChunks=True, parseBooklessReferences=False):
         if splitInChunks:
             parsedText = ""
             chunks = text.splitlines(True)
             chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
             for chunk in chunks:
-                parsedText += self.runParseText("".join(chunk))
+                parsedText += self.runParseText("".join(chunk), parseBooklessReferences)
         else:
-            parsedText = self.runParseText(text)
+            parsedText = self.runParseText(text, parseBooklessReferences)
         return parsedText
 
-    def runParseText(self, text):
+    def runParseText(self, text, parseBooklessReferences=False):
         # Add a space at the end of the text, to avoid indefinite loop in some of the following processes.
         # This extra space will be removed when parsing is finished.
         text = text + " "
@@ -204,6 +204,13 @@ class BibleVerseParser:
             return text.replace("＊", "")[:-1]
 
         # check if tagged references are followed by untagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
+        if parseBooklessReferences and config.parseBooklessReferences:
+            searchReplace = (
+                ("｝[^｝,-–;0-9][^｝<>]*?([0-9])", r"｝; \1"),
+                ("([0-9])[^｝,-–;0-9][^｝<>]*?([0-9])", r"\1; \2"),
+            )
+            text = RegexSearch.replace(text, searchReplace)
+            print(text)
         searchPattern = '</ref｝[,-–;][ ]*?[0-9]'
         searchReplace = (
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
@@ -256,7 +263,7 @@ class BibleVerseParser:
     
     def runExtractAllReferences(self, text, tagged=False):
         if not tagged:
-            text = self.parseText(text, False)
+            text = self.parseText(text, False, True)
         # return a list of tuples (b, c, v)
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 

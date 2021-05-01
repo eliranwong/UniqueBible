@@ -701,4 +701,5 @@ translation = {
     "saved": "Gespeichert",
     "marvelData": "MarvelData-Verzeichnis auswählen",
     "resourceDirectory": "Datenbankverzeichnis auswählen",
+    "parseBooklessReferences": "Parsen mit bookless-Referenzen im ausgewählten Text.",
 }

@@ -701,4 +701,5 @@ translation = {
     "saved": "Σώθηκε!",
     "marvelData": "Επιλογή καταλόγου θαυμάτων",
     "resourceDirectory": "Επιλογή καταλόγου βάσης δεδομένων",
+    "parseBooklessReferences": "Ανάλυση παραπομπών σε επιλεγμένα κείμενα.",
 }

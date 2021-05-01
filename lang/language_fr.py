@@ -701,4 +701,5 @@ translation = {
     "saved": "Enregistré",
     "marvelData": "Sélectionner le merveilleux répertoire de données",
     "resourceDirectory": "Sélectionnez Répertoire de base de données",
+    "parseBooklessReferences": "Analyser les références sans signet dans le texte sélectionné.",
 }

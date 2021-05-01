@@ -701,4 +701,5 @@ translation = {
     "saved": "सहेजा गया",
     "marvelData": "Marvelata निर्देशिका का चयन करें",
     "resourceDirectory": "डाटाबेस डिरेक्ट्री चुनें",
+    "parseBooklessReferences": "चुने गए पाठ में बुकलेस संदर्भों का विश्लेषण करें.",
 }

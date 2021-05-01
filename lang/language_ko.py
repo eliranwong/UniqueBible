@@ -701,4 +701,5 @@ translation = {
     "saved": "저장된",
     "marvelData": "marvelData Directory를 선택한다.",
     "resourceDirectory": "데이터베이스 디렉토리 선택",
+    "parseBooklessReferences": "선택된 텍스트의 북적인 책갈피를 구문 분석하지 않습니다.",
 }

@@ -1,3 +1,7 @@
+Major change in version 24.03:
+* Added a config flag 'parseBooklessReferences', giving users an option to parse bookless references in selected text.
+    This option is especially using for parsing references in non-tagged text, like pdf or word document.
+
 Major change in version 24.02:
 * Fixed bblx import issue
 

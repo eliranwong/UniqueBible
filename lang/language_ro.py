@@ -701,4 +701,5 @@ translation = {
     "saved": "Salvat",
     "marvelData": "Selectare director marvelData",
     "resourceDirectory": "Selectare director bază de date",
+    "parseBooklessReferences": "Analizaţi referinţele mai puţine în textul selectat.",
 }

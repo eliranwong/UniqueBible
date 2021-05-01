@@ -71,6 +71,7 @@ class ConfigFlagsWindow(QDialog):
             ("parseWordDocument", config.parseWordDocument, self.parseWordDocumentChanged, True, config.thisTranslation["parseWordDocument"]),
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator, self.convertChapterVerseDotSeparatorChanged, True, config.thisTranslation["convertChapterVerseDotSeparator"]),
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace, self.parseBookChapterWithoutSpaceChanged, True, config.thisTranslation["parseBookChapterWithoutSpace"]),
+            ("parseBooklessReferences", config.parseBooklessReferences, self.parseBooklessReferencesChanged, True, config.thisTranslation["parseBooklessReferences"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -301,6 +302,9 @@ class ConfigFlagsWindow(QDialog):
 
     def parseBookChapterWithoutSpaceChanged(self):
         config.parseBookChapterWithoutSpace = not config.parseBookChapterWithoutSpace
+
+    def parseBooklessReferencesChanged(self):
+        config.parseBooklessReferences = not config.parseBooklessReferences
 
     def overwriteNoteFontChanged(self):
         config.overwriteNoteFont = not config.overwriteNoteFont

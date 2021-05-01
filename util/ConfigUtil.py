@@ -207,6 +207,10 @@ class ConfigUtil:
         # Parse references without space between book name and chapter number."""
         if not hasattr(config, "parseBookChapterWithoutSpace"):
             config.parseBookChapterWithoutSpace = True
+        config.help["parseBooklessReferences"] = """
+        # Parse bookless references in selected text."""
+        if not hasattr(config, "parseBooklessReferences"):
+            config.parseBooklessReferences = True
         config.help["userLanguage"] = """
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
@@ -767,6 +771,7 @@ class ConfigUtil:
             ("noOfLinesPerChunkForParsing", config.noOfLinesPerChunkForParsing),
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator),
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace),
+            ("parseBooklessReferences", config.parseBooklessReferences),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),
