@@ -18,6 +18,7 @@ config.parserStandarisation = "NO"
 config.noOfLinesPerChunkForParsing = 100
 config.convertChapterVerseDotSeparator = True
 config.parseBookChapterWithoutSpace = False
+config.parseBooklessReferences = True
 
 from TextCommandParser import TextCommandParser
 
