@@ -1,4 +1,4 @@
-Major change in version 24.03:
+Major change in version 24.03, 24.04:
 * Added a config flag 'parseBooklessReferences', giving users an option to parse bookless references in selected text.
     This option is especially using for parsing references in non-tagged text, like pdf or word document.
 

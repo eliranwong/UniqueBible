@@ -210,7 +210,6 @@ class BibleVerseParser:
                 ("([0-9])[^｝,-–;0-9][^｝<>]*?([0-9])", r"\1; \2"),
             )
             text = RegexSearch.replace(text, searchReplace)
-            print(text)
         searchPattern = '</ref｝[,-–;][ ]*?[0-9]'
         searchReplace = (
             ('<ref onclick="bcv\(([0-9]+?),([0-9]+?),([0-9]+?)\)">([^｝]*?)</ref｝([,-–;][ ]*?)([0-9]+?):([0-9]+?)([^0-9])', r'<ref onclick="bcv(\1,\2,\3)">\4</ref｝\5<ref onclick="bcv(\1,\6,\7)">\6:\7</ref｝\8'),
