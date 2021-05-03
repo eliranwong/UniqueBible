@@ -1,3 +1,13 @@
+Major changes in version 24.06:
+* Renamed 1 context plugin:
+    'plugins/context/Insert Text into Note Editor_Ctrl+Shift+I.py'
+* Added 5 new context plugins:
+    'plugins/context/Insert Text into Existing Word Document.py'
+    'plugins/context/Insert Text into NEW Word Dcoument.py'
+    'plugins/context/Insert References into Existing Word Document.py'
+    'plugins/context/Insert References into Note Editor.py'
+    'plugins/context/Insert References into NEW Word Dcoument.py'
+
 Major changes in version 24.05:
 * Added support to export Bible / Study Tab to Word Document (*.docx).
 * Added icon buttons on Focus menu layout to export content to Word Document.
