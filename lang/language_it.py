@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Seleziona directory marvelData",
     "resourceDirectory": "Seleziona directory database",
     "parseBooklessReferences": "Paralizza i riferimenti del libretto in testo selezionato.",
+    "exportToDocx": "Esporta in Word Document",
 }

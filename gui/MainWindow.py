@@ -1489,6 +1489,34 @@ class MainWindow(QMainWindow):
         filename = "UniqueBible.app.pdf"
         self.studyPage.printToPdf(filename)
 
+    # Actions - export to Word Document (*.docx)
+    def exportHtmlToDocx(self, html):
+        try:
+            from htmldocx import HtmlToDocx
+            new_parser = HtmlToDocx()
+            docx = new_parser.parse_html_string(html)
+        except:
+            from docx import Document
+            import html_text
+            text = html_text.extract_text(html)
+            docx = Document()
+            docx.add_paragraph(text)
+        filename = "UniqueBibleApp.docx"
+        docx.save(filename)
+        subprocess.Popen("{0} {1}".format(config.open, filename), shell=True)
+
+    def exportMainPageToDocx(self):
+        if config.isHtmldocxInstalled:
+            self.mainPage.toHtml(self.exportHtmlToDocx)
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupport"])
+
+    def exportStudyPageToDocx(self):
+        if config.isHtmldocxInstalled:
+            self.studyPage.toHtml(self.exportHtmlToDocx)
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupport"])
+
     # import BibleBentoPlus modules
     def importBBPlusLexiconInAFolder(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -2791,31 +2819,38 @@ class MainWindow(QMainWindow):
     # change of unique bible commands
 
     def mainTextCommandChanged(self, newTextCommand):
-        if newTextCommand not in ("main.html", "UniqueBible.app"):
-            self.textCommandChanged(newTextCommand, "main")
+        try:
+            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app"):
+                self.textCommandChanged(newTextCommand, "main")
+        except:
+            pass
 
     def studyTextCommandChanged(self, newTextCommand):
-        if newTextCommand not in ("main.html", "UniqueBible.app") \
-                and not newTextCommand.endswith("UniqueBibleApp.png") \
-                and not newTextCommand.startswith("viewer.html") \
-                and not newTextCommand.endswith(".pdf") \
-                and not newTextCommand.startswith("ePubViewer.html"):
-            self.textCommandChanged(newTextCommand, "study")
+        try:
+            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app") \
+                    and not newTextCommand.endswith("UniqueBibleApp.png") \
+                    and not newTextCommand.startswith("viewer.html") \
+                    and not newTextCommand.endswith(".pdf") \
+                    and not newTextCommand.startswith("ePubViewer.html"):
+                self.textCommandChanged(newTextCommand, "study")
+        except:
+            pass
 
     def instantTextCommandChanged(self, newTextCommand):
         self.textCommandChanged(newTextCommand, "instant")
 
     # change of text command detected via change of document.title
     def textCommandChanged(self, newTextCommand, source="main"):
-        exceptionTuple = ("UniqueBible.app", "about:blank", "study.html")
-        if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand[
-                                                                                                         -4:] == ".txt" or newTextCommand in exceptionTuple):
-            if source == "main" and not newTextCommand.startswith("_"):
-                self.textCommandLineEdit.setText(newTextCommand)
-            if newTextCommand.startswith("_"):
-                self.runTextCommand(newTextCommand, False, source)
-            else:
-                self.runTextCommand(newTextCommand, True, source)
+        if isinstance(newTextCommand, str):
+            exceptionTuple = ("UniqueBible.app", "about:blank", "study.html")
+            if not (newTextCommand.startswith("data:text/html;") or newTextCommand.startswith("file:///") or newTextCommand[
+                                                                                                             -4:] == ".txt" or newTextCommand in exceptionTuple):
+                if source == "main" and not newTextCommand.startswith("_"):
+                    self.textCommandLineEdit.setText(newTextCommand)
+                if newTextCommand.startswith("_"):
+                    self.runTextCommand(newTextCommand, False, source)
+                else:
+                    self.runTextCommand(newTextCommand, True, source)
 
     # change of text command detected via user input
     def textCommandEntered(self, source="main"):

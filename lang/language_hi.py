@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Marvelata निर्देशिका का चयन करें",
     "resourceDirectory": "डाटाबेस डिरेक्ट्री चुनें",
     "parseBooklessReferences": "चुने गए पाठ में बुकलेस संदर्भों का विश्लेषण करें.",
+    "exportToDocx": "दस्तावेज़ शब्द दस्तावेज़ में निर्यात करें",
 }

@@ -171,6 +171,15 @@ class FocusMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
+        menu.addSeparator()
+        if config.isHtmldocxInstalled:
+            subMenu = addSubMenu(menu, "exportToDocx")
+            items = (
+                ("bar1_menu", self.exportMainPageToDocx),
+                ("bar2_menu", self.exportStudyPageToDocx),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(menu, "bar3_pdf")
         items = (
             ("bar1_menu", self.printMainPage),
@@ -517,6 +526,8 @@ class FocusMainWindow:
         self.addStandardIconButton("menu3_main", "history.png", self.mainHistoryButtonClicked, self.leftToolBar)
         self.addStandardIconButton("menu3_mainForward", "right.png", self.forward, self.leftToolBar)
         self.leftToolBar.addSeparator()
+        if config.isHtmldocxInstalled:
+            self.addStandardIconButton("exportToDocx", "docx.png", self.exportMainPageToDocx, self.leftToolBar)
         self.addStandardIconButton("bar3_pdf", "pdf.png", self.printMainPage, self.leftToolBar)
         self.leftToolBar.addSeparator()
         self.enableParagraphButton = QPushButton()
@@ -546,6 +557,8 @@ class FocusMainWindow:
         self.addStandardIconButton("menu3_study", "history.png", self.studyHistoryButtonClicked, self.rightToolBar)
         self.addStandardIconButton("menu3_studyForward", "right.png", self.studyForward, self.rightToolBar)
         self.rightToolBar.addSeparator()
+        if config.isHtmldocxInstalled:
+            self.addStandardIconButton("exportToDocx", "docx.png", self.exportStudyPageToDocx, self.rightToolBar)
         self.addStandardIconButton("bar3_pdf", "pdf.png", self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
         self.addStandardIconButton("menu4_indexes", "indexes.png", self.runINDEX, self.rightToolBar)
@@ -745,6 +758,9 @@ class FocusMainWindow:
 
         self.leftToolBar.addSeparator()
 
+        if config.isHtmldocxInstalled:
+            iconFile = os.path.join("htmlResources", "docx.png")
+            self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportMainPageToDocx)
         iconFile = os.path.join("htmlResources", "pdf.png")
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar3_pdf"], self.printMainPage)
 
@@ -802,6 +818,9 @@ class FocusMainWindow:
 
         self.rightToolBar.addSeparator()
 
+        if config.isHtmldocxInstalled:
+            iconFile = os.path.join("htmlResources", "docx.png")
+            self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportStudyPageToDocx)
         iconFile = os.path.join("htmlResources", "pdf.png")
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar3_pdf"], self.printStudyPage)
 

@@ -702,4 +702,5 @@ translation = {
     "marvelData": "marvelData ディレクトリーの選択",
     "resourceDirectory": "データベースディレクトリの選択",
     "parseBooklessReferences": "選択したテキスト内のブックマークの参照を解析します。",
+    "exportToDocx": "Word 文書にエクスポート",
 }

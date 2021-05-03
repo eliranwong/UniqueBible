@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Επιλογή καταλόγου θαυμάτων",
     "resourceDirectory": "Επιλογή καταλόγου βάσης δεδομένων",
     "parseBooklessReferences": "Ανάλυση παραπομπών σε επιλεγμένα κείμενα.",
+    "exportToDocx": "Εξαγωγή σε έγγραφο Word",
 }

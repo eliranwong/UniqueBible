@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Sélectionner le merveilleux répertoire de données",
     "resourceDirectory": "Sélectionnez Répertoire de base de données",
     "parseBooklessReferences": "Analyser les références sans signet dans le texte sélectionné.",
+    "exportToDocx": "Exporter vers un document Word",
 }

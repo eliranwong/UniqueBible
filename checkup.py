@@ -128,12 +128,19 @@ def isMammothInstalled():
     except:
         return False
 
-#def isPythonDocxInstalled():
-#    try:
-#        from docx import Document
-#        return True
-#    except:
-#        return False
+def isHtmldocxInstalled():
+    try:
+        from htmldocx import HtmlToDocx
+        return True
+    except:
+        return False
+
+def isPythonDocxInstalled():
+    try:
+        from docx import Document
+        return True
+    except:
+        return False
 
 def isDiffMatchPatchInstalled():
     try:
@@ -214,10 +221,12 @@ def isTtsInstalled():
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
     #    config.isPyPDF2Installed = isInstalled
-    #elif module == "python-docx":
-    #    config.isPythonDocxInstalled = isInstalled
     if module == "mammoth":
         config.isMammothInstalled = isInstalled
+    elif module == "htmldocx":
+        config.isHtmldocxInstalled = isInstalled
+    elif module == "python-docx":
+        config.isPythonDocxInstalled = isInstalled
     elif module == "diff_match_patch":
         config.isDiffMatchPatchInstalled = isInstalled
     elif module == "langdetect":
@@ -266,8 +275,9 @@ for module, feature, isInstalled in required:
 optional = (
     ("html-text", "Read html text", isHtmlTextInstalled),
     #("PyPDF2", "Open PDF file", isPyPDF2Installed),
-    #("python-docx", "Open DOCX file", isPythonDocxInstalled),
     ("mammoth", "Open DOCX file", isMammothInstalled),
+    ("htmldocx", "Convert HTML to DOCX", isHtmldocxInstalled),
+    ("python-docx", "Handle DOCX file", isPythonDocxInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
     ("pygithub", "Github access", isPygithubInstalled),

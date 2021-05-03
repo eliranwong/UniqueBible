@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Selectare director marvelData",
     "resourceDirectory": "Selectare director bază de date",
     "parseBooklessReferences": "Analizaţi referinţele mai puţine în textul selectat.",
+    "exportToDocx": "Export în document Word",
 }

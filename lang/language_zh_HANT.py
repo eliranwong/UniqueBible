@@ -702,4 +702,5 @@ translation = {
     "marvelData": "選取 marveData 目錄",
     "resourceDirectory": "選取資料庫目錄",
     "parseBooklessReferences": "在選取的文字中剖析沒有註明書卷的經文參照。",
+    "exportToDocx": "匯出至 Word 文件",
 }

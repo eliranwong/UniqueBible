@@ -702,4 +702,5 @@ translation = {
     "marvelData": "Select marvelData Directory",
     "resourceDirectory": "Select Database Directory",
     "parseBooklessReferences": "Parse bookless references in selected text.",
+    "exportToDocx": "Export to Word Document",
 }
