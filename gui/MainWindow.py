@@ -1175,7 +1175,7 @@ class MainWindow(QMainWindow):
         return css
 
     # Actions - open text from external sources
-    def htmlWrapper(self, text, parsing=False, view="study", linebreak=True):
+    def htmlWrapper(self, text, parsing=False, view="study", linebreak=True, html=True):
         searchReplace1 = (
             ("\r\n|\r|\n", "<br>"),
             ("\t", "&emsp;&emsp;"),
@@ -1190,8 +1190,9 @@ class MainWindow(QMainWindow):
         if linebreak:
             for search, replace in searchReplace1:
                 text = re.sub(search, replace, text)
-        for search, replace in searchReplace2:
-            text = re.sub(search, replace, text)
+        if html:
+            for search, replace in searchReplace2:
+                text = re.sub(search, replace, text)
         if parsing:
             # Export inline images to external files, so as to improve parsing performance. 
             text = self.exportAllImages(text)

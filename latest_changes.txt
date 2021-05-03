@@ -1,3 +1,6 @@
+Major change in version 24.09:
+* Added a menu plugin "PowerPoint Text" to extract text from PowerPoint Files (*.pptx) and display on UBA.
+
 Major changes in version 24.08:
 * Improved display of differences in version comparison.
 * Improved display of search result exported Word Document.
