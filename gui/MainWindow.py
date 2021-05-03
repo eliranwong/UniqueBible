@@ -1494,7 +1494,7 @@ class MainWindow(QMainWindow):
         try:
             from htmldocx import HtmlToDocx
             new_parser = HtmlToDocx()
-            docx = new_parser.parse_html_string(html)
+            docx = new_parser.parse_html_string(html.replace("</div><div", "</div><br><div"))
         except:
             from docx import Document
             import html_text

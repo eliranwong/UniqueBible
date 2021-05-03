@@ -1,5 +1,9 @@
+Major changes in version 24.08:
+* Improved display of differences in version comparison.
+* Improved display of search result exported Word Document.
+
 Major change in version 24.07:
-* Improved display of version comparison of single verse with use of table.
+* Improved display of single verse version comparison of with use of table.
 
 Major changes in version 24.06:
 * Renamed 1 context plugin:

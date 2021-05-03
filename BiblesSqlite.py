@@ -476,10 +476,13 @@ input.addEventListener('keyup', function(event) {0}
         texts.insert(0, mainText)
 
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+        verses += "<table>"
         from diff_match_patch import diff_match_patch
         dmp = diff_match_patch()
         *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
         for text in texts:
+            verses += "<tr>"
+            verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
             if not text == mainText and not text in config.originalTexts:
                 diff = dmp.diff_main(mainVerseText, verseText)
@@ -489,8 +492,10 @@ input.addEventListener('keyup', function(event) {0}
             divTag = "<div>"
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
-            verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
+            verses += "<td>{0}{1}</div></td>".format(divTag, verseText.strip())
+            verses += "</tr>"
         config.mainText = mainText
+        verses += "</table>"
         return verses
 
     def countSearchBible(self, text, searchString, interlinear=False):
@@ -556,7 +561,7 @@ input.addEventListener('keyup', function(event) {0}
         if mode == "REGEX":
             formatedText += "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
             verses = [(b, c, v, re.sub("({0})".format(searchString), r"<z>\1</z>", verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)) for b, c, v, verseText in verses if re.search(searchString, verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)]
-        formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p>".format(len(verses))
+        formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p><p>".format(len(verses))
         if referenceOnly:
             parser = BibleVerseParser(config.parserStandarisation)
             formatedText += "; ".join(["<ref onclick='bcv({0}, {1}, {2})'>{3}</ref>".format(b, c, v, parser.bcvToVerseReference(b, c, v)) for b, c, v, *_ in verses])
@@ -587,6 +592,7 @@ input.addEventListener('keyup', function(event) {0}
                         formatedText = re.sub("("+searchword+")", r"<z>\1</z>", formatedText, flags=re.IGNORECASE)
             # fix highlighting
             formatedText = TextUtil.fixTextHighlighting(formatedText)
+            formatedText += "</p>"
         return formatedText
 
     def getSearchVerses(self, query, binding):
