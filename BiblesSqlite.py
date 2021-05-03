@@ -453,11 +453,16 @@ input.addEventListener('keyup', function(event) {0}
             texts = plainBibleList + formattedBibleList
 
         verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+        verses += "<table>"
         for text in texts:
             *_, verseText = self.readTextVerse(text, b, c, v)
             if not (verseText == "" and config.hideBlankVerseCompare):
+                verses += "<tr>"
+                verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
                 divTag = "<div style='direction: rtl;'>" if b < 40 and text in config.rtlTexts else "<div>"
-                verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText.strip())
+                verses += "<td>{0}{1}</div></td>".format(divTag, verseText.strip())
+                verses += "</tr>"
+        verses += "</table>"
         return verses
 
     def readTranslationsDiff(self, b, c, v, texts):

@@ -1,3 +1,6 @@
+Major change in version 24.07:
+* Improved display of version comparison of single verse with use of table.
+
 Major changes in version 24.06:
 * Renamed 1 context plugin:
     'plugins/context/Insert Text into Note Editor_Ctrl+Shift+I.py'
