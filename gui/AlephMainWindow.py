@@ -360,6 +360,8 @@ class AlephMainWindow:
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
             build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
+            build_macros_menu.addAction(QAction(config.thisTranslation["downloadMissingFiles"], self, triggered=self.macroGenerateDownloadMissingFiles))
+            build_macros_menu.addAction(QAction(config.thisTranslation["downloadExistingFiles"], self, triggered=self.macroGenerateDownloadExistingFiles))
 
         # plugins
         if config.enablePlugins:

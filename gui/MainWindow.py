@@ -43,7 +43,9 @@ from gui.CentralWidget import CentralWidget
 from gui.AppUpdateDialog import AppUpdateDialog
 from ToolsSqlite import LexiconData
 from TtsLanguages import TtsLanguages
+from util.DatafileLocation import DatafileLocation
 from util.DateUtil import DateUtil
+from util.GithubUtil import GithubUtil
 from util.LanguageUtil import LanguageUtil
 from util.MacroParser import MacroParser
 from util.NoteService import NoteService
@@ -73,7 +75,7 @@ class MainWindow(QMainWindow):
                     print("'{0}' is not deleted.".format(filePath))
         # information on latest modules
         self.updatedFiles = update.updatedFiles
-        self.bibleInfo = update.bibleInfo
+        self.bibleInfo = DatafileLocation.marvelBibles
         # set os open command
         self.setOsOpenCmd()
         # set translation of interface
@@ -540,7 +542,7 @@ class MainWindow(QMainWindow):
         self.downloadthread.start()
 
     def moduleInstalled(self, fileItems, cloudID, notification=True):
-        if self.downloader.isVisible():
+        if hasattr(self, "downloader") and self.downloader.isVisible():
             self.downloader.close()
         # Check if file is successfully installed
         localFile = os.path.join(*fileItems)
@@ -606,68 +608,7 @@ class MainWindow(QMainWindow):
                     break
 
     def installMarvelCommentaries(self):
-        commentaries = {
-            "Notes on the Old and New Testaments (Barnes) [26 vol.]": (
-            (config.marvelData, "commentaries", "cBarnes.commentary"), "13uxButnFH2NRUV-YuyRZYCeh1GzWqO5J"),
-            "Commentary on the Old and New Testaments (Benson) [5 vol.]": (
-            (config.marvelData, "commentaries", "cBenson.commentary"), "1MSRUHGDilogk7_iZHVH5GWkPyf8edgjr"),
-            "Biblical Illustrator (Exell) [58 vol.]": (
-            (config.marvelData, "commentaries", "cBI.commentary"), "1DUATP_0M7SwBqsjf20YvUDblg3_sOt2F"),
-            "Complete Summary of the Bible (Brooks) [2 vol.]": (
-            (config.marvelData, "commentaries", "cBrooks.commentary"), "1pZNRYE6LqnmfjUem4Wb_U9mZ7doREYUm"),
-            "John Calvin's Commentaries (Calvin) [22 vol.]": (
-            (config.marvelData, "commentaries", "cCalvin.commentary"), "1FUZGK9n54aXvqMAi3-2OZDtRSz9iZh-j"),
-            "Cambridge Bible for Schools and Colleges (Cambridge) [57 vol.]": (
-            (config.marvelData, "commentaries", "cCBSC.commentary"), "1IxbscuAMZg6gQIjzMlVkLtJNDQ7IzTh6"),
-            "Critical And Exegetical Commentary on the NT (Meyer) [20 vol.]": (
-            (config.marvelData, "commentaries", "cCECNT.commentary"), "1MpBx7z6xyJYISpW_7Dq-Uwv0rP8_Mi-r"),
-            "Cambridge Greek Testament for Schools and Colleges (Cambridge) [21 vol.]": (
-            (config.marvelData, "commentaries", "cCGrk.commentary"), "1Jf51O0R911Il0V_SlacLQDNPaRjumsbD"),
-            "Church Pulpit Commentary (Nisbet) [12 vol.]": (
-            (config.marvelData, "commentaries", "cCHP.commentary"), "1dygf2mz6KN_ryDziNJEu47-OhH8jK_ff"),
-            "Commentary on the Bible (Clarke) [6 vol.]": (
-            (config.marvelData, "commentaries", "cClarke.commentary"), "1ZVpLAnlSmBaT10e5O7pljfziLUpyU4Dq"),
-            "College Press Bible Study Textbook Series (College) [59 vol.]": (
-            (config.marvelData, "commentaries", "cCPBST.commentary"), "14zueTf0ioI-AKRo_8GK8PDRKael_kB1U"),
-            "Expositor's Bible Commentary (Nicoll) [49 vol.]": (
-            (config.marvelData, "commentaries", "cEBC.commentary"), "1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r"),
-            "Commentary for English Readers (Ellicott) [8 vol.]": (
-            (config.marvelData, "commentaries", "cECER.commentary"), "1sCJc5xuxqDDlmgSn2SFWTRbXnHSKXeh_"),
-            "Expositor's Greek New Testament (Nicoll) [5 vol.]": (
-            (config.marvelData, "commentaries", "cEGNT.commentary"), "1ZvbWnuy2wwllt-s56FUfB2bS2_rZoiPx"),
-            "Greek Testament Commentary (Alford) [4 vol.]": (
-            (config.marvelData, "commentaries", "cGCT.commentary"), "1vK53UO2rggdcfcDjH6mWXAdYti4UbzUt"),
-            "Exposition of the Entire Bible (Gill) [9 vol.]": (
-            (config.marvelData, "commentaries", "cGill.commentary"), "1O5jnHLsmoobkCypy9zJC-Sw_Ob-3pQ2t"),
-            "Exposition of the Old and New Testaments (Henry) [6 vol.]": (
-            (config.marvelData, "commentaries", "cHenry.commentary"), "1m-8cM8uZPN-fLVcC-a9mhL3VXoYJ5Ku9"),
-            "Horæ Homileticæ (Simeon) [21 vol.]": (
-            (config.marvelData, "commentaries", "cHH.commentary"), "1RwKN1igd1RbN7phiJDiLPhqLXdgOR0Ms"),
-            "International Critical Commentary, NT (1896-1929) [16 vol.]": (
-            (config.marvelData, "commentaries", "cICCNT.commentary"), "1QxrzeeZYc0-GNwqwdDe91H4j1hGSOG6t"),
-            "Jamieson, Fausset, and Brown Commentary (JFB) [6 vol.]": (
-            (config.marvelData, "commentaries", "cJFB.commentary"), "1NT02QxoLeY3Cj0uA_5142P5s64RkRlpO"),
-            "Commentary on the Old Testament (Keil & Delitzsch) [10 vol.]": (
-            (config.marvelData, "commentaries", "cKD.commentary"), "1rFFDrdDMjImEwXkHkbh7-vX3g4kKUuGV"),
-            "Commentary on the Holy Scriptures: Critical, Doctrinal, and Homiletical (Lange) [25 vol.]": (
-            (config.marvelData, "commentaries", "cLange.commentary"), "1_PrTT71aQN5LJhbwabx-kjrA0vg-nvYY"),
-            "Expositions of Holy Scripture (MacLaren) [32 vol.]": (
-            (config.marvelData, "commentaries", "cMacL.commentary"), "1p32F9MmQ2wigtUMdCU-biSrRZWrFLWJR"),
-            "Preacher's Complete Homiletical Commentary (Exell) [37 vol.]": (
-            (config.marvelData, "commentaries", "cPHC.commentary"), "1xTkY_YFyasN7Ks9me3uED1HpQnuYI8BW"),
-            "Pulpit Commentary (Spence) [23 vol.]": (
-            (config.marvelData, "commentaries", "cPulpit.commentary"), "1briSh0oDhUX7QnW1g9oM3c4VWiThkWBG"),
-            "Word Pictures in the New Testament (Robertson) [6 vol.]": (
-            (config.marvelData, "commentaries", "cRob.commentary"), "17VfPe4wsnEzSbxL5Madcyi_ubu3iYVkx"),
-            "Spurgeon's Expositions on the Bible (Spurgeon) [3 vol.]": (
-            (config.marvelData, "commentaries", "cSpur.commentary"), "1OVsqgHVAc_9wJBCcz6PjsNK5v9GfeNwp"),
-            "Word Studies in the New Testament (Vincent) [4 vol.]": (
-            (config.marvelData, "commentaries", "cVincent.commentary"), "1ZZNnCo5cSfUzjdEaEvZ8TcbYa4OKUsox"),
-            "John Wesley's Notes on the Whole Bible (Wesley) [3 vol.]": (
-            (config.marvelData, "commentaries", "cWesley.commentary"), "1rerXER1ZDn4e1uuavgFDaPDYus1V-tS5"),
-            "Commentary on the Old and New Testaments (Whedon) [14 vol.]": (
-            (config.marvelData, "commentaries", "cWhedon.commentary"), "1FPJUJOKodFKG8wsNAvcLLc75QbM5WO-9"),
-        }
+        commentaries = DatafileLocation.marvelCommentaries
         items = [commentary for commentary in commentaries.keys() if
                  not os.path.isfile(os.path.join(*commentaries[commentary][0]))]
         if items:
@@ -683,20 +624,7 @@ class MainWindow(QMainWindow):
             self.installAllMarvelCommentaries(commentaries)
 
     def installHymnLyrics(self):
-        hymnLyrics = {
-            "Hymn Lyrics - English":
-                ((config.marvelData, "books", "Hymn Lyrics - English.book"), "1jO2-akZYgR7xl0ROIVMrjitDTVkEq6LJ"),
-            "Hymn Lyrics - Chinese - 迦南诗选":
-                ((config.marvelData, "books", "Hymn Lyrics - Chinese.book"), "1NXyLJ-OdKmOdc1CErbsaIT-egz0q9n6l"),
-            "Hymn Lyrics - French - Les Chants Joyeux":
-                ((config.marvelData, "books", "Hymn Lyrics - French.book"), "1MCHGo7-7wyR2tkXjEim36TffyKnzeGd-"),
-            "Hymn Lyrics - Hausa - Rubutacciyar wak'a":
-                ((config.marvelData, "books", "Hymn Lyrics - Hausa.book"), "1buBHoUlYhrMEEsjGHd3u5sFmZIgipBgb"),
-            "Hymn Lyrics - Romanian - Harfa de cantari":
-                ((config.marvelData, "books", "Hymn Lyrics - Romanian.book"), "1TYS00uhnPmBoi8vqhJzt0H9u7NySx-5w"),
-            "Hymn Lyrics - Spanish - Himnos Letras":
-                ((config.marvelData, "books", "Hymn Lyrics - Spanish.book"), "11_H2BxoSdWdcmZ2nv3E3vh9uaXBeyfE8"),
-        }
+        hymnLyrics = DatafileLocation.hymnLyrics
         items = [book for book in hymnLyrics.keys() if
                  not os.path.isfile(os.path.join(*hymnLyrics[book][0]))]
         if not items:
@@ -722,28 +650,7 @@ class MainWindow(QMainWindow):
             # self.displayMessage(config.thisTranslation["message_done"])
 
     def installMarvelDatasets(self):
-        datasets = {
-            "Core Datasets": ((config.marvelData, "images.sqlite"), "1-aFEfnSiZSIjEPUQ2VIM75I4YRGIcy5-"),
-            "Search Engine": ((config.marvelData, "search.sqlite"), "1A4s8ewpxayrVXamiva2l1y1AinAcIKAh"),
-            "Smart Indexes": ((config.marvelData, "indexes2.sqlite"), "1hY-QkBWQ8UpkeqM8lkB6q_FbaneU_Tg5"),
-            "Chapter & Verse Notes": ((config.marvelData, "note.sqlite"), "1OcHrAXLS-OLDG5Q7br6mt2WYCedk8lnW"),
-            "Bible Background Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
-            "Bible Topics Data": ((config.marvelData, "data", "exlb3.data"), "1gp2Unsab85Se-IB_tmvVZQ3JKGvXLyMP"),
-            "Cross-reference Data": (
-            (config.marvelData, "cross-reference.sqlite"), "1fTf0L7l1k_o1Edt4KUDOzg5LGHtBS3w_"),
-            "Dictionaries": ((config.marvelData, "data", "dictionary.data"), "1NfbkhaR-dtmT1_Aue34KypR3mfPtqCZn"),
-            "Encyclopedia": ((config.marvelData, "data", "encyclopedia.data"), "1OuM6WxKfInDBULkzZDZFryUkU1BFtym8"),
-            "Lexicons": ((config.marvelData, "lexicons", "MCGED.lexicon"), "157Le0xw2ovuoF2v9Bf6qeck0o15RGfMM"),
-            "Atlas, Timelines & Books": (
-            (config.marvelData, "books", "Maps_ABS.book"), "13hf1NvhAjNXmRQn-Cpq4hY0E2XbEfmEd"),
-            "Word Data": ((config.marvelData, "data", "wordNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
-            "Words Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
-            "Clause Data": ((config.marvelData, "data", "clauseNT.data"), "11pmVhecYEtklcB4fLjNP52eL9pkytFdS"),
-            "Translation Data": (
-            (config.marvelData, "data", "translationNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
-            "Discourse Data": ((config.marvelData, "data", "discourseNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
-            "TDW Combo Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
-        }
+        datasets = DatafileLocation.marvelData
         items = [dataset for dataset in datasets.keys() if not os.path.isfile(os.path.join(*datasets[dataset][0]))]
         if not items:
             items = ["[All Installed]"]
@@ -3330,11 +3237,104 @@ class MainWindow(QMainWindow):
             outfile.close()
             self.displayMessage("Command saved to {0}".format(filename))
 
+    def macroGenerateDownloadMissingFiles(self):
+        filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_command"])
+        if ok:
+            bibleList = [os.path.basename(file) for file in glob.glob(r"{0}/bibles/*.bible".format(config.marvelData))]
+            commentaryList = [os.path.basename(file) for file in glob.glob(r"{0}/commentaries/*.commentary".format(config.marvelData))]
+            bookList = [os.path.basename(file) for file in glob.glob(r"{0}/books/*.book".format(config.marvelData))]
+            pdfList = [os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))]
+            epubList = [os.path.basename(file) for file in glob.glob(r"{0}/epub/*.epub".format(config.marvelData))]
+
+            file = os.path.join(MacroParser.macros_dir, filename)
+            outfile = open(file, "w")
+            for key in DatafileLocation.marvelBibles.keys():
+                if (key+".bible") not in bibleList:
+                    outfile.write("DOWNLOAD:::MarvelBible:::{0}\n".format(key))
+            for key in DatafileLocation.marvelCommentaries.keys():
+                value = DatafileLocation.marvelCommentaries[key]
+                if (value[0][2]) not in commentaryList:
+                    outfile.write("DOWNLOAD:::MarvelCommentary:::{0}\n".format(key))
+            for key in DatafileLocation.hymnLyrics.keys():
+                value = DatafileLocation.hymnLyrics[key]
+                if (value[0][2]) not in bookList:
+                    outfile.write("DOWNLOAD:::HymnLyrics:::{0}\n".format(key))
+            for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                if file not in bibleList:
+                    outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                if file not in commentaryList:
+                    outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                if file not in bookList:
+                    outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                if file not in bookList:
+                    outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
+            for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                if file not in pdfList:
+                    outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
+            for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                if file not in epubList:
+                    outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
+            outfile.close()
+            self.reloadResources()
+            self.displayMessage("Command saved to {0}".format(filename))
+
+    def macroGenerateDownloadExistingFiles(self):
+        filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_command"])
+        if ok:
+            bibleList = [os.path.basename(file) for file in glob.glob(r"{0}/bibles/*.bible".format(config.marvelData))]
+            commentaryList = [os.path.basename(file) for file in glob.glob(r"{0}/commentaries/*.commentary".format(config.marvelData))]
+            bookList = [os.path.basename(file) for file in glob.glob(r"{0}/books/*.book".format(config.marvelData))]
+            pdfList = [os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))]
+            epubList = [os.path.basename(file) for file in glob.glob(r"{0}/epub/*.epub".format(config.marvelData))]
+
+            bibles = [value[0][2] for value in DatafileLocation.marvelBibles.values()]
+            commentaries = [value[0][2] for value in DatafileLocation.marvelCommentaries.values()]
+            hymns = [value[0][2] for value in DatafileLocation.hymnLyrics.values()]
+
+            file = os.path.join(MacroParser.macros_dir, filename)
+            outfile = open(file, "w")
+            for file in bibleList:
+                if file in bibles:
+                    file = file.replace(".bible", "")
+                    outfile.write("DOWNLOAD:::MarvelBible:::{0}\n".format(file))
+            for file in commentaryList:
+                if file in commentaries:
+                    file = file.replace(".commentary", "")
+                    outfile.write("DOWNLOAD:::MarvelCommentary:::{0}\n".format(file))
+            for file in bookList:
+                if file in hymns:
+                    file = file.replace(".book", "")
+                    outfile.write("DOWNLOAD:::HymnLyrics:::{0}\n".format(file))
+            for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                if file in bibleList:
+                    outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                if file in commentaryList:
+                    outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                if file in bookList:
+                    outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
+            for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                if file in bookList:
+                    outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
+            for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                if file in pdfList:
+                    outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
+            for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                if file in epubList:
+                    outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
+            outfile.close()
+            self.reloadResources()
+            self.displayMessage("Command saved to {0}".format(filename))
+
     def openSaveMacroDialog(self, message):
         filename, ok = QInputDialog.getText(self, "UniqueBible.app", message, QLineEdit.Normal, "")
         if ok and not filename == "":
-            if not ".txt" in filename:
-                filename += ".txt"
+            if not ".ubam" in filename:
+                filename += ".ubam"
             file = os.path.join(MacroParser.macros_dir, filename)
             if os.path.isfile(file):
                 reply = QMessageBox.question(self, "File exists",

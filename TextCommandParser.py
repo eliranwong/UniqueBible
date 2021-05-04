@@ -1,4 +1,6 @@
 # coding=utf-8
+import zipfile
+
 from LexicalData import LexicalData
 import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
 from BibleVerseParser import BibleVerseParser
@@ -13,7 +15,12 @@ from Translator import Translator
 from db.Highlight import Highlight
 from TtsLanguages import TtsLanguages
 from qtpy.QtWidgets import QApplication
+
+from gui.Downloader import Downloader
 from install.module import *
+from util.DatafileLocation import DatafileLocation
+from util.GithubUtil import GithubUtil
+
 try:
     # Note: qtpy.QtTextToSpeech is not found!
     from PySide2.QtTextToSpeech import QTextToSpeech
@@ -431,6 +438,13 @@ class TextCommandParser:
             "searchversenote": (self.textSearchVerseNote, """
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith"""),
+            "download": (self.download, """
+            # [KEYWORD] DOWNLOAD
+            # Feature - Download marvel data, github files
+            # Usage - DOWNLOAD:::[source]:::[file]
+            # source can be MarvelData, HymnLyrics, GitHubBible, GitHubBook, GitHubCommentary
+            # e.g. DOWNLOAD:::MarvelBible:::KJV
+            """),
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -2549,6 +2563,68 @@ class TextCommandParser:
         self.parent.addHistoryRecord("study", command)
         self.parent.displayMessage(config.thisTranslation["saved"])
         return ("", "", {})
+
+    # DOWNLOAD:::
+    def download(self, command, source):
+        action, filename = self.splitCommand(command)
+        action = action.lower()
+        if action.startswith("marvel") or action.startswith("hymn"):
+            if action == "marvelbible":
+                dataset = DatafileLocation.marvelBibles
+            elif action == "marvelcommentary":
+                dataset = DatafileLocation.marvelCommentaries
+            elif action == "hymnlyrics":
+                dataset = DatafileLocation.hymnLyrics
+            else:
+                self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                return ("", "", {})
+            if filename in dataset.keys():
+                databaseInfo = dataset[filename]
+                if os.path.isfile(os.path.join(*databaseInfo[0])):
+                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
+                else:
+                    # self.parent.downloader = Downloader(self.parent, databaseInfo, True)
+                    # self.parent.downloader.show()
+                    self.parent.downloadFile(databaseInfo, False)
+                    self.parent.reloadControlPanel(False)
+                    self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
+            else:
+                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
+        elif action.startswith("github"):
+            if action == "githubbible":
+                repo, directory, extension = ("otseng/UniqueBible_Bibles", "bibles", "bible")
+            elif action == "githubcommentary":
+                repo, directory, extension = ("darrelwright/UniqueBible_Commentaries", "commentaries", "commentary")
+            elif action == "githubbook":
+                repo, directory, extension = ("darrelwright/UniqueBible_Books", "books", "book")
+            elif action == "githubmap":
+                repo, directory, extension = ("darrelwright/UniqueBible_Maps-Charts", "books", "book")
+            elif action == "githubpdf":
+                repo, directory, extension = ("otseng/UniqueBible_PDF", "pdf", "pdf")
+            elif action == "githubepub":
+                repo, directory, extension = ("otseng/UniqueBible_EPUB", "epub", "epub")
+            else:
+                self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                return ("", "", {})
+            github = GithubUtil(repo)
+            repoData = github.getRepoData()
+            folder = os.path.join(config.marvelData, directory)
+            filename += "." + extension
+            if os.path.isfile(os.path.join(folder, filename)):
+                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
+            else:
+                file = os.path.join(folder, filename+".zip")
+                github.downloadFile(file, repoData[filename])
+                with zipfile.ZipFile(file, 'r') as zipped:
+                    zipped.extractall(folder)
+                os.remove(file)
+                self.parent.reloadControlPanel(False)
+                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["message_installed"]))
+        else:
+            self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+
+        return ("", "", {})
+
 
     def noAction(self, command, source):
         return ("", "", {})

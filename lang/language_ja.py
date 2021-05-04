@@ -701,6 +701,12 @@ translation = {
     "saved": "セイヴド",
     "marvelData": "marvelData ディレクトリーの選択",
     "resourceDirectory": "データベースディレクトリの選択",
+    "Downloading": "ダウンロード中",
+    "notFound": "見つかりません",
+    "unknown": "不明",
+    "alreadyExists": "既に存在する",
+    "downloadMissingFiles": "欠落ファイルのダウンロード",
+    "downloadExistingFiles": "既存ファイルのダウンロード",
     "parseBooklessReferences": "選択したテキスト内のブックマークの参照を解析します。",
     "exportToDocx": "Word 文書にエクスポート",
 }

@@ -701,6 +701,12 @@ translation = {
     "saved": "已儲存",
     "marvelData": "選取 marveData 目錄",
     "resourceDirectory": "選取資料庫目錄",
+    "Downloading": "正在下載",
+    "notFound": "找不到",
+    "unknown": "未知",
+    "alreadyExists": "已存在",
+    "downloadMissingFiles": "下載遺漏的檔案",
+    "downloadExistingFiles": "下載現有檔案",
     "parseBooklessReferences": "在選取的文字中剖析沒有註明書卷的經文參照。",
     "exportToDocx": "匯出至 Word 文件",
 }

@@ -701,6 +701,12 @@ translation = {
     "saved": "Salvat",
     "marvelData": "Selectare director marvelData",
     "resourceDirectory": "Selectare director bază de date",
+    "Downloading": "Descărcare",
+    "notFound": "negăsit",
+    "unknown": "necunoscut",
+    "alreadyExists": "există deja",
+    "downloadMissingFiles": "Descărcare fişiere lipsă",
+    "downloadExistingFiles": "Descărcare fişiere existente",
     "parseBooklessReferences": "Analizaţi referinţele mai puţine în textul selectat.",
     "exportToDocx": "Export în document Word",
 }

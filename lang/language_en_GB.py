@@ -701,6 +701,12 @@ translation = {
     "saved": "Saved",
     "marvelData": "Select marvelData Directory",
     "resourceDirectory": "Select Database Directory",
+    "Downloading": "Downloading",
+    "notFound": "not found",
+    "unknown": "unknown",
+    "alreadyExists": "already exists",
+    "downloadMissingFiles": "Download missing files",
+    "downloadExistingFiles": "Download existing files",
     "parseBooklessReferences": "Parse bookless references in selected text.",
     "exportToDocx": "Export to Word Document",
 }

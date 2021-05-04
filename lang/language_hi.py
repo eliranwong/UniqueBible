@@ -701,6 +701,12 @@ translation = {
     "saved": "सहेजा गया",
     "marvelData": "Marvelata निर्देशिका का चयन करें",
     "resourceDirectory": "डाटाबेस डिरेक्ट्री चुनें",
+    "Downloading": "डाउनलोड्स",
+    "notFound": "नहीं मिला",
+    "unknown": "अज्ञात",
+    "alreadyExists": "पहले ही",
+    "downloadMissingFiles": "गुम फ़ाइलों को डाउनलोड करें",
+    "downloadExistingFiles": "मौजूदा फ़ाइल डाउनलोड करें",
     "parseBooklessReferences": "चुने गए पाठ में बुकलेस संदर्भों का विश्लेषण करें.",
     "exportToDocx": "दस्तावेज़ शब्द दस्तावेज़ में निर्यात करें",
 }

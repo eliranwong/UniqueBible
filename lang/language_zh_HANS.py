@@ -701,6 +701,12 @@ translation = {
     "saved": "已保存",
     "marvelData": "选择 marvelData 目录",
     "resourceDirectory": "选择数据库目录",
+    "Downloading": "正在下载",
+    "notFound": "未找到",
+    "unknown": "未知",
+    "alreadyExists": "已存在",
+    "downloadMissingFiles": "下载缺少的文件",
+    "downloadExistingFiles": "下载现有文件",
     "parseBooklessReferences": "在选取的文字中解析没有注明书卷的经文参照。",
     "exportToDocx": "导出到 Word 文档",
 }
