@@ -1,3 +1,6 @@
+Major change in version 24.11:
+* Added a menu plugin "Extract Text" to use python package "textract" to extract texts from various types of files.
+
 Major change in version 24.10:
 * Added DOWNLOAD command to be able to download marvelData files from Google and Github repos.
 
