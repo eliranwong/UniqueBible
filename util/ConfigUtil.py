@@ -593,11 +593,11 @@ class ConfigUtil:
         config.help["enableVerseHighlighting"] = """
         # Verse highlighting functionality"""
         if not hasattr(config, "enableVerseHighlighting"):
-            config.enableVerseHighlighting = False
+            config.enableVerseHighlighting = True
         config.help["showHighlightMarkers"] = """
         # Show verse highlight markers"""
         if not hasattr(config, "showHighlightMarkers"):
-            config.showHighlightMarkers = True
+            config.showHighlightMarkers = False
         config.help["menuLayout"] = """
         # Menu layout"""
         if not hasattr(config, "menuLayout"):
@@ -683,7 +683,7 @@ class ConfigUtil:
         if not hasattr(config, "addOHGBiToMorphologySearch"):
             config.addOHGBiToMorphologySearch = True
         if not hasattr(config, "activeVerseNoColourLight"):
-            config.activeVerseNoColourLight = "red"
+            config.activeVerseNoColourLight = "#204a87"
         if not hasattr(config, "activeVerseNoColourDark"):
             config.activeVerseNoColourDark = "rgb(197, 197, 56)"
         if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
@@ -880,10 +880,8 @@ class ConfigUtil:
             ("forceGenerateHtml", config.forceGenerateHtml),
             ("enableLogging", config.enableLogging),
             ("logCommands", config.logCommands),
-            ("enableVerseHighlighting", config.enableVerseHighlighting),
             ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
             ("menuLayout", config.menuLayout),
-            ("showHighlightMarkers", config.showHighlightMarkers),
             ("useFastVerseParsing", config.useFastVerseParsing),
             #("customPythonOnStartup", config.customPythonOnStartup),
             ("enablePlugins", config.enablePlugins),
@@ -897,6 +895,7 @@ class ConfigUtil:
             ("highlightCollections", config.highlightCollections),
             ("highlightLightThemeColours", config.highlightLightThemeColours),
             ("highlightDarkThemeColours", config.highlightDarkThemeColours),
+            ("enableVerseHighlighting", config.enableVerseHighlighting),
             ("showHighlightMarkers", config.showHighlightMarkers),
             ("menuShortcuts", config.menuShortcuts),
             ("displayLanguage", config.displayLanguage),

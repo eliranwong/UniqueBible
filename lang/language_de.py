@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Vorhandene Dateien herunterladen",
     "parseBooklessReferences": "Parsen mit bookless-Referenzen im ausgewählten Text.",
     "exportToDocx": "In Word-Dokument exportieren",
+    "activeVerseColour": "Aktive Vers-Farbe auswählen",
 }

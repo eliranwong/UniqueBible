@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "기존 파일 다운로드",
     "parseBooklessReferences": "선택된 텍스트의 북적인 책갈피를 구문 분석하지 않습니다.",
     "exportToDocx": "Word 문서로 내보내기",
+    "activeVerseColour": "활성 Verse 색상 선택",
 }

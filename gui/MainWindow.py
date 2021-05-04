@@ -4,9 +4,9 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from qtpy.QtCore import QUrl, Qt, QEvent, QThread
-from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence
+from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut)
+                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
 
 import exlbl
 from BibleBooks import BibleBooks
@@ -1904,6 +1904,16 @@ class MainWindow(QMainWindow):
         if ok:
             config.maximumOHGBiVersesDisplayedInSearchResult = integer
 
+    def changeActiveVerseColour(self):
+        color = QColorDialog.getColor(QColor(config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight), self)
+        if color.isValid():
+            colorName = color.name()
+            if config.theme == "dark":
+                config.activeVerseNoColourDark = colorName
+            else:
+                config.activeVerseNoColourLight = colorName
+            self.reloadCurrentRecord()
+
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
                                           "UniqueBible", config.thisTranslation["menu1_tabNo"], config.numberOfTab, 1,
@@ -2384,7 +2394,6 @@ class MainWindow(QMainWindow):
 
     def toggleHighlightMarker(self):
         config.showHighlightMarkers = not config.showHighlightMarkers
-        config.readFormattedBibles = False
         self.reloadCurrentRecord(forceExecute=True)
 
     def reloadCurrentRecord(self, forceExecute=False):

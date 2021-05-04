@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Descargar archivos existentes",
     "parseBooklessReferences": "Analizar referencias sin libros en el texto seleccionado.",
     "exportToDocx": "Exportar a documento de Word",
+    "activeVerseColour": "Seleccionar color de Verse activo",
 }

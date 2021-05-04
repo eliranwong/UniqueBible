@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Μεταφόρτωση υπαρχόντων αρχείων",
     "parseBooklessReferences": "Ανάλυση παραπομπών σε επιλεγμένα κείμενα.",
     "exportToDocx": "Εξαγωγή σε έγγραφο Word",
+    "activeVerseColour": "Επιλογή ενεργού χρώματος Verse",
 }

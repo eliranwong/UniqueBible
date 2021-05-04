@@ -34,6 +34,7 @@ class ClassicMainWindow:
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu1_generalPreferences")
         items = (
+            ("activeVerseColour", self.changeActiveVerseColour, None),
             ("menu1_tabNo", self.setTabNumberDialog, None),
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog, None),
             ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog, None),

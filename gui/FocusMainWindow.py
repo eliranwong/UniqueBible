@@ -26,15 +26,16 @@ class FocusMainWindow:
         subMenu0 = addSubMenu(menu, "menu1_preferences")
         subMenu = addSubMenu(subMenu0, "menu1_generalPreferences")
         items = (
+            ("activeVerseColour", self.changeActiveVerseColour),
             ("menu1_tabNo", self.setTabNumberDialog),
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
             ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
-            ("resourceDirectory", self.customMarvelData),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
             ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
+            ("resourceDirectory", self.customMarvelData),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

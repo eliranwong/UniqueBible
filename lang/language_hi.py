@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "मौजूदा फ़ाइल डाउनलोड करें",
     "parseBooklessReferences": "चुने गए पाठ में बुकलेस संदर्भों का विश्लेषण करें.",
     "exportToDocx": "दस्तावेज़ शब्द दस्तावेज़ में निर्यात करें",
+    "activeVerseColour": "सक्रिय पद्य रंग चुनें",
 }

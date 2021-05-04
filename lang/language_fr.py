@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Télécharger des fichiers existants",
     "parseBooklessReferences": "Analyser les références sans signet dans le texte sélectionné.",
     "exportToDocx": "Exporter vers un document Word",
+    "activeVerseColour": "Sélectionner la couleur active des couleurs",
 }

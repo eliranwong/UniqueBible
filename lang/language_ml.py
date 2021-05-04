@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "ഫയലുകള് ഡൌണ്ലോട് ചെയ്യുക",
     "parseBooklessReferences": "തെരഞ്ഞെടുത്ത പദാവലികളില് പാഴ്സ് ഓര്മ്മയ്ക്കുള്ള റഫറൻസുകള്",
     "exportToDocx": "à '- à', à ', à', à",
+    "activeVerseColour": "സജീവമായ വെഴ്സ് നിറം തെരഞ്ഞെടുക്കുക",
 }

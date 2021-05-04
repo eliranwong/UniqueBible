@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Descărcare fişiere existente",
     "parseBooklessReferences": "Analizaţi referinţele mai puţine în textul selectat.",
     "exportToDocx": "Export în document Word",
+    "activeVerseColour": "Selectare culoare activă Verse",
 }

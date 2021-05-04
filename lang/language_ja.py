@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "既存ファイルのダウンロード",
     "parseBooklessReferences": "選択したテキスト内のブックマークの参照を解析します。",
     "exportToDocx": "Word 文書にエクスポート",
+    "activeVerseColour": "アクティブな Verse カラーを選択",
 }

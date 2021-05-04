@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "Загрузить существующие файлы",
     "parseBooklessReferences": "Анализировать ссылки на закладки в выбранном тексте.",
     "exportToDocx": "Экспортировать в документ Word",
+    "activeVerseColour": "Выбрать цвет активного куплета",
 }

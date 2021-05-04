@@ -709,4 +709,5 @@ translation = {
     "downloadExistingFiles": "下载现有文件",
     "parseBooklessReferences": "在选取的文字中解析没有注明书卷的经文参照。",
     "exportToDocx": "导出到 Word 文档",
+    "activeVerseColour": "选择活动 Verse 颜色",
 }

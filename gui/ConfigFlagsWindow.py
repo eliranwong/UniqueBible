@@ -75,7 +75,7 @@ class ConfigFlagsWindow(QDialog):
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
-            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, False, config.thisTranslation["enableVerseHighlighting"]),
+            ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, True, config.thisTranslation["enableVerseHighlighting"]),
             ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, False, config.thisTranslation["regexCaseSensitive"]),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, False, config.thisTranslation["alwaysDisplayStaticMaps"]),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, True, config.thisTranslation["exportEmbeddedImages"]),
