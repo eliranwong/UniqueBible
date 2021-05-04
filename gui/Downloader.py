@@ -1,6 +1,6 @@
 import os, config, zipfile, gdown
 # import threading
-from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel, QApplication)
+from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel)
 from qtpy.QtCore import QObject, Signal
 
 
@@ -31,7 +31,7 @@ class DownloadProcess(QObject):
 
 class Downloader(QDialog):
 
-    def __init__(self, parent, databaseInfo, autoStart=False):
+    def __init__(self, parent, databaseInfo):
         super().__init__()
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["message_downloadHelper"])
@@ -41,14 +41,9 @@ class Downloader(QDialog):
         fileItems, *_ = databaseInfo
         self.filename = fileItems[-1]
 
-        self.setupLayout(autoStart)
+        self.setupLayout()
 
-        if autoStart:
-            self.hide()
-            QApplication.processEvents()
-            self.downloadButton.click()
-
-    def setupLayout(self, autoStart):
+    def setupLayout(self):
 
         self.messageLabel = QLabel("{1} '{0}'".format(self.filename, config.thisTranslation["message_missing"]))
 
