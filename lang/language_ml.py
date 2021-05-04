@@ -701,6 +701,12 @@ translation = {
     "saved": "സേവനം",
     "marvelData": "മാര്വല് ഡേറ്റാ ഡയറക്ടറി തെരഞ്ഞെടുക്കുക",
     "resourceDirectory": "ഡാറ്റാബേസ് തട്ട് തെരഞ്ഞെടുക്കുക",
+    "Downloading": "ഡൌണ്ലോഡ് ചെയ്യുന്നു",
+    "notFound": "കണ്ടെത്താനായില്ല",
+    "unknown": "അപരിചിതമായ",
+    "alreadyExists": "നിലവിലുണ്ടു്",
+    "downloadMissingFiles": "हराएको ഫയലുകള് ഡൌണ്ലോട് ചെയ്യുക",
+    "downloadExistingFiles": "ഫയലുകള് ഡൌണ്ലോട് ചെയ്യുക",
     "parseBooklessReferences": "തെരഞ്ഞെടുത്ത പദാവലികളില് പാഴ്സ് ഓര്മ്മയ്ക്കുള്ള റഫറൻസുകള്",
     "exportToDocx": "à '- à', à ', à', à",
 }
