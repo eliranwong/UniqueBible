@@ -1,3 +1,6 @@
+Major change in version 24.10:
+* Added DOWNLOAD command to be able to download marvelData files from Google and Github repos.
+
 Major change in version 24.09:
 * Added a menu plugin "PowerPoint Text" to extract text from PowerPoint Files (*.pptx) and display on UBA.
 
