@@ -1,3 +1,6 @@
+Major change in version 24.13:
+* Fixed updating changes of active verse number colour without restart.
+
 Major changes in version 24.12:
 * Added a startup plugin "highlightActiveVerse" to highlight actively chosen verses.
     Remarks: Users can enable or disable individual plugins via plugin menu.
