@@ -150,10 +150,10 @@ class RemoteCliHandler:
 class MockWindow:
 
     def __init__(self):
-        import update
+        from util.DatafileLocation import DatafileLocation
         import config
 
-        self.bibleInfo = update.bibleInfo
+        self.bibleInfo = DatafileLocation.bibleInfo
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
     def updateMainRefButton(self):
