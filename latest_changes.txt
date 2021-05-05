@@ -1,3 +1,6 @@
+Major change in version 24.14:
+* Added dark theme support to pdf reader.
+
 Major change in version 24.13:
 * Fixed updating changes of active verse number colour without restart.
 
