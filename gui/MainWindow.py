@@ -1357,7 +1357,7 @@ class MainWindow(QMainWindow):
                 pdfViewer = pdfViewer.replace("\\", "/")
             marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
             fileName = file if fullPath else os.path.join(marvelDataPath, "pdf", file)
-            self.studyView.load(QUrl.fromUserInput("{0}?file={1}#page={2}".format(pdfViewer, fileName, page)))
+            self.studyView.load(QUrl.fromUserInput("{0}?file={1}&theme={2}#page={3}".format(pdfViewer, fileName, config.theme, page)))
             self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
             self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
             config.pdfTextPath = fileName

@@ -41,6 +41,21 @@ See https://github.com/adobe-type-tools/cmap-resources
       page = document.getElementById('pageNumber').value;
       document.title = "_savePdfCurrentPage:::" + page;
     }
+
+    function getUrlVars() {
+      var vars = {};
+      var parts = window.location.href.replace(/[?&#]+([^=&#]+)=([^&#]*)/gi,
+      function(m,key,value) {
+        vars[key] = value;
+      });
+      return vars;
+    }
+
+    theme = getUrlVars()["theme"];
+    if (theme == "dark") {
+      document.documentElement.style.filter='invert(68%) contrast(180%) brightness(100%) hue-rotate(180deg)';
+    }
+
   </script>
 
   </head>
