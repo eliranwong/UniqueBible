@@ -1,3 +1,10 @@
+Major changes in version 24.15:
+* Renamed 1 context plugins to change its keyboard shortcut:
+    "plugins/menu/Google Drive Notes Backup_Ctrl+Shift+K.py"
+* Added 2 context plugins with keyboard shortcuts to context menu features:
+    "plugins/context/Ctrl+Alt+B Open Verses in New Window_Ctrl+Alt+B.py"
+    "plugins/context/Ctrl+Shift+B Open Verses in Bible Window_Ctrl+Shift+B.py"
+
 Major change in version 24.14:
 * Added dark theme support to pdf reader.
 

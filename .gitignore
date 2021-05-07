@@ -63,6 +63,4 @@ UniqueBibleApp.desktop
 UniqueBibleApp.sh
 morphology.sqlite
 htmlResources/fonts/*
-htmlResources/images/Bridgeway/*
-htmlResources/images/BiblePic/*
-htmlResources/images/BDB/*
+htmlResources/images/[A-Z]*/*
