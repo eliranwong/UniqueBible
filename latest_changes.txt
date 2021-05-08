@@ -1,3 +1,15 @@
+Major changes in version 24.20:
+* Deleted 2 menu plugins:
+    'plugins/menu/Find Text Bible Window.py'
+    'plugins/menu/Find Text Study Window.py'
+* Added 3 context plugins:
+(These context plugins search for user selected text in the currently opened page(s).
+If text is not selected, a input dialog is opened for users to enter text manually.)
+    'plugins/context/Find Text_Ctrl+Alt+F.py'
+    'plugins/context/Find Text Bible Window.py'
+    'plugins/context/Find Text Study Window.py'
+Remarks: Using key combination "Ctrl+Alt+F" to search for text in both Bible page and Study Window pages.
+
 Major changes in version 24.18, 19:
 * Added 2 menu plugins to find text on Bible Window and Study Window.
 
