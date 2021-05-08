@@ -665,7 +665,8 @@ class WebEngineView(QWebEngineView):
             self.page().triggerAction(self.page().Copy)
 
     def copyHtmlCode(self):
-        self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
+        #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
+        self.page().toHtml(self.copyHtmlToClipboard)
 
     def copyHtmlToClipboard(self, html):
         QApplication.clipboard().setText(html)

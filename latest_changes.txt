@@ -1,3 +1,6 @@
+Major change in version 24.16:
+* Fixed copying html codes.
+
 Major changes in version 24.15:
 * Renamed 1 context plugins to change its keyboard shortcut:
     "plugins/menu/Google Drive Notes Backup_Ctrl+Shift+K.py"
