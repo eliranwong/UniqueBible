@@ -1,3 +1,6 @@
+Major change in version 24.23:
+* Fixed the issue that Strong's numbers were mistaken as bookless references in parsing bible verse references.
+
 Major change in version 24.22:
 * Corrected a text in "Find Text" plugin dialog.
 

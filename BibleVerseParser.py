@@ -206,6 +206,7 @@ class BibleVerseParser:
         # check if tagged references are followed by untagged references, e.g. Book 1:1-2:1; 3:2-4, 5; Jude 1
         if parseBooklessReferences and config.parseBooklessReferences:
             searchReplace = (
+                ("[EGH][0-9]+?([^0-9])", r"\1"),
                 ("｝[^｝,-–;0-9][^｝<>]*?([0-9])", r"｝; \1"),
                 ("([0-9])[^｝,-–;0-9][^｝<>]*?([0-9])", r"\1; \2"),
             )
