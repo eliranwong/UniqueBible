@@ -940,7 +940,8 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.printStudyPage()
 
     def openOnNewWindow(self):
-        self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
+        #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
+        self.page().toHtml(self.openNewWindow)
 
     def openNewWindow(self, html):
         self.openPopover(html=html)

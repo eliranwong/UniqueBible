@@ -1,3 +1,6 @@
+Major change in version 24.17:
+* Fixed opening content on New Window.
+
 Major change in version 24.16:
 * Fixed copying html codes.
 
