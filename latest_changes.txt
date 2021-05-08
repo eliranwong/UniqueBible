@@ -1,3 +1,6 @@
+Major change in version 24.21:
+* Fixed the issue that Study Window page was not being reloaded upon request.
+
 Major changes in version 24.20:
 * Deleted 2 menu plugins:
     'plugins/menu/Find Text Bible Window.py'

@@ -253,7 +253,7 @@ class FocusMainWindow:
             addMenuItem(subMenu, tab, self, lambda index=index: self.openMiniControlTab(index))
         menu.addSeparator()
         addMenuItem(menu, "reloadResources", self, self.reloadResources)
-        addMenuItem(menu, "menu1_reload", self, self.reloadCurrentRecord, sc.reloadCurrentRecord)
+        addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
 
         # 4th column
         menu = addMenu(menuBar, "menu8_resources")
@@ -514,7 +514,7 @@ class FocusMainWindow:
         self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
         self.secondToolBar.addSeparator()
-        self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
+        self.addStandardIconButton("menu1_reload", "reload.png", lambda: self.reloadCurrentRecord(True), self.secondToolBar)
         self.secondToolBar.addSeparator()
 
         # Left tool bar
@@ -739,7 +739,7 @@ class FocusMainWindow:
         self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], lambda: self.reloadCurrentRecord(True))
 
         self.secondToolBar.addSeparator()
 

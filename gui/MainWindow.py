@@ -1841,11 +1841,11 @@ class MainWindow(QMainWindow):
 
     def clearBookHighlights(self):
         config.bookSearchString = ""
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def clearNoteHighlights(self):
         config.noteSearchString = ""
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def displaySearchFavBookCommand(self):
         config.bookSearchString = ""
@@ -1912,7 +1912,7 @@ class MainWindow(QMainWindow):
                 config.activeVerseNoColourDark = colorName
             else:
                 config.activeVerseNoColourLight = colorName
-            self.reloadCurrentRecord()
+            self.reloadCurrentRecord(True)
 
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,
@@ -3131,7 +3131,7 @@ class MainWindow(QMainWindow):
             config.addFavouriteToMultiRef = True
         else:
             config.addFavouriteToMultiRef = False
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
@@ -3173,7 +3173,7 @@ class MainWindow(QMainWindow):
             config.font, fontSize, *_ = font.key().split(",")
             config.fontSize = int(fontSize)
             self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
-            self.reloadCurrentRecord()
+            self.reloadCurrentRecord(True)
 
     # set Chinese font
     def setChineseFont(self):
@@ -3181,7 +3181,7 @@ class MainWindow(QMainWindow):
         if ok:
             # print(font.key())
             config.fontChinese, *_ = font.key().split(",")
-            self.reloadCurrentRecord()
+            self.reloadCurrentRecord(True)
 
     def mainPageScrollPageDown(self):
         js = "window.scrollTo(0, window.scrollY + window.innerHeight * .95);"
