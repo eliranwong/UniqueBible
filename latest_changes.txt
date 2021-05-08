@@ -1,3 +1,6 @@
+Major change in version 24.22:
+* Corrected a text in "Find Text" plugin dialog.
+
 Major change in version 24.21:
 * Fixed the issue that Study Window page was not being reloaded upon request.
 

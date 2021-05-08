@@ -6,7 +6,7 @@ if config.pluginContext:
     config.mainWindow.studyPage.findText(config.pluginContext)
 else:
     text, ok = QInputDialog.getText(config.mainWindow, "QInputDialog.getText()",
-            "Find in Bible Window:", QLineEdit.Normal,
+            "Find:", QLineEdit.Normal,
             "")
     if ok and text != '':
         config.mainWindow.mainPage.findText(text)
