@@ -1,3 +1,6 @@
+Major changes in version 24.18:
+* Added 2 menu plugins to find text on Bible Window and Study Window.
+
 Major change in version 24.17:
 * Fixed opening content on New Window.
 
