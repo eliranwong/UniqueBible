@@ -67,16 +67,18 @@ class BibleVerseParser:
         # set preference of standardisation
         self.standardisation = standardisation
         self.bibleBooksDict = {}
-        for bible in BibleBooks.name2number.keys():
-            num = BibleBooks.name2number[bible]
-            self.bibleBooksDict[bible] = int(num)
-            if config.useFastVerseParsing:
-                if "." in bible:
-                    bible = bible.replace(".", "")
-                    self.bibleBooksDict[bible] = int(num)
-                if bible[0] < 'a':
-                    bible = bible.lower()
-                    self.bibleBooksDict[bible] = int(num)
+        pattern = re.compile("[a-zA-Z]")
+        bookNames = [bookName for bookName in BibleBooks.name2number.keys() if re.search(pattern, bookName)] if config.parseEnglishBooksOnly else BibleBooks.name2number.keys()
+        for bookName in bookNames:
+            num = BibleBooks.name2number[bookName]
+            self.bibleBooksDict[bookName] = int(num)
+            if config.useLiteVerseParsing:
+                if "." in bookName:
+                    bookName = bookName.replace(".", "")
+                    self.bibleBooksDict[bookName] = int(num)
+                if bookName[0] < 'a':
+                    bookName = bookName.lower()
+                    self.bibleBooksDict[bookName] = int(num)
         sortedNames = sorted(self.bibleBooksDict.keys())
         self.sortedNames = sorted(sortedNames, key=len, reverse=True)
 

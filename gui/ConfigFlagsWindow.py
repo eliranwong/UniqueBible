@@ -67,11 +67,14 @@ class ConfigFlagsWindow(QDialog):
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, True, config.thisTranslation["addBreakAfterTheFirstToolBar"]),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, False, config.thisTranslation["addBreakBeforeTheLastToolBar"]),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, False, config.thisTranslation["parserStandarisation"]),
-            ("useFastVerseParsing", config.useFastVerseParsing, self.useFastVerseParsingChanged, False, config.thisTranslation["useFastVerseParsing"]),
+            ("useLiteVerseParsing", config.useLiteVerseParsing, self.useLiteVerseParsingChanged, False, config.thisTranslation["useLiteVerseParsing"]),
+            ("parseEnglishBooksOnly", config.parseEnglishBooksOnly, self.parseEnglishBooksOnlyChanged, False, config.thisTranslation["parseEnglishBooksOnly"]),
             ("parseWordDocument", config.parseWordDocument, self.parseWordDocumentChanged, True, config.thisTranslation["parseWordDocument"]),
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator, self.convertChapterVerseDotSeparatorChanged, True, config.thisTranslation["convertChapterVerseDotSeparator"]),
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace, self.parseBookChapterWithoutSpaceChanged, True, config.thisTranslation["parseBookChapterWithoutSpace"]),
             ("parseBooklessReferences", config.parseBooklessReferences, self.parseBooklessReferencesChanged, True, config.thisTranslation["parseBooklessReferences"]),
+            ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound, self.searchBibleIfCommandNotFoundChanged, True, config.thisTranslation["searchBibleIfCommandNotFound"]),
+            ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound, self.regexSearchBibleIfCommandNotFoundChanged, False, config.thisTranslation["regexSearchBibleIfCommandNotFound"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
@@ -306,6 +309,14 @@ class ConfigFlagsWindow(QDialog):
     def parseBooklessReferencesChanged(self):
         config.parseBooklessReferences = not config.parseBooklessReferences
 
+    def searchBibleIfCommandNotFoundChanged(self):
+        config.searchBibleIfCommandNotFound = not config.searchBibleIfCommandNotFound
+
+    def regexSearchBibleIfCommandNotFoundChanged(self):
+        config.regexSearchBibleIfCommandNotFound = not config.regexSearchBibleIfCommandNotFound
+        if config.regexSearchBibleIfCommandNotFound and not config.searchBibleIfCommandNotFound:
+            config.searchBibleIfCommandNotFound = True
+
     def overwriteNoteFontChanged(self):
         config.overwriteNoteFont = not config.overwriteNoteFont
 
@@ -369,8 +380,11 @@ class ConfigFlagsWindow(QDialog):
         config.enableVerseHighlighting = not config.enableVerseHighlighting
         self.displayMessage(config.thisTranslation["message_restart"])
 
-    def useFastVerseParsingChanged(self):
-        config.useFastVerseParsing = not config.useFastVerseParsing
+    def useLiteVerseParsingChanged(self):
+        config.useLiteVerseParsing = not config.useLiteVerseParsing
+    
+    def parseEnglishBooksOnlyChanged(self):
+        config.parseEnglishBooksOnly = not config.parseEnglishBooksOnly
 
     def enableMacrosChanged(self):
         config.enableMacros = not config.enableMacros

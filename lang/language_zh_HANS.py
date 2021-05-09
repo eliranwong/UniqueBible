@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "在第一个工具列之后新增换行。",
     "addBreakBeforeTheLastToolBar": "在最后一个工具列之前新增换行。",
     "parserStandarisation": "根据 UBA 标准，应用书卷书卷缩写到经文参照剖析器。",
-    "useFastVerseParsing": "选用功能少一点的经文参照剖析器，但可以更快地剖析一般的经文参照。",
+    "useLiteVerseParsing": "使用轻便模式（取代标准模式）来剖析经文参照。轻便模式能较快剖析经文参照，并不区分大小写，但剖析功能较少。",
     "showVerseNumbersInRange": "在显示多节数功能同时显示每一节号。",
     "addFavouriteToMultiRef": "应用在显示多个经文参照时，从设定为最喜欢的圣经版本中提取经文，与正在开启的圣经版本并列显示。",
     "enableVerseHighlighting": "启用经文颜色强调显示的选项。",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "在选取的文字中解析没有注明书卷的经文参照。",
     "exportToDocx": "导出到 Word 文档",
     "activeVerseColour": "选择活动 Verse 颜色",
+    "regexSearchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会使用标准正规表示式来搜寻圣经。",
+    "searchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会搜寻圣经。",
+    "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
 }

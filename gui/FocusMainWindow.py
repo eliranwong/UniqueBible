@@ -41,12 +41,17 @@ class FocusMainWindow:
             addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
         for style in QStyleFactory.keys():
-            addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
+            # PySide2
+            #addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
+            # PyQt5
+            #addMenuItem(subMenu, style, self, lambda arg, style=style: self.setAppWindowStyle(style), None, False)
+            # For both PySide2 and PyQt5
+            addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
         subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
         if config.qtMaterial:
             qtMaterialThemes = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
             for theme in qtMaterialThemes:
-                addMenuItem(subMenu, theme[:-4], self, lambda theme=theme: self.setQtMaterialTheme(theme), None, False)
+                addMenuItem(subMenu, theme[:-4], self, partial(self.setQtMaterialTheme, theme), None, False)
             subMenu.addSeparator()
             addMenuItem(subMenu, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
         else:
@@ -73,7 +78,7 @@ class FocusMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         for shortcut in ShortcutUtil.getListCustomShortcuts():
-            addMenuItem(subMenu, shortcut, self, lambda shortcut=shortcut: self.setShortcuts(shortcut), None, False)
+            addMenuItem(subMenu, shortcut, self, partial(self.setShortcuts, shortcut), None, False)
         subMenu = addSubMenu(subMenu0, "toolbarIcon")
         items = (
             ("toolbarIconStandard", lambda: self.setFullIconSize(False)),
@@ -141,7 +146,7 @@ class FocusMainWindow:
         subMenu0 = addSubMenu(menu, "languageSettings")
         subMenu = addSubMenu(subMenu0, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
-            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
+            addMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), translation=False)
         subMenu = addSubMenu(subMenu0, "watsonTranslator")
         items = (
             ("setup", self.setupWatsonTranslator),
@@ -158,7 +163,7 @@ class FocusMainWindow:
             subMenu = addSubMenu(subMenu0, "ttsLanguage")
             for index, item in enumerate(items):
                 languageCode = languageCodes[index]
-                addMenuItem(subMenu, item, self, lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode), translation=False)
+                addMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), translation=False)
             #addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguageDialog)
 
         addMenuItem(menu, "configFlags", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
@@ -244,13 +249,13 @@ class FocusMainWindow:
             addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
             menu.addSeparator()
         for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2, sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5)):
-            addMenuItem(menu, "cp{0}".format(index), self, lambda index=index, shortcut=shortcut: self.openControlPanelTab(index), shortcut)
+            addMenuItem(menu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
         tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries")
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
-            addMenuItem(subMenu, tab, self, lambda index=index: self.openMiniControlTab(index))
+            addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
         menu.addSeparator()
         addMenuItem(menu, "reloadResources", self, self.reloadResources)
         addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
@@ -325,9 +330,20 @@ class FocusMainWindow:
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)
-                        addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                        # Note the difference between PySide2 & PyQt5
+                        # For PySide2
+                        #addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                        # For PyQt5
+                        #addMenuItem(menu, feature, self, lambda arg, plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
+                        # For both PySide2 and PyQt5
+                        addMenuItem(menu, feature, self, partial(self.runPlugin, plugin), shortcut=shortcut, translation=False)
                     else:
-                        addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+                        # For PySide2
+                        #addMenuItem(menu, plugin, self, lambda plugin=plugin: self.runPlugin(plugin), translation=False)
+                        # For PyQt5
+                        #addMenuItem(menu, plugin, self, lambda arg, plugin=plugin: self.runPlugin(plugin), translation=False)
+                        # For both PySide2 and PyQt5
+                        addMenuItem(menu, plugin, self, partial(self.runPlugin, plugin), translation=False)
             menu.addSeparator()
             addMenuItem(menu, "enableIndividualPlugins", self, self.enableIndividualPluginsWindow)
 

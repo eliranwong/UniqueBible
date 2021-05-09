@@ -211,6 +211,18 @@ class ConfigUtil:
         # Parse bookless references in selected text."""
         if not hasattr(config, "parseBooklessReferences"):
             config.parseBooklessReferences = True
+        config.help["searchBibleIfCommandNotFound"] = """
+        # Search bible if command entry does not contain a command keyword or a bible verse reference."""
+        if not hasattr(config, "searchBibleIfCommandNotFound"):
+            config.searchBibleIfCommandNotFound = True
+        config.help["regexSearchBibleIfCommandNotFound"] = """
+        # Search bible with regular expression if command entry does not contain a command keyword or a bible verse reference."""
+        if not hasattr(config, "regexSearchBibleIfCommandNotFound"):
+            config.regexSearchBibleIfCommandNotFound = False
+        config.help["parseEnglishBooksOnly"] = """
+        # Parse bible verse references with English books only."""
+        if not hasattr(config, "parseEnglishBooksOnly"):
+            config.parseEnglishBooksOnly = False
         config.help["userLanguage"] = """
         # Option to set a customised language for google-translate
         # References: https://cloud.google.com/translate/docs/languages
@@ -602,10 +614,10 @@ class ConfigUtil:
         # Menu layout"""
         if not hasattr(config, "menuLayout"):
             config.menuLayout = "focus"
-        config.help["useFastVerseParsing"] = """
+        config.help["useLiteVerseParsing"] = """
         # Verse parsing method"""
-        if not hasattr(config, "useFastVerseParsing"):
-            config.useFastVerseParsing = False
+        if not hasattr(config, "useLiteVerseParsing"):
+            config.useLiteVerseParsing = False
         config.help["enablePlugins"] = """
         # Enable plugins"""
         if not hasattr(config, "enablePlugins"):
@@ -685,7 +697,7 @@ class ConfigUtil:
         if not hasattr(config, "activeVerseNoColourLight"):
             config.activeVerseNoColourLight = "#204a87"
         if not hasattr(config, "activeVerseNoColourDark"):
-            config.activeVerseNoColourDark = "rgb(197, 197, 56)"
+            config.activeVerseNoColourDark = "#aaff7f"
         if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
             config.maximumOHGBiVersesDisplayedInSearchResult = 50
         if not hasattr(config, "excludeStartupPlugins"):
@@ -772,6 +784,7 @@ class ConfigUtil:
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator),
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace),
             ("parseBooklessReferences", config.parseBooklessReferences),
+            ("parseEnglishBooksOnly", config.parseEnglishBooksOnly),
             ("userLanguage", config.userLanguage),
             ("userLanguageInterface", config.userLanguageInterface),
             ("autoCopyTranslateResult", config.autoCopyTranslateResult),
@@ -826,6 +839,8 @@ class ConfigUtil:
             ("studyV", config.studyV),
             ("bibleSearchMode", config.bibleSearchMode),
             ("regexCaseSensitive", config.regexCaseSensitive),
+            ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound),
+            ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound),
             ("commentaryText", config.commentaryText),
             ("commentaryB", config.commentaryB),
             ("commentaryC", config.commentaryC),
@@ -882,7 +897,7 @@ class ConfigUtil:
             ("logCommands", config.logCommands),
             ("migrateDatabaseBibleNameToDetailsTable", config.migrateDatabaseBibleNameToDetailsTable),
             ("menuLayout", config.menuLayout),
-            ("useFastVerseParsing", config.useFastVerseParsing),
+            ("useLiteVerseParsing", config.useLiteVerseParsing),
             #("customPythonOnStartup", config.customPythonOnStartup),
             ("enablePlugins", config.enablePlugins),
             ("enableMacros", config.enableMacros),

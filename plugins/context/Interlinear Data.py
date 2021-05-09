@@ -288,8 +288,8 @@ class InterlinearDataWindow(QWidget):
             os.system("{0} {1}".format(config.open, filePath))
 
 
-useFastVerseParsing = config.useFastVerseParsing
-config.useFastVerseParsing = False
+useLiteVerseParsing = config.useLiteVerseParsing
+config.useLiteVerseParsing = False
 config.mainWindow.bibleReadingPlan = InterlinearDataWindow(config.mainWindow, config.pluginContext)
 config.mainWindow.bibleReadingPlan.show()
-config.useFastVerseParsing = useFastVerseParsing
+config.useLiteVerseParsing = useLiteVerseParsing

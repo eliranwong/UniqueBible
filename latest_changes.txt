@@ -1,3 +1,12 @@
+Major changes in version 24.24:
+* Fixed compatability issues with PyQt5
+* Fixed Focus menu layout to work with PyQt5
+* Renamed config flag "useFastVerseParsing" to "useLiteVerseParsing"
+* Added 3 config flags about verse parsing:
+    config.parseEnglishBooksOnly
+    config.searchBibleIfCommandNotFound
+    config.regexSearchBibleIfCommandNotFound
+
 Major change in version 24.23:
 * Fixed the issue that Strong's numbers were mistaken as bookless references in parsing bible verse references.
 
@@ -1546,7 +1555,7 @@ Latest changes in version 20.2:
 - Added next/previous verse/chapter buttons to Aleph menu.
 
 Latest changes in version 20.1:
-@otseng added a config option, useFastVerseParsing, to allow users to choose a faster parser.  Thank you, Oliver!
+@otseng added a config option, useLiteVerseParsing, to allow users to choose a faster parser.  Thank you, Oliver!
 By default, verse parsing will use standard parsing. Fast parsing option can be enabled in config flags.
 
 Latest changes in version 20.0:

@@ -15,6 +15,9 @@ class BibleVerseParserTestCase(unittest.TestCase):
         config.convertChapterVerseDotSeparator = True
         config.parseBookChapterWithoutSpace = True
         config.parseBooklessReferences = True
+        config.parseEnglishBooksOnly = False
+        config.searchBibleIfCommandNotFound = True
+        config.regexSearchBibleIfCommandNotFound = False
         self.parser = BibleVerseParser(config.standardAbbreviation)
 
     def test_gen_parseText(self):

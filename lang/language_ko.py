@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "첫 번째 메뉴 도구 모음 다음에 줄 바꿈을 추가합니다.",
     "addBreakBeforeTheLastToolBar": "마지막 메뉴 도구 모음 앞에 줄 바꿈을 추가합니다.",
     "parserStandarisation": "UBA 표준에 따라 성경 서적 약어를 변환하는 UBA파서에 대한 옵션.",
-    "useFastVerseParsing": "기능이 적은 구문 분석기를 사용하는 옵션이지만, 성경 참조를 빠르게 구문 분석하는 옵션입니다.",
+    "useLiteVerseParsing": "성경 구절 참조를 구문 분석하려면 표준 모드 대신에 라이트 모드를 사용하십시오. 라이트 역 구문 분석은 더 빠르고 대소문자를 구분하지 않지만 구문 분석 기능이 적습니다.",
     "showVerseNumbersInRange": "각 버전 범위의 모든 버스 번호를 표시하는 옵션입니다.",
     "addFavouriteToMultiRef": "여러 참조가 표시될 때 열리는 바이블 버전과 병렬로 표시되는 즐겨찾기 바이블에서 구절을 페치하는 옵션입니다.",
     "enableVerseHighlighting": "비시 강조표시를 사용하기 위한 옵션입니다.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "선택된 텍스트의 북적인 책갈피를 구문 분석하지 않습니다.",
     "exportToDocx": "Word 문서로 내보내기",
     "activeVerseColour": "활성 Verse 색상 선택",
+    "regexSearchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 정규식을 사용하여 성경을 검색할 수 있습니다.",
+    "searchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 검색을 사용할 수 있습니다.",
+    "parseEnglishBooksOnly": "영어 책만을 사용하여 성경 구절을 읽을 수 있다.",
 }

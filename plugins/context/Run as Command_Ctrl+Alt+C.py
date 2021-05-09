@@ -1,9 +1,9 @@
 import config
 
 if config.pluginContext:
-    useFastVerseParsing = config.useFastVerseParsing
-    config.useFastVerseParsing = False
+    useLiteVerseParsing = config.useLiteVerseParsing
+    config.useLiteVerseParsing = False
     config.mainWindow.textCommandChanged(config.pluginContext, "main")
-    config.useFastVerseParsing = useFastVerseParsing
+    config.useLiteVerseParsing = useLiteVerseParsing
 else:
     config.contextSource.messageNoSelection()

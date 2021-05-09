@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "Fügen Sie nach der ersten Menüsymbolleiste einen Zeilenumbruch hinzu.",
     "addBreakBeforeTheLastToolBar": "Fügen Sie vor der letzten Menüsymbolleiste einen Zeilenumbruch hinzu.",
     "parserStandarisation": "Option für UBA-Parser, Bibelbuchabkürzungen nach UBA-Standard zu konvertieren.",
-    "useFastVerseParsing": "Option zum Verwenden des Parsers mit weniger Features, aber schneller Syntaxanalyse von Bibelreferenzen.",
+    "useLiteVerseParsing": "Verwenden Sie den Lite-Modus anstelle des Standardmodus für die Syntaxanalyse von Bibel-Versverweisen. Die Analyse des Lite-Vers ist schneller und die Groß-/Kleinschreibung muss nicht beachtet werden, aber sie hat weniger Parsing",
     "showVerseNumbersInRange": "Option zur Anzeige aller Versnummern in jeder Reihe von Versen.",
     "addFavouriteToMultiRef": "Option zum Abrufen von Versen aus der Lieblingsbibel, die parallel zur geöffneten Bibelversion angezeigt werden, wenn mehrere Referenzen angezeigt werden.",
     "enableVerseHighlighting": "Option zur Aktivierung der Versaushebung.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "Parsen mit bookless-Referenzen im ausgewählten Text.",
     "exportToDocx": "In Word-Dokument exportieren",
     "activeVerseColour": "Aktive Vers-Farbe auswählen",
+    "regexSearchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel mit regulärem Ausdruck, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
+    "searchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
+    "parseEnglishBooksOnly": "Analysieren Sie bible verse Referenzen nur mit englischen Büchern.",
 }

@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "Aggiungere una riga - break dopo la barra degli strumenti del primo menu.",
     "addBreakBeforeTheLastToolBar": "Aggiungere una riga - break prima dell'ultima barra degli strumenti del menu.",
     "parserStandarisation": "Opzione per parser UBA per convertire abbreviazioni di libro bibbia secondo standard UBA.",
-    "useFastVerseParsing": "Opzione per utilizzare il parser con meno funzioni ma più rapidi riferimenti bibbia.",
+    "useLiteVerseParsing": "Utilizzare la modalità lite invece della modalità standard per parsing di riferimenti di versi bibbia. Lite versante parsing è più veloce e caso insensibile ma ha meno caratteristiche di parsing.",
     "showVerseNumbersInRange": "Opzione per visualizzare tutti i numeri di versi in ogni gamma di versi.",
     "addFavouriteToMultiRef": "Opzione per richiamare versi dalla bibbia preferita, che vengono visualizzati in parallelo con la versione bibbia aperta, quando vengono visualizzati più riferimenti.",
     "enableVerseHighlighting": "Opzione per abilitare l'evidenziazione del verso.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "Paralizza i riferimenti del libretto in testo selezionato.",
     "exportToDocx": "Esporta in Word Document",
     "activeVerseColour": "Seleziona Colore attivo attivo",
+    "regexSearchBibleIfCommandNotFound": "Cerca bibbia con espressione regolare se la voce di comando non contiene una parola chiave di comando o un riferimento in versi bibbia.",
+    "searchBibleIfCommandNotFound": "Cerca bibbia se la voce di comando non contiene una parola chiave di comando o un riferimento bibbia.",
+    "parseEnglishBooksOnly": "Parsa i riferimenti in versi bibbia con solo libri inglesi.",
 }

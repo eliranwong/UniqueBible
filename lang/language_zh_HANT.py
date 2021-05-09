@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "在第一個工具列之後新增換行。",
     "addBreakBeforeTheLastToolBar": "在最後一個工具列之前新增換行。",
     "parserStandarisation": "根據 UBA 標準，應用書卷書卷縮寫到經文參照剖析器。",
-    "useFastVerseParsing": "選用功能少一點的經文參照剖析器，但可以更快地剖析一般的經文參照。",
+    "useLiteVerseParsing": "使用輕便模式（取代標準模式）來剖析經文參照。輕便模式能較快剖析經文參照，並不區分大小寫，但剖析功能較少。",
     "showVerseNumbersInRange": "在顯示多節數功能同時顯示每一節號。",
     "addFavouriteToMultiRef": "應用在顯示多個經文參照時，從設定爲最喜歡的聖經版本中提取經文，與正在開啟的聖經版本並列顯示。",
     "enableVerseHighlighting": "啟用經文顏色強調顯示的選項。",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "在選取的文字中剖析沒有註明書卷的經文參照。",
     "exportToDocx": "匯出至 Word 文件",
     "activeVerseColour": "選取作用中 Verse 顏色",
+    "regexSearchBibleIfCommandNotFound": "如果輸入的指令不包含指令關鍵字或經文參照，就會使用標準正規表示式來搜尋聖經。",
+    "searchBibleIfCommandNotFound": "如果輸入的指令不包含指令關鍵字或經文參照，就會搜尋聖經 。",
+    "parseEnglishBooksOnly": "只使用英文書名剖析經文參照。",
 }

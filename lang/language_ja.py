@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "最初のメニュー・ツールバーの後に改行を追加します。",
     "addBreakBeforeTheLastToolBar": "最後のメニュー・ツールバーの前に改行を追加します。",
     "parserStandarisation": "UBA パーサーのオプション。 UBA 標準に従って聖書の省略形を変換します。",
-    "useFastVerseParsing": "パーサーを使用するオプションで、機能は少ないが、バイブル参照の構文解析が速い。",
+    "useLiteVerseParsing": "バイブル・逆参照の解析には、標準モードの代わりにライトモードを使用します。 Lite 逆構文解析は高速で、大 / 小文字を区別しないが、構文解析機能は少なく",
     "showVerseNumbersInRange": "各バージョンの範囲内のすべての行番号を表示するオプション。",
     "addFavouriteToMultiRef": "複数の参照が表示されている場合に、オープンされたバイブル・バージョンと並行して表示される、お気に入りのバイブルからバージョンをフェッチするオプション。",
     "enableVerseHighlighting": "逆強調表示を使用可能にするオプション。",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "選択したテキスト内のブックマークの参照を解析します。",
     "exportToDocx": "Word 文書にエクスポート",
     "activeVerseColour": "アクティブな Verse カラーを選択",
+    "regexSearchBibleIfCommandNotFound": "コマンド入力にコマンド・キーワードまたはバイブル・逆参照が含まれていない場合は、正規表現でバイブルを検索します。",
+    "searchBibleIfCommandNotFound": "コマンド入力にコマンド・キーワードが含まれていない場合や、バイブル・逆参照が含まれていない場合は、検索",
+    "parseEnglishBooksOnly": "英語の本のみを扱う構文解析の聖書参照。",
 }

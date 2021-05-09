@@ -813,15 +813,25 @@ class TextCommandParser:
         if config.enforceCompareParallel and view == "main" and parallelMatches and not parallel:
             config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
             return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
-        if config.useFastVerseParsing:
+        if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
-                search = re.sub(r" \d+:?\d?$", "", command)
-                return self.textSearchRegex("{0}:::{1}".format(text, search), "main")
+                command = re.sub(r" \d+:?\d?$", "", command)
+                if config.regexSearchBibleIfCommandNotFound:
+                    return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
+                elif config.searchBibleIfCommandNotFound:
+                    return self.textCountSearch("{0}:::{1}".format(text, command), "main")
+                else:
+                    return self.invalidCommand()
         else:
             verseList = self.extractAllVerses(command)
         if not verseList:
-            return self.invalidCommand()
+            if config.regexSearchBibleIfCommandNotFound:
+                return self.textSearchRegex("{0}:::{1}".format(text, command), "main")
+            elif config.searchBibleIfCommandNotFound:
+                return self.textCountSearch("{0}:::{1}".format(text, command), "main")
+            else:
+                return self.invalidCommand()
         else:
             formattedBiblesFolder = os.path.join(config.marvelData, "bibles")
             formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]

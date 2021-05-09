@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "Add a line-break after the first menu toolbar.",
     "addBreakBeforeTheLastToolBar": "Add a line-break before the last menu toolbar.",
     "parserStandarisation": "Option for UBA parser to convert bible book abbreviations according to UBA standard.",
-    "useFastVerseParsing": "Option to use parser with less features but quicker parsing bible references.",
+    "useLiteVerseParsing": "Use lite mode instead of standard mode for parsing bible verse references. Lite verse parsing is faster and case insensitive but it has less parsing features.",
     "showVerseNumbersInRange": "Option to display all verse numbers in each range of verses.",
     "addFavouriteToMultiRef": "Option to fetch verses from favourite bible, which are displayed in parallel with the opened bible version, when multiple references are displayed.",
     "enableVerseHighlighting": "Option to enable verse highlighting.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "Parse bookless references in selected text.",
     "exportToDocx": "Export to Word Document",
     "activeVerseColour": "Select Active Verse Colour",
+    "regexSearchBibleIfCommandNotFound": "Search bible with regular expression if command entry does not contain a command keyword or a bible verse reference.",
+    "searchBibleIfCommandNotFound": "Search bible if command entry does not contain a command keyword or a bible verse reference.",
+    "parseEnglishBooksOnly": "Parse bible verse references with English books only.",
 }

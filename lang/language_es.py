@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "Añada un salto de línea después de la primera barra de herramientas del menú.",
     "addBreakBeforeTheLastToolBar": "Añada un salto de línea antes de la última barra de herramientas del menú.",
     "parserStandarisation": "Opción para que el analizador de la UBA convierta las abreviaturas de libros de biblia de acuerdo a la norma",
-    "useFastVerseParsing": "Opción para utilizar el analizador con menos características pero más rápido analizando referencias de biblia.",
+    "useLiteVerseParsing": "Utilice la modalidad lite en lugar de la modalidad estándar para analizar referencias de verso de biblia. El análisis de verso ligero es más rápido y sin distinción entre mayúsculas y minúsculas, pero tiene menos características de análisis.",
     "showVerseNumbersInRange": "Opción para mostrar todos los números de versículo en cada rango de versículos.",
     "addFavouriteToMultiRef": "Opción para captar versos de la biblia favorita, que se muestran en paralelo con la versión de la biblia abierta, cuando se muestran varias referencias.",
     "enableVerseHighlighting": "Opción para habilitar el resaltado de versos.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "Analizar referencias sin libros en el texto seleccionado.",
     "exportToDocx": "Exportar a documento de Word",
     "activeVerseColour": "Seleccionar color de Verse activo",
+    "regexSearchBibleIfCommandNotFound": "Buscar biblia con expresión regular si la entrada de comando no contiene una palabra clave de comando o una referencia de verso de biblia.",
+    "searchBibleIfCommandNotFound": "Buscar biblia si la entrada de mandato no contiene una palabra clave de mandato o una referencia de verso de biblia.",
+    "parseEnglishBooksOnly": "Analizar las referencias de versos bibles sólo con libros en inglés.",
 }

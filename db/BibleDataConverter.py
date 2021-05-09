@@ -228,7 +228,7 @@ class BibleDataConverter:
 
 
 if __name__ == '__main__':
-    config.useFastVerseParsing = True
+    config.useLiteVerseParsing = True
     BibleDataConverter().convertFreeBibleVersion("/Users/otseng/Downloads/engfbv_readaloud")
 
     print("Done")

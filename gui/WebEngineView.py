@@ -3,9 +3,10 @@ import config, os, platform, webbrowser, re
 from functools import partial
 from qtpy.QtCore import Qt
 #from qtpy.QtGui import QDesktopServices
-from qtpy.QtGui import QGuiApplication, QKeySequence
+#from qtpy.QtGui import QKeySequence
+from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu
-from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
 from Translator import Translator
@@ -21,6 +22,8 @@ class WebEngineView(QWebEngineView):
         self.parent = parent
         self.name = name
         self.setPage(WebEnginePage(self))
+        self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        self.page().fullScreenRequested.connect(lambda request: request.accept())
        
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
@@ -960,10 +963,10 @@ class WebEngineView(QWebEngineView):
 
     def openReferenceInBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
-        useFastVerseParsing = config.useFastVerseParsing
-        config.useFastVerseParsing = False
+        useLiteVerseParsing = config.useLiteVerseParsing
+        config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
-        config.useFastVerseParsing = useFastVerseParsing
+        config.useLiteVerseParsing = useLiteVerseParsing
         if verses:
             command = "BIBLE:::{0}:::{1}".format(bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
@@ -974,10 +977,10 @@ class WebEngineView(QWebEngineView):
 
     def compareReferenceWithBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
-        useFastVerseParsing = config.useFastVerseParsing
-        config.useFastVerseParsing = False
+        useLiteVerseParsing = config.useLiteVerseParsing
+        config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
-        config.useFastVerseParsing = useFastVerseParsing
+        config.useLiteVerseParsing = useLiteVerseParsing
         if verses:
             command = "COMPARE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
@@ -988,10 +991,10 @@ class WebEngineView(QWebEngineView):
 
     def parallelReferenceWithBibleVersion(self, bible):
         selectedText = self.selectedText().strip()
-        useFastVerseParsing = config.useFastVerseParsing
-        config.useFastVerseParsing = False
+        useLiteVerseParsing = config.useLiteVerseParsing
+        config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
-        config.useFastVerseParsing = useFastVerseParsing
+        config.useLiteVerseParsing = useLiteVerseParsing
         if verses:
             command = "PARALLEL:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":

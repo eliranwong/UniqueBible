@@ -79,11 +79,11 @@ if path.exists("config.py"):
         printValue(config, "marvelData")
         printValue(config, "qtMaterial")
         printValue(config, "qtMaterialTheme")
-        printValue(config, "useFastVerseParsing")
+        printValue(config, "useLiteVerseParsing")
         printValue(config, "menuShortcuts")
         printValue(config, "startupMacro")
         printValue(config, "enableMacros")
-        printValue(config, "useFastVerseParsing")
+        printValue(config, "useLiteVerseParsing")
         printValue(config, "disableModulesUpdateCheck")
     except Exception as e:
         print("Error: {0}".format(e))

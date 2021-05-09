@@ -540,7 +540,7 @@ translation = {
     "addBreakAfterTheFirstToolBar": "Adăugaţi o linie-break după prima bară de unelte meniu.",
     "addBreakBeforeTheLastToolBar": "Adăugaţi o linie-break înainte de bara de unelte din ultima meniu.",
     "parserStandarisation": "Opţiune pentru parser-ul UBA pentru a converti abrevieri de carte biblice în conformitate cu standardul UBA.",
-    "useFastVerseParsing": "Opţiunea de a utiliza parser cu mai puţine caracteristici, dar mai rapid, parsarea referinţelor biblice.",
+    "useLiteVerseParsing": "Utilizaţi modul lite în loc de modul standard pentru parsarea referinţelor ververse biblice. Parsarea verset-ului Lite este mai rapidă şi nu este sensibilă la majuscule, dar are caracteristici mai puţin",
     "showVerseNumbersInRange": "Opţiune pentru a afişa toate numerele verse din fiecare interval de versete.",
     "addFavouriteToMultiRef": "Opţiune pentru a aduce versete din biblia preferată, care sunt afişate în paralel cu versiunea de biblie deschisă, atunci când sunt afişate mai multe referinţe.",
     "enableVerseHighlighting": "Opţiune pentru a activa evidenţierea verse.",
@@ -710,4 +710,7 @@ translation = {
     "parseBooklessReferences": "Analizaţi referinţele mai puţine în textul selectat.",
     "exportToDocx": "Export în document Word",
     "activeVerseColour": "Selectare culoare activă Verse",
+    "regexSearchBibleIfCommandNotFound": "Căutare biblică cu expresie regulată dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
+    "searchBibleIfCommandNotFound": "Căutare biblică dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
+    "parseEnglishBooksOnly": "Analizaţi numai referinţele Bibliei cu cărţi englezeşti.",
 }

@@ -260,6 +260,7 @@ for module, feature, isInstalled in required:
             if not isInstalled():
                 print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
                 pip3InstallModule(module)
+                pip3InstallModule("PyQtWebEngine")
                 if isInstalled():
                     print("Installed!")
                 else:

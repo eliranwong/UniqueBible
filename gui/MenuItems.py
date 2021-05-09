@@ -3,8 +3,10 @@ import os, config
 from util.FileUtil import FileUtil
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
-from qtpy.QtGui import QIcon, Qt
+from qtpy.QtGui import QIcon
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
+from functools import partial
 
 def addMenu(menuBar, translation):
     return menuBar.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation[translation]))
@@ -18,6 +20,8 @@ def addMenuItem(menu, feature, object, action, shortcut=None, translation=True):
             shortcut = None
         else:
             config.shortcutList.append(shortcut)
+    if shortcut is None:
+        shortcut = ""
     return menu.addAction(QAction(config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
 
 def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translation=True):
