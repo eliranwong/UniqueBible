@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 정규식을 사용하여 성경을 검색할 수 있습니다.",
     "searchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 검색을 사용할 수 있습니다.",
     "parseEnglishBooksOnly": "영어 책만을 사용하여 성경 구절을 읽을 수 있다.",
+    "pdfViewerOnNewWindow": "새 창에서 PDF 뷰어를 여는 옵션입니다.",
 }

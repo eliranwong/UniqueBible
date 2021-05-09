@@ -1085,6 +1085,24 @@ class WebEngineView(QWebEngineView):
             self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.show()
 
+    def openPopoverUrl(self, url, name="popover", fullScreen=False, screenNo=-1):
+        if not hasattr(self, "popoverUrlView") or not self.popoverView.isVisible:
+            self.popoverUrlView = WebEngineViewPopover(self, name, self.name)
+        self.popoverUrlView.load(url)
+        if fullScreen:
+            monitor = QDesktopWidget().screenGeometry(screenNo)
+            self.popoverUrlView.move(monitor.left(), monitor.top())
+            if platform.system() == "Linux":
+                # Using self.popoverUrlView.showFullScreen() directly does not work on Linux
+                self.popoverUrlView.showMaximized()
+                self.popoverUrlView.escKeyPressed()
+            else:
+                self.popoverUrlView.showFullScreen()
+        else:
+            self.popoverUrlView.setMinimumWidth(config.popoverWindowWidth)
+            self.popoverUrlView.setMinimumHeight(config.popoverWindowHeight)
+        self.popoverUrlView.show()
+
     def closePopover(self):
         if hasattr(self, "popoverView"):
             self.popoverView.close()

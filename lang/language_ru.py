@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Поиск библ с регулярным выражением, если в записи команды нет ключевого слова команды или ссылки на библ.",
     "searchBibleIfCommandNotFound": "Если в записи команды нет ключевого слова команды или bible verse, то поиск будет библ.",
     "parseEnglishBooksOnly": "Анализировать библевые ссылки только с английскими книгами.",
+    "pdfViewerOnNewWindow": "Опция открытия программы просмотра PDF в новом окне.",
 }

@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel mit regulärem Ausdruck, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
     "searchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
     "parseEnglishBooksOnly": "Analysieren Sie bible verse Referenzen nur mit englischen Büchern.",
+    "pdfViewerOnNewWindow": "Option zum Öffnen eines PDF-Viewers in einem neuen Fenster.",
 }

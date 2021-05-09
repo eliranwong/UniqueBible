@@ -28,7 +28,8 @@ class WebEngineViewPopover(QWebEngineView):
         changeTitle = "document.title = 'UniqueBible.app';"
         self.page().runJavaScript(changeTitle)
         # run textCommandChanged from parent
-        self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
+        if not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
+            self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
         copyText = QAction(self)

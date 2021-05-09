@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Căutare biblică cu expresie regulată dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
     "searchBibleIfCommandNotFound": "Căutare biblică dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
     "parseEnglishBooksOnly": "Analizaţi numai referinţele Bibliei cu cărţi englezeşti.",
+    "pdfViewerOnNewWindow": "Opţiune pentru a deschide vizualizatorul PDF pe o fereastră nouă.",
 }

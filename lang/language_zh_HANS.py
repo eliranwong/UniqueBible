@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会使用标准正规表示式来搜寻圣经。",
     "searchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会搜寻圣经。",
     "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
+    "pdfViewerOnNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
 }

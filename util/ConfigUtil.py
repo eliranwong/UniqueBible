@@ -461,6 +461,10 @@ class ConfigUtil:
         # Option to open book content on a new window"""
         if not hasattr(config, "bookOnNewWindow"):
             config.bookOnNewWindow = False
+        config.help["pdfViewerOnNewWindow"] = """
+        # Option to open PDF viewer on a new window"""
+        if not hasattr(config, "pdfViewerOnNewWindow"):
+            config.pdfViewerOnNewWindow = False
         config.help["popoverWindowWidth"] = """
         # Popover Windows width"""
         if not hasattr(config, "popoverWindowWidth"):
@@ -855,6 +859,7 @@ class ConfigUtil:
             ("book", config.book),
             ("bookChapter", config.bookChapter),
             ("bookOnNewWindow", config.bookOnNewWindow),
+            ("pdfViewerOnNewWindow", config.pdfViewerOnNewWindow),
             ("popoverWindowWidth", config.popoverWindowWidth),
             ("popoverWindowHeight", config.popoverWindowHeight),
             ("verseNoSingleClickAction", config.verseNoSingleClickAction),

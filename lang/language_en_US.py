@@ -713,4 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Search bible with regular expression if command entry does not contain a command keyword or a bible verse reference.",
     "searchBibleIfCommandNotFound": "Search bible if command entry does not contain a command keyword or a bible verse reference.",
     "parseEnglishBooksOnly": "Parse bible verse references with English books only.",
+    "pdfViewerOnNewWindow": "Option to open PDF viewer on a new window.",
 }

@@ -1,3 +1,6 @@
+Major change in version 24.25:
+* Added a config flag "pdfViewerOnNewWindow" to open PDF viewer on a new window.
+
 Major changes in version 24.24:
 * Fixed compatability issues with PyQt5
 * Fixed Focus menu layout to work with PyQt5
