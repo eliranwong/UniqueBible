@@ -92,8 +92,8 @@ class ConfigFlagsWindow(QDialog):
             ("overwriteNoteFontSize", config.overwriteNoteFontSize, self.overwriteNoteFontSizeChanged, True, config.thisTranslation["overwriteNoteFontSize"]),
             ("overwriteBookFont", config.overwriteBookFont, self.overwriteBookFontChanged, True, config.thisTranslation["overwriteBookFont"]),
             ("overwriteBookFontSize", config.overwriteBookFontSize, self.overwriteBookFontSizeChanged, True, config.thisTranslation["overwriteBookFontSize"]),
-            ("bookOnNewWindow", config.bookOnNewWindow, self.bookOnNewWindowChanged, False, config.thisTranslation["bookOnNewWindow"]),
-            ("pdfViewerOnNewWindow", config.pdfViewerOnNewWindow, self.pdfViewerOnNewWindowChanged, False, config.thisTranslation["pdfViewerOnNewWindow"]),
+            ("openBookInNewWindow", config.openBookInNewWindow, self.openBookInNewWindowChanged, False, config.thisTranslation["openBookInNewWindow"]),
+            ("openPdfViewerInNewWindow", config.openPdfViewerInNewWindow, self.openPdfViewerInNewWindowChanged, False, config.thisTranslation["openPdfViewerInNewWindow"]),
             ("virtualKeyboard", config.virtualKeyboard, self.virtualKeyboardChanged, False, config.thisTranslation["virtualKeyboard"]),
             ("useWebbrowser", config.useWebbrowser, self.useWebbrowserChanged, True, config.thisTranslation["useWebbrowser"]),
             ("removeHighlightOnExit", config.removeHighlightOnExit, self.removeHighlightOnExitChanged, False, config.thisTranslation["removeHighlightOnExit"]),
@@ -293,8 +293,8 @@ class ConfigFlagsWindow(QDialog):
     def populateTabsOnStartupChanged(self):
         config.populateTabsOnStartup = not config.populateTabsOnStartup
 
-    def bookOnNewWindowChanged(self):
-        config.bookOnNewWindow = not config.bookOnNewWindow
+    def openBookInNewWindowChanged(self):
+        config.openBookInNewWindow = not config.openBookInNewWindow
 
     def convertChapterVerseDotSeparatorChanged(self):
         config.convertChapterVerseDotSeparator = not config.convertChapterVerseDotSeparator
@@ -310,8 +310,8 @@ class ConfigFlagsWindow(QDialog):
     def parseBooklessReferencesChanged(self):
         config.parseBooklessReferences = not config.parseBooklessReferences
 
-    def pdfViewerOnNewWindowChanged(self):
-        config.pdfViewerOnNewWindow = not config.pdfViewerOnNewWindow
+    def openPdfViewerInNewWindowChanged(self):
+        config.openPdfViewerInNewWindow = not config.openPdfViewerInNewWindow
 
     def searchBibleIfCommandNotFoundChanged(self):
         config.searchBibleIfCommandNotFound = not config.searchBibleIfCommandNotFound

@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "在所有筆記上使用預設字體的大小。",
     "overwriteBookFont": "在所有書籍模組上使用預設字體",
     "overwriteBookFontSize": "在所有書籍模組上使用預設字體的大小。",
-    "bookOnNewWindow": "在新視窗開啟書籍模組的選項。",
+    "openBookInNewWindow": "在新視窗開啟書籍模組的選項。",
     "virtualKeyboard": "使用螢幕虛擬鍵盤的選項。",
     "autoCopyTranslateResult": "將文字翻譯結果複製到剪貼版。",
     "autoCopyChinesePinyinOutput": "將中文拼音轉換結果複製到剪貼版。",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "如果輸入的指令不包含指令關鍵字或經文參照，就會使用標準正規表示式來搜尋聖經。",
     "searchBibleIfCommandNotFound": "如果輸入的指令不包含指令關鍵字或經文參照，就會搜尋聖經 。",
     "parseEnglishBooksOnly": "只使用英文書名剖析經文參照。",
-    "pdfViewerOnNewWindow": "用來在新視窗開啟 PDF 檢視器的選項。",
+    "openPdfViewerInNewWindow": "用來在新視窗開啟 PDF 檢視器的選項。",
 }

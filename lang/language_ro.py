@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "Opţiune pentru a utiliza dimensiunea fontului UBA implicit pe toate notele.",
     "overwriteBookFont": "Opţiune pentru a utiliza fontul UBA implicit pe toate modulele de carte",
     "overwriteBookFontSize": "Opţiune pentru a utiliza dimensiunea fontului UBA implicit pe toate modulele de carte.",
-    "bookOnNewWindow": "Opţiune pentru a deschide modulul de carte pe o fereastră nouă.",
+    "openBookInNewWindow": "Opţiune pentru a deschide modulul de carte pe o fereastră nouă.",
     "virtualKeyboard": "Opţiune de utilizare a tastaturii virtuale pe ecran.",
     "autoCopyTranslateResult": "Opţiune pentru a copia ieşirea caracteristicii translatare text în clipboard",
     "autoCopyChinesePinyinOutput": "Opţiune pentru a copia ieşirea caracteristicii pinyin Chineză în clipboard.",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Căutare biblică cu expresie regulată dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
     "searchBibleIfCommandNotFound": "Căutare biblică dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
     "parseEnglishBooksOnly": "Analizaţi numai referinţele Bibliei cu cărţi englezeşti.",
-    "pdfViewerOnNewWindow": "Opţiune pentru a deschide vizualizatorul PDF pe o fereastră nouă.",
+    "openPdfViewerInNewWindow": "Opţiune pentru a deschide vizualizatorul PDF pe o fereastră nouă.",
 }

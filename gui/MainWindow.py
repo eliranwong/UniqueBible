@@ -1350,7 +1350,7 @@ class MainWindow(QMainWindow):
                 self.textCommandLineEdit.setText(command)
                 self.runTextCommand(command)
 
-    def openPdfReader(self, file, page=1, fullPath=False):
+    def openPdfReader(self, file, page=1, fullPath=False, fullScreen=False):
         if file:
             pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
             if platform.system() == "Windows":
@@ -1358,12 +1358,12 @@ class MainWindow(QMainWindow):
             marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
             fileName = file if fullPath else os.path.join(marvelDataPath, "pdf", file)
             url = QUrl.fromUserInput("{0}?file={1}&theme={2}#page={3}".format(pdfViewer, fileName, config.theme, page))
-            if config.pdfViewerOnNewWindow:
-                self.studyView.currentWidget().openPopoverUrl(url, name="Viewer")
+            if config.openPdfViewerInNewWindow:
+                self.studyView.currentWidget().openPopoverUrl(url, name=fileName, fullScreen=fullScreen)
             else:
                 self.studyView.load(url)
-                self.studyView.setTabText(self.studyView.currentIndex(), file[:20])
-                self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
+                self.studyView.setTabText(self.studyView.currentIndex(), os.path.basename(fileName)[:20])
+                self.studyView.setTabToolTip(self.studyView.currentIndex(), fileName)
             config.pdfTextPath = fileName
             self.addExternalFileHistory(fileName)
             self.setExternalFileButton()
@@ -1961,11 +1961,11 @@ class MainWindow(QMainWindow):
                 "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
 
     def toggleDisplayBookContent(self):
-        if config.bookOnNewWindow:
-            config.bookOnNewWindow = False
+        if config.openBookInNewWindow:
+            config.openBookInNewWindow = False
             self.displayMessage(config.thisTranslation["menu10_bookOnStudy"])
         else:
-            config.bookOnNewWindow = True
+            config.openBookInNewWindow = True
             self.displayMessage(config.thisTranslation["menu10_bookOnNew"])
 
     def searchBookDialog(self):

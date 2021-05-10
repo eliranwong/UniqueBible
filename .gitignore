@@ -64,3 +64,6 @@ UniqueBibleApp.sh
 morphology.sqlite
 htmlResources/fonts/*
 htmlResources/images/[A-Z]*/*
+/plugins/menu/Bibi/*
+/plugins/menu/Bibi/bibi/*
+/plugins/menu/Bibi/bibi-bookshelf/*

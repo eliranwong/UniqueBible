@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "Option permettant d'utiliser la taille de police UBA par défaut sur toutes les notes.",
     "overwriteBookFont": "Option permettant d'utiliser la police UBA par défaut sur tous les modules de livre",
     "overwriteBookFontSize": "Option permettant d'utiliser la taille de police UBA par défaut sur tous les modules de livre.",
-    "bookOnNewWindow": "Option permettant d'ouvrir le module de livre sur une nouvelle fenêtre.",
+    "openBookInNewWindow": "Option permettant d'ouvrir le module de livre sur une nouvelle fenêtre.",
     "virtualKeyboard": "Option permettant d'utiliser le clavier virtuel à l'écran.",
     "autoCopyTranslateResult": "Option permettant de copier la sortie de la fonction de conversion de texte dans le presse-papiers.",
     "autoCopyChinesePinyinOutput": "Option permettant de copier la sortie de la fonction pinyin chinoise dans le presse-papiers.",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Rechercher une bible avec une expression régulière si l'entrée de commande ne contient pas de mot clé de commande ou de référence de vers bible.",
     "searchBibleIfCommandNotFound": "Recherche bible si l'entrée de commande ne contient pas de mot clé de commande ou de référence de vers bible.",
     "parseEnglishBooksOnly": "Parse des références de vers bible avec des livres en anglais seulement.",
-    "pdfViewerOnNewWindow": "Option permettant d'ouvrir le visualiseur PDF sur une nouvelle fenêtre.",
+    "openPdfViewerInNewWindow": "Option permettant d'ouvrir le visualiseur PDF sur une nouvelle fenêtre.",
 }

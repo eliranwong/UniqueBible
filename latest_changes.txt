@@ -1,5 +1,14 @@
+Major changes in version 24.26:
+* Now bring popover window to the front when new content is loaded and the window was placed behind the main window.
+* Renamed config flag "bookOnNewWindow" to "openBookInNewWindow".
+* Renamed config flag "pdfViewerOnNewWindow" to "openPdfViewerInNewWindow".
+* Added ability to swap display of pdf viewer between new window and study window without modifying config.openPdfViewInNewWindow.
+* Added option "Full screen" to context menu section "Open Content in".
+* Added parsing options to context menu when PDF viewer is opened in a new window.
+* Partailly added fullscreen support to YouTube Browser for enabling fullscreen video. (will complete in upcoming update)
+
 Major change in version 24.25:
-* Added a config flag "pdfViewerOnNewWindow" to open PDF viewer on a new window.
+* Added a config flag "openPdfViewerInNewWindow" to open PDF viewer on a new window.
 
 Major changes in version 24.24:
 * Fixed compatability issues with PyQt5
@@ -1937,7 +1946,7 @@ Latest changes in version 12.2:
 
 Latest changes in version 12.1:
 * Two more options added to "Configure More ...":
-    - "bookOnNewWindow"
+    - "openBookInNewWindow"
     - "alwaysDisplayStaticMaps"
 
 Latest changes in version 12.0:

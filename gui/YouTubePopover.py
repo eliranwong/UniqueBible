@@ -1,7 +1,7 @@
 import config
-from qtpy.QtCore import QUrl, Qt
+from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction, QApplication
-from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
+from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 
 class YouTubePopover(QWebEngineView):
 
@@ -9,12 +9,23 @@ class YouTubePopover(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["menu11_youtube"])
+        self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        #self.page().fullScreenRequested.connect(lambda request: request.accept())
+        self.page().fullScreenRequested.connect(self.fullScreenRequested)
         #self.load(QUrl("https://www.youtube.com/"))
         self.urlString = ""
         self.urlChanged.connect(self.videoLinkChanged)
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
+
+    def fullScreenRequested(self, request):
+        self.parent.showFullScreen()
+        request.accept()
+
+    def exitFullScreen(self):
+        self.parent.showNormal()
+        self.page().triggerAction(QWebEnginePage.ExitFullScreen)
 
     def videoLinkChanged(self, url):
         self.urlString = url.toString()
@@ -63,6 +74,15 @@ class YouTubePopover(QWebEngineView):
         video.setText(config.thisTranslation["downloadOptions"])
         video.triggered.connect(self.parent.downloadOptions)
         self.addAction(video)
+
+#        separator = QAction(self)
+#        separator.setSeparator(True)
+#        self.addAction(separator)
+#
+#        action = QAction(self)
+#        action.setText(config.thisTranslation["youtube_copy"])
+#        action.triggered.connect(self.exitFullScreen)
+#        self.addAction(action)
 
     def back(self):
         self.page().triggerAction(QWebEnginePage.Back)

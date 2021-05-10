@@ -457,14 +457,14 @@ class ConfigUtil:
         # Last-opened book chapter"""
         if not hasattr(config, "bookChapter"):
             config.bookChapter = "03 - Gospels I"
-        config.help["bookOnNewWindow"] = """
+        config.help["openBookInNewWindow"] = """
         # Option to open book content on a new window"""
-        if not hasattr(config, "bookOnNewWindow"):
-            config.bookOnNewWindow = False
-        config.help["pdfViewerOnNewWindow"] = """
+        if not hasattr(config, "openBookInNewWindow"):
+            config.openBookInNewWindow = False
+        config.help["openPdfViewerInNewWindow"] = """
         # Option to open PDF viewer on a new window"""
-        if not hasattr(config, "pdfViewerOnNewWindow"):
-            config.pdfViewerOnNewWindow = False
+        if not hasattr(config, "openPdfViewerInNewWindow"):
+            config.openPdfViewerInNewWindow = False
         config.help["popoverWindowWidth"] = """
         # Popover Windows width"""
         if not hasattr(config, "popoverWindowWidth"):
@@ -858,8 +858,8 @@ class ConfigUtil:
             ("parseWordDocument", config.parseWordDocument),
             ("book", config.book),
             ("bookChapter", config.bookChapter),
-            ("bookOnNewWindow", config.bookOnNewWindow),
-            ("pdfViewerOnNewWindow", config.pdfViewerOnNewWindow),
+            ("openBookInNewWindow", config.openBookInNewWindow),
+            ("openPdfViewerInNewWindow", config.openPdfViewerInNewWindow),
             ("popoverWindowWidth", config.popoverWindowWidth),
             ("popoverWindowHeight", config.popoverWindowHeight),
             ("verseNoSingleClickAction", config.verseNoSingleClickAction),
