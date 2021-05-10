@@ -1,4 +1,4 @@
-Major change in version 24.27:
+Major change in version 24.27, 24.28:
 * Installed Bibi epub viewer for Windows users.  Previously installed ePub viewer does not work on Windows.
   Bibi epub viewer is loaded only on Windows platform.
 
