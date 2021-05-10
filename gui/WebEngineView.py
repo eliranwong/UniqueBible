@@ -957,6 +957,8 @@ class WebEngineView(QWebEngineView):
             config.openPdfViewerInNewWindow = True
             self.parent.parent.openPdfReader(toolTip, fullPath=True)
             config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif toolTip == "EPUB":
+            self.parent.parent.runPlugin("ePub Viewer New Window")
         else:
             #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
             self.page().toHtml(self.openNewWindow)
@@ -969,6 +971,8 @@ class WebEngineView(QWebEngineView):
             config.openPdfViewerInNewWindow = True
             self.parent.parent.openPdfReader(toolTip, fullPath=True, fullScreen=True)
             config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif toolTip == "EPUB":
+            self.parent.parent.runPlugin("ePub Viewer Full Screen")
         else:
             self.page().toHtml(lambda html: self.openNewWindow(html, True))
 

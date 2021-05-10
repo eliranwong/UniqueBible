@@ -28,7 +28,7 @@ class WebEngineViewPopover(QWebEngineView):
         changeTitle = "document.title = 'UniqueBible.app';"
         self.page().runJavaScript(changeTitle)
         # run textCommandChanged from parent
-        if not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
+        if not newTextCommand == "ePubViewer.html" and not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
             self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
@@ -167,6 +167,8 @@ class WebEngineViewPopover(QWebEngineView):
             config.openPdfViewerInNewWindow = False
             self.parent.parent.parent.openPdfReader(self.name, fullPath=True)
             config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif self.name == "EPUB":
+            self.parent.parent.parent.runPlugin("ePub Viewer")
         else:
             self.page().toHtml(self.openHtmlInStudyWindow)
         self.close()
