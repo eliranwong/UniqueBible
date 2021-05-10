@@ -2750,11 +2750,12 @@ class MainWindow(QMainWindow):
 
     def studyTextCommandChanged(self, newTextCommand):
         try:
-            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app") \
+            if isinstance(newTextCommand, str) and newTextCommand not in ("main.html", "UniqueBible.app", "index.html", "This E-Book is Published with Bibi | EPUB Reader on your website.") \
                     and not newTextCommand.endswith("UniqueBibleApp.png") \
                     and not newTextCommand.startswith("viewer.html") \
                     and not newTextCommand.endswith(".pdf") \
-                    and not newTextCommand.startswith("ePubViewer.html"):
+                    and not newTextCommand.startswith("ePubViewer.html") \
+                    and not newTextCommand.endswith("Published with Bibi"):
                 self.textCommandChanged(newTextCommand, "study")
         except:
             pass

@@ -1,3 +1,7 @@
+Major change in version 24.27:
+* Installed Bibi epub viewer for Windows users.  Previously installed ePub viewer does not work on Windows.
+  Bibi epub viewer is loaded only on Windows platform.
+
 Major changes in version 24.26:
 * Now bring popover window to the front when new content is loaded and the window was placed behind the main window.
 * Renamed config flag "bookOnNewWindow" to "openBookInNewWindow".
