@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "Option zur Verwendung der Standard-UBA-Schriftgröße für alle Notizen.",
     "overwriteBookFont": "Option zur Verwendung der Standard-UBA-Schriftart auf allen Buchmodulen",
     "overwriteBookFontSize": "Option zur Verwendung der Standard-UBA-Schriftgröße für alle Buchmodule.",
-    "bookOnNewWindow": "Option zum Öffnen des Buchmoduls in einem neuen Fenster.",
+    "openBookInNewWindow": "Option zum Öffnen des Buchmoduls in einem neuen Fenster.",
     "virtualKeyboard": "Option zur Verwendung einer virtuellen Tastatur auf Bildschirm.",
     "autoCopyTranslateResult": "Option zum Kopieren von Textübersetzungsfeature-Ausgabe in die Zwischenablage.",
     "autoCopyChinesePinyinOutput": "Option zum Kopieren der chinesischen Pinyin-Feature-Ausgabe in die Zwischenablage.",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel mit regulärem Ausdruck, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
     "searchBibleIfCommandNotFound": "Durchsuchen Sie die Bibel, wenn der Befehlseintrag kein Befehlsschlüsselwort oder eine Bibel-Vers-Referenz enthält.",
     "parseEnglishBooksOnly": "Analysieren Sie bible verse Referenzen nur mit englischen Büchern.",
-    "pdfViewerOnNewWindow": "Option zum Öffnen eines PDF-Viewers in einem neuen Fenster.",
+    "openPdfViewerInNewWindow": "Option zum Öffnen eines PDF-Viewers in einem neuen Fenster.",
 }

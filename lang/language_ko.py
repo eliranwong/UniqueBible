@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "모든 노트에서 기본 UBA 글꼴 크기를 사용하는 옵션입니다.",
     "overwriteBookFont": "모든 서적 모듈에서 기본 UBA 폰트를 사용하는 옵션",
     "overwriteBookFontSize": "모든 서적 모듈에서 기본 UBA 글꼴 크기를 사용하는 옵션입니다.",
-    "bookOnNewWindow": "새 창에서 서적 모듈을 여는 옵션입니다.",
+    "openBookInNewWindow": "새 창에서 서적 모듈을 여는 옵션입니다.",
     "virtualKeyboard": "화면 가상 키보드를 사용하는 옵션입니다.",
     "autoCopyTranslateResult": "텍스트 변환 기능 출력을 클립보드에 복사하는 옵션입니다.",
     "autoCopyChinesePinyinOutput": "중국어 핀인 기능 출력을 클립보드에 복사하는 옵션입니다.",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 정규식을 사용하여 성경을 검색할 수 있습니다.",
     "searchBibleIfCommandNotFound": "명령 항목에 명령 키워드 또는 성경 구절 참조가 포함되어 있지 않은 경우 검색을 사용할 수 있습니다.",
     "parseEnglishBooksOnly": "영어 책만을 사용하여 성경 구절을 읽을 수 있다.",
-    "pdfViewerOnNewWindow": "새 창에서 PDF 뷰어를 여는 옵션입니다.",
+    "openPdfViewerInNewWindow": "새 창에서 PDF 뷰어를 여는 옵션입니다.",
 }

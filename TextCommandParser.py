@@ -2292,7 +2292,7 @@ class TextCommandParser:
             else:
                 if config.theme == "dark":
                     content = self.adjustDarkThemeColorsForExternalBook(content)
-                if config.bookOnNewWindow:
+                if config.openBookInNewWindow:
                     self.parent.bookButton.setText(config.book)
                     return ("popover.study", content, {'tab_title': module[:20]})
                 else:

@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "Option to use default UBA font size on all notes.",
     "overwriteBookFont": "Option to use default UBA font on all book modules",
     "overwriteBookFontSize": "Option to use default UBA font size on all book modules.",
-    "bookOnNewWindow": "Option to open book module on a new window.",
+    "openBookInNewWindow": "Option to open book module on a new window.",
     "virtualKeyboard": "Option to use on-screen virtual keyboard.",
     "autoCopyTranslateResult": "Option to copy text translation feature output to clipboard.",
     "autoCopyChinesePinyinOutput": "Option to copy Chinese pinyin feature output to clipboard.",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "Search bible with regular expression if command entry does not contain a command keyword or a bible verse reference.",
     "searchBibleIfCommandNotFound": "Search bible if command entry does not contain a command keyword or a bible verse reference.",
     "parseEnglishBooksOnly": "Parse bible verse references with English books only.",
-    "pdfViewerOnNewWindow": "Option to open PDF viewer on a new window.",
+    "openPdfViewerInNewWindow": "Option to open PDF viewer on a new window.",
 }

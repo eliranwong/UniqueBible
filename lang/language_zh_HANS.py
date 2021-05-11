@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "在所有笔记上使用预设字体的大小。",
     "overwriteBookFont": "在所有书籍模组上使用预设字体",
     "overwriteBookFontSize": "在所有书籍模组上使用预设字体的大小。",
-    "bookOnNewWindow": "在新视窗开启书籍模组的选项。",
+    "openBookInNewWindow": "在新视窗开启书籍模组的选项。",
     "virtualKeyboard": "使用萤幕虚拟键盘的选项。",
     "autoCopyTranslateResult": "将文字翻译结果拷贝到剪贴版。",
     "autoCopyChinesePinyinOutput": "将中文拼音转换结果拷贝到剪贴版。",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会使用标准正规表示式来搜寻圣经。",
     "searchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会搜寻圣经。",
     "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
-    "pdfViewerOnNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
+    "openPdfViewerInNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
 }

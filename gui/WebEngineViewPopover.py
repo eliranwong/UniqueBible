@@ -1,7 +1,7 @@
 import config
 from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QAction
+from qtpy.QtWidgets import QAction, QMenu
 from qtpy.QtWebEngineWidgets import QWebEngineView
 
 class WebEngineViewPopover(QWebEngineView):
@@ -28,7 +28,7 @@ class WebEngineViewPopover(QWebEngineView):
         changeTitle = "document.title = 'UniqueBible.app';"
         self.page().runJavaScript(changeTitle)
         # run textCommandChanged from parent
-        if not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
+        if not newTextCommand == "ePubViewer.html" and not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
             self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
@@ -37,10 +37,40 @@ class WebEngineViewPopover(QWebEngineView):
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
 
-        runAsCommandLine = QAction(self)
-        runAsCommandLine.setText(config.thisTranslation["context1_command"])
-        runAsCommandLine.triggered.connect(self.runAsCommand)
-        self.addAction(runAsCommandLine)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
+        if not self.name == "popover":
+            action = QAction(self)
+            action.setText(config.thisTranslation["openOnNewWindow"])
+            action.setShortcut(QKeySequence("Ctrl+Alt+B"))
+            action.triggered.connect(self.displayVersesInNewWindow)
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["bar1_menu"])
+        action.setShortcut(QKeySequence("Ctrl+Shift+B"))
+        action.triggered.connect(self.displayVersesInBibleWindow)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["bottomWindow"])
+        action.triggered.connect(self.displayVersesInBottomWindow)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["presentation"])
+        action.setShortcut(QKeySequence("Ctrl+Shift+P"))
+        action.triggered.connect(self.displayVersesInPresentation)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["displayVerses"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
             spaceBar = QAction(self)
@@ -58,11 +88,43 @@ class WebEngineViewPopover(QWebEngineView):
             qKey.triggered.connect(self.qKeyPressed)
             self.addAction(qKey)
         
+        subMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["bar2_menu"])
+        action.triggered.connect(self.openInStudyWindow)
+        subMenu.addAction(action)
+        
         escKey = QAction(self)
         escKey.setText(config.thisTranslation["menu1_fullScreen"])
         escKey.setShortcut(QKeySequence(Qt.Key_Escape))
         escKey.triggered.connect(self.escKeyPressed)
-        self.addAction(escKey)
+        subMenu.addAction(escKey)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["displayContent"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_search"])
+        action.setShortcut(QKeySequence("Ctrl+F"))
+        action.triggered.connect(self.searchPanel)
+        self.addAction(action)
+        
+        runAsCommandLine = QAction(self)
+        runAsCommandLine.setText(config.thisTranslation["context1_command"])
+        runAsCommandLine.setShortcut(QKeySequence("Ctrl+Shift+C"))
+        runAsCommandLine.triggered.connect(self.runAsCommand)
+        self.addAction(runAsCommandLine)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         qKey = QAction(self)
         qKey.setText(config.thisTranslation["close"])
@@ -78,6 +140,41 @@ class WebEngineViewPopover(QWebEngineView):
             self.messageNoSelection()
         else:
             self.page().triggerAction(self.page().Copy)
+
+    def displayVersesInNewWindow(self):
+        selectedText = self.selectedText().strip()
+        self.parent.displayVersesInNewWindow(selectedText)
+    
+    def displayVersesInBibleWindow(self):
+        selectedText = self.selectedText().strip()
+        self.parent.displayVersesInBibleWindow(selectedText)
+
+    def displayVersesInBottomWindow(self):
+        selectedText = self.selectedText().strip()
+        self.parent.displayVersesInBottomWindow(selectedText)
+
+    def displayVersesInPresentation(self):
+        selectedText = self.selectedText().strip()
+        self.parent.runPlugin("Presentation_Ctrl+Shift+P", selectedText)
+
+    def searchPanel(self):
+        selectedText = self.selectedText().strip()
+        self.parent.searchPanel(selectedText)
+
+    def openInStudyWindow(self):
+        if self.name.lower().endswith("pdf"):
+            openPdfViewerInNewWindow = config.openPdfViewerInNewWindow
+            config.openPdfViewerInNewWindow = False
+            self.parent.parent.parent.openPdfReader(self.name, fullPath=True)
+            config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif self.name == "EPUB":
+            self.parent.parent.parent.runPlugin("ePub Viewer")
+        else:
+            self.page().toHtml(self.openHtmlInStudyWindow)
+        self.close()
+    
+    def openHtmlInStudyWindow(self, html):
+        self.parent.parent.parent.openTextOnStudyView(html, tab_title="study")
 
     def runAsCommand(self):
         selectedText = self.selectedText()

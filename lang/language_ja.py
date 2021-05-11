@@ -557,7 +557,7 @@ translation = {
     "overwriteNoteFontSize": "すべてのメモでデフォルト UBA フォント・サイズを使用するためのオプション。",
     "overwriteBookFont": "すべてのブック・モジュールでデフォルト UBA フォントを使用するためのオプション",
     "overwriteBookFontSize": "すべてのブック・モジュールでデフォルト UBA フォント・サイズを使用するためのオプション。",
-    "bookOnNewWindow": "新規ウィンドウでブック・モジュールを開くためのオプション。",
+    "openBookInNewWindow": "新規ウィンドウでブック・モジュールを開くためのオプション。",
     "virtualKeyboard": "画面上の仮想キーボードを使用するためのオプション。",
     "autoCopyTranslateResult": "テキスト変換機能の出力をクリップボードにコピーするためのオプション。",
     "autoCopyChinesePinyinOutput": "中国語ピンイン機能出力をクリップボードにコピーするオプション。",
@@ -713,5 +713,5 @@ translation = {
     "regexSearchBibleIfCommandNotFound": "コマンド入力にコマンド・キーワードまたはバイブル・逆参照が含まれていない場合は、正規表現でバイブルを検索します。",
     "searchBibleIfCommandNotFound": "コマンド入力にコマンド・キーワードが含まれていない場合や、バイブル・逆参照が含まれていない場合は、検索",
     "parseEnglishBooksOnly": "英語の本のみを扱う構文解析の聖書参照。",
-    "pdfViewerOnNewWindow": "新規ウィンドウで PDF ビューアーを開くためのオプション。",
+    "openPdfViewerInNewWindow": "新規ウィンドウで PDF ビューアーを開くためのオプション。",
 }

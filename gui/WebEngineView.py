@@ -198,6 +198,11 @@ class WebEngineView(QWebEngineView):
             subMenu.addAction(action)
 
             action = QAction(self)
+            action.setText(config.thisTranslation["menu1_fullScreen"])
+            action.triggered.connect(self.openOnFullScreen)
+            subMenu.addAction(action)
+
+            action = QAction(self)
             action.setText(config.thisTranslation["pdfDocument"])
             action.triggered.connect(self.exportToPdf)
             subMenu.addAction(action)
@@ -644,9 +649,11 @@ class WebEngineView(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
-    def runPlugin(self, fileName):
+    def runPlugin(self, fileName, selectedText=None):
+        if selectedText is None:
+            selectedText = self.selectedText().strip()
         config.contextSource = self
-        config.pluginContext = self.selectedText().strip()
+        config.pluginContext = selectedText
         script = os.path.join(os.getcwd(), "plugins", "context", "{0}.py".format(fileName))
         self.parent.parent.execPythonFile(script)
         config.pluginContext = ""
@@ -770,8 +777,9 @@ class WebEngineView(QWebEngineView):
         else:
             self.messageNoTtsEngine()
 
-    def searchPanel(self):
-        selectedText = self.selectedText().strip()
+    def searchPanel(self, selectedText=None):
+        if selectedText is None:
+            selectedText = self.selectedText().strip()
         if selectedText:
             config.contextItem = selectedText
         self.parent.parent.openControlPanelTab(3)
@@ -943,14 +951,37 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.printStudyPage()
 
     def openOnNewWindow(self):
-        #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
-        self.page().toHtml(self.openNewWindow)
+        toolTip = self.parent.mainView.tabToolTip(self.parent.mainView.currentIndex()) if self.name == "main" else self.parent.studyView.tabToolTip(self.parent.studyView.currentIndex())
+        if toolTip.lower().endswith(".pdf"):
+            openPdfViewerInNewWindow = config.openPdfViewerInNewWindow
+            config.openPdfViewerInNewWindow = True
+            self.parent.parent.openPdfReader(toolTip, fullPath=True)
+            config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif toolTip == "EPUB":
+            self.parent.parent.runPlugin("ePub Viewer New Window")
+        else:
+            #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.openNewWindow)
+            self.page().toHtml(self.openNewWindow)
 
-    def openNewWindow(self, html):
-        self.openPopover(html=html)
+    def openOnFullScreen(self):
+        #toolText = self.parent.mainView.tabText(self.parent.mainView.currentIndex()) if self.name == "main" else self.parent.studyView.tabText(self.parent.studyView.currentIndex())
+        toolTip = self.parent.mainView.tabToolTip(self.parent.mainView.currentIndex()) if self.name == "main" else self.parent.studyView.tabToolTip(self.parent.studyView.currentIndex())
+        if toolTip.lower().endswith(".pdf"):
+            openPdfViewerInNewWindow = config.openPdfViewerInNewWindow
+            config.openPdfViewerInNewWindow = True
+            self.parent.parent.openPdfReader(toolTip, fullPath=True, fullScreen=True)
+            config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
+        elif toolTip == "EPUB":
+            self.parent.parent.runPlugin("ePub Viewer Full Screen")
+        else:
+            self.page().toHtml(lambda html: self.openNewWindow(html, True))
 
-    def displayVersesInBottomWindow(self):
-        selectedText = self.selectedText().strip()
+    def openNewWindow(self, html, fullScreen=False):
+        self.openPopover(html=html, fullScreen=fullScreen)
+
+    def displayVersesInBottomWindow(self, selectedText=None):
+        if selectedText is None:
+            selectedText = self.selectedText().strip()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
@@ -1015,8 +1046,9 @@ class WebEngineView(QWebEngineView):
         else:
             self.messageNoSelection()
 
-    def displayVersesInNewWindow(self):
-        selectedText = self.selectedText().strip()
+    def displayVersesInNewWindow(self, selectedText=None):
+        if selectedText is None:
+            selectedText = self.selectedText().strip()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
@@ -1027,8 +1059,9 @@ class WebEngineView(QWebEngineView):
         else:
             self.messageNoSelection()
 
-    def displayVersesInBibleWindow(self):
-        selectedText = self.selectedText().strip()
+    def displayVersesInBibleWindow(self, selectedText=None):
+        if selectedText is None:
+            selectedText = self.selectedText().strip()
         if selectedText:
             parser = BibleVerseParser(config.parserStandarisation)
             verses = parser.extractAllReferences(selectedText, False)
@@ -1084,9 +1117,10 @@ class WebEngineView(QWebEngineView):
             self.popoverView.setMinimumWidth(config.popoverWindowWidth)
             self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.show()
+        self.parent.parent.bringToForeground(self.popoverView)
 
     def openPopoverUrl(self, url, name="popover", fullScreen=False, screenNo=-1):
-        if not hasattr(self, "popoverUrlView") or not self.popoverView.isVisible:
+        if not hasattr(self, "popoverUrlView") or not self.popoverUrlView.isVisible:
             self.popoverUrlView = WebEngineViewPopover(self, name, self.name)
         self.popoverUrlView.load(url)
         if fullScreen:
@@ -1102,6 +1136,7 @@ class WebEngineView(QWebEngineView):
             self.popoverUrlView.setMinimumWidth(config.popoverWindowWidth)
             self.popoverUrlView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverUrlView.show()
+        self.parent.parent.bringToForeground(self.popoverUrlView)
 
     def closePopover(self):
         if hasattr(self, "popoverView"):
