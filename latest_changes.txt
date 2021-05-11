@@ -1,3 +1,6 @@
+Major change in version 24.30:
+* Fixed opening mini Control when PyQt5 is used.
+
 Major changes in version 24.29:
 * Added support to open ePub Viewer in New Window / Full Screen.
 * Added support to swap display of ePub viewer between Study Window / New Window / Full Screen.
