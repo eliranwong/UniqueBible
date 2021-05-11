@@ -103,7 +103,7 @@ class CentralWidget(QWidget):
         }
 
         # The total space we have.
-        w, h = [ self.parallelSplitter.width(), self.instantSplitter.height() ]
+        w, h = (self.parallelSplitter.width(), self.instantSplitter.height())
 
         if config.parallelMode == -1:                        
             left, right = config.pModeSplitterSizes
@@ -111,7 +111,7 @@ class CentralWidget(QWidget):
         else:
             left, right = parallelRatio[config.parallelMode]
             
-        self.parallelSplitter.setSizes([ w * left // (left+right), w * right // (left+right)])
+        self.parallelSplitter.setSizes([w * left // (left+right), w * right // (left+right)])
        
         if config.parallelMode:
             self.studyView.show()
@@ -124,7 +124,7 @@ class CentralWidget(QWidget):
         else:
             top, bottom = CentralWidget.instantRatio[config.instantMode]
 
-        self.instantSplitter.setSizes([ h * top // (top + bottom), h * bottom // (top + bottom)])
+        self.instantSplitter.setSizes([h * top // (top + bottom), h * bottom // (top + bottom)])
         
         if config.instantMode:
             self.instantView.show()
@@ -132,20 +132,28 @@ class CentralWidget(QWidget):
             self.instantView.hide()
 
     def resizeAsPortrait(self):
-               
+
         parallelRatio = {
-            ( 0,  0): (10, 0, 0),
-            ( 0,  1): (10, 5, 0),
-            ( 0,  2): (5, 5, 0),
-            ( 0,  3): (5, 10, 0),
-            ( 1,  0): (10, 0, 3),            
-            ( 1,  1): (20, 10, 9),
-            ( 1,  2): (5, 5, 3),
-            ( 1,  3): (10, 20, 9),
-            ( 2,  0): (10, 0, 10),
-            ( 2,  1): (10, 5, 15),
-            ( 2,  2): (10, 10, 20),
-            ( 2,  3): (5, 10, 15),
+            (0,  0): (10, 0, 0),
+            (0,  1): (10, 5, 0),
+            (0,  2): (5, 5, 0),
+            (0,  3): (5, 10, 0),
+            (0,  4): (0, 10, 0),
+            (1,  0): (10, 0, 1),            
+            (1,  1): (20, 10, 3),
+            (1,  2): (5, 5, 1),
+            (1,  3): (10, 20, 3),
+            (1,  4): (0, 10, 1),
+            (2,  0): (10, 0, 4),
+            (2,  1): (10, 5, 6),
+            (2,  2): (5, 5, 4),
+            (2,  3): (5, 10, 6),
+            (2,  4): (0, 10, 4),
+            (3,  0): (10, 0, 10),
+            (3,  1): (10, 5, 15),
+            (3,  2): (10, 10, 20),
+            (3,  3): (5, 10, 15),
+            (3,  4): (0, 10, 10),
         }      
 
         h = self.instantSplitter.height()

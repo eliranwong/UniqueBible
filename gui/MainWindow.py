@@ -3024,7 +3024,7 @@ class MainWindow(QMainWindow):
                 config.pauseMode = False
 
     def parallel(self):
-        if config.parallelMode >= 3:
+        if config.parallelMode >= 4:
             config.parallelMode = 0
         else:
             config.parallelMode += 1

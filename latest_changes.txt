@@ -1,3 +1,6 @@
+Major change in version 24.31:
+* Fixed resizing parallel window and bottom window with keyboard shortcuts.
+
 Major change in version 24.30:
 * Fixed opening mini Control when PyQt5 is used.
 
