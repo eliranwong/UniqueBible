@@ -159,8 +159,7 @@ class MiniControl(QWidget):
 
         bible = QWidget()
         bible_layout = QVBoxLayout()
-        bible_layout.setMargin(0)
-        bible_layout.setSpacing(0)
+        bible_layout.setContentsMargins(0, 0, 0, 0)
         for bookNumGp in bookNumGps[0:5]:
             gp = QWidget()
             layout = self.newRowLayout()
@@ -189,8 +188,7 @@ class MiniControl(QWidget):
 
         bibles_box = QWidget()
         box_layout = QVBoxLayout()
-        box_layout.setMargin(0)
-        box_layout.setSpacing(0)
+        box_layout.setContentsMargins(0, 0, 0, 0)
         row_layout = self.newRowLayout()
         biblesSqlite = BiblesSqlite()
         bibles = biblesSqlite.getBibleList()
@@ -212,8 +210,7 @@ class MiniControl(QWidget):
 
         commentaries_box = QWidget()
         box_layout = QVBoxLayout()
-        box_layout.setMargin(0)
-        box_layout.setSpacing(0)
+        box_layout.setContentsMargins(0, 0, 0, 0)
         row_layout = self.newRowLayout()
         commentaries = Commentary().getCommentaryList()
         count = 0
@@ -234,8 +231,7 @@ class MiniControl(QWidget):
 
         lexicons_box = QWidget()
         box_layout = QVBoxLayout()
-        box_layout.setMargin(0)
-        box_layout.setSpacing(0)
+        box_layout.setContentsMargins(0, 0, 0, 0)
         row_layout = self.newRowLayout()
         lexicons = LexiconData().lexiconList
         count = 0
@@ -256,8 +252,7 @@ class MiniControl(QWidget):
 
         dictionaries_box = QWidget()
         box_layout = QVBoxLayout()
-        box_layout.setMargin(0)
-        box_layout.setSpacing(0)
+        box_layout.setContentsMargins(0, 0, 0, 0)
         row_layout = self.newRowLayout()
         dictionaries = IndexesSqlite().dictionaryList
         count = 0
@@ -281,8 +276,7 @@ class MiniControl(QWidget):
 
     def newRowLayout(self):
         row_layout = QHBoxLayout()
-        row_layout.setSpacing(0)
-        row_layout.setMargin(0)
+        row_layout.setContentsMargins(0, 0, 0, 0)
         return row_layout
 
     def tabChanged(self, index):
