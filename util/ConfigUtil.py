@@ -28,6 +28,12 @@ class ConfigUtil:
         # Option to enable developer menu and options"""
         if not hasattr(config, "developer"):
             config.developer = False
+        config.help["qtLibrary"] = """
+        # Specify a Qt library module for GUI.  By default UBA uses PySide2."""
+        if not hasattr(config, "qtLibrary"):
+            config.qtLibrary = os.environ["QT_API"]
+        else:
+            os.environ["QT_API"] = config.qtLibrary
         if not hasattr(config, "referenceTranslation"):
             config.referenceTranslation = "en_US"
         if not hasattr(config, "workingTranslation"):
@@ -748,6 +754,7 @@ class ConfigUtil:
         configs = (
             # ("version", config.version),
             ("developer", config.developer),
+            ("qtLibrary", config.qtLibrary),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),

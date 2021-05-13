@@ -498,8 +498,8 @@ class FocusMainWindow:
         button = QPushButton("<")
         button.setFixedWidth(40)
         self.addStandardTextButton("menu_previous_chapter", self.openBookPreviousChapter, self.secondToolBar, button)
-        self.bookButton = QPushButton(config.book)
-        self.addStandardTextButton("menu5_book", self.openBookMenu, self.secondToolBar, self.bookButton)
+        self.bookButton = QPushButton(config.book[:20])
+        self.addStandardTextButton(config.book, self.openBookMenu, self.secondToolBar, self.bookButton, translation=False)
         button = QPushButton(">")
         button.setFixedWidth(40)
         self.addStandardTextButton("menu_next_chapter", self.openBookNextChapter, self.secondToolBar, button)
@@ -511,8 +511,9 @@ class FocusMainWindow:
         self.addStandardIconButton("menu7_create", "newfile.png", self.createNewNoteFile, self.secondToolBar)
         self.addStandardIconButton("menu7_open", "open.png", self.openTextFileDialog, self.secondToolBar)
 
-        self.externalFileButton = QPushButton(self.getLastExternalFileName())
-        self.addStandardTextButton("menu7_read", self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton)
+        fileName = self.getLastExternalFileName()
+        self.externalFileButton = QPushButton(fileName[:20])
+        self.addStandardTextButton(fileName, self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton, translation=False)
 
         self.addStandardIconButton("wordDocument", "docx.png", self.openDocxDialog, self.secondToolBar)
         self.addStandardIconButton("pdfDocument", "pdfOpen.png", self.openPdfDialog, self.secondToolBar)

@@ -1877,7 +1877,7 @@ class TextCommandParser:
         bookMenu = bookData.getMenu(command)
         config.bookChapNum = 0
         del bookData
-        self.parent.bookButton.setText(config.book)
+        self.parent.updateBookButton()
         return ("study", bookMenu, {'tab_title':command[:20]})
 
     # _history:::
@@ -2280,7 +2280,7 @@ class TextCommandParser:
         bookList = [book for book, *_ in bookData.getBookList()]
         if command.count(":::") == 0 and command in bookList:
             config.book = command
-            self.parent.bookButton.setText(config.book)
+            self.parent.updateBookButton()
             return ("study", bookData.getMenu(module=config.book), {'tab_title': command[:20]})
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
@@ -2293,10 +2293,10 @@ class TextCommandParser:
                 if config.theme == "dark":
                     content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.openBookInNewWindow:
-                    self.parent.bookButton.setText(config.book)
+                    self.parent.updateBookButton()
                     return ("popover.study", content, {'tab_title': module[:20]})
                 else:
-                    self.parent.bookButton.setText(config.book)
+                    self.parent.updateBookButton()
                     return ("study", content, {'tab_title': module[:20]})
         else:
             return self.invalidCommand("study")
@@ -2328,7 +2328,7 @@ class TextCommandParser:
                 return ("study", config.thisTranslation["search_notFound"], {})
                 #return self.invalidCommand("study")
             else:
-                self.parent.bookButton.setText(config.book)
+                self.parent.updateBookButton()
                 return ("study", content, {})
 
     # SEARCHBOOKNOTE:::

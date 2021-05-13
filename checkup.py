@@ -245,7 +245,7 @@ def setInstallConfig(module, isInstalled):
 # Check if required modules are installed
 required = (
     ("config", "Configurations", isConfigInstalled),
-    ("PySide2", "Qt Graphical Interface Library", isPySide2Installed),
+    ("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary == "pyside2" else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
     ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
@@ -261,6 +261,17 @@ for module, feature, isInstalled in required:
                 print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
                 pip3InstallModule(module)
                 pip3InstallModule("PyQtWebEngine")
+                if isInstalled():
+                    print("Installed!")
+                else:
+                    print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
+                    exit(1)
+        elif module == "PyQt5" and not isInstalled():
+            module = "PySide2"
+            isInstalled = isPySide2Installed
+            if not isInstalled():
+                print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
+                pip3InstallModule(module)
                 if isInstalled():
                     print("Installed!")
                 else:

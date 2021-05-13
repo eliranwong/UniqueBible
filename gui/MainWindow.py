@@ -1152,7 +1152,8 @@ class MainWindow(QMainWindow):
             externalFileHistory.append(fileName)
 
     def setExternalFileButton(self):
-        self.externalFileButton.setText(self.getLastExternalFileName())
+        self.externalFileButton.setText(self.getLastExternalFileName()[:20])
+        self.externalFileButton.setToolTip(self.getLastExternalFileName())
 
     def getLastExternalFileName(self):
         externalFileHistory = config.history["external"]
@@ -2306,6 +2307,10 @@ class MainWindow(QMainWindow):
         enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
+
+    def updateBookButton(self):
+        self.parent.bookButton.setText(config.book[:20])
+        self.parent.bookButton.setToolTip(config.book)
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):

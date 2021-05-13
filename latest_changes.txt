@@ -1,3 +1,7 @@
+Major changes in version 24.32:
+* Added config.qtLibrary in config.py, allowing users to specify a Qt library for GUI.  Two valid options are "pyside2" and "pyqt5". 
+* Limit filename length displayed on book and external file buttons.
+
 Major change in version 24.31:
 * Fixed resizing parallel window and bottom window with keyboard shortcuts.
 
