@@ -25,16 +25,22 @@ import config
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
 # Check for dependencies and other essential elements
-from checkup import *
+#from checkup import *
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
+config.telnet = False
 if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
     config.cli = False
+elif initialCommand.startswith("telnet-server"):
+    config.telnet = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
+
+# Check for dependencies and other essential elements
+from checkup import *
 
 # Setup logging
 logger = logging.getLogger('uba')
