@@ -153,7 +153,7 @@ class MockWindow:
         from util.DatafileLocation import DatafileLocation
         import config
 
-        self.bibleInfo = DatafileLocation.bibleInfo
+        self.bibleInfo = DatafileLocation.marvelBibles
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
     def updateMainRefButton(self):
