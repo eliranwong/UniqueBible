@@ -245,6 +245,10 @@ def setInstallConfig(module, isInstalled):
 # Check if required modules are installed
 required = (
     ("config", "Configurations", isConfigInstalled),
+    ("babel", "Internationalization and localization library", isBabelInstalled),
+    ("requests", "Download / Update files", isRequestsInstalled),
+) if config.telnet else (
+    ("config", "Configurations", isConfigInstalled),
     ("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary == "pyside2" else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
     ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
