@@ -2598,9 +2598,9 @@ class TextCommandParser:
                 else:
                     # self.parent.downloader = Downloader(self.parent, databaseInfo, True)
                     # self.parent.downloader.show()
+                    self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
                     self.parent.downloadFile(databaseInfo, False)
                     self.parent.reloadControlPanel(False)
-                    self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
             else:
                 self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
         elif action.startswith("github"):

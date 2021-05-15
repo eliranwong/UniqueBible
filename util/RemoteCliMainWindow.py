@@ -21,7 +21,7 @@ class RemoteCliMainWindow:
         except:
             connection = False
         if connection:
-            if self.localFile.endswith(".zip"):
+            if localFile.endswith(".zip"):
                 zipObject = zipfile.ZipFile(localFile, "r")
                 path, *_ = os.path.split(localFile)
                 zipObject.extractall(path)
