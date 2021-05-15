@@ -291,7 +291,6 @@ for module, feature, isInstalled in required:
 # Check if optional modules are installed
 optional = (
     ("mammoth", "Open DOCX file", isMammothInstalled),
-    ("python-docx", "Handle DOCX file", isPythonDocxInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
     ("pygithub", "Github access", isPygithubInstalled),

@@ -1,4 +1,5 @@
-from qtpy.QtGui import QPalette, QColor
+if not config.telnet:
+    from qtpy.QtGui import QPalette, QColor
 import config
 class Themes():
 
