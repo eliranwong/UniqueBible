@@ -1,9 +1,9 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
 import asyncio, re, sys
-from checkup import isHtmlTextInstalled
 from socket import socket
 from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
+from util.RemoteCliMainWindow import RemoteCliMainWindow
 try:
     import html_text
     isHtmlTextInstalled = True
@@ -58,7 +58,7 @@ class RemoteCliHandler:
     def shell(reader, writer):
         from TextCommandParser import TextCommandParser
 
-        textCommandParser = TextCommandParser(MockWindow())
+        textCommandParser = TextCommandParser(RemoteCliMainWindow())
 
         writer.write("Connected to UniqueBible.app" + CRLF)
 
@@ -102,7 +102,7 @@ class RemoteCliHandler:
 
     def help(writer):
         from TextCommandParser import TextCommandParser
-        textCommandParser = TextCommandParser(MockWindow())
+        textCommandParser = TextCommandParser(RemoteCliMainWindow())
 
         writer.write("Type '.quit' to exit" + CRLF)
         writer.write("All other commands will be processed by UBA" + CRLF)
@@ -158,33 +158,6 @@ class RemoteCliHandler:
             s.close()
         return IP
 
-
-class MockWindow:
-
-    def __init__(self):
-        from util.DatafileLocation import DatafileLocation
-        import config
-
-        self.bibleInfo = DatafileLocation.marvelBibles
-        config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
-
-    def displayMessage(self, message):
-        print(message)
-
-    def updateMainRefButton(self):
-        pass
-
-    def enableParagraphButtonAction(self, v):
-        pass
-
-    def downloadHelper(self, v):
-        pass
-
-    def updateStudyRefButton(self):
-        pass
-
-    def updateCommentaryRefButton(self):
-        pass
 
 if __name__ == "__main__":
     import config
