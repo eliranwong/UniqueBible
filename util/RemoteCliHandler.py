@@ -156,6 +156,9 @@ class MockWindow:
         self.bibleInfo = DatafileLocation.marvelBibles
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
+    def displayMessage(self, message):
+        print(message)
+
     def updateMainRefButton(self):
         pass
 

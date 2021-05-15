@@ -14,9 +14,8 @@ from Languages import Languages
 from Translator import Translator
 from db.Highlight import Highlight
 from TtsLanguages import TtsLanguages
-from qtpy.QtWidgets import QApplication
 
-from gui.Downloader import Downloader
+#from gui.Downloader import Downloader
 from install.module import *
 from util.DatafileLocation import DatafileLocation
 from util.GithubUtil import GithubUtil
@@ -1285,7 +1284,8 @@ class TextCommandParser:
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)
             self.parent.displayMessage(translation)
-            if config.autoCopyTranslateResult:
+            if config.autoCopyTranslateResult and not config.telnet:
+                from qtpy.QtWidgets import QApplication
                 QApplication.clipboard().setText(translation)
         else:
             self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
@@ -2105,8 +2105,8 @@ class TextCommandParser:
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
         entries = entries.strip()
-        if source not in ("cli"):
-            QApplication.clipboard().setText(entries)
+        #if source not in ("cli"):
+            #QApplication.clipboard().setText(entries)
         TextCommandParser.last_lexicon_entry = entries
         config.lexicon = module
         lexicon = Lexicon(module)

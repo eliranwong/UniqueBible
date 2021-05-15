@@ -5,7 +5,6 @@ from BiblesSqlite import BiblesSqlite
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import Bible
 from xml.dom import minidom
-from qtpy.QtWidgets import QMessageBox
 
 class Converter:
 

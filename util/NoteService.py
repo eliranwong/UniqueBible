@@ -7,7 +7,8 @@ from Languages import Languages
 from NoteSqlite import NoteSqlite
 from util.DateUtil import DateUtil
 from util.GitHubGist import GitHubGist
-from qtpy.QtCore import QObject, Signal
+if not config.telnet:
+    from qtpy.QtCore import QObject, Signal
 
 
 class NoteService:
