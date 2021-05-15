@@ -7,7 +7,7 @@
 # pt, ro, ru, sk, sl, so, sq, sv, sw, ta, te, th, tl, tr, uk, ur, vi, zh-cn, zh-tw
 # ISO codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 
-from qtpy.QtCore import QLocale
+import config
 
 class TtsLanguages:
 
@@ -88,47 +88,52 @@ class TtsLanguages:
         "he": ("he", "hebrew", "he"),
     }
 
-    # QLocale: https://doc-snapshots.qt.io/qtforpython-5.14/PySide2/QtCore/QLocale.html
-    isoLang2qlocaleLang = {
-        "en": (QLocale(QLocale.English, QLocale.UnitedStates), "English-UnitedStates"),
-        "it": (QLocale(QLocale.Italian, QLocale.Italy), "Italian-Italy"),
-        "sv": (QLocale(QLocale.Swedish, QLocale.Sweden), "Swedish-Sweden"),
-        #"": (QLocale(QLocale.French, QLocale.Canada), "French-Canada"),
-        "de": (QLocale(QLocale.German, QLocale.Germany), "German-Germany"),
-        "he": (QLocale(QLocale.Hebrew, QLocale.Israel), "Hebrew-Israel"),
-        "id": (QLocale(QLocale.Indonesian, QLocale.Indonesia), "Indonesian-Indonesia"),
-        "en-gb": (QLocale(QLocale.English, QLocale.UnitedKingdom), "English-UnitedKingdom"),
-        #"": (QLocale(QLocale.Spanish, QLocale.Argentina), "Spanish-Argentina"),
-        #"": (QLocale(QLocale.Dutch, QLocale.Belgium), "Dutch-Belgium"),
-        "ro": (QLocale(QLocale.Romanian, QLocale.Romania), "Romanian-Romania"),
-        "pt": (QLocale(QLocale.Portuguese, QLocale.Portugal), "Portuguese-Portugal"),
-        "es": (QLocale(QLocale.Spanish, QLocale.Spain), "Spanish-Spain"),
-        #"": (QLocale(QLocale.Spanish, QLocale.Mexico), "Spanish-Mexico"),
-        "th": (QLocale(QLocale.Thai, QLocale.Thailand), "Thai-Thailand"),
-        #"": (QLocale(QLocale.English, QLocale.Australia), "English-Australia"),
-        "ja": (QLocale(QLocale.Japanese, QLocale.Japan), "Japanese-Japan"),
-        "sk": (QLocale(QLocale.Slovak, QLocale.Slovakia), "Slovak-Slovakia"),
-        "hi": (QLocale(QLocale.Hindi, QLocale.India), "Hindi-India"),
-        "pt": (QLocale(QLocale.Portuguese, QLocale.Brazil), "Portuguese-Brazil"),
-        "ar": (QLocale(QLocale.Arabic, QLocale.SaudiArabia), "Arabic-SaudiArabia"),
-        "hu": (QLocale(QLocale.Hungarian, QLocale.Hungary), "Hungarian-Hungary"),
-        # Use zh-cn for Taiwan Chinese, Taiwanese speaks Mandarin instead of Cantonese
-        #"zh-tw": (QLocale(QLocale.Chinese, QLocale.Taiwan), "Chinese-Taiwan"),
-        # we use grc here instead of el
-        "grc": (QLocale(QLocale.Greek, QLocale.Greece), "Greek-Greece"),
-        "ru": (QLocale(QLocale.Russian, QLocale.Russia), "Russian-Russia"),
-        #"": (QLocale(QLocale.English, QLocale.Ireland), "English-Ireland"),
-        "no": (QLocale(QLocale.NorwegianBokmal, QLocale.Norway), "NorwegianBokmal-Norway"),
-        #"": (QLocale(QLocale.English, QLocale.India), "English-India"),
-        "da": (QLocale(QLocale.Danish, QLocale.Denmark), "Danish-Denmark"),
-        "fi": (QLocale(QLocale.Finnish, QLocale.Finland), "Finnish-Finland"),
-        "zh-tw": (QLocale(QLocale.Chinese, QLocale.HongKong), "Chinese-HongKong"),
-        #"": (QLocale(QLocale.English, QLocale.SouthAfrica), "English-SouthAfrica"),
-        "fr": (QLocale(QLocale.French, QLocale.France), "French-France"),
-        "zh-cn": (QLocale(QLocale.Chinese, QLocale.China), "Chinese-China"),
-        "nl": (QLocale(QLocale.Dutch, QLocale.Netherlands), "Dutch-Netherlands"),
-        "tr": (QLocale(QLocale.Turkish, QLocale.Turkey), "Turkish-Turkey"),
-        "ko": (QLocale(QLocale.Korean, QLocale.SouthKorea), "Korean-SouthKorea"),
-        "pl": (QLocale(QLocale.Polish, QLocale.Poland), "Polish-Poland"),
-        "cs": (QLocale(QLocale.Czech, QLocale.CzechRepublic), "Czech-CzechRepublic"),
-    }
+    if config.telnet:
+        isoLang2qlocaleLang = {}
+    else:
+        from qtpy.QtCore import QLocale
+
+        # QLocale: https://doc-snapshots.qt.io/qtforpython-5.14/PySide2/QtCore/QLocale.html
+        isoLang2qlocaleLang = {
+            "en": (QLocale(QLocale.English, QLocale.UnitedStates), "English-UnitedStates"),
+            "it": (QLocale(QLocale.Italian, QLocale.Italy), "Italian-Italy"),
+            "sv": (QLocale(QLocale.Swedish, QLocale.Sweden), "Swedish-Sweden"),
+            #"": (QLocale(QLocale.French, QLocale.Canada), "French-Canada"),
+            "de": (QLocale(QLocale.German, QLocale.Germany), "German-Germany"),
+            "he": (QLocale(QLocale.Hebrew, QLocale.Israel), "Hebrew-Israel"),
+            "id": (QLocale(QLocale.Indonesian, QLocale.Indonesia), "Indonesian-Indonesia"),
+            "en-gb": (QLocale(QLocale.English, QLocale.UnitedKingdom), "English-UnitedKingdom"),
+            #"": (QLocale(QLocale.Spanish, QLocale.Argentina), "Spanish-Argentina"),
+            #"": (QLocale(QLocale.Dutch, QLocale.Belgium), "Dutch-Belgium"),
+            "ro": (QLocale(QLocale.Romanian, QLocale.Romania), "Romanian-Romania"),
+            "pt": (QLocale(QLocale.Portuguese, QLocale.Portugal), "Portuguese-Portugal"),
+            "es": (QLocale(QLocale.Spanish, QLocale.Spain), "Spanish-Spain"),
+            #"": (QLocale(QLocale.Spanish, QLocale.Mexico), "Spanish-Mexico"),
+            "th": (QLocale(QLocale.Thai, QLocale.Thailand), "Thai-Thailand"),
+            #"": (QLocale(QLocale.English, QLocale.Australia), "English-Australia"),
+            "ja": (QLocale(QLocale.Japanese, QLocale.Japan), "Japanese-Japan"),
+            "sk": (QLocale(QLocale.Slovak, QLocale.Slovakia), "Slovak-Slovakia"),
+            "hi": (QLocale(QLocale.Hindi, QLocale.India), "Hindi-India"),
+            "pt": (QLocale(QLocale.Portuguese, QLocale.Brazil), "Portuguese-Brazil"),
+            "ar": (QLocale(QLocale.Arabic, QLocale.SaudiArabia), "Arabic-SaudiArabia"),
+            "hu": (QLocale(QLocale.Hungarian, QLocale.Hungary), "Hungarian-Hungary"),
+            # Use zh-cn for Taiwan Chinese, Taiwanese speaks Mandarin instead of Cantonese
+            #"zh-tw": (QLocale(QLocale.Chinese, QLocale.Taiwan), "Chinese-Taiwan"),
+            # we use grc here instead of el
+            "grc": (QLocale(QLocale.Greek, QLocale.Greece), "Greek-Greece"),
+            "ru": (QLocale(QLocale.Russian, QLocale.Russia), "Russian-Russia"),
+            #"": (QLocale(QLocale.English, QLocale.Ireland), "English-Ireland"),
+            "no": (QLocale(QLocale.NorwegianBokmal, QLocale.Norway), "NorwegianBokmal-Norway"),
+            #"": (QLocale(QLocale.English, QLocale.India), "English-India"),
+            "da": (QLocale(QLocale.Danish, QLocale.Denmark), "Danish-Denmark"),
+            "fi": (QLocale(QLocale.Finnish, QLocale.Finland), "Finnish-Finland"),
+            "zh-tw": (QLocale(QLocale.Chinese, QLocale.HongKong), "Chinese-HongKong"),
+            #"": (QLocale(QLocale.English, QLocale.SouthAfrica), "English-SouthAfrica"),
+            "fr": (QLocale(QLocale.French, QLocale.France), "French-France"),
+            "zh-cn": (QLocale(QLocale.Chinese, QLocale.China), "Chinese-China"),
+            "nl": (QLocale(QLocale.Dutch, QLocale.Netherlands), "Dutch-Netherlands"),
+            "tr": (QLocale(QLocale.Turkish, QLocale.Turkey), "Turkish-Turkey"),
+            "ko": (QLocale(QLocale.Korean, QLocale.SouthKorea), "Korean-SouthKorea"),
+            "pl": (QLocale(QLocale.Polish, QLocale.Poland), "Polish-Poland"),
+            "cs": (QLocale(QLocale.Czech, QLocale.CzechRepublic), "Czech-CzechRepublic"),
+        }
