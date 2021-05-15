@@ -181,6 +181,20 @@ def isTelnetlib3Installed():
     except:
         return False
 
+def isHtml5libInstalled():
+    try:
+        import html5lib
+        return True
+    except:
+        return False
+
+def isBeautifulsoup4Installed():
+    try:
+        from bs4 import BeautifulSoup
+        return True
+    except:
+        return False
+
 def isIbmWatsonInstalled():
     try:
         from ibm_watson import LanguageTranslatorV3
@@ -296,8 +310,12 @@ optional = (
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
+    #("html5lib", "HTML Library", isHtml5libInstalled),
 ) if config.telnet else (
     ("html-text", "Read html text", isHtmlTextInstalled),
+    ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
+    #("html5lib", "HTML Library", isHtml5libInstalled),
     #("PyPDF2", "Open PDF file", isPyPDF2Installed),
     ("mammoth", "Open DOCX file", isMammothInstalled),
     ("htmldocx", "Convert HTML to DOCX", isHtmldocxInstalled),

@@ -10,6 +10,12 @@ try:
 except:
     isHtmlTextInstalled = False
 
+try:
+    from bs4 import BeautifulSoup
+    isBeautifulsoup4Installed = True
+except:
+    isBeautifulsoup4Installed = False
+
 CR, LF, NUL = '\r\n\x00'
 CRLF = '\r\n'
 
@@ -78,8 +84,13 @@ class RemoteCliHandler:
                 RemoteCliHandler.help(writer)
             elif len(command) > 0:
                 view, content, dict = textCommandParser.parser(command, "cli")
-                if isHtmlTextInstalled:
-                    content = html_text.extract_text(content)
+                #if isHtmlTextInstalled:
+                #    content = html_text.extract_text(content)
+                #    content = re.sub(r"\n", CRLF, content)
+                if isBeautifulsoup4Installed:
+                    content = re.sub("(<br>|<br/>)", r"\1\n", content)
+                    content = re.sub("(</p>|</div>|<hr>)", r"\1\n\n", content)
+                    content = BeautifulSoup(content, "lxml").get_text()
                     content = re.sub(r"\n", CRLF, content)
                 else:
                     content = re.sub("<br/?>|<br>", CRLF, content)

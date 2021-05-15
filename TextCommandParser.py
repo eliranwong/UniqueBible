@@ -945,10 +945,13 @@ class TextCommandParser:
     # cmd:::
     # run os command
     def osCommand(self, command, source):
-        if platform.system() == "Linux":
-            subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if config.telnet:
+            print("Command keyword CMD::: is not supported in telnet service for security reason.")
         else:
-            os.system(command)
+            if platform.system() == "Linux":
+                subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            else:
+                os.system(command)
         return ("", "", {})
 
     # check if espeak is installed.
