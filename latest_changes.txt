@@ -1,3 +1,6 @@
+Major change in version 24.37:
+* Improved display of content via telnet-server.
+
 Major changes in version 24.36:
 * Improved display of content via telnet-server.
 * Replaced "SHOWSEARCH" command with "SEARCHALL" command.
