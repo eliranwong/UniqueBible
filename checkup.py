@@ -255,6 +255,10 @@ def setInstallConfig(module, isInstalled):
         config.isIbmWatsonInstalled = isInstalled
     elif module == "html-text":
         config.isHtmlTextInstalled = isInstalled
+    elif module == "beautifulsoup4":
+        config.isBeautifulsoup4Installed = isInstalled
+    elif module == "html5lib":
+        config.isHtml5libInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -304,18 +308,18 @@ for module, feature, isInstalled in required:
 
 # Check if optional modules are installed
 optional = (
+    ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
+    ("html5lib", "HTML Library", isHtml5libInstalled),
     ("mammoth", "Open DOCX file", isMammothInstalled),
     ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
     ("langdetect", "Detect Language", isLangdetectInstalled),
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-    ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
-    #("html5lib", "HTML Library", isHtml5libInstalled),
 ) if config.telnet else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
-    #("html5lib", "HTML Library", isHtml5libInstalled),
+    ("html5lib", "HTML Library", isHtml5libInstalled),
     #("PyPDF2", "Open PDF file", isPyPDF2Installed),
     ("mammoth", "Open DOCX file", isMammothInstalled),
     ("htmldocx", "Convert HTML to DOCX", isHtmldocxInstalled),

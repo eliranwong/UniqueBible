@@ -12,6 +12,7 @@ except:
 
 try:
     from bs4 import BeautifulSoup
+    import html5lib
     isBeautifulsoup4Installed = True
 except:
     isBeautifulsoup4Installed = False
@@ -90,7 +91,7 @@ class RemoteCliHandler:
                 if isBeautifulsoup4Installed:
                     content = re.sub("(<br>|<br/>)", r"\1\n", content)
                     content = re.sub("(</p>|</div>|<hr>)", r"\1\n\n", content)
-                    content = BeautifulSoup(content, "lxml").get_text()
+                    content = BeautifulSoup(content, "html5lib").get_text()
                     content = re.sub(r"\n", CRLF, content)
                 else:
                     content = re.sub("<br/?>|<br>", CRLF, content)
