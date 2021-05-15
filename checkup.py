@@ -245,6 +245,7 @@ def setInstallConfig(module, isInstalled):
 # Check if required modules are installed
 required = (
     ("config", "Configurations", isConfigInstalled),
+    ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
 ) if config.telnet else (
@@ -289,6 +290,14 @@ for module, feature, isInstalled in required:
 
 # Check if optional modules are installed
 optional = (
+    ("mammoth", "Open DOCX file", isMammothInstalled),
+    ("python-docx", "Handle DOCX file", isPythonDocxInstalled),
+    ("diff_match_patch", "Highlight Differences", isDiffMatchPatchInstalled),
+    ("langdetect", "Detect Language", isLangdetectInstalled),
+    ("pygithub", "Github access", isPygithubInstalled),
+    ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
+    ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+) if config.telnet else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     #("PyPDF2", "Open PDF file", isPyPDF2Installed),
     ("mammoth", "Open DOCX file", isMammothInstalled),
