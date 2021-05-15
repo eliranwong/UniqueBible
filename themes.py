@@ -1,6 +1,6 @@
+import config
 if not config.telnet:
     from qtpy.QtGui import QPalette, QColor
-import config
 class Themes():
 
     @staticmethod
