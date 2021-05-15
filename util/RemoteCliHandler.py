@@ -89,7 +89,7 @@ class RemoteCliHandler:
                     content = html_text.extract_text(content)
                     content = re.sub(r"\n", CRLF, content)
                 elif isBeautifulsoup4Installed:
-                    content = "\n" + re.sub("(<br>|<br/>)", r"\1\n", content)
+                    content = re.sub("(<br>|<br/>)", r"\1\n", content)
                     content = re.sub("(</h[0-9]>|</p>|</div>|<hr>)", r"\1\n\n", content)
                     content = BeautifulSoup(content, "html5lib").get_text()
                     content = re.sub(r"\n", CRLF, content)
