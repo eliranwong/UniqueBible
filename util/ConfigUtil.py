@@ -391,7 +391,7 @@ class ConfigUtil:
         config.help["bibleSearchMode"] = """
         # Search Bible Mode
         # Accept value: 0-4
-        # Correspond to ("SEARCH", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")"""
+        # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")"""
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
         config.help["favouriteBible"] = """
