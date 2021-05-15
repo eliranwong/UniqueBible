@@ -46,7 +46,7 @@ class RemoteCliMainWindow:
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
 
-    def reloadControlPanel(self):
+    def reloadControlPanel(self, show=True):
         pass
 
     def displayMessage(self, message):
