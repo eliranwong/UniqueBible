@@ -1,3 +1,7 @@
+Major changes in version 24.35:
+* Added support of sending download::: command to telnet-server.
+* Added a config flag "enableCmd", to enable CMD::: command keyword.  It is set to False by default for security reason.
+
 Major changes in version 24.34:
 * Added support of running "telnet-server" without installing PySide2 or PyQt5.
 * Added support of running "telnet-server" on Android with Termux (WITHOUT root)

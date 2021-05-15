@@ -28,6 +28,10 @@ class ConfigUtil:
         # Option to enable developer menu and options"""
         if not hasattr(config, "developer"):
             config.developer = False
+        config.help["enableCmd"] = """
+        # Option to enable command keyword cmd:::"""
+        if not hasattr(config, "enableCmd"):
+            config.enableCmd = False
         config.help["qtLibrary"] = """
         # Specify a Qt library module for GUI.  By default UBA uses PySide2."""
         if not hasattr(config, "qtLibrary"):
@@ -754,6 +758,7 @@ class ConfigUtil:
         configs = (
             # ("version", config.version),
             ("developer", config.developer),
+            ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
