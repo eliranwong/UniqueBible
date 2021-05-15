@@ -7,7 +7,7 @@ from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout,
     QPushButton
 from util.GitHubGist import GitHubGist
 from util.LanguageUtil import LanguageUtil
-from util.NoteService import SyncNotesWithGist
+from util.SyncNotesWithGist import SyncNotesWithGist
 
 
 class GistWindow(QDialog):
