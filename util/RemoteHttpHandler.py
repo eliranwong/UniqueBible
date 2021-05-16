@@ -46,7 +46,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
-        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        activeBCVsettings = "<script>var mod = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
 
@@ -60,78 +60,71 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <style>body {4} font-size: {6}; font-family:'{7}';{5} 
-                zh {4} font-family:'{8}'; {5} 
-                {10} {11}</style>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css'>
+                <style>
+                ::-webkit-scrollbar {4}
+                  display: none;
+                {5}
+                ::-webkit-scrollbar-button {4}
+                  display: none;
+                {5}
+                body {4}
+                  font-size: {6};
+                  font-family:'{7}';
+                  -ms-overflow-style:none;
+                  margin-left: 5px;
+                  margin-right: 5px;
+                {5}
+                #content {4}
+                overflow: hidden;
+                display: block;
+                {5}
+                #bibleDiv, #toolDiv {4}
+                -webkit-overflow-scrolling: touch;
+                overflow: hidden;
+                {5}
+                #bibleDiv {4}
+                width: 100%;
+                float: left;
+                display: block;
+                {5}
+                #toolDiv {4}
+                width: 0%;
+                height: 0%;
+                float: left;
+                display: block;
+                visibility: hidden;
+                {5}
+                iframe {4}
+                /*height: calc(100% + 1px);*/
+                height: 90%;
+                width: 100%;
+                {5}
+                zh {4} font-family:'{8}'; {5} 
+                {10} {11}
+                </style>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>
+
                 <script src='js/common.js'></script>
                 <script src='js/{9}.js'></script>
                 <script src='w3.js'></script>
-                <script src='js/custom.js'></script>
-
-<script>
-var queryString = window.location.search;	
-queryString = queryString.substring(1);
-var curPos;
-var tempMod; var tempB; var tempC; var tempV;
-var para = 2; var annoClause = 1; var annoPhrase = 1; var highlights = 1;
-var paraWin = 1; var syncBible = 1; var paraContent = ''; var triggerPara = 0;
-var currentZone; var currentB; var currentC; var currentV;
-var fullScreen = 0; var toolDivLoaded = 0; var landscape;
-var toolB; var toolC; var toolV;
-</script>
-
+                <script>
+                var queryString = window.location.search;	
+                queryString = queryString.substring(1);
+                var curPos;
+                var tempMod; var tempB; var tempC; var tempV;
+                var para = 2; var annoClause = 1; var annoPhrase = 1; var highlights = 1;
+                var paraWin = 1; var syncBible = 1; var paraContent = ''; var triggerPara = 0;
+                var currentZone; var currentB; var currentC; var currentV;
+                var fullScreen = 0; var toolDivLoaded = 0; var landscape;
+                var toolB; var toolC; var toolV;
+                </script>
                 {3}
-                <script>var versionList = []; var compareList = []; var parallelList = []; 
-                var diffList = []; var searchList = [];</script>
-
-<style>
-
-::-webkit-scrollbar {4}
-  display: none;
-{5}
-
-::-webkit-scrollbar-button {4}
-  display: none;
-{5}
-
-body {4}
-  -ms-overflow-style:none;
-  margin-left: 5px;
-  margin-right: 5px;
-{5}
-
-iframe {4}
-/*height: calc(100% + 1px);*/
-height: 90%;
-width: 100%;
-{5}
-
-#content {4}
-overflow: hidden;
-display: block;
-{5}
-
-#bibleDiv, #toolDiv {4}
--webkit-overflow-scrolling: touch;
-overflow: hidden;
-{5}
-
-#bibleDiv {4}
-width: 100%;
-float: left;
-display: block;
-{5}
-
-#toolDiv {4}
-width: 0%;
-height: 0%;
-float: left;
-display: block;
-visibility: hidden;
-{5}
-</style>
+                <script>
+                var versionList = []; var compareList = []; var parallelList = []; 
+                var diffList = []; var searchList = [];
+                </script>
+                <script src='js/custom.js'></script>
 
             </head>
             <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();" ontouchstart="">
@@ -192,7 +185,7 @@ visibility: hidden;
                 elif type(config.overwriteBookFontSize) == int:
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
-        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        activeBCVsettings = "<script>var mod = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
@@ -206,7 +199,8 @@ visibility: hidden;
                 "{0}"
                 "<script>var versionList = []; var compareList = []; var parallelList = []; "
                 "var diffList = []; var searchList = [];</script></head>"
-                "<body><span id='v0.0.0'></span>{1}</body></html>"
+                "<body><span id='v0.0.0'></span>{1}"
+                "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
                          content,
                          "{",

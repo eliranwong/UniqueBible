@@ -1,159 +1,357 @@
+/* SECTION - SCROLLING BIBLES */
+
+function scrollBibles() {
+    if ((getMobileOperatingSystem() != 'iOS') && (window.parent.paraWin == 2) && (window.parent.paraContent == 'bible') && (window.parent.syncBible == 1)) {
+    
+    var bibleFrame = window.parent.document.getElementById('bibleFrame');
+    var bibleDoc = bibleFrame.contentDocument || iframe.contentWindow.document;
+    var bibleLastElement = bibleDoc.getElementById('footer');
+    var bibleHeight = bibleLastElement.offsetTop;
+    
+    var toolFrame = window.parent.document.getElementById('toolFrame');
+    var toolDoc = toolFrame.contentDocument || iframe.contentWindow.document;
+    var toolLastElement = toolDoc.getElementById('footer');
+    var toolHeight = toolLastElement.offsetTop;
+    
+    var verticalPos = window.pageYOffset || (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    var paraPos;
+    
+        if ((window.self == bibleFrame.contentWindow) && (window.parent.currentZone == 2)) {
+        window.parent.currentZone = 0;
+        }
+        else if ((window.self == toolFrame.contentWindow) && (window.parent.currentZone == 1)) {
+        window.parent.currentZone = 0;
+        }
+        else {
+            if (window.self == bibleFrame.contentWindow) { window.parent.currentZone = 1 }
+            else if (window.self == toolFrame.contentWindow) { window.parent.currentZone = 2 }
+        }
+    
+        if ((window.self == bibleFrame.contentWindow) && (verticalPos < bibleHeight) && (window.parent.currentZone == 1)) {
+        paraPos =  (verticalPos / bibleHeight) * toolHeight;
+        paraPos = Math.round(paraPos);
+        toolFrame.contentWindow.scrollTo(0,paraPos);
+        }
+        else if ((window.self == toolFrame.contentWindow) && (verticalPos < toolHeight) && (window.parent.currentZone == 2)) {
+        paraPos =  (verticalPos / toolHeight) * bibleHeight;
+        paraPos = Math.round(paraPos);
+        bibleFrame.contentWindow.scrollTo(0,paraPos);
+        }
+    }
+}
+    
+function scrollBiblesIOS(id) {
+    
+    var bibleDiv = document.getElementById('bibleDiv');
+    var bibleFrame = document.getElementById('bibleFrame');
+    var bibleDoc = bibleFrame.contentDocument || iframe.contentWindow.document;
+    var bibleLastElement = bibleDoc.getElementById('footer');
+    var bibleHeight = bibleLastElement.offsetTop;
+    
+    var toolDiv = document.getElementById('toolDiv');
+    var toolFrame = document.getElementById('toolFrame');
+    var toolDoc = toolFrame.contentDocument || iframe.contentWindow.document;
+    var toolLastElement = toolDoc.getElementById('footer');
+    var toolHeight = toolLastElement.offsetTop;
+    
+    var verticalPos = document.getElementById(id).scrollTop;
+    var paraPos;
+    
+    if ((id == 'bibleDiv') && (verticalPos > bibleHeight)) { document.getElementById(id).scrollTop = bibleHeight; }
+    if ((id == 'toolDiv') && (verticalPos > toolHeight)) { document.getElementById(id).scrollTop = toolHeight; }
+    
+    if ((getMobileOperatingSystem() == 'iOS') && (paraWin == 2) && (paraContent == 'bible') && (syncBible == 1)) {
+    
+        if ((id == 'bibleDiv') && (currentZone == 2)) {
+        currentZone = 0;
+        }
+        else if ((id == 'toolDiv') && (currentZone == 1)) {
+        currentZone = 0;
+        }
+        else {
+            if (id == 'bibleDiv') { currentZone = 1 }
+            else if (id == 'toolDiv') { currentZone = 2 }
+        }
+    
+        if ((id == 'bibleDiv') && (verticalPos < bibleHeight) && (currentZone == 1)) {
+        paraPos =  (verticalPos / bibleHeight) * toolHeight;
+        paraPos = Math.round(paraPos);
+        document.getElementById('toolDiv').scrollTop = paraPos;
+        }
+        if ((id == 'toolDiv') && (verticalPos < toolHeight) && (currentZone == 2)) {
+        paraPos =  (verticalPos / toolHeight) * bibleHeight;
+        paraPos = Math.round(paraPos);
+        document.getElementById('bibleDiv').scrollTop = paraPos;
+        }
+    }
+}
+
+/* SECTION - LOADING A SPECIFIC BIBLE VERSE
+*/
+
+function openBibleVerse(id,b,c,v,module) {
+    bcvId = 'v' + b + '.' + c + '.' + v;
+    document.getElementById(id).src = 'main.html#' + bcvId;
+}
+
+function loadBible() {
+//document.getElementById("footer").innerHTML = getFooter3();
+window.addEventListener("scroll", scrollBibles);
+
+var bibleFrame = window.parent.document.getElementById('bibleFrame');
+var toolFrame = window.parent.document.getElementById('toolFrame');
+var info = window.location.href;
+if (window.self == bibleFrame.contentWindow) { 
+// check matching src and href
+// workaround for iOS scrolling
+// bibleFrame.src = info;
+if (bibleFrame.src != info) { bibleFrame.src = info; }
+if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
+// mod info
+window.parent.mod = mod;
+window.parent.tempMod = mod;
+// verse info
+var patt = /#v.*$/g;
+info = info.match(patt).toString().slice(2);
+var bcv = info.split(".");
+window.parent.activeB = Number(bcv[0]);
+window.parent.tempB = window.parent.activeB;
+window.parent.activeC = Number(bcv[1]);
+window.parent.tempC = window.parent.activeC;
+window.parent.activeV = Number(bcv[2]);
+window.parent.tempV = window.parent.activeV;
+// window.parent.updateBibleTitle();
+window.parent.history.pushState(null, null, '/index.html?' + window.parent.mod + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
+window.parent.resizeSite();
+	// BibleSync
+	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { window.parent.checkSync('bibleFrame',window.parent.activeB); }
+	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { 
+		switch(window.parent.triggerPara) {
+    	case 0:
+    	window.parent.triggerPara = 1;
+    	window.parent.openBibleVerse('toolFrame',window.parent.activeB,window.parent.activeC,window.parent.activeV);
+    	break;
+    	case 1:
+    	window.parent.triggerPara = 0;
+    	break;
+    	}
+	}
+}
+else if (window.self == toolFrame.contentWindow) { 
+// check matching src and href
+// workaround for iOS scrolling
+//toolFrame.src = info;
+if (toolFrame.src != info) { toolFrame.src = info; }
+if (toolFrame.contentWindow.location.href != info) { toolFrame.contentWindow.location.href = info; }
+// workaround for iOS
+if (getMobileOperatingSystem() == 'iOS') { window.parent.document.getElementById('bibleDiv').scrollTop = window.parent.document.getElementById('bibleDiv').scrollTop - 1; }
+// get book number
+window.parent.toolB = window.parent.tempB;
+window.parent.toolC = window.parent.tempC;
+window.parent.toolV = window.parent.tempV;
+window.parent.tempMod = window.parent.mod;
+window.parent.tempB = window.parent.activeB;
+window.parent.tempC = window.parent.activeC;
+window.parent.tempV = window.parent.activeV;
+// set tool window info
+window.parent.paraContent = 'bible';
+//window.parent.document.getElementById('syncOption').style.display='';
+window.parent.resizeSite();
+	// BibleSync
+	if (window.parent.syncBible == 1) { window.parent.checkSync('toolFrame', window.parent.toolB); }
+	if (window.parent.syncBible == 1) { 
+		switch(window.parent.triggerPara) {
+    	case 0:
+    	window.parent.triggerPara = 1;
+    	window.parent.openBibleVerse('bibleFrame', window.parent.toolB, window.parent.toolC, window.parent.toolV);
+    	break;
+    	case 1:
+    	window.parent.triggerPara = 0;
+    	break;
+    	}
+	}
+}
+}
+
+function checkSync(source,b,module) {
+var target; var module;
+if (source == 'bibleFrame') { target = document.getElementById('toolFrame'); }
+else if (source == 'toolFrame') { target = document.getElementById('bibleFrame'); }
+
+	if (module == undefined) { module = target.contentWindow.mod; }
+
+var alertTitle = '<h3>"Bible Sync" is turned "OFF"</h3>';
+var alertSyncBibleOff = '<p>One of opened bible versions does not have the passage you had just selected.</p><p>To prevent errors on synchronising bibles, option "Bible Sync" is now automatically turned "OFF".</p><p>You may re-activate "Bible Sync" manually via our navigation menu.</p>';
+
+	if (module == 'lxx2' || module == 'lxx2i') {
+	var lxx2Bk = [60, 70, 340, 170, 325, 345];
+	if (lxx2Bk.indexOf(b) < 0) { syncSwitch(); messageUser(alertTitle, alertSyncBibleOff); }
+	}
+	else if (b < 470 || b > 730) {
+	var NTonly = ['nestle1904', 'nestle1904i', 'sblgntc', 'bgb', 'bib', 'bgb_blb', 'bgb_bsb', 'tr_kjv', 'byz_web', 'wh_cuv', 'blb', 'bsb'];
+	if (NTonly.indexOf(module) >= 0) { syncSwitch(); messageUser(alertTitle, alertSyncBibleOff); }
+	}
+	else if (b >= 470 || b <= 730) {
+	var OTonly = ['bhs', 'bhsl', 'bhsi', 'bhs_kjv', 'bhs_wrv', 'bhs_web', 'bhs_leb', 'bhs_cuv', 'lxx2012', 'lxx1', 'lxx2', 'lxx1i', 'lxx2i'];
+	if (OTonly.indexOf(module) >= 0) { syncSwitch(); messageUser(alertTitle, alertSyncBibleOff); }
+	}
+}
+
 /* START - FIXING iOS SCROLLING ISSUES */
 
 function getMobileOperatingSystem() {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+    return "unknown";
+}
+
+function resizeSite() {
+    // For iPhone ONLY, if ((/iPhone|iPod/.test(navigator.userAgent)) && (!window.MSStream)) { }
+    if (getMobileOperatingSystem() == 'iOS') { disableIOSScrolling(); }
+    
+    var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    
+    var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    if (screenWidth >= screenHeight) {landscape = 1;}
+    else if (screenHeight >= screenWidth) {landscape = 0;}
+    
+    var contentHeight = screenHeight - 52;
+    
+    var addSpace;
+    if ((landscape == 0) && (paraWin == 2)) {addSpace = (contentHeight / 2) - 110;}
+    else {addSpace = contentHeight - 110;}
+    if (addSpace <= 0) {addSpace = 1;}
+    
+    var bibleFrame = document.getElementById('bibleFrame');
+    var bibleDoc = bibleFrame.contentDocument || bibleFrame.contentWindow.document;
+    var bibleLastElement = bibleDoc.getElementById('lastElement');
+    bibleLastElement.style.display = 'block';
+    bibleLastElement.style.height = addSpace + 'px';
+    if (getMobileOperatingSystem() == 'iOS') { 
+        var bBODY = bibleDoc.body; var bHTML = bibleDoc.documentElement;
+        var bHeight = Math.max( bBODY.scrollHeight, bBODY.offsetHeight, bHTML.clientHeight, bHTML.scrollHeight, bHTML.offsetHeight );
+        bibleFrame.height = bHeight;
+        bibleFrame.style.height = bHeight + 'px';
+    }
+    
+    var toolFrame = document.getElementById('toolFrame');
+    var toolDoc = toolFrame.contentDocument || toolFrame.contentWindow.document;
+    if ((paraWin == 2) && (paraContent == 'bible')) {
+    var toolLastElement = toolDoc.getElementById('lastElement');
+    toolLastElement.style.display = 'block';
+    toolLastElement.style.height = addSpace + 'px';
+    }
+    if (getMobileOperatingSystem() == 'iOS') { 
+        var tBODY = toolDoc.body; var tHTML = toolDoc.documentElement;
+        var tHeight = Math.max( tBODY.scrollHeight, tBODY.offsetHeight, tHTML.clientHeight, tHTML.scrollHeight, tHTML.offsetHeight );
+        toolFrame.height = tHeight;
+        toolFrame.style.height = tHeight + 'px';
+    }
+    
+    var bibleDiv = document.getElementById('bibleDiv');
+    var toolDiv = document.getElementById('toolDiv');
+    
+    switch(paraWin) {
+        case 1:
+        bibleDiv.style.borderBottom = 'none';
+        toolDiv.style.borderTop = 'none';
+        bibleDiv.style.width = screenWidth + 'px';
+        bibleDiv.style.height = contentHeight + 'px';
+        break;
+        case 2:
+        if (landscape == 1) {
+        bibleDiv.style.borderBottom = 'none';
+        toolDiv.style.borderTop = 'none';
+        bibleDiv.style.width = (screenWidth / 2) + 'px';
+        toolDiv.style.width = (screenWidth / 2) + 'px';
+        bibleDiv.style.height = contentHeight + 'px';
+        toolDiv.style.height = contentHeight + 'px';
+        }
+        else if (landscape == 0) {
+        bibleDiv.style.width = screenWidth + 'px';
+        toolDiv.style.width = screenWidth + 'px';
+        bibleDiv.style.height = ((contentHeight - 4) / 2) + 'px';
+        toolDiv.style.height = ((contentHeight - 4) / 2) + 'px';
+        bibleDiv.style.borderBottom = '2px solid lightgrey';
+        toolDiv.style.borderTop = '2px solid lightgrey';
+        }
+        break;
+    }
+    
+    if (getMobileOperatingSystem() == 'iOS') { setTimeout(enableIOSScrolling,100); }
+    
+    // align content in view
+    setTimeout(function() {
+    if (activeB != undefined) { fixBibleVerse(); }
+    if ((paraWin == 2) && (paraContent == 'tool')) {
+        if (getMobileOperatingSystem() == 'iOS') {toolDiv.scrollTop = 0;}
+        else {toolFrame.contentWindow.scrollTo(0,0);}
+    }
+    else if ((paraWin == 2) && (paraContent == 'bible') && (syncBible == 0)) {
+        fixToolVerse(toolB,toolC,toolV);
+    }
+    },500); 
+    
+    // workaround for iPhone; problem: navigation bar hide under "tabs" after changing from portrait to landscape
+    setTimeout(function(){window.scrollTo(0, 1);}, 500);
+}
   
-      // Windows Phone must come first because its UA also contains "Android"
-      if (/windows phone/i.test(userAgent)) {
-          return "Windows Phone";
-      }
-      if (/android/i.test(userAgent)) {
-          return "Android";
-      }
-      // iOS detection from: http://stackoverflow.com/a/9039885/177710
-      if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-          return "iOS";
-      }
-      return "unknown";
-  }
+function enableIOSScrolling() {
+    var contentDiv = document.getElementById("content");
+    var bibleDiv = document.getElementById("bibleDiv");
+    var toolDiv = document.getElementById("toolDiv");
+    contentDiv.style.overflowY = "scroll";
+    contentDiv.style.overflowX = "auto";
+    bibleDiv.style.overflowY = "scroll";
+    bibleDiv.style.overflowX = "auto";
+    toolDiv.style.overflowY = "scroll";
+    toolDiv.style.overflowX = "auto";
+    contentDiv.style.webkitOverflowScrolling = "touch";
+    bibleDiv.style.webkitOverflowScrolling = "touch";
+    toolDiv.style.webkitOverflowScrolling = "touch";
+}
   
-  function resizeSite() {
-  // For iPhone ONLY, if ((/iPhone|iPod/.test(navigator.userAgent)) && (!window.MSStream)) { }
-  if (getMobileOperatingSystem() == 'iOS') { disableIOSScrolling(); }
+function disableIOSScrolling() {
+    var contentDiv = document.getElementById("content");
+    var bibleDiv = document.getElementById("bibleDiv");
+    var toolDiv = document.getElementById("toolDiv");
+    contentDiv.style.overflow = "auto";
+    bibleDiv.style.overflow = "auto";
+    toolDiv.style.overflow = "auto";
+    contentDiv.style.webkitOverflowScrolling = "auto";
+    bibleDiv.style.webkitOverflowScrolling = "auto";
+    toolDiv.style.webkitOverflowScrolling = "auto";
+}
   
-  var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+function fixBibleVerse() {
+    var targetPos = 'v' + activeB + '.' + activeC + '.' + activeV;
+    var targetFrame = document.getElementById('bibleFrame');
+    var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
+    var targetElement = targetDoc.getElementById(targetPos);
+    var targetHeight = targetElement.offsetTop;
+    if (getMobileOperatingSystem() == 'iOS') { document.getElementById('bibleDiv').scrollTop = targetHeight; }
+    else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
+}
   
-  var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-  if (screenWidth >= screenHeight) {landscape = 1;}
-  else if (screenHeight >= screenWidth) {landscape = 0;}
-  
-  var contentHeight = screenHeight - 52;
-  
-  var addSpace;
-  if ((landscape == 0) && (paraWin == 2)) {addSpace = (contentHeight / 2) - 110;}
-  else {addSpace = contentHeight - 110;}
-  if (addSpace <= 0) {addSpace = 1;}
-  
-  var bibleFrame = document.getElementById('bibleFrame');
-  var bibleDoc = bibleFrame.contentDocument || bibleFrame.contentWindow.document;
-  var bibleLastElement = bibleDoc.getElementById('lastElement');
-  bibleLastElement.style.display = 'block';
-  bibleLastElement.style.height = addSpace + 'px';
-      if (getMobileOperatingSystem() == 'iOS') { 
-      var bBODY = bibleDoc.body; var bHTML = bibleDoc.documentElement;
-      var bHeight = Math.max( bBODY.scrollHeight, bBODY.offsetHeight, bHTML.clientHeight, bHTML.scrollHeight, bHTML.offsetHeight );
-      bibleFrame.height = bHeight;
-      bibleFrame.style.height = bHeight + 'px';
-      }
-  
-  var toolFrame = document.getElementById('toolFrame');
-  var toolDoc = toolFrame.contentDocument || toolFrame.contentWindow.document;
-  if ((paraWin == 2) && (paraContent == 'bible')) {
-  var toolLastElement = toolDoc.getElementById('lastElement');
-  toolLastElement.style.display = 'block';
-  toolLastElement.style.height = addSpace + 'px';
-  }
-      if (getMobileOperatingSystem() == 'iOS') { 
-      var tBODY = toolDoc.body; var tHTML = toolDoc.documentElement;
-      var tHeight = Math.max( tBODY.scrollHeight, tBODY.offsetHeight, tHTML.clientHeight, tHTML.scrollHeight, tHTML.offsetHeight );
-      toolFrame.height = tHeight;
-      toolFrame.style.height = tHeight + 'px';
-      }
-  
-  var bibleDiv = document.getElementById('bibleDiv');
-  var toolDiv = document.getElementById('toolDiv');
-  
-  switch(paraWin) {
-      case 1:
-      bibleDiv.style.borderBottom = 'none';
-      toolDiv.style.borderTop = 'none';
-      bibleDiv.style.width = screenWidth + 'px';
-      bibleDiv.style.height = contentHeight + 'px';
-      break;
-      case 2:
-      if (landscape == 1) {
-      bibleDiv.style.borderBottom = 'none';
-      toolDiv.style.borderTop = 'none';
-      bibleDiv.style.width = (screenWidth / 2) + 'px';
-      toolDiv.style.width = (screenWidth / 2) + 'px';
-      bibleDiv.style.height = contentHeight + 'px';
-      toolDiv.style.height = contentHeight + 'px';
-      }
-      else if (landscape == 0) {
-      bibleDiv.style.width = screenWidth + 'px';
-      toolDiv.style.width = screenWidth + 'px';
-      bibleDiv.style.height = ((contentHeight - 4) / 2) + 'px';
-      toolDiv.style.height = ((contentHeight - 4) / 2) + 'px';
-      bibleDiv.style.borderBottom = '2px solid lightgrey';
-      toolDiv.style.borderTop = '2px solid lightgrey';
-      }
-      break;
-  }
-  
-  if (getMobileOperatingSystem() == 'iOS') { setTimeout(enableIOSScrolling,100); }
-  
-  // align content in view
-  setTimeout(function() {
-  if (activeB != undefined) { fixBibleVerse(); }
-  if ((paraWin == 2) && (paraContent == 'tool')) {
-      if (getMobileOperatingSystem() == 'iOS') {toolDiv.scrollTop = 0;}
-      else {toolFrame.contentWindow.scrollTo(0,0);}
-  }
-  else if ((paraWin == 2) && (paraContent == 'bible') && (syncBible == 0)) {
-      fixToolVerse(toolB,toolC,toolV);
-  }
-  },500); 
-  
-  // workaround for iPhone; problem: navigation bar hide under "tabs" after changing from portrait to landscape
-  setTimeout(function(){window.scrollTo(0, 1);}, 500);
-  }
-  
-  function enableIOSScrolling() {
-  var contentDiv = document.getElementById("content");
-  var bibleDiv = document.getElementById("bibleDiv");
-  var toolDiv = document.getElementById("toolDiv");
-  contentDiv.style.overflowY = "scroll";
-  contentDiv.style.overflowX = "auto";
-  bibleDiv.style.overflowY = "scroll";
-  bibleDiv.style.overflowX = "auto";
-  toolDiv.style.overflowY = "scroll";
-  toolDiv.style.overflowX = "auto";
-  contentDiv.style.webkitOverflowScrolling = "touch";
-  bibleDiv.style.webkitOverflowScrolling = "touch";
-  toolDiv.style.webkitOverflowScrolling = "touch";
-  }
-  
-  function disableIOSScrolling() {
-  var contentDiv = document.getElementById("content");
-  var bibleDiv = document.getElementById("bibleDiv");
-  var toolDiv = document.getElementById("toolDiv");
-  contentDiv.style.overflow = "auto";
-  bibleDiv.style.overflow = "auto";
-  toolDiv.style.overflow = "auto";
-  contentDiv.style.webkitOverflowScrolling = "auto";
-  bibleDiv.style.webkitOverflowScrolling = "auto";
-  toolDiv.style.webkitOverflowScrolling = "auto";
-  }
-  
-  function fixBibleVerse() {
-  var targetPos = 'v' + activeB + '.' + activeC + '.' + activeV;
-  var targetFrame = document.getElementById('bibleFrame');
-  var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
-  var targetElement = targetDoc.getElementById(targetPos);
-  var targetHeight = targetElement.offsetTop;
-  if (getMobileOperatingSystem() == 'iOS') { document.getElementById('bibleDiv').scrollTop = targetHeight; }
-  else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
-  }
-  
-  function fixToolVerse(b,c,v) {
-  var targetPos = 'v' + b + '.' + c + '.' + v;
-  var targetFrame = document.getElementById('toolFrame');
-  var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
-  var targetElement = targetDoc.getElementById(targetPos);
-  var targetHeight = targetElement.offsetTop;
-  if (getMobileOperatingSystem() == 'iOS') { document.getElementById('toolDiv').scrollTop = targetHeight; }
-  else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
-  }
+function fixToolVerse(b,c,v) {
+    var targetPos = 'v' + b + '.' + c + '.' + v;
+    var targetFrame = document.getElementById('toolFrame');
+    var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
+    var targetElement = targetDoc.getElementById(targetPos);
+    var targetHeight = targetElement.offsetTop;
+    if (getMobileOperatingSystem() == 'iOS') { document.getElementById('toolDiv').scrollTop = targetHeight; }
+    else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
+}
 
 /* END - FIXING iOS SCROLLING ISSUES */
 
