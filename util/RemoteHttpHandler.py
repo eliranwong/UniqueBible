@@ -74,13 +74,34 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 var diffList = []; var searchList = [];</script>
 
             </head>
-            <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();">
-            <span id='v0.0.0'></span>
+            <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();" ontouchstart="">
+                <span id='v0.0.0'></span>
+                
                 <form action="index.html" action="get">
                 {1}: <input type="text" id="cmd" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
                 </form>
-                <iframe width="100%" height="90%" src="main.html"/>
+                
+                <div id="content">
+                    <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
+                        <iframe id="bibleFrame" name="main" onload="resizeSite()" width="100%" height="90%" src="main.html">Oops!</iframe>
+                    </div>
+                    <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
+                        <iframe id="toolFrame" name="tool" onload="resizeSite()" src="empty.html">Oops!</iframe>
+                    </div>
+                </div>
+
+                <script>
+                if (getMobileOperatingSystem() == 'iOS') {4} 
+                    enableIOSScrolling(); 
+                {5}
+                function keepTop() {4}
+                    //window.scrollTo(0,0);
+                    setTimeout(function(){4}window.scrollTo(0,0);{5}, 250);
+                {5}
+                window.onscroll = function() {4}keepTop(){5};
+                window.onresize = function() {4}resizeSite(){5};
+                </script>
             </body>
             </html>
         """.format(
