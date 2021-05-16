@@ -1,3 +1,6 @@
+Major change in version 24.42:
+* Added css and javascript support to http-server display.
+
 Major changes in version 24.39, 24.40, 24.41:
 * Changed "help" and "stop" commands in http-server to ".help" and ".stop", so users can search bible for word like "help".
 * Fixed http-server charset issue.

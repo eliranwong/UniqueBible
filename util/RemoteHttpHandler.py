@@ -43,6 +43,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
+        
+        bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        fontSize = "{0}px".format(config.fontSize)
+        fontFamily = config.font
+
         html = """
             <html>
             <head>
@@ -52,17 +58,52 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
+
+                <style>body {4} font-size: {6}; font-family:'{7}';{5} 
+                zh {4} font-family:'{8}'; {5} 
+                {10} {11}</style>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>
+                <script src='js/common.js'></script>
+                <script src='js/{9}.js'></script>
+                <script src='w3.js'></script>
+                <script src='js/custom.js'></script>
+                {3}
+                <script>var versionList = []; var compareList = []; var parallelList = []; 
+                var diffList = []; var searchList = [];</script>
+
             </head>
-            <body onload="document.getElementById('cmd').focus();">
+            <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();">
+            <span id='v0.0.0'></span>
                 <form action="index.html" action="get">
                 {1}: <input type="text" id="cmd" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
                 </form>
-                <iframe width="100%" height="95%" src="main.html"/>
+                <iframe width="100%" height="90%" src="main.html"/>
             </body>
             </html>
-        """.format(self.command, config.thisTranslation["menu_command"], config.thisTranslation["enter"])
+        """.format(
+            self.command,
+            config.thisTranslation["menu_command"],
+            config.thisTranslation["enter"],
+            activeBCVsettings,
+            "{",
+            "}",
+            fontSize,
+            fontFamily,
+            config.fontChinese,
+            config.theme,
+            self.getHighlightCss(),
+            ""
+        )
         self.wfile.write(bytes(html, "utf8"))
+
+    def getHighlightCss(self):
+        css = ""
+        for i in range(len(config.highlightCollections)):
+            code = "hl{0}".format(i + 1)
+            css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
+        return css
 
     def closeWindow(self):
         self.send_response(200)
