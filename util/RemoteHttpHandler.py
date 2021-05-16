@@ -69,9 +69,69 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <script src='js/{9}.js'></script>
                 <script src='w3.js'></script>
                 <script src='js/custom.js'></script>
+
+<script>
+var queryString = window.location.search;	
+queryString = queryString.substring(1);
+var curPos;
+var tempMod; var tempB; var tempC; var tempV;
+var para = 2; var annoClause = 1; var annoPhrase = 1; var highlights = 1;
+var paraWin = 1; var syncBible = 1; var paraContent = ''; var triggerPara = 0;
+var currentZone; var currentB; var currentC; var currentV;
+var fullScreen = 0; var toolDivLoaded = 0; var landscape;
+var toolB; var toolC; var toolV;
+</script>
+
                 {3}
                 <script>var versionList = []; var compareList = []; var parallelList = []; 
                 var diffList = []; var searchList = [];</script>
+
+<style>
+
+::-webkit-scrollbar {4}
+  display: none;
+{5}
+
+::-webkit-scrollbar-button {4}
+  display: none;
+{5}
+
+body {4}
+  -ms-overflow-style:none;
+  margin-left: 5px;
+  margin-right: 5px;
+{5}
+
+iframe {4}
+/*height: calc(100% + 1px);*/
+height: 90%;
+width: 100%;
+{5}
+
+#content {4}
+overflow: hidden;
+display: block;
+{5}
+
+#bibleDiv, #toolDiv {4}
+-webkit-overflow-scrolling: touch;
+overflow: hidden;
+{5}
+
+#bibleDiv {4}
+width: 100%;
+float: left;
+display: block;
+{5}
+
+#toolDiv {4}
+width: 0%;
+height: 0%;
+float: left;
+display: block;
+visibility: hidden;
+{5}
+</style>
 
             </head>
             <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();" ontouchstart="">
