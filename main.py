@@ -105,13 +105,14 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     port = 80
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
-    print("Running in HTTP Server Mode on port {0}".format(port))
-    print("Access by 'http://{0}'".format(get_ip()))
+    print("Running in HTTP Server Mode")
+    print("Open browser link: 'http://{0}:{1}'".format(get_ip(), port))
+    socketserver.TCPServer.allow_reuse_address = True
     config.enableHttpServer = True
     with socketserver.TCPServer(("", port), RemoteHttpHandler) as httpd:
         while config.enableHttpServer:
             httpd.handle_request()
-        httpd.server_close()
+        httpd.shutdown()
         exit(0)
 
 # Setup menu shortcut configuration file
