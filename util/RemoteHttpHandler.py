@@ -26,8 +26,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.command = query_components["cmd"][0].strip()
                 if len(self.command) == 0 or self.command.lower() in ["help", "?"]:
                     content = self.helpContent()
-                elif self.command.lower() in ["stop-http-server"]:
-                    config.enableHttpServer = True
+                elif self.command.lower() in ["stop"]:
+                    config.enableHttpServer = False
                     return
                 else:
                     view, content, dict = self.textCommandParser.parser(self.command, "http")
