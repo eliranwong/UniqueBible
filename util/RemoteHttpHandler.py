@@ -31,6 +31,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 self.command = ""
                 content = self.helpContent()
+            content = self.wrapHtml(content)
             outputFile = os.path.join("htmlResources", "main.html")
             fileObject = open(outputFile, "w", encoding="utf-8")
             fileObject.write(content)
@@ -97,6 +98,45 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ""
         )
         self.wfile.write(bytes(html, "utf8"))
+
+    def wrapHtml(self, content, view="", book=False):
+        fontFamily = config.font
+        fontSize = "{0}px".format(config.fontSize)
+        if book:
+            if config.overwriteBookFontFamily:
+                fontFamily = config.overwriteBookFontFamily
+            if config.overwriteBookFontSize:
+                if type(config.overwriteBookFontSize) == str:
+                    fontSize = config.overwriteBookFontSize
+                elif type(config.overwriteBookFontSize) == int:
+                    fontSize = "{0}px".format(config.overwriteBookFontSize)
+        bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
+                "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
+                "zh {2} font-family:'{6}'; {3} "
+                "{8} {9}</style>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>"
+                "<script src='js/common.js'></script>"
+                "<script src='js/{7}.js'></script>"
+                "<script src='w3.js'></script>"
+                "<script src='js/custom.js'></script>"
+                "{0}"
+                "<script>var versionList = []; var compareList = []; var parallelList = []; "
+                "var diffList = []; var searchList = [];</script></head>"
+                "<body><span id='v0.0.0'></span>{1}</body></html>"
+                ).format(activeBCVsettings,
+                         content,
+                         "{",
+                         "}",
+                         fontSize,
+                         fontFamily,
+                         config.fontChinese,
+                         config.theme,
+                         self.getHighlightCss(),
+                         "")
+        return html
 
     def getHighlightCss(self):
         css = ""

@@ -1,4 +1,4 @@
-Major change in version 24.42:
+Major change in version 24.42, 43:
 * Added css and javascript support to http-server display.
 
 Major changes in version 24.39, 24.40, 24.41:
