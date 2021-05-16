@@ -1,3 +1,6 @@
+Major change in version 24.44:
+* Added scrolling feature to bible display with http-server.
+
 Major change in version 24.42, 43:
 * Added css and javascript support to http-server display.
 
