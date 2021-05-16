@@ -1,8 +1,7 @@
 # coding=utf-8
-import zipfile
-
+import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing, zipfile
 from LexicalData import LexicalData
-import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing
+from functools import partial
 from BibleVerseParser import BibleVerseParser
 from BibleBooks import BibleBooks
 from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
@@ -164,16 +163,34 @@ class TextCommandParser:
             # To search multiple bibles, separate versions with a character "_"
             # e.g. SEARCH:::KJV_WEB:::love
             # e.g. SEARCH:::KJV_WEB:::Christ%Jesus"""),
-            "showsearch": (self.textSearchBasic, """
-            # [KEYWORD] SHOWSEARCH
+            "searchall": (self.textSearchBasic, """
+            # [KEYWORD] SEARCHALL
             # Feature - Search bible / bibles for a string
-            # Usage - SHOWSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
-            # SHOWSEARCH::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SHOWSEARCH::: display all texts of the result.
-            # e.g. SHOWSEARCH:::KJV:::love
+            # Usage - SEARCHALL:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # SEARCHALL::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SEARCHALL::: display all texts of the result.
+            # e.g. SEARCHALL:::KJV:::love
             # To work on multiple bilbes, separate bible versions with a character "_":
-            # e.g. SHOWSEARCH:::KJV_WEB:::love"""),
+            # e.g. SEARCHALL:::KJV_WEB:::love"""),
             "searchreference": (self.textSearchReference, """
             # [KEYWORD] SEARCHREFERENCE"""),
+            "searchtnk": (self.textSearchOT, """
+            # [KEYWORD] SEARCHTNK
+            # Feature - Search Tanakh ONLY
+            # Usage - SEARCHTNK:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # e.g. SEARCHTNK:::KJV_WEB:::love
+            # e.g. SEARCHTNK:::KJV_WEB:::God%kind"""),
+            "searchot": (self.textSearchOT, """
+            # [KEYWORD] SEARCHOT
+            # Feature - Search O.T. ONLY
+            # Usage - SEARCHOT:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # e.g. SEARCHOT:::KJV_WEB:::love
+            # e.g. SEARCHOT:::KJV_WEB:::God%kind"""),
+            "searchnt": (self.textSearchNT, """
+            # [KEYWORD] SEARCHNT
+            # Feature - Search N.T. ONLY
+            # Usage - SEARCHNT:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # e.g. SEARCHNT:::KJV_WEB:::love
+            # e.g. SEARCHNT:::KJV_WEB:::Christ%Jesus"""),
             "regexsearch": (self.textSearchRegex, """
             # [KEYWORD] REGEXSEARCH
             # Feature - Search bible / bibles with regular expression
@@ -587,6 +604,13 @@ class TextCommandParser:
             # Example:
             # e.g. _SAVEPDFCURRENTPAGE:::100""")
         }
+        for key, value in BibleBooks.eng.items():
+            book = value[0]
+            self.interpreters[book.lower()] = (partial(self.textSearchSingleBook, key), """
+            # [KEYWORD] {0}
+            # Feature - Search '{0}' ONLY
+            # Usage - {0}:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # e.g. {0}:::KJV:::love""".format(book))
 
     def parser(self, textCommand, source="main"):
         commandList = self.splitCommand(textCommand)
@@ -631,7 +655,7 @@ class TextCommandParser:
             "diff": self.getCoreBiblesInfo(),
             "difference": self.getCoreBiblesInfo(),
             "search": self.getCoreBiblesInfo(),
-            "showsearch": self.getCoreBiblesInfo(),
+            "searchall": self.getCoreBiblesInfo(),
             "advancedsearch": self.getCoreBiblesInfo(),
             "andsearch": self.getCoreBiblesInfo(),
             "orsearch": self.getCoreBiblesInfo(),
@@ -2017,7 +2041,7 @@ class TextCommandParser:
             del biblesSqlite
             return ("study", searchResult, {})
 
-    # SHOWSEARCH:::
+    # SEARCHALL:::
     def textSearchBasic(self, command, source):
         return self.textSearch(command, source, "BASIC", config.addFavouriteToMultiRef)
 
@@ -2031,6 +2055,27 @@ class TextCommandParser:
 
     # ADVANCEDSEARCH:::
     def textSearchAdvanced(self, command, source):
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
+
+    # SEARCHOT:::
+    def textSearchOT(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = 'Scripture LIKE "%{0}%" AND Book < 40'.format(commandList[-1])
+        command = ":::".join(commandList)
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
+
+    # SEARCHNT:::
+    def textSearchNT(self, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = 'Scripture LIKE "%{0}%" AND Book >= 40 AND Book <= 66'.format(commandList[-1])
+        command = ":::".join(commandList)
+        return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
+
+    # SEARCHSINGLE:::
+    def textSearchSingleBook(self, book, command, source):
+        commandList = command.split(":::")
+        commandList[-1] = 'Scripture LIKE "%{0}%" AND Book = {1}'.format(commandList[-1], book)
+        command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
     # ANDSEARCH:::
@@ -2047,7 +2092,7 @@ class TextCommandParser:
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
-    # called by SHOWSEARCH::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH:::
+    # called by SEARCHALL::: & ANDSEARCH::: & ORSEARCH::: & ADVANCEDSEARCH::: & REGEXSEARCH:::
     def textSearch(self, command, source, mode, favouriteVersion=False, referenceOnly=False):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)

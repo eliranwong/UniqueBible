@@ -1,3 +1,18 @@
+Major change in version 24.37:
+* Improved display of content via telnet-server.
+
+Major changes in version 24.36:
+* Improved display of content via telnet-server.
+* Replaced "SHOWSEARCH" command with "SEARCHALL" command.
+* Added commands to search specific portion / book of the bible:
+    SEARCHTNK::: search Tanakh only
+    SEARCHOT::: search OT only
+    SEARCHNT::: search NT only
+    GEN::: search Genesis only
+    EXOD::: search Exod only
+    ...
+    REV::: search revelation only
+
 Major changes in version 24.35:
 * Added support of sending download::: command to telnet-server.
 * Added a config flag "enableCmd", to enable CMD::: command keyword.  It is set to False by default for security reason.

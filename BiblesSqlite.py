@@ -271,7 +271,7 @@ class BiblesSqlite:
                 defaultSearchText = config.mainText
             menu += "<hr><b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(defaultSearchText, config.thisTranslation["html_searchBible2"])
             menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
-            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
             menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
@@ -282,7 +282,7 @@ class BiblesSqlite:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br><br><input type='text' id='multiBibleSearch' style='width:95%'><br><br>"
-            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SHOWSEARCH", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
                 menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
             menu += self.inputEntered("bibleSearch", "SEARCH")
@@ -500,7 +500,7 @@ input.addEventListener('keyup', function(event) {0}
 
     def countSearchBible(self, text, searchString, interlinear=False):
         content = "SEARCH:::{0}:::{1}".format(text, searchString)
-        showCommand = "SHOWSEARCH"
+        showCommand = "SEARCHALL"
         searchFunction = "searchBibleBook"
         bookList = self.getBookList(text)
         bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
@@ -543,7 +543,7 @@ input.addEventListener('keyup', function(event) {0}
             if referenceOnly:
                 searchCommand = "SEARCHREFERENCE"
             else:
-                searchCommand = "SHOWSEARCH"
+                searchCommand = "SEARCHALL"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "Scripture LIKE ?"
