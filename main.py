@@ -7,6 +7,7 @@
 import os, platform, logging, re, sys, socket
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
+
 if not platform.system() == "Windows":
     import readline
 
@@ -96,6 +97,23 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         print(str(e))
         exit(-1)
 
+# HTTP Server
+if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
+    import socketserver
+    from util.RemoteHttpHandler import RemoteHttpHandler
+
+    port = 80
+    if (len(sys.argv) > 2):
+        port = int(sys.argv[2])
+    print("Running in HTTP Server Mode")
+    print("Open browser link: 'http://{0}:{1}'".format(get_ip(), port))
+    socketserver.TCPServer.allow_reuse_address = True
+    config.enableHttpServer = True
+    with socketserver.TCPServer(("", port), RemoteHttpHandler) as httpd:
+        while config.enableHttpServer:
+            httpd.handle_request()
+        httpd.shutdown()
+        exit(0)
 
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
