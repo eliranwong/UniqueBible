@@ -55,7 +55,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </head>
             <body onload="document.getElementById('cmd').focus();">
                 <form action="index.html" action="get">
-                {1}: <input type="text" id="cmd" style="width:70%" name="cmd" value="{0}"/>
+                {1}: <input type="text" id="cmd" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
                 </form>
                 <iframe width="100%" height="95%" src="main.html"/>
