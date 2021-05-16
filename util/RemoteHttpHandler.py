@@ -20,9 +20,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             query_components = parse_qs(urlparse(self.path).query)
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
-                if len(self.command) == 0 or self.command.lower() in ["help", "?"]:
+                if len(self.command) == 0 or self.command.lower() in (".help", "?"):
                     content = self.helpContent()
-                elif self.command.lower() in ["stop"]:
+                elif self.command.lower() in (".quit", ".stop"):
                     self.closeWindow()
                     config.enableHttpServer = False
                     return
@@ -47,6 +47,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             <html>
             <head>
                 <title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />

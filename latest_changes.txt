@@ -1,3 +1,8 @@
+Major changes in version 24.39:
+* Changed "help" and "stop" commands in http-server to ".help" and ".stop", so users can search bible for word like "help".
+* Fixed http-server charset issue.
+* Fixed http-server mobile view issue.
+
 Major changes in version 24.38:
 * Added initial support of running UBA as a http-server.
     Known issues to be fixed:
