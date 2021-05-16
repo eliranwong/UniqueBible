@@ -23,7 +23,7 @@ config.parseBooklessReferences = True
 config.parseEnglishBooksOnly = False
 config.searchBibleIfCommandNotFound = True
 config.regexSearchBibleIfCommandNotFound = False
-config.telnet = True
+config.noQt = True
 
 
 from TextCommandParser import TextCommandParser

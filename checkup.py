@@ -266,7 +266,7 @@ required = (
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
-) if config.telnet else (
+) if config.noQt else (
     ("config", "Configurations", isConfigInstalled),
     ("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary == "pyside2" else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
     ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
@@ -316,7 +316,7 @@ optional = (
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
-) if config.telnet else (
+) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),

@@ -1,3 +1,12 @@
+Major changes in version 24.38:
+* Added initial support of running UBA as a http-server.
+    Known issues to be fixed:
+        - non-English characters are not readable.
+        - html content is not properly displayed, e.g. run "text:::MIB"
+* Added support to run http-server with command "python3 uba.py http-server".
+* Added loading Qt library when UBA is run as a http-server.
+* Changed http-server port from 80 to 8080, as 80 is blocked by default on some devices, like Android, Chromebook, etc.
+
 Major change in version 24.37:
 * Improved display of content via telnet-server.
 

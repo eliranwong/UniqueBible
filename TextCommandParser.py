@@ -1313,7 +1313,7 @@ class TextCommandParser:
             # translate here
             translation = translator.translate(text, fromLanguage, toLanguage)
             self.parent.displayMessage(translation)
-            if config.autoCopyTranslateResult and not config.telnet:
+            if config.autoCopyTranslateResult and not config.noQt:
                 from qtpy.QtWidgets import QApplication
                 QApplication.clipboard().setText(translation)
         else:

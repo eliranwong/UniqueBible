@@ -88,7 +88,7 @@ class TtsLanguages:
         "he": ("he", "hebrew", "he"),
     }
 
-    if config.telnet:
+    if config.noQt:
         isoLang2qlocaleLang = {}
     else:
         from qtpy.QtCore import QLocale

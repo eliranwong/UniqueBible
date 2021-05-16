@@ -30,14 +30,14 @@ ConfigUtil.setup()
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
-config.telnet = False
+config.noQt = False
 if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
     config.cli = False
-elif initialCommand.startswith("telnet-server"):
-    config.telnet = True
+elif initialCommand.startswith("telnet-server") or initialCommand.startswith("http-server"):
+    config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Check for dependencies and other essential elements
@@ -102,7 +102,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
 
-    port = 80
+    port = 8080
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
     print("Running in HTTP Server Mode")
