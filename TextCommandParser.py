@@ -2155,8 +2155,12 @@ class TextCommandParser:
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
         entries = entries.strip()
-        #if source not in ("cli"):
-            #QApplication.clipboard().setText(entries)
+        if config.useLiteVerseParsing:
+            try:
+                from qtpy.QtWidgets import QApplication
+                QApplication.clipboard().setText(entries)
+            except Exception:
+                pass
         TextCommandParser.last_lexicon_entry = entries
         config.lexicon = module
         lexicon = Lexicon(module)
