@@ -763,6 +763,7 @@ class TextCommandParser:
             "study": (self.setStudyVerse, config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV), config.studyB, config.studyC, config.studyV),
             "instant": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
             "cli": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
+            "http": (self.setMainVerse, config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV), config.mainB, config.mainC, config.mainV),
         }
         return views[view]
 
@@ -865,10 +866,10 @@ class TextCommandParser:
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
-                #if view in ("cli"):
-                #    chapters = ""
-                #else:
-                chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
+                if view == "http":
+                    chapters = ""
+                else:
+                    chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
                 content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text, view))
             else:
                 # i.e. when more than one verse reference is found
