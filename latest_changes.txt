@@ -1,3 +1,6 @@
+Major change in version 24.46:
+* Added a "Toggle fullscreen" button to http-server page. 
+
 Major changes in version 24.45:
 Several enhancement about http-server:
 * Added buttons to navigate bible

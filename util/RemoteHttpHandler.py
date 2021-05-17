@@ -156,7 +156,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             <body style="padding-top: 10px;" onload="document.getElementById('commandInput').focus();" ontouchstart="">
                 <span id='v0.0.0'></span>
                 <form id="commandForm" action="index.html" action="get">
-                {12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{15}
+                {12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{15}&nbsp;&nbsp;{16}
                 <br/><br/>
                 {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
@@ -237,7 +237,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.bibleSelection(),
             self.bookSelection(),
             self.previousChapter(),
-            self.nextChapter()
+            self.nextChapter(),
+            self.toggleFullscreen()
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -327,6 +328,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             newChapter += 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
         html = "<button type='button' style='width: 50px' onclick='submitCommand(\"{0}\")'>&gt;</button>".format(command)
+        return html
+
+    def toggleFullscreen(self):
+        html = "<button type='button' style='width: 130px' onclick='fullScreenSwitch()'>Toggle Fullscreen</button>"
         return html
 
     def getHighlightCss(self):
