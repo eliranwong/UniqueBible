@@ -38,6 +38,10 @@ class ConfigUtil:
             config.qtLibrary = os.environ["QT_API"]
         else:
             os.environ["QT_API"] = config.qtLibrary
+        config.help["webUI"] = """
+        # To specify web user interface."""
+        if not hasattr(config, "webUI"):
+            config.webUI = ""
         if not hasattr(config, "referenceTranslation"):
             config.referenceTranslation = "en_US"
         if not hasattr(config, "workingTranslation"):
@@ -760,6 +764,7 @@ class ConfigUtil:
             ("developer", config.developer),
             ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
+            ("webUI", config.webUI),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),

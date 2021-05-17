@@ -155,13 +155,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </head>
             <body style="padding-top: 10px;" onload="document.getElementById('commandInput').focus();" ontouchstart="">
                 <span id='v0.0.0'></span>
-                <form id="commandForm" action="index.html" action="get">
-                {12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{15}&nbsp;&nbsp;{16}
-                <br/><br/>
-                {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/>
-                </form>
-                
+                {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="bibleFrame" name="main" onload="resizeSite()" width="100%" height="90%" src="main.html">Oops!</iframe>
@@ -222,9 +216,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </body>
             </html>
         """.format(
-            self.command,
-            config.thisTranslation["menu_command"],
-            config.thisTranslation["enter"],
+            self.buildForm(),
+            "",
+            "",
             activeBCVsettings,
             "{",
             "}",
@@ -234,13 +228,39 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.theme,
             self.getHighlightCss(),
             "",
-            self.bibleSelection(),
-            self.bookSelection(),
-            self.previousChapter(),
-            self.nextChapter(),
-            self.toggleFullscreen()
         )
         self.wfile.write(bytes(html, "utf8"))
+
+    def buildForm(self):
+        if config.webUI == "mini":
+            return """
+                <form id="commandForm" action="index.html" action="get">
+                {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
+                <input type="submit" value="{2}"/>
+                </form>
+            """.format(
+                self.command,
+                self.toggleFullscreen(),
+                config.thisTranslation["enter"],
+            )
+        else:
+            return """
+                <form id="commandForm" action="index.html" action="get">
+                {3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}
+                <br/><br/>
+                {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
+                <input type="submit" value="{2}"/>
+                </form>
+            """.format(
+                self.command,
+                config.thisTranslation["menu_command"],
+                config.thisTranslation["enter"],
+                self.bibleSelection(),
+                self.bookSelection(),
+                self.previousChapter(),
+                self.nextChapter(),
+                self.toggleFullscreen()
+            )
 
     def wrapHtml(self, content, view="", book=False):
         fontFamily = config.font
@@ -331,7 +351,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def toggleFullscreen(self):
-        html = "<button type='button' style='width: 130px' onclick='fullScreenSwitch()'>Toggle Fullscreen</button>"
+        html = "<button type='button' style='width: 50px' onclick='fullScreenSwitch()'>+ / -</button>"
         return html
 
     def getHighlightCss(self):
