@@ -50,7 +50,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     content = self.helpContent()
                 elif self.command.lower() in (".download",):
                     content = self.downloadContent()
-                elif self.command.lower() in (".quit", ".stop"):
+                elif self.command.lower() in (".stop",) and config.developer:
                     self.closeWindow()
                     config.enableHttpServer = False
                     return

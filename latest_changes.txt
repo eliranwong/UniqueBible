@@ -1,3 +1,6 @@
+Major change in version 24.50:
+* Enable ".stop" command only when config.developer is set to True.
+
 Major change in version 24.49:
 * Added a download page for http-server, accessible by running ".donload" command.
 
