@@ -85,6 +85,8 @@ class RemoteCliHandler:
                 RemoteCliHandler.help(writer)
             elif len(command) > 0:
                 view, content, dict = textCommandParser.parser(command, "cli")
+                if not content:
+                    content = "Command was successfully sent to telnet-server!"
                 if isHtmlTextInstalled:
                     content = html_text.extract_text(content)
                     content = re.sub(r"\n", CRLF, content)
