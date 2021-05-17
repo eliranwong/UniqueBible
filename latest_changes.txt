@@ -1,3 +1,6 @@
+Major change in version 24.48:
+* Added support of downloading marvel datasets with download:::marveldata:::[resource].
+
 Major change in version 24.47:
 * Added config.webUI to specify web ui.  Currently available option: "" (default) or "mini".
 
