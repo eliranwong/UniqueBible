@@ -461,6 +461,13 @@ class TextCommandParser:
             # source can be MarvelData, HymnLyrics, GitHubBible, GitHubBook, GitHubCommentary
             # e.g. DOWNLOAD:::MarvelBible:::KJV
             """),
+            "import": (self.importResources, """
+            # [KEYWORD] IMPORT
+            # Feature - Import third party resources
+            # Usage - IMPORT:::[directory_path_containing_supported_3rd_party_files]
+            # Remarks: If a directory is not specified, "import" is used by default.
+            # e.g. IMPORT:::import
+            """),
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -2626,6 +2633,13 @@ class TextCommandParser:
         command = "ANYPDF:::{0}:::{1}".format(config.pdfTextPath, page)
         self.parent.addHistoryRecord("study", command)
         self.parent.displayMessage(config.thisTranslation["saved"])
+        return ("", "", {})
+
+    # IMPORT:::
+    def importResources(self, command, source):
+        if not command:
+            command = "import"
+        self.parent.importModulesInFolder(command)
         return ("", "", {})
 
     # DOWNLOAD:::

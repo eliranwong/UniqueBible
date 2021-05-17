@@ -1,5 +1,6 @@
 import os, config, zipfile, gdown
 from util.LanguageUtil import LanguageUtil
+from ThirdParty import Converter
 
 class RemoteCliMainWindow:
 
@@ -9,6 +10,17 @@ class RemoteCliMainWindow:
 
         self.bibleInfo = DatafileLocation.marvelBibles
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+
+    def importModulesInFolder(self, directory="import"):
+        if os.path.isdir(directory):
+            if Converter().importAllFilesInAFolder(directory):
+                self.completeImport()
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def completeImport(self):
+        self.reloadControlPanel(False)
+        self.displayMessage(config.thisTranslation["message_done"])
 
     def downloadFile(self, databaseInfo, notification=True):
         config.isDownloading = True

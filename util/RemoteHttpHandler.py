@@ -56,6 +56,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     return
                 else:
                     view, content, dict = self.textCommandParser.parser(self.command, "http")
+                    if not content:
+                        content = "Command was successfully sent to http-server!"
             else:
                 self.command = self.abbreviations[str(config.mainB)]
                 view, content, dict = self.textCommandParser.parser(self.command, "http")

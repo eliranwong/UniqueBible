@@ -1513,11 +1513,12 @@ class MainWindow(QMainWindow):
             self.reloadControlPanel(False)
 
 
-    def importModulesInFolder(self):
-        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
-        directory = QFileDialog.getExistingDirectory(self,
-                                                     config.thisTranslation["menu8_3rdPartyInFolder"],
-                                                     self.directoryLabel.text(), options)
+    def importModulesInFolder(self, directory=None):
+        if directory is None:
+            options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+            directory = QFileDialog.getExistingDirectory(self,
+                                                         config.thisTranslation["menu8_3rdPartyInFolder"],
+                                                         self.directoryLabel.text(), options)
         if directory:
             if Converter().importAllFilesInAFolder(directory):
                 self.completeImport()
