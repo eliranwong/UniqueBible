@@ -1,3 +1,10 @@
+Major changes in version 24.52:
+Multiple enhancement about http-server:
+* Added javascript and css versions to ensure the latest ones are used on client side.
+* Added links on help page to display commands in command input.
+* Added a config page showing current config value.
+* Improved mini webUI: added a help button, enlarge iframe.
+
 Major change in version 24.51:
 * Improved display of download page.
 

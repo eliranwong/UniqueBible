@@ -53,6 +53,12 @@ function fullScreenSwitch() {
 
 /* SECTION - COMMAND */
 
+function displayCommand(cmd) {
+    el = window.parent.document.getElementById('commandInput');
+    el.value = cmd;
+    el.focus();
+}
+
 function submitCommand(cmd) {
     el = document.getElementById('commandInput');
     el.value = cmd;

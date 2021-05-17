@@ -1,8 +1,6 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
-import os
-import re
-import config
+import os, re, config, pprint
 from http.server import SimpleHTTPRequestHandler
 
 from BibleBooks import BibleBooks
@@ -50,6 +48,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     content = self.helpContent()
                 elif self.command.lower() in (".download",):
                     content = self.downloadContent()
+                elif self.command.lower() in (".config",):
+                    content = self.configContent()
                 elif self.command.lower() in (".stop",) and config.developer:
                     self.closeWindow()
                     config.enableHttpServer = False
@@ -61,9 +61,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 view, content, dict = self.textCommandParser.parser(self.command, "http")
             content = self.wrapHtml(content)
             outputFile = os.path.join("htmlResources", "main.html")
-            fileObject = open(outputFile, "w", encoding="utf-8")
-            fileObject.write(content)
-            fileObject.close()
+            with open(outputFile, "w", encoding="utf-8") as fileObject:
+                fileObject.write(content)
             self.indexPage()
         else:
             return super().do_GET()
@@ -88,7 +87,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.001'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -125,18 +124,18 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {5}
                 iframe {4}
                 /*height: calc(100% + 1px);*/
-                height: 90%;
+                height: {1}%;
                 width: 100%;
                 {5}
                 zh {4} font-family:'{8}'; {5} 
                 {10} {11}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>
-                <script src='js/common.js'></script>
-                <script src='js/{9}.js'></script>
-                <script src='w3.js'></script>
-                <script src='js/http_server.js'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.001'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.001'>
+                <script src='js/common.js?v=1.001'></script>
+                <script src='js/{9}.js?v=1.001'></script>
+                <script src='w3.js?v=1.001'></script>
+                <script src='js/http_server.js?v=1.001'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -160,7 +159,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main" onload="resizeSite()" width="100%" height="90%" src="main.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="toolFrame" name="tool" onload="resizeSite()" src="empty.html">Oops!</iframe>
@@ -219,7 +218,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </html>
         """.format(
             self.buildForm(),
-            "",
+            95 if config.webUI == "mini" else 85,
             "",
             activeBCVsettings,
             "{",
@@ -238,12 +237,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return """
                 <form id="commandForm" action="index.html" action="get">
                 {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/>
+                <input type="submit" value="{2}"/> {3}
                 </form>
             """.format(
                 self.command,
                 self.toggleFullscreen(),
-                config.thisTranslation["enter"],
+                config.thisTranslation["menu_run"],
+                self.helpButton(),
             )
         else:
             return """
@@ -286,12 +286,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>"
-                "<script src='js/common.js'></script>"
-                "<script src='js/{7}.js'></script>"
-                "<script src='w3.js'></script>"
-                "<script src='js/http_server.js'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.001'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.001'>"
+                "<script src='js/common.js?v=1.001'></script>"
+                "<script src='js/{7}.js?v=1.001'></script>"
+                "<script src='w3.js?v=1.001'></script>"
+                "<script src='js/http_server.js?v=1.001'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -307,7 +307,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js'></script>"
+                "<script src='js/custom.js?v=1.001'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -353,7 +353,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def toggleFullscreen(self):
-        html = "<button type='button' style='width: 50px' onclick='fullScreenSwitch()'>+ / -</button>"
+        html = "<button type='button' onclick='fullScreenSwitch()'>+ / -</button>"
+        return html
+
+    def helpButton(self):
+        html = """<button type='button' style='width: 25px' onclick='window.parent.submitCommand(".help")'>?</button>"""
         return html
 
     def getHighlightCss(self):
@@ -371,8 +375,30 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(html, "utf8"))
 
     def helpContent(self):
+        dotCommands = """<h2>Http-server Commands</h2>
+        <p>
+        <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
+        <ref onclick="displayCommand('.config')">.config</ref> - Display config.py values and their description.<br>
+        <ref onclick="displayCommand('.download')">.download</ref> - Display a page with links to download resources.<br>
+        <ref onclick="displayCommand('.stop')">.stop</ref> - Disable server.  It is only enabled when config.developer is set to True.
+        </p>
+        <h2>UBA Commands</h2>
+        <p>"""
         content = "\n".join(
             [re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
+        content = re.sub("(\[KEYWORD\] )(.*?)$", r"""\1<ref onclick="displayCommand('\2:::')">\2</ref>""", content, flags=re.M)
+        content = dotCommands + re.sub(r"\n", "<br/>", content) + "</p>"
+        return content
+
+    def configContent(self):
+        intro = ("File config.py contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)"
+            "\n\nTo telnet-server / http-server users on Android:"
+            "\nIf you want to change some configurations but don't see the file config.py, you need to create the file config.py in UniqueBible directory manually and enter in it non-default values ONLY."
+            "\nFor example, to change web user interface and theme, create file config.py and enter the following two lines:"
+            "\nwebUI = 'mini'"
+            "\ntheme = 'dark'"
+            "\n\nIndividual items in config.py are briefly described below:")
+        content = "{0}\n\n{1}".format(intro, "\n\n".join(["<b>[ITEM] {0}</b>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
         content = re.sub(r"\n", "<br/>", content)
         return content
 
