@@ -235,8 +235,10 @@ function resizeSite() {
     var bibleFrame = document.getElementById('bibleFrame');
     var bibleDoc = bibleFrame.contentDocument || bibleFrame.contentWindow.document;
     var bibleLastElement = bibleDoc.getElementById('lastElement');
-    bibleLastElement.style.display = 'block';
-    bibleLastElement.style.height = addSpace + 'px';
+    if (bibleLastElement) {
+        bibleLastElement.style.display = 'block';
+        bibleLastElement.style.height = addSpace + 'px';
+    }
     if (getMobileOperatingSystem() == 'iOS') { 
         var bBODY = bibleDoc.body; var bHTML = bibleDoc.documentElement;
         var bHeight = Math.max( bBODY.scrollHeight, bBODY.offsetHeight, bHTML.clientHeight, bHTML.scrollHeight, bHTML.offsetHeight );

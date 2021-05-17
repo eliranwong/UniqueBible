@@ -4,6 +4,10 @@ import os
 import re
 import config
 from http.server import SimpleHTTPRequestHandler
+
+from BibleBooks import BibleBooks
+from BibleVerseParser import BibleVerseParser
+from BiblesSqlite import BiblesSqlite
 from TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
@@ -11,8 +15,28 @@ from urllib.parse import parse_qs
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
+    parser = None
+    textCommandParser = None
+    bibles = None
+    books = None
+    abbreviations = None
+
     def __init__(self, *args, **kwargs):
-        self.textCommandParser = TextCommandParser(RemoteCliMainWindow())
+        if RemoteHttpHandler.textCommandParser is None:
+            RemoteHttpHandler.textCommandParser = TextCommandParser(RemoteCliMainWindow())
+        self.textCommandParser = RemoteHttpHandler.textCommandParser
+        if RemoteHttpHandler.bibles is None:
+            RemoteHttpHandler.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
+        self.bibles = RemoteHttpHandler.bibles
+        if RemoteHttpHandler.parser is None:
+            RemoteHttpHandler.parser = BibleVerseParser(config.parserStandarisation)
+        self.parser = RemoteHttpHandler.parser
+        if RemoteHttpHandler.abbreviations is None:
+            RemoteHttpHandler.abbreviations = self.parser.standardAbbreviation
+        self.abbreviations = RemoteHttpHandler.abbreviations
+        if RemoteHttpHandler.books is None:
+            RemoteHttpHandler.books = [(k, v) for k, v in self.abbreviations.items() if int(k) <= 69]
+        self.books = RemoteHttpHandler.books
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def do_GET(self):
@@ -20,7 +44,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             query_components = parse_qs(urlparse(self.path).query)
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
-                if len(self.command) == 0 or self.command.lower() in (".help", "?"):
+                if len(self.command) == 0:
+                    self.command = self.abbreviations[config.mainB]
+                if self.command.lower() in (".help", "?"):
                     content = self.helpContent()
                 elif self.command.lower() in (".quit", ".stop"):
                     self.closeWindow()
@@ -29,8 +55,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 else:
                     view, content, dict = self.textCommandParser.parser(self.command, "http")
             else:
-                self.command = ""
-                content = self.helpContent()
+                self.command = self.abbreviations[str(config.mainB)]
+                view, content, dict = self.textCommandParser.parser(self.command, "http")
             content = self.wrapHtml(content)
             outputFile = os.path.join("htmlResources", "main.html")
             fileObject = open(outputFile, "w", encoding="utf-8")
@@ -104,10 +130,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {10} {11}
                 </style>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>
-
                 <script src='js/common.js'></script>
                 <script src='js/{9}.js'></script>
                 <script src='w3.js'></script>
+                <script src='js/http_server.js'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -124,14 +150,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 var versionList = []; var compareList = []; var parallelList = []; 
                 var diffList = []; var searchList = [];
                 </script>
-                <script src='js/custom.js'></script>
 
             </head>
-            <body style="padding-top: 10px;" onload="document.getElementById('cmd').focus();" ontouchstart="">
+            <body style="padding-top: 10px;" onload="document.getElementById('commandInput').focus();" ontouchstart="">
                 <span id='v0.0.0'></span>
-                
-                <form action="index.html" action="get">
-                {1}: <input type="text" id="cmd" style="width:60%" name="cmd" value="{0}"/>
+                <form id="commandForm" action="index.html" action="get">
+                {12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{15}
+                <br/><br/>
+                {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
                 </form>
                 
@@ -169,7 +195,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
-            ""
+            "",
+            self.bibleSelection(),
+            self.bookSelection(),
+            self.previousChapter(),
+            self.nextChapter()
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -200,6 +230,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<script src='js/common.js'></script>"
                 "<script src='js/{7}.js'></script>"
                 "<script src='w3.js'></script>"
+                "<script src='js/http_server.js'></script>"
                 "<script src='js/custom.js'></script>"
                 "{0}"
                 "<script>var versionList = []; var compareList = []; var parallelList = []; "
@@ -216,6 +247,36 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          config.theme,
                          self.getHighlightCss(),
                          "")
+        return html
+
+    def bibleSelection(self):
+        return self.formatSelectList("bibleName", "submitTextCommand", self.bibles, config.mainText)
+
+    def bookSelection(self):
+        return self.formatSelectList("bookName", "submitBookCommand", self.books, str(config.mainB))
+
+    def formatSelectList(self, id, action, options, selected):
+        selectForm = "<select id='{0}' style='width: 100px' onchange='{1}(\"{0}\")'>".format(id, action)
+        for value, display in options:
+            selectForm += "<option value='{0}' {2}>{1}</option>".format(value, display,
+                ("selected='selected'" if value == selected else ""))
+        selectForm += "</select>"
+        return selectForm
+
+    def previousChapter(self):
+        newChapter = config.mainC - 1
+        if newChapter < 1:
+            newChapter = 1
+        command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
+        html = "<button type='button' style='width: 50px' onclick='submitCommand(\"{0}\")'>&lt;</button>".format(command)
+        return html
+
+    def nextChapter(self):
+        newChapter = config.mainC
+        if config.mainC < BibleBooks.getLastChapter(config.mainB):
+            newChapter += 1
+        command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
+        html = "<button type='button' style='width: 50px' onclick='submitCommand(\"{0}\")'>&gt;</button>".format(command)
         return html
 
     def getHighlightCss(self):

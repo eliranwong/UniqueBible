@@ -66,3 +66,6 @@ class RemoteCliMainWindow:
 
     def updateCommentaryRefButton(self):
         pass
+
+    def updateBookButton(self):
+        pass
