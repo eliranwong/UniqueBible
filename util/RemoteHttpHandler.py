@@ -377,14 +377,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return content
 
     def downloadContent(self):
-        from util.DatafileLocation import DatafileLocation
         content = ""
-        content += "<h2>Marvel Datasets</h2>"
-        content += "<br>".join(["""<ref onclick="document.title='download:::marveldata:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelData.keys()])
-        content += "<h2>Marvel Bibles</h2>"
-        content += "<br>".join(["""<ref onclick="document.title='download:::marvelbible:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelBibles.keys()])
-        content += "<h2>Marvel Commentaries</h2>"
-        content += "<br>".join(["""<ref onclick="document.title='download:::marvelcommentary:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelCommentaries.keys()])
-        content += "<h2>Hymn Lyrics</h2>"
-        content += "<br>".join(["""<ref onclick="document.title='download:::hymnlyrics:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.hymnLyrics.keys()])
+        from util.DatafileLocation import DatafileLocation
+        resources = (
+            ("Marvel Datasets", DatafileLocation.marvelData),
+            ("Marvel Bibles", DatafileLocation.marvelBibles),
+            ("Marvel Commentaries", DatafileLocation.marvelCommentaries),
+            ("Hymn Lyrics", DatafileLocation.hymnLyrics),
+        )
+        for collection, data in resources:
+            content += "<h2>{0}</h2>".format(collection)
+            content += "<br>".join(["""<ref onclick="document.title='download:::marveldata:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"]) if os.path.isfile(os.path.join(*v[0])) else "") for k, v in data.items()])
         return content

@@ -2630,64 +2630,68 @@ class TextCommandParser:
 
     # DOWNLOAD:::
     def download(self, command, source):
-        action, filename = self.splitCommand(command)
-        action = action.lower()
-        if action.startswith("marvel") or action.startswith("hymn"):
-            if action == "marvelbible":
-                dataset = DatafileLocation.marvelBibles
-            elif action == "marvelcommentary":
-                dataset = DatafileLocation.marvelCommentaries
-            elif action == "marveldata":
-                dataset = DatafileLocation.marvelData
-            elif action == "hymnlyrics":
-                dataset = DatafileLocation.hymnLyrics
-            else:
-                self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
-                return ("", "", {})
-            if filename in dataset.keys():
-                databaseInfo = dataset[filename]
-                if os.path.isfile(os.path.join(*databaseInfo[0])):
+        if config.isDownloading:
+            self.parent.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
+            return ("", config.thisTranslation["previousDownloadIncomplete"], {})
+        else:
+            action, filename = self.splitCommand(command)
+            action = action.lower()
+            if action.startswith("marvel") or action.startswith("hymn"):
+                if action == "marvelbible":
+                    dataset = DatafileLocation.marvelBibles
+                elif action == "marvelcommentary":
+                    dataset = DatafileLocation.marvelCommentaries
+                elif action == "marveldata":
+                    dataset = DatafileLocation.marvelData
+                elif action == "hymnlyrics":
+                    dataset = DatafileLocation.hymnLyrics
+                else:
+                    self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                    return ("", "", {})
+                if filename in dataset.keys():
+                    databaseInfo = dataset[filename]
+                    if os.path.isfile(os.path.join(*databaseInfo[0])):
+                        self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
+                    else:
+                        # self.parent.downloader = Downloader(self.parent, databaseInfo, True)
+                        # self.parent.downloader.show()
+                        self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
+                        self.parent.downloadFile(databaseInfo, False)
+                        self.parent.reloadControlPanel(False)
+                else:
+                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
+            elif action.startswith("github"):
+                if action == "githubbible":
+                    repo, directory, extension = ("otseng/UniqueBible_Bibles", "bibles", "bible")
+                elif action == "githubcommentary":
+                    repo, directory, extension = ("darrelwright/UniqueBible_Commentaries", "commentaries", "commentary")
+                elif action == "githubbook":
+                    repo, directory, extension = ("darrelwright/UniqueBible_Books", "books", "book")
+                elif action == "githubmap":
+                    repo, directory, extension = ("darrelwright/UniqueBible_Maps-Charts", "books", "book")
+                elif action == "githubpdf":
+                    repo, directory, extension = ("otseng/UniqueBible_PDF", "pdf", "pdf")
+                elif action == "githubepub":
+                    repo, directory, extension = ("otseng/UniqueBible_EPUB", "epub", "epub")
+                else:
+                    self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
+                    return ("", "", {})
+                github = GithubUtil(repo)
+                repoData = github.getRepoData()
+                folder = os.path.join(config.marvelData, directory)
+                filename += "." + extension
+                if os.path.isfile(os.path.join(folder, filename)):
                     self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
                 else:
-                    # self.parent.downloader = Downloader(self.parent, databaseInfo, True)
-                    # self.parent.downloader.show()
-                    self.parent.displayMessage("{0} {1}".format(config.thisTranslation["Downloading"], filename))
-                    self.parent.downloadFile(databaseInfo, False)
+                    file = os.path.join(folder, filename+".zip")
+                    github.downloadFile(file, repoData[filename])
+                    with zipfile.ZipFile(file, 'r') as zipped:
+                        zipped.extractall(folder)
+                    os.remove(file)
                     self.parent.reloadControlPanel(False)
-            else:
-                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
-        elif action.startswith("github"):
-            if action == "githubbible":
-                repo, directory, extension = ("otseng/UniqueBible_Bibles", "bibles", "bible")
-            elif action == "githubcommentary":
-                repo, directory, extension = ("darrelwright/UniqueBible_Commentaries", "commentaries", "commentary")
-            elif action == "githubbook":
-                repo, directory, extension = ("darrelwright/UniqueBible_Books", "books", "book")
-            elif action == "githubmap":
-                repo, directory, extension = ("darrelwright/UniqueBible_Maps-Charts", "books", "book")
-            elif action == "githubpdf":
-                repo, directory, extension = ("otseng/UniqueBible_PDF", "pdf", "pdf")
-            elif action == "githubepub":
-                repo, directory, extension = ("otseng/UniqueBible_EPUB", "epub", "epub")
+                    self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["message_installed"]))
             else:
                 self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
-                return ("", "", {})
-            github = GithubUtil(repo)
-            repoData = github.getRepoData()
-            folder = os.path.join(config.marvelData, directory)
-            filename += "." + extension
-            if os.path.isfile(os.path.join(folder, filename)):
-                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
-            else:
-                file = os.path.join(folder, filename+".zip")
-                github.downloadFile(file, repoData[filename])
-                with zipfile.ZipFile(file, 'r') as zipped:
-                    zipped.extractall(folder)
-                os.remove(file)
-                self.parent.reloadControlPanel(False)
-                self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["message_installed"]))
-        else:
-            self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
 
         return ("", "", {})
 

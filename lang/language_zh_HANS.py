@@ -714,4 +714,5 @@ translation = {
     "searchBibleIfCommandNotFound": "如果输入的指令不包含指令关键字或经文参照，就会搜寻圣经。",
     "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
     "openPdfViewerInNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
+    "installed": "已安装",
 }

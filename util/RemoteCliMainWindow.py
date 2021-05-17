@@ -11,6 +11,7 @@ class RemoteCliMainWindow:
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
     def downloadFile(self, databaseInfo, notification=True):
+        config.isDownloading = True
         # Retrieve file information
         fileItems, cloudID, *_ = databaseInfo
         cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)

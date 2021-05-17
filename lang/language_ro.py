@@ -714,4 +714,5 @@ translation = {
     "searchBibleIfCommandNotFound": "Căutare biblică dacă intrarea de comandă nu conţine un cuvânt cheie de comandă sau o referinţă de verset.",
     "parseEnglishBooksOnly": "Analizaţi numai referinţele Bibliei cu cărţi englezeşti.",
     "openPdfViewerInNewWindow": "Opţiune pentru a deschide vizualizatorul PDF pe o fereastră nouă.",
+    "installed": "instalat",
 }

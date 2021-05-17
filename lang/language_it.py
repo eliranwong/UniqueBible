@@ -714,4 +714,5 @@ translation = {
     "searchBibleIfCommandNotFound": "Cerca bibbia se la voce di comando non contiene una parola chiave di comando o un riferimento bibbia.",
     "parseEnglishBooksOnly": "Parsa i riferimenti in versi bibbia con solo libri inglesi.",
     "openPdfViewerInNewWindow": "Opzione per aprire il visualizzatore PDF su una nuova finestra.",
+    "installed": "installato",
 }

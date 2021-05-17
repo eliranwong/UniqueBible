@@ -714,4 +714,5 @@ translation = {
     "searchBibleIfCommandNotFound": "यदि कमांड प्रविष्टि में कमांड कीवर्ड या द्विबल पाठ संदर्भ नहीं है तो खोज बाईबल करें.",
     "parseEnglishBooksOnly": "केवल अंग्रेजी पुस्तकों के लिए द्विबल छंद संदर्भ का विश्लेषण करें ।",
     "openPdfViewerInNewWindow": "PDF प्रदर्शक को नए विंडो में खोलने के लिए विकल्प.",
+    "installed": "संस्थापित",
 }

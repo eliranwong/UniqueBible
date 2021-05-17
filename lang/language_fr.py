@@ -714,4 +714,5 @@ translation = {
     "searchBibleIfCommandNotFound": "Recherche bible si l'entrée de commande ne contient pas de mot clé de commande ou de référence de vers bible.",
     "parseEnglishBooksOnly": "Parse des références de vers bible avec des livres en anglais seulement.",
     "openPdfViewerInNewWindow": "Option permettant d'ouvrir le visualiseur PDF sur une nouvelle fenêtre.",
+    "installed": "Installé",
 }
