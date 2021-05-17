@@ -1,3 +1,9 @@
+Major changes in version 24.45:
+Several enhancement about http-server:
+* Added buttons to navigate bible
+* Added ability to open content by clicking links.
+    e.g. do a bible search by running "searchNT:::love", then click a verse link to open that passage.
+
 Major change in version 24.44:
 * Added scrolling feature to bible display with http-server.
 

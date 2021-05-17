@@ -129,6 +129,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10} {11}
                 </style>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css'>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css'>
                 <script src='js/common.js'></script>
                 <script src='js/{9}.js'></script>
@@ -170,10 +171,47 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     </div>
                 </div>
 
+                <!-- The Modal - Message -->
+                <div id="myModal2" class="modal2">
+                  <!-- Modal content -->
+                  <div class="modal2-content">
+                    <div class="modal2-header">
+                      <span class="close2">&times;</span>
+                      <span id="myMessageHeader"><h2>UniqueBible.app</h2></span>
+                    </div>
+                    <div class="modal2-body">
+                      <span id="myMessage"><p>UniqueBible.app</p></span>
+                    </div>
+                <!--
+                    <div class="modal2-footer">
+                      <span id="myMessageFooter"><h3>UniqueBible.app</h3></span>
+                    </div>
+                -->
+                  </div>
+                </div>
+
                 <script>
                 if (getMobileOperatingSystem() == 'iOS') {4} 
                     enableIOSScrolling(); 
                 {5}
+
+                /* start - modal - message */
+                // Get the modal  - message
+                var modal2 = document.getElementById('myModal2');
+                // Get the <span> element that closes the modal
+                var span2 = document.getElementsByClassName("close2")[0];
+                // When the user clicks on <span> (x), close the modal
+                span2.onclick = function() {4}
+                    modal2.style.display = "none";
+                {5}
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {4}
+                    if (event.target == modal2) {4}
+                        modal2.style.display = "none";
+                    {5}
+                {5}
+                /* end - modal - message */
+
                 function keepTop() {4}
                     //window.scrollTo(0,0);
                     setTimeout(function(){4}window.scrollTo(0,0);{5}, 250);
@@ -231,11 +269,23 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<script src='js/{7}.js'></script>"
                 "<script src='w3.js'></script>"
                 "<script src='js/http_server.js'></script>"
-                "<script src='js/custom.js'></script>"
+                """<script>
+                var target = document.querySelector('title');
+                var observer = new MutationObserver(function(mutations) {2}
+                    mutations.forEach(function(mutation) {2}
+                        if (document.title.startsWith("_")) {2}{3} else {2} window.parent.submitCommand(document.title); {3}
+                    {3});
+                {3});
+                var config = {2}
+                    childList: true,
+                {3};
+                observer.observe(target, config);
+                </script>"""
                 "{0}"
-                "<script>var versionList = []; var compareList = []; var parallelList = []; "
-                "var diffList = []; var searchList = [];</script></head>"
-                "<body><span id='v0.0.0'></span>{1}"
+                """<script>var versionList = []; var compareList = []; var parallelList = [];
+                var diffList = []; var searchList = [];</script>"""
+                "<script src='js/custom.js'></script>"
+                "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
                          content,
