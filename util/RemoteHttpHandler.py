@@ -48,6 +48,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = self.abbreviations[config.mainB]
                 if self.command.lower() in (".help", "?"):
                     content = self.helpContent()
+                elif self.command.lower() in (".download",):
+                    content = self.downloadContent()
                 elif self.command.lower() in (".quit", ".stop"):
                     self.closeWindow()
                     config.enableHttpServer = False
@@ -372,4 +374,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content = "\n".join(
             [re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         content = re.sub(r"\n", "<br/>", content)
+        return content
+
+    def downloadContent(self):
+        from util.DatafileLocation import DatafileLocation
+        content = ""
+        content += "<h2>Marvel Datasets</h2>"
+        content += "<br>".join(["""<ref onclick="document.title='download:::marveldata:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelData.keys()])
+        content += "<h2>Marvel Bibles</h2>"
+        content += "<br>".join(["""<ref onclick="document.title='download:::marvelbible:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelBibles.keys()])
+        content += "<h2>Marvel Commentaries</h2>"
+        content += "<br>".join(["""<ref onclick="document.title='download:::marvelcommentary:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.marvelCommentaries.keys()])
+        content += "<h2>Hymn Lyrics</h2>"
+        content += "<br>".join(["""<ref onclick="document.title='download:::hymnlyrics:::{0}'">{0}</ref>""".format(i) for i in DatafileLocation.hymnLyrics.keys()])
         return content

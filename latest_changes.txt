@@ -1,3 +1,6 @@
+Major change in version 24.49:
+* Added a download page for http-server, accessible by running ".donload" command.
+
 Major change in version 24.48:
 * Added support of downloading marvel datasets with download:::marveldata:::[resource].
 
