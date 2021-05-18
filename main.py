@@ -112,7 +112,8 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     with socketserver.TCPServer(("", port), RemoteHttpHandler) as httpd:
         while config.enableHttpServer:
             httpd.handle_request()
-        httpd.shutdown()
+        httpd.server_close()
+        print("Stopped")
         exit(0)
 
 # Setup menu shortcut configuration file
