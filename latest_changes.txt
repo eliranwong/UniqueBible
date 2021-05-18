@@ -1,3 +1,6 @@
+Major change in version 24.54:
+* Fixed download page.
+
 Major change in version 24.53:
 * Added a command keyword IMPORT:::.
 

@@ -408,12 +408,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content = ""
         from util.DatafileLocation import DatafileLocation
         resources = (
-            ("Marvel Datasets", DatafileLocation.marvelData),
-            ("Marvel Bibles", DatafileLocation.marvelBibles),
-            ("Marvel Commentaries", DatafileLocation.marvelCommentaries),
-            ("Hymn Lyrics", DatafileLocation.hymnLyrics),
+            ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
+            ("Marvel Bibles", DatafileLocation.marvelBibles, "marvelbible"),
+            ("Marvel Commentaries", DatafileLocation.marvelCommentaries, "marvelcommentary"),
+            ("Hymn Lyrics", DatafileLocation.hymnLyrics, "hymnlyrics"),
         )
-        for collection, data in resources:
+        for collection, data, keyword in resources:
             content += "<h2>{0}</h2>".format(collection)
-            content += "<br>".join(["""<ref onclick="document.title='download:::marveldata:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"]) if os.path.isfile(os.path.join(*v[0])) else "") for k, v in data.items()])
+            content += "<br>".join(["""<ref onclick="document.title='download:::{2}:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"], keyword) if os.path.isfile(os.path.join(*v[0])) else "") for k, v in data.items()])
         return content
