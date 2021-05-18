@@ -1,4 +1,4 @@
-Major changes in version 24.56:
+Major changes in version 24.56, 57:
 Improved http-server:
 * Fixed single-click verse action.
 * Fixed double-click verse action.

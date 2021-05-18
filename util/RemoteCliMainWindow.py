@@ -61,7 +61,9 @@ class RemoteCliMainWindow:
 
     # add a history record
     def addHistoryRecord(self, view, textCommand):
-        if not textCommand.startswith("_"):
+        if view == "http":
+            view = "main"
+        if not textCommand.startswith("_") and not textCommand.startswith("download:::"):
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):
                 viewhistory.append(textCommand)
