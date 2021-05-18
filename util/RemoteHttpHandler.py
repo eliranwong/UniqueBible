@@ -415,5 +415,5 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         for collection, data, keyword in resources:
             content += "<h2>{0}</h2>".format(collection)
-            content += "<br>".join(["""<ref onclick="document.title='download:::{2}:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"], keyword) if os.path.isfile(os.path.join(*v[0])) else "") for k, v in data.items()])
+            content += "<br>".join(["""<ref onclick="document.title='download:::{2}:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"]) if os.path.isfile(os.path.join(*v[0])) else "", keyword) for k, v in data.items()])
         return content
