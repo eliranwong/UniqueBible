@@ -1,5 +1,15 @@
+Major changes in version 24.56:
+Improved http-server:
+* Fixed single-click verse action.
+* Fixed double-click verse action.
+* Fixed history records.
+* Fixed classic html menu.
+Added command keyword _vndc:::
+* UBA now distinguish _vndc::: from _menu:::
+
 Major changes in version 24.55:
-Improved server:
+Improved http-server:
+* Improved documentation about config.py
 * Fixed display content with browser back button.
 * Fixed font size of index page.
 * Ported the classic html menu page to http-server page.

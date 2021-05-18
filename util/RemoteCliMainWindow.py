@@ -45,7 +45,7 @@ class RemoteCliMainWindow:
     def moduleInstalled(self, fileItems, cloudID, notification=True):
         if hasattr(self, "downloader") and self.downloader.isVisible():
             self.downloader.close()
-        # Check if file is successfully installed
+        # Check if file is y installed
         localFile = os.path.join(*fileItems)
         if os.path.isfile(localFile):
             # Reload Master Control
@@ -59,7 +59,23 @@ class RemoteCliMainWindow:
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
 
+    # add a history record
+    def addHistoryRecord(self, view, textCommand):
+        if not textCommand.startswith("_"):
+            viewhistory = config.history[view]
+            if not (viewhistory[-1] == textCommand):
+                viewhistory.append(textCommand)
+                # set maximum number of history records for each view here
+                maximumHistoryRecord = config.maximumHistoryRecord
+                if len(viewhistory) > maximumHistoryRecord:
+                    viewhistory = viewhistory[-maximumHistoryRecord:]
+                config.history[view] = viewhistory
+                config.currentRecord[view] = len(viewhistory) - 1
+
     def reloadControlPanel(self, show=True):
+        pass
+
+    def openControlPanelTab(self, index=None, b=None, c=None, v=None, text=None):
         pass
 
     def displayMessage(self, message):

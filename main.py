@@ -90,8 +90,10 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
         server = loop.run_until_complete(coro)
         loop.run_until_complete(server.wait_closed())
+        ConfigUtil.save()
         exit(0)
     except KeyboardInterrupt:
+        ConfigUtil.save()
         exit(0)
     except Exception as e:
         print(str(e))
@@ -115,6 +117,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
             httpd.handle_request()
         httpd.server_close()
         print("Stopped")
+        ConfigUtil.save()
         exit(0)
 
 # Setup menu shortcut configuration file
@@ -238,6 +241,7 @@ def startWithCli():
         elif command in (".help", ".command"):
             getCommandDocumentation()
         elif command == ".quit":
+            ConfigUtil.save()
             exit()
         else:
             config.mainWindow.runTextCommand(command)

@@ -344,7 +344,7 @@ translation = {
     "html_showCompare": "显示比较",
     "html_showParallel": "显示平行阅读",
     "html_showDifference": "显示差别",
-    "html_current": "当前选择：",
+    "html_current": "已选择：",
     "html_bibles": "圣经版本：",
     "html_book": "圣经书：",
     "html_chapter": "圣经章节：",
@@ -715,6 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
     "openPdfViewerInNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
     "installed": "已安装",
-    "run": "奔跑",
-    "go": "戈",
+    "run": "执行",
+    "go": "执行",
 }

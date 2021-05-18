@@ -344,7 +344,7 @@ translation = {
     "html_showCompare": "顯示比較",
     "html_showParallel": "顯示平行閱讀",
     "html_showDifference": "顯示差別",
-    "html_current": "當前選擇：",
+    "html_current": "已選擇：",
     "html_bibles": "聖經版本：",
     "html_book": "聖經書：",
     "html_chapter": "聖經章節：",
@@ -715,6 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "只使用英文書名剖析經文參照。",
     "openPdfViewerInNewWindow": "用來在新視窗開啟 PDF 檢視器的選項。",
     "installed": "已安裝",
-    "run": "跑",
-    "go": "走",
+    "run": "執行",
+    "go": "執行",
 }

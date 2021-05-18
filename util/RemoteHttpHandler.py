@@ -44,7 +44,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 if len(self.command) == 0:
-                    self.command = self.abbreviations[config.mainB]
+                    self.command = config.history["main"][-1]
                 if self.command.lower() in (".help", "?"):
                     content = self.helpContent()
                 elif self.command.lower() in (".download",):
@@ -56,9 +56,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     config.enableHttpServer = False
                     return
                 else:
-                    view, content, dict = self.textCommandParser.parser(self.command, "http")
+                    view, content, *_ = self.textCommandParser.parser(self.command, "http")
                     if not content:
-                        content = "Command was successfully sent to http-server!"
+                        content = "Command was processed!"
+                    elif not content == "INVALID_COMMAND_ENTERED":
+                        self.textCommandParser.parent.addHistoryRecord(view, self.command)
             else:
                 self.command = self.abbreviations[str(config.mainB)]
                 view, content, dict = self.textCommandParser.parser(self.command, "http")
@@ -93,7 +95,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.001'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.002'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -136,8 +138,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10} {11}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.001'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.001'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.002'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.002'>
                 <script src='js/common.js?v=1.001'></script>
                 <script src='js/{9}.js?v=1.001'></script>
                 <script src='w3.js?v=1.001'></script>
@@ -295,8 +297,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.001'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.001'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.002'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.002'>"
                 "<script src='js/common.js?v=1.001'></script>"
                 "<script src='js/{7}.js?v=1.001'></script>"
                 "<script src='w3.js?v=1.001'></script>"

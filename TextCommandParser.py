@@ -499,11 +499,19 @@ class TextCommandParser:
             # e.g. _lexicaldata:::G1234"""),
             "_vnsc": (self.verseNoSingleClick, """
             # [KEYWORD] _vnsc
-            # verse number single-click action
+            # Feature -Verse number single-click action
             # e.g. _vnsc:::KJV.43.3.16.John 3:16"""),
+            "_vndc": (self.verseNoDoubleClick, """
+            # [KEYWORD] _vndc
+            # Feature - Verse number double-click action
+            # e.g. _vnsc:::KJV.43.3.16"""),
             "_menu": (self.textMenu, """
             # [KEYWORD] _menu
-            # e.g. _menu:::"""),
+            # Feature - Open UBA classic html menu
+            # e.g. _menu:::
+            # e.g. _menu:::43
+            # e.g. _menu:::43.3
+            # e.g. _menu:::43.3.16"""),
             "_commentary": (self.textCommentaryMenu, """
             # [KEYWORD] _commentary
             # e.g. _commentary:::CBSC.1.1.1"""),
@@ -1836,13 +1844,65 @@ class TextCommandParser:
         else:
             return self.databaseNotInstalled(keyword.lower())
 
+    # _menu:::
+    def textMenu(self, command, source):
+        try:
+            dotCount = command.count(".")
+            if dotCount == 3 and config.enableHttpServer:
+                text, b, c, v = command.split(".")
+                config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
+                bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.eng[b][0], config.mainC, config.mainV)
+                self.parent.addHistoryRecord("main", bibleCommand)
+            biblesSqlite = BiblesSqlite()
+            menu = biblesSqlite.getMenu(command, source)
+            return (source, menu, {})
+        except:
+            return self.invalidCommand()
+
+    # _vndc:::
+    def verseNoDoubleClick(self, command, source):
+        dotCount = command.count(".")
+        if dotCount == 3 and config.enableHttpServer:
+            text, b, c, v = command.split(".")
+            config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
+            bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.eng[b][0], config.mainC, config.mainV)
+            self.parent.addHistoryRecord("main", bibleCommand)
+        if dotCount != 3 or config.verseNoDoubleClickAction == "_menu" or (config.enableHttpServer and config.verseNoDoubleClickAction.startswith("_cp")):
+            if dotCount == 2 and not config.preferHtmlMenu and not config.enableHttpServer:
+                text, b, c = command.split(".")
+                self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
+                return ("", "", {})
+            else:
+                biblesSqlite = BiblesSqlite()
+                menu = biblesSqlite.getMenu(command, source)
+                del biblesSqlite
+                return (source, menu, {})
+        elif config.verseNoDoubleClickAction in ("none", "_noAction"):
+            return self.noAction(command, source)
+        elif config.verseNoDoubleClickAction.startswith("_cp"):
+            index = int(config.verseNoDoubleClickAction[-1])
+            text, b, c, v = command.split(".")
+            self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
+            return ("", "", {})
+        else:
+            *_, b, c, v = command.split(".")
+            verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
+            self.parent.addHistoryRecord("main" if config.verseNoDoubleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
+            return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
+
     # _vnsc:::
     def verseNoSingleClick(self, command, source):
         if command.count(".") != 4:
             return self.invalidCommand()
         else:
             text, b, c, v, verseReference = command.split(".")
-            if config.verseNoSingleClickAction == "_menu":
+            bibleCommand = "BIBLE:::{0}:::{1}".format(text, verseReference)
+            if config.enableHttpServer:
+                config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
+                self.parent.addHistoryRecord("main", bibleCommand)
+            elif not config.verseNoSingleClickAction == "COMPARE":
+                self.parent.passRunTextCommand(bibleCommand, True, source)
+            if config.verseNoSingleClickAction == "_menu" or (config.enableHttpServer and config.verseNoSingleClickAction.startswith("_cp")):
                 biblesSqlite = BiblesSqlite()
                 menu = biblesSqlite.getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
                 del biblesSqlite
@@ -1869,35 +1929,6 @@ class TextCommandParser:
             return ("", "", {})
         except:
             return self.invalidCommand()
-
-    # _menu:::
-    def textMenu(self, command, source):
-        # Before version 21.33, _menu::: opens a classic html menu only
-        # From version 21.33, _menu::: open an action users assign to config.verseNoDoubleClickAction
-        # may change the keyword to _vndc::: later
-        dotCount = command.count(".")
-        if dotCount != 3 or config.verseNoDoubleClickAction == "_menu":
-            if dotCount == 2 and not config.preferHtmlMenu and not config.enableHttpServer:
-                text, b, c = command.split(".")
-                self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
-                return ("", "", {})
-            else:
-                biblesSqlite = BiblesSqlite()
-                menu = biblesSqlite.getMenu(command, source)
-                del biblesSqlite
-                return (source, menu, {})
-        elif config.verseNoDoubleClickAction == "none":
-            return ("", "", {})
-        elif config.verseNoDoubleClickAction.startswith("_cp"):
-            index = int(config.verseNoDoubleClickAction[-1])
-            text, b, c, v = command.split(".")
-            self.parent.openControlPanelTab(index, int(b), int(c), int(v), text),
-            return ("", "", {})
-        else:
-            *_, b, c, v = command.split(".")
-            verseReference = "{0} {1}:{2}".format(BibleBooks().eng[b][0], c, v)
-            self.parent.addHistoryRecord("main" if config.verseNoDoubleClickAction == "COMPARE" else "study", "{0}:::{1}".format(config.verseNoDoubleClickAction, verseReference))
-            return self.mapVerseAction(config.verseNoDoubleClickAction, verseReference, source)
 
     # _commentary:::
     def textCommentaryMenu(self, command, source):
@@ -2711,7 +2742,10 @@ class TextCommandParser:
 
 
     def noAction(self, command, source):
-        return ("", "", {})
+        if config.enableHttpServer:
+            return self.textText(config.mainText, source)
+        else:
+            return ("", "", {})
 
 
 if __name__ == "__main__":

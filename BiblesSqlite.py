@@ -216,7 +216,7 @@ class BiblesSqlite:
                     # selected chapter
                     menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button><br>{5} {6} {7} {8}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"], overviewButton, chapterIndexButton, summaryButton, chapterCommentaryButton)
                     # building verse list of slected chapter
-                    menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bookNo, chapterNo, text), config.thisTranslation["html_verse"])
+                    menu += "<hr><b>{1}</b> {0}".format(self.getVersesMenu(bookNo, chapterNo, text), config.thisTranslation["html_verse"])
                 if check == 3:
                     verseNo = bcList[2]
                     if config.openBibleInMainViewOnly:
@@ -271,7 +271,8 @@ class BiblesSqlite:
                 defaultSearchText = config.mainText
             menu += "<hr><b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span>".format(defaultSearchText, config.thisTranslation["html_searchBible2"])
             menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
-            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            searchOptions = ("SEARCH", "SEARCHREFERENCE", "SEARCHOT", "SEARCHNT", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+            for searchMode in searchOptions:
                 menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
             menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
@@ -282,12 +283,20 @@ class BiblesSqlite:
                     menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='search{0}'></div> ".format(version)
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br><br><input type='text' id='multiBibleSearch' style='width:95%'><br><br>"
-            for searchMode in ("SEARCH", "SEARCHREFERENCE", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH"):
+            for searchMode in searchOptions:
                 menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
             menu += self.inputEntered("bibleSearch", "SEARCH")
             menu += self.inputEntered("multiBibleSearch", "multiSEARCH")
         return menu
+
+    def getVersesMenu(self, b=config.mainB, c=config.mainC, text=config.mainText):
+        verseList = self.getVerseList(b, c, text)
+        return " ".join(["{0}{1}</ref>".format(self.formVerseTagMenu(b, c, verse, text), verse) for verse in verseList])
+
+    def formVerseTagMenu(self, b, c, v, text=config.mainText):
+        verseReference = self.bcvToVerseReference(b, c, v)
+        return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
     def inputEntered(self, inputID, buttonID):
         return """

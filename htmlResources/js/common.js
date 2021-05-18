@@ -832,7 +832,7 @@ function qV(v) {
 }
 
 function mV(v) {
-    document.title = "_menu:::"+activeText+"."+activeB+"."+activeC+"."+v;
+    document.title = "_vndc:::"+activeText+"."+activeB+"."+activeC+"."+v;
 }
 
 function nV(v) {
@@ -854,7 +854,7 @@ function ld(lexicalEntry) {
 function luV(v) {
     var verseReference = bcvToVerseRefence(activeB,activeC,v);
     document.title = "_stayOnSameTab:::";
-    document.title = "BIBLE:::"+activeText+":::"+verseReference;
+    // document.title = "BIBLE:::"+activeText+":::"+verseReference;
     document.title = "_vnsc:::"+activeText+"."+activeB+"."+activeC+"."+v+"."+verseReference;
 }
 
@@ -908,7 +908,7 @@ function checkDiff() {
         var diffTexts = diffList.join("_");
         diffList = [];
         var verseReference = bcvToVerseRefence(activeB,activeC,activeV);
-        document.title = "DIFF:::"+activeText+"_"+diffTexts+":::"+verseReference;
+        document.title = "DIFFERENCE:::"+activeText+"_"+diffTexts+":::"+verseReference;
     }
 }
 
