@@ -80,7 +80,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         import asyncio
         from util.RemoteCliHandler import RemoteCliHandler
 
-        port = 8888
+        port = config.telnetServerPort
         if (len(sys.argv) > 2):
             port = int(sys.argv[2])
         print("Running in remote CLI Mode on port {0}".format(port))
@@ -98,11 +98,12 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         exit(-1)
 
 # HTTP Server
+config.enableHttpServer = False
 if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
 
-    port = 8080
+    port = config.httpServerPort
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
     print("Running in HTTP Server Mode")

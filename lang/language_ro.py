@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "Analizaţi numai referinţele Bibliei cu cărţi englezeşti.",
     "openPdfViewerInNewWindow": "Opţiune pentru a deschide vizualizatorul PDF pe o fereastră nouă.",
     "installed": "instalat",
+    "run": "rulare",
+    "go": "go",
 }

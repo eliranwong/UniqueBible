@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "仅使用英文书名解析经文参照。",
     "openPdfViewerInNewWindow": "用于在新窗口上打开 PDF 查看器的选项。",
     "installed": "已安装",
+    "run": "奔跑",
+    "go": "戈",
 }

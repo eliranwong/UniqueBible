@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "英語の本のみを扱う構文解析の聖書参照。",
     "openPdfViewerInNewWindow": "新規ウィンドウで PDF ビューアーを開くためのオプション。",
     "installed": "インストール済み",
+    "run": "走る",
+    "go": "出かける",
 }

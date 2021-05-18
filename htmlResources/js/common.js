@@ -108,8 +108,8 @@ if (window.self == bibleFrame.contentWindow) {
 if (bibleFrame.src != info) { bibleFrame.src = info; }
 if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
 // mod info
-window.parent.mod = mod;
-window.parent.tempMod = mod;
+window.parent.activeText = activeText;
+window.parent.tempActiveText = activeText;
 // verse info
 var patt = /#v.*$/g;
 info = info.match(patt).toString().slice(2);
@@ -121,7 +121,7 @@ window.parent.tempC = window.parent.activeC;
 window.parent.activeV = Number(bcv[2]);
 window.parent.tempV = window.parent.activeV;
 // window.parent.updateBibleTitle();
-window.parent.history.pushState(null, null, '/index.html?' + window.parent.mod + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
+window.parent.history.pushState(null, null, '/index.html?' + window.parent.activeText + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
 window.parent.resizeSite();
 	// BibleSync
 	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { window.parent.checkSync('bibleFrame',window.parent.activeB); }
@@ -149,7 +149,7 @@ if (getMobileOperatingSystem() == 'iOS') { window.parent.document.getElementById
 window.parent.toolB = window.parent.tempB;
 window.parent.toolC = window.parent.tempC;
 window.parent.toolV = window.parent.tempV;
-window.parent.tempMod = window.parent.mod;
+window.parent.tempActiveText = window.parent.activeText;
 window.parent.tempB = window.parent.activeB;
 window.parent.tempC = window.parent.activeC;
 window.parent.tempV = window.parent.activeV;
@@ -178,7 +178,7 @@ var target; var module;
 if (source == 'bibleFrame') { target = document.getElementById('toolFrame'); }
 else if (source == 'toolFrame') { target = document.getElementById('bibleFrame'); }
 
-	if (module == undefined) { module = target.contentWindow.mod; }
+	if (module == undefined) { module = target.contentWindow.activeText; }
 
 var alertTitle = '<h3>"Bible Sync" is turned "OFF"</h3>';
 var alertSyncBibleOff = '<p>One of opened bible versions does not have the passage you had just selected.</p><p>To prevent errors on synchronising bibles, option "Bible Sync" is now automatically turned "OFF".</p><p>You may re-activate "Bible Sync" manually via our navigation menu.</p>';

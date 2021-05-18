@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "Analysieren Sie bible verse Referenzen nur mit englischen Büchern.",
     "openPdfViewerInNewWindow": "Option zum Öffnen eines PDF-Viewers in einem neuen Fenster.",
     "installed": "installiert",
+    "run": "Ausführen",
+    "go": "Go",
 }

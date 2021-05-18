@@ -1877,7 +1877,7 @@ class TextCommandParser:
         # may change the keyword to _vndc::: later
         dotCount = command.count(".")
         if dotCount != 3 or config.verseNoDoubleClickAction == "_menu":
-            if dotCount == 2 and not config.preferHtmlMenu:
+            if dotCount == 2 and not config.preferHtmlMenu and not config.enableHttpServer:
                 text, b, c = command.split(".")
                 self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
                 return ("", "", {})

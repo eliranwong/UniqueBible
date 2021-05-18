@@ -1,8 +1,18 @@
+Major changes in version 24.55:
+Improved server:
+* Fixed display content with browser back button.
+* Fixed font size of index page.
+* Ported the classic html menu page to http-server page.
+* Improved handling of change of UBA commands.
+* Added a feature menu button.
+* Added config.httpServerPort and config.telnetServerPort.
+* Added thrid-party resources wiki page link to download page.
+
 Major change in version 24.54:
 * Fixed download page.
 
 Major change in version 24.53:
-* Added a command keyword IMPORT:::.
+* Added a command keyword IMPORT:::
 
 Major changes in version 24.52:
 Multiple enhancement about http-server:

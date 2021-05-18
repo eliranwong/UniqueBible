@@ -2,6 +2,7 @@ import codecs
 import os, pprint, config
 from platform import system
 from util.DateUtil import DateUtil
+from lang import language_en_GB
 
 
 class ConfigUtil:
@@ -38,16 +39,28 @@ class ConfigUtil:
             config.qtLibrary = os.environ["QT_API"]
         else:
             os.environ["QT_API"] = config.qtLibrary
+        config.help["telnetServerPort"] = """
+        # To specify the port used by telnet-server."""
+        if not hasattr(config, "telnetServerPort"):
+            config.telnetServerPort = 8888
+        config.help["httpServerPort"] = """
+        # To specify the port used by http-server."""
+        if not hasattr(config, "httpServerPort"):
+            config.httpServerPort = 8080
         config.help["webUI"] = """
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
             config.webUI = ""
+        config.help["referenceTranslation"] = """
+        # Specify a translation as a reference for making other translations.  This option is created for development purpose."""
         if not hasattr(config, "referenceTranslation"):
             config.referenceTranslation = "en_US"
+        config.help["workingTranslation"] = """
+        # Specify the translation which is actively being edited.  This option is created for development purpose."""
         if not hasattr(config, "workingTranslation"):
             config.workingTranslation = "en_US"
         config.help["myGoogleApiKey"] = """
-        # Personal google api key for display of google maps"""
+        # Personal google api key for display of google maps inside UBA window."""
         if not hasattr(config, "myGoogleApiKey"):
             config.myGoogleApiKey = ""
         config.help["alwaysDisplayStaticMaps"] = """
@@ -61,8 +74,12 @@ class ConfigUtil:
         # IBM Watson service api key"""
         if not hasattr(config, "myIBMWatsonApikey"):
             config.myIBMWatsonApikey = ""
+        config.help["myIBMWatsonUrl"] = """
+        # IBM Watson service api url"""
         if not hasattr(config, "myIBMWatsonUrl"):
             config.myIBMWatsonUrl = ""
+        config.help["myIBMWatsonVersion"] = """
+        # IBM Watson service api version"""
         if not hasattr(config, "myIBMWatsonVersion"):
             config.myIBMWatsonVersion = "2018-05-01"
         config.help["showControlPanelOnStartup"] = """
@@ -71,30 +88,48 @@ class ConfigUtil:
         # If True, users can use an additional command field, in an additional window, to control the content being displayed, even the main window of UniqueBible.app is displayed on extended screen."""
         if not hasattr(config, "showControlPanelOnStartup"):
             config.showControlPanelOnStartup = False
+        config.help["preferControlPanelForCommandLineEntry"] = """
+        # {0}""".format(language_en_GB.translation["preferControlPanelForCommandLineEntry"])
         if not hasattr(config, "preferControlPanelForCommandLineEntry"):
             config.preferControlPanelForCommandLineEntry = False
+        config.help["closeControlPanelAfterRunningCommand"] = """
+        # {0}""".format(language_en_GB.translation["closeControlPanelAfterRunningCommand"])
         if not hasattr(config, "closeControlPanelAfterRunningCommand"):
             config.closeControlPanelAfterRunningCommand = True
+        config.help["restrictControlPanelWidth"] = """
+        # {0}""".format(language_en_GB.translation["restrictControlPanelWidth"])
         if not hasattr(config, "restrictControlPanelWidth"):
             config.restrictControlPanelWidth = False
+        config.help["masterControlWidth"] = """
+        # Specify the width of Master Control panel."""
         if not hasattr(config, "masterControlWidth"):
             config.masterControlWidth = 1255
+        config.help["miniControlInitialTab"] = """
+        # Specify the initial tab index of Mini Control panel."""
         if not hasattr(config, "miniControlInitialTab"):
             config.miniControlInitialTab = 0
+        config.help["addBreakAfterTheFirstToolBar"] = """
+        # Add a line break after the first toolbar."""
         if not hasattr(config, "addBreakAfterTheFirstToolBar"):
             config.addBreakAfterTheFirstToolBar = True
+        config.help["addBreakBeforeTheLastToolBar"] = """
+        # Add a line break before the last toolbar."""
         if not hasattr(config, "addBreakBeforeTheLastToolBar"):
             config.addBreakBeforeTheLastToolBar = False
         config.help["verseNoSingleClickAction"] = """
-        # Configure verse number single-click & double-click action
+        # Configure verse number single-click action
         # available options: "_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu"
         # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu" """
         if not hasattr(config, "verseNoSingleClickAction"):
             config.verseNoSingleClickAction = "INDEX"
+        config.help["verseNoDoubleClickAction"] = """
+        # Configure verse number double-click action
+        # available options: "_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu"
+        # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu" """
         if not hasattr(config, "verseNoDoubleClickAction"):
             config.verseNoDoubleClickAction = "_cp0"
         config.help["linuxStartFullScreen"] = """
-        # Start full-screen on Linux os"""
+        # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
             config.linuxStartFullScreen = False
         config.help["espeak"] = """
@@ -118,17 +153,27 @@ class ConfigUtil:
         if not hasattr(config, "qttsSpeed"):
             config.qttsSpeed = 0.0
         config.help["useLangDetectOnTts"] = """
-        # tts language options"""
+        # Apply language detect package to text-to-speech feature."""
         if not hasattr(config, "useLangDetectOnTts"):
             config.useLangDetectOnTts = False
+        config.help["ttsDefaultLangauge"] = """
+        # Default text-to-speech language"""
         if not hasattr(config, "ttsDefaultLangauge"):
             config.ttsDefaultLangauge = "en"
+        config.help["ttsChineseAlwaysCantonese"] = """
+        # Force text-to-speech feature to use Cantonese for all Chinese text."""
         if not hasattr(config, "ttsChineseAlwaysCantonese"):
             config.ttsChineseAlwaysCantonese = False
+        config.help["ttsChineseAlwaysMandarin"] = """
+        # Force text-to-speech feature to use Mandarin for all Chinese text."""
         if not hasattr(config, "ttsChineseAlwaysMandarin"):
             config.ttsChineseAlwaysMandarin = False
+        config.help["ttsEnglishAlwaysUS"] = """
+        # Force text-to-speech feature to use English (US) for all Chinese text."""
         if not hasattr(config, "ttsEnglishAlwaysUS"):
             config.ttsEnglishAlwaysUS = False
+        config.help["ttsEnglishAlwaysUK"] = """
+        # Force text-to-speech feature to use English (UK) for all Chinese text."""
         if not hasattr(config, "ttsEnglishAlwaysUK"):
             config.ttsEnglishAlwaysUK = False
         config.help["ibus"] = """
@@ -373,29 +418,41 @@ class ConfigUtil:
         if not hasattr(config, "openBibleInMainViewOnly"):
             config.openBibleInMainViewOnly = False
         config.help["mainText"] = """
-        # Last-opened bible version and passage to be displayed on main window"""
+        # Last-opened bible text on Main Window"""
         if not hasattr(config, "mainText"):
             config.mainText = "KJV"
+        config.help["mainB"] = """
+        # Last-opened bible book number on Main Window"""
         if not hasattr(config, "mainB"):
             config.mainB = 1
+        config.help["mainC"] = """
+        # Last-opened bible chapter number on Main Window"""
         if not hasattr(config, "mainC"):
             config.mainC = 1
+        config.help["mainV"] = """
+        # Last-opened bible verse number on Main Window"""
         if not hasattr(config, "mainV"):
             config.mainV = 1
         config.help["studyText"] = """
-        # Last-opened bible version and passage to be displayed on workspace"""
+        # Last-opened bible module on Study Window"""
         if not hasattr(config, "studyText"):
             config.studyText = "NET"
+        config.help["studyB"] = """
+        # Last-opened bible book number on Study Window"""
         if not hasattr(config, "studyB"):
             config.studyB = 43
+        config.help["studyC"] = """
+        # Last-opened bible chapter number on Study Window"""
         if not hasattr(config, "studyC"):
             config.studyC = 3
+        config.help["studyV"] = """
+        # Last-opened bible verse number on Study Window"""
         if not hasattr(config, "studyV"):
             config.studyV = 16
         config.help["bibleSearchMode"] = """
         # Search Bible Mode
-        # Accept value: 0-4
-        # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH")"""
+        # Accept value: 0-5
+        # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")"""
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
         config.help["favouriteBible"] = """
@@ -426,13 +483,19 @@ class ConfigUtil:
         if not hasattr(config, "syncCommentaryWithMainWindow"):
             config.syncCommentaryWithMainWindow = False
         config.help["commentaryText"] = """
-        # Last-opened commentary text and passage"""
+        # Last-opened commentary module"""
         if not hasattr(config, "commentaryText"):
             config.commentaryText = "CBSC"
+        config.help["commentaryB"] = """
+        # Last-opened commentary book number"""
         if not hasattr(config, "commentaryB"):
             config.commentaryB = 43
+        config.help["commentaryC"] = """
+        # Last-opened commentary chapter number"""
         if not hasattr(config, "commentaryC"):
             config.commentaryC = 3
+        config.help["commentaryV"] = """
+        # Last-opened commentary verse number"""
         if not hasattr(config, "commentaryV"):
             config.commentaryV = 16
         config.help["topic"] = """
@@ -585,8 +648,9 @@ class ConfigUtil:
         # set show information to True"""
         if not hasattr(config, "showInformation"):
             config.showInformation = True
+        config.help["windowStyle"] = """
         # Window Style
-        # Availability of window styles depends on device"""
+        # Availability of window styles depends on the device running UBA."""
         if not hasattr(config, "windowStyle") or not config.windowStyle:
             config.windowStyle = "Fusion"
         config.help["theme"] = """
@@ -594,10 +658,12 @@ class ConfigUtil:
         if not hasattr(config, "theme"):
             config.theme = "default"
         config.help["qtMaterial"] = """
-        # qt-material theme
-        # qt-material theme is used only qtMaterial is true and qtMaterialTheme is not empty"""
+        # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
             config.qtMaterial = False
+        config.help["qtMaterialTheme"] = """
+        # qt-material theme
+        # qt-material theme is used only qtMaterial is true and qtMaterialTheme is not empty"""
         if not hasattr(config, "qtMaterialTheme"):
             config.qtMaterialTheme = ""
         config.help["disableModulesUpdateCheck"] = """
@@ -652,6 +718,8 @@ class ConfigUtil:
         # Gist synching"""
         if not hasattr(config, "enableGist"):
             config.enableGist = False
+        config.help["gistToken"] = """
+        # Gist token"""
         if not hasattr(config, "gistToken"):
             config.gistToken = ''
         config.help["clearCommandEntry"] = """
@@ -659,10 +727,16 @@ class ConfigUtil:
         if not hasattr(config, "clearCommandEntry"):
             config.clearCommandEntry = False
         # Highlight collections"""
+        config.help["highlightCollections"] = """
+        # Highlight collection names."""
         if not hasattr(config, "highlightCollections") or len(config.highlightCollections) < 12:
             config.highlightCollections = ["Collection 1", "Collection 2", "Collection 3", "Collection 4", "Collection 5", "Collection 6", "Collection 7", "Collection 8", "Collection 9", "Collection 10", "Collection 11", "Collection 12"]
+        config.help["highlightDarkThemeColours"] = """
+        # Highlight collection colours displayed on dart theme."""
         if not hasattr(config, "highlightDarkThemeColours") or len(config.highlightDarkThemeColours) < 12:
             config.highlightDarkThemeColours = ["#646400", "#060166", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400", "#646400"]
+        config.help["highlightLightThemeColours"] = """
+        # Highlight collection colours displayed on light theme."""
         if not hasattr(config, "highlightLightThemeColours") or len(config.highlightLightThemeColours) < 12:
             config.highlightLightThemeColours = ["#e8e809", "#4ff7fa", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#e8e809", "#646400", "#646400"]
         config.help["menuShortcuts"] = """
@@ -674,62 +748,116 @@ class ConfigUtil:
         # flags=re.IGNORECASE will be applied only if config.regexCaseSensitive is set to False"""
         if not hasattr(config, "regexCaseSensitive"):
             config.regexCaseSensitive = False
+        config.help["displayLanguage"] = """
+        # Specify translation language for user interface."""
         if not hasattr(config, "displayLanguage"):
             config.displayLanguage = 'en_US'
         config.help["lastAppUpdateCheckDate"] = """
         # App update check"""
         if not hasattr(config, "lastAppUpdateCheckDate"):
             config.lastAppUpdateCheckDate = str(DateUtil.localDateNow())
+        config.help["daysElapseForNextAppUpdateCheck"] = """
+        # Days elapse for next app update check"""
         if not hasattr(config, "daysElapseForNextAppUpdateCheck"):
             config.daysElapseForNextAppUpdateCheck = '14'
+        config.help["updateWithGitPull"] = """
+        # Update with git pull command"""
         if not hasattr(config, "updateWithGitPull"):
             config.updateWithGitPull = False
+        config.help["minicontrolWindowWidth"] = """
+        # Specify the width of mini Control panel"""
         if not hasattr(config, "minicontrolWindowWidth"):
             config.minicontrolWindowWidth = 450
+        config.help["minicontrolWindowHeight"] = """
+        # Mini Control window height"""
         if not hasattr(config, "minicontrolWindowHeight"):
             config.minicontrolWindowHeight = 400
+        config.help["refButtonClickAction"] = """
+        # Action of reference button when it is clicked."""
         if not hasattr(config, "refButtonClickAction"):
             config.refButtonClickAction = "master"
+        config.help["presentationScreenNo"] = """
+        # Specify screen number for presentation features."""
         if not hasattr(config, "presentationScreenNo"):
             config.presentationScreenNo = -1
+        config.help["presentationFontSize"] = """
+        # Specify font size for display in presentation."""
         if not hasattr(config, "presentationFontSize"):
             config.presentationFontSize = 3.0
+        config.help["presentationMargin"] = """
+        # Specify margin for display in presentation."""
         if not hasattr(config, "presentationMargin"):
             config.presentationMargin = 50
+        config.help["presentationColorOnLightTheme"] = """
+        # Specify background colour for display in presentation with light theme."""
         if not hasattr(config, "presentationColorOnLightTheme"):
             config.presentationColorOnLightTheme = "black"
+        config.help["presentationColorOnDarkTheme"] = """
+        # Specify background colour for display in presentation with dark theme."""
         if not hasattr(config, "presentationColorOnDarkTheme"):
             config.presentationColorOnDarkTheme = "magenta"
+        config.help["presentationVerticalPosition"] = """
+        # Presentation vertical position"""
         if not hasattr(config, "presentationVerticalPosition"):
             config.presentationVerticalPosition = 50
+        config.help["presentationHorizontalPosition"] = """
+        # Presentation horizontal position"""
         if not hasattr(config, "presentationHorizontalPosition"):
             config.presentationHorizontalPosition = 50
+        config.help["hideBlankVerseCompare"] = """
+        # {0}""".format(language_en_GB.translation["hideBlankVerseCompare"])
         if not hasattr(config, "hideBlankVerseCompare"):
             config.hideBlankVerseCompare = False
+        config.help["miniBrowserHome"] = """
+        # Home page of mini web browser."""
         if not hasattr(config, "miniBrowserHome"):
             config.miniBrowserHome = "https://www.youtube.com/"
+        config.help["enableMenuUnderline"] = """
+        # {0}""".format(language_en_GB.translation["enableMenuUnderline"])
         if not hasattr(config, "enableMenuUnderline"):
             config.enableMenuUnderline = True
+        config.help["addOHGBiToMorphologySearch"] = """
+        # {0}""".format(language_en_GB.translation["addOHGBiToMorphologySearch"])
         if not hasattr(config, "addOHGBiToMorphologySearch"):
             config.addOHGBiToMorphologySearch = True
+        config.help["activeVerseNoColourLight"] = """
+        # Active verse number colour displayed on light theme."""
         if not hasattr(config, "activeVerseNoColourLight"):
             config.activeVerseNoColourLight = "#204a87"
+        config.help["activeVerseNoColourDark"] = """
+        # Active verse number colour displayed on dark theme."""
         if not hasattr(config, "activeVerseNoColourDark"):
             config.activeVerseNoColourDark = "#aaff7f"
+        config.help["maximumOHGBiVersesDisplayedInSearchResult"] = """
+        # Maximum number of OHGBi verses displayed in each search result."""
         if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
             config.maximumOHGBiVersesDisplayedInSearchResult = 50
+        config.help["excludeStartupPlugins"] = """
+        # List of disabled startup plugins"""
         if not hasattr(config, "excludeStartupPlugins"):
             config.excludeStartupPlugins = []
+        config.help["excludeMenuPlugins"] = """
+        # List of disabled menu plugins"""
         if not hasattr(config, "excludeMenuPlugins"):
             config.excludeMenuPlugins = []
+        config.help["excludeContextPlugins"] = """
+        # List of disabled context plugins"""
         if not hasattr(config, "excludeContextPlugins"):
             config.excludeContextPlugins = []
+        config.help["excludeShutdownPlugins"] = """
+        # List of disabled shutdown plugins"""
         if not hasattr(config, "excludeShutdownPlugins"):
             config.excludeShutdownPlugins = []
+        config.help["toolbarIconSizeFactor"] = """
+        # Toolbar icon size factor"""
         if not hasattr(config, "toolbarIconSizeFactor"):
             config.toolbarIconSizeFactor = 0.75
+        config.help["sidebarIconSizeFactor"] = """
+        # Sidebar icon size factor"""
         if not hasattr(config, "sidebarIconSizeFactor"):
             config.sidebarIconSizeFactor = 0.6
+        config.help["githubAccessToken"] = """
+        # Github access token"""
         if not hasattr(config, "githubAccessToken"):
             token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
             config.githubAccessToken = codecs.encode(token, 'rot_13')
@@ -764,6 +892,8 @@ class ConfigUtil:
             ("developer", config.developer),
             ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
+            ("telnetServerPort", config.telnetServerPort),
+            ("httpServerPort", config.httpServerPort),
             ("webUI", config.webUI),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),

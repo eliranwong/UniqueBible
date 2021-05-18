@@ -79,7 +79,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
-        activeBCVsettings = "<script>var mod = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
 
@@ -102,7 +102,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   display: none;
                 {5}
                 body {4}
-                  font-size: {6};
+                  {6}
                   font-family:'{7}';
                   -ms-overflow-style:none;
                   margin-left: 5px;
@@ -146,7 +146,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
                 var curPos;
-                var tempMod; var tempB; var tempC; var tempV;
+                var tempActiveText; var tempB; var tempC; var tempV;
                 var para = 2; var annoClause = 1; var annoPhrase = 1; var highlights = 1;
                 var paraWin = 1; var syncBible = 1; var paraContent = ''; var triggerPara = 0;
                 var currentZone; var currentB; var currentC; var currentV;
@@ -165,10 +165,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main-{12}" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="toolFrame" name="tool-{12}" onload="resizeSite()" src="empty.html">Oops!</iframe>
+                        <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
                     </div>
                 </div>
 
@@ -225,17 +225,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         """.format(
             self.buildForm(),
             95 if config.webUI == "mini" else 85,
-            "",
+            gmtime(),
             activeBCVsettings,
             "{",
             "}",
-            fontSize,
+            "", #"font-size: {0};".format(fontSize),
             fontFamily,
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
             "",
-            gmtime(),
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -244,21 +243,22 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return """
                 <form id="commandForm" action="index.html" action="get">
                 {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/> {3}
+                <input type="submit" value="{2}"/> {3} {4}
                 </form>
             """.format(
-                self.command,
+                "",
                 self.toggleFullscreen(),
-                config.thisTranslation["menu_run"],
+                config.thisTranslation["run"],
                 self.helpButton(),
+                self.featureButton(),
             )
         else:
             return """
                 <form id="commandForm" action="index.html" action="get">
-                {3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}
+                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{9}
                 <br/><br/>
                 {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/>
+                <input type="submit" value="{2}"/> {8}
                 </form>
             """.format(
                 "",
@@ -268,7 +268,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.bookSelection(),
                 self.previousChapter(),
                 self.nextChapter(),
-                self.toggleFullscreen()
+                self.toggleFullscreen(),
+                self.helpButton(),
+                self.featureButton(),
             )
 
     def wrapHtml(self, content, view="", book=False):
@@ -283,7 +285,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 elif type(config.overwriteBookFontSize) == int:
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
-        activeBCVsettings = "<script>var mod = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         html = ("""<!DOCTYPE html><html><head><title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -303,7 +305,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
                     mutations.forEach(function(mutation) {2}
-                        if (document.title.startsWith("_")) {2}{3} else {2} window.parent.submitCommand(document.title); {3}
+                        ubaCommandChanged(document.title);
                     {3});
                 {3});
                 var config = {2}
@@ -367,6 +369,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' style='width: 25px' onclick='window.parent.submitCommand(".help")'>?</button>"""
         return html
 
+    def featureButton(self):
+        html = """<button type='button' style='width: 25px' onclick='window.parent.submitCommand("_menu:::")'>*</button>"""
+        return html
+
     def getHighlightCss(self):
         css = ""
         for i in range(len(config.highlightCollections)):
@@ -385,9 +391,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         dotCommands = """<h2>Http-server Commands</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
-        <ref onclick="displayCommand('.config')">.config</ref> - Display config.py values and their description.<br>
-        <ref onclick="displayCommand('.download')">.download</ref> - Display a page with links to download resources.<br>
-        <ref onclick="displayCommand('.stop')">.stop</ref> - Disable server.  It is only enabled when config.developer is set to True.
+        <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
+        <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display a page with links to download resources.<br>
+        <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.
         </p>
         <h2>UBA Commands</h2>
         <p>"""
@@ -421,4 +427,5 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         for collection, data, keyword in resources:
             content += "<h2>{0}</h2>".format(collection)
             content += "<br>".join(["""<ref onclick="document.title='download:::{2}:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"]) if os.path.isfile(os.path.join(*v[0])) else "", keyword) for k, v in data.items()])
+        content += "<h2>Third-party Resources</h2><p><a href='https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources' target='_blank'>Click this link to read our wiki page about third-party reosources.</a></p>"
         return content

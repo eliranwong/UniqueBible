@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "Анализировать библевые ссылки только с английскими книгами.",
     "openPdfViewerInNewWindow": "Опция открытия программы просмотра PDF в новом окне.",
     "installed": "установлен",
+    "run": "запуск",
+    "go": "go",
 }

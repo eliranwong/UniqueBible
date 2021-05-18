@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "영어 책만을 사용하여 성경 구절을 읽을 수 있다.",
     "openPdfViewerInNewWindow": "새 창에서 PDF 뷰어를 여는 옵션입니다.",
     "installed": "설치된",
+    "run": "실행하다",
+    "go": "가다",
 }

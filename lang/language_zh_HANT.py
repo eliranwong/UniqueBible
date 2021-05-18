@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "只使用英文書名剖析經文參照。",
     "openPdfViewerInNewWindow": "用來在新視窗開啟 PDF 檢視器的選項。",
     "installed": "已安裝",
+    "run": "跑",
+    "go": "走",
 }

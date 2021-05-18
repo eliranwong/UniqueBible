@@ -64,6 +64,15 @@ function fullScreenSwitch() {
 
 /* SECTION - COMMAND */
 
+function ubaCommandChanged(cmd) {
+    const ignore = ["_stayOnSameTab:::"];
+    if ((cmd.startsWith("_menu:::")) || (!(cmd.startsWith("_")) && !(ignore.includes(cmd)))) {
+        window.parent.submitCommand(cmd);
+    } else if (!(ignore.includes(cmd))) {
+        displayCommand(cmd);
+    }
+}
+
 function displayCommand(cmd) {
     el = window.parent.document.getElementById('commandInput');
     el.value = cmd;

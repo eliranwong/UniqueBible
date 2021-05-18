@@ -715,4 +715,6 @@ translation = {
     "parseEnglishBooksOnly": "Ανάλυση παραπομπών σε ανάλυση με αγγλική γλώσσα μόνο.",
     "openPdfViewerInNewWindow": "Επιλογή ανοίγματος προβολής PDF σε νέο παράθυρο.",
     "installed": "εγκατάσταση:",
+    "run": "Run -",
+    "go": "'",
 }
