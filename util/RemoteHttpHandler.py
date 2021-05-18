@@ -2,6 +2,7 @@
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import os, re, config, pprint
 from http.server import SimpleHTTPRequestHandler
+from time import gmtime
 
 from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
@@ -72,6 +73,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def indexPage(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate'),
+        self.send_header('Pragma', 'no-cache'),
+        self.send_header('Expires', '0')
         self.end_headers()
         
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
@@ -156,15 +160,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 </script>
 
             </head>
-            <body style="padding-top: 10px;" onload="document.getElementById('commandInput').focus();" ontouchstart="">
+            <body style="padding-top: 10px;" onload="onBodyLoad()" ontouchstart="">
                 <span id='v0.0.0'></span>
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{12}" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="toolFrame" name="tool" onload="resizeSite()" src="empty.html">Oops!</iframe>
+                        <iframe id="toolFrame" name="tool-{12}" onload="resizeSite()" src="empty.html">Oops!</iframe>
                     </div>
                 </div>
 
@@ -231,6 +235,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.theme,
             self.getHighlightCss(),
             "",
+            gmtime(),
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -256,7 +261,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <input type="submit" value="{2}"/>
                 </form>
             """.format(
-                self.command,
+                "",
                 config.thisTranslation["menu_command"],
                 config.thisTranslation["enter"],
                 self.bibleSelection(),
