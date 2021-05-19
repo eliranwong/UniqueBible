@@ -1,4 +1,4 @@
-Major changes in version 24.60:
+Major changes in version 24.61:
 Improved http-server:
 * Improved .restart command.
 * Added .update command, to update and re-start http-server.  This works only if config.developer is set to True.

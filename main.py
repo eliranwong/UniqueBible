@@ -125,10 +125,9 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     config.startHttpServer = True
     startHttpServer()
     if config.startHttpServer:
-        subprocess.Popen("{0} uba.py http-server & disown".format(sys.executable), shell=True)
-    else:
-        ConfigUtil.save()
-        exit(0)
+        subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
+    ConfigUtil.save()
+    exit(0)
 
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil

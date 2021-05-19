@@ -63,7 +63,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.restartServer()
                 elif self.command.lower() in (".update",) and config.developer:
                     subprocess.Popen("git pull", shell=True)
-                    self.restartServer("updated and ")
+                    self.restartServer("uasdfpdated and ")
                 else:
                     view, content, *_ = self.textCommandParser.parser(self.command, "http")
                     if not content:
