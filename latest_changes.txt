@@ -1,5 +1,6 @@
-Major changes in version 24.70:
+Major changes in version 24.70, 24.71:
 * Fixed history record.
+* Revised web menu layout.
 
 Major changes in version 24.69:
 * Revised web layout.

@@ -271,7 +271,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         else:
             return """
                 <form id="commandForm" action="index.html" action="get">
-                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
+                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{13}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
                 <br/><br/>
                 {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                 <input type="submit" value="{2}"/>
@@ -290,6 +290,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.libraryButton(),
                 self.searchButton(),
                 self.layoutButton(),
+                self.historyButton(),
             )
 
     def wrapHtml(self, content, view="", book=False):
@@ -402,6 +403,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def layoutButton(self):
         html = """<button type='button' onclick='window.parent.submitCommand(".layout")'>{0}</button>""".format(config.thisTranslation["layout"])
+        return html
+
+    def historyButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".history")'>{0}</button>""".format(config.thisTranslation["menu3_history"])
         return html
 
     def getHighlightCss(self):
