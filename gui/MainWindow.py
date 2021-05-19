@@ -1947,6 +1947,9 @@ class MainWindow(QMainWindow):
             self.focusCommandLineField()
             self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
 
+    def isThridPartyDictionary(self, module):
+        return self.crossPlatform.isThridPartyDictionary(module)
+
     def search3rdDictionaryDialog(self):
         items = ThirdPartyDictionary(self.crossPlatform.isThridPartyDictionary(config.thirdDictionary)).moduleList
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items,

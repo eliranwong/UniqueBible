@@ -1,3 +1,6 @@
+Major change in version 24.63:
+* Fixed third party dictionary lookup.
+
 Major change in version 24.62:
 * Added restart function to desktop app.
 
