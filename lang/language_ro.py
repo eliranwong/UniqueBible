@@ -717,4 +717,5 @@ translation = {
     "installed": "instalat",
     "run": "rulare",
     "go": "go",
+    "restart": "Repornire",
 }

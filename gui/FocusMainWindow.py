@@ -196,6 +196,8 @@ class FocusMainWindow:
         menu.addSeparator()
         addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
         menu.addSeparator()
+        if hasattr(config, "cli"):
+            addMenuItem(menu, "restart", self, self.restartApp)
         addIconMenuItem("UniqueBibleApp.png", menu, "menu1_exit", self, self.quitApp, sc.quitApp)
 
         # 2nd column

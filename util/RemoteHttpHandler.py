@@ -399,7 +399,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(html, "utf8"))
 
     def restartServer(self, additionalMessage=""):
-        config.startHttpServer = True
+        config.restartHttpServer = True
         locallink = "http://localhost:{0}".format(config.httpServerPort)
         html = "<h2>Server {1}restarted!</h2><p>To connect again locally, try:<br><a href='{0}'>{0}</a></p>".format(locallink, additionalMessage)
         self.closeWindow(html)

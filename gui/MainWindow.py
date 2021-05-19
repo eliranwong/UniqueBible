@@ -362,6 +362,10 @@ class MainWindow(QMainWindow):
     def quitApp(self):
         QGuiApplication.instance().quit()
 
+    def restartApp(self):
+        config.restartUBA = True
+        QGuiApplication.instance().quit()
+
     # check migration
     def checkMigration(self):
         if config.version >= 0.56:

@@ -717,4 +717,5 @@ translation = {
     "installed": "установлен",
     "run": "запуск",
     "go": "go",
+    "restart": "Перезапуск",
 }

@@ -1,3 +1,6 @@
+Major change in version 24.62:
+* Added restart function to desktop app.
+
 Major changes in version 24.61:
 Improved http-server:
 * Improved .restart command.

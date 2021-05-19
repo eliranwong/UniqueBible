@@ -717,4 +717,5 @@ translation = {
     "installed": "설치된",
     "run": "실행하다",
     "go": "가다",
+    "restart": "재시작",
 }

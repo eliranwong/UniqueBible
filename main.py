@@ -106,7 +106,7 @@ def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
 
-    config.startHttpServer = False
+    config.restartHttpServer = False
     port = config.httpServerPort
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
@@ -122,11 +122,10 @@ def startHttpServer():
 
 config.enableHttpServer = False
 if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
-    config.startHttpServer = True
     startHttpServer()
-    if config.startHttpServer:
-        subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
     ConfigUtil.save()
+    if config.restartHttpServer:
+        subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
     exit(0)
 
 # Setup menu shortcut configuration file
@@ -205,6 +204,8 @@ def exitApplication():
                 script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
+    if config.restartUBA and hasattr(config, "cli"):
+        subprocess.Popen("{0} uba.py gui".format(sys.executable), shell=True)
 
 def nameChanged():
     if app.applicationName() == "UniqueBible.app CLI":
@@ -401,4 +402,5 @@ def global_excepthook(type, value, traceback):
 
 sys.excepthook = global_excepthook
 
+config.restartUBA = False
 sys.exit(app.exec_())

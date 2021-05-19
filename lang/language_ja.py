@@ -717,4 +717,5 @@ translation = {
     "installed": "インストール済み",
     "run": "走る",
     "go": "出かける",
+    "restart": "再始動",
 }
