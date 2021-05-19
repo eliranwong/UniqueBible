@@ -44,6 +44,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "download": self.downloadContent,
             "config": self.configContent,
             "history": self.historyContent,
+            "library": self.libraryContent,
         }
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
             query_components = parse_qs(urlparse(self.path).query)
@@ -413,6 +414,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
+        <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.  This works only if config.developer is set to True.
@@ -474,4 +476,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 else:
                     content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(file.replace(extension, ""), type)
         content += "<h2>Third-party Resources</h2><p><a href='https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources' target='_blank'>Click this link to read our wiki page about third-party resources.</a></p>"
+        return content
+
+    def getCurrentReference(self):
+        return "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+
+    def libraryContent(self):
+        content = ""
+        reference = self.getCurrentReference()
+        content += "<h2>Commentary</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<h2>Reference Book</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
         return content

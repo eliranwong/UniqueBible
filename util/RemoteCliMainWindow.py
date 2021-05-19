@@ -2,14 +2,13 @@ import os, config, zipfile, gdown
 from util.LanguageUtil import LanguageUtil
 from ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
+from util.DatafileLocation import DatafileLocation
 
 
 class RemoteCliMainWindow(CrossPlatform):
 
     def __init__(self):
-        from util.DatafileLocation import DatafileLocation
-        import config
-
+        self.setupResourceLists()
         self.bibleInfo = DatafileLocation.marvelBibles
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 

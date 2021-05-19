@@ -1,3 +1,6 @@
+Major change in version 24.64:
+* Added a .library command to http-server for quick access of bible commentaries and reference books.
+
 Major change in version 24.63:
 * Fixed third party dictionary lookup.
 
