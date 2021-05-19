@@ -69,7 +69,7 @@ function ubaCommandChanged(cmd) {
         cmd = "_menu:::";
     }
     const ignore = ["_stayOnSameTab:::"];
-    if (((cmd.search(/^_menu:::|_vnsc:::|_vndc:::/i)) >= 0) || (!(cmd.startsWith("_")) && !(ignore.includes(cmd)))) {
+    if (((cmd.search(/^_menu:::|_vnsc:::|_vndc:::|_history/i)) >= 0) || (!(cmd.startsWith("_")) && !(ignore.includes(cmd)))) {
         window.parent.submitCommand(cmd);
     } else if (!(ignore.includes(cmd))) {
         displayCommand(cmd);

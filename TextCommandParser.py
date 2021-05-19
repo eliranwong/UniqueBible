@@ -1956,9 +1956,13 @@ class TextCommandParser:
 
     # _historyrecord:::
     def textHistoryRecord(self, command, source):
+        if source == "http":
+            source = "main"
         if source in ("main", "study"):
-            self.parent.openHistoryRecord(source, int(command))
-            return ("", "", {})
+            recordNumber = int(command)
+            config.currentRecord[source] = recordNumber
+            textCommand = config.history[source][recordNumber]
+            return self.parser(textCommand, source)
         else:
             return self.invalidCommand()
 
@@ -2569,33 +2573,12 @@ class TextCommandParser:
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content, {})
 
-    # Check if a third party dictionary exists:
-    def isThridPartyDictionary(self, module):
-        bibleBentoPlusLexicon = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dic.bbp"))
-        eSwordLexicon = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".lexi"))
-        eSwordDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dcti"))
-        mySwordDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dct.mybible"))
-        myBibleDictionary = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(module, ".dictionary.SQLite3"))
-
-        if os.path.isfile(bibleBentoPlusLexicon):
-            return (module, ".dic.bbp")
-        elif os.path.isfile(eSwordLexicon):
-            return (module, ".lexi")
-        elif os.path.isfile(eSwordDictionary):
-            return (module, ".dcti")
-        elif os.path.isfile(mySwordDictionary):
-            return (module, ".dct.mybible")
-        elif os.path.isfile(myBibleDictionary):
-            return (module, ".dictionary.SQLite3")
-        else:
-            return None
-
     # SEARCHTHIRDDICTIONARY:::
     def thirdDictionarySearch(self, command, source):
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.thirdDictionary, command)
         module, entry = self.splitCommand(command)
-        module = self.isThridPartyDictionary(module)
+        module = self.parent.isThridPartyDictionary(module)
         if not entry or not module:
             return self.invalidCommand("study")
         else:
@@ -2609,7 +2592,7 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.thirdDictionary, command)
         module, entry = self.splitCommand(command)
-        module = self.isThridPartyDictionary(module)
+        module = self.parent.isThridPartyDictionary(module)
         if not entry or not module:
             return self.invalidCommand("study")
         else:

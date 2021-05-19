@@ -1099,5 +1099,5 @@ class ConfigUtil:
                 fileObj.write("{0} = {1}\n".format("iModeSplitterSizes", pprint.pformat(config.iModeSplitterSizes)))
             if hasattr(config, "pModeSplitterSizes"):
                 fileObj.write("{0} = {1}\n".format("pModeSplitterSizes", pprint.pformat(config.pModeSplitterSizes)))
-            print("File 'config.py' is saved!")
+            print("A copy of configurations is saved in file 'config.py'!")
 

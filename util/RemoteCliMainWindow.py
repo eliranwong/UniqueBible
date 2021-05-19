@@ -1,8 +1,10 @@
 import os, config, zipfile, gdown
 from util.LanguageUtil import LanguageUtil
 from ThirdParty import Converter
+from util.CrossPlatform import CrossPlatform
 
-class RemoteCliMainWindow:
+
+class RemoteCliMainWindow(CrossPlatform):
 
     def __init__(self):
         from util.DatafileLocation import DatafileLocation
@@ -58,21 +60,6 @@ class RemoteCliMainWindow:
         elif notification:
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
-
-    # add a history record
-    def addHistoryRecord(self, view, textCommand):
-        if view == "http":
-            view = "main"
-        if not textCommand.startswith("_") and not textCommand.startswith("download:::"):
-            viewhistory = config.history[view]
-            if not (viewhistory[-1] == textCommand):
-                viewhistory.append(textCommand)
-                # set maximum number of history records for each view here
-                maximumHistoryRecord = config.maximumHistoryRecord
-                if len(viewhistory) > maximumHistoryRecord:
-                    viewhistory = viewhistory[-maximumHistoryRecord:]
-                config.history[view] = viewhistory
-                config.currentRecord[view] = len(viewhistory) - 1
 
     def reloadControlPanel(self, show=True):
         pass

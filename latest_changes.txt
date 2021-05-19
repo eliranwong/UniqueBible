@@ -1,3 +1,8 @@
+Major changes in version 24.58:
+Improved http-server
+* Added github resources to download page.
+* Ported _history::: and _historyrecord commands.
+
 Major changes in version 24.56, 57:
 Improved http-server:
 * Fixed single-click verse action.

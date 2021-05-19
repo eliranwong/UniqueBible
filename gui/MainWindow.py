@@ -1,5 +1,4 @@
-import glob
-import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging
+import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 from datetime import datetime
 from distutils import util
 from functools import partial
@@ -12,12 +11,12 @@ import exlbl
 from BibleBooks import BibleBooks
 from TextCommandParser import TextCommandParser
 from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite, Bible
+from BiblesSqlite import BiblesSqlite
 from TextFileReader import TextFileReader
 from Translator import Translator
 from ThirdParty import Converter, ThirdPartyDictionary
 from Languages import Languages
-from ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
+from ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
 from gui.ConfigFlagsWindow import ConfigFlagsWindow
 from gui.EnableIndividualPlugins import EnableIndividualPlugins
@@ -54,13 +53,14 @@ from util.TextUtil import TextUtil
 import shortcut as sc
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
-import zipfile
+from util.CrossPlatform import CrossPlatform
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.crossPlatform = CrossPlatform()
         self.logger = logging.getLogger('uba')
 
         config.inBootupMode = True
@@ -166,59 +166,23 @@ class MainWindow(QMainWindow):
         del self.textCommandParser
 
     def setupResourceLists(self):
-        # bible versions
-        self.textList = BiblesSqlite().getBibleList()
-        self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
-        bibleOHGBiPath = os.path.join(config.marvelData, "bibles", "OHGBi.bible")
-        morphologyDatabase = os.path.join(config.marvelData, "morphology.sqlite")
-        self.strongBibles = ["OHGBi"] if os.path.isfile(bibleOHGBiPath) and os.path.isfile(morphologyDatabase) else []
-        self.strongBibles += [text for text in self.textList if Bible(text).bibleStrong()]
-        #if self.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
-        #    for index, fullName in enumerate(self.textFullNameList):
-        #        self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
-        # commentaries
-        self.commentaryList = Commentary().getCommentaryList()
-        #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]
-        self.commentaryFullNameList = []
-        for module in self.commentaryList:
-            info = Commentary(module).commentaryInfo()
-            if info == "https://Marvel.Bible Commentary" and module in Commentary.marvelCommentaries:
-                info = Commentary.marvelCommentaries[module]
-            self.commentaryFullNameList.append(info)
-        # reference book
-        # menu10_dialog
-        bookData = BookData()
-        self.referenceBookList = [book for book, *_ in bookData.getBookList()]
-        # open database
-        indexes = IndexesSqlite()
-        # topic
-        # menu5_topics
-        topicDictAbb2Name = {abb: name for abb, name in indexes.topicList}
-        self.topicListAbb = list(topicDictAbb2Name.keys())
-        topicDict = {name: abb for abb, name in indexes.topicList}
-        self.topicList = list(topicDict.keys())
-        # lexicon
-        # context1_originalLexicon
-        self.lexiconList = LexiconData().lexiconList
-        # dictionary
-        # context1_dict
-        dictionaryDictAbb2Name = {abb: name for abb, name in indexes.dictionaryList}
-        self.dictionaryListAbb = list(dictionaryDictAbb2Name.keys())
-        dictionaryDict = {name: abb for abb, name in indexes.dictionaryList}
-        self.dictionaryList = list(dictionaryDict.keys())
-        # encyclopedia
-        # context1_encyclopedia
-        encyclopediaDictAbb2Name = {abb: name for abb, name in indexes.encyclopediaList}
-        self.encyclopediaListAbb = list(encyclopediaDictAbb2Name.keys())
-        encyclopediaDict = {name: abb for abb, name in indexes.encyclopediaList}
-        self.encyclopediaList = list(encyclopediaDict.keys())
-        # 3rd-party dictionary
-        # menu5_3rdDict
-        self.thirdPartyDictionaryList = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
-        # pdf list
-        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))])
-        # docx list
-        self.docxList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/docx/*.docx".format(config.marvelData))])
+        self.crossPlatform.setupResourceLists()
+        self.textList = self.crossPlatform.textList
+        self.textFullNameList = self.crossPlatform.textFullNameList
+        self.strongBibles = self.crossPlatform.strongBibles
+        self.commentaryList = self.crossPlatform.commentaryList
+        self.commentaryFullNameList = self.crossPlatform.commentaryFullNameList
+        self.referenceBookList = self.crossPlatform.referenceBookList
+        self.topicListAbb = self.crossPlatform.topicListAbb
+        self.topicList = self.crossPlatform.topicList
+        self.lexiconList = self.crossPlatform.lexiconList
+        self.dictionaryListAbb = self.crossPlatform.dictionaryListAbb
+        self.dictionaryList = self.crossPlatform.dictionaryList
+        self.encyclopediaListAbb = self.crossPlatform.encyclopediaListAbb
+        self.encyclopediaList = self.crossPlatform.encyclopediaList
+        self.thirdPartyDictionaryList = self.crossPlatform.thirdPartyDictionaryList
+        self.pdfList = self.crossPlatform.pdfList
+        self.docxList = self.crossPlatform.docxList
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
@@ -1980,7 +1944,7 @@ class MainWindow(QMainWindow):
             self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(item))
 
     def search3rdDictionaryDialog(self):
-        items = ThirdPartyDictionary(self.textCommandParser.isThridPartyDictionary(config.thirdDictionary)).moduleList
+        items = ThirdPartyDictionary(self.crossPlatform.isThridPartyDictionary(config.thirdDictionary)).moduleList
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu5_3rdDict"], items,
                                         items.index(config.thirdDictionary), False)
         if ok and item:
@@ -2613,17 +2577,8 @@ class MainWindow(QMainWindow):
         # self.studyView.setHtml(self.getHistory("study"), baseUrl)
 
     def getHistory(self, view):
-        historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]
-        if view == "external":
-            html = "<br>".join([
-                                   "<button class='feature' onclick='openExternalRecord({0})'>{1}</button> [<ref onclick='editExternalRecord({0})'>edit</ref>]".format(
-                                       counter, record) for counter, record in reversed(historyRecords)])
-        else:
-            html = "<br>".join(
-                ["<button class='feature' onclick='openHistoryRecord({0})'>{1}</button>".format(counter, record) for
-                 counter, record in reversed(historyRecords)])
-        html = self.htmlWrapper(html)
-        return html
+        html = self.crossPlatform.getHistory(view)
+        return self.htmlWrapper(html)
 
     # navigation between history records
     def openHistoryRecord(self, view, recordNumber):
@@ -2971,16 +2926,7 @@ class MainWindow(QMainWindow):
 
     # add a history record
     def addHistoryRecord(self, view, textCommand):
-        if not textCommand.startswith("_"):
-            viewhistory = config.history[view]
-            if not (viewhistory[-1] == textCommand):
-                viewhistory.append(textCommand)
-                # set maximum number of history records for each view here
-                maximumHistoryRecord = config.maximumHistoryRecord
-                if len(viewhistory) > maximumHistoryRecord:
-                    viewhistory = viewhistory[-maximumHistoryRecord:]
-                config.history[view] = viewhistory
-                config.currentRecord[view] = len(viewhistory) - 1
+        self.crossPlatform.addHistoryRecord(view, textCommand)
 
     # switch between landscape / portrait mode
     def setFullIconSize(self, full):
@@ -3393,21 +3339,10 @@ class MainWindow(QMainWindow):
             MacroParser(self).parse(file)
 
     def runPlugin(self, fileName):
-        script = os.path.join(os.getcwd(), "plugins", "menu", "{0}.py".format(fileName))
-        self.execPythonFile(script)
+        self.crossPlatform.runPlugin(fileName)
 
     def execPythonFile(self, script):
-        if config.developer:
-            with open(script) as f:
-                code = compile(f.read(), script, 'exec')
-                exec(code, globals())
-        else:
-            try:
-                with open(script) as f:
-                    code = compile(f.read(), script, 'exec')
-                    exec(code, globals())
-            except:
-                self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
+        self.crossPlatform.execPythonFile(script)
 
     def showGistWindow(self):
         gw = GistWindow()
