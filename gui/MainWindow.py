@@ -2281,8 +2281,8 @@ class MainWindow(QMainWindow):
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
 
     def updateBookButton(self):
-        self.parent.bookButton.setText(config.book[:20])
-        self.parent.bookButton.setToolTip(config.book)
+        self.bookButton.setText(config.book[:20])
+        self.bookButton.setToolTip(config.book)
 
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
