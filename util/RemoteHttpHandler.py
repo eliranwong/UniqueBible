@@ -425,6 +425,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' onclick='window.parent.submitCommand(".layout")'>{0}</button>""".format(config.thisTranslation["layout"])
         return html
 
+    def historyButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".history")'>{0}</button>""".format(config.thisTranslation["menu3_history"])
+        return html
+
     def getHighlightCss(self):
         css = ""
         for i in range(len(config.highlightCollections)):
