@@ -46,6 +46,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "history": self.historyContent,
             "library": self.libraryContent,
             "search": self.searchContent,
+            "import": self.importContent,
         }
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
             query_components = parse_qs(urlparse(self.path).query)
@@ -415,8 +416,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
+        <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
-        <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.<br>
+        <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
+        </p><p><b>Developer Options</b></p><p>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.  This works only if config.developer is set to True.
@@ -432,6 +435,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def historyContent(self):
         view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
         return content
+
+    def importContent(self):
+        view, content, *_ = self.textCommandParser.parser("import:::import", "http")
+        return "Process completed!"
 
     def configContent(self):
         intro = ("File config.py contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)"

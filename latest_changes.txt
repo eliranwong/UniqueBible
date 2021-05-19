@@ -1,3 +1,7 @@
+Major changes in version 24.67:
+* Added a .import command added to http-server for importing resources.
+* A wiki page about http-server is created at: https://github.com/eliranwong/UniqueBible/wiki/Cross-platform-Web-Version
+
 Major change in version 24.66:
 * Fixed book button.
 
