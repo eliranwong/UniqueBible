@@ -45,6 +45,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "config": self.configContent,
             "history": self.historyContent,
             "library": self.libraryContent,
+            "search": self.searchContent,
         }
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
             query_components = parse_qs(urlparse(self.path).query)
@@ -105,7 +106,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.003'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.004'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -148,12 +149,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10} {11}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.003'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.003'>
-                <script src='js/common.js?v=1.003'></script>
-                <script src='js/{9}.js?v=1.003'></script>
-                <script src='w3.js?v=1.003'></script>
-                <script src='js/http_server.js?v=1.003'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.004'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.004'>
+                <script src='js/common.js?v=1.004'></script>
+                <script src='js/{9}.js?v=1.004'></script>
+                <script src='w3.js?v=1.004'></script>
+                <script src='js/http_server.js?v=1.004'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -307,12 +308,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.003'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.003'>"
-                "<script src='js/common.js?v=1.003'></script>"
-                "<script src='js/{7}.js?v=1.003'></script>"
-                "<script src='w3.js?v=1.003'></script>"
-                "<script src='js/http_server.js?v=1.003'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.004'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.004'>"
+                "<script src='js/common.js?v=1.004'></script>"
+                "<script src='js/{7}.js?v=1.004'></script>"
+                "<script src='w3.js?v=1.004'></script>"
+                "<script src='js/http_server.js?v=1.004'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -328,7 +329,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.003'></script>"
+                "<script src='js/custom.js?v=1.004'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -415,6 +416,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
+        <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.  This works only if config.developer is set to True.
@@ -488,4 +490,35 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>Reference Book</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
+        return content
+
+    def formatSearchSection(self, resourceType, inputID, searchCommand, abbreviationList, fullNameList=None):
+        content = ""
+        content += "<h2>{0}</h2><p>".format(resourceType)
+        content += "<input type='text' id='{0}' style='width:95%' autofocus></p><p>".format(inputID)
+        if fullNameList is None:
+            fullNameList = abbreviationList
+        if abbreviationList:
+            content += "<br>".join(["""<ref onclick ="searchResourceModule('{0}', '{1}', '{2}')">{3}</ref>""".format(inputID, searchCommand, abb, fullNameList[index]) for index, abb in enumerate(abbreviationList)])
+        else:
+            content += "[not installed]"
+        content += "</p>"
+        return content
+
+    def searchContent(self):
+        content = ""
+        content += """<h2>Bible Versions</h2><p><ref onclick="document.title='_menu:::'">Click HERE to Search Bibles</ref></p>"""
+        abbList = ["HBN", "EXLBP", "EXLBL"]
+        nameList = ["Bible Names", "Bible Characters", "Bible Locations"]
+        content += self.formatSearchSection("Bible Background", "SEARCHTOOL", "SEARCHTOOL", abbList, nameList)
+        abbList = ["Bible_Promises", "Harmonies_and_Parallels", "FAV", "ALL"]
+        nameList = ["Bible Promises", "Harmonies and Parallels", "Favourite Books", "All Books"]
+        content += self.formatSearchSection("Collections", "collection", "SEARCHBOOK", abbList, nameList)
+        content += self.formatSearchSection("Topics", "topics", "SEARCHTOOL", self.textCommandParser.parent.topicListAbb, self.textCommandParser.parent.topicList)
+        content += self.formatSearchSection("Dictionary", "dictionary", "SEARCHTOOL", self.textCommandParser.parent.dictionaryListAbb, self.textCommandParser.parent.dictionaryList)
+        content += self.formatSearchSection("Encyclopedia", "encyclopedia", "SEARCHTOOL", self.textCommandParser.parent.encyclopediaListAbb, self.textCommandParser.parent.encyclopediaList)
+        content += self.formatSearchSection("Concordance", "CONCORDANCE", "CONCORDANCE", self.textCommandParser.parent.strongBibles)
+        content += self.formatSearchSection("Lexicon", "LEXICON", "LEXICON", self.textCommandParser.parent.lexiconList)
+        content += self.formatSearchSection("Books", "SEARCHBOOK", "SEARCHBOOK", self.textCommandParser.parent.referenceBookList)
+        content += self.formatSearchSection("Third Party Dictionaries", "SEARCHTHIRDDICTIONARY", "SEARCHTHIRDDICTIONARY", self.textCommandParser.parent.thirdPartyDictionaryList)
         return content

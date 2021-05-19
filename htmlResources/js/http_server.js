@@ -62,6 +62,17 @@ function fullScreenSwitch() {
   }
 }
 
+/* Search */
+
+function searchResourceModule(inputID, searchCommand, module) {
+    var searchString = document.getElementById(inputID).value;
+    if (searchString == "") {
+        alert("Search input is empty!");
+    } else {
+        document.title = searchCommand+":::"+module+":::"+searchString;
+    }
+}
+
 /* SECTION - COMMAND */
 
 function ubaCommandChanged(cmd) {

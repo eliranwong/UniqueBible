@@ -922,7 +922,7 @@ function addDiff(value) {
 function checkSearch(searchKeyword, searchText) {
     var searchString = document.getElementById("bibleSearch").value;
     if (searchString == "") {
-        alert("Search field is empty!");
+        alert("Search input is empty!");
     } else {
         document.title = searchKeyword+":::"+searchText+":::"+searchString;
     }
@@ -931,7 +931,7 @@ function checkSearch(searchKeyword, searchText) {
 function checkMultiSearch(searchKeyword) {
     var searchString = document.getElementById("multiBibleSearch").value;
     if (searchString == "") {
-        alert("Search field is empty!");
+        alert("Search input is empty!");
     } else {
         versionList.forEach(addMultiSearch);
         if (searchList.length == 0) {
