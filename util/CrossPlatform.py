@@ -85,6 +85,8 @@ class CrossPlatform:
     # History record management
 
     def addHistoryRecord(self, view, textCommand):
+        if view == "http":
+            view = "main"
         if not textCommand.startswith("_"):
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):

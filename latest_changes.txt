@@ -1,3 +1,6 @@
+Major changes in version 24.70:
+* Fixed history record.
+
 Major changes in version 24.69:
 * Revised web layout.
 * Added .layout command to swap available web interface layouts.
