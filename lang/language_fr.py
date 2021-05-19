@@ -718,4 +718,5 @@ translation = {
     "run": "Exécuter",
     "go": "Aller",
     "restart": "Redémarrage",
+    "layout": "Présentation",
 }

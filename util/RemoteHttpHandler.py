@@ -58,13 +58,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     content = self.helpContent()
                 elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
                     content = features[self.command.lower()[1:]]()
+                elif self.command.lower() == ".layout":
+                    content = self.swapLayout()
                 elif self.command.lower() in (".stop",) and config.developer:
                     self.closeWindow()
                     config.enableHttpServer = False
                     return
-                elif self.command.lower() in (".restart",) and config.developer:
+                elif self.command.lower() == ".restart" and config.developer:
                     self.restartServer()
-                elif self.command.lower() in (".update",) and config.developer:
+                elif self.command.lower() == ".update" and config.developer:
                     subprocess.Popen("git pull", shell=True)
                     self.restartServer("updated and ")
                 else:
@@ -269,10 +271,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         else:
             return """
                 <form id="commandForm" action="index.html" action="get">
-                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}
+                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
                 <br/><br/>
                 {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/> {8} {9}
+                <input type="submit" value="{2}"/>
                 </form>
             """.format(
                 "",
@@ -285,6 +287,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 self.toggleFullscreen(),
                 self.helpButton(),
                 self.featureButton(),
+                self.libraryButton(),
+                self.searchButton(),
+                self.layoutButton(),
             )
 
     def wrapHtml(self, content, view="", book=False):
@@ -387,12 +392,34 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' style='width: 25px' onclick='window.parent.submitCommand("_menu:::")'>*</button>"""
         return html
 
+    def libraryButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".library")'>{0}</button>""".format(config.thisTranslation["menu_library"])
+        return html
+
+    def searchButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
+        return html
+
+    def layoutButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".layout")'>{0}</button>""".format(config.thisTranslation["layout"])
+        return html
+
     def getHighlightCss(self):
         css = ""
         for i in range(len(config.highlightCollections)):
             code = "hl{0}".format(i + 1)
             css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
         return css
+
+    def swapLayout(self):
+        config.webUI = "" if config.webUI == "mini" else "mini"
+        return """
+        <html>
+            <head>
+                <title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head><body>Layout changed!</body></html>"""
 
     def closeWindow(self, message="Sever is shut down!"):
         self.send_response(200)
@@ -423,6 +450,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
+        <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
         </p><p><b>Developer Options</b></p><p>

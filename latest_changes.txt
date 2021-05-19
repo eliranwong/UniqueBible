@@ -1,3 +1,7 @@
+Major changes in version 24.69:
+* Revised web layout.
+* Added .layout command to swap available web interface layouts.
+
 Major change in version 24.68:
 * Fixed font size of close / restart server message on mobile phone.
 

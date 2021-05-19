@@ -718,4 +718,5 @@ translation = {
     "run": "실행하다",
     "go": "가다",
     "restart": "재시작",
+    "layout": "레이아웃",
 }

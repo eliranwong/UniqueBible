@@ -718,4 +718,5 @@ translation = {
     "run": "rulare",
     "go": "go",
     "restart": "Repornire",
+    "layout": "Dispunere",
 }

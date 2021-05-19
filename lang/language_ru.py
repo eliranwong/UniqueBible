@@ -718,4 +718,5 @@ translation = {
     "run": "запуск",
     "go": "go",
     "restart": "Перезапуск",
+    "layout": "Макет",
 }
