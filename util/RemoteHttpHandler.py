@@ -420,6 +420,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def downloadContent(self):
         content = ""
         from util.DatafileLocation import DatafileLocation
+        from util.GithubUtil import GithubUtil
         resources = (
             ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
             ("Marvel Bibles", DatafileLocation.marvelBibles, "marvelbible"),
@@ -428,6 +429,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         for collection, data, keyword in resources:
             content += "<h2>{0}</h2>".format(collection)
-            content += "<br>".join(["""<ref onclick="document.title='download:::{2}:::{0}'">{0}</ref>{1}""".format(k, " [{0}]".format(config.thisTranslation["installed"]) if os.path.isfile(os.path.join(*v[0])) else "", keyword) for k, v in data.items()])
-        content += "<h2>Third-party Resources</h2><p><a href='https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources' target='_blank'>Click this link to read our wiki page about third-party reosources.</a></p>"
+            for k, v in data.items():
+                if os.path.isfile(os.path.join(*v[0])):
+                    content += """{0} [{1}]<br>""".format(k, config.thisTranslation["installed"])
+                else:
+                    content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(k, keyword)
+        resources = (
+            ("GitHub Bibles", "GitHubBible", "otseng/UniqueBible_Bibles", (config.marvelData, "bibles"), ".bible"),
+            ("GitHub Commentaries", "GitHubCommentary", "darrelwright/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
+            ("GitHub Books", "GitHubBook", "darrelwright/UniqueBible_Books", (config.marvelData, "books"), ".book"),
+            ("GitHub Books", "GitHubMap", "darrelwright/UniqueBible_Maps-Charts", (config.marvelData, "books"), ".book"),
+            ("GitHub PDF", "GitHubPdf", "otseng/UniqueBible_PDF", (config.marvelData, "pdf"), ".pdf"),
+            ("GitHub EPUB", "GitHubEpub", "otseng/UniqueBible_EPUB", (config.marvelData, "epub"), ".epub"),
+        )
+        for collection, type, repo, location, extension in resources:
+            content += "<h2>{0}</h2>".format(collection)
+            for file in GithubUtil(repo).getRepoData():
+                if os.path.isfile(os.path.join(*location, file)):
+                    content += """{0} [{1}]<br>""".format(file.replace(extension, ""), config.thisTranslation["installed"])
+                else:
+                    content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(file.replace(extension, ""), type)
+        content += "<h2>Third-party Resources</h2><p><a href='https://github.com/eliranwong/UniqueBible/wiki/Third-party-resources' target='_blank'>Click this link to read our wiki page about third-party resources.</a></p>"
         return content
