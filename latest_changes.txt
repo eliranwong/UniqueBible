@@ -1,3 +1,6 @@
+Major change in version 24.68:
+* Fixed font size of close / restart server message on mobile phone.
+
 Major changes in version 24.67:
 * Added a .import command added to http-server for importing resources.
 * A wiki page about http-server is created at: https://github.com/eliranwong/UniqueBible/wiki/Cross-platform-Web-Version

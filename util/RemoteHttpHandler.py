@@ -398,7 +398,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        html = "<html><head><script>window.close();</script></head><body>{0}</body></html>".format(message)
+        html = """
+        <html>
+            <head>
+                <title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>window.close();</script></head><body>{0}</body></html>""".format(message)
         self.wfile.write(bytes(html, "utf8"))
 
     def restartServer(self, additionalMessage=""):
