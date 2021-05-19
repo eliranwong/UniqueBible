@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging, re, sys, socket
+import os, platform, logging, re, sys, socket, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 
@@ -99,6 +99,9 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         print(str(e))
         exit(-1)
 
+
+# HTTP Server
+
 def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
@@ -115,16 +118,17 @@ def startHttpServer():
         while config.enableHttpServer:
             httpd.handle_request()
         httpd.server_close()
-        print("Stopped")
+        print("Server is stopped!")
 
-# HTTP Server
 config.enableHttpServer = False
 if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     config.startHttpServer = True
-    while config.startHttpServer:
-        startHttpServer()
-    ConfigUtil.save()
-    exit(0)
+    startHttpServer()
+    if config.startHttpServer:
+        subprocess.Popen("{0} uba.py http-server & disown".format(sys.executable), shell=True)
+    else:
+        ConfigUtil.save()
+        exit(0)
 
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil

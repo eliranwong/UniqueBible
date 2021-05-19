@@ -1,6 +1,7 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import os, re, config, pprint
+import subprocess
 from http.server import SimpleHTTPRequestHandler
 from time import gmtime
 
@@ -39,6 +40,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def do_GET(self):
+        features = {
+            "download": self.downloadContent,
+            "config": self.configContent,
+            "history": self.historyContent,
+        }
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
             query_components = parse_qs(urlparse(self.path).query)
             if 'cmd' in query_components:
@@ -47,20 +53,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = config.history["main"][-1]
                 if self.command.lower() in (".help", "?"):
                     content = self.helpContent()
-                elif self.command.lower() in (".download",):
-                    content = self.downloadContent()
-                elif self.command.lower() in (".config",):
-                    content = self.configContent()
+                elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
+                    content = features[self.command.lower()[1:]]()
                 elif self.command.lower() in (".stop",) and config.developer:
                     self.closeWindow()
                     config.enableHttpServer = False
                     return
                 elif self.command.lower() in (".restart",) and config.developer:
-                    config.startHttpServer = True
-                    locallink = "http://localhost:{0}".format(config.httpServerPort)
-                    self.closeWindow("<h2>Server restarted!</h2><p>To connect again locally, try:<br><a href='{0}'>{0}</a></p>".format(locallink))
-                    config.enableHttpServer = False
-                    return
+                    self.restartServer()
+                elif self.command.lower() in (".update",) and config.developer:
+                    subprocess.Popen("git pull", shell=True)
+                    self.restartServer("updated and ")
                 else:
                     view, content, *_ = self.textCommandParser.parser(self.command, "http")
                     if not content:
@@ -395,14 +398,24 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = "<html><head><script>window.close();</script></head><body>{0}</body></html>".format(message)
         self.wfile.write(bytes(html, "utf8"))
 
+    def restartServer(self, additionalMessage=""):
+        config.startHttpServer = True
+        locallink = "http://localhost:{0}".format(config.httpServerPort)
+        html = "<h2>Server {1}restarted!</h2><p>To connect again locally, try:<br><a href='{0}'>{0}</a></p>".format(locallink, additionalMessage)
+        self.closeWindow(html)
+        config.enableHttpServer = False
+        return
+
     def helpContent(self):
         dotCommands = """<h2>Http-server Commands</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
-        <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display a page with links to download resources.<br>
+        <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
+        <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
+        <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
-        <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.
+        <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.  This works only if config.developer is set to True.
         </p>
         <h2>UBA Commands</h2>
         <p>"""
@@ -410,6 +423,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             [re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         content = re.sub("(\[KEYWORD\] )(.*?)$", r"""\1<ref onclick="displayCommand('\2:::')">\2</ref>""", content, flags=re.M)
         content = dotCommands + re.sub(r"\n", "<br/>", content) + "</p>"
+        return content
+
+    def historyContent(self):
+        view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
         return content
 
     def configContent(self):
