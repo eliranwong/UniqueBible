@@ -55,6 +55,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.closeWindow()
                     config.enableHttpServer = False
                     return
+                elif self.command.lower() in (".restart",) and config.developer:
+                    config.startHttpServer = True
+                    locallink = "http://localhost:{0}".format(config.httpServerPort)
+                    self.closeWindow("<h2>Server restarted!</h2><p>To connect again locally, try:<br><a href='{0}'>{0}</a></p>".format(locallink))
+                    config.enableHttpServer = False
+                    return
                 else:
                     view, content, *_ = self.textCommandParser.parser(self.command, "http")
                     if not content:
@@ -382,11 +388,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
         return css
 
-    def closeWindow(self):
+    def closeWindow(self, message="Sever is shut down!"):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        html = "<html><head><script>window.close();</script></head></html>"
+        html = "<html><head><script>window.close();</script></head><body>{0}</body></html>".format(message)
         self.wfile.write(bytes(html, "utf8"))
 
     def helpContent(self):
@@ -395,7 +401,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display a page with links to download resources.<br>
-        <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.
+        <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
+        <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.
         </p>
         <h2>UBA Commands</h2>
         <p>"""

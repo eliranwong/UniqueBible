@@ -1,3 +1,6 @@
+Major change in version 24.59:
+* Added a .restart command to http-server.
+
 Major changes in version 24.58:
 Improved http-server
 * Added github resources to download page.

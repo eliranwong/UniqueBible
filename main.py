@@ -99,12 +99,11 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         print(str(e))
         exit(-1)
 
-# HTTP Server
-config.enableHttpServer = False
-if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
+def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
 
+    config.startHttpServer = False
     port = config.httpServerPort
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
@@ -117,8 +116,15 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
             httpd.handle_request()
         httpd.server_close()
         print("Stopped")
-        ConfigUtil.save()
-        exit(0)
+
+# HTTP Server
+config.enableHttpServer = False
+if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
+    config.startHttpServer = True
+    while config.startHttpServer:
+        startHttpServer()
+    ConfigUtil.save()
+    exit(0)
 
 # Setup menu shortcut configuration file
 from util.ShortcutUtil import ShortcutUtil
