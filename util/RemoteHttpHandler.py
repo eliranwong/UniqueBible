@@ -20,6 +20,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     bibles = None
     books = None
     abbreviations = None
+    users = []
 
     def __init__(self, *args, **kwargs):
         if RemoteHttpHandler.textCommandParser is None:
@@ -37,6 +38,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if RemoteHttpHandler.books is None:
             RemoteHttpHandler.books = [(k, v) for k, v in self.abbreviations.items() if int(k) <= 69]
         self.books = RemoteHttpHandler.books
+        self.users = RemoteHttpHandler.users
+        self.primaryUser = False
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def do_GET(self):
@@ -48,52 +51,54 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "search": self.searchContent,
             "import": self.importContent,
         }
+        clientIP = self.client_address[0]
+        if clientIP not in self.users:
+            self.users.append(clientIP)
+        if clientIP == self.users[0]:
+            self.primaryUser = True
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
-            query_components = parse_qs(urlparse(self.path).query)
-            if 'cmd' in query_components:
-                self.command = query_components["cmd"][0].strip()
-                if len(self.command) == 0:
-                    self.command = config.history["main"][-1]
-                if self.command.lower() in (".help", "?"):
-                    content = self.helpContent()
-                elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
-                    content = features[self.command.lower()[1:]]()
-                elif self.command.lower() == ".layout":
-                    content = self.swapLayout()
-                elif self.command.lower() in (".stop",) and config.developer:
-                    self.closeWindow()
-                    config.enableHttpServer = False
-                    return
-                elif self.command.lower() == ".restart" and config.developer:
-                    self.restartServer()
-                elif self.command.lower() == ".update" and config.developer:
-                    subprocess.Popen("git pull", shell=True)
-                    self.restartServer("updated and ")
+            if self.primaryUser:
+                query_components = parse_qs(urlparse(self.path).query)
+                if 'cmd' in query_components:
+                    self.command = query_components["cmd"][0].strip()
+                    if len(self.command) == 0:
+                        self.command = config.history["main"][-1]
+                    if self.command.lower() in (".help", "?"):
+                        content = self.helpContent()
+                    elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
+                        content = features[self.command.lower()[1:]]()
+                    elif self.command.lower() == ".layout":
+                        content = self.swapLayout()
+                    elif self.command.lower() in (".stop",) and config.developer:
+                        self.closeWindow()
+                        config.enableHttpServer = False
+                        return
+                    elif self.command.lower() == ".restart" and config.developer:
+                        self.restartServer()
+                    elif self.command.lower() == ".update" and config.developer:
+                        subprocess.Popen("git pull", shell=True)
+                        self.restartServer("updated and ")
+                    else:
+                        view, content, *_ = self.textCommandParser.parser(self.command, "http")
+                        if not content:
+                            content = "Command was processed!"
+                        elif not content == "INVALID_COMMAND_ENTERED":
+                            self.textCommandParser.parent.addHistoryRecord(view, self.command)
                 else:
-                    view, content, *_ = self.textCommandParser.parser(self.command, "http")
-                    if not content:
-                        content = "Command was processed!"
-                    elif not content == "INVALID_COMMAND_ENTERED":
-                        self.textCommandParser.parent.addHistoryRecord(view, self.command)
+                    self.command = self.abbreviations[str(config.mainB)]
+                    view, content, dict = self.textCommandParser.parser(self.command, "http")
+                content = self.wrapHtml(content)
+                outputFile = os.path.join("htmlResources", "main.html")
+                with open(outputFile, "w", encoding="utf-8") as fileObject:
+                    fileObject.write(content)
+                self.indexPage()
             else:
-                self.command = self.abbreviations[str(config.mainB)]
-                view, content, dict = self.textCommandParser.parser(self.command, "http")
-            content = self.wrapHtml(content)
-            outputFile = os.path.join("htmlResources", "main.html")
-            with open(outputFile, "w", encoding="utf-8") as fileObject:
-                fileObject.write(content)
-            self.indexPage()
+                self.mainPage()
         else:
             return super().do_GET()
 
     def indexPage(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate'),
-        self.send_header('Pragma', 'no-cache'),
-        self.send_header('Expires', '0')
-        self.end_headers()
-        
+        self.commonHeader()
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         fontSize = "{0}px".format(config.fontSize)
@@ -254,44 +259,60 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         self.wfile.write(bytes(html, "utf8"))
 
+    def mainPage(self):
+        self.commonHeader()
+        html = open(os.path.join("htmlResources", "main.html"), 'r').read()
+        self.wfile.write(bytes(html, "utf8"))
+
+    def commonHeader(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate'),
+        self.send_header('Pragma', 'no-cache'),
+        self.send_header('Expires', '0')
+        self.end_headers()
+
     def buildForm(self):
-        if config.webUI == "mini":
-            return """
-                <form id="commandForm" action="index.html" action="get">
-                {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/> {3} {4}
-                </form>
-            """.format(
-                "",
-                self.toggleFullscreen(),
-                config.thisTranslation["run"],
-                self.helpButton(),
-                self.featureButton(),
-            )
+        if self.primaryUser:
+            if config.webUI == "mini":
+                return """
+                    <form id="commandForm" action="index.html" action="get">
+                    {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
+                    <input type="submit" value="{2}"/> {3} {4}
+                    </form>
+                """.format(
+                    "",
+                    self.toggleFullscreen(),
+                    config.thisTranslation["run"],
+                    self.helpButton(),
+                    self.featureButton(),
+                )
+            else:
+                return """
+                    <form id="commandForm" action="index.html" action="get">
+                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{13}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
+                    <br/><br/>
+                    {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
+                    <input type="submit" value="{2}"/>
+                    </form>
+                    """.format(
+                    "",
+                    config.thisTranslation["menu_command"],
+                    config.thisTranslation["enter"],
+                    self.bibleSelection(),
+                    self.bookSelection(),
+                    self.previousChapter(),
+                    self.nextChapter(),
+                    self.toggleFullscreen(),
+                    self.helpButton(),
+                    self.featureButton(),
+                    self.libraryButton(),
+                    self.searchButton(),
+                    self.layoutButton(),
+                    self.historyButton(),
+                )
         else:
-            return """
-                <form id="commandForm" action="index.html" action="get">
-                {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{13}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
-                <br/><br/>
-                {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                <input type="submit" value="{2}"/>
-                </form>
-            """.format(
-                "",
-                config.thisTranslation["menu_command"],
-                config.thisTranslation["enter"],
-                self.bibleSelection(),
-                self.bookSelection(),
-                self.previousChapter(),
-                self.nextChapter(),
-                self.toggleFullscreen(),
-                self.helpButton(),
-                self.featureButton(),
-                self.libraryButton(),
-                self.searchButton(),
-                self.layoutButton(),
-                self.historyButton(),
-            )
+            return ""
 
     def wrapHtml(self, content, view="", book=False):
         fontFamily = config.font
