@@ -57,7 +57,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if clientIP == self.users[0]:
             self.primaryUser = True
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
-            if self.primaryUser:
+            if self.primaryUser or not config.webPresentationMode:
                 query_components = parse_qs(urlparse(self.path).query)
                 if 'cmd' in query_components:
                     self.command = query_components["cmd"][0].strip()
@@ -273,7 +273,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def buildForm(self):
-        if self.primaryUser:
+        if self.primaryUser or not config.webPresentationMode:
             if config.webUI == "mini":
                 return """
                     <form id="commandForm" action="index.html" action="get">

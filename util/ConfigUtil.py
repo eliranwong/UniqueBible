@@ -51,6 +51,10 @@ class ConfigUtil:
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
             config.webUI = ""
+        config.help["webPresentationMode"] = """
+        # Http-server presentation mode - only the primary user have full control and ability to share content to other users."""
+        if not hasattr(config, "webPresentationMode"):
+            config.webPresentationMode = False
         config.help["referenceTranslation"] = """
         # Specify a translation as a reference for making other translations.  This option is created for development purpose."""
         if not hasattr(config, "referenceTranslation"):
@@ -895,6 +899,7 @@ class ConfigUtil:
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerPort", config.httpServerPort),
             ("webUI", config.webUI),
+            ("webPresentationMode", config.webPresentationMode),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),
