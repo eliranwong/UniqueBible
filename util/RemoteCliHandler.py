@@ -1,6 +1,5 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
 import asyncio, re, sys
-from socket import socket
 from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
 from util.NetworkUtil import NetworkUtil
