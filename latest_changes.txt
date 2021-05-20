@@ -1,3 +1,9 @@
+Major change in version 24.73:
+* Added qrcode startup plugin.
+* Added .theme command to http-server.
+* Added 'webFullAccess' option to config.py.
+    When 'webFullAccess' or 'developer' is set to True, users can have full access to the http-server features, including shutdown or restart.
+
 Major change in version 24.72:
 * Added web presentation mode to http-server.
     When config.webPresentationMode is set to True, only the primary user, the first one who connect, have full control and ability to share content to other users.

@@ -50,6 +50,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "library": self.libraryContent,
             "search": self.searchContent,
             "import": self.importContent,
+            "layout": self.swapLayout,
+            "theme": self.swapTheme,
         }
         clientIP = self.client_address[0]
         if clientIP not in self.users:
@@ -67,17 +69,27 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                         content = self.helpContent()
                     elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
                         content = features[self.command.lower()[1:]]()
-                    elif self.command.lower() == ".layout":
-                        content = self.swapLayout()
-                    elif self.command.lower() in (".stop",) and config.developer:
-                        self.closeWindow()
-                        config.enableHttpServer = False
-                        return
-                    elif self.command.lower() == ".restart" and config.developer:
-                        self.restartServer()
-                    elif self.command.lower() == ".update" and config.developer:
-                        subprocess.Popen("git pull", shell=True)
-                        self.restartServer("updated and ")
+                    elif self.command.lower() == ".stop":
+                        permission, message = self.checkPermission()
+                        if not permission:
+                            content = message
+                        else:
+                            self.closeWindow()
+                            config.enableHttpServer = False
+                            return
+                    elif self.command.lower() == ".restart":
+                        permission, message = self.checkPermission()
+                        if not permission:
+                            content = message
+                        else:
+                            return self.restartServer()
+                    elif self.command.lower() == ".update":
+                        permission, message = self.checkPermission()
+                        if not permission:
+                            content = message
+                        else:
+                            subprocess.Popen("git pull", shell=True)
+                            return self.restartServer("updated and ")
                     else:
                         view, content, *_ = self.textCommandParser.parser(self.command, "http")
                         if not content:
@@ -267,9 +279,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def commonHeader(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
-        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate'),
-        self.send_header('Pragma', 'no-cache'),
-        self.send_header('Expires', '0')
+        self.send_header("charset", "UTF-8")
+        self.send_header("viewport", "width=device-width, initial-scale=1.0")
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate"),
+        self.send_header("Pragma", "no-cache"),
+        self.send_header("Expires", "0")
         self.end_headers()
 
     def buildForm(self):
@@ -290,7 +304,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 return """
                     <form id="commandForm" action="index.html" action="get">
-                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}&nbsp;&nbsp;{13}&nbsp;&nbsp;{12}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
+                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}{12}{13}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -308,8 +322,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    self.layoutButton(),
-                    self.historyButton(),
+                    "&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
+                    "&nbsp;&nbsp;{0}".format(self.layoutButton()) if self.checkPermission()[0] else "",
                 )
         else:
             return ""
@@ -437,27 +451,71 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
         return css
 
-    def swapLayout(self):
-        config.webUI = "" if config.webUI == "mini" else "mini"
+    def checkPermission(self):
+        if config.developer or config.webFullAccess:
+            return (True, "")
+        else:
+            return (False, "This feature is available for developers only.  To enable it, set 'developer = True' in file config.py and restart the server.")
+
+    def displayMessage(self, message):
         return """
         <html>
             <head>
                 <title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head><body>Layout changed!</body></html>"""
+        </head><body>{0}</body></html>""".format(message)
 
-    def closeWindow(self, message="Sever is shut down!"):
+    def historyContent(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
+        return content
+
+    def importContent(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        self.textCommandParser.parser("import:::import", "http")
+        return "Processed!"
+
+    def configContent(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        intro = ("File 'config.py' contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)"
+            "\n\nTo telnet-server / http-server users on Android:"
+            "\nIf you want to change some configurations but don't see the file config.py, you need to create the file config.py in UniqueBible directory manually and enter in it non-default values ONLY."
+            "\nFor example, to change web user interface and theme, create file config.py and enter the following two lines:"
+            "\nwebUI = 'mini'"
+            "\ntheme = 'dark'"
+            "\n\nIndividual items in config.py are briefly described below:")
+        content = "{0}\n\n{1}".format(intro, "\n\n".join(["<b>[ITEM] {0}</b>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
+        content = re.sub(r"\n", "<br/>", content)
+        return content
+
+    def swapLayout(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            config.webUI = "" if config.webUI == "mini" else "mini"
+            return self.displayMessage("Layout changed!")
+
+    def swapTheme(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            config.theme = "default" if config.theme == "dark" else "dark"
+            return self.displayMessage("Theme changed!")
+
+    def closeWindow(self, message="Server is shut down!"):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        html = """
-        <html>
-            <head>
-                <title>UniqueBible.app</title>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script>window.close();</script></head><body>{0}</body></html>""".format(message)
+        html = self.displayMessage(message)
         self.wfile.write(bytes(html, "utf8"))
 
     def restartServer(self, additionalMessage=""):
@@ -472,17 +530,19 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         dotCommands = """<h2>Http-server Commands</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
-        <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
+        <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
+        <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
+        </p><p><b>Developer Options</b></p>
+        <p>The following options are enabled only if 'developer' or 'webFullAccess' is set to 'True' in file 'config.py'.  To prevent access to the following features, both configurations need to be set 'False'.  Make sure UBA is not running when 'config.py' is being edited.</p><p>
+        <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
-        <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
-        <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
-        </p><p><b>Developer Options</b></p><p>
-        <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.  This works only if config.developer is set to True.<br>
-        <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.  This works only if config.developer is set to True.<br>
-        <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.  This works only if config.developer is set to True.
+        <ref onclick="window.parent.submitCommand('.theme')">.theme</ref> - Swap between available themes.<br>
+        <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
+        <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
+        <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.
         </p>
         <h2>UBA Commands</h2>
         <p>"""
@@ -490,26 +550,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             [re.sub("            #", "#", value[-1]) for value in self.textCommandParser.interpreters.values()])
         content = re.sub("(\[KEYWORD\] )(.*?)$", r"""\1<ref onclick="displayCommand('\2:::')">\2</ref>""", content, flags=re.M)
         content = dotCommands + re.sub(r"\n", "<br/>", content) + "</p>"
-        return content
-
-    def historyContent(self):
-        view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
-        return content
-
-    def importContent(self):
-        view, content, *_ = self.textCommandParser.parser("import:::import", "http")
-        return "Process completed!"
-
-    def configContent(self):
-        intro = ("File config.py contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)"
-            "\n\nTo telnet-server / http-server users on Android:"
-            "\nIf you want to change some configurations but don't see the file config.py, you need to create the file config.py in UniqueBible directory manually and enter in it non-default values ONLY."
-            "\nFor example, to change web user interface and theme, create file config.py and enter the following two lines:"
-            "\nwebUI = 'mini'"
-            "\ntheme = 'dark'"
-            "\n\nIndividual items in config.py are briefly described below:")
-        content = "{0}\n\n{1}".format(intro, "\n\n".join(["<b>[ITEM] {0}</b>{1}\nCurrent value: <z>{2}</z>".format(key, re.sub("        # ", "", value), eval("pprint.pformat(config."+key+")")) for key, value in config.help.items()]))
-        content = re.sub(r"\n", "<br/>", content)
         return content
 
     def downloadContent(self):

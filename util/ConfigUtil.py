@@ -47,6 +47,10 @@ class ConfigUtil:
         # To specify the port used by http-server."""
         if not hasattr(config, "httpServerPort"):
             config.httpServerPort = 8080
+        config.help["webFullAccess"] = """
+        # Full server to web http-server from browser, including shutdown or restart server."""
+        if not hasattr(config, "webFullAccess"):
+            config.webFullAccess = True
         config.help["webUI"] = """
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
@@ -898,6 +902,7 @@ class ConfigUtil:
             ("qtLibrary", config.qtLibrary),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerPort", config.httpServerPort),
+            ("webFullAccess", config.webFullAccess),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
             ("referenceTranslation", config.referenceTranslation),
