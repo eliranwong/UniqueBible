@@ -12,6 +12,7 @@ from TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+from util.FileUtil import FileUtil
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
@@ -26,6 +27,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if RemoteHttpHandler.textCommandParser is None:
             RemoteHttpHandler.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.textCommandParser = RemoteHttpHandler.textCommandParser
+        config.mainWindow = self
+        self.runStartupPlugins()
         if RemoteHttpHandler.bibles is None:
             RemoteHttpHandler.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
         self.bibles = RemoteHttpHandler.bibles
@@ -41,6 +44,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.users = RemoteHttpHandler.users
         self.primaryUser = False
         super().__init__(*args, directory="htmlResources", **kwargs)
+
+    def runStartupPlugins(self):
+        if config.enablePlugins:
+            for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+                if not plugin in config.excludeStartupPlugins:
+                    script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+                    config.mainWindow.execPythonFile(script)
+
+    def execPythonFile(self, script):
+        self.textCommandParser.parent.execPythonFile(script)
 
     def do_GET(self):
         features = {
@@ -100,6 +113,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = self.abbreviations[str(config.mainB)]
                     view, content, dict = self.textCommandParser.parser(self.command, "http")
                 content = self.wrapHtml(content)
+                if config.bibleWindowContentTransformers:
+                    for transformer in config.bibleWindowContentTransformers:
+                        content = transformer(content)
                 outputFile = os.path.join("htmlResources", "main.html")
                 with open(outputFile, "w", encoding="utf-8") as fileObject:
                     fileObject.write(content)

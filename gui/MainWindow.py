@@ -2803,20 +2803,20 @@ class MainWindow(QMainWindow):
                     "instant": self.instantView,
                 }
                 # add hovering action to bible reference links
-                searchReplace = (
-                    (
-                    '{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"),
-                    r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
-                    (
-                    r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format(
-                        "'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
-                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"),
-                     r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
-                    (
-                    r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
-                )
-                for search, replace in searchReplace:
-                    html = re.sub(search, replace, html)
+#                searchReplace = (
+#                    (
+#                    '{0}document.title="BIBLE:::([^<>"]*?)"{0}|"document.title={0}BIBLE:::([^<>{0}]*?){0}"'.format("'"),
+#                    r'{0}document.title="BIBLE:::\1\2"{0} onmouseover={0}document.title="_imvr:::\1\2"{0}'.format("'")),
+#                    (
+#                    r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format(
+#                        "'"), r'onclick="bcv(\2,\3,\4,\5,\6)" onmouseover="imv(\2,\3,\4,\5,\6)"'),
+#                    (r'onclick=([{0}"])bcv\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"),
+#                     r'onclick="bcv(\2,\3,\4)" onmouseover="imv(\2,\3,\4)"'),
+#                    (
+#                    r'onclick=([{0}"])cr\(([0-9]+?),[ ]*?([0-9]+?),[ ]*?([0-9]+?)\)\1'.format("'"), self.convertCrLink),
+#                )
+#                for search, replace in searchReplace:
+#                    html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
                     tab_title = ''

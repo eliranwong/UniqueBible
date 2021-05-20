@@ -88,6 +88,13 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         print(str(e))
         exit(-1)
 
+# Run startup plugins
+def runStartupPlugins():
+    if config.enablePlugins:
+        for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
+            if not plugin in config.excludeStartupPlugins:
+                script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
+                config.mainWindow.execPythonFile(script)
 
 # HTTP Server
 
@@ -339,12 +346,7 @@ setupMainWindow(availableGeometry)
 # This offers a way for startup plugins to run codes after history records being loaded.
 config.actionsRightAfterLoadingHistoryRecords = []
 
-# Run startup plugins
-if config.enablePlugins:
-    for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
-        if not plugin in config.excludeStartupPlugins:
-            script = os.path.join(os.getcwd(), "plugins", "startup", "{0}.py".format(plugin))
-            config.mainWindow.execPythonFile(script)
+runStartupPlugins()
 
 # Run initial commands
 if config.populateTabsOnStartup:
