@@ -6,9 +6,19 @@ from util.NetworkUtil import NetworkUtil
 def qrCode(command, source):
     if not config.isQrCodeInstalled or not config.isPillowInstalled:
         return ("", "", {})
+
     import qrcode
-    if command.lower().strip() in ["", "http-server", "http", "server"]:
+
+    aliases = {
+        "uba": "https://github.com/eliranwong/UniqueBible",
+        "wiki": "https://github.com/eliranwong/UniqueBible/wiki"
+    }
+
+    cmd = command.lower().strip()
+    if cmd in ["", "http-server", "http", "server"]:
         data = "http://{0}:{1}".format(NetworkUtil.get_ip(), config.httpServerPort)
+    elif cmd in aliases.keys():
+        data = aliases[cmd]
     else:
         data = command
     boxSize = 12 - (10/1000) * len(data)
