@@ -1,8 +1,8 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
 import asyncio, re, sys
-from socket import socket
 from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
+from util.NetworkUtil import NetworkUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 try:
     import html_text
@@ -41,7 +41,7 @@ class RemoteCliHandler:
                 if (len(sys.argv) > 2):
                     port = int(sys.argv[2])
                 print("Running in remote CLI Mode on port {0}".format(port))
-                print("Access by 'telnet {0} {1}'".format(RemoteCliHandler.get_ip(), port))
+                print("Access by 'telnet {0} {1}'".format(NetworkUtil.get_ip(), port))
                 print("Press Ctrl-C to stop the server")
                 loop = asyncio.get_event_loop()
                 coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
@@ -147,19 +147,6 @@ class RemoteCliHandler:
                 writer.echo(inp)
                 last_inp = inp
                 inp = yield None
-
-    @staticmethod
-    def get_ip():
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        try:
-            # doesn't even have to be reachable
-            s.connect(('10.255.255.255', 1))
-            IP = s.getsockname()[0]
-        except Exception:
-            IP = '127.0.0.1'
-        finally:
-            s.close()
-        return IP
 
 
 if __name__ == "__main__":
