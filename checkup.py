@@ -231,6 +231,20 @@ def isTtsInstalled():
             except:
                 return False
 
+def isQrCodeInstalled():
+    try:
+        import qrcode
+        return True
+    except:
+        return False
+
+def isPillowInstalled():
+    try:
+        import PIL
+        return True
+    except:
+        return False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -259,6 +273,10 @@ def setInstallConfig(module, isInstalled):
         config.isBeautifulsoup4Installed = isInstalled
     elif module == "html5lib":
         config.isHtml5libInstalled = isInstalled
+    elif module == "qrcode":
+        config.isQrCodeInstalled = isInstalled
+    elif module == "pillow":
+        config.isPillowInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -316,6 +334,8 @@ optional = (
     ("pygithub", "Github access", isPygithubInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("qrcode", "QR Code", isQrCodeInstalled),
+    ("pillow", "Image library", isPillowInstalled),
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -330,6 +350,8 @@ optional = (
     ("qt-material", "Qt Material Themes", isQtMaterialInstalled),
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
+    ("qrcode", "QR Code", isQrCodeInstalled),
+    ("pillow", "Image library", isPillowInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():

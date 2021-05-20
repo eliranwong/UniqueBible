@@ -16,3 +16,5 @@ telnetlib3
 ibm-watson
 babel
 requests
+qrcode
+pillow

@@ -64,3 +64,4 @@ UniqueBibleApp.sh
 morphology.sqlite
 htmlResources/fonts/*
 htmlResources/images/[A-Z]*/*
+htmlResources/images/qrcode.png

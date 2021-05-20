@@ -4,9 +4,10 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 
-import os, platform, logging, re, sys, socket, subprocess
+import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
+from util.NetworkUtil import NetworkUtil
 
 if not platform.system() == "Windows":
     import readline
@@ -55,18 +56,6 @@ if config.enableLogging:
 else:
     logger.addHandler(logging.NullHandler())
 
-def get_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        # doesn't even have to be reachable
-        s.connect(('10.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except Exception:
-        IP = '127.0.0.1'
-    finally:
-        s.close()
-    return IP
-
 # Remote CLI
 if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
     try:
@@ -84,7 +73,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
         if (len(sys.argv) > 2):
             port = int(sys.argv[2])
         print("Running in remote CLI Mode on port {0}".format(port))
-        print("Access by 'telnet {0} {1}'".format(get_ip(), port))
+        print("Access by 'telnet {0} {1}'".format(NetworkUtil.get_ip(), port))
         print("Press Ctrl-C to stop the server")
         loop = asyncio.get_event_loop()
         coro = telnetlib3.create_server(port=port, shell=RemoteCliHandler.shell)
@@ -111,7 +100,7 @@ def startHttpServer():
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
     print("Running in HTTP Server Mode")
-    print("Open browser link: 'http://{0}:{1}'".format(get_ip(), port))
+    print("Open browser link: 'http://{0}:{1}'".format(NetworkUtil.get_ip(), port))
     socketserver.TCPServer.allow_reuse_address = True
     config.enableHttpServer = True
     with socketserver.TCPServer(("", port), RemoteHttpHandler) as httpd:
