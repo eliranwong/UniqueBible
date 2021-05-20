@@ -36,7 +36,8 @@ def qrCode(command, source):
     qrCodeFile = os.path.join(".", "htmlResources", "images", "qrcode.png")
     img.save(qrCodeFile)
     content = "<img style='position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;' src='./images/qrcode.png'>"
-    return ("popover.fullscreen", content, {})
+    target = "main" if source == "http" else "popover.fullscreen"
+    return (target, content, {})
 
 config.mainWindow.textCommandParser.interpreters["qrcode"] = (qrCode, """
 # [KEYWORD] QRCODE
