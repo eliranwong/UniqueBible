@@ -29,6 +29,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.textCommandParser = RemoteHttpHandler.textCommandParser
         config.mainWindow = self
         self.runStartupPlugins()
+        self.getFeatures()
         if RemoteHttpHandler.bibles is None:
             RemoteHttpHandler.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
         self.bibles = RemoteHttpHandler.bibles
@@ -44,6 +45,24 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.users = RemoteHttpHandler.users
         self.primaryUser = False
         super().__init__(*args, directory="htmlResources", **kwargs)
+
+    def getFeatures(self):
+        self.chapterFeatures = {
+            "OVERVIEW": config.thisTranslation["html_overview"],
+            "CHAPTERINDEX": config.thisTranslation["html_chapterIndex"],
+            "SUMMARY": config.thisTranslation["html_summary"],
+        }
+        self.verseFeatures = {
+            "COMPARE": config.thisTranslation["menu4_compareAll"],
+            "CROSSREFERENCE": config.thisTranslation["menu4_crossRef"],
+            "TSKE": config.thisTranslation["menu4_tske"],
+            "TRANSLATION": config.thisTranslation["menu4_traslations"],
+            "DISCOURSE": config.thisTranslation["menu4_discourse"],
+            "WORDS": config.thisTranslation["menu4_words"],
+            "COMBO": config.thisTranslation["menu4_tdw"],
+            "COMMENTARY": config.thisTranslation["menu4_commentary"],
+            "INDEX": config.thisTranslation["menu4_indexes"],
+        }
 
     def runStartupPlugins(self):
         if config.enablePlugins:
@@ -76,8 +95,21 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 query_components = parse_qs(urlparse(self.path).query)
                 if 'cmd' in query_components:
                     self.command = query_components["cmd"][0].strip()
+                    # Convert command shortcut
                     if len(self.command) == 0:
                         self.command = config.history["main"][-1]
+                    elif self.command.lower() == ".bible":
+                        self.command = self.getCurrentReference()
+                    elif self.command.lower() == ".introduction":
+                        self.command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1])
+                    elif self.command.lower() in (".timeline", ".timelines"):
+                        self.command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1])
+                    elif self.command.upper()[1:] in self.verseFeatures.keys():
+                        self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+                    elif self.command.upper()[1:] in self.chapterFeatures.keys():
+                        self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+                        self.command = re.sub(":[0-9]+?$", "", self.command)
+                    # Parse command
                     if self.command.lower() in (".help", "?"):
                         content = self.helpContent()
                     elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
@@ -546,6 +578,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         dotCommands = """<h2>Http-server Commands</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
+        <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open the last opened bible chapter.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
