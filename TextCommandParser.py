@@ -986,7 +986,7 @@ class TextCommandParser:
     # run os command
     def osCommand(self, command, source):
         if not config.enableCmd:
-            print("Command keyword CMD::: is not enabled for security reason.")
+            print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
         else:
             subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             runCmd = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
