@@ -582,6 +582,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
+        </p><p>"""
+        dotCommands += """</p>
+        <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {0} - {1}.<br>
+        <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {0} - {2}.
+        <p>""".format("Bible feature shortcut on currently selected book", config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected chapter - {1}.""".format(key.lower(), value) for key, value in self.chapterFeatures.items()])
+        dotCommands += "</p><p>"
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected verse - {1}.""".format(key.lower(), value) for key, value in self.verseFeatures.items()])
+        dotCommands += """
         </p><p><b>Developer Options</b></p>
         <p>The following options are enabled only if 'developer' or 'webFullAccess' is set to 'True' in file 'config.py'.  To prevent access to the following features, both configurations need to be set 'False'.  Make sure UBA is not running when 'config.py' is being edited.</p><p>
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
