@@ -992,8 +992,8 @@ class TextCommandParser:
             runCmd = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = runCmd.communicate()
             output = stdout.decode("utf-8").replace("\n", "<br>")
-            errors = stderr.decode("utf-8").replace("\n", "<br>")
-            display = "<h2>Output</h2><p>{0}</p><h2>Errors</h2><p>{1}</p>".format(output, errors)
+            error = stderr.decode("utf-8").replace("\n", "<br>")
+            display = "<h2>Output</h2><p>{0}</p><h2>Error</h2><p>{1}</p>".format(output if output else "[no output]", error if error else "[no error]")
             #if platform.system() == "Linux":
                 #subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             #else:
