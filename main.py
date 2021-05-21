@@ -106,6 +106,7 @@ def startHttpServer():
     port = config.httpServerPort
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])
+    config.currentHttpServerPort = port
     print("Running in HTTP Server Mode")
     print("Open browser link: 'http://{0}:{1}'".format(NetworkUtil.get_ip(), port))
     socketserver.TCPServer.allow_reuse_address = True

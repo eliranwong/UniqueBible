@@ -13,6 +13,7 @@ from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from util.FileUtil import FileUtil
+from util.NetworkUtil import NetworkUtil
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
@@ -98,6 +99,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     # Convert command shortcut
                     if len(self.command) == 0:
                         self.command = config.history["main"][-1]
+                    elif self.command.lower() == ".myqrcode":
+                        self.command = "qrcode:::http://{0}:{1}".format(NetworkUtil.get_ip(), config.currentHttpServerPort)
                     elif self.command.lower() == ".bible":
                         self.command = self.getCurrentReference()
                     elif self.command.lower() == ".introduction":
@@ -578,18 +581,21 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         dotCommands = """<h2>Http-server Commands</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
+        <ref onclick="window.parent.submitCommand('.myqrcode')">.myqrcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
         <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open the last opened bible chapter.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
         </p><p>"""
         dotCommands += """</p>
-        <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {0} - {1}.<br>
-        <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {0} - {2}.
-        <p>""".format("Bible feature shortcut on currently selected book", config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
-        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected chapter - {1}.""".format(key.lower(), value) for key, value in self.chapterFeatures.items()])
+        <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {0}{1}] - {2}.<br>
+        <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {0}{1}] - {3}.
+        <p>""".format("Bible feature shortcut on currently selected book [", self.abbreviations[str(config.mainB)], config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
+        currentChapter = "{0} {1}".format(self.abbreviations[str(config.mainB)], config.mainC)
+        currentVerse = "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected chapter [{2}] - {1}.""".format(key.lower(), value, currentChapter) for key, value in self.chapterFeatures.items()])
         dotCommands += "</p><p>"
-        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected verse - {1}.""".format(key.lower(), value) for key, value in self.verseFeatures.items()])
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected verse [{2}] - {1}.""".format(key.lower(), value, currentVerse) for key, value in self.verseFeatures.items()])
         dotCommands += """
         </p><p><b>Developer Options</b></p>
         <p>The following options are enabled only if 'developer' or 'webFullAccess' is set to 'True' in file 'config.py'.  To prevent access to the following features, both configurations need to be set 'False'.  Make sure UBA is not running when 'config.py' is being edited.</p><p>
