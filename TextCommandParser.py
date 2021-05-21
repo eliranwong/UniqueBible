@@ -986,14 +986,19 @@ class TextCommandParser:
     # run os command
     def osCommand(self, command, source):
         if not config.enableCmd:
-            print("Command keyword CMD::: is not supported in telnet service for security reason.")
+            print("Command keyword CMD::: is not enabled for security reason.")
         else:
             subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            runCmd = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout, stderr = runCmd.communicate()
+            output = stdout.decode("utf-8").replace("\n", "<br>")
+            errors = stderr.decode("utf-8").replace("\n", "<br>")
+            display = "<h2>Output</h2><p>{0}</p><h2>Errors</h2><p>{1}</p>".format(output, errors)
             #if platform.system() == "Linux":
                 #subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             #else:
                 #os.system(command)
-        return ("", "", {})
+        return ("study", display, {})
 
     # check if espeak is installed.
     def isEspeakInstalled(self):

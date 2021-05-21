@@ -1,3 +1,7 @@
+Major changes in version 24.75:
+* Added display of cmd::: output and error.
+* Fixed qr code plugin.
+
 Major change in version 24.74:
 * Ported startup plugins to http-server.
 
