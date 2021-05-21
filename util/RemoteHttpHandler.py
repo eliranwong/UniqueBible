@@ -30,7 +30,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.textCommandParser = RemoteHttpHandler.textCommandParser
         config.mainWindow = self
         self.runStartupPlugins()
-        self.getFeatures()
         if RemoteHttpHandler.bibles is None:
             RemoteHttpHandler.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
         self.bibles = RemoteHttpHandler.bibles
@@ -47,13 +46,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.primaryUser = False
         super().__init__(*args, directory="htmlResources", **kwargs)
 
-    def getFeatures(self):
-        self.chapterFeatures = {
+    def getShortcuts(self):
+        return {
+            ".bible": self.getCurrentReference(),
+            ".menu": "_menu:::",
+            ".myqrcode": "qrcode:::server",
+            ".introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
+            ".timeline": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
+            ".timelines": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
+        }
+
+    def getChapterFeatures(self):
+        return {
             "OVERVIEW": config.thisTranslation["html_overview"],
             "CHAPTERINDEX": config.thisTranslation["html_chapterIndex"],
             "SUMMARY": config.thisTranslation["html_summary"],
         }
-        self.verseFeatures = {
+
+    def getVerseFeatures(self):
+        return {
             "COMPARE": config.thisTranslation["menu4_compareAll"],
             "CROSSREFERENCE": config.thisTranslation["menu4_crossRef"],
             "TSKE": config.thisTranslation["menu4_tske"],
@@ -97,19 +108,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if 'cmd' in query_components:
                     self.command = query_components["cmd"][0].strip()
                     # Convert command shortcut
-                    if len(self.command) == 0:
+                    shortcuts = self.getShortcuts()
+                    if not self.command:
                         self.command = config.history["main"][-1]
-                    elif self.command.lower() == ".myqrcode":
-                        self.command = "qrcode:::http://{0}:{1}".format(NetworkUtil.get_ip(), config.currentHttpServerPort)
-                    elif self.command.lower() == ".bible":
-                        self.command = self.getCurrentReference()
-                    elif self.command.lower() == ".introduction":
-                        self.command = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1])
-                    elif self.command.lower() in (".timeline", ".timelines"):
-                        self.command = "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1])
-                    elif self.command.upper()[1:] in self.verseFeatures.keys():
+                    elif self.command.lower() in shortcuts.keys():
+                        self.command = shortcuts[self.command.lower()]
+                    elif self.command.upper()[1:] in self.getVerseFeatures().keys():
                         self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-                    elif self.command.upper()[1:] in self.chapterFeatures.keys():
+                    elif self.command.upper()[1:] in self.getChapterFeatures().keys():
                         self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                         self.command = re.sub(":[0-9]+?$", "", self.command)
                     # Parse command
@@ -139,10 +145,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                             subprocess.Popen("git pull", shell=True)
                             return self.restartServer("updated and ")
                     else:
-                        view, content, *_ = self.textCommandParser.parser(self.command, "http")
+                        try:
+                            view, content, *_ = self.textCommandParser.parser(self.command, "http")
+                        except:
+                            content = "Error!"
                         if not content:
                             content = "Command was processed!"
-                        elif not content == "INVALID_COMMAND_ENTERED":
+                        elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
                             self.textCommandParser.parent.addHistoryRecord(view, self.command)
                 else:
                     self.command = self.abbreviations[str(config.mainB)]
@@ -583,6 +592,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.myqrcode')">.myqrcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
         <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open the last opened bible chapter.<br>
+        <ref onclick="window.parent.submitCommand('.menu')">.menu</ref> - Open bible menu.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
@@ -593,9 +603,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <p>""".format("Bible feature shortcut on currently selected book [", self.abbreviations[str(config.mainB)], config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
         currentChapter = "{0} {1}".format(self.abbreviations[str(config.mainB)], config.mainC)
         currentVerse = "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
-        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected chapter [{2}] - {1}.""".format(key.lower(), value, currentChapter) for key, value in self.chapterFeatures.items()])
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected chapter [{2}] - {1}.""".format(key.lower(), value, currentChapter) for key, value in self.getChapterFeatures().items()])
         dotCommands += "</p><p>"
-        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected verse [{2}] - {1}.""".format(key.lower(), value, currentVerse) for key, value in self.verseFeatures.items()])
+        dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - Bible feature shortcut on currently selected verse [{2}] - {1}.""".format(key.lower(), value, currentVerse) for key, value in self.getVerseFeatures().items()])
         dotCommands += """
         </p><p><b>Developer Options</b></p>
         <p>The following options are enabled only if 'developer' or 'webFullAccess' is set to 'True' in file 'config.py'.  To prevent access to the following features, both configurations need to be set 'False'.  Make sure UBA is not running when 'config.py' is being edited.</p><p>

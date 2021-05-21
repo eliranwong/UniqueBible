@@ -16,7 +16,7 @@ def qrCode(command, source):
 
     cmd = command.lower().strip()
     if cmd in ["", "http-server", "http", "server"]:
-        data = "http://{0}:{1}".format(NetworkUtil.get_ip(), config.httpServerPort)
+        data = "http://{0}:{1}".format(NetworkUtil.get_ip(), config.thisHttpServerPort if hasattr(config, "thisHttpServerPort") else config.httpServerPort)
     elif cmd in aliases.keys():
         data = aliases[cmd]
     else:

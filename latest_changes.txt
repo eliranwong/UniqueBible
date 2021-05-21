@@ -1,3 +1,6 @@
+Major change in version 24.77:
+* Added .menu command to http-server.
+
 Major changes in version 24.76:
 * A bundle of bible feature shortcuts created for http-server.  Read more via http-server help page.
 * Create a '.myqrcode' command to display a QR code for other users connecting to the same UBA http-server.
