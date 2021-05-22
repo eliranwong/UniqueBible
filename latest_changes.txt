@@ -1,3 +1,7 @@
+Major changes in version 24.80:
+* Fixed startup plugin 'addHoverFeatureToBibleLinks'.
+* Fixed loading bible map library with http-server.
+
 Major change in version 24.79:
 * Fixed loading high-quality timeline and map images with http-server.
 

@@ -1,7 +1,7 @@
 import config, re
 from ThirdParty import Converter
 
-def convertCrLink(self, match):
+def convertCrLink(match):
     *_, b, c, v = match.groups()
     bookNo = Converter().convertMyBibleBookNo(int(b))
     return 'onclick="bcv({0},{1},{2})" onmouseover="imv({0},{1},{2})"'.format(bookNo, c, v)

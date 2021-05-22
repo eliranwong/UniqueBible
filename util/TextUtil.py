@@ -15,7 +15,7 @@ class TextUtil:
                 htmlTag = '<img src="data:image/{2};base64,{0}" alt="{1}">'.format(binaryString, fileBasename, fileExtension[1:])
             return htmlTag
         else:
-            return ""
+            return "[File type not supported!]"
 
     @staticmethod
     def formulateUBACommandHyperlink(text):

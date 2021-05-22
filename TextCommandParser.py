@@ -1705,8 +1705,11 @@ class TextCommandParser:
     def openExternalFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(*fileitems)
-        self.parent.openExternalFile(filePath)
-        return ("", "", {})
+        if config.enableHttpServer:
+            return ("study", TextUtil.imageToText(filePath), {})
+        else:
+            self.parent.openExternalFile(filePath)
+            return ("", "", {})
 
     # docx:::
     def openDocxReader(self, command, source):
@@ -1736,7 +1739,10 @@ class TextCommandParser:
     # _website:::
     def textWebsite(self, command, source):
         if command:
-            webbrowser.open(command)
+            if config.enableHttpServer and command.startswith("http"):
+                subprocess.Popen("{0} {1}".format(config.open, command), shell=True)
+            else:
+                webbrowser.open(command)
             return ("", "", {})
         else:
             return self.invalidCommand()
