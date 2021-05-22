@@ -41,7 +41,8 @@ def pip3InstallModule(module):
         config.pipIsUpdated = True
     print("Installing missing module '{0}' ...".format(module))
     # implement pip3 as a subprocess:
-    install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #install = subprocess.Popen(['pip3', 'install', module], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    install = subprocess.Popen('pip3 install {0}'.format(module), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     *_, stderr = install.communicate()
     return stderr
 
