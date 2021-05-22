@@ -1,6 +1,21 @@
-import re, html
+import re, html, base64, os
 
 class TextUtil:
+
+    @staticmethod
+    def imageToText(filepath):
+        fileBasename = os.path.basename(filepath)
+        *_, fileExtension = os.path.splitext(fileBasename)
+        if fileExtension.lower() in (".png", ".jpg", ".jpeg", ".bmp", ".gif"):
+            # read a binary file
+            with open(filepath, "rb") as fileObject:
+                binaryData = fileObject.read()
+                encodedData = base64.b64encode(binaryData)
+                binaryString = encodedData.decode("ascii")
+                htmlTag = '<img src="data:image/{2};base64,{0}" alt="{1}">'.format(binaryString, fileBasename, fileExtension[1:])
+            return htmlTag
+        else:
+            return ""
 
     @staticmethod
     def formulateUBACommandHyperlink(text):

@@ -4,10 +4,12 @@ from util.NetworkUtil import NetworkUtil
 
 
 def qrCode(command, source):
-    if not config.isQrCodeInstalled or not config.isPillowInstalled:
+    if not config.isQrCodeInstalled or (not config.noQt and not config.isPillowInstalled) or (config.noQt and not config.isPurePythonPngInstalled):
         return ("", "", {})
 
     import qrcode
+    if config.noQt:
+        from qrcode.image.pure import PymagingImage
 
     aliases = {
         "uba": "https://github.com/eliranwong/UniqueBible",
@@ -29,6 +31,7 @@ def qrCode(command, source):
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=boxSize,
         border=4,
+        image_factory=PymagingImage if config.noQt else None,
     )
     qr.add_data(data)
     qr.make(fit=True)

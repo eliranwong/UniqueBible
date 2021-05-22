@@ -245,6 +245,14 @@ def isPillowInstalled():
     except:
         return False
 
+def isPurePythonPngInstalled():
+    try:
+        import qrcode
+        from qrcode.image.pure import PymagingImage
+        return True
+    except:
+        return False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -277,6 +285,8 @@ def setInstallConfig(module, isInstalled):
         config.isQrCodeInstalled = isInstalled
     elif module == "pillow":
         config.isPillowInstalled = isInstalled
+    elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
+        config.isPurePythonPngInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -335,7 +345,7 @@ optional = (
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
-    ("pillow", "Image library", isPillowInstalled),
+    ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),

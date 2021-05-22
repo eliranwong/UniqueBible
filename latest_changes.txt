@@ -1,3 +1,6 @@
+Major change in version 24.78:
+* Fixed loading high-quality timeline and map images with http-server.
+
 Major change in version 24.77:
 * Added .menu command to http-server.
 

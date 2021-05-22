@@ -1,5 +1,6 @@
 # coding=utf-8
 import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing, zipfile
+from util.TextUtil import TextUtil
 from LexicalData import LexicalData
 from functools import partial
 from BibleVerseParser import BibleVerseParser
@@ -1681,8 +1682,22 @@ class TextCommandParser:
     def openMarvelDataFile(self, command, source):
         fileitems = command.split("/")
         filePath = os.path.join(config.marvelData, *fileitems)
-        self.parent.openExternalFile(filePath)
-        return ("", "", {})
+        if config.enableHttpServer and re.search("\.jpg$|\.jpeg$|\.png$|\.bmp$|\.gif$", filePath.lower()):
+            fullPath = os.path.join(os.getcwd(), filePath)
+            if os.path.isfile(fullPath):
+                # config.marvelData is a relative path
+                # relative path outside htmlresource directory does not work on http-server, though it works on desktop version
+                #filePath = "../"+filePath
+                #return ("study", "<img src='{0}'>".format(filePath), {})
+                return ("study", TextUtil.imageToText(fullPath), {})
+            elif os.path.isfile(filePath):
+                # config.marvelData is an absolute path
+                return ("study", TextUtil.imageToText(filePath), {})
+            else:
+                return ("study", "Image not found!", {})
+        else:
+            self.parent.openExternalFile(filePath)
+            return ("", "", {})
 
     # open:::
     def openExternalFile(self, command, source):
