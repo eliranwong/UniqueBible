@@ -96,6 +96,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "import": self.importContent,
             "layout": self.swapLayout,
             "theme": self.swapTheme,
+            "increasefontsize": self.increaseFontSize,
+            "decreasefontsize": self.decreaseFontSize,
         }
         clientIP = self.client_address[0]
         if clientIP not in self.users:
@@ -555,6 +557,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content = re.sub(r"\n", "<br/>", content)
         return content
 
+    def increaseFontSize(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            config.fontSize = config.fontSize + 1
+            return self.displayMessage("Font size changed to {0}!".format(config.fontSize))
+
+    def decreaseFontSize(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.fontSize >= 4:
+                config.fontSize = config.fontSize - 1
+                return self.displayMessage("Font size changed to {0}!".format(config.fontSize))
+            else:
+                return self.displayMessage("Current font size is too small to be changed!")
+
     def swapLayout(self):
         permission, message = self.checkPermission()
         if not permission:
@@ -614,6 +635,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
         <ref onclick="window.parent.submitCommand('.theme')">.theme</ref> - Swap between available themes.<br>
+        <ref onclick="window.parent.submitCommand('.increasefontsize')">.increasefontsize</ref> - Increase font size.<br>
+        <ref onclick="window.parent.submitCommand('.decreasefontsize')">.decreasefontsize</ref> - Decrease font size.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.

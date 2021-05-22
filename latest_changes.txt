@@ -1,3 +1,6 @@
+Major change in version 24.81:
+* Added .increasefontsize and .decreasefontsize to http-server.
+
 Major changes in version 24.80:
 * Fixed startup plugin 'addHoverFeatureToBibleLinks'.
 * Fixed loading bible map library with http-server.
