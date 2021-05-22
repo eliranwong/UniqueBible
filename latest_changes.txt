@@ -1,4 +1,4 @@
-Major change in version 24.78:
+Major change in version 24.79:
 * Fixed loading high-quality timeline and map images with http-server.
 
 Major change in version 24.77:

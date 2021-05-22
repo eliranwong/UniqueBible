@@ -1695,6 +1695,8 @@ class TextCommandParser:
                 return ("study", TextUtil.imageToText(filePath), {})
             else:
                 return ("study", "Image not found!", {})
+        elif config.enableHttpServer:
+            return ("study", "[File type not supported!]", {})
         else:
             self.parent.openExternalFile(filePath)
             return ("", "", {})
