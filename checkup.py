@@ -239,13 +239,6 @@ def isQrCodeInstalled():
     except:
         return False
 
-def isPillowInstalled():
-    try:
-        import PIL
-        return True
-    except:
-        return False
-
 def isPurePythonPngInstalled():
     try:
         import qrcode
@@ -284,8 +277,6 @@ def setInstallConfig(module, isInstalled):
         config.isHtml5libInstalled = isInstalled
     elif module == "qrcode":
         config.isQrCodeInstalled = isInstalled
-    elif module == "pillow":
-        config.isPillowInstalled = isInstalled
     elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
         config.isPurePythonPngInstalled = isInstalled
 
@@ -362,7 +353,6 @@ optional = (
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
-    ("pillow", "Image library", isPillowInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():
