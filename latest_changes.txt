@@ -1,3 +1,8 @@
+Major changes in version 24.85:
+* Added several more built-in shortcut commands.
+* Added support of user customised command shortcuts to http-server.
+https://github.com/eliranwong/UniqueBible/wiki/UBA-Startup-Plugins#configcustomcommandshortcuts
+
 Major changes in version 24.84:
 * Added the following command shortcuts to http-server.
     .biblemenu - Open bible menu.

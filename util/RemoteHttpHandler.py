@@ -58,6 +58,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".names": "SEARCHTOOL:::HBN:::",
             ".promises": "BOOK:::Bible_Promises",
             ".parallels": "BOOK:::Harmonies_and_Parallels",
+            ".mob": "TEXT:::MOB",
+            ".mib": "TEXT:::MIB",
+            ".mtb": "TEXT:::MTB",
+            ".mpb": "TEXT:::MPB",
+            ".mab": "TEXT:::MAB",
             ".introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             ".timeline": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             ".timelines": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
@@ -105,6 +110,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "theme": self.swapTheme,
             "increasefontsize": self.increaseFontSize,
             "decreasefontsize": self.decreaseFontSize,
+            "compareparallelmode": self.toggleCompareParallel,
+            "subheadings": self.toggleSubheadings,
+            "plainmode": self.togglePlainMode,
+            "regexcasesensitive": self.toggleRegexCaseSensitive,
         }
         clientIP = self.client_address[0]
         if clientIP not in self.users:
@@ -120,6 +129,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     shortcuts = self.getShortcuts()
                     if not self.command:
                         self.command = config.history["main"][-1]
+                    elif self.command.lower() in config.customCommandShortcuts.keys():
+                        self.command = config.customCommandShortcuts[self.command.lower()]
                     elif self.command.lower() in shortcuts.keys():
                         self.command = shortcuts[self.command.lower()]
                     elif self.command.upper()[1:] in self.getVerseFeatures().keys():
@@ -571,7 +582,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return message
         else:
             config.fontSize = config.fontSize + 1
-            return self.displayMessage("Font size changed to {0}!".format(config.fontSize))
+            return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
 
     def decreaseFontSize(self):
         permission, message = self.checkPermission()
@@ -580,9 +591,65 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         else:
             if config.fontSize >= 4:
                 config.fontSize = config.fontSize - 1
-                return self.displayMessage("Font size changed to {0}!".format(config.fontSize))
+                return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
             else:
-                return self.displayMessage("Current font size is too small to be changed!")
+                return self.displayMessage("Current font size is already too small!")
+
+    def getBibleChapter(self):
+        view, content, *_ = self.textCommandParser.parser(self.getCurrentReference(), "http")
+        return content
+
+    def toggleCompareParallel(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.enforceCompareParallel:
+                config.enforceCompareParallel = False
+                return self.displayMessage("""<p>Compare / parallel mode is turned OFF!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            else:
+                config.enforceCompareParallel = True
+                return self.displayMessage("""<p>Compare / parallel mode is turned ON!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+
+    def togglePlainMode(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.readFormattedBibles:
+                config.readFormattedBibles = False
+                #return self.displayMessage("Option 'plain mode' is turned on for displaying bible chapter!")
+                return self.getBibleChapter()
+            else:
+                config.readFormattedBibles = True
+                #return self.displayMessage("Option 'plain mode' is turned off for displaying bible chapter!")
+                return self.getBibleChapter()
+
+    def toggleSubheadings(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.addTitleToPlainChapter:
+                config.addTitleToPlainChapter = False
+                #return self.displayMessage("Option 'add subheadings' is turned off for displaying bible chapter in plain mode!")
+                return self.getBibleChapter()
+            else:
+                config.addTitleToPlainChapter = True
+                #return self.displayMessage("Option 'add subheadings' is turned on for displaying bible chapter in plain mode!")
+                return self.getBibleChapter()
+
+    def toggleRegexCaseSensitive(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.regexCaseSensitive:
+                config.regexCaseSensitive = False
+                return self.displayMessage("""<p>Option 'case sensitive' is turned off for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            else:
+                config.regexCaseSensitive = True
+                return self.displayMessage("""<p>Option 'case sensitive' is turned on for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def swapLayout(self):
         permission, message = self.checkPermission()
@@ -616,14 +683,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return
 
     def helpContent(self):
-        dotCommands = """<h2>Http-server Commands</h2>
+        dotCommands = """<h2>Http-server Commands [case insensitive]</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
-        <ref onclick="window.parent.submitCommand('.myqrcode')">.myqrcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
-        <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open the last opened bible chapter.<br>
-        <ref onclick="window.parent.submitCommand('.biblemenu')">.biblemenu</ref> - Open bible menu.<br>
-        <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentarymenu</ref> - Open Commentary menu.<br>
-        <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelinemenu</ref> - Open Timeline menu.<br>
+        <ref onclick="window.parent.submitCommand('.myqrcode')">.myQRcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
+        <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open bible chapter.<br>
+        <ref onclick="window.parent.submitCommand('.biblemenu')">.bibleMenu</ref> - Open bible menu.<br>
+        <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentaryMenu</ref> - Open Commentary menu.<br>
+        <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelineMenu</ref> - Open Timeline menu.<br>
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
         <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
@@ -633,8 +700,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.
         </p><p>"""
-        dotCommands += """<p>
-        <u>Bible feature shortcut on currently selected book [{0}]</u><br>
+        dotCommands += """<u>Marvel Bibles</u><br>
+        <ref onclick="window.parent.submitCommand('.mob')">.mob</ref> - Open Marvel Original Bible.<br>
+        <ref onclick="window.parent.submitCommand('.mib')">.mib</ref> - Open Marvel Interlinear Bible.<br>
+        <ref onclick="window.parent.submitCommand('.mtb')">.mtb</ref> - Open Marvel Trilingual Bible.<br>
+        <ref onclick="window.parent.submitCommand('.mpb')">.mpb</ref> - Open Marvel Parallel Bible.<br>
+        <ref onclick="window.parent.submitCommand('.mab')">.mab</ref> - Open Marvel Annotated Bible.<br>
+        </p><p>"""
+        dotCommands += """<u>Bible feature shortcut on currently selected book [{0}]</u><br>
         <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {1}.<br>
         <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {2}.
         </p><p>""".format(self.abbreviations[str(config.mainB)], config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
@@ -653,8 +726,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
         <ref onclick="window.parent.submitCommand('.theme')">.theme</ref> - Swap between available themes.<br>
-        <ref onclick="window.parent.submitCommand('.increasefontsize')">.increasefontsize</ref> - Increase font size.<br>
-        <ref onclick="window.parent.submitCommand('.decreasefontsize')">.decreasefontsize</ref> - Decrease font size.<br>
+        <ref onclick="window.parent.submitCommand('.increasefontsize')">.increaseFontSize</ref> - Increase font size.<br>
+        <ref onclick="window.parent.submitCommand('.decreasefontsize')">.decreaseFontSize</ref> - Decrease font size.<br>
+        <ref onclick="window.parent.submitCommand('.plainmode')">.plainMode</ref> - Toggle 'plain mode' for displaying bible chapters.<br>
+        <ref onclick="window.parent.submitCommand('.subheadings')">.subHeadings</ref> - Toggle 'sub-headings' for displaying bible chapters in plain mode.<br>
+        <ref onclick="window.parent.submitCommand('.compareparallelmode')">.compareParallelMode</ref> - Toggle 'compare / parallel mode' for bible reading.<br>
+        <ref onclick="window.parent.submitCommand('.regexcasesensitive')">.regexCaseSensitive</ref> - Toggle 'case sensitive' for searching bible with regular expression.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.

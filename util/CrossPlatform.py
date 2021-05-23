@@ -88,15 +88,34 @@ class CrossPlatform:
         if view == "http":
             view = "main"
         if not textCommand.startswith("_") and not re.search("^download:::|^qrcode:::", textCommand.lower()):
-            viewhistory = config.history[view]
-            if not (viewhistory[-1] == textCommand):
-                viewhistory.append(textCommand)
-                # set maximum number of history records for each view here
-                maximumHistoryRecord = config.maximumHistoryRecord
-                if len(viewhistory) > maximumHistoryRecord:
-                    viewhistory = viewhistory[-maximumHistoryRecord:]
-                config.history[view] = viewhistory
-                config.currentRecord[view] = len(viewhistory) - 1
+
+            if view in ("main", "study"):
+                compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
+                if config.enforceCompareParallel and not config.tempRecord:
+                    if not ":::" in textCommand:
+                        view = "study"
+                        textCommand = "STUDY:::{0}".format(textCommand)
+                    elif textCommand.lower().startswith("bible:::"):
+                        view = "study"
+                        textCommand = re.sub("^.*?:::", "STUDY:::", textCommand)
+                if config.tempRecord:
+                    self.runAddHistoryRecord("main", config.tempRecord)
+                    config.tempRecord = ""
+                elif not (view == "main" and config.enforceCompareParallel) or compareParallel:
+                    self.runAddHistoryRecord(view, textCommand)
+            else:
+                self.runAddHistoryRecord(view, textCommand)
+
+    def runAddHistoryRecord(self, view, textCommand):
+        viewhistory = config.history[view]
+        if not (viewhistory[-1] == textCommand):
+            viewhistory.append(textCommand)
+            # set maximum number of history records for each view here
+            maximumHistoryRecord = config.maximumHistoryRecord
+            if len(viewhistory) > maximumHistoryRecord:
+                viewhistory = viewhistory[-maximumHistoryRecord:]
+            config.history[view] = viewhistory
+            config.currentRecord[view] = len(viewhistory) - 1
 
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]

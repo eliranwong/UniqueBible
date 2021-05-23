@@ -60,6 +60,9 @@ class RemoteCliMainWindow(CrossPlatform):
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
 
+    def enforceCompareParallelButtonClicked(self):
+        config.enforceCompareParallel = not config.enforceCompareParallel
+
     def reloadControlPanel(self, show=True):
         pass
 
