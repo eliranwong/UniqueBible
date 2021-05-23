@@ -146,7 +146,7 @@ class BiblesSqlite:
         menu += "<hr><b>{1}</b> {0}".format(self.getTexts(), config.thisTranslation["html_bibles"])
         if text:
             # i.e. text specified; add book menu
-            if config.openBibleInMainViewOnly:
+            if config.openBibleInMainViewOnly or config.enableHttpServer:
                 menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button>".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
             else:
                 if source == "study":
@@ -172,7 +172,7 @@ class BiblesSqlite:
                     bookReference = parser.bcvToVerseReference(bookNo, 1, 1)
                     bookAbb = bookReference[:-4]
                     # build open book button
-                    if config.openBibleInMainViewOnly:
+                    if config.openBibleInMainViewOnly or config.enableHttpServer:
                         openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
@@ -197,7 +197,7 @@ class BiblesSqlite:
                     # i.e. both book and chapter specified; add verse menu
                     chapterReference = parser.bcvToVerseReference(bookNo, chapterNo, 1)
                     # build open chapter button
-                    if config.openBibleInMainViewOnly:
+                    if config.openBibleInMainViewOnly or config.enableHttpServer:
                         openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
@@ -213,13 +213,15 @@ class BiblesSqlite:
                     summaryButton = "<button class='feature' onclick='document.title=\"SUMMARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_summary"])
                     # chapter commentary button
                     chapterCommentaryButton = "<button class='feature' onclick='document.title=\"COMMENTARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["menu4_commentary"])
+                    # chapter note button
+                    chapterNoteButton = " <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</button>".format(bookNo, chapterNo, config.thisTranslation["menu6_notes"])
                     # selected chapter
-                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2} <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{4}</button><br>{5} {6} {7} {8}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"], overviewButton, chapterIndexButton, summaryButton, chapterCommentaryButton)
+                    menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2}{4}<br>{5} {6} {7} {8}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], "" if config.enableHttpServer else chapterNoteButton, overviewButton, chapterIndexButton, summaryButton, chapterCommentaryButton)
                     # building verse list of slected chapter
                     menu += "<hr><b>{1}</b> {0}".format(self.getVersesMenu(bookNo, chapterNo, text), config.thisTranslation["html_verse"])
                 if check == 3:
                     verseNo = bcList[2]
-                    if config.openBibleInMainViewOnly:
+                    if config.openBibleInMainViewOnly or config.enableHttpServer:
                         openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
@@ -227,7 +229,8 @@ class BiblesSqlite:
                         else:
                             anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
                         openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, mainVerseReference, anotherView, config.thisTranslation["html_openHere"])
-                    menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4} <button class='feature' onclick='document.title=\"_openversenote:::{1}.{2}.{3}\"'>{6}</button>".format(text, bookNo, chapterNo, verseNo, openOption, config.thisTranslation["html_current"], config.thisTranslation["menu6_notes"])
+                    verseNoteButton = " <button class='feature' onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</button>".format(bookNo, chapterNo, verseNo, config.thisTranslation["menu6_notes"])
+                    menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4}{6}".format(text, bookNo, chapterNo, verseNo, openOption, config.thisTranslation["html_current"], "" if config.enableHttpServer else verseNoteButton)
                     #menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_features"])
                     menu += "<br>"
                     features = (
