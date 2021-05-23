@@ -1,3 +1,8 @@
+Major changes in version 24.83:
+* Restored http-server page diaplying bible chapter numbers. 
+* Fixed http-server displaying commentary menu page.
+* Improved http-server help page.
+
 Major changes in version 24.82:
 * Fixed qrcode on Android.
 * Fixed launching http-server with the latest history record.
