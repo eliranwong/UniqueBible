@@ -156,7 +156,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                         elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
                             self.textCommandParser.parent.addHistoryRecord(view, self.command)
                 else:
-                    self.command = self.abbreviations[str(config.mainB)]
+                    #self.command = self.abbreviations[str(config.mainB)]
+                    self.command = config.history["main"][-1]
                     view, content, dict = self.textCommandParser.parser(self.command, "http")
                 content = self.wrapHtml(content)
                 if config.bibleWindowContentTransformers:

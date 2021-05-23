@@ -353,6 +353,7 @@ optional = (
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
+    ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():

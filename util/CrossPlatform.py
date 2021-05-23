@@ -1,8 +1,8 @@
-import config, os, glob
+import config, os, glob, re
 from BiblesSqlite import BiblesSqlite, Bible
 from ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
 from ToolsSqlite import LexiconData
-from ThirdParty import Converter, ThirdPartyDictionary
+from ThirdParty import ThirdPartyDictionary
 
 class CrossPlatform:
 
@@ -87,7 +87,7 @@ class CrossPlatform:
     def addHistoryRecord(self, view, textCommand):
         if view == "http":
             view = "main"
-        if not textCommand.startswith("_"):
+        if not textCommand.startswith("_") and not re.search("^download:::|^qrcode:::", textCommand.lower()):
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):
                 viewhistory.append(textCommand)
