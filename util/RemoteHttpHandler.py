@@ -48,9 +48,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getShortcuts(self):
         return {
-            ".bible": self.getCurrentReference(),
-            ".menu": "_menu:::",
             ".myqrcode": "qrcode:::server",
+            ".bible": self.getCurrentReference(),
+            ".biblemenu": "_menu:::",
+            ".commentarymenu": "_commentary:::{0}".format(config.commentaryText),
+            ".timelinemenu": "BOOK:::Timelines",
+            ".maps": "SEARCHTOOL:::EXLBL:::",
+            ".characters": "SEARCHTOOL:::EXLBP:::",
+            ".names": "SEARCHTOOL:::HBN:::",
+            ".promises": "BOOK:::Bible_Promises",
+            ".parallels": "BOOK:::Harmonies_and_Parallels",
             ".introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             ".timeline": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             ".timelines": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
@@ -614,7 +621,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.myqrcode')">.myqrcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
         <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open the last opened bible chapter.<br>
-        <ref onclick="window.parent.submitCommand('.menu')">.menu</ref> - Open bible menu.<br>
+        <ref onclick="window.parent.submitCommand('.biblemenu')">.biblemenu</ref> - Open bible menu.<br>
+        <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentarymenu</ref> - Open Commentary menu.<br>
+        <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelinemenu</ref> - Open Timeline menu.<br>
+        <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
+        <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
+        <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
+        <ref onclick="window.parent.submitCommand('.parallels')">.parallels</ref> - Open bible parallels content page.<br>
+        <ref onclick="window.parent.submitCommand('.promises')">.promises</ref> - Open bible promises content page.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
         <ref onclick="window.parent.submitCommand('.library')">.library</ref> - Display installed bible commentaries and references books.<br>
         <ref onclick="window.parent.submitCommand('.search')">.search</ref> - Display search options.

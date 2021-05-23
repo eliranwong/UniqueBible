@@ -1,3 +1,16 @@
+Major changes in version 24.84:
+* Added the following command shortcuts to http-server.
+    .biblemenu - Open bible menu.
+    .commentarymenu - Open Commentary menu.
+    .timelinemenu - Open Timeline menu.
+    .names - Open bible names content page.
+    .characters - Open bible characters content page.
+    .maps - Open bible maps content page.
+    .parallels - Open bible parallels content page.
+    .promises - Open bible promises content page.
+Users can find links to these commands from http-server help page.
+This helps quick access to common resources when UBA is running on Android / iOS / mobile platforms.
+
 Major changes in version 24.83:
 * Restored http-server page diaplying bible chapter numbers. 
 * Fixed http-server displaying commentary menu page.
