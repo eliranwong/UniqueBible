@@ -103,7 +103,6 @@ def startHttpServer():
     from util.RemoteHttpHandler import RemoteHttpHandler
 
     config.restartHttpServer = False
-    config.customCommandShortcuts = {}
     port = config.httpServerPort
     if (len(sys.argv) > 2):
         port = int(sys.argv[2])

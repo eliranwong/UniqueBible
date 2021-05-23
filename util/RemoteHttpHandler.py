@@ -89,6 +89,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         }
 
     def runStartupPlugins(self):
+        config.customCommandShortcuts = {}
         if config.enablePlugins:
             for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "startup"), "py"):
                 if not plugin in config.excludeStartupPlugins:
