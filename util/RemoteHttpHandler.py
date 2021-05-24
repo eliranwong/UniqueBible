@@ -197,7 +197,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 outputFile = os.path.join("htmlResources", "main.html")
                 with open(outputFile, "w", encoding="utf-8") as fileObject:
                     fileObject.write(content)
-                if config.httpServerViewerGlobalMode:
+                if config.httpServerViewerGlobalMode and config.webPresentationMode:
                     url = config.httpServerViewerBaseUrl + "/submit.php"
                     data = {"code": self.viewerModeKey, "content": content}
                     response = requests.post(url, data=json.dumps(data))
