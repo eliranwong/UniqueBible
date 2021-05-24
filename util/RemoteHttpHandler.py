@@ -1,10 +1,13 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
+import json
 import os, re, config, pprint
 import subprocess
+import requests
+from datetime import date
 from http.server import SimpleHTTPRequestHandler
+from random import Random
 from time import gmtime
-
 from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -13,7 +16,6 @@ from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from util.FileUtil import FileUtil
-from util.NetworkUtil import NetworkUtil
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
@@ -22,6 +24,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     bibles = None
     books = None
     abbreviations = None
+    viewerModeKey = None
     users = []
 
     def __init__(self, *args, **kwargs):
@@ -44,11 +47,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.books = RemoteHttpHandler.books
         self.users = RemoteHttpHandler.users
         self.primaryUser = False
+        if RemoteHttpHandler.viewerModeKey is None:
+            now = date.today()
+            RemoteHttpHandler.viewerModeKey = "{0}-{1}-{2}-{3}"\
+                .format(now.year, now.month, now.day, Random().randint(10000, 99999))
+        self.viewerModeKey = RemoteHttpHandler.viewerModeKey
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def getShortcuts(self):
         return {
-            ".myqrcode": "qrcode:::server",
+            ".myqrcode": self.getQrCodeCommand(),
             ".bible": self.getCurrentReference(),
             ".biblemenu": "_menu:::",
             ".commentarymenu": "_commentary:::{0}".format(config.commentaryText),
@@ -186,6 +194,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 outputFile = os.path.join("htmlResources", "main.html")
                 with open(outputFile, "w", encoding="utf-8") as fileObject:
                     fileObject.write(content)
+                if config.httpServerViewerGlobalMode:
+                    url = config.httpServerViewerBaseUrl + "/submit.php"
+                    data = {"code": self.viewerModeKey, "content": content}
+                    response = requests.post(url, data=json.dumps(data))
+                    # print("Submitted data to {0}: {1}".format(url, response))
                 self.indexPage()
             else:
                 self.mainPage()
@@ -783,6 +796,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getCurrentReference(self):
         return "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+
+    def getQrCodeCommand(self):
+        if config.httpServerViewerGlobalMode:
+            return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.viewerModeKey)
+        else:
+            return "QRCODE:::server"
 
     def libraryContent(self):
         content = ""
