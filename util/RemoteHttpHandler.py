@@ -212,7 +212,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.commonHeader()
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        fontSize = "{0}px".format(config.fontSize)
+        #fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
 
         html = """
@@ -237,6 +237,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   {6}
                   font-family:'{7}';
                   -ms-overflow-style:none;
+                  margin-left: 0px;
+                  margin-right: 0px;
+                {5}
+                #commandForm {4}
                   margin-left: 5px;
                   margin-right: 5px;
                 {5}
@@ -403,8 +407,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 return """
                     <form id="commandForm" action="index.html" action="get">
-                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{10}
+                    {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
+                    {11}&nbsp;&nbsp;{12}{13}{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -412,18 +416,19 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     """.format(
                     "",
                     config.thisTranslation["menu_command"],
-                    config.thisTranslation["enter"],
+                    "&crarr;",
                     self.bibleSelection(),
                     self.bookSelection(),
                     self.previousChapter(),
-                    self.currentVerse(),
+                    self.currentVerseButton(),
                     self.nextChapter(),
                     self.toggleFullscreen(),
                     self.helpButton(),
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    "&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
+                    #"&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
+                    "",
                     "&nbsp;&nbsp;{0}".format(self.layoutButton()) if self.checkPermission()[0] else "",
                 )
         else:
@@ -501,10 +506,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         selectForm += "</select>"
         return selectForm
 
-    def currentVerse(self):
-        command = self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        html = "<button type='button' onclick='submitCommand(\"{0}\")'>{1} {2}:{3}</button>"\
-            .format(command, self.bookMap[str(config.mainB)], config.mainC, config.mainV)
+    def currentVerseButton(self):
+        html = "<button type='button' onclick='submitCommand(\".bible\")'>{0}:{1}</button>"\
+            .format(config.mainC, config.mainV)
         return html
 
     def previousChapter(self):
@@ -512,7 +516,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if newChapter < 1:
             newChapter = 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = "<button type='button' style='width: 50px' onclick='submitCommand(\"{0}\")'>&lt;</button>".format(command)
+        html = "<button type='button' onclick='submitCommand(\"{0}\")'>&lt;</button>".format(command)
         return html
 
     def nextChapter(self):
@@ -520,7 +524,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.mainC < BibleBooks.getLastChapter(config.mainB):
             newChapter += 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = "<button type='button' style='width: 50px' onclick='submitCommand(\"{0}\")'>&gt;</button>".format(command)
+        html = "<button type='button' onclick='submitCommand(\"{0}\")'>&gt;</button>".format(command)
         return html
 
     def toggleFullscreen(self):
