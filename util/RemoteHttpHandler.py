@@ -3,6 +3,8 @@
 import json
 import os, re, config, pprint
 import subprocess
+import urllib
+
 import requests
 from datetime import date
 from http.server import SimpleHTTPRequestHandler
@@ -50,10 +52,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.bookMap = RemoteHttpHandler.bookMap
         self.users = RemoteHttpHandler.users
         self.primaryUser = False
-        if RemoteHttpHandler.viewerModeKey is None:
-            now = date.today()
-            RemoteHttpHandler.viewerModeKey = "{0}-{1}-{2}-{3}"\
-                .format(now.year, now.month, now.day, Random().randint(10000, 99999))
+        if config.httpServerViewerGlobalMode:
+            try:
+                urllib.request.urlopen(config.httpServerViewerBaseUrl)
+                if RemoteHttpHandler.viewerModeKey is None:
+                    now = date.today()
+                    RemoteHttpHandler.viewerModeKey = "{0}-{1}-{2}-{3}" \
+                        .format(now.year, now.month, now.day, Random().randint(10000, 99999))
+            except:
+                config.httpServerViewerGlobalMode = False
         self.viewerModeKey = RemoteHttpHandler.viewerModeKey
         super().__init__(*args, directory="htmlResources", **kwargs)
 
