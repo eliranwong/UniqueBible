@@ -872,7 +872,7 @@ class ConfigUtil:
         config.help["httpServerViewerGlobalMode"] = """
         # Set to true to enable global mode for http-server viewer.  If false, only viewers on same wifi can access the link"""
         if not hasattr(config, "httpServerViewerGlobalMode"):
-            config.httpServerViewerGlobalMode = True
+            config.httpServerViewerGlobalMode = False
         config.help["httpServerViewerBaseUrl"] = """
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
@@ -910,6 +910,8 @@ class ConfigUtil:
             ("qtLibrary", config.qtLibrary),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerPort", config.httpServerPort),
+            ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
+            ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
             ("webFullAccess", config.webFullAccess),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
@@ -1107,8 +1109,6 @@ class ConfigUtil:
             ("installHistory", config.installHistory),
             ("enableMenuUnderline", config.enableMenuUnderline),
             ("githubAccessToken", config.githubAccessToken),
-            ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
-            ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
