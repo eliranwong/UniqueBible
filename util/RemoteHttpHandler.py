@@ -416,7 +416,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     """.format(
                     "",
                     config.thisTranslation["menu_command"],
-                    "&crarr;",
+                    config.thisTranslation["run"],
                     self.bibleSelection(),
                     self.bookSelection(),
                     self.previousChapter(),
