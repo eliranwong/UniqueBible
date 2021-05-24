@@ -869,6 +869,14 @@ class ConfigUtil:
         if not hasattr(config, "githubAccessToken"):
             token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
             config.githubAccessToken = codecs.encode(token, 'rot_13')
+        config.help["httpServerViewerGlobalMode"] = """
+        # Set to true to enable global mode for http-server viewer.  If false, only viewers on same wifi can access the link"""
+        if not hasattr(config, "httpServerViewerGlobalMode"):
+            config.httpServerViewerGlobalMode = True
+        config.help["httpServerViewerBaseUrl"] = """
+        # Base URL for http-server viewer"""
+        if not hasattr(config, "httpServerViewerBaseUrl"):
+            config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -1099,6 +1107,8 @@ class ConfigUtil:
             ("installHistory", config.installHistory),
             ("enableMenuUnderline", config.enableMenuUnderline),
             ("githubAccessToken", config.githubAccessToken),
+            ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
+            ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

@@ -1,10 +1,13 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
+import json
 import os, re, config, pprint
 import subprocess
+import requests
+from datetime import date
 from http.server import SimpleHTTPRequestHandler
+from random import Random
 from time import gmtime
-
 from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
 from BiblesSqlite import BiblesSqlite
@@ -13,7 +16,6 @@ from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from util.FileUtil import FileUtil
-from util.NetworkUtil import NetworkUtil
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
@@ -21,7 +23,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     textCommandParser = None
     bibles = None
     books = None
+    bookMap = None
     abbreviations = None
+    viewerModeKey = None
     users = []
 
     def __init__(self, *args, **kwargs):
@@ -41,14 +45,21 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.abbreviations = RemoteHttpHandler.abbreviations
         if RemoteHttpHandler.books is None:
             RemoteHttpHandler.books = [(k, v) for k, v in self.abbreviations.items() if int(k) <= 69]
+            RemoteHttpHandler.bookMap = {k: v for k, v in self.abbreviations.items() if int(k) <= 69}
         self.books = RemoteHttpHandler.books
+        self.bookMap = RemoteHttpHandler.bookMap
         self.users = RemoteHttpHandler.users
         self.primaryUser = False
+        if RemoteHttpHandler.viewerModeKey is None:
+            now = date.today()
+            RemoteHttpHandler.viewerModeKey = "{0}-{1}-{2}-{3}"\
+                .format(now.year, now.month, now.day, Random().randint(10000, 99999))
+        self.viewerModeKey = RemoteHttpHandler.viewerModeKey
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def getShortcuts(self):
         return {
-            ".myqrcode": "qrcode:::server",
+            ".myqrcode": self.getQrCodeCommand(),
             ".bible": self.getCurrentReference(),
             ".biblemenu": "_menu:::",
             ".commentarymenu": "_commentary:::{0}".format(config.commentaryText),
@@ -186,6 +197,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 outputFile = os.path.join("htmlResources", "main.html")
                 with open(outputFile, "w", encoding="utf-8") as fileObject:
                     fileObject.write(content)
+                if config.httpServerViewerGlobalMode:
+                    url = config.httpServerViewerBaseUrl + "/submit.php"
+                    data = {"code": self.viewerModeKey, "content": content}
+                    response = requests.post(url, data=json.dumps(data))
+                    # print("Submitted data to {0}: {1}".format(url, response))
                 self.indexPage()
             else:
                 self.mainPage()
@@ -387,7 +403,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 return """
                     <form id="commandForm" action="index.html" action="get">
-                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{10}&nbsp;&nbsp;{11}{12}{13}&nbsp;&nbsp;{8}&nbsp;&nbsp;{9}
+                    {7}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{5}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
+                    {11}&nbsp;&nbsp;{12}{13}{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{10}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -399,6 +416,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.bibleSelection(),
                     self.bookSelection(),
                     self.previousChapter(),
+                    self.currentVerse(),
                     self.nextChapter(),
                     self.toggleFullscreen(),
                     self.helpButton(),
@@ -482,6 +500,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 ("selected='selected'" if value == selected else ""))
         selectForm += "</select>"
         return selectForm
+
+    def currentVerse(self):
+        command = self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        html = "<button type='button' onclick='submitCommand(\"{0}\")'>{1} {2}:{3}</button>"\
+            .format(command, self.bookMap[str(config.mainB)], config.mainC, config.mainV)
+        return html
 
     def previousChapter(self):
         newChapter = config.mainC - 1
@@ -783,6 +807,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getCurrentReference(self):
         return "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+
+    def getQrCodeCommand(self):
+        if config.httpServerViewerGlobalMode:
+            return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.viewerModeKey)
+        else:
+            return "QRCODE:::server"
 
     def libraryContent(self):
         content = ""
