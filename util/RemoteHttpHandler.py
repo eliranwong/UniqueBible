@@ -128,6 +128,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "import": self.importContent,
             "layout": self.swapLayout,
             "theme": self.swapTheme,
+            "globalviewer": self.toggleGlobalViewer,
+            "presentationmode": self.togglePresentationMode,
             "increasefontsize": self.increaseFontSize,
             "decreasefontsize": self.decreaseFontSize,
             "compareparallelmode": self.toggleCompareParallel,
@@ -652,28 +654,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if not permission:
             return message
         else:
-            if config.readFormattedBibles:
-                config.readFormattedBibles = False
-                #return self.displayMessage("Option 'plain mode' is turned on for displaying bible chapter!")
-                return self.getBibleChapter()
-            else:
-                config.readFormattedBibles = True
-                #return self.displayMessage("Option 'plain mode' is turned off for displaying bible chapter!")
-                return self.getBibleChapter()
+            config.readFormattedBibles = not config.readFormattedBibles
+            return self.getBibleChapter()
 
     def toggleSubheadings(self):
         permission, message = self.checkPermission()
         if not permission:
             return message
         else:
-            if config.addTitleToPlainChapter:
-                config.addTitleToPlainChapter = False
-                #return self.displayMessage("Option 'add subheadings' is turned off for displaying bible chapter in plain mode!")
-                return self.getBibleChapter()
-            else:
-                config.addTitleToPlainChapter = True
-                #return self.displayMessage("Option 'add subheadings' is turned on for displaying bible chapter in plain mode!")
-                return self.getBibleChapter()
+            config.addTitleToPlainChapter = not config.addTitleToPlainChapter
+            return self.getBibleChapter()
 
     def toggleRegexCaseSensitive(self):
         permission, message = self.checkPermission()
@@ -687,13 +677,38 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 config.regexCaseSensitive = True
                 return self.displayMessage("""<p>Option 'case sensitive' is turned on for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
+    def togglePresentationMode(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.webPresentationMode:
+                config.webPresentationMode = False
+                return self.displayMessage("""<p>Option 'presentation mode' is turned off!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            else:
+                config.webPresentationMode = True
+                return self.displayMessage("""<p>Option 'presentation mode' is turned on!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+
+    def toggleGlobalViewer(self):
+        permission, message = self.checkPermission()
+        if not permission:
+            return message
+        else:
+            if config.httpServerViewerGlobalMode:
+                config.httpServerViewerGlobalMode = False
+                return self.displayMessage("""<p>Option 'global viewer' is turned off for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            else:
+                config.httpServerViewerGlobalMode = True
+                return self.displayMessage("""<p>Option 'global viewer' is turned on for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+
     def swapLayout(self):
         permission, message = self.checkPermission()
         if not permission:
             return message
         else:
             config.webUI = "" if config.webUI == "mini" else "mini"
-            return self.displayMessage("Layout changed!")
+            #return self.displayMessage("Layout changed!")
+            return self.getBibleChapter()
 
     def swapTheme(self):
         permission, message = self.checkPermission()
@@ -701,7 +716,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return message
         else:
             config.theme = "default" if config.theme == "dark" else "dark"
-            return self.displayMessage("Theme changed!")
+            #return self.displayMessage("Theme changed!")
+            return self.getBibleChapter()
 
     def closeWindow(self, message="Server is shut down!"):
         self.send_response(200)
@@ -768,6 +784,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.subheadings')">.subHeadings</ref> - Toggle 'sub-headings' for displaying bible chapters in plain mode.<br>
         <ref onclick="window.parent.submitCommand('.compareparallelmode')">.compareParallelMode</ref> - Toggle 'compare / parallel mode' for bible reading.<br>
         <ref onclick="window.parent.submitCommand('.regexcasesensitive')">.regexCaseSensitive</ref> - Toggle 'case sensitive' for searching bible with regular expression.<br>
+        <ref onclick="window.parent.submitCommand('.presentationmode')">.presentationMode</ref> - Toggle 'presentation mode'.<br>
+        <ref onclick="window.parent.submitCommand('.globalviewer')">.globalViewer</ref> - Toggle 'global viewer' for presentation mode.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.

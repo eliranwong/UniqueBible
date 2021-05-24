@@ -1,3 +1,7 @@
+Major changes in version 24.89:
+* Added ".presentationMode" command to http-server, to toggle presenatation mode.
+* Added ".globalViewer" command to http-server, to toggle global viewer for presentation mode.
+
 Major changes in version 24.88:
 Improved http-server:
 * Added support connecting via a global server.
