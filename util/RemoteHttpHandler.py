@@ -427,8 +427,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    #"&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
-                    "",
+                    "&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
                     "&nbsp;&nbsp;{0}".format(self.layoutButton()) if self.checkPermission()[0] else "",
                 )
         else:

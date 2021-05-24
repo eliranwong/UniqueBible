@@ -1,3 +1,9 @@
+Major changes in version 24.88:
+Improved http-server:
+* Added support connecting via a global server.
+* Added a current verse button.
+* Improved layout for mobile view.
+
 Major changes in version 24.87:
 * Fixed bible menu on http-server.
 * Fixed loading startup plugins on http-server.
