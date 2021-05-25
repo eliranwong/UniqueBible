@@ -316,7 +316,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{14}.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{11}.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
@@ -385,9 +385,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
-            config.mainB,
-            config.mainC,
-            config.mainV,
             self.session,
         )
         self.wfile.write(bytes(html, "utf8"))
