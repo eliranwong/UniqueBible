@@ -65,3 +65,6 @@ morphology.sqlite
 htmlResources/fonts/*
 htmlResources/images/[A-Z]*/*
 htmlResources/images/qrcode.png
+**/.DS_Store
+nohup.out
+htmlResources/main-*.html
