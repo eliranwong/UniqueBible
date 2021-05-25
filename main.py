@@ -3,7 +3,7 @@
 # UniqueBible.app
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
-
+import glob
 import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
@@ -55,6 +55,13 @@ if config.enableLogging:
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 else:
     logger.addHandler(logging.NullHandler())
+
+def cleanupTempFiles():
+    files = glob.glob(os.path.join("htmlResources", "main-*.html"))
+    for file in files:
+        os.remove(file)
+
+cleanupTempFiles()
 
 # Remote CLI
 if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
@@ -115,6 +122,7 @@ def startHttpServer():
         while config.enableHttpServer:
             httpd.handle_request()
         httpd.server_close()
+        cleanupTempFiles()
         print("Server is stopped!")
 
 config.enableHttpServer = False

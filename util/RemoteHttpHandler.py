@@ -1,14 +1,13 @@
 # https://docs.python.org/3/library/http.server.html
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
+import hashlib
 import json
 import os, re, config, pprint
 import subprocess
 import urllib
 
 import requests
-from datetime import date
 from http.server import SimpleHTTPRequestHandler
-from random import Random
 from time import gmtime
 from BibleBooks import BibleBooks
 from BibleVerseParser import BibleVerseParser
@@ -27,7 +26,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     books = None
     bookMap = None
     abbreviations = None
-    viewerModeKey = None
+    session = None
     users = []
 
     def __init__(self, *args, **kwargs):
@@ -55,19 +54,18 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.httpServerViewerGlobalMode:
             try:
                 urllib.request.urlopen(config.httpServerViewerBaseUrl)
-                if RemoteHttpHandler.viewerModeKey is None:
-                    now = date.today()
-                    RemoteHttpHandler.viewerModeKey = "{0}-{1}-{2}-{3}" \
-                        .format(now.year, now.month, now.day, Random().randint(10000, 99999))
             except:
                 config.httpServerViewerGlobalMode = False
-        self.viewerModeKey = RemoteHttpHandler.viewerModeKey
         super().__init__(*args, directory="htmlResources", **kwargs)
+
+    def getCommands(self):
+        return {
+            ".myqrcode": self.getQrCodeCommand,
+            ".bible": self.getCurrentReference,
+        }
 
     def getShortcuts(self):
         return {
-            ".myqrcode": self.getQrCodeCommand(),
-            ".bible": self.getCurrentReference(),
             ".biblemenu": "_menu:::",
             ".commentarymenu": "_commentary:::{0}".format(config.commentaryText),
             ".timelinemenu": "BOOK:::Timelines",
@@ -139,6 +137,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setfavouritebible": self.setFavouriteBibleContent,
             "setstandardabbreviation": self.setStandardAbbreviationContent,
         }
+        self.session = self.getSession()
         clientIP = self.client_address[0]
         if clientIP not in self.users:
             self.users.append(clientIP)
@@ -151,12 +150,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = query_components["cmd"][0].strip()
                     # Convert command shortcut
                     shortcuts = self.getShortcuts()
+                    commands = self.getCommands()
                     if not self.command:
                         self.command = config.history["main"][-1]
                     elif self.command.lower() in config.customCommandShortcuts.keys():
                         self.command = config.customCommandShortcuts[self.command.lower()]
                     elif self.command.lower() in shortcuts.keys():
                         self.command = shortcuts[self.command.lower()]
+                    elif self.command.lower() in commands.keys():
+                        self.command = commands[self.command.lower()]()
                     elif self.command.upper()[1:] in self.getVerseFeatures().keys():
                         self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                     elif self.command.upper()[1:] in self.getChapterFeatures().keys():
@@ -205,12 +207,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if config.bibleWindowContentTransformers:
                     for transformer in config.bibleWindowContentTransformers:
                         content = transformer(content)
-                outputFile = os.path.join("htmlResources", "main.html")
+                outputFile = os.path.join("htmlResources", "main-{0}.html".format(self.session))
                 with open(outputFile, "w", encoding="utf-8") as fileObject:
                     fileObject.write(content)
                 if config.httpServerViewerGlobalMode and config.webPresentationMode:
                     url = config.httpServerViewerBaseUrl + "/submit.php"
-                    data = {"code": self.viewerModeKey, "content": content}
+                    data = {"code": self.session, "content": content}
                     response = requests.post(url, data=json.dumps(data))
                     # print("Submitted data to {0}: {1}".format(url, response))
                 self.indexPage()
@@ -314,7 +316,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{14}.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
@@ -383,12 +385,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
+            config.mainB,
+            config.mainC,
+            config.mainV,
+            self.session,
         )
         self.wfile.write(bytes(html, "utf8"))
 
     def mainPage(self):
         self.commonHeader()
-        html = open(os.path.join("htmlResources", "main.html"), 'r').read()
+        html = open(os.path.join("htmlResources", "main-{0}.html".format(self.session)), 'r').read()
         self.wfile.write(bytes(html, "utf8"))
 
     def commonHeader(self):
@@ -843,7 +849,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getQrCodeCommand(self):
         if config.httpServerViewerGlobalMode:
-            return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.viewerModeKey)
+            return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.session)
         else:
             return "QRCODE:::server"
 
@@ -901,3 +907,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += self.formatSearchSection("Books", "SEARCHBOOK", "SEARCHBOOK", self.textCommandParser.parent.referenceBookList)
         content += self.formatSearchSection("Third Party Dictionaries", "SEARCHTHIRDDICTIONARY", "SEARCHTHIRDDICTIONARY", self.textCommandParser.parent.thirdPartyDictionaryList)
         return content
+
+    def getSession(self):
+        headers = {x: y for x, y in self.headers._headers}
+        ip = self.client_address[0]
+        browser = headers['User-Agent']
+        session = str(ip + browser).encode('utf-8')
+        session = hashlib.sha256(session).hexdigest()[:30]
+        return session
