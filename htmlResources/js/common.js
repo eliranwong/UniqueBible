@@ -95,82 +95,81 @@ function openBibleVerse(id,b,c,v,module) {
 }
 
 function loadBible() {
-//document.getElementById("footer").innerHTML = getFooter3();
-window.addEventListener("scroll", scrollBibles);
-
-var bibleFrame = window.parent.document.getElementById('bibleFrame');
-var toolFrame = window.parent.document.getElementById('toolFrame');
-var info = window.location.href;
-if (window.self == bibleFrame.contentWindow) { 
-// check matching src and href
-// workaround for iOS scrolling
-// bibleFrame.src = info;
-if (bibleFrame.src != info) { bibleFrame.src = info; }
-if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
-// mod info
-window.parent.activeText = activeText;
-window.parent.tempActiveText = activeText;
-// verse info
-var patt = /#v.*$/g;
-info = info.match(patt).toString().slice(2);
-var bcv = info.split(".");
-window.parent.activeB = Number(bcv[0]);
-window.parent.tempB = window.parent.activeB;
-window.parent.activeC = Number(bcv[1]);
-window.parent.tempC = window.parent.activeC;
-window.parent.activeV = Number(bcv[2]);
-window.parent.tempV = window.parent.activeV;
-// window.parent.updateBibleTitle();
-window.parent.history.pushState(null, null, '/index.html?' + window.parent.activeText + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
-window.parent.resizeSite();
-	// BibleSync
-	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { window.parent.checkSync('bibleFrame',window.parent.activeB); }
-	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { 
-		switch(window.parent.triggerPara) {
-    	case 0:
-    	window.parent.triggerPara = 1;
-    	window.parent.openBibleVerse('toolFrame',window.parent.activeB,window.parent.activeC,window.parent.activeV);
-    	break;
-    	case 1:
-    	window.parent.triggerPara = 0;
-    	break;
+    //document.getElementById("footer").innerHTML = getFooter3();
+    window.addEventListener("scroll", scrollBibles);
+    
+    var bibleFrame = window.parent.document.getElementById('bibleFrame');
+    var toolFrame = window.parent.document.getElementById('toolFrame');
+    var info = window.location.href;
+    if (window.self == bibleFrame.contentWindow) { 
+        // check matching src and href
+        // workaround for iOS scrolling
+        // bibleFrame.src = info;
+        if (bibleFrame.src != info) { bibleFrame.src = info; }
+        if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
+        // mod info
+        window.parent.activeText = activeText;
+        window.parent.tempActiveText = activeText;
+        // verse info
+        var patt = /#v.*$/g;
+        info = info.match(patt).toString().slice(2);
+        var bcv = info.split(".");
+        window.parent.activeB = Number(bcv[0]);
+        window.parent.tempB = window.parent.activeB;
+        window.parent.activeC = Number(bcv[1]);
+        window.parent.tempC = window.parent.activeC;
+        window.parent.activeV = Number(bcv[2]);
+        window.parent.tempV = window.parent.activeV;
+        // window.parent.updateBibleTitle();
+        // window.parent.history.pushState(null, null, '/index.html?' + window.parent.activeText + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
+        window.parent.resizeSite();
+    	// BibleSync
+    	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { window.parent.checkSync('bibleFrame',window.parent.activeB); }
+    	if ((window.parent.paraWin == 2) && (window.parent.syncBible == 1) && (window.parent.paraContent == 'bible')) { 
+    		switch(window.parent.triggerPara) {
+        	case 0:
+        	window.parent.triggerPara = 1;
+        	window.parent.openBibleVerse('toolFrame',window.parent.activeB,window.parent.activeC,window.parent.activeV);
+        	break;
+        	case 1:
+        	window.parent.triggerPara = 0;
+        	break;
+        	}
     	}
-	}
-}
-else if (window.self == toolFrame.contentWindow) { 
-// check matching src and href
-// workaround for iOS scrolling
-//toolFrame.src = info;
-if (toolFrame.src != info) { toolFrame.src = info; }
-if (toolFrame.contentWindow.location.href != info) { toolFrame.contentWindow.location.href = info; }
-// workaround for iOS
-if (getMobileOperatingSystem() == 'iOS') { window.parent.document.getElementById('bibleDiv').scrollTop = window.parent.document.getElementById('bibleDiv').scrollTop - 1; }
-// get book number
-window.parent.toolB = window.parent.tempB;
-window.parent.toolC = window.parent.tempC;
-window.parent.toolV = window.parent.tempV;
-window.parent.tempActiveText = window.parent.activeText;
-window.parent.tempB = window.parent.activeB;
-window.parent.tempC = window.parent.activeC;
-window.parent.tempV = window.parent.activeV;
-// set tool window info
-window.parent.paraContent = 'bible';
-//window.parent.document.getElementById('syncOption').style.display='';
-window.parent.resizeSite();
-	// BibleSync
-	if (window.parent.syncBible == 1) { window.parent.checkSync('toolFrame', window.parent.toolB); }
-	if (window.parent.syncBible == 1) { 
-		switch(window.parent.triggerPara) {
-    	case 0:
-    	window.parent.triggerPara = 1;
-    	window.parent.openBibleVerse('bibleFrame', window.parent.toolB, window.parent.toolC, window.parent.toolV);
-    	break;
-    	case 1:
-    	window.parent.triggerPara = 0;
-    	break;
+    } else if (window.self == toolFrame.contentWindow) {
+        // check matching src and href
+        // workaround for iOS scrolling
+        //toolFrame.src = info;
+        if (toolFrame.src != info) { toolFrame.src = info; }
+        if (toolFrame.contentWindow.location.href != info) { toolFrame.contentWindow.location.href = info; }
+        // workaround for iOS
+        if (getMobileOperatingSystem() == 'iOS') { window.parent.document.getElementById('bibleDiv').scrollTop = window.parent.document.getElementById('bibleDiv').scrollTop - 1; }
+        // get book number
+        window.parent.toolB = window.parent.tempB;
+        window.parent.toolC = window.parent.tempC;
+        window.parent.toolV = window.parent.tempV;
+        window.parent.tempActiveText = window.parent.activeText;
+        window.parent.tempB = window.parent.activeB;
+        window.parent.tempC = window.parent.activeC;
+        window.parent.tempV = window.parent.activeV;
+        // set tool window info
+        window.parent.paraContent = 'bible';
+        //window.parent.document.getElementById('syncOption').style.display='';
+        window.parent.resizeSite();
+    	// BibleSync
+    	if (window.parent.syncBible == 1) { window.parent.checkSync('toolFrame', window.parent.toolB); }
+    	if (window.parent.syncBible == 1) { 
+    		switch(window.parent.triggerPara) {
+        	case 0:
+        	window.parent.triggerPara = 1;
+        	window.parent.openBibleVerse('bibleFrame', window.parent.toolB, window.parent.toolC, window.parent.toolV);
+        	break;
+        	case 1:
+        	window.parent.triggerPara = 0;
+        	break;
+        	}
     	}
-	}
-}
+    }
 }
 
 function checkSync(source,b,module) {
@@ -334,13 +333,27 @@ function disableIOSScrolling() {
     bibleDiv.style.webkitOverflowScrolling = "auto";
     toolDiv.style.webkitOverflowScrolling = "auto";
 }
-  
+
+// There is a known issue about getting offset of an element within a table:
+// https://stackoverflow.com/questions/1044988/getting-offsettop-of-element-in-a-table
+function getOffsetByElement(elem) {
+    if (!elem) elem = this;
+    var x = elem.offsetLeft;
+    var y = elem.offsetTop;
+    while (elem = elem.offsetParent) {
+        x += elem.offsetLeft;
+        y += elem.offsetTop;
+    }
+    return { left: x, top: y };
+}
+
 function fixBibleVerse() {
     var targetPos = 'v' + activeB + '.' + activeC + '.' + activeV;
     var targetFrame = document.getElementById('bibleFrame');
     var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
     var targetElement = targetDoc.getElementById(targetPos);
-    var targetHeight = targetElement.offsetTop;
+    //var targetHeight = targetElement.offsetTop;
+    var targetHeight = getOffsetByElement(targetElement).top
     if (getMobileOperatingSystem() == 'iOS') { document.getElementById('bibleDiv').scrollTop = targetHeight; }
     else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
 }
@@ -350,7 +363,8 @@ function fixToolVerse(b,c,v) {
     var targetFrame = document.getElementById('toolFrame');
     var targetDoc = targetFrame.contentDocument || targetFrame.contentWindow.document;
     var targetElement = targetDoc.getElementById(targetPos);
-    var targetHeight = targetElement.offsetTop;
+    //var targetHeight = targetElement.offsetTop;
+    var targetHeight = getOffsetByElement(targetElement).top
     if (getMobileOperatingSystem() == 'iOS') { document.getElementById('toolDiv').scrollTop = targetHeight; }
     else {targetFrame.contentWindow.scrollTo(0,targetHeight);}
 }
