@@ -251,7 +251,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   display: none;
                 {5}
                 body {4}
-                  {6}
                   font-family:'{7}';
                   -ms-overflow-style:none;
                   margin-left: 0px;
@@ -316,7 +315,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{11}.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{6}.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
@@ -380,12 +379,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             activeBCVsettings,
             "{",
             "}",
-            "", #"font-size: {0};".format(fontSize),
+            self.session,
             fontFamily,
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
-            self.session,
         )
         self.wfile.write(bytes(html, "utf8"))
 
