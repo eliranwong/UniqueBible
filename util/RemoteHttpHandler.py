@@ -136,6 +136,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "subheadings": self.toggleSubheadings,
             "plainmode": self.togglePlainMode,
             "regexcasesensitive": self.toggleRegexCaseSensitive,
+            "setfavouritebible": self.setFavouriteBibleContent,
+            "setstandardabbreviation": self.setStandardAbbreviationContent,
         }
         clientIP = self.client_address[0]
         if clientIP not in self.users:
@@ -220,7 +222,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def indexPage(self):
         self.commonHeader()
         bcv = (config.mainText, config.mainB, config.mainC, config.mainV)
-        activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
+        activeBCVsettings = """<script>
+        var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};
+        var tempActiveText = '{0}'; var tempB = {1}; var tempC = {2}; var tempV = {3};
+        var toolB = {1}; var toolC = {2}; var toolV = {3};
+        </script>""".format(*bcv)
         #fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
 
@@ -234,7 +240,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.009'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.010'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -281,22 +287,20 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.009'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.009'>
-                <script src='js/common.js?v=1.009'></script>
-                <script src='js/{9}.js?v=1.009'></script>
-                <script src='w3.js?v=1.009'></script>
-                <script src='js/http_server.js?v=1.009'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.010'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.010'>
+                <script src='js/common.js?v=1.010'></script>
+                <script src='js/{9}.js?v=1.010'></script>
+                <script src='w3.js?v=1.010'></script>
+                <script src='js/http_server.js?v=1.010'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
                 var curPos;
-                var tempActiveText; var tempB; var tempC; var tempV;
                 var para = 2; var annoClause = 1; var annoPhrase = 1; var highlights = 1;
                 var paraWin = 1; var syncBible = 1; var paraContent = ''; var triggerPara = 0;
                 var currentZone; var currentB; var currentC; var currentV;
                 var fullScreen = 0; var toolDivLoaded = 0; var landscape;
-                var toolB; var toolC; var toolV;
                 </script>
                 {3}
                 <script>
@@ -379,9 +383,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
-            config.mainB,
-            config.mainC,
-            config.mainV,
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -466,12 +467,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.009'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.009'>"
-                "<script src='js/common.js?v=1.009'></script>"
-                "<script src='js/{7}.js?v=1.009'></script>"
-                "<script src='w3.js?v=1.009'></script>"
-                "<script src='js/http_server.js?v=1.009'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.010'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.010'>"
+                "<script src='js/common.js?v=1.010'></script>"
+                "<script src='js/{7}.js?v=1.010'></script>"
+                "<script src='w3.js?v=1.010'></script>"
+                "<script src='js/http_server.js?v=1.010'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -487,7 +488,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.009'></script>"
+                "<script src='js/custom.js?v=1.010'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -788,6 +789,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.regexcasesensitive')">.regexCaseSensitive</ref> - Toggle 'case sensitive' for searching bible with regular expression.<br>
         <ref onclick="window.parent.submitCommand('.presentationmode')">.presentationMode</ref> - Toggle 'presentation mode'.<br>
         <ref onclick="window.parent.submitCommand('.globalviewer')">.globalViewer</ref> - Toggle 'global viewer' for presentation mode.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebible')">.setFavouriteBible</ref> - Set configuration 'favouriteBible'.<br>
+        <ref onclick="window.parent.submitCommand('.setstandardabbreviation')">.setStandardAbbreviation</ref> - Set configuration 'standardAbbreviation'.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.
@@ -851,6 +854,21 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>Reference Book</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
+        return content
+
+    def setFavouriteBibleContent(self):
+        content = "<h2>Select Faviourite Bible:</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::favouriteBible:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.textList)])
+        return content
+
+    def setStandardAbbreviationContent(self):
+        options = (
+            ("ENG", "English"),
+            ("TC", "Traditional Chinese"),
+            ("SC", "Simplified Chinese"),
+        )
+        content = "<h2>Select Standard Abbreviation:</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::standardAbbreviation:::\\'{0}\\''">{1}</ref>""".format(code, language) for code, language in options])
         return content
 
     def formatSearchSection(self, resourceType, inputID, searchCommand, abbreviationList, fullNameList=None):

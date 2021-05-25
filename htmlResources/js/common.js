@@ -100,26 +100,26 @@ function loadBible() {
     
     var bibleFrame = window.parent.document.getElementById('bibleFrame');
     var toolFrame = window.parent.document.getElementById('toolFrame');
-    var info = window.location.href;
+    //var info = window.location.href;
     if (window.self == bibleFrame.contentWindow) { 
         // check matching src and href
         // workaround for iOS scrolling
         // bibleFrame.src = info;
-        if (bibleFrame.src != info) { bibleFrame.src = info; }
-        if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
+        //if (bibleFrame.src != info) { bibleFrame.src = info; }
+        //if (bibleFrame.contentWindow.location.href != info) { bibleFrame.contentWindow.location.href = info; }
         // mod info
-        window.parent.activeText = activeText;
-        window.parent.tempActiveText = activeText;
+        //window.parent.activeText = activeText;
+        //window.parent.tempActiveText = activeText;
         // verse info
-        var patt = /#v.*$/g;
-        info = info.match(patt).toString().slice(2);
-        var bcv = info.split(".");
-        window.parent.activeB = Number(bcv[0]);
+        //var patt = /#v.*$/g;
+        //info = info.match(patt).toString().slice(2);
+        //var bcv = info.split(".");
+        /*window.parent.activeB = Number(bcv[0]);
         window.parent.tempB = window.parent.activeB;
         window.parent.activeC = Number(bcv[1]);
         window.parent.tempC = window.parent.activeC;
         window.parent.activeV = Number(bcv[2]);
-        window.parent.tempV = window.parent.activeV;
+        window.parent.tempV = window.parent.activeV;*/
         // window.parent.updateBibleTitle();
         // window.parent.history.pushState(null, null, '/index.html?' + window.parent.activeText + '&' + window.parent.activeB + '.' + window.parent.activeC + '.' + window.parent.activeV);
         window.parent.resizeSite();
@@ -140,18 +140,18 @@ function loadBible() {
         // check matching src and href
         // workaround for iOS scrolling
         //toolFrame.src = info;
-        if (toolFrame.src != info) { toolFrame.src = info; }
-        if (toolFrame.contentWindow.location.href != info) { toolFrame.contentWindow.location.href = info; }
+        //if (toolFrame.src != info) { toolFrame.src = info; }
+        //if (toolFrame.contentWindow.location.href != info) { toolFrame.contentWindow.location.href = info; }
         // workaround for iOS
         if (getMobileOperatingSystem() == 'iOS') { window.parent.document.getElementById('bibleDiv').scrollTop = window.parent.document.getElementById('bibleDiv').scrollTop - 1; }
         // get book number
-        window.parent.toolB = window.parent.tempB;
+        /*window.parent.toolB = window.parent.tempB;
         window.parent.toolC = window.parent.tempC;
         window.parent.toolV = window.parent.tempV;
         window.parent.tempActiveText = window.parent.activeText;
         window.parent.tempB = window.parent.activeB;
         window.parent.tempC = window.parent.activeC;
-        window.parent.tempV = window.parent.activeV;
+        window.parent.tempV = window.parent.activeV;*/
         // set tool window info
         window.parent.paraContent = 'bible';
         //window.parent.document.getElementById('syncOption').style.display='';

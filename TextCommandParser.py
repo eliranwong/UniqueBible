@@ -369,6 +369,7 @@ class TextCommandParser:
             # [KEYWORD] cmd
             # Feature - Run an os command
             # Warning! Make sure you know what you are running before you use this keyword.  The running command may affect data outside UniqueBible folder.
+            # Remarks: This command works ONLY when config.enableCmd is set to True.
             # Examples on Windows:
             # e.g. cmd:::notepad
             # e.g. cmd:::start latest_changes.txt
@@ -618,7 +619,15 @@ class TextCommandParser:
             # Feature - Save the current page of PDF
             # Usage - _SAVEPDFCURRENTPAGE:::[page]
             # Example:
-            # e.g. _SAVEPDFCURRENTPAGE:::100""")
+            # e.g. _SAVEPDFCURRENTPAGE:::100"""),
+            "_setconfig": (self.textSetConfig, """
+            # [KEYWORD] _setconfig
+            # Feature - Set a config value in config.py.
+            # Usage - _setconfig:::[item]:::[value]
+            # WARNING! Do NOT use this command unless you know well about config.py.  A mistake can prevent UBA from startup.
+            # Remarks: This command works ONLY when config.developer is set to True.
+            # Example:
+            # e.g. _setconfig:::favouriteBible:::'BSB'"""),
         }
         for key, value in BibleBooks.eng.items():
             book = value[0]
@@ -2323,6 +2332,22 @@ class TextCommandParser:
         items = (lexeme, lexicalEntry, morphologyString, translations)
         self.parent.openMorphDialog(items)
         return ("", "", {})
+
+    # _setconfig:::
+    def textSetConfig(self, command, source):
+        if config.developer or config.webFullAccess:
+            item, value = self.splitCommand(command)
+            if not item in config.help.keys():
+                return self.invalidCommand("study")
+            else:
+                newConfig = "{0} = {1}".format(item, value)
+                try:
+                    exec("config."+newConfig)
+                    return ("study", "<p>Configuration changed to:<br>{0}</p>".format(newConfig), {})
+                except:
+                    return self.invalidCommand("study")
+        else:
+            return self.invalidCommand("study")
 
     # EXLB:::
     def textExlb(self, command, source):

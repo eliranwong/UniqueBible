@@ -1,3 +1,9 @@
+Major changes in version 24.90:
+* Fixed scolling to selected verse when comparison feature is loaded on http-server page.
+* Fixed a load loadBible javascript function for http-server.
+* Added '_setconfig:::' command keyword for developers to set configurations, e.g. _setconfig:::favouriteBible:::'BSB'
+* Added '.setFavouriteBible' and 'setstandardabbreviation' as shortcut commands to http-server.
+
 Major changes in version 24.89:
 * Added ".presentationMode" command to http-server, to toggle presenatation mode.
 * Added ".globalViewer" command to http-server, to toggle global viewer for presentation mode.
