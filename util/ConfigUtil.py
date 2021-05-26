@@ -877,6 +877,10 @@ class ConfigUtil:
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
             config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
+        config.help["collapseFooterHeight"] = """
+        # Collapse footer height for http-server"""
+        if not hasattr(config, "collapseFooterHeight"):
+            config.collapseFooterHeight = False
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -915,6 +919,7 @@ class ConfigUtil:
             ("webFullAccess", config.webFullAccess),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
+            ("collapseFooterHeight", config.collapseFooterHeight),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),
