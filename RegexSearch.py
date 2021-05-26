@@ -3,10 +3,6 @@
 import re, glob, os, sys, pprint
 #import platform
 #if (platform.system() != "Windows"):
-# sys.platform
-# https://docs.python.org/3/library/sys.html#sys.platform
-if (sys.platform == "linux") or (sys.platform == "darwin"):
-    import readline
 from ast import literal_eval
 
 class RegexSearch:
@@ -97,6 +93,11 @@ class RegexSearch:
         return text
 
 if __name__ == '__main__':
+    # sys.platform
+    # https://docs.python.org/3/library/sys.html#sys.platform
+    if (sys.platform == "linux") or (sys.platform == "darwin"):
+        import readline
+
     inputName = ""
     arguments = sys.argv
 

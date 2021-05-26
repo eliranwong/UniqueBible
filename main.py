@@ -9,9 +9,6 @@ import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 
-if not platform.system() == "Windows":
-    import readline
-
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
 wd = thisFile[:-7]
@@ -26,8 +23,6 @@ import config
 # Setup config values
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
-# Check for dependencies and other essential elements
-#from checkup import *
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
@@ -134,6 +129,8 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     exit(0)
 
 # Setup menu shortcut configuration file
+if not platform.system() == "Windows" and not config.enableHttpServer:
+    import readline
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
