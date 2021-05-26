@@ -231,9 +231,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         </script>""".format(*bcv)
         #fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
-        collapseFooter = ""
-        if config.collapseFooterHeight:
-            collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'"
+        collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'" if config.webCollapseFooterHeight else ""
         html = """
             <html>
             <head>

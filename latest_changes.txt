@@ -1,3 +1,6 @@
+Major change in version 24.92:
+* Added config option 'webCollapseFooterHeight' for running http-server.
+
 Major change in version 24.91:
 * Added support of multiple users for http-server.
 

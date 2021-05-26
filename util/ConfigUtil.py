@@ -47,6 +47,14 @@ class ConfigUtil:
         # To specify the port used by http-server."""
         if not hasattr(config, "httpServerPort"):
             config.httpServerPort = 8080
+        config.help["httpServerViewerGlobalMode"] = """
+        # Set to true to enable global mode for http-server viewer.  If false, only viewers on same wifi can access the link"""
+        if not hasattr(config, "httpServerViewerGlobalMode"):
+            config.httpServerViewerGlobalMode = False
+        config.help["httpServerViewerBaseUrl"] = """
+        # Base URL for http-server viewer"""
+        if not hasattr(config, "httpServerViewerBaseUrl"):
+            config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
         config.help["webFullAccess"] = """
         # Full server to web http-server from browser, including shutdown or restart server."""
         if not hasattr(config, "webFullAccess"):
@@ -59,6 +67,10 @@ class ConfigUtil:
         # Http-server presentation mode - only the primary user have full control and ability to share content to other users."""
         if not hasattr(config, "webPresentationMode"):
             config.webPresentationMode = False
+        config.help["webCollapseFooterHeight"] = """
+        # Collapse footer height for http-server."""
+        if not hasattr(config, "webCollapseFooterHeight"):
+            config.webCollapseFooterHeight = False
         config.help["referenceTranslation"] = """
         # Specify a translation as a reference for making other translations.  This option is created for development purpose."""
         if not hasattr(config, "referenceTranslation"):
@@ -869,18 +881,6 @@ class ConfigUtil:
         if not hasattr(config, "githubAccessToken"):
             token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
             config.githubAccessToken = codecs.encode(token, 'rot_13')
-        config.help["httpServerViewerGlobalMode"] = """
-        # Set to true to enable global mode for http-server viewer.  If false, only viewers on same wifi can access the link"""
-        if not hasattr(config, "httpServerViewerGlobalMode"):
-            config.httpServerViewerGlobalMode = False
-        config.help["httpServerViewerBaseUrl"] = """
-        # Base URL for http-server viewer"""
-        if not hasattr(config, "httpServerViewerBaseUrl"):
-            config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
-        config.help["collapseFooterHeight"] = """
-        # Collapse footer height for http-server"""
-        if not hasattr(config, "collapseFooterHeight"):
-            config.collapseFooterHeight = False
 
         # Temporary configurations
         # Their values are not saved on exit.
@@ -919,7 +919,7 @@ class ConfigUtil:
             ("webFullAccess", config.webFullAccess),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
-            ("collapseFooterHeight", config.collapseFooterHeight),
+            ("webCollapseFooterHeight", config.webCollapseFooterHeight),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),
