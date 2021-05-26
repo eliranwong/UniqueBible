@@ -231,7 +231,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         </script>""".format(*bcv)
         #fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
-
+        collapseFooter = ""
+        if config.collapseFooterHeight:
+            collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'"
         html = """
             <html>
             <head>
@@ -315,7 +317,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
-                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite()" width="100%" height="{1}%" src="main-{6}.html">Oops!</iframe>
+                        <iframe id="bibleFrame" name="main-{2}" onload="resizeSite();{11}" width="100%" height="{1}%" src="main-{6}.html">Oops!</iframe>
                     </div>
                     <div id="toolDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
@@ -384,6 +386,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.fontChinese,
             config.theme,
             self.getHighlightCss(),
+            collapseFooter,
         )
         self.wfile.write(bytes(html, "utf8"))
 
