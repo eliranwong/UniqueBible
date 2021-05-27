@@ -862,7 +862,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def libraryContent(self):
         content = ""
         reference = self.getCurrentReference()
-        content += "<h2>Commentary</h2>"
+        content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">Commentary</ref></h2>"""
         content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>Reference Book</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])

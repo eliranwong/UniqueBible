@@ -1,3 +1,6 @@
+Major change in version 24.96:
+* Fixed commentary menu on http-server.
+
 Major change in version 24.95:
 * Added Collections Dataset to http-server download page.  Without downloading collections data, _promise and _harmony commands do not work.
 * Changed two buttons http-server default layout.

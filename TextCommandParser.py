@@ -1970,6 +1970,8 @@ class TextCommandParser:
 
     # _commentary:::
     def textCommentaryMenu(self, command, source):
+        if config.enableHttpServer:
+            config.commentaryB, config.commentaryC, config.commentaryV = config.mainB, config.mainC, config.mainV
         text, *_ = command.split(".")
         commentary = Commentary(text)
         commentaryMenu = commentary.getMenu(command)
@@ -2043,6 +2045,8 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             bcvTuple = verseList[0]
+            if config.enableHttpServer:
+                config.mainB, config.mainC, config.mainV, *_ = bcvTuple
             module = commandList[0]
             commentary = Commentary(module)
             content =  commentary.getContent(bcvTuple)
