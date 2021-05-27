@@ -1188,7 +1188,11 @@ class TextCommandParser:
                     self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
         else:
             self.parent.displayMessage(config.thisTranslation["ffmpegNotFound"])
-            webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg")
+            wikiPage = "https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg"
+            if config.enableHttpServer:
+                subprocess.Popen("{0} {1}".format(config.open, wikiPage), shell=True)
+            else:
+                webbrowser.open(wikiPage)
 
     # functions about bible
 
@@ -2771,7 +2775,7 @@ class TextCommandParser:
             else:
                 self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
 
-        return ("", "", {})
+        return ("study", "Downloaded!", {})
 
 
     def noAction(self, command, source):

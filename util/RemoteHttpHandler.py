@@ -195,7 +195,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                             view, content, *_ = self.textCommandParser.parser(self.command, "http")
                         except:
                             content = "Error!"
-                        if not content:
+                        if content == "Downloaded!":
+                            content = self.downloadContent()
+                        elif not content:
                             content = "Command was processed!"
                         elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
                             self.textCommandParser.parent.addHistoryRecord(view, self.command)

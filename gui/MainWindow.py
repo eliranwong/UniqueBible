@@ -2756,7 +2756,9 @@ class MainWindow(QMainWindow):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
         elif commandFieldText != self.onlineCommand:
             *_, address = commandFieldText.split(":::")
-            if config.useWebbrowser:
+            if config.enableHttpServer and address.startswith("http"):
+                subprocess.Popen("{0} {1}".format(config.open, address), shell=True)
+            elif config.useWebbrowser:
                 webbrowser.open(address)
             else:
                 if config.openStudyWindowContentOnNextTab:

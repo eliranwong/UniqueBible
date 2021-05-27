@@ -1,3 +1,6 @@
+Major change in version 24.94:
+* Http-server reloads download page after an item is downloaded.
+
 Major change in version 24.93:
 * Fixed a readline issue with http-server.
 
