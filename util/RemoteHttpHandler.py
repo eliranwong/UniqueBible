@@ -244,7 +244,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.010'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.011'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -290,12 +290,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.010'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.010'>
-                <script src='js/common.js?v=1.010'></script>
-                <script src='js/{9}.js?v=1.010'></script>
-                <script src='w3.js?v=1.010'></script>
-                <script src='js/http_server.js?v=1.010'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.011'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.011'>
+                <script src='js/common.js?v=1.011'></script>
+                <script src='js/{9}.js?v=1.011'></script>
+                <script src='w3.js?v=1.011'></script>
+                <script src='js/http_server.js?v=1.011'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -424,7 +424,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 return """
                     <form id="commandForm" action="index.html" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
+                    {11}&nbsp;&nbsp;{12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -443,8 +443,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    "&nbsp;&nbsp;{0}".format(self.historyButton()) if self.checkPermission()[0] else "",
-                    "&nbsp;&nbsp;{0}".format(self.layoutButton()) if self.checkPermission()[0] else "",
+                    self.mibButton(),
+                    self.mpbButton(),
                 )
         else:
             return ""
@@ -471,12 +471,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.010'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.010'>"
-                "<script src='js/common.js?v=1.010'></script>"
-                "<script src='js/{7}.js?v=1.010'></script>"
-                "<script src='w3.js?v=1.010'></script>"
-                "<script src='js/http_server.js?v=1.010'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.011'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.011'>"
+                "<script src='js/common.js?v=1.011'></script>"
+                "<script src='js/{7}.js?v=1.011'></script>"
+                "<script src='w3.js?v=1.011'></script>"
+                "<script src='js/http_server.js?v=1.011'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -492,7 +492,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.010'></script>"
+                "<script src='js/custom.js?v=1.011'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -568,6 +568,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def historyButton(self):
         html = """<button type='button' onclick='window.parent.submitCommand(".history")'>{0}</button>""".format(config.thisTranslation["menu3_history"])
+        return html
+
+    def mibButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".mib")'>{0}</button>""".format("MIB")
+        return html
+
+    def mpbButton(self):
+        html = """<button type='button' onclick='window.parent.submitCommand(".mpb")'>{0}</button>""".format("MPB")
         return html
 
     def getHighlightCss(self):
