@@ -479,6 +479,14 @@ class ConfigUtil:
         # Set your favourite version here"""
         if not hasattr(config, "favouriteBible"):
             config.favouriteBible = "OHGBi"
+        config.help["favouriteBible2"] = """
+        # Set your second favourite version here"""
+        if not hasattr(config, "favouriteBible2"):
+            config.favouriteBible2 = "KJV"
+        config.help["favouriteBible3"] = """
+        # Set your third favourite version here"""
+        if not hasattr(config, "favouriteBible3"):
+            config.favouriteBible3 = "NET"
         config.help["addFavouriteToMultiRef"] = """
         # Options to display "favouriteBible" together with the main version for reading multiple references: True / False"""
         if not hasattr(config, "addFavouriteToMultiRef"):
@@ -1001,6 +1009,8 @@ class ConfigUtil:
             ("mainC", config.mainC),
             ("mainV", config.mainV),
             ("favouriteBible", config.favouriteBible),
+            ("favouriteBible2", config.favouriteBible2),
+            ("favouriteBible3", config.favouriteBible3),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
             ("maximumOHGBiVersesDisplayedInSearchResult", config.maximumOHGBiVersesDisplayedInSearchResult),

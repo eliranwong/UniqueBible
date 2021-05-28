@@ -1,3 +1,9 @@
+Major changes in version 24.97:
+Improvement about http-server:
+* Fixed loading _biblenote command.
+* Add customised favourite bible buttons on default layout.  Users can customise by editing config.favouriteBible, config.favouriteBible2, and config.favouriteBible3.
+* Added side navigation bar to mini layout.
+
 Major change in version 24.96:
 * Fixed commentary menu on http-server.
 

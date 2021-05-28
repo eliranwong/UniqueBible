@@ -79,7 +79,7 @@ function ubaCommandChanged(cmd) {
     if (cmd.startsWith("_cp")) {
         cmd = "_menu:::";
     }
-    essential = (cmd.search(/^_menu:::|^_vnsc:::|^_vndc:::|^_book:::|^_promise:::|^_harmony:::|^_history|^_open:::|^_htmlimage:::|^_website:::|^_commentary:::/i));
+    essential = (cmd.search(/^_menu:::|^_vnsc:::|^_vndc:::|^_book:::|^_promise:::|^_harmony:::|^_biblenote:::|^_history|^_open:::|^_htmlimage:::|^_website:::|^_commentary:::/i));
     const ignore = ["_stayOnSameTab:::"];
     if ((essential >= 0) || (!(cmd.startsWith("_")) && !(ignore.includes(cmd)))) {
         window.parent.submitCommand(cmd);

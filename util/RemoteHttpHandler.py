@@ -244,7 +244,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.011'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.012'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -258,6 +258,46 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   margin-left: 0px;
                   margin-right: 0px;
                 {5}
+
+                .sidenav {4}
+                  height: 100%;
+                  width: 0;
+                  position: fixed;
+                  z-index: 1;
+                  top: 0;
+                  left: 0;
+                  background-color: #111;
+                  overflow-x: hidden;
+                  transition: 0.5s;
+                  padding-top: 60px;
+                {5}
+                
+                .sidenav a {4}
+                  padding: 8px 8px 8px 32px;
+                  text-decoration: none;
+                  font-size: 25px;
+                  color: #818181;
+                  display: block;
+                  transition: 0.3s;
+                {5}
+                
+                .sidenav a:hover {4}
+                  color: #f1f1f1;
+                {5}
+                
+                .sidenav .closebtn {4}
+                  position: absolute;
+                  top: 0;
+                  right: 25px;
+                  font-size: 36px;
+                  margin-left: 50px;
+                {5}
+                
+                @media screen and (max-height: 450px) {4}
+                  .sidenav {4}padding-top: 15px;{5}
+                  .sidenav a {4}font-size: 18px;{5}
+                {5}
+
                 #commandForm {4}
                   margin-left: 5px;
                   margin-right: 5px;
@@ -290,12 +330,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.011'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.011'>
-                <script src='js/common.js?v=1.011'></script>
-                <script src='js/{9}.js?v=1.011'></script>
-                <script src='w3.js?v=1.011'></script>
-                <script src='js/http_server.js?v=1.011'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.012'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.012'>
+                <script src='js/common.js?v=1.012'></script>
+                <script src='js/{9}.js?v=1.012'></script>
+                <script src='w3.js?v=1.012'></script>
+                <script src='js/http_server.js?v=1.012'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -314,6 +354,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </head>
             <body style="padding-top: 10px;" onload="onBodyLoad()" ontouchstart="">
                 <span id='v0.0.0'></span>
+
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    {12}
+                </div>
+
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
@@ -371,6 +417,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {5}
                 window.onscroll = function() {4}keepTop(){5};
                 window.onresize = function() {4}resizeSite(){5};
+
+                function openNav() {4}
+                    document.getElementById("mySidenav").style.width = "250px";
+                {5}
+                
+                function closeNav() {4}
+                    document.getElementById("mySidenav").style.width = "0";
+                {5}
+
                 </script>
             </body>
             </html>
@@ -387,8 +442,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.theme,
             self.getHighlightCss(),
             collapseFooter,
+            self.getSideNavContent(),
         )
         self.wfile.write(bytes(html, "utf8"))
+
+    def getSideNavContent(self):
+        from util.SideNavItems import sideNavItems
+        html = ""
+        for item in sideNavItems:
+            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+        return html
 
     def mainPage(self):
         self.commonHeader()
@@ -424,7 +487,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 return """
                     <form id="commandForm" action="index.html" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}&nbsp;&nbsp;{13}&nbsp;&nbsp;{14}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -443,8 +506,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    self.mibButton(),
-                    self.mpbButton(),
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible)) if config.favouriteBible else "",
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible2)) if config.favouriteBible2 else "",
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible3)) if config.favouriteBible3 else "",
                 )
         else:
             return ""
@@ -471,12 +535,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.011'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.011'>"
-                "<script src='js/common.js?v=1.011'></script>"
-                "<script src='js/{7}.js?v=1.011'></script>"
-                "<script src='w3.js?v=1.011'></script>"
-                "<script src='js/http_server.js?v=1.011'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.012'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.012'>"
+                "<script src='js/common.js?v=1.012'></script>"
+                "<script src='js/{7}.js?v=1.012'></script>"
+                "<script src='w3.js?v=1.012'></script>"
+                "<script src='js/http_server.js?v=1.012'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -492,7 +556,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.011'></script>"
+                "<script src='js/custom.js?v=1.012'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -543,7 +607,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def toggleFullscreen(self):
-        html = "<button type='button' onclick='fullScreenSwitch()'>+ / -</button>"
+        #html = "<button type='button' onclick='fullScreenSwitch()'>+ / -</button>"
+        html = "<button type='button' onclick='openNav()'>&#9776;</button>"
         return html
 
     def helpButton(self):
@@ -562,20 +627,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' onclick='window.parent.submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
         return html
 
-    def layoutButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".layout")'>{0}</button>""".format(config.thisTranslation["layout"])
-        return html
-
-    def historyButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".history")'>{0}</button>""".format(config.thisTranslation["menu3_history"])
-        return html
-
-    def mibButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".mib")'>{0}</button>""".format("MIB")
-        return html
-
-    def mpbButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".mpb")'>{0}</button>""".format("MPB")
+    def favouriteBibleButton(self, text):
+        html = """<button type='button' onclick='window.parent.submitCommand("TEXT:::{0}")'>{0}</button>""".format(text)
         return html
 
     def getHighlightCss(self):

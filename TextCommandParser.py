@@ -1562,6 +1562,8 @@ class TextCommandParser:
 
     # _biblenote:::
     def textBiblenote(self, command, source):
+        if source == "http":
+            source = "main"
         texts = {
             "main": config.mainText,
             "study": config.studyText,
