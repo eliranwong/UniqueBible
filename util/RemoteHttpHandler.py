@@ -171,7 +171,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                         content = self.helpContent()
                     elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
                         content = features[self.command.lower()[1:]]()
-                    elif self.command.lower() in (".stop", config.httpServerStopCommand):
+                    elif self.command.lower() == ".stop" or self.command == config.httpServerStopCommand:
                         permission, message = self.checkPermission()
                         if permission or (config.httpServerStopCommand and self.command == config.httpServerStopCommand):
                             self.closeWindow()
