@@ -1,3 +1,6 @@
+Major change in version 25.00:
+* Added config.httpServerStopCommand
+
 Major change in version 24.99:
 * Fixed http-server favicon.
 

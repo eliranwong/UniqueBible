@@ -55,6 +55,10 @@ class ConfigUtil:
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
             config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
+        config.help["httpServerStopCommand"] = """
+        # A customised command to stop http-server."""
+        if not hasattr(config, "httpServerStopCommand"):
+            config.httpServerStopCommand = ""
         config.help["webFullAccess"] = """
         # Full server to web http-server from browser, including shutdown or restart server."""
         if not hasattr(config, "webFullAccess"):
@@ -924,6 +928,7 @@ class ConfigUtil:
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
+            ("httpServerStopCommand", config.httpServerStopCommand),
             ("webFullAccess", config.webFullAccess),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
