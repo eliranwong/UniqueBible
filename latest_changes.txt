@@ -1,4 +1,4 @@
-Major change in version 25.00:
+Major change in version 25.01:
 * Added config.httpServerStopCommand
 
 Major change in version 24.99:
