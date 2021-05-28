@@ -1,3 +1,7 @@
+Major changes in version 24.98:
+* Added .topics command to http-server.
+* Added items to http-server mini layout side navigation bar.
+
 Major changes in version 24.97:
 Improvement about http-server:
 * Fixed loading _biblenote command.

@@ -74,6 +74,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".names": "SEARCHTOOL:::HBN:::",
             ".promises": "BOOK:::Bible_Promises",
             ".parallels": "BOOK:::Harmonies_and_Parallels",
+            ".topics": "SEARCHTOOL:::EXLBT:::",
             ".mob": "TEXT:::MOB",
             ".mib": "TEXT:::MIB",
             ".mtb": "TEXT:::MTB",
@@ -266,17 +267,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   z-index: 1;
                   top: 0;
                   left: 0;
-                  background-color: #111;
+                  background-color: rgb(54, 53, 53);
                   overflow-x: hidden;
                   transition: 0.5s;
                   padding-top: 60px;
                 {5}
-                
+
                 .sidenav a {4}
                   padding: 8px 8px 8px 32px;
                   text-decoration: none;
                   font-size: 25px;
-                  color: #818181;
+                  color: #b6b4b4;
                   display: block;
                   transition: 0.3s;
                 {5}
@@ -284,7 +285,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 .sidenav a:hover {4}
                   color: #f1f1f1;
                 {5}
-                
+
+                .sidenav .fullscreenbtn {4}
+                  position: absolute;
+                  top: 0;
+                  font-size: 30px;
+                {5}
+
                 .sidenav .closebtn {4}
                   position: absolute;
                   top: 0;
@@ -357,6 +364,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="javascript:void(0)" class="fullscreenbtn" onclick="fullScreenSwitch()">&#x26F6;</a>
                     {12}
                 </div>
 
@@ -446,13 +454,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         self.wfile.write(bytes(html, "utf8"))
 
-    def getSideNavContent(self):
-        from util.SideNavItems import sideNavItems
-        html = ""
-        for item in sideNavItems:
-            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
-        return html
-
     def mainPage(self):
         self.commonHeader()
         html = open(os.path.join("htmlResources", "main-{0}.html".format(self.session)), 'r').read()
@@ -468,6 +469,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.send_header("Expires", "0")
         self.end_headers()
 
+    def getSideNavContent(self):
+        from util.SideNavItems import sideNavItems
+        html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        for item in sideNavItems:
+            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+        html += """<a href="#">&nbsp;</a>"""
+        html += """<a href="#">&nbsp;</a>"""
+        return html
+
     def buildForm(self):
         if self.primaryUser or not config.webPresentationMode:
             if config.webUI == "mini":
@@ -478,7 +488,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     </form>
                 """.format(
                     "",
-                    self.toggleFullscreen(),
+                    self.openSideNav(),
                     config.thisTranslation["run"],
                     self.helpButton(),
                     self.featureButton(),
@@ -526,7 +536,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        html = ("""<!DOCTYPE html><html><head><title>UniqueBible.app</title>
+        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="UniqueBibleApp.png"><title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -607,7 +617,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def toggleFullscreen(self):
-        #html = "<button type='button' onclick='fullScreenSwitch()'>+ / -</button>"
+        html = "<button type='button' onclick='fullScreenSwitch()'>+ / -</button>"
+        return html
+
+    def openSideNav(self):
         html = "<button type='button' onclick='openNav()'>&#9776;</button>"
         return html
 
@@ -648,6 +661,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return """
         <html>
             <head>
+                <link rel="icon" href="UniqueBibleApp.png">
                 <title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -814,6 +828,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
         <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
+        <ref onclick="window.parent.submitCommand('.topics')">.topics</ref> - Open bible topics content page.<br>
         <ref onclick="window.parent.submitCommand('.parallels')">.parallels</ref> - Open bible parallels content page.<br>
         <ref onclick="window.parent.submitCommand('.promises')">.promises</ref> - Open bible promises content page.<br>
         <ref onclick="window.parent.submitCommand('.download')">.download</ref> - Display downloadable resources.<br>
