@@ -1,3 +1,6 @@
+Major change in version 24.99:
+* Fixed http-server favicon.
+
 Major changes in version 24.98:
 * Added .topics command to http-server.
 * Added items to http-server mini layout side navigation bar.

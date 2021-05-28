@@ -17,6 +17,7 @@ from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from util.FileUtil import FileUtil
+from util.TextUtil import TextUtil
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
@@ -238,6 +239,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """
             <html>
             <head>
+                <link rel="icon" href="UniqueBibleApp.png">
                 <title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
