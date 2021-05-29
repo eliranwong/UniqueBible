@@ -1,3 +1,6 @@
+Major change in version 25.06:
+* Fixed button sizes on iOS.
+
 Major changes in version 25.05:
 * Added a QR code button to http-server default layout.
 * Added a QR code link to http-server mini layout.
