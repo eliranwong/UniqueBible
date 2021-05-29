@@ -909,7 +909,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ("GitHub Bibles", "GitHubBible", "otseng/UniqueBible_Bibles", (config.marvelData, "bibles"), ".bible"),
             ("GitHub Commentaries", "GitHubCommentary", "darrelwright/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
             ("GitHub Books", "GitHubBook", "darrelwright/UniqueBible_Books", (config.marvelData, "books"), ".book"),
-            ("GitHub Books", "GitHubMap", "darrelwright/UniqueBible_Maps-Charts", (config.marvelData, "books"), ".book"),
+            ("GitHub Maps", "GitHubMap", "darrelwright/UniqueBible_Maps-Charts", (config.marvelData, "books"), ".book"),
             ("GitHub PDF", "GitHubPdf", "otseng/UniqueBible_PDF", (config.marvelData, "pdf"), ".pdf"),
             ("GitHub EPUB", "GitHubEpub", "otseng/UniqueBible_EPUB", (config.marvelData, "epub"), ".epub"),
         )
