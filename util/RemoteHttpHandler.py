@@ -269,7 +269,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   z-index: 1;
                   top: 0;
                   left: 0;
-                  background-color: rgb(54, 53, 53);
+                  background-color: {13};
                   overflow-x: hidden;
                   transition: 0.5s;
                   padding-top: 60px;
@@ -279,13 +279,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   padding: 8px 8px 8px 32px;
                   text-decoration: none;
                   font-size: 25px;
-                  color: #b6b4b4;
+                  color: {14};
                   display: block;
                   transition: 0.3s;
                 {5}
                 
                 .sidenav a:hover {4}
-                  color: #f1f1f1;
+                  color: {15};
                 {5}
 
                 .sidenav .fullscreenbtn {4}
@@ -453,6 +453,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.getHighlightCss(),
             collapseFooter,
             self.getSideNavContent(),
+            "rgb(54, 53, 53)" if config.theme == "dark" else "rgb(247, 247, 247)",
+            "#b6b4b4" if config.theme == "dark" else "rgb(70, 70, 70)",
+            "#f1f1f1" if config.theme == "dark" else "rgb(5, 5, 5)",
         )
         self.wfile.write(bytes(html, "utf8"))
 
