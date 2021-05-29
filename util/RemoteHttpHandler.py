@@ -499,6 +499,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+        html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
@@ -522,7 +523,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 return """
                     <form id="commandForm" action="index.html" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}
                     <br/><br/>
                     {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
                     <input type="submit" value="{2}"/>
@@ -544,6 +545,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible)) if config.favouriteBible else "",
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible2)) if config.favouriteBible2 else "",
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible3)) if config.favouriteBible3 else "",
+                    self.qrButton(),
                 )
         else:
             return ""
@@ -651,6 +653,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def helpButton(self):
         html = """<button type='button' style='width: 25px' onclick='window.parent.submitCommand(".help")'>?</button>"""
+        return html
+
+    def qrButton(self):
+        html = """<button type='button' onclick='submitCommand("qrcode:::"+window.location.href)'>QR</button>"""
         return html
 
     def featureButton(self):

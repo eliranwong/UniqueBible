@@ -719,4 +719,5 @@ translation = {
     "go": "जाना",
     "restart": "पुनः प्रारंभ",
     "layout": "खाका",
+    "qrcode": "क्यूआर कोड",
 }

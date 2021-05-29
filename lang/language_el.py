@@ -719,4 +719,5 @@ translation = {
     "go": "'",
     "restart": "Επανεκκίνηση:",
     "layout": "Διάταξη:",
+    "qrcode": "Κωδικός QR",
 }

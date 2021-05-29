@@ -719,4 +719,5 @@ translation = {
     "go": "执行",
     "restart": "重新启动",
     "layout": "布局",
+    "qrcode": "二维码",
 }

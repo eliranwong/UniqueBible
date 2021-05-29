@@ -719,4 +719,5 @@ translation = {
     "go": "ir",
     "restart": "Reiniciar",
     "layout": "Diseño",
+    "qrcode": "Código QR",
 }

@@ -719,4 +719,5 @@ translation = {
     "go": "പോകുക",
     "restart": "പുനരാരണം",
     "layout": "ലേഔട്ട്",
+    "qrcode": "QR കോഡ്",
 }

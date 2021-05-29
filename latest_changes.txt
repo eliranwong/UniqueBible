@@ -1,3 +1,7 @@
+Major changes in version 25.05:
+* Added a QR code button to http-server default layout.
+* Added a QR code link to http-server mini layout.
+
 Major changes in version 25.04:
 * Added a bible link to verse comparison heading.
 * Http-server page now loads _setconfig::: link automatically.
