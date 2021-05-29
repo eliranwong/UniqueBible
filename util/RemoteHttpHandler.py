@@ -515,7 +515,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 """.format(
                     "",
                     self.openSideNav(),
-                    config.thisTranslation["run"],
+                    "&crarr;",
                     self.helpButton(),
                     self.featureButton(),
                 )
@@ -652,7 +652,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def helpButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".help")'>?</button>"""
+        html = """<button type='button' onclick='window.parent.submitCommand(".help")'>&quest;</button>"""
         return html
 
     def qrButton(self):
@@ -660,7 +660,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def featureButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand("_menu:::")'>*</button>"""
+        html = """<button type='button' onclick='window.parent.submitCommand("_menu:::")'>&dagger;</button>"""
         return html
 
     def libraryButton(self):

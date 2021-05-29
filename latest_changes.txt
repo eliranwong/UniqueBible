@@ -1,3 +1,6 @@
+Major change in version 25.07:
+* Changed button icon on http-server mini layout.
+
 Major change in version 25.06:
 * Fixed button sizes on iOS.
 
