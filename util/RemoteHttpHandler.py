@@ -137,7 +137,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "plainmode": self.togglePlainMode,
             "regexcasesensitive": self.toggleRegexCaseSensitive,
             "setfavouritebible": self.setFavouriteBibleContent,
+            "setfavouritebible2": lambda: self.setFavouriteBibleContent("favouriteBible2"),
+            "setfavouritebible3": lambda: self.setFavouriteBibleContent("favouriteBible3"),
             "setstandardabbreviation": self.setStandardAbbreviationContent,
+            "setversenosingleclickaction": self.setVerseNoClickActionContent,
+            "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
         }
         self.session = self.getSession()
         clientIP = self.client_address[0]
@@ -247,7 +251,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.012'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.013'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -339,12 +343,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.012'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.012'>
-                <script src='js/common.js?v=1.012'></script>
-                <script src='js/{9}.js?v=1.012'></script>
-                <script src='w3.js?v=1.012'></script>
-                <script src='js/http_server.js?v=1.012'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.013'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.013'>
+                <script src='js/common.js?v=1.013'></script>
+                <script src='js/{9}.js?v=1.013'></script>
+                <script src='w3.js?v=1.013'></script>
+                <script src='js/http_server.js?v=1.013'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -475,7 +479,23 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def getSideNavContent(self):
-        from util.SideNavItems import sideNavItems
+        sideNavItems = (
+            (config.thisTranslation["menu5_bible"], ".biblemenu"),
+            (config.favouriteBible, "TEXT:::{0}".format(config.favouriteBible)),
+            (config.favouriteBible2, "TEXT:::{0}".format(config.favouriteBible2)),
+            (config.favouriteBible3, "TEXT:::{0}".format(config.favouriteBible3)),
+            (config.thisTranslation["commentaries"], ".commentarymenu"),
+            (config.thisTranslation["menu_library"], ".library"),
+            (config.thisTranslation["html_timelines"], ".timelineMenu"),
+            (config.thisTranslation["menu5_names"], ".names"),
+            (config.thisTranslation["menu5_characters"], ".characters"),
+            (config.thisTranslation["menu5_locations"], ".maps"),
+            (config.thisTranslation["menu5_topics"], ".topics"),
+            (config.thisTranslation["bibleHarmonies"], ".parallels"),
+            (config.thisTranslation["biblePromises"], ".promises"),
+            (config.thisTranslation["menu_search"], ".search"),
+            (config.thisTranslation["download"], ".download"),
+        )
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
@@ -550,12 +570,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.012'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.012'>"
-                "<script src='js/common.js?v=1.012'></script>"
-                "<script src='js/{7}.js?v=1.012'></script>"
-                "<script src='w3.js?v=1.012'></script>"
-                "<script src='js/http_server.js?v=1.012'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.013'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.013'>"
+                "<script src='js/common.js?v=1.013'></script>"
+                "<script src='js/{7}.js?v=1.013'></script>"
+                "<script src='w3.js?v=1.013'></script>"
+                "<script src='js/http_server.js?v=1.013'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -571,7 +591,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.012'></script>"
+                "<script src='js/custom.js?v=1.013'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -875,7 +895,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.presentationmode')">.presentationMode</ref> - Toggle 'presentation mode'.<br>
         <ref onclick="window.parent.submitCommand('.globalviewer')">.globalViewer</ref> - Toggle 'global viewer' for presentation mode.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible')">.setFavouriteBible</ref> - Set configuration 'favouriteBible'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebible2')">.setFavouriteBible2</ref> - Set configuration 'favouriteBible2'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebible3')">.setFavouriteBible3</ref> - Set configuration 'favouriteBible3'.<br>
         <ref onclick="window.parent.submitCommand('.setstandardabbreviation')">.setStandardAbbreviation</ref> - Set configuration 'standardAbbreviation'.<br>
+        <ref onclick="window.parent.submitCommand('.setversenosingleclickaction')">.setVerseNoSingleClickAction</ref> - Set configuration 'verseNoSingleClickAction'.<br>
+        <ref onclick="window.parent.submitCommand('.setversenodoubleclickaction')">.setVerseNoDoubleClickAction</ref> - Set configuration 'verseNoDoubleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.
@@ -941,9 +965,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
         return content
 
-    def setFavouriteBibleContent(self):
+    def setVerseNoClickActionContent(self, double=False):
+        values = ("_noAction", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu")
+        features = ("noAction", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu")
+        items = [config.thisTranslation[feature] for feature in features]
+        content = "<h2>Select Verse Number Single-click Action:</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(value, items[index], "verseNoDoubleClickAction" if double else "verseNoSingleClickAction") for index, value in enumerate(values)])
+        return content
+
+    def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):
         content = "<h2>Select Faviourite Bible:</h2>"
-        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::favouriteBible:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.textList)])
+        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index], favouriteBible) for index, abb in enumerate(self.textCommandParser.parent.textList)])
         return content
 
     def setStandardAbbreviationContent(self):

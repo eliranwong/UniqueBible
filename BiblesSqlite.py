@@ -464,7 +464,7 @@ input.addEventListener('keyup', function(event) {0}
         if texts == ["ALL"]:
             texts = plainBibleList + formattedBibleList
 
-        verses = "<h2>{0}</h2>".format(self.bcvToVerseReference(b, c, v))
+        verses = """<h2><ref onclick="document.title='{0}'">{0}</ref></h2>""".format(self.bcvToVerseReference(b, c, v))
         verses += "<table>"
         for text in texts:
             *_, verseText = self.readTextVerse(text, b, c, v)

@@ -145,13 +145,13 @@ class ConfigUtil:
         # available options: "_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu"
         # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu" """
         if not hasattr(config, "verseNoSingleClickAction"):
-            config.verseNoSingleClickAction = "INDEX"
+            config.verseNoSingleClickAction = "_menu" if config.enableHttpServer else "INDEX"
         config.help["verseNoDoubleClickAction"] = """
         # Configure verse number double-click action
         # available options: "_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu"
         # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu" """
         if not hasattr(config, "verseNoDoubleClickAction"):
-            config.verseNoDoubleClickAction = "_cp0"
+            config.verseNoDoubleClickAction = "CROSSREFERENCE" if config.enableHttpServer else "_cp0"
         config.help["linuxStartFullScreen"] = """
         # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
