@@ -7,7 +7,6 @@ import glob
 import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
-from util.MacroParser import MacroParser
 from util.NetworkUtil import NetworkUtil
 
 # Change working directory to UniqueBible directory
@@ -131,6 +130,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
 # Execute macro
 if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
     if config.enableMacros:
+        from util.MacroParser import MacroParser
         if len(sys.argv) < 3:
             print("Please specify macro file to run")
             exit(-1)
