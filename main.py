@@ -148,7 +148,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
 
 # Setup menu shortcut configuration file
 if not platform.system() == "Windows" and not config.enableHttpServer:
-    pass
+    import readline
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
