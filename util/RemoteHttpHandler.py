@@ -251,7 +251,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.013'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=V=1.015'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -295,14 +295,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 .sidenav .fullscreenbtn {4}
                   position: absolute;
                   top: 0;
-                  font-size: 30px;
+                  font-size: 35px;
                 {5}
 
                 .sidenav .closebtn {4}
                   position: absolute;
                   top: 0;
                   right: 25px;
-                  font-size: 36px;
+                  font-size: 35px;
                   margin-left: 50px;
                 {5}
                 
@@ -343,12 +343,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.013'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.013'>
-                <script src='js/common.js?v=1.013'></script>
-                <script src='js/{9}.js?v=1.013'></script>
-                <script src='w3.js?v=1.013'></script>
-                <script src='js/http_server.js?v=1.013'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=V=1.015'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=V=1.015'>
+                <script src='js/common.js?v=V=1.015'></script>
+                <script src='js/{9}.js?v=V=1.015'></script>
+                <script src='w3.js?v=V=1.015'></script>
+                <script src='js/http_server.js?v=V=1.015'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -370,10 +370,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <div style="padding-left: {17};">
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                    <a href="javascript:void(0)" class="fullscreenbtn" onclick="fullScreenSwitch()">&#x26F6;</a>
+                    <a href="javascript:void(0)" class="fullscreenbtn" onclick="fullScreenSwitch()">&varr;</a>
                     {12}
                 </div>
-
                 {0}
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
@@ -461,7 +460,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "rgb(54, 53, 53)" if config.theme == "dark" else "rgb(247, 247, 247)",
             "#b6b4b4" if config.theme == "dark" else "rgb(70, 70, 70)",
             "#f1f1f1" if config.theme == "dark" else "rgb(5, 5, 5)",
-            "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth != "" else "",
+            "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth else "",
             config.webPaddingLeft
         )
         self.wfile.write(bytes(html, "utf8"))
@@ -512,15 +511,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             if config.webUI == "mini":
                 return """
                     <form id="commandForm" action="index.html" action="get">
-                    {1} <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                    <input type="submit" value="{2}"/> {3} {4}
+                    <table class='layout' style='border-collapse: collapse;'><tr>
+                    <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
+                    <td class='layout' style='width: 100%;'><input type="text" id="commandInput" style="width:100%" name="cmd" value=""/></td>
+                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{3}&nbsp;{0}</td>
+                    </tr></table>
                     </form>
                 """.format(
-                    "",
-                    self.openSideNav(),
-                    "&larr;",
-                    self.helpButton(),
                     self.featureButton(),
+                    self.openSideNav(),
+                    self.submitButton(),
+                    self.helpButton(),
                 )
             else:
                 return """
@@ -575,12 +576,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.013'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.013'>"
-                "<script src='js/common.js?v=1.013'></script>"
-                "<script src='js/{7}.js?v=1.013'></script>"
-                "<script src='w3.js?v=1.013'></script>"
-                "<script src='js/http_server.js?v=1.013'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=V=1.015'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=V=1.015'>"
+                "<script src='js/common.js?v=V=1.015'></script>"
+                "<script src='js/{7}.js?v=V=1.015'></script>"
+                "<script src='w3.js?v=V=1.015'></script>"
+                "<script src='js/http_server.js?v=V=1.015'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -596,7 +597,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.013'></script>"
+                "<script src='js/custom.js?v=V=1.015'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -651,11 +652,15 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def openSideNav(self):
-        html = "<button type='button' onclick='openNav()'>&#9776;</button>"
+        html = "<button type='button' onclick='openNav()'>&equiv;</button>"
         return html
 
     def helpButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".help")'>&quest;</button>"""
+        html = """<button type='button' onclick='submitCommand(".help")'>&quest;</button>"""
+        return html
+
+    def submitButton(self):
+        html = """<button type='button' onclick='document.getElementById("commandForm").submit();'>&crarr;</button>"""
         return html
 
     def qrButton(self):
@@ -663,19 +668,19 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def featureButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand("_menu:::")'>&dagger;</button>"""
+        html = """<button type='button' onclick='submitCommand("_menu:::")'>&dagger;</button>"""
         return html
 
     def libraryButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".library")'>{0}</button>""".format(config.thisTranslation["menu_library"])
+        html = """<button type='button' onclick='submitCommand(".library")'>{0}</button>""".format(config.thisTranslation["menu_library"])
         return html
 
     def searchButton(self):
-        html = """<button type='button' onclick='window.parent.submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
+        html = """<button type='button' onclick='submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
         return html
 
     def favouriteBibleButton(self, text):
-        html = """<button type='button' onclick='window.parent.submitCommand("TEXT:::{0}")'>{0}</button>""".format(text)
+        html = """<button type='button' onclick='submitCommand("TEXT:::{0}")'>{0}</button>""".format(text)
         return html
 
     def getHighlightCss(self):

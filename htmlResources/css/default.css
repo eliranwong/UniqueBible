@@ -511,6 +511,12 @@ table, th, td {
     border: 1px solid #D3D3D3;
 }
 
+table.layout, th.layout, td.layout {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
 text {
     color: #515790;
 }

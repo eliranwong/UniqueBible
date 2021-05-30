@@ -1,3 +1,7 @@
+Major changes in version 25.08:
+* Fixed chromecast on old TV.
+* Maximise the width of http-server mini layout command input.
+
 Major change in version 25.07:
 * Changed button icon on http-server mini layout.
 
