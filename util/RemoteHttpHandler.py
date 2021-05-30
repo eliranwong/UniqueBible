@@ -515,7 +515,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 """.format(
                     "",
                     self.openSideNav(),
-                    "&#8617;",
+                    "&larr;",
                     self.helpButton(),
                     self.featureButton(),
                 )
