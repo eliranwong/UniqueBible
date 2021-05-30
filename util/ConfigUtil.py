@@ -54,7 +54,7 @@ class ConfigUtil:
         config.help["httpServerViewerBaseUrl"] = """
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
-            config.httpServerViewerBaseUrl = "https://otweb.com/uba_viewer"
+            config.httpServerViewerBaseUrl = "https://marvelbible.com/uba_viewer"
         config.help["httpServerStopCommand"] = """
         # A customised command to stop http-server."""
         if not hasattr(config, "httpServerStopCommand"):
@@ -75,6 +75,14 @@ class ConfigUtil:
         # Collapse footer height for http-server."""
         if not hasattr(config, "webCollapseFooterHeight"):
             config.webCollapseFooterHeight = False
+        config.help["webDecreaseBibleDivWidth"] = """
+        # Adjust bibleDiv width to be narrower."""
+        if not hasattr(config, "webDecreaseBibleDivWidth"):
+            config.webDecreaseBibleDivWidth = ""
+        config.help["webPaddingLeft"] = """
+         # Add padding-left size to body."""
+        if not hasattr(config, "webPaddingLeft"):
+            config.webPaddingLeft = "0px"
         config.help["referenceTranslation"] = """
         # Specify a translation as a reference for making other translations.  This option is created for development purpose."""
         if not hasattr(config, "referenceTranslation"):
@@ -933,6 +941,8 @@ class ConfigUtil:
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
             ("webCollapseFooterHeight", config.webCollapseFooterHeight),
+            ("webDecreaseBibleDivWidth", config.webDecreaseBibleDivWidth),
+            ("webPaddingLeft", config.webPaddingLeft),
             ("referenceTranslation", config.referenceTranslation),
             ("workingTranslation", config.workingTranslation),
             ("myGoogleApiKey", config.myGoogleApiKey),
