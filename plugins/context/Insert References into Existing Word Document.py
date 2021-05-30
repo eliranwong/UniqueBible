@@ -1,6 +1,6 @@
 import config, subprocess, os
 from qtpy.QtWidgets import QFileDialog
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 
 if config.isPythonDocxInstalled:
     from docx import Document

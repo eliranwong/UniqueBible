@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from util.FileUtil import FileUtil
@@ -26,7 +25,7 @@ config.regexSearchBibleIfCommandNotFound = False
 config.noQt = True
 
 
-from TextCommandParser import TextCommandParser
+from util.TextCommandParser import TextCommandParser
 
 class TextCommandParserTestCase(unittest.TestCase):
 

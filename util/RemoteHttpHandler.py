@@ -2,22 +2,22 @@
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import hashlib
 import json
-import os, re, config, pprint
+import os, re, config
 import subprocess
 import urllib
 
 import requests
 from http.server import SimpleHTTPRequestHandler
 from time import gmtime
-from BibleBooks import BibleBooks
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite
-from TextCommandParser import TextCommandParser
+from util.BibleBooks import BibleBooks
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from util.TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 from util.FileUtil import FileUtil
-from util.TextUtil import TextUtil
+
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
 

@@ -1,7 +1,7 @@
 import glob, importlib, locale, sys, config
 from os import path
-from Languages import Languages
-from Translator import Translator
+from util.Languages import Languages
+from util.Translator import Translator
 from util.FileUtil import FileUtil
 
 config.isIbmWatsonInstalled = True

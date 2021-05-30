@@ -1,8 +1,8 @@
 import config, os, glob, re
-from BiblesSqlite import BiblesSqlite, Bible
-from ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
-from ToolsSqlite import LexiconData
-from ThirdParty import ThirdPartyDictionary
+from db.BiblesSqlite import BiblesSqlite, Bible
+from db.ToolsSqlite import BookData, IndexesSqlite, Commentary
+from db.ToolsSqlite import LexiconData
+from util.ThirdParty import ThirdPartyDictionary
 
 class CrossPlatform:
 

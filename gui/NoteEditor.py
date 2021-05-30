@@ -4,8 +4,8 @@ from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from qtpy.QtPrintSupport import QPrinter, QPrintDialog
 from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
-from TtsLanguages import TtsLanguages
-from Translator import Translator
+from util.TtsLanguages import TtsLanguages
+from util.Translator import Translator
 
 
 class NoteEditor(QMainWindow):

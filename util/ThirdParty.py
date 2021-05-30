@@ -1,9 +1,9 @@
 import os, sqlite3, config, re, json, base64, logging
 from pathlib import Path
 from shutil import copyfile
-from BiblesSqlite import BiblesSqlite
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import Bible
+from db.BiblesSqlite import BiblesSqlite
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import Bible
 from xml.dom import minidom
 
 class Converter:
@@ -153,7 +153,7 @@ class Converter:
 
     # create UniqueBible.app dictionary module
     def createDictionaryModule(self, module, content):
-        filename = os.path.join("thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
+        filename = os.path.join("../thirdParty", "dictionaries", "{0}.dic.bbp".format(module))
         if os.path.isfile(filename):
             os.remove(filename)
         with sqlite3.connect(filename) as connection:
@@ -186,7 +186,7 @@ class Converter:
     # export image files
     def exportImageData(self, module, images):
         module = module.replace(" ", "_")
-        imageFolder = os.path.join("htmlResources", "images", module)
+        imageFolder = os.path.join("../htmlResources", "images", module)
         if not os.path.isdir(imageFolder):
             os.makedirs(imageFolder)
         for filename, blobData in images:
@@ -334,7 +334,7 @@ class Converter:
 
     def importThirdPartyDictionary(self, filename):
         *_, name = os.path.split(filename)
-        destination = os.path.join("thirdParty", "dictionaries", name)
+        destination = os.path.join("../thirdParty", "dictionaries", name)
         try:
             copyfile(filename, destination)
         except:
@@ -1658,7 +1658,7 @@ class ThirdPartyDictionary:
         if moduleTuple is not None:
             self.module, self.fileExtension = moduleTuple
             if self.module in self.moduleList:
-                self.database = os.path.join("thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
+                self.database = os.path.join("./thirdParty", "dictionaries", "{0}{1}".format(self.module, self.fileExtension))
                 self.connection = sqlite3.connect(self.database)
                 self.cursor = self.connection.cursor()
 
@@ -1667,7 +1667,7 @@ class ThirdPartyDictionary:
             self.connection.close()
 
     def getModuleList(self):
-        moduleFolder = os.path.join("thirdParty", "dictionaries")
+        moduleFolder = os.path.join("./thirdParty", "dictionaries")
         bbPlusDictionaries = [f[:-8] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dic.bbp") and not re.search(r"^[\._]", f)]
         mySwordDictionaries = [f[:-12] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dct.mybible") and not re.search(r"^[\._]", f)]
         eSwordDictionaries = [f[:-5] for f in os.listdir(moduleFolder) if os.path.isfile(os.path.join(moduleFolder, f)) and f.endswith(".dcti") and not re.search(r"^[\._]", f)]

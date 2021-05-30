@@ -2,7 +2,7 @@ import config
 from qtpy.QtCore import QStringListModel
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
-from ToolsSqlite import Book
+from db.ToolsSqlite import Book
 #from qtpy.QtCore import Qt
 
 class LibraryLauncher(QWidget):

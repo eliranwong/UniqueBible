@@ -1,19 +1,19 @@
 # coding=utf-8
-import os, subprocess, signal, re, config, webbrowser, platform, multiprocessing, zipfile
+import os, signal, re, webbrowser, platform, multiprocessing, zipfile
 from util.TextUtil import TextUtil
-from LexicalData import LexicalData
+from util.LexicalData import LexicalData
 from functools import partial
-from BibleVerseParser import BibleVerseParser
-from BibleBooks import BibleBooks
-from BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, Book, Lexicon
-from ThirdParty import ThirdPartyDictionary
-from HebrewTransliteration import HebrewTransliteration
-from NoteSqlite import NoteSqlite
-from Languages import Languages
-from Translator import Translator
+from util.BibleVerseParser import BibleVerseParser
+from util.BibleBooks import BibleBooks
+from db.BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
+from db.ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, \
+    Lexicon
+from util.ThirdParty import ThirdPartyDictionary
+from util.HebrewTransliteration import HebrewTransliteration
+from db.NoteSqlite import NoteSqlite
+from util.Translator import Translator
 from db.Highlight import Highlight
-from TtsLanguages import TtsLanguages
+from util.TtsLanguages import TtsLanguages
 
 #from gui.Downloader import Downloader
 from install.module import *

@@ -7,28 +7,24 @@ from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
                                QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
 
-import exlbl
-from BibleBooks import BibleBooks
-from TextCommandParser import TextCommandParser
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite
-from TextFileReader import TextFileReader
-from Translator import Translator
-from ThirdParty import Converter, ThirdPartyDictionary
-from Languages import Languages
-from ToolsSqlite import BookData, IndexesSqlite, Book
+from util import exlbl
+from util.BibleBooks import BibleBooks
+from util.TextCommandParser import TextCommandParser
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from util.TextFileReader import TextFileReader
+from util.Translator import Translator
+from util.ThirdParty import Converter, ThirdPartyDictionary
+from util.Languages import Languages
+from db.ToolsSqlite import BookData, IndexesSqlite, Book
 from db.Highlight import Highlight
 from gui.ConfigFlagsWindow import ConfigFlagsWindow
 from gui.EnableIndividualPlugins import EnableIndividualPlugins
 from gui.EditGuiLanguageFileDialog import EditGuiLanguageFileDialog
 from gui.InfoDialog import InfoDialog
 # These "unused" window imports are actually used.  Do not delete these lines.
-from gui.AlephMainWindow import AlephMainWindow
-from gui.ClassicMainWindow import ClassicMainWindow
-from gui.FocusMainWindow import FocusMainWindow
 from gui.DisplayShortcutsWindow import DisplayShortcutsWindow
 from gui.GistWindow import GistWindow
-from shutil import copyfile
 from gui.Downloader import Downloader, DownloadProcess
 from gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from gui.WatsonCredentialWindow import WatsonCredentialWindow
@@ -40,10 +36,9 @@ from gui.MorphDialog import MorphDialog
 from gui.MiniBrowser import MiniBrowser
 from gui.CentralWidget import CentralWidget
 from gui.AppUpdateDialog import AppUpdateDialog
-from ToolsSqlite import LexiconData
-from TtsLanguages import TtsLanguages
+from db.ToolsSqlite import LexiconData
+from util.TtsLanguages import TtsLanguages
 from util.DatafileLocation import DatafileLocation
-from util.DateUtil import DateUtil
 from util.GithubUtil import GithubUtil
 from util.LanguageUtil import LanguageUtil
 from util.MacroParser import MacroParser
@@ -54,7 +49,10 @@ import shortcut as sc
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
 from util.CrossPlatform import CrossPlatform
-
+# These "unused" window imports are actually used.  Do not delete these lines.
+from gui.AlephMainWindow import AlephMainWindow
+from gui.ClassicMainWindow import ClassicMainWindow
+from gui.FocusMainWindow import FocusMainWindow
 
 class MainWindow(QMainWindow):
 

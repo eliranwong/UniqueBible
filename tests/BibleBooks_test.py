@@ -1,6 +1,6 @@
 import unittest
 
-from BibleBooks import BibleBooks
+from util.BibleBooks import BibleBooks
 
 class BibleBooksTestCase(unittest.TestCase):
 

@@ -74,7 +74,7 @@ class InterlinearDataWindow(QWidget):
         self.setLayout(mainLayout)
 
     def resetItems(self):
-        from BibleVerseParser import BibleVerseParser
+        from util.BibleVerseParser import BibleVerseParser
         from qtpy.QtGui import QStandardItem
 
         # Empty the model before reset
@@ -135,7 +135,6 @@ class InterlinearDataWindow(QWidget):
             self.runExportSpreadsheet()
 
     def runExportSpreadsheet(self):
-        import os
         from openpyxl import Workbook
         from openpyxl.styles import Font
 
@@ -201,7 +200,6 @@ class InterlinearDataWindow(QWidget):
             self.runExportSpreadsheet2()
 
     def runExportSpreadsheet2(self):
-        import os, platform, subprocess
         import xlsxwriter
 
         # Specify excel file path
@@ -237,7 +235,6 @@ class InterlinearDataWindow(QWidget):
 
     # export to csv when users cannot install either openpyxl or xlsxwriter for some reasons
     def exportSpreadsheet3(self):
-        import os
         # Define a file path
         #filePath = os.path.join(os.getcwd(), "plugins", "menu", "Interlinear_Data.csv")
         filePath = self.getFilePath("csv")
