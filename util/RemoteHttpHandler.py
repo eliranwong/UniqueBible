@@ -365,9 +365,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 </script>
 
             </head>
-            <body style="padding-top: 10px;" onload="onBodyLoad()" ontouchstart="">
+            <body style="padding-top: 10px;" onload="onBodyLoad();{16}" ontouchstart="">
                 <span id='v0.0.0'></span>
-
+                <div style="padding-left: {17};">
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <a href="javascript:void(0)" class="fullscreenbtn" onclick="fullScreenSwitch()">&#x26F6;</a>
@@ -441,6 +441,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {5}
 
                 </script>
+                </div>
             </body>
             </html>
         """.format(
@@ -460,6 +461,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "rgb(54, 53, 53)" if config.theme == "dark" else "rgb(247, 247, 247)",
             "#b6b4b4" if config.theme == "dark" else "rgb(70, 70, 70)",
             "#f1f1f1" if config.theme == "dark" else "rgb(5, 5, 5)",
+            "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth != "" else "",
+            config.webPaddingLeft
         )
         self.wfile.write(bytes(html, "utf8"))
 

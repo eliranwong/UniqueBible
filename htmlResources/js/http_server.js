@@ -9,6 +9,11 @@ function onBodyLoad() {
     el.focus();
 }
 
+function adjustBibleDivWidth(adjust) {
+    var bibleDiv = document.getElementById('bibleDiv');
+    bibleDiv.style.setProperty('width', 'calc(100% - ' + adjust + ')');
+}
+
 /* Display message */
 function messageUser(messageHeader, message) {
     document.getElementById('myMessageHeader').innerHTML = messageHeader;
