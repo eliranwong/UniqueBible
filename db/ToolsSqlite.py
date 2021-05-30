@@ -123,7 +123,7 @@ class ImageSqlite:
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
         if information:
-            htmlImageFolder = os.path.join("../htmlResources", "images")
+            htmlImageFolder = os.path.join("htmlResources", "images")
             if not os.path.isdir(htmlImageFolder):
                 os.mkdir(htmlImageFolder)
             if module == "EXLBL":
