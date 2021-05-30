@@ -89,3 +89,6 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def updateBookButton(self):
         pass
+
+    def closePopover(self):
+        pass

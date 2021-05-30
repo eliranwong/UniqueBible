@@ -7,6 +7,7 @@ import glob
 import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
+from util.MacroParser import MacroParser
 from util.NetworkUtil import NetworkUtil
 
 # Change working directory to UniqueBible directory
@@ -32,7 +33,7 @@ if initialCommand == "cli":
 elif initialCommand == "gui":
     initialCommand = ""
     config.cli = False
-elif initialCommand.startswith("telnet-server") or initialCommand.startswith("http-server"):
+elif len(sys.argv) > 1 and sys.argv[1] in ["telnet-server", "http-server", "execute-macro"]:
     config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
@@ -99,7 +100,6 @@ def runStartupPlugins():
                 config.mainWindow.execPythonFile(script)
 
 # HTTP Server
-
 def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
@@ -126,6 +126,24 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     ConfigUtil.save()
     if config.restartHttpServer:
         subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
+    exit(0)
+
+# Execute macro
+if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
+    if config.enableMacros:
+        if len(sys.argv) < 3:
+            print("Please specify macro file to run")
+            exit(-1)
+        file = sys.argv[2]
+        if os.path.isfile(os.path.join(MacroParser.macros_dir, file)):
+            from util.RemoteCliMainWindow import RemoteCliMainWindow
+            MacroParser(RemoteCliMainWindow()).parse(file)
+            ConfigUtil.save()
+            print("Macro {0} executed".format(file))
+        else:
+            print("Macro {0} does not exist".format(file))
+    else:
+        print("Macros are not enabled")
     exit(0)
 
 # Setup menu shortcut configuration file
