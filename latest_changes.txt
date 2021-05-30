@@ -1,3 +1,6 @@
+Major change in version 25.11:
+* Maximise the height of http-server page content.
+
 Major changes in version 25.08, 25.09, 25.10:
 * Fixed chromecast on old TV.
 * Maximise the width of http-server mini layout command input.

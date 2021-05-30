@@ -262,8 +262,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 body {4}
                   font-family:'{7}';
                   -ms-overflow-style:none;
-                  margin-left: 0px;
-                  margin-right: 0px;
+                  padding: 0;
+                  margin: 0;
                 {5}
 
                 .sidenav {4}
@@ -378,6 +378,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {12}
                 </div>
                 {0}
+                <table class='layout'>
+                <tr style='height: 100%;'>
                 <div id="content">
                     <div id="bibleDiv" onscroll="scrollBiblesIOS(this.id)">
                         <iframe id="bibleFrame" name="main-{2}" onload="resizeSite();{11}" width="100%" height="{1}%" src="main-{6}.html">Oops!</iframe>
@@ -386,6 +388,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                         <iframe id="toolFrame" name="tool-{2}" onload="resizeSite()" src="empty.html">Oops!</iframe>
                     </div>
                 </div>
+                </tr>
 
                 <!-- The Modal - Message -->
                 <div id="myModal2" class="modal2">
@@ -449,7 +452,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             </html>
         """.format(
             self.buildForm(),
-            95 if config.webUI == "mini" else 85,
+            100, #95 if config.webUI == "mini" else 85,
             gmtime(),
             activeBCVsettings,
             "{",
