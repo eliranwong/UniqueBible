@@ -1,4 +1,4 @@
-from BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite
 from gui.MenuItems import *
 from qtpy.QtCore import QSize
 import shortcut as sc

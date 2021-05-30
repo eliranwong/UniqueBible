@@ -4,7 +4,7 @@ from functools import partial
 #from qtpy.QtCore import Qt
 from qtpy.QtGui import QColor
 from qtpy.QtWidgets import QRadioButton, QComboBox, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 from db.Highlight import Highlight
 
 class HighlightLauncher(QWidget):

@@ -10,7 +10,7 @@ from qtpy import QtCore
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
     QComboBox, QRadioButton, QGridLayout
 
-from Languages import Languages
+from util.Languages import Languages
 
 
 class ModifyDatabaseDialog(QDialog):
@@ -18,7 +18,7 @@ class ModifyDatabaseDialog(QDialog):
     def __init__(self, filetype, filename):
         super().__init__()
 
-        from BiblesSqlite import Bible
+        from db.BiblesSqlite import Bible
         self.fontDatabase = QFontDatabase()
 
         self.filetype = filetype

@@ -1,8 +1,8 @@
 import config, re
-from BiblesSqlite import BiblesSqlite
-from BibleBooks import BibleBooks
+from db.BiblesSqlite import BiblesSqlite
+from util.BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox
 

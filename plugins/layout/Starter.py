@@ -1,6 +1,6 @@
 from gui.MenuItems import *
 import shortcut as sc
-from BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite
 from util.LanguageUtil import LanguageUtil
 
 

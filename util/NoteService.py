@@ -1,10 +1,9 @@
-import logging
 import re
 import time
 import config
-from BibleBooks import BibleBooks
-from Languages import Languages
-from NoteSqlite import NoteSqlite
+from util.BibleBooks import BibleBooks
+from util.Languages import Languages
+from db.NoteSqlite import NoteSqlite
 from util.DateUtil import DateUtil
 from util.GitHubGist import GitHubGist
 

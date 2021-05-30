@@ -1,19 +1,16 @@
 """
 Reading data from bibles.sqlite
 """
-import glob
 import os, sqlite3, config, re, logging
-from pathlib import Path
 
-from NoteSqlite import NoteSqlite
-from BibleVerseParser import BibleVerseParser
-from BibleBooks import BibleBooks
-from NoteSqlite import NoteSqlite
+from util.BibleVerseParser import BibleVerseParser
+from util.BibleBooks import BibleBooks
+from db.NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
-from themes import Themes
+from util.themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
-from LexicalData import LexicalData
+from util.LexicalData import LexicalData
 
 class BiblesSqlite:
 
@@ -1429,8 +1426,6 @@ class MorphologySqlite:
 
 
 if __name__ == '__main__':
-    from Languages import Languages
-
     # config.thisTranslation = Languages.translation
     # config.parserStandarisation = 'NO'
     # config.standardAbbreviation = 'ENG'

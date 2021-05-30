@@ -180,7 +180,7 @@ class ConfigurePresentationWindow(QWidget):
                 self.hymnWidget.show()
 
     def selectHymnBook(self, option):
-        from ToolsSqlite import Book
+        from db.ToolsSqlite import Book
         from qtpy.QtCore import QStringListModel
         if len(self.books) > 0:
             self.hymnBook = self.books[option]
@@ -189,7 +189,7 @@ class ConfigurePresentationWindow(QWidget):
             self.chapterlist.setModel(self.chapterModel)
 
     def selectHymn(self, option):
-        from ToolsSqlite import Book
+        from db.ToolsSqlite import Book
         row = option.row()
         self.hymn = self.hymns[row]
         book = Book(self.hymnBook)
@@ -257,7 +257,6 @@ class ConfigurePresentationWindow(QWidget):
 
 
 if __name__ == '__main__':
-    import checkup
     from util.ConfigUtil import ConfigUtil
     ConfigUtil.setup()
     config.activeVerseNoColour = "white"

@@ -7,9 +7,9 @@ if __name__ == '__main__':
     ConfigUtil.setup()
 
 import config
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 
-from ThirdParty import Converter
+from util.ThirdParty import Converter
 
 
 class BibleDataConverter:

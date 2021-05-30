@@ -56,7 +56,7 @@ class RemoteCliHandler:
 
     @asyncio.coroutine
     def shell(reader, writer):
-        from TextCommandParser import TextCommandParser
+        from util.TextCommandParser import TextCommandParser
 
         textCommandParser = TextCommandParser(RemoteCliMainWindow())
 
@@ -104,7 +104,7 @@ class RemoteCliHandler:
         writer.close()
 
     def help(writer):
-        from TextCommandParser import TextCommandParser
+        from util.TextCommandParser import TextCommandParser
         textCommandParser = TextCommandParser(RemoteCliMainWindow())
 
         writer.write("Type '.quit' to exit" + CRLF)

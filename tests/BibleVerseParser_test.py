@@ -6,7 +6,7 @@ if not os.path.isfile("config.py"):
 
 import config
 
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 
 class BibleVerseParserTestCase(unittest.TestCase):
     def setUp(self):

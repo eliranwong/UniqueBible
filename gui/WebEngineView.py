@@ -1,4 +1,4 @@
-from Languages import Languages
+from util.Languages import Languages
 import config, os, platform, webbrowser, re
 from functools import partial
 from qtpy.QtCore import Qt
@@ -7,13 +7,13 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite
-from Translator import Translator
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from util.Translator import Translator
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
-from BibleBooks import BibleBooks
+from util.BibleBooks import BibleBooks
 
 class WebEngineView(QWebEngineView):
     

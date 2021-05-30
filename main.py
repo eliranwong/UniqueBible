@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import glob
-import os, platform, logging, re, sys, subprocess
+import os, logging, re, sys
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
@@ -37,7 +37,7 @@ elif len(sys.argv) > 1 and sys.argv[1] in ["telnet-server", "http-server", "exec
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Check for dependencies and other essential elements
-from checkup import *
+from util.checkup import *
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -148,13 +148,13 @@ if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
 
 # Setup menu shortcut configuration file
 if not platform.system() == "Windows" and not config.enableHttpServer:
-    import readline
+    pass
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from gui.MainWindow import MainWindow
 from qtpy.QtWidgets import QApplication, QStyleFactory
-from themes import Themes
+from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
 if config.qtMaterial and not config.isQtMaterialInstalled:

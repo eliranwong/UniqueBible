@@ -1,7 +1,7 @@
 import logging
 import os, sqlite3, re, config
-from BiblesSqlite import BiblesSqlite
-from BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
 
 class VerseData:
@@ -123,7 +123,7 @@ class ImageSqlite:
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
         if information:
-            htmlImageFolder = os.path.join("htmlResources", "images")
+            htmlImageFolder = os.path.join("../htmlResources", "images")
             if not os.path.isdir(htmlImageFolder):
                 os.mkdir(htmlImageFolder)
             if module == "EXLBL":
