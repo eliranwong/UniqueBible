@@ -310,7 +310,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   .sidenav {4}padding-top: 15px;{5}
                   .sidenav a {4}font-size: 18px;{5}
                 {5}
-
+                table.layout, th.layout, td.layout {4}
+                  padding: 0;
+                  margin: 0;
+                  border: none;
+                {5}
                 #commandForm {4}
                   margin-left: 5px;
                   margin-right: 5px;
