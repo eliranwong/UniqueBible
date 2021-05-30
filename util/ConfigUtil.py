@@ -919,6 +919,7 @@ class ConfigUtil:
             config.menuUnderline = "&"
         else:
             config.menuUnderline = ""
+        config.enableHttpServer = False
 
     # Save configurations on exit
     @staticmethod
