@@ -295,7 +295,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 .sidenav .fullscreenbtn {4}
                   position: absolute;
                   top: 0;
-                  font-size: 30px;
+                  font-size: 25px;
                 {5}
 
                 .sidenav .closebtn {4}
