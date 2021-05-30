@@ -41,8 +41,8 @@ import os
 # The following two lines are written for use of this parser outside UniqueBible.app
 import pprint
 
-if not os.path.isfile("../config.py"):
-    open("../config.py", "w", encoding="utf-8").close()
+if not os.path.isfile("config.py"):
+    open("config.py", "w", encoding="utf-8").close()
 
 # import modules, which are ESSENTIAL for running BibleVerseParser
 import re, glob, config, sys
@@ -122,8 +122,8 @@ class BibleVerseParser:
                 ("standardAbbreviation = ", config.standardAbbreviation),
                 ("convertChapterVerseDotSeparator = ", config.convertChapterVerseDotSeparator),
             )
-            if not os.path.isfile("../config.py"):
-                with open("../config.py", "w", encoding="utf-8") as fileObj:
+            if not os.path.isfile("config.py"):
+                with open("config.py", "w", encoding="utf-8") as fileObj:
                     for name, value in nameValue:
                         fileObj.write(name+pprint.pformat(value))
 
