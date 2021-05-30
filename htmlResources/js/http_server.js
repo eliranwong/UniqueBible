@@ -46,25 +46,13 @@ function exitFullscreen() {
 }
 
 function fullScreenSwitch() {
-  
-  if (getMobileOperatingSystem() == 'iOS') {
-      if (window.navigator.standalone) {
-      messageUser('<h3>Exit Fullscreen in iOS/iPad/iPhone</h3>', '<p>To enter non-fullscreen mode in iOS/iPad/iPhone, use web browser (e.g. mobile Sarfari), instead home screen bookmark.</p>');
-      }
-      else {
-      messageUser('<h3>Enter Fullscreen in iOS/iPad/iPhone</h3>', '<p>To enter fullscreen mode in iOS/iPad/iPhone, use a home screen bookmark directly.</p><p>How to save a home screen bookmark?<br>1) Open http://localhost:8080 with mobile Sarfari first.<br>2) Choose "Add to Home Screen" in action menu to save a bookmark.</p>');
-      }
-  }
-  else {
-      if (fullScreen == 0) { 
-      fullScreen = 1;  
-      launchIntoFullscreen(document.documentElement);
-      }
-      else {
-      fullScreen = 0;  
-      exitFullscreen();
-      }
-  }
+    if (fullScreen == 0) { 
+        fullScreen = 1;  
+        launchIntoFullscreen(document.documentElement);
+    } else {
+        fullScreen = 0;  
+        exitFullscreen();
+    }
 }
 
 /* Search */
