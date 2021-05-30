@@ -1,5 +1,6 @@
-Major change in version 25.11:
+Major changes in version 25.11:
 * Maximise the height of http-server page content.
+* Fixed http-server page fullscreen issue on iOS.
 
 Major changes in version 25.08, 25.09, 25.10:
 * Fixed chromecast on old TV.
