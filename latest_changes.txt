@@ -1,3 +1,6 @@
+Major changes in version 25.12:
+* Apply changes in this PR: https://github.com/eliranwong/UniqueBible/pull/524/files
+
 Major changes in version 25.11:
 * Maximise the height of http-server page content.
 * Fixed http-server page fullscreen issue on iOS.
