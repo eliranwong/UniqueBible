@@ -157,25 +157,26 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     # Convert command shortcut
                     shortcuts = self.getShortcuts()
                     commands = self.getCommands()
+                    commandLower = self.command.lower()
                     if not self.command:
                         self.command = config.history["main"][-1]
-                    elif self.command.lower() in config.customCommandShortcuts.keys():
-                        self.command = config.customCommandShortcuts[self.command.lower()]
-                    elif self.command.lower() in shortcuts.keys():
-                        self.command = shortcuts[self.command.lower()]
-                    elif self.command.lower() in commands.keys():
-                        self.command = commands[self.command.lower()]()
+                    elif commandLower in config.customCommandShortcuts.keys():
+                        self.command = config.customCommandShortcuts[commandLower]
+                    elif commandLower in shortcuts.keys():
+                        self.command = shortcuts[commandLower]
+                    elif commandLower in commands.keys():
+                        self.command = commands[commandLower]()
                     elif self.command.upper()[1:] in self.getVerseFeatures().keys():
                         self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                     elif self.command.upper()[1:] in self.getChapterFeatures().keys():
                         self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                         self.command = re.sub(":[0-9]+?$", "", self.command)
                     # Parse command
-                    if self.command.lower() in (".help", "?"):
+                    if commandLower in (".help", "?"):
                         content = self.helpContent()
-                    elif self.command.lower().startswith(".") and self.command.lower()[1:] in features.keys():
-                        content = features[self.command.lower()[1:]]()
-                    elif self.command.lower() == ".stop" or self.command == config.httpServerStopCommand:
+                    elif commandLower.startswith(".") and commandLower[1:] in features.keys():
+                        content = features[commandLower[1:]]()
+                    elif commandLower == ".stop" or self.command == config.httpServerStopCommand:
                         permission, message = self.checkPermission()
                         if permission or (config.httpServerStopCommand and self.command == config.httpServerStopCommand):
                             self.closeWindow()
@@ -183,13 +184,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                             return
                         else:
                             content = message
-                    elif self.command.lower() == ".restart":
+                    elif commandLower == ".restart":
                         permission, message = self.checkPermission()
                         if not permission:
                             content = message
                         else:
                             return self.restartServer()
-                    elif self.command.lower() == ".update":
+                    elif commandLower == ".update":
                         permission, message = self.checkPermission()
                         if not permission:
                             content = message
@@ -863,7 +864,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return
 
     def helpContent(self):
-        dotCommands = """<h2>Http-server Commands [case insensitive]</h2>
+        dotCommands = """
+        <h2>Documentation</h2><p>
+        <a target="_blank" href="https://github.com/eliranwong/UniqueBible/wiki">Wiki</a><br>
+        <h2>Http-server Commands [case insensitive]</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.myqrcode')">.myQRcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
