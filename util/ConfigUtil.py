@@ -66,7 +66,7 @@ class ConfigUtil:
         config.help["webUI"] = """
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
-            config.webUI = ""
+            config.webUI = "mini"
         config.help["webPresentationMode"] = """
         # Http-server presentation mode - only the primary user have full control and ability to share content to other users."""
         if not hasattr(config, "webPresentationMode"):

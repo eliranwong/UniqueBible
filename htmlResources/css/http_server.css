@@ -1,3 +1,127 @@
+/* START of OVERLAY-NAV*/
+cat {
+    color: lightgray;
+    }
+    
+    .overlay {
+        height: 0%;
+        width: 100%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #151B54;
+        overflow-y: auto;
+        transition: 0.5s;
+    }
+    
+    .overlay-content {
+        position: relative;
+        top: 0%;
+        width: 100%;
+        text-align: center;
+        margin-top: 30px;
+    }
+    
+    .overlay navItem {
+        padding: 8px;
+        text-decoration: none;
+        font-size: 36px;
+        color: white;
+        transition: 0.3s;
+        display: inline-block;
+    }
+    
+    .overlay navItem:hover, .overlay navItem:focus {
+        color: orange;
+        cursor: pointer;
+    }
+    
+    .overlay .closebtn {
+        position: absolute;
+        top: 20px;
+        right: 45px;
+        font-size: 60px;
+    }
+    
+    @media screen and (max-height: 410px) {
+      .overlay {overflow-y: auto;}
+      .overlay a {font-size: 20px}
+      .overlay .closebtn {
+        font-size: 40px;
+        top: 15px;
+        right: 35px;
+      }
+    }
+    /* END of OVERLAY-NAV*/
+
+div.bookSection {
+    display: inline-block;
+    text-align: center;
+    vertical-align: text-top;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/* Add Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+}
+    
+@keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+
+@-webkit-keyframes slideIn {
+    from {bottom: -300px; opacity: 0} 
+    to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0} 
+    to {opacity: 1}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0} 
+    to {opacity: 1}
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 0px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%; 
+    /* Could be more or less, depending on screen size */
+}
+
 /* Modal - Message */
 /* The Modal (background) */
 .modal2 {
