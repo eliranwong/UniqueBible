@@ -1,4 +1,5 @@
 import os, config, zipfile, gdown
+import shutil
 from util.LanguageUtil import LanguageUtil
 from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
@@ -59,6 +60,26 @@ class RemoteCliMainWindow(CrossPlatform):
         elif notification:
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
+
+
+    def openPdfReader(self, file, page=1, fullPath=False, fullScreen=False):
+        if file:
+            try:
+                libPdfDir = "lib/pdfjs-2.7.570-dist/web"
+                marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
+                fileFrom = os.path.join(marvelDataPath, "pdf", file)
+                fileFrom = fileFrom.replace("+", " ")
+                fileTo = os.path.join(os.getcwd(), "htmlResources", libPdfDir, "temp.pdf")
+                shutil.copyfile(fileFrom, fileTo)
+                pdfViewer = "{0}/viewer.html".format(libPdfDir)
+                url = "{0}?file=temp.pdf&theme={1}#page={2}".format(pdfViewer, config.theme, page)
+                content = "<script>window.location.href = '{0}'</script>".format(url)
+                return("main", content, {})
+            except Exception as e:
+                return ("main", "Could not load {0}".format(file), {})
+        else:
+            return("main", "No file specified", {})
+
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

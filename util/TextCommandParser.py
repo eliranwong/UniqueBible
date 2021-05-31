@@ -2691,8 +2691,11 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command += ":::1"
         pdfFile, page = self.splitCommand(command)
-        self.parent.openPdfReader(pdfFile, page)
-        return ("", "", {})
+        if source == "http":
+            return self.parent.openPdfReader(pdfFile, page)
+        else:
+            self.parent.openPdfReader(pdfFile, page)
+            return ("", "", {})
 
     # ANYPDF:::
     def openPdfReaderFullpath(self, command, source):
