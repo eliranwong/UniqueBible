@@ -1,3 +1,6 @@
+Major change in version 25.15:
+* minor revision.
+
 Major change in version 25.14:
 * Added pdf support to http-server
 

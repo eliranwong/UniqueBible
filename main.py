@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import glob
-import os, logging, re, sys
+import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
@@ -32,7 +32,7 @@ if initialCommand == "cli":
 elif initialCommand == "gui":
     initialCommand = ""
     config.cli = False
-elif len(sys.argv) > 1 and sys.argv[1] in ["telnet-server", "http-server", "execute-macro"]:
+elif len(sys.argv) > 1 and sys.argv[1] in ("telnet-server", "http-server", "execute-macro"):
     config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 

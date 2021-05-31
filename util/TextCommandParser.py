@@ -1,5 +1,5 @@
 # coding=utf-8
-import os, signal, re, webbrowser, platform, multiprocessing, zipfile
+import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
 from functools import partial
