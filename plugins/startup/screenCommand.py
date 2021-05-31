@@ -1,7 +1,7 @@
 import config, re
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import BiblesSqlite
-from ToolsSqlite import Book
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from db.ToolsSqlite import Book
 
 config.presentationParser = True
 

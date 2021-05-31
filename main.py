@@ -4,7 +4,7 @@
 # a cross-platform desktop bible application
 # For more information on this application, visit https://BibleTools.app or https://UniqueBible.app.
 import glob
-import os, platform, logging, re, sys, subprocess
+import os, logging, re, sys
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
@@ -32,12 +32,12 @@ if initialCommand == "cli":
 elif initialCommand == "gui":
     initialCommand = ""
     config.cli = False
-elif initialCommand.startswith("telnet-server") or initialCommand.startswith("http-server"):
+elif len(sys.argv) > 1 and sys.argv[1] in ["telnet-server", "http-server", "execute-macro"]:
     config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Check for dependencies and other essential elements
-from checkup import *
+from util.checkup import *
 
 # Setup logging
 logger = logging.getLogger('uba')
@@ -99,7 +99,6 @@ def runStartupPlugins():
                 config.mainWindow.execPythonFile(script)
 
 # HTTP Server
-
 def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
@@ -128,6 +127,25 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
         subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
     exit(0)
 
+# Execute macro
+if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
+    if config.enableMacros:
+        from util.MacroParser import MacroParser
+        if len(sys.argv) < 3:
+            print("Please specify macro file to run")
+            exit(-1)
+        file = sys.argv[2]
+        if os.path.isfile(os.path.join(MacroParser.macros_dir, file)):
+            from util.RemoteCliMainWindow import RemoteCliMainWindow
+            MacroParser(RemoteCliMainWindow()).parse(file)
+            ConfigUtil.save()
+            print("Macro {0} executed".format(file))
+        else:
+            print("Macro {0} does not exist".format(file))
+    else:
+        print("Macros are not enabled")
+    exit(0)
+
 # Setup menu shortcut configuration file
 if not platform.system() == "Windows" and not config.enableHttpServer:
     import readline
@@ -136,7 +154,7 @@ ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from gui.MainWindow import MainWindow
 from qtpy.QtWidgets import QApplication, QStyleFactory
-from themes import Themes
+from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
 if config.qtMaterial and not config.isQtMaterialInstalled:

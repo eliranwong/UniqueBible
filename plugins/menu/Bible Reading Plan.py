@@ -511,7 +511,7 @@ class BibleReadingPlan(QWidget):
 
     def translateIntoChinese(self):
         import copy, pprint
-        from BibleBooks import BibleBooks
+        from util.BibleBooks import BibleBooks
         plan = copy.deepcopy(self.template)
         filePath = "{0}_zh".format(self.progressFile)
         with open(filePath, "w", encoding="utf-8") as fileObj:

@@ -24,7 +24,8 @@ os.environ["QT_LOGGING_RULES"] = "*=false"
 initialCommand = " ".join(sys.argv[1:]).strip()
 if initialCommand == "-i":
     initialCommand = input("Enter command: ").strip()
-enableCli = True if initialCommand in ("cli", "cli.py", "gui") or initialCommand.startswith("telnet-server") or initialCommand.startswith("http-server") else False
+enableCli = True if initialCommand in ("cli", "cli.py", "gui") \
+    or len(sys.argv) > 1 and sys.argv[1] in ["telnet-server", "http-server", "execute-macro"] else False
 
 # For ChromeOS Linux (Debian 10) ONLY:
 if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):

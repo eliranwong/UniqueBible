@@ -1,5 +1,5 @@
 import config
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 from qtpy.QtWebEngineWidgets import QWebEngineView
 
 

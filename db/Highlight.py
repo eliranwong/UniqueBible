@@ -1,6 +1,6 @@
 import os, sqlite3, re
 import config
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 
 
 class Highlight:

@@ -1,4 +1,4 @@
-from BiblesSqlite import BiblesSqlite, Bible
+from db.BiblesSqlite import BiblesSqlite, Bible
 
 class Twwy:
 # an example of using this script:

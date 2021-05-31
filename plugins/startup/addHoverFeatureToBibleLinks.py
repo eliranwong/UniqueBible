@@ -1,5 +1,5 @@
 import config, re
-from ThirdParty import Converter
+from util.ThirdParty import Converter
 
 def convertCrLink(match):
     *_, b, c, v = match.groups()

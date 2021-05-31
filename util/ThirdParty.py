@@ -1,9 +1,9 @@
 import os, sqlite3, config, re, json, base64, logging
 from pathlib import Path
 from shutil import copyfile
-from BiblesSqlite import BiblesSqlite
-from BibleVerseParser import BibleVerseParser
-from BiblesSqlite import Bible
+from db.BiblesSqlite import BiblesSqlite
+from util.BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import Bible
 from xml.dom import minidom
 
 class Converter:

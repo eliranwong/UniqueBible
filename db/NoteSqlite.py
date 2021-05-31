@@ -1,5 +1,5 @@
 import os, re, sqlite3, config
-from BibleVerseParser import BibleVerseParser
+from util.BibleVerseParser import BibleVerseParser
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
 

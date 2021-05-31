@@ -1,17 +1,17 @@
 import config
 from functools import partial
-from TtsLanguages import TtsLanguages
+from util.TtsLanguages import TtsLanguages
 from qtpy.QtCore import Qt, QEvent
 from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
                                QApplication, QBoxLayout, QGridLayout, QComboBox)
 
 
-from BibleVerseParser import BibleVerseParser
-from ToolsSqlite import Commentary, LexiconData, IndexesSqlite
-from TextCommandParser import TextCommandParser
+from util.BibleVerseParser import BibleVerseParser
+from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite
+from util.TextCommandParser import TextCommandParser
 
-from BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite
 
 class MiniControl(QWidget):
 

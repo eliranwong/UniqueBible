@@ -1,6 +1,6 @@
 import os, config, zipfile, gdown
 from util.LanguageUtil import LanguageUtil
-from ThirdParty import Converter
+from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
 
@@ -88,4 +88,7 @@ class RemoteCliMainWindow(CrossPlatform):
         pass
 
     def updateBookButton(self):
+        pass
+
+    def closePopover(self):
         pass

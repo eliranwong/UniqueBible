@@ -1,7 +1,7 @@
 import logging
 import os, sqlite3, re, config
-from BiblesSqlite import BiblesSqlite
-from BibleVerseParser import BibleVerseParser
+from db.BiblesSqlite import BiblesSqlite
+from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
 
 class VerseData:

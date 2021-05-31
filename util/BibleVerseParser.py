@@ -47,8 +47,8 @@ if not os.path.isfile("config.py"):
 # import modules, which are ESSENTIAL for running BibleVerseParser
 import re, glob, config, sys
 from ast import literal_eval
-from BibleBooks import BibleBooks
-from RegexSearch import RegexSearch
+from util.BibleBooks import BibleBooks
+from util.RegexSearch import RegexSearch
 
 """
 START - class BibleVerseParser
