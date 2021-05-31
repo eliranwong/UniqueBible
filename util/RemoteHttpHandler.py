@@ -982,12 +982,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return "QRCODE:::server"
 
     def libraryContent(self):
+        self.textCommandParser.parent.setupResourceLists()
         content = ""
         reference = self.getCurrentReference()
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">Commentary</ref></h2>"""
         content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>Reference Book</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
+        content += "<h2>PDF</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = 'PDF:::{0}'">{0}</ref>""".format(book)
+            for book in self.textCommandParser.parent.pdfList])
         return content
 
     def setVerseNoClickActionContent(self, double=False):
