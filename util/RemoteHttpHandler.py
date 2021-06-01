@@ -118,13 +118,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)
 
-    def do_GET(self):
-        self.session = self.getSession()
-        clientIP = self.client_address[0]
-        if clientIP not in self.users:
-            self.users.append(clientIP)
-        if clientIP == self.users[0]:
-            self.primaryUser = True
+    def setLanguage(self):
         # Check language
         # Traditional Chinese
         if self.path.startswith("/traditional.html"):
@@ -144,6 +138,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.standardAbbreviation = "ENG"
             self.homePage = "index.html"
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+        self.parser = BibleVerseParser(config.parserStandarisation)
+        self.abbreviations = self.parser.standardAbbreviation
+
+    def do_GET(self):
+        self.session = self.getSession()
+        clientIP = self.client_address[0]
+        if clientIP not in self.users:
+            self.users.append(clientIP)
+        if clientIP == self.users[0]:
+            self.primaryUser = True
+        self.setLanguage()
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
             self.loadContent()
         else:
@@ -275,7 +280,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.021'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.022'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -371,12 +376,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.021'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.021'>
-                <script src='js/common.js?v=1.021'></script>
-                <script src='js/{9}.js?v=1.021'></script>
-                <script src='w3.js?v=1.021'></script>
-                <script src='js/http_server.js?v=1.021'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.022'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.022'>
+                <script src='js/common.js?v=1.022'></script>
+                <script src='js/{9}.js?v=1.022'></script>
+                <script src='w3.js?v=1.022'></script>
+                <script src='js/http_server.js?v=1.022'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -529,12 +534,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
             (config.thisTranslation["menu_search"], ".search"),
+            (config.thisTranslation["ubaCommands"], ".help"),
             (config.thisTranslation["download"], ".download"),
         )
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
+        html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["menu1_wikiPages"])
+        html += """<a href="index.html">English</a>""" if self.homePage != "index.html" else ""
+        html += """<a href="traditional.html">繁體中文</a>""" if self.homePage != "traditional.html" else ""
+        html += """<a href="simplified.html">简体中文</a>""" if self.homePage != "simplified.html" else ""
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
@@ -554,7 +564,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.openSideNav(),
                     self.submitButton(),
-                    self.helpButton(),
+                    self.qrButton(),
                     self.homePage,
                 )
             else:
@@ -635,12 +645,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.021'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.021'>"
-                "<script src='js/common.js?v=1.021'></script>"
-                "<script src='js/{7}.js?v=1.021'></script>"
-                "<script src='w3.js?v=1.021'></script>"
-                "<script src='js/http_server.js?v=1.021'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.022'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.022'>"
+                "<script src='js/common.js?v=1.022'></script>"
+                "<script src='js/{7}.js?v=1.022'></script>"
+                "<script src='w3.js?v=1.022'></script>"
+                "<script src='js/http_server.js?v=1.022'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -656,7 +666,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.021'></script>"
+                "<script src='js/custom.js?v=1.022'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -684,7 +694,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 <div class="overlay-content">
 <div class="nav">
 
-<p><cat>[Book]</cat></p>
+<p><cat>{0}</cat></p>
 
 <p>
 <navItem class="numPad" onclick="closeNav('navB')">&#8630;</navItem>
@@ -713,7 +723,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 <div id="navC" class="overlay">
   <div class="overlay-content">
 <div class="nav">
-<p><cat>[Chapter]</cat></p>
+<p><cat>{1}</cat></p>
 <navItem class="numPad" onclick="closeNav('navC')">&#8630;</navItem>
 <span id="chapters"></span>
 </div>
@@ -727,7 +737,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 <div id="navV" class="overlay">
   <div class="overlay-content">
 <div class="nav">
-<p><cat>[Verse]</cat></p>
+<p><cat>{2}</cat></p>
 <navItem class="numPad" onclick="closeNav('navV')">&#8630;</navItem>
 <span id="verses"></span>
 </div>
@@ -735,7 +745,31 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 </div>
 
 <!-- end Verse Selection Interface -->
-"""
+""".format(self.getBookTitle(), self.getChapterTitle(), self.getVerseTitle())
+
+    def getBookTitle(self):
+        if self.homePage == "traditional.html":
+            return "〔書卷〕"
+        elif self.homePage == "simplified.html":
+            return "〔书卷〕"
+        else:
+            return "[Book]"
+
+    def getChapterTitle(self):
+        if self.homePage == "traditional.html":
+            return "〔章〕"
+        elif self.homePage == "simplified.html":
+            return "〔章〕"
+        else:
+            return "[Chapter]"
+
+    def getVerseTitle(self):
+        if self.homePage == "traditional.html":
+            return "〔節〕"
+        elif self.homePage == "simplified.html":
+            return "〔节〕"
+        else:
+            return "[Verse]"
 
     def bibleSelection(self):
         return self.formatSelectList("bibleName", "submitTextCommand", self.bibles, config.mainText)
@@ -789,12 +823,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def qrButton(self):
-        html = """<button type='button' onclick='submitCommand("qrcode:::"+window.location.href)'>QR</button>"""
+        html = """<button type='button' onclick='submitCommand("qrcode:::"+window.location.href)'>&#9641;</button>"""
         return html
 
     def featureButton(self):
         #html = """<button type='button' onclick='submitCommand("_menu:::")'>&dagger;</button>"""
-        html = """<button type='button' onclick='mod = "KJV"; updateBook("KJV"); openNav("navB");'>&dagger;</button>"""
+        html = """<button type='button' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(self.homePage)
         return html
 
     def libraryButton(self):

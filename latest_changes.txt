@@ -1,3 +1,7 @@
+Major changes in version 25.18:
+* Better support of Chinese interface on http-server.
+* Added traditional and simplified chinese bible menu to http-server.
+
 Major changes in version 25.17:
 * Added focusCommandInput
 * Fixed download file with single quote

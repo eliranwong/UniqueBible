@@ -117,7 +117,7 @@ function submitBookCommand(id) {
 
 /* SECTION - INTERFACE */
 
-function updateBook(bible) {
+function updateBook(bible, lang) {
 
     //modules using MarvelBible versification
     var MBversification = ['MOB','MAB','MPB','MTB','MIB'];
@@ -197,7 +197,7 @@ function updateBook(bible) {
     [0, 20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 18, 18, 20, 8, 21, 18, 24, 21, 15, 27, 21]
     ];
     
-    defaultBookMenu();
+    defaultBookMenu(lang);
     
     } else if ((KJVversification.indexOf(bible) >= 0) || (bible.lastIndexOf('c', 0) === 0)) {
     
@@ -272,7 +272,7 @@ function updateBook(bible) {
     [0, 20, 29, 22, 11, 14, 17, 17, 13, 21, 11, 19, 17, 18, 20, 8, 21, 18, 24, 21, 15, 27, 21]
     ];
     
-    defaultBookMenu();
+    defaultBookMenu(lang);
     
     } else {
     
@@ -297,84 +297,237 @@ function updateBook(bible) {
       xhttp.send();
     }
     
-    function defaultBookMenu() {
-    //var bookList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66];
+function defaultBookMenu(lang) {
     
-    document.getElementById('bookMenu').innerHTML = '' +
-    '<div class="bookSection">' +
-    '<navitem onclick="navB(1,\'Genesis\')">Genesis</navitem><br>' +
-    '<navitem onclick="navB(2,\'Exodus\')">Exodus</navitem><br>' +
-    '<navitem onclick="navB(3,\'Leviticus\')">Leviticus</navitem><br>' +
-    '<navitem onclick="navB(4,\'Numbers\')">Numbers</navitem><br>' +
-    '<navitem onclick="navB(5,\'Deuteronomy\')">Deuteronomy</navitem><br>' +
-    '<navitem onclick="navB(6,\'Joshua\')">Joshua</navitem><br>' +
-    '<navitem onclick="navB(7,\'Judges\')">Judges</navitem><br>' +
-    '<navitem onclick="navB(8,\'Ruth\')">Ruth</navitem><br>' +
-    '<navitem onclick="navB(9,\'1 Samuel\')">1 Samuel</navitem><br>' +
-    '<navitem onclick="navB(10,\'2 Samuel\')">2 Samuel</navitem><br>' +
-    '<navitem onclick="navB(11,\'1 Kings\')">1 Kings</navitem><br>' +
-    '<navitem onclick="navB(12,\'2 Kings\')">2 Kings</navitem><br>' +
-    '<navitem onclick="navB(13,\'1 Chronicles\')">1 Chronicles</navitem><br>' +
-    '<navitem onclick="navB(14,\'2 Chronicles\')">2 Chronicles</navitem><br>' +
-    '<navitem onclick="navB(15,\'Ezra\')">Ezra</navitem><br>' +
-    '<navitem onclick="navB(16,\'Nehemiah\')">Nehemiah</navitem><br>' +
-    '<navitem onclick="navB(17,\'Esther\')">Esther</navitem><br>' +
-    '<navitem onclick="navB(18,\'Job\')">Job</navitem><br>' +
-    '<navitem onclick="navB(19,\'Psalm\')">Psalm</navitem><br>' +
-    '<navitem onclick="navB(20,\'Proverbs\')">Proverbs</navitem><br>' +
-    '<navitem onclick="navB(21,\'Ecclesiastes\')">Ecclesiastes</navitem><br>' +
-    '<navitem onclick="navB(22,\'Song of Songs\')">Song of Songs</navitem><br>' +
-    '<navitem onclick="navB(23,\'Isaiah\')">Isaiah</navitem><br>' +
-    '<navitem onclick="navB(24,\'Jeremiah\')">Jeremiah</navitem><br>' +
-    '<navitem onclick="navB(25,\'Lamentations\')">Lamentations</navitem><br>' +
-    '<navitem onclick="navB(26,\'Ezekiel\')">Ezekiel</navitem><br>' +
-    '<navitem onclick="navB(27,\'Daniel\')">Daniel</navitem><br>' +
-    '<navitem onclick="navB(28,\'Hosea\')">Hosea</navitem><br>' +
-    '<navitem onclick="navB(29,\'Joel\')">Joel</navitem><br>' +
-    '<navitem onclick="navB(30,\'Amos\')">Amos</navitem><br>' +
-    '<navitem onclick="navB(31,\'Obadiah\')">Obadiah</navitem><br>' +
-    '<navitem onclick="navB(32,\'Jonah\')">Jonah</navitem><br>' +
-    '<navitem onclick="navB(33,\'Micah\')">Micah</navitem><br>' +
-    '<navitem onclick="navB(34,\'Nahum\')">Nahum</navitem><br>' +
-    '<navitem onclick="navB(35,\'Habakkuk\')">Habakkuk</navitem><br>' +
-    '<navitem onclick="navB(36,\'Zephaniah\')">Zephaniah</navitem><br>' +
-    '<navitem onclick="navB(37,\'Haggai\')">Haggai</navitem><br>' +
-    '<navitem onclick="navB(38,\'Zechariah\')">Zechariah</navitem><br>' +
-    '<navitem onclick="navB(39,\'Malachi\')">Malachi</navitem><br>' +
-    '</div>' +
-    '<div class="bookSection">' +
-    '<navitem onclick="navB(40,\'Matthew\')">Matthew</navitem><br>' +
-    '<navitem onclick="navB(41,\'Mark\')">Mark</navitem><br>' +
-    '<navitem onclick="navB(42,\'Luke\')">Luke</navitem><br>' +
-    '<navitem onclick="navB(43,\'John\')">John</navitem><br>' +
-    '<navitem onclick="navB(44,\'Acts\')">Acts</navitem><br>' +
-    '<navitem onclick="navB(45,\'Romans\')">Romans</navitem><br>' +
-    '<navitem onclick="navB(46,\'1 Corinthians\')">1 Corinthians</navitem><br>' +
-    '<navitem onclick="navB(47,\'2 Corinthians\')">2 Corinthians</navitem><br>' +
-    '<navitem onclick="navB(48,\'Galatians\')">Galatians</navitem><br>' +
-    '<navitem onclick="navB(49,\'Ephesians\')">Ephesians</navitem><br>' +
-    '<navitem onclick="navB(50,\'Philippians\')">Philippians</navitem><br>' +
-    '<navitem onclick="navB(51,\'Colossians\')">Colossians</navitem><br>' +
-    '<navitem onclick="navB(52,\'1 Thessalonians\')">1 Thessalonians</navitem><br>' +
-    '<navitem onclick="navB(53,\'2 Thessalonians\')">2 Thessalonians</navitem><br>' +
-    '<navitem onclick="navB(54,\'1 Timothy\')">1 Timothy</navitem><br>' +
-    '<navitem onclick="navB(55,\'2 Timothy\')">2 Timothy</navitem><br>' +
-    '<navitem onclick="navB(56,\'Titus\')">Titus</navitem><br>' +
-    '<navitem onclick="navB(57,\'Philemon\')">Philemon</navitem><br>' +
-    '<navitem onclick="navB(58,\'Hebrews\')">Hebrews</navitem><br>' +
-    '<navitem onclick="navB(59,\'James\')">James</navitem><br>' +
-    '<navitem onclick="navB(60,\'1 Peter\')">1 Peter</navitem><br>' +
-    '<navitem onclick="navB(61,\'2 Peter\')">2 Peter</navitem><br>' +
-    '<navitem onclick="navB(62,\'1 John\')">1 John</navitem><br>' +
-    '<navitem onclick="navB(63,\'2 John\')">2 John</navitem><br>' +
-    '<navitem onclick="navB(64,\'3 John\')">3 John</navitem><br>' +
-    '<navitem onclick="navB(65,\'Jude\')">Jude</navitem><br>' +
-    '<navitem onclick="navB(66,\'Revelation\')">Revelation</navitem><br>' +
-    '</div>' +
-    '';
+    if (lang == "traditional.html") {
+
+        document.getElementById('bookMenu').innerHTML = '' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(1,\'創世記\')">創世記</navitem><br>' +
+        '<navitem onclick="navB(2,\'出埃及記\')">出埃及記</navitem><br>' +
+        '<navitem onclick="navB(3,\'利未記\')">利未記</navitem><br>' +
+        '<navitem onclick="navB(4,\'民數記\')">民數記</navitem><br>' +
+        '<navitem onclick="navB(5,\'申命記\')">申命記</navitem><br>' +
+        '<navitem onclick="navB(6,\'約書亞記\')">約書亞記</navitem><br>' +
+        '<navitem onclick="navB(7,\'士師記\')">士師記</navitem><br>' +
+        '<navitem onclick="navB(8,\'路得記\')">路得記</navitem><br>' +
+        '<navitem onclick="navB(9,\'撒母耳記上\')">撒母耳記上</navitem><br>' +
+        '<navitem onclick="navB(10,\'撒母耳記下\')">撒母耳記下</navitem><br>' +
+        '<navitem onclick="navB(11,\'列王紀上\')">列王紀上</navitem><br>' +
+        '<navitem onclick="navB(12,\'列王紀下\')">列王紀下</navitem><br>' +
+        '<navitem onclick="navB(13,\'歷代志上\')">歷代志上</navitem><br>' +
+        '<navitem onclick="navB(14,\'歷代志下\')">歷代志下</navitem><br>' +
+        '<navitem onclick="navB(15,\'以斯拉記\')">以斯拉記</navitem><br>' +
+        '<navitem onclick="navB(16,\'尼希米記\')">尼希米記</navitem><br>' +
+        '<navitem onclick="navB(17,\'以斯帖記\')">以斯帖記</navitem><br>' +
+        '<navitem onclick="navB(18,\'約伯記\')">約伯記</navitem><br>' +
+        '<navitem onclick="navB(19,\'詩篇\')">詩篇</navitem><br>' +
+        '<navitem onclick="navB(20,\'箴言\')">箴言</navitem><br>' +
+        '<navitem onclick="navB(21,\'傳道書\')">傳道書</navitem><br>' +
+        '<navitem onclick="navB(22,\'雅歌\')">雅歌</navitem><br>' +
+        '<navitem onclick="navB(23,\'以賽亞書\')">以賽亞書</navitem><br>' +
+        '<navitem onclick="navB(24,\'耶利米書\')">耶利米書</navitem><br>' +
+        '<navitem onclick="navB(25,\'耶利米哀歌\')">耶利米哀歌</navitem><br>' +
+        '<navitem onclick="navB(26,\'以西結書\')">以西結書</navitem><br>' +
+        '<navitem onclick="navB(27,\'但以理書\')">但以理書</navitem><br>' +
+        '<navitem onclick="navB(28,\'何西阿書\')">何西阿書</navitem><br>' +
+        '<navitem onclick="navB(29,\'約珥書\')">約珥書</navitem><br>' +
+        '<navitem onclick="navB(30,\'阿摩司書\')">阿摩司書</navitem><br>' +
+        '<navitem onclick="navB(31,\'俄巴底亞書\')">俄巴底亞書</navitem><br>' +
+        '<navitem onclick="navB(32,\'約拿書\')">約拿書</navitem><br>' +
+        '<navitem onclick="navB(33,\'彌迦書\')">彌迦書</navitem><br>' +
+        '<navitem onclick="navB(34,\'那鴻書\')">那鴻書</navitem><br>' +
+        '<navitem onclick="navB(35,\'哈巴谷書\')">哈巴谷書</navitem><br>' +
+        '<navitem onclick="navB(36,\'西番雅書\')">西番雅書</navitem><br>' +
+        '<navitem onclick="navB(37,\'哈該書\')">哈該書</navitem><br>' +
+        '<navitem onclick="navB(38,\'撒迦利亞書\')">撒迦利亞書</navitem><br>' +
+        '<navitem onclick="navB(39,\'瑪拉基書\')">瑪拉基書</navitem><br>' +
+        '</div>' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(40,\'馬太福音\')">馬太福音</navitem><br>' +
+        '<navitem onclick="navB(41,\'馬可福音\')">馬可福音</navitem><br>' +
+        '<navitem onclick="navB(42,\'路加福音\')">路加福音</navitem><br>' +
+        '<navitem onclick="navB(43,\'約翰福音\')">約翰福音</navitem><br>' +
+        '<navitem onclick="navB(44,\'使徒行傳\')">使徒行傳</navitem><br>' +
+        '<navitem onclick="navB(45,\'羅馬書\')">羅馬書</navitem><br>' +
+        '<navitem onclick="navB(46,\'哥林多前書\')">哥林多前書</navitem><br>' +
+        '<navitem onclick="navB(47,\'哥林多後書\')">哥林多後書</navitem><br>' +
+        '<navitem onclick="navB(48,\'加拉太書\')">加拉太書</navitem><br>' +
+        '<navitem onclick="navB(49,\'以弗所書\')">以弗所書</navitem><br>' +
+        '<navitem onclick="navB(50,\'腓立比書\')">腓立比書</navitem><br>' +
+        '<navitem onclick="navB(51,\'歌羅西書\')">歌羅西書</navitem><br>' +
+        '<navitem onclick="navB(52,\'帖撒羅尼迦前書\')">帖撒羅尼迦前書</navitem><br>' +
+        '<navitem onclick="navB(53,\'帖撒羅尼迦後書\')">帖撒羅尼迦後書</navitem><br>' +
+        '<navitem onclick="navB(54,\'提摩太前書\')">提摩太前書</navitem><br>' +
+        '<navitem onclick="navB(55,\'提摩太後書\')">提摩太後書</navitem><br>' +
+        '<navitem onclick="navB(56,\'提多書\')">提多書</navitem><br>' +
+        '<navitem onclick="navB(57,\'腓利門書\')">腓利門書</navitem><br>' +
+        '<navitem onclick="navB(58,\'希伯來書\')">希伯來書</navitem><br>' +
+        '<navitem onclick="navB(59,\'雅各書\')">雅各書</navitem><br>' +
+        '<navitem onclick="navB(60,\'彼得前書\')">彼得前書</navitem><br>' +
+        '<navitem onclick="navB(61,\'彼得後書\')">彼得後書</navitem><br>' +
+        '<navitem onclick="navB(62,\'約翰一書\')">約翰一書</navitem><br>' +
+        '<navitem onclick="navB(63,\'約翰二書\')">約翰二書</navitem><br>' +
+        '<navitem onclick="navB(64,\'約翰三書\')">約翰三書</navitem><br>' +
+        '<navitem onclick="navB(65,\'猶大書\')">猶大書</navitem><br>' +
+        '<navitem onclick="navB(66,\'啟示錄\')">啟示錄</navitem><br>' +
+        '</div>' +
+        '';
+
+    } else if (lang == "simplified.html") {
+
+        document.getElementById('bookMenu').innerHTML = '' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(1,\'创世记\')">创世记</navitem><br>' +
+        '<navitem onclick="navB(2,\'出埃及记\')">出埃及记</navitem><br>' +
+        '<navitem onclick="navB(3,\'利未记\')">利未记</navitem><br>' +
+        '<navitem onclick="navB(4,\'民数记\')">民数记</navitem><br>' +
+        '<navitem onclick="navB(5,\'申命记\')">申命记</navitem><br>' +
+        '<navitem onclick="navB(6,\'约书亚记\')">约书亚记</navitem><br>' +
+        '<navitem onclick="navB(7,\'士师记\')">士师记</navitem><br>' +
+        '<navitem onclick="navB(8,\'路得记\')">路得记</navitem><br>' +
+        '<navitem onclick="navB(9,\'撒母耳记上\')">撒母耳记上</navitem><br>' +
+        '<navitem onclick="navB(10,\'撒母耳记下\')">撒母耳记下</navitem><br>' +
+        '<navitem onclick="navB(11,\'列王纪上\')">列王纪上</navitem><br>' +
+        '<navitem onclick="navB(12,\'列王纪下\')">列王纪下</navitem><br>' +
+        '<navitem onclick="navB(13,\'历代志上\')">历代志上</navitem><br>' +
+        '<navitem onclick="navB(14,\'历代志下\')">历代志下</navitem><br>' +
+        '<navitem onclick="navB(15,\'以斯拉记\')">以斯拉记</navitem><br>' +
+        '<navitem onclick="navB(16,\'尼希米记\')">尼希米记</navitem><br>' +
+        '<navitem onclick="navB(17,\'以斯帖记\')">以斯帖记</navitem><br>' +
+        '<navitem onclick="navB(18,\'约伯记\')">约伯记</navitem><br>' +
+        '<navitem onclick="navB(19,\'诗篇\')">诗篇</navitem><br>' +
+        '<navitem onclick="navB(20,\'箴言\')">箴言</navitem><br>' +
+        '<navitem onclick="navB(21,\'传道书\')">传道书</navitem><br>' +
+        '<navitem onclick="navB(22,\'雅歌\')">雅歌</navitem><br>' +
+        '<navitem onclick="navB(23,\'以赛亚书\')">以赛亚书</navitem><br>' +
+        '<navitem onclick="navB(24,\'耶利米书\')">耶利米书</navitem><br>' +
+        '<navitem onclick="navB(25,\'耶利米哀歌\')">耶利米哀歌</navitem><br>' +
+        '<navitem onclick="navB(26,\'以西结书\')">以西结书</navitem><br>' +
+        '<navitem onclick="navB(27,\'但以理书\')">但以理书</navitem><br>' +
+        '<navitem onclick="navB(28,\'何西阿书\')">何西阿书</navitem><br>' +
+        '<navitem onclick="navB(29,\'约珥书\')">约珥书</navitem><br>' +
+        '<navitem onclick="navB(30,\'阿摩司书\')">阿摩司书</navitem><br>' +
+        '<navitem onclick="navB(31,\'俄巴底亚书\')">俄巴底亚书</navitem><br>' +
+        '<navitem onclick="navB(32,\'约拿书\')">约拿书</navitem><br>' +
+        '<navitem onclick="navB(33,\'弥迦书\')">弥迦书</navitem><br>' +
+        '<navitem onclick="navB(34,\'那鸿书\')">那鸿书</navitem><br>' +
+        '<navitem onclick="navB(35,\'哈巴谷书\')">哈巴谷书</navitem><br>' +
+        '<navitem onclick="navB(36,\'西番雅书\')">西番雅书</navitem><br>' +
+        '<navitem onclick="navB(37,\'哈该书\')">哈该书</navitem><br>' +
+        '<navitem onclick="navB(38,\'撒迦利亚书\')">撒迦利亚书</navitem><br>' +
+        '<navitem onclick="navB(39,\'玛拉基书\')">玛拉基书</navitem><br>' +
+        '</div>' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(40,\'马太福音\')">马太福音</navitem><br>' +
+        '<navitem onclick="navB(41,\'马可福音\')">马可福音</navitem><br>' +
+        '<navitem onclick="navB(42,\'路加福音\')">路加福音</navitem><br>' +
+        '<navitem onclick="navB(43,\'约翰福音\')">约翰福音</navitem><br>' +
+        '<navitem onclick="navB(44,\'使徒行传\')">使徒行传</navitem><br>' +
+        '<navitem onclick="navB(45,\'罗马书\')">罗马书</navitem><br>' +
+        '<navitem onclick="navB(46,\'哥林多前书\')">哥林多前书</navitem><br>' +
+        '<navitem onclick="navB(47,\'哥林多后书\')">哥林多后书</navitem><br>' +
+        '<navitem onclick="navB(48,\'加拉太书\')">加拉太书</navitem><br>' +
+        '<navitem onclick="navB(49,\'以弗所书\')">以弗所书</navitem><br>' +
+        '<navitem onclick="navB(50,\'腓立比书\')">腓立比书</navitem><br>' +
+        '<navitem onclick="navB(51,\'歌罗西书\')">歌罗西书</navitem><br>' +
+        '<navitem onclick="navB(52,\'帖撒罗尼迦前书\')">帖撒罗尼迦前书</navitem><br>' +
+        '<navitem onclick="navB(53,\'帖撒罗尼迦后书\')">帖撒罗尼迦后书</navitem><br>' +
+        '<navitem onclick="navB(54,\'提摩太前书\')">提摩太前书</navitem><br>' +
+        '<navitem onclick="navB(55,\'提摩太后书\')">提摩太后书</navitem><br>' +
+        '<navitem onclick="navB(56,\'提多书\')">提多书</navitem><br>' +
+        '<navitem onclick="navB(57,\'腓利门书\')">腓利门书</navitem><br>' +
+        '<navitem onclick="navB(58,\'希伯来书\')">希伯来书</navitem><br>' +
+        '<navitem onclick="navB(59,\'雅各书\')">雅各书</navitem><br>' +
+        '<navitem onclick="navB(60,\'彼得前书\')">彼得前书</navitem><br>' +
+        '<navitem onclick="navB(61,\'彼得后书\')">彼得后书</navitem><br>' +
+        '<navitem onclick="navB(62,\'约翰一书\')">约翰一书</navitem><br>' +
+        '<navitem onclick="navB(63,\'约翰二书\')">约翰二书</navitem><br>' +
+        '<navitem onclick="navB(64,\'约翰三书\')">约翰三书</navitem><br>' +
+        '<navitem onclick="navB(65,\'犹大书\')">犹大书</navitem><br>' +
+        '<navitem onclick="navB(66,\'启示录\')">启示录</navitem><br>' +
+        '</div>' +
+        '';
+
+    } else {
+
+        document.getElementById('bookMenu').innerHTML = '' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(1,\'Genesis\')">Genesis</navitem><br>' +
+        '<navitem onclick="navB(2,\'Exodus\')">Exodus</navitem><br>' +
+        '<navitem onclick="navB(3,\'Leviticus\')">Leviticus</navitem><br>' +
+        '<navitem onclick="navB(4,\'Numbers\')">Numbers</navitem><br>' +
+        '<navitem onclick="navB(5,\'Deuteronomy\')">Deuteronomy</navitem><br>' +
+        '<navitem onclick="navB(6,\'Joshua\')">Joshua</navitem><br>' +
+        '<navitem onclick="navB(7,\'Judges\')">Judges</navitem><br>' +
+        '<navitem onclick="navB(8,\'Ruth\')">Ruth</navitem><br>' +
+        '<navitem onclick="navB(9,\'1 Samuel\')">1 Samuel</navitem><br>' +
+        '<navitem onclick="navB(10,\'2 Samuel\')">2 Samuel</navitem><br>' +
+        '<navitem onclick="navB(11,\'1 Kings\')">1 Kings</navitem><br>' +
+        '<navitem onclick="navB(12,\'2 Kings\')">2 Kings</navitem><br>' +
+        '<navitem onclick="navB(13,\'1 Chronicles\')">1 Chronicles</navitem><br>' +
+        '<navitem onclick="navB(14,\'2 Chronicles\')">2 Chronicles</navitem><br>' +
+        '<navitem onclick="navB(15,\'Ezra\')">Ezra</navitem><br>' +
+        '<navitem onclick="navB(16,\'Nehemiah\')">Nehemiah</navitem><br>' +
+        '<navitem onclick="navB(17,\'Esther\')">Esther</navitem><br>' +
+        '<navitem onclick="navB(18,\'Job\')">Job</navitem><br>' +
+        '<navitem onclick="navB(19,\'Psalm\')">Psalm</navitem><br>' +
+        '<navitem onclick="navB(20,\'Proverbs\')">Proverbs</navitem><br>' +
+        '<navitem onclick="navB(21,\'Ecclesiastes\')">Ecclesiastes</navitem><br>' +
+        '<navitem onclick="navB(22,\'Song of Songs\')">Song of Songs</navitem><br>' +
+        '<navitem onclick="navB(23,\'Isaiah\')">Isaiah</navitem><br>' +
+        '<navitem onclick="navB(24,\'Jeremiah\')">Jeremiah</navitem><br>' +
+        '<navitem onclick="navB(25,\'Lamentations\')">Lamentations</navitem><br>' +
+        '<navitem onclick="navB(26,\'Ezekiel\')">Ezekiel</navitem><br>' +
+        '<navitem onclick="navB(27,\'Daniel\')">Daniel</navitem><br>' +
+        '<navitem onclick="navB(28,\'Hosea\')">Hosea</navitem><br>' +
+        '<navitem onclick="navB(29,\'Joel\')">Joel</navitem><br>' +
+        '<navitem onclick="navB(30,\'Amos\')">Amos</navitem><br>' +
+        '<navitem onclick="navB(31,\'Obadiah\')">Obadiah</navitem><br>' +
+        '<navitem onclick="navB(32,\'Jonah\')">Jonah</navitem><br>' +
+        '<navitem onclick="navB(33,\'Micah\')">Micah</navitem><br>' +
+        '<navitem onclick="navB(34,\'Nahum\')">Nahum</navitem><br>' +
+        '<navitem onclick="navB(35,\'Habakkuk\')">Habakkuk</navitem><br>' +
+        '<navitem onclick="navB(36,\'Zephaniah\')">Zephaniah</navitem><br>' +
+        '<navitem onclick="navB(37,\'Haggai\')">Haggai</navitem><br>' +
+        '<navitem onclick="navB(38,\'Zechariah\')">Zechariah</navitem><br>' +
+        '<navitem onclick="navB(39,\'Malachi\')">Malachi</navitem><br>' +
+        '</div>' +
+        '<div class="bookSection">' +
+        '<navitem onclick="navB(40,\'Matthew\')">Matthew</navitem><br>' +
+        '<navitem onclick="navB(41,\'Mark\')">Mark</navitem><br>' +
+        '<navitem onclick="navB(42,\'Luke\')">Luke</navitem><br>' +
+        '<navitem onclick="navB(43,\'John\')">John</navitem><br>' +
+        '<navitem onclick="navB(44,\'Acts\')">Acts</navitem><br>' +
+        '<navitem onclick="navB(45,\'Romans\')">Romans</navitem><br>' +
+        '<navitem onclick="navB(46,\'1 Corinthians\')">1 Corinthians</navitem><br>' +
+        '<navitem onclick="navB(47,\'2 Corinthians\')">2 Corinthians</navitem><br>' +
+        '<navitem onclick="navB(48,\'Galatians\')">Galatians</navitem><br>' +
+        '<navitem onclick="navB(49,\'Ephesians\')">Ephesians</navitem><br>' +
+        '<navitem onclick="navB(50,\'Philippians\')">Philippians</navitem><br>' +
+        '<navitem onclick="navB(51,\'Colossians\')">Colossians</navitem><br>' +
+        '<navitem onclick="navB(52,\'1 Thessalonians\')">1 Thessalonians</navitem><br>' +
+        '<navitem onclick="navB(53,\'2 Thessalonians\')">2 Thessalonians</navitem><br>' +
+        '<navitem onclick="navB(54,\'1 Timothy\')">1 Timothy</navitem><br>' +
+        '<navitem onclick="navB(55,\'2 Timothy\')">2 Timothy</navitem><br>' +
+        '<navitem onclick="navB(56,\'Titus\')">Titus</navitem><br>' +
+        '<navitem onclick="navB(57,\'Philemon\')">Philemon</navitem><br>' +
+        '<navitem onclick="navB(58,\'Hebrews\')">Hebrews</navitem><br>' +
+        '<navitem onclick="navB(59,\'James\')">James</navitem><br>' +
+        '<navitem onclick="navB(60,\'1 Peter\')">1 Peter</navitem><br>' +
+        '<navitem onclick="navB(61,\'2 Peter\')">2 Peter</navitem><br>' +
+        '<navitem onclick="navB(62,\'1 John\')">1 John</navitem><br>' +
+        '<navitem onclick="navB(63,\'2 John\')">2 John</navitem><br>' +
+        '<navitem onclick="navB(64,\'3 John\')">3 John</navitem><br>' +
+        '<navitem onclick="navB(65,\'Jude\')">Jude</navitem><br>' +
+        '<navitem onclick="navB(66,\'Revelation\')">Revelation</navitem><br>' +
+        '</div>' +
+        '';
     }
+
+}
     
-    function updateChapter(book) {
+function updateChapter(book) {
     if (activeBCV[0] == 1) {
         document.getElementById("chapters").innerHTML = '<navItem><i>... loading ...</i></navItem>';
         if (changeVerse == 1) {

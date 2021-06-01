@@ -19,7 +19,7 @@ translation = {
     "menu1_programInterface": "用户界面",
     "menu1_translateInterface": "翻译成我的语言",
     "menu1_toogleInterface": "英语/我的翻译",
-    "menu1_wikiPages": "Wiki页面",
+    "menu1_wikiPages": "使用说明",
     "menu1_update": "更新",
     "menu1_clipboard": "剪贴版内容",
     "menu1_readClipboard": "阅读",
