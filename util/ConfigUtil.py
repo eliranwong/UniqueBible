@@ -488,17 +488,41 @@ class ConfigUtil:
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
         config.help["favouriteBible"] = """
-        # Set your favourite version here"""
+        # Set your favourite bible version here"""
         if not hasattr(config, "favouriteBible"):
             config.favouriteBible = "OHGBi"
         config.help["favouriteBible2"] = """
-        # Set your second favourite version here"""
+        # Set your second favourite bible version here"""
         if not hasattr(config, "favouriteBible2"):
             config.favouriteBible2 = "KJV"
         config.help["favouriteBible3"] = """
-        # Set your third favourite version here"""
+        # Set your third favourite bible version here"""
         if not hasattr(config, "favouriteBible3"):
             config.favouriteBible3 = "NET"
+        config.help["favouriteBibleTC"] = """
+        # Set your favourite bible version here for traditional Chinese interface."""
+        if not hasattr(config, "favouriteBibleTC"):
+            config.favouriteBibleTC = "CUV"
+        config.help["favouriteBibleTC2"] = """
+        # Set your second favourite bible version here for traditional Chinese interface."""
+        if not hasattr(config, "favouriteBibleTC2"):
+            config.favouriteBibleTC2 = "KJV"
+        config.help["favouriteBibleTC3"] = """
+        # Set your third favourite bible version here for traditional Chinese interface."""
+        if not hasattr(config, "favouriteBibleTC3"):
+            config.favouriteBibleTC3 = "NET"
+        config.help["favouriteBibleSC"] = """
+        # Set your favourite bible version here for simplified Chinese interface."""
+        if not hasattr(config, "favouriteBibleSC"):
+            config.favouriteBibleSC = "CUVs"
+        config.help["favouriteBibleSC2"] = """
+        # Set your second favourite bible version here for simplified Chinese interface."""
+        if not hasattr(config, "favouriteBibleSC2"):
+            config.favouriteBibleSC2 = "KJV"
+        config.help["favouriteBibleSC3"] = """
+        # Set your third favourite bible version here for simplified Chinese interface."""
+        if not hasattr(config, "favouriteBibleSC3"):
+            config.favouriteBibleSC3 = "NET"        
         config.help["addFavouriteToMultiRef"] = """
         # Options to display "favouriteBible" together with the main version for reading multiple references: True / False"""
         if not hasattr(config, "addFavouriteToMultiRef"):
@@ -1027,6 +1051,12 @@ class ConfigUtil:
             ("favouriteBible", config.favouriteBible),
             ("favouriteBible2", config.favouriteBible2),
             ("favouriteBible3", config.favouriteBible3),
+            ("favouriteBibleTC", config.favouriteBibleTC),
+            ("favouriteBibleTC2", config.favouriteBibleTC2),
+            ("favouriteBibleTC3", config.favouriteBibleTC3),
+            ("favouriteBibleSC", config.favouriteBibleSC),
+            ("favouriteBibleSC2", config.favouriteBibleSC2),
+            ("favouriteBibleSC3", config.favouriteBibleSC3),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
             ("maximumOHGBiVersesDisplayedInSearchResult", config.maximumOHGBiVersesDisplayedInSearchResult),

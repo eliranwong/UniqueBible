@@ -14,9 +14,9 @@ from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
 from util.TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
-from urllib.parse import urlparse
-from urllib.parse import parse_qs
+from urllib.parse import urlparse, parse_qs
 from util.FileUtil import FileUtil
+from util.LanguageUtil import LanguageUtil
 
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
@@ -125,9 +125,26 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.users.append(clientIP)
         if clientIP == self.users[0]:
             self.primaryUser = True
-        if self.path.lower().startswith("/tc.html"):
-            self.path = "/index.html"
-        if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
+        # Check language
+        # Traditional Chinese
+        if self.path.startswith("/traditional.html"):
+            config.displayLanguage = "zh_HANT"
+            config.standardAbbreviation = "TC"
+            self.homePage = "traditional.html"
+            self.path = re.sub("^/traditional.html", "/index.html", self.path)
+        # Simplified Chinese
+        elif self.path.startswith("/simplified.html"):
+            config.displayLanguage = "zh_HANS"
+            config.standardAbbreviation = "SC"
+            self.homePage = "simplified.html"
+            self.path = re.sub("^/simplified.html", "/index.html", self.path)
+        # Default English
+        else:
+            config.displayLanguage = "en_GB"
+            config.standardAbbreviation = "ENG"
+            self.homePage = "index.html"
+        config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+        if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
             self.loadContent()
         else:
             return super().do_GET()
@@ -153,7 +170,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setfavouritebible": self.setFavouriteBibleContent,
             "setfavouritebible2": lambda: self.setFavouriteBibleContent("favouriteBible2"),
             "setfavouritebible3": lambda: self.setFavouriteBibleContent("favouriteBible3"),
-            "setstandardabbreviation": self.setStandardAbbreviationContent,
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
         }
@@ -500,9 +516,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getSideNavContent(self):
         sideNavItems = (
             (config.thisTranslation["menu5_bible"], ".biblemenu"),
-            (config.favouriteBible, "TEXT:::{0}".format(config.favouriteBible)),
-            (config.favouriteBible2, "TEXT:::{0}".format(config.favouriteBible2)),
-            (config.favouriteBible3, "TEXT:::{0}".format(config.favouriteBible3)),
+            (self.getFavouriteBible(), "TEXT:::{0}".format(self.getFavouriteBible())),
+            (self.getFavouriteBible2(), "TEXT:::{0}".format(self.getFavouriteBible2())),
+            (self.getFavouriteBible3(), "TEXT:::{0}".format(self.getFavouriteBible3())),
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
             (config.thisTranslation["html_timelines"], ".timelineMenu"),
@@ -527,7 +543,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.primaryUser or not config.webPresentationMode:
             if config.webUI == "mini":
                 return """
-                    <form id="commandForm" action="index.html" action="get">
+                    <form id="commandForm" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
                     <td class='layout' style='width: 100%;'><input type="text" id="commandInput" style="width:100%" name="cmd" value=""/></td>
@@ -539,10 +555,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.openSideNav(),
                     self.submitButton(),
                     self.helpButton(),
+                    self.homePage,
                 )
             else:
                 return """
-                    <form id="commandForm" action="index.html" action="get">
+                    <form id="commandForm" action="{0}" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
                     {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}
                     <br/><br/>
@@ -551,7 +568,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {2}
                     </form>
                     """.format(
-                    "",
+                    self.homePage,
                     config.thisTranslation["menu_command"],
                     self.submitButton(),
                     self.bibleSelection(),
@@ -564,13 +581,37 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.featureButton(),
                     self.libraryButton(),
                     self.searchButton(),
-                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible)) if config.favouriteBible else "",
-                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible2)) if config.favouriteBible2 else "",
-                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(config.favouriteBible3)) if config.favouriteBible3 else "",
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible())),
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible2())),
+                    "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible3())),
                     self.qrButton(),
                 )
         else:
             return ""
+
+    def getFavouriteBible(self):
+        if self.homePage == "traditional.html":
+            return config.favouriteBibleTC
+        elif self.homePage == "simplified.html":
+            return config.favouriteBibleSC
+        else:
+            return config.favouriteBible
+
+    def getFavouriteBible2(self):
+        if self.homePage == "traditional.html":
+            return config.favouriteBibleTC2
+        elif self.homePage == "simplified.html":
+            return config.favouriteBibleSC2
+        else:
+            return config.favouriteBible2
+
+    def getFavouriteBible3(self):
+        if self.homePage == "traditional.html":
+            return config.favouriteBibleTC3
+        elif self.homePage == "simplified.html":
+            return config.favouriteBibleSC3
+        else:
+            return config.favouriteBible3
 
     def wrapHtml(self, content, view="", book=False):
         fontFamily = config.font
@@ -999,7 +1040,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.setfavouritebible')">.setFavouriteBible</ref> - Set configuration 'favouriteBible'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible2')">.setFavouriteBible2</ref> - Set configuration 'favouriteBible2'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible3')">.setFavouriteBible3</ref> - Set configuration 'favouriteBible3'.<br>
-        <ref onclick="window.parent.submitCommand('.setstandardabbreviation')">.setStandardAbbreviation</ref> - Set configuration 'standardAbbreviation'.<br>
         <ref onclick="window.parent.submitCommand('.setversenosingleclickaction')">.setVerseNoSingleClickAction</ref> - Set configuration 'verseNoSingleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.setversenodoubleclickaction')">.setVerseNoDoubleClickAction</ref> - Set configuration 'verseNoDoubleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
@@ -1083,16 +1123,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):
         content = "<h2>Select Faviourite Bible:</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(abb, self.textCommandParser.parent.textFullNameList[index], favouriteBible) for index, abb in enumerate(self.textCommandParser.parent.textList)])
-        return content
-
-    def setStandardAbbreviationContent(self):
-        options = (
-            ("ENG", "English"),
-            ("TC", "Traditional Chinese"),
-            ("SC", "Simplified Chinese"),
-        )
-        content = "<h2>Select Standard Abbreviation:</h2>"
-        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::standardAbbreviation:::\\'{0}\\''">{1}</ref>""".format(code, language) for code, language in options])
         return content
 
     def formatSearchSection(self, resourceType, inputID, searchCommand, abbreviationList, fullNameList=None):
