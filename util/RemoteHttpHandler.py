@@ -546,13 +546,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
                     {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}
                     <br/><br/>
-                    {1}: <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
-                    <input type="submit" value="{2}"/>
+                    <span onclick="focusCommandInput()">{1}</span>:
+                    <input type="text" id="commandInput" style="width:60%" name="cmd" value="{0}"/>
+                    {2}
                     </form>
                     """.format(
                     "",
                     config.thisTranslation["menu_command"],
-                    config.thisTranslation["run"],
+                    self.submitButton(),
                     self.bibleSelection(),
                     self.bookSelection(),
                     self.previousChapter(),
@@ -598,7 +599,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<script src='js/common.js?v=1.020'></script>"
                 "<script src='js/{7}.js?v=1.020'></script>"
                 "<script src='w3.js?v=1.020'></script>"
-                "<script src='js/http_server.js?v=1.020'></script>"
+                "<script src='js/http_server.js?v=1.021'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -1029,7 +1030,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if os.path.isfile(os.path.join(*v[0])):
                     content += """{0} [{1}]<br>""".format(k, config.thisTranslation["installed"])
                 else:
-                    content += """<ref onclick="document.title='download:::{1}:::{0}'">{0}</ref><br>""".format(k, keyword)
+                    content += """<ref onclick="document.title='download:::{0}:::{1}'">{2}</ref><br>"""\
+                        .format(keyword, k.replace("'", "\\'"), k)
         resources = (
             ("GitHub Bibles", "GitHubBible", "otseng/UniqueBible_Bibles", (config.marvelData, "bibles"), ".bible"),
             ("GitHub Commentaries", "GitHubCommentary", "darrelwright/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
