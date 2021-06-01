@@ -68,6 +68,12 @@ function searchResourceModule(inputID, searchCommand, module) {
 
 /* SECTION - COMMAND */
 
+function focusCommandInput() {
+    var el = document.getElementById("commandInput");
+    el.value = "";
+    el.focus();
+}
+
 function ubaCommandChanged(cmd) {
     if (cmd.startsWith("_cp")) {
         cmd = "_menu:::";
