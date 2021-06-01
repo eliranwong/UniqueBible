@@ -126,8 +126,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if clientIP == self.users[0]:
             self.primaryUser = True
         if self.path.lower().startswith("/tc/"):
-            pass
-        elif self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
+            self.path = "/index.html"
+        if self.path == "" or self.path == "/" or self.path.startswith("/index.html"):
             self.loadContent()
         else:
             return super().do_GET()
