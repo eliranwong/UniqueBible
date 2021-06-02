@@ -86,10 +86,10 @@ class RemoteCliMainWindow(CrossPlatform):
                 marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
                 fileFrom = os.path.join(marvelDataPath, "epub", file)
                 fileFrom = fileFrom.replace("+", " ")
-                fileTo = os.path.join(os.getcwd(), "htmlResources", libEpubDir, "bibi-bookshelf", "temp.epub")
+                fileTo = os.path.join(os.getcwd(), "htmlResources", libEpubDir, "bibi-bookshelf", file)
                 shutil.copyfile(fileFrom, fileTo)
                 viewer = "{0}/bibi/index.html".format(libEpubDir)
-                url = "{0}?book=temp.epub".format(viewer)
+                url = "{0}?book={1}".format(viewer, file)
                 content = "<script>window.location.href = '{0}'</script>".format(url)
                 return("main", content, {})
             except Exception as e:
