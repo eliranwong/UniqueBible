@@ -415,6 +415,10 @@ class TextCommandParser:
             # Usage - ANYPDF:::[PDF_filename_fullpath]
             # Usage - ANYPDF:::[PDF_filename_fullpath]:::[page_number]
             # e.g. ANYPDF:::file.pdf:::110"""),
+            "epub": (self.openEpubReader, """
+            # [KEYWORD] EPUB
+            # Feature: Open EPUB file, located in directory marvelData/epub/
+            # Usage - EPUB:::[EPUB_filename]"""),
             "docx": (self.openDocxReader, """
             # [KEYWORD] DOCX
             # Feature: Open Word Document
@@ -2711,6 +2715,17 @@ class TextCommandParser:
         self.parent.addHistoryRecord("study", command)
         self.parent.displayMessage(config.thisTranslation["saved"])
         return ("", "", {})
+
+    # EPUB:::
+    def openEpubReader(self, command, source):
+        if command.count(":::") == 0:
+            command += ":::1"
+        pdfFile, page = self.splitCommand(command)
+        if source == "http":
+            return self.parent.openEpubReader(pdfFile, page)
+        else:
+            self.parent.openEpubReader(pdfFile, page)
+            return ("", "", {})
 
     # IMPORT:::
     def importResources(self, command, source):
