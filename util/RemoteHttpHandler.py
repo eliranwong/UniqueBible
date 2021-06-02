@@ -284,7 +284,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.023'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.024'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -380,8 +380,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.023'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.023'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.024'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.024'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -480,6 +480,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     document.getElementById("mySidenav").style.width = "0";
                 {5}
 
+                el = document.getElementById('commandInput');
+                if (el.value == "") {4}
+                    el.value = "{19}";
+                {5}
                 </script>
                 </div>
             </body>
@@ -504,6 +508,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth else "",
             config.webPaddingLeft,
             self.getBibleNavigationMenu(),
+            config.history["main"][-1].replace('"', '\\"'),
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -649,8 +654,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.023'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.023'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.024'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.024'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
