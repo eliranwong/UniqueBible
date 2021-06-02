@@ -69,7 +69,8 @@ class MacroParser:
                     elif (len(args) == 2):
                         getattr(self.parent, method)(args[0].strip(), args[1].strip())
             else:
-                self.parent.textCommandLineEdit.setText(line)
+                if hasattr(self.parent, "textCommandLineEdit"):
+                    self.parent.textCommandLineEdit.setText(line)
                 self.parent.runTextCommand(line, forceExecute=True)
         except Exception as e:
             print("Error running line: {0}".format(line))

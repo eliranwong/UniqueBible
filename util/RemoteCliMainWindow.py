@@ -1,6 +1,10 @@
 import os, config, zipfile, gdown
 import shutil
+
+from html_text import html_text
+
 from util.LanguageUtil import LanguageUtil
+from util.TextCommandParser import TextCommandParser
 from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
@@ -129,3 +133,7 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def closePopover(self):
         pass
+
+    def runTextCommand(self, textCommand, addRecord=False, source="cli", forceExecute=False):
+        view, content, dict = TextCommandParser(self).parser(textCommand, source)
+        print(html_text.extract_text(content))
