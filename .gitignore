@@ -69,4 +69,5 @@ htmlResources/images/qrcode.png
 nohup.out
 /Perimeter\ Worship\ Songs
 htmlResources/main-*.html
-htmlResources/lib/pdfjs-2.7.570-dist/web/temp.pdf
+htmlResources/lib/pdfjs-2.7.570-dist/web/*.pdf
+htmlResources/lib/bibi-v1.2.0/bibi-bookshelf/*.epub

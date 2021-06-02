@@ -61,7 +61,6 @@ class RemoteCliMainWindow(CrossPlatform):
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
 
-
     def openPdfReader(self, file, page=1, fullPath=False, fullScreen=False):
         if file:
             try:
@@ -80,6 +79,23 @@ class RemoteCliMainWindow(CrossPlatform):
         else:
             return("main", "No file specified", {})
 
+    def openEpubReader(self, file, page=1, fullPath=False, fullScreen=False):
+        if file:
+            try:
+                libEpubDir = "lib/bibi-v1.2.0"
+                marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
+                fileFrom = os.path.join(marvelDataPath, "epub", file)
+                fileFrom = fileFrom.replace("+", " ")
+                fileTo = os.path.join(os.getcwd(), "htmlResources", libEpubDir, "bibi-bookshelf", file)
+                shutil.copyfile(fileFrom, fileTo)
+                viewer = "{0}/bibi/index.html".format(libEpubDir)
+                url = "{0}?book={1}".format(viewer, file)
+                content = "<script>window.location.href = '{0}'</script>".format(url)
+                return("main", content, {})
+            except Exception as e:
+                return ("main", "Could not load {0}".format(file), {})
+        else:
+            return("main", "No file specified", {})
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

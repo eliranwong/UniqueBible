@@ -180,6 +180,7 @@ class MainWindow(QMainWindow):
         self.encyclopediaList = self.crossPlatform.encyclopediaList
         self.thirdPartyDictionaryList = self.crossPlatform.thirdPartyDictionaryList
         self.pdfList = self.crossPlatform.pdfList
+        self.epubList = self.crossPlatform.epubList
         self.docxList = self.crossPlatform.docxList
 
     # Dynamically load menu layout
@@ -1343,6 +1344,26 @@ class MainWindow(QMainWindow):
 
     def openPdfFile(self, fileName):
         self.openPdfReader(fileName, fullPath=True)
+
+    def openEpubReader(self, file, page=1, fullPath=False, fullScreen=False):
+        if file:
+            epubViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/bibi-v1.2.0/bibi/index.html"))
+            if platform.system() == "Windows":
+                epubViewer = epubViewer.replace("\\", "/")
+            marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
+            # fileName = file if fullPath else os.path.join(marvelDataPath, "epub", file)
+            url = QUrl.fromUserInput("{0}?book={1}&theme={2}#page={3}".format(epubViewer, file, config.theme, page))
+            if config.openPdfViewerInNewWindow:
+                self.studyView.currentWidget().openPopoverUrl(url, name=file, fullScreen=fullScreen)
+            else:
+                self.studyView.load(url)
+                self.studyView.setTabText(self.studyView.currentIndex(), os.path.basename(file)[:20])
+                self.studyView.setTabToolTip(self.studyView.currentIndex(), file)
+            config.epubTextPath = file
+            self.addExternalFileHistory(file)
+            self.setExternalFileButton()
+        else:
+            self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
     def invokeSavePdfPage(self):
         pdfPage = self.studyView.currentWidget().page()

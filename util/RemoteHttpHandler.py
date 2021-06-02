@@ -1148,6 +1148,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content += "<h2>PDF</h2>"
         content += "<br>".join(["""<ref onclick ="document.title = 'PDF:::{0}'">{0}</ref>""".format(book)
             for book in self.textCommandParser.parent.pdfList])
+        content += "<h2>ePUB</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = 'EPUB:::{0}'">{0}</ref>""".format(book)
+            for book in self.textCommandParser.parent.epubList])
         return content
 
     def setVerseNoClickActionContent(self, double=False):
