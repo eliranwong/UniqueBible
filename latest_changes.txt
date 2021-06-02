@@ -1,4 +1,4 @@
-Major changes in version 25.19:
+Major changes in version 25.19, 25.20:
 * Fixed strange bible version names displayed before chapter numbers.
 * Changes are made about http-server:
     - Changed bible navigation menu background colour.
