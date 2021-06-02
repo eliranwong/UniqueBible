@@ -1,3 +1,11 @@
+Major changes in version 25.19, 25.20:
+* Fixed strange bible version names displayed before chapter numbers.
+* Changes are made about http-server:
+    - Changed bible navigation menu background colour.
+    - Rearranged side navigation bar items.
+Special thanks to Oliver Tsang for setting up server to host bible.GospelChurch.uk and MarvelBible.com
+Remarks: http-server can also installed locally for offline use, e.g. desktop or Android phone.
+
 Major changes in version 25.18:
 * Better support of Chinese interface on http-server.
 * Added traditional and simplified chinese bible menu to http-server.

@@ -180,6 +180,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         }
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
+            #self.initialCommandInput = ""
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
@@ -187,7 +188,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 commands = self.getCommands()
                 commandLower = self.command.lower()
                 if not self.command:
-                    self.command = config.history["main"][-1]
+                    initialCommand = config.history["main"][-1]
+                    self.command = initialCommand
+                    #self.initialCommandInput = initialCommand
                 elif commandLower in config.customCommandShortcuts.keys():
                     self.command = config.customCommandShortcuts[commandLower]
                 elif commandLower in shortcuts.keys():
@@ -237,8 +240,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
                         self.textCommandParser.parent.addHistoryRecord(view, self.command)
             else:
-                #self.command = self.abbreviations[str(config.mainB)]
-                self.command = config.history["main"][-1]
+                initialCommand = config.history["main"][-1]
+                self.command = initialCommand
+                #self.initialCommandInput = initialCommand
                 view, content, dict = self.textCommandParser.parser(self.command, "http")
             content = self.wrapHtml(content)
             if config.bibleWindowContentTransformers:
@@ -280,7 +284,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.022'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.023'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -376,12 +380,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5} 
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.022'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.022'>
-                <script src='js/common.js?v=1.022'></script>
-                <script src='js/{9}.js?v=1.022'></script>
-                <script src='w3.js?v=1.022'></script>
-                <script src='js/http_server.js?v=1.022'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.023'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.023'>
+                <script src='js/common.js?v=1.023'></script>
+                <script src='js/{9}.js?v=1.023'></script>
+                <script src='w3.js?v=1.023'></script>
+                <script src='js/http_server.js?v=1.023'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -534,17 +538,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
             (config.thisTranslation["menu_search"], ".search"),
-            (config.thisTranslation["ubaCommands"], ".help"),
             (config.thisTranslation["download"], ".download"),
+            (config.thisTranslation["ubaCommands"], ".help"),
         )
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
         html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["menu1_wikiPages"])
-        html += """<a href="index.html">English</a>""" if self.homePage != "index.html" else ""
         html += """<a href="traditional.html">繁體中文</a>""" if self.homePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if self.homePage != "simplified.html" else ""
+        html += """<a href="index.html">English</a>""" if self.homePage != "index.html" else ""
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
@@ -645,12 +649,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.022'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.022'>"
-                "<script src='js/common.js?v=1.022'></script>"
-                "<script src='js/{7}.js?v=1.022'></script>"
-                "<script src='w3.js?v=1.022'></script>"
-                "<script src='js/http_server.js?v=1.022'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.023'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.023'>"
+                "<script src='js/common.js?v=1.023'></script>"
+                "<script src='js/{7}.js?v=1.023'></script>"
+                "<script src='w3.js?v=1.023'></script>"
+                "<script src='js/http_server.js?v=1.023'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -666,7 +670,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.022'></script>"
+                "<script src='js/custom.js?v=1.023'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
                 ).format(activeBCVsettings,
@@ -1125,7 +1129,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return content
 
     def getCurrentReference(self):
-        return "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+        return "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
 
     def getQrCodeCommand(self):
         if config.httpServerViewerGlobalMode:
