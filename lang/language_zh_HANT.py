@@ -630,7 +630,7 @@ translation = {
     "refButtonAction": "參照按鈕操作",
     "direct": "直接",
     "cli": "指令執行介面",
-    "ubaCommands": "UBA 指令",
+    "ubaCommands": "指令手冊",
     "presentation": "演示",
     "speakLanguage": "說",
     "bibleText": "聖經文本",

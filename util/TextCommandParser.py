@@ -923,7 +923,7 @@ class TextCommandParser:
                 bcvTuple = verseList[-1]
             content = self.hideLexicalEntryInBible(content)
             # Add text tag for custom font styling
-            content = "<{0}>{1}</{0}>".format(text, content)
+            content = "<text class='{0}'>{1}</text>".format(text, content)
             if config.openBibleInMainViewOnly:
                 self.setMainVerse(text, bcvTuple)
                 self.setStudyVerse(text, bcvTuple)
