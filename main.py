@@ -127,6 +127,14 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
         subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
     exit(0)
 
+def printContentOnConsole(text):
+    if not "html-text" in sys.modules:
+        import html_text
+    print(html_text.extract_text(text))
+    #subprocess.Popen(["echo", html_text.extract_text(text)])
+    #sys.stdout.flush()
+    return text
+
 # Execute macro
 if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
     if config.enableMacros:
@@ -137,6 +145,8 @@ if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
         file = sys.argv[2]
         if os.path.isfile(os.path.join(MacroParser.macros_dir, file)):
             from util.RemoteCliMainWindow import RemoteCliMainWindow
+            config.bibleWindowContentTransformers.append(printContentOnConsole)
+            config.studyWindowContentTransformers.append(printContentOnConsole)
             MacroParser(RemoteCliMainWindow()).parse(file)
             ConfigUtil.save()
             print("Macro {0} executed".format(file))
@@ -230,14 +240,6 @@ def exitApplication():
 def nameChanged():
     if app.applicationName() == "UniqueBible.app CLI":
         switchToCli()
-
-def printContentOnConsole(text):
-    if not "html-text" in sys.modules:
-        import html_text
-    print(html_text.extract_text(text))
-    #subprocess.Popen(["echo", html_text.extract_text(text)])
-    #sys.stdout.flush()
-    return text
 
 def getCommandDocumentation():
     print("\nUBA commands:")
