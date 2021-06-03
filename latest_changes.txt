@@ -1,5 +1,9 @@
+Major changes in version 25.26:
+* Changed icon colour for web version.
+* Changed a few Chinese translations.
+
 Major change in version 25.25:
-* Change the colour of http-server bible navigation menu so that it looks consistent with the theme being used.
+* Changed the colour of http-server bible navigation menu so that it looks consistent with the theme being used.
 
 Major change in version 25.24:
 * Fixed macros
