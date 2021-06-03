@@ -133,4 +133,8 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def runTextCommand(self, textCommand, addRecord=False, source="cli", forceExecute=False):
         view, content, dict = TextCommandParser(self).parser(textCommand, source)
-        #print(html_text.extract_text(content))
+        try:
+            from html_text import html_text
+            print(html_text.extract_text(content))
+        except:
+            print(content)
