@@ -1,40 +1,11 @@
 /* START of OVERLAY-NAV*/
-cat {
-    color: lightgray;
-    }
-    
-    .overlay {
-        height: 0%;
-        width: 100%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #543e15;
-        overflow-y: auto;
-        transition: 0.5s;
-    }
-    
+
     .overlay-content {
         position: relative;
         top: 0%;
         width: 100%;
         text-align: center;
         margin-top: 30px;
-    }
-    
-    .overlay navItem {
-        padding: 8px;
-        text-decoration: none;
-        font-size: 36px;
-        color: white;
-        transition: 0.3s;
-        display: inline-block;
-    }
-    
-    .overlay navItem:hover, .overlay navItem:focus {
-        color: orange;
-        cursor: pointer;
     }
     
     .overlay .closebtn {

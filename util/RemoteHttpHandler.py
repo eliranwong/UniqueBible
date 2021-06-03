@@ -284,7 +284,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.024'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.025'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -298,6 +298,36 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   padding: 0;
                   margin: 0;
                 {5}
+
+    .overlay {4}
+        height: 0%;
+        width: 100%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: {13};
+        overflow-y: auto;
+        transition: 0.5s;
+    {5}
+
+    cat {4}
+        color: {14};
+    {5}
+
+    .overlay navItem {4}
+        padding: 8px;
+        text-decoration: none;
+        font-size: 36px;
+        color: {14};
+        transition: 0.3s;
+        display: inline-block;
+    {5}
+
+    .overlay navItem:hover, .overlay navItem:focus {4}
+        color: {15};
+        cursor: pointer;
+    {5}
 
                 .sidenav {4}
                   height: 100%;
@@ -377,11 +407,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 height: {1}%;
                 width: 100%;
                 {5}
-                zh {4} font-family:'{8}'; {5} 
+                zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.024'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.024'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.025'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.025'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -650,8 +680,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.024'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.024'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.025'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.025'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
