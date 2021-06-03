@@ -1,3 +1,6 @@
+Major change in version 25.23:
+* Fixed an issue that cannot launch http-server.
+
 Major change in version 25.22:
 * Display command upon opening a web version page.
 

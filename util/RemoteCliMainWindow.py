@@ -1,7 +1,4 @@
-import os, config, zipfile, gdown
-import shutil
-
-from html_text import html_text
+import os, config, zipfile, gdown, shutil
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -136,4 +133,4 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def runTextCommand(self, textCommand, addRecord=False, source="cli", forceExecute=False):
         view, content, dict = TextCommandParser(self).parser(textCommand, source)
-        print(html_text.extract_text(content))
+        #print(html_text.extract_text(content))

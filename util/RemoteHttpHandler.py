@@ -180,7 +180,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         }
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
-            #self.initialCommandInput = ""
+            self.initialCommandInput = ""
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
@@ -190,7 +190,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if not self.command:
                     initialCommand = config.history["main"][-1]
                     self.command = initialCommand
-                    #self.initialCommandInput = initialCommand
+                    self.initialCommandInput = initialCommand
                 elif commandLower in config.customCommandShortcuts.keys():
                     self.command = config.customCommandShortcuts[commandLower]
                 elif commandLower in shortcuts.keys():
@@ -242,7 +242,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             else:
                 initialCommand = config.history["main"][-1]
                 self.command = initialCommand
-                #self.initialCommandInput = initialCommand
+                self.initialCommandInput = initialCommand
                 view, content, dict = self.textCommandParser.parser(self.command, "http")
             content = self.wrapHtml(content)
             if config.bibleWindowContentTransformers:
@@ -479,11 +479,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 function closeSideNav() {4}
                     document.getElementById("mySidenav").style.width = "0";
                 {5}
-
-                el = document.getElementById('commandInput');
-                if (el.value == "") {4}
-                    el.value = "{19}";
-                {5}
                 </script>
                 </div>
             </body>
@@ -508,7 +503,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth else "",
             config.webPaddingLeft,
             self.getBibleNavigationMenu(),
-            config.history["main"][-1].replace('"', '\\"'),
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -565,7 +559,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <form id="commandForm" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
-                    <td class='layout' style='width: 100%;'><input type="text" id="commandInput" style="width:100%" name="cmd" value=""/></td>
+                    <td class='layout' style='width: 100%;'><input type="text" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
                     <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{3}&nbsp;{0}</td>
                     </tr></table>
                     </form>
@@ -575,6 +569,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.submitButton(),
                     self.qrButton(),
                     self.homePage,
+                    self.initialCommandInput.replace('"', '\\"'),
                 )
             else:
                 return """
@@ -583,7 +578,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{9}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
-                    <input type="text" id="commandInput" style="width:60%" name="cmd" value=""/>
+                    <input type="text" id="commandInput" style="width:60%" name="cmd" value="{17}"/>
                     {2}
                     </form>
                     """.format(
@@ -604,6 +599,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible2())),
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible3())),
                     self.qrButton(),
+                    self.initialCommandInput.replace('"', '\\"'),
                 )
         else:
             return ""
