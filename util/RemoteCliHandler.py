@@ -1,21 +1,10 @@
 # https://github.com/jquast/telnetlib3/blob/master/telnetlib3/server_shell.py
 import asyncio, re, sys
+from util.TextUtil import TextUtil
 from util.LanguageUtil import LanguageUtil
 from util.ConfigUtil import ConfigUtil
 from util.NetworkUtil import NetworkUtil
 from util.RemoteCliMainWindow import RemoteCliMainWindow
-try:
-    import html_text
-    isHtmlTextInstalled = True
-except:
-    isHtmlTextInstalled = False
-
-try:
-    from bs4 import BeautifulSoup
-    import html5lib
-    isBeautifulsoup4Installed = True
-except:
-    isBeautifulsoup4Installed = False
 
 CR, LF, NUL = '\r\n\x00'
 CRLF = '\r\n'
@@ -87,18 +76,8 @@ class RemoteCliHandler:
                 view, content, dict = textCommandParser.parser(command, "cli")
                 if not content:
                     content = "Command was processed!"
-                if isHtmlTextInstalled:
-                    content = html_text.extract_text(content)
-                    content = re.sub(r"\n", CRLF, content)
-                elif isBeautifulsoup4Installed:
-                    content = re.sub("(</th>|</td>)", r"\1&emsp;", content)
-                    content = re.sub("(<br>|<br/>|</tr>)", r"\1\n", content)
-                    content = re.sub("(</h[0-9]>|</p>|</div>|<hr>)", r"\1\n\n", content)
-                    content = BeautifulSoup(content, "html5lib").get_text()
-                    content = re.sub(r"\n", CRLF, content)
-                else:
-                    content = re.sub("<br/?>|<br>", CRLF, content)
-                    content = re.sub('<[^<]+?>', '', content)
+                content = TextUtil.htmlToPlainText(content)
+                content = re.sub(r"\n", CRLF, content)
                 content = content.strip()
                 writer.write(content)
         writer.close()

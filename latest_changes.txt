@@ -1,3 +1,6 @@
+Major change in version 25.24:
+* Fixed macros
+
 Major change in version 25.23:
 * Fixed an issue that cannot launch http-server.
 

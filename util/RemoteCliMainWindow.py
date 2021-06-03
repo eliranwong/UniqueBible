@@ -5,6 +5,7 @@ from util.TextCommandParser import TextCommandParser
 from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
+from util.TextUtil import TextUtil
 
 
 class RemoteCliMainWindow(CrossPlatform):
@@ -133,8 +134,4 @@ class RemoteCliMainWindow(CrossPlatform):
 
     def runTextCommand(self, textCommand, addRecord=False, source="cli", forceExecute=False):
         view, content, dict = TextCommandParser(self).parser(textCommand, source)
-        try:
-            from html_text import html_text
-            print(html_text.extract_text(content))
-        except:
-            print(content)
+        print(TextUtil.htmlToPlainText(content))

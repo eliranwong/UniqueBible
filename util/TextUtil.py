@@ -1,6 +1,33 @@
 import re, html, base64, os
 
+try:
+    import html_text
+    isHtmlTextInstalled = True
+except:
+    isHtmlTextInstalled = False
+
+try:
+    from bs4 import BeautifulSoup
+    import html5lib
+    isBeautifulsoup4Installed = True
+except:
+    isBeautifulsoup4Installed = False
+
 class TextUtil:
+
+    @staticmethod
+    def htmlToPlainText(content):
+        if isHtmlTextInstalled:
+            content = html_text.extract_text(content)
+        elif isBeautifulsoup4Installed:
+            content = re.sub("(</th>|</td>)", r"\1&emsp;", content)
+            content = re.sub("(<br>|<br/>|</tr>)", r"\1\n", content)
+            content = re.sub("(</h[0-9]>|</p>|</div>|<hr>)", r"\1\n\n", content)
+            content = BeautifulSoup(content, "html5lib").get_text()
+        else:
+            content = re.sub("<br/?>|<br>", "\n", content)
+            content = re.sub('<[^<]+?>', '', content)
+        return content
 
     @staticmethod
     def imageToText(filepath):
