@@ -59,6 +59,10 @@ class ConfigUtil:
         # A customised command to stop http-server."""
         if not hasattr(config, "httpServerStopCommand"):
             config.httpServerStopCommand = ""
+        config.help["webPublicVersion"] = """
+        # Enable this option is http-server is setup for public use."""
+        if not hasattr(config, "webPublicVersion"):
+            config.webPublicVersion = False
         config.help["webFullAccess"] = """
         # Full server to web http-server from browser, including shutdown or restart server."""
         if not hasattr(config, "webFullAccess"):
@@ -974,6 +978,7 @@ class ConfigUtil:
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
             ("httpServerStopCommand", config.httpServerStopCommand),
+            ("webPublicVersion", config.webPublicVersion),
             ("webFullAccess", config.webFullAccess),
             ("webPrivateHomePage", config.webPrivateHomePage),
             ("webUI", config.webUI),

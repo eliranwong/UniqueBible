@@ -126,22 +126,26 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.standardAbbreviation = "ENG"
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage)
             self.path = re.sub("^/{0}.html".format(config.webPrivateHomePage), "/index.html", self.path)
+            self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
         elif self.path.startswith("/traditional.html"):
             config.displayLanguage = "zh_HANT"
             config.standardAbbreviation = "TC"
             config.webHomePage = "traditional.html"
             self.path = re.sub("^/traditional.html", "/index.html", self.path)
+            self.initialCommand = "BIBLE:::{0}:::約翰福音 3:16".format(self.getFavouriteBible())
         # Simplified Chinese
         elif self.path.startswith("/simplified.html"):
             config.displayLanguage = "zh_HANS"
             config.standardAbbreviation = "SC"
             config.webHomePage = "simplified.html"
             self.path = re.sub("^/simplified.html", "/index.html", self.path)
+            self.initialCommand = "BIBLE:::{0}:::约翰福音 3:16".format(self.getFavouriteBible())
         # Default English
         else:
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
             config.webHomePage = "index.html"
+            self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
         config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
         self.textCommandParser.parent.setupResourceLists()
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
@@ -194,6 +198,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
+            initialCommand = self.initialCommand if config.webPublicVersion else config.history["main"][-1]
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
@@ -201,7 +206,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 commands = self.getCommands()
                 commandLower = self.command.lower()
                 if not self.command:
-                    initialCommand = config.history["main"][-1]
                     self.command = initialCommand
                     self.initialCommandInput = initialCommand
                 elif commandLower in config.customCommandShortcuts.keys():
@@ -253,7 +257,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
                         self.textCommandParser.parent.addHistoryRecord(view, self.command)
             else:
-                initialCommand = config.history["main"][-1]
                 self.command = initialCommand
                 self.initialCommandInput = initialCommand
                 view, content, dict = self.textCommandParser.parser(self.command, "http")

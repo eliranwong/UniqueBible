@@ -1,3 +1,7 @@
+Major changes in version 25.30:
+* Added config.webPublicVersion
+* Set John 3:16 as initial command if config.webPublicVersion is set to True.
+
 Major change in version 25.29:
 * Exempt private data access on web version from adding to history records.
 
