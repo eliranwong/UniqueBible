@@ -11,9 +11,10 @@ from util.TextUtil import TextUtil
 class RemoteCliMainWindow(CrossPlatform):
 
     def __init__(self):
-        self.setupResourceLists()
         self.bibleInfo = DatafileLocation.marvelBibles
-        config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
+        if not config.enableHttpServer:
+            self.setupResourceLists()
+            config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 
     def importModulesInFolder(self, directory="import"):
         if os.path.isdir(directory):

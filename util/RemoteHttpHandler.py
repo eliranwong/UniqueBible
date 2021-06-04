@@ -121,7 +121,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def setLanguage(self):
         # Check language
         # Traditional Chinese
-        if self.path.startswith("/traditional.html"):
+        if config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
+            config.displayLanguage = "en_GB"
+            config.standardAbbreviation = "ENG"
+            self.homePage = "{0}.html".format(config.webPrivateHomePage)
+            self.path = re.sub("^/{0}.html".format(config.webPrivateHomePage), "/index.html", self.path)
+        elif self.path.startswith("/traditional.html"):
             config.displayLanguage = "zh_HANT"
             config.standardAbbreviation = "TC"
             self.homePage = "traditional.html"
@@ -137,6 +142,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
             self.homePage = "index.html"
+        config.marvelData = config.marvelDataPrivate if self.homePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
+        self.textCommandParser.parent.setupResourceLists()
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
         self.parser = BibleVerseParser(config.parserStandarisation)
         self.abbreviations = self.parser.standardAbbreviation
@@ -175,6 +182,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setfavouritebible": self.setFavouriteBibleContent,
             "setfavouritebible2": lambda: self.setFavouriteBibleContent("favouriteBible2"),
             "setfavouritebible3": lambda: self.setFavouriteBibleContent("favouriteBible3"),
+            "setfavouritebibletc": lambda: self.setFavouriteBibleContent("favouriteBibleTC"),
+            "setfavouritebibletc2": lambda: self.setFavouriteBibleContent("favouriteBibleTC2"),
+            "setfavouritebibletc3": lambda: self.setFavouriteBibleContent("favouriteBibleTC3"),
+            "setfavouritebiblesc": lambda: self.setFavouriteBibleContent("favouriteBibleSC"),
+            "setfavouritebiblesc2": lambda: self.setFavouriteBibleContent("favouriteBibleSC2"),
+            "setfavouritebiblesc3": lambda: self.setFavouriteBibleContent("favouriteBibleSC3"),
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
         }
@@ -1109,6 +1122,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.setfavouritebible')">.setFavouriteBible</ref> - Set configuration 'favouriteBible'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible2')">.setFavouriteBible2</ref> - Set configuration 'favouriteBible2'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible3')">.setFavouriteBible3</ref> - Set configuration 'favouriteBible3'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibletc')">.setFavouriteBibleTC</ref> - Set configuration 'favouriteBible'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibletc2')">.setFavouriteBibleTC2</ref> - Set configuration 'favouriteBible2'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibletc3')">.setFavouriteBibleTC3</ref> - Set configuration 'favouriteBible3'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebiblesc')">.setFavouriteBibleSC</ref> - Set configuration 'favouriteBible'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebiblesc2')">.setFavouriteBibleSC2</ref> - Set configuration 'favouriteBible2'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebiblesc3')">.setFavouriteBibleSC3</ref> - Set configuration 'favouriteBible3'.<br>
         <ref onclick="window.parent.submitCommand('.setversenosingleclickaction')">.setVerseNoSingleClickAction</ref> - Set configuration 'verseNoSingleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.setversenodoubleclickaction')">.setVerseNoDoubleClickAction</ref> - Set configuration 'verseNoDoubleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>

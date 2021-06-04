@@ -63,6 +63,10 @@ class ConfigUtil:
         # Full server to web http-server from browser, including shutdown or restart server."""
         if not hasattr(config, "webFullAccess"):
             config.webFullAccess = True
+        config.help["webPrivateHomePage"] = """
+        # Specify a homepage, to which only developers can access."""
+        if not hasattr(config, "webPrivateHomePage"):
+            config.webPrivateHomePage = ""
         config.help["webUI"] = """
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
@@ -241,6 +245,14 @@ class ConfigUtil:
         # Specify the folder path of resources"""
         if not hasattr(config, "marvelData") or not os.path.isdir(config.marvelData):
             config.marvelData = "marvelData"
+        config.help["marvelDataPublic"] = """
+        # Public marvelData Directory."""
+        if not hasattr(config, "marvelDataPublic") or not os.path.isdir(config.marvelData):
+            config.marvelDataPublic = "marvelData"
+        config.help["marvelDataPrivate"] = """
+        # Private marvelData Directory."""
+        if not hasattr(config, "marvelDataPrivate") or not os.path.isdir(config.marvelData):
+            config.marvelDataPrivate = "marvelData"
         config.help["musicFolder"] = """
         # Specify the folder path of music files"""
         if not hasattr(config, "musicFolder"):
@@ -963,6 +975,7 @@ class ConfigUtil:
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
             ("httpServerStopCommand", config.httpServerStopCommand),
             ("webFullAccess", config.webFullAccess),
+            ("webPrivateHomePage", config.webPrivateHomePage),
             ("webUI", config.webUI),
             ("webPresentationMode", config.webPresentationMode),
             ("webCollapseFooterHeight", config.webCollapseFooterHeight),
@@ -994,6 +1007,8 @@ class ConfigUtil:
             ("fcitx", config.fcitx),
             ("virtualKeyboard", config.virtualKeyboard),
             ("marvelData", config.marvelData),
+            ("marvelDataPublic", config.marvelDataPublic),
+            ("marvelDataPrivate", config.marvelDataPrivate),
             ("musicFolder", config.musicFolder),
             ("videoFolder", config.videoFolder),
             ("bibleNotes", config.bibleNotes),
