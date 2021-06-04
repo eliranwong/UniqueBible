@@ -1,3 +1,6 @@
+Major change in version 25.29:
+* Exempt private data access on web version from adding to history records.
+
 Major changes in version 25.28:
 * Added support of access to private data on web version.
 * Added options config.marvelDataPublic, config.marvelDataPrivate and config.webPrivateHomePage for developers to access private data.

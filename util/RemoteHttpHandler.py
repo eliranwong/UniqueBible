@@ -124,25 +124,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
-            self.homePage = "{0}.html".format(config.webPrivateHomePage)
+            config.webHomePage = "{0}.html".format(config.webPrivateHomePage)
             self.path = re.sub("^/{0}.html".format(config.webPrivateHomePage), "/index.html", self.path)
         elif self.path.startswith("/traditional.html"):
             config.displayLanguage = "zh_HANT"
             config.standardAbbreviation = "TC"
-            self.homePage = "traditional.html"
+            config.webHomePage = "traditional.html"
             self.path = re.sub("^/traditional.html", "/index.html", self.path)
         # Simplified Chinese
         elif self.path.startswith("/simplified.html"):
             config.displayLanguage = "zh_HANS"
             config.standardAbbreviation = "SC"
-            self.homePage = "simplified.html"
+            config.webHomePage = "simplified.html"
             self.path = re.sub("^/simplified.html", "/index.html", self.path)
         # Default English
         else:
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
-            self.homePage = "index.html"
-        config.marvelData = config.marvelDataPrivate if self.homePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
+            config.webHomePage = "index.html"
+        config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
         self.textCommandParser.parent.setupResourceLists()
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
         self.parser = BibleVerseParser(config.parserStandarisation)
@@ -588,9 +588,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         #html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
         html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["menu1_wikiPages"])
-        html += """<a href="traditional.html">繁體中文</a>""" if self.homePage != "traditional.html" else ""
-        html += """<a href="simplified.html">简体中文</a>""" if self.homePage != "simplified.html" else ""
-        html += """<a href="index.html">English</a>""" if self.homePage != "index.html" else ""
+        html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
+        html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
+        html += """<a href="index.html">English</a>""" if config.webHomePage != "index.html" else ""
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
@@ -611,7 +611,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.openSideNav(),
                     self.submitButton(),
                     self.qrButton(),
-                    self.homePage,
+                    config.webHomePage,
                     self.initialCommandInput.replace('"', '\\"'),
                 )
             else:
@@ -625,7 +625,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {2}
                     </form>
                     """.format(
-                    self.homePage,
+                    config.webHomePage,
                     config.thisTranslation["menu_command"],
                     self.submitButton(),
                     self.bibleSelection(),
@@ -648,25 +648,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return ""
 
     def getFavouriteBible(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return config.favouriteBibleTC
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC
         else:
             return config.favouriteBible
 
     def getFavouriteBible2(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return config.favouriteBibleTC2
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC2
         else:
             return config.favouriteBible2
 
     def getFavouriteBible3(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return config.favouriteBibleTC3
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC3
         else:
             return config.favouriteBible3
@@ -796,25 +796,25 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 """.format(self.getBookTitle(), self.getChapterTitle(), self.getVerseTitle())
 
     def getBookTitle(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return "〔書卷〕"
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return "〔书卷〕"
         else:
             return "[Book]"
 
     def getChapterTitle(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return "〔章〕"
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return "〔章〕"
         else:
             return "[Chapter]"
 
     def getVerseTitle(self):
-        if self.homePage == "traditional.html":
+        if config.webHomePage == "traditional.html":
             return "〔節〕"
-        elif self.homePage == "simplified.html":
+        elif config.webHomePage == "simplified.html":
             return "〔节〕"
         else:
             return "[Verse]"
@@ -876,7 +876,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def featureButton(self):
         #html = """<button type='button' onclick='submitCommand("_menu:::")'>&dagger;</button>"""
-        html = """<button type='button' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(self.homePage)
+        html = """<button type='button' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(config.webHomePage)
         return html
 
     def libraryButton(self):

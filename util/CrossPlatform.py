@@ -87,26 +87,27 @@ class CrossPlatform:
     # History record management
 
     def addHistoryRecord(self, view, textCommand):
-        if view == "http":
-            view = "main"
-        if not textCommand.startswith("_") and not re.search("^download:::|^qrcode:::", textCommand.lower()):
-
-            if view in ("main", "study"):
-                compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
-                if config.enforceCompareParallel and not config.tempRecord:
-                    if not ":::" in textCommand:
-                        view = "study"
-                        textCommand = "STUDY:::{0}".format(textCommand)
-                    elif textCommand.lower().startswith("bible:::"):
-                        view = "study"
-                        textCommand = re.sub("^.*?:::", "STUDY:::", textCommand)
-                if config.tempRecord:
-                    self.runAddHistoryRecord("main", config.tempRecord)
-                    config.tempRecord = ""
-                elif not (view == "main" and config.enforceCompareParallel) or compareParallel:
+        if not (config.enableHttpServer and config.webHomePage == "{0}.html".format(config.webPrivateHomePage)):
+            if view == "http":
+                view = "main"
+            if not textCommand.startswith("_") and not re.search("^download:::|^qrcode:::", textCommand.lower()):
+    
+                if view in ("main", "study"):
+                    compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
+                    if config.enforceCompareParallel and not config.tempRecord:
+                        if not ":::" in textCommand:
+                            view = "study"
+                            textCommand = "STUDY:::{0}".format(textCommand)
+                        elif textCommand.lower().startswith("bible:::"):
+                            view = "study"
+                            textCommand = re.sub("^.*?:::", "STUDY:::", textCommand)
+                    if config.tempRecord:
+                        self.runAddHistoryRecord("main", config.tempRecord)
+                        config.tempRecord = ""
+                    elif not (view == "main" and config.enforceCompareParallel) or compareParallel:
+                        self.runAddHistoryRecord(view, textCommand)
+                else:
                     self.runAddHistoryRecord(view, textCommand)
-            else:
-                self.runAddHistoryRecord(view, textCommand)
 
     def runAddHistoryRecord(self, view, textCommand):
         viewhistory = config.history[view]
