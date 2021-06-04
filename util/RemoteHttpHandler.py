@@ -300,7 +300,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.025'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.027'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -426,8 +426,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.025'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.025'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.027'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.027'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -587,6 +587,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["ubaCommands"], ".help"),
         )
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         #html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
@@ -696,8 +697,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.025'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.025'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.027'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.027'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
@@ -828,11 +829,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def bookSelection(self):
         return self.formatSelectList("bookName", "submitBookCommand", self.books, str(config.mainB))
 
+    def verseActiionSelection(self):
+        features = [("_noAction", "[{0}]".format(config.thisTranslation["features"])),]
+        features += [(".{0}".format(key.lower()), value) for key, value in self.getVerseFeatures().items()]
+        return self.formatSelectList("verseAction", "submitVerseActionCommand", features, "_noAction")
+
     def formatSelectList(self, id, action, options, selected):
         selectForm = "<select id='{0}' style='width: 100px' onchange='{1}(\"{0}\")'>".format(id, action)
         for value, display in options:
-            selectForm += "<option value='{0}' {2}>{1}</option>".format(value, display,
-                ("selected='selected'" if value == selected else ""))
+            selectForm += "<option value='{0}'{2}>{1}</option>".format(value, display,
+                (" selected='selected'" if value == selected else ""))
         selectForm += "</select>"
         return selectForm
 

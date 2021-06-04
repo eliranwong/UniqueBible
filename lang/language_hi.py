@@ -720,4 +720,5 @@ translation = {
     "restart": "पुनः प्रारंभ",
     "layout": "खाका",
     "qrcode": "क्यूआर कोड",
+    "features": "विशेषताएँ",
 }

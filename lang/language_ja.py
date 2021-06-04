@@ -720,4 +720,5 @@ translation = {
     "restart": "再始動",
     "layout": "伽藍",
     "qrcode": "QR コード",
+    "features": "特徴",
 }

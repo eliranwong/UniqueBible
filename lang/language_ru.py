@@ -720,4 +720,5 @@ translation = {
     "restart": "Перезапуск",
     "layout": "Макет",
     "qrcode": "Код QR",
+    "features": "Функции",
 }

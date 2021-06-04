@@ -720,4 +720,5 @@ translation = {
     "restart": "പുനരാരണം",
     "layout": "ലേഔട്ട്",
     "qrcode": "QR കോഡ്",
+    "features": "സവിശേഷതകൾ",
 }

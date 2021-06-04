@@ -720,4 +720,5 @@ translation = {
     "restart": "Επανεκκίνηση:",
     "layout": "Διάταξη:",
     "qrcode": "Κωδικός QR",
+    "features": "Χαρακτηριστικά:",
 }

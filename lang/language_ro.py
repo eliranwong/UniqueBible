@@ -720,4 +720,5 @@ translation = {
     "restart": "Repornire",
     "layout": "Dispunere",
     "qrcode": "Cod QR",
+    "features": "Caracteristici",
 }

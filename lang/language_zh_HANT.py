@@ -720,4 +720,5 @@ translation = {
     "restart": "重新啟動",
     "layout": "佈置",
     "qrcode": "二維碼",
+    "features": "功能選項",
 }

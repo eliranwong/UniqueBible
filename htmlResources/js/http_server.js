@@ -115,7 +115,11 @@ function submitBookCommand(id) {
     submitCommand(value);
 }
 
-
+function submitVerseActionCommand(id) {
+    el = document.getElementById(id);
+    value = el.options[el.selectedIndex].value;
+    submitCommand(value);
+}
 
 /* SECTION - INTERFACE */
 
