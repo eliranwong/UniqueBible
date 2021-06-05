@@ -590,7 +590,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         html += "<hr>"
         sideNavItems = (
-            (config.thisTranslation["menu5_bible"], ".biblemenu"),
+            ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu5_bible"]), ".biblemenu"),
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
             (config.thisTranslation["html_timelines"], ".timelineMenu"),
@@ -600,7 +600,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["menu5_topics"], ".topics"),
             (config.thisTranslation["bibleHarmonies"], ".parallels"),
             (config.thisTranslation["biblePromises"], ".promises"),
-            (config.thisTranslation["menu_search"], ".search"),
+            ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu_search"]), ".search"),
             (config.thisTranslation["download"], ".download"),
             (config.thisTranslation["ubaCommands"], ".help"),
         )

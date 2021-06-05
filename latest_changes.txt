@@ -1,3 +1,6 @@
+Major change in version 25.36:
+* Added search icons to two items on web version side navigation menu.
+
 Major changes in version 25.35:
 * Fixed database migration on http-server.
 * Fixed concordance features on devices running web version without running desktop version.
