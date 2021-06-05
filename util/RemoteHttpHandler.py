@@ -118,7 +118,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def execPythonFile(self, script):
         self.textCommandParser.parent.execPythonFile(script)
 
-    def setLanguage(self):
+    def updateData(self):
         # Check language
         # Traditional Chinese
         if config.webPrivateHomePage and self.path.startswith("/{0}.html".format(config.webPrivateHomePage)):
@@ -161,7 +161,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.users.append(clientIP)
         if clientIP == self.users[0]:
             self.primaryUser = True
-        self.setLanguage()
+        self.updateData()
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
             self.loadContent()
         else:
