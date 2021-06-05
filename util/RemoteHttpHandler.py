@@ -151,7 +151,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
         self.parser = BibleVerseParser(config.parserStandarisation)
         self.abbreviations = self.parser.standardAbbreviation
-        self.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
+        if config.webPrivateHomePage:
+            self.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
 
     def do_GET(self):
         self.session = self.getSession()
