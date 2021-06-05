@@ -721,4 +721,5 @@ translation = {
     "layout": "Διάταξη:",
     "qrcode": "Κωδικός QR",
     "features": "Χαρακτηριστικά:",
+    "userManual": "Μη αυτόματη.",
 }

@@ -526,6 +526,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 window.onscroll = function() {4}keepTop(){5};
                 window.onresize = function() {4}resizeSite(){5};
 
+                function openCommandInNewWindow() {4}
+                    cmd = encodeURI(document.getElementById('commandInput').value);
+                    var url;
+                    if (cmd == "") {4}
+                        url = "{19}";
+                    {5} else {4}
+                        url = "{19}?cmd="+cmd;
+                    {5}
+                    window.open(url, "_blank");
+                {5}
+
                 // Open and close side navigation bar
                 function openSideNav() {4}
                     document.getElementById("mySidenav").style.width = "250px";
@@ -558,6 +569,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "adjustBibleDivWidth('{0}')".format(config.webDecreaseBibleDivWidth) if config.webDecreaseBibleDivWidth else "",
             config.webPaddingLeft,
             self.getBibleNavigationMenu(),
+            config.webHomePage,
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -606,7 +618,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
-        html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["menu1_wikiPages"])
+        html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"])
         html += "<hr>"
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
@@ -623,7 +635,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
                     <td class='layout' style='width: 100%;'><input type="text" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
-                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{3}&nbsp;{0}</td>
+                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{6}&nbsp;{3}&nbsp;{0}</td>
                     </tr></table>
                     </form>
                 """.format(
@@ -633,6 +645,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.qrButton(),
                     config.webHomePage,
                     self.initialCommandInput.replace('"', '\\"'),
+                    self.newWindowButton(),
                 )
             else:
                 return """
@@ -910,6 +923,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def searchButton(self):
         html = """<button type='button' onclick='submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
+        return html
+
+    def newWindowButton(self):
+        html = """<button type='button' onclick='openCommandInNewWindow()'>&#8663;</button>"""
         return html
 
     def favouriteBibleButton(self, text):

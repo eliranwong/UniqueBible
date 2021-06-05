@@ -721,4 +721,5 @@ translation = {
     "layout": "खाका",
     "qrcode": "क्यूआर कोड",
     "features": "विशेषताएँ",
+    "userManual": "उपयोगकर्ता मैनुअल",
 }

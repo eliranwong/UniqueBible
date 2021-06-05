@@ -721,4 +721,5 @@ translation = {
     "layout": "布局",
     "qrcode": "二维码",
     "features": "功能选项",
+    "userManual": "用户手册",
 }

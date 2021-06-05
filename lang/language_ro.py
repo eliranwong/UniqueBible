@@ -721,4 +721,5 @@ translation = {
     "layout": "Dispunere",
     "qrcode": "Cod QR",
     "features": "Caracteristici",
+    "userManual": "Manual utilizator",
 }
