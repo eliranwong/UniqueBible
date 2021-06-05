@@ -518,13 +518,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 window.onscroll = function() {4}keepTop(){5};
                 window.onresize = function() {4}resizeSite(){5};
 
+                // Open and close side navigation bar
                 function openSideNav() {4}
                     document.getElementById("mySidenav").style.width = "250px";
                 {5}
-                
                 function closeSideNav() {4}
                     document.getElementById("mySidenav").style.width = "0";
                 {5}
+                document.querySelector('#commandInput').addEventListener('click', closeSideNav);
                 </script>
                 </div>
             </body>
@@ -569,10 +570,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getSideNavContent(self):
         sideNavItems = (
-            (config.thisTranslation["menu5_bible"], ".biblemenu"),
             (self.getFavouriteBible(), "TEXT:::{0}".format(self.getFavouriteBible())),
             (self.getFavouriteBible2(), "TEXT:::{0}".format(self.getFavouriteBible2())),
             (self.getFavouriteBible3(), "TEXT:::{0}".format(self.getFavouriteBible3())),
+            (config.thisTranslation["menu5_bible"], ".biblemenu"),
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
             (config.thisTranslation["html_timelines"], ".timelineMenu"),
@@ -588,6 +589,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
+        html += """<a href="#">{0}</a>""".format(self.bibleSelection())
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
         #html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
@@ -720,7 +722,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 var diffList = []; var searchList = [];</script>"""
                 "<script src='js/custom.js?v=1.023'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
-                "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible()</script></body></html>"
+                "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
                          content,
                          "{",

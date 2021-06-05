@@ -1,3 +1,10 @@
+Major changes in version 25.32:
+* Improved web version:
+- Added bible version selection on mini layout side navigation menu.
+- Rearranged items on mini layout side navigation menu.
+- Now able to close side navigation bar by clicking main content or command input.
+- Set maximum QR code image size so that it scales down on small screen.
+
 Major changes in version 25.31:
 * Added verse feature selection on web version side navigation mini layout menu.
 
