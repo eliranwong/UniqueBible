@@ -1,3 +1,6 @@
+Major changes in version 25.33:
+* Fixed web version bible version selection update when swap between public and private marvelData.
+
 Major changes in version 25.32:
 * Improved web version:
 - Added bible version selection on mini layout side navigation menu.
