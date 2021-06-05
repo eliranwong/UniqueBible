@@ -99,6 +99,18 @@ def runStartupPlugins():
                 config.mainWindow.execPythonFile(script)
 
 # HTTP Server
+from db.BiblesSqlite import BiblesSqlite
+
+def checkMigration():
+    if config.version >= 0.56:
+        biblesSqlite = BiblesSqlite()
+        biblesWithBothVersions = biblesSqlite.migratePlainFormattedBibles()
+        if biblesWithBothVersions:
+            biblesSqlite.proceedMigration(biblesWithBothVersions)
+        if config.migrateDatabaseBibleNameToDetailsTable:
+            biblesSqlite.migrateDatabaseContent()
+        del biblesSqlite
+
 def startHttpServer():
     import socketserver
     from util.RemoteHttpHandler import RemoteHttpHandler
@@ -121,6 +133,7 @@ def startHttpServer():
 
 config.enableHttpServer = False
 if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
+    checkMigration()
     startHttpServer()
     ConfigUtil.save()
     if config.restartHttpServer:

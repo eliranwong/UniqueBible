@@ -1,9 +1,13 @@
+Major changes in version 25.35:
+* Fixed database migration on http-server.
+* Fixed concordance features on devices running web version without running desktop version.
+
 Major changes in version 25.34:
 * Improved web version side navigation:
 - Added previous and next chapter buttons.
 - Added dividers to separate items into sections.
 
-Major changes in version 25.33:
+Major change in version 25.33:
 * Fixed web version bible version selection update when swap between public and private marvelData.
 
 Major changes in version 25.32:
