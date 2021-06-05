@@ -31,7 +31,8 @@ class BiblesSqlite:
     # sort out download helper
 
     def getBibleList(self, includeMarvelBibles=True):
-        return sorted(self.getPlainBibleList() + self.getFormattedBibleList(includeMarvelBibles))
+        bibles = self.getPlainBibleList() + self.getFormattedBibleList(includeMarvelBibles)
+        return sorted(set(bibles))
 
     # legacy list before version 0.56
     def getBibleList2(self):
