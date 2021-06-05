@@ -379,6 +379,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   font-size: 25px;
                 {5}
 
+                #navBtns {4}
+                  position: absolute;
+                  top: 20;
+                  left: 70px;
+                {5}
+
                 .sidenav .closebtn {4}
                   position: absolute;
                   top: 0;
@@ -571,10 +577,19 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def getSideNavContent(self):
+        html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
+        html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
+        html += """<a href="#">{0}</a>""".format(self.bibleSelection())
         sideNavItems = (
             (self.getFavouriteBible(), "TEXT:::{0}".format(self.getFavouriteBible())),
             (self.getFavouriteBible2(), "TEXT:::{0}".format(self.getFavouriteBible2())),
             (self.getFavouriteBible3(), "TEXT:::{0}".format(self.getFavouriteBible3())),
+        )
+        for item in sideNavItems:
+            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+        html += "<hr>"
+        sideNavItems = (
             (config.thisTranslation["menu5_bible"], ".biblemenu"),
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
@@ -589,13 +604,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["download"], ".download"),
             (config.thisTranslation["ubaCommands"], ".help"),
         )
-        html = """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
-        html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
-        html += """<a href="#">{0}</a>""".format(self.bibleSelection())
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
-        #html += """<a href="#" onclick="submitCommand('qrcode:::'+window.location.href)">{0}</a>""".format(config.thisTranslation["qrcode"])
         html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["menu1_wikiPages"])
+        html += "<hr>"
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
         html += """<a href="index.html">English</a>""" if config.webHomePage != "index.html" else ""
@@ -615,7 +627,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     </tr></table>
                     </form>
                 """.format(
-                    self.featureButton(),
+                    self.passageSelectionButton(),
                     self.openSideNav(),
                     self.submitButton(),
                     self.qrButton(),
@@ -643,7 +655,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.nextChapter(),
                     self.toggleFullscreen(),
                     self.helpButton(),
-                    self.featureButton(),
+                    self.passageSelectionButton(),
                     self.libraryButton(),
                     self.searchButton(),
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible())),
@@ -887,7 +899,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' onclick='submitCommand("qrcode:::"+window.location.href)'>&#9641;</button>"""
         return html
 
-    def featureButton(self):
+    def passageSelectionButton(self):
         #html = """<button type='button' onclick='submitCommand("_menu:::")'>&dagger;</button>"""
         html = """<button type='button' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(config.webHomePage)
         return html

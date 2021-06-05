@@ -1,3 +1,8 @@
+Major changes in version 25.34:
+* Improved web version side navigation:
+- Added previous and next chapter buttons.
+- Added dividers to separate items into sections.
+
 Major changes in version 25.33:
 * Fixed web version bible version selection update when swap between public and private marvelData.
 
