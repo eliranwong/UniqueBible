@@ -219,7 +219,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.stop',
                          '.subheadings',
                          '.theme',
-                         '.update')
+                         '.update',
+                         config.httpServerStopCommand
+                         )
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
@@ -227,9 +229,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
+                self.commandFunction = ""
                 self.commandParam = ""
                 if ' ' in self.command:
-                    self.command, self.commandParam = self.command.split(' ', 1)
+                    self.commandFunction, self.commandParam = self.command.split(' ', 1)
+                    self.commandFunction = self.commandFunction.lower()
                 shortcuts = self.getShortcuts()
                 commands = self.getCommands()
                 commandLower = self.command.lower()
@@ -250,8 +254,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 # Parse command
                 if commandLower in (".help", "?"):
                     content = self.helpContent()
-                elif commandLower.startswith(".") and commandLower[1:] in features.keys():
-                    if commandLower in adminCommands:
+                elif self.commandFunction.startswith(".") and commandLower[1:] in features.keys():
+                    if self.commandFunction in adminCommands:
                         permission, message = self.checkPermission()
                         if not permission:
                             content = message
@@ -259,13 +263,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                             content = features[commandLower[1:]]()
                     else:
                         content = features[commandLower[1:]]()
-                elif commandLower.startswith(".") and commandLower[1:] in functions.keys():
-                    content = functions[commandLower[1:]](self.commandParam)
-                elif commandLower in adminCommands:
+                elif self.commandFunction.startswith(".") and self.commandFunction[1:] in functions.keys():
+                    content = functions[self.commandFunction[1:]](self.commandParam)
+                elif commandLower in adminCommands and len(commandLower) > 0:
                     permission, message = self.checkPermission()
                     if not permission:
                         content = message
-                    elif commandLower == ".stop" or self.command == config.httpServerStopCommand:
+                    elif commandLower == ".stop" or self.command == config.httpServerStopCommand :
                         self.closeWindow()
                         config.enableHttpServer = False
                         return
