@@ -225,6 +225,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
+            content = "None"
             initialCommand = self.initialCommand if config.webPublicVersion else config.history["main"][-1]
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
