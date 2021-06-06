@@ -317,10 +317,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   margin: 0;
                 {5}
 
-                input[type=search] {4}
-                    -webkit-appearance: none;
-                {5}
-
                 .overlay {4}
                     height: 0%;
                     width: 100%;
