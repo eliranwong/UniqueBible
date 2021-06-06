@@ -722,4 +722,5 @@ translation = {
     "qrcode": "二維碼",
     "features": "功能選項",
     "userManual": "使用手冊",
+    "bibleNavigation": "選擇經文",
 }

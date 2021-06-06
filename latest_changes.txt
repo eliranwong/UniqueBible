@@ -1,3 +1,11 @@
+Major changes in version 25.37:
+* Changes about web version:
+- Fixed duplicated bible on dropdown selection.
+- Added a button to launch UBA command in a new window.
+- Added clear button to commput input.
+- Added side navigation button to full layout.
+- Added tooltips to buttons.
+
 Major change in version 25.36:
 * Added search icons to two items on web version side navigation menu.
 

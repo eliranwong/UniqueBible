@@ -722,4 +722,5 @@ translation = {
     "qrcode": "Codice QR",
     "features": "Funzioni",
     "userManual": "Manuale utente",
+    "bibleNavigation": "Navigazione della Bibbia",
 }

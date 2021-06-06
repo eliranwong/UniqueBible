@@ -722,4 +722,5 @@ translation = {
     "qrcode": "QR コード",
     "features": "特徴",
     "userManual": "ユーザー・マニュアル",
+    "bibleNavigation": "聖書航海",
 }
