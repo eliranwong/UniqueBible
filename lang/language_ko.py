@@ -723,4 +723,7 @@ translation = {
     "features": "기능",
     "userManual": "사용자 매뉴얼",
     "bibleNavigation": "성경 탐색",
+    "file": "파일",
+    "bibleBackground": "성경의 배경",
+    "collection": "컬렉션",
 }

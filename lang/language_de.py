@@ -723,4 +723,7 @@ translation = {
     "features": "Funktionen",
     "userManual": "Bedienungsanleitung",
     "bibleNavigation": "Bibel-Navigation",
+    "file": "Datei",
+    "bibleBackground": "Bibelhintergrund",
+    "collection": "Sammlung",
 }

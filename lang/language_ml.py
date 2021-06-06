@@ -723,4 +723,7 @@ translation = {
     "features": "സവിശേഷതകൾ",
     "userManual": "ഉപയോക്താവ് മാനുവല്",
     "bibleNavigation": "ബൈബിൾ നക്ഷത്രം",
+    "file": "ഫയല്",
+    "bibleBackground": "ബൈബിള് പശ്ചാത്തല",
+    "collection": "ശേഖരണം",
 }
