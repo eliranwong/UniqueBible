@@ -619,7 +619,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         )
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
-        html += """<a href="https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%5D" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"])
+        html += """<a href="{1}" target="_blank">{0}</a>""".format(config.thisTranslation["userManual"], self.getUserManual())
         html += "<hr>"
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
@@ -635,7 +635,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <form id="commandForm" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
-                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" results=5 autosave="marvelbible" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
+                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
                     <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{6}&nbsp;{3}&nbsp;{0}</td>
                     </tr></table>
                     </form>
@@ -655,7 +655,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{9}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
-                    <input type="search" autocomplete="on" results=5 autosave="marvelbible" id="commandInput" style="width:60%" name="cmd" value="{17}"/>
+                    <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value="{17}"/>
                     {2}&nbsp;&nbsp;{18}
                     </form>
                     """.format(
@@ -905,8 +905,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = "<button type='button' title='{0}' onclick='openSideNav()'>&equiv;</button>".format(config.thisTranslation["menu_bibleMenu"])
         return html
 
+    def getUserManual(self):
+        if config.webHomePage in ("traditional.html", "simplified.html"):
+            userManual = r"https://www.uniquebible.app/web/%E4%B8%AD%E6%96%87%E8%AA%AA%E6%98%8E"
+        else:
+            userManual = "https://www.uniquebible.app/web/english-manual"
+        return userManual
+
     def helpButton(self):
-        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["userManual"])
+        #html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["userManual"])
+        html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
         return html
 
     def submitButton(self):
@@ -1111,9 +1119,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def helpContent(self):
         dotCommands = """
-        <h2>Documentation</h2><p>
-        <a target="_blank" href="https://github.com/eliranwong/UniqueBible/wiki">Wiki</a><br>
-        <h2>Http-server Commands [case insensitive]</h2>
+        <h2>Commands</h2>
+        <p>Unique Bible App supports single-line commands to navigate or interact between resources.  This page documents available commands.  Web version commands are supported on UBA web version only.  UBA commands are shared by both desktop and web versions, though some UBA commands apply to desktop version only.</p>
+        <h2>Web Version Commands [case insensitive]</h2>
         <p>
         <ref onclick="displayCommand('.help')">.help</ref> - Display help page with list of available commands.<br>
         <ref onclick="window.parent.submitCommand('.myqrcode')">.myQRcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
@@ -1237,14 +1245,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         reference = self.getCurrentReference()
-        content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">Commentary</ref></h2>"""
+        content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
         content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
-        content += "<h2>Reference Book</h2>"
+        content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
-        content += "<h2>PDF</h2>"
+        content += "<h2>PDF {0}</h2>".format(config.thisTranslation["file"])
         content += "<br>".join(["""<ref onclick ="document.title = 'PDF:::{0}'">{0}</ref>""".format(book)
             for book in self.textCommandParser.parent.pdfList])
-        content += "<h2>ePUB</h2>"
+        content += "<h2>EPUB {0}</h2>".format(config.thisTranslation["file"])
         content += "<br>".join(["""<ref onclick ="document.title = 'EPUB:::{0}'">{0}</ref>""".format(book)
             for book in self.textCommandParser.parent.epubList])
         return content
@@ -1253,7 +1261,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         values = ("_noAction", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "_menu")
         features = ("noAction", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu")
         items = [config.thisTranslation[feature] for feature in features]
-        content = "<h2>Select Verse Number Single-click Action:</h2>"
+        content = "<h2>Select Verse Number {0}-click Action:</h2>".format("Double" if double else "Single")
         content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(value, items[index], "verseNoDoubleClickAction" if double else "verseNoSingleClickAction") for index, value in enumerate(values)])
         return content
 
@@ -1277,20 +1285,20 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def searchContent(self):
         content = ""
-        content += """<h2>Bible Versions</h2><p><ref onclick="document.title='_menu:::'">Click HERE to Search Bibles</ref></p>"""
+        content += """<h2>{0}</h2><p><ref onclick="document.title='_menu:::'">Click HERE to Search Bibles</ref></p>""".format(config.thisTranslation["html_bibles"])
         abbList = ["HBN", "EXLBP", "EXLBL"]
         nameList = ["Bible Names", "Bible Characters", "Bible Locations"]
-        content += self.formatSearchSection("Bible Background", "SEARCHTOOL", "SEARCHTOOL", abbList, nameList)
+        content += self.formatSearchSection(config.thisTranslation["bibleBackground"], "SEARCHTOOL", "SEARCHTOOL", abbList, nameList)
         abbList = ["Bible_Promises", "Harmonies_and_Parallels", "FAV", "ALL"]
         nameList = ["Bible Promises", "Harmonies and Parallels", "Favourite Books", "All Books"]
-        content += self.formatSearchSection("Collections", "collection", "SEARCHBOOK", abbList, nameList)
-        content += self.formatSearchSection("Topics", "topics", "SEARCHTOOL", self.textCommandParser.parent.topicListAbb, self.textCommandParser.parent.topicList)
-        content += self.formatSearchSection("Dictionary", "dictionary", "SEARCHTOOL", self.textCommandParser.parent.dictionaryListAbb, self.textCommandParser.parent.dictionaryList)
-        content += self.formatSearchSection("Encyclopedia", "encyclopedia", "SEARCHTOOL", self.textCommandParser.parent.encyclopediaListAbb, self.textCommandParser.parent.encyclopediaList)
-        content += self.formatSearchSection("Concordance", "CONCORDANCE", "CONCORDANCE", self.textCommandParser.parent.strongBibles)
-        content += self.formatSearchSection("Lexicon", "LEXICON", "LEXICON", self.textCommandParser.parent.lexiconList)
-        content += self.formatSearchSection("Books", "SEARCHBOOK", "SEARCHBOOK", self.textCommandParser.parent.referenceBookList)
-        content += self.formatSearchSection("Third Party Dictionaries", "SEARCHTHIRDDICTIONARY", "SEARCHTHIRDDICTIONARY", self.textCommandParser.parent.thirdPartyDictionaryList)
+        content += self.formatSearchSection(config.thisTranslation["collection"], "collection", "SEARCHBOOK", abbList, nameList)
+        content += self.formatSearchSection(config.thisTranslation["menu5_topics"], "topics", "SEARCHTOOL", self.textCommandParser.parent.topicListAbb, self.textCommandParser.parent.topicList)
+        content += self.formatSearchSection(config.thisTranslation["context1_dict"], "dictionary", "SEARCHTOOL", self.textCommandParser.parent.dictionaryListAbb, self.textCommandParser.parent.dictionaryList)
+        content += self.formatSearchSection(config.thisTranslation["context1_encyclopedia"], "encyclopedia", "SEARCHTOOL", self.textCommandParser.parent.encyclopediaListAbb, self.textCommandParser.parent.encyclopediaList)
+        content += self.formatSearchSection(config.thisTranslation["bibleConcordance"], "CONCORDANCE", "CONCORDANCE", self.textCommandParser.parent.strongBibles)
+        content += self.formatSearchSection(config.thisTranslation["menu5_lexicon"], "LEXICON", "LEXICON", self.textCommandParser.parent.lexiconList)
+        content += self.formatSearchSection(config.thisTranslation["installBooks"], "SEARCHBOOK", "SEARCHBOOK", self.textCommandParser.parent.referenceBookList)
+        content += self.formatSearchSection(config.thisTranslation["menu5_3rdDict"], "SEARCHTHIRDDICTIONARY", "SEARCHTHIRDDICTIONARY", self.textCommandParser.parent.thirdPartyDictionaryList)
         return content
 
     def getSession(self):

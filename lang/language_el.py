@@ -723,4 +723,7 @@ translation = {
     "features": "Χαρακτηριστικά:",
     "userManual": "Μη αυτόματη.",
     "bibleNavigation": "Αγία Γραφή πλοήγησης",
+    "file": "Αρχείο:",
+    "bibleBackground": "Ιστορικό Αγία Γραφή",
+    "collection": "Συλλογή:",
 }

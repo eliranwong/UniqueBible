@@ -723,4 +723,7 @@ translation = {
     "features": "功能選項",
     "userManual": "使用手冊",
     "bibleNavigation": "選擇經文",
+    "file": "檔案",
+    "bibleBackground": "聖經背景",
+    "collection": "組合",
 }

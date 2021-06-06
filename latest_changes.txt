@@ -1,3 +1,9 @@
+Major changes in version 25.38:
+* Fixed a typo on .setVerseNoDoubleClickAction on web version.
+* Fixed command input on iOS.
+* Added translations to "Library" and "Search" pages headings.
+* Added links to user manual.
+
 Major changes in version 25.37:
 * Changes about web version:
 - Fixed duplicated bible on dropdown selection.

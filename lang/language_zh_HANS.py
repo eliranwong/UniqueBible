@@ -723,4 +723,7 @@ translation = {
     "features": "功能选项",
     "userManual": "用户手册",
     "bibleNavigation": "选择经文",
+    "file": "档案",
+    "bibleBackground": "圣经背景",
+    "collection": "组合",
 }
