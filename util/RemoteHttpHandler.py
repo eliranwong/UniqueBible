@@ -980,7 +980,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.developer or config.webFullAccess or self.clientIP in self.adminUsers:
             return (True, "")
         else:
-            return (False, "This feature is available for developers only.  To enable it, set 'developer = True' in file config.py and restart the server.")
+            return (False, "This feature is not available.")
 
     def displayMessage(self, message):
         return """
