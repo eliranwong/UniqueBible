@@ -29,6 +29,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     abbreviations = None
     session = None
     users = []
+    adminUsers = []
 
     def __init__(self, *args, **kwargs):
         if RemoteHttpHandler.textCommandParser is None:
@@ -51,6 +52,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.books = RemoteHttpHandler.books
         self.bookMap = RemoteHttpHandler.bookMap
         self.users = RemoteHttpHandler.users
+        self.adminUsers = RemoteHttpHandler.adminUsers
         self.primaryUser = False
         if config.httpServerViewerGlobalMode:
             try:
@@ -155,11 +157,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
 
     def do_GET(self):
+        self.clientIP = self.client_address[0]
         self.session = self.getSession()
-        clientIP = self.client_address[0]
-        if clientIP not in self.users:
-            self.users.append(clientIP)
-        if clientIP == self.users[0]:
+        if self.clientIP not in self.users:
+            self.users.append(self.clientIP)
+        if self.clientIP == self.users[0]:
             self.primaryUser = True
         self.updateData()
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
@@ -169,13 +171,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def loadContent(self):
         features = {
-            "download": self.downloadContent,
             "config": self.configContent,
+            "download": self.downloadContent,
             "history": self.historyContent,
-            "library": self.libraryContent,
-            "search": self.searchContent,
             "import": self.importContent,
             "layout": self.swapLayout,
+            "library": self.libraryContent,
+            "logout": self.logout,
+            "search": self.searchContent,
             "theme": self.swapTheme,
             "globalviewer": self.toggleGlobalViewer,
             "presentationmode": self.togglePresentationMode,
@@ -197,6 +200,26 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
         }
+        functions = {
+            "login": self.login,
+        }
+        adminCommands = ('.compareparallelmode',
+                         '.config',
+                         '.decreasefontsize',
+                         '.download',
+                         '.globalviewer',
+                         '.history',
+                         '.import',
+                         '.increasefontsize',
+                         '.layout',
+                         '.plainmode',
+                         '.presentationmode',
+                         '.regexcasesensitive',
+                         '.restart',
+                         '.stop',
+                         '.subheadings',
+                         '.theme',
+                         '.update')
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
@@ -204,6 +227,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
+                self.commandParam = ""
+                if ' ' in self.command:
+                    self.command, self.commandParam = self.command.split(' ', 1)
                 shortcuts = self.getShortcuts()
                 commands = self.getCommands()
                 commandLower = self.command.lower()
@@ -225,26 +251,27 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if commandLower in (".help", "?"):
                     content = self.helpContent()
                 elif commandLower.startswith(".") and commandLower[1:] in features.keys():
-                    content = features[commandLower[1:]]()
-                elif commandLower == ".stop" or self.command == config.httpServerStopCommand:
+                    if commandLower in adminCommands:
+                        permission, message = self.checkPermission()
+                        if not permission:
+                            content = message
+                        else:
+                            content = features[commandLower[1:]]()
+                    else:
+                        content = features[commandLower[1:]]()
+                elif commandLower.startswith(".") and commandLower[1:] in functions.keys():
+                    content = functions[commandLower[1:]](self.commandParam)
+                elif commandLower in adminCommands:
                     permission, message = self.checkPermission()
-                    if permission or (config.httpServerStopCommand and self.command == config.httpServerStopCommand):
+                    if not permission:
+                        content = message
+                    elif commandLower == ".stop" or self.command == config.httpServerStopCommand:
                         self.closeWindow()
                         config.enableHttpServer = False
                         return
-                    else:
-                        content = message
-                elif commandLower == ".restart":
-                    permission, message = self.checkPermission()
-                    if not permission:
-                        content = message
-                    else:
+                    elif commandLower == ".restart":
                         return self.restartServer()
-                elif commandLower == ".update":
-                    permission, message = self.checkPermission()
-                    if not permission:
-                        content = message
-                    else:
+                    elif commandLower == ".update":
                         subprocess.Popen("git pull", shell=True)
                         return self.restartServer("updated and ")
                 else:
@@ -945,7 +972,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return css
 
     def checkPermission(self):
-        if config.developer or config.webFullAccess:
+        if config.developer or config.webFullAccess or self.clientIP in self.adminUsers:
             return (True, "")
         else:
             return (False, "This feature is available for developers only.  To enable it, set 'developer = True' in file config.py and restart the server.")
@@ -961,23 +988,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         </head><body>{0}</body></html>""".format(message)
 
     def historyContent(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
         view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
         return content
 
     def importContent(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
         self.textCommandParser.parser("import:::import", "http")
         return "Processed!"
 
     def configContent(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
         intro = ("File 'config.py' contains essential configurations for running UniqueBible.app.\n(Remarks: Generally speaking, users don't need to edit this file.\nIn case you need to do so, make sure UBA is not running when you manually edit this file.)"
             "\n\nTo telnet-server / http-server users on Android:"
             "\nIf you want to change some configurations but don't see the file config.py, you need to create the file config.py in UniqueBible directory manually and enter in it non-default values ONLY."
@@ -990,109 +1008,69 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return content
 
     def increaseFontSize(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
-        else:
-            config.fontSize = config.fontSize + 1
-            return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
+        config.fontSize = config.fontSize + 1
+        return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
 
     def decreaseFontSize(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
+        if config.fontSize >= 4:
+            config.fontSize = config.fontSize - 1
+            return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
         else:
-            if config.fontSize >= 4:
-                config.fontSize = config.fontSize - 1
-                return self.displayMessage("""<p>Font size changed to {0}!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""".format(config.fontSize))
-            else:
-                return self.displayMessage("Current font size is already too small!")
+            return self.displayMessage("Current font size is already too small!")
 
     def getBibleChapter(self):
         view, content, *_ = self.textCommandParser.parser(self.getCurrentReference(), "http")
         return content
 
     def toggleCompareParallel(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
+        if config.enforceCompareParallel:
+            config.enforceCompareParallel = False
+            return self.displayMessage("""<p>Compare / parallel mode is turned OFF!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
         else:
-            if config.enforceCompareParallel:
-                config.enforceCompareParallel = False
-                return self.displayMessage("""<p>Compare / parallel mode is turned OFF!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
-            else:
-                config.enforceCompareParallel = True
-                return self.displayMessage("""<p>Compare / parallel mode is turned ON!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            config.enforceCompareParallel = True
+            return self.displayMessage("""<p>Compare / parallel mode is turned ON!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def togglePlainMode(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
-        else:
-            config.readFormattedBibles = not config.readFormattedBibles
-            return self.getBibleChapter()
+        config.readFormattedBibles = not config.readFormattedBibles
+        return self.getBibleChapter()
 
     def toggleSubheadings(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
-        else:
-            config.addTitleToPlainChapter = not config.addTitleToPlainChapter
-            return self.getBibleChapter()
+        config.addTitleToPlainChapter = not config.addTitleToPlainChapter
+        return self.getBibleChapter()
 
     def toggleRegexCaseSensitive(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
+        if config.regexCaseSensitive:
+            config.regexCaseSensitive = False
+            return self.displayMessage("""<p>Option 'case sensitive' is turned off for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
         else:
-            if config.regexCaseSensitive:
-                config.regexCaseSensitive = False
-                return self.displayMessage("""<p>Option 'case sensitive' is turned off for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
-            else:
-                config.regexCaseSensitive = True
-                return self.displayMessage("""<p>Option 'case sensitive' is turned on for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            config.regexCaseSensitive = True
+            return self.displayMessage("""<p>Option 'case sensitive' is turned on for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def togglePresentationMode(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
+        if config.webPresentationMode:
+            config.webPresentationMode = False
+            return self.displayMessage("""<p>Option 'presentation mode' is turned off!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
         else:
-            if config.webPresentationMode:
-                config.webPresentationMode = False
-                return self.displayMessage("""<p>Option 'presentation mode' is turned off!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
-            else:
-                config.webPresentationMode = True
-                return self.displayMessage("""<p>Option 'presentation mode' is turned on!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            config.webPresentationMode = True
+            return self.displayMessage("""<p>Option 'presentation mode' is turned on!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def toggleGlobalViewer(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
+        if config.httpServerViewerGlobalMode:
+            config.httpServerViewerGlobalMode = False
+            return self.displayMessage("""<p>Option 'global viewer' is turned off for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
         else:
-            if config.httpServerViewerGlobalMode:
-                config.httpServerViewerGlobalMode = False
-                return self.displayMessage("""<p>Option 'global viewer' is turned off for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
-            else:
-                config.httpServerViewerGlobalMode = True
-                return self.displayMessage("""<p>Option 'global viewer' is turned on for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            config.httpServerViewerGlobalMode = True
+            return self.displayMessage("""<p>Option 'global viewer' is turned on for presentation mode.!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def swapLayout(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
-        else:
-            config.webUI = "" if config.webUI == "mini" else "mini"
-            #return self.displayMessage("Layout changed!")
-            return self.getBibleChapter()
+        config.webUI = "" if config.webUI == "mini" else "mini"
+        #return self.displayMessage("Layout changed!")
+        return self.getBibleChapter()
 
     def swapTheme(self):
-        permission, message = self.checkPermission()
-        if not permission:
-            return message
-        else:
-            config.theme = "default" if config.theme == "dark" else "dark"
-            #return self.displayMessage("Theme changed!")
-            return self.getBibleChapter()
+        config.theme = "default" if config.theme == "dark" else "dark"
+        #return self.displayMessage("Theme changed!")
+        return self.getBibleChapter()
 
     def closeWindow(self, message="Server is shut down!"):
         self.send_response(200)
@@ -1300,3 +1278,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         session = str(ip + browser).encode('utf-8')
         session = hashlib.sha256(session).hexdigest()[:30]
         return session
+
+    def login(self, password):
+        if password == config.webAdminPassword:
+            if self.clientIP not in self.adminUsers:
+                self.adminUsers.append(self.clientIP)
+        return "Login command executed"
+
+    def logout(self):
+        if self.clientIP in self.adminUsers:
+            self.adminUsers.remove(self.clientIP)
+        return "Logged out"
