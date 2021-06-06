@@ -592,7 +592,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
         html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
-        html += """<a href="#">{0}</a>""".format(self.bibleSelection())
+        html += """<a href="#">{0}</a>""".format(self.bibleSelectionSide())
         sideNavItems = (
             (self.getFavouriteBible(), "TEXT:::{0}".format(self.getFavouriteBible())),
             (self.getFavouriteBible2(), "TEXT:::{0}".format(self.getFavouriteBible2())),
@@ -854,6 +854,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def bibleSelection(self):
         return self.formatSelectList("bibleName", "submitTextCommand", self.bibles, config.mainText)
+
+    def bibleSelectionSide(self):
+        return self.formatSelectList("bibleNameSide", "submitTextCommand", self.bibles, config.mainText)
 
     def bookSelection(self):
         return self.formatSelectList("bookName", "submitBookCommand", self.books, str(config.mainB))
