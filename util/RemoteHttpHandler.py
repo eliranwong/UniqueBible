@@ -5,7 +5,6 @@ import json
 import os, re, config, pprint
 import subprocess
 import urllib
-
 import requests
 from http.server import SimpleHTTPRequestHandler
 from time import gmtime
@@ -17,6 +16,7 @@ from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse, parse_qs
 from util.FileUtil import FileUtil
 from util.LanguageUtil import LanguageUtil
+from pathlib import Path
 
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
@@ -175,6 +175,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "download": self.downloadContent,
             "history": self.historyContent,
             "import": self.importContent,
+            "latest": self.latestContent,
             "layout": self.swapLayout,
             "library": self.libraryContent,
             "logout": self.logout,
@@ -686,7 +687,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 return """
                     <form id="commandForm" action="{0}" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{9}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{19}&nbsp;&nbsp;{9}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
                     <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value="{17}"/>
@@ -702,7 +703,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.currentVerseButton(),
                     self.nextChapter(),
                     self.toggleFullscreen(),
-                    self.helpButton(),
+                    self.externalHelpButton(),
                     self.openSideNav(),
                     self.libraryButton(),
                     self.searchButton(),
@@ -712,6 +713,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.qrButton(),
                     self.initialCommandInput.replace('"', '\\"'),
                     self.newWindowButton(),
+                    self.internalHelpButton(),
                 )
         else:
             return ""
@@ -946,7 +948,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             userManual = "https://www.uniquebible.app/web/english-manual"
         return userManual
 
-    def helpButton(self):
+    def internalHelpButton(self):
+        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&#9679;</button>""".format(config.thisTranslation["ubaCommands"])
+        return html
+
+    def externalHelpButton(self):
         #html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["userManual"])
         html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
         return html
@@ -1152,6 +1158,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <br>To prevent admin options from public access, administrator should set both config.developer and config.webFullAccess to 'False'. Administrator should also change the default 'webAdminPassword' in config.py.
         <br>Remarks: Make sure UBA is not running when 'config.py' is being edited manually.</p><p>
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
+        <ref onclick="window.parent.submitCommand('.latest')">.latest</ref> - Display latest changes.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
@@ -1313,3 +1320,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.clientIP in self.adminUsers:
             self.adminUsers.remove(self.clientIP)
         return "Administrative rights disabled!"
+
+    def latestContent(self):
+        content = Path('latest_changes.txt').read_text()
+        content = content.replace("\n", "<br>")
+        return content
