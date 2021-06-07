@@ -236,7 +236,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
-            content = "[no content]"
             initialCommand = self.initialCommand if config.webPublicVersion else config.history["main"][-1]
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
@@ -252,6 +251,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if not self.command:
                     self.command = initialCommand
                     self.initialCommandInput = initialCommand
+                    commandLower = initialCommand.lower()
                 elif commandLower in config.customCommandShortcuts.keys():
                     self.command = config.customCommandShortcuts[commandLower]
                 elif commandLower in shortcuts.keys():
@@ -266,18 +266,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 # Parse command
                 if commandLower in (".help", "?"):
                     content = self.helpContent()
-                elif commandLower.startswith(".") and commandLower[1:] in features.keys():
-                    if commandFunction in adminCommands:
-                        permission, message = self.checkPermission()
-                        if not permission:
-                            content = message
-                        else:
-                            content = features[commandLower[1:]]()
-                    else:
-                        content = features[commandLower[1:]]()
-                elif commandFunction.startswith(".") and commandFunction[1:] in functions.keys():
-                    content = functions[commandFunction[1:]](commandParam)
-                elif commandLower in adminCommands and len(commandLower) > 0:
+                elif commandLower in adminCommands:
                     permission, message = self.checkPermission()
                     if not permission:
                         content = message
@@ -290,6 +279,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     elif commandLower == ".update":
                         subprocess.Popen("git pull", shell=True)
                         return self.restartServer("updated and ")
+                    else:
+                        content = features[commandLower[1:]]()
+                elif commandLower.startswith(".") and commandLower[1:] in features.keys():
+                    content = features[commandLower[1:]]()
+                elif commandFunction and commandFunction[1:] in functions.keys():
+                    content = functions[commandFunction[1:]](commandParam)
                 else:
                     try:
                         view, content, *_ = self.textCommandParser.parser(self.command, "http")
@@ -298,8 +293,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     if content == "Downloaded!":
                         content = self.downloadContent()
                     elif not content:
-                        content = "Command was processed!"
-                    elif not content in ("INVALID_COMMAND_ENTERED", "Error!"):
+                        content = "No content for display!"
+                    elif not content in ("INVALID_COMMAND_ENTERED", "Error!", "No content for display!"):
                         self.textCommandParser.parent.addHistoryRecord(view, self.command)
             else:
                 self.command = initialCommand
@@ -992,6 +987,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return css
 
     def checkPermission(self):
+        print(config.developer, config.webFullAccess, (self.clientIP in self.adminUsers))
         if config.developer or config.webFullAccess or self.clientIP in self.adminUsers:
             return (True, "")
         else:
@@ -1309,9 +1305,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if password == config.webAdminPassword:
             if self.clientIP not in self.adminUsers:
                 self.adminUsers.append(self.clientIP)
-        return "Login command executed"
+        return "Administrative rights enabled!"
 
     def logout(self):
         if self.clientIP in self.adminUsers:
             self.adminUsers.remove(self.clientIP)
-        return "Logged out"
+        return "Administrative rights disabled!"

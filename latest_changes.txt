@@ -1,3 +1,6 @@
+Major change in version 25.40:
+* Fixed admin login on web version.
+
 Major changes in version 25.39:
 * Added admin login to web version.  Default password: UBA123.  Public server should change password.
 * Added .login and .login commands to web version.  To login, run ".login:::UBA123".  Run ".logout" to log out.
