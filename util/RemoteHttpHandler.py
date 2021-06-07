@@ -658,6 +658,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
         html += """<a href="index.html">English</a>""" if config.webHomePage != "index.html" else ""
+        html += """<a href="{0}" target="_blank"><img style="width:100px; height:auto;" src="{1}"></a>"""
+        html += """<a href="https://github.com/eliranwong/UniqueBible" target="_blank"><img style="width:100px; height:auto;" src="UniqueBibleAppWeb.png"></a>"""
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
