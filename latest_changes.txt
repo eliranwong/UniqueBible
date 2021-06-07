@@ -1,4 +1,4 @@
-Major change in version 25.40:
+Major change in version 25.40, 25.41:
 * Fixed admin login on web version.
 
 Major changes in version 25.39:

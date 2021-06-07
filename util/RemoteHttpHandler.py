@@ -1305,7 +1305,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if password == config.webAdminPassword:
             if self.clientIP not in self.adminUsers:
                 self.adminUsers.append(self.clientIP)
-        return "Administrative rights enabled!"
+            return "Administrative rights enabled!"
+        else:
+            return "Incorrect password!"
 
     def logout(self):
         if self.clientIP in self.adminUsers:
