@@ -1,4 +1,4 @@
-Major changes in version 25.42:
+Major changes in version 25.42, 25.43:
 Changes about web version:
 * Added selection of UBA icon colour.
 * Added support of organisation / church's icon and link.
