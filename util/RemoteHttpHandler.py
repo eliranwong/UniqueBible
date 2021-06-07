@@ -212,6 +212,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.import',
                          '.increasefontsize',
                          '.layout',
+                         '.logout',
                          '.plainmode',
                          '.presentationmode',
                          '.regexcasesensitive',
@@ -220,20 +221,30 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.subheadings',
                          '.theme',
                          '.update',
-                         config.httpServerStopCommand
+                         '.setfavouritebible',
+                         '.setfavouritebible2',
+                         '.setfavouritebible3',
+                         '.setfavouritebibletc',
+                         '.setfavouritebibletc2',
+                         '.setfavouritebibletc3',
+                         '.setfavouritebiblesc',
+                         '.setfavouritebiblesc2',
+                         '.setfavouritebiblesc3',
+                         '.setversenosingleclickaction',
+                         '.setversenodoubleclickaction',
                          )
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
             self.initialCommandInput = ""
-            content = "None"
+            content = "[no content]"
             initialCommand = self.initialCommand if config.webPublicVersion else config.history["main"][-1]
             if 'cmd' in query_components:
                 self.command = query_components["cmd"][0].strip()
                 # Convert command shortcut
                 commandFunction = ""
                 commandParam = ""
-                if ' ' in self.command:
-                    commandFunction, commandParam = self.command.split(' ', 1)
+                if self.command.startswith(".") and ":::" in self.command:
+                    commandFunction, commandParam = self.command.split(":::", 1)
                     commandFunction = commandFunction.lower()
                 shortcuts = self.getShortcuts()
                 commands = self.getCommands()
@@ -270,7 +281,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     permission, message = self.checkPermission()
                     if not permission:
                         content = message
-                    elif commandLower == ".stop" or self.command == config.httpServerStopCommand :
+                    elif commandLower == ".stop":
                         self.closeWindow()
                         config.enableHttpServer = False
                         return
@@ -984,7 +995,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.developer or config.webFullAccess or self.clientIP in self.adminUsers:
             return (True, "")
         else:
-            return (False, "This feature is not available.")
+            return (False, config.thisTranslation["loginAdmin"])
 
     def displayMessage(self, message):
         return """
@@ -1125,24 +1136,30 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.mpb')">.mpb</ref> - Open Marvel Parallel Bible.<br>
         <ref onclick="window.parent.submitCommand('.mab')">.mab</ref> - Open Marvel Annotated Bible.<br>
         </p><p>"""
-        dotCommands += """<u>Bible feature shortcut on currently selected book [{0}]</u><br>
+        dotCommands += """<u>Study currently selected book [{0}]</u><br>
         <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {1}.<br>
         <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {2}.
         </p><p>""".format(self.abbreviations[str(config.mainB)], config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
         currentChapter = "{0} {1}".format(self.abbreviations[str(config.mainB)], config.mainC)
-        dotCommands += "<u>Bible feature shortcut on currently selected chapter [{0}]</u><br>".format(currentChapter)
+        dotCommands += "<u>Study currently selected chapter [{0}]</u><br>".format(currentChapter)
         dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - {1}.""".format(key.lower(), value) for key, value in self.getChapterFeatures().items()])
         dotCommands += "</p><p>"
         currentVerse = "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
-        dotCommands += "<u>Bible feature shortcut on currently selected verse [{0}]</u><br>".format(currentVerse)
+        dotCommands += "<u>Study currently selected verse [{0}]</u><br>".format(currentVerse)
         dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - {1}.""".format(key.lower(), value) for key, value in self.getVerseFeatures().items()])
         dotCommands += """
-        </p><p><b>Developer Options</b></p>
-        <p>The following options are enabled only if 'developer' or 'webFullAccess' is set to 'True' in file 'config.py'.  To prevent access to the following features, both configurations need to be set 'False'.  Make sure UBA is not running when 'config.py' is being edited.</p><p>
+        </p><p><b>Admin Options</b></p>
+        <p>The following commands are enabled only if either you:
+        <br>- log in as an administrator by running '<ref onclick="displayCommand('.login:::')">.login:::</ref>UBA123', where 'UBA123' is the login password by default.
+        <br>- set 'developer' to 'True' in file 'config.py'.
+        <br>- set 'webFullAccess' to 'True' in file 'config.py'.
+        <br>To prevent admin options from public access, administrator should set both config.developer and config.webFullAccess to 'False'. Administrator should also change the default 'webAdminPassword' in config.py.
+        <br>Remarks: Make sure UBA is not running when 'config.py' is being edited manually.</p><p>
         <ref onclick="window.parent.submitCommand('.config')">.config</ref> - Display config.py values and their description.<br>
         <ref onclick="window.parent.submitCommand('.history')">.history</ref> - Display history records.<br>
         <ref onclick="window.parent.submitCommand('.import')">.import</ref> - Place third-party resources in directory 'UniqueBible/import/' and run this command to import them into UBA.<br>
         <ref onclick="window.parent.submitCommand('.layout')">.layout</ref> - Swap between available layouts.<br>
+        <ref onclick="window.parent.submitCommand('.logout')">.logout</ref> - Log out as an administrator.<br>
         <ref onclick="window.parent.submitCommand('.theme')">.theme</ref> - Swap between available themes.<br>
         <ref onclick="window.parent.submitCommand('.increasefontsize')">.increaseFontSize</ref> - Increase font size.<br>
         <ref onclick="window.parent.submitCommand('.decreasefontsize')">.decreaseFontSize</ref> - Decrease font size.<br>

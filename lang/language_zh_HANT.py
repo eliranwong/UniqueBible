@@ -726,4 +726,5 @@ translation = {
     "file": "檔案",
     "bibleBackground": "聖經背景",
     "collection": "組合",
+    "loginAdmin": "請以管理者身分登入，以啟用此功能。",
 }

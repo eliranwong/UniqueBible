@@ -726,4 +726,5 @@ translation = {
     "file": "Fichier",
     "bibleBackground": "Contexte biblique",
     "collection": "Collection",
+    "loginAdmin": "Veuillez vous connecter en tant qu'administrateur pour activer cette fonction.",
 }

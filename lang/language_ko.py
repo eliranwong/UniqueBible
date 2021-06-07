@@ -726,4 +726,5 @@ translation = {
     "file": "파일",
     "bibleBackground": "성경의 배경",
     "collection": "컬렉션",
+    "loginAdmin": "이 기능을 사용하려면 관리자로 로그인하십시오.",
 }

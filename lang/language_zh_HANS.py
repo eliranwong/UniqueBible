@@ -726,4 +726,5 @@ translation = {
     "file": "档案",
     "bibleBackground": "圣经背景",
     "collection": "组合",
+    "loginAdmin": "请以管理员身份登录以启用此功能。",
 }

@@ -55,10 +55,6 @@ class ConfigUtil:
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
             config.httpServerViewerBaseUrl = "https://marvelbible.com/uba_viewer"
-        config.help["httpServerStopCommand"] = """
-        # A customised command to stop http-server."""
-        if not hasattr(config, "httpServerStopCommand"):
-            config.httpServerStopCommand = ""
         config.help["webPublicVersion"] = """
         # Enable this option is http-server is setup for public use."""
         if not hasattr(config, "webPublicVersion"):
@@ -981,7 +977,6 @@ class ConfigUtil:
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
-            ("httpServerStopCommand", config.httpServerStopCommand),
             ("webPublicVersion", config.webPublicVersion),
             ("webFullAccess", config.webFullAccess),
             ("webPrivateHomePage", config.webPrivateHomePage),
