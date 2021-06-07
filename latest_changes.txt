@@ -1,4 +1,12 @@
-Major change in version 25.40, 25.41g:
+Major changes in version 25.42:
+Changes about web version:
+* Added selection of UBA icon colour.
+* Added support of organisation / church's icon and link.
+* Added config.webUBAIcon, config.webOrganisationIcon and config.webOrganisationLink
+* Added ".setWebUBAIcon" command to select UBA icon.
+* Fixed the issue that _setconfig::: did not work even login as an administrator.
+
+Major change in version 25.40, 25.41:
 * Fixed admin login on web version.
 
 Major changes in version 25.39:

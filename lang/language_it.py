@@ -727,4 +727,5 @@ translation = {
     "bibleBackground": "Sfondo Bibbia",
     "collection": "Raccolta",
     "loginAdmin": "Accedere come amministratore per abilitare questa funzione.",
+    "homePage": "Home",
 }

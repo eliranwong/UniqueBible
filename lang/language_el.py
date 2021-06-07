@@ -727,4 +727,5 @@ translation = {
     "bibleBackground": "Ιστορικό Αγία Γραφή",
     "collection": "Συλλογή:",
     "loginAdmin": "Συνδεθείτε ως διαχειριστής για να ενεργοποιήσετε αυτή τη λειτουργία.",
+    "homePage": "Home",
 }

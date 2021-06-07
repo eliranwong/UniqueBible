@@ -55,6 +55,18 @@ class ConfigUtil:
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
             config.httpServerViewerBaseUrl = "https://marvelbible.com/uba_viewer"
+        config.help["webUBAIcon"] = """
+        # Web version UBA icon filename.  UBA icons are provided in different colours for users to choose one for display.  Users are required to display an officially provided UBA icon to acknowledge the source of this application."""
+        if not hasattr(config, "webUBAIcon"):
+            config.webUBAIcon = "UniqueBibleApp.png"
+        config.help["webOrganisationIcon"] = """
+        # Customise an organisation icon filename.  The filename given should be a path relative to directory 'htmlResouces/'."""
+        if not hasattr(config, "webOrganisationIcon"):
+            config.webOrganisationIcon = ""
+        config.help["webOrganisationLink"] = """
+        # Customise an organisation link."""
+        if not hasattr(config, "webOrganisationLink"):
+            config.webOrganisationLink = ""
         config.help["webPublicVersion"] = """
         # Enable this option is http-server is setup for public use."""
         if not hasattr(config, "webPublicVersion"):
@@ -977,6 +989,9 @@ class ConfigUtil:
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
+            ("webUBAIcon", config.webUBAIcon),
+            ("webOrganisationIcon", config.webOrganisationIcon),
+            ("webOrganisationLink", config.webOrganisationLink),
             ("webPublicVersion", config.webPublicVersion),
             ("webFullAccess", config.webFullAccess),
             ("webPrivateHomePage", config.webPrivateHomePage),

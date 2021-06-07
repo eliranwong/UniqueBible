@@ -2,7 +2,7 @@
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import hashlib
 import json
-import os, re, config, pprint
+import os, re, config, pprint, glob
 import subprocess
 import urllib
 import requests
@@ -200,6 +200,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setfavouritebiblesc3": lambda: self.setFavouriteBibleContent("favouriteBibleSC3"),
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
+            "setwebubaicon": self.setWebUBAIconContent,
         }
         functions = {
             "login": self.login,
@@ -233,6 +234,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.setfavouritebiblesc3',
                          '.setversenosingleclickaction',
                          '.setversenodoubleclickaction',
+                         '.setwebubaicon',
                          )
         if self.primaryUser or not config.webPresentationMode:
             query_components = parse_qs(urlparse(self.path).query)
@@ -287,10 +289,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 elif commandFunction and commandFunction[1:] in functions.keys():
                     content = functions[commandFunction[1:]](commandParam)
                 else:
+                    tempDeveloper = False
+                    if self.clientIP in self.adminUsers and not config.developer:
+                        config.developer = True
+                        tempDeveloper = True
                     try:
                         view, content, *_ = self.textCommandParser.parser(self.command, "http")
                     except:
                         content = "Error!"
+                    if tempDeveloper:
+                        config.developer = False
                     if content == "Downloaded!":
                         content = self.downloadContent()
                     elif not content:
@@ -333,7 +341,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """
             <html>
             <head>
-                <link rel="icon" href="UniqueBibleAppWeb.png">
+                <link rel="icon" href="icons/{20}">
                 <title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -606,6 +614,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.webPaddingLeft,
             self.getBibleNavigationMenu(),
             config.webHomePage,
+            config.webUBAIcon,
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -659,11 +668,22 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += """<a href="traditional.html">繁體中文</a>""" if config.webHomePage != "traditional.html" else ""
         html += """<a href="simplified.html">简体中文</a>""" if config.webHomePage != "simplified.html" else ""
         html += """<a href="index.html">English</a>""" if config.webHomePage != "index.html" else ""
-        html += """<a href="{0}" target="_blank"><img style="width:100px; height:auto;" src="{1}"></a>"""
-        html += """<a href="https://github.com/eliranwong/UniqueBible" target="_blank"><img style="width:100px; height:auto;" src="UniqueBibleAppWeb.png"></a>"""
+        html += """<hr>{0}""".format(self.getOrganisationIcon())
+        html += """<a href="https://github.com/eliranwong/UniqueBible" target="_blank"><img style="width:85px; height:auto;" src="icons/{0}"></a>""".format(config.webUBAIcon)
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
+
+    def getOrganisationIcon(self):
+        if config.webOrganisationIcon and config.webOrganisationLink:
+            print(999)
+            return """<a href="{0}" target="_blank"><img style="width:85px; height:auto;" src="{1}"></a>""".format(config.webOrganisationLink, config.webOrganisationIcon)
+        elif config.webOrganisationLink:
+            return """<a href="{0}" target="_blank">{1}</a>""".format(config.webOrganisationLink, config.thisTranslation["homePage"],)
+        elif config.webOrganisationIcon:
+            return """<a href="#" target="_blank"><img style="width:85px; height:auto;" src="{0}"></a>""".format(config.webOrganisationIcon)
+        else:
+            return ""
 
     def buildForm(self):
         if self.primaryUser or not config.webPresentationMode:
@@ -757,7 +777,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="UniqueBibleAppWeb.png"><title>UniqueBible.app</title>
+        html = ("""<!DOCTYPE html><html><head><link rel="icon" href="icons/{9}"><title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -765,7 +785,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Expires" content="0" />"""
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
-                "{8} {9}</style>"
+                "{8}</style>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.027'>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.027'>"
                 "<script src='js/common.js?v=1.023'></script>"
@@ -799,7 +819,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          config.fontChinese,
                          config.theme,
                          self.getHighlightCss(),
-                         "")
+                         config.webUBAIcon,)
         return html
 
     def getBibleNavigationMenu(self):
@@ -995,7 +1015,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return css
 
     def checkPermission(self):
-        print(config.developer, config.webFullAccess, (self.clientIP in self.adminUsers))
         if config.developer or config.webFullAccess or self.clientIP in self.adminUsers:
             return (True, "")
         else:
@@ -1005,11 +1024,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return """
         <html>
             <head>
-                <link rel="icon" href="UniqueBibleAppWeb.png">
+                <link rel="icon" href="icons/{1}">
                 <title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        </head><body>{0}</body></html>""".format(message)
+        </head><body>{0}</body></html>""".format(message, config.webUBAIcon)
 
     def historyContent(self):
         view, content, *_ = self.textCommandParser.parser("_history:::main", "http")
@@ -1185,6 +1204,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.setfavouritebiblesc3')">.setFavouriteBibleSC3</ref> - Set configuration 'favouriteBible3'.<br>
         <ref onclick="window.parent.submitCommand('.setversenosingleclickaction')">.setVerseNoSingleClickAction</ref> - Set configuration 'verseNoSingleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.setversenodoubleclickaction')">.setVerseNoDoubleClickAction</ref> - Set configuration 'verseNoDoubleClickAction'.<br>
+        <ref onclick="window.parent.submitCommand('.setwebubaicon')">.setWebUBAIcon</ref> - Set configuration 'webUBAIcon'.<br>
         <ref onclick="window.parent.submitCommand('.restart')">.restart</ref> - Re-start http-server.<br>
         <ref onclick="window.parent.submitCommand('.stop')">.stop</ref> - Stop http-server.<br>
         <ref onclick="window.parent.submitCommand('.update')">.update</ref> - Update and re-start http-server.
@@ -1264,6 +1284,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         items = [config.thisTranslation[feature] for feature in features]
         content = "<h2>Select Verse Number {0}-click Action:</h2>".format("Double" if double else "Single")
         content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::{2}:::\\'{0}\\''">{1}</ref>""".format(value, items[index], "verseNoDoubleClickAction" if double else "verseNoSingleClickAction") for index, value in enumerate(values)])
+        return content
+
+    def setWebUBAIconContent(self):
+        files = glob.glob(os.path.join("htmlResources", "icons", "UniqueBibleApp*.png"))
+        files = [file[20:] for file in files]
+        content = "<h2>Select UniqueBible.app Icon:</h2>"
+        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::webUBAIcon:::\\'{0}\\''"><img src="icons/{0}"></ref>""".format(file) for file in files])
         return content
 
     def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):

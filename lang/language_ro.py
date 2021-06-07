@@ -727,4 +727,5 @@ translation = {
     "bibleBackground": "Fundal biblică",
     "collection": "Colecţie",
     "loginAdmin": "Vă rugăm să vă logaţi ca administrator pentru a activa această caracteristică.",
+    "homePage": "Acasă",
 }
