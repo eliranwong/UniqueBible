@@ -896,22 +896,7 @@ class TextCommandParser:
                 self.parent.enableParagraphButtonAction(False)
 
             # Custom font styling for Bible
-            (fontFile, fontSize) = Bible(text).getFontInfo()
-            fontFormat = ''
-            fontDefinition = ''
-            fontSizeFormat = ''
-            if fontFile and len(fontFile) > 0:
-                if ".ttf" in fontFile:
-                    fontName = fontFile.replace(".ttf", "")
-                    fontDefinition = "@font-face {0} font-family: '{1}'; src: url('fonts/{2}') format('truetype'); {3}".format(
-                                 "{", fontName, fontFile, "}")
-                    fontFormat = "font-family: '{0}';".format(fontName)
-                if ".builtin" in fontFile:
-                    fontName = fontFile.replace(".builtin", "")
-                    fontFormat = "font-family: '{0}';".format(fontName)
-            if fontSize and len(fontSize) > 0:
-                fontSizeFormat = "font-size: {0};".format(fontSize)
-            css = "{0} {1} {2} {3} {4} {5}".format(fontDefinition, text, "{", fontFormat, fontSizeFormat, "}", )
+            (fontFile, fontSize, css) = Bible(text).getFontInfo()
             if view == "main":
                 config.mainCssBibleFontStyle = css
             elif view == "study":
@@ -1424,6 +1409,10 @@ class TextCommandParser:
         if not confirmedTexts or not verseList:
             return self.invalidCommand()
         else:
+            config.mainCssBibleFontStyle = ""
+            for text in confirmedTexts:
+                (fontFile, fontSize, css) = Bible(text).getFontInfo()
+                config.mainCssBibleFontStyle += css
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             del biblesSqlite
@@ -1480,10 +1469,14 @@ class TextCommandParser:
                     return("main", "<br>".join(tableList), {})
                 else:
                     tableList = [("<th><ref onclick='document.title=\"TEXT:::{0}\"'>{0}</ref></th>".format(text),
-                                  "<td style='vertical-align: text-top;'>{0}</td>".format(
-                                      self.textBibleVerseParser(references, text, source, True)[1]))
+                                  "<td style='vertical-align: text-top;'><bibletext class={1}>{0}</bibletext></td>"
+                                  .format(self.textBibleVerseParser(references, text, source, True)[1], text))
                                  for text in confirmedTexts]
                     versions, verses = zip(*tableList)
+                    config.mainCssBibleFontStyle = ""
+                    for text in confirmedTexts:
+                        (fontFile, fontSize, css) = Bible(text).getFontInfo()
+                        config.mainCssBibleFontStyle += css
                     return ("main", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
 
    # PASSAGES:::
