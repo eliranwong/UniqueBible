@@ -1290,7 +1290,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         files = glob.glob(os.path.join("htmlResources", "icons", "UniqueBibleApp*.png"))
         files = [file[20:] for file in files]
         content = "<h2>Select UniqueBible.app Icon:</h2>"
-        content += "<br>".join(["""<ref onclick ="document.title = '_setconfig:::webUBAIcon:::\\'{0}\\''"><img src="icons/{0}"></ref>""".format(file) for file in files])
+        content += " ".join(["""<ref onclick ="document.title = '_setconfig:::webUBAIcon:::\\'{0}\\''"><img src="icons/{0}"></ref>""".format(file) for file in files])
         return content
 
     def setFavouriteBibleContent(self, favouriteBible="favouriteBible"):

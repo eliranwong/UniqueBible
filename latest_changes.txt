@@ -1,4 +1,7 @@
-Major changes in version 25.44:
+Major change in version 25.45:
+* Improved .setWebUBAIcon content displayed on web version.
+
+Major change in version 25.44:
 * Added custom font support for compare and parallel bible reading.
 
 Major changes in version 25.42, 25.43:
