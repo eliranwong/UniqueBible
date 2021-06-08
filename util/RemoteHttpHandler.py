@@ -1341,14 +1341,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if password == config.webAdminPassword:
             if self.clientIP not in self.adminUsers:
                 self.adminUsers.append(self.clientIP)
-            return "Administrative rights enabled!"
+            return "Administrative rights are enabled!"
         else:
             return "Incorrect password!"
 
     def logout(self):
         if self.clientIP in self.adminUsers:
             self.adminUsers.remove(self.clientIP)
-        return "Administrative rights disabled!"
+        return "Administrative rights are disabled!"
 
     def latestContent(self):
         content = Path('latest_changes.txt').read_text()
