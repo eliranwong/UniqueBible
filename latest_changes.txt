@@ -1,3 +1,6 @@
+Major changes in version 25.44:
+* Added custom font support for compare and parallel bible reading.
+
 Major changes in version 25.42, 25.43:
 Changes about web version:
 * Added selection of UBA icon colour.
