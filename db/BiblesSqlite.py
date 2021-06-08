@@ -452,7 +452,7 @@ input.addEventListener('keyup', function(event) {0}
                 textTdTag = "<td>"
                 if b < 40 and text in config.rtlTexts:
                     textTdTag = "<td style='direction: rtl;'>"
-                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}{3}</td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
+                chapter += "</td><td><sup>({0}{1}</ref>)</sup></td>{2}<bibletext class='{1}'>{3}</bibletext></td></tr>".format(self.formVerseTag(b, c, verse, text), text, textTdTag, self.readTextVerse(text, b, c, verse)[3])
         chapter += "</table>"
         return chapter
 
@@ -898,11 +898,28 @@ class Bible:
             self.cursor.execute(query)
             info = self.cursor.fetchone()
             if info:
-                return info
+                fontFile = info[0]
+                fontSize = info[1]
+                fontFormat = ''
+                fontDefinition = ''
+                fontSizeFormat = ''
+                if fontFile and len(fontFile) > 0:
+                    if ".ttf" in fontFile:
+                        fontName = fontFile.replace(".ttf", "")
+                        fontDefinition = "@font-face {0} font-family: '{1}'; src: url('fonts/{2}') format('truetype'); {3}".format(
+                            "{", fontName, fontFile, "}")
+                        fontFormat = "font-family: '{0}';".format(fontName)
+                    if ".builtin" in fontFile:
+                        fontName = fontFile.replace(".builtin", "")
+                        fontFormat = "font-family: '{0}';".format(fontName)
+                if fontSize and len(fontSize) > 0:
+                    fontSizeFormat = "font-size: {0};".format(fontSize)
+                css = "{0} .{1} {2} {3} {4} {5}".format(fontDefinition, self.text, "{", fontFormat, fontSizeFormat, "}", )
+                return (fontFile, fontSize, css)
             else:
-                return ("","")
+                return ("", "", "")
         except:
-            return ("", "")
+            return ("", "", "")
 
     def bibleInfoOld(self):
         query = "SELECT Scripture FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"

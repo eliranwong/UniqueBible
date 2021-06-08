@@ -31,7 +31,7 @@ class ModifyDatabaseDialog(QDialog):
         if filetype == "bible":
             self.bible = Bible(filename)
             self.bible.addMissingColumns()
-            (fontName, fontSize) = self.bible.getFontInfo()
+            (fontName, fontSize, css) = self.bible.getFontInfo()
             if fontName is None:
                 fontName = ""
             if fontSize is None:
