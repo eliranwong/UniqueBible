@@ -20,8 +20,35 @@ function getLastVerse() {
   if (lastVerse != "") {
     return lastVerse;
   } else {
-    return "";
+    return "John 3:16";
   }
+}
+
+function getLastBookName() {
+    var lastBookName = getCookie("lastBookName");
+    if (lastBookName != "") {
+      return lastBookName;
+    } else {
+      return "John";
+    }
+}
+
+function getLastChapterNumber() {
+    var lastChapterNumber = getCookie("lastChapterNumber");
+    if (lastChapterNumber != "") {
+      return lastChapterNumber;
+    } else {
+      return "3";
+    }
+}
+
+function getLastVerseNumber() {
+    var lastVerseNumber = getCookie("lastVerseNumber");
+    if (lastVerseNumber != "") {
+      return lastVerseNumber;
+    } else {
+      return "16";
+    }
 }
 
 /* Onload functions */
@@ -124,12 +151,19 @@ function displayCommand(cmd) {
     el.focus();
 }
 
-function submitCommand(cmd) {
-    if (cmd == ".bible") {
-        cmd = getLastVerse()
+function checkCommands(cmd) {
+    el = document.getElementById('commandInput');
+    switch (el.value) {
+        case ".bible":
+            el.value = getLastVerse();
+            break;
     }
+}
+
+function submitCommand(cmd) {
     el = document.getElementById('commandInput');
     el.value = cmd;
+    checkCommands()
     document.getElementById("commandForm").submit();
 }
 

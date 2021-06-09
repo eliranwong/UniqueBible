@@ -66,7 +66,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getCommands(self):
         return {
             ".myqrcode": self.getQrCodeCommand,
-            ".bible": self.getCurrentReference,
+            #".bible": self.getCurrentReference,
         }
 
     def getShortcuts(self):
@@ -341,7 +341,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         fontFamily = config.font
         collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'" if config.webCollapseFooterHeight else ""
         if config.setMainVerse:
-            cookie = """document.cookie = "lastVerse={0}";""".format(self.getCurrentReference())
+            cookie = """document.cookie = "lastVerse={0}"; 
+            document.cookie = "lastBookName={0}"; 
+            document.cookie = "lastChapterNumber={0}"; 
+            document.cookie = "lastVerseNumber={0}"; 
+            """.format(self.getCurrentReference(), self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
             config.setMainVerse = False
         else:
             cookie = ""
@@ -357,7 +361,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.031'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.033'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -486,8 +490,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.031'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.031'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.033'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.033'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -701,7 +705,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if self.primaryUser or not config.webPresentationMode:
             if config.webUI == "mini":
                 return """
-                    <form id="commandForm" action="{4}" action="get">
+                    <form id="commandForm" onsubmit="checkCommands()" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
                     <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
@@ -798,8 +802,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.031'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.031'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.033'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.033'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
