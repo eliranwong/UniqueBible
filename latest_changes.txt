@@ -1,6 +1,7 @@
-Major changes in version 25.46, 25.47:
+Major changes in version 25.46, 25.47, 25.48:
 * Fixed ".bible" command for concurrent bible browsing in web mode.
 * Fixed ".bible" command entered directly via command input field.
+* Fixed verse feature commands in web mode.
 
 Major change in version 25.45:
 * Improved .setWebUBAIcon content displayed on web version.

@@ -263,8 +263,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = shortcuts[commandLower]
                 elif commandLower in commands.keys():
                     self.command = commands[commandLower]()
-                elif self.command.upper()[1:] in self.getVerseFeatures().keys():
-                    self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+                #elif self.command.upper()[1:] in self.getVerseFeatures().keys():
+                    #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                 elif self.command.upper()[1:] in self.getChapterFeatures().keys():
                     self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
                     self.command = re.sub(":[0-9]+?$", "", self.command)

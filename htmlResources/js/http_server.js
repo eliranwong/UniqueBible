@@ -153,9 +153,36 @@ function displayCommand(cmd) {
 
 function checkCommands(cmd) {
     el = document.getElementById('commandInput');
-    switch (el.value) {
+    switch (el.value.toLowerCase()) {
         case ".bible":
             el.value = getLastVerse();
+            break;
+        case ".compare":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".crossreference":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".tske":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".translation":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".discourse":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".words":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".combo":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".commentary":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
+            break;
+        case ".index":
+            el.value = el.value.slice(1) + ":::" + getLastVerse();
             break;
     }
 }
