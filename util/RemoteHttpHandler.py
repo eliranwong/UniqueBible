@@ -59,6 +59,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 urllib.request.urlopen(config.httpServerViewerBaseUrl)
             except:
                 config.httpServerViewerGlobalMode = False
+        if not hasattr(config, "setMainVerse"):
+            config.setMainVerse = False
         super().__init__(*args, directory="htmlResources", **kwargs)
 
     def getCommands(self):
@@ -338,6 +340,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         #fontSize = "{0}px".format(config.fontSize)
         fontFamily = config.font
         collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'" if config.webCollapseFooterHeight else ""
+        if config.setMainVerse:
+            cookie = """document.cookie = "lastVerse={0}";""".format(self.getCurrentReference())
+            config.setMainVerse = False
+        else:
+            cookie = ""
+        #cookie = """document.cookie = "lastVerse={0}";""".format(self.getCurrentReference())
         html = """
             <html>
             <head>
@@ -349,7 +357,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.027'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.031'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -478,8 +486,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.027'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.027'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.031'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.031'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -589,6 +597,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     document.getElementById("mySidenav").style.width = "0";
                 {5}
                 document.querySelector('#commandInput').addEventListener('click', closeSideNav);
+                {21}
+                document.getElementById("lastVerse").innerHTML = getLastVerse();
                 </script>
                 </div>
             </body>
@@ -615,6 +625,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.getBibleNavigationMenu(),
             config.webHomePage,
             config.webUBAIcon,
+            cookie,
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -635,7 +646,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getSideNavContent(self):
         html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
-        html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        #html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        html += """<a href="#" onclick="submitCommand('.bible')"><span id="lastVerse"></span></a>"""
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
         html += """<a href="#">{0}</a>""".format(self.bibleSelectionSide())
         sideNavItems = (
@@ -786,8 +798,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.027'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.027'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.031'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.031'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"

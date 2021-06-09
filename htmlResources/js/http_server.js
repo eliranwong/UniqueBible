@@ -1,3 +1,29 @@
+/* Cookie */
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+}
+
+function getLastVerse() {
+  var lastVerse = getCookie("lastVerse");
+  if (lastVerse != "") {
+    return lastVerse;
+  } else {
+    return "";
+  }
+}
+
 /* Onload functions */
 
 function onBodyLoad() {
@@ -99,6 +125,9 @@ function displayCommand(cmd) {
 }
 
 function submitCommand(cmd) {
+    if (cmd == ".bible") {
+        cmd = getLastVerse()
+    }
     el = document.getElementById('commandInput');
     el.value = cmd;
     document.getElementById("commandForm").submit();

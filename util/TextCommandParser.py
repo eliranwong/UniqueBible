@@ -823,6 +823,7 @@ class TextCommandParser:
     def setMainVerse(self, text, bcvTuple):
         config.mainText = text
         config.mainB, config.mainC, config.mainV, *_ = bcvTuple
+        config.setMainVerse = True
         self.parent.updateMainRefButton()
 
     def setStudyVerse(self, text, bcvTuple):
