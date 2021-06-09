@@ -265,9 +265,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.command = commands[commandLower]()
                 #elif self.command.upper()[1:] in self.getVerseFeatures().keys():
                     #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-                elif self.command.upper()[1:] in self.getChapterFeatures().keys():
-                    self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-                    self.command = re.sub(":[0-9]+?$", "", self.command)
+                #elif self.command.upper()[1:] in self.getChapterFeatures().keys():
+                    #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+                    #self.command = re.sub(":[0-9]+?$", "", self.command)
                 # Parse command
                 if commandLower in (".help", "?"):
                     content = self.helpContent()
@@ -342,9 +342,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         collapseFooter = "document.getElementById('bibleFrame').contentWindow.document.getElementById('lastElement').style.height='5px'" if config.webCollapseFooterHeight else ""
         if config.setMainVerse:
             cookie = """document.cookie = "lastVerse={0}"; 
-            document.cookie = "lastBookName={0}"; 
-            document.cookie = "lastChapterNumber={0}"; 
-            document.cookie = "lastVerseNumber={0}"; 
+            document.cookie = "lastBookName={1}"; 
+            document.cookie = "lastChapterNumber={2}"; 
+            document.cookie = "lastVerseNumber={3}"; 
             """.format(self.getCurrentReference(), self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
             config.setMainVerse = False
         else:
@@ -361,7 +361,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.033'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.034'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -490,13 +490,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.033'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.033'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.034'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.034'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
                 <script src='js/http_server.js?v=1.023'></script>
                 <script>
+                {21}
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
                 var curPos;
@@ -601,7 +602,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     document.getElementById("mySidenav").style.width = "0";
                 {5}
                 document.querySelector('#commandInput').addEventListener('click', closeSideNav);
-                {21}
+                
                 document.getElementById("lastVerse").innerHTML = getLastVerse();
                 </script>
                 </div>
@@ -802,8 +803,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.033'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.033'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.034'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.034'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
@@ -1175,16 +1176,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.mpb')">.mpb</ref> - Open Marvel Parallel Bible.<br>
         <ref onclick="window.parent.submitCommand('.mab')">.mab</ref> - Open Marvel Annotated Bible.<br>
         </p><p>"""
-        dotCommands += """<u>Study currently selected book [{0}]</u><br>
-        <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {1}.<br>
-        <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {2}.
-        </p><p>""".format(self.abbreviations[str(config.mainB)], config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
-        currentChapter = "{0} {1}".format(self.abbreviations[str(config.mainB)], config.mainC)
-        dotCommands += "<u>Study currently selected chapter [{0}]</u><br>".format(currentChapter)
+        dotCommands += """<u>Study currently selected book [<span id="libraryBook"></span>]</u><br>
+        <ref onclick="window.parent.submitCommand('.introduction')">.introduction</ref> - {0}.<br>
+        <ref onclick="window.parent.submitCommand('.timelines')">.timelines</ref> - {1}.
+        </p><script>document.getElementById("libraryBook").innerHTML = getLastBookName();</script><p>""".format(config.thisTranslation["html_introduction"], config.thisTranslation["html_timelines"])
+        dotCommands += """<u>Study currently selected chapter [<span id="libraryChapter"></span>]</u><script>document.getElementById("libraryChapter").innerHTML = getLastBookName() + " " + getLastChapterNumber();</script><br>"""
         dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - {1}.""".format(key.lower(), value) for key, value in self.getChapterFeatures().items()])
         dotCommands += "</p><p>"
-        currentVerse = "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
-        dotCommands += "<u>Study currently selected verse [{0}]</u><br>".format(currentVerse)
+        dotCommands += """<u>Study currently selected verse [<span id="libraryVerse"></span>]</u><script>document.getElementById("libraryVerse").innerHTML = getLastBookName() + " " + getLastChapterNumber() + ":" + getLastVerseNumber();</script><br>"""
         dotCommands += "<br>".join(["""<ref onclick="window.parent.submitCommand('.{0}')">.{0}</ref> - {1}.""".format(key.lower(), value) for key, value in self.getVerseFeatures().items()])
         dotCommands += """
         </p><p><b>Admin Options</b></p>
@@ -1281,9 +1280,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def libraryContent(self):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
-        reference = self.getCurrentReference()
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
-        content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{1}'">{2}</ref>""".format(abb, reference, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::'+getLastVerse()">{1}</ref>""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
         content += "<h2>PDF {0}</h2>".format(config.thisTranslation["file"])

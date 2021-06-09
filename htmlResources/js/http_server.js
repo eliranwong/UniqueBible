@@ -184,6 +184,15 @@ function checkCommands(cmd) {
         case ".index":
             el.value = el.value.slice(1) + ":::" + getLastVerse();
             break;
+        case ".overview":
+            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
+            break;
+        case ".chapterindex":
+            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
+            break;
+        case ".summary":
+            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
+            break;
     }
 }
 
