@@ -33,6 +33,15 @@ function getLastBookName() {
     }
 }
 
+function getLastBookFullNameEnglish() {
+    var lastBookFullNameEnglish = getCookie("lastBookFullNameEnglish");
+    if (lastBookFullNameEnglish != "") {
+      return lastBookFullNameEnglish;
+    } else {
+      return "John";
+    }
+}
+
 function getLastChapterNumber() {
     var lastChapterNumber = getCookie("lastChapterNumber");
     if (lastChapterNumber != "") {
@@ -193,7 +202,16 @@ function checkCommands(cmd) {
         case ".summary":
             el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
             break;
-    }
+        case ".introduction":
+            el.value = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::" + getLastBookFullNameEnglish();
+            break;
+        case ".timeline":
+            el.value = "SEARCHBOOKCHAPTER:::Timelines:::" + getLastBookFullNameEnglish();
+            break;
+        case ".timelines":
+            el.value = "SEARCHBOOKCHAPTER:::Timelines:::" + getLastBookFullNameEnglish();
+            break;
+        }
 }
 
 function submitCommand(cmd) {
