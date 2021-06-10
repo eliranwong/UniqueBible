@@ -1,3 +1,7 @@
+Major changes in version 25.51:
+* Fixed custom fonts for parallel and comparison.
+* Fixed changing bible version for concurrent users in web mode.
+
 Major changes in version 25.46, 25.47, 25.48, 25.49, 25.50:
 * Fixed ".bible" command for concurrent bible browsing in web mode.
 * Fixed ".bible" command entered directly via command input field.

@@ -211,6 +211,21 @@ function checkCommands(cmd) {
         case ".timelines":
             el.value = "SEARCHBOOKCHAPTER:::Timelines:::" + getLastBookFullNameEnglish();
             break;
+        case ".mob":
+            el.value = "BIBLE:::MOB:::" + getLastVerse();
+            break;
+        case ".mib":
+            el.value = "BIBLE:::MIB:::" + getLastVerse();
+            break;
+        case ".mtb":
+            el.value = "BIBLE:::MTB:::" + getLastVerse();
+            break;
+        case ".mpb":
+            el.value = "BIBLE:::MPB:::" + getLastVerse();
+            break;
+        case ".mab":
+            el.value = "BIBLE:::MAB:::" + getLastVerse();
+            break;
         }
 }
 
@@ -223,7 +238,7 @@ function submitCommand(cmd) {
 
 function submitTextCommand(id) {
     el = document.getElementById(id);
-    submitCommand("TEXT:::" + el.value);
+    submitCommand("BIBLE:::" + el.value + ":::" + getLastVerse());
 }
 
 function submitBookCommand(id) {

@@ -80,11 +80,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".promises": "BOOK:::Bible_Promises",
             ".parallels": "BOOK:::Harmonies_and_Parallels",
             ".topics": "SEARCHTOOL:::EXLBT:::",
-            ".mob": "TEXT:::MOB",
-            ".mib": "TEXT:::MIB",
-            ".mtb": "TEXT:::MTB",
-            ".mpb": "TEXT:::MPB",
-            ".mab": "TEXT:::MAB",
+            #".mob": "TEXT:::MOB",
+            #".mib": "TEXT:::MIB",
+            #".mtb": "TEXT:::MTB",
+            #".mpb": "TEXT:::MPB",
+            #".mab": "TEXT:::MAB",
             #".introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             #".timeline": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
             #".timelines": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(BibleBooks.eng[str(config.mainB)][-1]),
@@ -362,7 +362,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.035'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.036'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -491,8 +491,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.035'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.035'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.036'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.036'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
@@ -657,12 +657,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
         html += """<a href="#">{0}</a>""".format(self.bibleSelectionSide())
         sideNavItems = (
-            (self.getFavouriteBible(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible(), self.getCurrentReference())),
-            (self.getFavouriteBible2(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible2(), self.getCurrentReference())),
-            (self.getFavouriteBible3(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible3(), self.getCurrentReference())),
+            (self.getFavouriteBible(), "BIBLE:::{0}:::".format(self.getFavouriteBible())),
+            (self.getFavouriteBible2(), "BIBLE:::{0}:::".format(self.getFavouriteBible2())),
+            (self.getFavouriteBible3(), "BIBLE:::{0}:::".format(self.getFavouriteBible3())),
         )
         for item in sideNavItems:
-            html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
+            html += """<a href="#" onclick="submitCommand('{1}'+getLastVerse())">{0}</a>""".format(*item)
         html += "<hr>"
         sideNavItems = (
             ("{0} &#x1F50E;&#xFE0E;".format(config.thisTranslation["menu5_bible"]), ".biblemenu"),
@@ -804,8 +804,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.035'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.035'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.036'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.036'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"
@@ -1022,7 +1022,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def favouriteBibleButton(self, text):
-        html = """<button type='button' onclick='submitCommand("BIBLE:::{0}:::{1}")'>{0}</button>""".format(text, self.getCurrentReference())
+        html = """<button type='button' onclick='submitCommand("BIBLE:::{0}:::"+getLastVerse())'>{0}</button>""".format(text)
         return html
 
     def getHighlightCss(self):
