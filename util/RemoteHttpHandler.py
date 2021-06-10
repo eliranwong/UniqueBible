@@ -657,9 +657,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
         html += """<a href="#">{0}</a>""".format(self.bibleSelectionSide())
         sideNavItems = (
-            (self.getFavouriteBible(), "TEXT:::{0}".format(self.getFavouriteBible())),
-            (self.getFavouriteBible2(), "TEXT:::{0}".format(self.getFavouriteBible2())),
-            (self.getFavouriteBible3(), "TEXT:::{0}".format(self.getFavouriteBible3())),
+            (self.getFavouriteBible(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible(), self.getCurrentReference())),
+            (self.getFavouriteBible2(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible2(), self.getCurrentReference())),
+            (self.getFavouriteBible3(), "BIBLE:::{0}:::{1}".format(self.getFavouriteBible3(), self.getCurrentReference())),
         )
         for item in sideNavItems:
             html += """<a href="#" onclick="submitCommand('{1}')">{0}</a>""".format(*item)
@@ -1022,7 +1022,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return html
 
     def favouriteBibleButton(self, text):
-        html = """<button type='button' onclick='submitCommand("TEXT:::{0}")'>{0}</button>""".format(text)
+        html = """<button type='button' onclick='submitCommand("BIBLE:::{0}:::{1}")'>{0}</button>""".format(text, self.getCurrentReference())
         return html
 
     def getHighlightCss(self):
