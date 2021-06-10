@@ -470,7 +470,7 @@ input.addEventListener('keyup', function(event) {0}
                 verses += "<tr>"
                 verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
                 divTag = "<div style='direction: rtl;'>" if b < 40 and text in config.rtlTexts else "<div>"
-                verses += "<td>{0}{1}</div></td>".format(divTag, verseText.strip())
+                verses += "<td><bibleText class='{0}'>{1}{2}</div></bibleText></td>".format(text, divTag, verseText.strip())
                 verses += "</tr>"
         verses += "</table>"
         return verses
