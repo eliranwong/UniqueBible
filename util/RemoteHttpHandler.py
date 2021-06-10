@@ -183,9 +183,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         else:
             return super().do_GET()
 
-    def loadLastVerse(self):
-        self.commonHeader()
-        html = """<!DOCTYPE html><html><head><link rel="icon" href="icons/{0}"><title>UniqueBible.app</title>
+    def loadLastVerseHtml(self):
+        return """<!DOCTYPE html><html><head><link rel="icon" href="icons/{0}"><title>UniqueBible.app</title>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -200,7 +199,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 location.assign("{2}?cmd=" + getLastVerse());
                 </script>
                 </body>""".format(config.webUBAIcon, config.thisTranslation["loading"], config.webHomePage, config.theme)
-        self.wfile.write(bytes(html, "utf8"))
+
+    def loadLastVerse(self):
+        self.commonHeader()
+        self.wfile.write(bytes(self.loadLastVerseHtml(), "utf8"))
 
     def loadContent(self):
         features = {
@@ -1095,8 +1097,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return self.displayMessage("Current font size is already too small!")
 
     def getBibleChapter(self):
-        view, content, *_ = self.textCommandParser.parser(self.getCurrentReference(), "http")
-        return content
+        #view, content, *_ = self.textCommandParser.parser(self.getCurrentReference(), "http")
+        #return content
+        return """... {0} ...
+                <script>
+                checkCookie();
+                window.parent.location.assign("{1}?cmd=" + getLastVerse());
+                </script>""".format(config.thisTranslation["loading"], config.webHomePage)
 
     def toggleCompareParallel(self):
         if config.enforceCompareParallel:
