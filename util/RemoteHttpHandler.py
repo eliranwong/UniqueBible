@@ -345,12 +345,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             document.cookie = "lastBookName={1}"; 
             document.cookie = "lastChapterNumber={2}"; 
             document.cookie = "lastVerseNumber={3}"; 
-            document.cookie = "lastBookFullNameEnglish={4}"; 
-            """.format(self.getCurrentReference(), self.abbreviations[str(config.mainB)], config.mainC, config.mainV, BibleBooks.eng[str(config.mainB)][-1])
+            document.cookie = "lastBookFullNameEnglish={4}";
+            document.cookie = "lastText={5}"; 
+            """.format(self.getCurrentReference(), self.abbreviations[str(config.mainB)], config.mainC, config.mainV, BibleBooks.eng[str(config.mainB)][-1], config.mainText)
             config.setMainVerse = False
         else:
             cookie = ""
-        #cookie = """document.cookie = "lastVerse={0}";""".format(self.getCurrentReference())
         html = """
             <html>
             <head>
@@ -362,7 +362,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.036'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.037'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -491,13 +491,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.036'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.036'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.037'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.037'>
                 <script src='js/common.js?v=1.023'></script>
                 <script src='js/{9}.js?v=1.023'></script>
                 <script src='w3.js?v=1.023'></script>
                 <script src='js/http_server.js?v=1.023'></script>
                 <script>
+                checkCookie();
                 {21}
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -804,8 +805,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.036'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.036'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.037'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.037'>"
                 "<script src='js/common.js?v=1.023'></script>"
                 "<script src='js/{7}.js?v=1.023'></script>"
                 "<script src='w3.js?v=1.023'></script>"

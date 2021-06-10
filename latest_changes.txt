@@ -1,3 +1,7 @@
+Major changes in version 25.52:
+* Fixed web version .bible command for concurrent users opening different bible versions.
+* Check if browser cookie is enabled when a web version page is loaded.
+
 Major changes in version 25.51:
 * Fixed custom fonts for parallel and comparison.
 * Fixed changing bible version for concurrent users in web mode.

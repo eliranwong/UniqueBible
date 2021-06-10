@@ -1,5 +1,19 @@
 /* Cookie */
 
+function checkCookie() {
+    var cookieEnabled = navigator.cookieEnabled;
+    if (!cookieEnabled){ 
+        document.cookie = "testcookie";
+        cookieEnabled = document.cookie.indexOf("testcookie")!=-1;
+    }
+    return cookieEnabled || showCookieFail();
+}
+
+function showCookieFail() {
+    // do something here
+    alert("You need cookies to run Unique Bible App web version properly, but cookies are not currently enabled on your browser!  Our app uses cookies to keep a record of your recently opened bible passage on your browser.  The record is kept only on your own devices without sharing with anyone.");
+}
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -14,6 +28,15 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function getLastText() {
+    var lastText = getCookie("lastText");
+    if (lastText != "") {
+      return lastText;
+    } else {
+      return "KJV";
+    }
+  }
 
 function getLastVerse() {
   var lastVerse = getCookie("lastVerse");
@@ -164,7 +187,7 @@ function checkCommands(cmd) {
     el = document.getElementById('commandInput');
     switch (el.value.toLowerCase()) {
         case ".bible":
-            el.value = getLastVerse();
+            el.value = "BIBLE:::" + getLastText() + ":::" + getLastVerse();
             break;
         case ".compare":
             el.value = el.value.slice(1) + ":::" + getLastVerse();
