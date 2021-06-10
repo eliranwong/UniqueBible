@@ -728,4 +728,5 @@ translation = {
     "collection": "컬렉션",
     "loginAdmin": "이 기능을 사용하려면 관리자로 로그인하십시오.",
     "homePage": "홈",
+    "loading": "로드하기",
 }

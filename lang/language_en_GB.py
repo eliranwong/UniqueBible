@@ -728,4 +728,5 @@ translation = {
     "collection": "Collection",
     "loginAdmin": "Please log in as administrator to enable this feature.",
     "homePage": "Home",
+    "loading": "Loading",
 }

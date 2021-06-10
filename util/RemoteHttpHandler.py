@@ -167,9 +167,40 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.primaryUser = True
         self.updateData()
         if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
-            self.loadContent()
+            if self.primaryUser or not config.webPresentationMode:
+                query_components = parse_qs(urlparse(self.path).query)
+                if 'cmd' in query_components:
+                    self.command = query_components["cmd"][0].strip()
+                    if self.command:
+                        self.loadContent()
+                    else:
+                        self.loadLastVerse()
+                else:
+                    self.loadLastVerse()
+            else:
+                # Web presentation mode is enabled and user is not the host.
+                self.mainPage()
         else:
             return super().do_GET()
+
+    def loadLastVerse(self):
+        self.commonHeader()
+        html = """<!DOCTYPE html><html><head><link rel="icon" href="icons/{0}"><title>UniqueBible.app</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+                <meta http-equiv="Pragma" content="no-cache" />
+                <meta http-equiv="Expires" content="0" />
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.038'>
+                <script src='js/http_server.js?v=1.038'></script>
+                </head>
+                <body>... {1} ...
+                <script>
+                checkCookie();
+                location.assign("{2}?cmd=" + getLastVerse());
+                </script>
+                </body>""".format(config.webUBAIcon, config.thisTranslation["loading"], config.webHomePage, config.theme)
+        self.wfile.write(bytes(html, "utf8"))
 
     def loadContent(self):
         features = {
@@ -238,94 +269,80 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.setversenodoubleclickaction',
                          '.setwebubaicon',
                          )
-        if self.primaryUser or not config.webPresentationMode:
-            query_components = parse_qs(urlparse(self.path).query)
-            self.initialCommandInput = ""
-            initialCommand = self.initialCommand if config.webPublicVersion else config.history["main"][-1]
-            if 'cmd' in query_components:
-                self.command = query_components["cmd"][0].strip()
-                # Convert command shortcut
-                commandFunction = ""
-                commandParam = ""
-                if self.command.startswith(".") and ":::" in self.command:
-                    commandFunction, commandParam = self.command.split(":::", 1)
-                    commandFunction = commandFunction.lower()
-                shortcuts = self.getShortcuts()
-                commands = self.getCommands()
-                commandLower = self.command.lower()
-                if not self.command:
-                    self.command = initialCommand
-                    self.initialCommandInput = initialCommand
-                    commandLower = initialCommand.lower()
-                elif commandLower in config.customCommandShortcuts.keys():
-                    self.command = config.customCommandShortcuts[commandLower]
-                elif commandLower in shortcuts.keys():
-                    self.command = shortcuts[commandLower]
-                elif commandLower in commands.keys():
-                    self.command = commands[commandLower]()
-                #elif self.command.upper()[1:] in self.getVerseFeatures().keys():
-                    #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-                #elif self.command.upper()[1:] in self.getChapterFeatures().keys():
-                    #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
-                    #self.command = re.sub(":[0-9]+?$", "", self.command)
-                # Parse command
-                if commandLower in (".help", "?"):
-                    content = self.helpContent()
-                elif commandLower in adminCommands:
-                    permission, message = self.checkPermission()
-                    if not permission:
-                        content = message
-                    elif commandLower == ".stop":
-                        self.closeWindow()
-                        config.enableHttpServer = False
-                        return
-                    elif commandLower == ".restart":
-                        return self.restartServer()
-                    elif commandLower == ".update":
-                        subprocess.Popen("git pull", shell=True)
-                        return self.restartServer("updated and ")
-                    else:
-                        content = features[commandLower[1:]]()
-                elif commandLower.startswith(".") and commandLower[1:] in features.keys():
-                    content = features[commandLower[1:]]()
-                elif commandFunction and commandFunction[1:] in functions.keys():
-                    content = functions[commandFunction[1:]](commandParam)
-                else:
-                    tempDeveloper = False
-                    if self.clientIP in self.adminUsers and not config.developer:
-                        config.developer = True
-                        tempDeveloper = True
-                    try:
-                        view, content, *_ = self.textCommandParser.parser(self.command, "http")
-                    except:
-                        content = "Error!"
-                    if tempDeveloper:
-                        config.developer = False
-                    if content == "Downloaded!":
-                        content = self.downloadContent()
-                    elif not content:
-                        content = "No content for display!"
-                    elif not content in ("INVALID_COMMAND_ENTERED", "Error!", "No content for display!"):
-                        self.textCommandParser.parent.addHistoryRecord(view, self.command)
+        # Convert command shortcut
+        commandFunction = ""
+        commandParam = ""
+        if self.command.startswith(".") and ":::" in self.command:
+            commandFunction, commandParam = self.command.split(":::", 1)
+            commandFunction = commandFunction.lower()
+        shortcuts = self.getShortcuts()
+        commands = self.getCommands()
+        commandLower = self.command.lower()
+        
+        if commandLower in config.customCommandShortcuts.keys():
+            self.command = config.customCommandShortcuts[commandLower]
+        elif commandLower in shortcuts.keys():
+            self.command = shortcuts[commandLower]
+        elif commandLower in commands.keys():
+            self.command = commands[commandLower]()
+        #elif self.command.upper()[1:] in self.getVerseFeatures().keys():
+            #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+        #elif self.command.upper()[1:] in self.getChapterFeatures().keys():
+            #self.command = "{0}:::{1}".format(self.command.upper()[1:], self.getCurrentReference())
+            #self.command = re.sub(":[0-9]+?$", "", self.command)
+        # Parse command
+        if commandLower in (".help", "?"):
+            content = self.helpContent()
+        elif commandLower in adminCommands:
+            permission, message = self.checkPermission()
+            if not permission:
+                content = message
+            elif commandLower == ".stop":
+                self.closeWindow()
+                config.enableHttpServer = False
+                return
+            elif commandLower == ".restart":
+                return self.restartServer()
+            elif commandLower == ".update":
+                subprocess.Popen("git pull", shell=True)
+                return self.restartServer("updated and ")
             else:
-                self.command = initialCommand
-                self.initialCommandInput = initialCommand
-                view, content, dict = self.textCommandParser.parser(self.command, "http")
-            content = self.wrapHtml(content)
-            if config.bibleWindowContentTransformers:
-                for transformer in config.bibleWindowContentTransformers:
-                    content = transformer(content)
-            outputFile = os.path.join("htmlResources", "main-{0}.html".format(self.session))
-            with open(outputFile, "w", encoding="utf-8") as fileObject:
-                fileObject.write(content)
-            if config.httpServerViewerGlobalMode and config.webPresentationMode:
-                url = config.httpServerViewerBaseUrl + "/submit.php"
-                data = {"code": self.session, "content": content}
-                response = requests.post(url, data=json.dumps(data))
-                # print("Submitted data to {0}: {1}".format(url, response))
-            self.indexPage()
+                content = features[commandLower[1:]]()
+        elif commandLower.startswith(".") and commandLower[1:] in features.keys():
+            content = features[commandLower[1:]]()
+        elif commandFunction and commandFunction[1:] in functions.keys():
+            content = functions[commandFunction[1:]](commandParam)
         else:
-            self.mainPage()
+            tempDeveloper = False
+            if self.clientIP in self.adminUsers and not config.developer:
+                config.developer = True
+                tempDeveloper = True
+            try:
+                view, content, *_ = self.textCommandParser.parser(self.command, "http")
+            except:
+                content = "Error!"
+            if tempDeveloper:
+                config.developer = False
+            if content == "Downloaded!":
+                content = self.downloadContent()
+            elif not content:
+                content = "No content for display!"
+            elif not content in ("INVALID_COMMAND_ENTERED", "Error!", "No content for display!"):
+                self.textCommandParser.parent.addHistoryRecord(view, self.command)
+
+        content = self.wrapHtml(content)
+        if config.bibleWindowContentTransformers:
+            for transformer in config.bibleWindowContentTransformers:
+                content = transformer(content)
+        outputFile = os.path.join("htmlResources", "main-{0}.html".format(self.session))
+        with open(outputFile, "w", encoding="utf-8") as fileObject:
+            fileObject.write(content)
+        if config.httpServerViewerGlobalMode and config.webPresentationMode:
+            url = config.httpServerViewerBaseUrl + "/submit.php"
+            data = {"code": self.session, "content": content}
+            response = requests.post(url, data=json.dumps(data))
+            # print("Submitted data to {0}: {1}".format(url, response))
+        self.indexPage()
 
     def indexPage(self):
         self.commonHeader()
@@ -362,7 +379,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.037'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.038'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -491,12 +508,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.037'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.037'>
-                <script src='js/common.js?v=1.023'></script>
-                <script src='js/{9}.js?v=1.023'></script>
-                <script src='w3.js?v=1.023'></script>
-                <script src='js/http_server.js?v=1.023'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.038'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.038'>
+                <script src='js/common.js?v=1.038'></script>
+                <script src='js/{9}.js?v=1.038'></script>
+                <script src='w3.js?v=1.038'></script>
+                <script src='js/http_server.js?v=1.038'></script>
                 <script>
                 checkCookie();
                 {21}
@@ -695,7 +712,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def getOrganisationIcon(self):
         if config.webOrganisationIcon and config.webOrganisationLink:
-            print(999)
             return """<a href="{0}" target="_blank"><img style="width:85px; height:auto;" src="{1}"></a>""".format(config.webOrganisationLink, config.webOrganisationIcon)
         elif config.webOrganisationLink:
             return """<a href="{0}" target="_blank">{1}</a>""".format(config.webOrganisationLink, config.thisTranslation["homePage"],)
@@ -711,8 +727,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <form id="commandForm" onsubmit="checkCommands()" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
-                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value="{5}"/></td>
-                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{6}&nbsp;{3}&nbsp;{0}</td>
+                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value=""/></td>
+                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{5}&nbsp;{3}&nbsp;{0}</td>
                     </tr></table>
                     </form>
                 """.format(
@@ -721,18 +737,17 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.submitButton(),
                     self.qrButton(),
                     config.webHomePage,
-                    self.initialCommandInput.replace('"', '\\"'),
                     self.newWindowButton(),
                 )
             else:
                 return """
                     <form id="commandForm" action="{0}" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{19}&nbsp;&nbsp;{9}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{18}&nbsp;&nbsp;{9}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
-                    <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value="{17}"/>
-                    {2}&nbsp;&nbsp;{18}
+                    <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value=""/>
+                    {2}&nbsp;&nbsp;{17}
                     </form>
                     """.format(
                     config.webHomePage,
@@ -752,7 +767,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible2())),
                     "&nbsp;&nbsp;{0}".format(self.favouriteBibleButton(self.getFavouriteBible3())),
                     self.qrButton(),
-                    self.initialCommandInput.replace('"', '\\"'),
                     self.newWindowButton(),
                     self.internalHelpButton(),
                 )
@@ -805,12 +819,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.037'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.037'>"
-                "<script src='js/common.js?v=1.023'></script>"
-                "<script src='js/{7}.js?v=1.023'></script>"
-                "<script src='w3.js?v=1.023'></script>"
-                "<script src='js/http_server.js?v=1.023'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.038'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.038'>"
+                "<script src='js/common.js?v=1.038'></script>"
+                "<script src='js/{7}.js?v=1.038'></script>"
+                "<script src='w3.js?v=1.038'></script>"
+                "<script src='js/http_server.js?v=1.038'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -826,7 +840,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.023'></script>"
+                "<script src='js/custom.js?v=1.038'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,

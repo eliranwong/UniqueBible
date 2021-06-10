@@ -728,4 +728,5 @@ translation = {
     "collection": "Collection",
     "loginAdmin": "Veuillez vous connecter en tant qu'administrateur pour activer cette fonction.",
     "homePage": "Accueil",
+    "loading": "Chargement",
 }

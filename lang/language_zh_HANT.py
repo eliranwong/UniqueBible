@@ -728,4 +728,5 @@ translation = {
     "collection": "組合",
     "loginAdmin": "請以管理者身分登入，以啟用此功能。",
     "homePage": "首頁",
+    "loading": "正在載入",
 }

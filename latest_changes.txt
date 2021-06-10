@@ -1,3 +1,7 @@
+Major change in version 25.53:
+* Added support of opening web version with last-opened verse.  Each user has their own record of the last-opened verse stored in browser cookie.
+* Removed config.webPublicVersion.
+
 Major changes in version 25.52:
 * Fixed web version .bible command for concurrent users opening different bible versions.
 * Check if browser cookie is enabled when a web version page is loaded.

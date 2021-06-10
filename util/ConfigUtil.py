@@ -67,10 +67,6 @@ class ConfigUtil:
         # Customise an organisation link."""
         if not hasattr(config, "webOrganisationLink"):
             config.webOrganisationLink = ""
-        config.help["webPublicVersion"] = """
-        # Enable this option is http-server is setup for public use."""
-        if not hasattr(config, "webPublicVersion"):
-            config.webPublicVersion = False
         config.help["webFullAccess"] = """
         # Full server to web http-server from browser, including shutdown or restart server."""
         if not hasattr(config, "webFullAccess"):
@@ -992,7 +988,6 @@ class ConfigUtil:
             ("webUBAIcon", config.webUBAIcon),
             ("webOrganisationIcon", config.webOrganisationIcon),
             ("webOrganisationLink", config.webOrganisationLink),
-            ("webPublicVersion", config.webPublicVersion),
             ("webFullAccess", config.webFullAccess),
             ("webPrivateHomePage", config.webPrivateHomePage),
             ("webUI", config.webUI),
