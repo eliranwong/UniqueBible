@@ -1410,11 +1410,15 @@ class TextCommandParser:
         if not confirmedTexts or not verseList:
             return self.invalidCommand()
         else:
+            biblesSqlite = BiblesSqlite()
             config.mainCssBibleFontStyle = ""
-            for text in confirmedTexts:
+            texts = confirmedTexts
+            if confirmedTexts == ["ALL"]:
+                plainBibleList, formattedBibleList = biblesSqlite.getTwoBibleLists()
+                texts = set(plainBibleList + formattedBibleList)
+            for text in texts:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css
-            biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
             del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
