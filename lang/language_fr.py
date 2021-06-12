@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "Veuillez vous connecter en tant qu'administrateur pour activer cette fonction.",
     "homePage": "Accueil",
     "loading": "Chargement",
+    "pdfFiles": "Fichiers PDF",
 }

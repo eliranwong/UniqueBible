@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "Please log in as administrator to enable this feature.",
     "homePage": "Home",
     "loading": "Loading",
+    "pdfFiles": "PDF Files",
 }

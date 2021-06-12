@@ -2742,7 +2742,8 @@ class MainWindow(QMainWindow):
                     and not newTextCommand.startswith("viewer.html") \
                     and not newTextCommand.endswith(".pdf") \
                     and not newTextCommand.startswith("ePubViewer.html") \
-                    and not newTextCommand.endswith("Published with Bibi"):
+                    and not newTextCommand.endswith("Published with Bibi") \
+                    or (newTextCommand.lower().startswith("pdf:::") and newTextCommand.endswith(".pdf")):
                 self.textCommandChanged(newTextCommand, "study")
         except:
             pass

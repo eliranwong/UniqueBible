@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "이 기능을 사용하려면 관리자로 로그인하십시오.",
     "homePage": "홈",
     "loading": "로드하기",
+    "pdfFiles": "PDF 파일",
 }

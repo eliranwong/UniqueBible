@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "请以管理员身份登录以启用此功能。",
     "homePage": "首页",
     "loading": "正在载入",
+    "pdfFiles": "PDF 文件",
 }
