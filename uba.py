@@ -137,8 +137,11 @@ else:
         with open(shortcutSh, "w") as fileObj:
             fileObj.write("#!{0}\n{1} {2}".format(os.environ["SHELL"], sys.executable, thisFile))
         # Set permission
-        for file in (thisFile, "main.py", "BibleVerseParser.py", "RegexSearch.py", shortcutSh):
-            os.chmod(file, 0o755)
+        for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
+            try:
+                os.chmod(file, 0o755)
+            except:
+                pass
     shortcutDesktop = os.path.join(os.getcwd(), "UniqueBibleApp.desktop")
     if not os.path.exists(shortcutDesktop):
         # Create .desktop shortcut

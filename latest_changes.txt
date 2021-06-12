@@ -1,4 +1,8 @@
-Major change in version 25.53, 25.54:
+Major changes in version 25.55:
+* Added search all pdf ability
+* Fixed installation on macOS, Linux and Android.
+
+Major changes in version 25.53, 25.54:
 * Added support of opening web version with last-opened verse.  Each user has their own record of the last-opened verse stored in browser cookie.
 * Removed config.webPublicVersion.
 * Fixed getBibleChapter on web version.
