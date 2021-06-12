@@ -19,6 +19,21 @@ class ConfigUtil:
         if not hasattr(config, "version") or current_version > config.version:
             config.version = current_version
 
+        # Temporary configurations
+        # Their values are not saved on exit.
+        config.controlPanel = False
+        config.miniControl = False
+        config.tempRecord = ""
+        config.contextItem = ""
+        config.isDownloading = False
+        config.noStudyBibleToolbar = False
+        config.noteOpened = False
+        config.pipIsUpdated = False
+        config.bibleWindowContentTransformers = []
+        config.studyWindowContentTransformers = []
+        config.shortcutList = []
+        config.enableHttpServer = False
+
         # Default settings for configurations:
 
         # A dictionary entry to hold information about individual attributes
@@ -36,7 +51,11 @@ class ConfigUtil:
         config.help["qtLibrary"] = """
         # Specify a Qt library module for GUI.  By default UBA uses PySide2."""
         if not hasattr(config, "qtLibrary"):
-            config.qtLibrary = os.environ["QT_API"]
+            try:
+                config.qtLibrary = os.environ["QT_API"]
+            except:
+                config.qtLibrary = "pyside2"
+                os.environ["QT_API"] = config.qtLibrary
         else:
             os.environ["QT_API"] = config.qtLibrary
         config.help["telnetServerPort"] = """
@@ -950,24 +969,11 @@ class ConfigUtil:
             token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
             config.githubAccessToken = codecs.encode(token, 'rot_13')
 
-        # Temporary configurations
-        # Their values are not saved on exit.
-        config.controlPanel = False
-        config.miniControl = False
-        config.tempRecord = ""
-        config.contextItem = ""
-        config.isDownloading = False
-        config.noStudyBibleToolbar = False
-        config.noteOpened = False
-        config.pipIsUpdated = False
-        config.bibleWindowContentTransformers = []
-        config.studyWindowContentTransformers = []
-        config.shortcutList = []
+        # Additional conditional configurations
         if config.enableMenuUnderline:
             config.menuUnderline = "&"
         else:
             config.menuUnderline = ""
-        config.enableHttpServer = False
 
     # Save configurations on exit
     @staticmethod
