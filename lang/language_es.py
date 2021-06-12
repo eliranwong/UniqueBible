@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "Inicie sesión como administrador para habilitar esta característica.",
     "homePage": "Casa",
     "loading": "Carga",
+    "pdfFiles": "Archivos PDF",
 }

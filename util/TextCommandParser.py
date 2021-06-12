@@ -1,4 +1,5 @@
 # coding=utf-8
+import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
@@ -408,6 +409,11 @@ class TextCommandParser:
             # Usage - PDF:::[PDF_filename]
             # Usage - PDF:::[PDF_filename]:::[page_number]
             # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
+            "searchpdf": (self.searchPdf, """
+            # [KEYWORD] SEARCHPDF
+            # Feature: Search for text inside PDFs in marvelData/pdf/
+            # Usage - SEARCHPDF:::[TEXT]
+            # e.g. SEARCHPDF:::Jesus"""),
             "anypdf": (self.openPdfReaderFullpath, """
             # [KEYWORD] ANYPDF
             # Feature: Open PDF file, located in local device where users have read permission.
@@ -2073,7 +2079,7 @@ class TextCommandParser:
                 bcvTuple = verseList[0]
                 module = commandList[0]
                 commentary = Commentary(module)
-                content =  commentary.getContent(bcvTuple)
+                content = commentary.getContent(bcvTuple)
                 if not content == "INVALID_COMMAND_ENTERED":
                     self.setCommentaryVerse(module, bcvTuple)
                 del commentary
@@ -2698,6 +2704,22 @@ class TextCommandParser:
         else:
             self.parent.openPdfReader(pdfFile, page)
             return ("", "", {})
+
+    # SEARCHPDF:::
+    def searchPdf(self, command, source):
+        content = "<h2>Search PDF for <span style='color: brown;'>{0}</span></h2>".format(command)
+        for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData)):
+            with open(file, 'rb') as f:
+                datafile = f.readlines()
+                for line in datafile:
+                    try:
+                        if command in line.decode("utf-8"):
+                            basename = os.path.basename(file)
+                            content += """<ref onclick='document.title="PDF:::{0}"'>{0}</ref><br>""".format(basename)
+                            break
+                    except Exception as e:
+                        pass
+        return ("study", content, {'tab_title': "PDF search"})
 
     # ANYPDF:::
     def openPdfReaderFullpath(self, command, source):

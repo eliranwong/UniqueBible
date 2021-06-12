@@ -729,4 +729,5 @@ translation = {
     "loginAdmin": "管理者としてログインして、この機能を有効にしてください。",
     "homePage": "ホーム",
     "loading": "ロード中",
+    "pdfFiles": "PDF ファイル",
 }

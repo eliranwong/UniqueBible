@@ -73,12 +73,13 @@ class SearchLauncher(QWidget):
             ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
             ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
             ("menu5_locations", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBL")),
+            ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
         )
         buttonRow2 = (
-            ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
             ("bibleHarmonies", lambda: self.runSearchCommand("SEARCHBOOK:::Harmonies_and_Parallels")),
             ("menu5_allBook", lambda: self.runSearchCommand("SEARCHBOOK:::ALL")),
             ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
+            ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
         )
         widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2)))
 
