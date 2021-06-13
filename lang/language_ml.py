@@ -730,4 +730,6 @@ translation = {
     "homePage": "ഹോം",
     "loading": "ലഭ്യമാക്കുന്നു",
     "pdfFiles": "PDF ഫയലുകള്",
+    "_blank": "",
+    "allBooksPDF": "എല്ലാ പുസ്തകങ്ങളും PDF",
 }

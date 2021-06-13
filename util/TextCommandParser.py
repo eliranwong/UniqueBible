@@ -366,6 +366,9 @@ class TextCommandParser:
             "searchbookchapter": (self.textSearchBookChapter, """
             # [KEYWORD] SEARCHBOOKCHAPTER
             # similar to searchbook:::, difference is that "searchbookchapter:::" searches chapters only"""),
+            "searchallbookspdf": (self.textSearchAllBooksAndPdf, """
+            # [KEYWORD] SEARCHALLBOOKSPDF
+            # Search all books and all PDF files"""),
             "cmd": (self.osCommand, """
             # [KEYWORD] cmd
             # Feature - Run an os command
@@ -409,6 +412,11 @@ class TextCommandParser:
             # Usage - PDF:::[PDF_filename]
             # Usage - PDF:::[PDF_filename]:::[page_number]
             # e.g. PDF:::Newton - Olney Hymns.pdf:::110"""),
+            "pdffind": (self.openPdfReaderFind, """
+            # [KEYWORD] PDFFIND
+            # Feature: Open PDF file, located in directory marvelData/pdf/ and search for text
+            # Usage - PDFFIND:::[PDF_filename]:::[TEXT]
+            # e.g. PDFFIND:::Newton - Olney Hymns.pdf:::Amazing"""),
             "searchpdf": (self.searchPdf, """
             # [KEYWORD] SEARCHPDF
             # Feature: Search for text inside PDFs in marvelData/pdf/
@@ -2495,6 +2503,12 @@ class TextCommandParser:
                 self.parent.updateBookButton()
                 return ("study", content, {})
 
+    # SEARCHALLBOOKSPDF:::
+    def textSearchAllBooksAndPdf(self, command, source):
+        view, content1, *_ = self.textSearchBook("ALL:::{0}".format(command), source)
+        view, content2, *_ = self.searchPdf(command, source)
+        return ("study", content1+content2, {'tab_title': "Books/PDF"})
+
     # SEARCHBOOKNOTE:::
     def textSearchBookNote(self, command, source):
         if not command:
@@ -2705,6 +2719,15 @@ class TextCommandParser:
             self.parent.openPdfReader(pdfFile, page)
             return ("", "", {})
 
+    # PDFFIND:::
+    def openPdfReaderFind(self, command, source):
+        pdfFile, find = self.splitCommand(command)
+        if source == "http":
+            return self.parent.openPdfReader(pdfFile, 0, False, False, find)
+        else:
+            self.parent.openPdfReader(pdfFile, 0, False, False, find)
+            return ("", "", {})
+
     # SEARCHPDF:::
     def searchPdf(self, command, source):
         content = "<h2>Search PDF for <span style='color: brown;'>{0}</span></h2>".format(command)
@@ -2715,7 +2738,7 @@ class TextCommandParser:
                     try:
                         if command in line.decode("utf-8"):
                             basename = os.path.basename(file)
-                            content += """<ref onclick='document.title="PDF:::{0}"'>{0}</ref><br>""".format(basename)
+                            content += """<ref onclick='document.title="PDFFIND:::{0}:::{1}"'>{0}</ref><br>""".format(basename, command)
                             break
                     except Exception as e:
                         pass

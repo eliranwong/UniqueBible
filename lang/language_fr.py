@@ -730,4 +730,6 @@ translation = {
     "homePage": "Accueil",
     "loading": "Chargement",
     "pdfFiles": "Fichiers PDF",
+    "_blank": "",
+    "allBooksPDF": "Tous les livres / PDF",
 }

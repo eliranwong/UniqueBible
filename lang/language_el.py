@@ -730,4 +730,6 @@ translation = {
     "homePage": "Home",
     "loading": "Φόρτωση:",
     "pdfFiles": "Αρχεία PDF",
+    "_blank": "",
+    "allBooksPDF": "Όλα τα Books/PDF",
 }

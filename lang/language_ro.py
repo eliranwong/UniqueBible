@@ -730,4 +730,6 @@ translation = {
     "homePage": "Acasă",
     "loading": "Încărcare",
     "pdfFiles": "Fişiere PDF",
+    "_blank": "",
+    "allBooksPDF": "Toate Books/PDF",
 }
