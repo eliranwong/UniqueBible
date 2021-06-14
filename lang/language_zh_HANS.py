@@ -730,4 +730,5 @@ translation = {
     "homePage": "首页",
     "loading": "正在载入",
     "pdfFiles": "PDF 文件",
+    "qrcodeScanner": "二维码扫描器",
 }

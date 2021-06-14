@@ -730,7 +730,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
                     <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value=""/></td>
-                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{5}&nbsp;{3}&nbsp;{0}</td>
+                    <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{5}&nbsp;{3}&nbsp;{6}&nbsp;{0}</td>
                     </tr></table>
                     </form>
                 """.format(
@@ -740,12 +740,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.qrButton(),
                     config.webHomePage,
                     self.newWindowButton(),
+                    self.qrScannerButton(),
                 )
             else:
                 return """
                     <form id="commandForm" action="{0}" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{18}&nbsp;&nbsp;{9}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{19}&nbsp;&nbsp;{18}&nbsp;&nbsp;{9}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
                     <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value=""/>
@@ -771,9 +772,18 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.qrButton(),
                     self.newWindowButton(),
                     self.internalHelpButton(),
+                    self.qrScannerButton(),
                 )
         else:
             return ""
+
+    def getQrScannerPage(self):
+        if config.webHomePage == "traditional.html":
+            return "qr_code_scanner_tc.html"
+        elif config.webHomePage == "simplified.html":
+            return "qr_code_scanner_sc.html"
+        else:
+            return "qr_code_scanner.html"
 
     def getFavouriteBible(self):
         if config.webHomePage == "traditional.html":
@@ -1006,12 +1016,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return userManual
 
     def internalHelpButton(self):
-        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&#9679;</button>""".format(config.thisTranslation["ubaCommands"])
+        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["ubaCommands"])
         return html
 
     def externalHelpButton(self):
-        #html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["userManual"])
-        html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
+        html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
         return html
 
     def submitButton(self):
@@ -1020,6 +1029,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def qrButton(self):
         html = """<button type='button' title='{0}' onclick='submitCommand("qrcode:::"+window.location.href)'>&#9641;</button>""".format(config.thisTranslation["qrcode"])
+        return html
+
+    def qrScannerButton(self):
+        html = """<button type='button' title='{0}' onclick="document.getElementById('bibleFrame').src = '{1}';">&#9635;</button>""".format(config.thisTranslation["qrcodeScanner"], self.getQrScannerPage())
         return html
 
     def passageSelectionButton(self):

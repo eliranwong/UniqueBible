@@ -730,4 +730,5 @@ translation = {
     "homePage": "首頁",
     "loading": "正在載入",
     "pdfFiles": "PDF 檔案",
+    "qrcodeScanner": "二維碼掃描器",
 }

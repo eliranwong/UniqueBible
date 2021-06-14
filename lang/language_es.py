@@ -730,4 +730,5 @@ translation = {
     "homePage": "Casa",
     "loading": "Carga",
     "pdfFiles": "Archivos PDF",
+    "qrcodeScanner": "Escáner de código QR",
 }

@@ -730,4 +730,5 @@ translation = {
     "homePage": "ホーム",
     "loading": "ロード中",
     "pdfFiles": "PDF ファイル",
+    "qrcodeScanner": "QR コード・スキャナー",
 }

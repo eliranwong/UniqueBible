@@ -730,4 +730,5 @@ translation = {
     "homePage": "घर",
     "loading": "भारित",
     "pdfFiles": "पीडीएफ फाइल",
+    "qrcodeScanner": "क्यूआर कोड स्कैनर",
 }

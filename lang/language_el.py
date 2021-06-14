@@ -730,4 +730,5 @@ translation = {
     "homePage": "Home",
     "loading": "Φόρτωση:",
     "pdfFiles": "Αρχεία PDF",
+    "qrcodeScanner": "Σάρωση κώδικα QR",
 }
