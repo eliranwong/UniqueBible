@@ -732,4 +732,5 @@ translation = {
     "pdfFiles": "PDF 파일",
     "_blank": "",
     "allBooksPDF": "모든 북/PDF",
+    "qrcodeScanner": "QR 코드 스캐너",
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>二维码扫描器</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="stylesheet" href="css/qr_code_scanner.css?v=0.002" />
+    <script src="js/qr_packed.js?v=0.002"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <h1>二维码扫描器</h1>
+
+      <a id="btn-scan-qr">
+        <img src="scan.png">
+      </a>
+
+      <canvas hidden="" id="qr-canvas"></canvas>
+
+      <div id="qr-result" hidden="">
+        <b>Data:</b> <span id="outputData"></span>
+      </div>
+    </div>
+
+    <script src="js/qr_code_scanner.js?v=0.002"></script>
+    <script>document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script>
+  </body>
+</html>

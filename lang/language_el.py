@@ -732,4 +732,5 @@ translation = {
     "pdfFiles": "Αρχεία PDF",
     "_blank": "",
     "allBooksPDF": "Όλα τα Books/PDF",
+    "qrcodeScanner": "Σάρωση κώδικα QR",
 }
