@@ -1,3 +1,10 @@
+Major changes in version 25.56:
+* Added QR code scanner page on web version.
+* Added QR code scanner buttons to web version layouts.
+Remarks: This feature could be useful, for example, in a bible study group.  
+        The lead open a passage and generate a QR code.  
+        Everyone else in the same group use the scanner to scan the code to open the same passage.
+
 Major changes in version 25.55:
 * Added search all pdf ability
 * Fixed installation on macOS, Linux and Android.
