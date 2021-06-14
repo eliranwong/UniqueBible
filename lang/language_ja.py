@@ -730,5 +730,7 @@ translation = {
     "homePage": "ホーム",
     "loading": "ロード中",
     "pdfFiles": "PDF ファイル",
+    "_blank": "",
+    "allBooksPDF": "すべてのブック / PDF",
     "qrcodeScanner": "QR コード・スキャナー",
 }

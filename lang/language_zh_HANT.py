@@ -730,5 +730,7 @@ translation = {
     "homePage": "首頁",
     "loading": "正在載入",
     "pdfFiles": "PDF 檔案",
+    "_blank": "",
+    "allBooksPDF": "所有手冊 / PDF",
     "qrcodeScanner": "二維碼掃描器",
 }

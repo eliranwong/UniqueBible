@@ -730,5 +730,7 @@ translation = {
     "homePage": "홈",
     "loading": "로드하기",
     "pdfFiles": "PDF 파일",
+    "_blank": "",
+    "allBooksPDF": "모든 북/PDF",
     "qrcodeScanner": "QR 코드 스캐너",
 }

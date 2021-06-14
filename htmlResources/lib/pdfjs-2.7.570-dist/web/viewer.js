@@ -7676,6 +7676,8 @@ class PDFLinkService {
           query: params.search.replace(/"/g, ""),
           phraseSearch: params.phrase === "true"
         });
+        PDFViewerApplication.findBar.open();
+        PDFViewerApplication.findBar.findField.value = params.search;
       }
 
       if ("page" in params) {

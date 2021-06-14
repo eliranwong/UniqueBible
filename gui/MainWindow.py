@@ -1318,14 +1318,17 @@ class MainWindow(QMainWindow):
                 self.textCommandLineEdit.setText(command)
                 self.runTextCommand(command)
 
-    def openPdfReader(self, file, page=1, fullPath=False, fullScreen=False):
+    def openPdfReader(self, file, page=1, fullPath=False, fullScreen=False, search=None):
         if file:
             pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
             if platform.system() == "Windows":
                 pdfViewer = pdfViewer.replace("\\", "/")
             marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
             fileName = file if fullPath else os.path.join(marvelDataPath, "pdf", file)
-            url = QUrl.fromUserInput("{0}?file={1}&theme={2}#page={3}".format(pdfViewer, fileName, config.theme, page))
+            if search is None:
+                url = QUrl.fromUserInput("{0}?file={1}&theme={2}#page={3}".format(pdfViewer, fileName, config.theme, page))
+            else:
+                url = QUrl.fromUserInput("{0}?file={1}&theme={2}#search={3}".format(pdfViewer, fileName, config.theme, search))
             if config.openPdfViewerInNewWindow:
                 self.studyView.currentWidget().openPopoverUrl(url, name=fileName, fullScreen=fullScreen)
             else:

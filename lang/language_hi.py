@@ -730,5 +730,7 @@ translation = {
     "homePage": "घर",
     "loading": "भारित",
     "pdfFiles": "पीडीएफ फाइल",
+    "_blank": "",
+    "allBooksPDF": "सभी बुक/पीडीएफ",
     "qrcodeScanner": "क्यूआर कोड स्कैनर",
 }

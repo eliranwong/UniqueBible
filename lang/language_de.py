@@ -730,5 +730,7 @@ translation = {
     "homePage": "Startseite",
     "loading": "Laden",
     "pdfFiles": "PDF-Dateien",
+    "_blank": "",
+    "allBooksPDF": "Alle Bücher/PDF",
     "qrcodeScanner": "QR-Code-Scanner",
 }

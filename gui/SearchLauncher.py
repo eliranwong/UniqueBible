@@ -41,8 +41,10 @@ class SearchLauncher(QWidget):
         subLayout = QHBoxLayout()
         subLayout.setSpacing(5)
         leftGroupLayout = QVBoxLayout()
+        centerGroupLayout = QVBoxLayout()
         rightGroupLayout = QVBoxLayout()
         subLayout.addLayout(leftGroupLayout)
+        subLayout.addLayout(centerGroupLayout)
         subLayout.addLayout(rightGroupLayout)
         for index, searchMode in enumerate(self.bibleSearchModeTuple):
             radioButton = QRadioButton(searchMode)
@@ -50,8 +52,14 @@ class SearchLauncher(QWidget):
             radioButton.toggled.connect(lambda checked, mode=index: self.searchModeChanged(checked, mode))
             if index == config.bibleSearchMode:
                 radioButton.setChecked(True)
-            leftGroupLayout.addWidget(radioButton) if (index % 2 == 0) else rightGroupLayout.addWidget(radioButton)
+            if index % 3 == 0:
+                leftGroupLayout.addWidget(radioButton)
+            elif index % 3 == 1:
+                centerGroupLayout.addWidget(radioButton)
+            else:
+                rightGroupLayout.addWidget(radioButton)
         leftGroupLayout.addStretch()
+        centerGroupLayout.addStretch()
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)
         bibleWidget.setLayout(bibleLayout)
@@ -81,7 +89,13 @@ class SearchLauncher(QWidget):
             ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
             ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2)))
+        buttonRow3 = (
+            ("allBooksPDF", lambda: self.runSearchCommand("SEARCHALLBOOKSPDF")),
+            ("_blank", lambda: self.blankOperation()),
+            ("_blank", lambda: self.blankOperation()),
+            ("_blank", lambda: self.blankOperation()),
+        )
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3)))
 
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
@@ -224,3 +238,6 @@ class SearchLauncher(QWidget):
                 keyword = "SEARCHTOOL"
             prefix = "{0}:::{1}".format(keyword, selectedItem)
             self.runSearchCommand(prefix)
+
+    def blankOperation(self):
+        return
