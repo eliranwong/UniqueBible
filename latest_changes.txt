@@ -1,3 +1,6 @@
+Major change in version 25.57:
+* Open PDF finder automatically and search for all books and PDFs.
+
 Major changes in version 25.56:
 * Added QR code scanner page on web version.
 * Added QR code scanner buttons to web version layouts.
