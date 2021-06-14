@@ -243,8 +243,6 @@ class MainWindow(QMainWindow):
             self.manageControlPanel()
         elif self.textCommandLineEdit.isVisible():
             self.textCommandLineEdit.setFocus()
-            if config.useLiteVerseParsing:
-                self.textCommandLineEdit.setText("")
         if config.clearCommandEntry:
             self.textCommandLineEdit.setText("")
 
