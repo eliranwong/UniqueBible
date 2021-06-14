@@ -170,7 +170,7 @@
 (25.57, "file", "util/LanguageUtil.py")
 (25.57, "file", "gui/MainWindow.py")
 (25.57, "file", "gui/SearchLauncher.py")
-(23.67, "file", "htmlResources/lib/pdfjs-2.7.570-dist/web/viewer.js")
+(25.57, "file", "htmlResources/lib/pdfjs-2.7.570-dist/web/viewer.js")
 (25.56, "file", "util/RemoteHttpHandler.py")
 (25.56, "file", "htmlResources/css/qr_code_scanner.css")
 (25.56, "file", "htmlResources/js/qr_code_scanner.js")
