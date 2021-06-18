@@ -1,3 +1,6 @@
+Major change in version 25.58:
+* Added night theme.
+
 Major change in version 25.57:
 * Open PDF finder automatically and search for all books and PDFs.
 
