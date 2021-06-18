@@ -497,7 +497,7 @@ input.addEventListener('keyup', function(event) {0}
             if not text == mainText and not text in config.originalTexts:
                 diff = dmp.diff_main(mainVerseText, verseText)
                 verseText = dmp.diff_prettyHtml(diff)
-                if config.theme == "dark":
+                if config.theme in ("dark", "night"):
                     verseText = self.adjustDarkThemeColorsForDiff(verseText)
             divTag = "<div>"
             if b < 40 and text in config.rtlTexts:

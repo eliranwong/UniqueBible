@@ -52,7 +52,7 @@ See https://github.com/adobe-type-tools/cmap-resources
     }
 
     theme = getUrlVars()["theme"];
-    if (theme == "dark") {
+    if (theme == "dark" || theme == "night") {
       document.documentElement.style.filter='invert(68%) contrast(180%) brightness(100%) hue-rotate(180deg)';
     }
 

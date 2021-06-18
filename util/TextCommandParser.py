@@ -2386,7 +2386,7 @@ class TextCommandParser:
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
                 del exlbData
-                if config.theme == "dark":
+                if config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExl(content)
                 return ("study", content, {})
             else:
@@ -2462,7 +2462,7 @@ class TextCommandParser:
             if not content:
                 return self.invalidCommand("study")
             else:
-                if config.theme == "dark":
+                if config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.openBookInNewWindow:
                     self.parent.updateBookButton()

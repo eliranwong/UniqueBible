@@ -595,7 +595,7 @@ class Commentary:
             scripture = self.cursor.fetchone()
             if scripture:
                 data = scripture[0]
-                if config.theme == "dark":
+                if config.theme in ("dark", "night"):
                     data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
                 return "<div>{0}</div>".format(chapter)
@@ -828,7 +828,7 @@ class Book:
                     content = TextUtil.fixTextHighlighting(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)
-            if config.theme == "dark":
+            if config.theme in ("dark", "night"):
                 content = self.adjustDarkThemeColorsForBook(content)
             # return content
             return "<p><ref onclick='document.title={3}BOOK:::{0}{3}'>{0}</ref><br>&gt; <b>{1}</b></p>{2}".format(self.module, config.bookChapter, content, '"')
