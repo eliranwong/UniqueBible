@@ -1313,7 +1313,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return content
 
     def getCurrentReference(self):
-        return "BIBLE:::{3}:::{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV, config.mainText)
+        return "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
 
     def getQrCodeCommand(self):
         if config.httpServerViewerGlobalMode:

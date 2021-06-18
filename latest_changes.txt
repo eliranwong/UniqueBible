@@ -1,4 +1,4 @@
-Major change in version 25.59:
+Major change in version 25.59, 25.60:
 * Fixed missing bible or commentary version.
 
 Major change in version 25.58:
