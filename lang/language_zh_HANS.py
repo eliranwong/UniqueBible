@@ -733,4 +733,5 @@ translation = {
     "_blank": "",
     "allBooksPDF": "所有书签 / PDF",
     "qrcodeScanner": "二维码扫描器",
+    "night_theme": "夜间主题",
 }

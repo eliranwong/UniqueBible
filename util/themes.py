@@ -5,7 +5,7 @@ class Themes():
 
     @staticmethod
     def getPalette():
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             palette = QPalette()
             palette.setColor(QPalette.Window, QColor(50, 50, 50))
             palette.setColor(QPalette.WindowText, QColor(200, 200, 200))
@@ -29,14 +29,14 @@ class Themes():
 
     @staticmethod
     def getComparisonBackgroundColor():
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             return "#5f5f5f"
         else:
             return "#f2f2f2"
 
     @staticmethod
     def getComparisonAlternateBackgroundColor():
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             return "#1f1f1f"
         else:
             return "#f2f2f2"

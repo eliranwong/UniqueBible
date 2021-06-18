@@ -40,7 +40,7 @@ class AppUpdateDialog(QDialog):
             self.updateNowButton.clicked.connect(self.updateNow)
             if self.uptodate:
                 ubaUptodate = QLabel(config.thisTranslation["UBA_is_uptodate"])
-                if config.theme == "dark":
+                if config.theme in ("dark", "night"):
                     ubaUptodate.setStyleSheet("color: green;")
                 else:
                     ubaUptodate.setStyleSheet("color: blue;")

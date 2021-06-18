@@ -733,4 +733,5 @@ translation = {
     "_blank": "",
     "allBooksPDF": "Все Books/PDF",
     "qrcodeScanner": "QR-сканер кода",
+    "night_theme": "Ночная тема",
 }

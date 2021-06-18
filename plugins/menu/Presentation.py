@@ -46,7 +46,7 @@ class ConfigurePresentationWindow(QWidget):
         layout1.addRow("Font Size", self.fontsizeslider)
 
         self.changecolorbutton = QPushButton()
-        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1}".format("{", "}", config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme, "white" if config.theme == "dark" else "black")
+        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1}".format("{", "}", config.presentationColorOnDarkTheme if config.theme in ("dark", "night") else config.presentationColorOnLightTheme, "white" if config.theme in ("dark", "night") else "black")
         self.changecolorbutton.setStyleSheet(buttonStyle)
         self.changecolorbutton.setToolTip("Change Color")
         self.changecolorbutton.clicked.connect(self.changeColor)
@@ -219,14 +219,14 @@ class ConfigurePresentationWindow(QWidget):
         from qtpy.QtGui import QColor
         from qtpy.QtWidgets import QColorDialog
 
-        color = QColorDialog.getColor(QColor(config.presentationColorOnDarkTheme if config.theme == "dark" else config.presentationColorOnLightTheme), self)
+        color = QColorDialog.getColor(QColor(config.presentationColorOnDarkTheme if config.theme in ("dark", "night") else config.presentationColorOnLightTheme), self)
         if color.isValid():
             colorName = color.name()
-            if config.theme == "dark":
+            if config.theme in ("dark", "night"):
                 config.presentationColorOnDarkTheme = colorName
             else:
                 config.presentationColorOnLightTheme = colorName
-            buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1}".format("{", "}", colorName, "white" if config.theme == "dark" else "black")
+            buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1}".format("{", "}", colorName, "white" if config.theme in ("dark", "night") else "black")
             self.changecolorbutton.setStyleSheet(buttonStyle)
 
     def presentationFontSizeChanged(self, value):

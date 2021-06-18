@@ -55,8 +55,9 @@ class AlephMainWindow:
             addMenuItem(selectTheme, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
         else:
             items = (
-                ("menu_light_theme", self.setDefaultTheme),
-                ("menu1_dark_theme", self.setDarkTheme),
+                ("menu_light_theme", lambda: self.setTheme("default")),
+                ("menu1_dark_theme", lambda: self.setTheme("dark")),
+                ("night_theme", lambda: self.setTheme("night")),
             )
             for feature, action in items:
                 addMenuItem(selectTheme, feature, self, action)

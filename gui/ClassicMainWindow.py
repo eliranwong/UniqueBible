@@ -59,10 +59,11 @@ class ClassicMainWindow:
                 addMenuItem(subMenu, theme[:-4], self, lambda theme=theme: self.setQtMaterialTheme(theme), None, False)
         else:
             items = (
-                ("menu_light_theme", self.setDefaultTheme, None),
-                ("menu1_dark_theme", self.setDarkTheme, None),
+                ("menu_light_theme", lambda: self.setTheme("default")),
+                ("menu1_dark_theme", lambda: self.setTheme("dark")),
+                ("night_theme", lambda: self.setTheme("night")),
             )
-            for feature, action, shortcut in items:
+            for feature, action in items:
                 addMenuItem(subMenu, feature, self, action, shortcut)
         
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")

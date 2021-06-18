@@ -165,7 +165,7 @@ class HighlightLauncher(QWidget):
         color = QColorDialog.getColor(QColor(config.highlightDarkThemeColours[index] if config.theme == "dark" else config.highlightLightThemeColours[index]), self)
         if color.isValid():
             colorName = color.name()
-            if config.theme == "dark":
+            if config.theme in ("dark", "night"):
                 config.highlightDarkThemeColours[index] = colorName
             else:
                 config.highlightLightThemeColours[index] = colorName

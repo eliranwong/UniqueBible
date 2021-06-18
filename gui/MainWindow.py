@@ -133,7 +133,7 @@ class MainWindow(QMainWindow):
             self.studyView.setCurrentIndex(config.numberOfTab - 1)
         self.setStudyPage()
         self.instantPage = self.instantView.page()
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             self.instantPage.setBackgroundColor(Qt.transparent)
         self.instantPage.titleChanged.connect(self.instantTextCommandChanged)
         # position views as the last-opened layout
@@ -416,7 +416,7 @@ class MainWindow(QMainWindow):
         # main page changes as tab is changed.
         # print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
@@ -426,7 +426,7 @@ class MainWindow(QMainWindow):
         # study page changes as tab is changed.
         # print(self.studyView.currentIndex())
         self.studyPage = self.studyView.currentWidget().page()
-        if config.theme == "dark":
+        if config.theme in ("dark", "night"):
             self.studyPage.setBackgroundColor(Qt.transparent)
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
 
@@ -772,7 +772,7 @@ class MainWindow(QMainWindow):
             self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def selectBuiltinTheme(self):
-        items = ("default", "dark")
+        items = ("default", "dark", "night")
         item, ok = QInputDialog.getItem(self, "UniqueBible",
                                         config.thisTranslation["menu1_selectThemeBuiltin"], items,
                                         items.index(config.theme) if config.theme and config.theme in items else 0,
@@ -788,6 +788,10 @@ class MainWindow(QMainWindow):
 
     def setDarkTheme(self):
         config.theme = "dark"
+        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
+    def setTheme(self, theme):
+        config.theme = theme
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def setMenuLayout(self, layout):
@@ -1045,7 +1049,7 @@ class MainWindow(QMainWindow):
         css = ""
         for i in range(len(config.highlightCollections)):
             code = "hl{0}".format(i + 1)
-            css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme == "dark" else config.highlightLightThemeColours[i])
+            css += ".{2} {0} background: {3}; {1} ".format("{", "}", code, config.highlightDarkThemeColours[i] if config.theme in ("dark", "night") else config.highlightLightThemeColours[i])
         return css
 
     # Actions - open text from external sources
@@ -1901,10 +1905,10 @@ class MainWindow(QMainWindow):
             config.maximumOHGBiVersesDisplayedInSearchResult = integer
 
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight), self)
+        color = QColorDialog.getColor(QColor(config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight), self)
         if color.isValid():
             colorName = color.name()
-            if config.theme == "dark":
+            if config.theme in ("dark", "night"):
                 config.activeVerseNoColourDark = colorName
             else:
                 config.activeVerseNoColourLight = colorName
@@ -2551,7 +2555,7 @@ class MainWindow(QMainWindow):
             self.runTextCommand(command)
 
     def updateVersionCombo(self):
-        if self.versionCombo is not None and config.menuLayout in ("focus", "Starter"):
+        if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph"):
             self.refreshing = True
             textIndex = 0
             if config.mainText in self.bibleVersions:
@@ -2647,14 +2651,14 @@ class MainWindow(QMainWindow):
 
     # finish view loading
     def finishMainViewLoading(self):
-        activeVerseNoColour = config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight
+        activeVerseNoColour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
         # scroll to the main verse
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
-        activeVerseNoColour = config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight
+        activeVerseNoColour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
         # scroll to the study verse
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
