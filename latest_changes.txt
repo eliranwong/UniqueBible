@@ -1,3 +1,6 @@
+Major change in version 25.59:
+* Fixed missing bible or commentary version.
+
 Major change in version 25.58:
 * Added night theme.
 

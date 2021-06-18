@@ -9,6 +9,8 @@ class CrossPlatform:
     def setupResourceLists(self):
         # bible versions
         self.textList = BiblesSqlite().getBibleList()
+        if not config.enableHttpServer and self.textList and not config.mainText in self.textList:
+            config.mainText = "KJV" if "KJV" in self.textList else self.textList[0]
         self.textFullNameList = [Bible(text).bibleInfo() for text in self.textList]
         bibleOHGBiPath = os.path.join(config.marvelData, "bibles", "OHGBi.bible")
         morphologyDatabase = os.path.join(config.marvelData, "morphology.sqlite")
@@ -19,6 +21,8 @@ class CrossPlatform:
         #        self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         # commentaries
         self.commentaryList = Commentary().getCommentaryList()
+        if self.commentaryList and not config.commentaryText in self.commentaryList:
+            config.commentaryText = "CBSC" if "CBSC" in self.commentaryList else self.commentaryList[0]
         #self.commentaryFullNameList = [Commentary(module).commentaryInfo() for module in self.commentaryList]
         self.commentaryFullNameList = []
         for module in self.commentaryList:

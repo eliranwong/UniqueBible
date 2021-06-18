@@ -130,26 +130,26 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             config.standardAbbreviation = "ENG"
             config.webHomePage = "{0}.html".format(config.webPrivateHomePage)
             self.path = re.sub("^/{0}.html".format(config.webPrivateHomePage), "/index.html", self.path)
-            self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
+            #self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
         elif self.path.startswith("/traditional.html"):
             config.displayLanguage = "zh_HANT"
             config.standardAbbreviation = "TC"
             config.webHomePage = "traditional.html"
             self.path = re.sub("^/traditional.html", "/index.html", self.path)
-            self.initialCommand = "BIBLE:::{0}:::約翰福音 3:16".format(self.getFavouriteBible())
+            #self.initialCommand = "BIBLE:::{0}:::約翰福音 3:16".format(self.getFavouriteBible())
         # Simplified Chinese
         elif self.path.startswith("/simplified.html"):
             config.displayLanguage = "zh_HANS"
             config.standardAbbreviation = "SC"
             config.webHomePage = "simplified.html"
             self.path = re.sub("^/simplified.html", "/index.html", self.path)
-            self.initialCommand = "BIBLE:::{0}:::约翰福音 3:16".format(self.getFavouriteBible())
+            #self.initialCommand = "BIBLE:::{0}:::约翰福音 3:16".format(self.getFavouriteBible())
         # Default English
         else:
             config.displayLanguage = "en_GB"
             config.standardAbbreviation = "ENG"
             config.webHomePage = "index.html"
-            self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
+            #self.initialCommand = "BIBLE:::{0}:::John 3:16".format(self.getFavouriteBible())
         config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
         self.textCommandParser.parent.setupResourceLists()
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
@@ -157,6 +157,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.abbreviations = self.parser.standardAbbreviation
         if config.webPrivateHomePage:
             self.bibles = [(bible, bible) for bible in BiblesSqlite().getBibleList()]
+        if not config.mainText in self.textCommandParser.parent.textList:
+            config.mainText = self.getFavouriteBible()
 
     def do_GET(self):
         self.clientIP = self.client_address[0]
@@ -172,6 +174,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 if 'cmd' in query_components:
                     self.command = query_components["cmd"][0].strip()
                     if self.command:
+                        if self.command.lower().endswith("bible:::") and self.command.count(":::") >= 2:
+                            commandSplit = self.command.split(":::")
+                            text = commandSplit[1]
+                            if not "_" in text and not text in self.textCommandParser.parent.textList:
+                                commandSplit[1] = self.getFavouriteBible()
+                                self.command = ":::".join(commandSplit)
                         self.loadContent()
                     else:
                         self.loadLastVerse()
@@ -1305,7 +1313,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return content
 
     def getCurrentReference(self):
-        return "{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV)
+        return "BIBLE:::{3}:::{0} {1}:{2}".format(self.abbreviations[str(config.mainB)], config.mainC, config.mainV, config.mainText)
 
     def getQrCodeCommand(self):
         if config.httpServerViewerGlobalMode:
