@@ -707,7 +707,7 @@ class Converter:
         abbreviation = abbreviation.replace("'", "")
         abbreviation = abbreviation.replace('"', "")
         abbreviation = abbreviation.replace("+", "x")
-        query = "SELECT * FROM Bible ORDER BY Book, Chapter, Verse"
+        query = "SELECT Book, Chapter, Verse, Scripture FROM Bible ORDER BY Book, Chapter, Verse"
         cursor.execute(query)
         verses = cursor.fetchall()
         connection.close()
