@@ -632,7 +632,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {5}
                 document.querySelector('#commandInput').addEventListener('click', closeSideNav);
                 
-                document.getElementById("lastVerse").innerHTML = '<a href="#" onclick="submitCommand(' + "'" + getLastVerse() + "'" + ')">' + getLastVerse() + '</a>';
+                var thisLastVerse = getLastVerse();
+                document.getElementById("lastVerse").innerHTML = '<a href="#" onclick="submitCommand(' + "'" + thisLastVerse + "'" + ')">' + thisLastVerse + '</a>';
                 </script>
                 </div>
             </body>
