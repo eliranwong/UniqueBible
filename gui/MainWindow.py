@@ -3243,6 +3243,7 @@ class MainWindow(QMainWindow):
             outfile = open(file, "w")
             outfile.write(self.textCommandLineEdit.text() + "\n")
             outfile.close()
+            self.reloadResources()
             self.displayMessage("Command saved to {0}".format(filename))
 
     def macroGenerateDownloadMissingFiles(self):
