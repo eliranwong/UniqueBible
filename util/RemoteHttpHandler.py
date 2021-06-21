@@ -632,7 +632,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 {5}
                 document.querySelector('#commandInput').addEventListener('click', closeSideNav);
                 
-                document.getElementById("lastVerse").innerHTML = getLastVerse();
+                document.getElementById("lastVerse").innerHTML = '<a href="#" onclick="submitCommand(' + "'" + getLastVerse() + "'" + ')">' + getLastVerse() + '</a>';
                 </script>
                 </div>
             </body>
@@ -681,7 +681,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getSideNavContent(self):
         html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
         #html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
-        html += """<a href="#" onclick="submitCommand('.bible')"><span id="lastVerse"></span></a>"""
+        html += """<span id="lastVerse"></span>"""
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
         html += """<a href="#">{0}</a>""".format(self.bibleSelectionSide())
         sideNavItems = (

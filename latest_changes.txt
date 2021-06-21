@@ -1,5 +1,6 @@
-Major change in version 25.61:
+Major changes in version 25.61:
 * Fixed import MySword bible module.
+* Fixed get last verse link on web version side navigation.
 
 Major change in version 25.59, 25.60:
 * Fixed missing bible or commentary version.
