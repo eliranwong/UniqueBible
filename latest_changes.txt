@@ -1,3 +1,6 @@
+Major change in version 25.62:
+* Added a context plugin "Search LN".
+
 Major changes in version 25.61:
 * Fixed import MySword bible module.
 * Fixed get last verse link on web version side navigation.
