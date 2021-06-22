@@ -83,7 +83,7 @@ class TextUtil:
     @staticmethod
     def removeVowelAccent(text):
         searchReplace = (
-            (r"[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\(\)\[\]\*\־\׀\׃\׆]", ""),
+            (r"[\֑\֒\֓\֔\֕\֖\֗\֘\֙\֚\֛\֜\֝\֞\֟\֠\֡\֣\֤\֥\֦\֧\֨\֩\֪\֫\֬\֭\֮\ֽ\ׄ\ׅ\‍\‪\‬\̣\ְ\ֱ\ֲ\ֳ\ִ\ֵ\ֶ\ַ\ָ\ֹ\ֺ\ֻ\ׂ\ׁ\ּ\ֿ\־\׀\׆]", ""),
             ("[שׂשׁ]", "ש"),
             ("[ἀἄᾄἂἆἁἅᾅἃάᾴὰᾶᾷᾳ]", "α"),
             ("[ἈἌἎἉἍἋ]", "Α"),
@@ -101,6 +101,15 @@ class TextUtil:
             ("[ὙὝὟ]", "Υ"),
             ("[ὠὤὢὦᾠὡὥὧᾧώῴὼῶῷῳ]", "ω"),
             ("[ὨὬὪὮὩὭὯ]", "Ω"),
+        )
+        for search, replace in searchReplace:
+            text = re.sub(search, replace, text)
+        return text
+
+    # Remove special characters
+    @staticmethod
+    def removeSpecialCharacters(text):
+        searchReplace = (
             (r"[\-\—\,\;\:\\\?\.\·\·\‘\’\‹\›\“\”\«\»\(\)\[\]\{\}\⧼\⧽\〈\〉\*\‿\᾽\⇔\¦]", ""),
         )
         for search, replace in searchReplace:
