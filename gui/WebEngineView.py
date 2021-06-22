@@ -595,10 +595,9 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(partial(self.selectedTextToSelectedLanguage, languageCode))
             translateMenu.addAction(action)
 
-        translate = QAction(self)
-        translate.setText(config.thisTranslation["watsonTranslator"])
-        translate.setMenu(translateMenu)
-        self.addAction(translate)
+        watsonTranslate = QAction(self)
+        watsonTranslate.setText(config.thisTranslation["watsonTranslator"])
+        watsonTranslate.setMenu(translateMenu)
 
         translateMenu = QMenu()
         for language, languageCode in Languages.googleTranslateCodes.items():
@@ -607,10 +606,17 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(partial(self.googleTranslate, languageCode))
             translateMenu.addAction(action)
 
-        translate = QAction(self)
-        translate.setText(config.thisTranslation["googleTranslate"])
-        translate.setMenu(translateMenu)
-        self.addAction(translate)
+        googleTranslate = QAction(self)
+        googleTranslate.setText(config.thisTranslation["googleTranslate"])
+        googleTranslate.setMenu(translateMenu)
+
+        translateWrapper = QAction(self)
+        translateWrapper.setText(config.thisTranslation["translate"])
+        translateWrapperMenu = QMenu()
+        translateWrapperMenu.addAction(watsonTranslate)
+        translateWrapperMenu.addAction(googleTranslate)
+        translateWrapper.setMenu(translateWrapperMenu)
+        self.addAction(translateWrapper)
 
         # Context menu plugins
         if config.enablePlugins:
