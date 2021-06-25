@@ -1,4 +1,5 @@
 import os, platform, subprocess, requests, config
+import sys
 from ast import literal_eval
 from util.DateUtil import DateUtil
 
@@ -91,3 +92,39 @@ class UpdateUtil:
                 "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
         else:
             return "Success"
+
+    @staticmethod
+    def getFilesChanged(sha1, sha2):
+        git = subprocess.Popen("git diff --name-only {0} {1}".format(sha1, sha2), shell=True, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
+        stdout, stderr = git.communicate()
+        files = stdout.decode("utf-8").split("\n")
+        return files
+
+    @staticmethod
+    def updatePatchFileWithChanges(version, sha1, sha2):
+        files = UpdateUtil.getFilesChanged(sha1, sha2)
+        patch = open("patches.txt", "a")
+        for file in files:
+            if not file == "":
+                line = """({0}, "file", "{1}")""".format(version, file)
+                print(line)
+                patch.write(line + "\n")
+        patch.close()
+
+
+if __name__ == "__main__":
+
+    version = "25.63"
+    # Run "git log" to find the sha of commits to compare
+    sha1 = "7ea151d9e680cd437be03e39e94bf423d0669c0d"
+    sha2 = "03916ca2cac9d516f35c33e96688f361ec4b0526"
+    if len(sys.argv) == 4:
+        version = sys.argv[1].strip()
+        sha1 = sys.argv[2].strip()
+        sha2 = sys.argv[3].strip()
+    elif len(sys.argv) > 1:
+        print("python3 -m util.UpdateUtil version sha1 sha2")
+        exit(1)
+    UpdateUtil.updatePatchFileWithChanges(version, sha1, sha2)
+

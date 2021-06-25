@@ -429,16 +429,7 @@ class FocusMainWindow:
         self.addStandardIconButton("menu_verseNote", "noteVerse.png", self.openMainVerseNote, self.firstToolBar)
 
         # Version selection
-        if self.textCommandParser.isDatabaseInstalled("bible"):
-            self.versionCombo = QComboBox()
-            self.bibleVersions = BiblesSqlite().getBibleList()
-            self.versionCombo.addItems(self.bibleVersions)
-            initialIndex = 0
-            if config.mainText in self.bibleVersions:
-                initialIndex = self.bibleVersions.index(config.mainText)
-            self.versionCombo.setCurrentIndex(initialIndex)
-            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.firstToolBar.addWidget(self.versionCombo)
+        self.addBibleVersionButton()
 
         self.addStandardIconButton("bar1_searchBible", "search.png", self.displaySearchBibleCommand, self.firstToolBar)
         self.addStandardIconButton("bar1_searchBibles", "search_plus.png", self.displaySearchBibleMenu, self.firstToolBar)
@@ -632,16 +623,7 @@ class FocusMainWindow:
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_verseNote"], self.openMainVerseNote)
 
         # Version selection
-        if self.textCommandParser.isDatabaseInstalled("bible"):
-            self.versionCombo = QComboBox()
-            self.bibleVersions = BiblesSqlite().getBibleList()
-            self.versionCombo.addItems(self.bibleVersions)
-            initialIndex = 0
-            if config.mainText in self.bibleVersions:
-                initialIndex = self.bibleVersions.index(config.mainText)
-            self.versionCombo.setCurrentIndex(initialIndex)
-            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.firstToolBar.addWidget(self.versionCombo)
+        self.addBibleVersionButton()
 
         iconFile = os.path.join("htmlResources", "search.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBible"], self.displaySearchBibleCommand)

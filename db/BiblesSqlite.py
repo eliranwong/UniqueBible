@@ -509,6 +509,9 @@ input.addEventListener('keyup', function(event) {0}
         return verses
 
     def countSearchBible(self, text, searchString, interlinear=False):
+        if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
+            searchString = TextUtil.removeVowelAccent(searchString)
+            searchString = TextUtil.removeSpecialCharacters(searchString)
         content = "SEARCH:::{0}:::{1}".format(text, searchString)
         showCommand = "SEARCHALL"
         searchFunction = "searchBibleBook"
@@ -530,13 +533,13 @@ input.addEventListener('keyup', function(event) {0}
             self.cursor.execute(query, t)
             return len(self.cursor.fetchall())
         elif text in formattedBibleList:
-            if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
-                searchString = TextUtil.removeVowelAccent(searchString)
             return Bible(text).countSearchBook(book, searchString)
 
     def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
-                searchString = TextUtil.removeVowelAccent(searchString)
+            searchString = TextUtil.removeVowelAccent(searchString)
+        if not mode == "REGEX":
+            searchString = TextUtil.removeSpecialCharacters(searchString)
 
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
 

@@ -2,10 +2,12 @@ import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, 
 from datetime import datetime
 from distutils import util
 from functools import partial
+
 from qtpy.QtCore import QUrl, Qt, QEvent, QThread
 from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
                                QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
+from qtpy.QtWidgets import QComboBox
 
 from util import exlbl
 from util.BibleBooks import BibleBooks
@@ -111,6 +113,7 @@ class MainWindow(QMainWindow):
         # Setup menu layout
         self.refreshing = False
         self.versionCombo = None
+        self.versionButton = None
         self.setupMenuLayout(config.menuLayout)
 
         # assign views
@@ -2562,6 +2565,8 @@ class MainWindow(QMainWindow):
                 textIndex = self.bibleVersions.index(config.mainText)
             self.versionCombo.setCurrentIndex(textIndex)
             self.refreshing = False
+        if self.versionButton is not None:
+            self.versionButton.setText(config.mainText)
 
     def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
@@ -2938,7 +2943,7 @@ class MainWindow(QMainWindow):
             bibleCss = ""
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        html = ("<!DOCTYPE html><html><head><title>UniqueBible.app</title>"
+        html = ("<!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>"
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
@@ -3098,6 +3103,7 @@ class MainWindow(QMainWindow):
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["refButtonAction"], items, values.index(config.refButtonClickAction), False)
         if ok and item:
             config.refButtonClickAction = itemsDict[item]
+            self.setupMenuLayout(config.menuLayout)
 
     # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
     def openSelectDefaultStrongsGreekLexiconDialog(self):
@@ -3419,6 +3425,31 @@ class MainWindow(QMainWindow):
         button.setIcon(QIcon(buttonIconFile))
         button.clicked.connect(action)
         toolbar.addWidget(button)
+
+    def addBibleVersionButton(self):
+        if self.textCommandParser.isDatabaseInstalled("bible"):
+            if config.refButtonClickAction == "direct":
+                self.versionButton = None
+                self.versionCombo = QComboBox()
+                self.bibleVersions = BiblesSqlite().getBibleList()
+                self.versionCombo.addItems(self.bibleVersions)
+                initialIndex = 0
+                if config.mainText in self.bibleVersions:
+                    initialIndex = self.bibleVersions.index(config.mainText)
+                self.versionCombo.setCurrentIndex(initialIndex)
+                self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+                self.firstToolBar.addWidget(self.versionCombo)
+            else:
+                self.versionCombo = None
+                self.versionButton = QPushButton(config.mainText)
+                self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar,
+                                           self.versionButton)
+
+    def versionButtonClicked(self):
+        if config.refButtonClickAction == "master":
+            self.openControlPanelTab(0)
+        elif config.refButtonClickAction == "mini":
+            self.openMiniControlTab(1)
 
     def testing(self):
         #pass

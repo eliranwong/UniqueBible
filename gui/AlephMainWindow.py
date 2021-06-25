@@ -458,16 +458,7 @@ class AlephMainWindow:
         self.firstToolBar.addWidget(button)
 
         # Version selection
-        if self.textCommandParser.isDatabaseInstalled("bible"):
-            self.versionCombo = QComboBox()
-            self.bibleVersions = BiblesSqlite().getBibleList()
-            self.versionCombo.addItems(self.bibleVersions)
-            initialIndex = 0
-            if config.mainText in self.bibleVersions:
-                initialIndex = self.bibleVersions.index(config.mainText)
-            self.versionCombo.setCurrentIndex(initialIndex)
-            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.firstToolBar.addWidget(self.versionCombo)
+        self.addBibleVersionButton()
 
         previousBookButton = QPushButton()
         previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])
@@ -993,6 +984,9 @@ class AlephMainWindow:
         if config.qtMaterial and config.qtMaterialTheme:
             config.iconButtonWidth = self.mainRefButton.height()
 
+        iconFile = os.path.join("htmlResources", "search_plus.png")
+        self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBibles"], self.displaySearchBibleMenu)
+
         iconFile = os.path.join("htmlResources", "noteBook.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_bookNote"], self.openMainBookNote)
 
@@ -1001,6 +995,9 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "noteVerse.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_verseNotes"], self.openMainVerseNote)
+
+        # Version selection
+        self.addBibleVersionButton()
 
         previousBookButton = QPushButton()
         previousBookButton.setToolTip(config.thisTranslation["menu_previous_book"])

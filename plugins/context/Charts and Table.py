@@ -5,11 +5,11 @@ from qtpy.QtWebEngineWidgets import QWebEngineView
 
 def generateCharts(text):
     # Extract bible verse references
-    useFastVerseParsing = config.useFastVerseParsing
-    config.useFastVerseParsing = False
+    useLiteVerseParsing = config.useLiteVerseParsing
+    config.useLiteVerseParsing = False
     parser = BibleVerseParser(config.parserStandarisation)
     verses = parser.extractAllReferences(text, False)
-    config.useFastVerseParsing = useFastVerseParsing
+    config.useLiteVerseParsing = useLiteVerseParsing
     if verses:
         # Sort by Books
         counts = countVersesByBook(verses)
