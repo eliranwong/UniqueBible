@@ -15,7 +15,8 @@ class ConfigurePresentationWindow(QWidget):
         # setup Hymn Lyrics
         from glob import glob
         from pathlib import Path
-        self.books = sorted([Path(filename).stem for filename in glob(r"./marvelData/books/Hymn Lyrics*.book")])
+        books = glob(r"./marvelData/books/Hymn Lyrics*.book") + glob(r"./marvelData/books/*Songs.book")
+        self.books = sorted([Path(filename).stem for filename in books])
         if len(self.books) > 0:
             self.setMinimumHeight(550)
         # setup interface
@@ -91,7 +92,7 @@ class ConfigurePresentationWindow(QWidget):
             self.showHymnsSelection = QRadioButton()
             self.showHymnsSelection.setChecked(False)
             self.showHymnsSelection.clicked.connect(lambda: self.selectRadio("hymns"))
-            layout1.addRow("Hymns", self.showHymnsSelection)
+            layout1.addRow("Songs", self.showHymnsSelection)
 
         # Second column
 

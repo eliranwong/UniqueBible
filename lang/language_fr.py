@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "Tous les livres / PDF",
     "qrcodeScanner": "Scanner de code QR",
     "night_theme": "Thème de nuit",
+    "includeStrictDocTypeInNote": "Inclure le type de document strict dans la première ligne de notes",
 }

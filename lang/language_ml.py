@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "എല്ലാ പുസ്തകങ്ങളും PDF",
     "qrcodeScanner": "QR കോഡ് സ്കാനര്",
     "night_theme": "രാത്രി പ്രമേയം",
+    "includeStrictDocTypeInNote": "കുറിപ്പുകളിലെ ആദ്യത്തെ വരിയില് കഠിനമായ doc തരം ഉള്പ്പെടുത്തുക",
 }

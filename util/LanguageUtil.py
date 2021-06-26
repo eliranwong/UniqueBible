@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("night_theme", "Night Theme")
+        addLanguageStringToAllFiles("includeStrictDocTypeInNote", "Include the strict doc type in first line of notes")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

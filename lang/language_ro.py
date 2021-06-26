@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "Toate Books/PDF",
     "qrcodeScanner": "Scaner cod QR",
     "night_theme": "Temă de noapte",
+    "includeStrictDocTypeInNote": "Includeţi tipul de doc strict în prima linie de note",
 }

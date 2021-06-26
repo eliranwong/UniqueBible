@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "모든 북/PDF",
     "qrcodeScanner": "QR 코드 스캐너",
     "night_theme": "밤 테마",
+    "includeStrictDocTypeInNote": "첫 번째 행에 엄격한 문서 유형 포함",
 }

@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "Все Books/PDF",
     "qrcodeScanner": "QR-сканер кода",
     "night_theme": "Ночная тема",
+    "includeStrictDocTypeInNote": "Включить строгий тип документов в первую строку примечаний",
 }

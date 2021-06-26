@@ -734,4 +734,5 @@ translation = {
     "allBooksPDF": "所有手冊 / PDF",
     "qrcodeScanner": "二維碼掃描器",
     "night_theme": "夜間主題",
+    "includeStrictDocTypeInNote": "在附註第一行包含嚴格的文件類型",
 }
