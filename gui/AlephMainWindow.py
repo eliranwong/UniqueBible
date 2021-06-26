@@ -249,6 +249,13 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
         library_menu.addSeparator()
         library_menu.addAction(
+            QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
+        library_menu.addAction(
+            QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
+        library_menu.addAction(
+            QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
+        library_menu.addSeparator()
+        library_menu.addAction(
             QAction(config.thisTranslation["pdfDocument"], self, triggered=self.openPdfFileDialog))
 
         annotate_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_annotate"]))
