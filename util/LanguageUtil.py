@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("includeStrictDocTypeInNote", "Include the strict doc type in first line of notes")
+        addLanguageStringToAllFiles("parseTextConvertNotesToBook", "Parse the text when converting notes to book")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

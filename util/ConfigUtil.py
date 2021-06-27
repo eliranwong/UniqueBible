@@ -969,9 +969,13 @@ class ConfigUtil:
             token = "{0}_{1}0{2}".format('tuc', 'pOgQGiZ7QLV6N37UN', 'S1ubxgHbiE5Z34mbiZ')
             config.githubAccessToken = codecs.encode(token, 'rot_13')
         config.help["includeStrictDocTypeInNote"] = """
-                # Include the strict doc type in first line of notes"""
+        # Include the strict doc type in first line of notes"""
         if not hasattr(config, "includeStrictDocTypeInNote"):
             config.includeStrictDocTypeInNote = True
+        config.help["parseTextConvertNotesToBook"] = """
+        # Parse the text when converting notes to book"""
+        if not hasattr(config, "parseTextConvertNotesToBook"):
+            config.parseTextConvertNotesToBook = True
 
         # Additional conditional configurations
         if config.enableMenuUnderline:

@@ -735,4 +735,5 @@ translation = {
     "qrcodeScanner": "二維碼掃描器",
     "night_theme": "夜間主題",
     "includeStrictDocTypeInNote": "在附註第一行包含嚴格的文件類型",
+    "parseTextConvertNotesToBook": "將附註轉換成工作簿時剖析文字",
 }

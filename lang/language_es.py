@@ -735,4 +735,5 @@ translation = {
     "qrcodeScanner": "Escáner de código QR",
     "night_theme": "Tema nocturno",
     "includeStrictDocTypeInNote": "Incluir el tipo de documento estricto en la primera línea de notas",
+    "parseTextConvertNotesToBook": "Cómo analizar el texto al convertir notas al libro",
 }

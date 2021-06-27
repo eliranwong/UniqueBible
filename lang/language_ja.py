@@ -735,4 +735,5 @@ translation = {
     "qrcodeScanner": "QR コード・スキャナー",
     "night_theme": "夜のテーマ",
     "includeStrictDocTypeInNote": "注釈の最初の行に厳密な文書タイプを含める",
+    "parseTextConvertNotesToBook": "ノートをブックに変換するときにテキストを構文解析する",
 }

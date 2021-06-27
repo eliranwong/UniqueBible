@@ -735,4 +735,5 @@ translation = {
     "qrcodeScanner": "二维码扫描器",
     "night_theme": "夜间主题",
     "includeStrictDocTypeInNote": "在注释的第一行中包含严格的文档类型",
+    "parseTextConvertNotesToBook": "将注释转换为书籍时解析文本",
 }
