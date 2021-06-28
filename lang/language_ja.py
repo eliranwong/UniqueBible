@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "強調表示なし",
     "selectRemoveHighlight": "強調表示するには選択",
     "selectApplyHighlight": "強調表示の適用を選択",
-    "rename": "ここをクリックして名前変更",
     "colour": "コラーール",
     "changeColour": "ここをクリックして色を変更",
     "select_a_folder": "フォルダーの選択",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "QR コード・スキャナー",
     "night_theme": "夜のテーマ",
     "includeStrictDocTypeInNote": "注釈の最初の行に厳密な文書タイプを含める",
+    "bibleCollections": "バイブルコレクション",
     "parseTextConvertNotesToBook": "ノートをブックに変換するときにテキストを構文解析する",
+    "rename": "名前変更",
 }

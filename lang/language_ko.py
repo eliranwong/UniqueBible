@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "강조표시 없음",
     "selectRemoveHighlight": "강조표시를 제거하려면 선택",
     "selectApplyHighlight": "강조표시를 적용하려면 선택",
-    "rename": "이름을 바꾸려면 여기를 클릭",
     "colour": "색깔",
     "changeColour": "색상을 변경하려면 여기를 클릭하십시오.",
     "select_a_folder": "폴더 선택하기",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "QR 코드 스캐너",
     "night_theme": "밤 테마",
     "includeStrictDocTypeInNote": "첫 번째 행에 엄격한 문서 유형 포함",
+    "bibleCollections": "성경 수집",
     "parseTextConvertNotesToBook": "노트를 책으로 변환할 때 텍스트 구문 분석하기",
+    "rename": "이름 바꾸기",
 }

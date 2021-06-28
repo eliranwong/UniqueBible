@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "沒有顏色強調顯示",
     "selectRemoveHighlight": "選擇移除顏色強調顯示",
     "selectApplyHighlight": "選擇套用顏色強調顯示",
-    "rename": "請按一下這裡重新命名",
     "colour": "顏色",
     "changeColour": "請按一下這裡以變更顏色",
     "select_a_folder": "選擇一個文件夾",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "二維碼掃描器",
     "night_theme": "夜間主題",
     "includeStrictDocTypeInNote": "在附註第一行包含嚴格的文件類型",
+    "bibleCollections": "聖經收藏",
     "parseTextConvertNotesToBook": "將附註轉換成工作簿時剖析文字",
+    "rename": "重新命名",
 }

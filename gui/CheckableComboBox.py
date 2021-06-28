@@ -134,6 +134,24 @@ class CheckableComboBox(QComboBox):
                 res.append(self.model().item(i).data())
         return res
 
+    def clearAll(self):
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            item.setCheckState(Qt.Unchecked)
+
+    def checkAll(self):
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            item.setCheckState(Qt.Checked)
+
+    def checkFromList(self, texts):
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if item.text() in texts:
+                item.setCheckState(Qt.Checked)
+            else:
+                item.setCheckState(Qt.Unchecked)
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     books = ["Genesis", "Exodus", "Leviticus"]

@@ -972,6 +972,10 @@ class ConfigUtil:
         # Include the strict doc type in first line of notes"""
         if not hasattr(config, "includeStrictDocTypeInNote"):
             config.includeStrictDocTypeInNote = True
+        config.help["bibleCollections"] = """
+        # Custom Bible Collections"""
+        if not hasattr(config, "bibleCollections"):
+            config.bibleCollections = {}
         config.help["parseTextConvertNotesToBook"] = """
         # Parse the text when converting notes to book"""
         if not hasattr(config, "parseTextConvertNotesToBook"):
@@ -1215,6 +1219,7 @@ class ConfigUtil:
             ("enableMenuUnderline", config.enableMenuUnderline),
             ("githubAccessToken", config.githubAccessToken),
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote),
+            ("bibleCollections", config.bibleCollections),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

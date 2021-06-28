@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "कोई हाइलाइट नहीं",
     "selectRemoveHighlight": "हाइलाइट करने के लिए चुनें",
     "selectApplyHighlight": "हाइलाइट करने के लिए चुनें",
-    "rename": "नाम बदलने हेतु यहाँ क्लिक करें",
     "colour": "रंग",
     "changeColour": "रंग बदलने के लिए यहाँ क्लिक करें",
     "select_a_folder": "फ़ोल्डर चुनें",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "क्यूआर कोड स्कैनर",
     "night_theme": "रात्रि प्रसंग",
     "includeStrictDocTypeInNote": "नोट्स की पहली पंक्ति में सख्त डॉक्टर प्रकार को शामिल करें",
+    "bibleCollections": "बाइबल संग्रह",
     "parseTextConvertNotesToBook": "नोट्स को पुस्तक में परिवर्तित करने के दौरान पाठ की व्याख्या करें",
+    "rename": "नाम बदलें",
 }

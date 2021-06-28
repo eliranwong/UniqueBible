@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "Kein Hervorheben",
     "selectRemoveHighlight": "Zum Entfernen der Hervorhebung auswählen",
     "selectApplyHighlight": "Zum Anwenden der Hervorhebung auswählen",
-    "rename": "Klicken Sie hier um umzubenennen",
     "colour": "Farbe",
     "changeColour": "Klicken Sie hier, um Farbe zu ändern",
     "select_a_folder": "Ordner auswählen",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "QR-Code-Scanner",
     "night_theme": "Nacht-Thema",
     "includeStrictDocTypeInNote": "Fügen Sie den strikten Dokumenttyp in die erste Zeile der Notizen ein.",
+    "bibleCollections": "Bibelsammlung",
     "parseTextConvertNotesToBook": "Parsen des Textes beim Konvertieren von Notizen in Buch",
+    "rename": "Umbenennen",
 }

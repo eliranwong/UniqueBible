@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "No Highlight",
     "selectRemoveHighlight": "Selezionare per rimuovere l'evidenziazione",
     "selectApplyHighlight": "Selezionare per applicare l'evidenziazione",
-    "rename": "Clicca qui per rinominare",
     "colour": "Colore",
     "changeColour": "Clicca qui per cambiare colore",
     "select_a_folder": "Seleziona una cartella",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "QR Code Scanner",
     "night_theme": "Tema Notturno",
     "includeStrictDocTypeInNote": "Includere il tipo doc rigoroso in prima linea di note",
+    "bibleCollections": "Raccolta della Bibbia",
     "parseTextConvertNotesToBook": "Analizza il testo quando converte le note da prenotare",
+    "rename": "Rinomina",
 }

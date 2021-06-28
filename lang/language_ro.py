@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "Fără evidenţiere",
     "selectRemoveHighlight": "Selectare pentru înlăturare evidenţiere",
     "selectApplyHighlight": "Selectaţi pentru a aplica evidenţierea",
-    "rename": "Faceţi clic aici pentru redenumire",
     "colour": "Culoare",
     "changeColour": "Click aici pentru a schimba culoarea",
     "select_a_folder": "Selectare folder",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "Scaner cod QR",
     "night_theme": "Temă de noapte",
     "includeStrictDocTypeInNote": "Includeţi tipul de doc strict în prima linie de note",
+    "bibleCollections": "Colecţie biblică",
     "parseTextConvertNotesToBook": "Analizaţi textul la convertirea notelor la carte",
+    "rename": "Redenumire",
 }

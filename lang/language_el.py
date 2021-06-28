@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "Χωρίς Highlight",
     "selectRemoveHighlight": "Επιλέξτε την αφαίρεση της επισήμανσης.",
     "selectApplyHighlight": "Επιλέξτε την αίτηση επισήμανσης.",
-    "rename": "Πατήστε εδώ για μετονομασία.",
     "colour": "Χρώμα:",
     "changeColour": "Πατήστε εδώ για να αλλάξετε χρώμα.",
     "select_a_folder": "Επιλογή φακέλου:",
@@ -735,5 +734,7 @@ translation = {
     "qrcodeScanner": "Σάρωση κώδικα QR",
     "night_theme": "Θέμα της νύχτας",
     "includeStrictDocTypeInNote": "Συμπεριλάβετε τον αυστηρό τύπο εγγράφου στην πρώτη γραμμή των σημειώσεων",
+    "bibleCollections": "Συλλογή Βίβλου:",
     "parseTextConvertNotesToBook": "Ανάλυση κειμένου κατά τη μετατροπή σημειώσεων σε βιβλίο",
+    "rename": "Μετονομασία:",
 }
