@@ -125,7 +125,7 @@ Major change in version 25.29:
 Major changes in version 25.28:
 * Added support of access to private data on web version.
 * Added options config.marvelDataPublic, config.marvelDataPrivate and config.webPrivateHomePage for developers to access private data.
-    e.g. with the following settings, developers can access data in directory 'myPrivateData' via http://<ip>/private.html
+    e.g. with the following settings, developers can access data in directory 'myPrivateData' via http://ip_address/private.html
     config.marvelDataPublic = 'marvelData'
     config.marvelDataPrivate = 'myPrivateData'
     config.webPrivateHomePage = 'private'

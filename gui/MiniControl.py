@@ -1,4 +1,8 @@
 import config
+
+if __name__ == "__main__":
+    config.noQt = True
+
 from functools import partial
 from util.TtsLanguages import TtsLanguages
 from qtpy.QtCore import Qt, QEvent
@@ -26,6 +30,7 @@ class MiniControl(QWidget):
             self.resizeWindow(2 / 5, 1 / 3)
         self.resizeEvent = (lambda old_method: (lambda event: (self.onResized(event), old_method(event))[-1]))(
             self.resizeEvent)
+        self.bibleButtons = {}
         # setup interface
         self.setupUI()
 
@@ -157,9 +162,12 @@ class MiniControl(QWidget):
             bookNums[59:66],
         ]
 
+        # Bible books tab
+
         bible = QWidget()
         bible_layout = QVBoxLayout()
         bible_layout.setContentsMargins(0, 0, 0, 0)
+        bible_layout.setSpacing(1)
         for bookNumGp in bookNumGps[0:5]:
             gp = QWidget()
             layout = self.newRowLayout()
@@ -170,7 +178,6 @@ class MiniControl(QWidget):
                 layout.addWidget(button)
             gp.setLayout(layout)
             bible_layout.addWidget(gp)
-
         for bookNumGp in bookNumGps[5:]:
             gp = QWidget()
             layout = self.newRowLayout()
@@ -181,15 +188,41 @@ class MiniControl(QWidget):
                 layout.addWidget(button)
             gp.setLayout(layout)
             bible_layout.addWidget(gp)
-
         bible_layout.addStretch()
         bible.setLayout(bible_layout)
         self.tabs.addTab(bible, config.thisTranslation["bible"])
 
-        bibles_box = QWidget()
-        box_layout = QVBoxLayout()
-        box_layout.setContentsMargins(0, 0, 0, 0)
+        # Bible translations tab
+
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        self.biblesBox = QWidget()
+        self.biblesBoxContainer = QVBoxLayout()
+        collectionsLayout = self.newRowLayout()
+        if len(config.bibleCollections) > 0:
+            button = QPushButton("All")
+            button.setStyleSheet(textButtonStyle)
+            button.clicked.connect(partial(self.selectCollection, "All"))
+            collectionsLayout.addWidget(button)
+            count = 0
+            for collection in sorted(config.bibleCollections.keys()):
+                button = QPushButton(collection)
+                button.setStyleSheet(textButtonStyle)
+                button.clicked.connect(partial(self.selectCollection, collection))
+                collectionsLayout.addWidget(button)
+                count += 1
+                if count > 5:
+                    count = 0
+                    self.biblesBoxContainer.addLayout(collectionsLayout)
+                    collectionsLayout = self.newRowLayout()
+
+        self.biblesBoxContainer.addLayout(collectionsLayout)
+        self.bibleBoxWidget = QWidget()
+        self.bibleBoxLayout = QVBoxLayout()
+        self.bibleBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.bibleBoxLayout.setSpacing(1)
         row_layout = self.newRowLayout()
+        row_layout.setContentsMargins(0, 0, 0, 0)
+        row_layout.setSpacing(1)
         biblesSqlite = BiblesSqlite()
         bibles = biblesSqlite.getBibleList()
         count = 0
@@ -200,17 +233,22 @@ class MiniControl(QWidget):
             count += 1
             if count > 6:
                 count = 0
-                box_layout.addLayout(row_layout)
+                self.bibleBoxLayout.addLayout(row_layout)
                 row_layout = self.newRowLayout()
-        box_layout.addLayout(row_layout)
-        box_layout.addStretch()
-        bibles_box.setLayout(box_layout)
+            self.bibleButtons[bible] = button
+        self.bibleBoxLayout.addLayout(row_layout)
+        self.bibleBoxLayout.addStretch()
+        self.biblesBoxContainer.addLayout(self.bibleBoxLayout)
+        self.biblesBoxContainer.addStretch()
+        self.biblesBox.setLayout(self.biblesBoxContainer)
+        self.tabs.addTab(self.biblesBox, config.thisTranslation["translations"])
 
-        self.tabs.addTab(bibles_box, config.thisTranslation["translations"])
+        # Commentaries tab
 
         commentaries_box = QWidget()
         box_layout = QVBoxLayout()
         box_layout.setContentsMargins(0, 0, 0, 0)
+        box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
         commentaries = Commentary().getCommentaryList()
         count = 0
@@ -229,9 +267,12 @@ class MiniControl(QWidget):
 
         self.tabs.addTab(commentaries_box, config.thisTranslation["commentaries"])
 
+        # Lexicons tab
+
         lexicons_box = QWidget()
         box_layout = QVBoxLayout()
         box_layout.setContentsMargins(0, 0, 0, 0)
+        box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
         lexicons = LexiconData().lexiconList
         count = 0
@@ -250,9 +291,12 @@ class MiniControl(QWidget):
 
         self.tabs.addTab(lexicons_box, config.thisTranslation["lexicons"])
 
+        # Dictionaries tab
+
         dictionaries_box = QWidget()
         box_layout = QVBoxLayout()
         box_layout.setContentsMargins(0, 0, 0, 0)
+        box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
         dictionaries = IndexesSqlite().dictionaryList
         count = 0
@@ -277,6 +321,7 @@ class MiniControl(QWidget):
     def newRowLayout(self):
         row_layout = QHBoxLayout()
         row_layout.setContentsMargins(0, 0, 0, 0)
+        row_layout.setSpacing(1)
         return row_layout
 
     def tabChanged(self, index):
@@ -351,6 +396,26 @@ class MiniControl(QWidget):
         self.parent.runTextCommand(command)
         self.parent.textCommandLineEdit.setText(command)
 
+    def selectCollection(self, collection):
+        textButtonStyleEnabled = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        textButtonStyleDisabled = "QPushButton {background-color: #323232; color: #323232;} QPushButton:hover {background-color: #323232;} QPushButton:pressed { background-color: #323232;}"
+
+        if not collection == "All":
+            biblesInCollection = config.bibleCollections[collection]
+        for bible in self.bibleButtons.keys():
+            button = self.bibleButtons[bible]
+            if collection == "All":
+                button.setEnabled(True)
+                button.setStyleSheet("")
+            else:
+                if bible in biblesInCollection:
+                    button.setEnabled(True)
+                    button.setStyleSheet("")
+                else:
+                    button.setEnabled(False)
+                    button.setStyleSheet(textButtonStyleDisabled)
+
+
 ## Standalone development code
 
 class DummyParent():
@@ -360,10 +425,13 @@ class DummyParent():
     def verseReference(self, command):
         return ['', '']
 
+
 if __name__ == "__main__":
    import sys
    import config
    from util.LanguageUtil import LanguageUtil
+   from util.ConfigUtil import ConfigUtil
+   from qtpy.QtCore import QCoreApplication
 
    config.mainText = ""
    config.mainB = ""
@@ -377,6 +445,12 @@ if __name__ == "__main__":
    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
    config.isTtsInstalled = False
 
+   ConfigUtil.setup()
+   config.noQt = False
+   # config.bibleCollections["Custom"] = ['ABP', 'ACV']
+   # config.bibleCollections["King James"] = ['KJV', 'KJVx', 'KJVA', 'KJV1611', 'KJV1769x']
+   config.thisTranslation = LanguageUtil.loadTranslation("en_US")
+   QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
    app = QApplication(sys.argv)
    ui = MiniControl(DummyParent())
    ui.setMinimumHeight(400)

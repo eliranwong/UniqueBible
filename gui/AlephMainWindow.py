@@ -114,6 +114,8 @@ class AlephMainWindow:
         menu1_defaults.addAction(QAction(config.thisTranslation["activeVerseColour"], self, triggered=self.changeActiveVerseColour))
         menu1_defaults.addAction(QAction(config.thisTranslation["resourceDirectory"], self, triggered=self.customMarvelData))
         menu1_defaults.addAction(
+            QAction(config.thisTranslation["bibleCollections"], self, triggered=self.showBibleCollectionDialog))
+        menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
@@ -247,6 +249,13 @@ class AlephMainWindow:
         library_menu.addAction(QAction(config.thisTranslation["menu4_words"], self, shortcut=sc.runWORDS, triggered=self.runWORDS))
         library_menu.addAction(QAction(config.thisTranslation["menu4_discourse"], self, shortcut=sc.runDISCOURSE, triggered=self.runDISCOURSE))
         library_menu.addAction(QAction(config.thisTranslation["menu4_tdw"], self, shortcut=sc.runCOMBO, triggered=self.runCOMBO))
+        library_menu.addSeparator()
+        library_menu.addAction(
+            QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
+        library_menu.addAction(
+            QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
+        library_menu.addAction(
+            QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
         library_menu.addSeparator()
         library_menu.addAction(
             QAction(config.thisTranslation["pdfDocument"], self, triggered=self.openPdfFileDialog))

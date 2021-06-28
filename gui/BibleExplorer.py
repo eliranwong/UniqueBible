@@ -1,5 +1,7 @@
+from functools import partial
+
 import config, re
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
 from util.BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from util.BibleVerseParser import BibleVerseParser
@@ -38,7 +40,7 @@ class BibleExplorer(QWidget):
         navigation = QWidget()
 
         navigationLayouts = QVBoxLayout()
-        navigationLayouts.setSpacing(20)
+        navigationLayouts.setSpacing(10)
 
         navigationLayoutsSub1 = QVBoxLayout()
         navigationLayoutsSub1.setSpacing(3)
@@ -57,8 +59,12 @@ class BibleExplorer(QWidget):
         navigationLayout5 = self.navigationLayout5()
         navigationLayouts.addLayout(navigationLayout5)
 
-        navigationLayout6 = self.navigationLayout6()
-        navigationLayouts.addWidget(navigationLayout6)
+        if len(config.bibleCollections) > 0:
+            navigationLayout6 = self.navigationLayout6()
+            navigationLayouts.addWidget(navigationLayout6)
+
+        navigationLayout7 = self.navigationLayout7()
+        navigationLayouts.addWidget(navigationLayout7)
 
         navigationLayouts.addStretch()
 
@@ -130,19 +136,38 @@ class BibleExplorer(QWidget):
         return self.parent.comboFeatureLayout(feature, self.differenceCombo, action)
 
     def navigationLayout6(self):
+        rows = []
+        row = [
+            ("All", lambda: self.selectCollection("All")),
+            ("None", lambda: self.selectCollection("None")),
+        ]
+        count = len(row)
+        for collection in sorted(config.bibleCollections.keys()):
+            row.append((collection, partial(self.selectCollection, collection)))
+            count += 1
+            if count % 6 == 0:
+                rows.append(row)
+                row = []
+        if len(row) > 0:
+            rows.append(row)
+        return self.parent.buttonsWidget(rows, False, False)
+
+    def navigationLayout7(self):
         buttonRow1 = (
             ("MOB", lambda: self.openInWindow("BIBLE", "MOB")),
             ("MIB", lambda: self.openInWindow("BIBLE", "MIB")),
             ("MTB", lambda: self.openInWindow("BIBLE", "MTB")),
             ("MPB", lambda: self.openInWindow("BIBLE", "MPB")),
             ("MAB", lambda: self.openInWindow("BIBLE", "MAB")),
+            ("SBLGNTl", lambda: self.openInWindow("BIBLE", "SBLGNTl")),
         )
         buttonRow2 = (
             ("LXX1", lambda: self.openInWindow("BIBLE", "LXX1")),
             ("LXX1i", lambda: self.openInWindow("BIBLE", "LXX1i")),
             ("LXX2", lambda: self.openInWindow("BIBLE", "LXX2")),
             ("LXX2i", lambda: self.openInWindow("BIBLE", "LXX2i")),
-            ("SBLGNTl", lambda: self.openInWindow("BIBLE", "SBLGNTl")),
+            ("OHGB", lambda: self.openInWindow("BIBLE", "OHGB")),
+            ("OHGBi", lambda: self.openInWindow("BIBLE", "OHGBi")),
         )
         buttonElementTupleTuple = (buttonRow1, buttonRow2)
         return self.parent.buttonsWidget(buttonElementTupleTuple, False, False)
@@ -373,3 +398,27 @@ class BibleExplorer(QWidget):
     def verseAction(self, keyword):
         command = "{0}:::{1}".format(keyword, self.getSelectedReference())
         self.parent.runTextCommand(command)
+
+    def selectCollection(self, collection):
+        if collection == "All":
+            self.versionCombo.clear()
+            self.versionCombo.addItems(self.textList)
+            for index, fullName in enumerate(self.parent.textFullNameList):
+                self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
+            self.parallelCombo.checkAll()
+            self.compareCombo.checkAll()
+            self.differenceCombo.checkAll()
+        elif collection == "None":
+            self.parallelCombo.clearAll()
+            self.compareCombo.clearAll()
+            self.differenceCombo.clearAll()
+        else:
+            self.versionCombo.clear()
+            self.versionCombo.addItems(config.bibleCollections[collection])
+            for i in range(self.versionCombo.model().rowCount()):
+                text = self.versionCombo.model().item(i).text()
+                fullName = Bible(text).bibleInfo()
+                self.versionCombo.setItemData(i, fullName, Qt.ToolTipRole)
+            self.parallelCombo.checkFromList(config.bibleCollections[collection])
+            self.compareCombo.checkFromList(config.bibleCollections[collection])
+            self.differenceCombo.checkFromList(config.bibleCollections[collection])

@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "没有颜色强调显示",
     "selectRemoveHighlight": "选择移除颜色强调显示",
     "selectApplyHighlight": "选择套用颜色强调显示",
-    "rename": "请按一下这里重新命名",
     "colour": "颜色",
     "changeColour": "请按一下这里以变更颜色",
     "select_a_folder": "选择一个文件夹",
@@ -734,4 +733,8 @@ translation = {
     "allBooksPDF": "所有书签 / PDF",
     "qrcodeScanner": "二维码扫描器",
     "night_theme": "夜间主题",
+    "includeStrictDocTypeInNote": "在注释的第一行中包含严格的文档类型",
+    "bibleCollections": "圣经收藏",
+    "parseTextConvertNotesToBook": "将注释转换为书籍时解析文本",
+    "rename": "重命名",
 }

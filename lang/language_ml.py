@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "ഹൈലൈറ്റ് ഇല്ലാതെ",
     "selectRemoveHighlight": "ഹൈലൈറ്റ് മാറ്റാൻ തെരഞ്ഞെടുക്കുക",
     "selectApplyHighlight": "ഹൈലൈറ്റ് പ്രയോഗിക്കുവാൻ തെരഞ്ഞെടുക്കുക",
-    "rename": "പേരു് മാറ്റുന്നതിനായി ഇവിടെ ക്ലിക്ക് ചെയ്യുക",
     "colour": "നിറം",
     "changeColour": "നിറം മാറ്റുന്നതിനായി ഇവിടെ ക്ലിക്ക് ചെയ്യുക",
     "select_a_folder": "ഒരു ഫോൾഡർ തെരഞ്ഞെടുക്കുക",
@@ -734,4 +733,8 @@ translation = {
     "allBooksPDF": "എല്ലാ പുസ്തകങ്ങളും PDF",
     "qrcodeScanner": "QR കോഡ് സ്കാനര്",
     "night_theme": "രാത്രി പ്രമേയം",
+    "includeStrictDocTypeInNote": "കുറിപ്പുകളിലെ ആദ്യത്തെ വരിയില് കഠിനമായ doc തരം ഉള്പ്പെടുത്തുക",
+    "bibleCollections": "ബൈബിൾ ശേഖരണം",
+    "parseTextConvertNotesToBook": "പുസ്തകത്തിന്റെ കുറിപ്പുകള് മാറ്റുമ്പോള് പദാവലി പാഴ്സ് ചെയ്യുക",
+    "rename": "പേരു് മാറ്റുക",
 }
