@@ -430,7 +430,6 @@ translation = {
     "noHightlight": "Нет выделения",
     "selectRemoveHighlight": "Выберите, чтобы удалить выделение",
     "selectApplyHighlight": "Выберите, чтобы применить выделение",
-    "rename": "Щелкните здесь, чтобы переименовать",
     "colour": "Цвет",
     "changeColour": "Щелкните здесь, чтобы изменить цвет",
     "select_a_folder": "Выбрать папку",
@@ -734,4 +733,8 @@ translation = {
     "allBooksPDF": "Все Books/PDF",
     "qrcodeScanner": "QR-сканер кода",
     "night_theme": "Ночная тема",
+    "includeStrictDocTypeInNote": "Включить строгий тип документов в первую строку примечаний",
+    "bibleCollections": "Сборник Библии",
+    "parseTextConvertNotesToBook": "Анализировать текст при преобразовании примечаний в книгу",
+    "rename": "Переименовать",
 }

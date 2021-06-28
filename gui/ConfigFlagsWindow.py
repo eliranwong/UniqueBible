@@ -107,6 +107,8 @@ class ConfigFlagsWindow(QDialog):
             ("enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, True, config.thisTranslation["enableMenuUnderline"]),
             ("openBibleInMainViewOnly", config.openBibleInMainViewOnly, self.parent.enableStudyBibleButtonClicked, False, config.thisTranslation["openBibleInMainViewOnly"]),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, True, config.thisTranslation["addOHGBiToMorphologySearch"]),
+            ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, True, config.thisTranslation["includeStrictDocTypeInNote"]),
+            ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, True, config.thisTranslation["parseTextConvertNotesToBook"]),
         ]
         if config.isTtsInstalled:
             options += [
@@ -427,3 +429,9 @@ class ConfigFlagsWindow(QDialog):
         else:
             config.menuUnderline = ""
         self.parent.setMenuLayout(config.menuLayout)
+
+    def includeStrictDocTypeInNoteChanged(self):
+        config.includeStrictDocTypeInNote = not config.includeStrictDocTypeInNote
+
+    def parseTextConvertNotesToBookChanged(self):
+        config.parseTextConvertNotesToBook = not config.parseTextConvertNotesToBook

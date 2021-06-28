@@ -31,6 +31,7 @@ class FocusMainWindow:
             ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
             ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
+            ("bibleCollections", self.showBibleCollectionDialog),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),

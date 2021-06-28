@@ -564,12 +564,14 @@ class NoteEditor(QMainWindow):
         self.parent.noteSaved = True
 
     def getEmptyPage(self):
-        return """
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-<html><head><meta name="qrichtext" content="1" /><style type="text/css">
+        strict = ''
+        if config.includeStrictDocTypeInNote:
+            strict = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">'
+        return """{4}<html><head><meta name="qrichtext" content="1" /><style type="text/css">
 p, li {0} white-space: pre-wrap; {1}
 </style></head><body style="font-family:'{2}'; font-size:{3}pt; font-weight:400; font-style:normal;">
-<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>""".format("{", "}", config.font, config.fontSize)
+<p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>"""\
+            .format("{", "}", config.font, config.fontSize, strict)
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
@@ -704,7 +706,11 @@ p, li {0} white-space: pre-wrap; {1}
         self.updateWindowTitle()
 
     def fixNoteFont(self, note):
-        return re.sub("<body style={0}[ ]*?font-family:[ ]*?'[^']*?';[ ]*?font-size:[ ]*?[0-9]+?pt;".format('"'), "<body style={0}font-family:'{1}'; font-size:{2}pt;".format('"', config.font, config.fontSize), note)
+        note = re.sub("<body style={0}[ ]*?font-family:[ ]*?'[^']*?';[ ]*?font-size:[ ]*?[0-9]+?pt;".format('"'), "<body style={0}font-family:'{1}'; font-size:{2}pt;".format('"', config.font, config.fontSize), note)
+        if not config.includeStrictDocTypeInNote:
+            note = re.sub("""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n""", "", note)
+        return note
+
 
     # formatting styles
     def format_clear(self):
