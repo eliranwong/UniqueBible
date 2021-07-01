@@ -1,3 +1,6 @@
+Major change in version 25.65:
+* Fixed note to book conversion.
+
 Major changes in version 25.64:
 * Custom song book support, Bible collection
 
