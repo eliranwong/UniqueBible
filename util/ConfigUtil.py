@@ -1220,6 +1220,7 @@ class ConfigUtil:
             ("githubAccessToken", config.githubAccessToken),
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote),
             ("bibleCollections", config.bibleCollections),
+            ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
