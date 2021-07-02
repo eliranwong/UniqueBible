@@ -114,15 +114,16 @@ class CrossPlatform:
                     self.runAddHistoryRecord(view, textCommand)
 
     def runAddHistoryRecord(self, view, textCommand):
-        viewhistory = config.history[view]
-        if not (viewhistory[-1] == textCommand):
-            viewhistory.append(textCommand)
-            # set maximum number of history records for each view here
-            maximumHistoryRecord = config.maximumHistoryRecord
-            if len(viewhistory) > maximumHistoryRecord:
-                viewhistory = viewhistory[-maximumHistoryRecord:]
-            config.history[view] = viewhistory
-            config.currentRecord[view] = len(viewhistory) - 1
+        if view and textCommand:
+            viewhistory = config.history[view]
+            if not (viewhistory[-1] == textCommand):
+                viewhistory.append(textCommand)
+                # set maximum number of history records for each view here
+                maximumHistoryRecord = config.maximumHistoryRecord
+                if len(viewhistory) > maximumHistoryRecord:
+                    viewhistory = viewhistory[-maximumHistoryRecord:]
+                config.history[view] = viewhistory
+                config.currentRecord[view] = len(viewhistory) - 1
 
     def getHistory(self, view):
         historyRecords = [(counter, record) for counter, record in enumerate(config.history[view])]

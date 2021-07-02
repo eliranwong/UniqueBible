@@ -737,4 +737,9 @@ translation = {
     "bibleCollections": "Collection de la Bible",
     "parseTextConvertNotesToBook": "Analyser le texte lors de la conversion de notes en livres",
     "rename": "Renommer",
+    "mediaPlayer": "Lecteur multimédia",
+    "play": "Jouer",
+    "volume": "Volume",
+    "pause": "Pause",
+    "cp6": "Lecteur multimédia",
 }

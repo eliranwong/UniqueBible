@@ -247,6 +247,13 @@ def isPurePythonPngInstalled():
     except:
         return False
 
+def isVlcInstalled():
+    try:
+        import vlc
+        return True
+    except:
+        return False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -279,6 +286,8 @@ def setInstallConfig(module, isInstalled):
         config.isQrCodeInstalled = isInstalled
     elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
         config.isPurePythonPngInstalled = isInstalled
+    elif module == "python-vlc":
+        config.isVlcInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -338,6 +347,7 @@ optional = (
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
+    ("python-vlc", "VLC Player", isVlcInstalled),
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -354,6 +364,7 @@ optional = (
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
+    ("python-vlc", "VLC Player", isVlcInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():

@@ -155,6 +155,9 @@ class AlephMainWindow:
         masterControlMenu.addAction(QAction(config.thisTranslation["cp3"], self, shortcut=sc.openControlPanelTab3, triggered=lambda: self.openControlPanelTab(3)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp4"], self, shortcut=sc.openControlPanelTab4, triggered=lambda: self.openControlPanelTab(4)))
         masterControlMenu.addAction(QAction(config.thisTranslation["cp5"], self, shortcut=sc.openControlPanelTab5, triggered=lambda: self.openControlPanelTab(5)))
+        masterControlMenu.addAction(QAction(config.thisTranslation["mediaPlayer"], self, shortcut=sc.openControlPanelTab6,
+                                            triggered=lambda: self.openControlPanelTab(6)))
+
         navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=self.manageMiniControl))
         navigation_menu.addSeparator()
         navigation_menu.addAction(
@@ -686,6 +689,24 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["menu11_youtube"])
+        buttonFile = os.path.join("htmlResources", "youtube.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(self.openYouTube)
+        self.secondToolBar.addWidget(button)
+
+        self.secondToolBar.addSeparator()
+
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["mediaPlayer"])
+        buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(lambda: self.openVlcPlayer(""))
+        self.secondToolBar.addWidget(button)
+
+        self.secondToolBar.addSeparator()
+
         reloadButton = QPushButton()
         reloadButton.setToolTip(config.thisTranslation["menu1_reload"])
         reloadButtonFile = os.path.join("htmlResources", "reload.png")
@@ -1156,6 +1177,16 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "pdfSave.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["savePdfCurrentPage"], self.invokeSavePdfPage)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "youtube.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
 
         self.secondToolBar.addSeparator()
 
