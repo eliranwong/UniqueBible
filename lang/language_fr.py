@@ -741,4 +741,5 @@ translation = {
     "play": "Jouer",
     "volume": "Volume",
     "pause": "Pause",
+    "cp6": "Lecteur multimédia",
 }

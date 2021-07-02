@@ -2,6 +2,7 @@ import config
 import shortcut as sc
 from gui.BibleExplorer import BibleExplorer
 from gui.Library2Launcher import Library2Launcher
+from gui.MediaLauncher import MediaLauncher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
@@ -40,20 +41,6 @@ class MasterControl(QWidget):
     # manage key capture
     def event(self, event):
         if event.type() == QEvent.KeyRelease:
-#            if event.modifiers() == Qt.ControlModifier:
-#                if event.key() == Qt.Key_B:
-#                    self.tabs.setCurrentIndex(0)
-#                elif event.key() == Qt.Key_L:
-#                    self.tabs.setCurrentIndex(1)
-#                elif event.key() == Qt.Key_F:
-#                    self.tabs.setCurrentIndex(3)
-#                elif event.key() == Qt.Key_Y:
-#                    self.tabs.setCurrentIndex(4)
-#                elif event.key() == Qt.Key_M:
-#                    self.tabs.setCurrentIndex(5)
-#                elif event.key() == Qt.Key_P:
-#                    self.tabs.setCurrentIndex(2)
-#            elif event.key() == Qt.Key_Escape:
             if event.key() == Qt.Key_Escape:
                 self.hide()
         return QWidget.event(self, event)
@@ -148,6 +135,11 @@ class MasterControl(QWidget):
         self.miscellaneousTab = MiscellaneousLauncher(self)
         self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp5"])
         self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
+        # 6
+        mediaTab = MediaLauncher(self)
+        self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
+        self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
+
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab

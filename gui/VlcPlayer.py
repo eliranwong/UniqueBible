@@ -4,7 +4,6 @@ import platform
 import sys
 from qtpy import QtWidgets, QtGui, QtCore
 from qtpy.QtWidgets import QWidget
-from qtpy.QtWidgets import QDesktopWidget
 from qtpy.QtCore import QEvent, Qt
 import vlc
 
@@ -20,10 +19,11 @@ class VlcPlayer(QWidget):
     height_video = 460
     width_video = 650
 
-    def __init__(self, filename=None):
+    def __init__(self, parent, filename=None):
         super().__init__()
         os.environ["VLC_VERBOSE"] = str("-1")  # turn off low level VLC logging
         self.setWindowTitle(config.thisTranslation["mediaPlayer"])
+        self.parent = parent
         self.instance = vlc.Instance()
         self.media = None
         self.mediaplayer = self.instance.media_player_new()
@@ -175,7 +175,12 @@ class VlcPlayer(QWidget):
             self.mediaplayer.stop()
             self.timer.stop()
             self.stop()
+            self.parent.vlcPlayer = None
 
+## Standalone development code
+
+class DummyParent():
+    vlcPlayer = None
 
 def main():
     from util.LanguageUtil import LanguageUtil
@@ -186,7 +191,7 @@ def main():
     # filename = ""
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
     app = QtWidgets.QApplication(sys.argv)
-    player = VlcPlayer(filename)
+    player = VlcPlayer(DummyParent(), filename)
     player.show()
     sys.exit(app.exec_())
 

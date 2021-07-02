@@ -734,11 +734,12 @@ translation = {
     "qrcodeScanner": "Escáner de código QR",
     "night_theme": "Tema nocturno",
     "includeStrictDocTypeInNote": "Incluir el tipo de documento estricto en la primera línea de notas",
-    "bibleCollection": "Colección Bíblica",
+    "bibleCollections": "Colección Bíblica",
     "parseTextConvertNotesToBook": "Cómo analizar el texto al convertir notas al libro",
     "rename": "Rename",
     "mediaPlayer": "Reproductor multimedia",
     "play": "Jugar",
     "volume": "Volumen",
     "pause": "Pausa",
+    "cp6": "Reproductor multimedia",
 }

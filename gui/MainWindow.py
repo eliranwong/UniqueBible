@@ -155,6 +155,8 @@ class MainWindow(QMainWindow):
         self.miniControl = None
         # Used in pause() to pause macros
         config.pauseMode = False
+        # VLC Player
+        self.vlcPlayer = None
 
         # pre-load control panel
         # This is now implemented in main.py instead
@@ -1667,7 +1669,11 @@ class MainWindow(QMainWindow):
         if filename:
             self.textCommandLineEdit.setText(textCommand)
             self.addHistoryRecord("study", textCommand)
-        self.vlcPlayer = VlcPlayer(filename)
+        if self.vlcPlayer is None:
+            self.vlcPlayer = VlcPlayer(self, filename)
+        else:
+            self.vlcPlayer.stop()
+            self.vlcPlayer.load_file(filename)
         self.vlcPlayer.show()
 
     def openMiniBrowser(self, initialUrl=None):
