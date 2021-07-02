@@ -795,7 +795,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return "qr_code_scanner.html"
 
     def getFavouriteBible(self):
-        if config.webHomePage == "traditional.html":
+        if config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate
+        elif config.webHomePage == "traditional.html":
             return config.favouriteBibleTC
         elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC
@@ -803,7 +805,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return config.favouriteBible
 
     def getFavouriteBible2(self):
-        if config.webHomePage == "traditional.html":
+        if config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate2
+        elif config.webHomePage == "traditional.html":
             return config.favouriteBibleTC2
         elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC2
@@ -811,7 +815,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return config.favouriteBible2
 
     def getFavouriteBible3(self):
-        if config.webHomePage == "traditional.html":
+        if config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate3
+        elif config.webHomePage == "traditional.html":
             return config.favouriteBibleTC3
         elif config.webHomePage == "simplified.html":
             return config.favouriteBibleSC3

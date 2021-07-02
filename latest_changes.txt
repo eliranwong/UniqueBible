@@ -1,3 +1,7 @@
+Major change in version 25.66:
+* Added media player
+* Added config.favouriteBiblePrivate, config.favouriteBiblePrivate2, and config.favouriteBiblePrivate3 for private web access.
+
 Major change in version 25.65:
 * Fixed note to book conversion.
 

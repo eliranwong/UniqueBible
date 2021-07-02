@@ -542,6 +542,18 @@ class ConfigUtil:
         # Set your third favourite bible version here"""
         if not hasattr(config, "favouriteBible3"):
             config.favouriteBible3 = "NET"
+        config.help["favouriteBiblePrivate"] = """
+        # Set your favourite bible version here"""
+        if not hasattr(config, "favouriteBiblePrivate"):
+            config.favouriteBiblePrivate = "OHGBi"
+        config.help["favouriteBiblePrivate2"] = """
+        # Set your second favourite bible version here"""
+        if not hasattr(config, "favouriteBiblePrivate2"):
+            config.favouriteBiblePrivate2 = "KJV"
+        config.help["favouriteBiblePrivate3"] = """
+        # Set your third favourite bible version here"""
+        if not hasattr(config, "favouriteBiblePrivate3"):
+            config.favouriteBiblePrivate3 = "NET"
         config.help["favouriteBibleTC"] = """
         # Set your favourite bible version here for traditional Chinese interface."""
         if not hasattr(config, "favouriteBibleTC"):
@@ -882,7 +894,7 @@ class ConfigUtil:
         config.help["refButtonClickAction"] = """
         # Action of reference button when it is clicked."""
         if not hasattr(config, "refButtonClickAction"):
-            config.refButtonClickAction = "master"
+            config.refButtonClickAction = "direct"
         config.help["presentationScreenNo"] = """
         # Specify screen number for presentation features."""
         if not hasattr(config, "presentationScreenNo"):
@@ -1099,6 +1111,9 @@ class ConfigUtil:
             ("favouriteBible", config.favouriteBible),
             ("favouriteBible2", config.favouriteBible2),
             ("favouriteBible3", config.favouriteBible3),
+            ("favouriteBiblePrivate", config.favouriteBiblePrivate),
+            ("favouriteBiblePrivate2", config.favouriteBiblePrivate2),
+            ("favouriteBiblePrivate3", config.favouriteBiblePrivate3),
             ("favouriteBibleTC", config.favouriteBibleTC),
             ("favouriteBibleTC2", config.favouriteBibleTC2),
             ("favouriteBibleTC3", config.favouriteBibleTC3),
