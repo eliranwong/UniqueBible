@@ -737,4 +737,8 @@ translation = {
     "bibleCollections": "ബൈബിൾ ശേഖരണം",
     "parseTextConvertNotesToBook": "പുസ്തകത്തിന്റെ കുറിപ്പുകള് മാറ്റുമ്പോള് പദാവലി പാഴ്സ് ചെയ്യുക",
     "rename": "പേരു് മാറ്റുക",
+    "mediaPlayer": "മീഡിയ പ്ലെയര്Name",
+    "play": "കളിക്കുക",
+    "volume": "വാല്യം",
+    "pause": "താങ്ങുക",
 }

@@ -686,6 +686,15 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["mediaPlayer"])
+        buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
+        button.setIcon(QIcon(buttonFile))
+        button.clicked.connect(lambda: self.openVlcPlayer(""))
+        self.secondToolBar.addWidget(button)
+
+        self.secondToolBar.addSeparator()
+
         reloadButton = QPushButton()
         reloadButton.setToolTip(config.thisTranslation["menu1_reload"])
         reloadButtonFile = os.path.join("htmlResources", "reload.png")
@@ -1156,6 +1165,11 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "pdfSave.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["savePdfCurrentPage"], self.invokeSavePdfPage)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
 
         self.secondToolBar.addSeparator()
 

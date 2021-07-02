@@ -1,6 +1,8 @@
 # coding=utf-8
 import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
+
+from gui.VlcPlayer import VlcPlayer
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
 from functools import partial
@@ -399,6 +401,13 @@ class TextCommandParser:
             "mp4": (self.mp4Download, """
             # [KEYWORD] MP4
             # Usage - MP4:::[youtube_link]"""),
+            "vlc": (self.openVlcPlayer, """
+            # [KEYWORD] VLC
+            # Feature: run VLC player to play mp3 and mp4 files
+            # e.g. VLC
+            # e.g. VLC:::music/AmazingGrace.mp3
+            # e.g. VLC:::video/ProdigalSon.mp4
+            """),
             "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote
             # e.g. opennote:::file_path"""),
@@ -1197,6 +1206,13 @@ class TextCommandParser:
                 subprocess.Popen("{0} {1}".format(config.open, wikiPage), shell=True)
             else:
                 webbrowser.open(wikiPage)
+
+    # VLC:::
+    def openVlcPlayer(self, command, source):
+        filename = command
+        self.player = VlcPlayer(filename)
+        self.player.show()
+        return ("", "", {})
 
     # functions about bible
 

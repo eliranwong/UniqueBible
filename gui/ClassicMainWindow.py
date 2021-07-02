@@ -359,6 +359,8 @@ class ClassicMainWindow:
         menu11.addSeparator()
         menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
+        menu11.addSeparator()
+        menu11.addAction(QAction(config.thisTranslation["mediaPlayer"], self, triggered=lambda: self.openVlcPlayer("")))
 
         menu8 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu8_resources"]))
         menu8.addAction(QAction(config.thisTranslation["menu8_marvelData"], self, triggered=self.openMarvelDataFolder))
@@ -568,6 +570,8 @@ class ClassicMainWindow:
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
+        self.secondToolBar.addSeparator()
+        self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
         self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
         self.secondToolBar.addSeparator()

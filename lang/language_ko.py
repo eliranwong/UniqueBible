@@ -737,4 +737,8 @@ translation = {
     "bibleCollections": "성경 수집",
     "parseTextConvertNotesToBook": "노트를 책으로 변환할 때 텍스트 구문 분석하기",
     "rename": "이름 바꾸기",
+    "mediaPlayer": "미디어 플레이어",
+    "play": "활동",
+    "volume": "볼륨",
+    "pause": "일시 중지",
 }

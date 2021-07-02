@@ -737,4 +737,8 @@ translation = {
     "bibleCollections": "Συλλογή Βίβλου:",
     "parseTextConvertNotesToBook": "Ανάλυση κειμένου κατά τη μετατροπή σημειώσεων σε βιβλίο",
     "rename": "Μετονομασία:",
+    "mediaPlayer": "Media Player",
+    "play": "Παίξε!",
+    "volume": "' Τόμος",
+    "pause": "-Γιατί;",
 }

@@ -1,4 +1,5 @@
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
+import time
 from datetime import datetime
 from distutils import util
 from functools import partial
@@ -10,6 +11,7 @@ from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMess
 from qtpy.QtWidgets import QComboBox
 
 from gui.BibleCollectionDialog import BibleCollectionDialog
+from gui.VlcPlayer import VlcPlayer
 from util import exlbl
 from util.BibleBooks import BibleBooks
 from util.TextCommandParser import TextCommandParser
@@ -1659,6 +1661,14 @@ class MainWindow(QMainWindow):
 
     def openYouTube(self):
         self.openMiniBrowser()
+
+    def openVlcPlayer(self, filename=""):
+        textCommand = "VLC:::{0}".format(filename)
+        if filename:
+            self.textCommandLineEdit.setText(textCommand)
+            self.addHistoryRecord("study", textCommand)
+        self.vlcPlayer = VlcPlayer(filename)
+        self.vlcPlayer.show()
 
     def openMiniBrowser(self, initialUrl=None):
         self.youTubeView = MiniBrowser(self, initialUrl)

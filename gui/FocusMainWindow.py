@@ -526,6 +526,8 @@ class FocusMainWindow:
         self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
         self.secondToolBar.addSeparator()
+        self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
+        self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", lambda: self.reloadCurrentRecord(True), self.secondToolBar)
         self.secondToolBar.addSeparator()
 
@@ -738,6 +740,11 @@ class FocusMainWindow:
 
         iconFile = os.path.join("htmlResources", "youtube.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+
+        self.secondToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
 
         self.secondToolBar.addSeparator()
 

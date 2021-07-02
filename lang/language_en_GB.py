@@ -737,4 +737,8 @@ translation = {
     "bibleCollections": "Bible Collections",
     "parseTextConvertNotesToBook": "Parse the text when converting notes to book",
     "rename": "Rename",
+    "mediaPlayer": "Media Player",
+    "play": "Play",
+    "volume": "Volume",
+    "pause": "Pause",
 }

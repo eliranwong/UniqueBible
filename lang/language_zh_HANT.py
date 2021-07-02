@@ -737,4 +737,8 @@ translation = {
     "bibleCollections": "聖經收藏",
     "parseTextConvertNotesToBook": "將附註轉換成工作簿時剖析文字",
     "rename": "重新命名",
+    "mediaPlayer": "媒體播放程式",
+    "play": "玩",
+    "volume": "卷",
+    "pause": "暫停",
 }
