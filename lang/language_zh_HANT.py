@@ -741,4 +741,5 @@ translation = {
     "play": "玩",
     "volume": "卷",
     "pause": "暫停",
+    "cp6": "媒體播放程式",
 }

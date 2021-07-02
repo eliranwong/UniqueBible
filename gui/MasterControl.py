@@ -2,6 +2,7 @@ import config
 import shortcut as sc
 from gui.BibleExplorer import BibleExplorer
 from gui.Library2Launcher import Library2Launcher
+from gui.MediaLauncher import MediaLauncher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
@@ -148,6 +149,11 @@ class MasterControl(QWidget):
         self.miscellaneousTab = MiscellaneousLauncher(self)
         self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp5"])
         self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
+        # 6
+        mediaTab = MediaLauncher(self)
+        self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
+        # self.tabs.setTabToolTip(3, sc.openControlPanelTab2)
+
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
         # set initial tab

@@ -741,4 +741,5 @@ translation = {
     "play": "Παίξε!",
     "volume": "' Τόμος",
     "pause": "-Γιατί;",
+    "cp6": "Media Player",
 }

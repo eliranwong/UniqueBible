@@ -741,4 +741,5 @@ translation = {
     "play": "활동",
     "volume": "볼륨",
     "pause": "일시 중지",
+    "cp6": "미디어 플레이어",
 }

@@ -741,4 +741,5 @@ translation = {
     "play": "プレイ",
     "volume": "体積",
     "pause": "一時停止",
+    "cp6": "メディアプレーヤー",
 }

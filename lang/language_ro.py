@@ -741,4 +741,5 @@ translation = {
     "play": "Joacă",
     "volume": "Volum",
     "pause": "Pauză",
+    "cp6": "Jucător media",
 }

@@ -1210,8 +1210,12 @@ class TextCommandParser:
     # VLC:::
     def openVlcPlayer(self, command, source):
         filename = command
-        self.player = VlcPlayer(filename)
-        self.player.show()
+        if self.parent.vlcPlayer is None:
+            self.parent.vlcPlayer = VlcPlayer(self, filename)
+        else:
+            self.parent.vlcPlayer.stop()
+            self.parent.vlcPlayer.load_file(filename)
+        self.parent.vlcPlayer.show()
         return ("", "", {})
 
     # functions about bible
