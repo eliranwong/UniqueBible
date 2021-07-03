@@ -236,8 +236,8 @@ class ClassicMainWindow:
 
         compareFeaturesMenu = menu4.addMenu(config.thisTranslation["menu4_compareFeatures"])
         compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_compareAll"], self, shortcut=sc.runCOMPARE, triggered=self.runCOMPARE))
-        compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=self.mainRefButtonClicked))
-        menu4.addSeparator()
+        compareFeaturesMenu.addAction(QAction(config.thisTranslation["menu4_moreComparison"], self, triggered=lambda: self.openControlPanelTab(0)))
+
 
         marvelBibleMenu = menu4.addMenu(config.thisTranslation["menu_marvelBibles"])
         marvelBibleMenu.addAction(QAction("Marvel Original Bible", self, shortcut=sc.runMOB, triggered=self.runMOB))
@@ -597,7 +597,7 @@ class ClassicMainWindow:
         self.addStandardIconButton("menu4_next", "nextChapter.png", self.nextMainChapter, self.leftToolBar)
         self.leftToolBar.addSeparator()
         self.addStandardIconButton("menu4_compareAll", "compare_with.png", self.runCOMPARE, self.leftToolBar)
-        self.addStandardIconButton("menu4_moreComparison", "parallel_with.png", self.mainRefButtonClicked, self.leftToolBar)
+        self.addStandardIconButton("menu4_moreComparison", "parallel_with.png", lambda: self.openControlPanelTab(0), self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addStandardIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
@@ -838,7 +838,7 @@ class ClassicMainWindow:
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compareAll"], self.runCOMPARE)
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], self.mainRefButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], lambda: self.openControlPanelTab(0))
 
         iconFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
         self.enforceCompareParallelButton = self.leftToolBar.addAction(QIcon(iconFile), self.getEnableCompareParallelDisplayToolTip(), self.enforceCompareParallelButtonClicked)
