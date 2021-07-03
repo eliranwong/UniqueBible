@@ -803,7 +803,7 @@ class AlephMainWindow:
         actionButton.setToolTip(config.thisTranslation["menu4_moreComparison"])
         actionButtonFile = os.path.join("htmlResources", "parallel_with.png")
         actionButton.setIcon(QIcon(actionButtonFile))
-        actionButton.clicked.connect(self.mainRefButtonClicked)
+        actionButton.clicked.connect(lambda: self.openControlPanelTab(0))
         self.leftToolBar.addWidget(actionButton)
 
         self.enforceCompareParallelButton = QPushButton()
@@ -1243,7 +1243,7 @@ class AlephMainWindow:
         self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_compareAll"], self.runCOMPARE)
 
         iconFile = os.path.join("htmlResources", "parallel_with.png")
-        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], self.mainRefButtonClicked)
+        self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu4_moreComparison"], lambda: self.openControlPanelTab(0))
 
         iconFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
         self.enforceCompareParallelButton = self.leftToolBar.addAction(QIcon(iconFile), self.getEnableCompareParallelDisplayToolTip(), self.enforceCompareParallelButtonClicked)
