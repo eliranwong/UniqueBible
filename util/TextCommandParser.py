@@ -408,6 +408,20 @@ class TextCommandParser:
             # e.g. VLC:::music/AmazingGrace.mp3
             # e.g. VLC:::video/ProdigalSon.mp4
             """),
+            "readbible": (self.readBible, """
+            # [KEYWORD] READBIBLE
+            # Feature: Play Bible mp3 file recording of a chapter
+            # mp3 files should be placed under audio/bibles/[Bible Text]/default/[Chapter number]/
+            # for example, audio/bibles/KJV/default/40/
+            # each file should be a recording of a chapter with the filename "[Book number]_[Name][Chapter number].mp3
+            # for example, 40_Matthew001.mp3.  Chapter numbers should be three digits (eg `001`).
+            # mp3 files can be downloaded from https://www.audiotreasure.com/audioindex.htm
+            # Usage:
+            # e.g. READBIBLE                             # Reads current Bible and current chapter
+            # e.g. READBIBLE:::Matt 1                    # Reads chapter from current Bible
+            # e.g. READBIBLE:::KJV:::Matt 1              # Reads chapter from Bible
+            # e.g. READBIBLE:::KJV:::Matt 1:::drama      # Reads from drama folder instead of default folder
+            """),
             "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote
             # e.g. opennote:::file_path"""),
@@ -1217,6 +1231,30 @@ class TextCommandParser:
             self.parent.vlcPlayer.load_file(filename)
         self.parent.vlcPlayer.show()
         return ("", "", {})
+
+    # READBIBLE:::
+    def readBible(self, command, source):
+        text = config.mainText
+        book = config.mainB
+        chapter = config.mainC
+        folder = "default"
+        if command:
+            count = command.count(":::")
+            if count == 0:
+                verseList = self.extractAllVerses(command)
+                book, chapter, verse = verseList[0]
+            elif count == 1:
+                text, reference = self.splitCommand(command)
+                verseList = self.extractAllVerses(command)
+                book, chapter, verse = verseList[0]
+            elif count == 2:
+                text, commandList = self.splitCommand(command)
+                reference, folder = self.splitCommand(commandList)
+                verseList = self.extractAllVerses(command)
+                book, chapter, verse = verseList[0]
+        self.parent.playBibleMP3File(text, book, chapter, folder)
+        return ("", "", {})
+
 
     # functions about bible
 
