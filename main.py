@@ -60,6 +60,7 @@ cleanupTempFiles()
 
 # Remote CLI
 if (len(sys.argv) > 1) and sys.argv[1] == "telnet-server":
+    config.runMode = "telnet-server"
     try:
         import telnetlib3
     except:
@@ -133,6 +134,7 @@ def startHttpServer():
 
 config.enableHttpServer = False
 if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
+    config.runMode = "http-server"
     checkMigration()
     startHttpServer()
     ConfigUtil.save()
@@ -150,6 +152,7 @@ def printContentOnConsole(text):
 
 # Execute macro
 if (len(sys.argv) > 1) and sys.argv[1] == "execute-macro":
+    config.runMode = "execute-macro"
     if config.enableMacros:
         from util.MacroParser import MacroParser
         if len(sys.argv) < 3:

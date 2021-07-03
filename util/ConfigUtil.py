@@ -33,6 +33,7 @@ class ConfigUtil:
         config.studyWindowContentTransformers = []
         config.shortcutList = []
         config.enableHttpServer = False
+        config.runMode = "gui"
 
         # Default settings for configurations:
 
