@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("cp6", "Media Player")
+        addLanguageStringToAllFiles("selectNone", "Select None")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

@@ -2,7 +2,6 @@
 import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 
-from gui.VlcPlayer import VlcPlayer
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
 from functools import partial
@@ -1223,36 +1222,39 @@ class TextCommandParser:
 
     # VLC:::
     def openVlcPlayer(self, command, source):
-        filename = command
-        if self.parent.vlcPlayer is None:
-            self.parent.vlcPlayer = VlcPlayer(self, filename)
-        else:
-            self.parent.vlcPlayer.stop()
-            self.parent.vlcPlayer.load_file(filename)
-        self.parent.vlcPlayer.show()
+        if config.isVlcInstalled:
+            from gui.VlcPlayer import VlcPlayer
+            filename = command
+            if self.parent.vlcPlayer is None:
+                self.parent.vlcPlayer = VlcPlayer(self, filename)
+            else:
+                self.parent.vlcPlayer.stop()
+                self.parent.vlcPlayer.load_file(filename)
+            self.parent.vlcPlayer.show()
         return ("", "", {})
 
     # READBIBLE:::
     def readBible(self, command, source):
-        text = config.mainText
-        book = config.mainB
-        chapter = config.mainC
-        folder = "default"
-        if command:
-            count = command.count(":::")
-            if count == 0:
-                verseList = self.extractAllVerses(command)
-                book, chapter, verse = verseList[0]
-            elif count == 1:
-                text, reference = self.splitCommand(command)
-                verseList = self.extractAllVerses(command)
-                book, chapter, verse = verseList[0]
-            elif count == 2:
-                text, commandList = self.splitCommand(command)
-                reference, folder = self.splitCommand(commandList)
-                verseList = self.extractAllVerses(command)
-                book, chapter, verse = verseList[0]
-        self.parent.playBibleMP3File(text, book, chapter, folder)
+        if config.isVlcInstalled:
+            text = config.mainText
+            book = config.mainB
+            chapter = config.mainC
+            folder = "default"
+            if command:
+                count = command.count(":::")
+                if count == 0:
+                    verseList = self.extractAllVerses(command)
+                    book, chapter, verse = verseList[0]
+                elif count == 1:
+                    text, reference = self.splitCommand(command)
+                    verseList = self.extractAllVerses(command)
+                    book, chapter, verse = verseList[0]
+                elif count == 2:
+                    text, commandList = self.splitCommand(command)
+                    reference, folder = self.splitCommand(commandList)
+                    verseList = self.extractAllVerses(command)
+                    book, chapter, verse = verseList[0]
+            self.parent.playBibleMP3File(text, book, chapter, folder)
         return ("", "", {})
 
 

@@ -742,4 +742,7 @@ translation = {
     "volume": "വാല്യം",
     "pause": "താങ്ങുക",
     "cp6": "മീഡിയ പ്ലെയര്Name",
+    "gitHubBibleMp3Files": "GitHub ബൈബിള് MP3 ഫയലുകള്",
+    "selectAll": "എല്ലാം തെരഞ്ഞെടുക്കുക",
+    "selectNone": "ഒന്നുമല്ല തെരഞ്ഞെടുക്കുക",
 }

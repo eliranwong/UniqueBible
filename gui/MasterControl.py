@@ -136,9 +136,10 @@ class MasterControl(QWidget):
         self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp5"])
         self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
         # 6
-        mediaTab = MediaLauncher(self)
-        self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
-        self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
+        if config.isVlcInstalled:
+            mediaTab = MediaLauncher(self)
+            self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
+            self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
 
         # set action with changing tabs
         self.tabs.currentChanged.connect(self.tabChanged)
