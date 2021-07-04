@@ -742,4 +742,7 @@ translation = {
     "volume": "आवाज़ निर्धारक",
     "pause": "ठहराना",
     "cp6": "मीडिया प्लेयर",
+    "gitHubBibleMp3Files": "Githb बाइबिल MP3 फ़ाइलें",
+    "selectAll": "सभी को चुनें",
+    "selectNone": "कुछ नहीं चुनें",
 }

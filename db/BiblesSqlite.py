@@ -726,7 +726,7 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
-        chapter += self.insertReadBibleLink(text, b)
+        chapter += Bible.insertReadBibleLink(text, b)
         chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
@@ -756,13 +756,6 @@ input.addEventListener('keyup', function(event) {0}
             chapter += "</span>"
             chapter += "</div>"
         return chapter
-
-    def insertReadBibleLink(self, text, b):
-        if config.runMode == "gui":
-            directory = "audio/bibles/{0}/{1}/{2}".format(text, "default", b)
-            if os.path.exists(directory):
-                return """ <ref onclick="document.title='READBIBLE:::'" style="font-size: .8em">&#128264;</ref>"""
-        return ""
 
     def migrateDatabaseContent(self):
         self.logger.debug("Migrating Bible name to Details table")
@@ -1061,7 +1054,7 @@ class Bible:
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
-        chapter += self.insertReadBibleLink(self.text, b)
+        chapter += Bible.insertReadBibleLink(self.text, b)
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
@@ -1077,9 +1070,10 @@ class Bible:
         else:
             return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
 
-    def insertReadBibleLink(self, text, b):
-        if config.runMode == "gui":
-            directory = "audio/bibles/{0}/{1}/{2}".format(text, "default", b)
+    @staticmethod
+    def insertReadBibleLink(text, b):
+        if config.runMode == "gui" and config.isVlcInstalled:
+            directory = "audio/bibles/{0}/{1}/{2}".format(text, "default", "{:02d}".format(b))
             if os.path.exists(directory):
                 return """ <ref onclick="document.title='READBIBLE:::'" style="font-size: .8em">&#128264;</ref>"""
         return ""
