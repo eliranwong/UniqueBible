@@ -20,7 +20,8 @@ class DownloadBibleMp3Dialog(QDialog):
         super().__init__()
 
         self.bibles = {
-            "KJV": "otseng/UniqueBible_MP3_KJV"
+            "KJV": "otseng/UniqueBible_MP3_KJV",
+            "CUV": "otseng/UniqueBible_MP3_CUV",
         }
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
@@ -40,7 +41,8 @@ class DownloadBibleMp3Dialog(QDialog):
         self.versionsLayout = QVBoxLayout()
         self.versionsList = QListWidget()
         self.versionsList.itemClicked.connect(self.selectItem)
-        self.versionsList.addItem("KJV")
+        for version in self.bibles.keys():
+            self.versionsList.addItem(version)
         self.versionsList.setMaximumHeight(50)
         self.versionsLayout.addWidget(self.versionsList)
         mainLayout.addLayout(self.versionsLayout)
@@ -254,6 +256,8 @@ class DownloadBibleMp3Util:
 
     @staticmethod
     def moveFiles(sourceDir, destDir, debugOutput = False):
+        if not sourceDir.endswith("*.mp3"):
+            sourceDir += "/*.mp3"
         files = glob.glob(sourceDir)
         for file in sorted(files):
             base = os.path.basename(file)
@@ -278,8 +282,35 @@ class DownloadBibleMp3Util:
             zipFile = os.path.join(directory, dir)
             shutil.make_archive(zipFile, 'zip', zipFile)
             count += 1
-            if count > 66:
+            if count > 39:
                 break
+
+    @staticmethod
+    def renameChinese(sourceDir, destDir, debugOutput = False):
+        offset = 39
+        sourceFiles = sourceDir
+        if not sourceFiles.endswith("*.mp3"):
+            sourceFiles += "/*.mp3"
+        files = glob.glob(sourceFiles)
+        for file in sorted(files):
+            base = os.path.basename(file)
+            bookNum = int(base[:2]) + offset
+            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = bookName.replace(" ", "")
+            try:
+                chapter = int(base[-7:-4])
+            except:
+                try:
+                    chapter = int(base[-6:-4])
+                except:
+                    try:
+                        chapter = int(base[-5:-4])
+                    except:
+                        chapter = 1
+            newFile = "{0}_{1}{2}.mp3".format(bookNum, bookName, "{:03d}".format(chapter))
+            os.rename(os.path.join(sourceDir, file), os.path.join(sourceDir, newFile))
+            if debugOutput:
+                print(newFile)
 
 
 class DummyParent():
@@ -304,7 +335,17 @@ def main():
 if __name__ == '__main__':
     main()
 
-    sourceDir = "/Users/otseng/Downloads/KJV_OT_Audio_TB/*"
-    destDir = "/Users/otseng/workspace/UniqueBible_MP3_KJV"
+    # destDir = "/Users/otseng/workspace/UniqueBible_MP3_CUV"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
     # DownloadBibleMp3Util.zipFiles(destDir, True)
+
+    '''
+    Chinese
+    '''
+    # sourceDir = "/Users/otseng/Downloads"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/CUV/default"
+    # DownloadBibleMp3Util.renameChinese(sourceDir, destDir, True)
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/CUV/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
