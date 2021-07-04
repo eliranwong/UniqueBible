@@ -652,6 +652,12 @@ class MainWindow(QMainWindow):
     def installGithubEpub(self):
         self.installFromGitHub("otseng/UniqueBible_EPUB", "epub", "githubEpub")
 
+    def installGithubBibleMp3(self):
+        if config.isVlcInstalled:
+            from gui.DownloadBibleMp3Dialog import DownloadBibleMp3Dialog
+            self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self)
+            self.downloadBibleMp3Dialog.show()
+
     def installFromGitHub(self, repo, directory, title):
         from util.GithubUtil import GithubUtil
 
@@ -3471,14 +3477,14 @@ class MainWindow(QMainWindow):
     def playBibleMP3File(self, text, book, chapter, folder="default"):
         directory = self.getBibleMP3Directory(text, book, chapter, folder)
         if directory:
-            filesearch = "{0}/{1}*{2}.mp3".format(directory, book, "{:03d}".format(chapter))
+            filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
             files = glob.glob(filesearch)
             if files:
                 file = files[0]
                 self.openVlcPlayer(file)
 
     def getBibleMP3Directory(self, text, book, chapter, folder):
-        directory = "audio/bibles/{0}/{1}/{2}".format(text, folder, book)
+        directory = "audio/bibles/{0}/{1}/{2}".format(text, folder, "{:02d}".format(book))
         if os.path.exists(directory):
             return directory
         else:
