@@ -1,5 +1,9 @@
+Major change in version 25.68:
+* Add Download Bible mp3 files from GitHub
+
 Major change in version 25.67:
 * Add READBIBLE to play Bible mp3 file
+* https://github.com/eliranwong/UniqueBible/wiki/MP3-MP4-files,-VLC,-and-reading-Bibles
 * Always use master control for comparison/parellel/difference icon
 
 Major change in version 25.66:
