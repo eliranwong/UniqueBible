@@ -20,15 +20,19 @@ class DownloadBibleMp3Dialog(QDialog):
         super().__init__()
 
         self.bibles = {
-            "KJV": "otseng/UniqueBible_MP3_KJV",
-            "CUV": "otseng/UniqueBible_MP3_CUV",
+            "KJV": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
+            "KJV (Soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
+            "CUV": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
+            "WEB": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
         }
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
-        self.setMinimumSize(150, 400)
-        self.selectedBible = None
+        self.setMinimumSize(150, 450)
+        self.selectedRendition = None
+        self.selectedText = None
+        self.selectedRepo = None
+        self.selectedDirectory = None
         self.settingBibles = False
-        self.default = "default"
         self.thread = None
         self.setupUI()
 
@@ -39,12 +43,12 @@ class DownloadBibleMp3Dialog(QDialog):
         mainLayout.addWidget(title)
 
         self.versionsLayout = QVBoxLayout()
-        self.versionsList = QListWidget()
-        self.versionsList.itemClicked.connect(self.selectItem)
-        for version in self.bibles.keys():
-            self.versionsList.addItem(version)
-        self.versionsList.setMaximumHeight(50)
-        self.versionsLayout.addWidget(self.versionsList)
+        self.renditionsList = QListWidget()
+        self.renditionsList.itemClicked.connect(self.selectItem)
+        for rendition in self.bibles.keys():
+            self.renditionsList.addItem(rendition)
+        self.renditionsList.setMaximumHeight(100)
+        self.versionsLayout.addWidget(self.renditionsList)
         mainLayout.addLayout(self.versionsLayout)
 
         self.downloadTable = QTableView()
@@ -95,22 +99,22 @@ class DownloadBibleMp3Dialog(QDialog):
 
         self.setLayout(mainLayout)
 
-        self.versionsList.item(0).setSelected(True)
-        bible = self.versionsList.item(0).text()
-        self.selectBible(bible)
+        self.renditionsList.item(0).setSelected(True)
+        bible = self.renditionsList.item(0).text()
+        self.selectRendition(bible)
 
         self.downloadButton.setDefault(True)
         QTimer.singleShot(0, self.downloadButton.setFocus)
 
     def selectItem(self, item):
-        self.selectBible(item.text())
+        self.selectRendition(item.text())
 
-    def selectBible(self, bible):
+    def selectRendition(self, rendition):
         from util.GithubUtil import GithubUtil
 
-        self.selectedBible = bible
+        self.selectedRendition = rendition
         self.downloadTable.setEnabled(True)
-        self.selectedRepo = self.bibles[self.selectedBible]
+        self.selectedText, self.selectedRepo, self.selectedDirectory = self.bibles[self.selectedRendition]
         self.github = GithubUtil(self.selectedRepo)
         self.repoData = self.github.getRepoData()
         self.settingBibles = True
@@ -118,7 +122,7 @@ class DownloadBibleMp3Dialog(QDialog):
         rowCount = 0
         for file in self.repoData.keys():
             item = QStandardItem(file)
-            folder = os.path.join("audio", "bibles", self.selectedBible, self.default, file)
+            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file)
             if not os.path.exists(folder):
                 item.setCheckable(True)
                 item.setCheckState(Qt.Checked)
@@ -140,7 +144,10 @@ class DownloadBibleMp3Dialog(QDialog):
             rowCount += 1
         self.dataViewModel.setHorizontalHeaderLabels(
             [config.thisTranslation["menu_book"], config.thisTranslation["name"], ""])
-        self.downloadTable.resizeColumnsToContents()
+        self.downloadTable.setColumnWidth(0, 90)
+        self.downloadTable.setColumnWidth(1, 125)
+        self.downloadTable.setColumnWidth(2, 125)
+        # self.downloadTable.resizeColumnsToContents()
         self.settingBibles = False
 
     def selectAll(self):
@@ -185,14 +192,14 @@ class DownloadBibleMp3Dialog(QDialog):
         folder = os.path.join("audio", "bibles")
         if not os.path.exists(folder):
             os.mkdir(folder)
-        folder = os.path.join("audio", "bibles", self.selectedBible)
+        folder = os.path.join("audio", "bibles", self.selectedText)
         if not os.path.exists(folder):
             os.mkdir(folder)
-        folder = os.path.join("audio", "bibles", self.selectedBible, self.default)
+        folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory)
         if not os.path.exists(folder):
             os.mkdir(folder)
         self.thread = QThread()
-        self.worker = DownloadFromGitHub(self.github, self.repoData, self.dataViewModel, self.selectedBible, self.default)
+        self.worker = DownloadFromGitHub(self.github, self.repoData, self.dataViewModel, self.selectedText, self.selectedDirectory)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
@@ -203,7 +210,7 @@ class DownloadBibleMp3Dialog(QDialog):
         self.thread.start()
 
     def finishedDownloading(self, count):
-        self.selectBible(self.selectedBible)
+        self.selectRendition(self.selectedRendition)
         self.setStatus("")
         self.downloadButton.setEnabled(True)
         self.closeButton.setEnabled(True)
@@ -225,17 +232,17 @@ class DownloadFromGitHub(QObject):
     finished = Signal(int)
     progress = Signal(str)
 
-    def __init__(self, github, repoData, dataViewModel, selectedBible, default):
+    def __init__(self, github, repoData, dataViewModel, selectedText, selectedDirectory):
         super(DownloadFromGitHub, self).__init__()
         self.github = github
         self.repoData = repoData
         self.dataViewModel = dataViewModel
-        self.selectedBible = selectedBible
-        self.default = default
+        self.selectedText = selectedText
+        self.selectedDirectory = selectedDirectory
 
     def run(self):
         self.progress.emit(config.thisTranslation["message_installing"])
-        folder = os.path.join("audio", "bibles", self.selectedBible, self.default)
+        folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory)
         count = 0
         for index in range(self.dataViewModel.rowCount()):
             if self.dataViewModel.item(index).checkState() == Qt.Checked:
@@ -256,8 +263,8 @@ class DownloadBibleMp3Util:
 
     @staticmethod
     def moveFiles(sourceDir, destDir, debugOutput = False):
-        if not sourceDir.endswith("*.mp3"):
-            sourceDir += "/*.mp3"
+        if not sourceDir.endswith(("*.mp3")):
+            sourceDir = os.path.join(sourceDir, "*.mp3")
         files = glob.glob(sourceDir)
         for file in sorted(files):
             base = os.path.basename(file)
@@ -287,7 +294,7 @@ class DownloadBibleMp3Util:
 
     @staticmethod
     def renameChinese(sourceDir, destDir, debugOutput = False):
-        offset = 39
+        offset = 0
         sourceFiles = sourceDir
         if not sourceFiles.endswith("*.mp3"):
             sourceFiles += "/*.mp3"
@@ -307,11 +314,53 @@ class DownloadBibleMp3Util:
                         chapter = int(base[-5:-4])
                     except:
                         chapter = 1
-            newFile = "{0}_{1}{2}.mp3".format(bookNum, bookName, "{:03d}".format(chapter))
+            newFile = "{0}_{1}{2}.mp3".format("{:02d}".format(bookNum), bookName, "{:03d}".format(chapter))
             os.rename(os.path.join(sourceDir, file), os.path.join(sourceDir, newFile))
             if debugOutput:
                 print(newFile)
 
+    @staticmethod
+    def fixFilenamesInAllSubdirectories(sourceDir, debugOutput = False):
+        directories = [d for d in os.listdir(sourceDir) if
+                       os.path.isdir(os.path.join(sourceDir, d)) and not d == ".git"]
+        for subdir in sorted(directories):
+            sourceDir = os.path.join(sourceDir, subdir)
+            DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, debugOutput)
+
+    @staticmethod
+    def fixFilenamesInDirectory(sourceDir, debugOutput=False):
+        sourceFiles = os.path.join(sourceDir, "*.mp3")
+        files = glob.glob(sourceFiles)
+        for file in sorted(files):
+            base = os.path.basename(file)
+            bookNum = int(base[:2])
+            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = bookName.replace(" ", "")
+            try:
+                chapter = int(base[-7:-4])
+            except:
+                try:
+                    chapter = int(base[-6:-4])
+                except:
+                    try:
+                        chapter = int(base[-5:-4])
+                    except:
+                        chapter = 1
+            newFile = "{0}_{1}{2}.mp3".format("{:02d}".format(bookNum), bookName, "{:03d}".format(chapter))
+            os.rename(os.path.join(sourceDir, file), os.path.join(sourceDir, newFile))
+            if debugOutput:
+                print(newFile)
+
+    @staticmethod
+    def renameDirs(sourceDir, debugOutput=False):
+        directories = [d for d in os.listdir(sourceDir) if
+                       os.path.isdir(os.path.join(sourceDir, d)) and not d == ".git"]
+        for dir in sorted(directories):
+            bookNum = dir[:2]
+            if bookNum != dir:
+                os.rename(os.path.join(sourceDir, dir), os.path.join(sourceDir, bookNum))
+                if debugOutput:
+                    print(bookNum)
 
 class DummyParent():
     def displayMessage(self, text):
@@ -335,12 +384,22 @@ def main():
 if __name__ == '__main__':
     main()
 
-    # destDir = "/Users/otseng/workspace/UniqueBible_MP3_CUV"
+    """
+    KJV
+    https://www.audiotreasure.com/audioindex.htm
+    """
+    # sourceDir = "/Users/otseng/Downloads/temp"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
+    # DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, True)
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+    # DownloadBibleMp3Util.zipFiles(destDir, True)
+
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
     # DownloadBibleMp3Util.zipFiles(destDir, True)
 
     '''
     Chinese
+    https://www.audiotreasure.com/audioindex.htm
     '''
     # sourceDir = "/Users/otseng/Downloads"
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/CUV/default"
@@ -348,4 +407,23 @@ if __name__ == '__main__':
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
     # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/CUV/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    # sourceDir = "/Users/otseng/Downloads"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/CUV/default"
+    # DownloadBibleMp3Util.renameChinese(sourceDir, destDir, True)
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    '''
+    WEB
+    https://www.audiotreasure.com/webindex.htm
+    '''
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    # DownloadBibleMp3Util.fixFilenames(sourceDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
     # DownloadBibleMp3Util.zipFiles(sourceDir, True)
