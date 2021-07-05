@@ -745,4 +745,5 @@ translation = {
     "gitHubBibleMp3Files": "깃허브 성경책 MP3 파일",
     "selectAll": "모두 선택",
     "selectNone": "없음 선택",
+    "displayCmdOutput": "CMD 명령의 출력 표시",
 }

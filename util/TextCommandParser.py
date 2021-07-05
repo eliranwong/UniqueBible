@@ -1019,7 +1019,9 @@ class TextCommandParser:
     # cmd:::
     # run os command
     def osCommand(self, command, source):
-        if not config.enableCmd:
+        window = ""
+        display = ""
+        if config.runMode == "http-server" and not config.enableCmd:
             print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
         else:
             subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -1027,12 +1029,14 @@ class TextCommandParser:
             stdout, stderr = runCmd.communicate()
             output = stdout.decode("utf-8").replace("\n", "<br>")
             error = stderr.decode("utf-8").replace("\n", "<br>")
-            display = "<h2>Output</h2><p>{0}</p><h2>Error</h2><p>{1}</p>".format(output if output else "[no output]", error if error else "[no error]")
+            if config.displayCmdOutput:
+                window = "study"
+                display = "<h2>Output</h2><p>{0}</p><h2>Error</h2><p>{1}</p>".format(output if output else "[no output]", error if error else "[no error]")
             #if platform.system() == "Linux":
                 #subprocess.Popen([command], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             #else:
                 #os.system(command)
-        return ("study", display, {})
+        return (window, display, {})
 
     # check if espeak is installed.
     def isEspeakInstalled(self):

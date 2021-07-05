@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("selectNone", "Select None")
+        addLanguageStringToAllFiles("displayCmdOutput", "Display output of CMD command")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

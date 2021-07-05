@@ -109,6 +109,7 @@ class ConfigFlagsWindow(QDialog):
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, True, config.thisTranslation["addOHGBiToMorphologySearch"]),
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, True, config.thisTranslation["includeStrictDocTypeInNote"]),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, True, config.thisTranslation["parseTextConvertNotesToBook"]),
+            ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, True, config.thisTranslation["displayCmdOutput"]),
         ]
         if config.isTtsInstalled:
             options += [
@@ -435,3 +436,6 @@ class ConfigFlagsWindow(QDialog):
 
     def parseTextConvertNotesToBookChanged(self):
         config.parseTextConvertNotesToBook = not config.parseTextConvertNotesToBook
+
+    def displayCmdOutputChanged(self):
+        config.displayCmdOutput = not config.displayCmdOutput
