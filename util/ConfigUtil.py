@@ -993,6 +993,10 @@ class ConfigUtil:
         # Parse the text when converting notes to book"""
         if not hasattr(config, "parseTextConvertNotesToBook"):
             config.parseTextConvertNotesToBook = True
+        config.help["displayCmdOutput"] = """
+        # Display output of CMD command"""
+        if not hasattr(config, "displayCmdOutput"):
+            config.displayCmdOutput = False
 
         # Additional conditional configurations
         if config.enableMenuUnderline:
@@ -1237,6 +1241,7 @@ class ConfigUtil:
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote),
             ("bibleCollections", config.bibleCollections),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook),
+            ("displayCmdOutput", config.displayCmdOutput),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

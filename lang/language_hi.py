@@ -745,4 +745,5 @@ translation = {
     "gitHubBibleMp3Files": "Githb बाइबिल MP3 फ़ाइलें",
     "selectAll": "सभी को चुनें",
     "selectNone": "कुछ नहीं चुनें",
+    "displayCmdOutput": "सीएमडी कमांड के आउटपुट को प्रदर्शित करें",
 }
