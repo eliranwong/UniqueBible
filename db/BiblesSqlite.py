@@ -1055,6 +1055,7 @@ class Bible:
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
         chapter += Bible.insertReadBibleLink(self.text, b)
+        chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
