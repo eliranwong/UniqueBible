@@ -1072,11 +1072,16 @@ class Bible:
 
     @staticmethod
     def insertReadBibleLink(text, b):
+        data = ""
         if config.runMode == "gui" and config.isVlcInstalled:
-            directory = "audio/bibles/{0}/{1}/{2}".format(text, "default", "{:02d}".format(b))
+            directory = "audio/bibles/{0}".format(text)
             if os.path.exists(directory):
-                return """ <ref onclick="document.title='READBIBLE:::'" style="font-size: .8em">&#128264;</ref>"""
-        return ""
+                directory = "audio/bibles/{0}".format(text)
+                directories = [d for d in sorted(os.listdir(directory)) if
+                               os.path.isdir(os.path.join(directory, d))]
+                for dir in directories:
+                    data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">&#128264;</ref>""".format(dir)
+        return data
 
     def formatVerseNumber(self, match):
         v, tagEnding = match.groups()

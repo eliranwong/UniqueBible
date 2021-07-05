@@ -420,6 +420,7 @@ class TextCommandParser:
             # e.g. READBIBLE:::Matt 1                    # Reads chapter from current Bible
             # e.g. READBIBLE:::KJV:::Matt 1              # Reads chapter from Bible
             # e.g. READBIBLE:::KJV:::Matt 1:::drama      # Reads from drama folder instead of default folder
+            # e.g. READBIBLE:::@drama                    # Reads from drama folder instead of default folder
             """),
             "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote
@@ -1243,8 +1244,11 @@ class TextCommandParser:
             if command:
                 count = command.count(":::")
                 if count == 0:
-                    verseList = self.extractAllVerses(command)
-                    book, chapter, verse = verseList[0]
+                    if command.startswith("@"):
+                        folder = command[1:]
+                    else:
+                        verseList = self.extractAllVerses(command)
+                        book, chapter, verse = verseList[0]
                 elif count == 1:
                     text, reference = self.splitCommand(command)
                     verseList = self.extractAllVerses(command)
