@@ -745,4 +745,5 @@ translation = {
     "gitHubBibleMp3Files": "Fişiere MP3 biblice GitHub",
     "selectAll": "Selectare tot",
     "selectNone": "Selectare Fără",
+    "displayCmdOutput": "Afişare ieşire comandă CMD",
 }
