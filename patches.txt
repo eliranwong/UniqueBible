@@ -155,6 +155,7 @@
 (25.66, "file", "gui/FocusMainWindow.py")
 (25.66, "file", "gui/MainWindow.py")
 (25.66, "file", "gui/VlcPlayer.py")
+(25.66, "folder", "htmlResources/buttons")
 (25.66, "file", "htmlResources/buttons/media_player.png")
 (25.66, "file", "lang/language_de.py")
 (25.66, "file", "lang/language_el.py")
