@@ -1,3 +1,6 @@
+Major change in version 25.69:
+* Support multiple Bible mp3 renditions
+
 Major change in version 25.68:
 * Add Download Bible mp3 files from GitHub
 

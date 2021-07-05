@@ -838,3 +838,8 @@
 (25.68, "file", "lang/language_zh_HANT.py")
 (25.68, "file", "util/LanguageUtil.py")
 (25.68, "file", "util/TextCommandParser.py")
+(25.69, "file", "db/BiblesSqlite.py")
+(25.69, "file", "debug.py")
+(25.69, "file", "gui/DownloadBibleMp3Dialog.py")
+(25.69, "file", "util/ShortcutUtil.py")
+(25.69, "file", "util/TextCommandParser.py")
