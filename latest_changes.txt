@@ -1,3 +1,6 @@
+Major change in version 25.70:
+* CMD only requires config.enableCmd to be True in http-server mode
+
 Major change in version 25.69:
 * Support multiple Bible mp3 renditions
 
