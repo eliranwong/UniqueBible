@@ -866,3 +866,5 @@
 (25.70, "file", "util/ConfigUtil.py")
 (25.70, "file", "util/LanguageUtil.py")
 (25.70, "file", "util/TextCommandParser.py")
+(25.71, "file", "gui/MediaLauncher.py")
+(25.71, "file", "util/UpdateUtil.py")
