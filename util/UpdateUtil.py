@@ -6,7 +6,7 @@ from util.DateUtil import DateUtil
 
 class UpdateUtil:
 
-    repository = "https://raw.githubusercontent.com/eliranwong/UniqueBible/master/"
+    repository = "https://raw.githubusercontent.com/eliranwong/UniqueBible/main/"
 
     @staticmethod
     def checkIfShouldCheckForAppUpdate():
