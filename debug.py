@@ -70,6 +70,8 @@ print("# Config")
 if path.exists("config.py"):
     try:
         import config
+        printValue(config, "developer")
+        printValue(config, "enableCmd")
         printValue(config, "theme")
         printValue(config, "userLanguage")
         printValue(config, "userLanguageInterface")
@@ -80,7 +82,6 @@ if path.exists("config.py"):
         printValue(config, "qtMaterial")
         printValue(config, "qtMaterialTheme")
         printValue(config, "useLiteVerseParsing")
-        printValue(config, "menuShortcuts")
         printValue(config, "startupMacro")
         printValue(config, "enableMacros")
         printValue(config, "useLiteVerseParsing")
