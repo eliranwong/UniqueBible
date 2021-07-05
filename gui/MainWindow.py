@@ -11,7 +11,6 @@ from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMess
 from qtpy.QtWidgets import QComboBox
 
 from gui.BibleCollectionDialog import BibleCollectionDialog
-from gui.VlcPlayer import VlcPlayer
 from util import exlbl
 from util.BibleBooks import BibleBooks
 from util.TextCommandParser import TextCommandParser
@@ -1671,12 +1670,14 @@ class MainWindow(QMainWindow):
         self.openMiniBrowser()
 
     def openVlcPlayer(self, filename=""):
-        if self.vlcPlayer is None:
-            self.vlcPlayer = VlcPlayer(self, filename)
-        else:
-            self.vlcPlayer.stop()
-            self.vlcPlayer.load_file(filename)
-        self.vlcPlayer.show()
+        if config.isVlcInstalled:
+            from gui.VlcPlayer import VlcPlayer
+            if self.vlcPlayer is None:
+                self.vlcPlayer = VlcPlayer(self, filename)
+            else:
+                self.vlcPlayer.stop()
+                self.vlcPlayer.load_file(filename)
+            self.vlcPlayer.show()
 
     def openMiniBrowser(self, initialUrl=None):
         self.youTubeView = MiniBrowser(self, initialUrl)
