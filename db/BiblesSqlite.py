@@ -1080,8 +1080,11 @@ class Bible:
                 directory = "audio/bibles/{0}".format(text)
                 directories = [d for d in sorted(os.listdir(directory)) if
                                os.path.isdir(os.path.join(directory, d))]
-                for dir in directories:
-                    data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">&#128264;</ref>""".format(dir)
+                for index, dir in enumerate(directories):
+                    if index > 2:
+                        index = 2
+                    icon = '&#{0}'.format(128264 + index)
+                    data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
         return data
 
     def formatVerseNumber(self, match):
