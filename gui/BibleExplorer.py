@@ -195,21 +195,22 @@ class BibleExplorer(QWidget):
                 self.text = self.textList[textIndex]
             self.bookCombo.clear()
             self.bookList = self.biblesSqlite.getBookList(self.text)
-            # Add only those are recognised by UBA parser
-            for index, b in enumerate(self.bookList):
-                strB = str(b)
-                if strB in self.bookNo2Abb:
-                    self.bookCombo.addItem(self.bookNo2Abb[str(b)])
-                    self.bookCombo.setItemData(index, self.bookNo2Name[str(b)], Qt.ToolTipRole)
-            index = 0
-            if not reset and self.b in self.bookList:
-                index = self.bookList.index(self.b)
-            else:
-                self.b = self.bookList[index]
-                reset = True
-            self.bookCombo.setCurrentIndex(index)
-            # check / update
-            self.updateChapterCombo(self.b, reset, False)
+            if self.bookList:
+                # Add only those are recognised by UBA parser
+                for index, b in enumerate(self.bookList):
+                    strB = str(b)
+                    if strB in self.bookNo2Abb:
+                        self.bookCombo.addItem(self.bookNo2Abb[str(b)])
+                        self.bookCombo.setItemData(index, self.bookNo2Name[str(b)], Qt.ToolTipRole)
+                index = 0
+                if not reset and self.b in self.bookList:
+                    index = self.bookList.index(self.b)
+                else:
+                    self.b = self.bookList[index]
+                    reset = True
+                self.bookCombo.setCurrentIndex(index)
+                # check / update
+                self.updateChapterCombo(self.b, reset, False)
 
     def updateChapterCombo(self, b=None, reset=False, head=True):
         if b is None or ((b is not None) and b >= 0):

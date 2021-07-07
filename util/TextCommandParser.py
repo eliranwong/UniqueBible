@@ -1024,7 +1024,6 @@ class TextCommandParser:
         if config.runMode == "http-server" and not config.enableCmd:
             print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
         else:
-            subprocess.Popen(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             runCmd = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = runCmd.communicate()
             output = stdout.decode("utf-8").replace("\n", "<br>")
