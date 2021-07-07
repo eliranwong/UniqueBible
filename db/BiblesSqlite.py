@@ -1083,8 +1083,10 @@ class Bible:
                 for index, dir in enumerate(directories):
                     if index > 2:
                         index = 2
-                    icon = '&#{0}'.format(128264 + index)
-                    data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
+                    directory = "audio/bibles/{0}/{1}/{2}".format(text, dir, "{:02d}".format(b))
+                    if os.path.exists(directory):
+                        icon = '&#{0}'.format(128264 + index)
+                        data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
         return data
 
     def formatVerseNumber(self, match):

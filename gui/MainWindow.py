@@ -3480,6 +3480,12 @@ class MainWindow(QMainWindow):
         if directory:
             filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
             files = glob.glob(filesearch)
+            if not files:
+                filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:02d}".format(chapter))
+                files = glob.glob(filesearch)
+            if not files:
+                filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:01d}".format(chapter))
+                files = glob.glob(filesearch)
             if files:
                 file = files[0]
                 self.openVlcPlayer(file)
