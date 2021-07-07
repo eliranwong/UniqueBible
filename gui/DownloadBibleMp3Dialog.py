@@ -382,17 +382,17 @@ def main():
     dialog.exec_()
 
 if __name__ == '__main__':
-    main()
+    # main()
 
     """
     KJV
     https://www.audiotreasure.com/audioindex.htm
     """
-    # sourceDir = "/Users/otseng/Downloads/temp"
-    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
+    sourceDir = "/Users/otseng/Downloads/temp"
+    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
     # DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, True)
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
-    # DownloadBibleMp3Util.zipFiles(destDir, True)
+    DownloadBibleMp3Util.zipFiles(destDir, True)
 
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
     # DownloadBibleMp3Util.zipFiles(destDir, True)

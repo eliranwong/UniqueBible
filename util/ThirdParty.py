@@ -1,3 +1,12 @@
+if __name__ == '__main__':
+    import config
+    from util.ConfigUtil import ConfigUtil
+    from util.LanguageUtil import LanguageUtil
+
+    ConfigUtil.setup()
+    config.noQt = False
+    config.thisTranslation = LanguageUtil.loadTranslation("en_US")
+
 import os, sqlite3, config, re, json, base64, logging
 from pathlib import Path
 from shutil import copyfile
@@ -375,7 +384,14 @@ class Converter:
             self.eSwordBibleToRichFormat(description, abbreviation, verses, notes)
         else:
             self.eSwordBibleToRichFormat(description, abbreviation, verses, [])
-        self.eSwordBibleToPlainFormat(description, abbreviation, verses)
+        plainVerses = []
+        for book, chapter, verse, scripture in verses:
+            scripture = scripture.strip()
+            if scripture.startswith("{"):
+                scripture = self.convertFromRichTextFormat(scripture, False)
+            plainVerses.append((book, chapter, verse, scripture))
+
+        self.eSwordBibleToPlainFormat(description, abbreviation, plainVerses)
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
@@ -406,9 +422,13 @@ class Converter:
 
         formattedChapters = {}
         for book, chapter, verse, scripture in verses:
-            if extended:
-                scripture = self.convertSuperStrongs(scripture)
-            scripture = self.convertESwordBibleTags(scripture)
+            # if extended:
+            #     scripture = self.convertSuperStrongs(scripture)
+            scripture = scripture.strip()
+            if scripture.count("{") > 3:
+                scripture = self.convertFromRichTextFormat(scripture)
+            else:
+                scripture = self.convertESwordBibleTags(scripture)
 
             if scripture:
 
@@ -476,6 +496,61 @@ class Converter:
             text = re.sub(search, replace, text)
         text = text.strip()
         return text
+
+    def convertFromRichTextFormat(self, text, includeStrongs = True):
+        out = ""
+        foundBrace = False
+        index = 0
+        element = ""
+        while index < len(text):
+            c = text[index]
+            if c == "{":
+                foundBrace = True
+            elif c == "}":
+                out += self.parseRtfElement(element, includeStrongs)
+                foundBrace = False
+                element = ""
+            elif foundBrace:
+                element += c
+            index += 1
+        out = out.replace("\\bullet", "")
+        return out
+
+    def parseRtfElement(self, element, includeStrongs):
+        out = ""
+        if " " in element:
+            element = element.replace("  ", " ")
+            tokens = element.split(" ")
+            command = tokens[0]
+            text = " ".join(tokens[1:])
+            if command == "\\cf2":
+                out = self.decodeString(text)
+                out += " "
+            elif includeStrongs and "\\cf11" in command:
+                out = self.extractStrongs(text) + " "
+            out = out.replace(",", " ")
+        return out
+
+    def decodeString(self, text):
+        if "'" in text:
+            out = re.sub("\\'([a-z0-9]{2})", lambda x: self.decodeHex(x.group(1)), text)
+            out = out.replace("\\", "")
+        else:
+            out = text
+        return out
+
+    def decodeHex(self, hex):
+        return chr(int(hex, 16))
+
+    def extractStrongs(self, text):
+        out = ""
+        if ":" in text:
+            out = text.split(":")[0]
+            # if re.search("[GH][0-9]*", text):
+            #     out = re.sub(".*([GH][0-9]*).*", "\\1", text)
+        else:
+            out = text
+        return out
 
     # Import e-Sword Commentaries
     def importESwordCommentary(self, filename):
@@ -1911,4 +1986,11 @@ if __name__ == '__main__':
     # note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
     # note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
     # print(note)
-    Converter().createBookModuleFromHymnLyricsFile("Hymn Lyrics - Romanian.txt")
+    # Converter().createBookModuleFromHymnLyricsFile("Hymn Lyrics - Romanian.txt")
+
+    # text = " {\f2\'e5\'cc}{\sub 1}  {\cf11\super  CC}  {\cf2 mas}  {\f2\'ee\'c5}{\sub 2}  {\cf11\super  PM}  {\cf2 del}  {\f2\'f2\'c5\'f5}{\sub 3}  {\cf11\super  H6086:NCcSMC}  {\cf2 árbol}  {\f2\u8592?}  {\cf16 de}  {\f2\'e4\'c7}{\sub 4}  {\cf11\super  XD}  {\cf2 la}  {\f2\'e3\'cc\'c7\'f2\'c7\'fa}{\sub 5}  {\cf11\super  H1847:VqAT---NH}  {\cf2 ciencia}  \bullet  {\cf2 del}  {\f2\'e8\'c9\'e5\'e1}{\sub 6}  {\cf11\super  H2896:NCcSMN}  {\cf2 bien}  {\f2\'e5\'c8}{\sub 7}  {\cf11\super  CC}  {\cf2 y}  \bullet  {\cf2 del}  {\f2\'f8\'c8\'f2}{\sub 8}  {\cf11\super  H7451:NCcSMP}  {\cf2 mal}  {\f2\'ec\'c9\'e0}{\sub 9}  {\cf11\super  H3808:ANN}  {\cf2 no}  {\f2\'fa\'c9\'e0\'eb\'c7\'ec}{\sub 10}  {\cf11\super  H398:VqAMSM2}  {\cf2 comerás;}  {\f2\'ee\'c4\'ee\'cc}{\sub 11}  {\cf11\super  H4480:PM}   {\cf2\bullet}   {\f2\'c6\'f0\'cc\'e5\'cc}{\sub 12}  {\cf11\super  RBSM3}  {\cf2 \bullet}  {\f2\'eb\'cc\'c4\'e9}{\sub 13}  {\cf11\super  H3588:CK}  {\cf2 porque}  \bullet  {\cf2 el}  {\f2\'e1\'cc\'c0}{\sub 14}  {\cf11\super  PB}   {\cf2\bullet}   {\f2\'e9\'c9\'e5\'ed}{\sub 15}  {\cf11\super  H3117:NCcSMC}  {\cf2 día}  \bullet  {\cf2 que}  {\f2\'ee\'c4\'ee\'cc}{\sub 18}  {\cf11\super  PM}  {\cf2 de}  {\f2\'c6\'f0\'cc\'e5\'cc}{\sub 19}  {\cf11\super  RBSM3}  {\cf2 él}  \'8b  {\f2\'e0\'c2\'eb\'c8\'ec}{\sub 16}  {\f2\'c0\'ea\'c8}{\sub 17} \'9b  {\cf11\super  H398:VqAT---S, RBSM2}  {\cf2 comieres,}  \'8b  {\f2\'ee\'c9\'e5\'fa}{\sub 20}  {\f2\'fa\'cc\'c8\'ee\'e5\'cc\'fa}{\sub 21} \'9b  {\cf11\super  H4191:VqAa, VqAMSM2}  {\cf2 ciertamente}  {\f2\u8592?}  {\cf16 morirás.}"
+    # text = " {\f1\'c2\'df\'e2\'eb\'ef\'f2\sub 1}  {\cf11\super  Biblos G976 NNSF}  {\cf2 Libro}  {\f1\u8594?}  {\cf16 de}  {\f1\u8594?}  {\cf16 la}  {\f1\'e3\'e5\'ed\'dd\'f3\'e5\'f9\'f2\sub 2}  {\cf11\super  geneseôs G1078 NGSF}  {\cf2 genealogía}  {\f1\u8594?}  {\cf16 de}  \'8b  {\f1\u7992?\'e7\'f3\'ef\u8166?{\sub 3} \'d8\'f1\'e9\'f3\'f4\'ef\u8166?\sub 4} \'9b  {\cf11\super  Iêsou Christou G2424 G5547 NGSM NGSM}  {\cf2 Jesucristo,}  {\f1\'f5\u7985?\'ef\u8166?\sub 5}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\'c4\'e1\'e2\'df\'e4\sub 6}  {\cf11\super  Dabid G1138 XP}  {\cf2 David,}  {\f1\'f5\u7985?\'ef\u8166?\sub 7}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\u7944?\'e2\'f1\'e1\'dc\'ec\sub 8}  {\cf11\super  Abraam G11 XP}  {\cf2 Abraham.}"
+    # text = " \'8b  {\f2\'e5\'c7}{\sub 1}  {\f2\'fa\'cc\'c9\'f1\'c6\'f3}{\åsub 2} \'9b  {\cf11\super  Cc, VhAmSF3}  {\cf2 Después}  \'8b  {\f2\'ec\'c8}{\sub 3}  {\f2\'ec\'c6\'e3\'c6\'fa}{\sub 4} \'9b  {\cf11\super  PL, VqAT---C}  {\cf2 dio}  {\f2\u8592?}  {\cf16 a}  {\f2\u8592?}  {\cf16 luz}  {\f2\'e0\'c6\'fa}{\sub 5}  {\cf11\super  H853:PA}  {\cf2 a}  {\f2\'e5}{\sub 7}  {\cf11\super  RBSM3}  {\cf2 su}  {\f2\'e0\'c8\'e7\'c4\'e9}{\sub 6}  {\cf11\super  H251:NCcSMS}  {\cf2 hermano}  {\f2\'e0\'c6\'fa}{\sub 8}  {\cf11\super  H853:PA}   {\cf2\bullet}   {\f2\'e4\'c8\'e1\'c6\'ec}{\sub 9}  {\cf11\super  H1893:NPHSMP}  {\cf2 Abel.}  {\f2\'e5\'c7}{\sub 10}  {\cf11\super  Cc}  {\cf2 Y}  {\f2\'e4\'c6\'e1\'c6\'ec}{\sub 12}  {\cf11\super  H1893:NPHSMN}  {\cf2 Abel}  {\f2\'e9\'c0\'e4\'c4\'e9}{\sub 11}  {\cf11\super  H1961:VqAmSM3}  {\cf2 fue}  \'8b  {\f2\'f8\'c9\'f2\'c5\'e4}{\sub 13}  {\f2\'f6\'c9\'e0\'ef}{\sub 14} \'9b  {\cf11\super  H6629:VqAtSM-C, NCcCMN}  {\cf2 pastor}  {\f2\u8592?}  {\cf16 de}  {\f2\u8592?}  {\cf16 ovejas,}  {\f2\'e5\'c0}{\sub 15}  {\cf11\super  CC}  {\cf2 y}  {\f2\'f7\'c7\'e9\'c4\'ef}{\sub 16}  {\cf11\super  H7014:NPHSMN}  {\cf2 Caín}  {\f2\'e4\'c8\'e9\'c8\'e4}{\sub 17}  {\cf11\super  H1961:VqAsSM3}  {\cf2 fue}  \'8b  {\f2\'f2\'c9\'e1\'c5\'e3}{\sub 18}  {\f2\'e0\'c2\'e3\'c8\'ee\'c8\'e4}{\sub 19} \'9b  {\cf11\super  H127:VqAtSM-C, NCcSFN}  {\cf2 labrador}  {\f2\u8592?}  {\cf16 de}  {\f2\u8592?}  {\cf16 la}  {\f2\u8592?}  {\cf16 tierra.}"
+    text = " {\f1\'c2\'df\'e2\'eb\'ef\'f2\sub 1}  {\cf11\super  Biblos G976 NNSF}  {\cf2 Libro}  {\f1\u8594?}  {\cf16 de}  {\f1\u8594?}  {\cf16 la}  {\f1\'e3\'e5\'ed\'dd\'f3\'e5\'f9\'f2\sub 2}  {\cf11\super  geneseôs G1078 NGSF}  {\cf2 genealogía}  {\f1\u8594?}  {\cf16 de}  \'8b  {\f1\u7992?\'e7\'f3\'ef\u8166?{\sub 3} \'d8\'f1\'e9\'f3\'f4\'ef\u8166?\sub 4} \'9b  {\cf11\super  Iêsou Christou G2424 G5547 NGSM NGSM}  {\cf2 Jesucristo,}  {\f1\'f5\u7985?\'ef\u8166?\sub 5}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\'c4\'e1\'e2\'df\'e4\sub 6}  {\cf11\super  Dabid G1138 XP}  {\cf2 David,}  {\f1\'f5\u7985?\'ef\u8166?\sub 7}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\u7944?\'e2\'f1\'e1\'dc\'ec\sub 8}  {\cf11\super  Abraam G11 XP}  {\cf2 Abraham.}"
+    out = Converter().convertFromRichTextFormat(text, True)
+    print(out)
