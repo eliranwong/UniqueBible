@@ -1,3 +1,8 @@
+Major changes in version 25.73:
+* Add support to import bblx Bibles in RTF format
+* Fix read Bible icon showing when missing data files
+* Fix running cmd twice
+
 Minor change in version 25.72:
 * Add sync Study Bible view for single click action
 
