@@ -746,4 +746,5 @@ translation = {
     "selectAll": "Выбрать все",
     "selectNone": "Выберите Нет",
     "displayCmdOutput": "Показать вывод команды CMD",
+    "textWithReference": "Текст со ссылкой",
 }

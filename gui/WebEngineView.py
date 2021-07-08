@@ -223,6 +223,11 @@ class WebEngineView(QWebEngineView):
         copyText.triggered.connect(self.copySelectedText)
         subMenu.addAction(copyText)
 
+        copyText = QAction(self)
+        copyText.setText(config.thisTranslation["textWithReference"])
+        copyText.triggered.connect(self.copySelectedTextWithReference)
+        subMenu.addAction(copyText)
+
         copyReferences = QAction(self)
         copyReferences.setText(config.thisTranslation["bibleReferences"])
         copyReferences.triggered.connect(self.copyAllReferences)
@@ -679,6 +684,28 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
         else:
             self.page().triggerAction(self.page().Copy)
+
+    def copySelectedTextWithReference(self):
+        if not self.selectedText():
+            self.messageNoSelection()
+        else:
+            selectedText = self.selectedText().strip()
+            verse = config.mainV
+            lastVerse = None
+            try:
+                firstVerse = re.findall(r'\d+', selectedText)[0]
+                lastVerse = re.findall(r'\d+', selectedText)[-1]
+                if firstVerse:
+                    verse = firstVerse
+                    if int(firstVerse) == int(lastVerse):
+                        lastVerse = None
+            except:
+                pass
+            reference = self.parent.parent.bcvToVerseReference(config.mainB, config.mainC, verse)
+            if lastVerse:
+                reference += "-" + lastVerse
+            text = "{0} ({1})\n{2}".format(reference, config.mainText, selectedText)
+            QApplication.clipboard().setText(text)
 
     def copyHtmlCode(self):
         #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)

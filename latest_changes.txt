@@ -1,9 +1,12 @@
+Major change in version 25.75:
+* Add Copy with reference in context menu
+
 Major changes in version 25.74:
 * Add ability to read multiple chapters
-    * READBIBLE:::Matt 1-28
-    * READBIBLE:::KJV:::Matt 1, Mark 1, Luke 1, John 1
-    * READBIBLE:::KJV:::Matt 1-5
-    * READBIBLE:::KJV:::1 Cor 13, Rev 1:::soft-music
+- READBIBLE:::Matt 1-28
+- READBIBLE:::KJV:::Matt 1, Mark 1, Luke 1, John 1
+- READBIBLE:::KJV:::Matt 1-5
+- READBIBLE:::KJV:::1 Cor 13, Rev 1:::soft-music
 * Add more info to InfoDialog
 
 Major changes in version 25.73:

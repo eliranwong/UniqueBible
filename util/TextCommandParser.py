@@ -1258,7 +1258,7 @@ class TextCommandParser:
                         playlist = self.getBiblePlaylist(command, text, folder)
                 elif count == 1:
                     text, reference = self.splitCommand(command)
-                    playlist = self.getBiblePlaylist(command, text, folder)
+                    playlist = self.getBiblePlaylist(reference, text, folder)
                 elif count == 2:
                     text, commandList = self.splitCommand(command)
                     reference, folder = self.splitCommand(commandList)

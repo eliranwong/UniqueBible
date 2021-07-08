@@ -746,4 +746,5 @@ translation = {
     "selectAll": "Επιλογή όλων:",
     "selectNone": "Επιλέξτε Χωρίς.",
     "displayCmdOutput": "Εμφάνιση εξόδου της εντολής CMD",
+    "textWithReference": "Κείμενο με αναφορά:",
 }

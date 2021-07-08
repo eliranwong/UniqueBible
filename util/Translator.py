@@ -25,7 +25,7 @@ class Translator:
                     authenticator=authenticator
                 )
                 language_translator.set_service_url(config.myIBMWatsonUrl)
-                #print(language_translator)
+                # print(language_translator)
                 self.language_translator = language_translator
             else:
                 self.language_translator = None

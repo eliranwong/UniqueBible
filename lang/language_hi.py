@@ -746,4 +746,5 @@ translation = {
     "selectAll": "सभी को चुनें",
     "selectNone": "कुछ नहीं चुनें",
     "displayCmdOutput": "सीएमडी कमांड के आउटपुट को प्रदर्शित करें",
+    "textWithReference": "संदर्भ के साथ पाठ",
 }

@@ -746,4 +746,5 @@ translation = {
     "selectAll": "全部选中",
     "selectNone": "选择无",
     "displayCmdOutput": "显示 CMD 命令的输出",
+    "textWithReference": "带有引用的文本",
 }
