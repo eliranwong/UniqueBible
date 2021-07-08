@@ -387,7 +387,7 @@ class Converter:
         plainVerses = []
         for book, chapter, verse, scripture in verses:
             scripture = scripture.strip()
-            if scripture.startswith("{"):
+            if scripture.count("{") > 4:
                 scripture = self.convertFromRichTextFormat(scripture, False)
             plainVerses.append((book, chapter, verse, scripture))
 
@@ -425,7 +425,7 @@ class Converter:
             # if extended:
             #     scripture = self.convertSuperStrongs(scripture)
             scripture = scripture.strip()
-            if scripture.count("{") > 3:
+            if scripture.count("{") > 4:
                 scripture = self.convertFromRichTextFormat(scripture)
             else:
                 scripture = self.convertESwordBibleTags(scripture)

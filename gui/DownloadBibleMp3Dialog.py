@@ -289,7 +289,7 @@ class DownloadBibleMp3Util:
             zipFile = os.path.join(directory, dir)
             shutil.make_archive(zipFile, 'zip', zipFile)
             count += 1
-            if count > 39:
+            if count >= 39:
                 break
 
     @staticmethod
@@ -388,11 +388,11 @@ if __name__ == '__main__':
     KJV
     https://www.audiotreasure.com/audioindex.htm
     """
-    sourceDir = "/Users/otseng/Downloads/temp"
-    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
+    # sourceDir = "/Users/otseng/Downloads/temp"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
     # DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, True)
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
-    DownloadBibleMp3Util.zipFiles(destDir, True)
+    # DownloadBibleMp3Util.zipFiles(destDir, True)
 
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/KJV/soft-music"
     # DownloadBibleMp3Util.zipFiles(destDir, True)
@@ -418,12 +418,12 @@ if __name__ == '__main__':
     WEB
     https://www.audiotreasure.com/webindex.htm
     '''
-    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    # sourceDir = "/Users/otseng/Downloads/temp"
+    # DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, True)
+
+    # sourceDir = "/Users/otseng/Downloads/temp"
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
-    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
-    # DownloadBibleMp3Util.fixFilenames(sourceDir, True)
-
-    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
-    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    DownloadBibleMp3Util.zipFiles(sourceDir, True)
