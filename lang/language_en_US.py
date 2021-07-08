@@ -746,4 +746,5 @@ translation = {
     "selectAll": "Select All",
     "selectNone": "Select None",
     "displayCmdOutput": "Display output of CMD command",
+    "textWithReference": "Text with reference",
 }

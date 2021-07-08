@@ -746,4 +746,5 @@ translation = {
     "selectAll": "모두 선택",
     "selectNone": "없음 선택",
     "displayCmdOutput": "CMD 명령의 출력 표시",
+    "textWithReference": "참조 텍스트",
 }

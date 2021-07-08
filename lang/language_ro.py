@@ -746,4 +746,5 @@ translation = {
     "selectAll": "Selectare tot",
     "selectNone": "Selectare Fără",
     "displayCmdOutput": "Afişare ieşire comandă CMD",
+    "textWithReference": "Text cu referinţă",
 }
