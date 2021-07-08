@@ -368,7 +368,7 @@ class ShortcutUtil:
             "externalFileButtonClicked": "Ctrl+N, R",
             "forward": "Ctrl+Y, 2",
             "fullsizeWindow": "Ctrl+W, F",
-            "maximizedWindow": "",
+            "maximizedWindow": "Ctrl+W, M",
             "gotoFirstChapter": 'Ctrl+<',
             "gotoLastChapter": 'Ctrl+>',
             "hideShowSideToolBars": "Ctrl+\\",
