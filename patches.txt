@@ -907,4 +907,3 @@
 (25.75, "file", "UniqueBibleAppVersion.txt")
 (25.75, "file", "latest_changes.txt")
 (25.75, "file", "patches.txt")
-
