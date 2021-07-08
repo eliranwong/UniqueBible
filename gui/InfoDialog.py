@@ -1,12 +1,11 @@
+import glob
 import re
 import sys
 import webbrowser
-
 import config
-
 from qtpy.QtCore import QCoreApplication, Qt
 from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QTextBrowser
-from qtpy.QtGui import QTextCursor
+from qtpy.QtWidgets import QHBoxLayout
 
 
 class InfoDialog(QDialog):
@@ -17,13 +16,42 @@ class InfoDialog(QDialog):
         self.wikiLink = "https://github.com/eliranwong/UniqueBible/wiki"
 
         self.setMinimumWidth(500)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(500)
         self.setWindowTitle(config.thisTranslation["info"])
         self.layout = QVBoxLayout()
 
-        self.appName = QLabel("UniqueBible.app [{0} {1}]".format(config.thisTranslation["version"], config.version))
+        self.appName = QLabel("UniqueBible.app - {0}".format(config.version))
+        self.appName.setStyleSheet("QLabel {font-size: 30px;}")
         self.appName.mouseReleaseEvent = self.openWiki
         self.layout.addWidget(self.appName)
+
+        filesHBox = QHBoxLayout()
+
+        filesVBox1 = QVBoxLayout()
+        count = len(glob.glob(config.marvelData+"/bibles/*.bible"))
+        filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu5_bible"], count)))
+        count = len(glob.glob(config.marvelData+"/lexicons/*.lexicon"))
+        filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["lexicons"], count)))
+        filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu1_menuLayout"], config.menuLayout)))
+        filesHBox.addLayout(filesVBox1)
+
+        filesVBox2 = QVBoxLayout()
+        count = len(glob.glob(config.marvelData+"/commentaries/*.commentary"))
+        filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["commentaries"], count)))
+        count = len(glob.glob(config.marvelData+"/books/*.book"))
+        filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu10_books"], count)))
+        filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_shortcuts"], config.menuShortcuts)))
+        filesHBox.addLayout(filesVBox2)
+
+        filesVBox3 = QVBoxLayout()
+        count = len(glob.glob(config.marvelData+"/pdf/*.pdf"))
+        filesVBox3.addWidget(QLabel("{0}: {1}".format("PDF", count)))
+        count = len(glob.glob(config.marvelData+"/epub/*.epub"))
+        filesVBox3.addWidget(QLabel("{0}: {1}".format("EPUB", count)))
+        filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_theme"], config.theme)))
+        filesHBox.addLayout(filesVBox3)
+
+        self.layout.addLayout(filesHBox)
 
         if content is None:
             with open("latest_changes.txt", "r", encoding="utf-8") as fileObject:
@@ -34,7 +62,9 @@ class InfoDialog(QDialog):
         urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$~_?\+-=\\\.&]*)", re.MULTILINE | re.UNICODE)
         html = urls.sub(r'<a href="\1" >\1</a>', html)
         html = html.replace("\n", "<br>")
-        self.layout.addWidget(QLabel("{0}:".format(config.thisTranslation["latest_changes"] if description is None else description)))
+        latest = QLabel("{0}:".format(config.thisTranslation["latest_changes"] if description is None else description))
+        latest.setStyleSheet("QLabel {font-size: 20px;}")
+        self.layout.addWidget(latest)
         self.latestChanges = QTextBrowser()
         self.latestChanges.setOpenExternalLinks(True)
         self.latestChanges.insertHtml(html)

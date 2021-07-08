@@ -1676,7 +1676,7 @@ class MainWindow(QMainWindow):
                 self.vlcPlayer = VlcPlayer(self, filename)
             else:
                 self.vlcPlayer.stop()
-                self.vlcPlayer.load_file(filename)
+                self.vlcPlayer.loadAndPlayFile(filename)
             self.vlcPlayer.show()
 
     def openMiniBrowser(self, initialUrl=None):
@@ -3475,20 +3475,38 @@ class MainWindow(QMainWindow):
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
 
+    def playBibleMP3Playlist(self, playlist):
+        if playlist and config.isVlcInstalled:
+            from gui.VlcPlayer import VlcPlayer
+            if self.vlcPlayer is None:
+                self.vlcPlayer = VlcPlayer(self)
+            else:
+                self.vlcPlayer.stop()
+            self.vlcPlayer.clearPlaylist()
+            for listItem in playlist:
+                (text, book, chapter, folder) = listItem
+                directory = self.getBibleMP3Directory(text, book, chapter, folder)
+                if directory:
+                    filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
+                    files = glob.glob(filesearch)
+                    if not files:
+                        filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
+                                                              "{:02d}".format(chapter))
+                        files = glob.glob(filesearch)
+                    if not files:
+                        filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
+                                                              "{:01d}".format(chapter))
+                        files = glob.glob(filesearch)
+                    if files:
+                        file = files[0]
+                        self.vlcPlayer.addToPlaylist(file)
+            self.vlcPlayer.show()
+            self.vlcPlayer.playNextInPlaylist()
+
     def playBibleMP3File(self, text, book, chapter, folder="default"):
-        directory = self.getBibleMP3Directory(text, book, chapter, folder)
-        if directory:
-            filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
-            files = glob.glob(filesearch)
-            if not files:
-                filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:02d}".format(chapter))
-                files = glob.glob(filesearch)
-            if not files:
-                filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:01d}".format(chapter))
-                files = glob.glob(filesearch)
-            if files:
-                file = files[0]
-                self.openVlcPlayer(file)
+        playlist = []
+        playlist.append((text, book, chapter, folder))
+        self.playBibleMP3Playlist(playlist)
 
     def getBibleMP3Directory(self, text, book, chapter, folder):
         directory = "audio/bibles/{0}/{1}/{2}".format(text, folder, "{:02d}".format(book))

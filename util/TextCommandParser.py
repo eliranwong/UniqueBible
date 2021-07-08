@@ -418,9 +418,12 @@ class TextCommandParser:
             # Usage:
             # e.g. READBIBLE                             # Reads current Bible and current chapter
             # e.g. READBIBLE:::Matt 1                    # Reads chapter from current Bible
+            # e.g. READBIBLE:::Matt 1,John 1             # Reads chapters from current Bible
+            # e.g. READBIBLE:::Matt 1-28                 # Reads chapters from current Bible
             # e.g. READBIBLE:::KJV:::Matt 1              # Reads chapter from Bible
-            # e.g. READBIBLE:::KJV:::Matt 1:::drama      # Reads from drama folder instead of default folder
-            # e.g. READBIBLE:::@drama                    # Reads from drama folder instead of default folder
+            # e.g. READBIBLE:::KJV:::Matt 1,Matt 2       # Reads chapters from Bible
+            # e.g. READBIBLE:::KJV:::Matt 1:::soft-music # Reads from drama folder instead of default folder
+            # e.g. READBIBLE:::@soft-music               # Reads from drama folder instead of default folder
             """),
             "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote
@@ -1244,14 +1247,15 @@ class TextCommandParser:
             book = config.mainB
             chapter = config.mainC
             folder = "default"
+            playlist = []
             if command:
                 count = command.count(":::")
                 if count == 0:
                     if command.startswith("@"):
                         folder = command[1:]
+                        playlist.append((text, book, chapter, folder))
                     else:
-                        verseList = self.extractAllVerses(command)
-                        book, chapter, verse = verseList[0]
+                        playlist = self.getBiblePlaylist(command, text, folder)
                 elif count == 1:
                     text, reference = self.splitCommand(command)
                     verseList = self.extractAllVerses(command)
@@ -1259,11 +1263,29 @@ class TextCommandParser:
                 elif count == 2:
                     text, commandList = self.splitCommand(command)
                     reference, folder = self.splitCommand(commandList)
-                    verseList = self.extractAllVerses(command)
-                    book, chapter, verse = verseList[0]
-            self.parent.playBibleMP3File(text, book, chapter, folder)
+                    playlist = self.getBiblePlaylist(reference, text, folder)
+            self.parent.playBibleMP3Playlist(playlist)
         return ("", "", {})
 
+    def getBiblePlaylist(self, command, text, folder):
+        playlist = []
+        if "," in command:
+            parts = command.split(",")
+            for part in parts:
+                verseList = self.extractAllVerses(part)
+                book, chapter, verse = verseList[0]
+                playlist.append((text, book, chapter, folder))
+        elif "-" in command:
+            start, end = command.split("-")
+            verseList = self.extractAllVerses(start)
+            book, chapter, verse = verseList[0]
+            for index in range(int(chapter), int(end)+1):
+                playlist.append((text, book, index, folder))
+        else:
+            verseList = self.extractAllVerses(command)
+            book, chapter, verse = verseList[0]
+            playlist.append((text, book, chapter, folder))
+        return playlist
 
     # functions about bible
 
