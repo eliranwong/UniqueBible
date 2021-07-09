@@ -22,6 +22,7 @@ class VlcPlayer(QWidget):
 
     def __init__(self, parent, filename=None):
         super().__init__()
+        self.debug = True
         self.playlist = []
         os.environ["VLC_VERBOSE"] = str("-1")  # turn off low level VLC logging
         self.setWindowTitle(config.thisTranslation["mediaPlayer"])
@@ -98,6 +99,8 @@ class VlcPlayer(QWidget):
         self.setLayout(self.vboxlayout)
 
     def play_pause(self):
+        if self.debug:
+            print("Play/Pause")
         if self.mediaplayer.is_playing():
             self.stopbutton.setEnabled(False)
             self.mediaplayer.pause()
@@ -130,6 +133,8 @@ class VlcPlayer(QWidget):
 
     def clearPlaylist(self):
         self.playlist = []
+        if self.debug:
+            print("Clear playlist")
 
     def loadAndPlayFile(self, filename):
         self.playlist = []
@@ -139,6 +144,8 @@ class VlcPlayer(QWidget):
     def addToPlaylist(self, filename):
         if not os.path.exists(filename):
             return
+        if self.debug:
+            print("Add to playlist {0}".format(filename))
         self.playlist.insert(0, filename)
         self.updateNextButton()
 
@@ -159,6 +166,8 @@ class VlcPlayer(QWidget):
             self.media.parse()
             self.mediaplayer.play()
             self.setWindowTitle(self.media.get_meta(0))
+            if self.debug:
+                print("Playing {0}".format(filename))
 
             # The media player has to be 'connected' to the QFrame (otherwise the
             # video would be displayed in it's own window). This is platform
@@ -241,6 +250,9 @@ class VlcPlayer(QWidget):
             self.timer.stop()
             self.stop()
             self.parent.vlcPlayer = None
+            if self.debug:
+                print("Close VLC")
+
 
 ## Standalone development code
 

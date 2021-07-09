@@ -416,14 +416,14 @@ class TextCommandParser:
             # for example, 40_Matthew001.mp3.  Chapter numbers should be three digits (eg `001`).
             # mp3 files can be downloaded from https://www.audiotreasure.com/audioindex.htm
             # Usage:
-            # e.g. READBIBLE:::                             # Reads current Bible and current chapter
-            # e.g. READBIBLE:::@soft-music                  # Reads from soft-music folder instead of default folder
-            # e.g. READBIBLE:::Matt 1                       # Reads chapter from current Bible
-            # e.g. READBIBLE:::Matt 1,John 1                # Reads chapters from current Bible
-            # e.g. READBIBLE:::Matt 1-28                    # Reads chapters from current Bible
-            # e.g. READBIBLE:::KJV:::Matt 1                 # Reads chapter from Bible
-            # e.g. READBIBLE:::KJV:::Matt 1,Matt 2          # Reads chapters from Bible
-            # e.g. READBIBLE:::KJV:::Matt 1-4:::soft-music  # Reads from soft-music folder instead of default folder
+            # e.g. READBIBLE:::                                 # Reads current Bible and current chapter
+            # e.g. READBIBLE:::@soft-music                      # Reads from soft-music folder instead of default folder
+            # e.g. READBIBLE:::Matt. 1                          # Reads chapter from current Bible
+            # e.g. READBIBLE:::Matt. 1,John. 1                  # Reads chapters from current Bible
+            # e.g. READBIBLE:::Matt. 1-28                       # Reads chapters from current Bible
+            # e.g. READBIBLE:::KJV:::Matt. 1                    # Reads chapter from Bible
+            # e.g. READBIBLE:::KJV:::Matt. 1,Matt. 2            # Reads chapters from Bible
+            # e.g. READBIBLE:::KJV:::Matt. 1-4:::soft-music     # Reads from soft-music folder instead of default folder
             """),
             "opennote": (self.textOpenNoteFile, """
             # [KEYWORD] opennote

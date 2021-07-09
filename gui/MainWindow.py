@@ -1470,17 +1470,18 @@ class MainWindow(QMainWindow):
     def importModules(self):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
-                                                      config.thisTranslation["menu8_3rdParty"],
-                                                      self.openFileNameLabel.text(),
-                                                      (
-                                                          "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Books (*.bok.mybible);;"
-                                                          "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
-                                                          "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
-                                                          "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
-                                                          "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
-                                                          "XML [Beblia/OSIS/Zefania] (*.xml);;"
-                                                          "Word Documents (*.docx);;"
-                                                          "PDF Documents (*.pdf)"), "", options)
+              config.thisTranslation["menu8_3rdParty"],
+              self.openFileNameLabel.text(),
+              (
+                  "MySword Bibles (*.bbl.mybible);;MySword Commentaries (*.cmt.mybible);;MySword Books (*.bok.mybible);;"
+                  "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
+                  "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
+                  "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
+                  "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
+                  "XML [Beblia/OSIS/Zefania] (*.xml);;"
+                  "theWord (*.nt);;"
+                  "Word Documents (*.docx);;"
+                  "PDF Documents (*.pdf)"), "", options)
         if fileName:
             if fileName.endswith(".dct.mybible") or fileName.endswith(".dcti") or fileName.endswith(
                     ".lexi") or fileName.endswith(".dictionary.SQLite3"):
@@ -1509,6 +1510,8 @@ class MainWindow(QMainWindow):
                 self.importMyBibleBible(fileName)
             elif fileName.endswith(".xml"):
                 self.importXMLBible(fileName)
+            elif fileName.endswith(".nt"):
+                self.importTheWordBible(fileName)
 
     def customMarvelData(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
@@ -1608,6 +1611,10 @@ class MainWindow(QMainWindow):
         Converter().importXMLBible(fileName)
         self.completeImport()
 
+    def importTheWordBible(self, filename):
+        Converter().importTheWordBible(filename)
+        self.completeImport()
+
     def completeImport(self):
         self.reloadControlPanel(False)
         self.displayMessage(config.thisTranslation["message_done"])
@@ -1671,13 +1678,15 @@ class MainWindow(QMainWindow):
 
     def openVlcPlayer(self, filename=""):
         if config.isVlcInstalled:
-            from gui.VlcPlayer import VlcPlayer
-            if self.vlcPlayer is None:
+            try:
+                from gui.VlcPlayer import VlcPlayer
+                if self.vlcPlayer is not None:
+                    self.vlcPlayer.stop()
                 self.vlcPlayer = VlcPlayer(self, filename)
-            else:
-                self.vlcPlayer.stop()
                 self.vlcPlayer.loadAndPlayFile(filename)
-            self.vlcPlayer.show()
+                self.vlcPlayer.show()
+            except:
+                pass
 
     def openMiniBrowser(self, initialUrl=None):
         self.youTubeView = MiniBrowser(self, initialUrl)
