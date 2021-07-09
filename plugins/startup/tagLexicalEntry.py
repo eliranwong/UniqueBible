@@ -13,7 +13,7 @@ def tagLexicalEntry(text):
         (r" [ ]+?([^ ])", r" \1"),
         (r"""(<ref onclick=["']lex\(["'])([^\(\)]+?)(["']\)["'])>""", r"""\1\2\3 onmouseover="ld('\2')">"""),
         (r" ([EHG][0-9]+?) ", r""" <sup><ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref></sup> """),
-        (r" ([EHG][0-9]+?) ", r""" <sup><ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref></sup> """),
+        (r" ([EHG][0-9]+?)([ <])", r""" <sup><ref onclick="lex('\1')" onmouseover="ld('\1')">\1</ref></sup>\2"""),
     )
     for search, replace in searchReplace:
         text = re.sub(search, replace, text)
