@@ -1246,7 +1246,7 @@ class TextCommandParser:
             text = config.mainText
             book = config.mainB
             chapter = config.mainC
-            folder = "default"
+            folder = config.defaultMP3BibleFolder
             playlist = []
             if command:
                 count = command.count(":::")
@@ -2781,7 +2781,6 @@ class TextCommandParser:
         code, reference = self.splitCommand(command)
         verseList = self.extractAllVerses(reference)
         for b, c, v in verseList:
-            #print("{0}:{1}:{2}:{3}".format(b, c, v, code))
             if code == "delete":
                 hl.removeHighlight(b, c, v)
             else:

@@ -19,7 +19,7 @@ from db.BiblesSqlite import BiblesSqlite
 
 class MiniControl(QWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent, selectedTab = 0):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["remote_control"])
         self.parent = parent
@@ -33,6 +33,7 @@ class MiniControl(QWidget):
         self.bibleButtons = {}
         # setup interface
         self.setupUI()
+        self.tabs.setCurrentIndex(selectedTab)
 
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):

@@ -1,3 +1,11 @@
+Major changes in version 25.77:
+* Import theWord OT Bibles
+* Fix reading Bibles without a default folder
+* Allow Bible mp3 folders to have the book name in it
+* Remove VLC debugging
+* Open by default Bible tab in minicontrol for Aleph menu
+* Add defaultMP3BibleFolder config
+
 Major changes in version 25.76:
 * Import theWord NT Bibles
 * Fix display of Strongs if at end of line
