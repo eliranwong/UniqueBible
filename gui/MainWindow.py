@@ -255,7 +255,7 @@ class MainWindow(QMainWindow):
 
     def openMiniControlTab(self, index):
         config.miniControlInitialTab = index
-        self.manageMiniControl()
+        self.manageMiniControl(index)
 
     def openControlPanelTab(self, index=None, b=None, c=None, v=None, text=None):
         if index is None:
@@ -331,7 +331,7 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
-    def manageMiniControl(self):
+    def manageMiniControl(self, selectedTab = 0):
         if config.miniControl:
             textCommandText = self.textCommandLineEdit.text()
             if textCommandText:
@@ -339,7 +339,7 @@ class MainWindow(QMainWindow):
             self.miniControl.tabs.setCurrentIndex(config.miniControlInitialTab)
             self.bringToForeground(self.miniControl)
         else:
-            self.miniControl = MiniControl(self)
+            self.miniControl = MiniControl(self, selectedTab)
             self.miniControl.setMinimumHeight(config.minicontrolWindowHeight)
             self.miniControl.setMinimumWidth(config.minicontrolWindowWidth)
             self.miniControl.show()
@@ -1479,7 +1479,8 @@ class MainWindow(QMainWindow):
                   "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
                   "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
                   "XML [Beblia/OSIS/Zefania] (*.xml);;"
-                  "theWord (*.nt);;"
+                  "theWord Complete Bibles (*.ont);;"
+                  "theWord NT Bibles (*.nt);;"
                   "Word Documents (*.docx);;"
                   "PDF Documents (*.pdf)"), "", options)
         if fileName:
@@ -1511,6 +1512,8 @@ class MainWindow(QMainWindow):
             elif fileName.endswith(".xml"):
                 self.importXMLBible(fileName)
             elif fileName.endswith(".nt"):
+                self.importTheWordBible(fileName)
+            elif fileName.endswith(".ont"):
                 self.importTheWordBible(fileName)
 
     def customMarvelData(self):
@@ -1682,7 +1685,11 @@ class MainWindow(QMainWindow):
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.stop()
-                self.vlcPlayer = VlcPlayer(self, filename)
+                    self.vlcPlayer.clearPlaylist()
+                    self.vlcPlayer.resetTimer()
+                    self.vlcPlayer.update()
+                else:
+                    self.vlcPlayer = VlcPlayer(self, filename)
                 self.vlcPlayer.loadAndPlayFile(filename)
                 self.vlcPlayer.show()
             except:
@@ -3205,7 +3212,6 @@ class MainWindow(QMainWindow):
     def setDefaultFont(self):
         ok, font = QFontDialog.getFont(QFont(config.font, config.fontSize), self)
         if ok:
-            # print(font.key())
             config.font, fontSize, *_ = font.key().split(",")
             config.fontSize = int(fontSize)
             self.defaultFontButton.setText("{0} {1}".format(config.font, config.fontSize))
@@ -3215,7 +3221,6 @@ class MainWindow(QMainWindow):
     def setChineseFont(self):
         ok, font = QFontDialog.getFont(QFont(config.fontChinese, config.fontSize), self)
         if ok:
-            # print(font.key())
             config.fontChinese, *_ = font.key().split(",")
             self.reloadCurrentRecord(True)
 
@@ -3487,42 +3492,56 @@ class MainWindow(QMainWindow):
     def playBibleMP3Playlist(self, playlist):
         if playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
-            if self.vlcPlayer is None:
-                self.vlcPlayer = VlcPlayer(self)
-            else:
+            if self.vlcPlayer is not None:
                 self.vlcPlayer.stop()
-            self.vlcPlayer.clearPlaylist()
+                self.vlcPlayer.clearPlaylist()
+                self.vlcPlayer.resetTimer()
+                self.vlcPlayer.update()
+            else:
+                self.vlcPlayer = VlcPlayer(self)
             for listItem in playlist:
                 (text, book, chapter, folder) = listItem
-                directory = self.getBibleMP3Directory(text, book, chapter, folder)
+                directory = self.getBibleMP3Directory(text, book, folder)
                 if directory:
-                    filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
+                    filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
                     files = glob.glob(filesearch)
                     if not files:
-                        filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
+                        filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
                                                               "{:02d}".format(chapter))
                         files = glob.glob(filesearch)
-                    if not files:
-                        filesearch = "{0}/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
-                                                              "{:01d}".format(chapter))
-                        files = glob.glob(filesearch)
+                        if not files:
+                            filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
+                                                                  "{:01d}".format(chapter))
+                            files = glob.glob(filesearch)
                     if files:
                         file = files[0]
                         self.vlcPlayer.addToPlaylist(file)
             self.vlcPlayer.show()
             self.vlcPlayer.playNextInPlaylist()
 
-    def playBibleMP3File(self, text, book, chapter, folder="default"):
+    def playBibleMP3File(self, text, book, chapter, folder=config.defaultMP3BibleFolder):
         playlist = []
         playlist.append((text, book, chapter, folder))
         self.playBibleMP3Playlist(playlist)
 
-    def getBibleMP3Directory(self, text, book, chapter, folder):
-        directory = "audio/bibles/{0}/{1}/{2}".format(text, folder, "{:02d}".format(book))
-        if os.path.exists(directory):
-            return directory
+    def getBibleMP3Directory(self, text, book, folder):
+        directory = "audio/bibles/{0}/{1}/{2}*".format(text, folder, "{:02d}".format(book))
+        directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
+        if directories:
+            if os.path.exists(directories[0]):
+                return directories[0]
         else:
-            return None
+            directory = "audio/bibles/{0}".format(text)
+            directories = [d for d in os.listdir(directory) if
+                           os.path.isdir(os.path.join(directory, d)) and not d == ".git"]
+            if directories:
+                directory = "audio/bibles/{0}/{1}/{2}*".format(text, directories[0], "{:02d}".format(book))
+                directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
+                if directories:
+                    if os.path.exists(directories[0]):
+                        return directories[0]
+        return None
+
 
     def testing(self):
         #pass

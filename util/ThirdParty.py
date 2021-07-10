@@ -1263,7 +1263,8 @@ class Converter:
         self.logger.info("Import successful")
 
     def stripTheWordTags(self, line):
-        line = re.sub(r"<W(G\d*)>", " \\1 ", line)
+        line = re.sub(r"<W([HG]\d*)>", " \\1 ", line)
+        line = re.sub(r"<.*?>", "", line)
         return line
 
     def storiesToTitles(self, stories):
@@ -2035,6 +2036,11 @@ if __name__ == '__main__':
     # text = " {\f1\'c2\'df\'e2\'eb\'ef\'f2\sub 1}  {\cf11\super  Biblos G976 NNSF}  {\cf2 Libro}  {\f1\u8594?}  {\cf16 de}  {\f1\u8594?}  {\cf16 la}  {\f1\'e3\'e5\'ed\'dd\'f3\'e5\'f9\'f2\sub 2}  {\cf11\super  geneseôs G1078 NGSF}  {\cf2 genealogía}  {\f1\u8594?}  {\cf16 de}  \'8b  {\f1\u7992?\'e7\'f3\'ef\u8166?{\sub 3} \'d8\'f1\'e9\'f3\'f4\'ef\u8166?\sub 4} \'9b  {\cf11\super  Iêsou Christou G2424 G5547 NGSM NGSM}  {\cf2 Jesucristo,}  {\f1\'f5\u7985?\'ef\u8166?\sub 5}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\'c4\'e1\'e2\'df\'e4\sub 6}  {\cf11\super  Dabid G1138 XP}  {\cf2 David,}  {\f1\'f5\u7985?\'ef\u8166?\sub 7}  {\cf11\super  huiou G5207 NGSM}  {\cf2 hijo}  {\f1\u8594?}  {\cf16 de}  {\f1\u7944?\'e2\'f1\'e1\'dc\'ec\sub 8}  {\cf11\super  Abraam G11 XP}  {\cf2 Abraham.}"
     # out = Converter().convertFromRichTextFormat(text, True)
     # print(out)
-    file = "/Users/otseng/Downloads/ant.nt"
-    Converter().importTheWordBible(file)
 
+    # file = "/Users/otseng/Downloads/ant.nt"
+    # Converter().importTheWordBible(file)
+
+    # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
+    line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
+    out = Converter().stripTheWordTags(line)
+    print(out)

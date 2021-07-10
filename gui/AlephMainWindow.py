@@ -158,7 +158,7 @@ class AlephMainWindow:
         masterControlMenu.addAction(QAction(config.thisTranslation["mediaPlayer"], self, shortcut=sc.openControlPanelTab6,
                                             triggered=lambda: self.openControlPanelTab(6)))
 
-        navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=self.manageMiniControl))
+        navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=lambda : self.openMiniControlTab(1)))
         navigation_menu.addSeparator()
         navigation_menu.addAction(
             QAction(config.thisTranslation["menu_first_chapter"], self, shortcut=sc.gotoFirstChapter, triggered=self.gotoFirstChapter))

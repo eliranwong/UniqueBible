@@ -1,6 +1,7 @@
 """
 Reading data from bibles.sqlite
 """
+import glob
 import os, sqlite3, config, re, logging
 
 from util.BibleVerseParser import BibleVerseParser
@@ -1083,8 +1084,9 @@ class Bible:
                 for index, dir in enumerate(directories):
                     if index > 2:
                         index = 2
-                    directory = "audio/bibles/{0}/{1}/{2}".format(text, dir, "{:02d}".format(b))
-                    if os.path.exists(directory):
+                    directory = "audio/bibles/{0}/{1}/{2}*".format(text, dir, "{:02d}".format(b))
+                    directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
+                    if len(directories) > 0:
                         icon = '&#{0}'.format(128264 + index)
                         data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
         return data

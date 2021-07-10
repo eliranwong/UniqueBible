@@ -997,6 +997,11 @@ class ConfigUtil:
         # Display output of CMD command"""
         if not hasattr(config, "displayCmdOutput"):
             config.displayCmdOutput = False
+        config.help["defaultMP3BibleFolder"] = """
+        # Default MP3 Bible folder
+        """
+        if not hasattr(config, "defaultMP3BibleFolder"):
+            config.defaultMP3BibleFolder = "default"
 
         # Additional conditional configurations
         if config.enableMenuUnderline:
@@ -1242,6 +1247,7 @@ class ConfigUtil:
             ("bibleCollections", config.bibleCollections),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook),
             ("displayCmdOutput", config.displayCmdOutput),
+            ("defaultMP3BibleFolder", config.defaultMP3BibleFolder),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:
