@@ -131,9 +131,7 @@ class LiveFilterDialog(QDialog):
                         sets.append('"{0}"'.format(self.filters[index][1]))
                 wordSets = ",".join(sets)
                 js = self.JS_SHOW.format(wordSets)
-                print(js)
                 config.mainWindow.studyPage.runJavaScript(js)
-                print(self.JS_SHOW.format(wordSets))
         except Exception as e:
             print(str(e))
 
