@@ -747,4 +747,8 @@ translation = {
     "selectNone": "없음 선택",
     "displayCmdOutput": "CMD 명령의 출력 표시",
     "textWithReference": "참조 텍스트",
+    "disableLoadLastOpenFilesOnStartup": "시작 시 마지막으로 열린 파일 로드 사용 안함",
+    "liveFilter": "라이브 필터",
+    "filter2": "필터",
+    "pattern": "패턴",
 }

@@ -8,6 +8,6 @@ else:
     text, ok = QInputDialog.getText(config.mainWindow, "QInputDialog.getText()",
             "Find:", QLineEdit.Normal,
             "")
-    if ok and text != '':
+    if ok:
         config.mainWindow.mainPage.findText(text)
         config.mainWindow.studyPage.findText(text)

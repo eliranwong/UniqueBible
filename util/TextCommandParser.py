@@ -1016,7 +1016,7 @@ class TextCommandParser:
         else:
             # use plain bibles database when corresponding formatted version is not available
             language = Bible(text).getLanguage()
-            content = BiblesSqlite(language).readPlainChapter(text, verse)
+            content = BiblesSqlite(language).readPlainChapter(text, verse, source)
         return content
 
     # cmd:::

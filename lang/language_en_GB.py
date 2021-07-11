@@ -747,4 +747,8 @@ translation = {
     "selectNone": "Select None",
     "displayCmdOutput": "Display output of CMD command",
     "textWithReference": "Text with reference",
+    "disableLoadLastOpenFilesOnStartup": "Disable load last open files on startup",
+    "liveFilter": "Live Filter",
+    "filter2": "Filter",
+    "pattern": "Pattern",
 }

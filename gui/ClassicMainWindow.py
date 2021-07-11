@@ -203,7 +203,8 @@ class ClassicMainWindow:
         studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_study"], self, shortcut=sc.studyHistoryButtonClicked, triggered=self.studyHistoryButtonClicked))
         studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyBack"], self, shortcut=sc.studyBack, triggered=self.studyBack))
         studyWindowHistoryMenu.addAction(QAction(config.thisTranslation["menu3_studyForward"], self, shortcut=sc.studyForward, triggered=self.studyForward))
-        
+        menu3.addSeparator()
+        menu3.addAction(QAction(config.thisTranslation["liveFilter"], self, triggered=self.showLiveFilterDialog))
         menu3.addSeparator()
         menu3.addAction(QAction(config.thisTranslation["menu1_reload"], self, triggered=self.reloadCurrentRecord))
 

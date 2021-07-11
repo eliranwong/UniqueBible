@@ -124,6 +124,7 @@ class ShortcutUtil:
             "ubaWiki": '',
             "ubaDiscussions": '',
             "commandLineInterface": '',
+            "liveFilterDialog": '',
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -234,6 +235,7 @@ class ShortcutUtil:
             "ubaWiki": '',
             "ubaDiscussions": '',
             "commandLineInterface": '',
+            "liveFilterDialog": '',
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -344,6 +346,7 @@ class ShortcutUtil:
             "ubaWiki": 'Ctrl+H',
             "ubaDiscussions": 'Ctrl+D',
             "commandLineInterface": 'Ctrl+^',
+            "liveFilterDialog": '',
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -454,6 +457,7 @@ class ShortcutUtil:
             "ubaWiki": '',
             "ubaDiscussions": '',
             "commandLineInterface": '',
+            "liveFilterDialog": 'Ctrl+*',
         }
     }
 

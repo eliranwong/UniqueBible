@@ -1,3 +1,9 @@
+Major changes in version 25.78:
+* Add Live Filtering
++ https://github.com/eliranwong/UniqueBible/wiki/Live-Filtering
+* Fix Windows shortcut if space in path
+* Add disableLoadLastOpenFilesOnStartup config flag to turn on/off loading files automatically on startup
+
 Major changes in version 25.77:
 * Import theWord OT Bibles
 * Fix reading Bibles without a default folder

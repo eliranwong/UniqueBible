@@ -37,6 +37,8 @@ class VlcPlayer(QWidget):
         self.resetTimer()
         if filename:
             self.loadAndPlayFile(filename)
+        self.mediaplayer.audio_set_mute(False)
+        self.mediaplayer.audio_set_volume(100)
         self.update()
 
     def create_ui(self):

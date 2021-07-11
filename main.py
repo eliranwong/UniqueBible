@@ -400,7 +400,7 @@ if config.populateTabsOnStartup:
     # Execute initial command on Study Window
     populateTabsOnStartup("study")
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
-else:
+elif not config.disableLoadLastOpenFilesOnStartup:
     # Execute initial command on Bible Window
     if not initialCommand or initialCommandIsPython or (hasattr(config, "cli") and config.cli):
         runLastHistoryRecord("main")

@@ -110,6 +110,7 @@ class ConfigFlagsWindow(QDialog):
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, True, config.thisTranslation["includeStrictDocTypeInNote"]),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, True, config.thisTranslation["parseTextConvertNotesToBook"]),
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, True, config.thisTranslation["displayCmdOutput"]),
+            ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, True, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
         ]
         if config.isTtsInstalled:
             options += [
@@ -439,3 +440,6 @@ class ConfigFlagsWindow(QDialog):
 
     def displayCmdOutputChanged(self):
         config.displayCmdOutput = not config.displayCmdOutput
+
+    def disableLoadLastOpenFilesOnStartupChanged(self):
+        config.disableLoadLastOpenFilesOnStartup = not config.disableLoadLastOpenFilesOnStartup
