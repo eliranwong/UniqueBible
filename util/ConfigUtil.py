@@ -1002,6 +1002,11 @@ class ConfigUtil:
         """
         if not hasattr(config, "defaultMP3BibleFolder"):
             config.defaultMP3BibleFolder = "default"
+        config.help["disableLoadLastOpenFilesOnStartup"] = """
+        # Disable load last open files on startup
+        """
+        if not hasattr(config, "disableLoadLastOpenFilesOnStartup"):
+            config.disableLoadLastOpenFilesOnStartup = False
 
         # Additional conditional configurations
         if config.enableMenuUnderline:
@@ -1248,6 +1253,7 @@ class ConfigUtil:
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook),
             ("displayCmdOutput", config.displayCmdOutput),
             ("defaultMP3BibleFolder", config.defaultMP3BibleFolder),
+            ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

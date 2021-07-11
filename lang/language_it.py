@@ -747,4 +747,8 @@ translation = {
     "selectNone": "Selezionare Nessuno",
     "displayCmdOutput": "Visualizza output del comando CMD",
     "textWithReference": "Testo con riferimento",
+    "disableLoadLastOpenFilesOnStartup": "Disabilitare il caricamento degli ultimi file aperti all'avvio",
+    "liveFilter": "Filtro attivo",
+    "filter2": "Filtro",
+    "pattern": "Modello",
 }

@@ -709,7 +709,7 @@ input.addEventListener('keyup', function(event) {0}
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
         return verses
 
-    def readPlainChapter(self, text, verse):
+    def readPlainChapter(self, text, verse, source):
         # expect verse is a tuple
         b, c, v, *_ = verse
         # format a chapter
@@ -727,7 +727,8 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
-        chapter += Bible.insertReadBibleLink(text, b)
+        if source == "main":
+            chapter += Bible.insertReadBibleLink(text, b)
         chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)

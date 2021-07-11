@@ -747,4 +747,8 @@ translation = {
     "selectNone": "選取無",
     "displayCmdOutput": "顯示 CMD 指令的輸出",
     "textWithReference": "參照文字",
+    "disableLoadLastOpenFilesOnStartup": "啟動時停用載入前次開啟的檔案",
+    "liveFilter": "即時過濾器",
+    "filter2": "過濾",
+    "pattern": "Pattern",
 }

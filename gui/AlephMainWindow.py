@@ -1,4 +1,3 @@
-from db.BiblesSqlite import BiblesSqlite
 from gui.MenuItems import *
 from qtpy.QtCore import QSize
 import shortcut as sc
@@ -207,6 +206,8 @@ class AlephMainWindow:
         search_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_search"]))
         search_menu.addAction(QAction(config.thisTranslation["menu5_bible"], self, shortcut=sc.displaySearchBibleMenu, triggered=self.displaySearchBibleMenu))
         search_menu.addAction(QAction(config.thisTranslation["menu_verse_all_versions"], self, shortcut=sc.runCOMPARE, triggered=self.runCOMPARE))
+        search_menu.addSeparator()
+        search_menu.addAction(QAction(config.thisTranslation["liveFilter"], self, shortcut=sc.liveFilterDialog, triggered=self.showLiveFilterDialog))
         search_menu.addSeparator()
         search_menu.addAction(QAction(config.thisTranslation["menu5_topics"], self, triggered=self.searchTopicDialog))
         search_menu.addAction(QAction(config.thisTranslation["context1_encyclopedia"], self, triggered=self.searchEncyclopediaDialog))
