@@ -954,6 +954,7 @@
 (25.79, "file", "gui/AlephMainWindow.py")
 (25.79, "file", "gui/ClassicMainWindow.py")
 (25.79, "file", "gui/FocusMainWindow.py")
+(25.79, "file", "db/BiblesSqlite.py")
 (25.79, "file", "UniqueBibleAppVersion.txt")
 (25.79, "file", "latest_changes.txt")
 (25.79, "file", "patches.txt")
