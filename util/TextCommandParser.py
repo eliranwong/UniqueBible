@@ -8,8 +8,9 @@ from functools import partial
 from util.BibleVerseParser import BibleVerseParser
 from util.BibleBooks import BibleBooks
 from db.BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
-from db.ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, \
-    Lexicon
+from db.ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, \
+    DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, \
+    Lexicon, LexiconData
 from util.ThirdParty import ThirdPartyDictionary
 from util.HebrewTransliteration import HebrewTransliteration
 from db.NoteSqlite import NoteSqlite
@@ -293,6 +294,13 @@ class TextCommandParser:
             # Usage - LEXICON:::[LEXICON_MODULE]:::[LEXICAL_ENTRIES]
             # e.g. LEXICON:::BDB:::H7225
             # e.g. LEXICON:::BDB:::H7225_H123"""),
+            "searchlexicon": (self.searchLexicon, """
+            # [KEYWORD] SEARCHLEXICON
+            # Usage - SEARCHLEXICON:::[LEXICON_MODULE]:::[TOPIC ENTRY SEARCH]
+            # e.g. SEARCHLEXICON:::BDB:::H7225
+            # e.g. SEARCHLEXICON:::Dake-topics:::Jesus
+            # e.g. SEARCHLEXICON:::ALL:::Peace
+            """),
             "lmcombo": (self.textLMcombo, """
             # [KEYWORD] LMCOMBO
             # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a"""),
@@ -2371,6 +2379,29 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             return ("study", content, {'tab_title': 'Lex:' + module + ':' + entries})
+
+    # SEARCHLEXICON:::
+    def searchLexicon(self, command, source):
+        if command.count(":::") == 0:
+            defaultLexicon = self.getDefaultLexicons()
+            command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
+        moduleList, search = self.splitCommand(command)
+        search = search.strip()
+        TextCommandParser.last_lexicon_entry = search
+        if moduleList == config.thisTranslation["all"]:
+            modules = LexiconData().getLexiconList()
+        else:
+            modules = moduleList.split("_")
+        content = ""
+        for module in modules:
+            config.lexicon = module
+            lexicon = Lexicon(module)
+            content += lexicon.searchTopic(search)
+            del lexicon
+        if not content or content == "INVALID_COMMAND_ENTERED":
+            return self.invalidCommand()
+        else:
+            return ("study", content, {'tab_title': 'SearchLex:' + module + ':' + search})
 
     # LMCOMBO:::
     def textLMcombo(self, command, source):

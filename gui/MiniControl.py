@@ -385,7 +385,7 @@ class MiniControl(QWidget):
 
 
     def lexiconAction(self, lexicon):
-        command = "LEXICON:::{0}:::{1}".format(lexicon, TextCommandParser.last_lexicon_entry)
+        command = "SEARCHLEXICON:::{0}:::{1}".format(lexicon, TextCommandParser.last_lexicon_entry)
         self.runCommmand(command)
 
     def dictionaryAction(self, dictionary):

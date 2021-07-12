@@ -699,14 +699,14 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        button = QPushButton()
-        button.setToolTip(config.thisTranslation["mediaPlayer"])
-        buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
-        button.setIcon(QIcon(buttonFile))
-        button.clicked.connect(lambda: self.openVlcPlayer(""))
-        self.secondToolBar.addWidget(button)
-
-        self.secondToolBar.addSeparator()
+        if config.isVlcInstalled:
+            button = QPushButton()
+            button.setToolTip(config.thisTranslation["mediaPlayer"])
+            buttonFile = os.path.join("htmlResources", "buttons", "media_player.png")
+            button.setIcon(QIcon(buttonFile))
+            button.clicked.connect(lambda: self.openVlcPlayer(""))
+            self.secondToolBar.addWidget(button)
+            self.secondToolBar.addSeparator()
 
         reloadButton = QPushButton()
         reloadButton.setToolTip(config.thisTranslation["menu1_reload"])
@@ -1186,10 +1186,10 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
-
-        self.secondToolBar.addSeparator()
+        if config.isVlcInstalled:
+            iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["mediaPlayer"], lambda: self.openVlcPlayer(""))
+            self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)

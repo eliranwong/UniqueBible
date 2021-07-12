@@ -458,6 +458,11 @@ class WebEngineView(QWebEngineView):
         action.triggered.connect(self.searchHebrewGreekLexicon)
         subSubMenu.addAction(action)
 
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(partial(self.searchHebrewGreekLexiconSelected, config.thisTranslation["all"]))
+        subSubMenu.addAction(action)
+
         separator = QAction(self)
         separator.setSeparator(True)
         subSubMenu.addAction(separator)
@@ -867,7 +872,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText:
             self.messageNoSelection()
         else:
-            searchCommand = "LEXICON:::{0}:::{1}".format(module, selectedText)
+            searchCommand = "SEARCHLEXICON:::{0}:::{1}".format(module, selectedText)
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchPreviousBook(self):
