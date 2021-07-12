@@ -268,7 +268,15 @@ class DownloadBibleMp3Util:
         files = glob.glob(sourceDir)
         for file in sorted(files):
             base = os.path.basename(file)
-            folder = base[:2]
+            # folder = base[:2]
+            folder = int(base[1:3])
+            bookNum = int(folder)
+            if base[0] == 'B':
+                bookNum += 39
+            # bookNum = int(base[:2])
+            bookName = BibleBooks.eng[str(bookNum)][1]
+            bookName = bookName.replace(" ", "")
+
             destFolder = os.path.join(destDir, folder)
             if not os.path.exists(destFolder):
                 os.mkdir(destFolder)
@@ -289,8 +297,8 @@ class DownloadBibleMp3Util:
             zipFile = os.path.join(directory, dir)
             shutil.make_archive(zipFile, 'zip', zipFile)
             count += 1
-            if count >= 39:
-                break
+            # if count >= 39:
+            #     break
 
     @staticmethod
     def renameChinese(sourceDir, destDir, debugOutput = False):
@@ -324,20 +332,26 @@ class DownloadBibleMp3Util:
         directories = [d for d in os.listdir(sourceDir) if
                        os.path.isdir(os.path.join(sourceDir, d)) and not d == ".git"]
         for subdir in sorted(directories):
-            sourceDir = os.path.join(sourceDir, subdir)
-            DownloadBibleMp3Util.fixFilenamesInDirectory(sourceDir, debugOutput)
+            dir = os.path.join(sourceDir, subdir)
+            DownloadBibleMp3Util.fixFilenamesInDirectory(dir, debugOutput)
 
     @staticmethod
     def fixFilenamesInDirectory(sourceDir, debugOutput=False):
+        if "Matthew" in sourceDir:
+            pass
         sourceFiles = os.path.join(sourceDir, "*.mp3")
         files = glob.glob(sourceFiles)
         for file in sorted(files):
             base = os.path.basename(file)
-            bookNum = int(base[:2])
+            bookNum = int(base[1:3])
+            if base[0] == 'B':
+                bookNum += 39
+            # bookNum = int(base[:2])
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             try:
-                chapter = int(base[-7:-4])
+                # chapter = int(base[-7:-4])
+                chapter = int(base[6:8])
             except:
                 try:
                     chapter = int(base[-6:-4])
@@ -425,5 +439,22 @@ if __name__ == '__main__':
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
-    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
-    DownloadBibleMp3Util.zipFiles(sourceDir, True)
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/WEB/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    ESV
+    '''
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
+    # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(sourceDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir)
+
+    '''
+    NSRV
+    '''
+    sourceDir = "/Users/otseng/Downloads/save"
+    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NSRV/default"
+    DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+

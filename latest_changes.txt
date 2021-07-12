@@ -1,3 +1,6 @@
+Major change in version 25.79:
+* Add SEARCHLEXICON command
+
 Major changes in version 25.78:
 * Add Live Filtering
 + https://github.com/eliranwong/UniqueBible/wiki/Live-Filtering
