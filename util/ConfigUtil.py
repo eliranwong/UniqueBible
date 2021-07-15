@@ -993,6 +993,10 @@ class ConfigUtil:
         # Parse the text when converting notes to book"""
         if not hasattr(config, "parseTextConvertNotesToBook"):
             config.parseTextConvertNotesToBook = True
+        config.help["parseTextConvertHTMLToBook"] = """
+        # Parse the text when converting HTML to book"""
+        if not hasattr(config, "parseTextConvertHTMLToBook"):
+            config.parseTextConvertHTMLToBook = False
         config.help["displayCmdOutput"] = """
         # Display output of CMD command"""
         if not hasattr(config, "displayCmdOutput"):
@@ -1251,6 +1255,7 @@ class ConfigUtil:
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote),
             ("bibleCollections", config.bibleCollections),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook),
+            ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook),
             ("displayCmdOutput", config.displayCmdOutput),
             ("defaultMP3BibleFolder", config.defaultMP3BibleFolder),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup),

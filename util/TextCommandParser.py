@@ -21,7 +21,6 @@ from util.TtsLanguages import TtsLanguages
 #from gui.Downloader import Downloader
 from install.module import *
 from util.DatafileLocation import DatafileLocation
-from util.GithubUtil import GithubUtil
 
 try:
     # Note: qtpy.QtTextToSpeech is not found!
@@ -2930,6 +2929,9 @@ class TextCommandParser:
                 else:
                     self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["notFound"]))
             elif action.startswith("github"):
+                if not config.isPygithubInstalled:
+                    return ("", "", {})
+
                 if action == "githubbible":
                     repo, directory, extension = ("otseng/UniqueBible_Bibles", "bibles", "bible")
                 elif action == "githubcommentary":
@@ -2945,6 +2947,7 @@ class TextCommandParser:
                 else:
                     self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
                     return ("", "", {})
+                from util.GithubUtil import GithubUtil
                 github = GithubUtil(repo)
                 repoData = github.getRepoData()
                 folder = os.path.join(config.marvelData, directory)

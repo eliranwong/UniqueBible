@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "Живой фильтр",
     "filter2": "Фильтр",
     "pattern": "Шаблон",
+    "parseTextConvertHTMLToBook": "Анализировать текст при преобразовании HTML в книгу",
 }

@@ -77,7 +77,8 @@ class Converter:
             if fileExtension.lower() in (".htm", ".html", ".xhtml"):
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
-                    html = BibleVerseParser(config.parserStandarisation).parseText(html)
+                    if config.parseTextConvertHTMLToBook:
+                        html = BibleVerseParser(config.parserStandarisation).parseText(html)
                     bookContent.append((fileName, html))
         if bookContent and module:
             self.createBookModule(module, bookContent)

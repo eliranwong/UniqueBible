@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "实时过滤器",
     "filter2": "过滤器",
     "pattern": "模式",
+    "parseTextConvertHTMLToBook": "将 HTML 转换为书籍时解析文本",
 }

@@ -44,7 +44,6 @@ from gui.AppUpdateDialog import AppUpdateDialog
 from db.ToolsSqlite import LexiconData
 from util.TtsLanguages import TtsLanguages
 from util.DatafileLocation import DatafileLocation
-from util.GithubUtil import GithubUtil
 from util.LanguageUtil import LanguageUtil
 from util.MacroParser import MacroParser
 from util.NoteService import NoteService
@@ -659,26 +658,27 @@ class MainWindow(QMainWindow):
             self.downloadBibleMp3Dialog.show()
 
     def installFromGitHub(self, repo, directory, title):
-        from util.GithubUtil import GithubUtil
+        if config.isPygithubInstalled:
+            from util.GithubUtil import GithubUtil
 
-        github = GithubUtil(repo)
-        repoData = github.getRepoData()
-        folder = os.path.join(config.marvelData, directory)
-        items = [item for item in repoData.keys() if
-                 not os.path.isfile(os.path.join(folder, item))]
-        if not items:
-            items = ["[All Installed]"]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation[title], items, 0, False)
-        if ok and item and not item in ("[All Installed]"):
-            file = os.path.join(folder, item+".zip")
-            github.downloadFile(file, repoData[item])
-            with zipfile.ZipFile(file, 'r') as zipped:
-                zipped.extractall(folder)
-            os.remove(file)
-            self.reloadControlPanel(False)
-            self.displayMessage(item + " " + config.thisTranslation["message_installed"])
-            self.installFromGitHub(repo, directory, title)
+            github = GithubUtil(repo)
+            repoData = github.getRepoData()
+            folder = os.path.join(config.marvelData, directory)
+            items = [item for item in repoData.keys() if
+                     not os.path.isfile(os.path.join(folder, item))]
+            if not items:
+                items = ["[All Installed]"]
+            item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                            config.thisTranslation[title], items, 0, False)
+            if ok and item and not item in ("[All Installed]"):
+                file = os.path.join(folder, item+".zip")
+                github.downloadFile(file, repoData[item])
+                with zipfile.ZipFile(file, 'r') as zipped:
+                    zipped.extractall(folder)
+                os.remove(file)
+                self.reloadControlPanel(False)
+                self.displayMessage(item + " " + config.thisTranslation["message_installed"])
+                self.installFromGitHub(repo, directory, title)
 
     # Select database to modify
     def selectDatabaseToModify(self):
@@ -3323,24 +3323,27 @@ class MainWindow(QMainWindow):
                 value = DatafileLocation.hymnLyrics[key]
                 if (value[0][2]) not in bookList:
                     outfile.write("DOWNLOAD:::HymnLyrics:::{0}\n".format(key))
-            for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
-                if file not in bibleList:
-                    outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
-                if file not in commentaryList:
-                    outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
-                if file not in bookList:
-                    outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
-                if file not in bookList:
-                    outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
-            for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
-                if file not in pdfList:
-                    outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
-            for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
-                if file not in epubList:
-                    outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
+            if config.isPygithubInstalled:
+                from util.GithubUtil import GithubUtil
+
+                for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                    if file not in bibleList:
+                        outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                    if file not in commentaryList:
+                        outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                    if file not in bookList:
+                        outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                    if file not in bookList:
+                        outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
+                for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                    if file not in pdfList:
+                        outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
+                for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                    if file not in epubList:
+                        outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
             outfile.close()
             self.reloadResources()
             self.displayMessage("Command saved to {0}".format(filename))
@@ -3372,24 +3375,27 @@ class MainWindow(QMainWindow):
                 if file in hymns:
                     file = file.replace(".book", "")
                     outfile.write("DOWNLOAD:::HymnLyrics:::{0}\n".format(file))
-            for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
-                if file in bibleList:
-                    outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
-                if file in commentaryList:
-                    outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
-                if file in bookList:
-                    outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
-            for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
-                if file in bookList:
-                    outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
-            for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
-                if file in pdfList:
-                    outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
-            for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
-                if file in epubList:
-                    outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
+
+            if config.isPygithubInstalled:
+                from util.GithubUtil import GithubUtil
+                for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                    if file in bibleList:
+                        outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                    if file in commentaryList:
+                        outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                    if file in bookList:
+                        outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
+                for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                    if file in bookList:
+                        outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
+                for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                    if file in pdfList:
+                        outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
+                for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                    if file in epubList:
+                        outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
             outfile.close()
             self.reloadResources()
             self.displayMessage("Command saved to {0}".format(filename))

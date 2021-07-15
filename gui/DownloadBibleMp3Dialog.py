@@ -448,13 +448,13 @@ if __name__ == '__main__':
     # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
     # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(sourceDir, True)
 
-    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
-    # DownloadBibleMp3Util.zipFiles(sourceDir)
+    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
+    DownloadBibleMp3Util.zipFiles(sourceDir, True)
 
     '''
     NSRV
     '''
-    sourceDir = "/Users/otseng/Downloads/save"
-    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NSRV/default"
-    DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+    # sourceDir = "/Users/otseng/Downloads/save"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NSRV/default"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
