@@ -1,5 +1,5 @@
 Major changes in version 25.80:
-* Add parseTextConvertHTMLToBookChanged config flag
+* Add parseTextConvertHTMLToBook config flag
 * Fix starting http-server on Amazon Fire tablet
 
 Major change in version 25.79:
