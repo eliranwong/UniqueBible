@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "Filtru live",
     "filter2": "Filtrare",
     "pattern": "Tipar",
+    "parseTextConvertHTMLToBook": "Analizaţi textul la convertirea HTML la carte",
 }

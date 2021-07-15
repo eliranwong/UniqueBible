@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "라이브 필터",
     "filter2": "필터",
     "pattern": "패턴",
+    "parseTextConvertHTMLToBook": "HTML을 서적으로 변환할 때 텍스트 구문 분석하기",
 }

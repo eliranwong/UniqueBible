@@ -109,6 +109,7 @@ class ConfigFlagsWindow(QDialog):
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, True, config.thisTranslation["addOHGBiToMorphologySearch"]),
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, True, config.thisTranslation["includeStrictDocTypeInNote"]),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, True, config.thisTranslation["parseTextConvertNotesToBook"]),
+            ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook, self.parseTextConvertHTMLToBookChanged, False, config.thisTranslation["parseTextConvertHTMLToBook"]),
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, True, config.thisTranslation["displayCmdOutput"]),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, True, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
         ]
@@ -437,6 +438,9 @@ class ConfigFlagsWindow(QDialog):
 
     def parseTextConvertNotesToBookChanged(self):
         config.parseTextConvertNotesToBook = not config.parseTextConvertNotesToBook
+
+    def parseTextConvertHTMLToBookChanged(self):
+        config.parseTextConvertHTMLToBook = not config.parseTextConvertHTMLToBook
 
     def displayCmdOutputChanged(self):
         config.displayCmdOutput = not config.displayCmdOutput

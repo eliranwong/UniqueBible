@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "Φίλτρο Live",
     "filter2": "Φίλτρο:",
     "pattern": "Μοτίβο",
+    "parseTextConvertHTMLToBook": "Ανάλυση κειμένου κατά τη μετατροπή HTML σε βιβλίο",
 }

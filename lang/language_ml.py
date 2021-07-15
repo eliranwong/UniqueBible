@@ -751,4 +751,5 @@ translation = {
     "liveFilter": "ലൈവ് ഫില്റ്റര്",
     "filter2": "ഫില്റ്റര്",
     "pattern": "പാറ്റേണ്",
+    "parseTextConvertHTMLToBook": "എച്ച്ടിഎംഎല് പുസ്തകമായി മാറ്റുമ്പോള് പദാവലി പാഴ്സ് ചെയ്യുക",
 }
