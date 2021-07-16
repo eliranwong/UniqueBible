@@ -3112,8 +3112,16 @@ if __name__ == '__main__':
     config.noQt = False
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
 
-    # for item in BibleBooks.getStandardBookAbbreviations():
-    #     print(item)
+    ot = []
+    nt = []
+    for count, item in enumerate(BibleBooks.getStandardBookAbbreviations(), 1):
+        pattern = "<ref.*>{0}.*</ref>".format(item)
+        if count < 40:
+            ot.append(pattern)
+        else:
+            nt.append(pattern)
+    print("Books - OT:::" + "|".join(ot))
+    print("Books - NT:::" + "|".join(nt))
 
     # from util.BibleBooks import BibleBooks
     # from db.BiblesSqlite import Bible
@@ -3126,6 +3134,8 @@ if __name__ == '__main__':
     #         print("{0}: {1},".format(chapter, verses))
     #     print("},")
 
-    line = "Book G976 [of] birth G1078 [of] jesus G2424 christ G5547 son G5207 {of} david G1138 son G5207 {of} abraham G11"
-    line = re.sub(r" ([EHG][0-9]+?)( |$)", r""" <b>\1</b> """, line)
-    print(line)
+    # line = "Book G976 [of] birth G1078 [of] jesus G2424 christ G5547 son G5207 {of} david G1138 son G5207 {of} abraham G11"
+    # line = re.sub(r" ([EHG][0-9]+?)( |$)", r""" <b>\1</b> """, line)
+    # print(line)
+
+

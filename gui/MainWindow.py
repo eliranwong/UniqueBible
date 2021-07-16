@@ -14,6 +14,7 @@ from gui.BibleCollectionDialog import BibleCollectionDialog
 from gui.LiveFilterDialog import LiveFilterDialog
 from util import exlbl
 from util.BibleBooks import BibleBooks
+from util.FileUtil import FileUtil
 from util.TextCommandParser import TextCommandParser
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
@@ -3518,21 +3519,9 @@ class MainWindow(QMainWindow):
                 self.vlcPlayer = VlcPlayer(self)
             for listItem in playlist:
                 (text, book, chapter, folder) = listItem
-                directory = self.getBibleMP3Directory(text, book, folder)
-                if directory:
-                    filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book), "{:03d}".format(chapter))
-                    files = glob.glob(filesearch)
-                    if not files:
-                        filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
-                                                              "{:02d}".format(chapter))
-                        files = glob.glob(filesearch)
-                        if not files:
-                            filesearch = "{0}*/{1}*{2}.mp3".format(directory, "{:02d}".format(book),
-                                                                  "{:01d}".format(chapter))
-                            files = glob.glob(filesearch)
-                    if files:
-                        file = files[0]
-                        self.vlcPlayer.addToPlaylist(file)
+                file = FileUtil.getBibleMP3File(text, book, folder, chapter)
+                if file:
+                    self.vlcPlayer.addToPlaylist(file)
             self.vlcPlayer.show()
             self.vlcPlayer.playNextInPlaylist()
 
@@ -3541,23 +3530,7 @@ class MainWindow(QMainWindow):
         playlist.append((text, book, chapter, folder))
         self.playBibleMP3Playlist(playlist)
 
-    def getBibleMP3Directory(self, text, book, folder):
-        directory = "audio/bibles/{0}/{1}/{2}*".format(text, folder, "{:02d}".format(book))
-        directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
-        if directories:
-            if os.path.exists(directories[0]):
-                return directories[0]
-        else:
-            directory = "audio/bibles/{0}".format(text)
-            directories = [d for d in os.listdir(directory) if
-                           os.path.isdir(os.path.join(directory, d)) and not d == ".git"]
-            if directories:
-                directory = "audio/bibles/{0}/{1}/{2}*".format(text, directories[0], "{:02d}".format(book))
-                directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
-                if directories:
-                    if os.path.exists(directories[0]):
-                        return directories[0]
-        return None
+
 
 
     def testing(self):

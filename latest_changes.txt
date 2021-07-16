@@ -1,3 +1,6 @@
+Major change in version 25.81:
+* Support mp3 files from faithcomesbyhearing.com
+
 Major changes in version 25.80:
 * Add parseTextConvertHTMLToBook config flag
 * Fix starting http-server on Amazon Fire tablet
