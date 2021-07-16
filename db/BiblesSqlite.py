@@ -8,6 +8,7 @@ from util.BibleVerseParser import BibleVerseParser
 from util.BibleBooks import BibleBooks
 from db.NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
+from util.FileUtil import FileUtil
 from util.themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
@@ -728,7 +729,7 @@ input.addEventListener('keyup', function(event) {0}
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
         if source == "main":
-            chapter += Bible.insertReadBibleLink(text, b)
+            chapter += Bible.insertReadBibleLink(text, b, c)
         chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
@@ -1056,7 +1057,7 @@ class Bible:
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
-        chapter += Bible.insertReadBibleLink(self.text, b)
+        chapter += Bible.insertReadBibleLink(self.text, b, c)
         chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
         self.cursor.execute(query, verse[0:2])
@@ -1074,7 +1075,7 @@ class Bible:
             return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
 
     @staticmethod
-    def insertReadBibleLink(text, b):
+    def insertReadBibleLink(text, b, c):
         data = ""
         if config.runMode == "gui" and config.isVlcInstalled:
             directory = "audio/bibles/{0}".format(text)
@@ -1085,9 +1086,8 @@ class Bible:
                 for index, dir in enumerate(directories):
                     if index > 2:
                         index = 2
-                    directory = "audio/bibles/{0}/{1}/{2}*".format(text, dir, "{:02d}".format(b))
-                    directories = [d for d in glob.glob(directory) if os.path.isdir(d)]
-                    if len(directories) > 0:
+                    file = FileUtil.getBibleMP3File(text, b, dir, c)
+                    if file:
                         icon = '&#{0}'.format(128264 + index)
                         data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
         return data

@@ -68,6 +68,37 @@ class FileUtil:
         except:
             pass
 
+    @staticmethod
+    def getBibleMP3File(text, book, folder, chapter):
+        b = book
+        a = "A"
+        if b == 19:
+            c = "{:03d}".format(chapter)
+        else:
+            c = "{:02d}".format(chapter)
+        if b > 39:
+            b -= 39
+            a = "B"
+        filesearch = "audio/bibles/{0}/{1}/{2}{3}*_{4}*.mp3".format(text, folder, a, "{:02d}".format(b), c)
+        file = glob.glob(filesearch)
+        if file:
+            return file[0]
+        filesearch = "audio/bibles/{0}/{1}/{2}*/{3}*_{4}*.mp3".format(text, folder, "{:02d}".format(book),
+                                                                    "{:02d}".format(book), "{:03d}".format(chapter))
+        files = glob.glob(filesearch)
+        if files:
+            file = files[0]
+            return file
+        else:
+            filesearch = "audio/bibles/{0}/{1}/{2}*/{3}_*{4}.mp3".format(text, folder, "{:02d}".format(book),
+                                                                         "{:02d}".format(book),
+                                                                         "{:02d}".format(chapter))
+            files = glob.glob(filesearch)
+            if files:
+                file = files[0]
+                return file
+        return None
+
 # Test code
 
 def test_insertStringIntoFile(filename, data, offset):
