@@ -161,6 +161,7 @@ class VlcPlayer(QWidget):
             self.mediaplayer.set_media(self.media)
             self.media.parse()
             self.mediaplayer.play()
+            self.mediaplayer.set_position(0)
             self.setWindowTitle(self.media.get_meta(0))
 
             # The media player has to be 'connected' to the QFrame (otherwise the
@@ -223,8 +224,10 @@ class VlcPlayer(QWidget):
             if not self.is_paused:
                 self.stop()
                 self.playNextInPlaylist()
-                self.positionslider.setValue(0)
                 self.timer.start()
+        if media_pos == 1000:
+            self.playNextInPlaylist()
+
 
     def center(self):
         qr = self.frameGeometry()
