@@ -20,10 +20,13 @@ class DownloadBibleMp3Dialog(QDialog):
         super().__init__()
 
         self.bibles = {
-            "KJV": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
-            "KJV (Soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
-            "CUV": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
-            "WEB": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
+            "BBE (British)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
+            "KJV (American)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
+            "KJV (American - soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
+            "CUV (Chinese)": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
+            "NHEB (Indian)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
+            "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
+            "WEB (American)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
         }
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
@@ -268,15 +271,13 @@ class DownloadBibleMp3Util:
         files = glob.glob(sourceDir)
         for file in sorted(files):
             base = os.path.basename(file)
-            # folder = base[:2]
-            folder = int(base[1:3])
+            folder = base[:2]
+            # folder = int(base[1:3])
             bookNum = int(folder)
             if base[0] == 'B':
                 bookNum += 39
-            # bookNum = int(base[:2])
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
-
             destFolder = os.path.join(destDir, folder)
             if not os.path.exists(destFolder):
                 os.mkdir(destFolder)
@@ -448,8 +449,8 @@ if __name__ == '__main__':
     # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
     # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(sourceDir, True)
 
-    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
-    DownloadBibleMp3Util.zipFiles(sourceDir, True)
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/ESV/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
 
     '''
     NSRV
@@ -458,3 +459,32 @@ if __name__ == '__main__':
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NSRV/default"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
+    '''
+    NHEB
+    '''
+    # sourceDir = "/Users/otseng/Downloads"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NHEB/indian"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/NHEB/indian"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    BBE
+    '''
+    # sourceDir = "/Users/otseng/Downloads/save"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/BBE/british"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/BBE/british"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    RV
+    '''
+    # sourceDir = "/Users/otseng/Downloads/save"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/RVA/default"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/RVA/default"
+    DownloadBibleMp3Util.zipFiles(sourceDir, True)
