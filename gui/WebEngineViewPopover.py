@@ -1,5 +1,7 @@
+import os
 import config
 from qtpy.QtGui import QKeySequence
+from qtpy.QtWidgets import QFileDialog
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction, QMenu
 from qtpy.QtWebEngineWidgets import QWebEngineView
@@ -32,10 +34,16 @@ class WebEngineViewPopover(QWebEngineView):
             self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
+
         copyText = QAction(self)
         copyText.setText(config.thisTranslation["context1_copy"])
         copyText.triggered.connect(self.copySelectedText)
         self.addAction(copyText)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["saveHtml"])
+        action.triggered.connect(self.saveHtml)
+        self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
@@ -199,3 +207,20 @@ class WebEngineViewPopover(QWebEngineView):
             self.showFullScreen()
         else:
             self.showMaximized()
+
+    def saveHtml(self):
+        self.page().toHtml(self.saveHtmlToFile)
+
+    def saveHtmlToFile(self, html):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "HTML Files (*.html)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".html"
+            file = open(fileName, "w")
+            file.write(html)
+            file.close()
+            self.parent.displayMessage(config.thisTranslation["saved"])

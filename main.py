@@ -405,7 +405,10 @@ elif not config.disableLoadLastOpenFilesOnStartup:
     if not initialCommand or initialCommandIsPython or (hasattr(config, "cli") and config.cli):
         runLastHistoryRecord("main")
     # Execute initial command on Study Window
-    runLastHistoryRecord("study")
+    history = config.history["study"]
+    command = history[-1] if len(history) > 0 else ""
+    if not (config.disableOpenPopupWindowOnStartup and command.lower().startswith("book:::")):
+        runLastHistoryRecord("study")
 
 # Run functions placed with startup plugins
 if config.actionsRightAfterLoadingHistoryRecords:

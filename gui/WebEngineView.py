@@ -1,7 +1,10 @@
+from shutil import copyfile
+
 from util.Languages import Languages
 import config, os, platform, webbrowser, re
 from functools import partial
 from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QFileDialog
 #from qtpy.QtGui import QDesktopServices
 #from qtpy.QtGui import QKeySequence
 from qtpy.QtGui import QGuiApplication
@@ -70,6 +73,69 @@ class WebEngineView(QWebEngineView):
             self.displayMessage("CLI feature is not enabled! \n Install module 'html-text' first, by running 'pip3 install html-text'!")
 
     def addMenuActions(self):
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_search"])
+        action.triggered.connect(self.searchPanel)
+        self.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["saveHtml"])
+        action.triggered.connect(self.saveHtml)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        copyText = QAction(self)
+        copyText.setText(config.thisTranslation["text"])
+        copyText.triggered.connect(self.copySelectedText)
+        subMenu.addAction(copyText)
+
+        copyText = QAction(self)
+        copyText.setText(config.thisTranslation["textWithReference"])
+        copyText.triggered.connect(self.copySelectedTextWithReference)
+        subMenu.addAction(copyText)
+
+        copyReferences = QAction(self)
+        copyReferences.setText(config.thisTranslation["bibleReferences"])
+        copyReferences.triggered.connect(self.copyAllReferences)
+        subMenu.addAction(copyReferences)
+
+        copyHtml = QAction(self)
+        copyHtml.setText(config.thisTranslation["htmlCode"])
+        copyHtml.triggered.connect(self.copyHtmlCode)
+        subMenu.addAction(copyHtml)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_copy"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        subMenu = QMenu()
+
+        self.searchText = QAction(self)
+        self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
+        self.searchText.triggered.connect(self.searchSelectedText)
+        subMenu.addAction(self.searchText)
+
+        self.searchTextInBook = QAction(self)
+        self.searchTextInBook.setText(config.thisTranslation["context1_current"])
+        self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
+        subMenu.addAction(self.searchTextInBook)
+
+        searchFavouriteBible = QAction(self)
+        searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
+        searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
+        subMenu.addAction(searchFavouriteBible)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["cp0"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
         subMenu = QMenu()
 
@@ -216,37 +282,6 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
-        subMenu = QMenu()
-
-        copyText = QAction(self)
-        copyText.setText(config.thisTranslation["text"])
-        copyText.triggered.connect(self.copySelectedText)
-        subMenu.addAction(copyText)
-
-        copyText = QAction(self)
-        copyText.setText(config.thisTranslation["textWithReference"])
-        copyText.triggered.connect(self.copySelectedTextWithReference)
-        subMenu.addAction(copyText)
-
-        copyReferences = QAction(self)
-        copyReferences.setText(config.thisTranslation["bibleReferences"])
-        copyReferences.triggered.connect(self.copyAllReferences)
-        subMenu.addAction(copyReferences)
-
-        copyHtml = QAction(self)
-        copyHtml.setText(config.thisTranslation["htmlCode"])
-        copyHtml.triggered.connect(self.copyHtmlCode)
-        subMenu.addAction(copyHtml)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_copy"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
         if self.name == "main":
             subMenu = QMenu()
 
@@ -269,33 +304,6 @@ class WebEngineView(QWebEngineView):
             separator = QAction(self)
             separator.setSeparator(True)
             self.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_search"])
-        action.triggered.connect(self.searchPanel)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        self.searchText = QAction(self)
-        self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
-        self.searchText.triggered.connect(self.searchSelectedText)
-        subMenu.addAction(self.searchText)
-
-        self.searchTextInBook = QAction(self)
-        self.searchTextInBook.setText(config.thisTranslation["context1_current"])
-        self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
-        subMenu.addAction(self.searchTextInBook)
-
-        searchFavouriteBible = QAction(self)
-        searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
-        searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
-        subMenu.addAction(searchFavouriteBible)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["cp0"])
-        action.setMenu(subMenu)
-        self.addAction(action)
 
         subMenu = QMenu()
 
@@ -1179,6 +1187,24 @@ class WebEngineView(QWebEngineView):
     def closePopover(self):
         if hasattr(self, "popoverView"):
             self.popoverView.close()
+
+    def saveHtml(self):
+        self.page().toHtml(self.saveHtmlToFile)
+
+    def saveHtmlToFile(self, html):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "HTML Files (*.html)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".html"
+            file = open(fileName, "w")
+            file.write(html)
+            file.close()
+            self.displayMessage(config.thisTranslation["saved"])
+
 
 class WebEnginePage(QWebEnginePage):
 
