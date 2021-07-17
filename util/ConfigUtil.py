@@ -1011,6 +1011,12 @@ class ConfigUtil:
         """
         if not hasattr(config, "disableLoadLastOpenFilesOnStartup"):
             config.disableLoadLastOpenFilesOnStartup = False
+        config.help["disableOpenPopupWindowOnStartup"] = """
+        # Disable open popup windows on startup
+        """
+        if not hasattr(config, "disableOpenPopupWindowOnStartup"):
+            config.disableOpenPopupWindowOnStartup = True
+
 
         # Additional conditional configurations
         if config.enableMenuUnderline:
@@ -1259,6 +1265,7 @@ class ConfigUtil:
             ("displayCmdOutput", config.displayCmdOutput),
             ("defaultMP3BibleFolder", config.defaultMP3BibleFolder),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup),
+            ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

@@ -74,6 +74,9 @@ class UpdateUtil:
                                     requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
                                     with open(localPath, "wb") as fileObject:
                                         fileObject.write(requestObject2.content)
+                                elif contentType == "delete":
+                                    if os.path.exists(localPath):
+                                        os.remove(localPath)
                     except Exception as e:
                         # message on failed item
                         if parent is not None:
@@ -95,7 +98,9 @@ class UpdateUtil:
 
     @staticmethod
     def getFilesChanged(sha1, sha2):
-        git = subprocess.Popen("git diff --name-only {0} {1}".format(sha1, sha2), shell=True, stdout=subprocess.PIPE,
+        diffCommand = "git diff --name-status {0} {1}".format(sha1, sha2)
+        print(diffCommand)
+        git = subprocess.Popen(diffCommand, shell=True, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         stdout, stderr = git.communicate()
         files = stdout.decode("utf-8").split("\n")
@@ -103,13 +108,17 @@ class UpdateUtil:
 
     @staticmethod
     def updatePatchFileWithChanges(version, sha1, sha2):
-        files = UpdateUtil.getFilesChanged(sha1, sha2)
+        lines = UpdateUtil.getFilesChanged(sha1, sha2)
         patch = open("patches.txt", "a")
-        for file in files:
-            if not file == "":
-                line = """({0}, "file", "{1}")""".format(version, file)
-                print(line)
-                patch.write(line + "\n")
+        for line in lines:
+            if not line == "":
+                action = "file"
+                code, file = line.split("\t")
+                if code.strip() == "D":
+                    action = "delete"
+                str = """({0}, "{1}", "{2}")""".format(version, action, file.strip())
+                print(str)
+                patch.write(str + "\n")
         patch.close()
 
 

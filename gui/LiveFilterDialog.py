@@ -45,6 +45,9 @@ class LiveFilterDialog(QDialog):
         self.settingBibles = False
         self.db = LiveFilterSqlite()
         self.filters = None
+        self.saveReadFormattedBibles = config.readFormattedBibles
+        if config.readFormattedBibles:
+            self.parent.disableBiblesInParagraphs()
         self.setupUI()
 
     def setupUI(self):
@@ -84,10 +87,14 @@ class LiveFilterDialog(QDialog):
         buttons = QDialogButtonBox.Ok
         self.buttonBox = QDialogButtonBox(buttons)
         self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.accepted.connect(self.close)
         self.buttonBox.rejected.connect(self.reject)
         mainLayout.addWidget(self.buttonBox)
 
         self.setLayout(mainLayout)
+
+    def close(self):
+        pass
 
     def reloadFilters(self):
         self.filters = self.db.getAll()
