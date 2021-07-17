@@ -112,6 +112,7 @@ class ConfigFlagsWindow(QDialog):
             ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook, self.parseTextConvertHTMLToBookChanged, False, config.thisTranslation["parseTextConvertHTMLToBook"]),
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, True, config.thisTranslation["displayCmdOutput"]),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, True, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
+            ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
         ]
         if config.isTtsInstalled:
             options += [
@@ -447,3 +448,6 @@ class ConfigFlagsWindow(QDialog):
 
     def disableLoadLastOpenFilesOnStartupChanged(self):
         config.disableLoadLastOpenFilesOnStartup = not config.disableLoadLastOpenFilesOnStartup
+
+    def disableOpenPopupWindowOnStartupChanged(self):
+        config.disableOpenPopupWindowOnStartup = not config.disableOpenPopupWindowOnStartup

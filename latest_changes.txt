@@ -1,3 +1,7 @@
+Major change in version 25.82:
+* Add Save HTML
+* Add disableOpenPopupWindowOnStartup config flag
+
 Major change in version 25.81:
 * Support mp3 files from faithcomesbyhearing.com
 
