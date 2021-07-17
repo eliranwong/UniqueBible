@@ -2658,3 +2658,4 @@ Latest changes in version 10.6:
     - openWindows
     - openMacos
     - openLinuxPdf
+
