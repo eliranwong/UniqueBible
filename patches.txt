@@ -1008,7 +1008,6 @@
 (25.82, "file", "util/LanguageUtil.py")
 (25.82, "file", "gui/LiveFilterDialog.py")
 (25.82, "file", "util/UpdateUtil.py")
-(25.82, "delete", "UniqueBibleApp_FeatureList.docx")
 (25.82, "file", "patches.txt")
 (25.82, "file", "latest_changes.txt")
 (25.82, "file", "UniqueBibleAppVersion.txt")
