@@ -2935,7 +2935,7 @@ class TextCommandParser:
                 if action == "githubbible":
                     repo, directory, extension = ("otseng/UniqueBible_Bibles", "bibles", "bible")
                 elif action == "githubcommentary":
-                    repo, directory, extension = ("darrelwright/UniqueBible_Commentaries", "commentaries", "commentary")
+                    repo, directory, extension = ("otseng/UniqueBible_Commentaries", "commentaries", "commentary")
                 elif action == "githubbook":
                     repo, directory, extension = ("darrelwright/UniqueBible_Books", "books", "book")
                 elif action == "githubmap":
@@ -2951,11 +2951,12 @@ class TextCommandParser:
                 github = GithubUtil(repo)
                 repoData = github.getRepoData()
                 folder = os.path.join(config.marvelData, directory)
-                filename += "." + extension
-                if os.path.isfile(os.path.join(folder, filename)):
+                shortFilename = GithubUtil.getShortname(filename)
+                shortFilename += "." + extension
+                if os.path.isfile(os.path.join(folder, shortFilename)):
                     self.parent.displayMessage("{0} {1}".format(filename, config.thisTranslation["alreadyExists"]))
                 else:
-                    file = os.path.join(folder, filename+".zip")
+                    file = os.path.join(folder, shortFilename+".zip")
                     github.downloadFile(file, repoData[filename])
                     with zipfile.ZipFile(file, 'r') as zipped:
                         zipped.extractall(folder)

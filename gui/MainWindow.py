@@ -638,7 +638,7 @@ class MainWindow(QMainWindow):
         self.installFromGitHub("otseng/UniqueBible_Bibles", "bibles", "githubBibles")
 
     def installGithubCommentaries(self):
-        self.installFromGitHub("darrelwright/UniqueBible_Commentaries", "commentaries", "githubCommentaries")
+        self.installFromGitHub("otseng/UniqueBible_Commentaries", "commentaries", "githubCommentaries")
 
     def installGithubBooks(self):
         self.installFromGitHub("darrelwright/UniqueBible_Books", "books", "githubBooks")
@@ -666,7 +666,7 @@ class MainWindow(QMainWindow):
             repoData = github.getRepoData()
             folder = os.path.join(config.marvelData, directory)
             items = [item for item in repoData.keys() if
-                     not os.path.isfile(os.path.join(folder, item))]
+                     not FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(item)), folder)]
             if not items:
                 items = ["[All Installed]"]
             item, ok = QInputDialog.getItem(self, "UniqueBible",
@@ -3330,7 +3330,7 @@ class MainWindow(QMainWindow):
                 for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
                     if file not in bibleList:
                         outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                for file in GithubUtil("otseng/UniqueBible_Commentaries").getRepoData():
                     if file not in commentaryList:
                         outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
                 for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
@@ -3382,7 +3382,7 @@ class MainWindow(QMainWindow):
                 for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
                     if file in bibleList:
                         outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Commentaries").getRepoData():
+                for file in GithubUtil("otseng/UniqueBible_Commentaries").getRepoData():
                     if file in commentaryList:
                         outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
                 for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():

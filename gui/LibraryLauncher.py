@@ -1,9 +1,11 @@
+import os
+
 import config
 from qtpy.QtCore import QStringListModel
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
-from db.ToolsSqlite import Book
-#from qtpy.QtCore import Qt
+from db.ToolsSqlite import Book, BookData
+
 
 class LibraryLauncher(QWidget):
 
@@ -87,12 +89,16 @@ class LibraryLauncher(QWidget):
     def bookListView(self):
         self.bookList = QListView()
         self.bookList.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.bookModel = QStringListModel(self.parent.referenceBookList)
-        self.bookList.setModel(self.bookModel)
-        if config.book in self.parent.referenceBookList:
-            self.bookList.setCurrentIndex(self.bookModel.index(self.parent.referenceBookList.index(config.book), 0))
-        self.bookList.selectionModel().selectionChanged.connect(self.bookSelected)
+        self.reloadBookListModel()
         return self.bookList
+
+    def reloadBookListModel(self):
+        self.dirsAndFiles = ["../"] + BookData().getDirectories() + BookData().getBooks()
+        self.bookModel = QStringListModel(self.dirsAndFiles)
+        self.bookList.setModel(self.bookModel)
+        if config.book in self.dirsAndFiles:
+            self.bookList.setCurrentIndex(self.bookModel.index(self.dirsAndFiles.index(config.book), 0))
+        self.bookList.selectionModel().selectionChanged.connect(self.bookOrFileSelected)
 
     def chapterListView(self):
         self.chapterlist = QListView()
@@ -133,15 +139,19 @@ class LibraryLauncher(QWidget):
         self.bookModel.setStringList(config.favouriteBooks)
         self.bookList.setCurrentIndex(self.bookModel.index(0, 0))
 
-    def bookSelected(self, selection):
+    def bookOrFileSelected(self, selection):
         self.parent.isRefreshing = True
-        selectedBook = selection[0].indexes()[0].data()
-        if config.book != selectedBook:
-            config.book = selectedBook
-            topicList = self.getBookTopicList()
-            self.chapterModel.setStringList(topicList)
-            config.bookChapter = topicList[0] if topicList else ""
-            self.scrollChapterList(topicList)
+        selected = selection[0].indexes()[0].data()
+        if config.book != selected:
+            if selected.endswith("/"):
+                config.booksFolder = os.path.join(config.booksFolder, selected)
+                self.reloadBookListModel()
+            else:
+                config.book = selected
+                topicList = self.getBookTopicList()
+                self.chapterModel.setStringList(topicList)
+                config.bookChapter = topicList[0] if topicList else ""
+                self.scrollChapterList(topicList)
 
     def chapterSelected(self, selection):
         config.bookChapter = selection[0].indexes()[0].data()

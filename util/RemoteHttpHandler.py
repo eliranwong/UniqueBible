@@ -1303,7 +1303,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                         .format(keyword, k.replace("'", "\\'"), k)
         resources = (
             ("GitHub Bibles", "GitHubBible", "otseng/UniqueBible_Bibles", (config.marvelData, "bibles"), ".bible"),
-            ("GitHub Commentaries", "GitHubCommentary", "darrelwright/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
+            ("GitHub Commentaries", "GitHubCommentary", "otseng/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
             ("GitHub Books", "GitHubBook", "darrelwright/UniqueBible_Books", (config.marvelData, "books"), ".book"),
             ("GitHub Maps", "GitHubMap", "darrelwright/UniqueBible_Maps-Charts", (config.marvelData, "books"), ".book"),
             ("GitHub PDF", "GitHubPdf", "otseng/UniqueBible_PDF", (config.marvelData, "pdf"), ".pdf"),
