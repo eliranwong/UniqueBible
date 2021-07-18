@@ -614,17 +614,40 @@ input.addEventListener('keyup', function(event) {0}
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
 
+    def getFavouriteBible(self):
+        if config.enableHttpServer and config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate
+        elif config.enableHttpServer and config.webHomePage == "traditional.html":
+            return config.favouriteBibleTC
+        elif config.enableHttpServer and config.webHomePage == "simplified.html":
+            return config.favouriteBibleSC
+        else:
+            return config.favouriteBible
+
+    def getFavouriteBible2(self):
+        if config.enableHttpServer and config.webHomePage == "{0}.html".format(config.webPrivateHomePage):
+            return config.favouriteBiblePrivate2
+        elif config.enableHttpServer and config.webHomePage == "traditional.html":
+            return config.favouriteBibleTC2
+        elif config.enableHttpServer and config.webHomePage == "simplified.html":
+            return config.favouriteBibleSC2
+        else:
+            return config.favouriteBible2
+
     def readMultipleVerses(self, inputText, verseList, displayRef=True, presentMode=False):
         verses = ""
-        if config.addFavouriteToMultiRef and not inputText == config.favouriteBible and not presentMode:
-            textList = [inputText, config.favouriteBible]
+        if config.addFavouriteToMultiRef and not presentMode:
+            favouriteBible = self.getFavouriteBible()
+            if inputText == favouriteBible:
+                favouriteBible = self.getFavouriteBible2()
+            textList = [inputText, favouriteBible]
         else:
             textList = [inputText]
         for index, verse in enumerate(verseList):
             for counter, text in enumerate(textList):
                 b = verse[0]
                 # format opening tag
-                if counter == 1 and text == config.favouriteBible:
+                if counter == 1 and text == favouriteBible:
                     extraStyle = " border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;"
                 else:
                     extraStyle = ""
@@ -704,7 +727,7 @@ input.addEventListener('keyup', function(event) {0}
                     verses += "{2} ({0}, {1})".format(verseReference, text, verseText)
                     if index != len(verseList) - 1:
                         verses += "<br><br>"
-                elif not displayRef or (counter == 1 and text == config.favouriteBible):
+                elif not displayRef or (counter == 1 and text == favouriteBible):
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)

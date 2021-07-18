@@ -1,3 +1,6 @@
+Major changes in version 25.84:
+* Enhanced display of favourite bibles with multiple verses.
+
 Major changes in version 25.83:
 * Add ability to navigate directories in master control for books
 * Add Github commentary description

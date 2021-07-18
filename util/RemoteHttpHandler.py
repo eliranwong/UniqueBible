@@ -241,6 +241,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setfavouritebiblesc": lambda: self.setFavouriteBibleContent("favouriteBibleSC"),
             "setfavouritebiblesc2": lambda: self.setFavouriteBibleContent("favouriteBibleSC2"),
             "setfavouritebiblesc3": lambda: self.setFavouriteBibleContent("favouriteBibleSC3"),
+            "setfavouritebibleprivate": lambda: self.setFavouriteBibleContent("favouriteBiblePrivate"),
+            "setfavouritebibleprivate2": lambda: self.setFavouriteBibleContent("favouriteBiblePrivate2"),
+            "setfavouritebibleprivate3": lambda: self.setFavouriteBibleContent("favouriteBiblePrivate3"),
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
             "setwebubaicon": self.setWebUBAIconContent,
@@ -1268,6 +1271,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.setfavouritebiblesc')">.setFavouriteBibleSC</ref> - Set configuration 'favouriteBible'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebiblesc2')">.setFavouriteBibleSC2</ref> - Set configuration 'favouriteBible2'.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebiblesc3')">.setFavouriteBibleSC3</ref> - Set configuration 'favouriteBible3'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibleprivate')">.setFavouriteBiblePrivate</ref> - Set configuration 'favouriteBiblePrivate'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibleprivate2')">.setFavouriteBiblePrivate2</ref> - Set configuration 'favouriteBiblePrivate2'.<br>
+        <ref onclick="window.parent.submitCommand('.setfavouritebibleprivate3')">.setFavouriteBiblePrivate3</ref> - Set configuration 'favouriteBiblePrivate3'.<br>
         <ref onclick="window.parent.submitCommand('.setversenosingleclickaction')">.setVerseNoSingleClickAction</ref> - Set configuration 'verseNoSingleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.setversenodoubleclickaction')">.setVerseNoDoubleClickAction</ref> - Set configuration 'verseNoDoubleClickAction'.<br>
         <ref onclick="window.parent.submitCommand('.setwebubaicon')">.setWebUBAIcon</ref> - Set configuration 'webUBAIcon'.<br>
