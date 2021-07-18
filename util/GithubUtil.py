@@ -45,12 +45,20 @@ class GithubUtil:
         with open(filename, 'wb') as zipfile:
             zipfile.write(decoded)
 
+    @staticmethod
+    def getShortname(filename):
+        if " - " in filename:
+            shortFilename = filename[:filename.find(" - ")]
+        else:
+            shortFilename = filename
+        return shortFilename
+
 
 if __name__ == "__main__":
     github = GithubUtil("otseng/UniqueBible_Bibles")
     github.printContentsOfRepo()
 
-    # github = GithubUtil("darrelwright/UniqueBible_Commentaries")
+    # github = GithubUtil("otseng/UniqueBible_Commentaries")
     # github.printContentsOfRepo()
     # github.downloadFile("test.zip", "1274eccd33476b0e4716b41e292d50ad601715c8")
 

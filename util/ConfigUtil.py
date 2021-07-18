@@ -34,6 +34,7 @@ class ConfigUtil:
         config.shortcutList = []
         config.enableHttpServer = False
         config.runMode = "gui"
+        config.booksFolder = os.path.join(config.marvelData, "books")
 
         # Default settings for configurations:
 

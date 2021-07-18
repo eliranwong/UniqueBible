@@ -75,8 +75,11 @@ class UpdateUtil:
                                     with open(localPath, "wb") as fileObject:
                                         fileObject.write(requestObject2.content)
                                 elif contentType == "delete":
-                                    if os.path.exists(localPath):
-                                        os.remove(localPath)
+                                    try:
+                                        if os.path.exists(localPath):
+                                            os.remove(localPath)
+                                    except:
+                                        print("Could not delete {0}".localPath)
                     except Exception as e:
                         # message on failed item
                         if parent is not None:

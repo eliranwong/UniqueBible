@@ -843,6 +843,18 @@ class Bible:
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
+    def getFirstBook(self):
+        query = "select min(book) from bible"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        return info[0]
+
+    def getLastBook(self):
+        query = "select max(book) from bible"
+        self.cursor.execute(query)
+        info = self.cursor.fetchone()
+        return info[0]
+
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
         self.cursor.execute(query)

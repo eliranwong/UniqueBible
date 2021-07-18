@@ -1,4 +1,5 @@
 import os, glob
+import re
 from itertools import (takewhile, repeat)
 
 
@@ -98,6 +99,14 @@ class FileUtil:
                 file = files[0]
                 return file
         return None
+
+    @staticmethod
+    def regexFileExists(regex, directory):
+        for filename in os.listdir(directory):
+            if re.search(regex, filename):
+                return True
+        return False
+
 
 # Test code
 

@@ -1,5 +1,14 @@
+import config
+
+if __name__ == "__main__":
+    from util.ConfigUtil import ConfigUtil
+    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+    config.noQt = True
+    ConfigUtil.setup()
+    config.noQt = True
+
 import logging
-import os, sqlite3, re, config
+import os, sqlite3, re
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
 from util.TextUtil import TextUtil
@@ -692,11 +701,20 @@ class BookData:
     def __init__(self):
         self.bookList = self.getBookList()
 
-    def getBookList(self):
-        bookFolder = os.path.join(config.marvelData, "books")
+    def getDirectories(self):
+        bookFolder = config.booksFolder
+        dirList = ["{0}/".format(f) for f in os.listdir(bookFolder) if os.path.isdir(os.path.join(bookFolder, f)) and not f.startswith("__") and not f.startswith(".")]
+        dirList = sorted(dirList)
+        return dirList
+
+    def getBooks(self):
+        bookFolder = config.booksFolder
         bookList = [f[:-5] for f in os.listdir(bookFolder) if os.path.isfile(os.path.join(bookFolder, f)) and f.endswith(".book") and not re.search(r"^[\._]", f)]
         bookList = sorted(bookList)
-        return [(book, book) for book in bookList]
+        return bookList
+
+    def getBookList(self):
+        return [(book, book) for book in self.getBooks()]
 
     def getMenu(self, module=""):
         if module == "":
@@ -863,3 +881,14 @@ class Book:
         content = content.replace('<body style="background-attachment: fixed" background="http://www.swartzentrover.com/Web Graphics/BackGrounds/concrete/concrete12.jpg">', '<body>')
         content = content.replace('cellpadding="0"', 'cellpadding="5"')
         return content
+
+
+if __name__ == "__main__":
+
+    commentary = Commentary()
+    commentaries = commentary.getCommentaryList()
+    for item in commentaries:
+        com = Commentary(item)
+        info = com.commentaryInfo()
+        info = info.replace("'", "")
+        print("{0} - {1}".format(item, info))
