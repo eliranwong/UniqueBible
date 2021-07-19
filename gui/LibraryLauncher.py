@@ -44,7 +44,7 @@ class LibraryLauncher(QWidget):
         button.clicked.connect(self.favouriteBookOnly)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["addFavourite"])
-        button.clicked.connect(self.parent.parent.addFavouriteBookDialog)
+        button.clicked.connect(self.addFavorite)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["removeFavourite"])
         button.clicked.connect(self.removeFavorite)
@@ -165,6 +165,11 @@ class LibraryLauncher(QWidget):
                 self.chapterModel.setStringList(topicList)
                 config.bookChapter = topicList[0] if topicList else ""
                 self.scrollChapterList(topicList)
+
+    def addFavorite(self):
+        if self.selectedBook and self.selectedBook not in config.favouriteBooks:
+            config.favouriteBooks.append(self.selectedBook)
+            self.reloadBookListModel(sorted(config.favouriteBooks))
 
     def removeFavorite(self):
         if self.selectedBook and self.selectedBook in config.favouriteBooks:
