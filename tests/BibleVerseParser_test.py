@@ -123,3 +123,9 @@ class BibleVerseParserTestCase(unittest.TestCase):
         res = self.parser.verseReferenceToBCV(input)
         self.assertEqual(expected, res)
 
+    def test_skip_image(self):
+        input = """<html><body>John 1:1, Acts 10:10, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p>Rev 22:1</body></html>"""
+        res = BibleVerseParser("YES").parseText(input, False, False)
+        expected = """<html><body><ref onclick="bcv(43,1,1)">John 1:1</ref>, <ref onclick="bcv(44,10,10)">Acts 10:10</ref>, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p><ref onclick="bcv(66,22,1)">Rev 22:1</ref></body></html>"""
+        self.assertEqual(expected, res)
+

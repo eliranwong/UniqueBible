@@ -2838,11 +2838,10 @@ class MainWindow(QMainWindow):
 
     def runTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         textCommandKeyword, *_ = re.split('[ ]*?:::[ ]*?', textCommand, 1)
-        commandFieldText = self.textCommandLineEdit.text()
-        if not re.match("^online:::", commandFieldText, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword.lower() in self.textCommandParser.interpreters):
+        if not re.match("^online:::", textCommand, flags=re.IGNORECASE) or (":::" in textCommand and textCommandKeyword.lower() in self.textCommandParser.interpreters):
             self.passRunTextCommand(textCommand, addRecord, source, forceExecute)
-        elif commandFieldText != self.onlineCommand:
-            *_, address = commandFieldText.split(":::")
+        elif textCommand != self.onlineCommand:
+            *_, address = textCommand.split(":::")
             if config.enableHttpServer and address.startswith("http"):
                 subprocess.Popen("{0} {1}".format(config.open, address), shell=True)
             elif config.useWebbrowser:
@@ -2850,9 +2849,9 @@ class MainWindow(QMainWindow):
             else:
                 if config.openStudyWindowContentOnNextTab:
                     self.nextStudyWindowTab()
-                self.onlineCommand = commandFieldText
+                self.onlineCommand = textCommand
                 self.studyView.load(QUrl(address))
-                self.addHistoryRecord("study", commandFieldText)
+                self.addHistoryRecord("study", textCommand)
 
     def passRunTextCommand(self, textCommand, addRecord=True, source="main", forceExecute=False):
         if config.logCommands:

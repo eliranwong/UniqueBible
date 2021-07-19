@@ -1,3 +1,9 @@
+Major changes in version 25.86:
+* Always parse links in book conversion
+* Strip tags when doing verse comparision
+* Don't parse embedded images
+* Always use passed in command when title changes
+
 Major changes in version 25.85:
 * Create Github repo of context plugins
 * Add case sensitive mode for live filter
