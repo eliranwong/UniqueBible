@@ -770,7 +770,9 @@ class Book:
         # connect book module
         self.module = module
 
-        self.database = os.path.join(config.marvelData, "books", "{0}.book".format(module))
+        self.database = os.path.join(config.booksFolder, "{0}.book".format(module))
+        if not os.path.exists(self.database):
+            self.database = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         self.connection = sqlite3.connect(self.database)
         self.cursor = self.connection.cursor()
 

@@ -1,6 +1,7 @@
 import os, glob
 import re
 from itertools import (takewhile, repeat)
+from urllib.parse import urlsplit, urlunsplit
 
 
 class FileUtil:
@@ -108,6 +109,20 @@ class FileUtil:
                 return True
         return False
 
+    @staticmethod
+    def normalizePath(url):
+        parts = list(urlsplit(url))
+        segments = parts[2].split('/')
+        segments = [segment + '/' for segment in segments[:-1]] + [segments[-1]]
+        resolved = []
+        for segment in segments:
+            if segment in ('../', '..'):
+                if resolved[1:]:
+                    resolved.pop()
+            elif segment not in ('./', '.'):
+                resolved.append(segment)
+        parts[2] = ''.join(resolved)
+        return urlunsplit(parts)
 
 # Test code
 

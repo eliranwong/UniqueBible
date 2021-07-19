@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("gitHubPluginsContext", "GitHub Plugins Context")
+        addLanguageStringToAllFiles("removeFavourite", "Remove favourite")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

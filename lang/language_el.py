@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "Αποθήκευση κώδικα HTML",
     "disableOpenPopupWindowOnStartup": "Απενεργοποίηση ανοίγματος αναδυόμενων παραθύρων κατά την εκκίνηση",
     "gitHubPluginsContext": "Περιβάλλον πρόσθετων λειτουργιών GitHub",
+    "removeFavourite": "Αφαίρεση αγαπημένου",
 }

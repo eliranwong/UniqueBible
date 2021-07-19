@@ -1,3 +1,7 @@
+Major changes in version 25.87:
+* Fix show all and favorite books in master control
+* Add remove favorite book button in master control
+
 Major changes in version 25.86:
 * Always parse links in book conversion
 * Strip tags when doing verse comparision

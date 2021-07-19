@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "HTML speichern",
     "disableOpenPopupWindowOnStartup": "Geöffnete Popup-Fenster beim Start inaktivieren",
     "gitHubPluginsContext": "GitHub-Plugins-Kontext",
+    "removeFavourite": "Favoriten entfernen",
 }

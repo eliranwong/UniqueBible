@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "HTML の保存",
     "disableOpenPopupWindowOnStartup": "起動時にポップアップ・ウィンドウを開くことを",
     "gitHubPluginsContext": "GitHub プラグイン・コンテキスト",
+    "removeFavourite": "お気に入りの削除",
 }

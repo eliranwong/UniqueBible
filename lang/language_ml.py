@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "HTML സൂക്ഷിയ്ക്കുക",
     "disableOpenPopupWindowOnStartup": "തുടങ്ങുമ്പോള് പൊങ്ങിവരുന്ന ജാലകങ്ങള് തുറക്കുക",
     "gitHubPluginsContext": "GitHub സംയോജകംComment",
+    "removeFavourite": "ഇഷ്ടപ്പെട്ട മാറ്റം",
 }
