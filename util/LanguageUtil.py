@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("disableOpenPopupWindowOnStartup", "Disable open popup windows on startup")
+        addLanguageStringToAllFiles("gitHubPluginsContext", "GitHub Plugins Context")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

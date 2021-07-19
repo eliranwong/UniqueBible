@@ -1,3 +1,9 @@
+Major changes in version 25.85:
+* Create Github repo of context plugins
+* Add case sensitive mode for live filter
+* Import theWord OT files
+* Add bible collections shortcut
+
 Major changes in version 25.84:
 * Enhanced display of favourite bibles with multiple verses.
 
@@ -26,7 +32,7 @@ Major changes in version 25.78:
 * Add disableLoadLastOpenFilesOnStartup config flag to turn on/off loading files automatically on startup
 
 Major changes in version 25.77:
-* Import theWord OT Bibles
+* Import theWord ONT Bibles
 * Fix reading Bibles without a default folder
 * Allow Bible mp3 folders to have the book name in it
 * Remove VLC debugging

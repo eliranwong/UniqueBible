@@ -102,6 +102,7 @@ class FileUtil:
 
     @staticmethod
     def regexFileExists(regex, directory):
+        regex = regex.replace("+", "\\+")
         for filename in os.listdir(directory):
             if re.search(regex, filename):
                 return True
