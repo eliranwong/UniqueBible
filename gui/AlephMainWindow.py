@@ -113,7 +113,7 @@ class AlephMainWindow:
         menu1_defaults.addAction(QAction(config.thisTranslation["activeVerseColour"], self, triggered=self.changeActiveVerseColour))
         menu1_defaults.addAction(QAction(config.thisTranslation["resourceDirectory"], self, triggered=self.customMarvelData))
         menu1_defaults.addAction(
-            QAction(config.thisTranslation["bibleCollections"], self, triggered=self.showBibleCollectionDialog))
+            QAction(config.thisTranslation["bibleCollections"], self, shortcut=sc.bibleCollections, triggered=self.showBibleCollectionDialog))
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
@@ -191,9 +191,6 @@ class AlephMainWindow:
         if os.path.isfile(os.path.join(config.marvelData, "bibles/TRLIT.bible")):
             marvel_bible_menu.addAction(
                 QAction("Transliteral Bible", self, shortcut=sc.runTransliteralBible, triggered=self.runTransliteralBible))
-        if os.path.isfile(os.path.join(config.marvelData, "bibles/KJVx.bible")):
-            marvel_bible_menu.addAction(
-                QAction("KJVx Bible", self, shortcut=sc.runKJV2Bible, triggered=self.runKJV2Bible))
         history_menu = navigation_menu.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_history"]))
         history_menu.addAction(QAction(config.thisTranslation["menu3_main"], self, shortcut=sc.mainHistoryButtonClicked, triggered=self.mainHistoryButtonClicked))
         history_menu.addAction(QAction(config.thisTranslation["menu3_mainBack"], self, shortcut=sc.back, triggered=self.back))

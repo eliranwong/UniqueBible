@@ -125,6 +125,7 @@ class ShortcutUtil:
             "ubaDiscussions": '',
             "commandLineInterface": '',
             "liveFilterDialog": '',
+            "bibleCollections": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -236,6 +237,7 @@ class ShortcutUtil:
             "ubaDiscussions": '',
             "commandLineInterface": '',
             "liveFilterDialog": '',
+            "bibleCollections": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -347,6 +349,7 @@ class ShortcutUtil:
             "ubaDiscussions": 'Ctrl+D',
             "commandLineInterface": 'Ctrl+^',
             "liveFilterDialog": '',
+            "bibleCollections": "",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -418,7 +421,7 @@ class ShortcutUtil:
             "runCROSSREFERENCE": "Ctrl+L, X",
             "runDISCOURSE": "Ctrl+L, D",
             "runINDEX": "Ctrl+L, I",
-            "runKJV2Bible": "Ctrl+B, K",
+            "runKJV2Bible": "",
             "runMAB": "Ctrl+B, 5",
             "runMIB": "Ctrl+B, 2",
             "runMOB": "Ctrl+B, 1",
@@ -458,6 +461,7 @@ class ShortcutUtil:
             "ubaDiscussions": '',
             "commandLineInterface": '',
             "liveFilterDialog": 'Ctrl+*',
+            "bibleCollections": "Ctrl+D,B",
         }
     }
 

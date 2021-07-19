@@ -755,4 +755,5 @@ translation = {
     "save": "Sauvegarder",
     "saveHtml": "Enregistrer HTML",
     "disableOpenPopupWindowOnStartup": "Désactiver les fenêtres en incrustation ouvertes au démarrage",
+    "gitHubPluginsContext": "Contexte des plug-ins GitHub",
 }

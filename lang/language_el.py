@@ -755,4 +755,5 @@ translation = {
     "save": "Αποθήκευση:",
     "saveHtml": "Αποθήκευση κώδικα HTML",
     "disableOpenPopupWindowOnStartup": "Απενεργοποίηση ανοίγματος αναδυόμενων παραθύρων κατά την εκκίνηση",
+    "gitHubPluginsContext": "Περιβάλλον πρόσθετων λειτουργιών GitHub",
 }
