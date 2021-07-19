@@ -277,6 +277,8 @@ class MainWindow(QMainWindow):
             self.textCommandParser.databaseNotInstalled("bible")
 
     def reloadResources(self):
+        CrossPlatform().setupResourceLists()
+        self.controlPanel.setupResourceLists()
         self.setMenuLayout(config.menuLayout)
         self.reloadControlPanel(False)
 
@@ -2005,13 +2007,14 @@ class MainWindow(QMainWindow):
         bookData = BookData()
         items = [book for book, *_ in bookData.getBookList()]
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["menu10_addFavourite"], items,
-                                        items.index(config.book), False)
+                                        0, False)
         if ok and item:
-            config.favouriteBooks.insert(0, item)
-            if len(config.favouriteBooks) > 10:
-                config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
-            self.displayMessage(
-                "{0}  {1}".format(config.thisTranslation["message_done"], config.thisTranslation["message_restart"]))
+            if item not in config.favouriteBooks:
+                config.favouriteBooks.insert(0, item)
+                if len(config.favouriteBooks) > 10:
+                    config.favouriteBooks = [book for counter, book in enumerate(config.favouriteBooks) if counter < 10]
+                self.displayMessage(
+                    "{0}".format(config.thisTranslation["message_done"]))
 
     def toggleDisplayBookContent(self):
         if config.openBookInNewWindow:

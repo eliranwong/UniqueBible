@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "एचटीएमएल सहेजें",
     "disableOpenPopupWindowOnStartup": "प्रारंभ होने पर पॉपअप विंडो निष्क्रिय करें",
     "gitHubPluginsContext": "Githb प्लगइन्स कॉन्टेक्स्ट",
+    "removeFavourite": "पसंदीदा मिटाएँ",
 }

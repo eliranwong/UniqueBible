@@ -756,4 +756,5 @@ translation = {
     "saveHtml": "儲存 HTML",
     "disableOpenPopupWindowOnStartup": "啟動時停用開啟的蹦現視窗",
     "gitHubPluginsContext": "GitHub 外掛程式環境定義",
+    "removeFavourite": "移除喜好的",
 }
