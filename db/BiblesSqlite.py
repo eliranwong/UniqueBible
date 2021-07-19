@@ -492,11 +492,13 @@ input.addEventListener('keyup', function(event) {0}
         from diff_match_patch import diff_match_patch
         dmp = diff_match_patch()
         *_, mainVerseText = self.readTextVerse(mainText, b, c, v)
+        mainVerseText = TextUtil.htmlToPlainText(mainVerseText)
         for text in texts:
             verses += "<tr>"
             verses += "<td>({0}{1}</ref>)</td>".format(self.formVerseTag(b, c, v, text), text)
             book, chapter, verse, verseText = self.readTextVerse(text, b, c, v)
             if not text == mainText and not text in config.originalTexts:
+                verseText = TextUtil.htmlToPlainText(verseText)
                 diff = dmp.diff_main(mainVerseText, verseText)
                 verseText = dmp.diff_prettyHtml(diff)
                 if config.theme in ("dark", "night"):

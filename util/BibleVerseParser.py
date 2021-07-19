@@ -33,7 +33,7 @@ Prompting question (2) "Do you want to standardise the format of all bible verse
 Enter YES if you want to standardise all verse references with SBL-style-abbreviations and common format like Gen 2:4; Deut 6:4, etc.<br>
 Any answers other than "YES" [case-insensitive] skip the standarisation.
 """
-
+import logging
 import os
 
 # File "config.py" is essential for running module "config"
@@ -60,6 +60,7 @@ class BibleVerseParser:
 
     # initialisation
     def __init__(self, standardisation, noOfLinesPerChunkForParsing=None):
+        self.logger = logging.getLogger('uba')
         # noOfLinesPerChunkForParsing
         self.noOfLinesPerChunkForParsing = config.noOfLinesPerChunkForParsing if noOfLinesPerChunkForParsing is None else noOfLinesPerChunkForParsing
         # set standard abbreviation, displayed in UniqueBible
@@ -147,7 +148,22 @@ class BibleVerseParser:
             for chunk in chunks:
                 parsedText += self.runParseText("".join(chunk), parseBooklessReferences)
         else:
-            parsedText = self.runParseText(text, parseBooklessReferences)
+            parsedText = ""
+            start = 0
+            end = 0
+            # Do not parse embedded images
+            while end < len(text):
+                if '<img src="data:image' in text[start:]:
+                    imgstart = text.find('<img src="data:image', start)
+                    block = text[start:imgstart]
+                    parsedText += self.runParseText(block, parseBooklessReferences)
+                    end = text.find(' />', start+10)+3
+                    parsedText += text[imgstart:end]
+                    start = end
+                else:
+                    end = len(text)
+                    block = text[start: end]
+                    parsedText += self.runParseText(block, parseBooklessReferences)
         return parsedText
 
     def runParseText(self, text, parseBooklessReferences=False):
@@ -367,7 +383,8 @@ class BibleVerseParser:
 END - class BibleVerseParser
 """
 
-if __name__ == '__main__':
+def extractFromFile():
+
     inputName = ""
     standardisation = ""
     arguments = sys.argv
@@ -388,3 +405,21 @@ if __name__ == '__main__':
 
     # delete object
     del parser
+
+def parseImage():
+    text = """<html><body>John 1:1, Acts 10:10, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p>Rev 22:1</body></html>"""
+    result = BibleVerseParser("YES").parseText(text, False, False)
+    expectedResult = """<html><body><ref onclick="bcv(43,1,1)">John 1:1</ref>, <ref onclick="bcv(44,10,10)">Acts 10:10</ref>, <p><img src="data:image/png;base64,iVBOTkSuQmCC" alt="UniqueBibleApp_black" /></p><ref onclick="bcv(66,22,1)">Rev 22:1</ref></body></html>"""
+    print(result == expectedResult)
+
+if __name__ == '__main__':
+    import config
+    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
+    from util.ConfigUtil import ConfigUtil
+    from util.LanguageUtil import LanguageUtil
+
+    ConfigUtil.setup()
+    config.noQt = False
+    config.thisTranslation = LanguageUtil.loadTranslation("en_US")
+
+    parseImage()

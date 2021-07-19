@@ -1,4 +1,5 @@
 from util.BibleBooks import BibleBooks
+from util.TextUtil import TextUtil
 
 if __name__ == '__main__':
     import config
@@ -73,12 +74,15 @@ class Converter:
         bookContent = []
         for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
+            self.logger.info("Converting {0}".format(fileBasename))
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() in (".htm", ".html", ".xhtml"):
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
                     if config.parseTextConvertHTMLToBook:
                         html = BibleVerseParser(config.parserStandarisation).parseText(html)
+                    # Convert links
+                    html = TextUtil.formulateUBACommandHyperlink(html)
                     bookContent.append((fileName, html))
         if bookContent and module:
             self.createBookModule(module, bookContent)
