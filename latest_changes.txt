@@ -1,3 +1,7 @@
+Major changes in version 25.89:
+* Fix links for books generated from notes
+* Only change size of popup when it gets created
+
 Major changes in version 25.88:
 * Support parsing theWord OT files with morphology
 * Don't parse images in HTML books

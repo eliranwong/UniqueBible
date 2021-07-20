@@ -1147,8 +1147,11 @@ class WebEngineView(QWebEngineView):
             html = self.parent.parent.addOpenImageAction(html)
         # format html content
         html = self.parent.parent.wrapHtml(html)
-        if not hasattr(self, "popoverView") or not self.popoverView.isVisible:
+        if not hasattr(self, "popoverView"):
             self.popoverView = WebEngineViewPopover(self, name, self.name)
+            if not fullScreen:
+                self.popoverView.setMinimumWidth(config.popoverWindowWidth)
+                self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.setHtml(html, config.baseUrl)
         if config.forceGenerateHtml:
             outputFile = os.path.join("htmlResources", "popover.html")
@@ -1164,14 +1167,11 @@ class WebEngineView(QWebEngineView):
                 self.popoverView.escKeyPressed()
             else:
                 self.popoverView.showFullScreen()
-        else:
-            self.popoverView.setMinimumWidth(config.popoverWindowWidth)
-            self.popoverView.setMinimumHeight(config.popoverWindowHeight)
         self.popoverView.show()
         self.parent.parent.bringToForeground(self.popoverView)
 
     def openPopoverUrl(self, url, name="popover", fullScreen=False, screenNo=-1):
-        if not hasattr(self, "popoverUrlView") or not self.popoverUrlView.isVisible:
+        if not hasattr(self, "popoverUrlView"):
             self.popoverUrlView = WebEngineViewPopover(self, name, self.name)
         self.popoverUrlView.load(url)
         if fullScreen:
