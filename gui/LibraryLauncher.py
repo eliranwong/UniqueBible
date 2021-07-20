@@ -178,6 +178,8 @@ class LibraryLauncher(QWidget):
 
     def chapterSelected(self, selection):
         config.bookChapter = selection[0].indexes()[0].data()
+        if self.selectedBook:
+            config.book = self.selectedBook
         command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
         if not self.parent.isRefreshing:
             self.parent.runTextCommand(command)
