@@ -101,7 +101,7 @@ class Converter:
                     note = fileObject.read()
                     if config.parseTextConvertNotesToBook:
                         note = BibleVerseParser(config.parserStandarisation).parseText(note)
-                    note = re.sub(r"\*\*\*\[([^'{0}]*?)@([^'{0}]*?)\]".format(r'"\*\[\]@'), r"<ref onclick={0}document.title='BOOK:::\1'{0}>\2</ref>".format('"'), note)
+                    note = TextUtil.formulateUBACommandHyperlink(note)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)
