@@ -1,3 +1,9 @@
+Major changes in version 25.88:
+* Support parsing theWord OT files with morphology
+* Don't parse images in HTML books
+* Create popover.html file with forceGenerateHtml is true
+* Fix crash when book file is missing
+
 Major changes in version 25.87:
 * Fix show all and favorite books in master control
 * Add remove favorite book button in master control

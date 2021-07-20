@@ -1150,6 +1150,11 @@ class WebEngineView(QWebEngineView):
         if not hasattr(self, "popoverView") or not self.popoverView.isVisible:
             self.popoverView = WebEngineViewPopover(self, name, self.name)
         self.popoverView.setHtml(html, config.baseUrl)
+        if config.forceGenerateHtml:
+            outputFile = os.path.join("htmlResources", "popover.html")
+            fileObject = open(outputFile, "w", encoding="utf-8")
+            fileObject.write(html)
+            fileObject.close()
         if fullScreen:
             monitor = QDesktopWidget().screenGeometry(screenNo)
             self.popoverView.move(monitor.left(), monitor.top())

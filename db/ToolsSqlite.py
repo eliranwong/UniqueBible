@@ -769,20 +769,28 @@ class Book:
         self.logger = logging.getLogger('uba')
         # connect book module
         self.module = module
+        self.cursor = None
+        self.connection = None
 
         self.database = os.path.join(config.booksFolder, "{0}.book".format(module))
         if not os.path.exists(self.database):
             self.database = os.path.join(config.marvelData, "books", "{0}.book".format(module))
-        self.connection = sqlite3.connect(self.database)
-        self.cursor = self.connection.cursor()
+        if not os.path.exists(self.database):
+            self.module = ""
+        else:
+            self.connection = sqlite3.connect(self.database)
+            self.cursor = self.connection.cursor()
 
     def __del__(self):
-        self.connection.close()
+        if self.connection:
+            self.connection.close()
 
     def getTopicList(self):
-        query = "SELECT DISTINCT Chapter FROM Reference ORDER BY ROWID"
-        self.cursor.execute(query)
-        return [topic[0] for topic in self.cursor.fetchall()]
+        if self.connection:
+            query = "SELECT DISTINCT Chapter FROM Reference ORDER BY ROWID"
+            self.cursor.execute(query)
+            return [topic[0] for topic in self.cursor.fetchall()]
+        return []
 
     def getSearchedTopicList(self, searchString, chapterOnly=False):
         try:
@@ -799,13 +807,17 @@ class Book:
             return []
 
     def getChapterCount(self):
-        query = "SELECT MAX(ROWID) from Reference"
-        result = self.cursor.execute(query).fetchone()
-        return result[0]
+        if self.connection:
+            query = "SELECT MAX(ROWID) from Reference"
+            result = self.cursor.execute(query).fetchone()
+            return result[0]
+        return 0
 
     def getContentByChapter(self, entry):
-        query = "SELECT Chapter, Content, ROWID FROM Reference WHERE Chapter=?"
-        return self.getContentData(query, entry)
+        if self.connection:
+            query = "SELECT Chapter, Content, ROWID FROM Reference WHERE Chapter=?"
+            return self.getContentData(query, entry)
+        return ""
 
     def getParagraphSectionsByChapter(self, entry):
         query = "SELECT Content FROM Reference WHERE Chapter=?"
@@ -840,8 +852,9 @@ class Book:
         return sections
 
     def getContentByRowId(self, entry):
-        query = "SELECT Chapter, Content, ROWID FROM Reference WHERE ROWID=?"
-        return self.getContentData(query, entry)
+        if self.connection:
+            query = "SELECT Chapter, Content, ROWID FROM Reference WHERE ROWID=?"
+            return self.getContentData(query, entry)
 
     def getContentData(self, query, entry):
         self.cursor.execute(query, (entry,))

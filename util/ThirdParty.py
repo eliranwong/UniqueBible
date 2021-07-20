@@ -80,7 +80,7 @@ class Converter:
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
                     if config.parseTextConvertHTMLToBook:
-                        html = BibleVerseParser(config.parserStandarisation).parseText(html)
+                        html = BibleVerseParser(config.parserStandarisation).parseText(html, False)
                     # Convert links
                     html = TextUtil.formulateUBACommandHyperlink(html)
                     bookContent.append((fileName, html))
@@ -1269,7 +1269,13 @@ class Converter:
 
     def stripTheWordTags(self, line):
         line = re.sub(r"<W([HG]\d*)>", " \\1 ", line)
-        line = re.sub(r"<.*?>", "", line)
+        if config.importDoNotStripMorphCode:
+            line = line.replace("<wt>", "")
+            line = re.sub(r"""<WT(.*?) l="(.*?)">""",
+                          """ <gloss>\\1</gloss> """, line)
+            line = re.sub("<v.*?>", "", line)
+        else:
+            line = re.sub(r"<.*?>", "", line)
         return line
 
     def storiesToTitles(self, stories):
@@ -2046,6 +2052,7 @@ if __name__ == '__main__':
     # Converter().importTheWordBible(file)
 
     # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
-    line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
+    # line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
+    line = """<v="Gen.1.1/Gen.1.1"><wt>ἐν<WTP l="ἐν"> <wt>ἀρχῇ<WTN1-DSF l="ἀρχή"> <wt>ἐποίησεν<WTVAI-AAI3S l="ποιέω"> <wt>ὁ<WTRA-NSM l="ὁ"> <wt>θεὸς<WTN2-NSM l="θεός"> <wt>τὸν<WTRA-ASM l="ὁ"> <wt>οὐρανὸν<WTN2-ASM l="οὐρανός"> <wt>καὶ<WTC l="καί"> <wt>τὴν<WTRA-ASF l="ὁ"> <wt>γῆν<WTN1-ASF l="γῆ">"""
     out = Converter().stripTheWordTags(line)
     print(out)
