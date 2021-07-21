@@ -1147,12 +1147,12 @@ class WebEngineView(QWebEngineView):
             html = self.parent.parent.addOpenImageAction(html)
         # format html content
         html = self.parent.parent.wrapHtml(html)
-        if not hasattr(self, "popoverView"):
-            self.popoverView = WebEngineViewPopover(self, name, self.name)
+        if self.parent.popoverView is None:
+            self.parent.popoverView = WebEngineViewPopover(self, name, self.name)
             if not fullScreen:
-                self.popoverView.setMinimumWidth(config.popoverWindowWidth)
-                self.popoverView.setMinimumHeight(config.popoverWindowHeight)
-        self.popoverView.setHtml(html, config.baseUrl)
+                self.parent.popoverView.setMinimumWidth(config.popoverWindowWidth)
+                self.parent.popoverView.setMinimumHeight(config.popoverWindowHeight)
+        self.parent.popoverView.setHtml(html, config.baseUrl)
         if config.forceGenerateHtml:
             outputFile = os.path.join("htmlResources", "popover.html")
             fileObject = open(outputFile, "w", encoding="utf-8")
@@ -1160,38 +1160,38 @@ class WebEngineView(QWebEngineView):
             fileObject.close()
         if fullScreen:
             monitor = QDesktopWidget().screenGeometry(screenNo)
-            self.popoverView.move(monitor.left(), monitor.top())
+            self.parent.popoverView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
-                # Using self.popoverView.showFullScreen() directly does not work on Linux
-                self.popoverView.showMaximized()
-                self.popoverView.escKeyPressed()
+                # Using self.parent.popoverView.showFullScreen() directly does not work on Linux
+                self.parent.popoverView.showMaximized()
+                self.parent.popoverView.escKeyPressed()
             else:
-                self.popoverView.showFullScreen()
-        self.popoverView.show()
-        self.parent.parent.bringToForeground(self.popoverView)
+                self.parent.popoverView.showFullScreen()
+        self.parent.popoverView.show()
+        self.parent.parent.bringToForeground(self.parent.popoverView)
 
     def openPopoverUrl(self, url, name="popover", fullScreen=False, screenNo=-1):
-        if not hasattr(self, "popoverUrlView"):
-            self.popoverUrlView = WebEngineViewPopover(self, name, self.name)
-        self.popoverUrlView.load(url)
+        if self.parent.popoverUrlView is None:
+            self.parent.popoverUrlView = WebEngineViewPopover(self, name, self.name)
+        self.parent.popoverUrlView.load(url)
         if fullScreen:
             monitor = QDesktopWidget().screenGeometry(screenNo)
-            self.popoverUrlView.move(monitor.left(), monitor.top())
+            self.parent.popoverUrlView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
-                # Using self.popoverUrlView.showFullScreen() directly does not work on Linux
-                self.popoverUrlView.showMaximized()
-                self.popoverUrlView.escKeyPressed()
+                # Using self.parent.popoverUrlView.showFullScreen() directly does not work on Linux
+                self.parent.popoverUrlView.showMaximized()
+                self.parent.popoverUrlView.escKeyPressed()
             else:
-                self.popoverUrlView.showFullScreen()
+                self.parent.popoverUrlView.showFullScreen()
         else:
-            self.popoverUrlView.setMinimumWidth(config.popoverWindowWidth)
-            self.popoverUrlView.setMinimumHeight(config.popoverWindowHeight)
-        self.popoverUrlView.show()
-        self.parent.parent.bringToForeground(self.popoverUrlView)
+            self.parent.popoverUrlView.setMinimumWidth(config.popoverWindowWidth)
+            self.parent.popoverUrlView.setMinimumHeight(config.popoverWindowHeight)
+        self.parent.popoverUrlView.show()
+        self.parent.parent.bringToForeground(self.parent.popoverUrlView)
 
     def closePopover(self):
-        if hasattr(self, "popoverView"):
-            self.popoverView.close()
+        if self.parent.popoverView is not None:
+            self.parent.popoverView.close()
 
     def saveHtml(self):
         self.page().toHtml(self.saveHtmlToFile)

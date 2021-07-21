@@ -1,3 +1,9 @@
+Major changes in version 25.90:
+* Show all books in a translation (including Apocrypha) in miniControl
+* Add Bible info on hover in miniControl
+* Fix import theWord interlinear Bible and RTL
+* Only have one popup window
+
 Major changes in version 25.89:
 * Fix links for books generated from notes
 * Only change size of popup when it gets created
