@@ -69,7 +69,11 @@ class CentralWidget(QWidget):
         # self.layout.setVerticalSpacing(2)        
         self.layout.addWidget(self.instantSplitter)                
         
-        self.setLayout(self.layout)       
+        self.setLayout(self.layout)
+
+        # Popup windows
+        self.popoverView = None
+        self.popoverUrlView = None
 
     def onInstantSplitterMoved(self, pos, index):      
         config.instantMode = -1

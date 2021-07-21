@@ -1265,14 +1265,17 @@ class Converter:
                     break
         self.mySwordBibleToRichFormat(biblename, biblename, data)
         self.mySwordBibleToPlainFormat(biblename, biblename, data)
+        if config.importRtlOT:
+            config.rtlTexts.append(biblename)
         self.logger.info("Import successful")
 
     def stripTheWordTags(self, line):
-        line = re.sub(r"<W([HG]\d*)>", " \\1 ", line)
+        if config.importDoNotStripStrongNo:
+            line = re.sub(r"<W([HG]\d*)>", " <gloss> \\1 </gloss> ", line)
         if config.importDoNotStripMorphCode:
             line = line.replace("<wt>", "")
             line = re.sub(r"""<WT(.*?) l="(.*?)">""",
-                          """ <gloss>\\1</gloss> """, line)
+                          """ <gloss> \\1 </gloss> """, line)
             line = re.sub("<v.*?>", "", line)
         else:
             line = re.sub(r"<.*?>", "", line)

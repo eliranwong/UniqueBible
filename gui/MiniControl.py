@@ -15,7 +15,8 @@ from util.BibleVerseParser import BibleVerseParser
 from db.ToolsSqlite import Commentary, LexiconData, IndexesSqlite
 from util.TextCommandParser import TextCommandParser
 
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
+
 
 class MiniControl(QWidget):
 
@@ -32,6 +33,7 @@ class MiniControl(QWidget):
             self.resizeEvent)
         self.bibleButtons = {}
         # setup interface
+        self.bible_layout = None
         self.setupUI()
         self.tabs.setCurrentIndex(selectedTab)
 
@@ -153,45 +155,24 @@ class MiniControl(QWidget):
         parser = BibleVerseParser(config.parserStandarisation)
         self.bookMap = parser.standardAbbreviation
         bookNums = list(self.bookMap.keys())
-        bookNumGps = [
+        self.bookNumGps = [
             bookNums[0:10],
             bookNums[10:20],
             bookNums[20:30],
             bookNums[30:39],
             bookNums[39:49],
             bookNums[49:59],
-            bookNums[59:66],
+            bookNums[59:69],
+            bookNums[69:79],
+            bookNums[79:89],
+            bookNums[89:92],
         ]
 
         # Bible books tab
 
-        bible = QWidget()
-        bible_layout = QVBoxLayout()
-        bible_layout.setContentsMargins(0, 0, 0, 0)
-        bible_layout.setSpacing(1)
-        for bookNumGp in bookNumGps[0:5]:
-            gp = QWidget()
-            layout = self.newRowLayout()
-            for bookNum in bookNumGp:
-                text = self.bookMap[bookNum]
-                button = QPushButton(text)
-                button.clicked.connect(partial(self.bibleBookAction, bookNum))
-                layout.addWidget(button)
-            gp.setLayout(layout)
-            bible_layout.addWidget(gp)
-        for bookNumGp in bookNumGps[5:]:
-            gp = QWidget()
-            layout = self.newRowLayout()
-            for bookNum in bookNumGp:
-                text = self.bookMap[bookNum]
-                button = QPushButton(text)
-                button.clicked.connect(partial(self.bibleBookAction, bookNum))
-                layout.addWidget(button)
-            gp.setLayout(layout)
-            bible_layout.addWidget(gp)
-        bible_layout.addStretch()
-        bible.setLayout(bible_layout)
-        self.tabs.addTab(bible, config.thisTranslation["bible"])
+        self.bible = QWidget()
+        self.populateBooksButtons(config.mainText)
+        self.tabs.addTab(self.bible, config.thisTranslation["bible"])
 
         # Bible translations tab
 
@@ -229,6 +210,8 @@ class MiniControl(QWidget):
         count = 0
         for bible in bibles:
             button = QPushButton(bible)
+            if bible in config.bibleDescription:
+                button.setToolTip(config.bibleDescription[bible])
             button.clicked.connect(partial(self.bibleAction, bible))
             row_layout.addWidget(button)
             count += 1
@@ -319,6 +302,41 @@ class MiniControl(QWidget):
         self.tabs.setCurrentIndex(config.miniControlInitialTab)
         self.setLayout(mainLayout)
 
+    def populateBooksButtons(self, bibleName):
+        books = Bible(bibleName).getBookList()
+        if self.bible_layout is not None:
+            while self.bible_layout.count():
+                child = self.bible_layout.takeAt(0)
+                if child.widget():
+                    child.widget().deleteLater()
+        else:
+            self.bible_layout = QVBoxLayout()
+        self.bible_layout.setContentsMargins(0, 0, 0, 0)
+        self.bible_layout.setSpacing(1)
+        for bookNumGp in self.bookNumGps:
+            gp = QWidget()
+            layout = self.newRowLayout()
+            for bookNum in bookNumGp:
+                if int(bookNum) in books:
+                    text = self.bookMap[bookNum]
+                    button = QPushButton(text)
+                    button.clicked.connect(partial(self.bibleBookAction, bookNum))
+                    layout.addWidget(button)
+            gp.setLayout(layout)
+            self.bible_layout.addWidget(gp)
+        # for bookNumGp in self.bookNumGps[5:]:
+        #     gp = QWidget()
+        #     layout = self.newRowLayout()
+        #     for bookNum in bookNumGp:
+        #         text = self.bookMap[bookNum]
+        #         button = QPushButton(text)
+        #         button.clicked.connect(partial(self.bibleBookAction, bookNum))
+        #         layout.addWidget(button)
+        #     gp.setLayout(layout)
+        #     bible_layout.addWidget(gp)
+        self.bible_layout.addStretch()
+        self.bible.setLayout(self.bible_layout)
+
     def newRowLayout(self):
         row_layout = QHBoxLayout()
         row_layout.setContentsMargins(0, 0, 0, 0)
@@ -345,6 +363,7 @@ class MiniControl(QWidget):
         self.parent.textCommandLineEdit.setText(searchString)
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
+        self.populateBooksButtons(config.mainText)
 
     #def setTtsDefaultLanguage(self):
         #config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]
@@ -376,13 +395,13 @@ class MiniControl(QWidget):
         self.runCommmand(command)
         command = "_bibleinfo:::{0}".format(bible)
         self.parent.runTextCommand(command)
+        self.populateBooksButtons(config.mainText)
 
     def commentaryAction(self, commentary):
         command = "COMMENTARY:::{0}:::{1}".format(commentary, self.parent.verseReference("main")[1])
         self.runCommmand(command)
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)
-
 
     def lexiconAction(self, lexicon):
         command = "SEARCHLEXICON:::{0}:::{1}".format(lexicon, TextCommandParser.last_lexicon_entry)
@@ -396,6 +415,7 @@ class MiniControl(QWidget):
         self.searchLineEdit.setText(command)
         self.parent.runTextCommand(command)
         self.parent.textCommandLineEdit.setText(command)
+        self.populateBooksButtons(config.mainText)
 
     def selectCollection(self, collection):
         textButtonStyleEnabled = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
