@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("removeFavourite", "Remove favourite")
+        addLanguageStringToAllFiles("showMiniKeyboardInMiniControl", "Show mini keyboard in miniControl")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

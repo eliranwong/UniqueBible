@@ -757,4 +757,5 @@ translation = {
     "disableOpenPopupWindowOnStartup": "Απενεργοποίηση ανοίγματος αναδυόμενων παραθύρων κατά την εκκίνηση",
     "gitHubPluginsContext": "Περιβάλλον πρόσθετων λειτουργιών GitHub",
     "removeFavourite": "Αφαίρεση αγαπημένου",
+    "showMiniKeyboardInMiniControl": "Εμφάνιση μίνι πληκτρολογίου στο miniControl",
 }

@@ -757,4 +757,5 @@ translation = {
     "disableOpenPopupWindowOnStartup": "Geöffnete Popup-Fenster beim Start inaktivieren",
     "gitHubPluginsContext": "GitHub-Plugins-Kontext",
     "removeFavourite": "Favoriten entfernen",
+    "showMiniKeyboardInMiniControl": "Mini-Tastatur im MiniControl anzeigen",
 }

@@ -107,12 +107,13 @@ class ConfigFlagsWindow(QDialog):
             ("enableMenuUnderline", config.enableMenuUnderline, self.enableMenuUnderlineChanged, True, config.thisTranslation["enableMenuUnderline"]),
             ("openBibleInMainViewOnly", config.openBibleInMainViewOnly, self.parent.enableStudyBibleButtonClicked, False, config.thisTranslation["openBibleInMainViewOnly"]),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch, self.addOHGBiToMorphologySearchChanged, True, config.thisTranslation["addOHGBiToMorphologySearch"]),
-            ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, True, config.thisTranslation["includeStrictDocTypeInNote"]),
-            ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, True, config.thisTranslation["parseTextConvertNotesToBook"]),
+            ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, False, config.thisTranslation["includeStrictDocTypeInNote"]),
+            ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, False, config.thisTranslation["parseTextConvertNotesToBook"]),
             ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook, self.parseTextConvertHTMLToBookChanged, False, config.thisTranslation["parseTextConvertHTMLToBook"]),
-            ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, True, config.thisTranslation["displayCmdOutput"]),
-            ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, True, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
+            ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, False, config.thisTranslation["displayCmdOutput"]),
+            ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
+            ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, True, config.thisTranslation["showMiniKeyboardInMiniControl"]),
         ]
         if config.isTtsInstalled:
             options += [
@@ -451,3 +452,6 @@ class ConfigFlagsWindow(QDialog):
 
     def disableOpenPopupWindowOnStartupChanged(self):
         config.disableOpenPopupWindowOnStartup = not config.disableOpenPopupWindowOnStartup
+
+    def showMiniKeyboardInMiniControlChanged(self):
+        config.showMiniKeyboardInMiniControl = not config.showMiniKeyboardInMiniControl

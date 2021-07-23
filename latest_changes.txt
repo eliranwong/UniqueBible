@@ -1,3 +1,6 @@
+Major changes in version 25.91
+* Add showMiniKeyboardInMiniControl flag
+
 Major changes in version 25.90:
 * Show all books in a translation (including Apocrypha) in miniControl
 * Add Bible info on hover in miniControl
