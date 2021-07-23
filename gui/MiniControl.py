@@ -92,20 +92,21 @@ class MiniControl(QWidget):
         commandLayout1.addStretch()
         commandBox.addLayout(commandLayout1)
 
-        commandLayout2 = QBoxLayout(QBoxLayout.LeftToRight)
-        commandLayout2.setSpacing(5)
+        if config.showMiniKeyboardInMiniControl:
+            commandLayout2 = QBoxLayout(QBoxLayout.LeftToRight)
+            commandLayout2.setSpacing(5)
 
-        keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', '-', ',', '.', ' ', '<', 'X']
-        for key in keys:
-            button = QPushButton(key)
-            button.setMaximumWidth(30)
-            button.clicked.connect(partial(self.keyEntryAction, key))
-            commandLayout2.addWidget(button)
+            keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', '-', ',', '.', ' ', '<', 'X']
+            for key in keys:
+                button = QPushButton(key)
+                button.setMaximumWidth(30)
+                button.clicked.connect(partial(self.keyEntryAction, key))
+                commandLayout2.addWidget(button)
 
-        commandLayout2.addStretch()
-        commandBox.addLayout(commandLayout2)
+            commandLayout2.addStretch()
+            commandBox.addLayout(commandLayout2)
 
-        if config.isTtsInstalled:
+        if config.showMiniKeyboardInMiniControl and config.isTtsInstalled:
             ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
             ttsLayout.setSpacing(5)
     

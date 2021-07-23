@@ -757,4 +757,5 @@ translation = {
     "disableOpenPopupWindowOnStartup": "시작 시 팝업 팝업 창 사용 안함",
     "gitHubPluginsContext": "GitHub Plugins 컨텍스트",
     "removeFavourite": "선호를 제거하기",
+    "showMiniKeyboardInMiniControl": "미니 제어에 미니 키보드 표시",
 }

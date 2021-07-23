@@ -1017,6 +1017,11 @@ class ConfigUtil:
         """
         if not hasattr(config, "disableOpenPopupWindowOnStartup"):
             config.disableOpenPopupWindowOnStartup = True
+        config.help["showMiniKeyboardInMiniControl"] = """
+        # Show mini keyboard in miniControl
+        """
+        if not hasattr(config, "showMiniKeyboardInMiniControl"):
+            config.showMiniKeyboardInMiniControl = True
 
 
         # Additional conditional configurations
@@ -1267,6 +1272,7 @@ class ConfigUtil:
             ("defaultMP3BibleFolder", config.defaultMP3BibleFolder),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup),
+            ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

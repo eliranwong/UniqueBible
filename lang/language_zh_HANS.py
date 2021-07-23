@@ -757,4 +757,5 @@ translation = {
     "disableOpenPopupWindowOnStartup": "启动时禁用打开的弹出窗口",
     "gitHubPluginsContext": "GitHub 插件上下文",
     "removeFavourite": "除去收藏夹",
+    "showMiniKeyboardInMiniControl": "在迷你控制中显示迷你键盘",
 }

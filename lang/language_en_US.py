@@ -757,4 +757,5 @@ translation = {
     "disableOpenPopupWindowOnStartup": "Disable open popup windows on startup",
     "gitHubPluginsContext": "GitHub Plugins Context",
     "removeFavourite": "Remove favorite",
+    "showMiniKeyboardInMiniControl": "Show mini keyboard in miniControl",
 }
