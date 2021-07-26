@@ -1022,7 +1022,12 @@ class ConfigUtil:
         """
         if not hasattr(config, "showMiniKeyboardInMiniControl"):
             config.showMiniKeyboardInMiniControl = True
-
+        config.help["parseClearSpecialCharacters"] = """
+        # Clear special characters when parsing
+        # When set to True, will make parsing take a long time
+        """
+        if not hasattr(config, "parseClearSpecialCharacters"):
+            config.parseClearSpecialCharacters = False
 
         # Additional conditional configurations
         if config.enableMenuUnderline:
@@ -1273,6 +1278,7 @@ class ConfigUtil:
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl),
+            ("parseClearSpecialCharacters", config.parseClearSpecialCharacters),
         )
         with open("config.py", "w", encoding="utf-8") as fileObj:
             for name, value in configs:

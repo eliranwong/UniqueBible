@@ -18,6 +18,7 @@ class BibleVerseParserTestCase(unittest.TestCase):
         config.parseEnglishBooksOnly = False
         config.searchBibleIfCommandNotFound = True
         config.regexSearchBibleIfCommandNotFound = False
+        config.parseClearSpecialCharacters = False
         self.parser = BibleVerseParser(config.standardAbbreviation)
 
     def test_gen_parseText(self):
@@ -51,7 +52,7 @@ class BibleVerseParserTestCase(unittest.TestCase):
         self.assertEqual(expected, res)
 
     def test_rev_extractAllReferences(self):
-        input = "rev 1-10"
+        input = "Rev. 1-10"
         expected = [(66, 1, 1, 10, 1)]
         res = self.parser.extractAllReferences(input)
         self.assertEqual(expected, res)

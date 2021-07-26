@@ -74,3 +74,4 @@ htmlResources/main-*.html
 htmlResources/lib/pdfjs-2.7.570-dist/web/*.pdf
 htmlResources/lib/bibi-v1.2.0/bibi-bookshelf/*.epub
 htmlResources/popover.html
+/snippets/**

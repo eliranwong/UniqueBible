@@ -8,6 +8,7 @@ if __name__ == "__main__":
     config.noQt = True
 
 import logging
+from logging import handlers
 import os, sqlite3, re
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
@@ -488,6 +489,8 @@ class Commentary:
     }
 
     def __init__(self, text=False):
+        self.connection = None
+        self.logger = logging.getLogger('uba')
         if text:
             self.text = text
             if self.text in self.getCommentaryList():
@@ -613,6 +616,17 @@ class Commentary:
         else:
             return "INVALID_COMMAND_ENTERED"
 
+    def fixLinksInCommentary(self):
+        query = "SELECT Book, Chapter, Scripture FROM Commentary ORDER BY Book, Chapter"
+        self.cursor.execute(query)
+        for record in self.cursor.fetchall():
+            scripture = record[2]
+            scripture = BibleVerseParser("no").replaceTextWithReference(scripture, False)
+            update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
+            self.cursor.execute(update, (scripture, record[0], record[1]))
+            self.cursor.connection.commit()
+            if int(record[1]) >= 1:
+                self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
 class LexiconData:
 
@@ -900,10 +914,15 @@ class Book:
 
 if __name__ == "__main__":
 
-    commentary = Commentary()
-    commentaries = commentary.getCommentaryList()
-    for item in commentaries:
-        com = Commentary(item)
-        info = com.commentaryInfo()
-        info = info.replace("'", "")
-        print("{0} - {1}".format(item, info))
+    logger = logging.getLogger('uba')
+    logger.setLevel(logging.DEBUG)
+    logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
+    logHandler.setLevel(logging.DEBUG)
+    logger.addHandler(logHandler)
+
+    print("Start")
+    config.parseEnglishBooksOnly = True
+    config.parseClearSpecialCharacters = False
+    commentary = Commentary("Dakes")
+    commentary.fixLinksInCommentary()
+    print("Finished")

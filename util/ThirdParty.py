@@ -2065,6 +2065,8 @@ class ThirdPartyDictionary:
 
 if __name__ == '__main__':
 
+    pass
+
     # note = "***[BOOK:::Thrones of our Soul:::0.4.3 The insight of Moses|Go to chapter]"
     # note = re.sub(r"\*\*\*\[(.+?)\|(.+?)\]", r"""<ref onclick="document.title='\1'">\2</ref>""", note)
     # print(note)
@@ -2086,7 +2088,7 @@ if __name__ == '__main__':
     # out = Converter().stripTheWordTags(line)
     # print(out)
 
-    file = "/Users/otseng/Downloads/apocrypha.txt"
-    print("Processing " + file)
-    Converter().importScrollmapperDeuterocanonicalFiles(file)
+    # file = "/Users/otseng/Downloads/apocrypha.txt"
+    # print("Processing " + file)
+    # Converter().importScrollmapperDeuterocanonicalFiles(file)
 

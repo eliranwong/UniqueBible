@@ -679,6 +679,11 @@ class TextCommandParser:
             # Remarks: This command works ONLY when config.developer is set to True.
             # Example:
             # e.g. _setconfig:::favouriteBible:::'BSB'"""),
+            "fixlinksincommentary": (self.fixLinksInCommentary, """
+            # Usage - FIXLINKSINCOMMENTARY:::[commentary]
+            # Example:
+            # FIXLINKSINCOMMENTARY:::Dakes
+            """),
         }
         for key, value in BibleBooks.eng.items():
             book = value[0]
@@ -2164,7 +2169,7 @@ class TextCommandParser:
                 config.mainB, config.mainC, config.mainV, *_ = bcvTuple
             module = commandList[0]
             commentary = Commentary(module)
-            content =  commentary.getContent(bcvTuple)
+            content = commentary.getContent(bcvTuple)
             if not content == "INVALID_COMMAND_ENTERED":
                 self.setCommentaryVerse(module, bcvTuple)
             del commentary
@@ -2968,12 +2973,20 @@ class TextCommandParser:
 
         return ("study", "Downloaded!", {})
 
-
     def noAction(self, command, source):
         if config.enableHttpServer:
             return self.textText(config.mainText, source)
         else:
             return ("", "", {})
+
+    # FIXLINKSINCOMMENTARY:::
+    def fixLinksInCommentary(self, command, source):
+        commentary = Commentary(command)
+        if commentary.connection is None:
+            self.parent.displayMessage("{0} {1}".format(command, config.thisTranslation["notFound"]))
+        else:
+            commentary.fixLinksInCommentary()
+            self.parent.displayMessage(config.thisTranslation["message_done"])
 
 
 if __name__ == "__main__":
