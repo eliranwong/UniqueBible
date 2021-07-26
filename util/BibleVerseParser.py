@@ -68,11 +68,14 @@ class BibleVerseParser:
         # set preference of standardisation
         self.standardisation = standardisation
         self.bibleBooksDict = {}
+        self.bibleBooksDictCanonBooksOnly = {}
         pattern = re.compile("[a-zA-Z]")
         bookNames = [bookName for bookName in BibleBooks.name2number.keys() if re.search(pattern, bookName)] if config.parseEnglishBooksOnly else BibleBooks.name2number.keys()
         for bookName in bookNames:
-            num = BibleBooks.name2number[bookName]
-            self.bibleBooksDict[bookName] = int(num)
+            num = int(BibleBooks.name2number[bookName])
+            self.bibleBooksDict[bookName] = num
+            if num <= 66:
+                self.bibleBooksDictCanonBooksOnly[bookName] = num
             if config.useLiteVerseParsing:
                 if "." in bookName:
                     bookName = bookName.replace(".", "")
@@ -82,6 +85,8 @@ class BibleVerseParser:
                     self.bibleBooksDict[bookName] = int(num)
         sortedNames = sorted(self.bibleBooksDict.keys())
         self.sortedNames = sorted(sortedNames, key=len, reverse=True)
+        sortedNamesCanonBooksOnly = sorted(self.bibleBooksDictCanonBooksOnly.keys())
+        self.sortedNamesCanonBooksOnly = sorted(sortedNamesCanonBooksOnly, key=len, reverse=True)
 
     # function for converting b c v integers to verse reference string
     def bcvToVerseReference(self, b, c, v, *args, isChapter=False):
@@ -178,7 +183,7 @@ class BibleVerseParser:
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
-        for name in self.sortedNames:
+        for name in self.sortedNamesCanonBooksOnly:
             # get the string of book name
             bookName = name
             searchReplace = (
@@ -239,9 +244,13 @@ class BibleVerseParser:
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
-        # clear special markers
+        if config.parseClearSpecialCharacters:
+            searchReplace = (
+                ('『[0-9]+?|([^『』]*?)』', r'\1'),
+            )
+            text = RegexSearch.replace(text, searchReplace)
+
         searchReplace = (
-            ('『[0-9]+?|([^『』]*?)』', r'\1'),
             ('(<ref onclick="bcv\([0-9]+?,[0-9]+?,[0-9]+?\)">)＊', r'\1'),
             ('</ref｝', '</ref>'),
         )
@@ -302,36 +311,29 @@ class BibleVerseParser:
         # open file and read input text
         with open(inputFile, "r", encoding="utf-8") as f:
             originalText = f.read()
+        newText = self.replaceTextWithReference(originalText, splitInChunks)
+        with open(outputFile, "w", encoding="utf-8") as f:
+            f.write(newText)
 
-        if originalText:
-            if splitInChunks:
-                # Create or empty a file
-                with open(outputFile, "w", encoding="utf-8") as f:
-                    f.write("")
-                chunks = originalText.splitlines(True)
-                chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
-                with open(outputFile, "a", encoding="utf-8") as f:
-                    for chunk in chunks:
-                        parsedText = self.runParseText("".join(chunk))
-                        # standardise the format of bible verse references
-                        if self.standardisation.lower() == "yes":
-                            parsedText = self.standardReference(parsedText)
-                        f.write(parsedText)
-            else:
-                parsedText = self.runParseText(originalText)
+    def replaceTextWithReference(self, originalText, splitInChunks):
+        newText = ""
+        if splitInChunks:
+            # Create or empty a file
+            chunks = originalText.splitlines(True)
+            chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
+            for chunk in chunks:
+                parsedText = self.runParseText("".join(chunk))
                 # standardise the format of bible verse references
                 if self.standardisation.lower() == "yes":
                     parsedText = self.standardReference(parsedText)
-                with open(outputFile, "w", encoding="utf-8") as f:
-                    f.write(parsedText)
-            # Notify about the changes
-            print("Text is parsed and saved in '{0}'.".format(outputFile))
-            if self.standardisation.lower() == "yes":
-                print("Verse reference format is standardised.")
-            else:
-                print("Original verse reference format is reserved.")
+                newText += parsedText
         else:
-            print("No text is found in '{0}'!".format(file))
+            parsedText = self.runParseText(originalText)
+            # standardise the format of bible verse references
+            if self.standardisation.lower() == "yes":
+                parsedText = self.standardReference(parsedText)
+            newText += parsedText
+        return newText
 
     def parseFilesInFolder(self, folder):
         fileList = glob.glob(folder+"/*")
