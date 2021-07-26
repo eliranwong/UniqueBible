@@ -1,3 +1,7 @@
+Major changes in version 25.92
+* Add more support for Deuterocanonical books
+* Added DEUT.bible for download from Github
+
 Major changes in version 25.91
 * Add showMiniKeyboardInMiniControl flag
 

@@ -486,5 +486,13 @@ if __name__ == '__main__':
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/RVA/default"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
 
-    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/RVA/default"
-    DownloadBibleMp3Util.zipFiles(sourceDir, True)
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/RVA/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    AFV
+    https://afaithfulversion.org/genesis/
+    '''
+    sourceDir = "/Users/otseng/Downloads/save"
+    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/AFV/default"
+    # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
