@@ -1,3 +1,5 @@
+import glob
+
 from util.BibleBooks import BibleBooks
 from util.TextUtil import TextUtil
 
@@ -1269,6 +1271,30 @@ class Converter:
             config.rtlTexts.append(biblename)
         self.logger.info("Import successful")
 
+    # https://github.com/scrollmapper/bible_databases_deuterocanonical
+    def importScrollmapperDeuterocanonicalFiles(self, filename):
+        biblename = "DEUT"
+        count = 0
+        data = []
+        record = ""
+        with open(filename, errors='ignore') as f:
+            for line in f:
+                if line.startswith("|"):
+                    if record.startswith("|"):
+                        (bookName, chapter, verse, scripture) = re.search(r"\|(.*)\|(.*)\|(.*)\|(.*)$", line).groups()
+                        if bookName in BibleBooks.name2number:
+                            book = BibleBooks.name2number[bookName]
+                            row = [book, chapter, verse, scripture]
+                            data.append(row)
+                        else:
+                            print("{0} not found".format(bookName))
+                    record = line
+                else:
+                    record += " " + line
+        self.mySwordBibleToRichFormat(biblename, biblename, data)
+        self.mySwordBibleToPlainFormat(biblename, biblename, data)
+
+
     def stripTheWordTags(self, line):
         if config.importDoNotStripStrongNo:
             line = re.sub(r"<W([HG]\d*)>", " <gloss> \\1 </gloss> ", line)
@@ -2056,6 +2082,11 @@ if __name__ == '__main__':
 
     # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
     # line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
-    line = """<v="Gen.1.1/Gen.1.1"><wt>ἐν<WTP l="ἐν"> <wt>ἀρχῇ<WTN1-DSF l="ἀρχή"> <wt>ἐποίησεν<WTVAI-AAI3S l="ποιέω"> <wt>ὁ<WTRA-NSM l="ὁ"> <wt>θεὸς<WTN2-NSM l="θεός"> <wt>τὸν<WTRA-ASM l="ὁ"> <wt>οὐρανὸν<WTN2-ASM l="οὐρανός"> <wt>καὶ<WTC l="καί"> <wt>τὴν<WTRA-ASF l="ὁ"> <wt>γῆν<WTN1-ASF l="γῆ">"""
-    out = Converter().stripTheWordTags(line)
-    print(out)
+    # line = """<v="Gen.1.1/Gen.1.1"><wt>ἐν<WTP l="ἐν"> <wt>ἀρχῇ<WTN1-DSF l="ἀρχή"> <wt>ἐποίησεν<WTVAI-AAI3S l="ποιέω"> <wt>ὁ<WTRA-NSM l="ὁ"> <wt>θεὸς<WTN2-NSM l="θεός"> <wt>τὸν<WTRA-ASM l="ὁ"> <wt>οὐρανὸν<WTN2-ASM l="οὐρανός"> <wt>καὶ<WTC l="καί"> <wt>τὴν<WTRA-ASF l="ὁ"> <wt>γῆν<WTN1-ASF l="γῆ">"""
+    # out = Converter().stripTheWordTags(line)
+    # print(out)
+
+    file = "/Users/otseng/Downloads/apocrypha.txt"
+    print("Processing " + file)
+    Converter().importScrollmapperDeuterocanonicalFiles(file)
+

@@ -99,7 +99,7 @@ class BibleVerseParser:
             else:
                 return "{0} {1}:{2}".format(abbreviation, c, v)
         else:
-            return "BOOK 0:0"
+            return ""
 
     # update self.standardAbbreviation
     def updateStandardAbbreviation(self):

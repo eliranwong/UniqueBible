@@ -891,6 +891,18 @@ class Bible:
         info = self.cursor.fetchone()
         return info[0]
 
+    def getNextBook(self, book):
+        query = "select book from bible where book > ? order by book asc limit 1"
+        self.cursor.execute(query, (book,))
+        info = self.cursor.fetchone()
+        return info[0]
+
+    def getPreviousBook(self, book):
+        query = "select book from bible where book < ? order by book desc limit 1"
+        self.cursor.execute(query, (book,))
+        info = self.cursor.fetchone()
+        return info[0]
+
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
         self.cursor.execute(query)
@@ -1558,7 +1570,21 @@ if __name__ == '__main__':
     # bible.renameGlossToRef()
     # print("Done")
 
-    fileList = glob.glob(config.marvelData+"/bibles/*.bible")
+    # fileList = glob.glob(config.marvelData+"/bibles/*.bible")
+    # for file in fileList:
+    #     bible = None
+    #     try:
+    #         if os.path.isfile(file):
+    #             bibleName = Path(file).stem
+    #             bible = Bible(bibleName)
+    #             description = bible.bibleInfo()
+    #             lastBook = bible.getLastBook()
+    #             print("{0}:{1}:{2}".format(bibleName, lastBook, description))
+    #     except:
+    #         print("Error in {0}".format(bible))
+
+
+    fileList = glob.glob(config.marvelData+"")
     for file in fileList:
         bible = None
         try:
@@ -1570,4 +1596,3 @@ if __name__ == '__main__':
                 print("{0}:{1}:{2}".format(bibleName, lastBook, description))
         except:
             print("Error in {0}".format(bible))
-
