@@ -628,6 +628,20 @@ class Commentary:
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
+    def fixClosingTagsInCommentary(self):
+        query = "SELECT Book, Chapter, Scripture FROM Commentary ORDER BY Book, Chapter"
+        self.cursor.execute(query)
+        for record in self.cursor.fetchall():
+            scripture = record[2]
+            scripture = re.sub(r"<heb>(.*?)</span>", r"<heb>\1</heb>", scripture)
+            scripture = re.sub(r"<grk>(.*?)</span>", r"<grk>\1</grk>", scripture)
+            update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
+            self.cursor.execute(update, (scripture, record[0], record[1]))
+            self.cursor.connection.commit()
+            if int(record[1]) >= 1:
+                self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
+
+
 class LexiconData:
 
     def __init__(self):
@@ -830,7 +844,8 @@ class Book:
     def getContentByChapter(self, entry):
         if self.connection:
             query = "SELECT Chapter, Content, ROWID FROM Reference WHERE Chapter=?"
-            return self.getContentData(query, entry)
+            content = self.getContentData(query, entry)
+            return content
         return ""
 
     def getParagraphSectionsByChapter(self, entry):
@@ -923,6 +938,10 @@ if __name__ == "__main__":
     print("Start")
     config.parseEnglishBooksOnly = True
     config.parseClearSpecialCharacters = False
-    commentary = Commentary("Dakes")
-    commentary.fixLinksInCommentary()
+    commentary = Commentary("OwenHebrews")
+    # commentary.fixClosingTagsInCommentary()
     print("Finished")
+
+    scripture = """<heb>&#x05D5;&#x05D1;&#x05BC;&#x05B0;&#x05D4;&#x05B8;&#x05DC;&#x05B5;&#x05D9;&#x05DF;</span><heb> </span><heb>&#x05D9;&#x05B7;&#x05D5;&#x05B0;&#x05DE;&#x05B8;&#x05D7;&#x05B5;&#x05D0;</span><heb> </span><heb>&#x05D0;&#x05B7;&#x05D7;&#x05B2;&#x05E8;&#x05B7;&#x05D9;&#x05B4;&#x05D0;&#x05BC;</span>"""
+    scripture = re.sub(r"<heb>(.*?)</span>", r"<heb>\1</heb>", scripture)
+    print(scripture)

@@ -2996,6 +2996,11 @@ class MainWindow(QMainWindow):
     def displayPlainTextOnBottomWindow(self, content):
         html = self.wrapHtml(content)
         self.instantView.setHtml(html, config.baseUrl)
+        if config.forceGenerateHtml:
+            outputFile = os.path.join("htmlResources", "instant.html")
+            fileObject = open(outputFile, "w", encoding="utf-8")
+            fileObject.write(html)
+            fileObject.close()
 
     def wrapHtml(self, content, view="", book=False):
         fontFamily = config.font
@@ -3008,7 +3013,7 @@ class MainWindow(QMainWindow):
                     fontSize = config.overwriteBookFontSize
                 elif type(config.overwriteBookFontSize) == int:
                     fontSize = "{0}px".format(config.overwriteBookFontSize)
-        if hasattr(config, "mainCssBibleFontStyle") and view == "main":
+        if hasattr(config, "mainCssBibleFontStyle") and view in ("main", "instant"):
             bibleCss = config.mainCssBibleFontStyle
         elif hasattr(config, "studyCssBibleFontStyle") and view == "study":
             bibleCss = config.studyCssBibleFontStyle

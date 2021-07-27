@@ -1,3 +1,7 @@
+Major changes in version 25.94:
+* Use Bible font in instant window
+* Only check shortname for commentaries
+
 Major changes in version 25.93:
 * Fix links in Dakes commentary
 * Make it easier to search dictionary in miniControl
