@@ -1,4 +1,5 @@
 import glob
+from xml.dom.minidom import Node
 
 from util.BibleBooks import BibleBooks
 from util.TextUtil import TextUtil
@@ -1136,6 +1137,8 @@ class Converter:
             self.importZefaniaBible(filename, doc)
         elif len(doc.getElementsByTagName("osis")) > 0:
             self.importOsisBible(filename, doc)
+        elif "2001" in filename and len(doc.getElementsByTagName("bible")) == 1:
+            self.import2001Bible(filename, doc)
         elif len(doc.getElementsByTagName("bible")) > 0 and len(doc.getElementsByTagName("testament")) > 0:
             self.importBebliaBible(filename, doc)
         else:
@@ -1167,6 +1170,51 @@ class Converter:
                         scripture = verse.firstChild.nodeValue.strip()
                         row = [bookNum, chapterNum, verseNum, scripture]
                         data.append(row)
+        self.mySwordBibleToRichFormat(description, abbreviation, data)
+        self.mySwordBibleToPlainFormat(description, abbreviation, data)
+        self.logger.info("Import successful")
+
+    # Import 2001 Translation
+    # https://2001translation.org/
+    # Note: requires a lot of XML cleanup prior to being imported
+    def import2001Bible(self, filename, doc):
+        self.logger.info("Importing 2001 XML Bible: " + filename)
+        work = doc.getElementsByTagName("bible")[0]
+        biblename = "2001"
+        description = "https://2001translation.org/"
+        self.logger.info("Creating " + biblename)
+        abbreviation = biblename
+        books = doc.getElementsByTagName("book")
+        data = []
+        for bookNum in range(1,67):
+            bookInfo = BibleBooks.eng[str(bookNum)]
+            bookName = bookInfo[1]
+            bookTag = "_" + bookName.lower().replace(" ", "")
+            print("{0}-{1}".format(bookTag, bookNum))
+            book = doc.getElementsByTagName(bookTag)[0]
+            chapters = BibleBooks.chapters[bookNum]
+            for chapterNum in range(1, chapters):
+                chapterStr = "chapter{0}".format(chapterNum)
+                chapter = book.getElementsByTagName(chapterStr)[0]
+                # print(chapterStr)
+                verses = BibleBooks.verses[bookNum][chapterNum]
+                for verseNum in range(1, verses):
+                    scripture = ""
+                    try:
+                        verse = chapter.getElementsByTagName("v{0}".format(verseNum))[0]
+                        for curNode in verse.childNodes:
+                            if (curNode.nodeType == Node.TEXT_NODE):
+                                scripture += curNode.nodeValue
+                            elif (curNode.nodeType == Node.ELEMENT_NODE):
+                                if curNode.localName == 'a':
+                                    if curNode.firstChild.nodeValue:
+                                        scripture += "<a href='" + curNode.attributes['href'].nodeValue + "'>"
+                                        scripture += curNode.firstChild.nodeValue
+                                        scripture += "</a>"
+                    except Exception as ex:
+                        print("Error {0}-{1} {2}:{3}".format(bookName, bookNum, chapterNum, verseNum))
+                    row = [bookNum, chapterNum, verseNum, scripture]
+                    data.append(row)
         self.mySwordBibleToRichFormat(description, abbreviation, data)
         self.mySwordBibleToPlainFormat(description, abbreviation, data)
         self.logger.info("Import successful")
@@ -2079,8 +2127,8 @@ if __name__ == '__main__':
     # out = Converter().convertFromRichTextFormat(text, True)
     # print(out)
 
-    # file = "/Users/otseng/Downloads/ant.nt"
-    # Converter().importTheWordBible(file)
+    file = "/Users/otseng/Downloads/2001.xml"
+    Converter().importXMLBible(file)
 
     # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
     # line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
