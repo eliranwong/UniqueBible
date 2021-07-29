@@ -1,7 +1,7 @@
 Major changes in version 25.96:
 * Fix opening DUETC Bible when useLiteVerseParsing is false
 * Add Master Control tabs to Classic menu
-* Move all files in plugins/context to https://github.com/otseng/UniqueBible_Plugins_Context
+* Move files in plugins/context to https://github.com/eliranwong/UniqueBible_Plugins_Context
 - For more info see: https://github.com/eliranwong/UniqueBible/issues/708
 
 Major changes in version 25.95:

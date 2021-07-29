@@ -672,7 +672,7 @@ class MainWindow(QMainWindow):
             self.downloadBibleMp3Dialog.show()
 
     def installGithubPluginsContext(self):
-        self.installFromGitHub("otseng/UniqueBible_Plugins_Context", "../plugins/context", "gitHubPluginsContext")
+        self.installFromGitHub("eliranwong/UniqueBible_Plugins_Context", "../plugins/context", "gitHubPluginsContext")
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def installFromGitHub(self, repo, directory, title):
