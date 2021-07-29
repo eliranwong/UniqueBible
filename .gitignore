@@ -12,6 +12,7 @@
 /.idea
 /plugins/*.py
 /plugins/*.zip
+/plugins/context_backup/**
 /plugins/context/**
 /plugins/menu/**
 /plugins/startup/**
