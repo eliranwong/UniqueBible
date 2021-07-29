@@ -145,13 +145,13 @@ class BibleVerseParser:
             text = RegexSearch.replace(text, searchReplace)
         return text
 
-    def parseText(self, text, splitInChunks=True, parseBooklessReferences=False):
+    def parseText(self, text, splitInChunks=True, parseBooklessReferences=False, canonicalOnly=False):
         if splitInChunks:
             parsedText = ""
             chunks = text.splitlines(True)
             chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
             for chunk in chunks:
-                parsedText += self.runParseText("".join(chunk), parseBooklessReferences)
+                parsedText += self.runParseText("".join(chunk), parseBooklessReferences, canonicalOnly)
         else:
             parsedText = ""
             start = 0
@@ -161,17 +161,17 @@ class BibleVerseParser:
                 if '<img src="data:image' in text[start:]:
                     imgstart = text.find('<img src="data:image', start)
                     block = text[start:imgstart]
-                    parsedText += self.runParseText(block, parseBooklessReferences)
+                    parsedText += self.runParseText(block, parseBooklessReferences, canonicalOnly)
                     end = text.find(' />', start+10)+3
                     parsedText += text[imgstart:end]
                     start = end
                 else:
                     end = len(text)
                     block = text[start: end]
-                    parsedText += self.runParseText(block, parseBooklessReferences)
+                    parsedText += self.runParseText(block, parseBooklessReferences, canonicalOnly)
         return parsedText
 
-    def runParseText(self, text, parseBooklessReferences=False):
+    def runParseText(self, text, parseBooklessReferences=False, canonicalOnly=False):
         # Add a space at the end of the text, to avoid indefinite loop in some of the following processes.
         # This extra space will be removed when parsing is finished.
         text = text + " "
@@ -183,7 +183,10 @@ class BibleVerseParser:
         )
         text = RegexSearch.deepReplace(text, searchPattern, searchReplace)
 
-        for name in self.sortedNamesCanonBooksOnly:
+        searchBooks = self.sortedNames
+        if canonicalOnly:
+            searchBooks = self.sortedNamesCanonBooksOnly
+        for name in searchBooks:
             # get the string of book name
             bookName = name
             searchReplace = (
@@ -315,20 +318,20 @@ class BibleVerseParser:
         with open(outputFile, "w", encoding="utf-8") as f:
             f.write(newText)
 
-    def replaceTextWithReference(self, originalText, splitInChunks):
+    def replaceTextWithReference(self, originalText, splitInChunks, canonicalOnly=False):
         newText = ""
         if splitInChunks:
             # Create or empty a file
             chunks = originalText.splitlines(True)
             chunks = [chunks[x:x+self.noOfLinesPerChunkForParsing] for x in range(0, len(chunks), self.noOfLinesPerChunkForParsing)]
             for chunk in chunks:
-                parsedText = self.runParseText("".join(chunk))
+                parsedText = self.runParseText("".join(chunk), canonicalOnly)
                 # standardise the format of bible verse references
                 if self.standardisation.lower() == "yes":
                     parsedText = self.standardReference(parsedText)
                 newText += parsedText
         else:
-            parsedText = self.runParseText(originalText)
+            parsedText = self.runParseText(originalText, canonicalOnly)
             # standardise the format of bible verse references
             if self.standardisation.lower() == "yes":
                 parsedText = self.standardReference(parsedText)
