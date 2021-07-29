@@ -651,12 +651,15 @@ input.addEventListener('keyup', function(event) {0}
             favouriteBible = self.getFavouriteBible()
             if inputText == favouriteBible:
                 favouriteBible = self.getFavouriteBible2()
+            (fontFile, fontSize, css) = Bible(favouriteBible).getFontInfo()
+            config.mainCssBibleFontStyle += css
             textList = [inputText, favouriteBible]
         else:
             textList = [inputText]
         for index, verse in enumerate(verseList):
             for counter, text in enumerate(textList):
                 b = verse[0]
+                verses += "<div class={0}>".format(text)
                 # format opening tag
                 if counter == 1 and text == favouriteBible:
                     extraStyle = " border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;"
@@ -742,6 +745,7 @@ input.addEventListener('keyup', function(event) {0}
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+                verses += "</div>"
         return verses
 
     def readPlainChapter(self, text, verse, source):

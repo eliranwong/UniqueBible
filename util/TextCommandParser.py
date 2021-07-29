@@ -1934,7 +1934,6 @@ class TextCommandParser:
             info = BiblesSqlite().readMultipleVerses(config.mainText, [bcvList])
             if config.mainText in config.rtlTexts and bcvList[0] < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
-            info = "<div class='{0}'>{1}</div>".format(config.mainText, info)
             return ("instant", info, {})
         else:
             return ("", "", {})
