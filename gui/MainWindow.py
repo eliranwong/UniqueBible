@@ -1502,6 +1502,7 @@ class MainWindow(QMainWindow):
                   "theWord Complete Bibles (*.ont);;"
                   "theWord OT Bibles (*.ot);;"
                   "theWord NT Bibles (*.nt);;"
+                  # "theWord Commentaries (*.twm);;"
                   "Word Documents (*.docx);;"
                   "PDF Documents (*.pdf)"), "", options)
         if fileName:
@@ -1534,6 +1535,8 @@ class MainWindow(QMainWindow):
                 self.importXMLBible(fileName)
             elif fileName.endswith(".nt") or fileName.endswith(".ot") or fileName.endswith(".ont"):
                 self.importTheWordBible(fileName)
+            elif fileName.endswith(".cmt.twm"):
+                self.importTheWordCommentary(fileName)
         self.loadBibleDescriptions()
 
     def customMarvelData(self):
@@ -1636,6 +1639,10 @@ class MainWindow(QMainWindow):
 
     def importTheWordBible(self, filename):
         Converter().importTheWordBible(filename)
+        self.completeImport()
+
+    def importTheWordCommentary(self, fileName):
+        Converter().importTheWordCommentary(fileName)
         self.completeImport()
 
     def completeImport(self):

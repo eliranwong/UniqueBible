@@ -1319,6 +1319,22 @@ class Converter:
             config.rtlTexts.append(biblename)
         self.logger.info("Import successful")
 
+    def importTXTBible(self, filename):
+        biblename = Path(filename).stem
+        extension = Path(filename).suffix
+        data = []
+        with open(filename, errors='ignore') as f:
+            for line in f:
+                line = line.strip()
+                (book, chapter, verse, scripture) = line.split("||")
+                book = book.replace("N", "")
+                row = [book, chapter, verse, scripture]
+                # print("{0} - {1}:{2}:{3}:{4}".format(count, book, chapter, verse, line))
+                data.append(row)
+        self.mySwordBibleToRichFormat(biblename, biblename, data)
+        self.mySwordBibleToPlainFormat(biblename, biblename, data)
+        self.logger.info("Import successful")
+
     # https://github.com/scrollmapper/bible_databases_deuterocanonical
     def importScrollmapperDeuterocanonicalFiles(self, filename):
         biblename = "DEUT"
@@ -2111,6 +2127,64 @@ class ThirdPartyDictionary:
             content = Converter().formatNonBibleMyBibleModule(content[0], self.module)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
+
+    # Import TheWord Commentaries
+    def importTheWordCommentary(self, filename):
+        commentaryContent = []
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+            query = "SELECT value FROM config where name='title'"
+            cursor.execute(query)
+            description = cursor.fetchone()[0]
+            title = description
+            *_, inputFileName = os.path.split(filename)
+            abbreviation = inputFileName[:-21]
+            abbreviation = re.sub(r"^(.*?)\-c$", r"\1", abbreviation)
+            query = "SELECT topic_id, DISTINCT book_number, chapter_number_from FROM commentaries ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
+            cursor.execute(query)
+            chapters = cursor.fetchall()
+            # format chapters
+            biblesSqlite = BiblesSqlite()
+            for chapter in chapters:
+                b, c = chapter
+                b = self.convertMyBibleBookNo(b)
+                # get standard kjv verse list for a chapter
+                verseList = biblesSqlite.getVerseList(b, c, "kjvbcv")
+                # use a dictionary to hold verse content
+                verseDict = {v: ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, v)] for v in verseList}
+                # get verse data
+                query = "SELECT book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text FROM commentaries WHERE book_number=? AND chapter_number_from=? ORDER BY book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to"
+                cursor.execute(query, chapter)
+                verses = cursor.fetchall()
+                # format verses
+                for verse in verses:
+                    book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text = verse
+                    book_number = self.convertMyBibleBookNo(book_number)
+                    verseContent = '<ref onclick="bcv({0},{1},{2})"><u><b>{1}:{2}-{3}:{4}</b></u></ref><br>{5}'.format(book_number, chapter_number_from, verse_number_from, chapter_number_to, verse_number_to, text)
+                    # check fromverse if it is included in a standard kjv verse list
+                    # convert to integer below, as some modules are found containing string, probably by mistake
+                    fromverse = int(verse_number_from)
+                    item = verseDict.get(fromverse, "not found")
+                    if item == "not found":
+                        verseDict[fromverse] = ['<vid id="v{0}.{1}.{2}"></vid>'.format(b, c, fromverse), verseContent]
+                    else:
+                        item.append(verseContent)
+                # sort verse numbers in a chapter
+                sortedVerses = sorted(verseDict.keys())
+                # combine verse content into a single chapter
+                chapterText = ""
+                for sortedVerse in sortedVerses:
+                    chapterText += "｛｝".join(verseDict[sortedVerse])
+                # fix scrolling for commentary modules
+                chapterText = self.fixCommentaryScrolling(chapterText)
+                # add to commentary content
+                commentaryContent.append((b, c, chapterText))
+            # convert MyBible format to UniqueBible format
+            commentaryContent = [(b, c, self.formatMyBibleCommentaryVerse(chapterText, abbreviation)) for b, c, chapterText in commentaryContent]
+            # write to a UB commentary file
+            self.createCommentaryModule(abbreviation, title, description, commentaryContent)
+
+
 if __name__ == '__main__':
 
     pass
@@ -2127,8 +2201,8 @@ if __name__ == '__main__':
     # out = Converter().convertFromRichTextFormat(text, True)
     # print(out)
 
-    file = "/Users/otseng/Downloads/2001.xml"
-    Converter().importXMLBible(file)
+    file = "/Users/otseng/Downloads/TR.txt"
+    Converter().importTXTBible(file)
 
     # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
     # line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
