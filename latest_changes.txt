@@ -1,3 +1,6 @@
+Major change in version 25.97:
+* Add TR Bible and MP3 files
+
 Major changes in version 25.96:
 * Fix opening DUETC Bible when useLiteVerseParsing is false
 * Add Master Control tabs to Classic menu

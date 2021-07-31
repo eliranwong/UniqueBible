@@ -26,6 +26,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "CUV (Chinese)": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
             "NHEB (Indian)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
+            "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
             "WEB (American)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
         }
         self.parent = parent
@@ -124,25 +125,29 @@ class DownloadBibleMp3Dialog(QDialog):
         self.dataViewModel.clear()
         rowCount = 0
         for file in self.repoData.keys():
-            item = QStandardItem(file)
-            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file)
-            if not os.path.exists(folder):
-                item.setCheckable(True)
-                item.setCheckState(Qt.Checked)
-                item.setEnabled(True)
+            if len(str(file)) > 3:
+                engFullBookName = file[3:]
             else:
+                engFullBookName = BibleBooks().eng[str(int(file))][1]
+            item = QStandardItem(file[:3].strip())
+            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file)
+            folderWithName = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file + " " + engFullBookName)
+            if os.path.exists(folder) or os.path.exists(folderWithName):
                 item.setCheckable(False)
                 item.setCheckState(Qt.Unchecked)
                 item.setEnabled(False)
+            else:
+                item.setCheckable(True)
+                item.setCheckState(Qt.Checked)
+                item.setEnabled(True)
             self.dataViewModel.setItem(rowCount, 0, item)
-            engFullBookName = BibleBooks().eng[str(int(file))][1]
             item = QStandardItem(engFullBookName)
             self.dataViewModel.setItem(rowCount, 1, item)
-            if not os.path.exists(folder):
-                item = QStandardItem("")
+            if os.path.exists(folder) or os.path.exists(folderWithName):
+                item = QStandardItem("Installed")
                 self.dataViewModel.setItem(rowCount, 2, item)
             else:
-                item = QStandardItem("Installed")
+                item = QStandardItem("")
                 self.dataViewModel.setItem(rowCount, 2, item)
             rowCount += 1
         self.dataViewModel.setHorizontalHeaderLabels(
@@ -249,7 +254,12 @@ class DownloadFromGitHub(QObject):
         count = 0
         for index in range(self.dataViewModel.rowCount()):
             if self.dataViewModel.item(index).checkState() == Qt.Checked:
-                filename = self.dataViewModel.item(index).text()
+                bookNum = self.dataViewModel.item(index).text()
+                filename = ""
+                for key in self.repoData.keys():
+                    if key.startswith(bookNum):
+                        filename = key
+                        break
                 file = os.path.join(folder, filename+".zip")
                 msg = "Download " + filename
                 self.progress.emit(msg)
@@ -257,7 +267,8 @@ class DownloadFromGitHub(QObject):
                 with zipfile.ZipFile(file, 'r') as zipped:
                     zipped.extractall(folder)
                 os.remove(file)
-                DownloadBibleMp3Util.moveFiles("{0}/{1}*.mp3".format(folder, filename), folder)
+                srcFiles = "{0}/{1}*.mp3".format(folder, bookNum)
+                DownloadBibleMp3Util.moveFiles(srcFiles, folder)
                 count += 1
         self.finished.emit(count)
 
@@ -278,13 +289,31 @@ class DownloadBibleMp3Util:
                 bookNum += 39
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
-            destFolder = os.path.join(destDir, folder)
+            destFolder = os.path.join(destDir, folder + " " + bookName)
             if not os.path.exists(destFolder):
                 os.mkdir(destFolder)
             newFile = os.path.join(destFolder, base)
             os.rename(file, newFile)
             if debugOutput:
                 print(newFile)
+
+    @staticmethod
+    def moveGreekFiles(sourceDir, destDir, debugOutput = False):
+        for bookNum in range(40, 67):
+            dirs = glob.glob("{0}/{1} *".format(sourceDir, bookNum))
+            dir = dirs[0]
+            baseDir = os.path.basename(dir)
+            files = glob.glob("{0}/{1}".format(dir, "*.mp3"))
+            for file in files:
+                baseFile = os.path.basename(file)
+                destFolder = os.path.join(destDir, baseDir)
+                if not os.path.exists(destFolder):
+                    os.mkdir(destFolder)
+                newFile = os.path.join(destDir, "{0}/{1}_{2}".format(baseDir, bookNum, baseFile))
+                os.rename(file, newFile)
+                if debugOutput:
+                    print("From:" + file)
+                    print("To:" + newFile)
 
     @staticmethod
     def zipFiles(directory, debugOutput = False):
@@ -493,6 +522,17 @@ if __name__ == '__main__':
     AFV
     https://afaithfulversion.org/genesis/
     '''
-    sourceDir = "/Users/otseng/Downloads/save"
-    destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/AFV/default"
+    # sourceDir = "/Users/otseng/Downloads/save"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/AFV/default"
     # DownloadBibleMp3Util.moveFiles(sourceDir, destDir, True)
+
+    '''
+    Greek NT
+    http://getbible.net/scriptureinstall/Greek__NT_Textus_Receptus_(1550_1894)__text__LTR.txt
+    '''
+    # sourceDir = "/Users/otseng/Downloads"
+    # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/TR/modern"
+    # DownloadBibleMp3Util.moveGreekFiles(sourceDir, destDir, True)
+
+    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/TR/modern"
+    DownloadBibleMp3Util.zipFiles(sourceDir, True)
