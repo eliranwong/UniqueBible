@@ -758,4 +758,5 @@ translation = {
     "gitHubPluginsContext": "Githb प्लगइन्स कॉन्टेक्स्ट",
     "removeFavourite": "पसंदीदा मिटाएँ",
     "showMiniKeyboardInMiniControl": "मिनी-कंट्रोल में मिनी कीबोर्ड दिखाएं",
+    "activeOnly": "सिर्फ सक्रिय",
 }

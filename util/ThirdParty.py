@@ -1858,9 +1858,15 @@ class Converter:
         query = "SELECT Chapter, Content FROM Reference"
         cursor.execute(query)
         content = cursor.fetchall()
-        content = [(chapter, self.formatNonBibleESwordModule(chapterContent)) for chapter, chapterContent in content]
-
-        self.createBookModule(module, content)
+        data = []
+        for chapter, chapterContent in content:
+            self.logger.info("Converting {0}".format(chapter))
+            chapterContent = self.formatNonBibleESwordModule(chapterContent)
+            chapterContent = BibleVerseParser(config.parserStandarisation).parseText(chapterContent, splitInChunks=False,
+                                                                           parseBooklessReferences=False,
+                                                                           canonicalOnly=True)
+            data.append((chapter, chapterContent))
+        self.createBookModule(module, data)
 
         connection.close()
 

@@ -23,6 +23,8 @@ class MiniControl(QWidget):
 
     def __init__(self, parent, selectedTab = 0):
         super().__init__()
+        self.textButtonStyleEnabled = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        self.textButtonStyleDisabled = "QPushButton {background-color: #323232; color: #323232;} QPushButton:hover {background-color: #323232;} QPushButton:pressed { background-color: #323232;}"
         self.setWindowTitle(config.thisTranslation["remote_control"])
         self.parent = parent
         # specify window size
@@ -33,6 +35,7 @@ class MiniControl(QWidget):
         self.resizeEvent = (lambda old_method: (lambda event: (self.onResized(event), old_method(event))[-1]))(
             self.resizeEvent)
         self.bibleButtons = {}
+        self.commentaryButtons = {}
         # setup interface
         self.bible_layout = None
         self.setupUI()
@@ -70,6 +73,8 @@ class MiniControl(QWidget):
 
     # setup ui
     def setupUI(self):
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+
         mainLayout = QGridLayout()
 
         commandBox = QVBoxLayout()
@@ -192,7 +197,6 @@ class MiniControl(QWidget):
 
         # Bible translations tab
 
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
         self.biblesBox = QWidget()
         self.biblesBoxContainer = QVBoxLayout()
         collectionsLayout = self.newRowLayout()
@@ -250,11 +254,19 @@ class MiniControl(QWidget):
         box_layout.setContentsMargins(0, 0, 0, 0)
         box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
+        button = QPushButton(config.thisTranslation["activeOnly"])
+        button.setStyleSheet(textButtonStyle)
+        button.clicked.connect(self.activeCommentaries)
+        row_layout.addWidget(button)
+        box_layout.addLayout(row_layout)
+        row_layout = self.newRowLayout()
         commentaries = Commentary().getCommentaryList()
         count = 0
         for commentary in commentaries:
             button = QPushButton(commentary)
+            button.setToolTip(Commentary.fileLookup[commentary])
             button.clicked.connect(partial(self.commentaryAction, commentary))
+            self.commentaryButtons[commentary] = button
             row_layout.addWidget(button)
             count += 1
             if count > 6:
@@ -444,8 +456,6 @@ class MiniControl(QWidget):
         self.populateBooksButtons(config.mainText)
 
     def selectCollection(self, collection):
-        textButtonStyleEnabled = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
-        textButtonStyleDisabled = "QPushButton {background-color: #323232; color: #323232;} QPushButton:hover {background-color: #323232;} QPushButton:pressed { background-color: #323232;}"
 
         if not collection == "All":
             biblesInCollection = config.bibleCollections[collection]
@@ -460,8 +470,18 @@ class MiniControl(QWidget):
                     button.setStyleSheet("")
                 else:
                     button.setEnabled(False)
-                    button.setStyleSheet(textButtonStyleDisabled)
+                    button.setStyleSheet(self.textButtonStyleDisabled)
 
+    def activeCommentaries(self):
+        activeCommentaries = Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)
+        for commentary in self.commentaryButtons.keys():
+            button = self.commentaryButtons[commentary]
+            if commentary in activeCommentaries:
+                button.setEnabled(True)
+                button.setStyleSheet("")
+            else:
+                button.setEnabled(False)
+                button.setStyleSheet(self.textButtonStyleDisabled)
 
 ## Standalone development code
 

@@ -758,4 +758,5 @@ translation = {
     "gitHubPluginsContext": "Контекст подключаемых модулей GitHub",
     "removeFavourite": "Удалить избранное",
     "showMiniKeyboardInMiniControl": "Показать мини-клавиатуру в мини-контроле",
+    "activeOnly": "Только активные",
 }

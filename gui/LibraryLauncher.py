@@ -4,7 +4,7 @@ import config
 from qtpy.QtCore import QStringListModel
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
-from db.ToolsSqlite import Book, BookData
+from db.ToolsSqlite import Book, BookData, Commentary
 from util.FileUtil import FileUtil
 
 
@@ -26,9 +26,15 @@ class LibraryLauncher(QWidget):
         leftColumnWidget = QGroupBox(config.thisTranslation["commentaries"])
         commentaryLayout = QVBoxLayout()
         commentaryLayout.addWidget(self.commentaryListView())
+        subSubLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousCommentary)
-        commentaryLayout.addWidget(button)
+        subSubLayout.addWidget(button)
+        button = QPushButton(config.thisTranslation["activeOnly"])
+        button.clicked.connect(self.showActiveOnlyCommentaries)
+        subSubLayout.addWidget(button)
+        commentaryLayout.addLayout(subSubLayout)
+
         leftColumnWidget.setLayout(commentaryLayout)
 
         rightColumnWidget = QGroupBox(config.thisTranslation["menu10_books"])
@@ -72,30 +78,34 @@ class LibraryLauncher(QWidget):
         # https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtCore/QStringListModel.html
         # https://gist.github.com/minoue/9f384cd36339429eb0bf
         # https://www.pythoncentral.io/pyside-pyqt-tutorial-qlistview-and-qstandarditemmodel/
-        list = QListView()
-        list.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        model = QStandardItemModel(list)
+        self.commentaryListView = QListView()
+        self.commentaryListView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.reloadCommentariesListModel()
+        return self.commentaryListView
+
+    def reloadCommentariesListModel(self, showOnlyActiveCommentaries=False):
+        self.commentaryList = []
+        activeCommentaries = []
+        if showOnlyActiveCommentaries:
+            activeCommentaries = Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)
         for index, commentary in enumerate(self.parent.commentaryFullNameList):
-            item = QStandardItem(commentary)
-            item.setToolTip(self.parent.commentaryList[index])
-            #item.setCheckable(True)
-            #item.setCheckState(Qt.CheckState.Checked)
-            #item.setCheckState(Qt.CheckState.Unchecked)
-            #print(item.checkState() is Qt.CheckState.Checked)
-            model.appendRow(item)
-        #model = QStringListModel(self.parent.commentaryList)
-        #model = QStringListModel(self.parent.commentaryFullNameList)
-        list.setModel(model)
-        if config.commentaryText in self.parent.commentaryList:
-            list.setCurrentIndex(model.index(self.parent.commentaryList.index(config.commentaryText), 0))
-        list.selectionModel().selectionChanged.connect(self.commentarySelected)
-        return list
+            if not showOnlyActiveCommentaries or commentary in activeCommentaries:
+                # item = QStandardItem(commentary)
+                # item.setToolTip(self.parent.commentaryList[index])
+                self.commentaryList.append(commentary)
+        model = QStringListModel(self.commentaryList)
+        self.commentaryListView.setModel(model)
+        if config.commentaryText in self.commentaryList:
+            self.commentaryListView.setCurrentIndex(model.index(self.commentaryList.index(config.commentaryText), 0))
+        self.commentaryListView.selectionModel().selectionChanged.connect(self.commentarySelected)
+
 
     def bookListView(self):
         self.bookList = QListView()
         self.bookList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.reloadBookListModel()
         return self.bookList
+
 
     def reloadBookListModel(self, files=None):
         self.dirsAndFiles = self.getSubdirectories()
@@ -140,11 +150,14 @@ class LibraryLauncher(QWidget):
         self.parent.runTextCommand(command)
 
     def commentarySelected(self, selection):
-        #config.commentaryText = selection[0].indexes()[0].data()
         index = selection[0].indexes()[0].row()
-        config.commentaryText = self.parent.commentaryList[index]
+        reverseLookup = {v: k for k, v in Commentary.fileLookup.items()}
+        config.commentaryText = reverseLookup[self.commentaryList[index]]
         command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
         self.parent.runTextCommand(command)
+
+    def showActiveOnlyCommentaries(self):
+        self.reloadCommentariesListModel(True)
 
     def showAllBooks(self):
         self.reloadBookListModel()
