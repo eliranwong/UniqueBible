@@ -1,3 +1,7 @@
+Major changes in version 25.98:
+* Convert references to links importing refi books
+* Filter by active commentaries in miniControl and masterControl
+
 Major change in version 25.97:
 * Add TR Bible and MP3 files
 

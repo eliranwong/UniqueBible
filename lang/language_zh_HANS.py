@@ -758,4 +758,5 @@ translation = {
     "gitHubPluginsContext": "GitHub 插件上下文",
     "removeFavourite": "除去收藏夹",
     "showMiniKeyboardInMiniControl": "在迷你控制中显示迷你键盘",
+    "activeOnly": "仅活动",
 }

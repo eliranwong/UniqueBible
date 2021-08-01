@@ -488,6 +488,8 @@ class Commentary:
         "Whedon": "Commentary on the Old and New Testaments (Whedon) [14 vol.]",
     }
 
+    fileLookup = None
+
     def __init__(self, text=False):
         self.connection = None
         self.logger = logging.getLogger('uba')
@@ -497,6 +499,19 @@ class Commentary:
                 self.database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(text))
                 self.connection = sqlite3.connect(self.database)
                 self.cursor = self.connection.cursor()
+        if Commentary.fileLookup is None:
+            Commentary.fileLookup = {}
+            commentaryFolder = os.path.join(config.marvelData, "commentaries")
+            commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if
+                              os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(
+                                  ".commentary") and not re.search(r"^[\._]", f)]
+            for commentary in sorted(commentaryList):
+                database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
+                connection = sqlite3.connect(database)
+                cursor = connection.cursor()
+                query = "SELECT title FROM Details"
+                cursor.execute(query)
+                Commentary.fileLookup[commentary] = cursor.fetchone()[0]
 
     def __del__(self):
         try:
@@ -534,6 +549,21 @@ class Commentary:
         commentaryFolder = os.path.join(config.marvelData, "commentaries")
         commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
         return sorted(commentaryList)
+
+    def getCommentaryListThatHasBookAndChapter(self, book, chapter):
+        commentaryFolder = os.path.join(config.marvelData, "commentaries")
+        commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
+        activeCommentaries = []
+        for commentary in sorted(commentaryList):
+            database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
+            connection = sqlite3.connect(database)
+            cursor = connection.cursor()
+            query = "select book from commentary where book=? and chapter=?"
+            cursor.execute(query, (book, chapter))
+            if cursor.fetchone():
+                activeCommentaries.append(commentary)
+                activeCommentaries.append(Commentary.fileLookup[commentary])
+        return activeCommentaries
 
     def getCommentaries(self):
         commentaryList = self.getCommentaryList()
