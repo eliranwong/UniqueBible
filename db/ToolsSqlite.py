@@ -506,12 +506,16 @@ class Commentary:
                               os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(
                                   ".commentary") and not re.search(r"^[\._]", f)]
             for commentary in sorted(commentaryList):
-                database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
-                connection = sqlite3.connect(database)
-                cursor = connection.cursor()
-                query = "SELECT title FROM Details"
-                cursor.execute(query)
-                Commentary.fileLookup[commentary] = cursor.fetchone()[0]
+                if commentary in Commentary.marvelCommentaries.keys():
+                    description = Commentary.marvelCommentaries[commentary]
+                else:
+                    database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
+                    connection = sqlite3.connect(database)
+                    cursor = connection.cursor()
+                    query = "SELECT title FROM Details"
+                    cursor.execute(query)
+                    description = cursor.fetchone()[0]
+                Commentary.fileLookup[commentary] = description
 
     def __del__(self):
         try:
