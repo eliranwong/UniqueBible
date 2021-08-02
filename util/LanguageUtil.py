@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("activeOnly", "Active Only")
+        addLanguageStringToAllFiles("cp7", "Morphology")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

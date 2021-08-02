@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "Remove favorite",
     "showMiniKeyboardInMiniControl": "Show mini keyboard in miniControl",
     "activeOnly": "Active Only",
+    "cp7": "Morphology",
 }

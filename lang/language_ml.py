@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "ഇഷ്ടപ്പെട്ട മാറ്റം",
     "showMiniKeyboardInMiniControl": "MiniControl-ല് മിനി കീബോര്ഡ് കാണിക്കുക",
     "activeOnly": "സജീവമായ മാത്രം",
+    "cp7": "മോര്ഫോളജി",
 }
