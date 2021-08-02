@@ -178,6 +178,8 @@ class LibraryLauncher(QWidget):
                 self.chapterModel.setStringList(topicList)
                 config.bookChapter = topicList[0] if topicList else ""
                 self.scrollChapterList(topicList)
+                command = "SEARCHBOOK:::{0}:::".format(config.book)
+                self.parent.commandField.setText(command)
 
     def addFavorite(self):
         if self.selectedBook and self.selectedBook not in config.favouriteBooks:

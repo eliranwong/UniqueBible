@@ -7,7 +7,7 @@ from util.LexicalData import LexicalData
 from functools import partial
 from util.BibleVerseParser import BibleVerseParser
 from util.BibleBooks import BibleBooks
-from db.BiblesSqlite import BiblesSqlite, Bible, ClauseData, MorphologySqlite
+from db.BiblesSqlite import BiblesSqlite, Bible, ClauseData
 from db.ToolsSqlite import CrossReferenceSqlite, CollectionsSqlite, ImageSqlite, IndexesSqlite, EncyclopediaData, \
     DictionaryData, ExlbData, SearchSqlite, Commentary, VerseData, WordData, BookData, \
     Lexicon, LexiconData
@@ -17,6 +17,7 @@ from db.NoteSqlite import NoteSqlite
 from util.Translator import Translator
 from db.Highlight import Highlight
 from util.TtsLanguages import TtsLanguages
+from db.BiblesSqlite import MorphologySqlite
 
 #from gui.Downloader import Downloader
 from install.module import *
@@ -319,6 +320,21 @@ class TextCommandParser:
             # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%")
             # e.g. SEARCHMORPHOLOGY:::E70002:::feminine|noun
             # alias of e.g. MORPHOLOGY:::LexicalEntry LIKE '%E70002,%' AND (Morphology LIKE "%feminine%" OR Morphology LIKE "%noun%")"""),
+            "searchmorphologybylex": (self.searchMorphologyByLex, """
+            # [KEYWORD] SEARCHMORPHOLOGYBYLEX
+            # e.g. SEARCHMORPHOLOGYBYLEX:::G2424:::Noun,Nominative,Masculine
+            # e.g. SEARCHMORPHOLOGYBYLEX:::G2424:::Noun,Nominative,Masculine:::40-66
+            """),
+            "searchmorphologybyword": (self.searchMorphologyByWord, """
+            # [KEYWORD] SEARCHMORPHOLOGYBYWORD
+            # e.g. SEARCHMORPHOLOGYBYWORD:::Ἰησοῦς:::Noun,Dative,Masculine
+            # e.g. SEARCHMORPHOLOGYBYWORD:::Ἰησοῦς:::Noun,Dative,Masculine:::40
+            """),
+            "searchmorphologybygloss": (self.searchMorphologyByGloss, """
+            # [KEYWORD] SEARCHMORPHOLOGYBYGLOSS
+            # e.g. SEARCHMORPHOLOGYBYGLOSS:::Joshua:::Noun,Dative,Masculine
+            # e.g. SEARCHMORPHOLOGYBYGLOSS:::Joshua:::Noun,Dative,Masculine:::1-66
+            """),
             "word": (self.textWordData, """
             # [KEYWORD] WORD
             # e.g. WORD:::1:::2"""),
@@ -1248,7 +1264,7 @@ class TextCommandParser:
                 self.parent.vlcPlayer = VlcPlayer(self, filename)
             else:
                 self.parent.vlcPlayer.stop()
-                self.parent.vlcPlayer.load_file(filename)
+                self.parent.vlcPlayer.loadAndPlayFile(filename)
             self.parent.vlcPlayer.show()
         return ("", "", {})
 
@@ -2483,6 +2499,53 @@ class TextCommandParser:
         items = (lexeme, lexicalEntry, morphologyString, translations)
         self.parent.openMorphDialog(items)
         return ("", "", {})
+
+    # SEARCHMORPHOLOGYBYLEX:::
+    def searchMorphologyByLex(self, command, source):
+        return self.searchMorphologyCommon(command, source, "LEX")
+
+    # SEARCHMORPHOLOGYBYWORD:::
+    def searchMorphologyByWord(self, command, source):
+        return self.searchMorphologyCommon(command, source, "WORD")
+
+    # SEARCHMORPHOLOGYBYGLOSS:::
+    def searchMorphologyByGloss(self, command, source):
+        return self.searchMorphologyCommon(command, source, "GLOSS")
+
+    def searchMorphologyCommon(self, command, source, mode):
+        commands = command.split(":::")
+        searchTerm = commands[0]
+        morphology = commands[1]
+        startBook = 1
+        endBook = 66
+        if len(commands) > 2:
+            range = commands[2]
+            if "-" in range:
+                startBook, endBook = range.split("-")
+            else:
+                startBook = range
+                endBook = range
+        morphologyList = morphology.split(",")
+        morphologySqlist = MorphologySqlite()
+        if mode == "LEX":
+            records = morphologySqlist.searchByLexicalAndMorphology(startBook, endBook, searchTerm, morphologyList)
+        elif mode == "WORD":
+            records = morphologySqlist.searchByWordAndMorphology(startBook, endBook, searchTerm, morphologyList)
+        elif mode == "GLOSS":
+            records = morphologySqlist.searchByGlossAndMorphology(startBook, endBook, searchTerm, morphologyList)
+        formatedText = "<p>{0}:::{1} <b style='color: brown;'>{2}</b> hits</p>".format(searchTerm, morphology, len(records))
+        ohgbiInstalled = os.path.isfile(os.path.join(config.marvelData, "bibles", "OHGBi.bible"))
+        if config.addOHGBiToMorphologySearch and ohgbiInstalled:
+            ohgbiBible = Bible("OHGBi")
+        for index, word in enumerate(records):
+            wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
+            firstLexicalEntry = lexicalEntry.split(",")[0]
+            textWord = "<{3} onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</{3}>".format(textWord, b, wordID, "heb" if b < 40 else "grk")
+            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref>".format(morphologySqlist.formVerseTag(b, c, v, config.mainText), morphologySqlist.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            if config.addOHGBiToMorphologySearch and ohgbiInstalled:
+                formatedText += ohgbiBible.getHighlightedOHGBVerse(b, c, v, wordID, False, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult)
+            formatedText += "<br>"
+        return ("study", formatedText, {})
 
     # _setconfig:::
     def textSetConfig(self, command, source):

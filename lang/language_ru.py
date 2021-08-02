@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "Удалить избранное",
     "showMiniKeyboardInMiniControl": "Показать мини-клавиатуру в мини-контроле",
     "activeOnly": "Только активные",
+    "cp7": "Морфология",
 }

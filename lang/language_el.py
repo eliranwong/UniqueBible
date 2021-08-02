@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "Αφαίρεση αγαπημένου",
     "showMiniKeyboardInMiniControl": "Εμφάνιση μίνι πληκτρολογίου στο miniControl",
     "activeOnly": "Μόνο ενεργό.",
+    "cp7": "-Μορφολογία",
 }

@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "पसंदीदा मिटाएँ",
     "showMiniKeyboardInMiniControl": "मिनी-कंट्रोल में मिनी कीबोर्ड दिखाएं",
     "activeOnly": "सिर्फ सक्रिय",
+    "cp7": "आकारिकी",
 }

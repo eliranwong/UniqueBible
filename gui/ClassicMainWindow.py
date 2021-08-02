@@ -27,7 +27,7 @@ class ClassicMainWindow:
         subMenu = addSubMenu(menu, "controlPanel")
         for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
                                           sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5,
-                                          sc.openControlPanelTab6)):
+                                          sc.openControlPanelTab6, sc.openControlPanelTab7)):
             addMenuItem(subMenu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu1_clipboard")

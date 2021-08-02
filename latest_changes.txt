@@ -1,6 +1,10 @@
+Major changes in version 25.99:
+* Add Morphology Search tab in Master Control
+* Fix VLC player not playing file from master control
+
 Major changes in version 25.98:
 * Convert references to links importing refi books
-* Filter by active commentaries in miniControl and masterControl
+* Filter by active commentaries in miniControl and Master Control
 
 Major change in version 25.97:
 * Add TR Bible and MP3 files

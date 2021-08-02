@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "お気に入りの削除",
     "showMiniKeyboardInMiniControl": "ミニコントロールにミニキーボードを表示",
     "activeOnly": "アクティブのみ",
+    "cp7": "形態",
 }

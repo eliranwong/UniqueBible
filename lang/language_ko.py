@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "선호를 제거하기",
     "showMiniKeyboardInMiniControl": "미니 제어에 미니 키보드 표시",
     "activeOnly": "활성 전용",
+    "cp7": "형태학",
 }

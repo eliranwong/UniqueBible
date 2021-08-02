@@ -759,4 +759,5 @@ translation = {
     "removeFavourite": "移除喜好的",
     "showMiniKeyboardInMiniControl": "在 miniControl 中顯示迷你鍵盤",
     "activeOnly": "僅作用中",
+    "cp7": "道德學",
 }
