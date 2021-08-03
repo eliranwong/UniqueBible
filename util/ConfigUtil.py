@@ -34,7 +34,6 @@ class ConfigUtil:
         config.shortcutList = []
         config.enableHttpServer = False
         config.runMode = "gui"
-        config.booksFolder = os.path.join(config.marvelData, "books")
 
         # Default settings for configurations:
 
@@ -1029,7 +1028,8 @@ class ConfigUtil:
         if not hasattr(config, "parseClearSpecialCharacters"):
             config.parseClearSpecialCharacters = False
 
-        # Additional conditional configurations
+        # Additional configurations
+        config.booksFolder = os.path.join(config.marvelData, "books")
         if config.enableMenuUnderline:
             config.menuUnderline = "&"
         else:
