@@ -799,10 +799,11 @@ input.addEventListener('keyup', function(event) {0}
         return chapter
 
     def migrateDatabaseContent(self):
-        self.logger.debug("Migrating Bible name to Details table")
-        self.migrateFormattedDatabaseContent()
-        self.migratePlainDatabaseContent()
-        config.migrateDatabaseBibleNameToDetailsTable = False
+        if not self.connection is None:
+            self.logger.debug("Migrating Bible name to Details table")
+            self.migrateFormattedDatabaseContent()
+            self.migratePlainDatabaseContent()
+            config.migrateDatabaseBibleNameToDetailsTable = False
 
     def migrateFormattedDatabaseContent(self):
         self.logger.debug("Migrating formatted Bibles")
@@ -871,6 +872,7 @@ class Bible:
         # connect [text].bible
         self.text = text
         self.connection = None
+        self.cursor = None
         self.database = os.path.join(config.marvelData, "bibles", text+".bible")
         if os.path.exists(self.database):
             self.connection = sqlite3.connect(self.database)
@@ -1196,11 +1198,13 @@ class Bible:
         return self.cursor.fetchall()
 
     def checkTableExists(self, table):
-        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,))
-        if self.cursor.fetchone():
-            return True
-        else:
-            return False
+        if self.cursor:
+            self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,))
+            if self.cursor.fetchone():
+                return True
+            else:
+                return False
+        return False
 
     def checkColumnExists(self, table, column):
         self.cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))
