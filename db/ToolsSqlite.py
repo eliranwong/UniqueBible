@@ -1,4 +1,5 @@
 import config
+from util.BibleBooks import BibleBooks
 
 if __name__ == "__main__":
     from util.ConfigUtil import ConfigUtil
@@ -635,12 +636,17 @@ class Commentary:
     def getContent(self, verse):
         if self.text in self.getCommentaryList():
             b, c, v, *_ = verse
-            chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+            if c > 0:
+                chapter = "<h2>{0}{1}</ref></h2>".format(self.formChapterTag(b, c), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
+            else:
+                chapter = "<h2>{0}</h2>".format(BibleBooks.eng[b][0])
             query = "SELECT Scripture FROM Commentary WHERE Book=? AND Chapter=?"
             self.cursor.execute(query, verse[0:2])
             scripture = self.cursor.fetchone()
             if scripture:
                 data = scripture[0]
+                if c == 0:
+                    data = data.replace("<b>0:0</b>", "")
                 if config.theme in ("dark", "night"):
                     data = data.replace('color:#000080;', 'color:gray;')
                 chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"', r'onclick="luV(\1)" onmouseover="qV(\1)" ondblclick="mV(\1)"', data)
@@ -963,19 +969,24 @@ class Book:
 
 if __name__ == "__main__":
 
-    logger = logging.getLogger('uba')
-    logger.setLevel(logging.DEBUG)
-    logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
-    logHandler.setLevel(logging.DEBUG)
-    logger.addHandler(logHandler)
+    # logger = logging.getLogger('uba')
+    # logger.setLevel(logging.DEBUG)
+    # logHandler = handlers.TimedRotatingFileHandler('uba.log', when='D', interval=1, backupCount=0)
+    # logHandler.setLevel(logging.DEBUG)
+    # logger.addHandler(logHandler)
+    #
+    # print("Start")
+    # config.parseEnglishBooksOnly = True
+    # config.parseClearSpecialCharacters = False
+    # commentary = Commentary("OwenHebrews")
+    # # commentary.fixClosingTagsInCommentary()
+    # print("Finished")
+    #
+    # scripture = """<heb>&#x05D5;&#x05D1;&#x05BC;&#x05B0;&#x05D4;&#x05B8;&#x05DC;&#x05B5;&#x05D9;&#x05DF;</span><heb> </span><heb>&#x05D9;&#x05B7;&#x05D5;&#x05B0;&#x05DE;&#x05B8;&#x05D7;&#x05B5;&#x05D0;</span><heb> </span><heb>&#x05D0;&#x05B7;&#x05D7;&#x05B2;&#x05E8;&#x05B7;&#x05D9;&#x05B4;&#x05D0;&#x05BC;</span>"""
+    # scripture = re.sub(r"<heb>(.*?)</span>", r"<heb>\1</heb>", scripture)
+    # print(scripture)
 
-    print("Start")
-    config.parseEnglishBooksOnly = True
-    config.parseClearSpecialCharacters = False
-    commentary = Commentary("OwenHebrews")
-    # commentary.fixClosingTagsInCommentary()
+    list = Commentary().getCommentaryListThatHasBookAndChapter(40, 0)
+    print(",".join(list))
+
     print("Finished")
-
-    scripture = """<heb>&#x05D5;&#x05D1;&#x05BC;&#x05B0;&#x05D4;&#x05B8;&#x05DC;&#x05B5;&#x05D9;&#x05DF;</span><heb> </span><heb>&#x05D9;&#x05B7;&#x05D5;&#x05B0;&#x05DE;&#x05B8;&#x05D7;&#x05B5;&#x05D0;</span><heb> </span><heb>&#x05D0;&#x05B7;&#x05D7;&#x05B2;&#x05E8;&#x05B7;&#x05D9;&#x05B4;&#x05D0;&#x05BC;</span>"""
-    scripture = re.sub(r"<heb>(.*?)</span>", r"<heb>\1</heb>", scripture)
-    print(scripture)
