@@ -877,8 +877,9 @@ class Bible:
             self.cursor = self.connection.cursor()
 
     def __del__(self):
-        self.connection.commit()
-        self.connection.close()
+        if not self.connection is None:
+            self.connection.commit()
+            self.connection.close()
 
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)

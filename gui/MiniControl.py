@@ -87,7 +87,7 @@ class MiniControl(QWidget):
         self.searchLineEdit.setClearButtonEnabled(True)
         self.searchLineEdit.setToolTip(config.thisTranslation["enter_command_here"])
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
-        self.searchLineEdit.setFixedWidth(300)
+        self.searchLineEdit.setFixedWidth(450)
         commandLayout1.addWidget(self.searchLineEdit)
 
         enterButton = QPushButton(config.thisTranslation["enter"])
@@ -95,7 +95,7 @@ class MiniControl(QWidget):
         enterButton.clicked.connect(self.searchLineEntered)
         commandLayout1.addWidget(enterButton)
 
-        commandLayout1.addStretch()
+        # commandLayout1.addStretch()
         commandBox.addLayout(commandLayout1)
 
         if config.showMiniKeyboardInMiniControl:

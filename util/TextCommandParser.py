@@ -2176,7 +2176,10 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.commentaryText, command)
         commandList = self.splitCommand(command)
-        verseList = self.extractAllVerses(commandList[1])
+        if " " in commandList[1]:
+            verseList = self.extractAllVerses(commandList[1])
+        else:
+            verseList = [(BibleBooks.name2number[commandList[1]], 0, 0)]
         if not len(commandList) == 2 or not verseList:
             return self.invalidCommand()
         else:

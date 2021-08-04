@@ -1,3 +1,8 @@
+Major changes in version 26.00:
+* Fix app startup issue
+* Show commentary book intro with name of book only
+- Example: `COMMENTARY:::JE-TNK:::Matthew`
+
 Major changes in version 25.99:
 * Add Morphology Search tab in Master Control
 * Fix VLC player not playing file from master control
