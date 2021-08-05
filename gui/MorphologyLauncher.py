@@ -41,6 +41,9 @@ class MorphologyLauncher(QWidget):
         button = QPushButton("Entire Bible")
         button.clicked.connect(lambda: self.selectBookCombos(0, 65))
         subLayout.addWidget(button)
+        button = QPushButton("Current Book")
+        button.clicked.connect(lambda: self.selectBookCombos(config.mainB-1, config.mainB-1))
+        subLayout.addWidget(button)
         button = QPushButton("OT")
         button.clicked.connect(lambda: self.selectBookCombos(0, 38))
         subLayout.addWidget(button)
@@ -188,6 +191,20 @@ class MorphologyLauncher(QWidget):
         layout.addStretch()
         subLayout.addWidget(self.genderBox)
 
+        hebrewList = ["Absolute", "Construct", "Hif‘il", "Infinitive", "Nif‘al", "Pi“el", "Pronominal", "Pu“al", "Qal", "Wayyiqtol"]
+        self.hebrewCheckBoxes = []
+        self.hebrewBox = QGroupBox("Hebrew")
+        self.hebrewBox.hide()
+        layout = QVBoxLayout()
+        for hebrew in hebrewList:
+            checkbox = QCheckBox(hebrew)
+            layout.addWidget(checkbox)
+            self.hebrewCheckBoxes.append(checkbox)
+            checkbox.stateChanged.connect(lambda checked, hebrew=hebrew: self.hebrewCheckBoxChanged(checked, hebrew))
+        self.hebrewBox.setLayout(layout)
+        layout.addStretch()
+        subLayout.addWidget(self.hebrewBox)
+
         mainLayout.addLayout(subLayout)
 
         mainLayout.addStretch()
@@ -256,6 +273,7 @@ class MorphologyLauncher(QWidget):
                 self.tenseBox.hide()
                 self.moodBox.hide()
                 self.voiceBox.hide()
+                self.hebrewBox.show()
             elif mode in ("Pronoun", "Article"):
                 self.genderBox.hide()
                 self.numberBox.show()
@@ -264,6 +282,7 @@ class MorphologyLauncher(QWidget):
                 self.tenseBox.hide()
                 self.moodBox.hide()
                 self.voiceBox.hide()
+                self.hebrewBox.show()
             elif mode in ("Verb"):
                 self.genderBox.hide()
                 self.numberBox.show()
@@ -272,6 +291,7 @@ class MorphologyLauncher(QWidget):
                 self.moodBox.show()
                 self.voiceBox.show()
                 self.caseBox.hide()
+                self.hebrewBox.show()
 
     def searchMorphology(self):
         searchTerm = self.searchField.text()
@@ -301,6 +321,9 @@ class MorphologyLauncher(QWidget):
             for numberCheckbox in self.numberCheckBoxes:
                 if numberCheckbox.isChecked():
                     morphologyList.append(numberCheckbox.text())
+            for hebrewCheckbox in self.hebrewCheckBoxes:
+                if hebrewCheckbox.isChecked():
+                    morphologyList.append(hebrewCheckbox.text())
             morphology = ",".join(morphologyList)
             startBook = self.startBookCombo.currentIndex() + 1
             endBook = self.endBookCombo.currentIndex() + 1

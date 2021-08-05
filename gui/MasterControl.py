@@ -142,8 +142,8 @@ class MasterControl(QWidget):
             self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
             self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
         #7
-        morphologyTab = MorphologyLauncher(self)
-        self.tabs.addTab(morphologyTab, config.thisTranslation["cp7"])
+        self.morphologyTab = MorphologyLauncher(self)
+        self.tabs.addTab(self.morphologyTab, config.thisTranslation["cp7"])
         self.tabs.setTabToolTip(7, sc.openControlPanelTab7)
 
         # set action with changing tabs

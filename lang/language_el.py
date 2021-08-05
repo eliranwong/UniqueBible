@@ -760,4 +760,5 @@ translation = {
     "showMiniKeyboardInMiniControl": "Εμφάνιση μίνι πληκτρολογίου στο miniControl",
     "activeOnly": "Μόνο ενεργό.",
     "cp7": "-Μορφολογία",
+    "bookIntro": "Εισαγωγή βιβλίου",
 }

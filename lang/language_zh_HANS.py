@@ -760,4 +760,5 @@ translation = {
     "showMiniKeyboardInMiniControl": "在迷你控制中显示迷你键盘",
     "activeOnly": "仅活动",
     "cp7": "形态",
+    "bookIntro": "书籍简介",
 }

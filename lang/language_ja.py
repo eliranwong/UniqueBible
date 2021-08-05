@@ -760,4 +760,5 @@ translation = {
     "showMiniKeyboardInMiniControl": "ミニコントロールにミニキーボードを表示",
     "activeOnly": "アクティブのみ",
     "cp7": "形態",
+    "bookIntro": "ブック・イントロ",
 }

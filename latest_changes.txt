@@ -1,3 +1,7 @@
+Major changes in version 26.01:
+* Add Commentary book intro to HTML menu and miniControl
+* Add Hebrew support for morphology search
+
 Major changes in version 26.00:
 * Fix app startup issue
 * Show commentary book intro with name of book only

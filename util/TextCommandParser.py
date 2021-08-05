@@ -2,6 +2,7 @@
 import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 
+from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
 from functools import partial
@@ -973,6 +974,9 @@ class TextCommandParser:
             if (len(verseList) == 1) and (len(verseList[0]) == 3):
                 # i.e. only one verse reference is specified
                 bcvTuple = verseList[0]
+                # Force book to 1 if it's 0 (when viewing a commentary intro)
+                if bcvTuple[1] == 0:
+                    bcvTuple = (bcvTuple[0], 1, 1)
                 chapters = self.getChaptersMenu(bcvTuple[0], bcvTuple[1], text)
                 content = "{0}<hr>{1}<hr>{0}".format(chapters, self.textFormattedBible(bcvTuple, text, view))
             else:
@@ -2028,7 +2032,8 @@ class TextCommandParser:
                 bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.eng[b][0], config.mainC, config.mainV)
                 self.parent.addHistoryRecord("main", bibleCommand)
             biblesSqlite = BiblesSqlite()
-            menu = biblesSqlite.getMenu(command, source)
+            htmlGeneratorUtil = HtmlGeneratorUtil()
+            menu = htmlGeneratorUtil.getMenu(command, source)
             return (source, menu, {})
         except:
             return self.invalidCommand()
@@ -2544,10 +2549,10 @@ class TextCommandParser:
             wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
             firstLexicalEntry = lexicalEntry.split(",")[0]
             textWord = "<{3} onclick='w({1},{2})' onmouseover='iw({1},{2})'>{0}</{3}>".format(textWord, b, wordID, "heb" if b < 40 else "grk")
-            formatedText += "<span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref>".format(morphologySqlist.formVerseTag(b, c, v, config.mainText), morphologySqlist.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
+            formatedText += "<div><span style='color: purple;'>({0}{1}</ref>)</span> {2} <ref onclick='searchCode(\"{4}\", \"{3}\")'>{3}</ref>".format(morphologySqlist.formVerseTag(b, c, v, config.mainText), morphologySqlist.bcvToVerseReference(b, c, v), textWord, morphologyCode, firstLexicalEntry)
             if config.addOHGBiToMorphologySearch and ohgbiInstalled:
                 formatedText += ohgbiBible.getHighlightedOHGBVerse(b, c, v, wordID, False, index + 1 > config.maximumOHGBiVersesDisplayedInSearchResult)
-            formatedText += "<br>"
+            formatedText += "<br></div>"
         return ("study", formatedText, {})
 
     # _setconfig:::

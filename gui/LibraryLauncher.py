@@ -87,7 +87,7 @@ class LibraryLauncher(QWidget):
         self.commentaryList = []
         activeCommentaries = []
         if showOnlyActiveCommentaries:
-            activeCommentaries = Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)
+            activeCommentaries = [item[1] for item in Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)]
         for index, commentary in enumerate(self.parent.commentaryFullNameList):
             if not showOnlyActiveCommentaries or commentary in activeCommentaries:
                 # item = QStandardItem(commentary)

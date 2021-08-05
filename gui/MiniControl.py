@@ -36,6 +36,7 @@ class MiniControl(QWidget):
             self.resizeEvent)
         self.bibleButtons = {}
         self.commentaryButtons = {}
+        self.bookIntroButtons = {}
         # setup interface
         self.bible_layout = None
         self.setupUI()
@@ -327,6 +328,39 @@ class MiniControl(QWidget):
         dictionaries_box.setLayout(box_layout)
 
         self.tabs.addTab(dictionaries_box, config.thisTranslation["dictionaries"])
+
+        # Book intros tab
+
+        bookIntros_box = QWidget()
+        box_layout = QVBoxLayout()
+        box_layout.setContentsMargins(0, 0, 0, 0)
+        box_layout.setSpacing(1)
+        row_layout = self.newRowLayout()
+        button = QPushButton(config.thisTranslation["activeOnly"])
+        button.setStyleSheet(textButtonStyle)
+        button.clicked.connect(self.activeBookIntros)
+        row_layout.addWidget(button)
+        box_layout.addLayout(row_layout)
+        row_layout = self.newRowLayout()
+        commentaries = Commentary().getCommentaryList()
+        count = 0
+        for commentary in commentaries:
+            button = QPushButton(commentary)
+            button.setToolTip(Commentary.fileLookup[commentary])
+            button.clicked.connect(partial(self.bookIntroAction, commentary))
+            self.bookIntroButtons[commentary] = button
+            row_layout.addWidget(button)
+            count += 1
+            if count > 6:
+                count = 0
+                box_layout.addLayout(row_layout)
+                row_layout = self.newRowLayout()
+        box_layout.addLayout(row_layout)
+        box_layout.addStretch()
+        bookIntros_box.setLayout(box_layout)
+
+        self.tabs.addTab(bookIntros_box, config.thisTranslation["bookIntro"])
+
         self.tabs.setCurrentIndex(config.miniControlInitialTab)
         self.setLayout(mainLayout)
 
@@ -435,6 +469,12 @@ class MiniControl(QWidget):
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)
 
+    def bookIntroAction(self, commentary):
+        command = "COMMENTARY:::{0}:::{1}".format(commentary, BibleBooks().eng[str(config.mainB)][-1])
+        self.runCommmand(command)
+        command = "_commentaryinfo:::{0}".format(commentary)
+        self.parent.runTextCommand(command)
+
     def lexiconAction(self, lexicon):
         searchString = self.searchLineEdit.text()
         if ":::" not in searchString:
@@ -473,9 +513,22 @@ class MiniControl(QWidget):
                     button.setStyleSheet(self.textButtonStyleDisabled)
 
     def activeCommentaries(self):
-        activeCommentaries = Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)
+        activeCommentaries = [item[0] for item in
+                              Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)]
         for commentary in self.commentaryButtons.keys():
             button = self.commentaryButtons[commentary]
+            if commentary in activeCommentaries:
+                button.setEnabled(True)
+                button.setStyleSheet("")
+            else:
+                button.setEnabled(False)
+                button.setStyleSheet(self.textButtonStyleDisabled)
+
+    def activeBookIntros(self):
+        activeCommentaries = [item[0] for item in
+                              Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, 0)]
+        for commentary in self.bookIntroButtons.keys():
+            button = self.bookIntroButtons[commentary]
             if commentary in activeCommentaries:
                 button.setEnabled(True)
                 button.setStyleSheet("")
