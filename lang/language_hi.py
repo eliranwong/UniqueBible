@@ -760,4 +760,5 @@ translation = {
     "showMiniKeyboardInMiniControl": "मिनी-कंट्रोल में मिनी कीबोर्ड दिखाएं",
     "activeOnly": "सिर्फ सक्रिय",
     "cp7": "आकारिकी",
+    "bookIntro": "पुस्तक इन्ट्रो",
 }

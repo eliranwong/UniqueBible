@@ -384,6 +384,10 @@ function bookName(name) {
     document.title = "_info:::"+fullname;
 }
 
+function instantInfo(text) {
+    document.title = "_info:::"+text;
+}
+
 function getFullBookName(abbreviation) {
     var fullBookNameObject = {
         bGen: "Genesis",

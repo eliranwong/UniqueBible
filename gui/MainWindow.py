@@ -317,6 +317,8 @@ class MainWindow(QMainWindow):
                 textCommandText = self.textCommandLineEdit.text()
                 if textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
+                selectedText = self.mainView.currentWidget().selectedText().strip()
+                self.controlPanel.morphologyTab.searchField.setText(selectedText)
                 self.controlPanel.raise_()
                 # Method activateWindow() does not work with qt.qpa.wayland
                 # platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland"
@@ -357,7 +359,10 @@ class MainWindow(QMainWindow):
             self.miniControl.setMinimumWidth(config.minicontrolWindowWidth)
             self.miniControl.show()
             textCommandText = self.textCommandLineEdit.text()
-            if config.clearCommandEntry:
+            selectedText = self.mainView.currentWidget().selectedText().strip()
+            if selectedText:
+                self.miniControl.searchLineEdit.setText(selectedText)
+            elif config.clearCommandEntry:
                 self.miniControl.searchLineEdit.setText("")
             elif textCommandText:
                 self.miniControl.searchLineEdit.setText(textCommandText)
@@ -2650,19 +2655,20 @@ class MainWindow(QMainWindow):
 
     def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
-        if config.menuLayout == "aleph":
-            self.mainRefButton.setText(":::".join(self.verseReference("main")))
-        else:
-            self.mainRefButton.setText(self.verseReference("main")[-1])
-        self.updateVersionCombo()
-        if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
-            self.syncingBibles = True
-            newTextCommand = "STUDY:::{0}".format(verseReference)
-            self.runTextCommand(newTextCommand, True, "study")
-        elif config.syncCommentaryWithMainWindow:
-            self.syncingBibles = True
-            newTextCommand = "COMMENTARY:::{0}".format(verseReference)
-            self.runTextCommand(newTextCommand, True, "study")
+        if config.mainC > 0:
+            if config.menuLayout == "aleph":
+                self.mainRefButton.setText(":::".join(self.verseReference("main")))
+            else:
+                self.mainRefButton.setText(self.verseReference("main")[-1])
+            self.updateVersionCombo()
+            if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
+                self.syncingBibles = True
+                newTextCommand = "STUDY:::{0}".format(verseReference)
+                self.runTextCommand(newTextCommand, True, "study")
+            elif config.syncCommentaryWithMainWindow:
+                self.syncingBibles = True
+                newTextCommand = "COMMENTARY:::{0}".format(verseReference)
+                self.runTextCommand(newTextCommand, True, "study")
 
     def updateStudyRefButton(self):
         text, verseReference = self.verseReference("study")
