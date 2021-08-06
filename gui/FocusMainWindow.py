@@ -258,7 +258,7 @@ class FocusMainWindow:
             addMenuItem(menu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
-        tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries")
+        tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries", "bookIntro")
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
