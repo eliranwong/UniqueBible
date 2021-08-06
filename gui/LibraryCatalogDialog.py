@@ -1,12 +1,8 @@
-from pathlib import Path
-
-from PyQt5.QtWidgets import QCheckBox
-
-import config, platform, webbrowser, os
+import config, os
+from qtpy.QtWidgets import QCheckBox
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
-
 from util.BibleBooks import BibleBooks
 from util.FileUtil import FileUtil
 
