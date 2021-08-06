@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "仅活动",
     "cp7": "形态",
     "bookIntro": "书籍简介",
+    "libraryCatalog": "库目录",
+    "directory": "目录",
+    "type": "类型",
 }

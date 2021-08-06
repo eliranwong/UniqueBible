@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "활성 전용",
     "cp7": "형태학",
     "bookIntro": "서적 소개",
+    "libraryCatalog": "라이브러리 카탈로그",
+    "directory": "디렉토리",
+    "type": "유형",
 }

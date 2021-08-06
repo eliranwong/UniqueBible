@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "アクティブのみ",
     "cp7": "形態",
     "bookIntro": "ブック・イントロ",
+    "libraryCatalog": "ライブラリー・カタログ",
+    "directory": "ディレクトリ",
+    "type": "種類",
 }

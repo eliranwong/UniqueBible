@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "Μόνο ενεργό.",
     "cp7": "-Μορφολογία",
     "bookIntro": "Εισαγωγή βιβλίου",
+    "libraryCatalog": "Κατάλογος βιβλιοθηκών",
+    "directory": "' Κατάλογος",
+    "type": "Είδος:",
 }

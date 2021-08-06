@@ -124,14 +124,20 @@ class FileUtil:
         parts[2] = ''.join(resolved)
         return urlunsplit(parts)
 
-# Test code
+    @staticmethod
+    def getAllFilesWithExtension(dir, extension):
+        matches = []
+        files = glob.glob(os.path.join(dir, "*"))
+        for file in files:
+            if os.path.isdir(file):
+                matches += FileUtil.getAllFilesWithExtension(file, extension)
+            elif file.lower().endswith(extension.lower()):
+                matches.append(file)
+        return sorted(matches)
 
-def test_insertStringIntoFile(filename, data, offset):
-    FileUtil.insertStringIntoFile(filename, data, offset)
-
-def test_updateStringIntoFile(filename, data, offset):
-    FileUtil.updateStringIntoFile(filename, data, offset)
 
 if __name__ == "__main__":
 
-    test_insertStringIntoFile("testing.txt", "ppppp\n", -1)
+    files = FileUtil.getAllFilesWithExtension("marvelData/books", ".book")
+    for file in files:
+        print(file)

@@ -1,3 +1,8 @@
+Major changes in version 26.02:
+* Show different Bible version on hover
+* Fix font issue in Hebrew morphology search
+* Count files in subdirectories in Info dialog
+
 Major changes in version 26.01:
 * Add Commentary book intro to HTML menu and miniControl
 * Add Hebrew support for morphology search

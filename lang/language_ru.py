@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "Только активные",
     "cp7": "Морфология",
     "bookIntro": "Книга Интро",
+    "libraryCatalog": "Каталог библиотек",
+    "directory": "Каталог",
+    "type": "Тип",
 }

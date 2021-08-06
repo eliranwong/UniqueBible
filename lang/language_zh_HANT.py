@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "僅作用中",
     "cp7": "道德學",
     "bookIntro": "書籍簡介",
+    "libraryCatalog": "程式庫型錄",
+    "directory": "目錄",
+    "type": "類型",
 }

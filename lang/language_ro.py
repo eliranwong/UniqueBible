@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "Numai activ",
     "cp7": "Morfologie",
     "bookIntro": "Carte Intro",
+    "libraryCatalog": "Catalog bibliotecă",
+    "directory": "Director",
+    "type": "Tip",
 }
