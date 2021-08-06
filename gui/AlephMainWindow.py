@@ -235,9 +235,8 @@ class AlephMainWindow:
 
         library_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_library"]))
 
-        # if config.developer:
-        #     library_menu.addAction(QAction(config.thisTranslation["libraryCatalog"], self, triggered=self.showLibraryCatalogDialog))
-        #     library_menu.addSeparator()
+        library_menu.addAction(QAction(config.thisTranslation["libraryCatalog"], self, shortcut=sc.showLibraryCatalogDialog, triggered=self.showLibraryCatalogDialog))
+        library_menu.addSeparator()
 
         library_menu.addAction(QAction(config.thisTranslation["menu4_book"], self, shortcut=sc.bookFeatures, triggered=self.bookFeatures))
         library_menu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeatureIntroduction))
