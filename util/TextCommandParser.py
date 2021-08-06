@@ -1989,7 +1989,7 @@ class TextCommandParser:
 
     # _commentaryinfo:::
     def textCommentaryInfo(self, command, source):
-        commentaryFile = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(command))
+        commentaryFile = os.path.join(config.commentariesFolder, "c{0}.commentary".format(command))
         if os.path.isfile(commentaryFile):
             if command in Commentary.marvelCommentaries:
                 return ("instant", Commentary.marvelCommentaries[command], {})
@@ -2660,7 +2660,8 @@ class TextCommandParser:
     def textBook(self, command, source):
         bookData = BookData()
         bookList = [book for book, *_ in bookData.getBookList()]
-        if command.count(":::") == 0 and command in bookList:
+        if command.count(":::") == 0:
+        # if command.count(":::") == 0 and command in bookList:
             config.book = command
             self.parent.updateBookButton()
             return ("study", bookData.getMenu(module=config.book), {'tab_title': command[:20]})

@@ -2027,6 +2027,9 @@ class MainWindow(QMainWindow):
 
     def showLibraryCatalogDialog(self):
         self.libraryCatalogDialog = LibraryCatalogDialog(self)
+        screen = QGuiApplication.instance().desktop().availableGeometry()
+        y = screen.height() * float(1/5)
+        self.libraryCatalogDialog.move(20, y)
         self.libraryCatalogDialog.show()
 
     def enableIndividualPluginsWindow(self):

@@ -128,6 +128,7 @@ class ShortcutUtil:
             "commandLineInterface": '',
             "liveFilterDialog": '',
             "bibleCollections": "",
+            "showLibraryCatalogDialog": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -242,6 +243,8 @@ class ShortcutUtil:
             "commandLineInterface": '',
             "liveFilterDialog": '',
             "bibleCollections": "",
+            "showLibraryCatalogDialog": "Ctrl+Shift+O",
+
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -356,6 +359,7 @@ class ShortcutUtil:
             "commandLineInterface": 'Ctrl+^',
             "liveFilterDialog": '',
             "bibleCollections": "",
+            "showLibraryCatalogDialog": "Ctrl+Shift+O",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -470,6 +474,7 @@ class ShortcutUtil:
             "commandLineInterface": '',
             "liveFilterDialog": 'Ctrl+*',
             "bibleCollections": "Ctrl+D,B",
+            "showLibraryCatalogDialog": "Ctrl+I",
         }
     }
 

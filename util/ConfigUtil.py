@@ -1030,6 +1030,7 @@ class ConfigUtil:
 
         # Additional configurations
         config.booksFolder = os.path.join(config.marvelData, "books")
+        config.commentariesFolder = os.path.join(config.marvelData, "commentaries")
         if config.enableMenuUnderline:
             config.menuUnderline = "&"
         else:

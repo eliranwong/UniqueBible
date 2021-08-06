@@ -1,10 +1,9 @@
-from pathlib import Path
-
-import config, platform, webbrowser, os
+import config, os
+from qtpy.QtWidgets import QCheckBox
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
-
+from util.BibleBooks import BibleBooks
 from util.FileUtil import FileUtil
 
 
@@ -31,9 +30,43 @@ class LibraryCatalogDialog(QDialog):
         filterLayout = QHBoxLayout()
         filterLayout.addWidget(QLabel(config.thisTranslation["menu5_search"]))
         self.filterEntry = QLineEdit()
+        self.filterEntry.setClearButtonEnabled(True)
         self.filterEntry.textChanged.connect(self.resetItems)
         filterLayout.addWidget(self.filterEntry)
         mainLayout.addLayout(filterLayout)
+
+        typesLayout = QHBoxLayout()
+        button = QPushButton("All")
+        button.clicked.connect(lambda: self.selectAllTypes(True))
+        typesLayout.addWidget(button)
+        button = QPushButton("None")
+        button.clicked.connect(lambda: self.selectAllTypes(False))
+        typesLayout.addWidget(button)
+        self.bookCheckbox = QCheckBox("BOOK")
+        self.bookCheckbox.setChecked(True)
+        self.bookCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.bookCheckbox)
+        self.pdfCheckbox = QCheckBox("PDF")
+        self.pdfCheckbox.setChecked(True)
+        self.pdfCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.pdfCheckbox)
+        self.docxCheckbox = QCheckBox("DOCX")
+        self.docxCheckbox.setChecked(True)
+        self.docxCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.docxCheckbox)
+        self.commCheckbox = QCheckBox("COMM")
+        self.commCheckbox.setChecked(True)
+        self.commCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.commCheckbox)
+        self.mp3Checkbox = QCheckBox("MP3")
+        self.mp3Checkbox.setChecked(True)
+        self.mp3Checkbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.mp3Checkbox)
+        self.mp4Checkbox = QCheckBox("MP4")
+        self.mp4Checkbox.setChecked(True)
+        self.mp4Checkbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.mp4Checkbox)
+        mainLayout.addLayout(typesLayout)
 
         self.dataView = QTableView()
         self.dataView.clicked.connect(self.itemClicked)
@@ -57,6 +90,14 @@ class LibraryCatalogDialog(QDialog):
         mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
+
+    def selectAllTypes(self, value):
+        self.pdfCheckbox.setChecked(value)
+        self.mp3Checkbox.setChecked(value)
+        self.mp4Checkbox.setChecked(value)
+        self.bookCheckbox.setChecked(value)
+        self.docxCheckbox.setChecked(value)
+        self.commCheckbox.setChecked(value)
 
     def getCatalogItems(self):
         data = {}
@@ -102,7 +143,14 @@ class LibraryCatalogDialog(QDialog):
         colCount = 0
         for id, value in self.catalogData.items():
             id2, filename, type, directory, file, description, repo, installDirectory = value
-            if filterEntry == "" or (filterEntry in filename.lower() or filterEntry in description.lower()):
+            if (filterEntry == "" or filterEntry in filename.lower() or filterEntry in description.lower()):
+                if (not self.pdfCheckbox.isChecked() and type == "PDF") or \
+                        (not self.mp3Checkbox.isChecked() and type == "MP3") or \
+                        (not self.mp4Checkbox.isChecked() and type == "MP4") or \
+                        (not self.bookCheckbox.isChecked() and type == "BOOK") or \
+                        (not self.docxCheckbox.isChecked() and type == "DOCX") or \
+                        (not self.commCheckbox.isChecked() and type == "COMM"):
+                    continue
                 item = QStandardItem(id)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
@@ -156,9 +204,11 @@ class LibraryCatalogDialog(QDialog):
     def fixDirectory(self, directory, type):
         if type == "PDF":
             directory = directory.replace(config.marvelData, "")
-            directory = directory.replace("/pdf/", "")
+            directory = directory.replace("/pdf", "")
         if len(directory) > 0 and not directory.endswith("/"):
             directory += "/"
+        if len(directory) > 0 and directory.startswith("/"):
+            directory = directory[1:]
         return directory
 
     def open(self):
@@ -168,7 +218,22 @@ class LibraryCatalogDialog(QDialog):
         command = ""
         if type == "PDF":
             command = "PDF:::{0}{1}".format(directory, file)
-            print(command)
+        elif type == "MP3":
+            command = "VLC:::{0}{1}".format(directory, file)
+        elif type == "MP4":
+            command = "VLC:::{0}{1}".format(directory, file)
+        elif type == "BOOK":
+            if file.endswith(".book"):
+                file = file.replace(".book", "")
+            config.booksFolder = directory
+            command = "BOOK:::{0}".format(file)
+        elif type == "COMM":
+            file = file.replace(".commentary", "")
+            file = file[1:]
+            config.commentariesFolder = directory
+            command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
+        elif type == "DOCX":
+            command = "DOCX:::{0}".format(file)
         self.parent.runTextCommand(command)
 
 
