@@ -1,4 +1,4 @@
-Major changes in version 26.03:
+Major change in version 26.03:
 * Add Library Catalog
 
 Major changes in version 26.02:
