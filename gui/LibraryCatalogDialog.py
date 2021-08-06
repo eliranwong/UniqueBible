@@ -30,6 +30,7 @@ class LibraryCatalogDialog(QDialog):
         filterLayout = QHBoxLayout()
         filterLayout.addWidget(QLabel(config.thisTranslation["menu5_search"]))
         self.filterEntry = QLineEdit()
+        self.filterEntry.setClearButtonEnabled(True)
         self.filterEntry.textChanged.connect(self.resetItems)
         filterLayout.addWidget(self.filterEntry)
         mainLayout.addLayout(filterLayout)
@@ -59,8 +60,13 @@ class LibraryCatalogDialog(QDialog):
         self.commCheckbox.setChecked(True)
         self.commCheckbox.stateChanged.connect(self.resetItems)
         typesLayout.addWidget(self.commCheckbox)
+        button = QPushButton("All")
+        button.clicked.connect(lambda: self.selectAllTypes(True))
+        typesLayout.addWidget(button)
+        button = QPushButton("None")
+        button.clicked.connect(lambda: self.selectAllTypes(False))
+        typesLayout.addWidget(button)
         mainLayout.addLayout(typesLayout)
-
 
         self.dataView = QTableView()
         self.dataView.clicked.connect(self.itemClicked)
@@ -84,6 +90,14 @@ class LibraryCatalogDialog(QDialog):
         mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
+
+    def selectAllTypes(self, value):
+        self.pdfCheckbox.setChecked(value)
+        self.mp3Checkbox.setChecked(value)
+        self.mp4Checkbox.setChecked(value)
+        self.bookCheckbox.setChecked(value)
+        self.docxCheckbox.setChecked(value)
+        self.commCheckbox.setChecked(value)
 
     def getCatalogItems(self):
         data = {}
@@ -218,7 +232,8 @@ class LibraryCatalogDialog(QDialog):
             file = file[1:]
             config.commentariesFolder = directory
             command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
-        print(command)
+        elif type == "DOCX":
+            command = "DOCX:::{0}".format(file)
         self.parent.runTextCommand(command)
 
 
