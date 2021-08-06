@@ -2660,7 +2660,8 @@ class TextCommandParser:
     def textBook(self, command, source):
         bookData = BookData()
         bookList = [book for book, *_ in bookData.getBookList()]
-        if command.count(":::") == 0 and command in bookList:
+        if command.count(":::") == 0:
+        # if command.count(":::") == 0 and command in bookList:
             config.book = command
             self.parent.updateBookButton()
             return ("study", bookData.getMenu(module=config.book), {'tab_title': command[:20]})

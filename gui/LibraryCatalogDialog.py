@@ -184,7 +184,10 @@ class LibraryCatalogDialog(QDialog):
         elif type == "BOOK":
             if file.endswith(".book"):
                 file = file[:-5]
-            command = "BOOK:::{0}{1}".format(directory, file)
+            config.booksFolder = config.marvelData + "/books"
+            if len(directory) > 0:
+                config.booksFolder += "/" + directory
+            command = "BOOK:::{0}".format(file)
         elif type == "COMM":
             file = file.replace(".commentary", "")
             file = file[1:]
