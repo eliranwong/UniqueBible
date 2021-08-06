@@ -158,12 +158,12 @@ class LibraryCatalogDialog(QDialog):
         if type == "PDF":
             directory = directory.replace(config.marvelData, "")
             directory = directory.replace("/pdf", "")
-        elif type == "BOOK":
-            directory = directory.replace(config.marvelData, "")
-            directory = directory.replace("/books", "")
-        elif type == "COMM":
-            directory = directory.replace(config.marvelData, "")
-            directory = directory.replace("/commentaries", "")
+        # elif type == "BOOK":
+        #     directory = directory.replace(config.marvelData, "")
+        #     directory = directory.replace("/books", "")
+        # elif type == "COMM":
+        #     directory = directory.replace(config.marvelData, "")
+        #     directory = directory.replace("/commentaries", "")
         if len(directory) > 0 and not directory.endswith("/"):
             directory += "/"
         if len(directory) > 0 and directory.startswith("/"):
@@ -184,14 +184,16 @@ class LibraryCatalogDialog(QDialog):
         elif type == "BOOK":
             if file.endswith(".book"):
                 file = file[:-5]
-            config.booksFolder = config.marvelData + "/books"
-            if len(directory) > 0:
-                config.booksFolder += "/" + directory
+            # config.booksFolder = config.marvelData + "/books"
+            # if len(directory) > 0:
+            #     config.booksFolder += "/" + directory
+            config.booksFolder = directory
             command = "BOOK:::{0}".format(file)
         elif type == "COMM":
             file = file.replace(".commentary", "")
             file = file[1:]
-            command = "COMMENTARY:::{0}{1}:::{2} {3}".format(directory, file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
+            config.commentariesFolder = directory
+            command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
         print(command)
         self.parent.runTextCommand(command)
 

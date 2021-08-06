@@ -28,7 +28,8 @@ class Converter:
 
     # create UniqueBible.app commentary module
     def createCommentaryModule(self, abbreviation, title, description, content):
-        ubCommentary = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(abbreviation))
+        config.commentariesFolder = os.path.join(config.marvelData, "commentaries")
+        ubCommentary = os.path.join(config.commentariesFolder, "c{0}.commentary".format(abbreviation))
         if os.path.isfile(ubCommentary):
             os.remove(ubCommentary)
         with sqlite3.connect(ubCommentary) as connection:

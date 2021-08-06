@@ -1989,7 +1989,7 @@ class TextCommandParser:
 
     # _commentaryinfo:::
     def textCommentaryInfo(self, command, source):
-        commentaryFile = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(command))
+        commentaryFile = os.path.join(config.commentariesFolder, "c{0}.commentary".format(command))
         if os.path.isfile(commentaryFile):
             if command in Commentary.marvelCommentaries:
                 return ("instant", Commentary.marvelCommentaries[command], {})
