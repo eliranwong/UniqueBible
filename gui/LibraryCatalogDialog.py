@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from PyQt5.QtWidgets import QCheckBox
+
 import config, platform, webbrowser, os
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
@@ -35,6 +37,34 @@ class LibraryCatalogDialog(QDialog):
         self.filterEntry.textChanged.connect(self.resetItems)
         filterLayout.addWidget(self.filterEntry)
         mainLayout.addLayout(filterLayout)
+
+        typesLayout = QHBoxLayout()
+        self.pdfCheckbox = QCheckBox("PDF")
+        self.pdfCheckbox.setChecked(True)
+        self.pdfCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.pdfCheckbox)
+        self.mp3Checkbox = QCheckBox("MP3")
+        self.mp3Checkbox.setChecked(True)
+        self.mp3Checkbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.mp3Checkbox)
+        self.mp4Checkbox = QCheckBox("MP4")
+        self.mp4Checkbox.setChecked(True)
+        self.mp4Checkbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.mp4Checkbox)
+        self.bookCheckbox = QCheckBox("BOOK")
+        self.bookCheckbox.setChecked(True)
+        self.bookCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.bookCheckbox)
+        self.docxCheckbox = QCheckBox("DOCX")
+        self.docxCheckbox.setChecked(True)
+        self.docxCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.docxCheckbox)
+        self.commCheckbox = QCheckBox("COMM")
+        self.commCheckbox.setChecked(True)
+        self.commCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.commCheckbox)
+        mainLayout.addLayout(typesLayout)
+
 
         self.dataView = QTableView()
         self.dataView.clicked.connect(self.itemClicked)
@@ -103,7 +133,14 @@ class LibraryCatalogDialog(QDialog):
         colCount = 0
         for id, value in self.catalogData.items():
             id2, filename, type, directory, file, description, repo, installDirectory = value
-            if filterEntry == "" or (filterEntry in filename.lower() or filterEntry in description.lower()):
+            if (filterEntry == "" or filterEntry in filename.lower() or filterEntry in description.lower()):
+                if (not self.pdfCheckbox.isChecked() and type == "PDF") or \
+                        (not self.mp3Checkbox.isChecked() and type == "MP3") or \
+                        (not self.mp4Checkbox.isChecked() and type == "MP4") or \
+                        (not self.bookCheckbox.isChecked() and type == "BOOK") or \
+                        (not self.docxCheckbox.isChecked() and type == "DOCX") or \
+                        (not self.commCheckbox.isChecked() and type == "COMM"):
+                    continue
                 item = QStandardItem(id)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
@@ -158,12 +195,6 @@ class LibraryCatalogDialog(QDialog):
         if type == "PDF":
             directory = directory.replace(config.marvelData, "")
             directory = directory.replace("/pdf", "")
-        # elif type == "BOOK":
-        #     directory = directory.replace(config.marvelData, "")
-        #     directory = directory.replace("/books", "")
-        # elif type == "COMM":
-        #     directory = directory.replace(config.marvelData, "")
-        #     directory = directory.replace("/commentaries", "")
         if len(directory) > 0 and not directory.endswith("/"):
             directory += "/"
         if len(directory) > 0 and directory.startswith("/"):
@@ -183,10 +214,7 @@ class LibraryCatalogDialog(QDialog):
             command = "VLC:::{0}{1}".format(directory, file)
         elif type == "BOOK":
             if file.endswith(".book"):
-                file = file[:-5]
-            # config.booksFolder = config.marvelData + "/books"
-            # if len(directory) > 0:
-            #     config.booksFolder += "/" + directory
+                file = file.replace(".book", "")
             config.booksFolder = directory
             command = "BOOK:::{0}".format(file)
         elif type == "COMM":
