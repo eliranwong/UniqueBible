@@ -160,7 +160,6 @@ class AlephMainWindow:
             QAction(config.thisTranslation["cp7"], self, shortcut=sc.openControlPanelTab7,
                     triggered=lambda: self.openControlPanelTab(7)))
 
-        addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
         tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries", "bookIntro")
         shortcuts = (sc.manageMiniControl, None, None, None, None, None)
         subMenu = addSubMenu(navigation_menu, "menu1_miniControl")
