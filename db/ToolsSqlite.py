@@ -497,12 +497,12 @@ class Commentary:
         if text:
             self.text = text
             if self.text in self.getCommentaryList():
-                self.database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(text))
+                self.database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(text))
                 self.connection = sqlite3.connect(self.database)
                 self.cursor = self.connection.cursor()
         if Commentary.fileLookup is None:
             Commentary.fileLookup = {}
-            commentaryFolder = os.path.join(config.marvelData, "commentaries")
+            commentaryFolder = config.commentariesFolder
             commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if
                               os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(
                                   ".commentary") and not re.search(r"^[\._]", f)]
@@ -510,7 +510,7 @@ class Commentary:
                 if commentary in Commentary.marvelCommentaries.keys():
                     description = Commentary.marvelCommentaries[commentary]
                 else:
-                    database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
+                    database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
                     connection = sqlite3.connect(database)
                     cursor = connection.cursor()
                     query = "SELECT title FROM Details"
@@ -551,16 +551,16 @@ class Commentary:
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_commentary:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, self.text, verseReference)
 
     def getCommentaryList(self):
-        commentaryFolder = os.path.join(config.marvelData, "commentaries")
+        commentaryFolder = config.commentariesFolder
         commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
         return sorted(commentaryList)
 
     def getCommentaryListThatHasBookAndChapter(self, book, chapter):
-        commentaryFolder = os.path.join(config.marvelData, "commentaries")
+        commentaryFolder = config.commentariesFolder
         commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if os.path.isfile(os.path.join(commentaryFolder, f)) and f.endswith(".commentary") and not re.search(r"^[\._]", f)]
         activeCommentaries = []
         for commentary in sorted(commentaryList):
-            database = os.path.join(config.marvelData, "commentaries", "c{0}.commentary".format(commentary))
+            database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
             connection = sqlite3.connect(database)
             cursor = connection.cursor()
             query = "select book from commentary where book=? and chapter=?"

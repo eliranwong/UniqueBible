@@ -20,6 +20,7 @@ class ClassicMainWindow:
         items = (
             ("controlPanel", self.manageControlPanel, sc.manageControlPanel),
             ("menu1_miniControl", self.manageMiniControl, sc.manageMiniControl),
+            ("libraryCatalog", self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog),
         )
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)

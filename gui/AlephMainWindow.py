@@ -160,8 +160,17 @@ class AlephMainWindow:
             QAction(config.thisTranslation["cp7"], self, shortcut=sc.openControlPanelTab7,
                     triggered=lambda: self.openControlPanelTab(7)))
 
-        navigation_menu.addAction(QAction(config.thisTranslation["menu1_miniControl"], self, shortcut=sc.manageMiniControl, triggered=lambda : self.openMiniControlTab(1)))
+        addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
+        tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries", "bookIntro")
+        shortcuts = (sc.manageMiniControl, None, None, None, None, None)
+        subMenu = addSubMenu(navigation_menu, "menu1_miniControl")
+        for index, tab in enumerate(tabs):
+            addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index), shortcuts[index])
+
+        navigation_menu.addAction(QAction(config.thisTranslation["libraryCatalog"], self, shortcut=sc.showLibraryCatalogDialog, triggered=self.showLibraryCatalogDialog))
+
         navigation_menu.addSeparator()
+
         navigation_menu.addAction(
             QAction(config.thisTranslation["menu_first_chapter"], self, shortcut=sc.gotoFirstChapter, triggered=self.gotoFirstChapter))
         prev_chap = QAction(config.thisTranslation["menu4_previous"], self, shortcut=sc.previousMainChapter, triggered=self.previousMainChapter)
@@ -234,10 +243,6 @@ class AlephMainWindow:
             QAction(config.thisTranslation["menu5_allBook"], self, shortcut=sc.displaySearchAllBookCommand, triggered=self.displaySearchAllBookCommand))
 
         library_menu = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_library"]))
-
-        # if config.developer:
-        #     library_menu.addAction(QAction(config.thisTranslation["libraryCatalog"], self, triggered=self.showLibraryCatalogDialog))
-        #     library_menu.addSeparator()
 
         library_menu.addAction(QAction(config.thisTranslation["menu4_book"], self, shortcut=sc.bookFeatures, triggered=self.bookFeatures))
         library_menu.addAction(QAction(config.thisTranslation["html_introduction"], self, triggered=self.runBookFeatureIntroduction))
