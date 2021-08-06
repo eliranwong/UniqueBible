@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "Active Only",
     "cp7": "Morphology",
     "bookIntro": "Book Intro",
+    "libraryCatalog": "Library Catalog",
+    "directory": "Directory",
+    "type": "Type",
 }

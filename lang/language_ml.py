@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "സജീവമായ മാത്രം",
     "cp7": "മോര്ഫോളജി",
     "bookIntro": "ബുക്ക് ഇൻട്രോ",
+    "libraryCatalog": "ലൈബ്രറി കാറ്റലോഗ്",
+    "directory": "ഡയറക്ടറി",
+    "type": "തരം",
 }

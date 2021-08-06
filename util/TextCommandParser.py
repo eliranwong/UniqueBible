@@ -1941,18 +1941,21 @@ class TextCommandParser:
 
     # _imvr:::
     def instantMainVerseReference(self, command, source):
+        text = config.mainText
+        if ":::" in command:
+            text, verseList = self.splitCommand(command)
         verseList = self.extractAllVerses(command)
         if verseList:
-            return self.instantMainVerse(".".join([str(i) for i in verseList[0]]), source)
+            return self.instantMainVerse(".".join([str(i) for i in verseList[0]]), source, text)
         else:
             return ("", "", {})
 
     # _imv:::
-    def instantMainVerse(self, command, source):
+    def instantMainVerse(self, command, source, text=config.mainText):
         if config.instantInformationEnabled and command:
             bcvList = [int(i) for i in command.split(".")]
-            info = BiblesSqlite().readMultipleVerses(config.mainText, [bcvList])
-            if config.mainText in config.rtlTexts and bcvList[0] < 40:
+            info = BiblesSqlite().readMultipleVerses(text, [bcvList])
+            if text in config.rtlTexts and bcvList[0] < 40:
                 info = "<div style='direction: rtl;'>{0}</div>".format(info)
             return ("instant", info, {})
         else:
@@ -2541,7 +2544,18 @@ class TextCommandParser:
             records = morphologySqlist.searchByWordAndMorphology(startBook, endBook, searchTerm, morphologyList)
         elif mode == "GLOSS":
             records = morphologySqlist.searchByGlossAndMorphology(startBook, endBook, searchTerm, morphologyList)
-        formatedText = "<p>{0}:::{1} <b style='color: brown;'>{2}</b> hits</p>".format(searchTerm, morphology, len(records))
+        fontStart = ""
+        fontEnd = ""
+        if len(records) > 0:
+            b = records[0][2]
+            if b < 40:
+                fontStart = "<heb>"
+                fontEnd = "</heb>"
+            else:
+                fontStart = "<grk>"
+                fontEnd = "</grk>"
+        formatedText = "<p>{3}{0}{4}:::{1} <b style='color: brown;'>{2}</b> hits</p>".format(
+            searchTerm, morphology, len(records), fontStart, fontEnd)
         ohgbiInstalled = os.path.isfile(os.path.join(config.marvelData, "bibles", "OHGBi.bible"))
         if config.addOHGBiToMorphologySearch and ohgbiInstalled:
             ohgbiBible = Bible("OHGBi")

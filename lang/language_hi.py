@@ -761,4 +761,7 @@ translation = {
     "activeOnly": "सिर्फ सक्रिय",
     "cp7": "आकारिकी",
     "bookIntro": "पुस्तक इन्ट्रो",
+    "libraryCatalog": "लाइब्रेरी सूचीपत्र",
+    "directory": "डिरेक्ट्री",
+    "type": "क़िस्म",
 }
