@@ -200,13 +200,21 @@ class LibraryCatalogDialog(QDialog):
                         (not self.docxCheckbox.isChecked() and type == "DOCX") or \
                         (not self.commCheckbox.isChecked() and type == "COMM"):
                     continue
+                enable = True
+                if self.location == "remote":
+                    installDirectory = os.path.join(config.marvelData, installDirectory)
+                    if FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(filename)), installDirectory):
+                        enable = False
                 item = QStandardItem(id)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 item = QStandardItem(file)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 item = QStandardItem(directory)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 # item = QStandardItem(description)
