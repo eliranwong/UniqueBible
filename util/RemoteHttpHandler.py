@@ -11,6 +11,7 @@ from time import gmtime
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
+from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
 from urllib.parse import urlparse, parse_qs
@@ -1308,12 +1309,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     content += """<ref onclick="document.title='download:::{0}:::{1}'">{2}</ref><br>"""\
                         .format(keyword, k.replace("'", "\\'"), k)
         resources = (
-            ("GitHub Bibles", "GitHubBible", "otseng/UniqueBible_Bibles", (config.marvelData, "bibles"), ".bible"),
-            ("GitHub Commentaries", "GitHubCommentary", "otseng/UniqueBible_Commentaries", (config.marvelData, "commentaries"), ".commentary"),
-            ("GitHub Books", "GitHubBook", "darrelwright/UniqueBible_Books", (config.marvelData, "books"), ".book"),
-            ("GitHub Maps", "GitHubMap", "darrelwright/UniqueBible_Maps-Charts", (config.marvelData, "books"), ".book"),
-            ("GitHub PDF", "GitHubPdf", "otseng/UniqueBible_PDF", (config.marvelData, "pdf"), ".pdf"),
-            ("GitHub EPUB", "GitHubEpub", "otseng/UniqueBible_EPUB", (config.marvelData, "epub"), ".epub"),
+            ("GitHub Bibles", "GitHubBible", GitHubRepoInfo.bibles[0], (config.marvelData, "bibles"), ".bible"),
+            ("GitHub Commentaries", "GitHubCommentary", GitHubRepoInfo.commentaries[0], (config.marvelData, "commentaries"), ".commentary"),
+            ("GitHub Books", "GitHubBook", GitHubRepoInfo.books[0], (config.marvelData, "books"), ".book"),
+            ("GitHub Maps", "GitHubMap", GitHubRepoInfo.maps[0], (config.marvelData, "books"), ".book"),
+            ("GitHub PDF", "GitHubPdf", GitHubRepoInfo.pdf[0], (config.marvelData, "pdf"), ".pdf"),
+            ("GitHub EPUB", "GitHubEpub", GitHubRepoInfo.epub[0], (config.marvelData, "epub"), ".epub"),
         )
         for collection, type, repo, location, extension in resources:
             content += "<h2>{0}</h2>".format(collection)
