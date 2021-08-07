@@ -17,6 +17,7 @@ from gui.LiveFilterDialog import LiveFilterDialog
 from util import exlbl
 from util.BibleBooks import BibleBooks
 from util.FileUtil import FileUtil
+from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite, Bible
@@ -654,22 +655,22 @@ class MainWindow(QMainWindow):
             self.downloadHelper(datasets[item])
 
     def installGithubBibles(self):
-        self.installFromGitHub("otseng/UniqueBible_Bibles", "bibles", "githubBibles")
+        self.installFromGitHub(GitHubRepoInfo.bibles)
 
     def installGithubCommentaries(self):
-        self.installFromGitHub("otseng/UniqueBible_Commentaries", "commentaries", "githubCommentaries")
+        self.installFromGitHub(GitHubRepoInfo.commentaries)
 
     def installGithubBooks(self):
-        self.installFromGitHub("darrelwright/UniqueBible_Books", "books", "githubBooks")
+        self.installFromGitHub(GitHubRepoInfo.books)
 
     def installGithubMaps(self):
-        self.installFromGitHub("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps")
+        self.installFromGitHub(GitHubRepoInfo.maps)
 
     def installGithubPdf(self):
-        self.installFromGitHub("otseng/UniqueBible_PDF", "pdf", "githubPdf")
+        self.installFromGitHub(GitHubRepoInfo.pdf)
 
     def installGithubEpub(self):
-        self.installFromGitHub("otseng/UniqueBible_EPUB", "epub", "githubEpub")
+        self.installFromGitHub(GitHubRepoInfo.epub)
 
     def installGithubBibleMp3(self):
         if config.isVlcInstalled:
@@ -678,10 +679,11 @@ class MainWindow(QMainWindow):
             self.downloadBibleMp3Dialog.show()
 
     def installGithubPluginsContext(self):
-        self.installFromGitHub("eliranwong/UniqueBible_Plugins_Context", "../plugins/context", "gitHubPluginsContext")
+        self.installFromGitHub(GitHubRepoInfo.pluginsContext)
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
-    def installFromGitHub(self, repo, directory, title):
+    def installFromGitHub(self, gitHubRepoInfo):
+        repo, directory, title, extension = gitHubRepoInfo
         if config.isPygithubInstalled:
             from util.GithubUtil import GithubUtil
 
@@ -3374,22 +3376,22 @@ class MainWindow(QMainWindow):
             if config.isPygithubInstalled:
                 from util.GithubUtil import GithubUtil
 
-                for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.bible[0]).getRepoData():
                     if file not in bibleList:
                         outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-                for file in GithubUtil("otseng/UniqueBible_Commentaries").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.commentaries[0]).getRepoData():
                     if file not in commentaryList:
                         outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.books[0]).getRepoData():
                     if file not in bookList:
                         outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.maps[0]).getRepoData():
                     if file not in bookList:
                         outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
-                for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.pdf[0]).getRepoData():
                     if file not in pdfList:
                         outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
-                for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.epub[0]).getRepoData():
                     if file not in epubList:
                         outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
             outfile.close()
@@ -3426,22 +3428,22 @@ class MainWindow(QMainWindow):
 
             if config.isPygithubInstalled:
                 from util.GithubUtil import GithubUtil
-                for file in GithubUtil("otseng/UniqueBible_Bibles").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.bible[0]).getRepoData():
                     if file in bibleList:
                         outfile.write("DOWNLOAD:::GitHubBible:::{0}\n".format(file.replace(".bible", "")))
-                for file in GithubUtil("otseng/UniqueBible_Commentaries").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.commentaries[0]).getRepoData():
                     if file in commentaryList:
                         outfile.write("DOWNLOAD:::GitHubCommentary:::{0}\n".format(file.replace(".commentary", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Books").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.books[0]).getRepoData():
                     if file in bookList:
                         outfile.write("DOWNLOAD:::GitHubBook:::{0}\n".format(file.replace(".book", "")))
-                for file in GithubUtil("darrelwright/UniqueBible_Maps-Charts").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.maps[0]).getRepoData():
                     if file in bookList:
                         outfile.write("DOWNLOAD:::GitHubMap:::{0}\n".format(file.replace(".book", "")))
-                for file in GithubUtil("otseng/UniqueBible_PDF").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.pdf[0]).getRepoData():
                     if file in pdfList:
                         outfile.write("DOWNLOAD:::GitHubPdf:::{0}\n".format(file.replace(".pdf", "")))
-                for file in GithubUtil("otseng/UniqueBible_EPUB").getRepoData():
+                for file in GithubUtil(GitHubRepoInfo.epub[0]).getRepoData():
                     if file in epubList:
                         outfile.write("DOWNLOAD:::GitHubEpub:::{0}\n".format(file.replace(".epub", "")))
             outfile.close()

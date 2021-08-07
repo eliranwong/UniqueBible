@@ -1,10 +1,17 @@
+import pprint
+import zipfile
 import config, os
-from qtpy.QtWidgets import QCheckBox
 from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QRadioButton
+from qtpy.QtWidgets import QCheckBox
+from qtpy.QtWidgets import QGroupBox
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 from util.BibleBooks import BibleBooks
 from util.FileUtil import FileUtil
+from util.GitHubRepoInfo import GitHubRepoInfo
+from util.GithubUtil import GithubUtil
+from util.GitHubRepoCache import gitHubRepoCacheData
 
 
 class LibraryCatalogDialog(QDialog):
@@ -20,9 +27,13 @@ class LibraryCatalogDialog(QDialog):
     def setupVariables(self):
         self.isUpdating = False
         self.catalogEntryId = None
-        self.catalog = []
-        self.catalogData = {}
-        self.loadCatalog()
+        self.localCatalog = self.loadLocalCatalog()
+        self.remoteCatalog = self.loadRemoteCatalogFromCache()
+        self.localCatalogData = self.getLocalCatalogItems()
+        self.remoteCatalogData = self.getRemoteCatalogItems()
+        self.location = "local"
+        self.textButtonStyle = "QPushButton {background-color: #333972; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+
 
     def setupUI(self):
         mainLayout = QVBoxLayout()
@@ -35,11 +46,25 @@ class LibraryCatalogDialog(QDialog):
         filterLayout.addWidget(self.filterEntry)
         mainLayout.addLayout(filterLayout)
 
+        self.searchTypeBox = QGroupBox("")
+        locationLayout = QHBoxLayout()
+        self.localRadioButton = QRadioButton("Local")
+        self.localRadioButton.setChecked(True)
+        self.localRadioButton.toggled.connect(lambda: self.setLocation("local"))
+        locationLayout.addWidget(self.localRadioButton)
+        self.remoteRadioButton = QRadioButton("Remote")
+        self.remoteRadioButton.toggled.connect(lambda: self.setLocation("remote"))
+        locationLayout.addWidget( self.remoteRadioButton)
+        self.searchTypeBox.setLayout(locationLayout)
+        mainLayout.addWidget(self.searchTypeBox)
+
         typesLayout = QHBoxLayout()
         button = QPushButton("All")
+        button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(lambda: self.selectAllTypes(True))
         typesLayout.addWidget(button)
         button = QPushButton("None")
+        button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(lambda: self.selectAllTypes(False))
         typesLayout.addWidget(button)
         self.bookCheckbox = QCheckBox("BOOK")
@@ -78,18 +103,34 @@ class LibraryCatalogDialog(QDialog):
         mainLayout.addWidget(self.dataView)
 
         buttonLayout = QHBoxLayout()
-        button = QPushButton(config.thisTranslation["open"])
-        button.clicked.connect(self.open)
-        buttonLayout.addWidget(button)
-        # button = QPushButton(config.thisTranslation["download"])
-        # button.clicked.connect(self.download)
-        # buttonLayout.addWidget(button)
+        self.openButton = QPushButton(config.thisTranslation["open"])
+        self.openButton.setEnabled(True)
+        self.openButton.setStyleSheet(self.textButtonStyle)
+        self.openButton.clicked.connect(self.open)
+        buttonLayout.addWidget(self.openButton)
+        self.downloadButton = QPushButton(config.thisTranslation["download"])
+        self.downloadButton.setEnabled(False)
+        self.downloadButton.clicked.connect(self.download)
+        buttonLayout.addWidget(self.downloadButton)
         button = QPushButton(config.thisTranslation["close"])
+        button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(self.close)
         buttonLayout.addWidget(button)
         mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
+
+    def setLocation(self, location):
+        self.location = location
+        self.resetItems()
+        if location == "local":
+            self.openButton.setEnabled(True)
+            self.openButton.setStyleSheet(self.textButtonStyle)
+            self.downloadButton.setEnabled(False)
+        else:
+            self.openButton.setEnabled(False)
+            self.openButton.setStyleSheet("")
+            self.downloadButton.setEnabled(True)
 
     def selectAllTypes(self, value):
         self.pdfCheckbox.setChecked(value)
@@ -99,7 +140,13 @@ class LibraryCatalogDialog(QDialog):
         self.docxCheckbox.setChecked(value)
         self.commCheckbox.setChecked(value)
 
-    def getCatalogItems(self):
+    def getLocalCatalogItems(self):
+        return self.getCatalogItems(self.localCatalog)
+
+    def getRemoteCatalogItems(self):
+        return self.getCatalogItems(self.remoteCatalog)
+
+    def getCatalogItems(self, catalog):
         data = {}
         pdfCount = 0
         mp3Count = 0
@@ -108,7 +155,7 @@ class LibraryCatalogDialog(QDialog):
         docxCount = 0
         commCount = 0
         lexCount = 0
-        for filename, type, directory, file, description, repo, installDirectory in self.catalog:
+        for filename, type, directory, file, description, repo, installDirectory, sha in catalog:
             id = "UNKNOWN"
             if type == "PDF":
                 pdfCount += 1
@@ -131,18 +178,20 @@ class LibraryCatalogDialog(QDialog):
             elif type == "LEX":
                 lexCount += 1
                 id = "{0}-{1}".format(type, lexCount)
-            data[id] = [id, filename, type, directory, file, description, repo, installDirectory]
+            data[id] = [id, filename, type, directory, file, description, repo, installDirectory, sha]
         return data
 
     def resetItems(self):
         self.isUpdating = True
         self.dataViewModel.clear()
-        self.catalogData = self.getCatalogItems()
         filterEntry = self.filterEntry.text().lower()
         rowCount = 0
         colCount = 0
-        for id, value in self.catalogData.items():
-            id2, filename, type, directory, file, description, repo, installDirectory = value
+        catalogData = self.localCatalogData
+        if self.location == "remote":
+            catalogData = self.remoteCatalogData
+        for id, value in catalogData.items():
+            id2, filename, type, directory, file, description, repo, installDirectory, sha = value
             if (filterEntry == "" or filterEntry in filename.lower() or filterEntry in description.lower()):
                 if (not self.pdfCheckbox.isChecked() and type == "PDF") or \
                         (not self.mp3Checkbox.isChecked() and type == "MP3") or \
@@ -151,13 +200,21 @@ class LibraryCatalogDialog(QDialog):
                         (not self.docxCheckbox.isChecked() and type == "DOCX") or \
                         (not self.commCheckbox.isChecked() and type == "COMM"):
                     continue
+                enable = True
+                if self.location == "remote":
+                    installDirectory = os.path.join(config.marvelData, installDirectory)
+                    if FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(filename)), installDirectory):
+                        enable = False
                 item = QStandardItem(id)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 item = QStandardItem(file)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 item = QStandardItem(directory)
+                item.setEnabled(enable)
                 self.dataViewModel.setItem(rowCount, colCount, item)
                 colCount += 1
                 # item = QStandardItem(description)
@@ -177,29 +234,65 @@ class LibraryCatalogDialog(QDialog):
     def itemClicked(self, index):
         selectedRow = index.row()
         self.catalogEntryId = self.dataViewModel.item(selectedRow, 0).text()
+        if self.location == "remote":
+            item = self.remoteCatalogData[self.catalogEntryId]
+            id, filename, type, directory, file, description, repo, installDirectory, sha = item
+            installDirectory = os.path.join(config.marvelData, installDirectory)
+            if FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(filename)), installDirectory):
+                self.downloadButton.setEnabled(False)
+                self.downloadButton.setStyleSheet("")
+            else:
+                self.downloadButton.setEnabled(True)
+                self.downloadButton.setStyleSheet(self.textButtonStyle)
 
     def displayMessage(self, message="", title="UniqueBible"):
         QMessageBox.information(self, title, message)
 
-    def loadCatalog(self):
-        self.catalog += self.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf", "", "")
-        self.catalog += self.loadLocalFiles("MP3", "music", ".mp3", "", "")
-        self.catalog += self.loadLocalFiles("MP4", "video", ".mp4", "", "")
-        self.catalog += self.loadLocalFiles("BOOK", config.marvelData + "/books", ".book", "", "")
-        self.catalog += self.loadLocalFiles("DOCX", config.marvelData + "/docx", ".docx", "", "")
-        self.catalog += self.loadLocalFiles("COMM", config.marvelData + "/commentaries", ".commentary", "", "")
+    def loadLocalCatalog(self):
+        data = []
+        data += self.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf")
+        data += self.loadLocalFiles("MP3", "music", ".mp3")
+        data += self.loadLocalFiles("MP4", "video", ".mp4")
+        data += self.loadLocalFiles("BOOK", config.marvelData + "/books", ".book")
+        data += self.loadLocalFiles("DOCX", config.marvelData + "/docx", ".docx")
+        data += self.loadLocalFiles("COMM", config.marvelData + "/commentaries", ".commentary")
+        return data
 
-    def loadLocalFiles(self, type, folder, extension, repo="", installFolder=""):
+    def loadLocalFiles(self, type, folder, extension):
         data = []
         files = FileUtil.getAllFilesWithExtension(folder, extension)
         for file in files:
             path = os.path.dirname(file)
             filename = os.path.basename(file)
-            data.append((file, type, path, filename, folder, repo, installFolder))
+            data.append((file, type, path, filename, folder, "", "", ""))
         return data
 
-    def download(self):
-        pass
+    def loadRemoteCatalogFromCache(self):
+        return gitHubRepoCacheData
+
+    def loadRemoteCatalog(self):
+        data = []
+        data += self.loadRemoteFiles("PDF", GitHubRepoInfo.pdf)
+        data += self.loadRemoteFiles("BOOK", GitHubRepoInfo.books)
+        data += self.loadRemoteFiles("BOOK", GitHubRepoInfo.maps)
+        data += self.loadRemoteFiles("COMM", GitHubRepoInfo.commentaries)
+        return data
+
+    def saveRemoteCatalogToCache(self):
+        data = self.loadRemoteCatalog()
+        with open("util/GitHubRepoCache.py", "w", encoding="utf-8") as fileObj:
+            fileObj.write("gitHubRepoCacheData = {0}\n".format(pprint.pformat(data)))
+
+    def loadRemoteFiles(self, type, repo):
+        data = []
+        github = GithubUtil(repo[0])
+        repoData = github.getRepoData()
+        for file in repoData.keys():
+            gitrepo = repo[0]
+            installFolder = repo[1]
+            sha = repoData[file]
+            data.append((file, type, repo[0], file, "", gitrepo, installFolder, sha))
+        return data
 
     def fixDirectory(self, directory, type):
         if type == "PDF":
@@ -212,8 +305,8 @@ class LibraryCatalogDialog(QDialog):
         return directory
 
     def open(self):
-        item = self.catalogData[self.catalogEntryId]
-        id, filename, type, directory, file, description, repo, installDirectory = item
+        item = self.localCatalogData[self.catalogEntryId]
+        id, filename, type, directory, file, description, repo, installDirectory, sha = item
         directory = self.fixDirectory(directory, type)
         command = ""
         if type == "PDF":
@@ -236,15 +329,29 @@ class LibraryCatalogDialog(QDialog):
             command = "DOCX:::{0}".format(file)
         self.parent.runTextCommand(command)
 
+    def download(self):
+        self.downloadButton.setEnabled(False)
+        self.downloadButton.setStyleSheet("")
+        item = self.remoteCatalogData[self.catalogEntryId]
+        id, filename, type, directory, file, description, repo, installDirectory, sha = item
+        github = GithubUtil(repo)
+        installDirectory = os.path.join(config.marvelData, installDirectory)
+        file = os.path.join(installDirectory, filename + ".zip")
+        github.downloadFile(file, sha)
+        with zipfile.ZipFile(file, 'r') as zipped:
+            zipped.extractall(installDirectory)
+        os.remove(file)
+        self.displayMessage(filename + " " + config.thisTranslation["message_installed"])
+        self.localCatalog = self.loadLocalCatalog()
+        self.localCatalogData = self.getLocalCatalogItems()
+        self.resetItems()
+
 
 ## Standalone development code
 
 class DummyParent():
     def runTextCommand(self, command):
         print(command)
-
-    def verseReference(self, command):
-        return ['', '']
 
 if __name__ == '__main__':
     import sys
@@ -259,6 +366,8 @@ if __name__ == '__main__':
     config.bibleCollections["King James"] = ['KJV', 'KJVx', 'KJVA', 'KJV1611', 'KJV1769x']
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
+
     app = QApplication(sys.argv)
     dialog = LibraryCatalogDialog(DummyParent())
+    dialog.saveRemoteCatalogToCache()
     dialog.exec_()

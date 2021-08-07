@@ -117,11 +117,15 @@ class UpdateUtil:
             if not line == "":
                 action = "file"
                 code, file = line.split("\t")
-                if code.strip() == "D":
-                    action = "delete"
-                str = """({0}, "{1}", "{2}")""".format(version, action, file.strip())
-                print(str)
-                patch.write(str + "\n")
+                if not file in ("patches.txt", "latest_changes.txt", "UniqueBibleAppVersion.txt"):
+                    if code.strip() == "D":
+                        action = "delete"
+                    str = """({0}, "{1}", "{2}")""".format(version, action, file.strip())
+                    print(str)
+                    patch.write(str + "\n")
+        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "patches.txt"))
+        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "latest_changes.txt"))
+        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "UniqueBibleAppVersion.txt"))
         patch.close()
 
 

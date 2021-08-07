@@ -1,3 +1,6 @@
+Major change in version 26.04:
+* Add GitHub support to Library Catalog
+
 Major change in version 26.03:
 * Add Library Catalog
 

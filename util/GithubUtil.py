@@ -3,6 +3,7 @@ from github import Github
 import config
 import base64
 
+
 class GithubUtil:
 
     def __init__(self, repo=""):
@@ -55,7 +56,9 @@ class GithubUtil:
 
 
 if __name__ == "__main__":
-    github = GithubUtil("otseng/UniqueBible_Bibles")
+    from util.GitHubRepoInfo import GitHubRepoInfo
+
+    github = GithubUtil(GitHubRepoInfo.bibles[0])
     github.printContentsOfRepo()
 
     # github = GithubUtil("otseng/UniqueBible_Commentaries")
