@@ -16,6 +16,7 @@ from gui.LibraryCatalogDialog import LibraryCatalogDialog
 from gui.LiveFilterDialog import LiveFilterDialog
 from util import exlbl
 from util.BibleBooks import BibleBooks
+from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
@@ -161,11 +162,10 @@ class MainWindow(QMainWindow):
         # VLC Player
         self.vlcPlayer = None
 
+        # Load Bible descriptions
         self.loadBibleDescriptions()
-
-        # pre-load control panel
-        # This is now implemented in main.py instead
-        #self.manageControlPanel(config.showControlPanelOnStartup)
+        # Load local file catalog
+        CatalogUtil.loadLocalCatalog()
 
         config.inBootupMode = False
         bootEndTime = datetime.now()

@@ -114,7 +114,7 @@ class CrossPlatform:
                     self.runAddHistoryRecord(view, textCommand)
 
     def runAddHistoryRecord(self, view, textCommand):
-        if view and textCommand:
+        if view and textCommand and view in config.history:
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):
                 viewhistory.append(textCommand)

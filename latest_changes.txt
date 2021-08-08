@@ -1,8 +1,13 @@
+Major changes in version 26.05:
+* Show exact match for lexicon search first
+* Fix search book if it’s in a subfolder
+
 Major change in version 26.04:
-* Add GitHub support to Library Catalog
+* Add Remote/GitHub support to Library Catalog
 
 Major change in version 26.03:
 * Add Library Catalog
+- https://github.com/eliranwong/UniqueBible/wiki/Library-Catalog
 
 Major changes in version 26.02:
 * Show different Bible version on hover
@@ -109,7 +114,7 @@ Major change in version 25.79:
 
 Major changes in version 25.78:
 * Add Live Filtering
-+ https://github.com/eliranwong/UniqueBible/wiki/Live-Filtering
+- https://github.com/eliranwong/UniqueBible/wiki/Live-Filtering
 * Fix Windows shortcut if space in path
 * Add disableLoadLastOpenFilesOnStartup config flag to turn on/off loading files automatically on startup
 

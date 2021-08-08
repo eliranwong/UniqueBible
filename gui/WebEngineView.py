@@ -1139,7 +1139,7 @@ class WebEngineView(QWebEngineView):
             self.openPopover()
         return super().createWindow(windowType)
 
-    def openPopover(self, name="popover", html="UniqueBible.app", fullScreen=False, screenNo=-1):
+    def openPopover(self, name="popover", html="UniqueBible.app", fullScreen=False, screenNo=-1, forceNewWindow=False):
         # image options
         if config.exportEmbeddedImages:
             html = self.parent.parent.exportAllImages(html)
@@ -1147,7 +1147,7 @@ class WebEngineView(QWebEngineView):
             html = self.parent.parent.addOpenImageAction(html)
         # format html content
         html = self.parent.parent.wrapHtml(html)
-        if self.parent.popoverView is None:
+        if self.parent.popoverView is None or forceNewWindow:
             self.parent.popoverView = WebEngineViewPopover(self, name, self.name)
             if not fullScreen:
                 self.parent.popoverView.setMinimumWidth(config.popoverWindowWidth)
