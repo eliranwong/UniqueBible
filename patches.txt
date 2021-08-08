@@ -1244,7 +1244,7 @@
 (26.04, "file", "util/GitHubRepoInfo.py")
 (26.04, "file", "util/GithubUtil.py")
 (26.04, "file", "util/RemoteHttpHandler.py")
-(26.04, "file", "util/TextCommandParser.py")
+(26.05, "file", "util/TextCommandParser.py")
 (26.05, "file", "db/ToolsSqlite.py")
 (26.05, "file", "gui/LibraryCatalogDialog.py")
 (26.05, "file", "gui/MainWindow.py")
