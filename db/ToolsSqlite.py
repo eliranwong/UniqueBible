@@ -796,8 +796,8 @@ class BookData:
     def getMenu(self, module=""):
         if module == "":
             module = config.book
-        if module in dict(self.bookList).keys():
-            books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
+        if module in dict(self.catalogBookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", self.catalogBookList, module)
             topicList = Book(module).getTopicList()
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
