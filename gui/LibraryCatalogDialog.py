@@ -301,7 +301,7 @@ class LibraryCatalogDialog(QDialog):
             zipped.extractall(installDirectory)
         os.remove(file)
         self.displayMessage(filename + " " + config.thisTranslation["message_installed"])
-        self.localCatalog = self.loadLocalCatalog()
+        self.localCatalog = CatalogUtil.reloadLocalCatalog()
         self.localCatalogData = self.getLocalCatalogItems()
         self.resetItems()
 
