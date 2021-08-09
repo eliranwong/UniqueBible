@@ -8,8 +8,8 @@ from qtpy.QtWidgets import QGroupBox
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 from util.BibleBooks import BibleBooks
+from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
-from util.GitHubRepoInfo import GitHubRepoInfo
 from util.GithubUtil import GithubUtil
 from util.GitHubRepoCache import gitHubRepoCacheData
 
@@ -27,8 +27,8 @@ class LibraryCatalogDialog(QDialog):
     def setupVariables(self):
         self.isUpdating = False
         self.catalogEntryId = None
-        self.localCatalog = self.loadLocalCatalog()
-        self.remoteCatalog = self.loadRemoteCatalogFromCache()
+        self.localCatalog = CatalogUtil.loadLocalCatalog()
+        self.remoteCatalog = gitHubRepoCacheData
         self.localCatalogData = self.getLocalCatalogItems()
         self.remoteCatalogData = self.getRemoteCatalogItems()
         self.location = "local"
@@ -248,51 +248,10 @@ class LibraryCatalogDialog(QDialog):
     def displayMessage(self, message="", title="UniqueBible"):
         QMessageBox.information(self, title, message)
 
-    def loadLocalCatalog(self):
-        data = []
-        data += self.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf")
-        data += self.loadLocalFiles("MP3", "music", ".mp3")
-        data += self.loadLocalFiles("MP4", "video", ".mp4")
-        data += self.loadLocalFiles("BOOK", config.marvelData + "/books", ".book")
-        data += self.loadLocalFiles("DOCX", config.marvelData + "/docx", ".docx")
-        data += self.loadLocalFiles("COMM", config.marvelData + "/commentaries", ".commentary")
-        return data
-
-    def loadLocalFiles(self, type, folder, extension):
-        data = []
-        files = FileUtil.getAllFilesWithExtension(folder, extension)
-        for file in files:
-            path = os.path.dirname(file)
-            filename = os.path.basename(file)
-            data.append((file, type, path, filename, folder, "", "", ""))
-        return data
-
-    def loadRemoteCatalogFromCache(self):
-        return gitHubRepoCacheData
-
-    def loadRemoteCatalog(self):
-        data = []
-        data += self.loadRemoteFiles("PDF", GitHubRepoInfo.pdf)
-        data += self.loadRemoteFiles("BOOK", GitHubRepoInfo.books)
-        data += self.loadRemoteFiles("BOOK", GitHubRepoInfo.maps)
-        data += self.loadRemoteFiles("COMM", GitHubRepoInfo.commentaries)
-        return data
-
     def saveRemoteCatalogToCache(self):
-        data = self.loadRemoteCatalog()
+        data = CatalogUtil.loadRemoteCatalog()
         with open("util/GitHubRepoCache.py", "w", encoding="utf-8") as fileObj:
             fileObj.write("gitHubRepoCacheData = {0}\n".format(pprint.pformat(data)))
-
-    def loadRemoteFiles(self, type, repo):
-        data = []
-        github = GithubUtil(repo[0])
-        repoData = github.getRepoData()
-        for file in repoData.keys():
-            gitrepo = repo[0]
-            installFolder = repo[1]
-            sha = repoData[file]
-            data.append((file, type, repo[0], file, "", gitrepo, installFolder, sha))
-        return data
 
     def fixDirectory(self, directory, type):
         if type == "PDF":

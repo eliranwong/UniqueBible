@@ -1,5 +1,6 @@
 import config
 from util.BibleBooks import BibleBooks
+from util.CatalogUtil import CatalogUtil
 
 if __name__ == "__main__":
     from util.ConfigUtil import ConfigUtil
@@ -729,10 +730,14 @@ class Lexicon:
     def searchTopic(self, search):
         try:
             searchString = "%{0}%".format(search)
-            query = "SELECT DISTINCT Topic FROM Lexicon WHERE Topic like ? OR DEFINITION like ? ORDER BY Topic LIMIT 0, 500"
-            self.cursor.execute(query, (searchString, searchString))
+            query = "SELECT DISTINCT Topic FROM Lexicon WHERE Topic like ? ORDER BY Topic"
+            self.cursor.execute(query, (searchString,))
+            topics = self.cursor.fetchall()
             contentText = """<h2>{0}</h2>""".format(self.module)
-            for topic in self.cursor.fetchall():
+            query = "SELECT DISTINCT Topic FROM Lexicon WHERE DEFINITION like ? and TOPIC NOT LIKE ? ORDER BY Topic LIMIT 0, 500"
+            self.cursor.execute(query, (searchString, searchString))
+            topics += self.cursor.fetchall()
+            for topic in topics:
                 t = topic[0]
                 e = t.replace("'", "\\\'").replace('"', '\\\"')
                 entry = """<div><ref onclick="document.title='LEXICON:::{0}:::{1}'">{2}</ref></div>""".format(self.module, e, t)
@@ -768,6 +773,7 @@ class BookData:
 
     def __init__(self):
         self.bookList = self.getBookList()
+        self.catalogBookList = self.getCatalogBookList()
 
     def getDirectories(self):
         bookFolder = config.booksFolder
@@ -784,11 +790,14 @@ class BookData:
     def getBookList(self):
         return [(book, book) for book in self.getBooks()]
 
+    def getCatalogBookList(self):
+        return [(book, book) for book in CatalogUtil.getBooks()]
+
     def getMenu(self, module=""):
         if module == "":
             module = config.book
-        if module in dict(self.bookList).keys():
-            books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
+        if module in dict(self.catalogBookList).keys():
+            books = self.formatSelectList("listBookTopic(this.value)", self.catalogBookList, module)
             topicList = Book(module).getTopicList()
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
@@ -797,7 +806,8 @@ class BookData:
             return "INVALID_COMMAND_ENTERED"
 
     def getSearchedMenu(self, module, searchString, chapterOnly=False):
-        if module in dict(self.bookList).keys():
+        searchString = searchString.strip()
+        if module in dict(self.catalogBookList).keys():
             books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
             topicList = Book(module).getSearchedTopicList(searchString, chapterOnly=chapterOnly)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
@@ -840,9 +850,9 @@ class Book:
         self.cursor = None
         self.connection = None
 
-        self.database = os.path.join(config.booksFolder, "{0}.book".format(module))
-        if not os.path.exists(self.database):
-            self.database = os.path.join(config.marvelData, "books", "{0}.book".format(module))
+        module = "{0}.book".format(module)
+        folder = CatalogUtil.getFolder(module)
+        self.database = os.path.join(folder, module)
         if not os.path.exists(self.database):
             self.module = ""
         else:

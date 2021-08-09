@@ -2,6 +2,8 @@ import config
 import sys
 from qtpy.QtWidgets import QApplication, QWidget
 
+from util.BibleBooks import BibleBooks
+
 
 class ConfigurePresentationWindow(QWidget):
 
@@ -118,7 +120,8 @@ class ConfigurePresentationWindow(QWidget):
         versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
         self.bibleLayout.addRow("Bible Version", versionCombo)
 
-        self.textEntry = QPlainTextEdit("John 3:16; Rm 5:8")
+        defaultVerse = "{0} {1}:{2}".format(BibleBooks.eng[str(config.mainB)][0], config.mainC, config.mainV)
+        self.textEntry = QPlainTextEdit(defaultVerse)
         self.bibleLayout.addRow(self.textEntry)
 
         button = QPushButton("Presentation")
