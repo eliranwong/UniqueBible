@@ -377,7 +377,8 @@ class AlephMainWindow:
             addMenuItem(subMenu, feature, self, action)
         display_menu.addAction(
             QAction(config.thisTranslation["menu_display_shortcuts"], self, shortcut=sc.displayShortcuts, triggered=self.displayShortcuts))
-        addMenuItem(display_menu, "reloadResources", self, self.reloadResources)
+        display_menu.addAction(
+            QAction(config.thisTranslation["reloadResources"], self, shortcut=sc.reloadResources, triggered=self.reloadResources))
         display_menu.addAction(
             QAction(config.thisTranslation["menu_reload"], self, shortcut=sc.reloadCurrentRecord, triggered=self.reloadCurrentRecord))
 

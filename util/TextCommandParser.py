@@ -2540,6 +2540,7 @@ class TextCommandParser:
         morphologyList = morphology.split(",")
         morphologySqlist = MorphologySqlite()
         if mode == "LEX":
+            searchTerm += ","
             records = morphologySqlist.searchByLexicalAndMorphology(startBook, endBook, searchTerm, morphologyList)
         elif mode == "WORD":
             records = morphologySqlist.searchByWordAndMorphology(startBook, endBook, searchTerm, morphologyList)
