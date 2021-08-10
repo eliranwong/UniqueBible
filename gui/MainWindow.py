@@ -290,6 +290,7 @@ class MainWindow(QMainWindow):
 
     def reloadResources(self):
         CrossPlatform().setupResourceLists()
+        CatalogUtil.reloadLocalCatalog()
         self.controlPanel.setupResourceLists()
         self.setMenuLayout(config.menuLayout)
         self.reloadControlPanel(False)
@@ -2030,8 +2031,9 @@ class MainWindow(QMainWindow):
     def showLibraryCatalogDialog(self):
         self.libraryCatalogDialog = LibraryCatalogDialog(self)
         screen = QGuiApplication.instance().desktop().availableGeometry()
+        x = screen.width() * float(1/8)
         y = screen.height() * float(1/5)
-        self.libraryCatalogDialog.move(20, y)
+        self.libraryCatalogDialog.move(x, y)
         self.libraryCatalogDialog.show()
 
     def enableIndividualPluginsWindow(self):

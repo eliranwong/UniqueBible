@@ -43,7 +43,9 @@ class CatalogUtil:
 
     @staticmethod
     def getFolder(filename):
-        return CatalogUtil.folderLookup[filename]
+        if filename in CatalogUtil.folderLookup:
+            return CatalogUtil.folderLookup[filename]
+        return ""
 
     @staticmethod
     def getBooks():

@@ -1,6 +1,7 @@
 import os, glob
 import re
 from itertools import (takewhile, repeat)
+import platform
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -112,7 +113,10 @@ class FileUtil:
     @staticmethod
     def normalizePath(url):
         parts = list(urlsplit(url))
-        segments = parts[2].split('/')
+        separator = '/'
+        if platform.system() == "Windows":
+            separator = '\\'
+        segments = parts[2].split(separator)
         segments = [segment + '/' for segment in segments[:-1]] + [segments[-1]]
         resolved = []
         for segment in segments:
@@ -122,7 +126,10 @@ class FileUtil:
             elif segment not in ('./', '.'):
                 resolved.append(segment)
         parts[2] = ''.join(resolved)
-        return urlunsplit(parts)
+        url = urlunsplit(parts)
+        if platform.system() == "Windows":
+            url = url.replace("/", "\\")
+        return url
 
     @staticmethod
     def getAllFilesWithExtension(dir, extension):
