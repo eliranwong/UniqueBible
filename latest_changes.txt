@@ -1,3 +1,7 @@
+Major changes in version 26.07:
+* Change showLibraryCatalogDialog shortcut to Ctrl+Shift+Y in micron
+* Show all files in pdf subdirectories in open pdf files
+
 Major changes in version 26.06:
 * Fix sub directories navigation in master control for Windows
 * Open Library Catalog window in center

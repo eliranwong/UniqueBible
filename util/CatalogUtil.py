@@ -9,6 +9,7 @@ class CatalogUtil:
 
     localCatalog = None
     bookCatalog = None
+    pdfCatalog = None
     folderLookup = {}
 
     @staticmethod
@@ -20,7 +21,9 @@ class CatalogUtil:
     def loadLocalCatalog():
         if CatalogUtil.localCatalog is None:
             CatalogUtil.localCatalog = []
-            CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf")
+            pdf = CatalogUtil.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf")
+            CatalogUtil.pdfCatalog = pdf
+            CatalogUtil.localCatalog += pdf
             CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("MP3", "music", ".mp3")
             CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("MP4", "video", ".mp4")
             books = CatalogUtil.loadLocalFiles("BOOK", config.marvelData + "/books", ".book")
@@ -55,7 +58,17 @@ class CatalogUtil:
         for record in CatalogUtil.bookCatalog:
             book = record[3].replace(".book", "")
             books.append(book)
-        return books
+        return sorted(books)
+
+    @staticmethod
+    def getPDFs():
+        if CatalogUtil.pdfCatalog is None:
+            CatalogUtil.loadLocalCatalog()
+        pdfs = []
+        for record in CatalogUtil.pdfCatalog:
+            pdf = record[3]
+            pdfs.append(pdf)
+        return sorted(pdfs)
 
     @staticmethod
     def loadRemoteCatalog():

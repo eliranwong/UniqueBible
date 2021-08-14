@@ -362,7 +362,7 @@ class ShortcutUtil:
             "commandLineInterface": 'Ctrl+^',
             "liveFilterDialog": '',
             "bibleCollections": "",
-            "showLibraryCatalogDialog": "Ctrl+Shift+O",
+            "showLibraryCatalogDialog": "Ctrl+Shift+Y",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",

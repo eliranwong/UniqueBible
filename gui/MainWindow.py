@@ -289,8 +289,8 @@ class MainWindow(QMainWindow):
             self.textCommandParser.databaseNotInstalled("bible")
 
     def reloadResources(self):
-        CrossPlatform().setupResourceLists()
         CatalogUtil.reloadLocalCatalog()
+        CrossPlatform().setupResourceLists()
         self.controlPanel.setupResourceLists()
         self.setMenuLayout(config.menuLayout)
         self.reloadControlPanel(False)
@@ -1369,8 +1369,7 @@ class MainWindow(QMainWindow):
             pdfViewer = "{0}{1}".format("file:///" if platform.system() == "Windows" else "file://", os.path.join(os.getcwd(), "htmlResources", "lib/pdfjs-2.7.570-dist/web/viewer.html"))
             if platform.system() == "Windows":
                 pdfViewer = pdfViewer.replace("\\", "/")
-            marvelDataPath = os.path.join(os.getcwd(), "marvelData") if config.marvelData == "marvelData" else config.marvelData
-            fileName = file if fullPath else os.path.join(marvelDataPath, "pdf", file)
+            fileName = file if fullPath else os.path.join(os.getcwd(), CatalogUtil.getFolder(file), file)
             if search is None:
                 url = QUrl.fromUserInput("{0}?file={1}&theme={2}#page={3}".format(pdfViewer, fileName, config.theme, page))
             else:
