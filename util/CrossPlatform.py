@@ -2,6 +2,7 @@ import config, os, glob, re
 from db.BiblesSqlite import BiblesSqlite, Bible
 from db.ToolsSqlite import BookData, IndexesSqlite, Commentary
 from db.ToolsSqlite import LexiconData
+from util.CatalogUtil import CatalogUtil
 from util.ThirdParty import ThirdPartyDictionary
 
 class CrossPlatform:
@@ -61,7 +62,8 @@ class CrossPlatform:
         # menu5_3rdDict
         self.thirdPartyDictionaryList = ThirdPartyDictionary(self.isThridPartyDictionary(config.thirdDictionary)).moduleList
         # pdf list
-        self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))])
+        # self.pdfList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/pdf/*.pdf".format(config.marvelData))])
+        self.pdfList = CatalogUtil.getPDFs()
         # epub list
         self.epubList = sorted([os.path.basename(file) for file in glob.glob(r"{0}/epub/*.epub".format(config.marvelData))])
         # docx list
