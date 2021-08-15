@@ -895,7 +895,7 @@ class ConfigUtil:
         config.help["refButtonClickAction"] = """
         # Action of reference button when it is clicked."""
         if not hasattr(config, "refButtonClickAction"):
-            config.refButtonClickAction = "direct"
+            config.refButtonClickAction = "master"
         config.help["presentationScreenNo"] = """
         # Specify screen number for presentation features."""
         if not hasattr(config, "presentationScreenNo"):
