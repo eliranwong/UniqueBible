@@ -1267,6 +1267,7 @@
 (26.08, "file", "util/ShortcutUtil.py")
 (26.09, "file", "db/ToolsSqlite.py")
 (26.09, "file", "gui/MainWindow.py")
+(26.09, "folder", "marvelData/xref")
 (26.09, "file", "marvelData/xref/Readme.md")
 (26.09, "file", "util/TextCommandParser.py")
 (26.09, "file", "util/ThirdParty.py")
