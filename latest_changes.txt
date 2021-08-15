@@ -1,3 +1,8 @@
+Major changes in version 26.08:
+* Change media player shortcut to Ctrl+Shift+V for brachys and micron
+* Fix not able to open pdf file in book
+* Set refButtonClickAction default to master
+
 Major changes in version 26.07:
 * Change showLibraryCatalogDialog shortcut to Ctrl+Shift+Y in micron
 * Show all files in pdf subdirectories in open pdf files
