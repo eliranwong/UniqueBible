@@ -1510,6 +1510,7 @@ class MainWindow(QMainWindow):
                   "theWord Complete Bibles (*.ont);;"
                   "theWord OT Bibles (*.ot);;"
                   "theWord NT Bibles (*.nt);;"
+                  "theWord xref module (*.xrefs.twm);;"
                   # "theWord Commentaries (*.twm);;"
                   "Word Documents (*.docx);;"
                   "PDF Documents (*.pdf)"), "", options)
@@ -1543,6 +1544,8 @@ class MainWindow(QMainWindow):
                 self.importXMLBible(fileName)
             elif fileName.endswith(".nt") or fileName.endswith(".ot") or fileName.endswith(".ont"):
                 self.importTheWordBible(fileName)
+            elif fileName.endswith(".xrefs.twm"):
+                self.importTheWordXref(fileName)
             elif fileName.endswith(".cmt.twm"):
                 self.importTheWordCommentary(fileName)
         self.loadBibleDescriptions()
@@ -1651,6 +1654,10 @@ class MainWindow(QMainWindow):
 
     def importTheWordCommentary(self, fileName):
         Converter().importTheWordCommentary(fileName)
+        self.completeImport()
+
+    def importTheWordXref(self, fileName):
+        Converter().importTheWordXref(fileName)
         self.completeImport()
 
     def completeImport(self):

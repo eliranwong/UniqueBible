@@ -1879,6 +1879,62 @@ class Converter:
             return False
 
 
+    # Import TheWord cross references
+    def importTheWordXref(self, filename):
+        xrefFilename = Path(filename).stem.replace(".xrefs", "")
+        with sqlite3.connect(filename) as connection:
+            cursor = connection.cursor()
+            query = "SELECT value FROM config where name='tables.xrefs.description'"
+            cursor.execute(query)
+            description = cursor.fetchone()[0]
+            query = "SELECT fbi, fci, fvi, tbi, tci, tvi, tspan FROM xrefs_bcv order by fbi, fci, fvi"
+            cursor.execute(query)
+            xrefs = cursor.fetchall()
+            self.createXrefModule(xrefFilename, description, description, xrefs)
+
+    # create cross reference module
+    def createXrefModule(self, filename, title, description, xrefs):
+        xrefFolder = os.path.join(config.marvelData, "xref")
+        xrefFile = os.path.join(xrefFolder, "{0}.xref".format(filename))
+        if os.path.isfile(xrefFile):
+            os.remove(xrefFile)
+        with sqlite3.connect(xrefFile) as connection:
+            cursor = connection.cursor()
+            statements = (
+                """CREATE TABLE "CrossReference" (Book INT, Chapter INT, Verse INT, Information TEXT)""",
+                """CREATE TABLE "Details" ("Title"	NVARCHAR(100), "Information" TEXT)"""
+            )
+            for create in statements:
+                cursor.execute(create)
+                connection.commit()
+            insert = "INSERT INTO Details (Title, Information) VALUES (?, ?)"
+            cursor.execute(insert, (title, description))
+            connection.commit()
+            if xrefs:
+                data = []
+                book = 0
+                chapter = 0
+                verse = 0
+                info = ""
+                for xref in xrefs:
+                    fbi, fci, fvi, tbi, tci, tvi, tspan = xref
+                    if not (fbi == book and fci == chapter and fvi == verse):
+                        if len(info) > 0:
+                            data.append((book, chapter, verse, info))
+                        book = fbi
+                        chapter = fci
+                        verse = fvi
+                        info = ""
+                    if len(info) > 0:
+                        info += "; "
+                    info += BibleVerseParser(config.parserStandarisation).bcvToVerseReference(tbi, tci, tvi)
+                    if int(tspan) > 0:
+                        info += "-{0}".format(int(tvi)+int(tspan))
+                data.append((book, chapter, verse, info))
+                insert = "INSERT INTO CrossReference (Book, Chapter, Verse, Information) VALUES (?, ?, ?, ?)"
+                cursor.executemany(insert, data)
+                connection.commit()
+
 class ThirdPartyDictionary:
 
     def __init__(self, moduleTuple=None):
@@ -2134,7 +2190,6 @@ class ThirdPartyDictionary:
             content = Converter().formatNonBibleMyBibleModule(content[0], self.module)
             return "<h2>{0}</h2><p>{1}</p><p>{2}</p>".format(entry, selectList, content)
 
-
     # Import TheWord Commentaries
     def importTheWordCommentary(self, filename):
         commentaryContent = []
@@ -2208,8 +2263,8 @@ if __name__ == '__main__':
     # out = Converter().convertFromRichTextFormat(text, True)
     # print(out)
 
-    file = "/Users/otseng/Downloads/TR.txt"
-    Converter().importTXTBible(file)
+    # file = "/Users/otseng/Downloads/TR.txt"
+    # Converter().importTXTBible(file)
 
     # line = "In <FI>the<Fi> beginning<WH7225><WTHR><WTHNcfsa> God<WH430><WTHNcmpa> created<WH1254><WTHVqp3ms> <WH853><WTHTo> the heavens<WH8064><WTHTd><WTHNcmpa> and<WH853><WTHC><WTHTo> the earth.<WH776><WTHTd><WTHNcbsa>"
     # line = """And God<WH430><WTHNcmpa> said,<WH559><WTHC><WTHVqw3ms> "Let there be<WH1961><WTHVqj3ms> light."<WH216><WTHNcbsa> And there was<WH1961><WTHC><WTHVqw3ms> light.<WH216><WTHNcbsa>"""
@@ -2221,3 +2276,5 @@ if __name__ == '__main__':
     # print("Processing " + file)
     # Converter().importScrollmapperDeuterocanonicalFiles(file)
 
+    file = "/Users/otseng/Downloads/FruchtenbaumOTRev.xrefs.twm"
+    Converter().importTheWordXref(file)
