@@ -83,10 +83,10 @@ class Converter:
             if fileExtension.lower() in (".htm", ".html", ".xhtml"):
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     html = fileObject.read()
-                    if config.parseTextConvertHTMLToBook:
-                        html = BibleVerseParser(config.parserStandarisation).parseText(html, False)
                     # Convert links
                     html = TextUtil.formulateUBACommandHyperlink(html)
+                    if config.parseTextConvertHTMLToBook:
+                        html = BibleVerseParser(config.parserStandarisation).parseText(html, False)
                     bookContent.append((fileName, html))
         if bookContent and module:
             self.createBookModule(module, bookContent)
@@ -103,9 +103,9 @@ class Converter:
             if fileExtension.lower() == ".uba":
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
+                    note = TextUtil.formulateUBACommandHyperlink(note)
                     if config.parseTextConvertNotesToBook:
                         note = BibleVerseParser(config.parserStandarisation).parseText(note)
-                    note = TextUtil.formulateUBACommandHyperlink(note)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)

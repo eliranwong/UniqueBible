@@ -1,3 +1,8 @@
+Major changes in version 26.10:
+* Add jump to anchor for books
+* Generate book link before verse parsing
+* Fix opening book with only one chapter in master control
+
 Major changes in version 26.09:
 * Custom cross reference module support
 - https://github.com/eliranwong/UniqueBible/wiki/Custom-cross-reference-module

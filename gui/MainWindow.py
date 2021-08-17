@@ -926,7 +926,7 @@ class MainWindow(QMainWindow):
         # Alternatively,
         # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
 
-    def openTextOnStudyView(self, text, tab_title=''):
+    def openTextOnStudyView(self, text, tab_title='', anchor=None):
         if config.studyWindowContentTransformers:
             for transformer in config.studyWindowContentTransformers:
                 text = transformer(text)
@@ -944,6 +944,9 @@ class MainWindow(QMainWindow):
         # added links to open image files if enabled
         if config.clickToOpenImage:
             text = self.addOpenImageAction(text)
+        if anchor is not None:
+            js = "jump('{0}');".format(anchor)
+            self.studyView.currentWidget().loadFinished.connect(lambda: self.studyViewFinishedLoading(js))
         # check size of text content
         if config.forceGenerateHtml or sys.getsizeof(text) > 2097152:
             # save html in a separate file if text is larger than 2MB
@@ -957,6 +960,7 @@ class MainWindow(QMainWindow):
             self.studyView.load(QUrl.fromLocalFile(fullOutputPath))
         else:
             self.studyView.setHtml(text, baseUrl)
+
         if config.parallelMode == 0:
             self.parallel()
         if self.textCommandParser.lastKeyword == "main":
@@ -965,6 +969,9 @@ class MainWindow(QMainWindow):
             tab_title = self.textCommandParser.lastKeyword
         self.studyView.setTabText(self.studyView.currentIndex(), tab_title)
         self.studyView.setTabToolTip(self.studyView.currentIndex(), tab_title)
+
+    def studyViewFinishedLoading(self, js):
+        self.studyView.currentWidget().page().runJavaScript(js)
 
     # warning for next action without saving modified notes
     def warningNotSaved(self):
@@ -1569,6 +1576,7 @@ class MainWindow(QMainWindow):
         if directory:
             if Converter().importAllFilesInAFolder(directory):
                 self.completeImport()
+                self.reloadResources()
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
@@ -1579,7 +1587,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromImages(directory):
-                self.reloadControlPanel(False)
+                self.reloadResources()
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1591,7 +1599,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromHTML(directory):
-                self.reloadControlPanel(False)
+                self.reloadResources()
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -1603,7 +1611,7 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromNotes(directory):
-                self.reloadControlPanel(False)
+                self.reloadResources()
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
@@ -2958,10 +2966,9 @@ class MainWindow(QMainWindow):
 #                    html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
-                    tab_title = ''
-                    if ('tab_title' in dict.keys()):
-                        tab_title = dict['tab_title']
-                    self.openTextOnStudyView(html, tab_title)
+                    tab_title = dict['tab_title'] if 'tab_title' in dict.keys() else ""
+                    anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
+                    self.openTextOnStudyView(html, tab_title, anchor)
                 elif view == "main":
                     self.openTextOnMainView(html)
                 elif view.startswith("popover"):

@@ -2672,6 +2672,11 @@ class TextCommandParser:
         commandList = self.splitCommand(command)
         if commandList and len(commandList) == 2:
             module, entry = commandList
+            anchor = None
+            if '#' in entry:
+                parts = re.split("#", entry)
+                entry = parts[0]
+                anchor = parts[1]
             content = bookData.getContent(module, entry)
             del bookData
             if not content:
@@ -2684,7 +2689,7 @@ class TextCommandParser:
                     return ("popover.study", content, {'tab_title': module[:20]})
                 else:
                     self.parent.updateBookButton()
-                    return ("study", content, {'tab_title': module[:20]})
+                    return ("study", content, {'tab_title': module[:20], 'jump_to': anchor})
         else:
             return self.invalidCommand("study")
 
