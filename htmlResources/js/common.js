@@ -85,7 +85,6 @@ function scrollBiblesIOS(id) {
         }
     }
 }
-
 /* SECTION - LOADING A SPECIFIC BIBLE VERSE
 */
 
@@ -261,7 +260,7 @@ function resizeSite() {
     
     var bibleDiv = document.getElementById('bibleDiv');
     var toolDiv = document.getElementById('toolDiv');
-    
+
     switch(paraWin) {
         case 1:
         bibleDiv.style.borderBottom = 'none';
@@ -1207,4 +1206,8 @@ function hiV(b,c,v,code) {
     }
     verseReference = bcvToVerseRefence(b,c,v);
     document.title = "_HIGHLIGHT:::"+code+":::"+verseReference;
+}
+
+function jump(anchor){
+    window.location.href = "#"+anchor;
 }

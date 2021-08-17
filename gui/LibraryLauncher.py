@@ -146,6 +146,8 @@ class LibraryLauncher(QWidget):
         self.parent.runTextCommand(command)
 
     def openPreviousBookChapter(self):
+        if config.bookChapter == "":
+            config.bookChapter = self.getBookTopicList()[0]
         command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
         self.parent.runTextCommand(command)
 
