@@ -1277,6 +1277,7 @@
 (26.10, "file", "util/GitHubRepoCache.py")
 (26.10, "file", "util/TextCommandParser.py")
 (26.10, "file", "util/ThirdParty.py")
+(26.10, "file", "gui/InfoDialog.py")
 (26.10, "file", "patches.txt")
 (26.10, "file", "latest_changes.txt")
 (26.10, "file", "UniqueBibleAppVersion.txt")
