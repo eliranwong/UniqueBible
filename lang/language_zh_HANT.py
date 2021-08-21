@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "程式庫型錄",
     "directory": "目錄",
     "type": "類型",
+    "menu10_bookFromPDF": "PDF 檔案中的參考書籍",
 }

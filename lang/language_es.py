@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "Catálogo de bibliotecas",
     "directory": "Directorio",
     "type": "Tipo",
+    "menu10_bookFromPDF": "Libro de referencia de archivos PDF",
 }

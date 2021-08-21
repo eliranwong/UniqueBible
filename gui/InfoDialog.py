@@ -22,7 +22,7 @@ class InfoDialog(QDialog):
         self.setWindowTitle(config.thisTranslation["info"])
         self.layout = QVBoxLayout()
 
-        self.appName = QLabel("UniqueBible.app - {0}".format(config.version))
+        self.appName = QLabel("UniqueBible.app - {:.2f}".format(config.version))
         self.appName.setStyleSheet("QLabel {font-size: 30px;}")
         self.appName.mouseReleaseEvent = self.openWiki
         self.layout.addWidget(self.appName)

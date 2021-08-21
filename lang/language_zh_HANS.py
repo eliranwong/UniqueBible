@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "库目录",
     "directory": "目录",
     "type": "类型",
+    "menu10_bookFromPDF": "PDF 文件中的参考书",
 }

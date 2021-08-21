@@ -705,7 +705,7 @@ class MainWindow(QMainWindow):
                 os.remove(file)
                 self.reloadControlPanel(False)
                 self.displayMessage(item + " " + config.thisTranslation["message_installed"])
-                self.installFromGitHub(repo, directory, title)
+                self.installFromGitHub(gitHubRepoInfo)
             self.loadBibleDescriptions()
 
     # Select database to modify
@@ -1611,6 +1611,18 @@ class MainWindow(QMainWindow):
                                                      self.directoryLabel.text(), options)
         if directory:
             if Converter().createBookModuleFromNotes(directory):
+                self.reloadResources()
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
+    def createBookModuleFromPDF(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                                                     config.thisTranslation["menu10_bookFromPDF"],
+                                                     self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createBookModuleFromPDF(directory):
                 self.reloadResources()
                 self.displayMessage(config.thisTranslation["message_done"])
             else:
@@ -2943,7 +2955,15 @@ class MainWindow(QMainWindow):
             else:
                 if view == "main":
                     content = self.instantHighlight(content)
-                html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
+                pdfFilename = dict['pdf_filename'] if "pdf_filename" in dict.keys() else None
+                outputFile = None
+                if pdfFilename is not None:
+                    outputFile = os.path.join("htmlResources", "{0}.pdf".format(pdfFilename))
+                    fileObject = open(outputFile, "wb")
+                    fileObject.write(content)
+                    fileObject.close()
+                else:
+                    html = self.wrapHtml(content, view, textCommand.startswith("BOOK:::"))
                 views = {
                     "main": self.mainView,
                     "study": self.studyView,
@@ -2966,23 +2986,29 @@ class MainWindow(QMainWindow):
 #                    html = re.sub(search, replace, html)
                 # load into widget view
                 if view == "study":
-                    tab_title = dict['tab_title'] if 'tab_title' in dict.keys() else ""
-                    anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
-                    self.openTextOnStudyView(html, tab_title, anchor)
+                    if pdfFilename is not None:
+                        self.openPdfReader(outputFile)
+                    else:
+                        tab_title = dict['tab_title'] if 'tab_title' in dict.keys() else ""
+                        anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
+                        self.openTextOnStudyView(html, tab_title, anchor)
                 elif view == "main":
                     self.openTextOnMainView(html)
                 elif view.startswith("popover"):
-                    viewElements = view.split(".")
-                    view = viewElements[1]
-                    if view == "fullscreen":
-                        screenNo = -1
-                        try:
-                            screenNo=int(viewElements[2])
-                        except:
-                            pass
-                        views["main"].currentWidget().openPopover(html=html, fullScreen=True, screenNo=screenNo)
+                    if pdfFilename is not None:
+                        self.openPdfReader(outputFile)
                     else:
-                        views[view].currentWidget().openPopover(html=html)
+                        viewElements = view.split(".")
+                        view = viewElements[1]
+                        if view == "fullscreen":
+                            screenNo = -1
+                            try:
+                                screenNo=int(viewElements[2])
+                            except:
+                                pass
+                            views["main"].currentWidget().openPopover(html=html, fullScreen=True, screenNo=screenNo)
+                        else:
+                            views[view].currentWidget().openPopover(html=html)
                 # There is a case where view is an empty string "".
                 # The following condition applies where view is not empty only.
                 elif view:

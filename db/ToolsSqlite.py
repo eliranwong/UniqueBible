@@ -958,6 +958,9 @@ class Book:
             config.bookChapter = row[0]
             content = row[1]
             config.bookChapNum = row[2]
+            isPDF = True if type(content) == bytes and content[0] == 37 and content[1] == 80 and content[2] == 68 else False
+            if isPDF:
+                return content
             if config.overwriteBookFont:
                 fontFamily = config.font
                 if config.overwriteBookFontFamily:

@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("type", "Type")
+        addLanguageStringToAllFiles("menu10_bookFromPDF", "Reference Book from PDF Files")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

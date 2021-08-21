@@ -2678,18 +2678,22 @@ class TextCommandParser:
                 entry = parts[0]
                 anchor = parts[1]
             content = bookData.getContent(module, entry)
+            isPDF = True if type(content) == bytes and content[0] == 37 and content[1] == 80 and content[2] == 68 else False
+            pdfFilename = None
+            if isPDF:
+                pdfFilename = entry
             del bookData
             if not content:
                 return self.invalidCommand("study")
             else:
-                if config.theme in ("dark", "night"):
+                if not isPDF and config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExternalBook(content)
                 if config.openBookInNewWindow:
                     self.parent.updateBookButton()
-                    return ("popover.study", content, {'tab_title': module[:20]})
+                    return ("popover.study", content, {'tab_title': module[:20], 'pdf_filename': pdfFilename})
                 else:
                     self.parent.updateBookButton()
-                    return ("study", content, {'tab_title': module[:20], 'jump_to': anchor})
+                    return ("study", content, {'tab_title': module[:20], 'jump_to': anchor, 'pdf_filename': pdfFilename})
         else:
             return self.invalidCommand("study")
 
