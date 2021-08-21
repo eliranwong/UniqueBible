@@ -312,6 +312,7 @@ class FocusMainWindow:
             ("menu10_bookFromImages", self.createBookModuleFromImages),
             ("menu10_bookFromHtml", self.createBookModuleFromHTML),
             ("menu10_bookFromNotes", self.createBookModuleFromNotes),
+            ("menu10_bookFromPDF", self.createBookModuleFromPDF),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

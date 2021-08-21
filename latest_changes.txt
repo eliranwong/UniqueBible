@@ -1,3 +1,7 @@
+Major changes in version 26.11:
+* Add ability to create a book from PDF files
+* Fix download from Github
+
 Major changes in version 26.10:
 * Add jump to anchor for books
 * Generate book link before verse parsing

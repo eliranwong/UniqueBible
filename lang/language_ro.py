@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "Catalog bibliotecă",
     "directory": "Director",
     "type": "Tip",
+    "menu10_bookFromPDF": "Carte de referinţă din fişiere PDF",
 }

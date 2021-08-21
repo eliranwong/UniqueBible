@@ -36,6 +36,7 @@ htmlResources/main.html
 htmlResources/study.html
 htmlResources/css/custom.css
 htmlResources/js/custom.js
+htmlResources/*.pdf
 UniqueBible.app.pdf
 UniqueBibleApp.docx
 WordDocument_NEW.docx
