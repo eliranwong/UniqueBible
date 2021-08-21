@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "라이브러리 카탈로그",
     "directory": "디렉토리",
     "type": "유형",
+    "menu10_bookFromPDF": "PDF 파일에서 서적 참조",
 }

@@ -113,6 +113,22 @@ class Converter:
         else:
             return False
 
+    def createBookModuleFromPDF(self, folder):
+        module = os.path.basename(folder)
+        bookContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() == ".pdf":
+                with open(os.path.join(folder, filepath), "rb") as fileObject:
+                    note = fileObject.read()
+                    bookContent.append((fileName, note))
+        if bookContent and module:
+            self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
+
     def createBookModuleFromHymnLyricsFile(self, inputFile):
         filename = os.path.join(inputFile)
         file = open(filename, "r")

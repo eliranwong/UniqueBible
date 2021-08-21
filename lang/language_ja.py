@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "ライブラリー・カタログ",
     "directory": "ディレクトリ",
     "type": "種類",
+    "menu10_bookFromPDF": "PDF ファイルからの参照ブック",
 }

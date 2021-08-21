@@ -325,6 +325,8 @@ class AlephMainWindow:
             QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
         submenu.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
         submenu.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
+        submenu.addAction(
+            QAction(config.thisTranslation["menu10_bookFromPDF"], self, triggered=self.createBookModuleFromPDF))
         menu_data.addSeparator()
         menu_data.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 

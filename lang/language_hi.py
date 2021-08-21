@@ -764,4 +764,5 @@ translation = {
     "libraryCatalog": "लाइब्रेरी सूचीपत्र",
     "directory": "डिरेक्ट्री",
     "type": "क़िस्म",
+    "menu10_bookFromPDF": "पीडीएफ फाइल से संदर्भ पुस्तक",
 }
