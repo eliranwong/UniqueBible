@@ -765,4 +765,5 @@ translation = {
     "directory": "ഡയറക്ടറി",
     "type": "തരം",
     "menu10_bookFromPDF": "PDF ഫയലുകളില് നിന്നുള്ള റഫറന്സ് ബുക്ക്",
+    "gitHubPluginsMenu": "GitHub പ്ലഗിനുകള് മെനു",
 }

@@ -59,6 +59,7 @@ def addGithubDownloadMenuItems(self, subMenu):
             ("githubEpub", self.installGithubEpub),
             ("gitHubBibleMp3Files", self.installGithubBibleMp3),
             ("gitHubPluginsContext", self.installGithubPluginsContext),
+            ("gitHubPluginsMenu", self.installGithubPluginsMenu),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
