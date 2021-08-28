@@ -765,4 +765,5 @@ translation = {
     "directory": "Каталог",
     "type": "Тип",
     "menu10_bookFromPDF": "Справочные книги из файлов PDF",
+    "gitHubPluginsMenu": "Меню модулей GitHub",
 }

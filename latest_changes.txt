@@ -1,3 +1,6 @@
+Major change in version 26.12:
+* Add support for Github plugins menu repo
+
 Major changes in version 26.11:
 * Add ability to create a book from PDF files
 * Fix download from Github
