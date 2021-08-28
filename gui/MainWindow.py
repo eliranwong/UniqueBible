@@ -681,11 +681,11 @@ class MainWindow(QMainWindow):
 
     def installGithubPluginsContext(self):
         self.installFromGitHub(GitHubRepoInfo.pluginsContext)
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
 
     def installGithubPluginsMenu(self):
         self.installFromGitHub(GitHubRepoInfo.pluginsMenu)
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
 
     def installFromGitHub(self, gitHubRepoInfo):
         repo, directory, title, extension = gitHubRepoInfo
