@@ -1,3 +1,6 @@
+import glob
+from pathlib import Path
+
 import config
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
@@ -12,6 +15,9 @@ class Library2Launcher(QWidget):
         self.parent = parent
         self.pdfList = self.parent.pdfList
         self.docxList = self.parent.docxList
+        self.devotionals = [Path(filename).stem for filename in glob.glob(config.marvelData + "/devotionals/*.devotional")]
+        self.selectedDevotional = self.devotionals[0] if len(self.devotionals) > 0 else None
+
         # setup interface
         self.setupUI()
 
@@ -34,7 +40,7 @@ class Library2Launcher(QWidget):
         pdfLayout.addLayout(buttons)
         leftColumnWidget.setLayout(pdfLayout)
 
-        rightColumnWidget = QGroupBox(config.thisTranslation["wordDocument"])
+        centerColumnWidget = QGroupBox(config.thisTranslation["wordDocument"])
         pdfLayout = QVBoxLayout()
         pdfLayout.addWidget(self.docxListView())
         buttons = QHBoxLayout()
@@ -48,9 +54,21 @@ class Library2Launcher(QWidget):
         button.clicked.connect(self.parent.parent.openDocxDialog)
         buttons.addWidget(button)
         pdfLayout.addLayout(buttons)
-        rightColumnWidget.setLayout(pdfLayout)
+        centerColumnWidget.setLayout(pdfLayout)
+
+        rightColumnWidget = QGroupBox(config.thisTranslation["devotionals"])
+        devotionalLayout = QVBoxLayout()
+        devotionalLayout.addWidget(self.devotionsListView())
+        buttons = QHBoxLayout()
+        button = QPushButton(config.thisTranslation["open"])
+        button.clicked.connect(self.openDevotional)
+        buttons.addWidget(button)
+        buttons.addWidget(button)
+        devotionalLayout.addLayout(buttons)
+        rightColumnWidget.setLayout(devotionalLayout)
 
         mainLayout.addWidget(leftColumnWidget)
+        mainLayout.addWidget(centerColumnWidget)
         mainLayout.addWidget(rightColumnWidget)
         self.setLayout(mainLayout)
 
@@ -91,6 +109,17 @@ class Library2Launcher(QWidget):
         list.selectionModel().selectionChanged.connect(self.docxSelected)
         return list
 
+    def devotionsListView(self):
+        list = QListView()
+        list.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        model = QStandardItemModel(list)
+        for devotional in self.devotionals:
+            item = QStandardItem(devotional)
+            model.appendRow(item)
+        list.setModel(model)
+        list.selectionModel().selectionChanged.connect(self.devotionalSelected)
+        return list
+
     def docxSelected(self, selection):
         index = selection[0].indexes()[0].row()
         config.docxText = self.docxList[index]
@@ -100,4 +129,13 @@ class Library2Launcher(QWidget):
     def openPreviousDocx(self):
         if config.docxText in self.parent.docxList:
             command = "DOCX:::{0}".format(config.docxText)
+            self.parent.runTextCommand(command)
+
+    def devotionalSelected(self, selection):
+        index = selection[0].indexes()[0].row()
+        self.selectedDevotional = self.devotionals[index]
+
+    def openDevotional(self):
+        if self.selectedDevotional is not None:
+            command = "DEVOTIONAL:::{0}".format(self.selectedDevotional)
             self.parent.runTextCommand(command)

@@ -79,6 +79,10 @@ class LibraryCatalogDialog(QDialog):
         self.docxCheckbox.setChecked(True)
         self.docxCheckbox.stateChanged.connect(self.resetItems)
         typesLayout.addWidget(self.docxCheckbox)
+        self.devotionalCheckbox = QCheckBox("DEVOTIONAL")
+        self.devotionalCheckbox.setChecked(True)
+        self.devotionalCheckbox.stateChanged.connect(self.resetItems)
+        typesLayout.addWidget(self.devotionalCheckbox)
         self.commCheckbox = QCheckBox("COMM")
         self.commCheckbox.setChecked(True)
         self.commCheckbox.stateChanged.connect(self.resetItems)
@@ -138,6 +142,7 @@ class LibraryCatalogDialog(QDialog):
         self.mp4Checkbox.setChecked(value)
         self.bookCheckbox.setChecked(value)
         self.docxCheckbox.setChecked(value)
+        self.devotionalCheckbox.setChecked(value)
         self.commCheckbox.setChecked(value)
 
     def getLocalCatalogItems(self):
@@ -155,6 +160,7 @@ class LibraryCatalogDialog(QDialog):
         docxCount = 0
         commCount = 0
         lexCount = 0
+        devotionalCount = 0
         for filename, type, directory, file, description, repo, installDirectory, sha in catalog:
             id = "UNKNOWN"
             if type == "PDF":
@@ -178,6 +184,9 @@ class LibraryCatalogDialog(QDialog):
             elif type == "LEX":
                 lexCount += 1
                 id = "{0}-{1}".format(type, lexCount)
+            elif type == "DEVOTIONAL":
+                devotionalCount += 1
+                id = "{0}-{1}".format(type, devotionalCount)
             data[id] = [id, filename, type, directory, file, description, repo, installDirectory, sha]
         return data
 
@@ -198,6 +207,7 @@ class LibraryCatalogDialog(QDialog):
                         (not self.mp4Checkbox.isChecked() and type == "MP4") or \
                         (not self.bookCheckbox.isChecked() and type == "BOOK") or \
                         (not self.docxCheckbox.isChecked() and type == "DOCX") or \
+                        (not self.devotionalCheckbox.isChecked() and type == "DEVOTIONAL") or \
                         (not self.commCheckbox.isChecked() and type == "COMM"):
                     continue
                 enable = True
@@ -286,6 +296,9 @@ class LibraryCatalogDialog(QDialog):
             command = "COMMENTARY:::{0}:::{1} {2}".format(file, BibleBooks.eng[str(config.mainB)][0], config.mainC)
         elif type == "DOCX":
             command = "DOCX:::{0}".format(file)
+        elif type == "DEVOTIONAL":
+            file = file.replace(".devotional", "")
+            command = "DEVOTIONAL:::{0}".format(file)
         self.parent.runTextCommand(command)
 
     def download(self):

@@ -1,4 +1,3 @@
-import glob
 import re
 import sys
 import webbrowser
@@ -34,6 +33,8 @@ class InfoDialog(QDialog):
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu5_bible"], count)))
         count = len(FileUtil.getAllFilesWithExtension(config.marvelData+"/lexicons", ".lexicon"))
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["lexicons"], count)))
+        count = len(FileUtil.getAllFilesWithExtension(config.marvelData+"/devotionals", ".devotional"))
+        filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["devotionals"], count)))
         count = len(FileUtil.getAllFilesWithExtension("music", ".mp3"))
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu11_music"], count)))
         filesVBox1.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu1_menuLayout"], config.menuLayout)))
@@ -46,6 +47,7 @@ class InfoDialog(QDialog):
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu10_books"], count)))
         count = len(FileUtil.getAllFilesWithExtension("video", ".mp4"))
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu11_video"], count)))
+        filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_language"], config.displayLanguage)))
         filesVBox2.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_shortcuts"], config.menuShortcuts)))
         filesHBox.addLayout(filesVBox2)
 
@@ -57,6 +59,7 @@ class InfoDialog(QDialog):
         count = len(FileUtil.getAllFilesWithExtension(config.marvelData+"/docx", ".docx"))
         filesVBox3.addWidget(QLabel("{0}: {1}".format("DOCX", count)))
         filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_theme"], config.theme)))
+        filesVBox3.addWidget(QLabel(""))
         filesHBox.addLayout(filesVBox3)
 
         self.layout.addLayout(filesHBox)

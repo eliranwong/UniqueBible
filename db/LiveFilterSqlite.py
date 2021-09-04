@@ -1,6 +1,5 @@
-import os, sqlite3, re
+import os, sqlite3
 import config
-from util.BibleVerseParser import BibleVerseParser
 
 
 class LiveFilterSqlite:

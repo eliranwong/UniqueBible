@@ -1,3 +1,4 @@
+from qtpy.QtWidgets import QComboBox
 from qtpy.QtWidgets import QLineEdit, QFormLayout
 from qtpy.QtWidgets import QDialog
 from qtpy.QtWidgets import QDialogButtonBox
@@ -9,12 +10,17 @@ class MultiLineInputDialog(QDialog):
         self.inputs = []
         layout = QFormLayout(self)
         for field in fields:
-            entry = QLineEdit(self)
-            width = 200
-            if len(field[1]) > 50:
-                width = 400
-            entry.setMinimumWidth(width)
-            entry.setText(field[1])
+            value = field[1]
+            if type(value) is str:
+                entry = QLineEdit(self)
+                width = 200
+                if len(field[1]) > 50:
+                    width = 400
+                entry.setMinimumWidth(width)
+                entry.setText(value)
+            elif isinstance(value, list):
+                entry = QComboBox()
+                entry.addItems(value)
             self.inputs.append(entry)
             layout.addRow(field[0], entry)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self);
@@ -23,8 +29,13 @@ class MultiLineInputDialog(QDialog):
         buttonBox.rejected.connect(self.reject)
 
     def getInputs(self):
-        inputs = [i.text() for i in self.inputs]
-        return inputs
+        values = []
+        for input in self.inputs:
+            if isinstance(input, QLineEdit):
+                values.append(input.text())
+            elif isinstance(input, QComboBox):
+                values.append(input.currentText())
+        return values
 
 
 if __name__ == '__main__':
@@ -40,9 +51,10 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     title = "My test input"
-    fields = [("Name", ""), ("City", "Jerusalem"), ("Apostles", "Matthew|Peter|Andrew|James|John|Philip|Bartholomew|Thomas|James|Judas|Simon")]
+    fields = [("Name", ""), ("Bibles", ["KJV", "MIB"]), ("City", "Jerusalem"),
+              ("Apostle", ["Matthew", "Peter", "Andrew", "James", "John", "Philip", "Bartholomew", "Thomas", "James", "Judas", "Simon"])]
     dialog = MultiLineInputDialog(title, fields)
     if dialog.exec():
         data = dialog.getInputs()
-        print(len(data))
+        print(data)
     exit(0)

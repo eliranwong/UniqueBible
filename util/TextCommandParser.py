@@ -541,6 +541,11 @@ class TextCommandParser:
             # Remarks: If a directory is not specified, "import" is used by default.
             # e.g. IMPORT:::import
             """),
+            "devotional": (self.openDevotional, """
+            # [KEYWORD] DEVOTIONAL
+            # Feature - Open today's devotional entry
+            # e.g. DEVOTIONAL:::Meyer
+            """),
             #
             # Keywords starting with "_" are mainly internal commands for GUI operations
             # They are not recorded in history records.
@@ -3095,6 +3100,16 @@ class TextCommandParser:
         else:
             commentary.fixLinksInCommentary()
             self.parent.displayMessage(config.thisTranslation["message_done"])
+
+    # DEVOTIONAL:::
+    def openDevotional(self, command, source):
+        if command.count(":::") == 1:
+            devotional, date = self.splitCommand(command)
+        else:
+            devotional = command
+            date = ""
+        self.parent.openDevotional(devotional, date)
+        return ("", "", {})
 
 
 if __name__ == "__main__":

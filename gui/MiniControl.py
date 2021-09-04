@@ -1,3 +1,6 @@
+import glob
+from pathlib import Path
+
 import config
 from util.BibleBooks import BibleBooks
 
@@ -27,6 +30,7 @@ class MiniControl(QWidget):
         self.textButtonStyleDisabled = "QPushButton {background-color: #323232; color: #323232;} QPushButton:hover {background-color: #323232;} QPushButton:pressed { background-color: #323232;}"
         self.setWindowTitle(config.thisTranslation["remote_control"])
         self.parent = parent
+        self.devotionals = glob.glob(config.marvelData + "/devotionals/*.devotional")
         # specify window size
         if config.qtMaterial and config.qtMaterialTheme:
             self.resizeWindow(1 / 2, 1 / 3)
@@ -68,6 +72,8 @@ class MiniControl(QWidget):
                     self.tabs.setCurrentIndex(3)
                 elif event.key() == Qt.Key_D:
                     self.tabs.setCurrentIndex(4)
+                elif event.key() == Qt.Key_O:
+                    self.tabs.setCurrentIndex(5)
             elif event.key() == Qt.Key_Escape:
                 self.close()
         return QWidget.event(self, event)
@@ -361,6 +367,36 @@ class MiniControl(QWidget):
 
         self.tabs.addTab(bookIntros_box, config.thisTranslation["bookIntro"])
 
+        # Devotionals tab
+
+        if len(self.devotionals) > 0:
+            devotionals_box = QWidget()
+            box_layout = QVBoxLayout()
+            box_layout.setContentsMargins(0, 0, 0, 0)
+            box_layout.setSpacing(1)
+            row_layout = self.newRowLayout()
+            count = 0
+            for file in self.devotionals:
+                name = Path(file).stem
+                button = QPushButton(name)
+                # button.setToolTip(dictionary[1])
+                button.clicked.connect(partial(self.devotionalAction, name))
+                row_layout.addWidget(button)
+                count += 1
+                if count > 3:
+                    count = 0
+                    box_layout.addLayout(row_layout)
+                    row_layout.addStretch()
+                    row_layout = self.newRowLayout()
+            for i in range(count, 3):
+                button = QPushButton("")
+                row_layout.addWidget(button)
+            box_layout.addLayout(row_layout)
+            box_layout.addStretch()
+            devotionals_box.setLayout(box_layout)
+
+            self.tabs.addTab(devotionals_box, config.thisTranslation["devotionals"])
+
         self.tabs.setCurrentIndex(config.miniControlInitialTab)
         self.setLayout(mainLayout)
 
@@ -474,6 +510,10 @@ class MiniControl(QWidget):
         self.runCommmand(command)
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)
+
+    def devotionalAction(self, devotional):
+        command = "DEVOTIONAL:::{0}".format(devotional)
+        self.runCommmand(command)
 
     def lexiconAction(self, lexicon):
         searchString = self.searchLineEdit.text()

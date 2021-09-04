@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 import config
 
@@ -67,6 +67,22 @@ class DateUtil:
     def secondsBetweenLocalAndUtc():
         return int(DateUtil.stimeToEpoch(time.gmtime()) - DateUtil.stimeToEpoch(time.localtime()))
 
+    @staticmethod
+    def currentYear():
+        return date.today().year
+
+    @staticmethod
+    def currentMonth():
+        return date.today().month
+
+    @staticmethod
+    def currentDay():
+        return date.today().day
+
+    @staticmethod
+    def monthFullName(month):
+        return datetime.strptime(str(month), "%m").strftime("%B")
+
 def test_epoch():
     print(DateUtil.epoch())
     print(time.gmtime())
@@ -106,5 +122,9 @@ def test_stringFormat():
     dateObj = DateUtil.dateStringToObject('2021-02-23')
     print(dateObj)
 
+def test_month():
+    dateObj = DateUtil.monthFullName(1)
+    print(dateObj)
+
 if __name__ == "__main__":
-    test_stringFormat()
+    test_month()

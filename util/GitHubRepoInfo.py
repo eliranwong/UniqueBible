@@ -10,3 +10,4 @@ class GitHubRepoInfo:
     epub = ("otseng/UniqueBible_EPUB", "epub", "githubEpub", "epub")
     pluginsContext = ("eliranwong/UniqueBible_Plugins_Context", "../plugins/context", "gitHubPluginsContext", "py")
     pluginsMenu = ("eliranwong/UniqueBible_Plugins_Menu", "../plugins/menu", "gitHubPluginsMenu", "py")
+    devotionals = ("otseng/UniqueBible_Devotionals", "devotionals", "gitHubDevotionals", "devotion")
