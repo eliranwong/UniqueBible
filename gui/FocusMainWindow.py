@@ -331,8 +331,7 @@ class FocusMainWindow:
             run_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_run"])
             self.loadRunMacrosMenu(run_macros_menu)
             build_macros_menu = macros_menu.addMenu(config.thisTranslation["menu_build_macro"])
-            build_macros_menu.addAction(QAction(config.thisTranslation["menu_command"], self, triggered=self.macroSaveCommand))
-            build_macros_menu.addAction(QAction(config.thisTranslation["menu_highlight"], self, triggered=self.macroSaveHighlights))
+            addBuildMacroMenuItems(self, build_macros_menu)
 
         # plugins
         if config.enablePlugins:

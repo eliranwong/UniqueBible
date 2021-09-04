@@ -768,4 +768,6 @@ translation = {
     "gitHubPluginsMenu": "GitHअय्यूब प्लगइन्स मेन्यू",
     "devotionals": "प्रार्थनापत्र",
     "gitHubDevotionals": "Githb भक्तिपत्र",
+    "message_macro_save_settings": "मेक्रो फ़ाइल के रूप में सेटिंग सहेजने के लिए फ़ाइलनाम भरें",
+    "settings": "विन्यास",
 }

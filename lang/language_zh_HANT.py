@@ -768,4 +768,6 @@ translation = {
     "gitHubPluginsMenu": "GitHub 外掛程式功能表",
     "devotionals": "爱好者",
     "gitHubDevotionals": "GitHub 爱好者",
+    "message_macro_save_settings": "輸入檔名以儲存設定為巨集檔",
+    "settings": "設定",
 }

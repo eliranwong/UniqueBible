@@ -58,8 +58,8 @@ class InfoDialog(QDialog):
         filesVBox3.addWidget(QLabel("{0}: {1}".format("EPUB", count)))
         count = len(FileUtil.getAllFilesWithExtension(config.marvelData+"/docx", ".docx"))
         filesVBox3.addWidget(QLabel("{0}: {1}".format("DOCX", count)))
+        filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_window"], config.windowStyle)))
         filesVBox3.addWidget(QLabel("{0}: {1}".format(config.thisTranslation["menu_theme"], config.theme)))
-        filesVBox3.addWidget(QLabel(""))
         filesHBox.addLayout(filesVBox3)
 
         self.layout.addLayout(filesHBox)
