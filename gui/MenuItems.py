@@ -64,3 +64,16 @@ def addGithubDownloadMenuItems(self, subMenu):
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+
+def addBuildMacroMenuItems(self, subMenu):
+    if config.isPygithubInstalled:
+        subMenu.addSeparator()
+        items = (
+            ("menu_command", self.macroSaveCommand),
+            ("menu_highlight", self.macroSaveHighlights),
+            ("settings", self.macroSaveSettings),
+            ("downloadMissingFiles", self.macroGenerateDownloadMissingFiles),
+            ("downloadExistingFiles", self.macroGenerateDownloadExistingFiles),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)

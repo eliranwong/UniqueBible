@@ -768,4 +768,6 @@ translation = {
     "gitHubPluginsMenu": "GitHub 插件菜单",
     "devotionals": "义务",
     "gitHubDevotionals": "GitHub 爱好者",
+    "message_macro_save_settings": "输入文件名以将设置保存为宏文件",
+    "settings": "设置",
 }

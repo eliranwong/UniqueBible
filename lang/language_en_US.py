@@ -768,4 +768,6 @@ translation = {
     "gitHubPluginsMenu": "GitHub Plugins Menu",
     "devotionals": "Devotionals",
     "gitHubDevotionals": "GitHub Devotionals",
+    "message_macro_save_settings": "Enter filename to save settings as a macro file",
+    "settings": "Settings",
 }

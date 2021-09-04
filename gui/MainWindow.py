@@ -3401,6 +3401,33 @@ class MainWindow(QMainWindow):
             self.reloadResources()
             self.displayMessage("Command saved to {0}".format(filename))
 
+    def macroSaveSettings(self):
+        filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_settings"])
+        if ok:
+            file = os.path.join(MacroParser.macros_dir, filename)
+            outfile = open(file, "w")
+            outfile.write("config.defaultLexiconStrongH = '{0}'{1}".format(config.defaultLexiconStrongH, "\n"))
+            outfile.write("config.defaultLexiconStrongG = '{0}'{1}".format(config.defaultLexiconStrongG, "\n"))
+            outfile.write("config.displayLanguage = '{0}'{1}".format(config.displayLanguage, "\n"))
+            outfile.write("config.enablePlugins = {0}{1}".format(config.enablePlugins, "\n"))
+            outfile.write("config.favouriteBible = '{0}'{1}".format(config.favouriteBible, "\n"))
+            outfile.write("config.forceGenerateHtml = {0}{1}".format(config.forceGenerateHtml, "\n"))
+            outfile.write("config.lexicon = '{0}'{1}".format(config.lexicon, "\n"))
+            outfile.write("config.menuLayout = '{0}'{1}".format(config.menuLayout, "\n"))
+            outfile.write("config.menuShortcuts = '{0}'{1}".format(config.menuShortcuts, "\n"))
+            outfile.write("config.numberOfTab = {0}{1}".format(config.numberOfTab, "\n"))
+            outfile.write("config.qtMaterial = {0}{1}".format(config.qtMaterial, "\n"))
+            outfile.write("config.theme = '{0}'{1}".format(config.theme, "\n"))
+            outfile.write("config.useLiteVerseParsing = {0}{1}".format(config.useLiteVerseParsing, "\n"))
+            outfile.write("config.useWebbrowser = {0}{1}".format(config.useWebbrowser, "\n"))
+            outfile.write("config.verseNoSingleClickAction = '{0}'{1}".format(config.verseNoSingleClickAction, "\n"))
+            outfile.write("config.verseNoDoubleClickAction = '{0}'{1}".format(config.verseNoDoubleClickAction, "\n"))
+            outfile.write("config.windowStyle = '{0}'{1}".format(config.windowStyle, "\n"))
+            outfile.write(". displayMessage Restart for settings to take effect\n")
+            outfile.close()
+            self.reloadResources()
+            self.displayMessage("Command saved to {0}".format(filename))
+
     def macroGenerateDownloadMissingFiles(self):
         filename, ok = self.openSaveMacroDialog(config.thisTranslation["message_macro_save_command"])
         if ok:
