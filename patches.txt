@@ -1322,6 +1322,7 @@
 (26.12, "file", "lang/language_zh_HANT.py")
 (26.12, "file", "util/GitHubRepoInfo.py")
 (26.12, "file", "util/LanguageUtil.py")
+(26.13, "file", "patches.txt")
 (26.13, "folder", "marvelData/devotionals")
 (26.13, "file", "marvelData/devotionals/Readme.md")
 (26.13, "file", "db/DevotionalSqlite.py")
