@@ -29,6 +29,7 @@ class CatalogUtil:
             books = CatalogUtil.loadLocalFiles("BOOK", config.marvelData + "/books", ".book")
             CatalogUtil.bookCatalog = books
             CatalogUtil.localCatalog += books
+            CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("DEVOTIONAL", config.marvelData + "/devotionals", ".devotional")
             CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("DOCX", config.marvelData + "/docx", ".docx")
             CatalogUtil.localCatalog += CatalogUtil.loadLocalFiles("COMM", config.marvelData + "/commentaries", ".commentary")
         return CatalogUtil.localCatalog
@@ -77,6 +78,7 @@ class CatalogUtil:
         data += CatalogUtil.loadRemoteFiles("BOOK", GitHubRepoInfo.books)
         data += CatalogUtil.loadRemoteFiles("BOOK", GitHubRepoInfo.maps)
         data += CatalogUtil.loadRemoteFiles("COMM", GitHubRepoInfo.commentaries)
+        data += CatalogUtil.loadRemoteFiles("DEVOTIONAL", GitHubRepoInfo.devotionals)
         return data
 
     @staticmethod

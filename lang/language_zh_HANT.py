@@ -766,4 +766,6 @@ translation = {
     "type": "類型",
     "menu10_bookFromPDF": "PDF 檔案中的參考書籍",
     "gitHubPluginsMenu": "GitHub 外掛程式功能表",
+    "devotionals": "爱好者",
+    "gitHubDevotionals": "GitHub 爱好者",
 }

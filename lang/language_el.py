@@ -766,4 +766,6 @@ translation = {
     "type": "Είδος:",
     "menu10_bookFromPDF": "Βιβλίο αναφοράς από αρχεία PDF",
     "gitHubPluginsMenu": "Μενού πρόσθετων λειτουργιών GitHub",
+    "devotionals": "Αφοσίωση",
+    "gitHubDevotionals": "Devotionals GitHub",
 }
