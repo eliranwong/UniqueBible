@@ -79,7 +79,7 @@ class UpdateUtil:
                                         if os.path.exists(localPath):
                                             os.remove(localPath)
                                     except:
-                                        print("Could not delete {0}".localPath)
+                                        print("Could not delete {0}".format(localPath))
                     except Exception as e:
                         # message on failed item
                         if parent is not None:

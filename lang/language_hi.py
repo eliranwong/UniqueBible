@@ -770,4 +770,5 @@ translation = {
     "gitHubDevotionals": "Githb भक्तिपत्र",
     "message_macro_save_settings": "मेक्रो फ़ाइल के रूप में सेटिंग सहेजने के लिए फ़ाइलनाम भरें",
     "settings": "विन्यास",
+    "devotionalFromNotes": "नोट फ़ाइल से भक्ति",
 }

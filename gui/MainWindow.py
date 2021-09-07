@@ -1520,6 +1520,7 @@ class MainWindow(QMainWindow):
                   "MySword Dictionaries (*.dct.mybible);;e-Sword Bibles [Apple] (*.bbli);;"
                   "e-Sword Bibles [Apple] (*.bblx);;e-Sword Commentaries [Apple] (*.cmti);;"
                   "e-Sword Dictionaries [Apple] (*.dcti);;e-Sword Lexicons [Apple] (*.lexi);;e-Sword Books [Apple] (*.refi);;"
+                  "e-Sword Devotionals (*.devx);;;"
                   "MyBible Bibles (*.SQLite3);;MyBible Commentaries (*.commentaries.SQLite3);;MyBible Dictionaries (*.dictionary.SQLite3);;"
                   "XML [Beblia/OSIS/Zefania] (*.xml);;"
                   "theWord Complete Bibles (*.ont);;"
@@ -1551,6 +1552,8 @@ class MainWindow(QMainWindow):
                 self.importESwordCommentary(fileName)
             elif fileName.endswith(".refi"):
                 self.importESwordBook(fileName)
+            elif fileName.endswith(".devx"):
+                self.importESwordDevotional(fileName)
             elif fileName.endswith(".commentaries.SQLite3"):
                 self.importMyBibleCommentary(fileName)
             elif fileName.endswith(".SQLite3"):
@@ -1624,6 +1627,18 @@ class MainWindow(QMainWindow):
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
+    def createDevotionalFromNotes(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                                                     config.thisTranslation["devotionalFromNotes"],
+                                                     self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createDevotionalFromNotes(directory):
+                self.reloadResources()
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
     def createBookModuleFromPDF(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
@@ -1662,6 +1677,10 @@ class MainWindow(QMainWindow):
 
     def importESwordBook(self, fileName):
         Converter().importESwordBook(fileName)
+        self.completeImport()
+
+    def importESwordDevotional(self, fileName):
+        Converter().importESwordDevotional(fileName)
         self.completeImport()
 
     def importMyBibleCommentary(self, fileName):

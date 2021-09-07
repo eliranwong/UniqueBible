@@ -770,4 +770,5 @@ translation = {
     "gitHubDevotionals": "GitHub Devotionals",
     "message_macro_save_settings": "Dateinamen eingeben, um Einstellungen als Makrodatei zu speichern",
     "settings": "Einstellungen",
+    "devotionalFromNotes": "Devotional aus Notizdateien",
 }

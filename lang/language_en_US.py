@@ -770,4 +770,5 @@ translation = {
     "gitHubDevotionals": "GitHub Devotionals",
     "message_macro_save_settings": "Enter filename to save settings as a macro file",
     "settings": "Settings",
+    "devotionalFromNotes": "Devotional from Note Files",
 }

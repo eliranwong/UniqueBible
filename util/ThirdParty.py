@@ -1,6 +1,7 @@
 import glob
 from xml.dom.minidom import Node
 
+from db.DevotionalSqlite import DevotionalSqlite
 from util.BibleBooks import BibleBooks
 from util.TextUtil import TextUtil
 
@@ -109,6 +110,30 @@ class Converter:
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.createBookModule(module, bookContent)
+            return True
+        else:
+            return False
+
+    def createDevotionalFromNotes(self, folder):
+        module = os.path.basename(folder)
+        devotionalContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() == ".uba":
+                with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
+                    note = fileObject.read()
+                    note = TextUtil.formulateUBACommandHyperlink(note)
+                    if config.parseTextConvertNotesToBook:
+                        note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                    try:
+                        month = int(fileName[0:2])
+                        day = int(fileName[3:5])
+                    except:
+                        return False
+                    devotionalContent.append((month, day, note))
+        if devotionalContent and module:
+            DevotionalSqlite.createDevotional(module, devotionalContent)
             return True
         else:
             return False
@@ -1887,6 +1912,22 @@ class Converter:
 
         connection.close()
 
+    def importESwordDevotional(self, filename):
+        *_, module = os.path.split(filename)
+        module = Path(module).stem
+        connection = sqlite3.connect(filename)
+        cursor = connection.cursor()
+
+        query = "SELECT Month, Day, Devotion from Devotions"
+        cursor.execute(query)
+        content = cursor.fetchall()
+        data = []
+        for month, day, devotion in content:
+            devotion = self.convertRtfToHtml(devotion)
+            data.append((month, day, devotion))
+        DevotionalSqlite.createDevotional(module, data)
+        connection.close()
+
     def checkColumnExists(self, table, column, cursor):
         cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))
         if cursor.fetchone():
@@ -1950,6 +1991,80 @@ class Converter:
                 insert = "INSERT INTO CrossReference (Book, Chapter, Verse, Information) VALUES (?, ?, ?, ?)"
                 cursor.executemany(insert, data)
                 connection.commit()
+
+    def convertRtfToHtml(self, rtf):
+        rtf = rtf.replace("\\pard", "<p>\n")
+        rtf = rtf.replace("\\par", "<p>\n")
+        lines = rtf.split("\n")
+        output = ""
+        for line in lines:
+            center = False
+            line = line.replace("\\line", "<br>")
+            line = line.replace("\\s18tap01", "<br>")
+            line = line.replace("\\par", "<br>")
+            line = line.replace("\\i0", "</i>")
+            line = line.replace("\\i ", "<i>")
+            line = line.replace("\\b0", "</b>")
+            line = line.replace("\\b ", "<b>")
+            line = line.replace("\\'91", "'")
+            line = line.replace("\\'92", "'")
+            line = line.replace("\\'93", '"')
+            line = line.replace("\\'94", '"')
+            line = line.replace("\\'97", ' - ')
+            line = line.replace("\\cs51", ':')
+            if "\\qc" in line:
+                if len(line) < 80:
+                    center = True
+                    line = line.replace("\\qc", "<center>")
+                else:
+                    line = line.replace("\\qc", "")
+            line = re.sub("^\\\[^ ]+?<", "<", line)
+            line = re.sub("^\\\[^ ]+$", "", line)
+            line = re.sub("^\{.*\}$", "", line)
+            line = re.sub("^\\\[^ ]+? ", "", line)
+            line = re.sub("\\\\tx[0-9]*", "", line)
+            line = re.sub("\\\sb[0-9]*", "", line)
+            line = re.sub("\\\sl[0-9]*", "", line)
+            replace = [
+                       "\\cf11",
+                       "\\cf0none",
+                       "\\cf1",
+                       "\\cs505",
+                       "\\cs52",
+                       "\\f0",
+                       "\\hich",
+                       "\\keep",
+                       "\\keepn1",
+                       "\\li1440",
+                       "\\li360",
+                       "\\li4320",
+                       "\\li720",
+                       "\\loch",
+                       "\\nosupersub",
+                       "\\nowidctlpar",
+                       "\\ri360",
+                       "\\lmult1",
+                       "\\qc",
+                       "\\ul",
+                       "\\ulnone",
+                       "\\s18tap0",
+                       "\\s18tap01",
+                       "\\s22tap0",
+                       "\\s22tap0n1",
+                       "\\widctlparmult",
+                       "\\cf0none",
+                       "\\b",
+                       "\\i",
+                       ]
+            if len(line) > 0:
+                for r in replace:
+                    line = line.replace(r, "")
+                line = line.replace("_", " ")
+            if center:
+                line += "</center>"
+            output += line + "\n"
+        return output
+
 
 class ThirdPartyDictionary:
 
@@ -2292,5 +2407,12 @@ if __name__ == '__main__':
     # print("Processing " + file)
     # Converter().importScrollmapperDeuterocanonicalFiles(file)
 
-    file = "/Users/otseng/Downloads/FruchtenbaumOTRev.xrefs.twm"
-    Converter().importTheWordXref(file)
+    # file = "/Users/otseng/Downloads/FruchtenbaumOTRev.xrefs.twm"
+    # Converter().importTheWordXref(file)
+
+    # line = "\\tx123dev\\tx2345abc"
+    # print(re.sub("\\\\tx[0-9]*", "", line))
+
+    filename = "/home/oliver/Downloads/Miller - Devotional Hours with the Bible.devx"
+    Converter().importESwordDevotional(filename)
+
