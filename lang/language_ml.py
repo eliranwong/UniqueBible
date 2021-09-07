@@ -770,4 +770,5 @@ translation = {
     "gitHubDevotionals": "GitHub Devotionals",
     "message_macro_save_settings": "മാക്രോ ഫയല് ആയി സജ്ജീകരണങ്ങള് സൂക്ഷിക്കുവാനുള്ള ഫയല്നാമം നല്കുക",
     "settings": "സജ്ജീകരണങ്ങള്",
+    "devotionalFromNotes": "കുറിപ്പ് ഫയലുകളില് നിന്നും Devotional",
 }

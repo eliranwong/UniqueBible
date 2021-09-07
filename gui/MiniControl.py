@@ -30,7 +30,7 @@ class MiniControl(QWidget):
         self.textButtonStyleDisabled = "QPushButton {background-color: #323232; color: #323232;} QPushButton:hover {background-color: #323232;} QPushButton:pressed { background-color: #323232;}"
         self.setWindowTitle(config.thisTranslation["remote_control"])
         self.parent = parent
-        self.devotionals = glob.glob(config.marvelData + "/devotionals/*.devotional")
+        self.devotionals = sorted(glob.glob(config.marvelData + "/devotionals/*.devotional"))
         # specify window size
         if config.qtMaterial and config.qtMaterialTheme:
             self.resizeWindow(1 / 2, 1 / 3)
@@ -383,7 +383,7 @@ class MiniControl(QWidget):
                 button.clicked.connect(partial(self.devotionalAction, name))
                 row_layout.addWidget(button)
                 count += 1
-                if count > 3:
+                if count > 2:
                     count = 0
                     box_layout.addLayout(row_layout)
                     row_layout.addStretch()

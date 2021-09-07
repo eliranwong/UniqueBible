@@ -1,3 +1,7 @@
+Major changes in version 26.15:
+* Add create devotional from notes
+* Add import devx files (experimental)
+
 Major change in version 26.14:
 * Add generate save settings macro
 

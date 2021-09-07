@@ -321,12 +321,15 @@ class AlephMainWindow:
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
         submenu = menu_data.addMenu(config.thisTranslation["menu_convert"])
-        submenu.addAction(
-            QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
-        submenu.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
-        submenu.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
-        submenu.addAction(
-            QAction(config.thisTranslation["menu10_bookFromPDF"], self, triggered=self.createBookModuleFromPDF))
+        items = (
+            ("menu10_bookFromImages", self.createBookModuleFromImages),
+            ("menu10_bookFromHtml", self.createBookModuleFromHTML),
+            ("menu10_bookFromNotes", self.createBookModuleFromNotes),
+            ("menu10_bookFromPDF", self.createBookModuleFromPDF),
+            ("devotionalFromNotes", self.createDevotionalFromNotes)
+        )
+        for feature, action in items:
+            addMenuItem(submenu, feature, self, action)
         menu_data.addSeparator()
         menu_data.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 

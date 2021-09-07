@@ -296,10 +296,15 @@ class ClassicMainWindow:
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_addFavourite"], self, triggered=self.addFavouriteBookDialog))
         menu10.addSeparator()
-        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromImages"], self, triggered=self.createBookModuleFromImages))
-        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromHtml"], self, triggered=self.createBookModuleFromHTML))
-        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromNotes"], self, triggered=self.createBookModuleFromNotes))
-        menu10.addAction(QAction(config.thisTranslation["menu10_bookFromPDF"], self, triggered=self.createBookModuleFromPDF))
+        items = (
+            ("menu10_bookFromImages", self.createBookModuleFromImages),
+            ("menu10_bookFromHtml", self.createBookModuleFromHTML),
+            ("menu10_bookFromNotes", self.createBookModuleFromNotes),
+            ("menu10_bookFromPDF", self.createBookModuleFromPDF),
+            ("devotionalFromNotes", self.createDevotionalFromNotes)
+        )
+        for feature, action in items:
+            addMenuItem(menu10, feature, self, action)
         menu10.addSeparator()
         menu10.addAction(QAction(config.thisTranslation["menu10_clearBookHighlights"], self, triggered=self.clearBookHighlights))
 

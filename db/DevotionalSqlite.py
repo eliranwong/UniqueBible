@@ -1,9 +1,13 @@
 import os, sqlite3, config
 
-from util.DateUtil import DateUtil
-
 
 class DevotionalSqlite:
+
+    CREATE_DEVOTIONAL_TABLE = """
+            CREATE TABLE "devotional" (
+            "month"	TEXT,
+            "day"	TEXT,
+            "devotion"	TEXT);"""
 
     def __init__(self, devotional):
         self.database = os.path.join(config.marvelData, "devotionals", "{0}.devotional".format(devotional))
@@ -34,6 +38,19 @@ class DevotionalSqlite:
             else:
                 return False
         return False
+
+    @staticmethod
+    def createDevotional(devotional, content):
+        database = os.path.join(config.marvelData, "devotionals", "{0}.devotional".format(devotional))
+        if os.path.isfile(database):
+            os.remove(database)
+        with sqlite3.connect(database) as connection:
+            cursor = connection.cursor()
+            cursor.execute(DevotionalSqlite.CREATE_DEVOTIONAL_TABLE)
+            connection.commit()
+            insert = "INSERT INTO devotional (month, day, devotion) VALUES (?, ?, ?)"
+            cursor.executemany(insert, content)
+            connection.commit()
 
 
 if __name__ == "__main__":

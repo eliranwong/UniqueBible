@@ -770,4 +770,5 @@ translation = {
     "gitHubDevotionals": "GitHub 爱好者",
     "message_macro_save_settings": "輸入檔名以儲存設定為巨集檔",
     "settings": "設定",
+    "devotionalFromNotes": "來自附註檔案的比例",
 }
