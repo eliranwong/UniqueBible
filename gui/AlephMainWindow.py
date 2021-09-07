@@ -329,7 +329,7 @@ class AlephMainWindow:
             ("devotionalFromNotes", self.createDevotionalFromNotes)
         )
         for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+            addMenuItem(submenu, feature, self, action)
         menu_data.addSeparator()
         menu_data.addAction(QAction(config.thisTranslation["modify_database"], self, triggered=self.selectDatabaseToModify))
 
