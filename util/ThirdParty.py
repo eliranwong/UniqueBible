@@ -102,13 +102,15 @@ class Converter:
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
             if fileExtension.lower() == ".uba":
+                self.logger.info("Reading file {0}".format(filepath))
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = TextUtil.formulateUBACommandHyperlink(note)
                     if config.parseTextConvertNotesToBook:
-                        note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                        note = BibleVerseParser(config.parserStandarisation).parseText(note, False)
                     bookContent.append((fileName, note))
         if bookContent and module:
+            self.logger.info("Creating module {0}".format(module))
             self.createBookModule(module, bookContent)
             return True
         else:
@@ -189,6 +191,7 @@ class Converter:
 
     # create UniqueBible.app book modules
     def createBookModule(self, module, content, blobData=None):
+        self.logger.info("Creating book {0}".format(module))
         content = [(re.sub("['{0}]".format('"'), "_", chapter), chapterContent) for chapter, chapterContent in content]
         book = os.path.join(config.marvelData, "books", "{0}.book".format(module))
         if os.path.isfile(book):
@@ -200,6 +203,7 @@ class Converter:
             cursor.execute(create)
             connection.commit()
             # insert data for book content
+            self.logger.info("Inserting reference data")
             insert = "INSERT INTO Reference (Chapter, Content) VALUES (?, ?)"
             cursor.executemany(insert, content)
             connection.commit()
@@ -209,6 +213,7 @@ class Converter:
                 cursor.execute(create)
                 connection.commit()
                 # insert data for book content
+                self.logger.info("Inserting blob data")
                 insert = "INSERT INTO data (Filename, Content) VALUES (?, ?)"
                 cursor.executemany(insert, blobData)
                 connection.commit()
@@ -404,8 +409,7 @@ class Converter:
 
     # Import e-Sword Bibles [Apple / macOS / iOS]
     def importESwordBible(self, filename):
-        logger = logging.getLogger('uba')
-        logger.info("Importing eSword Bible: " + filename)
+        self.logger.info("Importing eSword Bible: " + filename)
         connection = sqlite3.connect(filename)
         connection.text_factory = lambda b: b.decode(errors='ignore')
         cursor = connection.cursor()
@@ -447,7 +451,7 @@ class Converter:
         connection.close()
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
-        logger.info("Importing successful")
+        self.logger.info("Importing successful")
 
     def eSwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripESwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]
@@ -823,8 +827,7 @@ class Converter:
 
     # Import MySword Bibles
     def importMySwordBible(self, filename):
-        logger = logging.getLogger('uba')
-        logger.info("Importing MySword Bible: " + filename)
+        self.logger.info("Importing MySword Bible: " + filename)
         connection = sqlite3.connect(filename)
         cursor = connection.cursor()
 
@@ -844,7 +847,7 @@ class Converter:
         self.mySwordBibleToPlainFormat(description, abbreviation, verses)
         if config.importRtlOT:
             config.rtlTexts.append(abbreviation)
-        logger.info("Import successful")
+        self.logger.info("Import successful")
 
     def mySwordBibleToPlainFormat(self, description, abbreviation, verses):
         verses = [(book, chapter, verse, self.stripMySwordBibleTags(scripture)) for book, chapter, verse, scripture in verses]

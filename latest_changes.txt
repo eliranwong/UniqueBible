@@ -1,3 +1,7 @@
+Major changes in version 26.16:
+* Fix devotional download on new install
+* Fix building book from notes containing images and links
+
 Major changes in version 26.15:
 * Add create devotional from notes
 * Add import devx files (experimental)
