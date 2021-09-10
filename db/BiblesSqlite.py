@@ -266,6 +266,19 @@ input.addEventListener('keyup', function(event) {0}
         else:
             return "".join([self.readTranslations(b, c, v, texts) for b, c, v, *_ in verseList])
 
+    def parallelVerse(self, verseList, texts):
+        b, c, v, *_ = verseList[0]
+        content = """<h2><ref onclick="document.title='{0}'">{0}</ref></h2>""".format(self.bcvToVerseReference(b, c, v))
+        content += "<table>"
+        content += "<tr>"
+        for text in texts:
+            content += "<td><h2>{0}</h2></td>".format(text)
+        content += "</tr>"
+        for b, c, v, *_ in verseList:
+            content += self.readTranslationsAsRow(b, c, v, texts)
+        content += "</table>"
+        return content
+
     def diffVerse(self, verseList, texts=["ALL"]):
         if config.isDiffMatchPatchInstalled:
             return "".join([self.readTranslationsDiff(b, c, v, texts) for b, c, v, *_ in verseList])
@@ -322,6 +335,27 @@ input.addEventListener('keyup', function(event) {0}
                 verses += "</tr>"
         verses += "</table>"
         return verses
+
+    def readTranslationsAsRow(self, b, c, v, texts):
+        combinedVerseList = [self.getVerseList(b, c, text) for text in texts]
+        uniqueVerseList = []
+        for verseList in combinedVerseList:
+            for verseNo in verseList:
+                if not verseNo in uniqueVerseList:
+                    uniqueVerseList.append(verseNo)
+        content = ""
+        for verse in verseList:
+            content += "<tr>"
+            for text in texts:
+                *_, verseText = self.readTextVerse(text, b, c, verse)
+                divTag = "<div style='direction: rtl;'>" if b < 40 and text in config.rtlTexts else "<div>"
+                ref = "<sup>{0}{1}:{2}</ref></sup> ".format(self.formVerseTag(b, c, verse, text), c, verse)
+                verseBlock = "<span id='s{0}.{1}.{2}'>".format(b, c, verse)
+                verseBlock += "{0}".format(verseText)
+                verseBlock += "</span>"
+                content += "<td valign='top'><bibleText class='{0}'>{1}{2}{3}</div></bibleText></td>".format(text, divTag, ref, verseBlock)
+            content += "</tr>"
+        return content
 
     def readTranslationsDiff(self, b, c, v, texts):
         plainBibleList, formattedBibleList = self.getTwoBibleLists(False)

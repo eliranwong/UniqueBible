@@ -771,4 +771,5 @@ translation = {
     "message_macro_save_settings": "Introduceţi numele de fişier pentru a salva setările ca un fişier macro",
     "settings": "Setări",
     "devotionalFromNotes": "Dedicare din Fişiere de notă",
+    "parallelVerses": "Versete paralele",
 }

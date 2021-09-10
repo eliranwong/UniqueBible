@@ -132,6 +132,10 @@ class TextCommandParser:
             # 4) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8"""),
+            "parallelverses": (self.textParallelVerses, """
+            # [KEYWORD] PARALLELVERSES
+            # Feature - Display bible versions of the same chapter in parallel columns with verses aligned"""),
+            "parallelverse": (self.textParallelVerses, ""),
             "passages": (self.textPassages, """
             # [KEYWORD] PASSAGES
             # Feature - Display different bible passages of the same bible version in parallel columns. It is created for studying similar passages.
@@ -1043,7 +1047,7 @@ class TextCommandParser:
         formattedBibles = [f[:-6] for f in os.listdir(formattedBiblesFolder) if os.path.isfile(os.path.join(formattedBiblesFolder, f)) and f.endswith(".bible") and not re.search(r"^[\._]", f)]
         #marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         #marvelBibles = list(self.getMarvelBibles().keys())
-        bibleSqlite = Bible(text)
+        # bibleSqlite = Bible(text)
         #if source in ("cli"):
         #    b, c, v, *_ = verse
         #    bibleSqlite = Bible(text)
@@ -1564,6 +1568,32 @@ class TextCommandParser:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
+            del biblesSqlite
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            if confirmedTexts == ["ALL"]:
+                updateViewConfig(viewText, verseList[-1])
+            else:
+                updateViewConfig(confirmedTexts[0], verseList[-1])
+            return ("main", verses, {})
+
+    # PARALLELVERSES:::
+    def textParallelVerses(self, command, source):
+        if command.count(":::") == 0:
+            return ("", "", {})
+        else:
+            texts, references = self.splitCommand(command)
+            confirmedTexts = self.getConfirmedTexts(texts)
+            verseList = self.extractAllVerses(references)
+        if not confirmedTexts or not verseList:
+            return self.invalidCommand()
+        else:
+            biblesSqlite = BiblesSqlite()
+            config.mainCssBibleFontStyle = ""
+            texts = confirmedTexts
+            for text in texts:
+                (fontFile, fontSize, css) = Bible(text).getFontInfo()
+                config.mainCssBibleFontStyle += css
+            verses = biblesSqlite.parallelVerse(verseList, confirmedTexts)
             del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             if confirmedTexts == ["ALL"]:

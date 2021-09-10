@@ -771,4 +771,5 @@ translation = {
     "message_macro_save_settings": "설정을 매크로 파일로 저장하려면 파일 이름을 입력하십시오.",
     "settings": "설정",
     "devotionalFromNotes": "노트 파일에서의 개념",
+    "parallelVerses": "병렬 버스",
 }

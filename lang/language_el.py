@@ -771,4 +771,5 @@ translation = {
     "message_macro_save_settings": "Καταχωρήστε το όνομα αρχείου για αποθήκευση ρυθμίσεων ως αρχείο μακροεντολής",
     "settings": "Ρυθμίσεις:",
     "devotionalFromNotes": "Αφοσίωση από αρχεία σημειώσεων",
+    "parallelVerses": "Παράλληλες Εκδόσεις:",
 }

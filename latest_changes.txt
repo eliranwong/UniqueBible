@@ -1,3 +1,6 @@
+Major change in version 26.17
+* Add PARALLELVERSES command
+
 Major changes in version 26.16:
 * Fix devotional download on new install
 * Fix building book from notes containing images and links
