@@ -771,4 +771,5 @@ translation = {
     "message_macro_save_settings": "输入文件名以将设置保存为宏文件",
     "settings": "设置",
     "devotionalFromNotes": "来自注释文件的义务",
+    "parallelVerses": "并行版本",
 }

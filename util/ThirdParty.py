@@ -107,7 +107,7 @@ class Converter:
                     note = fileObject.read()
                     note = TextUtil.formulateUBACommandHyperlink(note)
                     if config.parseTextConvertNotesToBook:
-                        note = BibleVerseParser(config.parserStandarisation).parseText(note, False)
+                        note = BibleVerseParser(config.parserStandarisation).parseText(note, False, False, True)
                     bookContent.append((fileName, note))
         if bookContent and module:
             self.logger.info("Creating module {0}".format(module))

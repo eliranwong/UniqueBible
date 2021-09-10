@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("devotionalFromNotes", "Devotional from Note Files")
+        addLanguageStringToAllFiles("parallelVerses", "Parallel Verses")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

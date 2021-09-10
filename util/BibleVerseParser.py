@@ -153,6 +153,7 @@ class BibleVerseParser:
             for chunk in chunks:
                 parsedText += self.runParseText("".join(chunk), parseBooklessReferences, canonicalOnly)
         else:
+            text = text.replace("\n", "")
             parsedText = ""
             start = 0
             end = 0
@@ -169,6 +170,7 @@ class BibleVerseParser:
                     end = len(text)
                     block = text[start: end]
                     parsedText += self.runParseText(block, parseBooklessReferences, canonicalOnly)
+            parsedText = parsedText.replace("</p>", "</p>\n")
         return parsedText
 
     def runParseText(self, text, parseBooklessReferences=False, canonicalOnly=False):

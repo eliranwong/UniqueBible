@@ -44,7 +44,8 @@ class MasterControl(QWidget):
         if event.type() == QEvent.KeyRelease:
             if event.key() == Qt.Key_Escape:
                 self.hide()
-        return QWidget.event(self, event)
+        if isinstance(event, QEvent):
+            return QWidget.event(self, event)
 
     def closeEvent(self, event):
         # Control panel is designed for frequent use

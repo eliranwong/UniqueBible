@@ -53,6 +53,9 @@ class BibleExplorer(QWidget):
         navigationLayout3 = self.navigationLayout3()
         navigationLayouts.addLayout(navigationLayout3)
 
+        navigationLayout3b = self.navigationLayout3b()
+        navigationLayouts.addLayout(navigationLayout3b)
+
         navigationLayout4 = self.navigationLayout4()
         navigationLayouts.addLayout(navigationLayout4)
 
@@ -118,6 +121,14 @@ class BibleExplorer(QWidget):
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.parallelCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
         return self.parent.comboFeatureLayout(feature, self.parallelCombo, action)
+
+    def navigationLayout3b(self):
+        feature = "parallelVerses"
+        action = lambda: self.versionsAction("PARALLELVERSES")
+        items = self.textList
+        initialItems = list({config.mainText, config.studyText, config.favouriteBible})
+        self.parallelVersesCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
+        return self.parent.comboFeatureLayout(feature, self.parallelVersesCombo, action)
 
     def navigationLayout4(self):
         feature = "html_showCompare"
@@ -363,6 +374,7 @@ class BibleExplorer(QWidget):
     def versionsAction(self, keyword):
         selectedVersionsMap = {
             "PARALLEL": self.parallelCombo.checkItems,
+            "PARALLELVERSES": self.parallelVersesCombo.checkItems,
             "COMPARE": self.compareCombo.checkItems,
             "DIFFERENCE": self.differenceCombo.checkItems,
         }
@@ -407,10 +419,12 @@ class BibleExplorer(QWidget):
             for index, fullName in enumerate(self.parent.textFullNameList):
                 self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
             self.parallelCombo.checkAll()
+            self.parallelVersesCombo.checkAll()
             self.compareCombo.checkAll()
             self.differenceCombo.checkAll()
         elif collection == "None":
             self.parallelCombo.clearAll()
+            self.parallelVersesCombo.clearAll()
             self.compareCombo.clearAll()
             self.differenceCombo.clearAll()
         else:
@@ -421,5 +435,6 @@ class BibleExplorer(QWidget):
                 fullName = Bible(text).bibleInfo()
                 self.versionCombo.setItemData(i, fullName, Qt.ToolTipRole)
             self.parallelCombo.checkFromList(config.bibleCollections[collection])
+            self.parallelVersesCombo.checkFromList(config.bibleCollections[collection])
             self.compareCombo.checkFromList(config.bibleCollections[collection])
             self.differenceCombo.checkFromList(config.bibleCollections[collection])

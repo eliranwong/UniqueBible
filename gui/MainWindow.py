@@ -438,7 +438,8 @@ class MainWindow(QMainWindow):
                 self.setNoToolBar()
                 config.quitMacro = True
                 return True
-        return QWidget.event(self, event)
+        if isinstance(event, QEvent):
+            return QWidget.event(self, event)
 
     # manage main page
     def setMainPage(self):

@@ -771,4 +771,5 @@ translation = {
     "message_macro_save_settings": "Введите имя файла, чтобы сохранить параметры как файл макрокоманды",
     "settings": "Параметры",
     "devotionalFromNotes": "Последовательные файлы из примечательных файлов",
+    "parallelVerses": "Параллельные стихи",
 }
