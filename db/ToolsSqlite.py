@@ -821,7 +821,7 @@ class BookData:
     def getSearchedMenu(self, module, searchString, chapterOnly=False):
         searchString = searchString.strip()
         if module in dict(self.catalogBookList).keys():
-            books = self.formatSelectList("listBookTopic(this.value)", self.bookList, module)
+            books = self.formatSelectList("listBookTopic(this.value)", CatalogUtil.getBookList(), module)
             topicList = Book(module).getSearchedTopicList(searchString, chapterOnly=chapterOnly)
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
