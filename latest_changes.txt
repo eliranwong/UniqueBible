@@ -1,4 +1,7 @@
-Major change in version 26.17
+Major change in version 26.18:
+* Fix search all books not searching subfolders
+
+Major change in version 26.17:
 * Add PARALLELVERSES command
 
 Major changes in version 26.16:

@@ -62,6 +62,10 @@ class CatalogUtil:
         return sorted(books)
 
     @staticmethod
+    def getBookList():
+        return [(book, book) for book in CatalogUtil.getBooks()]
+
+    @staticmethod
     def getPDFs():
         if CatalogUtil.pdfCatalog is None:
             CatalogUtil.loadLocalCatalog()

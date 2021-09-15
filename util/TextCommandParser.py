@@ -2,6 +2,7 @@
 import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 
+from util.CatalogUtil import CatalogUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 from util.TextUtil import TextUtil
@@ -2743,7 +2744,7 @@ class TextCommandParser:
             command = "{0}:::{1}".format(config.book, command)
         modules, searchString = self.splitCommand(command)
         if modules == "ALL":
-            modules = ",".join([book for book, *_ in bookData.getBookList()])
+            modules = ",".join(CatalogUtil.getBooks())
         elif modules == "FAV":
             modules = ",".join(config.favouriteBooks)
             if not config.book in config.favouriteBooks:
