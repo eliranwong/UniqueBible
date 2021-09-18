@@ -9,8 +9,8 @@ from util.BibleVerseParser import BibleVerseParser
 
 class HtmlGeneratorUtil:
 
-
-    def getMenu(self, command, source="main"):
+    @staticmethod
+    def getMenu(command, source="main"):
         biblesSqlite = BiblesSqlite()
         parser = BibleVerseParser(config.parserStandarisation)
         items = command.split(".", 3)

@@ -2073,9 +2073,7 @@ class TextCommandParser:
                 config.mainText, config.mainB, config.mainC, config.mainV = text, int(b), int(c), int(v)
                 bibleCommand = "BIBLE:::{0}:::{1} {2}:{3}".format(text, BibleBooks.eng[b][0], config.mainC, config.mainV)
                 self.parent.addHistoryRecord("main", bibleCommand)
-            biblesSqlite = BiblesSqlite()
-            htmlGeneratorUtil = HtmlGeneratorUtil()
-            menu = htmlGeneratorUtil.getMenu(command, source)
+            menu = HtmlGeneratorUtil().getMenu(command, source)
             return (source, menu, {})
         except:
             return self.invalidCommand()
@@ -2094,9 +2092,7 @@ class TextCommandParser:
                 self.parent.openControlPanelTab(0, int(b), int(c), int(1), text),
                 return ("", "", {})
             else:
-                biblesSqlite = BiblesSqlite()
-                menu = biblesSqlite.getMenu(command, source)
-                del biblesSqlite
+                menu = HtmlGeneratorUtil().getMenu(command, source)
                 return (source, menu, {})
         elif config.verseNoDoubleClickAction in ("none", "_noAction"):
             return self.noAction(command, source)
@@ -2124,9 +2120,7 @@ class TextCommandParser:
             elif not config.verseNoSingleClickAction == "COMPARE":
                 self.parent.passRunTextCommand(bibleCommand, True, source)
             if config.verseNoSingleClickAction == "_menu" or (config.enableHttpServer and config.verseNoSingleClickAction.startswith("_cp")):
-                biblesSqlite = BiblesSqlite()
-                menu = biblesSqlite.getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
-                del biblesSqlite
+                menu = HtmlGeneratorUtil().getMenu("{0}.{1}.{2}.{3}".format(text, b, c, v), source)
                 return (source, menu, {})
             elif config.verseNoSingleClickAction.startswith("_cp"):
                 index = int(config.verseNoSingleClickAction[-1])

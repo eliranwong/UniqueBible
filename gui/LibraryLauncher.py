@@ -194,6 +194,7 @@ class LibraryLauncher(QWidget):
             self.reloadBookListModel(sorted(config.favouriteBooks))
 
     def chapterSelected(self, selection):
+        config.bookSearchString = ''
         config.bookChapter = selection[0].indexes()[0].data()
         if self.selectedBook:
             config.book = self.selectedBook
