@@ -1,12 +1,9 @@
-from shutil import copyfile
-
 from util.Languages import Languages
 import config, os, platform, webbrowser, re
 from functools import partial
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QFileDialog
-#from qtpy.QtGui import QDesktopServices
-#from qtpy.QtGui import QKeySequence
+from qtpy.QtCore import QUrl
 from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
@@ -1152,12 +1149,15 @@ class WebEngineView(QWebEngineView):
             if not fullScreen:
                 self.parent.popoverView.setMinimumWidth(config.popoverWindowWidth)
                 self.parent.popoverView.setMinimumHeight(config.popoverWindowHeight)
-        self.parent.popoverView.setHtml(html, config.baseUrl)
-        if config.forceGenerateHtml:
+        if config.forceGenerateHtml or len(html) > 1000000:
             outputFile = os.path.join("htmlResources", "popover.html")
             fileObject = open(outputFile, "w", encoding="utf-8")
             fileObject.write(html)
             fileObject.close()
+            fullOutputPath = os.path.abspath(outputFile)
+            self.parent.popoverView.load(QUrl.fromLocalFile(fullOutputPath))
+        else:
+            self.parent.popoverView.setHtml(html, config.baseUrl)
         if fullScreen:
             monitor = QDesktopWidget().screenGeometry(screenNo)
             self.parent.popoverView.move(monitor.left(), monitor.top())
