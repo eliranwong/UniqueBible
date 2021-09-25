@@ -111,6 +111,7 @@ class UpdateUtil:
 
     @staticmethod
     def updatePatchFileWithChanges(version, sha1, sha2):
+        ver = "{:.2f}".format(float(version))
         lines = UpdateUtil.getFilesChanged(sha1, sha2)
         patch = open("patches.txt", "a")
         for line in lines:
@@ -120,12 +121,12 @@ class UpdateUtil:
                 if not file in ("patches.txt", "latest_changes.txt", "UniqueBibleAppVersion.txt"):
                     if code.strip() == "D":
                         action = "delete"
-                    str = """({0}, "{1}", "{2}")""".format(version, action, file.strip())
+                    str = """({0}, "{1}", "{2}")""".format(ver, action, file.strip())
                     print(str)
                     patch.write(str + "\n")
-        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "patches.txt"))
-        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "latest_changes.txt"))
-        patch.write("""({0}, "{1}", "{2}")\n""".format(version, action, "UniqueBibleAppVersion.txt"))
+        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "patches.txt"))
+        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "latest_changes.txt"))
+        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "UniqueBibleAppVersion.txt"))
         patch.close()
 
 

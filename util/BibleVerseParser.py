@@ -163,7 +163,7 @@ class BibleVerseParser:
                     imgstart = text.find('<img src="data:image', start)
                     block = text[start:imgstart]
                     parsedText += self.runParseText(block, parseBooklessReferences, canonicalOnly)
-                    end = text.find(' />', start+10)+3
+                    end = text.find(' />', imgstart+10)+3
                     parsedText += text[imgstart:end]
                     start = end
                 else:

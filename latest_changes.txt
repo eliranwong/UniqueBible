@@ -1,3 +1,6 @@
+Major change in version 26.20:
+* Fix repeating sections when building a book
+
 Major change in version 26.19:
 * Fix popup window not being able to display data greater than 1MB
 
