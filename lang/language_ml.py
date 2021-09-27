@@ -772,4 +772,5 @@ translation = {
     "settings": "സജ്ജീകരണങ്ങള്",
     "devotionalFromNotes": "കുറിപ്പ് ഫയലുകളില് നിന്നും Devotional",
     "parallelVerses": "à '- à', à ', à', à",
+    "githubHymnLyrics": "GitHub Hymn Lyrics",
 }

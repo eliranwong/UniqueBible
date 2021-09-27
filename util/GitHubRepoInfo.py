@@ -5,6 +5,7 @@ class GitHubRepoInfo:
     bibles = ("otseng/UniqueBible_Bibles", "bibles", "githubBibles", "bible")
     commentaries = ("otseng/UniqueBible_Commentaries", "commentaries", "githubCommentaries", "commentary")
     books = ("darrelwright/UniqueBible_Books", "books", "githubBooks", "book")
+    hymnLyrics = ("otseng/UniqueBible_Hymn_Lyrics", "books", "githubHymnLyrics", "book")
     maps = ("darrelwright/UniqueBible_Maps-Charts", "books", "githubMaps", "book")
     pdf = ("otseng/UniqueBible_PDF", "pdf", "githubPdf", "pdf")
     epub = ("otseng/UniqueBible_EPUB", "epub", "githubEpub", "epub")

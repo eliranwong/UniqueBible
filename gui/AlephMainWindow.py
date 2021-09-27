@@ -304,7 +304,6 @@ class AlephMainWindow:
             ("menu8_commentaries", self.installMarvelCommentaries),
             ("menu8_datasets", self.installMarvelDatasets),
             ("installBooks", self.installBooks),
-            ("hymn_lyrics", self.installHymnLyrics),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

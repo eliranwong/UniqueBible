@@ -621,17 +621,6 @@ class MainWindow(QMainWindow):
         elif item == "Install ALL Commentaries Listed Above":
             self.installAllMarvelCommentaries(commentaries)
 
-    def installHymnLyrics(self):
-        hymnLyrics = DatafileLocation.hymnLyrics
-        items = [book for book in hymnLyrics.keys() if
-                 not os.path.isfile(os.path.join(*hymnLyrics[book][0]))]
-        if not items:
-            items = ["[All Installed]"]
-        item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                        config.thisTranslation["hymn_lyrics"], items, 0, False)
-        if ok and item and not item in ("[All Installed]"):
-            self.downloadHelper(hymnLyrics[item])
-
     def installAllMarvelCommentaries(self, commentaries):
         if config.isDownloading:
             self.displayMessage(config.thisTranslation["previousDownloadIncomplete"])
@@ -662,6 +651,9 @@ class MainWindow(QMainWindow):
 
     def installGithubCommentaries(self):
         self.installFromGitHub(GitHubRepoInfo.commentaries)
+
+    def installGithubHymnLyrics(self):
+        self.installFromGitHub(GitHubRepoInfo.hymnLyrics)
 
     def installGithubBooks(self):
         self.installFromGitHub(GitHubRepoInfo.books)
@@ -700,8 +692,7 @@ class MainWindow(QMainWindow):
             github = GithubUtil(repo)
             repoData = github.getRepoData()
             folder = os.path.join(config.marvelData, directory)
-            items = [item for item in repoData.keys() if
-                     not FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(item)), folder)]
+            items = [item for item in repoData.keys() if not FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(item)), folder)]
             if not items:
                 items = ["[All Installed]"]
             item, ok = QInputDialog.getItem(self, "UniqueBible",
@@ -712,10 +703,11 @@ class MainWindow(QMainWindow):
                 with zipfile.ZipFile(file, 'r') as zipped:
                     zipped.extractall(folder)
                 os.remove(file)
-                self.reloadControlPanel(False)
                 self.displayMessage(item + " " + config.thisTranslation["message_installed"])
+                self.loadBibleDescriptions()
+                CatalogUtil.reloadLocalCatalog()
+                self.reloadControlPanel(False)
                 self.installFromGitHub(gitHubRepoInfo)
-            self.loadBibleDescriptions()
 
     # Select database to modify
     def selectDatabaseToModify(self):

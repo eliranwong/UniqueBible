@@ -80,6 +80,7 @@ class CatalogUtil:
         data = []
         data += CatalogUtil.loadRemoteFiles("PDF", GitHubRepoInfo.pdf)
         data += CatalogUtil.loadRemoteFiles("BOOK", GitHubRepoInfo.books)
+        data += CatalogUtil.loadRemoteFiles("BOOK", GitHubRepoInfo.hymnLyrics)
         data += CatalogUtil.loadRemoteFiles("BOOK", GitHubRepoInfo.maps)
         data += CatalogUtil.loadRemoteFiles("COMM", GitHubRepoInfo.commentaries)
         data += CatalogUtil.loadRemoteFiles("DEVOTIONAL", GitHubRepoInfo.devotionals)

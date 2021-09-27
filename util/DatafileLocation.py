@@ -132,18 +132,3 @@ class DatafileLocation:
         "Discourse Data": ((config.marvelData, "data", "discourseNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
         "TDW Combo Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
     }
-
-    hymnLyrics = {
-        "Hymn Lyrics - English":
-            ((config.marvelData, "books", "Hymn Lyrics - English.book"), "1jO2-akZYgR7xl0ROIVMrjitDTVkEq6LJ"),
-        "Hymn Lyrics - Chinese - 迦南诗选":
-            ((config.marvelData, "books", "Hymn Lyrics - Chinese.book"), "1NXyLJ-OdKmOdc1CErbsaIT-egz0q9n6l"),
-        "Hymn Lyrics - French - Les Chants Joyeux":
-            ((config.marvelData, "books", "Hymn Lyrics - French.book"), "1MCHGo7-7wyR2tkXjEim36TffyKnzeGd-"),
-        "Hymn Lyrics - Hausa - Rubutacciyar wak'a":
-            ((config.marvelData, "books", "Hymn Lyrics - Hausa.book"), "1buBHoUlYhrMEEsjGHd3u5sFmZIgipBgb"),
-        "Hymn Lyrics - Romanian - Harfa de cantari":
-            ((config.marvelData, "books", "Hymn Lyrics - Romanian.book"), "1TYS00uhnPmBoi8vqhJzt0H9u7NySx-5w"),
-        "Hymn Lyrics - Spanish - Himnos Letras":
-            ((config.marvelData, "books", "Hymn Lyrics - Spanish.book"), "11_H2BxoSdWdcmZ2nv3E3vh9uaXBeyfE8"),
-    }

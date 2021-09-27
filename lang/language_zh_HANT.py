@@ -772,4 +772,5 @@ translation = {
     "settings": "設定",
     "devotionalFromNotes": "來自附註檔案的比例",
     "parallelVerses": "平行版本",
+    "githubHymnLyrics": "GitHub Hymn Lyrics",
 }

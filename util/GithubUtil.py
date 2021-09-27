@@ -32,7 +32,10 @@ class GithubUtil:
         for element in tree.tree:
             if ".zip" in element.path:
                 file = element.path.replace(".zip", "")
-                data[file] = element.sha
+                if element.type == "blob":
+                    data[file] = element.sha
+                else:
+                    data[file] = "tree-" + element.sha
         return data
 
     def printContentsOfRepo(self):
@@ -41,15 +44,26 @@ class GithubUtil:
             print("{0}:{1}".format(key, data[key]))
 
     def downloadFile(self, filename, sha):
-        file = self.repo.get_git_blob(sha)
-        decoded = base64.b64decode(file.content)
-        with open(filename, 'wb') as zipfile:
-            zipfile.write(decoded)
+        if sha.startswith("tree-"):
+            sha = sha[5:]
+            tree = self.repo.get_git_tree(sha)
+            with open(filename, 'wb') as zipfile:
+                for element in tree.tree:
+                    file = self.repo.get_git_blob(element.sha)
+                    decoded = base64.b64decode(file.content)
+                    zipfile.write(decoded)
+        else:
+            file = self.repo.get_git_blob(sha)
+            decoded = base64.b64decode(file.content)
+            with open(filename, 'wb') as zipfile:
+                zipfile.write(decoded)
 
     @staticmethod
     def getShortname(filename):
         if " - " in filename and filename.endswith(".commentary"):
             shortFilename = filename[:filename.find(" - ")]
+        elif " -- " in filename:
+            shortFilename = filename[:filename.find(" -- ")]
         else:
             shortFilename = filename
         return shortFilename
@@ -58,10 +72,11 @@ class GithubUtil:
 if __name__ == "__main__":
     from util.GitHubRepoInfo import GitHubRepoInfo
 
-    github = GithubUtil(GitHubRepoInfo.bibles[0])
-    github.printContentsOfRepo()
-
-    # github = GithubUtil("otseng/UniqueBible_Commentaries")
+    # github = GithubUtil(GitHubRepoInfo.bibles[0])
     # github.printContentsOfRepo()
-    # github.downloadFile("test.zip", "1274eccd33476b0e4716b41e292d50ad601715c8")
+
+    github = GithubUtil("otseng/UBA-Wiki")
+    github.printContentsOfRepo()
+    github.printBranches()
+    github.downloadFile("file.zip", "tree-2c12af93b64436c86869f58ce3e7b4ce24dd5772")
 

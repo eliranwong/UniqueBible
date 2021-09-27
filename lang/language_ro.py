@@ -772,4 +772,5 @@ translation = {
     "settings": "Setări",
     "devotionalFromNotes": "Dedicare din Fişiere de notă",
     "parallelVerses": "Versete paralele",
+    "githubHymnLyrics": "GitHub Versuri Versuri",
 }

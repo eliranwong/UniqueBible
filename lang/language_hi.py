@@ -772,4 +772,5 @@ translation = {
     "settings": "विन्यास",
     "devotionalFromNotes": "नोट फ़ाइल से भक्ति",
     "parallelVerses": "समांतर वर्सेस",
+    "githubHymnLyrics": "गित्हब भजन गीत",
 }

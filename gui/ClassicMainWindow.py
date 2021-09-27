@@ -384,7 +384,6 @@ class ClassicMainWindow:
         menu8.addAction(QAction(config.thisTranslation["menu8_commentaries"], self, triggered=self.installMarvelCommentaries))
         menu8.addAction(QAction(config.thisTranslation["menu8_datasets"], self, triggered=self.installMarvelDatasets))
         menu8.addSeparator()
-        menu8.addAction(QAction(config.thisTranslation["hymn_lyrics"], self, triggered=self.installHymnLyrics))
 
         addGithubDownloadMenuItems(self, menu8)
 
