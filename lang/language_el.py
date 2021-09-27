@@ -772,4 +772,5 @@ translation = {
     "settings": "Ρυθμίσεις:",
     "devotionalFromNotes": "Αφοσίωση από αρχεία σημειώσεων",
     "parallelVerses": "Παράλληλες Εκδόσεις:",
+    "githubHymnLyrics": "Στίχοι Hymn GitHub",
 }

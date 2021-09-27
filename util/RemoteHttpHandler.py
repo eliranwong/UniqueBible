@@ -2,6 +2,7 @@
 # https://ironpython-test.readthedocs.io/en/latest/library/simplehttpserver.html
 import hashlib
 import json
+import logging
 import os, re, config, pprint, glob
 import subprocess
 import urllib
@@ -33,6 +34,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     adminUsers = []
 
     def __init__(self, *args, **kwargs):
+        self.logger = logging.getLogger('uba')
         if RemoteHttpHandler.textCommandParser is None:
             RemoteHttpHandler.textCommandParser = TextCommandParser(RemoteCliMainWindow())
         self.textCommandParser = RemoteHttpHandler.textCommandParser
@@ -161,15 +163,39 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if not config.mainText in self.textCommandParser.parent.textList:
             config.mainText = self.getFavouriteBible()
 
+    def ignoreCommand(self, path):
+        ignoreCommands = [
+            'robots.txt',
+            'humans.txt',
+            'ads.txt',
+            'favicon.ico',
+        ]
+        for cmd in ignoreCommands:
+            if cmd in path:
+                return True
+        if len(path) > 255:
+            return True
+        return False
+
+    def do_POST(self):
+        self.blankPage()
+        return
+
     def do_GET(self):
         self.clientIP = self.client_address[0]
         self.session = self.getSession()
+        if self.session is None:
+            self.blankPage()
+            return
         if self.clientIP not in self.users:
             self.users.append(self.clientIP)
         if self.clientIP == self.users[0]:
             self.primaryUser = True
         self.updateData()
-        if self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
+        if self.ignoreCommand(self.path):
+            self.blankPage()
+            return
+        elif self.path == "" or self.path == "/" or self.path.startswith("/index.html") or config.displayLanguage != "en_GB":
             if self.primaryUser or not config.webPresentationMode:
                 query_components = parse_qs(urlparse(self.path).query)
                 if 'cmd' in query_components:
@@ -682,6 +708,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.send_header("Pragma", "no-cache"),
         self.send_header("Expires", "0")
         self.end_headers()
+
+    def blankPage(self):
+        self.commonHeader()
+        html = ""
+        self.wfile.write(bytes(html, "utf8"))
 
     def getSideNavContent(self):
         html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
@@ -1404,7 +1435,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getSession(self):
         headers = {x: y for x, y in self.headers._headers}
         ip = self.client_address[0]
-        browser = headers['User-Agent']
+        if 'User-Agent' in headers.keys():
+            browser = headers['User-Agent']
+        else:
+            return None
         session = str(ip + browser).encode('utf-8')
         session = hashlib.sha256(session).hexdigest()[:30]
         return session

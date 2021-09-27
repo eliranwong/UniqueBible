@@ -1,3 +1,7 @@
+Major change in version 26.21:
+* Move hymn lyrics to Github
+* Harden http server
+
 Major change in version 26.20:
 * Fix repeating sections when building a book
 

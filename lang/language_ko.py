@@ -772,4 +772,5 @@ translation = {
     "settings": "설정",
     "devotionalFromNotes": "노트 파일에서의 개념",
     "parallelVerses": "병렬 버스",
+    "githubHymnLyrics": "GitHub Hymn Lyrics",
 }

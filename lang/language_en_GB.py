@@ -772,4 +772,5 @@ translation = {
     "settings": "Settings",
     "devotionalFromNotes": "Devotional from Note Files",
     "parallelVerses": "Parallel Verses",
+    "githubHymnLyrics": "GitHub Hymn Lyrics",
 }

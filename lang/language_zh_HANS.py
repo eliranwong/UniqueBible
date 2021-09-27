@@ -772,4 +772,5 @@ translation = {
     "settings": "设置",
     "devotionalFromNotes": "来自注释文件的义务",
     "parallelVerses": "并行版本",
+    "githubHymnLyrics": "GitHub hymn 歌词",
 }

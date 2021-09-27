@@ -772,4 +772,5 @@ translation = {
     "settings": "Параметры",
     "devotionalFromNotes": "Последовательные файлы из примечательных файлов",
     "parallelVerses": "Параллельные стихи",
+    "githubHymnLyrics": "Песня GitHub Hymn",
 }
