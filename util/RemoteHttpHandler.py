@@ -1329,7 +1329,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ("Marvel Datasets", DatafileLocation.marvelData, "marveldata"),
             ("Marvel Bibles", DatafileLocation.marvelBibles, "marvelbible"),
             ("Marvel Commentaries", DatafileLocation.marvelCommentaries, "marvelcommentary"),
-            ("Hymn Lyrics", DatafileLocation.hymnLyrics, "hymnlyrics"),
         )
         for collection, data, keyword in resources:
             content += "<h2>{0}</h2>".format(collection)

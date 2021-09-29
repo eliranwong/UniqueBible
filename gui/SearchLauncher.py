@@ -1,6 +1,10 @@
+from functools import partial
+
 import config
+from db.BiblesSqlite import Bible
 from gui.CheckableComboBox import CheckableComboBox
 from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+from qtpy.QtCore import Qt
 
 class SearchLauncher(QWidget):
 
@@ -62,6 +66,11 @@ class SearchLauncher(QWidget):
         centerGroupLayout.addStretch()
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)
+
+        if len(config.bibleCollections) > 0:
+            navigationLayout6 = self.navigationLayout6()
+            bibleLayout.addWidget(navigationLayout6)
+
         bibleWidget.setLayout(bibleLayout)
         
         widgetLayout0.addWidget(bibleWidget)
@@ -100,6 +109,23 @@ class SearchLauncher(QWidget):
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
         return widget
+
+    def navigationLayout6(self):
+        rows = []
+        row = [
+            ("All", lambda: self.selectCollection("All")),
+            ("None", lambda: self.selectCollection("None")),
+        ]
+        count = len(row)
+        for collection in sorted(config.bibleCollections.keys()):
+            row.append((collection, partial(self.selectCollection, collection)))
+            count += 1
+            if count % 6 == 0:
+                rows.append(row)
+                row = []
+        if len(row) > 0:
+            rows.append(row)
+        return self.parent.buttonsWidget(rows, False, False)
 
     def column2Widget(self):
         widget = QWidget()
@@ -241,3 +267,11 @@ class SearchLauncher(QWidget):
 
     def blankOperation(self):
         return
+
+    def selectCollection(self, collection):
+        if collection == "All":
+            self.bibleCombo.checkAll()
+        elif collection == "None":
+            self.bibleCombo.clearAll()
+        else:
+            self.bibleCombo.checkFromList(config.bibleCollections[collection])

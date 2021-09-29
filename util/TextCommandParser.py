@@ -3054,8 +3054,6 @@ class TextCommandParser:
                     dataset = DatafileLocation.marvelCommentaries
                 elif action == "marveldata":
                     dataset = DatafileLocation.marvelData
-                elif action == "hymnlyrics":
-                    dataset = DatafileLocation.hymnLyrics
                 else:
                     self.parent.displayMessage("{0} {1}".format(action, config.thisTranslation["unknown"]))
                     return ("", "", {})
