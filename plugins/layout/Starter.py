@@ -60,7 +60,12 @@ class Starter:
             addMenuItem(menu, feature, self, action)
 
     def setupToolBarStandardIconSize(self):
-        
+        Starter.setupToolBar(self)
+
+    def setupToolBarFullIconSize(self):
+        Starter.setupToolBar(self)
+
+    def setupToolBar(self):
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -122,9 +127,3 @@ class Starter:
         self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
 
 
-    def setupToolBarFullIconSize(self):
-
-        self.studyBibleToolBar = QToolBar()
-        self.leftToolBar = QToolBar()
-        self.rightToolBar = QToolBar()
-        self.commentaryRefButton = QPushButton(self.verseReference("commentary"))

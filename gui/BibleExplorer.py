@@ -359,6 +359,7 @@ class BibleExplorer(QWidget):
         self.parent.runTextCommand(command)
 
     def present(self):
+        config.mainText = self.text
         command = "SCREEN:::{0}".format(self.getSelectedReference())
         self.parent.runTextCommand(command)
 
