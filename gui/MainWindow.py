@@ -555,6 +555,7 @@ class MainWindow(QMainWindow):
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
         CatalogUtil.reloadLocalCatalog()
+        self.setupMenuLayout(config.menuLayout)
 
     def downloadGoogleStaticMaps(self):
         # https://developers.google.com/maps/documentation/maps-static/intro

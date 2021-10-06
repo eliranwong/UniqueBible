@@ -1,3 +1,8 @@
+Major changes in version 26.23:
+* Fix changing Bible for presentation in master control
+* Fix starter menu layout not starting when toolBarIconFullSize is true
+* Fix Bible list in starter menu after downloading a Bible
+
 Major change in version 26.22:
 * Add collection to Bible search
 * Fix html menu in starter layout
