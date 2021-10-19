@@ -14,27 +14,8 @@ class AlephMainWindow:
 
         menu1 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu1_app"]))
         menu1_language = addSubMenu(menu1, "languageSettings")
-        subMenu = addSubMenu(menu1_language, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
-            addMenuItem(subMenu, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
-        subMenu = addSubMenu(menu1_language, "watsonTranslator")
-        items = (
-            ("setup", self.setupWatsonTranslator),
-            ("enterCredentials", self.showWatsonCredentialWindow),
-            ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
-        if config.isTtsInstalled:
-            languages = self.getTtsLanguages()
-            languageCodes = list(languages.keys())
-            items = [languages[code][1] for code in languageCodes]
-            subMenu = addSubMenu(menu1_language, "ttsLanguage")
-            for index, item in enumerate(items):
-                languageCode = languageCodes[index]
-                addMenuItem(subMenu, item, self,
-                            lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode),
-                            translation=False)
+            addMenuItem(menu1_language, language, self, lambda language=language: self.changeInterfaceLanguage(language), translation=False)
 
         menu1_defaults = addSubMenu(menu1, "menu1_preferences")
         subMenu = addSubMenu(menu1_defaults, "menu1_selectWindowStyle")
@@ -91,13 +72,6 @@ class AlephMainWindow:
         lexiconMenu = menu1_defaults.addMenu(config.thisTranslation["menu_lexicon"])
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsHebrew"], self, triggered=self.openSelectDefaultStrongsHebrewLexiconDialog))
         lexiconMenu.addAction(QAction(config.thisTranslation["menu1_StrongsGreek"], self, triggered=self.openSelectDefaultStrongsGreekLexiconDialog))
-        subMenu = addSubMenu(menu1_defaults, "gistSync")
-        items = (
-            ("setup", self.setupGist),
-            ("menu_gist", self.showGistWindow),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(menu1_defaults, "menu_toggleFeatures")
         items = (
             ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
@@ -109,19 +83,52 @@ class AlephMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
-        menu1_defaults.addAction(QAction(config.thisTranslation["activeVerseColour"], self, triggered=self.changeActiveVerseColour))
-        menu1_defaults.addAction(QAction(config.thisTranslation["resourceDirectory"], self, triggered=self.customMarvelData))
+        if config.developer:
+            subMenu = addSubMenu(menu1_defaults, "gistSync")
+            items = (
+                ("setup", self.setupGist),
+                ("menu_gist", self.showGistWindow),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
+            subMenu = addSubMenu(menu1_defaults, "watsonTranslator")
+            items = (
+                ("setup", self.setupWatsonTranslator),
+                ("enterCredentials", self.showWatsonCredentialWindow),
+                ("menu1_setMyLanguage", self.openTranslationLanguageDialog),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
+            if config.isTtsInstalled:
+                languages = self.getTtsLanguages()
+                languageCodes = list(languages.keys())
+                items = [languages[code][1] for code in languageCodes]
+                subMenu = addSubMenu(menu1_defaults, "ttsLanguage")
+                for index, item in enumerate(items):
+                    languageCode = languageCodes[index]
+                    addMenuItem(subMenu, item, self,
+                                lambda languageCode=languageCode: self.setDefaultTtsLanguage(languageCode),
+                                translation=False)
+
         menu1_defaults.addAction(
             QAction(config.thisTranslation["bibleCollections"], self, shortcut=sc.bibleCollections, triggered=self.showBibleCollectionDialog))
+        addMenuItem(menu1_defaults, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
+        menu1_defaults.addAction(QAction(config.thisTranslation["activeVerseColour"], self, triggered=self.changeActiveVerseColour))
         menu1_defaults.addAction(
             QAction(config.thisTranslation["menu_favouriteBible"], self, triggered=self.openFavouriteBibleDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_abbreviations"], self, triggered=self.setBibleAbbreviations))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_tabs"], self, triggered=self.setTabNumberDialog))
-        menu1_defaults.addAction(QAction(config.thisTranslation["selectNoOfLinesPerChunkForParsing"], self, triggered=self.setNoOfLinesPerChunkForParsingDialog))
-        menu1_defaults.addAction(QAction(config.thisTranslation["selectMaximumOHGBiVerses"], self, triggered=self.setMaximumOHGBiVersesDisplayDialog))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_font"], self, triggered=self.setDefaultFont))
         menu1_defaults.addAction(QAction(config.thisTranslation["menu_chineseFont"], self, triggered=self.setChineseFont))
+        if config.developer:
+            menu1_defaults.addAction(
+                QAction(config.thisTranslation["resourceDirectory"], self, triggered=self.customMarvelData))
+            menu1_defaults.addAction(QAction(config.thisTranslation["selectNoOfLinesPerChunkForParsing"], self,
+                                             triggered=self.setNoOfLinesPerChunkForParsingDialog))
+            menu1_defaults.addAction(QAction(config.thisTranslation["selectMaximumOHGBiVerses"], self,
+                                             triggered=self.setMaximumOHGBiVersesDisplayDialog))
+        menu1_defaults.addAction(
+            QAction(config.thisTranslation["menu_config_flags"], self, shortcut=sc.moreConfigOptionsDialog, triggered=self.moreConfigOptionsDialog))
 
         if config.developer:
             menu = addMenu(menu1, "developer")
@@ -134,8 +141,6 @@ class AlephMainWindow:
             menu1.addAction(
                 QAction(config.thisTranslation["menu_startup_macro"], self, triggered=self.setStartupMacro))
 
-        menu1.addAction(
-            QAction(config.thisTranslation["menu_config_flags"], self, shortcut=sc.moreConfigOptionsDialog, triggered=self.moreConfigOptionsDialog))
         menu1.addAction(
             QAction(config.thisTranslation["menu1_update"], self, triggered=self.showUpdateAppWindow))
 

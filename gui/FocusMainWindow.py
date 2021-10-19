@@ -28,25 +28,25 @@ class FocusMainWindow:
         items = (
             ("activeVerseColour", self.changeActiveVerseColour),
             ("menu1_tabNo", self.setTabNumberDialog),
-            ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
-            ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("bibleCollections", self.showBibleCollectionDialog),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
-            ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
-            ("resourceDirectory", self.customMarvelData),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        if config.developer:
+            items = (
+                ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
+                ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
+                ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
+                ("resourceDirectory", self.customMarvelData),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
         subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
         for style in QStyleFactory.keys():
-            # PySide2
-            #addMenuItem(subMenu, style, self, lambda style=style: self.setAppWindowStyle(style), None, False)
-            # PyQt5
-            #addMenuItem(subMenu, style, self, lambda arg, style=style: self.setAppWindowStyle(style), None, False)
-            # For both PySide2 and PyQt5
             addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
         subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
         if config.qtMaterial:
@@ -103,13 +103,19 @@ class FocusMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        subMenu = addSubMenu(subMenu0, "gistSync")
+        if config.developer:
+            subMenu = addSubMenu(subMenu0, "gistSync")
+            items = (
+                ("setup", self.setupGist),
+                ("menu_gist", self.showGistWindow),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
         items = (
-            ("setup", self.setupGist),
-            ("menu_gist", self.showGistWindow),
+            ("menu_config_flags", self.moreConfigOptionsDialog),
         )
         for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+            addMenuItem(subMenu0, feature, self, action)
 
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")
@@ -583,6 +589,8 @@ class FocusMainWindow:
             self.addStandardIconButton("exportToDocx", "docx.png", self.exportStudyPageToDocx, self.rightToolBar)
         self.addStandardIconButton("bar3_pdf", "pdf.png", self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
+        self.addStandardIconButton("Marvel Interlinear Bible", "interlinear.png", self.runMIBStudy, self.rightToolBar, None, False)
+        self.rightToolBar.addSeparator()
         self.addStandardIconButton("menu4_indexes", "indexes.png", self.runINDEX, self.rightToolBar)
         self.addStandardIconButton("menu4_commentary", "commentary.png", self.runCOMMENTARY, self.rightToolBar)
         self.rightToolBar.addSeparator()
@@ -838,9 +846,15 @@ class FocusMainWindow:
 
         if config.isHtmldocxInstalled:
             iconFile = os.path.join("htmlResources", "docx.png")
-            self.leftToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportStudyPageToDocx)
+            self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["exportToDocx"], self.exportStudyPageToDocx)
+
         iconFile = os.path.join("htmlResources", "pdf.png")
         self.rightToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar3_pdf"], self.printStudyPage)
+
+        self.rightToolBar.addSeparator()
+
+        iconFile = os.path.join("htmlResources", "interlinear.png")
+        self.rightToolBar.addAction(QIcon(iconFile), "Marvel Interlinear Bible", self.runMIBStudy)
 
         self.rightToolBar.addSeparator()
 
