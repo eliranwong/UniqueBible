@@ -1,3 +1,8 @@
+Changes in version 26.24:
+* Only display advanced options in Focus and Aleph menus in dev mode
+* Fix location of export to Word icon in Focus sidebar
+* Add MIB button to Focus right side bar
+
 Major changes in version 26.23:
 * Fix changing Bible for presentation in master control
 * Fix starter menu layout not starting when toolBarIconFullSize is true
