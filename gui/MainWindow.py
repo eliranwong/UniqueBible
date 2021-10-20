@@ -3625,10 +3625,14 @@ class MainWindow(QMainWindow):
                     initialIndex = self.bibleVersions.index(config.mainText)
                 self.versionCombo.setCurrentIndex(initialIndex)
                 self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+                textButtonStyle = "QComboBox {background-color: #151B54; color: white;} QComboBox:hover {background-color: #333972;} QComboBox:pressed { background-color: #515790;}"
+                self.versionCombo.setStyleSheet(textButtonStyle)
                 self.firstToolBar.addWidget(self.versionCombo)
             else:
                 self.versionCombo = None
                 self.versionButton = QPushButton(config.mainText)
+                textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+                self.versionButton.setStyleSheet(textButtonStyle)
                 self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar,
                                            self.versionButton)
 
