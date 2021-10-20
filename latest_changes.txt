@@ -1,3 +1,8 @@
+Changes in version 26.25:
+* Set style of Bible version button in toolbar in Focus layout
+* Move Reference button config in Focus layout
+* Remove "A copy of configurations is saved in file config.py" message
+
 Changes in version 26.24:
 * Only display advanced options in Focus and Aleph menus in dev mode
 * Fix location of export to Word icon in Focus sidebar

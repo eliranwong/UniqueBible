@@ -1,7 +1,6 @@
 from qtpy.QtCore import QSize
 from gui.MenuItems import *
 import shortcut as sc
-from db.BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.FileUtil import FileUtil
@@ -26,10 +25,11 @@ class FocusMainWindow:
         subMenu0 = addSubMenu(menu, "menu1_preferences")
         subMenu = addSubMenu(subMenu0, "menu1_generalPreferences")
         items = (
+            ("bibleCollections", self.showBibleCollectionDialog),
+            ("refButtonAction", self.selectRefButtonSingleClickActionDialog),
             ("activeVerseColour", self.changeActiveVerseColour),
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
-            ("bibleCollections", self.showBibleCollectionDialog),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
@@ -68,8 +68,6 @@ class FocusMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
 
-        subMenu.addSeparator()
-        addMenuItem(subMenu, "refButtonAction", self, self.selectRefButtonSingleClickActionDialog)
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
             ("menu_brachys", lambda: self.setShortcuts("brachys")),
