@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "Dévotionnel à partir des fichiers de notes",
     "parallelVerses": "Verses parallèles",
     "githubHymnLyrics": "Lyrics Hymn GitHub",
+    "gitHubPluginsStartup": "Démarrage des plug-ins GitHub",
+    "gitHubPluginsShutdown": "Arrêt des plug-ins GitHub",
+    "gitHubPluginsLayout": "Présentation des plug-ins GitHub",
 }

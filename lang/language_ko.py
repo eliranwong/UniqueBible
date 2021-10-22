@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "노트 파일에서의 개념",
     "parallelVerses": "병렬 버스",
     "githubHymnLyrics": "GitHub Hymn Lyrics",
+    "gitHubPluginsStartup": "깃허브 플루긴스 시동",
+    "gitHubPluginsShutdown": "GitHub 플러그인 종료",
+    "gitHubPluginsLayout": "GitHub 플러그인 레이아웃",
 }

@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "メモ・ファイルからのデボショナル",
     "parallelVerses": "パラレル・バージョン",
     "githubHymnLyrics": "GitHub Hymn ライリクス",
+    "gitHubPluginsStartup": "GitHub プラグインの開始",
+    "gitHubPluginsShutdown": "GitHub プラグインのシャットダウン",
+    "gitHubPluginsLayout": "GitHub プラグイン・レイアウト",
 }

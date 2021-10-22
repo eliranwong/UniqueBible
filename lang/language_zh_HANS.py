@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "来自注释文件的义务",
     "parallelVerses": "并行版本",
     "githubHymnLyrics": "GitHub hymn 歌词",
+    "gitHubPluginsStartup": "GitHub 插件启动",
+    "gitHubPluginsShutdown": "GitHub 插件关闭",
+    "gitHubPluginsLayout": "GitHub 插件布局",
 }

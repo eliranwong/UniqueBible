@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "Последовательные файлы из примечательных файлов",
     "parallelVerses": "Параллельные стихи",
     "githubHymnLyrics": "Песня GitHub Hymn",
+    "gitHubPluginsStartup": "Запуск модулей GitHub",
+    "gitHubPluginsShutdown": "Завершение работы модулей GitHub",
+    "gitHubPluginsLayout": "Макет модулей GitHub",
 }

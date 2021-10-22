@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "കുറിപ്പ് ഫയലുകളില് നിന്നും Devotional",
     "parallelVerses": "à '- à', à ', à', à",
     "githubHymnLyrics": "GitHub Hymn Lyrics",
+    "gitHubPluginsStartup": "GitHub സംയോജകങ്ങള് ആരംഭിക്കുന്നു",
+    "gitHubPluginsShutdown": "GitHub സംയോജകങ്ങള് ഷട്ട്ഡാള്",
+    "gitHubPluginsLayout": "GitHub സംയോജകങ്ങള് മാതൃക",
 }
