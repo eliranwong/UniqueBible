@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "नोट फ़ाइल से भक्ति",
     "parallelVerses": "समांतर वर्सेस",
     "githubHymnLyrics": "गित्हब भजन गीत",
+    "gitHubPluginsStartup": "Githb Plugins स्टार्टअप",
+    "gitHubPluginsShutdown": "Githb प्लगिन बंद",
+    "gitHubPluginsLayout": "GitHअय्यूब प्लग-इन खाका",
 }

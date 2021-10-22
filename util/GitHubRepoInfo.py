@@ -11,4 +11,7 @@ class GitHubRepoInfo:
     epub = ("otseng/UniqueBible_EPUB", "epub", "githubEpub", "epub")
     pluginsContext = ("eliranwong/UniqueBible_Plugins_Context", "../plugins/context", "gitHubPluginsContext", "py")
     pluginsMenu = ("eliranwong/UniqueBible_Plugins_Menu", "../plugins/menu", "gitHubPluginsMenu", "py")
+    pluginsStartup = ("otseng/UniqueBible_Plugins_Startup", "../plugins/startup", "gitHubPluginsStartup", "py")
+    pluginsShutdown = ("otseng/UniqueBible_Plugins_Shutdown", "../plugins/shutdown", "gitHubPluginsShutdown", "py")
+    pluginsLayout = ("otseng/UniqueBible_Plugins_Layout", "../plugins/layout", "gitHubPluginsLayout", "py")
     devotionals = ("otseng/UniqueBible_Devotionals", "devotionals", "gitHubDevotionals", "devotion")

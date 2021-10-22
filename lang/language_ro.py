@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "Dedicare din Fişiere de notă",
     "parallelVerses": "Versete paralele",
     "githubHymnLyrics": "GitHub Versuri Versuri",
+    "gitHubPluginsStartup": "Startup GitHub Plugins",
+    "gitHubPluginsShutdown": "Shutdown Plug-in-",
+    "gitHubPluginsLayout": "Dispunere plugin-uri GitHub",
 }

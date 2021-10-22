@@ -61,6 +61,7 @@ def addGithubDownloadMenuItems(self, subMenu):
             ("gitHubDevotionals", self.installGithubDevotionals),
             ("gitHubBibleMp3Files", self.installGithubBibleMp3),
             ("gitHubPluginsContext", self.installGithubPluginsContext),
+            ("gitHubPluginsStartup", self.installGithubPluginsStartup),
             ("gitHubPluginsMenu", self.installGithubPluginsMenu),
         )
         for feature, action in items:

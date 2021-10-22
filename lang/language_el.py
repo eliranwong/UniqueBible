@@ -773,4 +773,7 @@ translation = {
     "devotionalFromNotes": "Αφοσίωση από αρχεία σημειώσεων",
     "parallelVerses": "Παράλληλες Εκδόσεις:",
     "githubHymnLyrics": "Στίχοι Hymn GitHub",
+    "gitHubPluginsStartup": "Εκκίνηση πρόσθετων λειτουργιών GitHub",
+    "gitHubPluginsShutdown": "Shutdown πρόσθετων λειτουργιών GitHub",
+    "gitHubPluginsLayout": "Διάταξη πρόσθετων λειτουργιών GitHub",
 }

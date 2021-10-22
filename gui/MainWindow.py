@@ -676,12 +676,16 @@ class MainWindow(QMainWindow):
             self.downloadBibleMp3Dialog.show()
 
     def installGithubPluginsContext(self):
-        self.installFromGitHub(GitHubRepoInfo.pluginsContext)
-        self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
+        if self.installFromGitHub(GitHubRepoInfo.pluginsContext):
+            self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
 
     def installGithubPluginsMenu(self):
-        self.installFromGitHub(GitHubRepoInfo.pluginsMenu)
-        self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
+        if self.installFromGitHub(GitHubRepoInfo.pluginsMenu):
+            self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
+
+    def installGithubPluginsStartup(self):
+        if self.installFromGitHub(GitHubRepoInfo.pluginsStartup):
+            self.displayMessage(config.thisTranslation["message_configurationTakeEffectAfterRestart"])
 
     def installGithubDevotionals(self):
         self.installFromGitHub(GitHubRepoInfo.devotionals)
@@ -710,6 +714,8 @@ class MainWindow(QMainWindow):
                 CatalogUtil.reloadLocalCatalog()
                 self.reloadControlPanel(False)
                 self.installFromGitHub(gitHubRepoInfo)
+                return True
+        return False
 
     # Select database to modify
     def selectDatabaseToModify(self):
