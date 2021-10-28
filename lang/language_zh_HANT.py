@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "GitHub 外掛程式啟動",
     "gitHubPluginsShutdown": "GitHub 外掛程式關閉",
     "gitHubPluginsLayout": "GitHub 外掛程式佈置",
+    "searchAllLexicons": "搜尋所有墨西哥",
+    "searchAllDictionaries": "搜尋所有字典",
 }

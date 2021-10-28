@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "GitHub സംയോജകങ്ങള് ആരംഭിക്കുന്നു",
     "gitHubPluginsShutdown": "GitHub സംയോജകങ്ങള് ഷട്ട്ഡാള്",
     "gitHubPluginsLayout": "GitHub സംയോജകങ്ങള് മാതൃക",
+    "searchAllLexicons": "à ', à', à ', à', à ', à',",
+    "searchAllDictionaries": "എല്ലാ നിഘണ്ടുക്കളും തെരയുക",
 }

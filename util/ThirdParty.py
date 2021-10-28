@@ -2096,7 +2096,7 @@ class ThirdPartyDictionary:
         moduleList = sorted(list(moduleList))
         return moduleList
 
-    def search(self, entry):
+    def search(self, entry, showMenu=True):
         if not self.database:
             return "INVALID_COMMAND_ENTERED"
         else:
@@ -2104,7 +2104,7 @@ class ThirdPartyDictionary:
             similarMatch = self.getSimilarWord(entry)
             action = "searchThirdDictionary(this.value, \"{0}\")".format(entry)
             optionList = [(m, m) for m in self.moduleList]
-            selectList = self.formatSelectList(action, optionList)
+            selectList = self.formatSelectList(action, optionList) if showMenu else ""
             config.thirdDictionary = self.module
             return "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(self.module, entry, exactMatch, similarMatch, selectList)
 
