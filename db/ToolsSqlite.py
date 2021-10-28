@@ -759,13 +759,14 @@ class Lexicon:
         except:
             return "Could not search {0} in {1}".format(searchString, self.module)
 
-    def getContent(self, entry):
+    def getContent(self, entry, showMenu=True):
         lexiconData = LexiconData()
         query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
         self.cursor.execute(query, (entry,))
         information = self.cursor.fetchone()
         contentText = """<h2>{0} - <ref onclick='concord("{1}")'>{1}</ref></h2>""".format(self.module, entry)
-        contentText += "<p>{0}</p>".format(lexiconData.getSelectForm(entry, self.module))
+        if showMenu:
+            contentText += "<p>{0}</p>".format(lexiconData.getSelectForm(entry, self.module))
         if not information:
             return contentText+"[not found]"
         else:

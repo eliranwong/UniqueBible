@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "깃허브 플루긴스 시동",
     "gitHubPluginsShutdown": "GitHub 플러그인 종료",
     "gitHubPluginsLayout": "GitHub 플러그인 레이아웃",
+    "searchAllLexicons": "모든 어휘를 검색합니다.",
+    "searchAllDictionaries": "모든 사전 검색",
 }

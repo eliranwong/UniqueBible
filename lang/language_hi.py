@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "Githb Plugins स्टार्टअप",
     "gitHubPluginsShutdown": "Githb प्लगिन बंद",
     "gitHubPluginsLayout": "GitHअय्यूब प्लग-इन खाका",
+    "searchAllLexicons": "सभी Lexicons खोजें",
+    "searchAllDictionaries": "सभी शब्दकोशों को ढूंढें",
 }

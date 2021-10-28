@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "GitHub 插件启动",
     "gitHubPluginsShutdown": "GitHub 插件关闭",
     "gitHubPluginsLayout": "GitHub 插件布局",
+    "searchAllLexicons": "搜索所有词汇",
+    "searchAllDictionaries": "搜索所有字典",
 }

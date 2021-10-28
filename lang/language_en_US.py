@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "GitHub Plugins Startup",
     "gitHubPluginsShutdown": "GitHub Plugins Shutdown",
     "gitHubPluginsLayout": "GitHub Plugins Layout",
+    "searchAllLexicons": "Search ALL Lexicons",
+    "searchAllDictionaries": "Search ALL Dictionaries",
 }

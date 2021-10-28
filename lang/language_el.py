@@ -776,4 +776,6 @@ translation = {
     "gitHubPluginsStartup": "Εκκίνηση πρόσθετων λειτουργιών GitHub",
     "gitHubPluginsShutdown": "Shutdown πρόσθετων λειτουργιών GitHub",
     "gitHubPluginsLayout": "Διάταξη πρόσθετων λειτουργιών GitHub",
+    "searchAllLexicons": "Αναζήτηση σε ALL Lexicon",
+    "searchAllDictionaries": "Αναζήτηση σε όλα τα λεξικά",
 }

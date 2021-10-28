@@ -1,3 +1,6 @@
+Change in version 26.27:
+* Add search all lexicons and dictionary option
+
 Change in version 26.26:
 * Add Github startup plugin download support
 

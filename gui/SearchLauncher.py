@@ -150,12 +150,21 @@ class SearchLauncher(QWidget):
         initialDictionaryIndex = self.parent.dictionaryListAbb.index(config.dictionary) if config.dictionary in self.parent.dictionaryListAbb else 0
         self.thirdPartyDictionaryCombo = QComboBox()
         initialThridPartyDictionaryIndex = self.parent.thirdPartyDictionaryList.index(config.thirdDictionary) if config.thirdDictionary in self.parent.thirdPartyDictionaryList else 0
+        self.lexiconList = self.parent.lexiconList
+        self.lexiconList.append(config.thisTranslation['searchAllLexicons'])
+        self.dictionaryList = self.parent.dictionaryList
+        self.dictionaryList.append(config.thisTranslation['searchAllDictionaries'])
+        self.dictionaryListAbb = self.parent.dictionaryListAbb
+        self.dictionaryListAbb.append(config.thisTranslation['searchAllDictionaries'])
+        self.thirdPartyDictionaryList = self.parent.thirdPartyDictionaryList
+        self.thirdPartyDictionaryList.append(config.thisTranslation['searchAllDictionaries'])
+
         features = (
             (self.topicCombo, "menu5_topics", lambda: self.runSearchSelection("topic"), self.parent.topicList, initialTopicIndex),
-            (self.lexiconCombo, "menu5_lexicon", lambda: self.runSearchSelection("lexicon"), self.parent.lexiconList, initialLexiconIndex),
+            (self.lexiconCombo, "menu5_lexicon", lambda: self.runSearchSelection("lexicon"), self.lexiconList, initialLexiconIndex),
             (self.encyclopediaCombo, "context1_encyclopedia", lambda: self.runSearchSelection("encyclopedia"), self.parent.encyclopediaList, initialEncyclopediaIndex),
-            (self.dictionaryCombo, "context1_dict", lambda: self.runSearchSelection("dictionary"), self.parent.dictionaryList, initialDictionaryIndex),
-            (self.thirdPartyDictionaryCombo, "menu5_3rdDict", lambda: self.runSearchSelection("thirdPartyDictionary"), self.parent.thirdPartyDictionaryList, initialThridPartyDictionaryIndex),
+            (self.dictionaryCombo, "context1_dict", lambda: self.runSearchSelection("dictionary"), self.dictionaryList, initialDictionaryIndex),
+            (self.thirdPartyDictionaryCombo, "menu5_3rdDict", lambda: self.runSearchSelection("thirdPartyDictionary"), self.thirdPartyDictionaryList, initialThridPartyDictionaryIndex),
         )
         for combo, feature, action, items, initialIndex in features:
             widgetLayout.addLayout(self.singleSelectionLayout(combo, feature, action, items, initialIndex))
@@ -249,10 +258,10 @@ class SearchLauncher(QWidget):
         if searchItem:
             comboDict = {
                 "topic": (self.topicCombo, self.parent.topicListAbb),
-                "lexicon": (self.lexiconCombo, self.parent.lexiconList),
+                "lexicon": (self.lexiconCombo, self.lexiconList),
                 "encyclopedia": (self.encyclopediaCombo, self.parent.encyclopediaListAbb),
-                "dictionary": (self.dictionaryCombo, self.parent.dictionaryListAbb),
-                "thirdPartyDictionary": (self.thirdPartyDictionaryCombo, self.parent.thirdPartyDictionaryList),
+                "dictionary": (self.dictionaryCombo, self.dictionaryListAbb),
+                "thirdPartyDictionary": (self.thirdPartyDictionaryCombo, self.thirdPartyDictionaryList),
             }
             combo, resourceList = comboDict[resource]
             selectedItem = resourceList[combo.currentIndex()]

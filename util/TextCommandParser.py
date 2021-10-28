@@ -2259,29 +2259,34 @@ class TextCommandParser:
 
     # SEARCHTOOL:::
     def textSearchTool(self, command, source):
-        module, entry = self.splitCommand(command)
+        origModule, entry = self.splitCommand(command)
+        if origModule == config.thisTranslation['searchAllDictionaries']:
+            modules = self.parent.dictionaryListAbb
+        else:
+            modules = [origModule]
         TextCommandParser.last_text_search = entry
         indexes = IndexesSqlite()
+        content = ""
         toolList = [("", "[search other resources]"), ("EXLBP", "Exhaustive Library of Bible Characters"), ("EXLBL", "Exhaustive Library of Bible Locations")] + indexes.topicList + indexes.dictionaryList + indexes.encyclopediaList
-        if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
-            action = "searchItem(this.value, \"{0}\")".format(entry)
-            selectList = indexes.formatSelectList(action, toolList)
-            if module in dict(indexes.topicList).keys():
-                config.topic = module
-            elif module in dict(indexes.dictionaryList).keys() and not module == "HBN":
-                config.dictionary = module
-            elif module in dict(indexes.encyclopediaList).keys():
-                config.encyclopedia = module
-            del indexes
-            searchSqlite = SearchSqlite()
-            exactMatch = searchSqlite.getContent(module, entry)
-            similarMatch = searchSqlite.getSimilarContent(module, entry)
-            del searchSqlite
-            return ("study",
-                    "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}"
-                    .format(module, entry, exactMatch, similarMatch, selectList), {'tab_title': 'Search:' + module + ':' + entry})
+        for module in modules:
+            if module in dict(toolList[1:]).keys() or module in ("mRMAC", "mETCBC", "mLXX"):
+                action = "searchItem(this.value, \"{0}\")".format(entry)
+                selectList = indexes.formatSelectList(action, toolList)
+                if module in dict(indexes.topicList).keys():
+                    config.topic = module
+                elif module in dict(indexes.dictionaryList).keys() and not module == "HBN":
+                    config.dictionary = module
+                elif module in dict(indexes.encyclopediaList).keys():
+                    config.encyclopedia = module
+                searchSqlite = SearchSqlite()
+                exactMatch = searchSqlite.getContent(module, entry)
+                similarMatch = searchSqlite.getSimilarContent(module, entry)
+                del searchSqlite
+                content += "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList)
+        del indexes
+        if len(content) > 0:
+            return ("study", content, {'tab_title': 'Search:' + origModule + ':' + entry})
         else:
-            del indexes
             return self.invalidCommand()
 
     # SEARCH:::
@@ -2418,6 +2423,12 @@ class TextCommandParser:
             defaultLexicon = self.getDefaultLexicons()
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
         module, entries = self.splitCommand(command)
+        if module == config.thisTranslation['searchAllLexicons']:
+            modules = LexiconData().lexiconList
+            showLexiconMenu = False
+        else:
+            modules = [module]
+            showLexiconMenu = True
         entries = entries.strip()
         if config.useLiteVerseParsing and not config.noQt:
             try:
@@ -2426,19 +2437,21 @@ class TextCommandParser:
             except:
                 pass
         TextCommandParser.last_lexicon_entry = entries
-        config.lexicon = module
-        lexicon = Lexicon(module)
-        # Convert ETCBC Hebrew lexeme codes, if any, to Hebrew Strong's numbers
-        morphologySqlite = MorphologySqlite()
-        entriesSplit = entries.split("_")
-        entryList = []
-        for entry in entriesSplit:
-            if not module.startswith("Concordance") and entry.startswith("E"):
-                entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
-            else:
-                entryList.append(entry)
-        content = "<hr>".join([lexicon.getContent(entry) for entry in entryList])
-        del lexicon
+        content = ""
+        for module in modules:
+            config.lexicon = module
+            lexicon = Lexicon(module)
+            # Convert ETCBC Hebrew lexeme codes, if any, to Hebrew Strong's numbers
+            morphologySqlite = MorphologySqlite()
+            entriesSplit = entries.split("_")
+            entryList = []
+            for entry in entriesSplit:
+                if not module.startswith("Concordance") and entry.startswith("E"):
+                    entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
+                else:
+                    entryList.append(entry)
+            content += "<hr>".join([lexicon.getContent(entry, showLexiconMenu) for entry in entryList])
+            del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
@@ -2923,14 +2936,23 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.thirdDictionary, command)
         module, entry = self.splitCommand(command)
-        module = self.parent.isThridPartyDictionary(module)
-        if not entry or not module:
-            return self.invalidCommand("study")
+        if module == config.thisTranslation['searchAllDictionaries']:
+            modules = self.parent.thirdPartyDictionaryList
+            showMenu = False
         else:
-            thirdPartyDictionary = ThirdPartyDictionary(module)
-            content = thirdPartyDictionary.search(entry)
-            del thirdPartyDictionary
+            modules = [module]
+            showMenu = True
+        content = ""
+        for module in modules:
+            module = self.parent.isThridPartyDictionary(module)
+            if entry and module:
+                thirdPartyDictionary = ThirdPartyDictionary(module)
+                content += thirdPartyDictionary.search(entry, showMenu)
+                del thirdPartyDictionary
+        if len(content) > 0:
             return ("study", content, {})
+        else:
+            return self.invalidCommand("study")
 
     # THIRDDICTIONARY:::
     def thirdDictionaryOpen(self, command, source):
