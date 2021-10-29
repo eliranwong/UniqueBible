@@ -1020,7 +1020,7 @@ class ConfigUtil:
         # Show mini keyboard in miniControl
         """
         if not hasattr(config, "showMiniKeyboardInMiniControl"):
-            config.showMiniKeyboardInMiniControl = True
+            config.showMiniKeyboardInMiniControl = False
         config.help["parseClearSpecialCharacters"] = """
         # Clear special characters when parsing
         # When set to True, will make parsing take a long time

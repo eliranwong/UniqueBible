@@ -11,7 +11,7 @@ from http.server import SimpleHTTPRequestHandler
 from time import gmtime
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
 from util.RemoteCliMainWindow import RemoteCliMainWindow
@@ -1014,7 +1014,11 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return self.formatSelectList("bibleNameSide", "submitTextCommand", self.bibles, config.mainText)
 
     def bookSelection(self):
-        return self.formatSelectList("bookName", "submitBookCommand", self.books, str(config.mainB))
+        books = Bible(config.mainText).getBookList()
+        bookList = []
+        for book in books:
+            bookList.append((str(book), self.bookMap[str(book)]))
+        return self.formatSelectList("bookName", "submitBookCommand", bookList, str(config.mainB))
 
     def verseActiionSelection(self):
         features = [("_noAction", "[{0}]".format(config.thisTranslation["features"])),]

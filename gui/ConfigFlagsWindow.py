@@ -113,7 +113,7 @@ class ConfigFlagsWindow(QDialog):
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, False, config.thisTranslation["displayCmdOutput"]),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
-            ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, True, config.thisTranslation["showMiniKeyboardInMiniControl"]),
+            ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
         ]
         if config.isTtsInstalled:
             options += [
