@@ -1,3 +1,6 @@
+Change in version 26.28:
+* Only display books that are in that Bible in web menu
+
 Change in version 26.27:
 * Add search all lexicons and dictionary option
 
