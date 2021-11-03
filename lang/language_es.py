@@ -778,4 +778,5 @@ translation = {
     "gitHubPluginsLayout": "Diseño de plugins de GitHub",
     "searchAllLexicons": "Buscar TODOS los Lexicones",
     "searchAllDictionaries": "Buscar todos los diccionarios",
+    "custom": "Personalizado",
 }

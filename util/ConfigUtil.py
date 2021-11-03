@@ -34,6 +34,7 @@ class ConfigUtil:
         config.shortcutList = []
         config.enableHttpServer = False
         config.runMode = "gui"
+        config.customBooksRangeSearch = ""
 
         # Default settings for configurations:
 

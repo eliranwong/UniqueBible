@@ -778,4 +778,5 @@ translation = {
     "gitHubPluginsLayout": "GitHub സംയോജകങ്ങള് മാതൃക",
     "searchAllLexicons": "à ', à', à ', à', à ', à',",
     "searchAllDictionaries": "എല്ലാ നിഘണ്ടുക്കളും തെരയുക",
+    "custom": "തയ്യാറാക്കുക",
 }

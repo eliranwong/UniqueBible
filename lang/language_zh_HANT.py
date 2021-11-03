@@ -778,4 +778,5 @@ translation = {
     "gitHubPluginsLayout": "GitHub 外掛程式佈置",
     "searchAllLexicons": "搜尋所有墨西哥",
     "searchAllDictionaries": "搜尋所有字典",
+    "custom": "自訂",
 }

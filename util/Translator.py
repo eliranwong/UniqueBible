@@ -29,7 +29,8 @@ class Translator:
                 self.language_translator = language_translator
             else:
                 self.language_translator = None
-        except:
+        except Exception as ex:
+            print(ex)
             self.language_translator = None
 
     def getLanguageLists(self):
