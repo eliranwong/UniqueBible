@@ -166,22 +166,30 @@ class TextCommandParser:
             "search": (self.textCountSearch, """
             # [KEYWORD] SEARCH
             # Feature - Search bible / bibles for a string, displaying numbers of hits in individual bible books
-            # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Usage - SEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # To search for a string in a bible
             # e.g. SEARCH:::KJV:::love
             # To search with a wild card character "%"
             # e.g. SEARCH:::KJV:::Christ%Jesus
             # To search multiple bibles, separate versions with a character "_"
             # e.g. SEARCH:::KJV_WEB:::love
-            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus"""),
+            # e.g. SEARCH:::KJV_WEB:::Christ%Jesus
+            # To search specific books of bible
+            # e.g. SEARCH:::KJV:::love:::Matt-John, 1Cor, Rev
+            # e.g. SEARCH:::KJV:::temple:::OT
+            """),
             "searchall": (self.textSearchBasic, """
             # [KEYWORD] SEARCHALL
             # Feature - Search bible / bibles for a string
-            # Usage - SEARCHALL:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Usage - SEARCHALL:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # SEARCHALL::: is different from SEARCH::: that SEARCH::: shows the number of hits in individual books only whereas SEARCHALL::: display all texts of the result.
             # e.g. SEARCHALL:::KJV:::love
-            # To work on multiple bilbes, separate bible versions with a character "_":
-            # e.g. SEARCHALL:::KJV_WEB:::love"""),
+            # To work on multiple bibles, separate bible versions with a character "_":
+            # e.g. SEARCHALL:::KJV_WEB:::love
+            # To search specific books of bible
+            # e.g. SEARCHALL:::KJV:::love:::Matt-John, 1Cor, Rev
+            # e.g. SEARCHALL:::KJV:::temple:::OT
+            """),
             "searchreference": (self.textSearchReference, """
             # [KEYWORD] SEARCHREFERENCE"""),
             "searchtnk": (self.textSearchOT, """
@@ -205,26 +213,30 @@ class TextCommandParser:
             "regexsearch": (self.textSearchRegex, """
             # [KEYWORD] REGEXSEARCH
             # Feature - Search bible / bibles with regular expression
-            # Usage - REGEXSEARCH:::[BIBLE_VERSION(S)]:::[REGEX_PATTERN]
-            # e.g. REGEXSEARCH:::KJV:::God.*?heaven"""),
+            # Usage - REGEXSEARCH:::[BIBLE_VERSION(S)]:::[REGEX_PATTERN]:::[BIBLE_BOOKS]
+            # e.g. REGEXSEARCH:::KJV:::God.*?heaven
+            # To search specific books of bible
+            # e.g. REGEXSEARCH:::KJV:::God.*?love:::Matt-John, 1Cor, Rev
+            # e.g. REGEXSEARCH:::KJV:::God.*?temple:::OT
+            """),
             "advancedsearch": (self.textSearchAdvanced, """
             # [KEYWORD] ADVANCEDSEARCH
             # Feature - Search bible / bibles with a sql string
-            # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Usage - ADVANCEDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # e.g. ADVANCEDSEARCH:::KJV:::Book = 1 AND Scripture LIKE '%love%'
             # To work on multiple bibles, separate bible versions with a character "_":
             # e.g. ADVANCEDSEARCH:::KJV_WEB:::Book = 1 AND Scripture LIKE '%love%'"""),
             "andsearch": (self.textAndSearch, """
             # [KEYWORD] ANDSEARCH
             # Feature - Search bible / bibles for combinations of words without taking order into consideration
-            # Usage - ANDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Usage - ANDSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # Words are separated by a character "|" in a search string.
             # e.g. ANDSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" AND Scripture LIKE "%Jesus%" """),
             "orsearch": (self.textOrSearch, """
             # [KEYWORD] ORSEARCH
             # Feature - Search bible / bibles for verses containing at least on of the words given in a string
-            # Usage - ORSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]
+            # Usage - ORSEARCH:::[BIBLE_VERSION(S)]:::[LOOK_UP_STRING]:::[BIBLE_BOOKS]
             # Words are separated by a character "|" in a search string.
             # e.g. ORSEARCH:::KJV:::love|Jesus
             # alias of, e.g. ADVANCEDSEARCH:::KJV:::Scripture LIKE "%love%" OR Scripture LIKE "%Jesus%" """),
@@ -2298,7 +2310,10 @@ class TextCommandParser:
         if command.count(":::") == 0:
             command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
-        texts, searchEntry, *_ = commandList
+        texts, searchEntry = commandList
+        booksRange = ""
+        if searchEntry.count(":::") > 0:
+            searchEntry, booksRange = self.splitCommand(searchEntry)
         texts = self.getConfirmedTexts(texts)
         if texts and re.match("^[EHG][0-9]+?$", searchEntry):
             return self.textConcordance(command, "study")
@@ -2306,7 +2321,7 @@ class TextCommandParser:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, searchEntry, interlinear) for text in texts])
+            searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, searchEntry, interlinear, booksRange) for text in texts])
             del biblesSqlite
             return ("study", searchResult, {})
 
@@ -2350,14 +2365,16 @@ class TextCommandParser:
     # ANDSEARCH:::
     def textAndSearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
+        index = -2 if command.count(":::") == 2 else -1
+        commandList[index] = " AND ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[index].split("|")])
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
     # ORSEARCH:::
     def textOrSearch(self, command, source):
         commandList = command.split(":::")
-        commandList[-1] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[-1].split("|")])
+        index = -2 if command.count(":::") == 2 else -1
+        commandList[index] = " OR ".join(['Scripture LIKE "%{0}%"'.format(m.strip()) for m in commandList[index].split("|")])
         command = ":::".join(commandList)
         return self.textSearch(command, source, "ADVANCED", config.addFavouriteToMultiRef)
 
@@ -2367,11 +2384,15 @@ class TextCommandParser:
             command = "{0}:::{1}".format(config.mainText, command)
         commandList = self.splitCommand(command)
         texts = self.getConfirmedTexts(commandList[0])
-        if not len(commandList) == 2 or not texts:
+        searchEntry = commandList[1]
+        booksRange = ""
+        if searchEntry.count(":::") > 0:
+            searchEntry, booksRange = self.splitCommand(searchEntry)
+        if not texts:
             return self.invalidCommand()
         else:
             biblesSqlite = BiblesSqlite()
-            searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, commandList[1], favouriteVersion, referenceOnly) for text in texts])
+            searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, searchEntry, favouriteVersion, referenceOnly, booksRange) for text in texts])
             del biblesSqlite
             return ("study", searchResult, {})
 

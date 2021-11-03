@@ -392,14 +392,18 @@ input.addEventListener('keyup', function(event) {0}
         verses += "</table>"
         return verses
 
-    def countSearchBible(self, text, searchString, interlinear=False):
+    def countSearchBible(self, text, searchString, interlinear=False, booksRange=""):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
             searchString = TextUtil.removeVowelAccent(searchString)
             searchString = TextUtil.removeSpecialCharacters(searchString)
         content = "SEARCH:::{0}:::{1}".format(text, searchString)
+        if booksRange:
+            content += ":::{0}".format(booksRange)
+            bookList = BibleVerseParser(config.parserStandarisation).extractBookListAsBookNumberList(booksRange)
+        else:
+            bookList = self.getBookList(text)
         showCommand = "SEARCHALL"
         searchFunction = "searchBibleBook"
-        bookList = self.getBookList(text)
         bookCountList = [self.countSearchBook(text, book, searchString) for book in bookList]
         content += "<p>Total: <ref onclick='document.title=\"{3}:::{1}:::{2}\"'>{0} verse(s)</ref> found in {1}. <ref onclick='document.title=\"SEARCHREFERENCE:::{1}:::{2}\"'>***</ref></p><table><tr><th>Book</th><th>Verse(s)</th></tr>".format(sum(bookCountList), text, searchString, showCommand)
         for counter, bookCount in enumerate(bookCountList):
@@ -419,7 +423,7 @@ input.addEventListener('keyup', function(event) {0}
         elif text in formattedBibleList:
             return Bible(text).countSearchBook(book, searchString)
 
-    def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False):
+    def searchBible(self, text, mode, searchString, interlinear=False, referenceOnly=False, booksRange=""):
         if text in self.marvelBibles and not text in ["LXX1", "LXX1i", "LXX2", "LXX2i"]:
             searchString = TextUtil.removeVowelAccent(searchString)
         if not mode == "REGEX":
@@ -432,10 +436,8 @@ input.addEventListener('keyup', function(event) {0}
             query = "SELECT * FROM {0}".format(text)
         elif text in formattedBibleList:
             query = "SELECT * FROM Verses"
-        if not mode == "REGEX":
-            query += " WHERE "
-        else:
-            t = ()
+        query += " WHERE "
+        t = ()
         if mode == "BASIC":
             if referenceOnly:
                 searchCommand = "SEARCHREFERENCE"
@@ -443,12 +445,17 @@ input.addEventListener('keyup', function(event) {0}
                 searchCommand = "SEARCHALL"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
-            query += "Scripture LIKE ?"
+            query += "(Scripture LIKE ?)"
         elif mode == "ADVANCED":
             t = tuple()
             searchCommand = "ADVANCEDSEARCH"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
-            query += searchString
+            query += "({0})".format(searchString)
+        if booksRange:
+            if not mode == "REGEX":
+                query += " AND "
+            query += "book in ({0})".format(BibleVerseParser(config.parserStandarisation).extractBookListAsString(booksRange))
+            formatedText += ":::{0}".format(booksRange)
         query += " ORDER BY Book, Chapter, Verse"
         if text in plainBibleList:
             verses = self.getSearchVerses(query, t)
@@ -456,7 +463,9 @@ input.addEventListener('keyup', function(event) {0}
             verses = Bible(text).getSearchVerses(query, t)
         # Search fetched result with regular express here
         if mode == "REGEX":
-            formatedText += "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
+            formatedText = "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
+            if booksRange:
+                formatedText += ":::{0}".format(booksRange)
             verses = [(b, c, v, re.sub("({0})".format(searchString), r"<z>\1</z>", verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)) for b, c, v, verseText in verses if re.search(searchString, verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)]
         formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p><p>".format(len(verses))
         if referenceOnly:

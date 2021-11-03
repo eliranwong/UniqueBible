@@ -778,4 +778,5 @@ translation = {
     "gitHubPluginsLayout": "Διάταξη πρόσθετων λειτουργιών GitHub",
     "searchAllLexicons": "Αναζήτηση σε ALL Lexicon",
     "searchAllDictionaries": "Αναζήτηση σε όλα τα λεξικά",
+    "custom": "Έθιμο",
 }

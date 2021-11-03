@@ -360,6 +360,7 @@ class BibleVerseParser:
             print("'{0}' is not found.".format(inputName))
 
     def bookNameToNum(self, bookName):
+        bookName = bookName.strip()
         for key in self.sortedNames:
             if bookName.startswith(key):
                 return self.bibleBooksDict[key]
@@ -386,6 +387,68 @@ class BibleVerseParser:
             return bible, int(res[1]), int(res[2]), int(res[1]), int(res[3])
         else:
             return bible, int(res[1]), int(res[2]), int(res[3]), int(res[4])
+
+    # Convert a book string range into a list of book numbers
+    # Gen. -> [1]
+    # Gen,Exodus,Matt -> [1, 2, 40]
+    # Jude-Rev -> [65, 66]
+    # Psa, Matt-John, Rev -> [19, 40, 41, 42, 43, 66]
+    # OT -> [1, ..., 39]
+    # NT -> [40, ..., 66]
+    def extractBookList(self, inputString):
+        try:
+            books = []
+            bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+            sections = re.split(",", inputString)
+            for section in sections:
+                if "-" in section:
+                    ranges = re.split("-", section)
+                    start = bibleVerseParser.bookNameToNum(ranges[0])
+                    end = bibleVerseParser.bookNameToNum(ranges[1])
+                    if start is not None and end is not None:
+                        for book in range(start, end + 1):
+                            books.append(book)
+                else:
+                    if section.lower() == "ot":
+                        for book in range(1, 40):
+                            books.append(book)
+                    elif section.lower() == "nt":
+                        for book in range(40, 67):
+                            books.append(book)
+                    elif section.lower() == "all":
+                        for book in range(1, 500):
+                            books.append(book)
+                    else:
+                        books.append(bibleVerseParser.bookNameToNum(section))
+            return books
+        except:
+            return None
+
+    def extractBookListAsString(self, inputString):
+        books = self.extractBookList(inputString)
+        bookStr = ""
+        for book in books:
+            if book is not None:
+                if len(bookStr) > 0:
+                    bookStr += ","
+                bookStr += "{0}".format(book)
+        return bookStr
+
+    def extractBookListAsBookNameList(self, inputString):
+        books = self.extractBookList(inputString)
+        bookList = []
+        for book in books:
+            if book is not None:
+                bookList.append(BibleBooks.eng[str(book)][0])
+        return bookList
+
+    def extractBookListAsBookNumberList(self, inputString):
+        books = self.extractBookList(inputString)
+        bookList = []
+        for book in books:
+            if book is not None:
+                bookList.append(int(book))
+        return bookList
 
 """
 END - class BibleVerseParser
@@ -428,6 +491,12 @@ if __name__ == '__main__':
 
     ConfigUtil.setup()
     config.noQt = False
+    config.useLiteVerseParsing = True
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
 
-    parseImage()
+    bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+    print(bibleVerseParser.extractBookList("Jude-Rev"))
+    print(bibleVerseParser.extractBookListAsBookNameList("Psa, Matt-John, Rev"))
+    print(bibleVerseParser.extractBookListAsBookNumberList("Psa, Matt-John, Rev"))
+    print(bibleVerseParser.extractBookListAsString("nt"))
+    print(bibleVerseParser.extractBookList("Oadf"))

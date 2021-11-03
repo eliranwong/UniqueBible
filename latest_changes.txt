@@ -1,3 +1,7 @@
+Change in version 26.29:
+* Add ability to limit search by books
+- https://github.com/eliranwong/UniqueBible/wiki/Searching-Bible
+
 Change in version 26.28:
 * Only display books that are in that Bible in web menu
 

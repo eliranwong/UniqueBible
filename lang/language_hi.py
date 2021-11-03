@@ -778,4 +778,5 @@ translation = {
     "gitHubPluginsLayout": "GitHअय्यूब प्लग-इन खाका",
     "searchAllLexicons": "सभी Lexicons खोजें",
     "searchAllDictionaries": "सभी शब्दकोशों को ढूंढें",
+    "custom": "मनपसंद",
 }

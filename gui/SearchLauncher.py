@@ -1,10 +1,8 @@
 from functools import partial
 
 import config
-from db.BiblesSqlite import Bible
 from gui.CheckableComboBox import CheckableComboBox
 from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
-from qtpy.QtCore import Qt
 
 class SearchLauncher(QWidget):
 
@@ -17,12 +15,12 @@ class SearchLauncher(QWidget):
         self.setWindowTitle(config.thisTranslation["tools"])
         # set up variables
         self.bibleSearchModeTuple = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
+        config.bibleSearchRange = config.thisTranslation["all"]
         # setup interface
         self.setupUI()
 
     def setupUI(self):
         mainLayout0 = QVBoxLayout()
-        #mainLayout0.setSpacing(5)
         mainLayout0.addWidget(self.searchFieldWidget())
         mainLayout = QHBoxLayout()
         mainLayout.addWidget(self.column1Widget())
@@ -35,7 +33,6 @@ class SearchLauncher(QWidget):
         widget = QWidget()
 
         widgetLayout0 = QVBoxLayout()
-        #widgetLayout0.setSpacing(5)
 
         bibleWidget = QGroupBox(config.thisTranslation["bible"])
         bibleLayout = QVBoxLayout()
@@ -74,6 +71,25 @@ class SearchLauncher(QWidget):
         bibleWidget.setLayout(bibleLayout)
         
         widgetLayout0.addWidget(bibleWidget)
+
+        # Books range selection
+        booksWidget = QGroupBox(config.thisTranslation["menu10_books"])
+        booksLayout = QHBoxLayout()
+        booksLayout.setSpacing(1)
+        for range in [config.thisTranslation["all"], "OT", "NT", "Custom"]:
+            radioButton = QRadioButton(range)
+            radioButton.toggled.connect(lambda checked, range=range: self.booksChanged(checked, range))
+            if config.bibleSearchRange == range:
+                radioButton.setChecked(True)
+            booksLayout.addWidget(radioButton)
+            if range == "Custom":
+                self.customRangeRadioButton = radioButton
+        self.customBooksRangeSearchField = QLineEdit()
+        self.customBooksRangeSearchField.setText(config.customBooksRangeSearch)
+        self.customBooksRangeSearchField.textChanged.connect(self.customBooksRangeChanged)
+        booksLayout.addWidget(self.customBooksRangeSearchField)
+        booksWidget.setLayout(booksLayout)
+        widgetLayout0.addWidget(booksWidget)
 
         subLayout = QHBoxLayout()
         buttonRow = (
@@ -206,6 +222,15 @@ class SearchLauncher(QWidget):
         if checked:
             config.bibleSearchMode = mode
 
+    def booksChanged(self, checked, range):
+        if checked:
+            config.bibleSearchRange = range
+
+    def customBooksRangeChanged(self, text):
+        if len(text) > 0:
+            self.customRangeRadioButton.setChecked(True)
+            config.customBooksRangeSearch = text
+
     def getSearchItem(self):
         searchItem = self.searchField.text()
         noItemMessage = config.thisTranslation["menu5_searchItems"]
@@ -225,6 +250,10 @@ class SearchLauncher(QWidget):
         searchItem = self.getSearchItem()
         if searchItem:
             command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], "_".join(self.bibleCombo.checkItems), self.searchField.text())
+            if config.bibleSearchRange == "Custom":
+                command += ":::{0}".format(config.customBooksRangeSearch)
+            elif config.bibleSearchRange != config.thisTranslation["all"]:
+                command += ":::{0}".format(config.bibleSearchRange)
             self.parent.runTextCommand(command)
 
     def searchBook(self):
