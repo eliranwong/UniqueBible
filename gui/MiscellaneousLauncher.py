@@ -51,10 +51,11 @@ class MiscellaneousLauncher(QWidget):
         button.setToolTip(config.thisTranslation["presentation"])
         button.clicked.connect(lambda: self.parent.parent.runPlugin("Presentation"))
         subLayout.addWidget(button)
-        button = QPushButton(config.thisTranslation["youtube_utility"])
-        button.setToolTip(config.thisTranslation["youtube_utility"])
-        button.clicked.connect(self.parent.parent.openYouTube)
-        subLayout.addWidget(button)
+        if config.isYoutubeDownloaderInstalled:
+            button = QPushButton(config.thisTranslation["youtube_utility"])
+            button.setToolTip(config.thisTranslation["youtube_utility"])
+            button.clicked.connect(self.parent.parent.openYouTube)
+            subLayout.addWidget(button)
         box.setLayout(subLayout)
         return box
 

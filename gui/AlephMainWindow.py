@@ -710,14 +710,14 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        button = QPushButton()
-        button.setToolTip(config.thisTranslation["menu11_youtube"])
-        buttonFile = os.path.join("htmlResources", "youtube.png")
-        button.setIcon(QIcon(buttonFile))
-        button.clicked.connect(self.openYouTube)
-        self.secondToolBar.addWidget(button)
-
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            button = QPushButton()
+            button.setToolTip(config.thisTranslation["menu11_youtube"])
+            buttonFile = os.path.join("htmlResources", "youtube.png")
+            button.setIcon(QIcon(buttonFile))
+            button.clicked.connect(self.openYouTube)
+            self.secondToolBar.addWidget(button)
+            self.secondToolBar.addSeparator()
 
         if config.isVlcInstalled:
             button = QPushButton()
@@ -1201,10 +1201,10 @@ class AlephMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "youtube.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
-
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            iconFile = os.path.join("htmlResources", "youtube.png")
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addSeparator()
 
         if config.isVlcInstalled:
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")

@@ -534,8 +534,9 @@ class FocusMainWindow:
 
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
-        self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
+            self.secondToolBar.addSeparator()
         if config.isVlcInstalled:
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
             self.secondToolBar.addSeparator()
@@ -751,10 +752,10 @@ class FocusMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "youtube.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
-
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            iconFile = os.path.join("htmlResources", "youtube.png")
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addSeparator()
 
         if config.isVlcInstalled:
             iconFile = os.path.join("htmlResources", "buttons", "media_player.png")
