@@ -368,9 +368,10 @@ class ClassicMainWindow:
         menu11.addAction(QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
         menu11.addSeparator()
-        menu11.addAction(QAction(config.thisTranslation["menu11_setupDownload"], self, triggered=self.setupYouTube))
-        menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openYouTube))
-        menu11.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            menu11.addAction(QAction(config.thisTranslation["menu11_setupDownload"], self, triggered=self.setupYouTube))
+            menu11.addAction(QAction(config.thisTranslation["menu11_youtube"], self, triggered=self.openYouTube))
+            menu11.addSeparator()
         menu11.addAction(QAction("YouTube -> mp3", self, triggered=self.downloadMp3Dialog))
         menu11.addAction(QAction("YouTube -> mp4", self, triggered=self.downloadMp4Dialog))
         menu11.addSeparator()
@@ -582,8 +583,9 @@ class ClassicMainWindow:
 
         self.addStandardIconButton("menu2_larger", "fontPlus.png", self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
-        self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            self.addStandardIconButton("menu11_youtube", "youtube.png", self.openYouTube, self.secondToolBar)
+            self.secondToolBar.addSeparator()
         if config.isVlcInstalled:
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
             self.secondToolBar.addSeparator()
@@ -794,10 +796,10 @@ class ClassicMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        iconFile = os.path.join("htmlResources", "youtube.png")
-        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
-
-        self.secondToolBar.addSeparator()
+        if config.isYoutubeDownloaderInstalled:
+            iconFile = os.path.join("htmlResources", "youtube.png")
+            self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu11_youtube"], self.openYouTube)
+            self.secondToolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "reload.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)

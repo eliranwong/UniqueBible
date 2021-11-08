@@ -18,3 +18,4 @@ babel
 requests
 qrcode
 python-vlc
+yt-dlp

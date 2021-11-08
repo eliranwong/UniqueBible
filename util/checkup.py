@@ -254,6 +254,14 @@ def isVlcInstalled():
     except:
         return False
 
+def isYoutubeDownloaderInstalled():
+    try:
+        import yt_dlp
+        return True
+    except:
+        return False
+
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -288,6 +296,8 @@ def setInstallConfig(module, isInstalled):
         config.isPurePythonPngInstalled = isInstalled
     elif module == "python-vlc":
         config.isVlcInstalled = isInstalled
+    elif module == "yt-dlp":
+        config.isYoutubeDownloaderInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -348,6 +358,7 @@ optional = (
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
+    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -365,6 +376,7 @@ optional = (
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
+    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():

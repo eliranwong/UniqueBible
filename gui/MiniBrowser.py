@@ -115,7 +115,7 @@ class MiniBrowser(QWidget):
     def downloadSelectedOption(self, option):
         self.youTubeDownloadOptions.close()
         option = re.sub("^([0-9]+?) .*?$", r"\1", option)
-        downloadCommand = "youtube-dl -f {0}".format(option)
+        downloadCommand = "yt-dlp -f {0}".format(option)
         self.parent.textCommandParser.youtubeDownload(downloadCommand, self.addressBar.text())
 
     def downloadLastOption(self):
@@ -145,9 +145,10 @@ class MiniBrowser(QWidget):
         if address:
             self.youTubeView.load(QUrl(address))
 
-    def convertToFormat(self, fileType):
+    def convertToFormat(self, fileType, address=""):
         if self.isFfmpegInstalled:
-            address = self.addressBar.text()
+            if not address:
+                address = self.addressBar.text()
             self.downloadMpFile(fileType, address)
         else:
             self.displayMessage(config.thisTranslation["ffmpegNotFound"])

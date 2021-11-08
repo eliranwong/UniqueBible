@@ -1,3 +1,7 @@
+Change in version 26.30:
+* Replace youtube-dl with yt-dlp
+- https://github.com/eliranwong/UniqueBible/wiki/Download-Youtube-audio-video
+
 Change in version 26.29:
 * Add ability to limit search by books
 - https://github.com/eliranwong/UniqueBible/wiki/Searching-Bible

@@ -439,7 +439,7 @@ class TextCommandParser:
             # e.g. SPEAK:::zh-tw:::聖經都是上帝所默示的"""),
             "mp3": (self.mp3Download, """
             # [KEYWORD] MP3
-            # Feature: run youtube-dl to download mp3 from youtube, provided that youtube-dl is installed on user's system
+            # Feature: run yt-dlp to download mp3 from youtube, provided that yt-dlp is installed on user's system
             # Usage - MP3:::[youtube_link]"""),
             "mp4": (self.mp4Download, """
             # [KEYWORD] MP4
@@ -1208,7 +1208,7 @@ class TextCommandParser:
 
     # mp3:::
     def mp3Download(self, command, source):
-        downloadCommand = "youtube-dl -x --audio-format mp3"
+        downloadCommand = "yt-dlp -x --audio-format mp3"
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.musicFolder)
@@ -1220,7 +1220,7 @@ class TextCommandParser:
 
     # mp4:::
     def mp4Download(self, command, source):
-        downloadCommand = "youtube-dl -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
+        downloadCommand = "yt-dlp -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4"
         if not platform.system() == "Linux":
             # version 1: known issue - the download process blocks the main window
             self.downloadYouTubeFile(downloadCommand, command, config.videoFolder)
@@ -1245,7 +1245,7 @@ class TextCommandParser:
         return False if stderr else True
 
     def getYouTubeDownloadOptions(self, url):
-        options = subprocess.Popen("youtube-dl -F {0}".format(url), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        options = subprocess.Popen("yt-dlp -F {0}".format(url), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, *_ = options.communicate()
         options = stdout.decode("utf-8").split("\n")
         return [option for option in options if re.search(r"^[0-9]+? ", option)]
@@ -1253,7 +1253,7 @@ class TextCommandParser:
     def downloadYouTubeFile(self, downloadCommand, youTubeLink, outputFolder, noFfmpeg=False):
         # Download / upgrade to the latest version
         if not hasattr(config, "youtubeDlIsUpdated") or (hasattr(config, "youtubeDlIsUpdated") and not config.youtubeDlIsUpdated):
-            installmodule("--upgrade youtube_dl")
+            installmodule("--upgrade yt-dlp")
             config.youtubeDlIsUpdated = True
         if self.isFfmpegInstalled() or noFfmpeg:
             if platform.system() == "Linux":
