@@ -12,15 +12,23 @@ from gui.MultiLineInputDialog import MultiLineInputDialog
 class LiveFilterDialog(QDialog):
 
     JS_HIDE = """
+            count = 0;
+            searchResultCount = document.getElementById("searchResultCount");
             divs = document.querySelectorAll("div");
             for (var i = 0, len = divs.length; i < len; i++) {{
                 div = divs[i];
                 div.hidden = {0};
+                count++;
             }};
+            if (searchResultCount) {{
+                searchResultCount.innerHTML = count;
+            }}
             """
 
     JS_SHOW = """
-            wordSets = [{0}]; 
+            wordSets = [{0}];
+            count = 0;
+            searchResultCount = document.getElementById("searchResultCount");
             divs = document.querySelectorAll("div");
             for (var i=0, len=divs.length; i < len; i++) {{
                 div = divs[i];
@@ -39,8 +47,12 @@ class LiveFilterDialog(QDialog):
                 }}
                 if (found) {{
                     div.hidden = false;
+                    count++;
                 }}
             }};
+            if (searchResultCount) {{
+                searchResultCount.innerHTML = count;
+            }}
             """
 
     def __init__(self, parent):
