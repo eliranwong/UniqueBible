@@ -467,7 +467,7 @@ input.addEventListener('keyup', function(event) {0}
             if booksRange:
                 formatedText += ":::{0}".format(booksRange)
             verses = [(b, c, v, re.sub("({0})".format(searchString), r"<z>\1</z>", verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)) for b, c, v, verseText in verses if re.search(searchString, verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)]
-        formatedText += "<p>x <b style='color: brown;'>{0}</b> verse(s)</p><p>".format(len(verses))
+        formatedText += "<p>x <b id='searchResultCount' style='color: brown;'>{0}</b> verse(s)</p><p>".format(len(verses))
         if referenceOnly:
             parser = BibleVerseParser(config.parserStandarisation)
             formatedText += "; ".join(["<ref onclick='bcv({0}, {1}, {2})'>{3}</ref>".format(b, c, v, parser.bcvToVerseReference(b, c, v)) for b, c, v, *_ in verses])

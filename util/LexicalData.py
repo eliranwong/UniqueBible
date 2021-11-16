@@ -10351,6 +10351,7 @@ class LexicalData:
         "H1001": ("בִּירְתָא", "A:N-F", "citadel", "bi.ra"),
         "H1002": ("בִּירָה", "H:N-F", "palace", "bi.rah"),
         "H1003": ("בִּירָנִית", "H:N-F", "fortress", "bi.ra.nit"),
+        "H1004": ("בַּ֫יִת", "H:N-M", "house", "ba.yit"),
         "H1004a": ("בֵּית", "H:Prep", "between", ""),
         "H1004b": ("בַּ֫יִת", "H:N-M", "house", "ba.yit"),
         "H1005": ("בַּ֫יִת", "A:N-M", "house", "ba.yit"),
