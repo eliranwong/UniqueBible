@@ -20,14 +20,15 @@ class DownloadBibleMp3Dialog(QDialog):
         super().__init__()
 
         self.bibles = {
-            "BBE (British)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
-            "KJV (American)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
-            "KJV (American - soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
+            "BBE (British accent)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
+            "KJV (American accent)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
+            "KJV (American soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
+            "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
+            "WEB (American accent)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
             "CUV (Chinese)": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
-            "NHEB (Indian)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
+            "HHBD (Hindi)": ("HHBD", "otseng/UniqueBible_MP3_HHBD", "default"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
-            "WEB (American)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
         }
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
@@ -373,15 +374,21 @@ class DownloadBibleMp3Util:
         files = glob.glob(sourceFiles)
         for file in sorted(files):
             base = os.path.basename(file)
-            bookNum = int(base[1:3])
-            if base[0] == 'B':
-                bookNum += 39
+
+            # bookNum = int(base[1:3])
+            # if base[0] == 'B':
+            #     bookNum += 39
+
             # bookNum = int(base[:2])
+
+            bookNum = int(base[:2])
+            bookNum += 39
+
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             try:
-                # chapter = int(base[-7:-4])
-                chapter = int(base[6:8])
+                chapter = int(base[-6:-4])
+                # chapter = int(base[6:8])
             except:
                 try:
                     chapter = int(base[-6:-4])
@@ -534,5 +541,14 @@ if __name__ == '__main__':
     # destDir = "/Users/otseng/dev/UniqueBible/audio/bibles/TR/modern"
     # DownloadBibleMp3Util.moveGreekFiles(sourceDir, destDir, True)
 
-    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/TR/modern"
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/TR/modern"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    HHBD
+    '''
+    # sourceDir = "/Users/otseng/Downloads/HHBD"
+    # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(sourceDir, True)
+
+    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/HHBD/default"
     DownloadBibleMp3Util.zipFiles(sourceDir, True)

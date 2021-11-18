@@ -27,7 +27,7 @@ from util.TextFileReader import TextFileReader
 from util.Translator import Translator
 from util.ThirdParty import Converter, ThirdPartyDictionary
 from util.Languages import Languages
-from db.ToolsSqlite import BookData, IndexesSqlite, Book
+from db.ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
 from db.Highlight import Highlight
 from gui.ConfigFlagsWindow import ConfigFlagsWindow
 from gui.EnableIndividualPlugins import EnableIndividualPlugins
@@ -554,6 +554,7 @@ class MainWindow(QMainWindow):
         elif notification:
             self.displayMessage(config.thisTranslation["message_failedToInstall"])
         config.isDownloading = False
+        Commentary().reloadFileLookup()
         CatalogUtil.reloadLocalCatalog()
         self.setupMenuLayout(config.menuLayout)
 
