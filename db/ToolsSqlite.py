@@ -515,6 +515,9 @@ class Commentary:
                 self.connection = sqlite3.connect(self.database)
                 self.cursor = self.connection.cursor()
         if Commentary.fileLookup is None:
+            self.reloadFileLookup()
+
+    def reloadFileLookup(self):
             Commentary.fileLookup = {}
             commentaryFolder = config.commentariesFolder
             commentaryList = [f[1:-11] for f in os.listdir(commentaryFolder) if

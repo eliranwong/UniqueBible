@@ -1,3 +1,6 @@
+Change in version 26.32:
+* Add HHBD (Hindi) Bible and MP3 files
+
 Change in version 26.31:
 * Update search result count for live filter
 
