@@ -1,3 +1,6 @@
+Change in version 26.33:
+* Show Bible in either main window or study window for “Harmonies and Parallels” with “Open Bible reference in Bible window” button
+
 Change in version 26.32:
 * Add HHBD (Hindi) Bible and MP3 files
 
