@@ -1,3 +1,6 @@
+Change in version 26.34:
+* Fix window not maximized on startup in Windows
+
 Change in version 26.33:
 * Show Bible in either main window or study window for “Harmonies and Parallels” with “Open Bible reference in Bible window” button
 

@@ -27,11 +27,11 @@ ConfigUtil.setup()
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
 config.noQt = False
+config.cli = False
 if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
-    config.cli = False
 elif len(sys.argv) > 1 and sys.argv[1] in ("telnet-server", "http-server", "execute-macro"):
     config.noQt = True
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
