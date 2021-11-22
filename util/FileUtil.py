@@ -72,7 +72,7 @@ class FileUtil:
             pass
 
     @staticmethod
-    def getBibleMP3File(text, book, folder, chapter):
+    def getBibleMP3File(text, book, folder, chapter, verse=None):
         b = book
         a = "A"
         if b == 19:
@@ -82,6 +82,16 @@ class FileUtil:
         if b > 39:
             b -= 39
             a = "B"
+        if verse is not None:
+            filesearch = "audio/bibles/{0}/{1}/{2}*/chapter{4}/*-{4}-*{5}.mp3".format(text, folder, "{:02d}".format(book),
+                                                                      "{:02d}".format(book),
+                                                                      "{:02d}".format(chapter),
+                                                                      "{:02d}".format(verse))
+            file = glob.glob(filesearch)
+            if file:
+                return file[0]
+            else:
+                return None
         filesearch = "audio/bibles/{0}/{1}/{2}{3}*_{4}*.mp3".format(text, folder, a, "{:02d}".format(b), c)
         file = glob.glob(filesearch)
         if file:
