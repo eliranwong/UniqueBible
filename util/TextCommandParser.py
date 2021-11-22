@@ -1310,7 +1310,7 @@ class TextCommandParser:
                 if count == 0:
                     if command.startswith("@"):
                         folder = command[1:]
-                        playlist.append((text, book, chapter, folder))
+                        playlist.append((text, book, chapter, None, folder))
                     else:
                         playlist = self.getBiblePlaylist(command, text, folder)
                 elif count == 1:
