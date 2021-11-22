@@ -1,3 +1,6 @@
+Change in version 26.35:
+* Add support to read a single Bible verse
+
 Change in version 26.34:
 * Fix window not maximized on startup in Windows
 

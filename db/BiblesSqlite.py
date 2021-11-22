@@ -646,8 +646,10 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
+        readChapter = ""
         if source == "main":
-            chapter += Bible.insertReadBibleLink(text, b, c)
+            readChapter = Bible.insertReadBibleLink(text, b, c)
+            chapter += readChapter
         chapter += "</h2>"
         titleList = self.getVerseList(b, c, "title")
         verseList = self.readTextChapter(text, b, c)
@@ -665,6 +667,8 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl1\')" class="ohl1">&#9678;</ref>'.format(b, c, v)
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl2\')" class="ohl2">&#9678;</ref>'.format(b, c, v)
                 chapter += '<ref onclick="hiV({0},{1},{2},\'ul1\')" class="oul1">&#9683;</ref>'.format(b, c, v)
+            if readChapter:
+                chapter += Bible.insertReadBibleLink(text, b, c, v)
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add note indicator
             if v in noteVerseList:
@@ -1024,7 +1028,7 @@ class Bible:
             return "<span style='color:gray;'>['{0}' does not contain this chapter.]</span>".format(self.text)
 
     @staticmethod
-    def insertReadBibleLink(text, b, c):
+    def insertReadBibleLink(text, b, c, v=None):
         data = ""
         if config.runMode == "gui" and config.isVlcInstalled:
             directory = "audio/bibles/{0}".format(text)
@@ -1035,10 +1039,14 @@ class Bible:
                 for index, dir in enumerate(directories):
                     if index > 2:
                         index = 2
-                    file = FileUtil.getBibleMP3File(text, b, dir, c)
+                    file = FileUtil.getBibleMP3File(text, b, dir, c, v)
                     if file:
                         icon = '&#{0}'.format(128264 + index)
-                        data += """ <ref onclick="document.title='READBIBLE:::@{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(dir, icon)
+                        if v is not None:
+                            command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
+                        else:
+                            command = "READBIBLE:::@{0}".format(dir)
+                        data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: .8em">{1}</ref>""".format(command, icon)
         return data
 
     def formatVerseNumber(self, match):

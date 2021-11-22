@@ -3660,8 +3660,8 @@ class MainWindow(QMainWindow):
             else:
                 self.vlcPlayer = VlcPlayer(self)
             for listItem in playlist:
-                (text, book, chapter, folder) = listItem
-                file = FileUtil.getBibleMP3File(text, book, folder, chapter)
+                (text, book, chapter, verse, folder) = listItem
+                file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
                 if file:
                     self.vlcPlayer.addToPlaylist(file)
             self.vlcPlayer.show()
