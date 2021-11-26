@@ -1,3 +1,6 @@
+Change in version 26.36:
+* Add 'Ancient Greek for Everyone' PDF
+
 Change in version 26.35:
 * Add support to read a single Bible verse
 
