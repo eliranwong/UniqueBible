@@ -35,6 +35,7 @@ class ConfigUtil:
         config.enableHttpServer = False
         config.runMode = "gui"
         config.customBooksRangeSearch = ""
+        config.mainCssBibleFontStyle = ""
 
         # Default settings for configurations:
 

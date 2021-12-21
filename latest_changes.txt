@@ -1,3 +1,6 @@
+Change in version 26.37:
+* Fix multiple verses in web view
+
 Change in version 26.36:
 * Add 'Ancient Greek for Everyone' PDF
 

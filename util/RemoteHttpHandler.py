@@ -359,7 +359,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 tempDeveloper = True
             try:
                 view, content, *_ = self.textCommandParser.parser(self.command, "http")
-            except:
+            except Exception as e:
                 content = "Error!"
             if tempDeveloper:
                 config.developer = False
