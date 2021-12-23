@@ -173,7 +173,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         for cmd in ignoreCommands:
             if cmd in path:
                 return True
-        if path.startswith("/index.html?cmd=bible"):
+        if path.lower().startswith("/index.html?cmd=bible"):
             return False
         if len(path) > 255:
             return True
