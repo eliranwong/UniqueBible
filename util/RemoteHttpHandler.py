@@ -173,6 +173,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         for cmd in ignoreCommands:
             if cmd in path:
                 return True
+        if path.startswith("/index.html?cmd=bible"):
+            return False
         if len(path) > 255:
             return True
         return False
@@ -200,6 +202,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 query_components = parse_qs(urlparse(self.path).query)
                 if 'cmd' in query_components:
                     self.command = query_components["cmd"][0].strip()
+                    self.command = self.command.replace("+", " ")
                     if self.command:
                         if self.command.lower().endswith("bible:::") and self.command.count(":::") >= 2:
                             commandSplit = self.command.split(":::")
