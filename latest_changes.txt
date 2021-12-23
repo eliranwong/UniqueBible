@@ -1,3 +1,6 @@
+Change in version 26.38:
+* Fix long Bible verse searches in Chinese
+
 Change in version 26.37:
 * Fix multiple verses in web view
 
