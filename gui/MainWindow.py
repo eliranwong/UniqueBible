@@ -3044,7 +3044,12 @@ class MainWindow(QMainWindow):
                     views[view].setHtml(html, baseUrl)
 
                 if addRecord:
-                    self.addHistoryRecord(view, textCommand)
+                    tab = "0"
+                    if view == "main":
+                        tab = str(self.mainView.currentIndex())
+                    elif view == "study":
+                        tab = str(self.studyView.currentIndex())
+                    self.addHistoryRecord(view, textCommand, tab)
 #                if addRecord == True and view in ("main", "study"):
 #                    compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
 #                    if config.enforceCompareParallel and not config.tempRecord:
@@ -3142,8 +3147,8 @@ class MainWindow(QMainWindow):
         return html
 
     # add a history record
-    def addHistoryRecord(self, view, textCommand):
-        self.crossPlatform.addHistoryRecord(view, textCommand)
+    def addHistoryRecord(self, view, textCommand, tab="0"):
+        self.crossPlatform.addHistoryRecord(view, textCommand, tab)
 
     # switch between landscape / portrait mode
     def setFullIconSize(self, full):

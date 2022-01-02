@@ -758,6 +758,10 @@ class ConfigUtil:
         if not hasattr(config, "history"):
             config.history = {"external": ["note_editor.uba"], "main": ["BIBLE:::KJV:::Genesis 1:1"],
                               "study": ["BIBLE:::NET:::John 3:16"]}
+        config.help["tabHistory"] = """
+        # Tab history records for startup"""
+        if not hasattr(config, "tabHistory"):
+            config.tabHistory = {"main": {"0": config.history["main"][-1]}, "study": {"0": config.history["study"][-1]}}
         config.help["installHistory"] = """
         # Installed Formatted Bibles"""
         if not hasattr(config, "installHistory"):
@@ -1269,6 +1273,7 @@ class ConfigUtil:
             ("maximumHistoryRecord", config.maximumHistoryRecord),
             ("currentRecord", {'main': 0, 'study': 0}),
             ("history", config.history),
+            ("tabHistory", config.tabHistory),
             ("installHistory", config.installHistory),
             ("enableMenuUnderline", config.enableMenuUnderline),
             ("githubAccessToken", config.githubAccessToken),

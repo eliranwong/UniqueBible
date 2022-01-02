@@ -92,7 +92,7 @@ class CrossPlatform:
 
     # History record management
 
-    def addHistoryRecord(self, view, textCommand):
+    def addHistoryRecord(self, view, textCommand, tab="0"):
         if not (config.enableHttpServer and config.webHomePage == "{0}.html".format(config.webPrivateHomePage)):
             if view == "http":
                 view = "main"
@@ -108,14 +108,16 @@ class CrossPlatform:
                             view = "study"
                             textCommand = re.sub("^.*?:::", "STUDY:::", textCommand)
                     if config.tempRecord:
-                        self.runAddHistoryRecord("main", config.tempRecord)
+                        self.runAddHistoryRecord("main", config.tempRecord, tab)
                         config.tempRecord = ""
                     elif not (view == "main" and config.enforceCompareParallel) or compareParallel:
-                        self.runAddHistoryRecord(view, textCommand)
+                        self.runAddHistoryRecord(view, textCommand, tab)
                 else:
-                    self.runAddHistoryRecord(view, textCommand)
+                    self.runAddHistoryRecord(view, textCommand, tab)
 
-    def runAddHistoryRecord(self, view, textCommand):
+    def runAddHistoryRecord(self, view, textCommand, tab):
+        if view in ("main", "study"):
+            config.tabHistory[view][tab] = textCommand
         if view and textCommand and view in config.history:
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):

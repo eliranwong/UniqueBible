@@ -219,17 +219,25 @@ def executeInitialTextCommand(textCommand, addRecord=False, source="main"):
     try:
         if source == "main" or (source == "study" and re.match("^online:::", textCommand, flags=re.IGNORECASE)):
             config.mainWindow.textCommandLineEdit.setText(textCommand)
-        config.mainWindow.runTextCommand(textCommand, addRecord, source)
+        config.mainWindow.runTextCommand(textCommand, addRecord, source, True)
     except:
         print("Failed to execute '{0}' on startup.".format(textCommand))
 
 def populateTabsOnStartup(source="main"):
-    history = config.history[source]
-    for i in reversed(range(config.numberOfTab - 1 if initialCommand and not initialCommandIsPython and not (hasattr(config, "cli") and config.cli) and source == "main" else config.numberOfTab)):
-        index = i + 1
-        if len(history) >= index:
-            command = history[0 - index]
-            executeInitialTextCommand(command, False, source)
+    # numTabs = config.numberOfTab-1 if initialCommand and not initialCommandIsPython and not (hasattr(config, "cli") and config.cli) and source == "main" else config.numberOfTab
+    numTabs = config.numberOfTab
+    for i in range(numTabs):
+        if str(i) in config.tabHistory[source]:
+            command = config.tabHistory[source][str(i)]
+            if command:
+                previous = i - 1
+                if previous < 0:
+                    previous = config.numberOfTab - 1
+                if source == "main":
+                    config.mainWindow.mainView.setCurrentIndex(previous)
+                elif source == "study":
+                    config.mainWindow.studyView.setCurrentIndex(previous)
+                executeInitialTextCommand(command, False, source)
 
 def runLastHistoryRecord(source="main"):
     history = config.history[source]
@@ -393,13 +401,19 @@ runStartupPlugins()
 # Run initial commands
 if config.populateTabsOnStartup:
     openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab = config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab
+    forceGenerateHtml = config.forceGenerateHtml
+    syncStudyWindowBibleWithMainWindow = config.syncStudyWindowBibleWithMainWindow
     config.openBibleWindowContentOnNextTab = True
     config.openStudyWindowContentOnNextTab = True
-    # Execute initial command on Bible Window
-    populateTabsOnStartup("main")
+    config.forceGenerateHtml = False
+    config.syncStudyWindowBibleWithMainWindow = False
     # Execute initial command on Study Window
     populateTabsOnStartup("study")
+    # Execute initial command on Bible Window
+    populateTabsOnStartup("main")
     config.openBibleWindowContentOnNextTab, config.openStudyWindowContentOnNextTab = openBibleWindowContentOnNextTab, openStudyWindowContentOnNextTab
+    config.forceGenerateHtml = forceGenerateHtml
+    config.syncStudyWindowBibleWithMainWindow = syncStudyWindowBibleWithMainWindow
 elif not config.disableLoadLastOpenFilesOnStartup:
     # Execute initial command on Bible Window
     if not initialCommand or initialCommandIsPython or (hasattr(config, "cli") and config.cli):
