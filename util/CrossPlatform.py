@@ -2,6 +2,7 @@ import config, os, glob, re
 from db.BiblesSqlite import BiblesSqlite, Bible
 from db.ToolsSqlite import BookData, IndexesSqlite, Commentary
 from db.ToolsSqlite import LexiconData
+from util.BibleBooks import BibleBooks
 from util.CatalogUtil import CatalogUtil
 from util.ThirdParty import ThirdPartyDictionary
 
@@ -117,7 +118,22 @@ class CrossPlatform:
 
     def runAddHistoryRecord(self, view, textCommand, tab):
         if view in ("main", "study"):
-            config.tabHistory[view][tab] = textCommand
+            command = textCommand
+            if command.count(":::") == 0:
+                if view == "main":
+                    command = "BIBLE:::{0}:::{1}".format(config.mainText, command)
+                elif view == "study":
+                    command = "STUDY:::{0}:::{1}".format(config.mainText, command)
+            elif command.count(":::") == 1:
+                verse = command.find(":::") + 3
+                if view == "main":
+                    if command.lower().startswith("bible"):
+                        command = "BIBLE:::{0}:::{1}".format(config.mainText, command[verse:])
+                    elif command.lower().startswith("main"):
+                        command = "MAIN:::{0}:::{1}".format(config.mainText, command[verse:])
+                elif view == "study" and command.lower().startswith("study"):
+                    command = "STUDY:::{0}:::{1}".format(config.mainText, command[verse:])
+            config.tabHistory[view][tab] = command
         if view and textCommand and view in config.history:
             viewhistory = config.history[view]
             if not (viewhistory[-1] == textCommand):

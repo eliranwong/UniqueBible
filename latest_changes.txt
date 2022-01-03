@@ -1,3 +1,6 @@
+Change in version 26.40:
+* Save Bible in populateTabsOnStartup history
+
 Change in version 26.39:
 * Modify populateTabsOnStartup to restore tabs based on displayed values rather than history values
 
