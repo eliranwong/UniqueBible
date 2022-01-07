@@ -785,6 +785,20 @@ class Lexicon:
             contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
             return contentText
 
+    def getReverseContent(self, entry):
+        search = "%{0}%".format(entry)
+        query = "SELECT Topic, Definition FROM Lexicon WHERE Definition like ?"
+        self.cursor.execute(query, (search,))
+        records = self.cursor.fetchall()
+        contentText = """<h2>{0}</h2>""".format(self.module)
+        if not records:
+            return contentText+"[not found]"
+        else:
+            for record in records:
+                if re.search(r"\b{0}\b".format(entry), record[1]):
+                    contentText += "<div><h3>{0}</h3>{1}</div>".format(record[0], record[1])
+            contentText = re.sub("(" + entry + ")", r"<z>\1</z>", contentText, flags=re.IGNORECASE)
+        return contentText
 
 class BookData:
 
@@ -1015,8 +1029,12 @@ if __name__ == "__main__":
     # scripture = """<heb>&#x05D5;&#x05D1;&#x05BC;&#x05B0;&#x05D4;&#x05B8;&#x05DC;&#x05B5;&#x05D9;&#x05DF;</span><heb> </span><heb>&#x05D9;&#x05B7;&#x05D5;&#x05B0;&#x05DE;&#x05B8;&#x05D7;&#x05B5;&#x05D0;</span><heb> </span><heb>&#x05D0;&#x05B7;&#x05D7;&#x05B2;&#x05E8;&#x05B7;&#x05D9;&#x05B4;&#x05D0;&#x05BC;</span>"""
     # scripture = re.sub(r"<heb>(.*?)</span>", r"<heb>\1</heb>", scripture)
     # print(scripture)
+    # list = Commentary().getCommentaryListThatHasBookAndChapter(40, 0)
+    # print(",".join(list))
 
-    list = Commentary().getCommentaryListThatHasBookAndChapter(40, 0)
-    print(",".join(list))
+    s = "asdfadcryadsfa cryasdfads cry adfasdf"
+    e = "cry"
+    print(s)
+    print(re.search(r"\b{0}\b".format(e), s))
 
     print("Finished")

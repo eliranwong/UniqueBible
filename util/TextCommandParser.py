@@ -322,6 +322,11 @@ class TextCommandParser:
             # e.g. SEARCHLEXICON:::Dake-topics:::Jesus
             # e.g. SEARCHLEXICON:::ALL:::Peace
             """),
+            "reverselexicon": (self.textReverseLexicon, """
+            # [KEYWORD] REVERSELEXICON
+            # Usage - REVERSELEXICON:::[LEXICON_MODULE]:::[DEFINITION]
+            # Usage - REVERSELEXICON:::[LEXICON_MODULE]:::[DEFINITION_ENTRIES]
+            # e.g. REVERSELEXICON:::TRLIT:::Jesus"""),
             "lmcombo": (self.textLMcombo, """
             # [KEYWORD] LMCOMBO
             # e.g. LMCOMBO:::E70002:::ETCBC:::subs.f.sg.a"""),
@@ -2443,6 +2448,13 @@ class TextCommandParser:
     
     # LEXICON:::
     def textLexicon(self, command, source):
+        return self.textLexiconSearch(command, source, False)
+
+    # REVERSELEXICON:::
+    def textReverseLexicon(self, command, source):
+        return self.textLexiconSearch(command, source, True)
+
+    def textLexiconSearch(self, command, source, reverse):
         if command.count(":::") == 0:
             defaultLexicon = self.getDefaultLexicons()
             command = "{0}:::{1}".format(defaultLexicon[command[0]], command)
@@ -2470,16 +2482,20 @@ class TextCommandParser:
             entriesSplit = entries.split("_")
             entryList = []
             for entry in entriesSplit:
-                if not module.startswith("Concordance") and entry.startswith("E"):
+                if not reverse and not module.startswith("Concordance") and entry.startswith("E"):
                     entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
                 else:
                     entryList.append(entry)
-            content += "<hr>".join([lexicon.getContent(entry, showLexiconMenu) for entry in entryList])
+            if reverse:
+                content += "<hr>".join([lexicon.getReverseContent(entry) for entry in entryList])
+            else:
+                content += "<hr>".join([lexicon.getContent(entry, showLexiconMenu) for entry in entryList])
             del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
-            return ("study", content, {'tab_title': 'Lex:' + module + ':' + entries})
+            title = "RevLex" if reverse else "Lex"
+            return ("study", content, {'tab_title': title + ':' + module + ':' + entries})
 
     # SEARCHLEXICON:::
     def searchLexicon(self, command, source):

@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "모든 어휘를 검색합니다.",
     "searchAllDictionaries": "모든 사전 검색",
     "custom": "사용자 정의",
+    "menu5_reverseLexicon": "역 어휘",
 }

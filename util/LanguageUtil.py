@@ -230,7 +230,7 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("custom", "Custom")
+        addLanguageStringToAllFiles("menu5_reverseLexicon", "Reverse Lexicon")
         # createNewLanguageFile("ro")
         # validateLanguageFileSizes()
 

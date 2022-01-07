@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "Rechercher TOUS les lexiques",
     "searchAllDictionaries": "Rechercher TOUS les dictionnaires",
     "custom": "Personnalisé",
+    "menu5_reverseLexicon": "Lexique inverse",
 }

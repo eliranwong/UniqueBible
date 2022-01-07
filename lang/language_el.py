@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "Αναζήτηση σε ALL Lexicon",
     "searchAllDictionaries": "Αναζήτηση σε όλα τα λεξικά",
     "custom": "Έθιμο",
+    "menu5_reverseLexicon": "Αντιστροφή Lexicon",
 }

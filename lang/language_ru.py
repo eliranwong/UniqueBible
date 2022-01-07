@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "Поиск всех лексемы",
     "searchAllDictionaries": "Поиск всех словарей",
     "custom": "Пользовательский",
+    "menu5_reverseLexicon": "Обратный лексикон",
 }

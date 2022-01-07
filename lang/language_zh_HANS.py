@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "搜索所有词汇",
     "searchAllDictionaries": "搜索所有字典",
     "custom": "定制",
+    "menu5_reverseLexicon": "反向词汇图标",
 }

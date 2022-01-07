@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "Caută toate Lexicoanele",
     "searchAllDictionaries": "Caută toate dicţionarele",
     "custom": "Personalizat",
+    "menu5_reverseLexicon": "Inversează Lexicon",
 }

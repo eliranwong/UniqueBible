@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "搜尋所有墨西哥",
     "searchAllDictionaries": "搜尋所有字典",
     "custom": "自訂",
+    "menu5_reverseLexicon": "反向 Lexicon",
 }
