@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "à ', à', à ', à', à ', à',",
     "searchAllDictionaries": "എല്ലാ നിഘണ്ടുക്കളും തെരയുക",
     "custom": "തയ്യാറാക്കുക",
+    "menu5_reverseLexicon": "Reverse Lexicon",
 }

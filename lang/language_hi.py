@@ -779,4 +779,5 @@ translation = {
     "searchAllLexicons": "सभी Lexicons खोजें",
     "searchAllDictionaries": "सभी शब्दकोशों को ढूंढें",
     "custom": "मनपसंद",
+    "menu5_reverseLexicon": "विलोम शब्दकोश",
 }

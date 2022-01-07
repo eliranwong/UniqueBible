@@ -1,3 +1,6 @@
+Change in version 26.41:
+* Add reverse lexicon
+
 Change in version 26.40:
 * Save Bible in populateTabsOnStartup history
 
