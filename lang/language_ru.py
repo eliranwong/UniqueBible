@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "Поиск всех словарей",
     "custom": "Пользовательский",
     "menu5_reverseLexicon": "Обратный лексикон",
+    "commentaryFromNotes": "Комментарий из файлов Note",
 }

@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "Αναζήτηση σε όλα τα λεξικά",
     "custom": "Έθιμο",
     "menu5_reverseLexicon": "Αντιστροφή Lexicon",
+    "commentaryFromNotes": "Σχόλια από αρχεία σημειώσεων",
 }

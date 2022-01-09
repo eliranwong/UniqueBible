@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "すべての辞書の検索",
     "custom": "カスタム",
     "menu5_reverseLexicon": "リバース・レキシコン",
+    "commentaryFromNotes": "メモ・ファイルからのコメント",
 }

@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "എല്ലാ നിഘണ്ടുക്കളും തെരയുക",
     "custom": "തയ്യാറാക്കുക",
     "menu5_reverseLexicon": "Reverse Lexicon",
+    "commentaryFromNotes": "കുറിപ്പ് ഫയലുകളില് നിന്നും കമ്മിന്ററി",
 }

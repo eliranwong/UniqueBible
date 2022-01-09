@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "모든 사전 검색",
     "custom": "사용자 정의",
     "menu5_reverseLexicon": "역 어휘",
+    "commentaryFromNotes": "노트 파일의 무료",
 }
