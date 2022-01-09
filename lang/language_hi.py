@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "सभी शब्दकोशों को ढूंढें",
     "custom": "मनपसंद",
     "menu5_reverseLexicon": "विलोम शब्दकोश",
+    "commentaryFromNotes": "नोट फ़ाइल से कमेंट्री",
 }

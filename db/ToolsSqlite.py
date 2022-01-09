@@ -470,6 +470,9 @@ class ExlbData:
 
 class Commentary:
 
+    CREATE_COMMENTARY_TABLE = "CREATE TABLE Commentary (Book INT, Chapter INT, Scripture TEXT)"
+    CREATE_DETAILS_TABLE = "CREATE TABLE Details (Title NVARCHAR(100), Abbreviation NVARCHAR(50), Information TEXT, Version INT, OldTestament BOOL, NewTestament BOOL, Apocrypha BOOL, Strongs BOOL)"
+
     marvelCommentaries = {
         "Barnes": "Notes on the Old and New Testaments (Barnes) [26 vol.]",
         "Benson": "Commentary on the Old and New Testaments (Benson) [5 vol.]",
@@ -516,6 +519,31 @@ class Commentary:
                 self.cursor = self.connection.cursor()
         if Commentary.fileLookup is None:
             self.reloadFileLookup()
+
+    @staticmethod
+    def createCommentary(commentary, content):
+        database = os.path.join(config.commentariesFolder, "c{0}.commentary".format(commentary))
+        with sqlite3.connect(database) as connection:
+            cursor = connection.cursor()
+            if not ToolsSqlite.checkTableExists(cursor, "Commentary"):
+                cursor.execute(Commentary.CREATE_COMMENTARY_TABLE)
+            if not ToolsSqlite.checkTableExists(cursor, "Details"):
+                cursor.execute(Commentary.CREATE_DETAILS_TABLE)
+                sql = ("INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament,"
+                       "Apocrypha, Strongs) VALUES (?, ?, ?, 1, 1, 1, 0, 0)")
+                cursor.execute(sql, (commentary, commentary, commentary))
+            connection.commit()
+            deleteData = []
+            insertData = []
+            for data in content:
+                deleteData.append((data[0], data[1]))
+                if data[2]:
+                    insertData.append((data[0], data[1], data[2]))
+            delete = "DELETE FROM Commentary WHERE Book=? AND Chapter=?"
+            cursor.executemany(delete, deleteData)
+            insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
+            cursor.executemany(insert, insertData)
+            connection.commit()
 
     def reloadFileLookup(self):
             Commentary.fileLookup = {}
@@ -697,7 +725,6 @@ class Commentary:
             self.cursor.connection.commit()
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
-
 
 class LexiconData:
 
@@ -1009,6 +1036,18 @@ class Book:
         content = content.replace('<body style="background-attachment: fixed" background="http://www.swartzentrover.com/Web Graphics/BackGrounds/concrete/concrete12.jpg">', '<body>')
         content = content.replace('cellpadding="0"', 'cellpadding="5"')
         return content
+
+
+class ToolsSqlite:
+    @staticmethod
+    def checkTableExists(cursor, table):
+        if cursor:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table,))
+            if cursor.fetchone():
+                return True
+            else:
+                return False
+        return False
 
 
 if __name__ == "__main__":

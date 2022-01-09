@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "Caută toate dicţionarele",
     "custom": "Personalizat",
     "menu5_reverseLexicon": "Inversează Lexicon",
+    "commentaryFromNotes": "Comentariu de la Note Files",
 }

@@ -780,4 +780,5 @@ translation = {
     "searchAllDictionaries": "搜尋所有字典",
     "custom": "自訂",
     "menu5_reverseLexicon": "反向 Lexicon",
+    "commentaryFromNotes": "來自附註檔案的註解",
 }

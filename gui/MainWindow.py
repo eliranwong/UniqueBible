@@ -1641,6 +1641,18 @@ class MainWindow(QMainWindow):
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
+    def createCommentaryFromNotes(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                                                     config.thisTranslation["commentaryFromNotes"],
+                                                     self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createCommentaryFromNotes(directory):
+                self.reloadResources()
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
     def createBookModuleFromPDF(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
