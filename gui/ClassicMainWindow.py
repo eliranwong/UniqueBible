@@ -302,7 +302,8 @@ class ClassicMainWindow:
             ("menu10_bookFromNotes", self.createBookModuleFromNotes),
             ("menu10_bookFromPDF", self.createBookModuleFromPDF),
             ("devotionalFromNotes", self.createDevotionalFromNotes),
-            ("commentaryFromNotes", self.createCommentaryFromNotes)
+            ("commentaryFromNotes", self.createCommentaryFromNotes),
+            ("lexiconFromNotes", self.createLexiconFromNotes),
         )
         for feature, action in items:
             addMenuItem(menu10, feature, self, action)

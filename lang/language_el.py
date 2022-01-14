@@ -781,4 +781,5 @@ translation = {
     "custom": "Έθιμο",
     "menu5_reverseLexicon": "Αντιστροφή Lexicon",
     "commentaryFromNotes": "Σχόλια από αρχεία σημειώσεων",
+    "lexiconFromNotes": "Λεξικό από αρχεία σημειώσεων",
 }

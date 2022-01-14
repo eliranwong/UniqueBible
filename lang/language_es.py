@@ -781,4 +781,5 @@ translation = {
     "custom": "Personalizado",
     "menu5_reverseLexicon": "Reverso de Lexicon",
     "commentaryFromNotes": "Comentario de los archivos de nota",
+    "lexiconFromNotes": "Léxico de los archivos de nota",
 }

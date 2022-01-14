@@ -230,4 +230,4 @@ if __name__ == "__main__":
             print("Error executing: " + str(e))
     else:
         # printCodesSupportedLanguages()
-        addLanguageStringToAllFiles("commentaryFromNotes", "Commentary from Note Files")
+        addLanguageStringToAllFiles("lexiconFromNotes", "Lexicon from Note Files")

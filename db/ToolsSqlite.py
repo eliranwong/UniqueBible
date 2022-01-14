@@ -747,6 +747,8 @@ class LexiconData:
 
 class Lexicon:
 
+    CREATE_LEXICON_TABLE = "CREATE TABLE Lexicon (Topic NVARCHAR(100), Definition TEXT)"
+
     def __init__(self, module):
         # connect lexicon module
         self.module = module
@@ -757,6 +759,28 @@ class Lexicon:
 
     def __del__(self):
         self.connection.close()
+
+    @staticmethod
+    def createLexicon(lexicon, content):
+        database = os.path.join(config.marvelData, "lexicons", "{0}.lexicon".format(lexicon))
+        with sqlite3.connect(database) as connection:
+            cursor = connection.cursor()
+            if not ToolsSqlite.checkTableExists(cursor, "Lexicon"):
+                cursor.execute(Lexicon.CREATE_LEXICON_TABLE)
+                sql = ("INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)")
+                cursor.execute(sql, ('info', lexicon))
+            connection.commit()
+            deleteData = []
+            insertData = []
+            for data in content:
+                deleteData.append((data[0],))
+                if data[1]:
+                    insertData.append((data[0], data[1]))
+            delete = "DELETE FROM Lexicon WHERE Topic=?"
+            cursor.executemany(delete, deleteData)
+            insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
+            cursor.executemany(insert, insertData)
+            connection.commit()
 
     def getInfo(self):
         try:
