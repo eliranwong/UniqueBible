@@ -781,4 +781,5 @@ translation = {
     "custom": "मनपसंद",
     "menu5_reverseLexicon": "विलोम शब्दकोश",
     "commentaryFromNotes": "नोट फ़ाइल से कमेंट्री",
+    "lexiconFromNotes": "नोट फ़ाइल से लेक्सिकॉन",
 }

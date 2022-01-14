@@ -1653,6 +1653,18 @@ class MainWindow(QMainWindow):
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
+    def createLexiconFromNotes(self):
+        options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self,
+                                                     config.thisTranslation["lexiconFromNotes"],
+                                                     self.directoryLabel.text(), options)
+        if directory:
+            if Converter().createLexiconFromNotes(directory):
+                self.reloadResources()
+                self.displayMessage(config.thisTranslation["message_done"])
+            else:
+                self.displayMessage(config.thisTranslation["message_noSupportedFile"])
+
     def createBookModuleFromPDF(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,

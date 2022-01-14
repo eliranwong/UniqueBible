@@ -332,6 +332,7 @@ class AlephMainWindow:
             ("menu10_bookFromPDF", self.createBookModuleFromPDF),
             ("devotionalFromNotes", self.createDevotionalFromNotes),
             ("commentaryFromNotes", self.createCommentaryFromNotes),
+            ("lexiconFromNotes", self.createLexiconFromNotes),
         )
         for feature, action in items:
             addMenuItem(submenu, feature, self, action)

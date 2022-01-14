@@ -1,6 +1,6 @@
 from xml.dom.minidom import Node
 from db.DevotionalSqlite import DevotionalSqlite
-from db.ToolsSqlite import Commentary
+from db.ToolsSqlite import Commentary, Lexicon
 from util.BibleBooks import BibleBooks
 from util.TextUtil import TextUtil
 
@@ -168,6 +168,25 @@ class Converter:
         if commentaryContent and module:
             Commentary.createCommentary(module, commentaryContent)
             Commentary().reloadFileLookup()
+            return True
+        else:
+            return False
+
+    def createLexiconFromNotes(self, folder):
+        module = os.path.basename(folder)
+        lexiconContent = []
+        for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
+            fileBasename = os.path.basename(filepath)
+            fileName, fileExtension = os.path.splitext(fileBasename)
+            if fileExtension.lower() == ".uba":
+                with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
+                    note = fileObject.read()
+                    note = TextUtil.formulateUBACommandHyperlink(note)
+                    if config.parseTextConvertNotesToBook:
+                        note = BibleVerseParser(config.parserStandarisation).parseText(note)
+                    lexiconContent.append((fileName, note))
+        if lexiconContent and module:
+            Lexicon.createLexicon(module, lexiconContent)
             return True
         else:
             return False

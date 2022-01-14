@@ -781,4 +781,5 @@ translation = {
     "custom": "カスタム",
     "menu5_reverseLexicon": "リバース・レキシコン",
     "commentaryFromNotes": "メモ・ファイルからのコメント",
+    "lexiconFromNotes": "ノート・ファイルからのレキシコン",
 }

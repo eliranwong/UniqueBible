@@ -781,4 +781,5 @@ translation = {
     "custom": "自訂",
     "menu5_reverseLexicon": "反向 Lexicon",
     "commentaryFromNotes": "來自附註檔案的註解",
+    "lexiconFromNotes": "附註檔案中的 Lexicon",
 }

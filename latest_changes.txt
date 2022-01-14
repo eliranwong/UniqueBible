@@ -1,3 +1,8 @@
+Change in version 26.43:
+* Clear history when clearing tabs
+* Add create lexicon from notes
+- https://github.com/eliranwong/UniqueBible/wiki/Create-Lexicon-from-Notes-files
+
 Change in version 26.42:
 * Add language tags to theWord Bible import
 * Add create commentary from notes

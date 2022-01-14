@@ -781,4 +781,5 @@ translation = {
     "custom": "사용자 정의",
     "menu5_reverseLexicon": "역 어휘",
     "commentaryFromNotes": "노트 파일의 무료",
+    "lexiconFromNotes": "노트 파일의 Lexicon",
 }
