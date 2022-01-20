@@ -27,7 +27,7 @@ from util.TextFileReader import TextFileReader
 from util.Translator import Translator
 from util.ThirdParty import Converter, ThirdPartyDictionary
 from util.Languages import Languages
-from db.ToolsSqlite import BookData, IndexesSqlite, Book, Commentary
+from db.ToolsSqlite import BookData, IndexesSqlite, Book, Commentary, Lexicon
 from db.Highlight import Highlight
 from gui.ConfigFlagsWindow import ConfigFlagsWindow
 from gui.EnableIndividualPlugins import EnableIndividualPlugins
@@ -163,8 +163,8 @@ class MainWindow(QMainWindow):
         # VLC Player
         self.vlcPlayer = None
 
-        # Load Bible descriptions
-        self.loadBibleDescriptions()
+        # Load resource descriptions
+        self.loadResourceDescriptions()
         # Load local file catalog
         CatalogUtil.loadLocalCatalog()
 
@@ -238,12 +238,23 @@ class MainWindow(QMainWindow):
         elif platform.system() == "Windows":
             config.open = config.openWindows
 
+    def loadResourceDescriptions(self):
+        self.loadBibleDescriptions()
+        self.loadLexiconSampleTopics()
+
     def loadBibleDescriptions(self):
         config.bibleDescription = {}
         for file in glob.glob(config.marvelData + "/bibles/*.bible"):
             name = Path(file).stem
             bible = Bible(name)
             config.bibleDescription[name] = bible.bibleInfo()
+
+    def loadLexiconSampleTopics(self):
+        config.lexiconDescription = {}
+        for file in glob.glob(config.marvelData + "/lexicons/*.lexicon"):
+            name = Path(file).stem
+            lexicon = Lexicon(name)
+            config.lexiconDescription[name] = lexicon.getSampleTopics()
 
     def setTranslation(self):
         config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
@@ -291,6 +302,7 @@ class MainWindow(QMainWindow):
 
     def reloadResources(self):
         CatalogUtil.reloadLocalCatalog()
+        self.loadResourceDescriptions()
         CrossPlatform().setupResourceLists()
         self.controlPanel.setupResourceLists()
         self.setMenuLayout(config.menuLayout)
@@ -606,7 +618,7 @@ class MainWindow(QMainWindow):
                 if item == value[-1]:
                     self.downloadHelper(self.bibleInfo[key])
                     break
-        self.loadBibleDescriptions()
+        self.reloadResources()
 
     def installMarvelCommentaries(self):
         commentaries = DatafileLocation.marvelCommentaries
@@ -711,9 +723,7 @@ class MainWindow(QMainWindow):
                     zipped.extractall(folder)
                 os.remove(file)
                 self.displayMessage(item + " " + config.thisTranslation["message_installed"])
-                self.loadBibleDescriptions()
-                CatalogUtil.reloadLocalCatalog()
-                self.reloadControlPanel(False)
+                self.reloadResources()
                 self.installFromGitHub(gitHubRepoInfo)
                 return True
         return False
@@ -1568,7 +1578,7 @@ class MainWindow(QMainWindow):
                 self.importTheWordXref(fileName)
             elif fileName.endswith(".cmt.twm"):
                 self.importTheWordCommentary(fileName)
-        self.loadBibleDescriptions()
+        self.reloadResources()
 
     def customMarvelData(self):
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly

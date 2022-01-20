@@ -1,3 +1,7 @@
+Change in version 26.44:
+* Don’t open new tab in mini-control when enter verse
+* Add hint to mini-control for lexicons
+
 Change in version 26.43:
 * Clear history when clearing tabs
 * Add create lexicon from notes
