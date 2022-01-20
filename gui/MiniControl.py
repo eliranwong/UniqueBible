@@ -297,6 +297,8 @@ class MiniControl(QWidget):
         count = 0
         for lexicon in lexicons:
             button = QPushButton(lexicon)
+            if lexicon in config.lexiconDescription:
+                button.setToolTip("{0}".format(config.lexiconDescription[lexicon]))
             button.clicked.connect(partial(self.lexiconAction, lexicon))
             row_layout.addWidget(button)
             count += 1
@@ -461,11 +463,16 @@ class MiniControl(QWidget):
             self.searchLineEdit.setText(prefix)
 
     def searchLineEntered(self):
+
+        saveOpenBibleWindowContentOnNextTab = config.openBibleWindowContentOnNextTab
         searchString = self.searchLineEdit.text()
+        if ":::" not in searchString or ":::{0}:::".format(config.mainText) in searchString:
+            config.openBibleWindowContentOnNextTab = False
         self.parent.textCommandLineEdit.setText(searchString)
         self.parent.runTextCommand(searchString)
         self.searchLineEdit.setFocus()
         self.populateBooksButtons(config.mainText)
+        config.openBibleWindowContentOnNextTab = saveOpenBibleWindowContentOnNextTab
 
     #def setTtsDefaultLanguage(self):
         #config.ttsDefaultLangauge = self.languageCodes[self.languageCombo.currentIndex()]

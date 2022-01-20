@@ -794,6 +794,16 @@ class Lexicon:
         except:
             return self.module
 
+    def getSampleTopics(self):
+        try:
+            query = "select topic from Lexicon where rowid in (5, 5000, 10000, 20000)"
+            self.cursor.execute(query)
+            topics = self.cursor.fetchall()
+            sample = ",".join(topic[0] for topic in topics)
+            return sample
+        except:
+            return ""
+
     def searchTopic(self, search):
         try:
             searchString = "%{0}%".format(search)
