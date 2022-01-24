@@ -1,3 +1,6 @@
+Change in version 26.45:
+* Fix access to GitHub
+
 Change in version 26.44:
 * Don’t open new tab in mini-control when enter verse
 * Add hint to mini-control for lexicons
