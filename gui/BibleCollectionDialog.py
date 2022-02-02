@@ -9,7 +9,7 @@ from qtpy.QtWidgets import QListWidget
 
 class BibleCollectionDialog(QDialog):
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["bibleCollections"])
         self.setMinimumSize(680, 500)
@@ -17,6 +17,7 @@ class BibleCollectionDialog(QDialog):
         self.settingBibles = False
         self.bibles = self.getBibles()
         self.setupUI()
+        self.parent = parent
 
     def setupUI(self):
         mainLayout = QVBoxLayout()
@@ -56,6 +57,7 @@ class BibleCollectionDialog(QDialog):
 
         buttonLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["close"])
+        button.clicked.connect(self.reloadControlPanel)
         button.clicked.connect(self.close)
         buttonLayout.addWidget(button)
         mainLayout.addLayout(buttonLayout)
@@ -145,6 +147,8 @@ class BibleCollectionDialog(QDialog):
         self.biblesTable.resizeColumnsToContents()
         self.settingBibles = False
 
+    def reloadControlPanel(self):
+        self.parent.reloadControlPanel(False)
 
 if __name__ == '__main__':
     import sys
