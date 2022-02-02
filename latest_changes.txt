@@ -1,3 +1,7 @@
+Change in version 26.46:
+* Fix advanced search
+* Update master control after adding a new Bible collection
+
 Change in version 26.45:
 * Fix access to GitHub
 

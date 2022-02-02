@@ -2105,7 +2105,7 @@ class MainWindow(QMainWindow):
         self.configFlagsDialog.show()
 
     def showBibleCollectionDialog(self):
-        self.bibleCollectionDialog = BibleCollectionDialog()
+        self.bibleCollectionDialog = BibleCollectionDialog(self)
         self.bibleCollectionDialog.show()
 
     def showLiveFilterDialog(self):

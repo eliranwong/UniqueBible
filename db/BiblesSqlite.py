@@ -451,9 +451,10 @@ input.addEventListener('keyup', function(event) {0}
             searchCommand = "ADVANCEDSEARCH"
             formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
             query += "({0})".format(searchString)
+        else:
+            query += " 1=1"
         if booksRange:
-            if not mode == "REGEX":
-                query += " AND "
+            query += " AND "
             query += "book in ({0})".format(BibleVerseParser(config.parserStandarisation).extractBookListAsString(booksRange))
             formatedText += ":::{0}".format(booksRange)
         query += " ORDER BY Book, Chapter, Verse"
