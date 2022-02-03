@@ -20,6 +20,8 @@ class CatalogUtil:
     @staticmethod
     def loadLocalCatalog():
         if CatalogUtil.localCatalog is None:
+            if config.enableHttpServer:
+                config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
             CatalogUtil.localCatalog = []
             pdf = CatalogUtil.loadLocalFiles("PDF", config.marvelData + "/pdf", ".pdf")
             CatalogUtil.pdfCatalog = pdf
@@ -53,7 +55,9 @@ class CatalogUtil:
 
     @staticmethod
     def getBooks():
-        if CatalogUtil.bookCatalog is None:
+        if config.enableHttpServer:
+            CatalogUtil.reloadLocalCatalog()
+        elif CatalogUtil.bookCatalog is None:
             CatalogUtil.loadLocalCatalog()
         books = []
         for record in CatalogUtil.bookCatalog:
