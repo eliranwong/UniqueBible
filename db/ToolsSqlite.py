@@ -511,6 +511,9 @@ class Commentary:
     def __init__(self, text=False):
         self.connection = None
         self.logger = logging.getLogger('uba')
+        if config.enableHttpServer:
+            config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
+            config.commentariesFolder = os.path.join(config.marvelData, "commentaries")
         if text:
             self.text = text
             if self.text in self.getCommentaryList():
@@ -864,6 +867,9 @@ class Lexicon:
 class BookData:
 
     def __init__(self):
+        if config.enableHttpServer:
+            config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
+            config.booksFolder = os.path.join(config.marvelData, "books")
         self.bookList = self.getBookList()
         self.catalogBookList = self.getCatalogBookList()
 
