@@ -949,7 +949,11 @@ class Book:
         self.connection = None
 
         module = "{0}.book".format(module)
-        folder = CatalogUtil.getFolder(module)
+        if config.enableHttpServer:
+            config.marvelData = config.marvelDataPrivate if config.webHomePage == "{0}.html".format(config.webPrivateHomePage) else config.marvelDataPublic
+            folder = os.path.join(config.marvelData, "books")
+        else:
+            folder = CatalogUtil.getFolder(module)
         self.database = os.path.join(folder, module)
         if not os.path.exists(self.database):
             self.module = ""

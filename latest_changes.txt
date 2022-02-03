@@ -1,3 +1,6 @@
+Change in version 26.48:
+* Fixed opening non-public reference books with web version.
+
 Change in version 26.47:
 * Fixed web version private commentary and library items.
 
