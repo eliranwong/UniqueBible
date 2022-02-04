@@ -204,12 +204,24 @@ input.addEventListener('keyup', function(event) {0}
         return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
 
     def getBookList(self, text=config.mainText):
+        print(7777)
+        print(text)
+        print(config.marvelData)
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if not text in plainBibleList and not text in formattedBibleList:
+            if formattedBibleList:
+                text = formattedBibleList[0]
+            elif plainBibleList:
+                text = plainBibleList[0]
+        print(self.getTwoBibleLists())
+        print("ok")
         if text in plainBibleList:
+            print(7778)
             query = "SELECT DISTINCT Book FROM {0} ORDER BY Book".format(text)
             self.cursor.execute(query)
             return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
         elif text in formattedBibleList:
+            print(7779)
             return Bible(text).getBookList()
 
     def getBooks(self, text=config.mainText):
@@ -219,11 +231,21 @@ input.addEventListener('keyup', function(event) {0}
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        print(31)
+        print(text)
+        print(self.getTwoBibleLists())
+        if not text in plainBibleList and not text in formattedBibleList:
+            if formattedBibleList:
+                text = formattedBibleList[0]
+            elif plainBibleList:
+                text = plainBibleList[0]
         if text in plainBibleList:
+            print(32)
             query = "SELECT DISTINCT Chapter FROM {0} WHERE Book=? ORDER BY Chapter".format(text)
             self.cursor.execute(query, (b,))
             return [chapter[0] for chapter in self.cursor.fetchall()]
         elif text in formattedBibleList:
+            print(33)
             return Bible(text).getChapterList(b)
 
     def getChapters(self, b=config.mainB, text=config.mainText):
@@ -247,6 +269,11 @@ input.addEventListener('keyup', function(event) {0}
 
     def getVerseList(self, b, c, text=config.mainText, language=""):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        if not text in plainBibleList and not text in formattedBibleList:
+            if formattedBibleList:
+                text = formattedBibleList[0]
+            elif plainBibleList:
+                text = plainBibleList[0]
         if text in plainBibleList or text in ("kjvbcv", "title"):
             query = "SELECT DISTINCT Verse FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
             self.cursor.execute(query, (b, c))

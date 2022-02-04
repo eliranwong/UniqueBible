@@ -1,4 +1,7 @@
 Change in version 26.49:
+* Fixed _menu::: command on web version.
+
+Change in version 26.49:
 * Fixed opening non-public pdf on web version.
 
 Change in version 26.48:
