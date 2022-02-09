@@ -76,7 +76,7 @@ class MiscellaneousLauncher(QWidget):
         self.ttsSlider.setToolTip(config.thisTranslation["adjustSpeed"])
         self.ttsSlider.setMinimum(10)
         self.ttsSlider.setMaximum(310)
-        self.ttsSlider.setValue(config.espeakSpeed if config.espeak else (160 + config.qttsSpeed * 150))
+        self.ttsSlider.setValue(int(config.espeakSpeed if config.espeak else (160 + config.qttsSpeed * 150)))
         self.ttsSlider.valueChanged.connect(self.changeEspeakSpeed if config.espeak else self.changeQttsSpeed)
         layout.addWidget(self.ttsSlider)
 

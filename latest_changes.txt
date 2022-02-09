@@ -1,4 +1,9 @@
-Change in version 26.49:
+Change in version 26.51:
+* Tested on Arch Linux webtop running on Apple M1 laptop.
+* Fixed a line to support running on Arch Linux webtop.
+Reference on webtops: https://docs.linuxserver.io/images/docker-webtop
+
+Change in version 26.50:
 * Fixed _menu::: command on web version.
 
 Change in version 26.49:
