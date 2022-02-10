@@ -675,9 +675,10 @@ input.addEventListener('keyup', function(event) {0}
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
             if v in titleList and config.addTitleToPlainChapter:
-                if not v == 1:
-                    chapter += "<br>"
-                chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
+                #if not v == 1:
+                #    chapter += "<br>"
+                #chapter += "{0}<br>".format(self.readTextVerse("title", b, c, v)[3])
+                chapter += self.readTextVerse("title", b, c, v)[3]
             chapter += divTag
             if config.enableVerseHighlighting and config.showHighlightMarkers:
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl1\')" class="ohl1">&#9678;</ref>'.format(b, c, v)

@@ -92,7 +92,7 @@ class NoteEditor(QMainWindow):
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
-        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+        self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def updateWindowTitle(self):
         if self.noteType == "file":
