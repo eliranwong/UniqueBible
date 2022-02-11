@@ -671,7 +671,9 @@ class WebEngineView(QWebEngineView):
             self.addAction(action)
 
     def runPlugin(self, fileName, selectedText=None):
-        if selectedText is None:
+        #if selectedText is None:
+        # Note: Tested in Arch Linux using pyqt5, selectedText = False.  Therefore, the line above does not work.
+        if not selectedText:
             selectedText = self.selectedText().strip()
         config.contextSource = self
         config.pluginContext = selectedText
@@ -821,7 +823,8 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsEngine()
 
     def searchPanel(self, selectedText=None):
-        if selectedText is None:
+        #if selectedText is None:
+        if not selectedText:
             selectedText = self.selectedText().strip()
         if selectedText:
             config.contextItem = selectedText
@@ -1023,7 +1026,8 @@ class WebEngineView(QWebEngineView):
         self.openPopover(html=html, fullScreen=fullScreen)
 
     def displayVersesInBottomWindow(self, selectedText=None):
-        if selectedText is None:
+        #if selectedText is None:
+        if not selectedText:
             selectedText = self.selectedText().strip()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
@@ -1090,7 +1094,8 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
 
     def displayVersesInNewWindow(self, selectedText=None):
-        if selectedText is None:
+        #if selectedText is None:
+        if not selectedText:
             selectedText = self.selectedText().strip()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
@@ -1103,7 +1108,8 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
 
     def displayVersesInBibleWindow(self, selectedText=None):
-        if selectedText is None:
+        #if selectedText is None:
+        if not selectedText:
             selectedText = self.selectedText().strip()
         if selectedText:
             parser = BibleVerseParser(config.parserStandarisation)

@@ -1,8 +1,12 @@
-Change in version 26.52:
+Changes in version 26.53:
+* Fixed context menu and plugin features with pyqt5.
+* Updated config.qtLibrary when either PySide2 or PyQt5 is not found and alternative is installed.
+
+Changes in version 26.52:
 * Fixed extra spaces in plain chapter mode.
 * Fixed opening note editor.
 
-Change in version 26.51:
+Changes in version 26.51:
 * Tested on Arch Linux webtop running on Apple M1 laptop.
 * Fixed a line to support running on Arch Linux webtop.
 Reference on webtops: https://docs.linuxserver.io/images/docker-webtop

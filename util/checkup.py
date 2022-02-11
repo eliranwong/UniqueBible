@@ -324,6 +324,7 @@ for module, feature, isInstalled in required:
                 pip3InstallModule(module)
                 pip3InstallModule("PyQtWebEngine")
                 if isInstalled():
+                    config.qtLibrary == "pyqt5"
                     print("Installed!")
                 else:
                     print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
@@ -335,6 +336,7 @@ for module, feature, isInstalled in required:
                 print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
                 pip3InstallModule(module)
                 if isInstalled():
+                    config.qtLibrary == "pyside2"
                     print("Installed!")
                 else:
                     print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
