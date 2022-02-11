@@ -1,3 +1,7 @@
+Changes in version 26.58:
+* Now update mp3 file list on media player list.
+* Now update mp4 file list on media player list.
+
 Changes in version 26.57:
 * Fixed opening Live Filter.
 * Fixed opening Library Catalog.

@@ -1272,6 +1272,7 @@ class TextCommandParser:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.musicFolder)).start()
             self.parent.displayMessage(config.thisTranslation["downloading"])
+        self.parent.reloadResources()
         return ("", "", {})
 
     # mp4:::
@@ -1284,6 +1285,7 @@ class TextCommandParser:
             # version 2: known issue - only works on Linux, but not macOS or Windows
             multiprocessing.Process(target=self.downloadYouTubeFile, args=(downloadCommand, command, config.videoFolder)).start()
             self.parent.displayMessage(config.thisTranslation["downloading"])
+        self.parent.reloadResources()
         return ("", "", {})
 
     def youtubeDownload(self, downloadCommand, youTubeLink):
