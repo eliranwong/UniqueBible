@@ -202,6 +202,14 @@ class ConfigUtil:
         # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
             config.linuxStartFullScreen = False
+        config.help["gTTS"] = """
+        # Google text-to-speech feature
+        # gTTS and sox are required to run this feature.
+        # To install, e.g., on Arach Linux:
+        # 'pip3 install gTTS'
+        # 'sudo pacman -S sox'"""
+        if not hasattr(config, "gTTS"):
+            config.gTTS = False
         config.help["espeak"] = """
         # Use espeak for text-to-speech feature instead of built-in qt tts engine
         # espeak is a text-to-speech tool that can run offline
@@ -1081,6 +1089,7 @@ class ConfigUtil:
             ("openLinuxPdf", config.openLinuxPdf),
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             #("showTtsOnLinux", config.showTtsOnLinux),
+            ("gTTS", config.gTTS),
             ("espeak", config.espeak),
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),

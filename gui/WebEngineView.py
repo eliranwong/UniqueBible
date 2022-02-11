@@ -567,13 +567,13 @@ class WebEngineView(QWebEngineView):
         self.addAction(separator)
 
         # TEXT-TO-SPEECH feature
-        languages = self.parent.parent.getTtsLanguages()
-        tts = QAction(self)
-        tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
-        tts.triggered.connect(self.textToSpeech)
-        self.addAction(tts)
-
         if config.isTtsInstalled:
+            languages = self.parent.parent.getTtsLanguages()
+            tts = QAction(self)
+            tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
+            tts.triggered.connect(self.textToSpeech)
+            self.addAction(tts)
+
             ttsMenu = QMenu()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]
@@ -589,9 +589,9 @@ class WebEngineView(QWebEngineView):
             tts.setMenu(ttsMenu)
             self.addAction(tts)
 
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
 
         # IBM-Watson Translation Service
 

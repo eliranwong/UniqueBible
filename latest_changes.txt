@@ -1,3 +1,12 @@
+Changes in version 26.54:
+Added config.gTTS and GTTS::: command to run Google text-to-speech feature.
+        # Google text-to-speech feature
+        # gTTS and sox are required to run this feature.
+        # To install, e.g., on Arach Linux:
+        # 'pip3 install gTTS'
+        # 'sudo pacman -S sox'"""
+Will add this feature to context menu next update.
+
 Changes in version 26.53:
 * Fixed context menu and plugin features with pyqt5.
 * Updated config.qtLibrary when either PySide2 or PyQt5 is not found and alternative is installed.
