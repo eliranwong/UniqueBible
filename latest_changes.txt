@@ -1,3 +1,7 @@
+Changes in version 26.57:
+* Fixed opening Live Filter.
+* Fixed opening Library Catalog.
+
 Changes in version 26.56:
 * Fixed opening menu plugin Presentation.
 * Fixed a display message function.

@@ -2114,7 +2114,7 @@ class MainWindow(QMainWindow):
         screen = QGuiApplication.instance().desktop().availableGeometry()
         x = screen.width() * float(1/8)
         y = screen.height() * float(1/5)
-        self.liveFilterDialog.move(x, y)
+        self.liveFilterDialog.move(int(x), int(y))
         self.liveFilterDialog.show()
 
     def showLibraryCatalogDialog(self):
@@ -2122,7 +2122,7 @@ class MainWindow(QMainWindow):
         screen = QGuiApplication.instance().desktop().availableGeometry()
         x = screen.width() * float(1/8)
         y = screen.height() * float(1/5)
-        self.libraryCatalogDialog.move(x, y)
+        self.libraryCatalogDialog.move(int(x), int(y))
         self.libraryCatalogDialog.show()
 
     def enableIndividualPluginsWindow(self):
