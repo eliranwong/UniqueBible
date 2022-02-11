@@ -174,4 +174,4 @@ class CrossPlatform:
                     code = compile(f.read(), script, 'exec')
                     exec(code, globals())
             except:
-                self.displayMessage("Failed to run '{0}'!".format(os.path.basename(script)))
+                print("Failed to run '{0}'!".format(os.path.basename(script)))

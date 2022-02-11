@@ -1,3 +1,7 @@
+Changes in version 26.56:
+* Fixed opening menu plugin Presentation.
+* Fixed a display message function.
+
 Changes in version 26.55:
 * Added Google text-to-speech feature to context menu if config.gTTS is set to True on non-Windows OS.
 * config.gTTS is now configurable via Config flag window.

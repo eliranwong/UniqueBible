@@ -43,7 +43,7 @@ class ConfigurePresentationWindow(QWidget):
         self.fontsizeslider.setMaximum(12)
         self.fontsizeslider.setTickInterval(2)
         self.fontsizeslider.setSingleStep(2)
-        self.fontsizeslider.setValue(config.presentationFontSize / 0.5)
+        self.fontsizeslider.setValue(int(config.presentationFontSize / 0.5))
         self.fontsizeslider.setToolTip(str(config.presentationFontSize))
         self.fontsizeslider.valueChanged.connect(self.presentationFontSizeChanged)
         layout1.addRow("Font Size", self.fontsizeslider)
