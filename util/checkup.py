@@ -261,6 +261,12 @@ def isYoutubeDownloaderInstalled():
     except:
         return False
 
+def isGTTSInstalled():
+    try:
+        from gtts import gTTS
+        return True
+    except:
+        return False
 
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
@@ -298,6 +304,8 @@ def setInstallConfig(module, isInstalled):
         config.isVlcInstalled = isInstalled
     elif module == "yt-dlp":
         config.isYoutubeDownloaderInstalled = isInstalled
+    elif module == "gTTS":
+        config.isGTTSInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -360,7 +368,8 @@ optional = (
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
-    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
+    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
+    ("gTTS", "Google text-to-speech", isGTTSInstalled)
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),

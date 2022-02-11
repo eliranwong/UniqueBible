@@ -130,6 +130,10 @@ class ConfigFlagsWindow(QDialog):
                 ("ibus", config.ibus, self.ibusChanged, False, config.thisTranslation["ibus"]),
                 ("espeak", config.espeak, self.espeakChanged, False, config.thisTranslation["espeak"]),
             ]
+        if not platform.system() == "Windows":
+            options += [
+                ("gTTS", config.gTTS, self.gTTSChanged, False, "Option to enable or disable Google text-to-speech feature."),
+            ]
         if config.developer:
             options += [
                 ("forceGenerateHtml", config.forceGenerateHtml, self.forceGenerateHtmlChanged, False, config.thisTranslation["forceGenerateHtml"]),
@@ -378,6 +382,10 @@ class ConfigFlagsWindow(QDialog):
 
     def espeakChanged(self):
         config.espeak = not config.espeak
+        self.displayMessage(config.thisTranslation["message_restart"])
+
+    def gTTSChanged(self):
+        config.gTTS = not config.gTTS
         self.displayMessage(config.thisTranslation["message_restart"])
 
     def enableLoggingChanged(self):

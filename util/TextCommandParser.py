@@ -1144,15 +1144,21 @@ class TextCommandParser:
         language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
+            language = "el"
         elif language == "el":
             text = TextUtil.removeVowelAccent(text)
 
         if not platform.system() == "Windows" and config.gTTS:
+            if not self.isCommandInstalled("gtts-cli"):
+                installmodule("gTTS")
             if self.isCommandInstalled("gtts-cli") and self.isCommandInstalled("play"):
                 command = "gtts-cli '{0}' --lang {1} --nocheck | play -t mp3 -".format(text, language)
                 print(command)
                 self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            else:
+            elif self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
+                message = "Install sox FIRST! \nFor examples, run: \non macOS, 'brew install sox' \non Ubuntu / Debian, 'sudo apt install sox' \non Arch Linux, 'sudo pacman -S sox'"
+                self.parent.displayMessage(message)
+            elif not self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
                 message = "Install gTTS and sox FIRST! \nFor example, on Arch Linux, run:\n'pip3 install gTSS' and \n'sudo pacman -S sox'"
                 self.parent.displayMessage(message)
         return ("", "", {})

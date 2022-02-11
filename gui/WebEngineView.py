@@ -593,6 +593,25 @@ class WebEngineView(QWebEngineView):
             separator.setSeparator(True)
             self.addAction(separator)
 
+        # Google TEXT-TO-SPEECH feature
+        if not platform.system() == "Windows" and config.gTTS:
+
+            ttsMenu = QMenu()
+            for language, languageCode in Languages.googleTranslateCodes.items():
+                action = QAction(self)
+                action.setText(language)
+                action.triggered.connect(partial(self.googleTextToSpeechLanguage, languageCode))
+                ttsMenu.addAction(action)
+
+            tts = QAction(self)
+            tts.setText("Google TTS")
+            tts.setMenu(ttsMenu)
+            self.addAction(tts)
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
+
         # IBM-Watson Translation Service
 
         # Translate into User-defined Language
@@ -821,6 +840,13 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(speakCommand, self.name)
         else:
             self.messageNoTtsEngine()
+
+    def googleTextToSpeechLanguage(self, language):
+        selectedText = self.selectedText().strip()
+        if not selectedText:
+            self.messageNoSelection()
+        speakCommand = "GTTS:::{0}:::{1}".format(language, selectedText)
+        self.parent.parent.textCommandChanged(speakCommand, self.name)
 
     def searchPanel(self, selectedText=None):
         #if selectedText is None:

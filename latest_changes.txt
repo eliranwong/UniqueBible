@@ -1,3 +1,9 @@
+Changes in version 26.55:
+* Added Google text-to-speech feature to context menu if config.gTTS is set to True on non-Windows OS.
+* config.gTTS is now configurable via Config flag window.
+* Automate installation of gTTS python package.
+* Fixed running Google text-to-speech feature on Hebrew text.
+
 Changes in version 26.54:
 Added config.gTTS and GTTS::: command to run Google text-to-speech feature.
         # Google text-to-speech feature
