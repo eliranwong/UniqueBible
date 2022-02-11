@@ -1138,8 +1138,6 @@ class TextCommandParser:
             language, text = self.splitCommand(command)
         
         # fine-tune
-        if not text:
-            text == "No text entry"
         text = re.sub("['\"]", "", text)
         language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
