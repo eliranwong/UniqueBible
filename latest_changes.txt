@@ -1,3 +1,6 @@
+Changes in version 27.00:
+* Fixed Main Window resize issues.
+
 Changes in version 26.59:
 * Fixed opening mini Control.
 * Integrated use of Google text-to-speech feature into Master Control, Mini Control and Note Editor, when there is no offline tts engine.

@@ -2379,7 +2379,7 @@ class MainWindow(QMainWindow):
         if platform.system() == "Linux":
             self.showNormal()
         availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
-        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+        self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def moveWindow(self, horizontal, vertical):
         # Note: move feature does not work on Chrome OS
