@@ -1,8 +1,9 @@
-import config
+import config, platform
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget)
 from gui.HighlightLauncher import HighlightLauncher
 from util.TtsLanguages import TtsLanguages
+from util.Languages import Languages
 
 class MiscellaneousLauncher(QWidget):
 
@@ -84,7 +85,11 @@ class MiscellaneousLauncher(QWidget):
 
         self.languageCombo = QComboBox()
         subLayout.addWidget(self.languageCombo)
-        if config.espeak:
+        if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+            languages = {}
+            for language, languageCode in Languages.googleTranslateCodes.items():
+                languages[languageCode] = ("", language)
+        elif config.espeak:
             languages = TtsLanguages().isoLang2epeakLang
         else:
             languages = TtsLanguages().isoLang2qlocaleLang
@@ -120,15 +125,18 @@ class MiscellaneousLauncher(QWidget):
     def speakText(self):
         text = self.ttsEdit.text()
         if text:
-            if config.isTtsInstalled:
+            if not config.isTtsInstalled and not config.gTTS:
+                self.parent.displayMessage(config.thisTranslation["message_noSupport"])
+            else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+                    command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                else:
+                    command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 self.parent.isRefreshing = True
                 self.parent.runTextCommand(command)
                 self.parent.isRefreshing = False
-            else:
-                self.parent.displayMessage(config.thisTranslation["message_noSupport"])
         else:
             self.parent.displayMessage(config.thisTranslation["enterTextFirst"])
 

@@ -1,10 +1,11 @@
-import os, re, config, base64, webbrowser
+import os, re, config, base64, webbrowser, platform
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from qtpy.QtPrintSupport import QPrinter, QPrintDialog
 from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
 from util.TtsLanguages import TtsLanguages
+from util.Languages import Languages
 from util.Translator import Translator
 
 
@@ -1024,7 +1025,11 @@ p, li {0} white-space: pre-wrap; {1}
 
         self.languageCombo = QComboBox()
         self.ttsToolbar.addWidget(self.languageCombo)
-        if config.espeak:
+        if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+            languages = {}
+            for language, languageCode in Languages.googleTranslateCodes.items():
+                languages[languageCode] = ("", language)
+        elif config.espeak:
             languages = TtsLanguages().isoLang2epeakLang
         else:
             languages = TtsLanguages().isoLang2qlocaleLang
@@ -1074,13 +1079,16 @@ p, li {0} white-space: pre-wrap; {1}
     def speakText(self):
         text = self.editor.textCursor().selectedText()
         if text:
-            if config.isTtsInstalled:
+            if not config.isTtsInstalled and not config.gTTS:
+                self.displayMessage(config.thisTranslation["message_noSupport"])
+            else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+                    command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+                else:
+                    command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 self.parent.runTextCommand(command)
-            else:
-                self.displayMessage(config.thisTranslation["message_noSupport"])
         else:
             self.selectTextFirst()
 

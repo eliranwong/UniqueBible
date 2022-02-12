@@ -1,3 +1,7 @@
+Changes in version 26.59:
+* Fixed opening mini Control.
+* Integrated use of Google text-to-speech feature into Master Control, Mini Control and Note Editor, when there is no offline tts engine.
+
 Changes in version 26.58:
 * Now update mp3 file list on media player list.
 * Now update mp4 file list on media player list.

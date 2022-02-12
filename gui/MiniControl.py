@@ -1,7 +1,5 @@
-import glob
+import glob, platform, config
 from pathlib import Path
-
-import config
 from util.BibleBooks import BibleBooks
 
 if __name__ == "__main__":
@@ -9,6 +7,7 @@ if __name__ == "__main__":
 
 from functools import partial
 from util.TtsLanguages import TtsLanguages
+from util.Languages import Languages
 from qtpy.QtCore import Qt, QEvent
 from qtpy.QtGui import QGuiApplication
 from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
@@ -50,7 +49,7 @@ class MiniControl(QWidget):
     def resizeWindow(self, widthFactor, heightFactor):
         availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
         self.setMinimumWidth(500)
-        self.resize(availableGeometry.width() * widthFactor, availableGeometry.height() * heightFactor)
+        self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def onResized(self, event):
         pass
@@ -119,13 +118,17 @@ class MiniControl(QWidget):
             commandLayout2.addStretch()
             commandBox.addLayout(commandLayout2)
 
-        if config.showMiniKeyboardInMiniControl and config.isTtsInstalled:
+        if config.showMiniKeyboardInMiniControl and (config.isTtsInstalled or config.gTTS):
             ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
             ttsLayout.setSpacing(5)
     
             self.languageCombo = QComboBox()
             ttsLayout.addWidget(self.languageCombo)
-            if config.espeak:
+            if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+                languages = {}
+                for language, languageCode in Languages.googleTranslateCodes.items():
+                    languages[languageCode] = ("", language)
+            elif config.espeak:
                 languages = TtsLanguages().isoLang2epeakLang
             else:
                 languages = TtsLanguages().isoLang2qlocaleLang
@@ -481,7 +484,10 @@ class MiniControl(QWidget):
         text = self.searchLineEdit.text()
         if ":::" in text:
             text = text.split(":::")[-1]
-        command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+        if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+            command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
+        else:
+            command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
         self.runCommmand(command)
 
     def bibleBookAction(self, book):
