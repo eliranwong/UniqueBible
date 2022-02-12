@@ -110,7 +110,10 @@ class MiniBrowser(QWidget):
 
     def getYouTubeDownloadOptions(self):
         url = self.addressBar.text()
-        return self.parent.textCommandParser.getYouTubeDownloadOptions(url)
+        if self.isDownloadableURL(url):
+            return self.parent.textCommandParser.getYouTubeDownloadOptions(url)
+        else:
+            return ""
 
     def downloadSelectedOption(self, option):
         self.youTubeDownloadOptions.close()
@@ -154,8 +157,14 @@ class MiniBrowser(QWidget):
             self.displayMessage(config.thisTranslation["ffmpegNotFound"])
             webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Install-ffmpeg")
 
-    def downloadMpFile(self, fileType, address):
-        if not address or not re.search("youtube", address, flags=re.IGNORECASE) or "/results?search_query=" in address:
-            self.displayMessage(config.thisTranslation["youTubeLinkNotFound"])
+    def isDownloadableURL(self, address):
+        if not address or not re.search("youtube", address, flags=re.IGNORECASE) or re.search("/$", address) or "/results?search_query=" in address:
+            return False
         else:
+            return True
+
+    def downloadMpFile(self, fileType, address):
+        if self.isDownloadableURL(address):
             self.parent.runTextCommand("{0}:::{1}".format(fileType, address))
+        else:
+            self.displayMessage(config.thisTranslation["noSupportedUrlFormat"])

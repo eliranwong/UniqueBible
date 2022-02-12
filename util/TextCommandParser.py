@@ -1303,7 +1303,7 @@ class TextCommandParser:
         return False if stderr else True
 
     def getYouTubeDownloadOptions(self, url):
-        options = subprocess.Popen("yt-dlp -F {0}".format(url), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        options = subprocess.Popen("yt-dlp --list-formats {0}".format(url), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, *_ = options.communicate()
         options = stdout.decode("utf-8").split("\n")
         return [option for option in options if re.search(r"^[0-9]+? ", option)]
