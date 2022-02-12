@@ -435,7 +435,8 @@ class FocusMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         self.addStandardIconButton("menu_bookNote", "noteBook.png", self.openMainBookNote, self.firstToolBar)
         self.addStandardIconButton("menu_chapterNote", "noteChapter.png", self.openMainChapterNote, self.firstToolBar)
@@ -464,7 +465,7 @@ class FocusMainWindow:
         # Toolbar height here is affected by the actual size of icon file used in a QAction
         if config.qtMaterial and config.qtMaterialTheme:
             self.firstToolBar.setFixedHeight(config.iconButtonWidth + 4)
-            self.firstToolBar.setIconSize(QSize(config.iconButtonWidth / 2, config.iconButtonWidth / 2))
+            self.firstToolBar.setIconSize(QSize(int(config.iconButtonWidth / 2), int(config.iconButtonWidth / 2)))
         else:
             self.firstToolBar.setIconSize(QSize(17, 17))
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
@@ -630,7 +631,8 @@ class FocusMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         iconFile = os.path.join("htmlResources", "noteBook.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu_bookNote"], self.openMainBookNote)
@@ -899,7 +901,7 @@ class FocusMainWindow:
 
         if config.qtMaterial and config.qtMaterialTheme:
             for toolbar in (self.firstToolBar, self.secondToolBar):
-                toolbar.setIconSize(QSize(config.iconButtonWidth * config.toolbarIconSizeFactor, config.iconButtonWidth * config.toolbarIconSizeFactor))
+                toolbar.setIconSize(QSize(int(config.iconButtonWidth * config.toolbarIconSizeFactor), int(config.iconButtonWidth * config.sidebarIconSizeFactor)))
                 toolbar.setFixedHeight(config.iconButtonWidth + 4)
             for toolbar in (self.leftToolBar, self.rightToolBar):
-                toolbar.setIconSize(QSize(config.iconButtonWidth * config.sidebarIconSizeFactor, config.iconButtonWidth * config.sidebarIconSizeFactor))
+                toolbar.setIconSize(QSize(int(config.iconButtonWidth * config.sidebarIconSizeFactor), int(config.iconButtonWidth * config.sidebarIconSizeFactor)))

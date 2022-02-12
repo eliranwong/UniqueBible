@@ -162,15 +162,14 @@ class ClassicMainWindow:
         scrollMenu = menu3.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu_scroll"]))
         scrollMenu.addAction(QAction(config.thisTranslation["menu_main_scroll_to_top"], self, shortcut=sc.mainPageScrollToTop,
                                           triggered=self.mainPageScrollToTop))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, self, shortcut=sc.mainPageScrollPageDown,
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_down"], self, shortcut=sc.mainPageScrollPageDown,
                                           triggered=self.mainPageScrollPageDown))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_up"], self, self, shortcut=sc.mainPageScrollPageUp,
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_main_page_up"], self, shortcut=sc.mainPageScrollPageUp,
                                           triggered=self.mainPageScrollPageUp))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_scroll_to_top"], self,
-                                      self, shortcut=sc.studyPageScrollToTop, triggered=self.studyPageScrollToTop))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_down"], self, self, shortcut=sc.studyPageScrollPageDown,
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_scroll_to_top"], self, shortcut=sc.studyPageScrollToTop, triggered=self.studyPageScrollToTop))
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_down"], self, shortcut=sc.studyPageScrollPageDown,
                                       triggered=self.studyPageScrollPageDown))
-        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, self, shortcut=sc.studyPageScrollPageUp,
+        scrollMenu.addAction(QAction(config.thisTranslation["menu_study_page_up"], self, shortcut=sc.studyPageScrollPageUp,
                                       triggered=self.studyPageScrollPageUp))
         menu3.addSeparator()
         subMenu = addSubMenu(menu3, "verseNoAction")
@@ -499,7 +498,8 @@ class ClassicMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         self.addStandardIconButton("bar1_chapterNotes", "noteChapter.png", self.openMainChapterNote, self.firstToolBar)
         self.addStandardIconButton("bar1_verseNotes", "noteVerse.png", self.openMainVerseNote, self.firstToolBar)
@@ -673,7 +673,8 @@ class ClassicMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         iconFile = os.path.join("htmlResources", "noteChapter.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_chapterNotes"], self.openMainChapterNote)

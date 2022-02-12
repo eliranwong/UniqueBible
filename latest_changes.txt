@@ -1,3 +1,9 @@
+Changes in version 27.01:
+* Added config.maximumIconButtonWidth
+* Fixed loading qt material theme with pyqt5.
+* Fixed the issues that icon button are too wide with use of config.maximumIconButtonWidth.
+* Fixed loading toolbar on Classic menu layout.
+
 Changes in version 27.00:
 * Fixed Main Window resize issues.
 

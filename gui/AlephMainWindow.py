@@ -462,7 +462,8 @@ class AlephMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         searchBibleButton = QPushButton()
         searchBibleButton.setToolTip(config.thisTranslation["bar1_searchBibles"])
@@ -1035,7 +1036,8 @@ class AlephMainWindow:
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
 
         iconFile = os.path.join("htmlResources", "search_plus.png")
         self.firstToolBar.addAction(QIcon(iconFile), config.thisTranslation["bar1_searchBibles"], self.displaySearchBibleMenu)

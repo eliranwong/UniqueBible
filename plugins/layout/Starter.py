@@ -100,7 +100,8 @@ class Starter:
                                     self.firstToolBar, self.mainRefButton)
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            config.iconButtonWidth = self.mainRefButton.height()
+            mainRefButtonHeight = self.mainRefButton.height() 
+            config.iconButtonWidth = config.maximumIconButtonWidth if mainRefButtonHeight > config.maximumIconButtonWidth else mainRefButtonHeight
         button = QPushButton(">")
         button.setFixedWidth(40)
         self.addStandardTextButton("menu_next_chapter", self.nextMainChapter, self.firstToolBar, button)
