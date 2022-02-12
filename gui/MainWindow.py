@@ -2386,7 +2386,7 @@ class MainWindow(QMainWindow):
         screen = QGuiApplication.instance().desktop().availableGeometry()
         x = screen.width() * float(horizontal)
         y = screen.height() * float(vertical)
-        self.move(x, y)
+        self.move(int(x), int(y))
 
     # Actions - enable or disable enforcement of comparison / parallel
     def getEnableCompareParallelDisplay(self):
