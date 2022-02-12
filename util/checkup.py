@@ -401,7 +401,7 @@ for module, feature, isInstalled in optional:
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
 config.isTtsInstalled = isTtsInstalled()
-if not config.isTtsInstalled:
+if not config.isTtsInstalled and not config.gTTS:
     print("Text-to-speech feature is not enabled or supported on your device.")
 
 # Import modules for developer

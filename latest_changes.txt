@@ -1,3 +1,6 @@
+Change in version 27.03:
+* Get rid of disabled text-to-speech message, if config.gTTS is set to True.
+
 Changes in version 27.02:
 * Fixed YouTube downloader mini browser buttons.
 * Now url is checked before passing to yt-dlp to list available formats.
