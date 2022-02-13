@@ -39,6 +39,10 @@ initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfi
 # Check for dependencies and other essential elements
 from util.checkup import *
 
+if initialCommand == "docker":
+    print("UniqueBibleApp installed!")
+    exit()
+
 # Setup logging
 logger = logging.getLogger('uba')
 if config.enableLogging:

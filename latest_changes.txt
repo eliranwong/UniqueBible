@@ -1,4 +1,4 @@
-Change in version 27.04:
+Changes in version 27.04, 27.05:
 * Tweaks for building docker image.
 
 Change in version 27.03:
