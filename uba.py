@@ -168,7 +168,8 @@ else:
     # Run main.py
     if initialCommand == "docker":
         initialCommand = ""
-    if enableCli:
+        os.system("{0} {1}".format(python, mainFile))
+    elif enableCli:
         os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
     else:
         subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
