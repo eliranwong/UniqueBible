@@ -16,12 +16,13 @@ if sys.version_info < (3, 5):
 if sys.version_info < (3, 7):
     print("You are running a python version lower than 3.7.  Some optional features may not be enabled.  UniqueBible.app requires python version 3.7+ to run all its features.")
 
-# Set environment variable
-os.environ["QT_API"] = "pyside2"
-os.environ["QT_LOGGING_RULES"] = "*=false"
-
 # Take arguments
 initialCommand = " ".join(sys.argv[1:]).strip()
+
+# Set environment variable
+os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
+os.environ["QT_LOGGING_RULES"] = "*=false"
+
 if initialCommand == "-i":
     initialCommand = input("Enter command: ").strip()
 enableCli = True if initialCommand in ("cli", "cli.py", "gui") \
@@ -135,7 +136,7 @@ else:
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}".format(os.environ["SHELL"], sys.executable, thisFile))
+            fileObj.write("#!{0}\n{1} {2}".format("/bin/bash" if initialCommand == "docker" else os.environ["SHELL"], sys.executable, thisFile))
         # Set permission
         for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
             try:

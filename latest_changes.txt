@@ -1,5 +1,8 @@
+Change in version 27.04:
+* Tweaks for building docker image.
+
 Change in version 27.03:
-* Get rid of disabled text-to-speech message, if config.gTTS is set to True.
+* Do not show disabled text-to-speech message, if config.gTTS is set to True.
 
 Changes in version 27.02:
 * Fixed YouTube downloader mini browser buttons.
