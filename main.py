@@ -31,8 +31,8 @@ config.noQt = False
 config.cli = False
 if initialCommand == "docker":
     docker = True
-    initialCommand = ""
-elif initialCommand == "cli":
+    initialCommand = "gui"
+if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""

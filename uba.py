@@ -168,7 +168,7 @@ else:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
     # Run main.py
-    if enableCli or initialCommand == "setup-only":
+    if enableCli or initialCommand == "docker":
         os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
     else:
         subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
