@@ -3,6 +3,8 @@
 import os, sys, subprocess, platform
 from shutil import copyfile
 
+os.environ["PYTHONUNBUFFERED"] = "1"
+
 thisFile = os.path.realpath(__file__)
 wd = thisFile[:-6]
 if os.getcwd() != wd:

@@ -204,7 +204,7 @@ def setupMainWindow(availableGeometry):
     config.screenHeight = availableGeometry.height()
     # Check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
-    if startFullScreen or (platform.system() == "Linux" and config.linuxStartFullScreen):
+    if startFullScreen or config.startFullScreen or (platform.system() == "Linux" and config.linuxStartFullScreen):
         config.mainWindow.showFullScreen()
     elif platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.

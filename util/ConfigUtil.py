@@ -198,6 +198,10 @@ class ConfigUtil:
         # corresponding translation: "noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "classicMenu" """
         if not hasattr(config, "verseNoDoubleClickAction"):
             config.verseNoDoubleClickAction = "CROSSREFERENCE" if config.enableHttpServer else "_cp0"
+        config.help["startFullScreen"] = """
+        # Start UBA with full-screen"""
+        if not hasattr(config, "startFullScreen"):
+            config.startFullScreen = False
         config.help["linuxStartFullScreen"] = """
         # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
@@ -1133,6 +1137,7 @@ class ConfigUtil:
             ("exportEmbeddedImages", config.exportEmbeddedImages),
             ("clickToOpenImage", config.clickToOpenImage),
             ("landscapeMode", config.landscapeMode),
+            ("startFullScreen", config.startFullScreen),
             ("noToolBar", config.noToolBar),
             ("topToolBarOnly", config.topToolBarOnly),
             ("toolBarIconFullSize", config.toolBarIconFullSize),

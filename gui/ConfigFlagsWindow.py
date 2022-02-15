@@ -64,6 +64,7 @@ class ConfigFlagsWindow(QDialog):
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, True, config.thisTranslation["openStudyWindowContentOnNextTab"]),
             ("populateTabsOnStartup", config.populateTabsOnStartup, self.populateTabsOnStartupChanged, False, config.thisTranslation["populateTabsOnStartup"]),
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, False, config.thisTranslation["qtMaterial"]),
+            ("startFullScreen", config.startFullScreen, self.startFullScreenChanged, False, "Option to launch UBA in fullscreen."),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar, self.addBreakAfterTheFirstToolBarChanged, True, config.thisTranslation["addBreakAfterTheFirstToolBar"]),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar, self.addBreakBeforeTheLastToolBarChanged, False, config.thisTranslation["addBreakBeforeTheLastToolBar"]),
             ("parserStandarisation", (config.parserStandarisation == "YES"), self.parserStandarisationChanged, False, config.thisTranslation["parserStandarisation"]),
@@ -375,6 +376,10 @@ class ConfigFlagsWindow(QDialog):
             config.parserStandarisation = "NO"
         else:
             config.parserStandarisation = "YES"
+
+    def startFullScreenChanged(self):
+        config.startFullScreen = not config.startFullScreen
+        self.displayMessage(config.thisTranslation["message_restart"])
 
     def linuxStartFullScreenChanged(self):
         config.linuxStartFullScreen = not config.linuxStartFullScreen
