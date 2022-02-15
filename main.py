@@ -37,9 +37,10 @@ elif len(sys.argv) > 1 and sys.argv[1] in ("telnet-server", "http-server", "exec
 initialCommandIsPython = True if initialCommand.endswith(".py") and os.path.isfile(initialCommand) else False
 
 # Check for dependencies and other essential elements
+os.environ["PYTHONUNBUFFERED"] = 1
 from util.checkup import *
 
-if initialCommand == "docker":
+if initialCommand == "setup-only":
     print("UniqueBibleApp installed!")
     exit()
 

@@ -20,7 +20,7 @@ if sys.version_info < (3, 7):
 initialCommand = " ".join(sys.argv[1:]).strip()
 
 # Set environment variable
-os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
+os.environ["QT_API"] = "pyqt5" if initialCommand == "setup-only" else "pyside2"
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 if initialCommand == "-i":
@@ -136,7 +136,7 @@ else:
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}".format("/bin/bash" if initialCommand == "docker" else os.environ["SHELL"], sys.executable, thisFile))
+            fileObj.write("#!{0}\n{1} {2}".format("/bin/bash" if initialCommand == "setup-only" else os.environ["SHELL"], sys.executable, thisFile))
         # Set permission
         for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
             try:
@@ -166,7 +166,7 @@ else:
         code = compile(f.read(), activator, 'exec')
         exec(code, dict(__file__=activator))
     # Run main.py
-    if enableCli or initialCommand == "docker":
+    if enableCli or initialCommand == "setup-only":
         os.system("{0} {1} {2}".format(python, mainFile, initialCommand))
     else:
         subprocess.Popen([python, mainFile, initialCommand] if initialCommand else [python, mainFile])
