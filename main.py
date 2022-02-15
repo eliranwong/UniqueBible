@@ -26,9 +26,13 @@ ConfigUtil.setup()
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
+startFullScreen = False
 config.noQt = False
 config.cli = False
-if initialCommand == "cli":
+if initialCommand == "fullscreen":
+    startFullScreen = True
+    initialCommand = ""
+elif initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":
     initialCommand = ""
@@ -200,7 +204,9 @@ def setupMainWindow(availableGeometry):
     config.screenHeight = availableGeometry.height()
     # Check os with platform.system() or sys.platform
     # Linux / Darwin / Windows
-    if platform.system() == "Linux" and not config.linuxStartFullScreen:
+    if startFullScreen or (platform.system() == "Linux" and config.linuxStartFullScreen):
+        config.mainWindow.showFullScreen()
+    elif platform.system() == "Linux" and not config.linuxStartFullScreen:
         # Launching the app in full screen in some Linux distributions makes the app too sticky to be resized.
         config.mainWindow.resize(int(config.screenWidth), int(config.screenHeight - 60))
         # Below is an alternate workaround, loading the app in 4/5 of the screen size.

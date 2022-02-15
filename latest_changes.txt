@@ -1,3 +1,6 @@
+Change in version 27.07:
+* Add ability to start UBA in fullscreen mode, by running "python3 uba.py fullscreen"
+
 Changes in version 27.04, 27.05, 27.06:
 * Tweaks for building docker image.
 
