@@ -22,7 +22,7 @@ if sys.version_info < (3, 7):
 initialCommand = " ".join(sys.argv[1:]).strip()
 
 # Set environment variable
-os.environ["QT_API"] = "pyqt5" if initialCommand == "setup-only" else "pyside2"
+os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 if initialCommand == "-i":
@@ -106,7 +106,7 @@ if sys.prefix == sys.base_prefix:
         try:
             if not "venv" in sys.modules:
                 import venv
-            venv.create(env_dir=venvDir, with_pip=True)
+            venv.create(env_dir=venvDir, with_pip=True, system_site_packages=True) if initialCommand == "docker" else venv.create(env_dir=venvDir, with_pip=True)
         except:
             pass
 
