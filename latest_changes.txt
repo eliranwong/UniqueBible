@@ -1,4 +1,4 @@
-Changes in version 27.09:
+Changes in version 27.09, 28.00:
 * Removed uba.py fullscreen, which could be achieved by setting config.startFullScreen to True.
 * Added uba.py docker for running on docker image.
 * Added venv option system_site_packages=True for docker version.

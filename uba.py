@@ -138,7 +138,7 @@ else:
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}".format("/bin/bash" if initialCommand == "setup-only" else os.environ["SHELL"], sys.executable, thisFile))
+            fileObj.write("#!{0}\n{1} {2}{3}".format("/bin/bash" if initialCommand == "docker" else os.environ["SHELL"], sys.executable, thisFile, " docker" if initialCommand == "docker" else ""))
         # Set permission
         for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
             try:
