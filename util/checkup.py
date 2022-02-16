@@ -12,23 +12,36 @@ def downloadFileIfNotFound(databaseInfo):
         import gdown
         try:
             print("Downloading initial content '{0}' ...".format(fileItems[-1]))
-            print("from: {0}".format(cloudFile))
-            print("to: {0}".format(localFile))
-            gdown.download(cloudFile, localFile, quiet=False)
-            print("Downloaded!")
-            connection = True
+            #print("from: {0}".format(cloudFile))
+            #print("to: {0}".format(localFile))
+            # The following command does not work in docker image in some cases.
+            #gdown.download(cloudFile, localFile, quiet=False)
+            cli = "gdown {0} -O {1}".format(cloudFile, localFile)
+            try:
+                runcli = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                *_, stderr = runcli.communicate()
+                if not stderr:
+                    print("Failed to download '{0}'!".format(fileItems[-1]))
+                    connection = False
+                else:
+                    print("Downloaded!")
+                    connection = True
+            except:
+                print("Failed to download '{0}'!".format(fileItems[-1]))
+                connection = False
         except:
             print("Failed to download '{0}'!".format(fileItems[-1]))
             connection = False
-        if connection:
-            if localFile.endswith(".zip"):
-                print("Unpacking ...")
-                zipObject = zipfile.ZipFile(localFile, "r")
-                path, *_ = os.path.split(localFile)
-                zipObject.extractall(path)
-                zipObject.close()
-                os.remove(localFile)
-                print("'{0}' is installed!".format(fileItems[-1]))
+        if connection and os.path.isfile(localFile) and localFile.endswith(".zip"):
+            print("Unpacking ...")
+            zipObject = zipfile.ZipFile(localFile, "r")
+            path, *_ = os.path.split(localFile)
+            zipObject.extractall(path)
+            zipObject.close()
+            os.remove(localFile)
+            print("'{0}' is installed!".format(fileItems[-1]))
+        else:
+            print("Failed to download '{0}'!".format(fileItems[-1]))
 
 def pip3InstallModule(module):
     if not config.pipIsUpdated:

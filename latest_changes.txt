@@ -1,3 +1,6 @@
+Changes in 28.02:
+* Fixed google drive file download issues, which blocks UBA from startup on fresh installation.
+
 Changes in version 27.09, 28.00, 28.01:
 * Removed uba.py fullscreen, which could be achieved by setting config.startFullScreen to True.
 * Added uba.py docker for running on docker image.
