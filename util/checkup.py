@@ -12,7 +12,9 @@ def downloadFileIfNotFound(databaseInfo):
         import gdown
         try:
             print("Downloading initial content '{0}' ...".format(fileItems[-1]))
-            gdown.download(cloudFile, localFile, quiet=True)
+            print("from: {0}".format(cloudFile))
+            print("to: {0}".format(localFile))
+            gdown.download(cloudFile, localFile, quiet=False)
             print("Downloaded!")
             connection = True
         except:
