@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, shutil
+import os, config, zipfile, gdown, shutil, subprocess
 
 from util.LanguageUtil import LanguageUtil
 from util.TextCommandParser import TextCommandParser
@@ -33,18 +33,32 @@ class RemoteCliMainWindow(CrossPlatform):
         fileItems, cloudID, *_ = databaseInfo
         cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         localFile = "{0}.zip".format(os.path.join(*fileItems))
+        cli = "gdown {0} -O {1}".format(cloudFile, localFile)
         try:
-            gdown.download(cloudFile, localFile, quiet=True)
-            connection = True
+            # The following line does not work in some cases
+            #gdown.download(cloudFile, localFile, quiet=True)
+            try:
+                runcli = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                *_, stderr = runcli.communicate()
+                if stderr:
+                    print("Failed to download '{0}'!".format(fileItems[-1]))
+                    print(stderr)
+                    connection = False
+                else:
+                    print("Downloaded!")
+                    connection = True
+            except:
+                print("Failed to download '{0}'!".format(fileItems[-1]))
+                connection = False
         except:
+            print("Failed to download '{0}'!".format(fileItems[-1]))
             connection = False
-        if connection:
-            if localFile.endswith(".zip"):
-                zipObject = zipfile.ZipFile(localFile, "r")
-                path, *_ = os.path.split(localFile)
-                zipObject.extractall(path)
-                zipObject.close()
-                os.remove(localFile)
+        if connection and os.path.isfile(localFile) and localFile.endswith(".zip"):
+            zipObject = zipfile.ZipFile(localFile, "r")
+            path, *_ = os.path.split(localFile)
+            zipObject.extractall(path)
+            zipObject.close()
+            os.remove(localFile)
         self.moduleInstalled(fileItems, cloudID, notification)
 
     def moduleInstalled(self, fileItems, cloudID, notification=True):

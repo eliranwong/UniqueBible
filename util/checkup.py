@@ -14,14 +14,15 @@ def downloadFileIfNotFound(databaseInfo):
             print("Downloading initial content '{0}' ...".format(fileItems[-1]))
             #print("from: {0}".format(cloudFile))
             #print("to: {0}".format(localFile))
-            # The following command does not work in docker image in some cases.
+            # The following command does not work in some cases.
             #gdown.download(cloudFile, localFile, quiet=False)
             cli = "gdown {0} -O {1}".format(cloudFile, localFile)
             try:
                 runcli = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 *_, stderr = runcli.communicate()
-                if not stderr:
+                if stderr:
                     print("Failed to download '{0}'!".format(fileItems[-1]))
+                    print(stderr)
                     connection = False
                 else:
                     print("Downloaded!")

@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown
+import os, config, zipfile, gdown, subprocess
 # import threading
 from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel)
 from qtpy.QtCore import QObject, Signal
@@ -14,17 +14,31 @@ class DownloadProcess(QObject):
 
     def downloadFile(self):
         try:
-            gdown.download(self.cloudFile, self.localFile, quiet=True)
-            connection = True
+            # The following way doesn't work in some cases
+            #gdown.download(self.cloudFile, self.localFile, quiet=True)
+            cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
+            try:
+                runcli = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                *_, stderr = runcli.communicate()
+                if stderr:
+                    print("Failed to download '{0}'!".format(self.cloudFile))
+                    print(stderr)
+                    connection = False
+                else:
+                    print("Downloaded!")
+                    connection = True
+            except:
+                print("Failed to download '{0}'!".format(self.cloudFile))
+                connection = False
         except:
+            print("Failed to download '{0}'!".format(self.cloudFile))
             connection = False
-        if connection:
-            if self.localFile.endswith(".zip"):
-                zipObject = zipfile.ZipFile(self.localFile, "r")
-                path, *_ = os.path.split(self.localFile)
-                zipObject.extractall(path)
-                zipObject.close()
-                os.remove(self.localFile)
+        if connection and os.path.isfile(self.localFile) and self.localFile.endswith(".zip"):
+            zipObject = zipfile.ZipFile(self.localFile, "r")
+            path, *_ = os.path.split(self.localFile)
+            zipObject.extractall(path)
+            zipObject.close()
+            os.remove(self.localFile)
         # Emit a signal to notify that download process is finished
         self.finished.emit()
 
