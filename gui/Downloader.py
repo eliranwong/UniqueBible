@@ -1,4 +1,4 @@
-import os, config, zipfile, gdown, subprocess
+import os, config, zipfile, gdown, platform
 # import threading
 from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel)
 from qtpy.QtCore import QObject, Signal
@@ -14,22 +14,10 @@ class DownloadProcess(QObject):
 
     def downloadFile(self):
         try:
-            # The following way doesn't work in some cases
-            #gdown.download(self.cloudFile, self.localFile, quiet=True)
-            cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
-            try:
-                runcli = subprocess.Popen(cli, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                *_, stderr = runcli.communicate()
-                if stderr:
-                    print("Failed to download '{0}'!".format(self.cloudFile))
-                    print(stderr)
-                    connection = False
-                else:
-                    print("Downloaded!")
-                    connection = True
-            except:
-                print("Failed to download '{0}'!".format(self.cloudFile))
-                connection = False
+            cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile) 
+            gdown.download(self.cloudFile, self.localFile, quiet=True) if platform.system() == "Windows" else os.system(cli)
+            print("Downloaded!")
+            connection = True
         except:
             print("Failed to download '{0}'!".format(self.cloudFile))
             connection = False
