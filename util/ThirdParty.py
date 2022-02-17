@@ -1,8 +1,5 @@
 from xml.dom.minidom import Node
-from db.DevotionalSqlite import DevotionalSqlite
-from db.ToolsSqlite import Commentary, Lexicon
-from util.BibleBooks import BibleBooks
-from util.TextUtil import TextUtil
+import os, sqlite3, config, re, json, base64, logging
 
 if __name__ == '__main__':
     import config
@@ -13,13 +10,17 @@ if __name__ == '__main__':
     config.noQt = False
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
 
-import os, sqlite3, config, re, json, base64, logging
 from pathlib import Path
 from shutil import copyfile
 from db.BiblesSqlite import BiblesSqlite
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import Bible
 from xml.dom import minidom
+from db.DevotionalSqlite import DevotionalSqlite
+from db.ToolsSqlite import Commentary, Lexicon
+from util.BibleBooks import BibleBooks
+from util.TextUtil import TextUtil
+
 
 class Converter:
 
@@ -1228,7 +1229,15 @@ class Converter:
             config.rtlTexts.append(abbreviation)
 
     def importXMLBible(self, filename):
-        doc = minidom.parse(filename)
+        file = open(filename, "r")
+        contents = file.read()
+        if "2001" in filename:
+            contents = contents.replace("…", "...")
+            for token in ("‘", "’"):
+                contents = contents.replace(token, "'")
+            for token in ("&nbsp;", "<b>", "</b>", "<i>", "</i>"):
+                contents = contents.replace(token, " ")
+        doc = minidom.parseString(contents)
         if len(doc.getElementsByTagName("XMLBIBLE")) > 0:
             self.importZefaniaBible(filename, doc)
         elif len(doc.getElementsByTagName("osis")) > 0:
@@ -1289,12 +1298,12 @@ class Converter:
             print("{0}-{1}".format(bookTag, bookNum))
             book = doc.getElementsByTagName(bookTag)[0]
             chapters = BibleBooks.chapters[bookNum]
-            for chapterNum in range(1, chapters):
+            for chapterNum in range(1, chapters+1):
                 chapterStr = "chapter{0}".format(chapterNum)
                 chapter = book.getElementsByTagName(chapterStr)[0]
                 # print(chapterStr)
                 verses = BibleBooks.verses[bookNum][chapterNum]
-                for verseNum in range(1, verses):
+                for verseNum in range(1, verses+1):
                     scripture = ""
                     try:
                         verse = chapter.getElementsByTagName("v{0}".format(verseNum))[0]
@@ -2473,6 +2482,9 @@ if __name__ == '__main__':
     # Converter().importESwordDevotional(filename)
 
     # line = '﻿<TS>The Creation<Ts><wt><E>In the beginning<e><O> בְּרֵאשִׁ֖ית<o><T> bə·rê·šîṯ<t><WH7225><WTPrep-b+N-fs l="רֵאשִׁית"><RX 43.1.1+4><RX 58.11.1+2><wt><E> God<e><O> אֱלֹהִ֑ים<o><T> ’ĕ·lō·hîm<t><WH430><WTN-mp l="אֱלֹהִים"><wt><E> -<e><O> אֵ֥ת<o><T> ’êṯ<t><WH853><WTDirObjM l="אֵת"><wt><E> created<e><O> בָּרָ֣א<o><T> bā·rā<t><WH1254><WTV-Qal-Perf-3ms l="בָּרָא"><wt><E> the heavens<e><O> הַשָּׁמַ֖יִם<o><T> haš·šā·ma·yim<t><WH8064><WTArt+N-mp l="שָׁמַיִם"><wt><E> and<e><O> וְאֵ֥ת<o><T> wə·’êṯ<t><WH853><WTConj-w+DirObjM l="אֵת"><wt><E> the earth.<e><O> הָאָֽרֶץ׃<o><T> hā·’ā·reṣ<t><WH776><WTArt+N-fs l="אֶרֶץ">'
-    line = '<TS>Nothing May Be Added or Removed<Ts><wt><E>I<e><OG> ἐγὼ<og><T> egō<t><WG1473><WTPPro-N1S l="ἐγώ"><wt><E> testify<e><OG> Μαρτυρῶ<og><T> Martyrō<t><WG3140><WTV-PIA-1S l="μαρτυρέω"><wt><E> to everyone<e><OG> παντὶ<og><T> panti<t><WG3956><WTAdj-DMS l="πᾶς"><wt><E> who<e><OG> τῷ<og><T> tō<t><WG3588><WTArt-DMS l="ὁ"><wt><E> hears<e><OG> ἀκούοντι<og><T> akouonti<t><WG191><WTV-PPA-DMS l="ἀκούω"><wt><E> the<e><OG> τοὺς<og><T> tous<t><WG3588><WTArt-AMP l="ὁ"><wt><E> words<e><OG> λόγους<og><T> logous<t><WG3056><WTN-AMP l="λόγος"><wt><E> of<e><OG> τῆς<og><T> tēs<t><WG3588><WTArt-GFS l="ὁ"><wt><E> prophecy<e><OG> προφητείας<og><T> prophēteias<t><WG4394><WTN-GFS l="προφητεία"><wt><E> in this<e><OG> τούτου·<og><T> toutou·<t><WG3778><WTDPro-GNS l="οὗτος"><wt><E> -<e><OG> τοῦ<og><T> tou<t><WG3588><WTArt-GNS l="ὁ"><wt><E> book:<e><OG> βιβλίου<og><T> bibliou<t><WG975><WTN-GNS l="βιβλίον"><wt><E> If<e><OG> ἐάν<og><T> ean<t><WG1437><WTConj l="ἐάν"><wt><E> anyone<e><OG> τις<og><T> tis<t><WG5100><WTIPro-NMS l="τίς"><wt><E> adds<e><OG> ἐπιθῇ<og><T> epithē<t><WG2007><WTV-ASA-3S l="ἐπιτίθημι"><wt><E> to<e><OG> ἐπ’<og><T> ep’<t><WG1909><WTPrep l="ἐπί"><wt><E> them,<e><OG> αὐτά,<og><T> auta,<t><WG846><WTPPro-AN3P l="αὐτός"><wt><E> -<e><OG> ὁ<og><T> ho<t><WG3588><WTArt-NMS l="ὁ"><wt><E> God<e><OG> Θεὸς<og><T> Theos<t><WG2316><WTN-NMS l="θεός"><wt><E> will add<e><OG> ἐπιθήσει<og><T> epithēsei<t><WG2007><WTV-FIA-3S l="ἐπιτίθημι"><wt><E> to<e><OG> ἐπ’<og><T> ep’<t><WG1909><WTPrep l="ἐπί"><wt><E> him<e><OG> αὐτὸν<og><T> auton<t><WG846><WTPPro-AM3S l="αὐτός"><wt><E> the<e><OG> τὰς<og><T> tas<t><WG3588><WTArt-AFP l="ὁ"><wt><E> plagues<e><OG> πληγὰς<og><T> plēgas<t><WG4127><WTN-AFP l="πληγή"><wt><E> -<e><OG> τὰς<og><T> tas<t><WG3588><WTArt-AFP l="ὁ"><wt><E> described<e><OG> γεγραμμένας<og><T> gegrammenas<t><WG1125><WTV-RPM/P-AFP l="γράφω"><wt><E> in<e><OG> ἐν<og><T> en<t><WG1722><WTPrep l="ἔν"><wt><E> this<e><OG> τούτῳ.<og><T> toutō.<t><WG3778><WTDPro-DNS l="οὗτος"><wt><E> -<e><OG> τῷ<og><T> tō<t><WG3588><WTArt-DNS l="ὁ"><wt><E> book.<e><OG> βιβλίῳ<og><T> bibliō<t><WG975><WTN-DNS l="βιβλίον">'
-    out = Converter().stripTheWordTags(line)
-    print(out)
+    # line = '<TS>Nothing May Be Added or Removed<Ts><wt><E>I<e><OG> ἐγὼ<og><T> egō<t><WG1473><WTPPro-N1S l="ἐγώ"><wt><E> testify<e><OG> Μαρτυρῶ<og><T> Martyrō<t><WG3140><WTV-PIA-1S l="μαρτυρέω"><wt><E> to everyone<e><OG> παντὶ<og><T> panti<t><WG3956><WTAdj-DMS l="πᾶς"><wt><E> who<e><OG> τῷ<og><T> tō<t><WG3588><WTArt-DMS l="ὁ"><wt><E> hears<e><OG> ἀκούοντι<og><T> akouonti<t><WG191><WTV-PPA-DMS l="ἀκούω"><wt><E> the<e><OG> τοὺς<og><T> tous<t><WG3588><WTArt-AMP l="ὁ"><wt><E> words<e><OG> λόγους<og><T> logous<t><WG3056><WTN-AMP l="λόγος"><wt><E> of<e><OG> τῆς<og><T> tēs<t><WG3588><WTArt-GFS l="ὁ"><wt><E> prophecy<e><OG> προφητείας<og><T> prophēteias<t><WG4394><WTN-GFS l="προφητεία"><wt><E> in this<e><OG> τούτου·<og><T> toutou·<t><WG3778><WTDPro-GNS l="οὗτος"><wt><E> -<e><OG> τοῦ<og><T> tou<t><WG3588><WTArt-GNS l="ὁ"><wt><E> book:<e><OG> βιβλίου<og><T> bibliou<t><WG975><WTN-GNS l="βιβλίον"><wt><E> If<e><OG> ἐάν<og><T> ean<t><WG1437><WTConj l="ἐάν"><wt><E> anyone<e><OG> τις<og><T> tis<t><WG5100><WTIPro-NMS l="τίς"><wt><E> adds<e><OG> ἐπιθῇ<og><T> epithē<t><WG2007><WTV-ASA-3S l="ἐπιτίθημι"><wt><E> to<e><OG> ἐπ’<og><T> ep’<t><WG1909><WTPrep l="ἐπί"><wt><E> them,<e><OG> αὐτά,<og><T> auta,<t><WG846><WTPPro-AN3P l="αὐτός"><wt><E> -<e><OG> ὁ<og><T> ho<t><WG3588><WTArt-NMS l="ὁ"><wt><E> God<e><OG> Θεὸς<og><T> Theos<t><WG2316><WTN-NMS l="θεός"><wt><E> will add<e><OG> ἐπιθήσει<og><T> epithēsei<t><WG2007><WTV-FIA-3S l="ἐπιτίθημι"><wt><E> to<e><OG> ἐπ’<og><T> ep’<t><WG1909><WTPrep l="ἐπί"><wt><E> him<e><OG> αὐτὸν<og><T> auton<t><WG846><WTPPro-AM3S l="αὐτός"><wt><E> the<e><OG> τὰς<og><T> tas<t><WG3588><WTArt-AFP l="ὁ"><wt><E> plagues<e><OG> πληγὰς<og><T> plēgas<t><WG4127><WTN-AFP l="πληγή"><wt><E> -<e><OG> τὰς<og><T> tas<t><WG3588><WTArt-AFP l="ὁ"><wt><E> described<e><OG> γεγραμμένας<og><T> gegrammenas<t><WG1125><WTV-RPM/P-AFP l="γράφω"><wt><E> in<e><OG> ἐν<og><T> en<t><WG1722><WTPrep l="ἔν"><wt><E> this<e><OG> τούτῳ.<og><T> toutō.<t><WG3778><WTDPro-DNS l="οὗτος"><wt><E> -<e><OG> τῷ<og><T> tō<t><WG3588><WTArt-DNS l="ὁ"><wt><E> book.<e><OG> βιβλίῳ<og><T> bibliō<t><WG975><WTN-DNS l="βιβλίον">'
+    # out = Converter().stripTheWordTags(line)
+    # print(out)
+
+    file = "/home/oliver/Downloads/temp/2001b.xml"
+    Converter().importXMLBible(file)
