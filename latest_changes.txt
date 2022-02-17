@@ -1,3 +1,6 @@
+Changes in 28.03:
+* Fixed 2001 Bible importer
+
 Changes in 28.02:
 * Fixed google drive file download issues, which blocks UBA from startup on fresh installation.
 
