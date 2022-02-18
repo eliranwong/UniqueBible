@@ -14,10 +14,15 @@ def downloadFileIfNotFound(databaseInfo):
             print("Downloading initial content '{0}' ...".format(fileItems[-1]))
             #print("from: {0}".format(cloudFile))
             #print("to: {0}".format(localFile))
-            cli = "gdown {0} -O {1}".format(cloudFile, localFile)
-            gdown.download(cloudFile, localFile, quiet=False) if platform.system() == "Windows" else os.system(cli)
-            print("Downloaded!")
-            connection = True
+            try:
+                gdown.download(cloudFile, localFile, quiet=True)
+                print("Downloaded!")
+                connection = True
+            except:
+                cli = "gdown {0} -O {1}".format(cloudFile, localFile)
+                os.system(cli)
+                print("Downloaded!")
+                connection = True
         except:
             print("Failed to download '{0}'!".format(fileItems[-1]))
             connection = False

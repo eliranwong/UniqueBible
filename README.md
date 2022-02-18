@@ -1,11 +1,17 @@
+# News! Unique Bible App Webtop Version
+
+Simple to install! Great for Bible Study!
+
+https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!
+
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.
 
 This single project has two major interfaces:
 
-Qt-based Desktop Application:
+Qt-based Multi-Window Desktop Application:
 
-<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Arch-Linux-Webtop">Webtops</a>
+<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!">Webtops</a>
 
 Web Application (available OFFLINE):
 
@@ -25,7 +31,7 @@ Oliver Tseng (https://github.com/otseng)
 
 # Screenshot:
 
-<img src="screenshots/screenshot.png">
+<img width="1440" alt="Screenshot 2022-02-18 at 19 09 09" src="https://user-images.githubusercontent.com/25262722/154747249-adf94293-eaab-43aa-9461-04d4d688b3d1.png">
 
 # Automatic Setup
 

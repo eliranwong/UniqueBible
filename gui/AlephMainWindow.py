@@ -4,6 +4,7 @@ import shortcut as sc
 from util.LanguageUtil import LanguageUtil
 from util.ShortcutUtil import ShortcutUtil
 from util.FileUtil import FileUtil
+import re, subprocess
 
 
 class AlephMainWindow:
@@ -438,6 +439,15 @@ class AlephMainWindow:
         about_menu.addAction(QAction(config.thisTranslation["menu9_contact"], self, triggered=self.contactEliranWong))
         about_menu.addAction(QAction(config.thisTranslation["menu_donate"], self, triggered=self.donateToUs))
 
+        if config.docker:
+            menu = addMenu(self.menuBar(), "menu_apps")
+            with open("/defaults/menu.xml", "r") as fileObj:
+                for line in fileObj.readlines():
+                    if "icon=" in line and not 'label="Unique Bible App"' in line:
+                        line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
+                        webtopApp, icon, command = line[:-1].split(",", 3)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(subprocess.Popen, command), "", translation=False)
+
     def setupToolBarStandardIconSize(self):
 
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
@@ -736,6 +746,13 @@ class AlephMainWindow:
         reloadButtonFile = os.path.join("htmlResources", "reload.png")
         reloadButton.setIcon(QIcon(reloadButtonFile))
         reloadButton.clicked.connect(self.reloadCurrentRecord)
+        self.secondToolBar.addWidget(reloadButton)
+
+        reloadButton = QPushButton()
+        reloadButton.setToolTip(config.thisTranslation["menu1_fullScreen"])
+        reloadButtonFile = os.path.join("htmlResources", "expand.png")
+        reloadButton.setIcon(QIcon(reloadButtonFile))
+        reloadButton.clicked.connect(self.fullsizeWindow)
         self.secondToolBar.addWidget(reloadButton)
 
         self.secondToolBar.addSeparator()
@@ -1217,6 +1234,8 @@ class AlephMainWindow:
 
         iconFile = os.path.join("htmlResources", "reload.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)
+        iconFile = os.path.join("htmlResources", "expand.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_fullScreen"], self.fullsizeWindow)
 
         self.secondToolBar.addSeparator()
 

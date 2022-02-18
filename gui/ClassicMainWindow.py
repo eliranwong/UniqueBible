@@ -3,6 +3,7 @@ from gui.MenuItems import *
 import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
 from util.FileUtil import FileUtil
+import re, subprocess
 
 
 class ClassicMainWindow:
@@ -457,6 +458,14 @@ class ClassicMainWindow:
             menu999.addAction(QAction("testing", self, triggered=self.testing))
             addMenuItem(menu999, "edit_language_file", self, self.selectLanguageFileToEdit)
 
+        if config.docker:
+            menu = addMenu(self.menuBar(), "menu_apps")
+            with open("/defaults/menu.xml", "r") as fileObj:
+                for line in fileObj.readlines():
+                    if "icon=" in line and not 'label="Unique Bible App"' in line:
+                        line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
+                        webtopApp, icon, command = line[:-1].split(",", 3)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(subprocess.Popen, command), "", translation=False)
 
     def testing(self):
         pass
@@ -592,6 +601,7 @@ class ClassicMainWindow:
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
             self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", self.reloadCurrentRecord, self.secondToolBar)
+        self.addStandardIconButton("menu1_fullScreen", "expand.png", self.fullsizeWindow, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
         # Left tool bar
@@ -806,6 +816,8 @@ class ClassicMainWindow:
 
         iconFile = os.path.join("htmlResources", "reload.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], self.reloadCurrentRecord)
+        iconFile = os.path.join("htmlResources", "expand.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_fullScreen"], self.fullsizeWindow)
 
         self.secondToolBar.addSeparator()
 

@@ -1,9 +1,10 @@
 from qtpy.QtCore import QSize
 from gui.MenuItems import *
-import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.FileUtil import FileUtil
+import shortcut as sc
+import re, subprocess
 
 
 class FocusMainWindow:
@@ -409,6 +410,15 @@ class FocusMainWindow:
             menu.addSeparator()
             addMenuItem(menu, "menu9_donate", self, self.donateToUs)
 
+        if config.docker:
+            menu = addMenu(menuBar, "menu_apps")
+            with open("/defaults/menu.xml", "r") as fileObj:
+                for line in fileObj.readlines():
+                    if "icon=" in line and not 'label="Unique Bible App"' in line:
+                        line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
+                        webtopApp, icon, command = line[:-1].split(",", 3)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(subprocess.Popen, command), "", translation=False)
+
         if config.developer:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
@@ -544,6 +554,7 @@ class FocusMainWindow:
             self.addStandardIconButton("mediaPlayer", "buttons/media_player.png", lambda: self.openVlcPlayer(""), self.secondToolBar)
             self.secondToolBar.addSeparator()
         self.addStandardIconButton("menu1_reload", "reload.png", lambda: self.reloadCurrentRecord(True), self.secondToolBar)
+        self.addStandardIconButton("menu1_fullScreen", "expand.png", self.fullsizeWindow, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
         # Left tool bar
@@ -768,6 +779,8 @@ class FocusMainWindow:
 
         iconFile = os.path.join("htmlResources", "reload.png")
         self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_reload"], lambda: self.reloadCurrentRecord(True))
+        iconFile = os.path.join("htmlResources", "expand.png")
+        self.secondToolBar.addAction(QIcon(iconFile), config.thisTranslation["menu1_fullScreen"], self.fullsizeWindow)
 
         self.secondToolBar.addSeparator()
 
