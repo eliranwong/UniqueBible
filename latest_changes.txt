@@ -1,3 +1,6 @@
+Changes in 28.08:
+* Reload all changes since 27.00
+
 Changes in 28.07:
 * Set git pull to update UBA by default for webtop version.
 * Fixed test errors.
@@ -9,7 +12,10 @@ Changes in 28.06:
 * Uploaded three images on webtop versions uploaded for different OS users.
 * A wiki page on webtop version is written at https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!
 
-Changes in 28.02, 28.03, 28.04, 28.05:
+Changes in 28.05:
+* Fixed 2001 Bible importer
+
+Changes in 28.02, 28.03, 28.04:
 * Fixed google drive file download issues, which blocks UBA from startup on fresh installation.
 * Configure config.gTTS to True for docker version.
 
