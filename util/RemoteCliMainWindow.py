@@ -34,10 +34,15 @@ class RemoteCliMainWindow(CrossPlatform):
         cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
         localFile = "{0}.zip".format(os.path.join(*fileItems))
         try:
-            cli = "gdown {0} -O {1}".format(cloudFile, localFile)
-            gdown.download(cloudFile, localFile, quiet=True) if platform.system() == "Windows" else os.system(cli)
-            print("Downloaded!")
-            connection = True
+            try:
+                gdown.download(cloudFile, localFile, quiet=True)
+                print("Downloaded!")
+                connection = True
+            except:
+                cli = "gdown {0} -O {1}".format(cloudFile, localFile)
+                os.system(cli)
+                print("Downloaded!")
+                connection = True
         except:
             print("Failed to download '{0}'!".format(fileItems[-1]))
             connection = False

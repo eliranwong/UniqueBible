@@ -132,3 +132,32 @@ class DatafileLocation:
         "Discourse Data": ((config.marvelData, "data", "discourseNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
         "TDW Combo Data": ((config.marvelData, "data", "wordsNT.data"), "11bANQQhH6acVujDXiPI4JuaenTFYTkZA"),
     }
+
+if __name__ == "__main__":
+    import os, config
+
+    def installResources(resources):
+        count = 0
+        ids = []
+        for value in resources.values():
+            cloudID = value[1]
+            cloudFile = "https://drive.google.com/uc?id={0}".format(cloudID)
+            # e.g. "https://drive.google.com/uc?id=1UA3tdZtIKQEx-xmXtM_SO1k8S8DKYm6r"
+            # cli = "gdown {0} -O {1}.zip".format(cloudFile, cloudID)
+            try:
+                # os.system(cli)
+                count += 1
+                if not cloudID in ids:
+                    ids.append(cloudID)
+                else:
+                    print("Duplicated: {0}".format(cloudID))
+                if not os.path.exists("/home/e/development/uniquebibleapp-webtop/root/defaults/uba/{0}.zip".format(cloudID)):
+                    print("Not downloaded: {0}".format(cloudID))
+            except:
+                *_, filename = value[0]
+                print("Failed to download {0}!".format(filename))
+        print(count)
+
+    data = DatafileLocation()
+    for resources in (data.marvelBibles, data.marvelCommentaries, data.marvelData):
+        installResources(resources)

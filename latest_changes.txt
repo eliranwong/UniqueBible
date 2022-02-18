@@ -1,4 +1,4 @@
-Changes in 28.02, 28.03, 28.04:
+Changes in 28.02, 28.03, 28.04, 28.05:
 * Fixed google drive file download issues, which blocks UBA from startup on fresh installation.
 * Configure config.gTTS to True for docker version.
 

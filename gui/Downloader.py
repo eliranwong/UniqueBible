@@ -14,10 +14,15 @@ class DownloadProcess(QObject):
 
     def downloadFile(self):
         try:
-            cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile) 
-            gdown.download(self.cloudFile, self.localFile, quiet=True) if platform.system() == "Windows" else os.system(cli)
-            print("Downloaded!")
-            connection = True
+            try:
+                gdown.download(self.cloudFile, self.localFile, quiet=True)
+                print("Downloaded!")
+                connection = True
+            except:
+                cli = "gdown {0} -O {1}".format(self.cloudFile, self.localFile)
+                os.system(cli)
+                print("Downloaded!")
+                connection = True
         except:
             print("Failed to download '{0}'!".format(self.cloudFile))
             connection = False
