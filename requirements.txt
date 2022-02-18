@@ -1,0 +1,21 @@
+# Requirements
+# https://pip.pypa.io/en/stable/reference/pip_install/#requirements-file-format
+
+config
+qtpy
+PySide2
+PyQt5
+gdown
+mammoth
+diff_match_patch
+langdetect
+pygithub
+qt-material
+html-text
+telnetlib3
+ibm-watson
+babel
+requests
+qrcode
+python-vlc
+yt-dlp

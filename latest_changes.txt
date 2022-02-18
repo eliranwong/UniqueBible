@@ -1,3 +1,8 @@
+Changes in 28.07:
+* Set git pull to update UBA by default for webtop version.
+* Fixed test errors.
+* Fixed patches.txt
+
 Changes in 28.06:
 * Added a button on Aleph, Classic and Focus menu layouts, to toggle fullscreen.
 * Webtop version ONLY: Integrated desktop applications into UBA menu.
