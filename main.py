@@ -33,6 +33,9 @@ if initialCommand == "docker":
     docker = True
     initialCommand = "gui"
     config.gTTS = True
+    config.docker = True
+else:
+    config.docker = False
 if initialCommand == "cli":
     config.cli = True
 elif initialCommand == "gui":

@@ -1,3 +1,9 @@
+Changes in 28.06:
+* Added a button on Aleph, Classic and Focus menu layouts, to toggle fullscreen.
+* Webtop version ONLY: Integrated desktop applications into UBA menu.
+* Uploaded three images on webtop versions uploaded for different OS users.
+* A wiki page on webtop version is written at https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!
+
 Changes in 28.02, 28.03, 28.04, 28.05:
 * Fixed google drive file download issues, which blocks UBA from startup on fresh installation.
 * Configure config.gTTS to True for docker version.

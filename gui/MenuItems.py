@@ -8,8 +8,9 @@ from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
 from functools import partial
 
-def addMenu(menuBar, translation):
-    return menuBar.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation[translation]))
+
+def addMenu(menuBar, title, translation=True):
+    return menuBar.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation[title] if translation else title))
 
 def addSubMenu(parentMenu, translation):
     return parentMenu.addMenu(config.thisTranslation[translation])
