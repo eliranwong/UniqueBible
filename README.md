@@ -25,7 +25,7 @@ Oliver Tseng (https://github.com/otseng)
 
 # Screenshot:
 
-<img src="screenshots/screenshot.png">
+<img width="1440" alt="Screenshot 2022-02-18 at 19 09 09" src="https://user-images.githubusercontent.com/25262722/154747249-adf94293-eaab-43aa-9461-04d4d688b3d1.png">
 
 # Automatic Setup
 
