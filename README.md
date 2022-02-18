@@ -21,10 +21,6 @@ https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
-# Cross-platform
-
-Read our recommendations at: https://github.com/eliranwong/UniqueBible/wiki/Recommendations-for-Different-Platforms
-
 # Development Team
 
 Eliran Wong (https://github.com/eliranwong)
@@ -38,6 +34,8 @@ Oliver Tseng (https://github.com/otseng)
 <img width="1440" alt="Screenshot 2022-02-18 at 19 09 09" src="https://user-images.githubusercontent.com/25262722/154747249-adf94293-eaab-43aa-9461-04d4d688b3d1.png">
 
 # Automatic Setup
+
+Read our recommendations first at: https://github.com/eliranwong/UniqueBible/wiki/Recommendations-for-Different-Platforms
 
 You can simply download & run UBA if you have python in place, read our examples at:
 
