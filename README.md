@@ -3,9 +3,9 @@ A cross-platform & offline bible application, integrated with high-quality resou
 
 This single project has two major interfaces:
 
-Qt-based Desktop Application:
+Qt-based Multi-Window Desktop Application:
 
-<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Arch-Linux-Webtop">Webtops</a>
+<b>Tested in:</b> <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Windows">Windows 10</a>, <a href="https://github.com/eliranwong/wsl2/blob/master/bible_apps/desktop.md">Windows WSL2</a>, <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-macOS">macOS [Sierra+]</a> and <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Linux">Linux</a> (Arch, Debian, Ubuntu & Mint), <a href="https://github.com/eliranwong/UniqueBible/wiki/Install-on-Chrome-OS">Chrome OS</a> (Debian 10), <a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED!">Webtops</a>
 
 Web Application (available OFFLINE):
 
