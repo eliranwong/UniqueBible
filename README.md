@@ -21,6 +21,10 @@ https://github.com/eliranwong/UniqueBible/wiki/Web-Version-%5Bavailable-OFFLINE%
 
 Visit <a href="https://BibleTools.app" target="_blank">https://BibleTools.app</a> for further other bible tools we develop.
 
+# Cross-platform
+
+Read our recommendations at: https://github.com/eliranwong/UniqueBible/wiki/Recommendations-for-Different-Platforms
+
 # Development Team
 
 Eliran Wong (https://github.com/eliranwong)
