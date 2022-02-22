@@ -596,6 +596,11 @@ class WebEngineView(QWebEngineView):
         # Google TEXT-TO-SPEECH feature
         if not platform.system() == "Windows" and config.gTTS:
 
+            tts = QAction(self)
+            tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], config.gTTSDefaultLanguage.capitalize()))
+            tts.triggered.connect(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage))
+            self.addAction(tts)
+
             ttsMenu = QMenu()
             for language, languageCode in Languages.googleTranslateCodes.items():
                 action = QAction(self)

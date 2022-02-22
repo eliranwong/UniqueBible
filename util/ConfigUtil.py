@@ -214,6 +214,10 @@ class ConfigUtil:
         # 'sudo pacman -S sox'"""
         if not hasattr(config, "gTTS"):
             config.gTTS = False
+        config.help["gTTSDefaultLanguage"] = """
+        # Default Google text-to-speech language"""
+        if not hasattr(config, "gTTSDefaultLanguage"):
+            config.gTTSDefaultLanguage = "en"
         config.help["espeak"] = """
         # Use espeak for text-to-speech feature instead of built-in qt tts engine
         # espeak is a text-to-speech tool that can run offline
@@ -1102,6 +1106,7 @@ class ConfigUtil:
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             #("showTtsOnLinux", config.showTtsOnLinux),
             ("gTTS", config.gTTS),
+            ("gTTSDefaultLanguage", config.gTTSDefaultLanguage),
             ("espeak", config.espeak),
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),

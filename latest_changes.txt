@@ -1,3 +1,6 @@
+Changes in 28.11:
+Added config.gTTSDefaultLanguage
+
 Changes in 28.10:
 * Set config.fcitx = True in webtop version.
 * Added config.commandTextIfNoSelection, to run context menu features on text entered in the command field if no text is selected.
