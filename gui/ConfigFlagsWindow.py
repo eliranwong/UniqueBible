@@ -111,6 +111,7 @@ class ConfigFlagsWindow(QDialog):
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, False, config.thisTranslation["includeStrictDocTypeInNote"]),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, False, config.thisTranslation["parseTextConvertNotesToBook"]),
             ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook, self.parseTextConvertHTMLToBookChanged, False, config.thisTranslation["parseTextConvertHTMLToBook"]),
+            ("commandTextIfNoSelection", config.commandTextIfNoSelection, self.commandTextIfNoSelectionChanged, False, "Context menu features run on command field text if no text is selected."),
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, False, config.thisTranslation["displayCmdOutput"]),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
@@ -255,6 +256,9 @@ class ConfigFlagsWindow(QDialog):
     def openBibleWindowContentOnNextTabChanged(self):
         config.openBibleWindowContentOnNextTab = not config.openBibleWindowContentOnNextTab
         self.newTabException = False
+
+    def commandTextIfNoSelectionChanged(self):
+        config.commandTextIfNoSelection = not config.commandTextIfNoSelection
 
     def showControlPanelOnStartupChanged(self):
         config.showControlPanelOnStartup = not config.showControlPanelOnStartup

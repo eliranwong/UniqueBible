@@ -689,11 +689,17 @@ class WebEngineView(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
+    def selectedTextProcessed(self):
+        selectedText = self.selectedText().strip()
+        if not selectedText and config.commandTextIfNoSelection:
+            selectedText = self.parent.parent.textCommandLineEdit.text().strip()
+        return selectedText
+
     def runPlugin(self, fileName, selectedText=None):
         #if selectedText is None:
         # Note: Tested in Arch Linux using pyqt5, selectedText = False.  Therefore, the line above does not work.
         if not selectedText:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
         config.contextSource = self
         config.pluginContext = selectedText
         script = os.path.join(os.getcwd(), "plugins", "context", "{0}.py".format(fileName))
@@ -711,16 +717,16 @@ class WebEngineView(QWebEngineView):
         self.displayMessage(config.thisTranslation["message_noTtsVoice"])
 
     def copySelectedText(self):
-        if not self.selectedText():
+        if not self.selectedTextProcessed():
             self.messageNoSelection()
         else:
             self.page().triggerAction(self.page().Copy)
 
     def copySelectedTextWithReference(self):
-        if not self.selectedText():
+        selectedText = self.selectedTextProcessed()
+        if not selectedText:
             self.messageNoSelection()
         else:
-            selectedText = self.selectedText().strip()
             verse = config.mainV
             lastVerse = None
             try:
@@ -747,7 +753,7 @@ class WebEngineView(QWebEngineView):
 
     # Instant highligh feature
     def instantHighlight(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -767,7 +773,7 @@ class WebEngineView(QWebEngineView):
     # Url format to translate a webpage:
     # http://translate.google.com/translate?js=n&sl=auto&tl=destination_language&u=http://example.net
     def googleTranslate(self, language):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -777,7 +783,7 @@ class WebEngineView(QWebEngineView):
 
     # Translate selected words into Selected Language (Watson Translator)
     def selectedTextToSelectedLanguage(self, language):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -789,7 +795,7 @@ class WebEngineView(QWebEngineView):
         translator = Translator()
         if translator.language_translator is not None:
             if config.userLanguage and config.userLanguage in Translator.toLanguageNames:
-                selectedText = self.selectedText().strip()
+                selectedText = self.selectedTextProcessed()
                 if not selectedText:
                     self.messageNoSelection()
                 else:
@@ -815,7 +821,7 @@ class WebEngineView(QWebEngineView):
     # TEXT-TO-SPEECH feature
     def textToSpeech(self):
         if config.isTtsInstalled:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
             if not selectedText:
                 self.messageNoSelection()
             elif config.isLangdetectInstalled and config.useLangDetectOnTts:
@@ -833,7 +839,7 @@ class WebEngineView(QWebEngineView):
 
     def textToSpeechLanguage(self, language):
         if config.isTtsInstalled:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
             if not selectedText:
                 self.messageNoSelection()
             speakCommand = "SPEAK:::{0}:::{1}".format(language, selectedText)
@@ -842,7 +848,7 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsEngine()
 
     def googleTextToSpeechLanguage(self, language):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         speakCommand = "GTTS:::{0}:::{1}".format(language, selectedText)
@@ -851,13 +857,13 @@ class WebEngineView(QWebEngineView):
     def searchPanel(self, selectedText=None):
         #if selectedText is None:
         if not selectedText:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
         if selectedText:
             config.contextItem = selectedText
         self.parent.parent.openControlPanelTab(3)
 
     def searchSelectedText(self, text=None):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -865,12 +871,12 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def openReferencesInBook(self, book):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         command = "{0} {1}".format(book, selectedText) if selectedText else book
         self.parent.parent.textCommandChanged(command, self.name)
 
     def searchSelectedTextInBook(self, book=None):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -878,7 +884,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedFavouriteBible(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -886,7 +892,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchSelectedTextOriginal(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -894,7 +900,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchHebrewGreekLexicon(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -902,7 +908,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchHebrewGreekLexiconSelected(self, module):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -913,7 +919,7 @@ class WebEngineView(QWebEngineView):
         self.searchSelectedBook(config.book)
 
     def searchSelectedBook(self, book):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -921,7 +927,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchFavouriteBooks(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -929,7 +935,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchAllBooks(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -942,7 +948,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.reloadCurrentRecord()
 
     def searchBibleNote(self, keyword):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -955,7 +961,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.reloadCurrentRecord()
 
     def searchStrongBible(self, module):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         elif re.match("^[EGH][0-9]+?$", selectedText):
@@ -965,7 +971,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])
 
     def searchAllStrongBible(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         elif re.match("^[EGH][0-9]+?$", selectedText):
@@ -975,7 +981,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.displayMessage(config.thisTranslation["notStrongNumber"])
 
     def searchResource(self, module):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -1001,7 +1007,7 @@ class WebEngineView(QWebEngineView):
         self.searchResource(config.encyclopedia)
 
     def searchThirdPartyDictionary(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -1009,7 +1015,7 @@ class WebEngineView(QWebEngineView):
             self.parent.parent.textCommandChanged(searchCommand, self.name)
 
     def searchThirdPartyDictionarySelected(self, module):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
         else:
@@ -1054,7 +1060,7 @@ class WebEngineView(QWebEngineView):
     def displayVersesInBottomWindow(self, selectedText=None):
         #if selectedText is None:
         if not selectedText:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
@@ -1066,7 +1072,7 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
 
     def openReferenceInBibleVersion(self, bible):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         useLiteVerseParsing = config.useLiteVerseParsing
         config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
@@ -1080,7 +1086,7 @@ class WebEngineView(QWebEngineView):
         self.parent.parent.textCommandChanged(command, self.name)
 
     def compareReferenceWithBibleVersion(self, bible):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         useLiteVerseParsing = config.useLiteVerseParsing
         config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
@@ -1094,7 +1100,7 @@ class WebEngineView(QWebEngineView):
         self.parent.parent.textCommandChanged(command, self.name)
 
     def parallelReferenceWithBibleVersion(self, bible):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         useLiteVerseParsing = config.useLiteVerseParsing
         config.useLiteVerseParsing = False
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
@@ -1108,7 +1114,7 @@ class WebEngineView(QWebEngineView):
         self.parent.parent.textCommandChanged(command, self.name)
 
     def compareAllVersions(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
@@ -1122,7 +1128,7 @@ class WebEngineView(QWebEngineView):
     def displayVersesInNewWindow(self, selectedText=None):
         #if selectedText is None:
         if not selectedText:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
         if selectedText:
             verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
             if verses:
@@ -1136,7 +1142,7 @@ class WebEngineView(QWebEngineView):
     def displayVersesInBibleWindow(self, selectedText=None):
         #if selectedText is None:
         if not selectedText:
-            selectedText = self.selectedText().strip()
+            selectedText = self.selectedTextProcessed()
         if selectedText:
             parser = BibleVerseParser(config.parserStandarisation)
             verses = parser.extractAllReferences(selectedText, False)
@@ -1150,7 +1156,7 @@ class WebEngineView(QWebEngineView):
             self.messageNoSelection()
 
     def copyAllReferences(self):
-        selectedText = self.selectedText().strip()
+        selectedText = self.selectedTextProcessed()
         if selectedText:
             parser = BibleVerseParser(config.parserStandarisation)
             verseList = parser.extractAllReferences(selectedText, False)

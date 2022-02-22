@@ -998,6 +998,10 @@ class ConfigUtil:
         # List of disabled shutdown plugins"""
         if not hasattr(config, "excludeShutdownPlugins"):
             config.excludeShutdownPlugins = []
+        config.help["commandTextIfNoSelection"] = """
+        # Context menu features run on command field text if no text is selected."""
+        if not hasattr(config, "commandTextIfNoSelection"):
+            config.commandTextIfNoSelection = False
         config.help["githubAccessToken"] = """
         # Github access token"""
         token = "{0}_{1}0{2}".format('tuc', 'AAUqeeL85rzuqvqZCx4B', 'iu2CrbkH41IBZJE')
@@ -1288,6 +1292,7 @@ class ConfigUtil:
             ("excludeMenuPlugins", config.excludeMenuPlugins),
             ("excludeContextPlugins", config.excludeContextPlugins),
             ("excludeShutdownPlugins", config.excludeShutdownPlugins),
+            ("commandTextIfNoSelection", config.commandTextIfNoSelection),
             ("maximumHistoryRecord", config.maximumHistoryRecord),
             ("currentRecord", {'main': 0, 'study': 0}),
             ("history", config.history),

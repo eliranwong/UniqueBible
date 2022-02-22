@@ -1138,7 +1138,7 @@ class TextCommandParser:
             language, text = self.splitCommand(command)
         
         # fine-tune
-        text = re.sub("['\"]", "", text)
+        text = re.sub("[\[\]\(\)'\"]", "", text)
         language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
