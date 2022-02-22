@@ -110,32 +110,51 @@ class UpdateUtil:
         return files
 
     @staticmethod
-    def updatePatchFileWithChanges(version, sha1, sha2):
-        ver = "{:.2f}".format(float(version))
+    def updatePatchFileWithChanges(ver, sha1, sha2):
+        version = "{:.2f}".format(float(ver))
+        patches = {}
+        f = open("patches.txt", "r")
+        lines = f.readlines()
+        for line in lines:
+            ver, contentType, filePath = literal_eval(line)
+            patches[filePath] = "{0}".format(ver)
+        f.close()
         lines = UpdateUtil.getFilesChanged(sha1, sha2)
         patch = open("patches.txt", "a")
         for line in lines:
             if not line == "":
                 action = "file"
                 code, file = line.split("\t")
-                if not file in ("patches.txt", "latest_changes.txt", "UniqueBibleAppVersion.txt"):
+                if (file not in patches.keys()) or (patches[file] != version):
                     if code.strip() == "D":
                         action = "delete"
-                    str = """({0}, "{1}", "{2}")""".format(ver, action, file.strip())
+                    str = """({0}, "{1}", "{2}")""".format(version, action, file.strip())
                     print(str)
                     patch.write(str + "\n")
-        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "patches.txt"))
-        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "latest_changes.txt"))
-        patch.write("""({0}, "{1}", "{2}")\n""".format(ver, action, "UniqueBibleAppVersion.txt"))
         patch.close()
 
+    @staticmethod
+    def removeDuplicates():
+        patches = {}
+        f = open("patches.txt", "r")
+        lines = f.readlines()
+        for line in lines:
+            version, contentType, filePath = literal_eval(line)
+            patches[filePath] = version
+        f.close()
+        patch = open("patches.txt", "w")
+        for line in lines:
+            version, contentType, filePath = literal_eval(line)
+            if patches[filePath] == version:
+                patch.write(line)
+        patch.close()
 
 if __name__ == "__main__":
 
-    version = "25.63"
+    version = "28.09"
     # Run "git log" to find the sha of commits to compare
-    sha1 = "7ea151d9e680cd437be03e39e94bf423d0669c0d"
-    sha2 = "03916ca2cac9d516f35c33e96688f361ec4b0526"
+    sha1 = "dec108f8431303fbf105b5fcb502815af7fb7921"
+    sha2 = "4de5fca3c41ee80ffaafff1f79373f79e2e5108b"
     if len(sys.argv) == 4:
         version = sys.argv[1].strip()
         sha1 = sys.argv[2].strip()
@@ -144,4 +163,4 @@ if __name__ == "__main__":
         print("python3 -m util.UpdateUtil version sha1 sha2")
         exit(1)
     UpdateUtil.updatePatchFileWithChanges(version, sha1, sha2)
-
+    UpdateUtil.removeDuplicates()

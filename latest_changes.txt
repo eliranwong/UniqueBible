@@ -1,3 +1,6 @@
+Changes in 28.09:
+* Remove duplicate lines from patches.txt
+
 Changes in 28.08:
 * Reload all changes since 27.00
 
