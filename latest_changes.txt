@@ -1,5 +1,8 @@
+Changes in 28.12:
+* Fixed webtop version tts context menu.
+
 Changes in 28.11:
-Added config.gTTSDefaultLanguage
+* Added config.gTTSDefaultLanguage
 
 Changes in 28.10:
 * Set config.fcitx = True in webtop version.
