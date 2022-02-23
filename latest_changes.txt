@@ -1,5 +1,8 @@
+Changes in 28.13:
+* Added context menu feature 'save selected text into mp3 file'.
+
 Changes in 28.12:
-* Fixed webtop version tts context menu.
+* Fixed webtop version text-to-speech context menu.
 
 Changes in 28.11:
 * Added config.gTTSDefaultLanguage

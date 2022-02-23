@@ -1,11 +1,10 @@
 from util.Languages import Languages
-import config, os, platform, webbrowser, re
+import config, os, platform, webbrowser, re, subprocess
 from functools import partial
 from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QFileDialog
 from qtpy.QtCore import QUrl
 from qtpy.QtGui import QGuiApplication
-from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu
+from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu, QFileDialog
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
@@ -14,6 +13,7 @@ from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
 from util.BibleBooks import BibleBooks
+from util.HebrewTransliteration import HebrewTransliteration
 
 class WebEngineView(QWebEngineView):
     
@@ -609,7 +609,19 @@ class WebEngineView(QWebEngineView):
                 ttsMenu.addAction(action)
 
             tts = QAction(self)
-            tts.setText("Google TTS")
+            tts.setText(config.thisTranslation["tts_utility"])
+            tts.setMenu(ttsMenu)
+            self.addAction(tts)
+
+            ttsMenu = QMenu()
+            for language, languageCode in Languages.googleTranslateCodes.items():
+                action = QAction(self)
+                action.setText(language)
+                action.triggered.connect(partial(self.googleTextToSpeechAudio, languageCode))
+                ttsMenu.addAction(action)
+
+            tts = QAction(self)
+            tts.setText("{0} MP3".format(config.thisTranslation["note_saveAs"]))
             tts.setMenu(ttsMenu)
             self.addAction(tts)
 
@@ -856,8 +868,47 @@ class WebEngineView(QWebEngineView):
         selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
-        speakCommand = "GTTS:::{0}:::{1}".format(language, selectedText)
-        self.parent.parent.textCommandChanged(speakCommand, self.name)
+        else:
+            speakCommand = "GTTS:::{0}:::{1}".format(language, selectedText)
+            self.parent.parent.textCommandChanged(speakCommand, self.name)
+
+    def googleTextToSpeechAudio(self, language):
+        selectedText = self.selectedTextProcessed()
+        if not selectedText:
+            self.messageNoSelection()
+        elif config.gTTS:
+            # fine-tune
+            selectedText = re.sub("[\[\]\(\)'\"]", "", selectedText)
+            language = re.sub("\-.*?$", "", language)
+            if language in ("iw", "he"):
+                selectedText = HebrewTransliteration().transliterateHebrew(selectedText)
+                language = "el"
+            elif language == "el":
+                selectedText = TextUtil.removeVowelAccent(selectedText)
+
+            # Ask for a filename
+            options = QFileDialog.Options()
+            fileName, *_ = QFileDialog.getSaveFileName(self,
+                    config.thisTranslation["note_saveAs"],
+                    "music",
+                    "MP3 Files (*.mp3)", "", options)
+            if fileName:
+                if not "." in os.path.basename(fileName):
+                    fileName = fileName + ".mp3"
+                # Save mp3 file
+                from gtts import gTTS
+                tts = gTTS(selectedText, lang=language)
+                tts.save(fileName)
+                # Open the directory where the file is saved
+                outputFolder = os.path.dirname(fileName)
+                if platform.system() == "Linux":
+                    subprocess.Popen([config.open, outputFolder])
+                # on Windows
+                elif platform.system() == "Windows":
+                    os.system(r"{0} {1}".format(config.open, outputFolder))
+                # on Unix-based system, like macOS
+                else:
+                    os.system(r"{0} {1}".format(config.open, outputFolder))
 
     def searchPanel(self, selectedText=None):
         #if selectedText is None:

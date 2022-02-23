@@ -275,7 +275,9 @@ def exitApplication():
                 script = os.path.join(os.getcwd(), "plugins", "shutdown", "{0}.py".format(plugin))
                 config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
-    if config.restartUBA and hasattr(config, "cli"):
+    if config.docker and config.restartUBA:
+        subprocess.Popen("{0} uba.py docker".format(sys.executable), shell=True)
+    elif config.restartUBA and hasattr(config, "cli"):
         subprocess.Popen("{0} uba.py gui".format(sys.executable), shell=True)
 
 def nameChanged():
