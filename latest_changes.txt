@@ -1,3 +1,6 @@
+Changes in 28.15:
+* Integrated restart UBA feature into Config Flags Window on supported os.
+
 Changes in 28.14:
 * Fixed restart UBA feature on webtop version.
 * Now closing UBA do not close those apps opened through UBA Apps menu on webtop version.

@@ -3,6 +3,7 @@ from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 
+
 class ConfigFlagsWindow(QDialog):
 
     def __init__(self, parent):
@@ -152,7 +153,7 @@ class ConfigFlagsWindow(QDialog):
             code = "config.{0} = {1}".format(key, value[1])
             exec(code)
         self.resetItems()
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def itemChanged(self, standardItem):
         flag = standardItem.text()
@@ -193,6 +194,27 @@ class ConfigFlagsWindow(QDialog):
     def displayMessage(self, message="", title="UniqueBible"):
         QMessageBox.information(self, title, message)
 
+    # handling restart
+    def handleRestart(self):
+        if hasattr(config, "cli") and self.warningRestart():
+            self.parent.restartApp()
+        else:
+            self.displayMessage(config.thisTranslation["message_restart"])
+
+    def warningRestart(self):
+        msgBox = QMessageBox(QMessageBox.Warning,
+                             "QMessageBox.warning()",
+                             "Restart Unique Bible App to make the changes effective?",
+                             QMessageBox.NoButton, self)
+        msgBox.addButton("Later", QMessageBox.AcceptRole)
+        msgBox.addButton("&Now", QMessageBox.RejectRole)
+        if msgBox.exec_() == QMessageBox.AcceptRole:
+            # Cancel
+            return False
+        else:
+            # Continue
+            return True
+
     def openWiki(self, event):
         wikiLink = "https://github.com/eliranwong/UniqueBible/wiki/Config-file-reference"
         webbrowser.open(wikiLink)
@@ -203,7 +225,7 @@ class ConfigFlagsWindow(QDialog):
             config.fcitx = not config.fcitx
         if config.virtualKeyboard and config.ibus:
             config.virtualKeyboard = not config.virtualKeyboard
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def fcitxChanged(self):
         config.fcitx = not config.fcitx
@@ -211,7 +233,7 @@ class ConfigFlagsWindow(QDialog):
             config.ibus = not config.ibus
         if config.fcitx and config.virtualKeyboard:
             config.virtualKeyboard = not config.virtualKeyboard
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def virtualKeyboardChanged(self):
         config.virtualKeyboard = not config.virtualKeyboard
@@ -219,7 +241,7 @@ class ConfigFlagsWindow(QDialog):
             config.fcitx = not config.fcitx
         if config.virtualKeyboard and config.ibus:
             config.ibus = not config.ibus
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def parseWordDocumentChanged(self):
         config.parseWordDocument = not config.parseWordDocument
@@ -262,11 +284,11 @@ class ConfigFlagsWindow(QDialog):
 
     def showControlPanelOnStartupChanged(self):
         config.showControlPanelOnStartup = not config.showControlPanelOnStartup
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def preferControlPanelForCommandLineEntryChanged(self):
         config.preferControlPanelForCommandLineEntry = not config.preferControlPanelForCommandLineEntry
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def closeControlPanelAfterRunningCommandChanged(self):
         config.closeControlPanelAfterRunningCommand = not config.closeControlPanelAfterRunningCommand
@@ -363,11 +385,11 @@ class ConfigFlagsWindow(QDialog):
 
     def addBreakAfterTheFirstToolBarChanged(self):
         config.addBreakAfterTheFirstToolBar = not config.addBreakAfterTheFirstToolBar
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def addBreakBeforeTheLastToolBarChanged(self):
         config.addBreakBeforeTheLastToolBar = not config.addBreakBeforeTheLastToolBar
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def disableModulesUpdateCheckChanged(self):
         config.disableModulesUpdateCheck = not config.disableModulesUpdateCheck
@@ -383,30 +405,30 @@ class ConfigFlagsWindow(QDialog):
 
     def startFullScreenChanged(self):
         config.startFullScreen = not config.startFullScreen
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def linuxStartFullScreenChanged(self):
         config.linuxStartFullScreen = not config.linuxStartFullScreen
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def espeakChanged(self):
         config.espeak = not config.espeak
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def gTTSChanged(self):
         config.gTTS = not config.gTTS
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def enableLoggingChanged(self):
         config.enableLogging = not config.enableLogging
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def logCommandsChanged(self):
         config.logCommands = not config.logCommands
 
     def enableVerseHighlightingChanged(self):
         config.enableVerseHighlighting = not config.enableVerseHighlighting
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def useLiteVerseParsingChanged(self):
         config.useLiteVerseParsing = not config.useLiteVerseParsing
@@ -416,7 +438,7 @@ class ConfigFlagsWindow(QDialog):
 
     def enableMacrosChanged(self):
         config.enableMacros = not config.enableMacros
-        self.displayMessage(config.thisTranslation["message_restart"])
+        self.handleRestart()
 
     def enablePluginsChanged(self):
         config.enablePlugins = not config.enablePlugins
@@ -434,10 +456,10 @@ class ConfigFlagsWindow(QDialog):
     def enableGistChanged(self):
         if not config.enableGist and config.isPygithubInstalled:
             config.enableGist = True
-            self.displayMessage(config.thisTranslation["message_restart"])
+            self.handleRestart()
         elif config.enableGist:
             config.enableGist = not config.enableGist
-            self.displayMessage(config.thisTranslation["message_restart"])
+            self.handleRestart()
         else:
             self.displayMessage(config.thisTranslation["message_noSupport"])
 
