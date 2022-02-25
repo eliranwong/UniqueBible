@@ -3,7 +3,7 @@ from gui.MenuItems import *
 import shortcut as sc
 from util.ShortcutUtil import ShortcutUtil
 from util.FileUtil import FileUtil
-import re, subprocess
+import re, os
 
 
 class ClassicMainWindow:
@@ -465,7 +465,7 @@ class ClassicMainWindow:
                     if "icon=" in line and not 'label="Unique Bible App"' in line:
                         line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
                         webtopApp, icon, command = line[:-1].split(",", 3)
-                        addIconMenuItem(icon, menu, webtopApp, self, partial(subprocess.Popen, command), "", translation=False)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(os.system, "nohup {0} &".format(command)), "", translation=False)
 
     def testing(self):
         pass
