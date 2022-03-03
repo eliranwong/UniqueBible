@@ -1,3 +1,16 @@
+Changes in 28.16:
+* Added four bible text toggle features:
+    1. Display Verse References
+    2. Display User Note indicators
+    3. Display Bible Note indicators
+    4. Display Lexical Entries
+* Added new toggle features to Focus and Aleph menu layouts.
+* Added config values related to new toggle features.
+* Added shortcuts for new toggle features.
+* Added items to language files.
+* Fixed display user note indicator issue on webtop version.
+* Fixed error message, "ERROR:command_buffer_proxy_impl.cc(141)] ContextResult::kTransientFailure: Failed to send GpuChannelMsg_CreateCommandBuffer.", on webtop version.
+
 Changes in 28.15:
 * Integrated restart UBA feature into Config Flags Window on supported os.
 

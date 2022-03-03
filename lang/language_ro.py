@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "Opţiune de afişare a hărţilor statice în locul hărţilor Google online, pe lista de articole de Locaţii Biblice.",
     "exportEmbeddedImages": "Exportaţi imagini în fişiere individuale atunci când sunt afişate pe fereastra Study.",
     "clickToOpenImage": "Opţiune pentru a deschide imaginea cu aplicaţia de imagine implicită a sistemului dispozitivului dumneavoastră.",
-    "showNoteIndicatorOnBibleChapter": "Opţiune de afişare pictogramă pentru a afişa disponibilitatea notelor salvate.",
+    "showUserNoteIndicator": "Opţiune de afişare pictogramă pentru a afişa disponibilitatea notelor salvate.",
     "openBibleNoteAfterSave": "Deschideţi nota biblică în fereastra Study de fiecare dată când este salvată.",
     "openBibleNoteAfterEditorClosed": "Deschidere notă biblică pe Window Window, este editat cu Editor de note.",
     "hideNoteEditorStyleToolbar": "Ascundeţi bara de unelte 'Stil' în Editorul de note.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "Inversează Lexicon",
     "commentaryFromNotes": "Comentariu de la Note Files",
     "lexiconFromNotes": "Lexicon din fișierele Note",
+    "displayVerseReference": "Afișați referințe Verset",
+    "displayUserNoteIndicator": "Afişează indicatorii de utilizare a notei",
+    "displayBibleNoteIndicator": "Afişează indicatoare de note biblice",
+    "displayLexicalEntry": "Afișează intrările lexicale",
 }

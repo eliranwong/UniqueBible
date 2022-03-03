@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "聖書の立地記事の Exhausative Library 上で、オンラインの Google マップの代わりに静的マップを表示するオプション。",
     "exportEmbeddedImages": "「スタディー・ウィンドウ」に表示されるときに、画像を個別のファイルに",
     "clickToOpenImage": "ご使用のデバイス・システムのデフォルト・イメージ・アプリケーションでイメージを開くオプション。",
-    "showNoteIndicatorOnBibleChapter": "保存されたメモの可用性を表示するアイコンを表示するオプション。",
+    "showUserNoteIndicator": "保存されたメモの可用性を表示するアイコンを表示するオプション。",
     "openBibleNoteAfterSave": "保存されるたびに「学習」ウィンドウにバイブル・ノートを開きます。",
     "openBibleNoteAfterEditorClosed": "スタディー・ウィンドウでバイブル・ノートを開くと、メモ・エディターによる編集が行われます。",
     "hideNoteEditorStyleToolbar": "メモ・エディターで「スタイル」ツールバーを非表示にする",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "リバース・レキシコン",
     "commentaryFromNotes": "メモ・ファイルからのコメント",
     "lexiconFromNotes": "ノート・ファイルからのレキシコン",
+    "displayVerseReference": "Verse 参照を表示",
+    "displayUserNoteIndicator": "ユーザー・メモ標識の表示",
+    "displayBibleNoteIndicator": "聖書の注記の表示",
+    "displayLexicalEntry": "Lexical 項目の表示",
 }

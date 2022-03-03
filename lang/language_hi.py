@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "बाइबल लोकेल के थरेटिव लाइब्रेरी पर ऑनलाइन गूगल मैप के बजाय स्थैतिक नक्शे प्रदर्शित करने के लिए विकल्प.",
     "exportEmbeddedImages": "छवियों को व्यक्तिगत फ़ाइलों में निर्यात करें जब वे अध्ययन विंडो पर प्रदर्शित किए जाते हैं.",
     "clickToOpenImage": "आपके उपकरण तंत्र तयशुदा छवि अनुप्रयोग के साथ छवि खोलने के लिए विकल्प.",
-    "showNoteIndicatorOnBibleChapter": "सहेजे गए नोट्स की उपलब्धता दिखाने के लिए प्रतीक प्रदर्शित करने के लिए विकल्प.",
+    "showUserNoteIndicator": "सहेजे गए नोट्स की उपलब्धता दिखाने के लिए प्रतीक प्रदर्शित करने के लिए विकल्प.",
     "openBibleNoteAfterSave": "अध्ययन विंडो में प्रत्येक बार जब यह सहेजा जाता है के लिए द्विबल नोट खोलें.",
     "openBibleNoteAfterEditorClosed": "अध्ययन विंडो पर द्विबल नोट इसे नोट संपादक के साथ संपादित किया गया है.",
     "hideNoteEditorStyleToolbar": "नोट संपादक में 'शैली' उपकरण पट्टी छुपाएँ.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "विलोम शब्दकोश",
     "commentaryFromNotes": "नोट फ़ाइल से कमेंट्री",
     "lexiconFromNotes": "नोट फ़ाइल से लेक्सिकॉन",
+    "displayVerseReference": "पृष्ठ-सूची दिखाएँ",
+    "displayUserNoteIndicator": "उपयोगकर्ता नोट संकेतक प्रदर्शित करें",
+    "displayBibleNoteIndicator": "बाइबल नोट संकेतक को प्रदर्शित करें",
+    "displayLexicalEntry": "Lexical entries प्रदर्शित करें",
 }

@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "Opción para mostrar mapas estáticos en lugar de mapas de Google en línea en la Biblioteca Exhausativa de artículos de Ubicaciones de la Biblia.",
     "exportEmbeddedImages": "Exportar imágenes a archivos individuales cuando se visualizan en la ventana de estudio.",
     "clickToOpenImage": "Opción para abrir la imagen con la aplicación de imagen predeterminada del sistema de dispositivo.",
-    "showNoteIndicatorOnBibleChapter": "Opción para mostrar el icono para mostrar la disponibilidad de las notas guardadas.",
+    "showUserNoteIndicator": "Opción para mostrar el icono para mostrar la disponibilidad de las notas guardadas.",
     "openBibleNoteAfterSave": "Abra la nota de biblia en la ventana de estudio cada vez que se guarde.",
     "openBibleNoteAfterEditorClosed": "Abrir nota de biblia en la ventana de estudio afer que se edita con el editor de notas.",
     "hideNoteEditorStyleToolbar": "Ocultar la barra de herramientas 'Estilo' en el Editor de notas.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "Reverso de Lexicon",
     "commentaryFromNotes": "Comentario de los archivos de nota",
     "lexiconFromNotes": "Léxico de los archivos de nota",
+    "displayVerseReference": "Mostrar referencias de Verse",
+    "displayUserNoteIndicator": "Mostrar indicadores de nota de usuario",
+    "displayBibleNoteIndicator": "Mostrar indicadores de nota bíblica",
+    "displayLexicalEntry": "Visualizar entradas léxicas",
 }

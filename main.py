@@ -36,6 +36,10 @@ if initialCommand == "docker":
     config.fcitx = True
     config.docker = True
     config.updateWithGitPull = True
+    # To deal with "ERROR:command_buffer_proxy_impl.cc(141)] ContextResult::kTransientFailure: Failed to send GpuChannelMsg_CreateCommandBuffer."
+    # Reference: https://bugreports.qt.io/browse/QTBUG-82423
+    os.environ["QTWEBENGINE_DISABLE_GPU_THREAD"] = "1"
+    os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing --num-raster-threads=1 --enable-viewport --main-frame-resizes-are-orientation-changes --disable-composited-antialiasing"
 else:
     config.docker = False
 if initialCommand == "cli":

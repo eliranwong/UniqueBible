@@ -2457,7 +2457,7 @@ class MainWindow(QMainWindow):
         self.syncButtonChanging = False
 
     def enableNoteIndicatorButtonClicked(self):
-        config.showNoteIndicatorOnBibleChapter = not config.showNoteIndicatorOnBibleChapter
+        config.showUserNoteIndicator = not config.showUserNoteIndicator
         self.reloadCurrentRecord()
 
     # Actions - enable or disable study bible / bible displayed on study view
@@ -2557,6 +2557,26 @@ class MainWindow(QMainWindow):
             return "subheadingEnable.png"
         else:
             return "subheadingDisable.png"
+
+    def toggleShowUserNoteIndicator(self):
+        config.showUserNoteIndicator = not config.showUserNoteIndicator
+        self.newTabException = True
+        self.reloadCurrentRecord()
+
+    def toggleShowBibleNoteIndicator(self):
+        config.showBibleNoteIndicator = not config.showBibleNoteIndicator
+        self.newTabException = True
+        self.reloadCurrentRecord()
+
+    def toggleShowVerseReference(self):
+        config.showVerseReference = not config.showVerseReference
+        self.newTabException = True
+        self.reloadCurrentRecord()
+
+    def toggleHideLexicalEntryInBible(self):
+        config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
+        self.newTabException = True
+        self.reloadCurrentRecord()
 
     def enableSubheadingButtonClicked(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter

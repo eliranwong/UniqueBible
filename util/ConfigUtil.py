@@ -485,6 +485,10 @@ class ConfigUtil:
         # Options to add sub-headings when "readFormattedBibles" is set to "False": True / False"""
         if not hasattr(config, "addTitleToPlainChapter"):
             config.addTitleToPlainChapter = True
+        config.help["showVerseReference"] = """
+        # Options to display verse reference: True / False"""
+        if not hasattr(config, "showVerseReference"):
+            config.showVerseReference = True
         config.help["hideLexicalEntryInBible"] = """
         # Options to hide lexical entries or Strong's numbers: True / False"""
         if not hasattr(config, "hideLexicalEntryInBible"):
@@ -620,10 +624,14 @@ class ConfigUtil:
         # This feature is accessible via a left toolbar button, located under the "Comparison / Parallel Reading / Difference" button."""
         if not hasattr(config, "enforceCompareParallel"):
             config.enforceCompareParallel = False
-        config.help["showNoteIndicatorOnBibleChapter"] = """
-        # Options to show note indicator on bible chapter: True / False"""
-        if not hasattr(config, "showNoteIndicatorOnBibleChapter"):
-            config.showNoteIndicatorOnBibleChapter = True
+        config.help["showUserNoteIndicator"] = """
+        # Options to show user note indicator on bible chapter: True / False"""
+        if not hasattr(config, "showUserNoteIndicator"):
+            config.showUserNoteIndicator = True
+        config.help["showBibleNoteIndicator"] = """
+        # Options to show bible module note indicator on bible chapter: True / False"""
+        if not hasattr(config, "showBibleNoteIndicator"):
+            config.showBibleNoteIndicator = True
         config.help["syncStudyWindowBibleWithMainWindow"] = """
         # Options sync Study Window's with changes verse references on Main Window: True / False"""
         if not hasattr(config, "syncStudyWindowBibleWithMainWindow"):
@@ -1163,9 +1171,6 @@ class ConfigUtil:
             ("noteEditorFontSize", config.noteEditorFontSize),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility),
-            ("readFormattedBibles", config.readFormattedBibles),
-            ("addTitleToPlainChapter", config.addTitleToPlainChapter),
-            ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("importDoNotStripStrongNo", config.importDoNotStripStrongNo),
             ("importDoNotStripMorphCode", config.importDoNotStripMorphCode),
             ("importAddVerseLinebreak", config.importAddVerseLinebreak),
@@ -1193,8 +1198,13 @@ class ConfigUtil:
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
             ("maximumOHGBiVersesDisplayedInSearchResult", config.maximumOHGBiVersesDisplayedInSearchResult),
-            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter),
+            ("showVerseReference", config.showVerseReference),
+            ("showUserNoteIndicator", config.showUserNoteIndicator),
+            ("showBibleNoteIndicator", config.showBibleNoteIndicator),
             ("enforceCompareParallel", config.enforceCompareParallel),
+            ("readFormattedBibles", config.readFormattedBibles),
+            ("addTitleToPlainChapter", config.addTitleToPlainChapter),
+            ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),
             ("syncStudyWindowBibleWithMainWindow", config.syncStudyWindowBibleWithMainWindow),
             ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),

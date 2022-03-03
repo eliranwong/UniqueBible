@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "Opzione per visualizzare le mappe statiche invece delle mappe di google online su Exhausative Library of Bible Locations Articoli.",
     "exportEmbeddedImages": "Esportare le immagini in singoli file quando vengono visualizzate su Finestra di studio.",
     "clickToOpenImage": "Opzione per aprire l'immagine con l'applicazione immagine predefinita del sistema del dispositivo.",
-    "showNoteIndicatorOnBibleChapter": "Opzione per visualizzare l'icona per mostrare la disponibilità delle note salvate.",
+    "showUserNoteIndicator": "Opzione per visualizzare l'icona per mostrare la disponibilità delle note salvate.",
     "openBibleNoteAfterSave": "Nota di bibbia aperta su Finestra di Studio ogni volta che viene salvato.",
     "openBibleNoteAfterEditorClosed": "Nota di bibbia aperta su Studio Window afer è modificata con Note Editor.",
     "hideNoteEditorStyleToolbar": "Nascondere la barra degli strumenti 'Stile' in Note Editor.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "Lexicon inversa",
     "commentaryFromNotes": "Commento da Note Files",
     "lexiconFromNotes": "Lexicon da Note Files",
+    "displayVerseReference": "Visualizza Riferimenti a versi",
+    "displayUserNoteIndicator": "Visualizza Indicatori utente Note",
+    "displayBibleNoteIndicator": "Visualizza indicatori di nota Bibbia",
+    "displayLexicalEntry": "Visualizza voci lessicali",
 }

@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "Επιλογή για την εμφάνιση στατικών χαρτών αντί για online google χάρτες για την Exhausative Library of Αγία Γραφή άρθρα.",
     "exportEmbeddedImages": "Εξαγωγή εικόνων σε μεμονωμένα αρχεία όταν εμφανίζονται στο παράθυρο της μελέτης.",
     "clickToOpenImage": "Επιλογή ανοίγματος εικόνας με την προεπιλεγμένη εφαρμογή εικόνας συστήματος συσκευών.",
-    "showNoteIndicatorOnBibleChapter": "Επιλογή εμφάνισης εικονιδίου για εμφάνιση αποθηκευμένων σημειώσεων.",
+    "showUserNoteIndicator": "Επιλογή εμφάνισης εικονιδίου για εμφάνιση αποθηκευμένων σημειώσεων.",
     "openBibleNoteAfterSave": "Ανοίξτε τη Βίβλο στο παράθυρο της μελέτης κάθε φορά που αποθηκεύεται.",
     "openBibleNoteAfterEditorClosed": "Ανοίξτε τη Βίβλο στο παράθυρο της μελέτης μετά την επεξεργασία με τη λειτουργία επεξεργασίας σημειώσεων.",
     "hideNoteEditorStyleToolbar": "Απόκρυψη γραμμής εργαλείων Στυλ στη λειτουργία επεξεργασίας σημειώσεων.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "Αντιστροφή Lexicon",
     "commentaryFromNotes": "Σχόλια από αρχεία σημειώσεων",
     "lexiconFromNotes": "Λεξικό από αρχεία σημειώσεων",
+    "displayVerseReference": "Εμφάνιση παραπομπών σε Verse",
+    "displayUserNoteIndicator": "Εμφάνιση δεικτών σημείωσης χρήστη",
+    "displayBibleNoteIndicator": "Εμφάνιση δεικτών σημείωσης βίβλου",
+    "displayLexicalEntry": "Εμφάνιση Λεξικών Καταχωρήσεων",
 }

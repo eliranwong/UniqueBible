@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "Опция отображения статических карт вместо онлайновых карт google в Исчерпывательной Библиотеке статей Библии.",
     "exportEmbeddedImages": "Экспортировать изображения в отдельные файлы при их отображениях в окне Исследования.",
     "clickToOpenImage": "Опция открытия образа с помощью приложения образа по умолчанию для системы устройства.",
-    "showNoteIndicatorOnBibleChapter": "Опция для отображения значка доступности сохраненных примечаний.",
+    "showUserNoteIndicator": "Опция для отображения значка доступности сохраненных примечаний.",
     "openBibleNoteAfterSave": "Открытая библевая заметка в окне Исследования при каждом сохранении.",
     "openBibleNoteAfterEditorClosed": "Открытая библевая заметка в окне Study Window редактируется с помощью редактора Note.",
     "hideNoteEditorStyleToolbar": "Скрыть панель инструментов Стиль в редакторе примечании.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "Обратный лексикон",
     "commentaryFromNotes": "Комментарий из файлов Note",
     "lexiconFromNotes": "Лексикон из файлов Note",
+    "displayVerseReference": "Показать ссылки Verse",
+    "displayUserNoteIndicator": "Показать индикаторы пользовательской заметки",
+    "displayBibleNoteIndicator": "Показать индикаторы примечания к Библии",
+    "displayLexicalEntry": "Показать лексические записи",
 }

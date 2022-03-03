@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "用来显示静态地图的选项，应用在 Exhauative Library 上。",
     "exportEmbeddedImages": "当个别图像档案载入研究视窗时，导出和存档每个图像档案。",
     "clickToOpenImage": "使用系统预设映像应用程式开启映像档的选项。",
-    "showNoteIndicatorOnBibleChapter": "显示圣经笔记图标。",
+    "showUserNoteIndicator": "显示圣经笔记图标。",
     "openBibleNoteAfterSave": "每次储存时，在研究视窗上开启笔记。",
     "openBibleNoteAfterEditorClosed": "笔记编辑器关闭后，在研究视窗上开启可笔记",
     "hideNoteEditorStyleToolbar": "在笔记编辑器中隐藏「样式」工具列。",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "反向词汇图标",
     "commentaryFromNotes": "注释文件的注释",
     "lexiconFromNotes": "来自注释文件的词法",
+    "displayVerseReference": "显示圣经经文参照",
+    "displayUserNoteIndicator": "显示用户笔记图标",
+    "displayBibleNoteIndicator": "显示圣经笔记图标",
+    "displayLexicalEntry": "显示原文词汇条目",
 }

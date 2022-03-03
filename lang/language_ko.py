@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "성경 위치 기사의 Exhausative Library에 있는 온라인 google맵 대신 정적 맵을 표시하는 옵션입니다.",
     "exportEmbeddedImages": "이미지가 연구 창에 표시될 때 이미지를 개별 파일로 내보냅니다.",
     "clickToOpenImage": "디바이스 시스템 기본 이미지 애플리케이션을 사용하여 이미지를 여는 옵션입니다.",
-    "showNoteIndicatorOnBibleChapter": "저장된 노트의 사용 가능성을 표시하는 아이콘을 표시하는 옵션입니다.",
+    "showUserNoteIndicator": "저장된 노트의 사용 가능성을 표시하는 아이콘을 표시하는 옵션입니다.",
     "openBibleNoteAfterSave": "학습 창이 저장될 때마다 열린 바이블 노트를 엽니다.",
     "openBibleNoteAfterEditorClosed": "연구 창에서 사용할 수 있는 성경 노트는 노트 편집기를 사용하여 편집됩니다.",
     "hideNoteEditorStyleToolbar": "노트 편집기에서 '스타일' 도구 모음을 숨기십시오.",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "역 어휘",
     "commentaryFromNotes": "노트 파일의 무료",
     "lexiconFromNotes": "노트 파일의 Lexicon",
+    "displayVerseReference": "Verse 참조 표시하기",
+    "displayUserNoteIndicator": "사용자 노트 표시기 표시",
+    "displayBibleNoteIndicator": "성경 노트 표시기 표시하기",
+    "displayLexicalEntry": "렉시칼 항목 표시하기",
 }

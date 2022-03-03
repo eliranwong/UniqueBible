@@ -1019,7 +1019,7 @@ class TextCommandParser:
                 # i.e. when more than one verse reference is found
                 content = self.textPlainBible(verseList, text)
                 bcvTuple = verseList[-1]
-            content = self.hideLexicalEntryInBible(content)
+            content = self.toggleBibleText(content)
             # Add text tag for custom font styling
             content = "<bibletext class='{0}'>{1}</bibletext>".format(text, content)
             if config.openBibleInMainViewOnly:
@@ -1031,7 +1031,11 @@ class TextCommandParser:
                 updateViewConfig(text, bcvTuple)
                 return (view, content, {'tab_title': text})
 
-    def hideLexicalEntryInBible(self, text):
+    def toggleBibleText(self, text):
+        if not config.showVerseReference:
+            text = re.sub('<vid .*?>.*?</vid>', '', text)
+        if not config.showBibleNoteIndicator:
+            text = re.sub("<sup><ref onclick='bn\([^\(\)]*?\)'>&oplus;</ref></sup>", '', text)
         if config.hideLexicalEntryInBible and re.search("onclick=['{0}]lex".format('"'), text):
             p = re.compile(r"<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>[ ]*?<[^\n<>]+?onclick='lex\({0}([^\n<>]+?){0}\)'>[^\n<>]+?</[^\n<>]+?>".format('"'))
             while p.search(text):

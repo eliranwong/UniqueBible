@@ -85,7 +85,7 @@ class ConfigFlagsWindow(QDialog):
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, False, config.thisTranslation["alwaysDisplayStaticMaps"]),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, True, config.thisTranslation["exportEmbeddedImages"]),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, True, config.thisTranslation["clickToOpenImage"]),
-            ("showNoteIndicatorOnBibleChapter", config.showNoteIndicatorOnBibleChapter, self.parent.enableNoteIndicatorButtonClicked, True, config.thisTranslation["showNoteIndicatorOnBibleChapter"]),
+            ("showUserNoteIndicator", config.showUserNoteIndicator, self.parent.enableNoteIndicatorButtonClicked, True, config.thisTranslation["showUserNoteIndicator"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, False, config.thisTranslation["hideNoteEditorStyleToolbar"]),

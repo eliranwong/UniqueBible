@@ -649,17 +649,17 @@ input.addEventListener('keyup', function(event) {0}
         b, c, v, *_ = verse
         # format a chapter
         chapter = "<h2>"
-        if config.showNoteIndicatorOnBibleChapter and not config.enableHttpServer:
+        if config.showUserNoteIndicator and not config.enableHttpServer:
             if NoteSqlite().isBookNote(b):
-                chapter += '<ref onclick="nB()">&#9997</ref> '
+                chapter += '<ref onclick="nB()">&#9998;</ref> '
         chapter += "{0}{1}</ref>".format(self.formChapterTag(b, c, text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         # get a verse list of available notes
         noteVerseList = []
         highlightDict = {}
-        if config.showNoteIndicatorOnBibleChapter and not config.enableHttpServer:
+        if config.showUserNoteIndicator and not config.enableHttpServer:
             noteVerseList = NoteService.getChapterVerseList(b, c)
             if NoteService.isChapterNote(b, c):
-                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
+                chapter += ' <ref onclick="nC()">&#9998;</ref>'.format(v)
         if config.enableVerseHighlighting:
             highlightDict = Highlight().getVerseDict(b, c)
         readChapter = ""
@@ -689,7 +689,7 @@ input.addEventListener('keyup', function(event) {0}
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add note indicator
             if v in noteVerseList:
-                chapter += '<ref onclick="nV({0})">&#9997</ref> '.format(v)
+                chapter += '<ref onclick="nV({0})">&#9998;</ref> '.format(v)
             hlClass = ""
             if v in highlightDict.keys():
                 hlClass = " class='{0}'".format(highlightDict[v])
@@ -1016,16 +1016,16 @@ class Bible:
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>"
-        if config.showNoteIndicatorOnBibleChapter and not config.enableHttpServer:
+        if config.showUserNoteIndicator and not config.enableHttpServer:
             if NoteSqlite().isBookNote(b):
-                chapter += '<ref onclick="nB()">&#9997</ref> '
+                chapter += '<ref onclick="nB()">&#9998;</ref> '
         chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         self.thisVerseNoteList = []
-        if config.showNoteIndicatorOnBibleChapter and not config.enableHttpServer:
+        if config.showUserNoteIndicator and not config.enableHttpServer:
             noteSqlite = NoteSqlite()
             self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
-                chapter += ' <ref onclick="nC()">&#9997</ref>'.format(v)
+                chapter += ' <ref onclick="nC()">&#9998;</ref>'.format(v)
         directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
         chapter += Bible.insertReadBibleLink(self.text, b, c)
         chapter += "</h2>"
@@ -1071,7 +1071,7 @@ class Bible:
         verseTag = 'onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding)
         v = int(v)
         if v in self.thisVerseNoteList:
-            verseTag += ' <ref onclick="nV({0})">&#9997</ref>'.format(v)
+            verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)
         return verseTag
 
     def readBiblenote(self, bcvi):

@@ -547,7 +547,7 @@ translation = {
     "alwaysDisplayStaticMaps": "用來顯示靜態地圖的選項，應用在 Exhauative Library 上。",
     "exportEmbeddedImages": "當個別圖像檔案載入研究視窗時，導出和存檔每個圖像檔案。",
     "clickToOpenImage": "使用系統預設映像應用程式開啟映像檔的選項。",
-    "showNoteIndicatorOnBibleChapter": "顯示聖經筆記圖標。",
+    "showUserNoteIndicator": "顯示聖經筆記圖標。",
     "openBibleNoteAfterSave": "每次儲存時，在研究視窗上開啟筆記。",
     "openBibleNoteAfterEditorClosed": "筆記編輯器關閉後，在研究視窗上開啟可筆記",
     "hideNoteEditorStyleToolbar": "在筆記編輯器中隱藏「樣式」工具列。",
@@ -782,4 +782,8 @@ translation = {
     "menu5_reverseLexicon": "反向 Lexicon",
     "commentaryFromNotes": "來自附註檔案的註解",
     "lexiconFromNotes": "附註檔案中的 Lexicon",
+    "displayVerseReference": "顯示聖經經文參照",
+    "displayUserNoteIndicator": "顯示用戶筆記圖標",
+    "displayBibleNoteIndicator": "顯示聖經筆記圖標",
+    "displayLexicalEntry": "顯示原文詞彙條目",
 }
