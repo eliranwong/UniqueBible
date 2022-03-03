@@ -1,3 +1,6 @@
+Changes in 28.18:
+* Added "Add Language Files" & "Update Language Files" to developer menu, available only if config.developer is set to True
+
 Changes in 28.17:
 * Added items to config flag windows.
 * Added some translations.

@@ -788,4 +788,6 @@ translation = {
     "displayLexicalEntry": "Display Lexical Entries",
     "gTTS": "Option to enable or disable Google text-to-speech feature.",
     "commandTextIfNoSelection": "Context menu features run on command field text if no text is selected.",
+    "addLanguageFiles": "Add Language Files",
+    "updateLanguageFiles": "Update Language Files",
 }

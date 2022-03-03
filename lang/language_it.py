@@ -788,4 +788,6 @@ translation = {
     "displayLexicalEntry": "Visualizza voci lessicali",
     "gTTS": "Opzione per abilitare o disabilitare la funzione text-to-speech di Google.",
     "commandTextIfNoSelection": "Le funzioni del menu contestuale vengono eseguite sul testo del campo di comando se non viene selezionato alcun testo.",
+    "addLanguageFiles": "Aggiungi file di lingua",
+    "updateLanguageFiles": "Aggiornamento file di lingua",
 }

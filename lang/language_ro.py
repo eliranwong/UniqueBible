@@ -788,4 +788,6 @@ translation = {
     "displayLexicalEntry": "Afișează intrările lexicale",
     "gTTS": "Opțiunea de a activa sau dezactiva funcția Google text-to-speech.",
     "commandTextIfNoSelection": "Caracteristicile meniului contextual rulează pe textul câmpului de comandă dacă nu este selectat niciun text.",
+    "addLanguageFiles": "Adaugă fișiere lingvistice",
+    "updateLanguageFiles": "Actualizați fișierele lingvistice",
 }

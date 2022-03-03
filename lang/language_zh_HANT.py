@@ -788,4 +788,6 @@ translation = {
     "displayLexicalEntry": "顯示原文詞彙條目",
     "gTTS": "啟用或停用 Google 語音功能的選項。",
     "commandTextIfNoSelection": "當沒有文字選擇時，選文插件功能使用於命令框中輸入的文字。",
+    "addLanguageFiles": "新增語言檔案",
+    "updateLanguageFiles": "更新語言檔案",
 }

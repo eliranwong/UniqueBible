@@ -430,6 +430,8 @@ class FocusMainWindow:
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
             addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)
             addMenuItem(menu, "editWorkingTranslation", self, self.editWorkingTranslation)
+            addMenuItem(menu, "addLanguageFiles", self, self.showAddLanguageItemWindow)
+            addMenuItem(menu, "updateLanguageFiles", self, self.showUpdateLanguageItemWindow)
 
     def setupToolBarStandardIconSize(self):
         

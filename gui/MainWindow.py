@@ -39,6 +39,7 @@ from gui.GistWindow import GistWindow
 from gui.Downloader import Downloader, DownloadProcess
 from gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from gui.WatsonCredentialWindow import WatsonCredentialWindow
+from gui.LanguageItemWindow import LanguageItemWindow
 from gui.ImportSettings import ImportSettings
 from gui.NoteEditor import NoteEditor
 from gui.MasterControl import MasterControl
@@ -3650,6 +3651,16 @@ class MainWindow(QMainWindow):
         window = WatsonCredentialWindow()
         if window.exec():
             config.myIBMWatsonApikey, config.myIBMWatsonUrl, config.myIBMWatsonVersion = window.inputApiKey.text(), window.inputURL.text(), window.inputVersion.text()
+
+    def showAddLanguageItemWindow(self):
+        window = LanguageItemWindow(config.thisTranslation["addLanguageFiles"])
+        if window.exec() and window.key.text():
+            LanguageUtil.addLanguageStringToAllFiles(window.key.text(), window.entry.text())
+
+    def showUpdateLanguageItemWindow(self):
+        window = LanguageItemWindow(config.thisTranslation["updateLanguageFiles"])
+        if window.exec() and window.key.text():
+            LanguageUtil.updateLanguageStringToAllFiles(window.key.text(), window.entry.text())
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"

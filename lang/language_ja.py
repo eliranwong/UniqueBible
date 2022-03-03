@@ -788,4 +788,6 @@ translation = {
     "displayLexicalEntry": "Lexical 項目の表示",
     "gTTS": "Google の音声合成機能を使用可能または使用不可にするオプション。",
     "commandTextIfNoSelection": "テキストが選択されていない場合、コンテキスト・メニュー機能はコマンド・フィールド・テキストで実行",
+    "addLanguageFiles": "言語ファイルの追加",
+    "updateLanguageFiles": "言語ファイルの更新",
 }
