@@ -2456,10 +2456,6 @@ class MainWindow(QMainWindow):
             self.reloadCurrentRecord()
         self.syncButtonChanging = False
 
-    def enableNoteIndicatorButtonClicked(self):
-        config.showUserNoteIndicator = not config.showUserNoteIndicator
-        self.reloadCurrentRecord()
-
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:

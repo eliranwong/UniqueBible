@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "Display User Note Indicators",
     "displayBibleNoteIndicator": "Display Bible Note Indicators",
     "displayLexicalEntry": "Display Lexical Entries",
+    "gTTS": "Option to enable or disable Google text-to-speech feature.",
+    "commandTextIfNoSelection": "Context menu features run on command field text if no text is selected.",
 }

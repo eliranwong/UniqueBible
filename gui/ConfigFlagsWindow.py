@@ -85,7 +85,10 @@ class ConfigFlagsWindow(QDialog):
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, False, config.thisTranslation["alwaysDisplayStaticMaps"]),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, True, config.thisTranslation["exportEmbeddedImages"]),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, True, config.thisTranslation["clickToOpenImage"]),
-            ("showUserNoteIndicator", config.showUserNoteIndicator, self.parent.enableNoteIndicatorButtonClicked, True, config.thisTranslation["showUserNoteIndicator"]),
+            ("showUserNoteIndicator", config.showUserNoteIndicator, self.parent.toggleShowUserNoteIndicator, True, config.thisTranslation["displayUserNoteIndicator"]),
+            ("showBibleNoteIndicator", config.showBibleNoteIndicator, self.parent.toggleShowBibleNoteIndicator, True, config.thisTranslation["displayBibleNoteIndicator"]),
+            ("showVerseReference", config.showVerseReference, self.parent.toggleShowVerseReference, True, config.thisTranslation["displayVerseReference"]),
+            ("hideLexicalEntryInBible", config.hideLexicalEntryInBible, self.parent.toggleHideLexicalEntryInBible, False, config.thisTranslation["displayLexicalEntry"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, False, config.thisTranslation["hideNoteEditorStyleToolbar"]),
@@ -112,7 +115,7 @@ class ConfigFlagsWindow(QDialog):
             ("includeStrictDocTypeInNote", config.includeStrictDocTypeInNote, self.includeStrictDocTypeInNoteChanged, False, config.thisTranslation["includeStrictDocTypeInNote"]),
             ("parseTextConvertNotesToBook", config.parseTextConvertNotesToBook, self.parseTextConvertNotesToBookChanged, False, config.thisTranslation["parseTextConvertNotesToBook"]),
             ("parseTextConvertHTMLToBook", config.parseTextConvertHTMLToBook, self.parseTextConvertHTMLToBookChanged, False, config.thisTranslation["parseTextConvertHTMLToBook"]),
-            ("commandTextIfNoSelection", config.commandTextIfNoSelection, self.commandTextIfNoSelectionChanged, False, "Context menu features run on command field text if no text is selected."),
+            ("commandTextIfNoSelection", config.commandTextIfNoSelection, self.commandTextIfNoSelectionChanged, False, config.thisTranslation["commandTextIfNoSelection"]),
             ("displayCmdOutput", config.displayCmdOutput, self.displayCmdOutputChanged, False, config.thisTranslation["displayCmdOutput"]),
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
@@ -135,7 +138,7 @@ class ConfigFlagsWindow(QDialog):
             ]
         if not platform.system() == "Windows":
             options += [
-                ("gTTS", config.gTTS, self.gTTSChanged, False, "Option to enable or disable Google text-to-speech feature."),
+                ("gTTS", config.gTTS, self.gTTSChanged, False, config.thisTranslation["gTTS"]),
             ]
         if config.developer:
             options += [

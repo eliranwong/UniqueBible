@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "顯示用戶筆記圖標",
     "displayBibleNoteIndicator": "顯示聖經筆記圖標",
     "displayLexicalEntry": "顯示原文詞彙條目",
+    "gTTS": "啟用或停用 Google 語音功能的選項。",
+    "commandTextIfNoSelection": "當沒有文字選擇時，選文插件功能使用於命令框中輸入的文字。",
 }

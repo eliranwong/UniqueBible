@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "Benutzeranmerkanzeigen anzeigen",
     "displayBibleNoteIndicator": "Bibelanmerkanzeigen anzeigen",
     "displayLexicalEntry": "Lexikalische Einträge anzeigen",
+    "gTTS": "Option zum Aktivieren oder Inaktivieren der Google-Text-zu-Sprachfunktion.",
+    "commandTextIfNoSelection": "Die Kontextmenüfeatures werden im Befehlsfeldtext ausgeführt, wenn kein Text ausgewählt ist.",
 }

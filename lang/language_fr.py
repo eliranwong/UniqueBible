@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "Afficher les indicateurs de note utilisateur",
     "displayBibleNoteIndicator": "Afficher les indicateurs de la note biblique",
     "displayLexicalEntry": "Afficher les entrées Lexiques",
+    "gTTS": "Option permettant d'activer ou de désactiver la fonction de texte de texte Google.",
+    "commandTextIfNoSelection": "Les fonctions de menu contextuel s'exécutent sur le texte de la zone de commande si aucun texte n'est sélectionné.",
 }

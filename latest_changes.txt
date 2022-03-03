@@ -1,3 +1,7 @@
+Changes in 28.17:
+* Added items to config flag windows.
+* Added some translations.
+
 Changes in 28.16:
 * Added four bible text toggle features:
     1. Display Verse References

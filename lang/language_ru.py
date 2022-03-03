@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "Показать индикаторы пользовательской заметки",
     "displayBibleNoteIndicator": "Показать индикаторы примечания к Библии",
     "displayLexicalEntry": "Показать лексические записи",
+    "gTTS": "Опция включения или выключения функции Google text-to-speece.",
+    "commandTextIfNoSelection": "Если текст не выбран, то в контекстном меню можно ввести текст команды.",
 }

@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "사용자 노트 표시기 표시",
     "displayBibleNoteIndicator": "성경 노트 표시기 표시하기",
     "displayLexicalEntry": "렉시칼 항목 표시하기",
+    "gTTS": "Google 텍스트-음성 기능을 사용 또는 사용 안함으로 설정하는 옵션입니다.",
+    "commandTextIfNoSelection": "텍스트가 선택되지 않은 경우 컨텍스트 메뉴 기능은 명령 필드 텍스트에서 실행됩니다.",
 }

@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "Afişează indicatorii de utilizare a notei",
     "displayBibleNoteIndicator": "Afişează indicatoare de note biblice",
     "displayLexicalEntry": "Afișează intrările lexicale",
+    "gTTS": "Opțiunea de a activa sau dezactiva funcția Google text-to-speech.",
+    "commandTextIfNoSelection": "Caracteristicile meniului contextual rulează pe textul câmpului de comandă dacă nu este selectat niciun text.",
 }

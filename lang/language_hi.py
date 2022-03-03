@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "उपयोगकर्ता नोट संकेतक प्रदर्शित करें",
     "displayBibleNoteIndicator": "बाइबल नोट संकेतक को प्रदर्शित करें",
     "displayLexicalEntry": "Lexical entries प्रदर्शित करें",
+    "gTTS": "Google text-टू-स्पीच फीचर को सक्षम या अक्षम करने के लिए विकल्प.",
+    "commandTextIfNoSelection": "संदर्भ मेनू विशेषताएँ यदि कोई पाठ चुना नहीं गया है तो कमांड क्षेत्र पाठ पर चलाया जाता है.",
 }

@@ -786,4 +786,6 @@ translation = {
     "displayUserNoteIndicator": "ユーザー・メモ標識の表示",
     "displayBibleNoteIndicator": "聖書の注記の表示",
     "displayLexicalEntry": "Lexical 項目の表示",
+    "gTTS": "Google の音声合成機能を使用可能または使用不可にするオプション。",
+    "commandTextIfNoSelection": "テキストが選択されていない場合、コンテキスト・メニュー機能はコマンド・フィールド・テキストで実行",
 }
