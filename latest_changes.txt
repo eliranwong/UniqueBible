@@ -1,5 +1,6 @@
 Changes in 28.21:
 * Install pycharm on demand and open it on webtop version.
+* Added developer option "pycharm" to Focus and Aleph menu layouts.
 
 Changes in 28.20:
 * Remove message "nohup: appending output to 'nohup.out'" when open third-party apps via webtop version.

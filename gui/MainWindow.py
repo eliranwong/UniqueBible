@@ -16,6 +16,7 @@ from gui.BibleCollectionDialog import BibleCollectionDialog
 from gui.LibraryCatalogDialog import LibraryCatalogDialog
 from gui.LiveFilterDialog import LiveFilterDialog
 from util import exlbl
+from util.WebtopUtil import WebtopUtil
 from util.BibleBooks import BibleBooks
 from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
@@ -3661,6 +3662,13 @@ class MainWindow(QMainWindow):
         window = LanguageItemWindow(config.thisTranslation["updateLanguageFiles"])
         if window.exec() and window.key.text():
             LanguageUtil.updateLanguageStringToAllFiles(window.key.text(), window.entry.text())
+
+    def openPycharm(self):
+        isPycharmInstalled = WebtopUtil.isPackageInstalled("pycharm")
+        if not isPycharmInstalled:
+            self.displayMessage("Installing 'pycharm' ...")
+            WebtopUtil.installPackage("pycharm-community-edition")
+        WebtopUtil.runNohup("pycharm /config/UniqueBible/")
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"

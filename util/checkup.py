@@ -1,5 +1,6 @@
 import config, subprocess, os, zipfile, platform, sys
 from shutil import copyfile
+from util.WebtopUtil import WebtopUtil
 
 
 def downloadFileIfNotFound(databaseInfo):
@@ -341,7 +342,7 @@ for module, feature, isInstalled in required:
             if not isInstalled():
                 print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
                 if config.docker:
-                    os.system("sudo pacman -Syu --noconfirm python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
+                    WebtopUtil.installPackage("python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
                 else:
                     pip3InstallModule(module)
                     pip3InstallModule("PyQtWebEngine")
@@ -361,7 +362,7 @@ for module, feature, isInstalled in required:
             if not isInstalled():
                 print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
                 if config.docker:
-                    os.system("sudo pacman -Syu --noconfirm pyside2 pyside2-tools qt5-webengine")
+                    WebtopUtil.installPackage("pyside2 pyside2-tools qt5-webengine")
                 else:
                     pip3InstallModule(module)
                 if isInstalled():
