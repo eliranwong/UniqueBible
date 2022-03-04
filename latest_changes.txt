@@ -1,3 +1,6 @@
+Changes in 28.20:
+* Remove message "nohup: appending output to 'nohup.out'" when open third-party apps via webtop version.
+
 Changes in 28.19:
 * Webtop version now use PySide2 library by default.
 
