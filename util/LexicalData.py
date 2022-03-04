@@ -1,3 +1,4 @@
+import os
 import re
 
 class LexicalData:
@@ -9642,7 +9643,7 @@ class LexicalData:
         "H325": ("אֲחַשְׁוֵרוֹשׁ", "N:N-M-P", "Ahasuerus", "a.chash.ve.rosh"),
         "H326": ("אֲחַשְׁתָּרִי", "N:N-M-P", "Haahashtari", "a.chash.ta.ri"),
         "H327": ("אֲחַשְׁתְּרָן", "H:A", "steed", "a.chash.ta.ran"),
-        "H328a": ("אִטִּי", "H:N-M / H:Adv", "mutterer", ""),
+        "H328a": ("אִטִּי", "H:N-M / H:Adv", "mutterer", "at"),
         "H328b": ("אַט", "H:N-M / H:Adv", "softly", "at"),
         "H329": ("אָטָד", "H:N-M", "bramble", "a.tad"),
         "H330": ("אֵטוּן", "H:N-M", "fine linen", "e.tun"),
@@ -9679,7 +9680,7 @@ class LexicalData:
         "H356": ("אֵלוֹן", "N:N-M-P / N:N--L", "Elon", "e.lon"),
         "H357": ("אַיָּלוֹן", "N:N--L", "Aijalon", "ay.ya.lon"),
         "H358": ("אֵילוֹן בֵּית חָנָן", "N:N--L", "Elonbeth-hanan", "e.lon bet cha.nan"),
-        "H359a": ("אֵילַת, אֵילוֹת", "N:N--L", "Elath", ""),
+        "H359a": ("אֵילַת, אֵילוֹת", "N:N--L", "Elath", "e.lot"),
         "H359b": ("אֵילוֹת", "N:N--L", "Eloth", "e.lot"),
         "H360": ("אֱיָלוּת", "H:N-F", "strength", "e.ya.lut"),
         "H361": ("אֵילָם", "H:N-M", "arches", "e.lam"),
@@ -10078,7 +10079,7 @@ class LexicalData:
         "H743": ("אֲרִידָ֑תָא", "N:N-M-P", "Aridatha", "a.ri.da.ta"),
         "H744": ("אַרְיֵה", "A:N-M", "lion", "ar.yeh"),
         "H745": ("אַרְיֵה", "N:N-M-P", "Arieh", "ar.yeh"),
-        "H746a": ("אַרְיוֹךְ", "N:N-M-P", "Arioch", ""),
+        "H746a": ("אַרְיוֹךְ", "N:N-M-P", "Arioch", "a.re.yokh"),
         "H746b": ("אֲרְיוֹךְ", "N:N-M-P", "Arioch", "a.re.yokh"),
         "H747": ("אֲרִיסַי", "N:N-M-P", "Arisai", "a.ri.say"),
         "H748": ("אָרַךְ", "H:V", "to prolong", "a.rakh"),
@@ -10139,7 +10140,7 @@ class LexicalData:
         "H802": ("אִשָּׁה", "H:N-F", "woman", "ish.shah"),
         "H803": ("אָשְׁיָה", "H:N-F", "foundation", "a.shu.yah"),
         "H804": ("אַשּׁוּר", "N:N--L / N:N--LG / N:N-M-P", "Asshur", "ash.shur"),
-        "H805a": ("אַשּׁוּרִם", "N:N-M-PG", "Asshurim", ""),
+        "H805a": ("אַשּׁוּרִם", "N:N-M-PG", "Asshurim", "a.shu.ri"),
         "H805b": ("אֲשׁוּרִי", "N:N--LG", "Ashurite", "a.shu.ri"),
         "H806": ("אַשְׁחוּר", "N:N-M-P", "Ashhur", "ash.chur"),
         "H807": ("אֲשִׁימָא", "N:N-M-T", "Ashima", "a.shi.ma"),
@@ -10176,7 +10177,7 @@ class LexicalData:
         "H835": ("אֶ֫שֶׁר", "H:N-M", "blessed", "e.sher"),
         "H836": ("אָשֵׁר", "N:N--L / N:N--LG / N:N-M-P", "Asher", "a.sher"),
         "H837": ("אֹ֫שֶׁר", "H:N-M", "happy", "o.sher"),
-        "H838a": ("אֲשׁוּר", "H:N-F", "step", ""),
+        "H838a": ("אֲשׁוּר", "H:N-F", "step", "a.shur"),
         "H838b": ("אַשֻּׁר", "H:N-F", "step", "a.shur"),
         "H839": ("אֲשֻׁרִים", "H:N-F", "boxwood", "a.shur"),
         "H840": ("אֲשַׂרְאֵל", "N:N-M-P", "Asarel", "a.sar.el"),
@@ -10352,7 +10353,7 @@ class LexicalData:
         "H1002": ("בִּירָה", "H:N-F", "palace", "bi.rah"),
         "H1003": ("בִּירָנִית", "H:N-F", "fortress", "bi.ra.nit"),
         "H1004": ("בַּ֫יִת", "H:N-M", "house", "ba.yit"),
-        "H1004a": ("בֵּית", "H:Prep", "between", ""),
+        "H1004a": ("בֵּית", "H:Prep", "between", "ba.yit"),
         "H1004b": ("בַּ֫יִת", "H:N-M", "house", "ba.yit"),
         "H1005": ("בַּ֫יִת", "A:N-M", "house", "ba.yit"),
         "H1006": ("בַּ֫יִת", "N:N--L", "Bajith", "ba.yit"),
@@ -10607,7 +10608,7 @@ class LexicalData:
         "H1247": ("בַּר", "A:N-M", "son", "bar"),
         "H1248": ("בַּר", "H:N-M", "son", "bar"),
         "H1249": ("בַּר", "H:A", "pure", "bar"),
-        "H1250a": ("בַּר", "H:N-M", "grain", ""),
+        "H1250a": ("בַּר", "H:N-M", "grain", "bar"),
         "H1250b": ("בָּר", "H:N-M", "field", "bar"),
         "H1251": ("בַּר", "A:N-M", "field", "bar"),
         "H1252": ("בֹּר", "H:N-M", "cleanness", "bor"),
@@ -10660,7 +10661,7 @@ class LexicalData:
         "H1297": ("בְּרַם", "A:Adv", "nevertheless", "be.ram"),
         "H1298": ("בֶּ֫רַע", "N:N-M-P", "Bera", "be.ra"),
         "H1299": ("בָּרַק", "H:V", "to flash", "ba.raq"),
-        "H1300a": ("בָּרַק", "H:V", "to use lightning", ""),
+        "H1300a": ("בָּרַק", "H:V", "to use lightning", "ba.raq"),
         "H1300b": ("בָּרָק", "H:N-M", "lightning", "ba.raq"),
         "H1301": ("בָּרָק", "N:N-M-P", "Barak", "ba.raq"),
         "H1302": ("בַּרְקוֹס", "N:N-M-P", "Barkos", "bar.qos"),
@@ -11278,7 +11279,7 @@ class LexicalData:
         "H1885": ("דָּתָן", "N:N-M-P", "Dathan", "da.tan"),
         "H1886": ("דֹּתָן", "N:N--L", "Dothan", "do.tan"),
         "H1887": ("הֵא", "H:Intj", "behold", "he"),
-        "H1888a": ("הָא", "A:Intj", "behold", ""),
+        "H1888a": ("הָא", "A:Intj", "behold", "he"),
         "H1888b": ("הֵא", "A:Intj", "behold!", "he"),
         "H1889": ("הֶאָח", "H:Intj", "Aha!", "he.ach"),
         "H1890": ("הַבְהָב", "H:N-M", "gift", "hav.hav"),
@@ -11553,7 +11554,7 @@ class LexicalData:
         "H2145": ("זָכָר", "H:N-M", "male", "za.khar"),
         "H2146": ("זִכָּרוֹן", "H:N-M", "memorial", "zikh.ron"),
         "H2147": ("זִכְרִי", "N:N-M-P", "Zichri", "zikh.ri"),
-        "H2148a": ("זְכַרְיָהוּ", "N:N-M-P", "Zechariah", ""),
+        "H2148a": ("זְכַרְיָהוּ", "N:N-M-P", "Zechariah", "ze.khar.yah"),
         "H2148b": ("זְכַרְיָה", "N:N-M-P", "Zechariah", "ze.khar.yah"),
         "H2149": ("זֻלּוּת", "H:N-M", "vileness", "zul.lut"),
         "H2150": ("זַלְזַל", "H:N-M", "tendril", "zal.zal"),
@@ -11631,7 +11632,7 @@ class LexicalData:
         "H2219": ("זָרָה", "H:V", "to scatter", "za.rah"),
         "H2220": ("זְרוֹעַ", "H:N-F", "arm", "ze.ro.a"),
         "H2221": ("זֵרוּעַ", "H:N-M", "sowing", "ze.ru.a"),
-        "H2222a": ("זָרַף", "H:V", "drip", ""),
+        "H2222a": ("זָרַף", "H:V", "drip", "zar.ziph"),
         "H2222b": ("זַרְזִיף", "H:N-M", "drip", "zar.ziph"),
         "H2223": ("זַרְזִיר", "H:N-M", "greyhound", "zar.zir"),
         "H2224": ("זָרַח", "H:V", "to rise", "za.rach"),
@@ -12062,7 +12063,7 @@ class LexicalData:
         "H2605": ("חָנָן", "N:N-M-P", "Hanan", "cha.nan"),
         "H2606": ("חֲנַנְאֵל", "N:N-M-P", "Hananel", "cha.nan.el"),
         "H2607": ("חֲנָנִי", "N:N-M-P", "Hanani", "cha.na.ni"),
-        "H2608a": ("חֲנַנְיָ֫הוּ", "N:N-M-P", "Hananiah", ""),
+        "H2608a": ("חֲנַנְיָ֫הוּ", "N:N-M-P", "Hananiah", "cha.nan.yah"),
         "H2608b": ("חֲנַנְיָה", "N:N-M-P", "Hananiah", "cha.nan.yah"),
         "H2609": ("חָנֵס", "N:N--L", "Hanes", "cha.nes"),
         "H2610": ("חָנֵף", "H:V", "to pollute", "cha.neph"),
@@ -12340,7 +12341,7 @@ class LexicalData:
         "H2856": ("חָתַם", "H:V", "to seal", "cha.tam"),
         "H2857": ("חֲתַם", "A:V", "to seal", "cha.tam"),
         "H2858": ("חֹתֶ֫מֶת", "H:N-F", "ring", "cho.te.met"),
-        "H2859a": ("חֹתֵן", "H:N-M", "relative", ""),
+        "H2859a": ("חֹתֵן", "H:N-M", "relative", "cha.tan"),
         "H2859b": ("חָתַן", "H:V", "be related", "cha.tan"),
         "H2860": ("חָתָן", "H:N-M", "son-in-law", "cha.tan"),
         "H2861": ("חֲתֻנָּה", "H:N-F", "marriage", "cha.tun.nah"),
@@ -12881,7 +12882,7 @@ class LexicalData:
         "H3381": ("יָרַד", "H:V", "to go down", "ya.rad"),
         "H3382": ("יֶ֫רֶד", "N:N-M-P", "Jared", "ye.red"),
         "H3383": ("יַרְדֵּן", "N:N--L", "Jordan", "yar.den"),
-        "H3384a": ("יָרָא", "H:V", "to shoot", ""),
+        "H3384a": ("יָרָא", "H:V", "to shoot", "ya.rah"),
         "H3384b": ("יָרָה", "H:V", "to show", "ya.rah"),
         "H3385": ("יְרוּאֵל", "N:N--L", "Jeruel", "ye.ru.el"),
         "H3386": ("יָרוֹחַ", "N:N-M-P", "Jaroah", "ya.ro.ach"),
@@ -12969,7 +12970,7 @@ class LexicalData:
         "H3467": ("יָשַׁע", "H:V", "to save", "ya.sah"),
         "H3468": ("יֵ֫שַׁע", "H:N-M", "salvation", "ye.sah"),
         "H3469": ("יִשְׁעִי", "N:N-M-P", "Ishi", "yish.i"),
-        "H3470a": ("יְשַׁעְיָ֫הוּ", "N:N-M-P", "Isaiah", ""),
+        "H3470a": ("יְשַׁעְיָ֫הוּ", "N:N-M-P", "Isaiah", "ye.sha.yah"),
         "H3470b": ("יְשַׁעְיָה", "N:N-M-P", "Isaiah", "ye.sha.yah"),
         "H3471": ("יָֽשְׁפֶה", "H:N-M", "jasper", "ya.she.pheh"),
         "H3472": ("יִשְׁפָּה", "N:N-M-P", "Ishpah", "yish.pah"),
@@ -13022,7 +13023,7 @@ class LexicalData:
         "H3517": ("כְּבֵדֻת", "H:N-F", "heaviness", "ke.ve.dut"),
         "H3518": ("כָּבָה", "H:V", "to quench", "ka.vah"),
         "H3519": ("כָּבוֹד", "H:N-M", "glory", "ka.vod"),
-        "H3520a": ("כָּבוֹד", "H:A", "glorious", ""),
+        "H3520a": ("כָּבוֹד", "H:A", "glorious", "ke.vud.dah"),
         "H3520b": ("כְּבוּדָּ֯ה", "H:N-F", "riches", "ke.vud.dah"),
         "H3521": ("כָּבוּל", "N:N--L", "Cabul", "ka.vul"),
         "H3522": ("כַּבּוֹן", "N:N--L", "Cabbon", "kab.bon"),
@@ -13152,7 +13153,7 @@ class LexicalData:
         "H3638": ("כִּלְמָד", "N:N--L", "Chilmad", "kil.mad"),
         "H3639": ("כְּלִמָּה", "H:N-F", "shame", "ke.lim.mah"),
         "H3640": ("כְּלִמּוּת", "H:N-F", "shame", "ke.lim.mut"),
-        "H3641a": ("כַּלְנֵ֑ה", "N:N--L", "Calneh", ""),
+        "H3641a": ("כַּלְנֵ֑ה", "N:N--L", "Calneh", "kal.neh"),
         "H3641b": ("כַּלְנֶה", "N:N--L", "Calno", "kal.neh"),
         "H3642": ("כָּמַהּ", "H:V", "to pine", "ka.mah"),
         "H3643": ("כִּמְהָם", "N:N-M-P / N:N--L", "Chimham", "kim.ham"),
@@ -13256,7 +13257,7 @@ class LexicalData:
         "H3730": ("כַּפְתּוֹר", "H:N-M", "capital", "kaph.tor"),
         "H3731": ("כַּפְתּוֹר", "N:N--L", "Caphtor", "kaph.tor"),
         "H3732": ("כַּפְתֹּרִי", "N:N--LG", "Caphthorite", "kaph.to.ri"),
-        "H3733a": ("כָּר", "H:N-M", "saddle", ""),
+        "H3733a": ("כָּר", "H:N-M", "saddle", "kar"),
         "H3733b": ("כַּר", "H:N-M", "pasture", "kar"),
         "H3733c": ("כַּר", "H:N-M", "ram", "kar"),
         "H3734a": ("כֹּר", "H:N-M", "kor", "kor"),
@@ -13264,7 +13265,7 @@ class LexicalData:
         "H3735": ("כְּרָא", "A:V", "be distressed", "ka.ra"),
         "H3736": ("כרבל", "H:V", "be clothed", "kar.bel"),
         "H3737": ("כַּרְבְּלָא", "A:N-M", "helmet", "kar.be.la"),
-        "H3738a": ("כוּר", "H:V", "to dig", ""),
+        "H3738a": ("כוּר", "H:V", "to dig", "ka.rah"),
         "H3738b": ("כָּרָה", "H:V", "to pierce", "ka.rah"),
         "H3739a": ("כָּרָה", "H:V", "to trade", "ka.rah"),
         "H3739b": ("כָּרָה", "H:V", "to feed", "ka.rah"),
@@ -13367,7 +13368,7 @@ class LexicalData:
         "H3833b": ("לְבִיָּא", "H:N-F", "lioness", ""),
         "H3833c": ("לָבִיא", "H:N-M", "lion", "la.vi"),
         "H3834": ("לְבִבָה", "H:N-F", "cake", "la.vi.vah"),
-        "H3835a": ("לָבֵן", "H:V", "to whiten", ""),
+        "H3835a": ("לָבֵן", "H:V", "to whiten", "la.van"),
         "H3835b": ("לָבַן", "H:V", "to make bricks", "la.van"),
         "H3836": ("לָבָן", "H:A", "white", "la.van"),
         "H3837a": ("לָבָן", "N:N-M-P", "Laban", "la.van"),
@@ -13758,7 +13759,7 @@ class LexicalData:
         "H4203": ("מָזוֹן", "A:N-M", "food", "ma.zon"),
         "H4204": ("מָזוֹר", "H:N-M", "net", "ma.zor"),
         "H4205": ("מָזוֹר", "H:N-M", "wound", "ma.zor"),
-        "H4206a": ("מֵ֫זַח", "H:N-M", "belt", ""),
+        "H4206a": ("מֵ֫זַח", "H:N-M", "belt", "ma.zi.ach"),
         "H4206b": ("מְזִיחַ", "H:N-M", "belt", "ma.zi.ach"),
         "H4207a": ("מַזְלֵג", "H:N-M", "fork", "maz.leg"),
         "H4207b": ("מִזְלָגָה", "H:N-M", "fork", ""),
@@ -14304,7 +14305,7 @@ class LexicalData:
         "H4720": ("מִקְדָּשׁ", "H:N-M", "sanctuary", "miq.dash"),
         "H4721": ("מַקְהֵל", "H:N-M", "assembly", "maq.hel"),
         "H4722": ("מַקְהֵלֹת", "N:N--L", "Makheloth", "maq.he.lot"),
-        "H4723a": ("קֹוֶה", "N:N--L", "Kue", ""),
+        "H4723a": ("קֹוֶה", "N:N--L", "Kue", "miq.veh"),
         "H4723b": ("מִקְוֶה", "H:N-M", "hope", "miq.veh"),
         "H4723c": ("מִקְוֶה", "H:N-M", "collection", "miq.veh"),
         "H4724": ("מִקְוָה", "H:N-F", "reservoir", "miq.vah"),
@@ -14482,9 +14483,9 @@ class LexicalData:
         "H4890": ("מִשְׂחַק", "H:N-M", "laughing", "mis.chaq"),
         "H4891": ("מִשְׁחָר", "H:N-M", "dawn", "mish.char"),
         "H4892": ("מַשְׁחֵת", "H:N-M", "destruction", "mash.chet"),
-        "H4893a": ("מִשְׁחַת", "H:N-M", "mutilation", ""),
+        "H4893a": ("מִשְׁחַת", "H:N-M", "mutilation", "mish.chat"),
         "H4893b": ("מָשְׁחָת", "H:N-M", "corruption", "mish.chat"),
-        "H4894a": ("מִשְׁטָח", "H:N-M", "spreading-place", ""),
+        "H4894a": ("מִשְׁטָח", "H:N-M", "spreading-place", "mish.to.ach"),
         "H4894b": ("מִשְׁטוֹחַ", "H:N-M", "spreading-place", "mish.to.ach"),
         "H4895": ("מַשְׂטֵמָה", "H:N-F", "hatred", "mas.te.mah"),
         "H4896": ("מִשְׁטָר", "H:N-M", "rule", "mish.tar"),
@@ -14509,7 +14510,7 @@ class LexicalData:
         "H4914": ("מְשֹׁל", "H:N-M", "byword", "me.shol"),
         "H4915a": ("מֹ֫שֶׁל", "H:N-M", "likeness", "mo.shel"),
         "H4915b": ("מֹ֫שֶׁל", "H:N-M", "dominion", "mo.shel"),
-        "H4916a": ("מִשְׁלַח", "H:N-M", "sending", ""),
+        "H4916a": ("מִשְׁלַח", "H:N-M", "sending", "mish.lo.ach"),
         "H4916b": ("מִשְׁלוֹחַ", "H:N-M", "sending", "mish.lo.ach"),
         "H4917": ("מִשְׁלַ֫חַת", "H:N-F", "deputation", "mish.la.chat"),
         "H4918": ("מְשֻׁלָּם", "N:N-M-P", "Meshullam", "me.shul.lam"),
@@ -14533,7 +14534,7 @@ class LexicalData:
         "H4934": ("מִשְׁעוֹל", "H:N-M", "passage", "mish.ol"),
         "H4935": ("מִשְׁעִי", "H:N-F", "cleansing", "mish.i"),
         "H4936": ("מִשְׁעָם", "N:N-M-P", "Misham", "mish.am"),
-        "H4937a": ("מִשְׁעָן", "H:N-M", "support", ""),
+        "H4937a": ("מִשְׁעָן", "H:N-M", "support", "mish.en"),
         "H4937b": ("מִשְׁעֵן", "H:N-M", "support", "mish.en"),
         "H4938a": ("מִשְׁעֵנָה", "H:N-F", "support", "mish.e.nah"),
         "H4938b": ("מִשְׁעֶ֫נֶת", "H:N-F", "staff", ""),
@@ -14680,7 +14681,7 @@ class LexicalData:
         "H5074": ("נָדַד", "H:V", "to wander", "na.dad"),
         "H5075": ("נְדַד", "A:V", "to flee", "ne.dad"),
         "H5076": ("נְדוּד", "H:N-M", "tossing", "na.dud"),
-        "H5077a": ("נָדָא", "H:V", "to drive away", ""),
+        "H5077a": ("נָדָא", "H:V", "to drive away", "na.dah"),
         "H5077b": ("נָדָה", "H:V", "to put away", "na.dah"),
         "H5078": ("נֶ֑דֶה", "H:N-M", "gift", "ne.deh"),
         "H5079": ("נִדָּה", "H:N-F", "impurity", "nid.dah"),
@@ -14835,10 +14836,10 @@ class LexicalData:
         "H5213": ("נִיצוֹץ", "H:N-M", "spark", "ni.tsots"),
         "H5214": ("נִיר", "H:V", "to break", "nir"),
         "H5215": ("נִיר", "H:N-M", "fallow ground", "nir"),
-        "H5216a": ("נֵר", "H:N-M", "lamp", ""),
+        "H5216a": ("נֵר", "H:N-M", "lamp", "nir"),
         "H5216b": ("נִיר", "H:N-M", "lamp", "nir"),
         "H5217": ("נָכָא", "H:V", "to whip", "na.kah"),
-        "H5218a": ("נָכָא", "H:A", "stricken", ""),
+        "H5218a": ("נָכָא", "H:A", "stricken", "na.khe"),
         "H5218b": ("נָכֵא", "H:A", "stricken", "na.khe"),
         "H5219": ("נְכֹאת", "H:N-F", "tragacanth gum", "ne.khot"),
         "H5220": ("נֶ֫כֶד", "H:N-M", "progeny", "ne.khed"),
@@ -14865,7 +14866,7 @@ class LexicalData:
         "H5240": ("נְמִבְזֶה", "H:A", "vile", "ne.miv.zeh"),
         "H5241": ("נְמוּאֵל", "N:N-M-P", "Nemuel", "ne.mu.el"),
         "H5242": ("נְמוּאֵלִי", "N:N--PG", "Nemuelite", "ne.mu.e.li"),
-        "H5243a": ("מָלַל", "H:V", "to languish", ""),
+        "H5243a": ("מָלַל", "H:V", "to languish", "na.mal"),
         "H5243b": ("נָמַל", "H:V", "to cut", "na.mal"),
         "H5244": ("נְמָלָה", "H:N-F", "ant", "ne.ma.lah"),
         "H5245": ("נְמַר", "A:N-M", "leopard", "ne.mar"),
@@ -15174,7 +15175,7 @@ class LexicalData:
         "H5523": ("סֻכּוֹת", "N:N--L", "Succoth", "suk.kot"),
         "H5524": ("סֻכּוֹת בְּנוֹת", "N:N-M-T", "Succoth-benoth", "suk.kot be.not"),
         "H5525": ("סֻכִּיִּים", "N:N--LG", "Sukkiim", "suk.ki"),
-        "H5526a": ("סוּךְ", "H:V", "to fence", ""),
+        "H5526a": ("סוּךְ", "H:V", "to fence", "sa.khakh"),
         "H5526b": ("סָכַךְ", "H:V", "to cover", "sa.khakh"),
         "H5526c": ("סָכַךְ", "H:V", "to weave", "sa.khakh"),
         "H5526d": ("סֹכֵךְ", "H:N-M", "protector", ""),
@@ -15199,7 +15200,7 @@ class LexicalData:
         "H5541a": ("סָלָה", "H:V", "to reject", "sa.lah"),
         "H5541b": ("סָלָה", "H:V", "to weigh", "sa.lah"),
         "H5542": ("סֶ֫לָה", "H:V", "Selah", "se.lah"),
-        "H5543a": ("סַלָּ֑י", "N:N-M-P", "Sallai", ""),
+        "H5543a": ("סַלָּ֑י", "N:N-M-P", "Sallai", "sal.lu"),
         "H5543b": ("סַלּוּ", "N:N-M-P", "Sallu", "sal.lu"),
         "H5543c": ("סַלוּא", "N:N-M-P", "Sallai", ""),
         "H5543d": ("סַלּוּא", "N:N-M-P", "Sallu", ""),
@@ -15273,7 +15274,7 @@ class LexicalData:
         "H5605": ("סָפַף", "H:V", "to stand", "sa.phaph"),
         "H5606a": ("סָפַק", "H:V", "to slap", "sa.phaq"),
         "H5606b": ("שָׂפַק", "H:V", "to suffice", ""),
-        "H5607a": ("שֶׂ֫פֶק", "H:N-M", "mockery", ""),
+        "H5607a": ("שֶׂ֫פֶק", "H:N-M", "mockery", "se.pheq"),
         "H5607b": ("שֵׂ֫פֶק", "H:N-M", "sufficiency", "se.pheq"),
         "H5608a": ("סָפַר", "H:V", "to recount", "sa.phar"),
         "H5608b": ("סֹפֵר", "H:N-M", "secretary", ""),
@@ -15566,7 +15567,7 @@ class LexicalData:
         "H5867a": ("עֵילָם", "N:N--L", "Elam", "e.lam"),
         "H5867b": ("עֵילָם", "N:N-M-P", "Elam", "e.lam"),
         "H5867c": ("עֵילָם", "N:N-M-P", "Elam", "e.lam"),
-        "H5868a": ("עוֹנָה", "H:N-M/F", "strength", ""),
+        "H5868a": ("עוֹנָה", "H:N-M/F", "strength", "a.yam"),
         "H5868b": ("עֲיָם", "H:N-M/F", "heat", "a.yam"),
         "H5869a": ("עַ֫יִן", "H:N-F", "eye", "a.yin"),
         "H5869b": ("עַ֫יִן", "H:N-F", "spring", "a.yin"),
@@ -15724,7 +15725,7 @@ class LexicalData:
         "H6011": ("עֹ֫מֶק", "H:N-M", "depth", "o.meq"),
         "H6012": ("עָמֵק", "H:A", "unfathomable", "a.meq"),
         "H6013": ("עָמֹק", "H:A", "deep", "a.moq"),
-        "H6014a": ("עִמֵּר", "H:V", "to bind", ""),
+        "H6014a": ("עִמֵּר", "H:V", "to bind", "a.mar"),
         "H6014b": ("עָמַר", "H:V", "to tyranise", "a.mar"),
         "H6015": ("עֲמַר", "A:N-M", "wool", "a.mar"),
         "H6016a": ("עֹ֫מֶר", "H:N-M", "sheaf", "o.mer"),
@@ -15742,7 +15743,7 @@ class LexicalData:
         "H6027": ("עֹ֫נֶג", "H:N-M", "delight", "o.neg"),
         "H6028": ("עָנֹג", "H:A", "dainty", "a.nog"),
         "H6029": ("עָנַד", "H:V", "to bind", "a.nad"),
-        "H6030a": ("עוּן", "H:V", "to dwell", ""),
+        "H6030a": ("עוּן", "H:V", "to dwell", "a.nah"),
         "H6030b": ("עָנָה", "H:V", "to answer", "a.nah"),
         "H6030c": ("עָנָה", "H:V", "to sing", "a.nah"),
         "H6031a": ("עָנָה", "H:V", "be occupied", "a.nah"),
@@ -15827,7 +15828,7 @@ class LexicalData:
         "H6102": ("עָצֵל", "H:A", "sluggish", "a.tsel"),
         "H6103": ("עַצְלָה", "H:N-F", "sluggishness", "ats.lah"),
         "H6104": ("עַצְלוּת", "H:N-F", "sluggishness", "ats.lut"),
-        "H6105a": ("עָצֹם", "H:V", "be vast", ""),
+        "H6105a": ("עָצֹם", "H:V", "be vast", "a.tsam"),
         "H6105b": ("עָצַם", "H:V", "to shut eyes", "a.tsam"),
         "H6106": ("עֶ֫צֶם", "H:N-F", "bone", "e.tsem"),
         "H6107": ("עֶ֫צֶם", "N:N--L", "Ezem", "e.tsem"),
@@ -15877,7 +15878,7 @@ class LexicalData:
         "H6149": ("עָרַב", "H:V", "to please", "a.rev"),
         "H6150": ("עָרַב", "H:V", "to grow dark", "a.rav"),
         "H6151": ("עֲרַב", "A:V", "to mix", "a.rav"),
-        "H6152a": ("עֲרַב", "N:N--L", "Arabia", ""),
+        "H6152a": ("עֲרַב", "N:N--L", "Arabia", "a.rav"),
         "H6152b": ("עֲרָב", "N:N--LG", "Arabia", "a.rav"),
         "H6153": ("עֶ֫רֶב", "H:N-M", "evening", "e.rev"),
         "H6154a": ("עֵ֫רֶב", "H:N-M", "racial-mix", "e.rev"),
@@ -16154,7 +16155,7 @@ class LexicalData:
         "H6408": ("פִּלְטָ֑י", "N:N-M-P", "Piltai", "pil.tay"),
         "H6409": ("פַּלְטִיאֵל", "N:N-M-P", "Paltiel", "pal.ti.el"),
         "H6410": ("פְּלַטְיָ֫הוּ", "N:N-M-P", "Pelatiah", "pe.lat.yah"),
-        "H6411a": ("פְּלָאיָה", "N:N-M-P", "Pelaiah", ""),
+        "H6411a": ("פְּלָאיָה", "N:N-M-P", "Pelaiah", "pe.la.yah"),
         "H6411b": ("פְּלָיָה", "N:N-M-P", "Pelaiah", "pe.la.yah"),
         "H6412a": ("פָּלִיט", "H:N-M", "survivor", "pa.lit"),
         "H6412b": ("פָּלֵיט", "H:N-M", "survivor", ""),
@@ -16370,7 +16371,7 @@ class LexicalData:
         "H6609": ("פְּתִיחָה", "H:N-F", "drawn sword", "pe.ti.chah"),
         "H6610": ("פִּתְחוֹן", "H:N-M", "opening", "pit.chon"),
         "H6611": ("פְּתַחְיָה", "N:N-M-P", "Pethahiah", "pe.tach.yah"),
-        "H6612a": ("פֶּ֫תִי", "H:A", "simple", ""),
+        "H6612a": ("פֶּ֫תִי", "H:A", "simple", "pe.ti"),
         "H6612b": ("פְּתִי", "H:N-F", "simplicity", "pe.ti"),
         "H6613": ("פְּתָי", "A:N-M", "breadth", "pe.tay"),
         "H6614": ("פְּתִיגִיל", "H:N-M", "robe", "pe.ti.gil"),
@@ -16656,10 +16657,10 @@ class LexicalData:
         "H6864": ("צֹר", "H:N-M", "flint", "tsor"),
         "H6865": ("צֹר", "N:N--L", "Tyre", "tsor"),
         "H6866": ("צָרַב", "H:V", "to burn", "tsa.rav"),
-        "H6867a": ("צָרָב", "H:A", "burning", ""),
+        "H6867a": ("צָרָב", "H:A", "burning", "tsa.re.vet"),
         "H6867b": ("צָרֶ֫בֶת", "H:N-F", "scar", "tsa.re.vet"),
         "H6868": ("צְרֵדָה", "N:N--L", "Zeredah", "tse.re.dah"),
-        "H6869a": ("בַּצָּרָה", "H:N-F", "dearth", ""),
+        "H6869a": ("בַּצָּרָה", "H:N-F", "dearth", "tsa.rah"),
         "H6869b": ("צָרָה", "H:N-F", "distress", "tsa.rah"),
         "H6869c": ("צָרָה", "H:N-F", "vexer", "tsa.rah"),
         "H6870": ("צְרוּיָה", "N:N-F-P", "Zeruiah", "tse.ru.yah"),
@@ -16681,7 +16682,7 @@ class LexicalData:
         "H6884": ("צָרַף", "H:V", "to refine", "tsa.raph"),
         "H6885": ("צֹרְפִי", "H:N-M", "goldsmith", "tso.re.phi"),
         "H6886": ("צָֽרְפַת", "N:N--L", "Zarephath", "tsa.re.phat"),
-        "H6887a": ("צָרַר", "H:V", "to confine", ""),
+        "H6887a": ("צָרַר", "H:V", "to confine", "tsa.rar"),
         "H6887b": ("צָרַר", "H:V", "to constrain", "tsa.rar"),
         "H6887c": ("צָרַר", "H:V", "to distress", "tsa.rar"),
         "H6887d": ("צָרַר", "H:V", "to vex", "tsa.rar"),
@@ -16768,7 +16769,7 @@ class LexicalData:
         "H6963a": ("קוֹל", "H:N-M", "voice", "qol"),
         "H6963b": ("קֹל", "H:N-M", "frivolity", ""),
         "H6964": ("קוֹלָיָה", "N:N-M-P", "Kolaiah", "qo.la.yah"),
-        "H6965a": ("קָמָי", "H:V", "-Kemai", ""),
+        "H6965a": ("קָמָי", "H:V", "-Kemai", "qum"),
         "H6965b": ("קוּם", "H:V", "to arise", "qum"),
         "H6966": ("קוּם", "A:V", "to stand", "qum"),
         "H6967": ("קוֹמָה", "H:N-F", "height", "qo.mah"),
@@ -16932,7 +16933,7 @@ class LexicalData:
         "H7111": ("קְצָפָה", "H:N-F", "splinter", "qe.tsa.phah"),
         "H7112": ("קָצַץ", "H:V", "to cut", "qa.tsats"),
         "H7113": ("קְצַץ", "A:V", "to cut", "qe.tsats"),
-        "H7114a": ("קָצֵר", "H:V", "be short", ""),
+        "H7114a": ("קָצֵר", "H:V", "be short", "qa.tsar"),
         "H7114b": ("קָצַר", "H:V", "to reap", "qa.tsar"),
         "H7115": ("קֹ֫צֶר", "H:N-M", "shortness", "qo.tser"),
         "H7116": ("קָצֵר", "H:A", "short", "qa.tser"),
@@ -17222,7 +17223,7 @@ class LexicalData:
         "H7381": ("רֵיחַ", "H:N-M", "aroma", "re.ach"),
         "H7382": ("רֵיחַ", "A:N-F", "smell", "re.ach"),
         "H7383": ("רִיפָה", "H:N-F", "grain", "ri.phah"),
-        "H7384a": ("דִּיפַת", "N:N-M-P", "Riphath", ""),
+        "H7384a": ("דִּיפַת", "N:N-M-P", "Riphath", "ri.phat"),
         "H7384b": ("רִיפַת", "N:N-M-P", "Riphath", "ri.phat"),
         "H7385": ("רִיק", "H:N-M", "vain", "riq"),
         "H7386": ("רֵיק", "H:A", "worthless", "req"),
@@ -17237,7 +17238,7 @@ class LexicalData:
         "H7394": ("רֵכָב", "N:N-M-P", "Rechab", "re.khav"),
         "H7395": ("רַכָּב", "H:N-M", "charioteer", "rak.kav"),
         "H7396": ("רִכְבָּה", "H:N-F", "riding", "rikh.bah"),
-        "H7397a": ("רֵכָבִי", "N:N--L", "Rechabite", ""),
+        "H7397a": ("רֵכָבִי", "N:N--L", "Rechabite", "re.khah"),
         "H7397b": ("רֵכָה", "N:N--L", "Rechah", "re.khah"),
         "H7398": ("רְכוּב", "H:N-M", "chariot", "re.khuv"),
         "H7399": ("רְכוּשׁ", "H:N-M", "property", "re.khush"),
@@ -17287,7 +17288,7 @@ class LexicalData:
         "H7439": ("רָנָה", "H:V", "to rattle", "ra.nah"),
         "H7440": ("רִנָּה", "H:N-F", "cry", "rin.nah"),
         "H7441": ("רִנָּה", "N:N-M-P", "Rinnah", "rin.nah"),
-        "H7442a": ("רוּן", "H:V", "to overcome", ""),
+        "H7442a": ("רוּן", "H:V", "to overcome", "ra.nan"),
         "H7442b": ("רָנַן", "H:V", "to sing", "ra.nan"),
         "H7443": ("רְנָנִים", "H:N-M", "ostrich", "re.nen"),
         "H7444": ("רַנֵּן", "H:V", "to sing", "ran.nen"),
@@ -17312,7 +17313,7 @@ class LexicalData:
         "H7460": ("רָעַד", "H:V", "to tremble", "ra.ad"),
         "H7461a": ("רַ֫עַד", "H:N-M", "trembling", "ra.ad"),
         "H7461b": ("רְעַדָה", "H:N-F", "trembling", ""),
-        "H7462a": ("בֵּית־עֵ֫קֶד הָרֹעִים", "N:N--L", "of Shepherds", ""),
+        "H7462a": ("בֵּית־עֵ֫קֶד הָרֹעִים", "N:N--L", "of Shepherds", "ra.ah"),
         "H7462b": ("רָעָה", "H:V", "to pasture", "ra.ah"),
         "H7462c": ("רָעָה", "H:V", "to accompany", "ra.ah"),
         "H7462d": ("רָעָה", "H:V", "to befriend", "ra.ah"),
@@ -17341,7 +17342,7 @@ class LexicalData:
         "H7485": ("רַעַמְיָה", "N:N-M-P", "Raamiah", "ra.am.yah"),
         "H7486": ("רַֽעַמְסֵס", "N:N--L", "Rameses", "ra.me.ses"),
         "H7487": ("רַעֲנַן", "A:A", "luxuriant", "ra.a.nan"),
-        "H7488a": ("רָעַן", "H:V", "be fresh", ""),
+        "H7488a": ("רָעַן", "H:V", "be fresh", "ra.a.nan"),
         "H7488b": ("רַעֲנָן", "H:A", "fresh", "ra.a.nan"),
         "H7489a": ("רָעַע", "H:V", "be evil", "ra.a"),
         "H7489b": ("רָעַע", "H:V", "to shatter", "ra.a"),
@@ -17571,7 +17572,7 @@ class LexicalData:
         "H7701": ("שֹׁד", "H:N-M", "violence", "shod"),
         "H7702": ("שָׂדַד", "H:V", "to harrow", "sa.dad"),
         "H7703": ("שָׁדַד", "H:V", "to ruin", "sha.dad"),
-        "H7704a": ("שָׂדַי", "H:N-M", "field", ""),
+        "H7704a": ("שָׂדַי", "H:N-M", "field", "sa.deh"),
         "H7704b": ("שָׂדֶה", "H:N-M", "land", "sa.deh"),
         "H7705": ("שִׁדָּה", "H:N-F", "concubine", "shid.dah"),
         "H7706": ("שַׁדַּי", "H:N-M", "Almighty", "shad.day"),
@@ -17819,7 +17820,7 @@ class LexicalData:
         "H7933": ("שֵׁ֫כֶן", "H:N-M", "habitation", "she.khen"),
         "H7934": ("שָׁכֵן", "H:A", "neighboring", "sha.khen"),
         "H7935": ("שְׁכַנְיָהוּ", "N:N-M-P", "Shecaniah", "she.khan.yah"),
-        "H7936a": ("סָכַר", "H:V", "to hire", ""),
+        "H7936a": ("סָכַר", "H:V", "to hire", "sa.khar"),
         "H7936b": ("שָׂכַר", "H:V", "to hire", "sa.khar"),
         "H7937": ("שָׁכַר", "H:V", "be drunk", "sha.khar"),
         "H7938": ("שֶׂ֫כֶר", "H:N-M", "hire", "se.kher"),
@@ -17859,7 +17860,7 @@ class LexicalData:
         "H7972": ("שְׁלַח", "A:V", "to send", "she.lach"),
         "H7973": ("שֶׁ֫לַח", "H:N-M", "missile", "she.lach"),
         "H7974": ("שֶׁ֫לַח", "N:N-M-P", "Shelah", "she.lach"),
-        "H7975a": ("שֶׁ֫לַח", "N:N--L", "Shelah", ""),
+        "H7975a": ("שֶׁ֫לַח", "N:N--L", "Shelah", "shi.lo.ach"),
         "H7975b": ("שִׁלֹחַ", "N:N--L", "Shiloah", "shi.lo.ach"),
         "H7976": ("שְׁלּוּחָה", "H:N-F", "shoot", "shil.lu.chah"),
         "H7977": ("שִׁלְחִי", "N:N-M-P", "Shilhi", "shil.chi"),
@@ -17887,7 +17888,7 @@ class LexicalData:
         "H7997a": ("שָׁלַל", "H:V", "to take", "sha.lal"),
         "H7997b": ("שָׁלַל", "H:V", "to loot", "sha.lal"),
         "H7998": ("שָׁלָל", "H:N-M", "spoil", "sha.lal"),
-        "H7999a": ("שָׁלֵם", "H:V", "to complete", ""),
+        "H7999a": ("שָׁלֵם", "H:V", "to complete", "sha.lam"),
         "H7999b": ("שָׁלַם", "H:V", "to ally", "sha.lam"),
         "H8000": ("שְׁלֵם", "A:V", "be complete", "she.lam"),
         "H8001": ("שְׁלָם", "A:N-M", "peace", "she.lam"),
@@ -17979,7 +17980,7 @@ class LexicalData:
         "H8085": ("שָׁמַע", "H:V", "to hear", "sha.ma"),
         "H8086": ("שְׁמַע", "A:V", "to hear", "she.ma"),
         "H8087": ("שֶׁ֫מַע", "N:N-M-P", "Shema", "she.ma"),
-        "H8088a": ("שֶׁ֫מַע", "H:N-M", "sound", ""),
+        "H8088a": ("שֶׁ֫מַע", "H:N-M", "sound", "she.ma"),
         "H8088b": ("שֵׁ֫מַע", "H:N-M", "report", "she.ma"),
         "H8089": ("שֹׁ֫מַע", "H:N-M", "report", "sho.ma"),
         "H8090": ("שְׁמַע", "N:N--L", "Shema", "she.ma"),
@@ -18058,7 +18059,7 @@ class LexicalData:
         "H8160": ("שָׁעָה", "A:N-F", "moment", "sha.ah"),
         "H8161": ("שַׁעֲטָה", "H:N-F", "stamping", "sha.a.tah"),
         "H8162": ("שַׁעַטְנֵז", "H:N-M", "mixed stuff", "sha.at.nez"),
-        "H8163a": ("שָׂעִר", "H:A", "hairy", ""),
+        "H8163a": ("שָׂעִר", "H:A", "hairy", "sa.ir"),
         "H8163b": ("שָׂעִיר", "H:N-M", "he-goat", "sa.ir"),
         "H8163c": ("שָׂעִיר", "H:N-M", "satyr", "sa.ir"),
         "H8164": ("שְׂעִירִים", "H:N-M", "rain", "sa.ir"),
@@ -18209,7 +18210,7 @@ class LexicalData:
         "H8299": ("שָׂרִיג", "H:N-M", "tendril", "sa.rig"),
         "H8300": ("שָׂרִיד", "H:N-M", "survivor", "sa.rid"),
         "H8301": ("שָׂרִיד", "N:N--L", "Sarid", "sa.rid"),
-        "H8302a": ("שִׁרְיָה", "H:N-M/F", "lance", ""),
+        "H8302a": ("שִׁרְיָה", "H:N-M/F", "lance", "shir.yon"),
         "H8302b": ("שִׁרְיוֹן", "H:N-M/F", "armor", "shir.yon"),
         "H8303": ("שִׂרְיֹן", "N:N--L", "Sirion", "shir.yon"),
         "H8304": ("שְׂרָיָהוּ", "N:N-M-P", "Seraiah", "se.ra.yah"),
@@ -18440,7 +18441,7 @@ class LexicalData:
         "H8520": ("תֶּ֫לַח", "N:N-M-P", "Telah", "te.lach"),
         "H8521": ("תֵּל חַרְשָׁא", "N:N--L", "Tel-harsha", "tel char.sah"),
         "H8522": ("תְּלִי", "H:N-M", "quiver", "te.li"),
-        "H8523a": ("תַּלְתִּי", "A:A", "third", ""),
+        "H8523a": ("תַּלְתִּי", "A:A", "third", "te.li.tay"),
         "H8523b": ("תְּלִיתַי", "A:A", "third", "te.li.tay"),
         "H8524": ("תָּלוּל", "H:A", "eminent", "ta.lal"),
         "H8525": ("תֶּ֫לֶם", "H:N-M", "furrow", "te.lem"),
@@ -18496,7 +18497,7 @@ class LexicalData:
         "H8574": ("תַּנּוּר", "H:N-M", "oven", "tan.nur"),
         "H8575": ("תַּנְחוּם", "H:N", "consolation", "tan.chum"),
         "H8576": ("תַּנְחֻ֫מֶת", "N:N-M-P", "Tanhumeth", "tan.chu.met"),
-        "H8577a": ("תַּן", "H:N-M", "jackal", ""),
+        "H8577a": ("תַּן", "H:N-M", "jackal", "tan.nin"),
         "H8577b": ("תַּנִּין", "H:N-M", "serpent", "tan.nin"),
         "H8578": ("תִּנְיָן", "A:A", "second", "tin.yan"),
         "H8579": ("תִּנְיָנוּת", "A:Adv", "second time", "tin.ya.nut"),
@@ -18520,7 +18521,7 @@ class LexicalData:
         "H8596": ("תֹּף", "H:N-M", "tambourine", "toph"),
         "H8597": ("תִּפְאָרָה", "H:N-F", "beauty", "tiph.a.rah"),
         "H8598": ("תַּפּוּחַ", "H:N-M", "apple", "tap.pu.ach"),
-        "H8599a": ("תַּפֻּחַ", "N:N-M-P", "Tappuah", ""),
+        "H8599a": ("תַּפֻּחַ", "N:N-M-P", "Tappuah", "tap.pu.ach"),
         "H8599b": ("תַּפּוּחַ", "N:N--L", "Tappuah", "tap.pu.ach"),
         "H8600": ("תְּפוֹצָה", "H:N-F", "dispersion", "te.pho.tsah"),
         "H8601": ("תֻּפִינִים", "H:N-M", "baked", "tu.phin"),
@@ -18557,7 +18558,7 @@ class LexicalData:
         "H8629": ("תֵּ֫קַע", "H:N-M", "blast", "te.qa"),
         "H8630": ("תָּקֵף", "H:V", "to prevail", "ta.qaph"),
         "H8631": ("תְּקֵף", "A:V", "to grow strong", "te.qeph"),
-        "H8632a": ("תְּקָף", "A:N-M", "might", ""),
+        "H8632a": ("תְּקָף", "A:N-M", "might", "te.qoph"),
         "H8632b": ("תְּקֹף", "A:N-M", "might", "te.qoph"),
         "H8633": ("תֹּ֫קֶף", "H:N-M", "power", "to.qeph"),
         "H8634": ("תַּרְאֲלָה", "N:N--L", "Taralah", "tar.a.lah"),
@@ -29380,3 +29381,63 @@ class LexicalData:
                 return "<h3>{0}</h3> <p>{1}</p>".format(lexeme, data)
         else:
             return ""
+
+    @staticmethod
+    def populatePronunciation():
+        filename = "LexicalData.py"
+        if os.path.isfile(filename):
+            file = open(filename, "r", encoding="utf-8")
+            data = ""
+            lines = file.readlines()
+            for i in range(len(lines)):
+                line = lines[i]
+                if re.search(r'^\s+"H', line):
+                    (start, end) = LexicalData.getLastQuotes(line)
+                    if start + 1 == end:
+                        if re.search(r'a":', line):
+                            nextLine = lines[i+1]
+                        # else:
+                        #     nextLine = lines[i-1]
+                            (nextLineStart, nextLineEnd) = LexicalData.getLastQuotes(nextLine)
+                            nextBlock = nextLine[nextLineStart+1:nextLineEnd]
+                            line = LexicalData.insertText(line, start, end, nextBlock)
+                data += line
+            f = open("LexicalData2.py", "w", encoding="utf-8")
+            f.write(data)
+            f.close()
+        else:
+            print("Could not open {0}".format(filename))
+
+    @staticmethod
+    def getLastQuotes(line):
+        count = 0
+        start = 0
+        end = 0
+        for i in range(len(line)):
+            x = line[i]
+            if x == '"':
+                count += 1
+                if count == 9:
+                    start = i
+                if count == 10:
+                    end = i
+        return (start, end)
+
+    #staticmethod
+    def insertText(line, start, end, block):
+        newLine = '{0}"{1}{2}'.format(line[:start], block, line[end:])
+        return newLine
+
+if __name__ == "__main__":
+
+    # s = '"H27": ("אֲבִידָן", "N:N-M-P", "Abidan", ""),'
+    # (start, end) = LexicalData.getLastQuotes(s)
+    # print("{0}:{1}".format(start, end))
+    # print(s[start+1:end])
+
+    # s = '"H27": ("אֲבִידָן", "N:N-M-P", "Abidan", ""),'
+    # (start, end) = LexicalData.getLastQuotes(s)
+    # s = LexicalData.insertText(s, start, end, "hello")
+    # print(s)
+
+    LexicalData.populatePronunciation()
