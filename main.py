@@ -36,6 +36,10 @@ if initialCommand == "docker":
     config.fcitx = True
     config.docker = True
     config.updateWithGitPull = True
+    # Force to use PySide2 instead of PyQt5 for general users
+    if not config.developer and config.qtLibrary != "pyside2":
+        config.qtLibrary = "pyside2"
+        os.environ["QT_API"] = config.qtLibrary
     # To deal with "ERROR:command_buffer_proxy_impl.cc(141)] ContextResult::kTransientFailure: Failed to send GpuChannelMsg_CreateCommandBuffer."
     # Reference: https://bugreports.qt.io/browse/QTBUG-82423
     os.environ["QTWEBENGINE_DISABLE_GPU_THREAD"] = "1"

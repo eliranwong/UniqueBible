@@ -22,7 +22,8 @@ if sys.version_info < (3, 7):
 initialCommand = " ".join(sys.argv[1:]).strip()
 
 # Set environment variable
-os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
+# os.environ["QT_API"] = "pyqt5" if initialCommand == "docker" else "pyside2"
+os.environ["QT_API"] = "pyside2"
 os.environ["QT_LOGGING_RULES"] = "*=false"
 
 if initialCommand == "-i":

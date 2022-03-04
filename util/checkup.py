@@ -340,26 +340,40 @@ for module, feature, isInstalled in required:
             isInstalled = isPyQt5Installed
             if not isInstalled():
                 print("PySide2 is not found!  Trying to install 'PyQt5' instead ...")
-                pip3InstallModule(module)
-                pip3InstallModule("PyQtWebEngine")
+                if config.docker:
+                    os.system("sudo pacman -Syu --noconfirm python-pyqt5 python-pyqt5-sip python-pyqt5-webengine")
+                else:
+                    pip3InstallModule(module)
+                    pip3InstallModule("PyQtWebEngine")
                 if isInstalled():
                     config.qtLibrary == "pyqt5"
+                    os.environ["QT_API"] = config.qtLibrary
                     print("Installed!")
                 else:
                     print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
                     exit(1)
+            else:
+                config.qtLibrary == "pyqt5"
+                os.environ["QT_API"] = config.qtLibrary
         elif module == "PyQt5" and not isInstalled():
             module = "PySide2"
             isInstalled = isPySide2Installed
             if not isInstalled():
                 print("PyQt5 is not found!  Trying to install 'PySide2' instead ...")
-                pip3InstallModule(module)
+                if config.docker:
+                    os.system("sudo pacman -Syu --noconfirm pyside2 pyside2-tools qt5-webengine")
+                else:
+                    pip3InstallModule(module)
                 if isInstalled():
                     config.qtLibrary == "pyside2"
+                    os.environ["QT_API"] = config.qtLibrary
                     print("Installed!")
                 else:
                     print("Required feature '{0}' is not enabled.\nInstall either 'PySide2' or 'PyQt5' first!".format(feature, module))
                     exit(1)
+            else:
+                config.qtLibrary == "pyside2"
+                os.environ["QT_API"] = config.qtLibrary
         if isInstalled():
             print("Installed!")
         else:
