@@ -428,7 +428,7 @@ class FocusMainWindow:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
             if config.docker:
-                addMenuItem(menu, "pycharm", self, self.openPycharm, translation=False)
+                addMenuItem(menu, "pycharm", self, partial(self.webtopApp, "pycharm", "pycharm-community-edition", "/config/UniqueBible/"), translation=False)
             addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
             addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)

@@ -1,3 +1,6 @@
+Changes in 28.22:
+* Added support to install-on-demand and open third-party apps on webtop version via plugins.
+
 Changes in 28.21:
 * Install pycharm on demand and open it on webtop version.
 * Added developer option "pycharm" to Focus and Aleph menu layouts.

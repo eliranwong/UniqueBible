@@ -3663,12 +3663,19 @@ class MainWindow(QMainWindow):
         if window.exec() and window.key.text():
             LanguageUtil.updateLanguageStringToAllFiles(window.key.text(), window.entry.text())
 
-    def openPycharm(self):
-        isPycharmInstalled = WebtopUtil.isPackageInstalled("pycharm")
-        if not isPycharmInstalled:
-            self.displayMessage("Installing 'pycharm' ...")
-            WebtopUtil.installPackage("pycharm-community-edition")
-        WebtopUtil.runNohup("pycharm /config/UniqueBible/")
+    def webtopApp(self, app, pkg="", arg=""):
+        isInstalled = WebtopUtil.isPackageInstalled(app)
+        if not isInstalled:
+            self.displayMessage("Installing '{0}' ...".format(pkg if pkg else app))
+            WebtopUtil.installPackage(pkg if pkg else app)
+        WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
+
+    def webtopAurApp(self, app, pkg="", arg=""):
+        isInstalled = WebtopUtil.isPackageInstalled(app)
+        if not isInstalled:
+            self.displayMessage("Installing '{0}' ...".format(pkg if pkg else app))
+            WebtopUtil.installAurPackage(pkg if pkg else app)
+        WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"

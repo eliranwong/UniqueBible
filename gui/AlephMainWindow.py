@@ -139,7 +139,7 @@ class AlephMainWindow:
         if config.developer:
             menu = addMenu(menu1, "developer")
             if config.docker:
-                addMenuItem(menu, "pycharm", self, self.openPycharm, translation=False)
+                addMenuItem(menu, "pycharm", self, partial(self.webtopApp, "pycharm", "pycharm-community-edition", "/config/UniqueBible/"), translation=False)
             addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
             addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)
