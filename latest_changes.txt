@@ -1,3 +1,6 @@
+Changes in 28.23:
+* Setup yay on webtop version. It works only with the latest docker images.
+
 Changes in 28.22:
 * Added support to install-on-demand and open third-party apps on webtop version via plugins.
 

@@ -15,8 +15,8 @@ class WebtopUtil:
 
     @staticmethod
     def installPackage(package):
-        os.system("konsole -e 'sudo pacman -Syu --noconfirm {0}'".format(package))
+        os.system("konsole -e 'sudo pacman -Syu --noconfirm --needed {0}'".format(package))
 
     @staticmethod
     def installAurPackage(package):
-        os.system("konsole -e 'yay -Syu --noconfirm {0}'".format(package))
+        os.system("konsole -e 'yay -Syu --noconfirm --needed {0}'".format(package))

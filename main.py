@@ -8,6 +8,7 @@ import os, platform, logging, re, sys, subprocess
 import logging.handlers as handlers
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
+from util.WebtopUtil import WebtopUtil
 
 # Change working directory to UniqueBible directory
 thisFile = os.path.realpath(__file__)
@@ -44,6 +45,12 @@ if initialCommand == "docker":
     # Reference: https://bugreports.qt.io/browse/QTBUG-82423
     os.environ["QTWEBENGINE_DISABLE_GPU_THREAD"] = "1"
     os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--disable-gpu-compositing --num-raster-threads=1 --enable-viewport --main-frame-resizes-are-orientation-changes --disable-composited-antialiasing"
+    # Setup yay on first run; latest docker images has /opt/yay in place
+    if os.path.isdir("/opt/yay") and not WebtopUtil.isPackageInstalled("yay"):
+        print("Installing yay ...")
+        os.system("sudo chown -R abc:users /opt/yay && cd /opt/yay && makepkg -si --noconfirm --needed && cd -")
+        print("Installing wps-office ...")
+        os.system("yay -Syu --noconfirm --needed wps-office wps-office-fonts ttf-wps-fonts")
 else:
     config.docker = False
 if initialCommand == "cli":
