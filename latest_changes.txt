@@ -1,3 +1,7 @@
+Changes in 28.25:
+* webtop version: added "VS Code" & "Sqlite Browser" to developer menu.
+* Webtop version: install yay for users using old docker images.
+
 Changes in 28.24:
 * Added Chrome to Focus menu layout Apps menu on webtop version.
 

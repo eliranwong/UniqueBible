@@ -418,7 +418,7 @@ class FocusMainWindow:
         if config.docker:
             menu = addMenu(menuBar, "menu_apps")
             icon = "/usr/share/icons/hicolor/48x48/apps/google-chrome.png"
-            addIconMenuItem(icon, menu, "Chrome", self, partial(self.webtopAurApp, "google-chrome-stable", "google-chrome"), "", translation=False)
+            addIconMenuItem(icon, menu, "Pycharm", self, partial(self.webtopAurApp, "google-chrome-stable", "google-chrome"), "", translation=False)
             with open("/defaults/menu.xml", "r") as fileObj:
                 for line in fileObj.readlines():
                     if "icon=" in line and not 'label="Unique Bible App"' in line:
@@ -430,7 +430,19 @@ class FocusMainWindow:
             menu = addMenu(menuBar, "developer")
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
             if config.docker:
-                addMenuItem(menu, "pycharm", self, partial(self.webtopApp, "pycharm", "pycharm-community-edition", "/config/UniqueBible/"), translation=False)
+                icon = "/usr/share/pixmaps/pycharm.png"
+                addIconMenuItem(icon, menu, "Pycharm", self,
+                                partial(self.webtopApp, "pycharm", "pycharm-community-edition", "/config/UniqueBible/"),
+                                "", translation=False)
+                icon = "/usr/share/pixmaps/vscodium.png"
+                addIconMenuItem(icon, menu, "VS Code", self,
+                                partial(self.webtopAurApp, "vscodium", "vscodium-bin"),
+                                "", translation=False)
+                icon = "/usr/share/icons/hicolor/256x256/apps/sqlitebrowser.png"
+                addIconMenuItem(icon, menu, "Sqlite Browser", self,
+                                partial(self.webtopApp, "sqlitebrowser"),
+                                "", translation=False)
+                menu.addSeparator()
             addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)
             addMenuItem(menu, "selectTooltipTranslation", self, self.selectReferenceTranslation)
