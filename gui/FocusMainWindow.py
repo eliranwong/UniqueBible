@@ -417,8 +417,6 @@ class FocusMainWindow:
 
         if config.docker:
             menu = addMenu(menuBar, "menu_apps")
-            icon = "/usr/share/icons/hicolor/48x48/apps/google-chrome.png"
-            addIconMenuItem(icon, menu, "Pycharm", self, partial(self.webtopAurApp, "google-chrome-stable", "google-chrome"), "", translation=False)
             with open("/defaults/menu.xml", "r") as fileObj:
                 for line in fileObj.readlines():
                     if "icon=" in line and not 'label="Unique Bible App"' in line:
