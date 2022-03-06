@@ -3663,6 +3663,14 @@ class MainWindow(QMainWindow):
         if window.exec() and window.key.text():
             LanguageUtil.updateLanguageStringToAllFiles(window.key.text(), window.entry.text())
 
+    def pycharm(self):
+        stdout, *_  = subprocess.Popen("uname -m", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        machine = stdout.decode("utf-8")
+        if machine == "aarch64\n":
+            self.webtopAurApp("pycharm", "pycharm-community-jre-aarch64", "/config/UniqueBible/")
+        else:
+            self.webtopApp("pycharm", "pycharm-community-edition", "/config/UniqueBible/")
+
     def webtopApp(self, app, pkg="", arg=""):
         isInstalled = WebtopUtil.isPackageInstalled(app)
         if not isInstalled:

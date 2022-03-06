@@ -429,9 +429,7 @@ class FocusMainWindow:
             #addMenuItem(menu, "Download Google Static Maps", self, self.downloadGoogleStaticMaps, None, False)
             if config.docker:
                 icon = "/usr/share/pixmaps/pycharm.png"
-                addIconMenuItem(icon, menu, "Pycharm", self,
-                                partial(self.webtopApp, "pycharm", "pycharm-community-edition", "/config/UniqueBible/"),
-                                "", translation=False)
+                addIconMenuItem(icon, menu, "Pycharm", self, self.pycharm, "", translation=False)
                 icon = "/usr/share/pixmaps/vscodium.png"
                 addIconMenuItem(icon, menu, "VS Code", self,
                                 partial(self.webtopAurApp, "vscodium", "vscodium-bin"),

@@ -1,3 +1,6 @@
+Changes in 28.26:
+* Fixed installing pycharm from developer menu on apple chip machine.  For webtop version only.
+
 Changes in 28.25:
 * webtop version: added "VS Code" & "Sqlite Browser" to developer menu.
 * Webtop version: install yay for users using old docker images.
