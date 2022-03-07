@@ -1,3 +1,6 @@
+Changes in 28.28:
+* Fixed installing wps office on webtop version.
+
 Changes in 28.27:
 * Updated gtts language list.
 
