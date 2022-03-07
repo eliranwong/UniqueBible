@@ -1,4 +1,4 @@
-# News! Unique Bible App Webtop Version
+# NEW! Unique Bible App Webtop Version
 
 Simple to install! Great for Bible Study!
 
