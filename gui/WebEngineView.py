@@ -602,9 +602,9 @@ class WebEngineView(QWebEngineView):
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            for language, languageCode in Languages.googleTranslateCodes.items():
+            for language, languageCode in Languages.gTTSLanguageCodes.items():
                 action = QAction(self)
-                action.setText(language)
+                action.setText("{0} [{1}]".format(language, languageCode))
                 action.triggered.connect(partial(self.googleTextToSpeechLanguage, languageCode))
                 ttsMenu.addAction(action)
 
@@ -614,9 +614,9 @@ class WebEngineView(QWebEngineView):
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            for language, languageCode in Languages.googleTranslateCodes.items():
+            for language, languageCode in Languages.gTTSLanguageCodes.items():
                 action = QAction(self)
-                action.setText(language)
+                action.setText("{0} [{1}]".format(language, languageCode))
                 action.triggered.connect(partial(self.googleTextToSpeechAudio, languageCode))
                 ttsMenu.addAction(action)
 
@@ -864,11 +864,18 @@ class WebEngineView(QWebEngineView):
         else:
             self.messageNoTtsEngine()
 
+    def isGttsLanguage(self, languageCode):
+        if languageCode in [languageCode for *_, languageCode in Languages.gTTSLanguageCodes.items()]:
+            return True
+        else:
+            self.messageNoTtsVoice()
+            return False
+
     def googleTextToSpeechLanguage(self, language):
         selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()
-        else:
+        elif self.isGttsLanguage(language):
             speakCommand = "GTTS:::{0}:::{1}".format(language, selectedText)
             self.parent.parent.textCommandChanged(speakCommand, self.name)
 
@@ -886,29 +893,30 @@ class WebEngineView(QWebEngineView):
             elif language == "el":
                 selectedText = TextUtil.removeVowelAccent(selectedText)
 
-            # Ask for a filename
-            options = QFileDialog.Options()
-            fileName, *_ = QFileDialog.getSaveFileName(self,
-                    config.thisTranslation["note_saveAs"],
-                    "music",
-                    "MP3 Files (*.mp3)", "", options)
-            if fileName:
-                if not "." in os.path.basename(fileName):
-                    fileName = fileName + ".mp3"
-                # Save mp3 file
-                from gtts import gTTS
-                tts = gTTS(selectedText, lang=language)
-                tts.save(fileName)
-                # Open the directory where the file is saved
-                outputFolder = os.path.dirname(fileName)
-                if platform.system() == "Linux":
-                    subprocess.Popen([config.open, outputFolder])
-                # on Windows
-                elif platform.system() == "Windows":
-                    os.system(r"{0} {1}".format(config.open, outputFolder))
-                # on Unix-based system, like macOS
-                else:
-                    os.system(r"{0} {1}".format(config.open, outputFolder))
+            if self.isGttsLanguage(language):
+                # Ask for a filename
+                options = QFileDialog.Options()
+                fileName, *_ = QFileDialog.getSaveFileName(self,
+                        config.thisTranslation["note_saveAs"],
+                        "music",
+                        "MP3 Files (*.mp3)", "", options)
+                if fileName:
+                    if not "." in os.path.basename(fileName):
+                        fileName = fileName + ".mp3"
+                    # Save mp3 file
+                    from gtts import gTTS
+                    tts = gTTS(selectedText, lang=language)
+                    tts.save(fileName)
+                    # Open the directory where the file is saved
+                    outputFolder = os.path.dirname(fileName)
+                    if platform.system() == "Linux":
+                        subprocess.Popen([config.open, outputFolder])
+                    # on Windows
+                    elif platform.system() == "Windows":
+                        os.system(r"{0} {1}".format(config.open, outputFolder))
+                    # on Unix-based system, like macOS
+                    else:
+                        os.system(r"{0} {1}".format(config.open, outputFolder))
 
     def searchPanel(self, selectedText=None):
         #if selectedText is None:

@@ -87,7 +87,7 @@ class MiscellaneousLauncher(QWidget):
         subLayout.addWidget(self.languageCombo)
         if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
             languages = {}
-            for language, languageCode in Languages.googleTranslateCodes.items():
+            for language, languageCode in Languages.gTTSLanguageCodes.items():
                 languages[languageCode] = ("", language)
         elif config.espeak:
             languages = TtsLanguages().isoLang2epeakLang
