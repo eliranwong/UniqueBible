@@ -8,6 +8,9 @@ To work with this plugin, you need to:
 1) Create a credential key and download it.  Read for details at https://cloud.google.com/text-to-speech/docs/before-you-begin
 2) Rename the credential key file to "credentials_GoogleCloudTextToSpeech.json"
 3) Place the credential key file "credentials_GoogleCloudTextToSpeech.json" in UniqueBibleApp folder.
+
+Remarks: "Google Cloud Text-to-Speech is priced based on the number of characters sent to the service to be synthesized into audio each month. 
+The first 1 million characters for WaveNet voices are free each month."  1 million characters each month should be free enough for general use.
 """
 
 Changes in 28.28:
