@@ -1,3 +1,15 @@
+Changes in 28.29:
+* Uploaded a new context plugin at: https://github.com/eliranwong/UniqueBible_Plugins_Context/blob/main/Text-to-Cantonese.py.zip
+"""Important Notes:
+This plugin uses Google Cloud Text to Speech service.
+Read more at: https://cloud.google.com/text-to-speech
+
+To work with this plugin, you need to:
+1) Create a credential key and download it.  Read for details at https://cloud.google.com/text-to-speech/docs/before-you-begin
+2) Rename the credential key file to "credentials_GoogleCloudTextToSpeech.json"
+3) Place the credential key file "credentials_GoogleCloudTextToSpeech.json" in UniqueBibleApp folder.
+"""
+
 Changes in 28.28:
 * Fixed installing wps office on webtop version.
 
