@@ -1,3 +1,6 @@
+Changes in 28.30:
+* Added developer helper tool for website to book conversion
+
 Changes in 28.29:
 * Uploaded a new context plugin at: https://github.com/eliranwong/UniqueBible_Plugins_Context/blob/main/Text-to-Cantonese.py.zip
 """Important Notes:
