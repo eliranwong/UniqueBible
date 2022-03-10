@@ -462,6 +462,16 @@ class TextCommandParser:
             # e.g. VLC:::music/AmazingGrace.mp3
             # e.g. VLC:::video/ProdigalSon.mp4
             """),
+            "readchapter": (self.readChapter, """
+            # [KEYWORD] READCHAPTER
+            # Feature: read a bible chapter verse by verse
+            # e.g. READCHAPTER:::CUV.1.1
+            """),
+            "readverse": (self.readVerse, """
+            # [KEYWORD] READVERSE
+            # Feature: read a bible verse
+            # e.g. READVERSE:::CUV.1.1.1
+            """),
             "readbible": (self.readBible, """
             # [KEYWORD] READBIBLE
             # Feature: Play Bible mp3 file recording of a chapter
@@ -1345,6 +1355,25 @@ class TextCommandParser:
                 subprocess.Popen("{0} {1}".format(config.open, wikiPage), shell=True)
             else:
                 webbrowser.open(wikiPage)
+
+    # READCHAPTER:::
+    def readChapter(self, command, source):
+        try:
+            text, b, c = command.split(".")
+            self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+            return ("", "", {})
+        except:
+            return self.invalidCommand()
+
+    # READVERSE:::
+    def readVerse(self, command, source):
+        try:
+            text, b, c, v = command.split(".")
+            folder = os.path.join(config.musicFolder, text, "{0}_{1}".format(b, c))
+            audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
+            self.openVlcPlayer(audioFile, "main")
+        except:
+            return self.invalidCommand()
 
     # VLC:::
     def openVlcPlayer(self, command, source):

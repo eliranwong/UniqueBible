@@ -293,7 +293,7 @@ def exitApplication():
                 config.mainWindow.execPythonFile(script)
     ConfigUtil.save()
     if config.docker and config.restartUBA:
-        os.system("nohup ./UniqueBibleApp.sh &")
+        os.system("nohup ./UniqueBibleApp.sh > /dev/null 2>&1 &")
     elif config.restartUBA and hasattr(config, "cli"):
         subprocess.Popen("{0} uba.py gui".format(sys.executable), shell=True)
 
