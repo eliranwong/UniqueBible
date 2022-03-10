@@ -1,3 +1,12 @@
+Changes in 28.32:
+* Added GUI for verse-by-verse audio bible features.  For bible versions haveing audio bible in place, a music note button is displayed next to chapter number or verse number.  Users can click the music note button to play audio bible for a whole chapter or a single verse.  Traditional audio bible often read the whole chapter which makes users difficult to find a particular verse.  We make the verse-by-verse audio bible to offer more flexibility and functionality.
+* See screenshot at: https://github.com/eliranwong/UniqueBible/issues/927#issuecomment-1064597060
+* Refer to Changes in 28.31 below for how to create audio bible for your favourite bible version.
+* Currently, we provide NET [English] and CUV [Cantonese] for downloads, read:
+    - NET MP3: https://github.com/eliranwong/NewEnglishTranslationMP3
+    - CUV MP3: https://github.com/eliranwong/ChineseUnionVersionCantoneseMP3
+* Fixed issue that VLC::: command does not play file if built-in VLC player does not close after the 1st run of VLC::: command.
+
 Changes in 28.31:
 * Added READCHAPTER::: READVERSE::: commands, to prepare gui integration of verse by verse audio bible next update.
 * Uploading a menu plugin "Create Audio Bible" to create MP3 files on every single verse of a bible version.  This plugin is created for developers only.  Developers may need to modify the script according to their needs.

@@ -1383,8 +1383,11 @@ class TextCommandParser:
             if self.parent.vlcPlayer is None:
                 self.parent.vlcPlayer = VlcPlayer(self, filename)
             else:
-                self.parent.vlcPlayer.stop()
-                self.parent.vlcPlayer.loadAndPlayFile(filename)
+                # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
+                #self.parent.vlcPlayer.stop()
+                #self.parent.vlcPlayer.loadAndPlayFile(filename)
+                self.parent.vlcPlayer.close()
+                self.parent.vlcPlayer = VlcPlayer(self, filename)
             self.parent.vlcPlayer.show()
         return ("", "", {})
 

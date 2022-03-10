@@ -864,6 +864,14 @@ function nB() {
     document.title = "_openbooknote:::"+activeB;
 }
 
+function rC() {
+    document.title = "READCHAPTER:::"+activeText+"."+activeB+"."+activeC;
+}
+
+function rV(v) {
+    document.title = "READVERSE:::"+activeText+"."+activeB+"."+activeC+"."+v;
+}
+
 function ld(lexicalEntry) {
     document.title = "_lexicaldata:::"+lexicalEntry;
 }

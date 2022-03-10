@@ -645,6 +645,8 @@ input.addEventListener('keyup', function(event) {0}
         return verses
 
     def readPlainChapter(self, text, verse, source):
+        # https://www.amp-what.com/unicode/search/music
+        ttsIndicator = "&#9834;"
         # expect verse is a tuple
         b, c, v, *_ = verse
         # format a chapter
@@ -656,6 +658,11 @@ input.addEventListener('keyup', function(event) {0}
         # get a verse list of available notes
         noteVerseList = []
         highlightDict = {}
+        # add tts indicator
+        audioFolder = os.path.join(os.getcwd(), config.musicFolder, text, "{0}_{1}".format(b, c))
+        if os.path.isdir(audioFolder):
+            chapter += ' <ref onclick="rC()">{0}</ref>'.format(ttsIndicator)
+        # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteVerseList = NoteService.getChapterVerseList(b, c)
             if NoteService.isChapterNote(b, c):
@@ -687,6 +694,10 @@ input.addEventListener('keyup', function(event) {0}
             if readChapter:
                 chapter += Bible.insertReadBibleLink(text, b, c, v)
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
+            # add tts indicator
+            audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
+            if os.path.isfile(audioFilename):
+                chapter += ' <ref onclick="rV({0})">{1}</ref> '.format(v, ttsIndicator)
             # add note indicator
             if v in noteVerseList:
                 chapter += '<ref onclick="nV({0})">&#9998;</ref> '.format(v)
@@ -1013,6 +1024,8 @@ class Bible:
             return (b, c, v, "")
 
     def readFormattedChapter(self, verse):
+        # https://www.amp-what.com/unicode/search/music
+        ttsIndicator = "&#9834;"
         b, c, v, *_ = verse
         biblesSqlite = BiblesSqlite()
         chapter = "<h2>"
@@ -1021,11 +1034,16 @@ class Bible:
                 chapter += '<ref onclick="nB()">&#9998;</ref> '
         chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         self.thisVerseNoteList = []
+        # add tts indicator
+        audioFolder = os.path.join(os.getcwd(), config.musicFolder, self.text, "{0}_{1}".format(b, c))
+        if os.path.isdir(audioFolder):
+            chapter += ' <ref onclick="rC()">{0}</ref>'.format(ttsIndicator)
+        # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteSqlite = NoteSqlite()
             self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
-                chapter += ' <ref onclick="nC()">&#9998;</ref>'.format(v)
+                chapter += ' <ref onclick="nC()">&#9998;</ref>'
         directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
         chapter += Bible.insertReadBibleLink(self.text, b, c)
         chapter += "</h2>"
@@ -1033,7 +1051,8 @@ class Bible:
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
         if scripture:
-            chapter += re.sub(r'onclick="luV\(([0-9]+?)\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
+            # e.g. <vid id="v1.1.1" onclick="luV(1)">1</vid>
+            chapter += re.sub(r'<vid id="v([0-9]+?).([0-9]+?).([0-9]+?)" onclick="luV\([0-9]+?\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
             divTag = "<div>"
             if self.text in config.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
@@ -1067,9 +1086,16 @@ class Bible:
         return data
 
     def formatVerseNumber(self, match):
-        v, tagEnding = match.groups()
-        verseTag = 'onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding)
+        ttsIndicator = "&#9834;"
+        b, c, v, tagEnding = match.groups()
+        verseTag = '<vid id="v{2}.{3}.{0}" onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding, b, c)
         v = int(v)
+        # add tts indicator
+        audioFolder = os.path.join(os.getcwd(), config.musicFolder, self.text, "{0}_{1}".format(b, c))
+        audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(self.text, b, c, v))
+        if os.path.isfile(audioFilename):
+            verseTag += ' <ref onclick="rV({0})">{1}</ref> '.format(v, ttsIndicator)
+        # add note indicator
         if v in self.thisVerseNoteList:
             verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)
         return verseTag
