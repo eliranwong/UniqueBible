@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Если текст не выбран, то в контекстном меню можно ввести текст команды.",
     "addLanguageFiles": "Добавить языковые файлы",
     "updateLanguageFiles": "Обновить языковые файлы",
+    "menu11_audio": "Аудио",
 }

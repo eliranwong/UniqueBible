@@ -288,6 +288,8 @@ class AlephMainWindow:
         folders_menu.addAction(
             QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
         folders_menu.addAction(
+            QAction(config.thisTranslation["menu11_audio"], self, triggered=self.openAudioFolder))
+        folders_menu.addAction(
             QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
         folders_menu.addAction(
             QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))

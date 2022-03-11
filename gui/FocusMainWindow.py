@@ -286,6 +286,7 @@ class FocusMainWindow:
         items = (
             ("menu8_marvelData", self.openMarvelDataFolder),
             ("menu11_images", self.openImagesFolder),
+            ("menu11_audio", self.openAudioFolder),
             ("menu11_music", self.openMusicFolder),
             ("menu11_video", self.openVideoFolder),
         )

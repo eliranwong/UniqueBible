@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Le funzioni del menu contestuale vengono eseguite sul testo del campo di comando se non viene selezionato alcun testo.",
     "addLanguageFiles": "Aggiungi file di lingua",
     "updateLanguageFiles": "Aggiornamento file di lingua",
+    "menu11_audio": "Audio",
 }

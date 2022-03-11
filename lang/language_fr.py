@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Les fonctions de menu contextuel s'exécutent sur le texte de la zone de commande si aucun texte n'est sélectionné.",
     "addLanguageFiles": "Ajouter des fichiers de langue",
     "updateLanguageFiles": "Mettre à jour les fichiers linguistiques",
+    "menu11_audio": "Audio",
 }

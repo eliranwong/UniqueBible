@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "പദാവലി തെരഞ്ഞെടുത്തില്ലെങ്കില് കമാന്ഡ് ഫീള്ഡ് ടെക്സ്റ്റില് പ്രവര്ത്തിപ്പിക്കുന്നു.",
     "addLanguageFiles": "ഭാഷ ഫയലുകള് ചേര്ക്കുക",
     "updateLanguageFiles": "ഭാഷ ഫയലുകള് പരിഷ്കരിക്കുക",
+    "menu11_audio": "ഓഡിയോ",
 }

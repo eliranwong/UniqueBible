@@ -1,3 +1,14 @@
+Changes in 28.34:
+* Moved verse-by-verse audio bible files to config.audioFolder.
+* Integrated previously chapter-based audio bibles and newly added verse-based audio-bibles.
+* Integrated READCHAPTER::: and READVERSE::: commands to work with files in config.audioFolder.
+* Added config.audioFolder and config.audioBibleIcon.
+* Added menu item to open audio folder.
+* Added CUV Cantonese audio bible for download.
+* Assign CUV Mandarin audio bible to CUVs instead of CUV.
+* Fixed reading audio bible chapter not playing if vlc player is opened before a command is triggered.
+* Fixed "partyly" audio/bibles path which is not cross-platform.
+
 Changes in 28.33:
 * Add NET to MP3 download in menu
 

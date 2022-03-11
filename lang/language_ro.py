@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Caracteristicile meniului contextual rulează pe textul câmpului de comandă dacă nu este selectat niciun text.",
     "addLanguageFiles": "Adaugă fișiere lingvistice",
     "updateLanguageFiles": "Actualizați fișierele lingvistice",
+    "menu11_audio": "Audio",
 }

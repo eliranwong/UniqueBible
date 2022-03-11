@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "テキストが選択されていない場合、コンテキスト・メニュー機能はコマンド・フィールド・テキストで実行",
     "addLanguageFiles": "言語ファイルの追加",
     "updateLanguageFiles": "言語ファイルの更新",
+    "menu11_audio": "オーディオ",
 }

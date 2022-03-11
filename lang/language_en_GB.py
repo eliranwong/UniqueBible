@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Context menu features run on command field text if no text is selected.",
     "addLanguageFiles": "Add Language Files",
     "updateLanguageFiles": "Update Language Files",
+    "menu11_audio": "Audio",
 }

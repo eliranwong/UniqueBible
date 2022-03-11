@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "텍스트가 선택되지 않은 경우 컨텍스트 메뉴 기능은 명령 필드 텍스트에서 실행됩니다.",
     "addLanguageFiles": "언어 파일 추가",
     "updateLanguageFiles": "언어 파일 업데이트",
+    "menu11_audio": "오디오",
 }

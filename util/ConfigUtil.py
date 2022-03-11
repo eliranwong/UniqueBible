@@ -307,6 +307,14 @@ class ConfigUtil:
         # Specify the folder path of music files"""
         if not hasattr(config, "musicFolder"):
             config.musicFolder = "music"
+        config.help["audioFolder"] = """
+        # Specify the folder path of audio bible files"""
+        if not hasattr(config, "audioFolder"):
+            config.audioFolder = "audio"
+        config.help["audioBibleIcon"] = """
+        # Specify the icon used for playing audio bible features"""
+        if not hasattr(config, "audioBibleIcon"):
+            config.audioBibleIcon = "&#9834;"
         config.help["videoFolder"] = """
         # Specify the folder path of video files"""
         if not hasattr(config, "videoFolder"):
@@ -1130,8 +1138,10 @@ class ConfigUtil:
             ("marvelData", config.marvelData),
             ("marvelDataPublic", config.marvelDataPublic),
             ("marvelDataPrivate", config.marvelDataPrivate),
-            ("musicFolder", config.musicFolder),
             ("videoFolder", config.videoFolder),
+            ("musicFolder", config.musicFolder),
+            ("audioFolder", config.audioFolder),
+            ("audioBibleIcon", config.audioBibleIcon),
             ("bibleNotes", config.bibleNotes),
             ("numberOfTab", config.numberOfTab),
             ("populateTabsOnStartup", config.populateTabsOnStartup),

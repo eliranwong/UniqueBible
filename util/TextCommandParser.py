@@ -1369,7 +1369,7 @@ class TextCommandParser:
     def readVerse(self, command, source):
         try:
             text, b, c, v = command.split(".")
-            folder = os.path.join(config.musicFolder, text, "{0}_{1}".format(b, c))
+            folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
             audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
             self.openVlcPlayer(audioFile, "main")
         except:
@@ -1380,14 +1380,12 @@ class TextCommandParser:
         if config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             filename = command
-            if self.parent.vlcPlayer is None:
-                self.parent.vlcPlayer = VlcPlayer(self, filename)
-            else:
+            if self.parent.vlcPlayer is not None:
                 # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
                 #self.parent.vlcPlayer.stop()
                 #self.parent.vlcPlayer.loadAndPlayFile(filename)
                 self.parent.vlcPlayer.close()
-                self.parent.vlcPlayer = VlcPlayer(self, filename)
+            self.parent.vlcPlayer = VlcPlayer(self, filename)
             self.parent.vlcPlayer.show()
         return ("", "", {})
 

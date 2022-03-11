@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "संदर्भ मेनू विशेषताएँ यदि कोई पाठ चुना नहीं गया है तो कमांड क्षेत्र पाठ पर चलाया जाता है.",
     "addLanguageFiles": "भाषा फ़ाइलें जोड़ें",
     "updateLanguageFiles": "भाषा फ़ाइलें अद्यतन करें",
+    "menu11_audio": "ऑडियो",
 }

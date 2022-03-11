@@ -368,6 +368,7 @@ class ClassicMainWindow:
 
         menu11 = self.menuBar().addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation["menu11_multimedia"]))
         menu11.addAction(QAction(config.thisTranslation["menu11_images"], self, triggered=self.openImagesFolder))
+        menu11.addAction(QAction(config.thisTranslation["menu11_audio"], self, triggered=self.openAudioFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_music"], self, triggered=self.openMusicFolder))
         menu11.addAction(QAction(config.thisTranslation["menu11_video"], self, triggered=self.openVideoFolder))
         menu11.addSeparator()

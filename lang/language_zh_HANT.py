@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "當沒有文字選擇時，選文插件功能使用於命令框中輸入的文字。",
     "addLanguageFiles": "新增語言檔案",
     "updateLanguageFiles": "更新語言檔案",
+    "menu11_audio": "音訊",
 }

@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Οι λειτουργίες μενού περιβάλλοντος εκτελούνται στο πεδίο της εντολής αν δεν έχει επιλεγεί κείμενο.",
     "addLanguageFiles": "Προσθήκη αρχείων γλώσσας",
     "updateLanguageFiles": "Ενημέρωση αρχείων γλώσσας",
+    "menu11_audio": "-Ήχος",
 }

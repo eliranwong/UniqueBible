@@ -1833,11 +1833,15 @@ class MainWindow(QMainWindow):
 
     # Action - open "music" directory
     def openMusicFolder(self):
-        self.runTextCommand("cmd:::{0} music".format(config.open))
+        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.musicFolder))
+
+    # Action - open "audio" directory
+    def openAudioFolder(self):
+        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.audioFolder))
 
     # Action - open "video" directory
     def openVideoFolder(self):
-        self.runTextCommand("cmd:::{0} video".format(config.open))
+        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.videoFolder))
 
     # Action - open "marvelData" directory
     def openMarvelDataFolder(self):
@@ -3740,7 +3744,7 @@ class MainWindow(QMainWindow):
 
     def playAudioBibleChapterVerseByVerse(self, text, b, c):
         playlist = []
-        folder = os.path.join(config.musicFolder, text, "{0}_{1}".format(b, c))
+        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         if os.path.isdir(folder):
             verses = Bible(text).getVerseList(b, c)
             for verse in verses:
@@ -3750,12 +3754,8 @@ class MainWindow(QMainWindow):
         if playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
-                self.vlcPlayer.stop()
-                self.vlcPlayer.clearPlaylist()
-                self.vlcPlayer.resetTimer()
-                self.vlcPlayer.update()
-            else:
-                self.vlcPlayer = VlcPlayer(self)
+                self.vlcPlayer.close()
+            self.vlcPlayer = VlcPlayer(self)
             for file in playlist:
                 self.vlcPlayer.addToPlaylist(file)
             self.vlcPlayer.show()
@@ -3765,12 +3765,8 @@ class MainWindow(QMainWindow):
         if playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
-                self.vlcPlayer.stop()
-                self.vlcPlayer.clearPlaylist()
-                self.vlcPlayer.resetTimer()
-                self.vlcPlayer.update()
-            else:
-                self.vlcPlayer = VlcPlayer(self)
+                self.vlcPlayer.close()
+            self.vlcPlayer = VlcPlayer(self)
             for listItem in playlist:
                 (text, book, chapter, verse, folder) = listItem
                 file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)

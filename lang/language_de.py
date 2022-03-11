@@ -790,4 +790,5 @@ translation = {
     "commandTextIfNoSelection": "Die Kontextmenüfeatures werden im Befehlsfeldtext ausgeführt, wenn kein Text ausgewählt ist.",
     "addLanguageFiles": "Sprachdateien hinzufügen",
     "updateLanguageFiles": "Sprachdateien aktualisieren",
+    "menu11_audio": "Audio",
 }
