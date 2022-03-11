@@ -691,8 +691,9 @@ input.addEventListener('keyup', function(event) {0}
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl1\')" class="ohl1">&#9678;</ref>'.format(b, c, v)
                 chapter += '<ref onclick="hiV({0},{1},{2},\'hl2\')" class="ohl2">&#9678;</ref>'.format(b, c, v)
                 chapter += '<ref onclick="hiV({0},{1},{2},\'ul1\')" class="oul1">&#9683;</ref>'.format(b, c, v)
+            readChapter = Bible.insertReadBibleLink(text, b, c, v)
             if readChapter:
-                chapter += Bible.insertReadBibleLink(text, b, c, v)
+                chapter += readChapter + "&nbsp;"
             chapter += '<vid id="v{0}.{1}.{2}" onclick="luV({2})" onmouseover="qV({2})" ondblclick="mV({2})">{2}</vid> '.format(b, c, v)
             # add tts indicator
             audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))

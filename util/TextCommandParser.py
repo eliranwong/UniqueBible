@@ -1431,8 +1431,12 @@ class TextCommandParser:
             start, end = command.split("-")
             verseList = self.extractAllVerses(start)
             book, chapter, verse = verseList[0]
-            for index in range(int(chapter), int(end)+1):
-                playlist.append((text, book, index, None, folder))
+            if ":" in start:
+                for index in range(int(verse), int(end)+1):
+                    playlist.append((text, book, chapter, index, folder))
+            else:
+                for index in range(int(chapter), int(end)+1):
+                    playlist.append((text, book, index, None, folder))
         else:
             verseList = self.extractAllVerses(command)
             book, chapter, verse = verseList[0]
