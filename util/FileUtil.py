@@ -83,10 +83,16 @@ class FileUtil:
             b -= 39
             a = "B"
         if verse is not None:
+            if not os.path.isdir("audio/bibles/{0}/{1}/".format(text, folder)):
+                return None
             filesearch = "audio/bibles/{0}/{1}/{2}*/chapter{4}/*-{4}-*{5}.mp3".format(text, folder, "{:02d}".format(book),
                                                                       "{:02d}".format(book),
                                                                       "{:02d}".format(chapter),
                                                                       "{:02d}".format(verse))
+            file = glob.glob(filesearch)
+            if file:
+                return file[0]
+            filesearch = "audio/bibles/{0}/{1}/{2}_{3}/{0}_{2}_{3}_{4}.mp3".format(text, folder, book, chapter, verse)
             file = glob.glob(filesearch)
             if file:
                 return file[0]

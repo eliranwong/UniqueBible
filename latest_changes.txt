@@ -1,3 +1,6 @@
+Changes in 28.33:
+* Add NET to MP3 download in menu
+
 Changes in 28.32:
 * Added GUI for verse-by-verse audio bible features.  For bible versions haveing audio bible in place, a music note button is displayed next to chapter number or verse number.  Users can click the music note button to play audio bible for a whole chapter or a single verse.  Traditional audio bible often read the whole chapter which makes users difficult to find a particular verse.  We make the verse-by-verse audio bible to offer more flexibility and functionality.
 * See screenshot at: https://github.com/eliranwong/UniqueBible/issues/927#issuecomment-1064597060

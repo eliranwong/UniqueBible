@@ -23,6 +23,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "BBE (British accent)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
             "KJV (American accent)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
             "KJV (American soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
+            "NET (Google TTS)": ("NET", "eliranwong/NewEnglishTranslationMP3", "default"),
             "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
             "WEB (American accent)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
             "CUV (Chinese)": ("CUV", "otseng/UniqueBible_MP3_CUV", "default"),
