@@ -1,4 +1,4 @@
-import os, glob
+import os, glob, config
 import re
 from itertools import (takewhile, repeat)
 import platform
