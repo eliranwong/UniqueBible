@@ -1,4 +1,5 @@
 from util.Languages import Languages
+from util.GoogleCloudTTSVoices import GoogleCloudTTS
 import config, os, platform, webbrowser, re, subprocess
 from functools import partial
 from qtpy.QtCore import Qt
@@ -602,7 +603,8 @@ class WebEngineView(QWebEngineView):
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            for language, languageCode in Languages.gTTSLanguageCodes.items():
+            languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+            for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
                 action.triggered.connect(partial(self.googleTextToSpeechLanguage, languageCode))
@@ -865,7 +867,8 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsEngine()
 
     def isGttsLanguage(self, languageCode):
-        if languageCode in [languageCode for *_, languageCode in Languages.gTTSLanguageCodes.items()]:
+        languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+        if languageCode in [languageCode for *_, languageCode in languageCodes.items()]:
             return True
         else:
             self.messageNoTtsVoice()

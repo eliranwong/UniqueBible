@@ -1153,7 +1153,8 @@ class TextCommandParser:
         
         # fine-tune
         text = re.sub("[\[\]\(\)'\"]", "", text)
-        language = re.sub("\-.*?$", "", language)
+        if not os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")):
+            language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
             language = "el"

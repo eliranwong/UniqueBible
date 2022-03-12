@@ -1,3 +1,6 @@
+Changes in 28.37:
+* Integrate Google Cloud Text-to-Speech service to context menu to read selected text.
+
 Changes in 28.36:
 * Fix paths for audio Bibles
 * Remove duplicate icons for Bible reading
