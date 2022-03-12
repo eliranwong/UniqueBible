@@ -1,3 +1,7 @@
+Changes in 28.36:
+* Fix paths for audio Bibles
+* Remove duplicate icons for Bible reading
+
 Changes in 28.35:
 * gTTS feature uses built-in vlc player to play created mp3 file.  This works in non-Linux device too.
 * gTTS feature uses official Google cloud text-to-speech service, if "credentials_GoogleCloudTextToSpeech.json" is placed in UBA root folder.

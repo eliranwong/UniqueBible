@@ -73,6 +73,7 @@ class FileUtil:
 
     @staticmethod
     def getBibleMP3File(text, book, folder, chapter, verse=None):
+        text = FileUtil.getMP3TextFile(text)
         b = book
         a = "A"
         if b == 19:
@@ -83,41 +84,57 @@ class FileUtil:
             b -= 39
             a = "B"
         if verse is not None:
-            bibleFolder = os.path.join(config.audioFolder, "bibles" ,text, folder)
+            bibleFolder = os.path.join(config.audioFolder, "bibles", text, folder)
             if not os.path.isdir(bibleFolder):
                 return None
-            filesearch = "audio/bibles/{0}/{1}/{2}*/chapter{4}/*-{4}-*{5}.mp3".format(text, folder, "{:02d}".format(book),
-                                                                      "{:02d}".format(book),
-                                                                      "{:02d}".format(chapter),
-                                                                      "{:02d}".format(verse))
+            filesearch = os.path.join(config.audioFolder, "bibles", text, folder,
+                                      "{:02d}".format(book), "chapter{:02d}".format(chapter),
+                                      "*-{0}-*{1}.mp3".format("{:02d}".format(chapter),
+                                                              "{:02d}".format(verse)))
             file = glob.glob(filesearch)
             if file:
                 return file[0]
-            filesearch = "audio/bibles/{0}/{1}/{2}_{3}/{0}_{2}_{3}_{4}.mp3".format(text, folder, book, chapter, verse)
+            filesearch = os.path.join(config.audioFolder, "bibles", text, folder,
+                                      "{0}_{1}".format(book, chapter),
+                                      "{0}_{1}_{2}_{3}.mp3".format(text, book, chapter, verse))
             file = glob.glob(filesearch)
             if file:
                 return file[0]
             else:
                 return None
-        filesearch = "audio/bibles/{0}/{1}/{2}{3}*_{4}*.mp3".format(text, folder, a, "{:02d}".format(b), c)
+        filesearch = os.path.join(config.audioFolder, "bibles", text, folder,
+                                  "{0}{1}*_{2}*.mp3".format(a, "{:02d}".format(b), c))
         file = glob.glob(filesearch)
         if file:
             return file[0]
-        filesearch = "audio/bibles/{0}/{1}/{2}*/{3}*_{4}*.mp3".format(text, folder, "{:02d}".format(book),
-                                                                    "{:02d}".format(book), "{:03d}".format(chapter))
+        filesearch = os.path.join(config.audioFolder, "bibles", text, folder,
+                                  "{:02d}*".format(book),
+                                  "{0}*_*{1}.mp3".format("{:02d}".format(book), "{:03d}".format(chapter)))
         files = glob.glob(filesearch)
         if files:
             file = files[0]
             return file
         else:
-            filesearch = "audio/bibles/{0}/{1}/{2}*/{3}_*{4}.mp3".format(text, folder, "{:02d}".format(book),
-                                                                         "{:02d}".format(book),
-                                                                         "{:02d}".format(chapter))
+            filesearch = os.path.join(config.audioFolder, "bibles", text, folder,
+                                      "{:02d}*".format(book),
+                                      "{0}_*{1}.mp3".format("{:02d}".format(book), "{:02d}".format(chapter)))
             files = glob.glob(filesearch)
             if files:
                 file = files[0]
                 return file
         return None
+
+    @staticmethod
+    def getMP3TextFile(text):
+        if text == "KJVx":
+            text = "KJV"
+        elif text == "NETx":
+            text = "NET"
+        elif text == "WEBx":
+            text = "WEB"
+        elif text == "TRx":
+            text = "TR"
+        return text
 
     @staticmethod
     def regexFileExists(regex, directory):
