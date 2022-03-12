@@ -1160,20 +1160,103 @@ class TextCommandParser:
         elif language == "el":
             text = TextUtil.removeVowelAccent(text)
 
-        if not platform.system() == "Windows" and config.gTTS:
-            if not self.isCommandInstalled("gtts-cli"):
-                installmodule("gTTS")
-            if self.isCommandInstalled("gtts-cli") and self.isCommandInstalled("play"):
-                command = "gtts-cli '{0}' --lang {1} --nocheck | play -t mp3 -".format(text, language)
-                print(command)
-                self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            elif self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
-                message = "Install sox FIRST! \nFor examples, run: \non macOS, 'brew install sox' \non Ubuntu / Debian, 'sudo apt install sox' \non Arch Linux, 'sudo pacman -S sox'"
-                self.parent.displayMessage(message)
-            elif not self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
-                message = "Install gTTS and sox FIRST! \nFor example, on Arch Linux, run:\n'pip3 install gTSS' and \n'sudo pacman -S sox'"
-                self.parent.displayMessage(message)
+        try:
+            credentials = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
+            if os.path.isfile(credentials):
+                self.saveCloudTTSAudio(text, language)
+            else:
+                self.saveGTTSAudio(text, language)
+
+            audioFile = self.getGttsFilename()
+            if os.path.isfile(audioFile):
+                self.openVlcPlayer(audioFile, "main")
+        except:
+            self.parent.displayMessage(config.thisTranslation["message_fail"])
+
+# Keep the following codes for future reference
+#        if not platform.system() == "Windows" and config.gTTS:
+#            if not self.isCommandInstalled("gtts-cli"):
+#                installmodule("gTTS")
+#            if self.isCommandInstalled("gtts-cli") and self.isCommandInstalled("play"):
+#                command = "gtts-cli '{0}' --lang {1} --nocheck | play -t mp3 -".format(text, language)
+#                print(command)
+#                self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+#            elif self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
+#                message = "Install sox FIRST! \nFor examples, run: \non macOS, 'brew install sox' \non Ubuntu / Debian, 'sudo apt install sox' \non Arch Linux, 'sudo pacman -S sox'"
+#                self.parent.displayMessage(message)
+#            elif not self.isCommandInstalled("gtts-cli") and not self.isCommandInstalled("play"):
+#                message = "Install gTTS and sox FIRST! \nFor example, on Arch Linux, run:\n'pip3 install gTSS' and \n'sudo pacman -S sox'"
+#                self.parent.displayMessage(message)
         return ("", "", {})
+
+    def getGttsFilename(self):
+        folder = os.path.join(config.musicFolder, "tmp")
+        if not os.path.isdir(folder):
+            os.makedirs(folder, exist_ok=True)
+        return os.path.join(folder, "gtts.mp3")
+
+    def saveGTTSAudio(self, inputText, languageCode):
+        try:
+            from gtts import gTTS
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade gTTS")
+
+        from gtts import gTTS
+        tts = gTTS(inputText, lang=languageCode)
+        tts.save(self.getGttsFilename())
+
+    def saveCloudTTSAudio(self, inputText, languageCode):
+        try:
+            from google.cloud import texttospeech
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade google-cloud-texttospeech")
+
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
+
+        # Modified from ource: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
+        """Synthesizes speech from the input string of text or ssml.
+        Make sure to be working in a virtual environment.
+
+        Note: ssml must be well-formed according to:
+            https://www.w3.org/TR/speech-synthesis/
+        """
+        from google.cloud import texttospeech
+
+        # Instantiates a client
+        client = texttospeech.TextToSpeechClient()
+
+        # Set the text input to be synthesized
+        synthesis_input = texttospeech.SynthesisInput(text=inputText)
+
+        # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
+        # voice gender ("neutral")
+        voice = texttospeech.VoiceSelectionParams(
+            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
+
+        # Select the type of audio file you want returned
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3
+        )
+
+        # Perform the text-to-speech request on the text input with the selected
+        # voice parameters and audio file type
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+        # The response's audio_content is binary.
+        # Save into mp3
+        with open(self.getGttsFilename(), "wb") as out:
+            # Write the response to the output file.
+            out.write(response.audio_content)
+            #print('Audio content written to file "{0}"'.format(outputFile))
 
     # speak:::
     # run text to speech feature
