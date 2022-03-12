@@ -141,7 +141,7 @@ class DownloadBibleMp3Dialog(QDialog):
                 item.setEnabled(False)
             else:
                 item.setCheckable(True)
-                item.setCheckState(Qt.Checked)
+                item.setCheckState(Qt.Unchecked)
                 item.setEnabled(True)
             self.dataViewModel.setItem(rowCount, 0, item)
             item = QStandardItem(engFullBookName)
@@ -255,24 +255,27 @@ class DownloadFromGitHub(QObject):
         self.progress.emit(config.thisTranslation["message_installing"])
         folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory)
         count = 0
-        for index in range(self.dataViewModel.rowCount()):
-            if self.dataViewModel.item(index).checkState() == Qt.Checked:
-                bookNum = self.dataViewModel.item(index).text()
-                filename = ""
-                for key in self.repoData.keys():
-                    if key.startswith(bookNum):
-                        filename = key
-                        break
-                file = os.path.join(folder, filename+".zip")
-                msg = "Download " + filename
-                self.progress.emit(msg)
-                self.github.downloadFile(file, self.repoData[filename])
-                with zipfile.ZipFile(file, 'r') as zipped:
-                    zipped.extractall(folder)
-                os.remove(file)
-                srcFiles = "{0}/{1}*.mp3".format(folder, bookNum)
-                DownloadBibleMp3Util.moveFiles(srcFiles, folder)
-                count += 1
+        try:
+            for index in range(self.dataViewModel.rowCount()):
+                if self.dataViewModel.item(index).checkState() == Qt.Checked:
+                    bookNum = self.dataViewModel.item(index).text()
+                    filename = ""
+                    for key in self.repoData.keys():
+                        if key.startswith(bookNum):
+                            filename = key
+                            break
+                    file = os.path.join(folder, filename+".zip")
+                    msg = "Download " + filename
+                    self.progress.emit(msg)
+                    self.github.downloadFile(file, self.repoData[filename])
+                    with zipfile.ZipFile(file, 'r') as zipped:
+                        zipped.extractall(folder)
+                    os.remove(file)
+                    srcFiles = "{0}/{1}*.mp3".format(folder, bookNum)
+                    DownloadBibleMp3Util.moveFiles(srcFiles, folder)
+                    count += 1
+        except Exception as e:
+            print(e)
         self.finished.emit(count)
 
 
