@@ -864,12 +864,12 @@ function nB() {
     document.title = "_openbooknote:::"+activeB;
 }
 
-function rC() {
-    document.title = "READCHAPTER:::"+activeText+"."+activeB+"."+activeC;
+function rC(text) {
+    document.title = "READCHAPTER:::"+text+"."+activeB+"."+activeC;
 }
 
-function rV(v) {
-    document.title = "READVERSE:::"+activeText+"."+activeB+"."+activeC+"."+v;
+function rV(text, v) {
+    document.title = "READVERSE:::"+text+"."+activeB+"."+activeC+"."+v;
 }
 
 function ld(lexicalEntry) {

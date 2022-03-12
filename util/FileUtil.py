@@ -126,14 +126,20 @@ class FileUtil:
 
     @staticmethod
     def getMP3TextFile(text):
-        if text == "KJVx":
-            text = "KJV"
-        elif text == "NETx":
-            text = "NET"
-        elif text == "WEBx":
-            text = "WEB"
-        elif text == "TRx":
-            text = "TR"
+        matchTexts = {
+            "KJVx": "KJV",
+            "NETx": "NET",
+            "WEBx": "WEB",
+            "TRx": "TR",
+            "OHGBi": "OHGB",
+            "MOB": "OHGB",
+            "MIB": "OHGB",
+            "MTB": "OHGB",
+            "MPB": "OHGB",
+            "MAB": "OHGB",
+        }
+        if text in matchTexts:
+            text = matchTexts[text]
         return text
 
     @staticmethod

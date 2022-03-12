@@ -18,7 +18,7 @@ from db.NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from util.ConfigUtil import ConfigUtil
 from util.FileUtil import FileUtil
-from util.themes import Themes
+#from util.themes import Themes
 from util.NoteService import NoteService
 from util.TextUtil import TextUtil
 from util.LexicalData import LexicalData
@@ -318,9 +318,11 @@ input.addEventListener('keyup', function(event) {0}
                     chapter += "<tr>"
                 else:
                     if row == 1:
-                        chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonBackgroundColor())
+                        pass
+                        #chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonBackgroundColor())
                     else:
-                        chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonAlternateBackgroundColor())
+                        pass
+                        #chapter += "<tr style='background-color: {0};'>".format(Themes.getComparisonAlternateBackgroundColor())
                 if row == 1:
                     chapter += "<td style='vertical-align: text-top;'><vid>{0}{1}</ref></vid> ".format(self.formVerseTag(b, c, verse, text), verse)
                 else:
@@ -657,10 +659,9 @@ input.addEventListener('keyup', function(event) {0}
         noteVerseList = []
         highlightDict = {}
         # add tts indicator
-        mp3text = FileUtil.getMP3TextFile(text)
-        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
+        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         if os.path.isdir(audioFolder):
-            chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
+            chapter += ' <ref onclick="rC()">{0}</ref>'.format(config.audioBibleIcon)
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteVerseList = NoteService.getChapterVerseList(b, c)
@@ -1030,10 +1031,9 @@ class Bible:
         chapter += "{0}{1}</ref>".format(biblesSqlite.formChapterTag(b, c, self.text), self.bcvToVerseReference(b, c, v).split(":", 1)[0])
         self.thisVerseNoteList = []
         # add tts indicator
-        mp3text = FileUtil.getMP3TextFile(self.text)
-        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3text, "default", "{0}_{1}".format(b, c))
+        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", self.text, "default", "{0}_{1}".format(b, c))
         if os.path.isdir(audioFolder):
-            chapter += """ <ref onclick="rC('{0}')">{1}</ref>""".format(mp3text, config.audioBibleIcon)
+            chapter += ' <ref onclick="rC()">{0}</ref>'.format(config.audioBibleIcon)
         # add note indicator
         if config.showUserNoteIndicator and not config.enableHttpServer:
             noteSqlite = NoteSqlite()
@@ -1086,13 +1086,10 @@ class Bible:
         verseTag = '<vid id="v{2}.{3}.{0}" onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding, b, c)
         v = int(v)
         # add tts indicator
-        mp3Text = FileUtil.getMP3TextFile(self.text)
-        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3Text, "default", "{0}_{1}".format(b, c))
-        audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(mp3Text, b, c, v))
+        audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", self.text, "default", "{0}_{1}".format(b, c))
+        audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(self.text, b, c, v))
         if os.path.isfile(audioFilename):
-            #command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(mp3Text, BibleBooks.eng[str(b)][0], c, v, "default")
-            #verseTag += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, config.audioBibleIcon)
-            verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref> """.format(mp3Text, v, config.audioBibleIcon)
+            verseTag += ' <ref onclick="rV({0})">{1}</ref> '.format(v, config.audioBibleIcon)
         # add note indicator
         if v in self.thisVerseNoteList:
             verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)

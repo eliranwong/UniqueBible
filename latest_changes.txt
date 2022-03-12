@@ -1,3 +1,8 @@
+Changes in 28.38:
+* Added utility to create audio bible on macOS.  Non-macOS developers can use "Create Audio Bible" plugin instead.
+* Added support of verse-by-verse audio bibles on OHGB / OHGBi / MOB / MIB / MTB / MPB / MAB.  Audio files will be uploaded in a couple of days.
+* Fixed matching texts for MP3 audio bible.
+
 Changes in 28.37:
 * Integrate Google Cloud Text-to-Speech service to context menu to read selected text.
 
