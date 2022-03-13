@@ -1,4 +1,4 @@
-import os, glob, config
+import os, glob
 import re
 from itertools import (takewhile, repeat)
 import platform
@@ -73,6 +73,8 @@ class FileUtil:
 
     @staticmethod
     def getBibleMP3File(text, book, folder, chapter, verse=None):
+        import config
+
         text = FileUtil.getMP3TextFile(text)
         b = book
         a = "A"
