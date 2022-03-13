@@ -386,26 +386,32 @@ class DownloadBibleMp3Util:
 
             # bookNum = int(base[:2])
 
-            bookNum = int(base[:2])
-            bookNum += 39
+            dir = sourceDir.replace("/home/oliver/dev/UniqueBible/audio/bibles/OHGB/default/", "")
+            bookNum = int(dir[:2])
+            # bookNum += 39
 
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
             try:
-                chapter = int(base[-6:-4])
+                base = base.replace(".mp3", "")
+                book, chapter = base.split("_")
+                chapter = int(chapter)
+                # chapter = int(base[-6:-4])
                 # chapter = int(base[6:8])
             except:
-                try:
-                    chapter = int(base[-6:-4])
-                except:
-                    try:
-                        chapter = int(base[-5:-4])
-                    except:
-                        chapter = 1
+                pass
+                # try:
+                #     chapter = int(base[-6:-4])
+                # except:
+                #     try:
+                #         chapter = int(base[-5:-4])
+                #     except:
+                #         chapter = 1
             newFile = "{0}_{1}{2}.mp3".format("{:02d}".format(bookNum), bookName, "{:03d}".format(chapter))
             os.rename(os.path.join(sourceDir, file), os.path.join(sourceDir, newFile))
             if debugOutput:
-                print(newFile)
+                print(os.path.join(sourceDir, file))
+                print(os.path.join(sourceDir, newFile))
 
     @staticmethod
     def renameDirs(sourceDir, debugOutput=False):
@@ -555,5 +561,11 @@ if __name__ == '__main__':
     # sourceDir = "/Users/otseng/Downloads/HHBD"
     # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(sourceDir, True)
 
-    sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/HHBD/default"
-    DownloadBibleMp3Util.zipFiles(sourceDir, True)
+    # sourceDir = "/Users/otseng/dev/UniqueBible/audio/bibles/HHBD/default"
+    # DownloadBibleMp3Util.zipFiles(sourceDir, True)
+
+    '''
+    OHGB
+    '''
+    dir = "/home/oliver/dev/UniqueBible/audio/bibles/OHGB/default"
+    DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(dir, True)
