@@ -713,7 +713,7 @@ class MainWindow(QMainWindow):
             github = GithubUtil(repo)
             repoData = github.getRepoData()
             folder = os.path.join(config.marvelData, directory)
-            items = [item for item in repoData.keys() if not FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(item)), folder)]
+            items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
             if not items:
                 items = ["[All Installed]"]
             item, ok = QInputDialog.getItem(self, "UniqueBible",
