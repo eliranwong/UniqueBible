@@ -26,7 +26,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "HHBD (Hindi)": ("HHBD", "otseng/UniqueBible_MP3_HHBD", "default"),
             "KJV (American accent)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
             "KJV (American soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
-            "NET (American accent; verse-by-verse)": ("NET", "https://github.com/eliranwong/MP3_NewEnglishTranslation_american", "default"),
+            "NET (American accent; verse-by-verse)": ("NET", "eliranwong/MP3_NewEnglishTranslation_american", "default"),
             "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
