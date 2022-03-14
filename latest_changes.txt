@@ -1,3 +1,6 @@
+Changes in 28.40:
+* Add WLC MP3
+
 Changes in 28.39:
 * Fix config issue in FileUtil
 

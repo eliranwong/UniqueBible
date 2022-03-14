@@ -31,10 +31,11 @@ class DownloadBibleMp3Dialog(QDialog):
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
             "WEB (American accent)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
+            "WLC (Hebrew)": ("WLC", "otseng/UniqueBible_MP3_WLC", "default"),
         }
         self.parent = parent
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
-        self.setMinimumSize(150, 450)
+        self.setMinimumSize(150, 500)
         self.selectedRendition = None
         self.selectedText = None
         self.selectedRepo = None
@@ -132,10 +133,12 @@ class DownloadBibleMp3Dialog(QDialog):
                 engFullBookName = file[3:]
             else:
                 engFullBookName = BibleBooks().eng[str(int(file))][1]
-            item = QStandardItem(file[:3].strip())
-            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file)
-            folderWithName = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, file + " " + engFullBookName)
-            if os.path.exists(folder) or os.path.exists(folderWithName):
+            item = QStandardItem(file[:3].strip().replace("_", ""))
+            folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory, "{0}*".format(file[:3]))
+            exists = False
+            if glob.glob(folder):
+                exists = True
+            if exists:
                 item.setCheckable(False)
                 item.setCheckState(Qt.Unchecked)
                 item.setEnabled(False)
@@ -146,7 +149,7 @@ class DownloadBibleMp3Dialog(QDialog):
             self.dataViewModel.setItem(rowCount, 0, item)
             item = QStandardItem(engFullBookName)
             self.dataViewModel.setItem(rowCount, 1, item)
-            if os.path.exists(folder) or os.path.exists(folderWithName):
+            if exists:
                 item = QStandardItem("Installed")
                 self.dataViewModel.setItem(rowCount, 2, item)
             else:
@@ -295,7 +298,7 @@ class DownloadBibleMp3Util:
                 bookNum += 39
             bookName = BibleBooks.eng[str(bookNum)][1]
             bookName = bookName.replace(" ", "")
-            destFolder = os.path.join(destDir, folder + " " + bookName)
+            destFolder = os.path.join(destDir, folder + "_" + bookName)
             if not os.path.exists(destFolder):
                 os.mkdir(destFolder)
             newFile = os.path.join(destFolder, base)
@@ -565,7 +568,8 @@ if __name__ == '__main__':
     # DownloadBibleMp3Util.zipFiles(sourceDir, True)
 
     '''
-    OHGB
+    WLC
     '''
-    dir = "/home/oliver/dev/UniqueBible/audio/bibles/OHGB/default"
-    DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(dir, True)
+    dir = "/home/oliver/dev/UniqueBible/audio/bibles/WLC/default"
+    # DownloadBibleMp3Util.fixFilenamesInAllSubdirectories(dir, True)
+    DownloadBibleMp3Util.zipFiles(dir, True)
