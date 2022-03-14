@@ -1,3 +1,20 @@
+Upcoming ...
+* Added Open Hebrew Greek Bible verse-by-verse MP3 audio files for downloads via menu.
+* There are two set of Open Hebrew Greek Bible verse-by-verse MP3 audio files, fast and slow.
+* The following Unique Bible App modules are integrated to use these audio files:
+    OHGB - Open Hebrew Greek Bible
+    OHGBi - Open Hebrew Greek Bible (interlinear)
+    MOB - Marvel Original Bible
+    MIB - Marvel Interlinear Bible
+    MTB - Marvel Trilingual Bible
+    MPB - Marvel Parallel Bible
+    MAB - Marvel Annotated Bible
+
+Changes in 28.40:
+* Changed github links for downloading NET & CUV verse-by-verse audio bibles.
+* Added voice selection for text-to-speech features, mainly for developers.
+* Added zip folders utility for developers.
+
 Changes in 28.39:
 * Fix config issue in FileUtil
 

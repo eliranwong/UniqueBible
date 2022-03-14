@@ -21,12 +21,12 @@ class DownloadBibleMp3Dialog(QDialog):
 
         self.bibles = {
             "BBE (British accent)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
-            "CUV (Cantonese)": ("CUV", "eliranwong/ChineseUnionVersionCantoneseMP3", "default"),
+            "CUV (Cantonese; verse-by-verse)": ("CUV", "eliranwong/MP3_ChineseUnionVersion_cantonese", "default"),
             "CUV (Mandarin)": ("CUVs", "otseng/UniqueBible_MP3_CUV", "default"),
             "HHBD (Hindi)": ("HHBD", "otseng/UniqueBible_MP3_HHBD", "default"),
             "KJV (American accent)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
             "KJV (American soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
-            "NET (American accent)": ("NET", "eliranwong/NewEnglishTranslationMP3", "default"),
+            "NET (American accent; verse-by-verse)": ("NET", "https://github.com/eliranwong/MP3_NewEnglishTranslation_american", "default"),
             "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),

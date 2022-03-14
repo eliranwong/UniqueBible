@@ -1243,7 +1243,9 @@ class TextCommandParser:
 
         # Select the type of audio file you want returned
         audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
+            speaking_rate=1,
         )
 
         # Perform the text-to-speech request on the text input with the selected
