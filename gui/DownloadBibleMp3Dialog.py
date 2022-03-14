@@ -138,6 +138,12 @@ class DownloadBibleMp3Dialog(QDialog):
             exists = False
             if glob.glob(folder):
                 exists = True
+            else:
+                if file[0] == '0':
+                    folder = os.path.join("audio", "bibles", self.selectedText, self.selectedDirectory,
+                                                      "{0}_*".format(file[1]))
+                    if glob.glob(folder):
+                        exists = True
             if exists:
                 item.setCheckable(False)
                 item.setCheckState(Qt.Unchecked)
