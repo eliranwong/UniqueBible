@@ -80,5 +80,5 @@ def getSingleBookFolders(b):
 for b in range(1, 67):
     folderList = getSingleBookFolders(b)
     if folderList:
-        os.system(f"zip -r {zipFiles[b]}.zip {folderList}")
+        os.system(f"zip -r {zipFiles[b]} {folderList}")
 
