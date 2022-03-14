@@ -1,4 +1,5 @@
 """
+This script is written for macOS users only!
 Install ffmpeg & AudioConverter FIRST!
 On macOS terminal, run:
 > brew install ffmpeg
@@ -7,7 +8,7 @@ On macOS terminal, run:
 
 # User can change bible module in the following line:
 # On macOS, select voice or adjust rate at System Preferences > Accessibility > Spoken Content
-bibleModule = "OHGB"
+bibleModule = "KJV"
 
 from db.BiblesSqlite_nogui import Bible
 # getBookList, getChapterList, readTextChapter
@@ -39,7 +40,11 @@ def saveMacTTSAudio(b, c, v, verseText):
     audioFilename = "{0}_{1}_{2}_{3}.aiff".format(bibleModule, b, c, v)
     outputFile = os.path.join(chapterFolder, audioFilename)
 
-    os.system(f"say -o {outputFile} {verseText}")
+    # For non-English text, can use the following line direclty
+    #os.system(f"say -o {outputFile} {verseText}")
+    with open('temp.txt', 'w') as file:
+        file.write(verseText)
+    os.system(f"say -o {outputFile} -f temp.txt")
 
 def processBooks(rangeBegin, rangeEnd):
     # For testing
@@ -70,6 +75,7 @@ def processBooks(rangeBegin, rangeEnd):
 # main process begin from below
 bible = Bible(bibleModule)
 
+print("hi")
 # O.T.
 processBooks(1, 40)
 # N.T.
