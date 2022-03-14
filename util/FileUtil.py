@@ -139,6 +139,7 @@ class FileUtil:
             "MTB": "OHGB",
             "MPB": "OHGB",
             "MAB": "OHGB",
+            "WLCx": "WLC",
         }
         if text in matchTexts:
             text = matchTexts[text]

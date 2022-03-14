@@ -10,6 +10,9 @@ Upcoming ...
     MPB - Marvel Parallel Bible
     MAB - Marvel Annotated Bible
 
+Changes in 28.41:
+* Add WLC MP3
+
 Changes in 28.40:
 * Changed github links for downloading NET & CUV verse-by-verse audio bibles.
 * Added voice selection for text-to-speech features, mainly for developers.
