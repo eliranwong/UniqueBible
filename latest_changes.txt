@@ -10,6 +10,9 @@ Upcoming ...
     MPB - Marvel Parallel Bible
     MAB - Marvel Annotated Bible
 
+Changes in 28.42:
+* Fix pattern filename match in download Bible
+
 Changes in 28.41:
 * Add WLC MP3
 
