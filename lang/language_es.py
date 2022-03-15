@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "Añadir archivos de idioma",
     "updateLanguageFiles": "Actualizar archivos de idioma",
     "menu11_audio": "Audio",
+    "readTillChapterEnd": "Leer a través del Resto del Capítulo",
 }

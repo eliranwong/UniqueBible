@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "ഭാഷ ഫയലുകള് ചേര്ക്കുക",
     "updateLanguageFiles": "ഭാഷ ഫയലുകള് പരിഷ്കരിക്കുക",
     "menu11_audio": "ഓഡിയോ",
+    "readTillChapterEnd": "അദ്ധ്യായത്തിന്റെ രചനയിലൂടെ വായിക്കുക",
 }

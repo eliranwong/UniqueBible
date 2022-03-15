@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "언어 파일 추가",
     "updateLanguageFiles": "언어 파일 업데이트",
     "menu11_audio": "오디오",
+    "readTillChapterEnd": "장의 라스트를 통해 읽기",
 }

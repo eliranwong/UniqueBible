@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "言語ファイルの追加",
     "updateLanguageFiles": "言語ファイルの更新",
     "menu11_audio": "オーディオ",
+    "readTillChapterEnd": "この章の Rest を読む",
 }

@@ -10,6 +10,10 @@ Upcoming ...
     MPB - Marvel Parallel Bible
     MAB - Marvel Annotated Bible
 
+Changes in 28.43:
+* Add option Read through the rest of the chapter
+* Users can toogle it via Focus / Aleph menu layout.
+
 Changes in 28.42:
 * Fix pattern filename match in download Bible
 

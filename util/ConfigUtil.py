@@ -314,7 +314,13 @@ class ConfigUtil:
         config.help["audioBibleIcon"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon"):
-            config.audioBibleIcon = "&#9834;"
+            #config.audioBibleIcon = "&#9834;"
+            config.audioBibleIcon = "&#119136;"
+        config.help["audioBibleIcon2"] = """
+        # Specify the icon used for playing audio bible features"""
+        if not hasattr(config, "audioBibleIcon2"):
+            #config.audioBibleIcon2 = "&#9834;"
+            config.audioBibleIcon2 = "&#119137;"
         config.help["videoFolder"] = """
         # Specify the folder path of video files"""
         if not hasattr(config, "videoFolder"):
@@ -501,6 +507,10 @@ class ConfigUtil:
         # Options to hide lexical entries or Strong's numbers: True / False"""
         if not hasattr(config, "hideLexicalEntryInBible"):
             config.hideLexicalEntryInBible = False
+        config.help["readTillChapterEnd"] = """
+        # Options to read, with audio bible, through the rest of a chapter from a verse: True / False"""
+        if not hasattr(config, "readTillChapterEnd"):
+            config.readTillChapterEnd = False
         config.help["importAddVerseLinebreak"] = """
         # Import setting - add a line break after each verse: True / False"""
         if not hasattr(config, "importAddVerseLinebreak"):
@@ -1142,6 +1152,7 @@ class ConfigUtil:
             ("musicFolder", config.musicFolder),
             ("audioFolder", config.audioFolder),
             ("audioBibleIcon", config.audioBibleIcon),
+            ("audioBibleIcon2", config.audioBibleIcon2),
             ("bibleNotes", config.bibleNotes),
             ("numberOfTab", config.numberOfTab),
             ("populateTabsOnStartup", config.populateTabsOnStartup),
@@ -1215,6 +1226,7 @@ class ConfigUtil:
             ("readFormattedBibles", config.readFormattedBibles),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
+            ("readTillChapterEnd", config.readTillChapterEnd),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),
             ("syncStudyWindowBibleWithMainWindow", config.syncStudyWindowBibleWithMainWindow),
             ("syncCommentaryWithMainWindow", config.syncCommentaryWithMainWindow),

@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "Προσθήκη αρχείων γλώσσας",
     "updateLanguageFiles": "Ενημέρωση αρχείων γλώσσας",
     "menu11_audio": "-Ήχος",
+    "readTillChapterEnd": "Διαβάστε στο υπόλοιπο κεφάλαιο.",
 }

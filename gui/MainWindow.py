@@ -2580,6 +2580,11 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord()
 
+    def toggleReadTillChapterEnd(self):
+        config.readTillChapterEnd = not config.readTillChapterEnd
+        self.newTabException = True
+        self.reloadCurrentRecord()
+
     def enableSubheadingButtonClicked(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         self.newTabException = True

@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "Add Language Files",
     "updateLanguageFiles": "Update Language Files",
     "menu11_audio": "Audio",
+    "readTillChapterEnd": "Read through the Rest of the Chapter",
 }

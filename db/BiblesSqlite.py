@@ -4,6 +4,7 @@ Reading data from bibles.sqlite
 import glob
 import os, sqlite3, config, re, logging
 from pathlib import Path
+from functools import partial
 
 if __name__ == "__main__":
     from util.ConfigUtil import ConfigUtil
@@ -1047,8 +1048,13 @@ class Bible:
         self.cursor.execute(query, verse[0:2])
         scripture = self.cursor.fetchone()
         if scripture:
+            mp3Text = FileUtil.getMP3TextFile(self.text)
+            try:
+                lastVerse = Bible(mp3Text).getVerseList(b, c)[-1]
+            except:
+                lastVerse = v
             # e.g. <vid id="v1.1.1" onclick="luV(1)">1</vid>
-            chapter += re.sub(r'<vid id="v([0-9]+?).([0-9]+?).([0-9]+?)" onclick="luV\([0-9]+?\)"(.*?>.*?</vid>)', self.formatVerseNumber, scripture[0])
+            chapter += re.sub(r'<vid id="v([0-9]+?).([0-9]+?).([0-9]+?)" onclick="luV\([0-9]+?\)"(.*?>.*?</vid>)', partial(self.formatVerseNumber, lastVerse), scripture[0])
             divTag = "<div>"
             if self.text in config.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
@@ -1062,6 +1068,10 @@ class Bible:
     @staticmethod
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
+        try:
+            lastVerse = Bible(text).getVerseList(b, c)[-1]
+        except:
+            lastVerse = v
         data = ""
         if config.runMode == "gui" and config.isVlcInstalled:
             directory = os.path.join(config.audioFolder, "bibles", text)
@@ -1075,13 +1085,17 @@ class Bible:
                     if file:
                         icon = config.audioBibleIcon
                         if v is not None:
-                            command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
+                            if lastVerse > v and config.readTillChapterEnd:
+                                icon = config.audioBibleIcon2
+                                command = "READBIBLE:::{0}:::{1} {2}:{3}-{5}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir, lastVerse)
+                            else:
+                                command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
                         else:
                             command = "READBIBLE:::@{0}".format(dir)
                         data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)
         return data
 
-    def formatVerseNumber(self, match):
+    def formatVerseNumber(self, lastVerse, match):
         b, c, v, tagEnding = match.groups()
         verseTag = '<vid id="v{2}.{3}.{0}" onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding, b, c)
         v = int(v)
@@ -1090,9 +1104,11 @@ class Bible:
         audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3Text, "default", "{0}_{1}".format(b, c))
         audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(mp3Text, b, c, v))
         if os.path.isfile(audioFilename):
-            #command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(mp3Text, BibleBooks.eng[str(b)][0], c, v, "default")
-            #verseTag += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, config.audioBibleIcon)
-            verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref> """.format(mp3Text, v, config.audioBibleIcon)
+            if config.readTillChapterEnd and lastVerse > int(v):
+                command = "READBIBLE:::{0}:::{1} {2}:{3}-{5}:::{4}".format(mp3Text, BibleBooks.eng[str(b)][0], c, v, "default", lastVerse)
+                verseTag += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, config.audioBibleIcon2)
+            else:
+                verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref> """.format(mp3Text, v, config.audioBibleIcon)
         # add note indicator
         if v in self.thisVerseNoteList:
             verseTag += ' <ref onclick="nV({0})">&#9998;</ref>'.format(v)

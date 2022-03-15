@@ -791,4 +791,5 @@ translation = {
     "addLanguageFiles": "添加语言文件",
     "updateLanguageFiles": "更新语言文件",
     "menu11_audio": "音频",
+    "readTillChapterEnd": "阅读同章其后节数",
 }
