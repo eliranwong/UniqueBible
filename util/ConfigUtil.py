@@ -510,7 +510,7 @@ class ConfigUtil:
         config.help["readTillChapterEnd"] = """
         # Options to read, with audio bible, through the rest of a chapter from a verse: True / False"""
         if not hasattr(config, "readTillChapterEnd"):
-            config.readTillChapterEnd = False
+            config.readTillChapterEnd = True
         config.help["importAddVerseLinebreak"] = """
         # Import setting - add a line break after each verse: True / False"""
         if not hasattr(config, "importAddVerseLinebreak"):

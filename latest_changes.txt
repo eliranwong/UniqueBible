@@ -1,3 +1,8 @@
+Changes in 28.45:
+* Changed the default value of config.readTillChapterEnd to True.
+* Users can toggle it via Focus / Aleph menu layout.
+* For example, in Focus menu layout, Bible > Toggle Features > Read through the Rest of the Chapter.
+
 Changes in 28.44:
 * Added Open Hebrew Greek Bible verse-by-verse MP3 audio files for downloads via menu.
 * There are two sets of Open Hebrew Greek Bible verse-by-verse MP3 audio files, fast and slow.
