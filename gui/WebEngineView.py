@@ -15,6 +15,9 @@ from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
 from util.BibleBooks import BibleBooks
 from util.HebrewTransliteration import HebrewTransliteration
+from util.WebtopUtil import WebtopUtil
+from install.module import *
+
 
 class WebEngineView(QWebEngineView):
     
@@ -616,7 +619,8 @@ class WebEngineView(QWebEngineView):
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            for language, languageCode in Languages.gTTSLanguageCodes.items():
+            languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+            for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
                 action.triggered.connect(partial(self.googleTextToSpeechAudio, languageCode))
@@ -889,11 +893,12 @@ class WebEngineView(QWebEngineView):
         elif config.gTTS:
             # fine-tune
             selectedText = re.sub("[\[\]\(\)'\"]", "", selectedText)
-            language = re.sub("\-.*?$", "", language)
+            if not os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")):
+                language = re.sub("\-.*?$", "", language)
             if language in ("iw", "he"):
                 selectedText = HebrewTransliteration().transliterateHebrew(selectedText)
                 language = "el"
-            elif language == "el":
+            elif language == "el" or language.startswith("el-"):
                 selectedText = TextUtil.removeVowelAccent(selectedText)
 
             if self.isGttsLanguage(language):
@@ -907,19 +912,89 @@ class WebEngineView(QWebEngineView):
                     if not "." in os.path.basename(fileName):
                         fileName = fileName + ".mp3"
                     # Save mp3 file
-                    from gtts import gTTS
-                    tts = gTTS(selectedText, lang=language)
-                    tts.save(fileName)
-                    # Open the directory where the file is saved
-                    outputFolder = os.path.dirname(fileName)
-                    if platform.system() == "Linux":
-                        subprocess.Popen([config.open, outputFolder])
-                    # on Windows
-                    elif platform.system() == "Windows":
-                        os.system(r"{0} {1}".format(config.open, outputFolder))
-                    # on Unix-based system, like macOS
-                    else:
-                        os.system(r"{0} {1}".format(config.open, outputFolder))
+                    try:
+                        credentials = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
+                        if os.path.isfile(credentials):
+                            self.saveCloudTTSAudio(selectedText, language, fileName)
+                        else:
+                            self.saveGTTSAudio(selectedText, language, fileName)
+
+                        if os.path.isfile(fileName):
+                            # Open the directory where the file is saved
+                            outputFolder = os.path.dirname(fileName)
+                            if config.docker:
+                                WebtopUtil.runNohup(f"{config.open} {outputFolder}")
+                            elif platform.system() == "Linux":
+                                subprocess.Popen([config.open, outputFolder])
+                            else:
+                                os.system(r"{0} {1}".format(config.open, outputFolder))
+                    except:
+                        self.displayMessage(config.thisTranslation["message_fail"])
+
+    def saveGTTSAudio(self, inputText, languageCode, filename):
+        try:
+            from gtts import gTTS
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade gTTS")
+
+        from gtts import gTTS
+        tts = gTTS(inputText, lang=languageCode)
+        tts.save(filename)
+
+    def saveCloudTTSAudio(self, inputText, languageCode, filename):
+        try:
+            from google.cloud import texttospeech
+            moduleInstalled = True
+        except:
+            moduleInstalled = False
+        if not moduleInstalled:
+            installmodule("--upgrade google-cloud-texttospeech")
+
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
+
+        # Modified from ource: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
+        """Synthesizes speech from the input string of text or ssml.
+        Make sure to be working in a virtual environment.
+
+        Note: ssml must be well-formed according to:
+            https://www.w3.org/TR/speech-synthesis/
+        """
+        from google.cloud import texttospeech
+
+        # Instantiates a client
+        client = texttospeech.TextToSpeechClient()
+
+        # Set the text input to be synthesized
+        synthesis_input = texttospeech.SynthesisInput(text=inputText)
+
+        # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
+        # voice gender ("neutral")
+        voice = texttospeech.VoiceSelectionParams(
+            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+        )
+
+        # Select the type of audio file you want returned
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.MP3,
+            # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
+            speaking_rate=1,
+        )
+
+        # Perform the text-to-speech request on the text input with the selected
+        # voice parameters and audio file type
+        response = client.synthesize_speech(
+            input=synthesis_input, voice=voice, audio_config=audio_config
+        )
+
+        # The response's audio_content is binary.
+        # Save into mp3
+        with open(filename, "wb") as out:
+            # Write the response to the output file.
+            out.write(response.audio_content)
+            #print('Audio content written to file "{0}"'.format(outputFile))
 
     def searchPanel(self, selectedText=None):
         #if selectedText is None:

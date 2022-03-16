@@ -2,6 +2,7 @@
 import glob
 import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 
+from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.HtmlGeneratorUtil import HtmlGeneratorUtil
@@ -1106,7 +1107,9 @@ class TextCommandParser:
     def osCommand(self, command, source):
         window = ""
         display = ""
-        if config.runMode == "http-server" and not config.enableCmd:
+        if config.docker:
+            WebtopUtil.runNohup(command)
+        elif config.runMode == "http-server" and not config.enableCmd:
             print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
         else:
             runCmd = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -1158,7 +1161,7 @@ class TextCommandParser:
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
             language = "el"
-        elif language == "el":
+        elif language == "el" or language.startswith("el-"):
             text = TextUtil.removeVowelAccent(text)
 
         try:

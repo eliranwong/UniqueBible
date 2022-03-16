@@ -1089,7 +1089,7 @@ class Bible:
                                 icon = config.audioBibleIcon2
                                 command = "READBIBLE:::{0}:::{1} {2}:{3}-{5}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir, lastVerse)
                             else:
-                                command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
+                                command = "rV('{0}', {1})".format(text, v)
                         else:
                             command = "READBIBLE:::@{0}".format(dir)
                         data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)

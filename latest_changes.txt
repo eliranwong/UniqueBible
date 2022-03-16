@@ -1,6 +1,6 @@
-Upcoming ...
+Changes in 28.44:
 * Added Open Hebrew Greek Bible verse-by-verse MP3 audio files for downloads via menu.
-* There are two set of Open Hebrew Greek Bible verse-by-verse MP3 audio files, fast and slow.
+* There are two sets of Open Hebrew Greek Bible verse-by-verse MP3 audio files, fast and slow.
 * The following Unique Bible App modules are integrated to use these audio files:
     OHGB - Open Hebrew Greek Bible
     OHGBi - Open Hebrew Greek Bible (interlinear)
@@ -9,6 +9,16 @@ Upcoming ...
     MTB - Marvel Trilingual Bible
     MPB - Marvel Parallel Bible
     MAB - Marvel Annotated Bible
+* Added some other verse-by-verse MP3 audio bibles, available right now are:
+    American Standard Version (American accent)
+    Chinese Union Version (Cantonese)
+    English Revised Version (British accent)
+    King James Version (British accent)
+    New English Translation (American accent)
+    New English Translation (British accent)
+    Open Hebrew Greek Bible (Hebrew & Greek; fast)
+    Open Hebrew Greek Bible (Hebrew & Greek; slow)
+* Fixed the issue that opening resource folders freezed UBA.
 
 Changes in 28.43:
 * Add option Read through the rest of the chapter
