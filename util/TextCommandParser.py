@@ -1448,8 +1448,13 @@ class TextCommandParser:
     # READCHAPTER:::
     def readChapter(self, command, source):
         try:
-            text, b, c = command.split(".")
-            self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+            items = command.split(".")
+            if len(items) == 3:
+                text, b, c = items
+                self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+            elif len(items) == 4:
+                text, b, c, startVerse = items
+                self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
             return ("", "", {})
         except:
             return self.invalidCommand()

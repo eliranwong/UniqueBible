@@ -3747,15 +3747,16 @@ class MainWindow(QMainWindow):
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
 
-    def playAudioBibleChapterVerseByVerse(self, text, b, c):
+    def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
         playlist = []
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         if os.path.isdir(folder):
             verses = Bible(text).getVerseList(b, c)
             for verse in verses:
-                audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse))
-                if os.path.isfile(audioFile):
-                    playlist.append(audioFile)
+                if verse >= startVerse:
+                    audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse))
+                    if os.path.isfile(audioFile):
+                        playlist.append(audioFile)
         if playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:

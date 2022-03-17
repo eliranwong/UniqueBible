@@ -1041,7 +1041,6 @@ class Bible:
             self.thisVerseNoteList = noteSqlite.getChapterVerseList(b, c)
             if noteSqlite.isChapterNote(b, c):
                 chapter += ' <ref onclick="nC()">&#9998;</ref>'
-        directory = "audio/bibles/{0}/{1}/{2}".format(self.text, "default", b)
         chapter += Bible.insertReadBibleLink(self.text, b, c)
         chapter += "</h2>"
         query = "SELECT Scripture FROM Bible WHERE Book=? AND Chapter=?"
@@ -1049,12 +1048,8 @@ class Bible:
         scripture = self.cursor.fetchone()
         if scripture:
             mp3Text = FileUtil.getMP3TextFile(self.text)
-            try:
-                lastVerse = Bible(mp3Text).getVerseList(b, c)[-1]
-            except:
-                lastVerse = v
             # e.g. <vid id="v1.1.1" onclick="luV(1)">1</vid>
-            chapter += re.sub(r'<vid id="v([0-9]+?).([0-9]+?).([0-9]+?)" onclick="luV\([0-9]+?\)"(.*?>.*?</vid>)', partial(self.formatVerseNumber, lastVerse), scripture[0])
+            chapter += re.sub(r'<vid id="v([0-9]+?).([0-9]+?).([0-9]+?)" onclick="luV\([0-9]+?\)"(.*?>.*?</vid>)', partial(self.formatVerseNumber, mp3Text), scripture[0])
             divTag = "<div>"
             if self.text in config.rtlTexts and b < 40:
                 divTag = "<div style='direction: rtl;'>"
@@ -1068,10 +1063,6 @@ class Bible:
     @staticmethod
     def insertReadBibleLink(text, b, c, v=None):
         text = FileUtil.getMP3TextFile(text)
-        try:
-            lastVerse = Bible(text).getVerseList(b, c)[-1]
-        except:
-            lastVerse = v
         data = ""
         if config.runMode == "gui" and config.isVlcInstalled:
             directory = os.path.join(config.audioFolder, "bibles", text)
@@ -1085,28 +1076,27 @@ class Bible:
                     if file:
                         icon = config.audioBibleIcon
                         if v is not None:
-                            if lastVerse > v and config.readTillChapterEnd:
+                            if config.readTillChapterEnd:
                                 icon = config.audioBibleIcon2
-                                command = "READBIBLE:::{0}:::{1} {2}:{3}-{5}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir, lastVerse)
+                                command = "rC('{0}', {1})".format(text, v)
                             else:
                                 command = "rV('{0}', {1})".format(text, v)
+                            data += """ <ref onclick="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)
                         else:
                             command = "READBIBLE:::@{0}".format(dir)
-                        data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)
+                            data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)
         return data
 
-    def formatVerseNumber(self, lastVerse, match):
+    def formatVerseNumber(self, mp3Text, match):
         b, c, v, tagEnding = match.groups()
         verseTag = '<vid id="v{2}.{3}.{0}" onclick="luV({0})" onmouseover="qV({0})" ondblclick="mV({0})"{1}'.format(v, tagEnding, b, c)
         v = int(v)
         # add tts indicator
-        mp3Text = FileUtil.getMP3TextFile(self.text)
         audioFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", mp3Text, "default", "{0}_{1}".format(b, c))
         audioFilename = os.path.join(audioFolder, "{0}_{1}_{2}_{3}.mp3".format(mp3Text, b, c, v))
         if os.path.isfile(audioFilename):
-            if config.readTillChapterEnd and lastVerse > int(v):
-                command = "READBIBLE:::{0}:::{1} {2}:{3}-{5}:::{4}".format(mp3Text, BibleBooks.eng[str(b)][0], c, v, "default", lastVerse)
-                verseTag += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, config.audioBibleIcon2)
+            if config.readTillChapterEnd:
+                verseTag += """ <ref onclick="rC('{0}', {1})">{2}</ref> """.format(mp3Text, v, config.audioBibleIcon2)
             else:
                 verseTag += """ <ref onclick="rV('{0}', {1})">{2}</ref> """.format(mp3Text, v, config.audioBibleIcon)
         # add note indicator

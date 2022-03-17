@@ -864,8 +864,13 @@ function nB() {
     document.title = "_openbooknote:::"+activeB;
 }
 
-function rC(text) {
-    document.title = "READCHAPTER:::"+text+"."+activeB+"."+activeC;
+function rC(text, startVerse) {
+    if (startVerse == undefined) {
+        document.title = "READCHAPTER:::"+text+"."+activeB+"."+activeC;
+    } else {
+        document.title = "READCHAPTER:::"+text+"."+activeB+"."+activeC+"."+startVerse;
+    }
+    
 }
 
 function rV(text, v) {
