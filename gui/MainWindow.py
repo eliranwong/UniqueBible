@@ -3773,7 +3773,13 @@ class MainWindow(QMainWindow):
 
     def playBibleMP3Playlist(self, playlist):
         if playlist and config.docker and WebtopUtil.isPackageInstalled("vlc"):
-            audioFiles = ' '.join(playlist)
+            fileList = []
+            for listItem in playlist:
+                (text, book, chapter, verse, folder) = listItem
+                file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
+                if file:
+                    fileList.append(file)
+            audioFiles = ' '.join(fileList)
             os.system("pkill vlc")
             WebtopUtil.runNohup(f"vlc {audioFiles}")
         elif playlist and config.isVlcInstalled:

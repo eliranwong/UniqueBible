@@ -1,4 +1,4 @@
-Changes in 28.48:
+Changes in 28.48, 28.49:
 * Replace built-in media player with VLC player on webtop version, to workaround playlist issue of built-in media player.
 
 Changes in 28.47:
