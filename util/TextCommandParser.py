@@ -1465,7 +1465,12 @@ class TextCommandParser:
             text, b, c, v = command.split(".")
             folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
             audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
-            self.openVlcPlayer(audioFile, "main")
+            if config.docker and WebtopUtil.isPackageInstalled("vlc"):
+                os.system("pkill vlc")
+                WebtopUtil.runNohup(f"vlc {audioFile}")
+                return ("", "", {})
+            else:
+                self.openVlcPlayer(audioFile, "main")
         except:
             return self.invalidCommand()
 

@@ -3757,7 +3757,11 @@ class MainWindow(QMainWindow):
                     audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse))
                     if os.path.isfile(audioFile):
                         playlist.append(audioFile)
-        if playlist and config.isVlcInstalled:
+        if playlist and config.docker and WebtopUtil.isPackageInstalled("vlc"):
+            audioFiles = ' '.join(playlist)
+            os.system("pkill vlc")
+            WebtopUtil.runNohup(f"vlc {audioFiles}")
+        elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
                 self.vlcPlayer.close()
@@ -3768,7 +3772,11 @@ class MainWindow(QMainWindow):
             self.vlcPlayer.playNextInPlaylist()
 
     def playBibleMP3Playlist(self, playlist):
-        if playlist and config.isVlcInstalled:
+        if playlist and config.docker and WebtopUtil.isPackageInstalled("vlc"):
+            audioFiles = ' '.join(playlist)
+            os.system("pkill vlc")
+            WebtopUtil.runNohup(f"vlc {audioFiles}")
+        elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
                 self.vlcPlayer.close()
