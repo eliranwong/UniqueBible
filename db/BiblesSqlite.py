@@ -1016,7 +1016,7 @@ class Bible:
             if not textVerse:
                 return (b, c, v, "")
             # return a tuple
-            return textVerse
+            return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse[-1].strip()}")
         else:
             print("Verse table does not exist")
             return (b, c, v, "")

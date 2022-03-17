@@ -1,3 +1,6 @@
+Changes in 28.47:
+* Integrated read verse audio into multiple-verse display features.
+
 Changes in 28.46:
 * Fixed "Read through the Rest of the Chapter" feature, by using READCHAPTER::: command instead of READBIBLE::: command.
 

@@ -127,6 +127,17 @@ class FileUtil:
         return None
 
     @staticmethod
+    def getVerseAudioTag(text, b, c, v):
+        import config
+        text = FileUtil.getMP3TextFile(text)
+        audioFile = os.path.join(config.audioFolder, "bibles", text, "default", f"{b}_{c}", f"{text}_{b}_{c}_{v}.mp3")
+        if os.path.isfile(audioFile):
+            command = f"READVERSE:::{text}.{b}.{c}.{v}"
+            return f"""<ref onclick="document.title='{command}'" title="{command}" style="font-size: 1em">{config.audioBibleIcon}</ref> """
+        else:
+            return ""
+
+    @staticmethod
     def getMP3TextFile(text):
         matchTexts = {
             "KJVx": "KJV",
