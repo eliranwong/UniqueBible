@@ -1,3 +1,6 @@
+Changes in 28.50:
+* Added support of Amazon Polly for creation of verse-by-verse audio bible.  This feature is created for developers only.
+
 Changes in 28.48, 28.49:
 * Replace built-in media player with VLC player on webtop version, to workaround playlist issue of built-in media player.
 

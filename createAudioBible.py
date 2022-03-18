@@ -8,14 +8,89 @@ On macOS terminal, run:
 
 # User can change bible module in the following line:
 # On macOS, select voice or adjust rate at System Preferences > Accessibility > Spoken Content
-bibleModule = "KJV"
+bibleModule = "ISV"
 
 from db.BiblesSqlite_nogui import Bible
 # getBookList, getChapterList, readTextChapter
 import os, re, config
 from install.module import *
 
+# To work with Amazon Polly
+# Install boto3 first
+# > pip3 install boto3
+from boto3 import Session
+from botocore.exceptions import BotoCoreError, ClientError
+from contextlib import closing
+import os
+import sys
+from tempfile import gettempdir
 
+# To work with Amazon Polly
+# Python: https://docs.aws.amazon.com/polly/latest/dg/get-started-what-next.html
+# Voices: https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
+def savePollyTTSAudio(b, c, v, verseText):
+    # To work out output file path
+    moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", bibleModule, "default")
+    if not os.path.isdir(moduleFolder):
+        os.makedirs(moduleFolder, exist_ok=True)
+    chapterFolder = os.path.join(moduleFolder, "{0}_{1}".format(b, c))
+    if not os.path.isdir(chapterFolder):
+        os.makedirs(chapterFolder)
+    audioFilename = "{0}_{1}_{2}_{3}.mp3".format(bibleModule, b, c, v)
+    outputFile = os.path.join(chapterFolder, audioFilename)
+
+    # Create a client using the credentials and region defined in the [adminuser]
+    # section of the AWS credentials file (~/.aws/credentials).
+    # session = Session(profile_name="adminuser")
+    # Use default profile instead
+# Run in terminal "aws configure" to set up, and check
+#""" ~/.aws/credentials
+#[default]
+#aws_access_key_id = 
+#aws_secret_access_key = 
+#region = eu-west-2
+#output = json
+# """
+    session = Session()
+    polly = session.client("polly")
+
+    try:
+        # Request speech synthesis
+        # These voices can be used with Newscaster speaking styles when used with the Neural format.
+        # British accent: Amy
+        # American accent: Joanna
+        # American accent: Matthew
+        response = polly.synthesize_speech(Text=verseText, OutputFormat="mp3",
+                                            VoiceId="Amy")
+    except (BotoCoreError, ClientError) as error:
+        # The service returned an error, exit gracefully
+        print(error)
+        sys.exit(-1)
+
+    # Access the audio stream from the response
+    if "AudioStream" in response:
+        # Note: Closing the stream is important because the service throttles on the
+        # number of parallel connections. Here we are using contextlib.closing to
+        # ensure the close method of the stream object will be called automatically
+        # at the end of the with statement's scope.
+        with closing(response["AudioStream"]) as stream:
+            #output = os.path.join(gettempdir(), "speech.mp3")
+
+            try:
+                # Open a file for writing the output as a binary stream
+                with open(outputFile, "wb") as file:
+                    file.write(stream.read())
+            except IOError as error:
+                # Could not write to file, exit gracefully
+                print(error)
+                sys.exit(-1)
+
+    else:
+        # The response didn't contain audio data, exit gracefully
+        print("Could not stream audio")
+        sys.exit(-1)
+
+# To work with macOS
 def convertAiffToMP3():
     aiffFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", f"{bibleModule}_aiff", "default")
     moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", bibleModule, "default")
@@ -29,6 +104,7 @@ def convertAiffToMP3():
             os.makedirs(moduleFolder, exist_ok=True)
         os.system(f"audioconvert convert {inputFolder} {outputFolder}")
 
+# To work with macOS
 def saveMacTTSAudio(b, c, v, verseText):
 
     moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", f"{bibleModule}_aiff", "default")
@@ -67,7 +143,8 @@ def processBooks(rangeBegin, rangeEnd):
                     #print(bibleModule, b, c, v, verseText)
                     # User can change text-to-speech module in the following line (saveCloudTTSAudio or saveGTTSAudio):
                     try:
-                        saveMacTTSAudio(b, c, v, verseText)
+                        #saveMacTTSAudio(b, c, v, verseText)
+                        savePollyTTSAudio(b, c, v, verseText)
                     except:
                         print("Failed to save {0}.{1}.{2}: {3}".format(b, c, v, verseText))
 
@@ -75,10 +152,13 @@ def processBooks(rangeBegin, rangeEnd):
 # main process begin from below
 bible = Bible(bibleModule)
 
-print("hi")
+# To test Amazon Polly
+#savePollyTTSAudio(1, 1, 1, "test")
+
 # O.T.
 processBooks(1, 40)
 # N.T.
 processBooks(40, 67)
 
-convertAiffToMP3()
+# On mac ONLY:
+#convertAiffToMP3()
