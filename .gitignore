@@ -1,5 +1,5 @@
 **/__pycache__/**
-/venv
+/venv*
 /marvelData
 /marvelData_init
 /build
@@ -60,3 +60,4 @@ htmlResources/lib/bibi-v1.2.0/bibi-bookshelf/*.epub
 htmlResources/popover.html
 /snippets/**
 credentials_*
+uba_*.py
