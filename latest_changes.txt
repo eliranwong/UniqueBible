@@ -1,3 +1,6 @@
+Changes in 28.52:
+* Fixed the issue that audioBibleIcon and audioBibleIcon2 are not clickable on some Linux OSs.
+
 Changes in 28.51:
 * Added support of multip uba.py and venv folders, for using the same UBA folder across different OSs.
 
