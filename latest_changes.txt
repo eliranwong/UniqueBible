@@ -1,3 +1,7 @@
+Changes in 28.53:
+* Extend the use of the third-party VLC player on macOS and Linux even users do not use webtop version.
+* Added a workaround to open audio file with third-party app in case built-in media player does not work.
+
 Changes in 28.52:
 * Fixed the issue that audioBibleIcon and audioBibleIcon2 are not clickable on some Linux OSs.
 
