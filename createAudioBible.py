@@ -1,14 +1,20 @@
 """
-This script is written for macOS users only!
+This script is written for macOS or Amazon Polly users only!
+
+For macOS users:
 Install ffmpeg & AudioConverter FIRST!
 On macOS terminal, run:
 > brew install ffmpeg
 > pip install --upgrade AudioConverter
+
+For Amazon Polly users:
+Python: https://docs.aws.amazon.com/polly/latest/dg/get-started-what-next.html
+Voices: https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
 """
 
 # User can change bible module in the following line:
 # On macOS, select voice or adjust rate at System Preferences > Accessibility > Spoken Content
-bibleModule = "ISV"
+bibleModule = "BBE"
 
 from db.BiblesSqlite_nogui import Bible
 # getBookList, getChapterList, readTextChapter
@@ -25,9 +31,6 @@ import os
 import sys
 from tempfile import gettempdir
 
-# To work with Amazon Polly
-# Python: https://docs.aws.amazon.com/polly/latest/dg/get-started-what-next.html
-# Voices: https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
 def savePollyTTSAudio(b, c, v, verseText):
     # To work out output file path
     moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", bibleModule, "default")
@@ -137,13 +140,17 @@ def processBooks(rangeBegin, rangeEnd):
             if chapter >= 0:
                 textChapter = bible.readTextChapter(book, chapter)
                 for b, c, v, verseText in textChapter:
+                    # The following line applies to WEB only.
+                    #verseText = re.sub("\[.*?\]", "", verseText)
                     verseText = re.sub("<.*?>", "", verseText)
                     verseText = re.sub("[<>〔〕\[\]（）\(\)]", "", verseText)
                     # For testing:
                     #print(bibleModule, b, c, v, verseText)
                     # User can change text-to-speech module in the following line (saveCloudTTSAudio or saveGTTSAudio):
                     try:
+                        # Use macOS TTS
                         #saveMacTTSAudio(b, c, v, verseText)
+                        # Use Amazon Polly
                         savePollyTTSAudio(b, c, v, verseText)
                     except:
                         print("Failed to save {0}.{1}.{2}: {3}".format(b, c, v, verseText))
