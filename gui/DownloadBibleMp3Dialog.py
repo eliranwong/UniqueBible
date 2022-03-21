@@ -21,13 +21,20 @@ class DownloadBibleMp3Dialog(QDialog):
 
         self.bibles = {
             "BBE (British accent)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
+            "BSB (American accent; verse-by-verse)": ("BSB", "eliranwong/MP3_BereanStudyBible_american", "default"),
+            "BSB (British accent; verse-by-verse)": ("BSB", "eliranwong/MP3_BereanStudyBible_british", "default"),
             "CUV (Cantonese; verse-by-verse)": ("CUV", "eliranwong/MP3_ChineseUnionVersion_cantonese", "default"),
+            "CUVs (Mandarin; verse-by-verse)": ("CUVs", "eliranwong/MP3_ChineseUnionVersion_mandarin", "default"),
             "CUVs (Mandarin)": ("CUVs", "otseng/UniqueBible_MP3_CUV", "default"),
             "ERV (British accent; verse-by-verse)": ("ERV", "eliranwong/MP3_EnglishRevisedVersion_british", "default"),
             "HHBD (Hindi)": ("HHBD", "otseng/UniqueBible_MP3_HHBD", "default"),
+            "ISV (American accent; verse-by-verse)": ("ISV", "eliranwong/MP3_InternationalStandardVersion_american", "default"),
+            "ISV (British accent; verse-by-verse)": ("ISV", "eliranwong/MP3_InternationalStandardVersion_british", "default"),
             "KJV (American accent)": ("KJV", "otseng/UniqueBible_MP3_KJV", "default"),
             "KJV (American soft music)": ("KJV", "otseng/UniqueBible_MP3_KJV_soft_music", "soft-music"),
             "KJV (British accent; verse-by-verse)": ("KJV", "eliranwong/MP3_KingJamesVersion_british", "default"),
+            "LEB (American accent; verse-by-verse)": ("LEB", "eliranwong/MP3_LexhamEnglishBible_american", "default"),
+            "LEB (British accent; verse-by-verse)": ("LEB", "eliranwong/MP3_LexhamEnglishBible_british", "default"),
             "NET (American accent; verse-by-verse)": ("NET", "eliranwong/MP3_NewEnglishTranslation_american", "default"),
             "NET (British accent; verse-by-verse)": ("NET", "eliranwong/MP3_NewEnglishTranslation_british", "default"),
             "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
@@ -36,6 +43,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
             "WEB (American accent)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
+            "WEB (British accent; verse-by-verse)": ("WEB", "eliranwong/MP3_WebEnglishBible_british", "default"), 
             "WLC (Hebrew)": ("WLC", "otseng/UniqueBible_MP3_WLC", "default"),
         }
         self.parent = parent

@@ -1,3 +1,23 @@
+Changes in 28.53:
+* Uploaded and integrated six more verse-by-verse MP3 audio bibles.
+* Currently available verse-by-verse modules are:
+    American Standard Version (American accent)
+    Berean Study Bible (American accent)
+    Berean Study Bible (British accent)
+    Chinese Union Version (Cantonese)
+    Chinese Union Version (Mandarin)
+    English Revised Version (British accent)
+    International Standard Version (American accent)
+    International Standard Version (British accent)
+    King James Version (British accent)
+    Lexham English Bible (American accent)
+    Lexham English Bible (British accent)
+    New English Translation (American accent)
+    New English Translation (British accent)
+    Open Hebrew Greek Bible (Hebrew & Greek; fast)
+    Open Hebrew Greek Bible (Hebrew & Greek; slow)
+    Web English Bible (British accent)
+
 Changes in 28.52:
 * Fixed the issue that audioBibleIcon and audioBibleIcon2 are not clickable on some Linux OSs.
 
