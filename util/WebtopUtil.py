@@ -1,4 +1,4 @@
-import os
+import os, sys
 import subprocess
 
 
@@ -9,9 +9,27 @@ class WebtopUtil:
         os.system("nohup {0} > /dev/null 2>&1 &".format(command))
 
     @staticmethod
+    def openFile(filename):
+        try:
+            if sys.platform == "win32":
+                try:
+                    os.startfile(filename)
+                except:
+                    os.system(f"start {filename}")
+            else:
+                # The following works on macOS and Linux. (Darwin = mac, xdg-open = linux).
+                opener = "open" if sys.platform == "darwin" else "xdg-open"
+                subprocess.call([opener, filename])
+        except:
+            print(f"Unable to open file '{filename}'!")
+
+    @staticmethod
     def isPackageInstalled(package):
-        isInstalled, *_ = subprocess.Popen("which {0}".format(package), shell=True, stdout=subprocess.PIPE).communicate()
-        return True if isInstalled else False
+        try:
+            isInstalled, *_ = subprocess.Popen("which {0}".format(package), shell=True, stdout=subprocess.PIPE).communicate()
+            return True if isInstalled else False
+        except:
+            return False
 
     @staticmethod
     def installPackage(package):

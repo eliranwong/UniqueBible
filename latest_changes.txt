@@ -1,4 +1,4 @@
-Changes in 28.53:
+Changes in 28.54:
 * Uploaded and integrated six more verse-by-verse MP3 audio bibles.
 * Currently available verse-by-verse modules are:
     American Standard Version (American accent)
@@ -17,6 +17,10 @@ Changes in 28.53:
     Open Hebrew Greek Bible (Hebrew & Greek; fast)
     Open Hebrew Greek Bible (Hebrew & Greek; slow)
     Web English Bible (British accent)
+
+Changes in 28.53:
+* Extend the use of the third-party VLC player on macOS and Linux even users do not use webtop version.
+* Added a workaround to open audio file with third-party app in case built-in media player does not work.
 
 Changes in 28.52:
 * Fixed the issue that audioBibleIcon and audioBibleIcon2 are not clickable on some Linux OSs.

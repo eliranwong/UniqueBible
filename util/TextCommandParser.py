@@ -1465,7 +1465,7 @@ class TextCommandParser:
             text, b, c, v = command.split(".")
             folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
             audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
-            if config.docker and WebtopUtil.isPackageInstalled("vlc"):
+            if WebtopUtil.isPackageInstalled("vlc"):
                 os.system("pkill vlc")
                 WebtopUtil.runNohup(f"vlc {audioFile}")
                 return ("", "", {})
@@ -1476,16 +1476,18 @@ class TextCommandParser:
 
     # VLC:::
     def openVlcPlayer(self, command, source):
-        if config.isVlcInstalled:
-            from gui.VlcPlayer import VlcPlayer
-            filename = command
-            if self.parent.vlcPlayer is not None:
-                # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
-                #self.parent.vlcPlayer.stop()
-                #self.parent.vlcPlayer.loadAndPlayFile(filename)
-                self.parent.vlcPlayer.close()
-            self.parent.vlcPlayer = VlcPlayer(self, filename)
-            self.parent.vlcPlayer.show()
+        try:
+            if config.isVlcInstalled:
+                from gui.VlcPlayer import VlcPlayer
+                if self.parent.vlcPlayer is not None:
+                    # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
+                    #self.parent.vlcPlayer.stop()
+                    #self.parent.vlcPlayer.loadAndPlayFile(filename)
+                    self.parent.vlcPlayer.close()
+                self.parent.vlcPlayer = VlcPlayer(self, command)
+                self.parent.vlcPlayer.show()
+        except:
+            WebtopUtil.openFile(command)
         return ("", "", {})
 
     # READBIBLE:::
