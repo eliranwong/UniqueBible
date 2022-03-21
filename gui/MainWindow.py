@@ -1827,25 +1827,31 @@ class MainWindow(QMainWindow):
         self.youTubeView.show()
 
     # Action - open "images" directory
+    def openDir(self, dir):
+        if config.docker:
+            WebtopUtil.openDir(dir)
+        else:
+            self.runTextCommand("cmd:::{0} {1}".format(config.open, dir))
+
     def openImagesFolder(self):
         imageFolder = os.path.join("htmlResources", "images")
-        self.runTextCommand("cmd:::{0} {1}".format(config.open, imageFolder))
+        self.openDir(imageFolder)
 
     # Action - open "music" directory
     def openMusicFolder(self):
-        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.musicFolder))
+        self.openDir(config.musicFolder)
 
     # Action - open "audio" directory
     def openAudioFolder(self):
-        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.audioFolder))
+        self.openDir(config.audioFolder)
 
     # Action - open "video" directory
     def openVideoFolder(self):
-        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.videoFolder))
+        self.openDir(config.videoFolder)
 
     # Action - open "marvelData" directory
     def openMarvelDataFolder(self):
-        self.runTextCommand("cmd:::{0} {1}".format(config.open, config.marvelData))
+        self.openDir(config.marvelData)
 
     # Actions - hide / show tool bars
     def hideShowMainToolBar(self):

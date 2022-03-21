@@ -9,6 +9,13 @@ class WebtopUtil:
         os.system("nohup {0} > /dev/null 2>&1 &".format(command))
 
     @staticmethod
+    def openDir(dir):
+        if os.path.isdir(dir):
+            WebtopUtil.runNohup(f"thunar {dir}")
+        else:
+            print(f"{dir} is not a directory!")
+
+    @staticmethod
     def openFile(filename):
         try:
             if sys.platform == "win32":

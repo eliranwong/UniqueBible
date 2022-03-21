@@ -1,3 +1,6 @@
+Changes in 28.56:
+* Use "thunar" to open directories on webtop version.
+
 Changes in 28.54:
 * Uploaded and integrated nine more verse-by-verse MP3 audio bibles.
 * Currently available verse-by-verse modules are:
