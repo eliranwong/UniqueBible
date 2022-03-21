@@ -1,9 +1,10 @@
 Changes in 28.54:
-* Uploaded and integrated eight more verse-by-verse MP3 audio bibles.
+* Uploaded and integrated nine more verse-by-verse MP3 audio bibles.
 * Currently available verse-by-verse modules are:
     American Standard Version (American accent)
     Berean Study Bible (American accent)
     Berean Study Bible (British accent)
+    Bible in Basic English (British accent)
     Chinese Union Version (Cantonese)
     Chinese Union Version (Mandarin)
     English Revised Version (British accent)
