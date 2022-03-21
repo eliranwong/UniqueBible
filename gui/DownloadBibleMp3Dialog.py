@@ -20,6 +20,7 @@ class DownloadBibleMp3Dialog(QDialog):
         super().__init__()
 
         self.bibles = {
+            "ASV (American accent; verse-by-verse)": ("BBE", "eliranwong/MP3_AmericanStandardVersion_american", "default"),
             "BBE (British accent)": ("BBE", "otseng/UniqueBible_MP3_BBE_british", "british"),
             "BBE (British accent; verse-by-verse)": ("BBE", "eliranwong/MP3_BibleInBasicEnglish_british", "british"),
             "BSB (American accent; verse-by-verse)": ("BSB", "eliranwong/MP3_BereanStudyBible_american", "default"),

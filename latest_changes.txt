@@ -1,3 +1,6 @@
+Changes in 28.57:
+* Added verse-by-verse audio bible - American Standard Version (American accent)
+
 Changes in 28.56:
 * Use "thunar" to open directories on webtop version.
 
