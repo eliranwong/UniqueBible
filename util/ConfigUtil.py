@@ -543,8 +543,13 @@ class ConfigUtil:
                                     'LXX2', 'LXX2i']
         config.help["rtlTexts"] = """
         # List of modules, which contains right-to-left texts on old testament"""
+        rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi", "WLC", "WLCx"]
         if not hasattr(config, "rtlTexts"):
-            config.rtlTexts = ["original", "MOB", "MAB", "MIB", "MPB", "OHGB", "OHGBi"]
+            config.rtlTexts = rtlTexts
+        else:
+            for text in rtlTexts:
+                if not text in config.rtlTexts:
+                    config.rtlTexts.append(text)
         config.help["openBibleInMainViewOnly"] = """
         # Open bible references on main window instead of workspace: Ture / False"""
         if not hasattr(config, "openBibleInMainViewOnly"):
