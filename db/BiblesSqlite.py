@@ -1397,7 +1397,7 @@ class MorphologySqlite:
         SELECT * FROM morphology WHERE {0} like '%{1}%'
         and book >= {2} and book <= {3}
         {4}
-        order by book, chapter, verse
+        order by Book, Chapter, Verse
         """.format(type, word, startBook, endBook, morphology)
         self.cursor.execute(query)
         records = self.cursor.fetchall()

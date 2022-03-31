@@ -1,3 +1,6 @@
+Changes in 28.60:
+* Support creation of all Hebrew and Greek word audio.
+
 Changes in 28.59:
 * Added WLC and WLCx bibles to right-to-left reading list.
 

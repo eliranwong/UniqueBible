@@ -14,9 +14,9 @@ Voices: https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
 
 # User can change bible module in the following line:
 # On macOS, select voice or adjust rate at System Preferences > Accessibility > Spoken Content
-bibleModule = "BBE"
+bibleModule = "MOB"
 
-from db.BiblesSqlite_nogui import Bible
+from db.BiblesSqlite_nogui import Bible, MorphologySqlite
 # getBookList, getChapterList, readTextChapter
 import os, re, config
 from install.module import *
@@ -27,7 +27,7 @@ from install.module import *
 from boto3 import Session
 from botocore.exceptions import BotoCoreError, ClientError
 from contextlib import closing
-import os
+#import os
 import sys
 from tempfile import gettempdir
 
@@ -108,22 +108,38 @@ def convertAiffToMP3():
         os.system(f"audioconvert convert {inputFolder} {outputFolder}")
 
 # To work with macOS
-def saveMacTTSAudio(b, c, v, verseText):
+def saveMacTTSAudio(b, c, v, text, wordID=None, lexeme=None):
+    module = bibleModule if wordID is None else "BHS5"
 
-    moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", f"{bibleModule}_aiff", "default")
+    moduleFolder = os.path.join(os.getcwd(), config.audioFolder, "bibles", f"{module}_aiff", "default")
     if not os.path.isdir(moduleFolder):
         os.makedirs(moduleFolder, exist_ok=True)
     chapterFolder = os.path.join(moduleFolder, "{0}_{1}".format(b, c))
     if not os.path.isdir(chapterFolder):
         os.makedirs(chapterFolder)
-    audioFilename = "{0}_{1}_{2}_{3}.aiff".format(bibleModule, b, c, v)
-    outputFile = os.path.join(chapterFolder, audioFilename)
+    if wordID is None:
+        audioFilename = "{0}_{1}_{2}_{3}.aiff".format(module, b, c, v)
+        outputFile = os.path.join(chapterFolder, audioFilename)
+    else:
+        verseFolder = os.path.join(chapterFolder, "{0}_{1}_{2}".format(b, c, v))
+        if not os.path.isdir(verseFolder):
+            os.makedirs(verseFolder)
+        audioFilename = "{0}_{1}_{2}_{3}_{4}.aiff".format(module, b, c, v, wordID)
+        outputFile = os.path.join(verseFolder, audioFilename)
 
-    # For non-English text, can use the following line direclty
-    #os.system(f"say -o {outputFile} {verseText}")
-    with open('temp.txt', 'w') as file:
-        file.write(verseText)
-    os.system(f"say -o {outputFile} -f temp.txt")
+    if text and not os.path.isfile(outputFile):
+        # For non-English text, can use the following line direclty
+        os.system(f"say -o {outputFile} {text}")
+        #print(f"{outputFile} is created.")
+        #with open('temp.txt', 'w') as file:
+        #    file.write(text)
+        #os.system(f"say -o {outputFile} -f temp.txt")
+
+    if lexeme:
+        audioFilename = "lex_{0}_{1}_{2}_{3}_{4}.aiff".format(module, b, c, v, wordID)
+        outputFile = os.path.join(verseFolder, audioFilename)
+        if not os.path.isfile(outputFile):
+            os.system(f"say -o {outputFile} {lexeme}")
 
 def processBooks(rangeBegin, rangeEnd):
     # For testing
@@ -149,23 +165,49 @@ def processBooks(rangeBegin, rangeEnd):
                     # User can change text-to-speech module in the following line (saveCloudTTSAudio or saveGTTSAudio):
                     try:
                         # Use macOS TTS
-                        #saveMacTTSAudio(b, c, v, verseText)
+                        saveMacTTSAudio(b, c, v, verseText)
                         # Use Amazon Polly
-                        savePollyTTSAudio(b, c, v, verseText)
+                        #savePollyTTSAudio(b, c, v, verseText)
                     except:
                         print("Failed to save {0}.{1}.{2}: {3}".format(b, c, v, verseText))
+
+def processBooksWords(rangeBegin, rangeEnd):
+    # For testing
+    # For selected books
+    #for book in (2,):
+    # For a range of book in a row
+    for book in range(rangeBegin, rangeEnd):
+    # The following two lines do all books in one go, but it is not recommended
+    #books = bible.getBookList()
+    #for book in books:
+        chapters = bible.getChapterList(book)
+        for chapter in chapters:
+            # Change the start chapter if last process break somewhere
+            if chapter >= 0:
+                textChapter = bible.readTextChapter(book, chapter)
+                for b, c, v, *_ in textChapter:
+                    words = morphology.allWords(b, c, v)
+                    for wordID, b, c, v, word, lexeme in words:
+                        try:
+                            # Use macOS TTS
+                            saveMacTTSAudio(b, c, v, word, wordID, lexeme)
+                        except:
+                            print("Failed to save {0}.{1}.{2}.{3}: {4}".format(b, c, v, wordID, word))
 
 
 # main process begin from below
 bible = Bible(bibleModule)
+# For creating individual word audio only
+morphology = MorphologySqlite()
 
 # To test Amazon Polly
 #savePollyTTSAudio(1, 1, 1, "test")
 
 # O.T.
-processBooks(1, 40)
+#processBooks(1, 40)
+processBooksWords(1, 40)
 # N.T.
-processBooks(40, 67)
+#processBooks(40, 67)
 
 # On mac ONLY:
 #convertAiffToMP3()

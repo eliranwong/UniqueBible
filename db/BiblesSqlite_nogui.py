@@ -1293,6 +1293,18 @@ class MorphologySqlite:
     def __del__(self):
         self.connection.close()
 
+    def allWords(self, b, c, v):
+        query = """
+        SELECT WordID, Book, Chapter, Verse, Word, Lexeme FROM morphology WHERE
+        Book = {0} AND
+        Chapter = {1} AND
+        Verse = {2}
+        order by Book, Chapter, Verse, WordID
+        """.format(b, c, v)
+        self.cursor.execute(query)
+        records = self.cursor.fetchall()
+        return records
+
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
@@ -1388,7 +1400,7 @@ class MorphologySqlite:
         SELECT * FROM morphology WHERE {0} like '%{1}%'
         and book >= {2} and book <= {3}
         {4}
-        order by book, chapter, verse
+        order by Book, Chapter, Verse
         """.format(type, word, startBook, endBook, morphology)
         self.cursor.execute(query)
         records = self.cursor.fetchall()
