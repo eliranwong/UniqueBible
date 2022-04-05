@@ -1334,11 +1334,31 @@ class MorphologySqlite:
         wordID, clauseID, b, c, v, textWord, lexicalEntry, morphologyCode, morphology, lexeme, transliteration, pronuciation, interlinear, translation, gloss = word
         morphology = morphology.replace(",", ", ")
         if b < 40:
-            textWord = "<heb>{0}</heb>".format(textWord)
-            lexeme = "<heb>{0}</heb>".format(lexeme)
+            wordAudioFile = os.path.join(config.audioFolder, "bibles", "BHS5", "default", "{0}_{1}".format(b, c), "BHS5_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(wordAudioFile):
+                wordAudioLink = """ <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                wordAudioLink = ""
+            lexemeAudioFile = os.path.join(config.audioFolder, "bibles", "BHS5", "default", "{0}_{1}".format(b, c), "lex_BHS5_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(lexemeAudioFile):
+                lexemeAudioLink = """ <ref onclick="document.title='READLEXEME:::BHS5.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                lexemeAudioLink = ""
+            textWord = "<heb>{0}</heb>{1}".format(textWord, wordAudioLink)
+            lexeme = "<heb>{0}</heb>{1}".format(lexeme, lexemeAudioLink)
         else:
-            textWord = "<grk>{0}</grk>".format(textWord)
-            lexeme = "<grk>{0}</grk>".format(lexeme)
+            wordAudioFile = os.path.join(config.audioFolder, "bibles", "OGNT", "default", "{0}_{1}".format(b, c), "OGNT_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(wordAudioFile):
+                wordAudioLink = """ <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                wordAudioLink = ""
+            lexemeAudioFile = os.path.join(config.audioFolder, "bibles", "OGNT", "default", "{0}_{1}".format(b, c), "lex_OGNT_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(lexemeAudioFile):
+                lexemeAudioLink = """ <ref onclick="document.title='READLEXEME:::OGNT.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                lexemeAudioLink = ""
+            textWord = "<grk>{0}</grk>{1}".format(textWord, wordAudioLink)
+            lexeme = "<grk>{0}</grk>{1}".format(lexeme, lexemeAudioLink)
         return "{0} <transliteration>{1}</transliteration> {2} {3} <e>{4}</e> <esblu>{5}</esblu>".format(textWord, transliteration, lexeme, morphology, interlinear, translation)
 
     def wordData(self, book, wordId):
@@ -1360,14 +1380,36 @@ class MorphologySqlite:
         morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
         if b < 40:
+            wordAudioFile = os.path.join(config.audioFolder, "bibles", "BHS5", "default", "{0}_{1}".format(b, c), "BHS5_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(wordAudioFile):
+                wordAudioLink = """ <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                wordAudioLink = ""
+            lexemeAudioFile = os.path.join(config.audioFolder, "bibles", "BHS5", "default", "{0}_{1}".format(b, c), "lex_BHS5_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(lexemeAudioFile):
+                lexemeAudioLink = """ <ref onclick="document.title='READLEXEME:::BHS5.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                lexemeAudioLink = ""
             testament = "OT"
-            textWord = "<heb>{0}</heb>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
+            textWord = "<heb>{0}</heb>{1}".format(textWord, wordAudioLink)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref>{2} &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
         else:
+            wordAudioFile = os.path.join(config.audioFolder, "bibles", "OGNT", "default", "{0}_{1}".format(b, c), "OGNT_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(wordAudioFile):
+                wordAudioLink = """ <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                wordAudioLink = ""
+            lexemeAudioFile = os.path.join(config.audioFolder, "bibles", "OGNT", "default", "{0}_{1}".format(b, c), "lex_OGNT_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
+            if os.path.isfile(lexemeAudioFile):
+                lexemeAudioLink = """ <ref onclick="document.title='READLEXEME:::OGNT.{0}.{1}.{2}.{3}'">{4}</ref> """.format(b, c, v, wordID, config.audioBibleIcon)
+            else:
+                lexemeAudioLink = ""
             testament = "NT"
-            textWord = "<grk>{0}</grk>".format(textWord)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref> &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme)
+            textWord = "<grk>{0}</grk>{1}".format(textWord, wordAudioLink)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>{2} &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
         clauseContent = ClauseData().getContent(testament, clauseID)
+        clauseContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), clauseContent)
+        clauseContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), clauseContent)
         return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1} [<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
 
     def searchWord(self, portion, wordID):

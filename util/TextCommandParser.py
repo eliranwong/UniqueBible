@@ -473,6 +473,16 @@ class TextCommandParser:
             # Feature: read a bible verse
             # e.g. READVERSE:::CUV.1.1.1
             """),
+            "readword": (self.readWord, """
+            # [KEYWORD] READWORD
+            # Feature: read a word
+            # e.g. READWORD:::BHS5.1.1.1.1
+            """),
+            "readlexeme": (self.readLexeme, """
+            # [KEYWORD] READLEXEME
+            # Feature: read a lexeme
+            # e.g. READLEXEME:::BHS5.1.1.1.1
+            """),
             "readbible": (self.readBible, """
             # [KEYWORD] READBIBLE
             # Feature: Play Bible mp3 file recording of a chapter
@@ -919,6 +929,10 @@ class TextCommandParser:
     # return invalid command
     def invalidCommand(self, source="main"):
         return (source, "INVALID_COMMAND_ENTERED", {})
+
+    # return invalid command
+    def noAudio(self, source="main"):
+        return (source, "NO_AUDIO", {})
 
     # sort out keywords from a single line command
     def splitCommand(self, command):
@@ -1434,7 +1448,10 @@ class TextCommandParser:
             else:
                 try:
                     os.system(r"cd {2}; {0} {1}".format(downloadCommand, youTubeLink, outputFolder))
-                    os.system(r"{0} {1}".format(config.open, outputFolder))
+                    if config.docker:
+                        WebtopUtil.openDir(dir)
+                    else:
+                        os.system(r"{0} {1}".format(config.open, outputFolder))
                 except:
                     self.parent.displayMessage(config.thisTranslation["noSupportedUrlFormat"], title="ERROR:")
         else:
@@ -1461,18 +1478,57 @@ class TextCommandParser:
 
     # READVERSE:::
     def readVerse(self, command, source):
-        try:
-            text, b, c, v = command.split(".")
-            folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
-            audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
-            if WebtopUtil.isPackageInstalled("vlc"):
-                os.system("pkill vlc")
-                WebtopUtil.runNohup(f"vlc {audioFile}")
-                return ("", "", {})
-            else:
-                self.openVlcPlayer(audioFile, "main")
-        except:
-            return self.invalidCommand()
+        text, b, c, v = command.split(".")
+        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
+        audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
+        if os.path.isfile(audioFile):
+            try:
+                if WebtopUtil.isPackageInstalled("vlc"):
+                    os.system("pkill vlc")
+                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    return ("", "", {})
+                else:
+                    self.openVlcPlayer(audioFile, "main")
+            except:
+                return self.invalidCommand()
+        else:
+            return self.noAudio()
+
+    # READWORD:::
+    def readWord(self, command, source):
+        text, b, c, v, wordID = command.split(".")
+        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
+        audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
+        if os.path.isfile(audioFile):
+            try:
+                if WebtopUtil.isPackageInstalled("vlc"):
+                    os.system("pkill vlc")
+                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    return ("", "", {})
+                else:
+                    self.openVlcPlayer(audioFile, "main")
+            except:
+                return self.invalidCommand()
+        else:
+            return self.noAudio()
+
+    # READLEXEME:::
+    def readLexeme(self, command, source):
+        text, b, c, v, wordID = command.split(".")
+        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
+        audioFile = os.path.join(folder, "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
+        if os.path.isfile(audioFile):
+            try:
+                if WebtopUtil.isPackageInstalled("vlc"):
+                    os.system("pkill vlc")
+                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    return ("", "", {})
+                else:
+                    self.openVlcPlayer(audioFile, "main")
+            except:
+                return self.invalidCommand()
+        else:
+            return self.noAudio()
 
     # VLC:::
     def openVlcPlayer(self, command, source):
@@ -3123,7 +3179,14 @@ class TextCommandParser:
             biblesSqlite = BiblesSqlite()
             verseData = VerseData(filename)
             feature = "{0}{1}".format(filename[0].upper(), filename[1:])
-            content = "<hr>".join(["<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
+            #content = "<hr>".join(["<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v))) for b, c, v in verseList])
+            contentList = []
+            for b, c, v in verseList:
+                subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
+                subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                contentList.append(subContent)
+            content = "<hr>".join(contentList)
             del verseData
             del biblesSqlite
             self.setStudyVerse(config.studyText, verseList[-1])

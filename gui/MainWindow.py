@@ -3045,6 +3045,8 @@ class MainWindow(QMainWindow):
             if content == "INVALID_COMMAND_ENTERED":
                 self.displayMessage("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))
                 self.logger.info("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))
+            elif content == "NO_AUDIO":
+                self.displayMessage("{0} - {1}".format(config.thisTranslation["menu11_audio"], config.thisTranslation["message_installFirst"]))
             elif view == "command":
                 self.focusCommandLineField()
                 self.textCommandLineEdit.setText(content)

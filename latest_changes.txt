@@ -1,3 +1,12 @@
+Changes in 28.61:
+* Added READWORD::: and READLEXEME::: commands to work with audio of individual Hebrew / Greek words and lexemes.
+* Added audio link to _instantWord::: content.  Therefore, instant lookup of a Hebrew / Greek word shows audio links for its word and lexeme.
+* Tips: To keep instant lookup information of a particular word, use enable / disable instant lookup feature.  In Focus menu layout, shortcut combo is Ctrl + =.
+* Integrated Hebrew word-by-word audio into Word, Words, Translation, Discourse features.
+* Added download of MP3 word-by-word audio of the Hebrew bible BHS5.  Storage required: 15.08GB in total.
+* Fixed use of MP3 audio bible - BBE (British accent; verse-by-verse).
+* On webtop version, use "thunar" to open directories after YouTube audio / video is downloaded.
+
 Changes in 28.60:
 * Support creation of all Hebrew and Greek word audio.
 
