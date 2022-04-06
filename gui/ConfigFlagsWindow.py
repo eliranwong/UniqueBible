@@ -88,6 +88,7 @@ class ConfigFlagsWindow(QDialog):
             ("showUserNoteIndicator", config.showUserNoteIndicator, self.parent.toggleShowUserNoteIndicator, True, config.thisTranslation["displayUserNoteIndicator"]),
             ("showBibleNoteIndicator", config.showBibleNoteIndicator, self.parent.toggleShowBibleNoteIndicator, True, config.thisTranslation["displayBibleNoteIndicator"]),
             ("showVerseReference", config.showVerseReference, self.parent.toggleShowVerseReference, True, config.thisTranslation["displayVerseReference"]),
+            ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks, self.parent.toggleShowHebrewGreekWordAudioLinks, False, config.thisTranslation["showHebrewGreekWordAudioLinks"]),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible, self.parent.toggleHideLexicalEntryInBible, False, config.thisTranslation["displayLexicalEntry"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
@@ -138,6 +139,7 @@ class ConfigFlagsWindow(QDialog):
             ]
         if not platform.system() == "Windows":
             options += [
+                ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
                 ("gTTS", config.gTTS, self.gTTSChanged, False, config.thisTranslation["gTTS"]),
             ]
         if config.developer:
@@ -405,6 +407,9 @@ class ConfigFlagsWindow(QDialog):
             config.parserStandarisation = "NO"
         else:
             config.parserStandarisation = "YES"
+
+    def hideVlcInterfaceReadingSingleVerseChanged(self):
+        config.hideVlcInterfaceReadingSingleVerse = not config.hideVlcInterfaceReadingSingleVerse
 
     def startFullScreenChanged(self):
         config.startFullScreen = not config.startFullScreen

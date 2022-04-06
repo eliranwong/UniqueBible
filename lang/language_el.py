@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "Ενημέρωση αρχείων γλώσσας",
     "menu11_audio": "-Ήχος",
     "readTillChapterEnd": "Διαβάστε στο υπόλοιπο κεφάλαιο.",
+    "showHebrewGreekWordAudioLinks": "Εμφάνιση διαθέσιμων συνδέσμων ήχου για κάθε εβραϊκή και ελληνική λέξη σε βίβλο.",
+    "displayHebrewGreekWordAudio": "Εμφάνιση ήχου Εβραϊκά/Ελληνικά Word",
+    "hideVlcInterfaceReadingSingleVerse": "Απόκρυψη VLC γραφικό περιβάλλον για την ανάγνωση ενός μόνο στίχο.",
 }

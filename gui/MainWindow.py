@@ -684,10 +684,10 @@ class MainWindow(QMainWindow):
     def installGithubEpub(self):
         self.installFromGitHub(GitHubRepoInfo.epub)
 
-    def installGithubBibleMp3(self):
+    def installGithubBibleMp3(self, audioModule=""):
         if config.isVlcInstalled:
             from gui.DownloadBibleMp3Dialog import DownloadBibleMp3Dialog
-            self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self)
+            self.downloadBibleMp3Dialog = DownloadBibleMp3Dialog(self, audioModule)
             self.downloadBibleMp3Dialog.show()
 
     def installGithubPluginsContext(self):
@@ -2581,6 +2581,11 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord()
 
+    def toggleShowHebrewGreekWordAudioLinks(self):
+        config.showHebrewGreekWordAudioLinks = not config.showHebrewGreekWordAudioLinks
+        self.newTabException = True
+        self.reloadCurrentRecord()
+
     def toggleHideLexicalEntryInBible(self):
         config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
         self.newTabException = True
@@ -3047,6 +3052,14 @@ class MainWindow(QMainWindow):
                 self.logger.info("{0} '{1}'".format(config.thisTranslation["message_invalid"], textCommand))
             elif content == "NO_AUDIO":
                 self.displayMessage("{0} - {1}".format(config.thisTranslation["menu11_audio"], config.thisTranslation["message_installFirst"]))
+            elif content == "NO_HEBREW_AUDIO":
+                audioModule = "BHS5 (Hebrew; word-by-word)"
+                self.displayMessage("{1} - {0}\n{2}".format(audioModule, config.thisTranslation["menu11_audio"], config.thisTranslation["message_installFirst"]))
+                self.installGithubBibleMp3(audioModule)
+            elif content == "NO_GREEK_AUDIO":
+                audioModule = "OGNT (Greek; word-by-word)"
+                self.displayMessage("{1} - {0}\n{2}".format(audioModule, config.thisTranslation["menu11_audio"], config.thisTranslation["message_installFirst"]))
+                self.installGithubBibleMp3(audioModule)
             elif view == "command":
                 self.focusCommandLineField()
                 self.textCommandLineEdit.setText(content)

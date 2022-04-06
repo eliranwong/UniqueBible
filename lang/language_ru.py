@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "Обновить языковые файлы",
     "menu11_audio": "Аудио",
     "readTillChapterEnd": "Читать через остальную часть главы",
+    "showHebrewGreekWordAudioLinks": "Показать доступные звуковые ссылки каждого иврита и греческого слова в библии.",
+    "displayHebrewGreekWordAudio": "Показать аудиозапись на иврите/",
+    "hideVlcInterfaceReadingSingleVerse": "Скрыть графический интерфейс VLC для чтения одного куплета.",
 }

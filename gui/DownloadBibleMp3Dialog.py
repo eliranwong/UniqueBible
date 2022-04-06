@@ -10,13 +10,13 @@ from qtpy.QtCore import QTimer
 from qtpy.QtGui import QStandardItemModel, QStandardItem
 from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
 from qtpy.QtWidgets import QApplication
-from qtpy.QtWidgets import QListWidget
+from qtpy.QtWidgets import QListWidget, QListWidgetItem
 from util.BibleBooks import BibleBooks
 
 
 class DownloadBibleMp3Dialog(QDialog):
 
-    def __init__(self, parent):
+    def __init__(self, parent, audioModule=""):
         super().__init__()
 
         self.bibles = {
@@ -42,6 +42,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "NET (American accent; verse-by-verse)": ("NET", "eliranwong/MP3_NewEnglishTranslation_american", "default"),
             "NET (British accent; verse-by-verse)": ("NET", "eliranwong/MP3_NewEnglishTranslation_british", "default"),
             "NHEB (Indian accent)": ("NHEB", "otseng/UniqueBible_MP3_NHEB_indian", "indian"),
+            "OGNT (Greek; word-by-word)": ("OGNT", "eliranwong/MP3_OpenGNT_word-by-word", "default"),
             "OHGB (Hebrew & Greek; fast; verse-by-verse)": ("OHGB", "eliranwong/MP3_OpenHebrewGreekBible_fast", "default"),
             "OHGB (Hebrew & Greek; slow; verse-by-verse)": ("OHGB", "eliranwong/MP3_OpenHebrewGreekBible_slow", "default"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
@@ -51,6 +52,7 @@ class DownloadBibleMp3Dialog(QDialog):
             "WLC (Hebrew)": ("WLC", "otseng/UniqueBible_MP3_WLC", "default"),
         }
         self.parent = parent
+        self.audioModule = audioModule
         self.setWindowTitle(config.thisTranslation["gitHubBibleMp3Files"])
         self.setMinimumSize(150, 500)
         self.selectedRendition = None
@@ -69,9 +71,11 @@ class DownloadBibleMp3Dialog(QDialog):
 
         self.versionsLayout = QVBoxLayout()
         self.renditionsList = QListWidget()
+        bibleList = list(self.bibles.keys())
+        for rendition in bibleList:
+            item = QListWidgetItem(rendition)
+            self.renditionsList.addItem(item)
         self.renditionsList.itemClicked.connect(self.selectItem)
-        for rendition in self.bibles.keys():
-            self.renditionsList.addItem(rendition)
         self.renditionsList.setMaximumHeight(100)
         self.versionsLayout.addWidget(self.renditionsList)
         mainLayout.addLayout(self.versionsLayout)
@@ -124,8 +128,10 @@ class DownloadBibleMp3Dialog(QDialog):
 
         self.setLayout(mainLayout)
 
-        self.renditionsList.item(0).setSelected(True)
-        bible = self.renditionsList.item(0).text()
+        initialIndex = bibleList.index(self.audioModule) if self.audioModule else 0
+        self.renditionsList.item(initialIndex).setSelected(True)
+        self.renditionsList.setCurrentRow(initialIndex)
+        bible = self.renditionsList.item(initialIndex).text()
         self.selectRendition(bible)
 
         self.downloadButton.setDefault(True)

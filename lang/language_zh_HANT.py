@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "更新語言檔案",
     "menu11_audio": "音訊",
     "readTillChapterEnd": "閱讀同章其後節數",
+    "showHebrewGreekWordAudioLinks": "在聖經中，顯示每一個希伯來文和希臘文的可用語音鏈結。",
+    "displayHebrewGreekWordAudio": "顯示希伯來文 / 希臘文字音訊",
+    "hideVlcInterfaceReadingSingleVerse": "當閱讀單節時，隱藏 VLC 圖形介面。",
 }

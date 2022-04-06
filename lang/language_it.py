@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "Aggiornamento file di lingua",
     "menu11_audio": "Audio",
     "readTillChapterEnd": "Leggi attraverso il Resto del Capitolo",
+    "showHebrewGreekWordAudioLinks": "Mostra link audio disponibili di ogni frase ebraica e greca in bibles.",
+    "displayHebrewGreekWordAudio": "Visualizza ebraico / greco Word Audio",
+    "hideVlcInterfaceReadingSingleVerse": "Nascondere interfaccia grafica VLC per la lettura di un singolo verso.",
 }

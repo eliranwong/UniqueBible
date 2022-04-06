@@ -507,6 +507,14 @@ class ConfigUtil:
         # Options to display verse reference: True / False"""
         if not hasattr(config, "showVerseReference"):
             config.showVerseReference = True
+        config.help["hideVlcInterfaceReadingSingleVerse"] = """
+        # Options to hide VLC graphical interface on supported operating systems: True / False"""
+        if not hasattr(config, "hideVlcInterfaceReadingSingleVerse"):
+            config.hideVlcInterfaceReadingSingleVerse = True
+        config.help["showHebrewGreekWordAudioLinks"] = """
+        # Options to display word-by-word Hebrew & Greek audio links: True / False"""
+        if not hasattr(config, "showHebrewGreekWordAudioLinks"):
+            config.showHebrewGreekWordAudioLinks = False
         config.help["hideLexicalEntryInBible"] = """
         # Options to hide lexical entries or Strong's numbers: True / False"""
         if not hasattr(config, "hideLexicalEntryInBible"):
@@ -1233,6 +1241,8 @@ class ConfigUtil:
             ("showBibleNoteIndicator", config.showBibleNoteIndicator),
             ("enforceCompareParallel", config.enforceCompareParallel),
             ("readFormattedBibles", config.readFormattedBibles),
+            ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse),
+            ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("readTillChapterEnd", config.readTillChapterEnd),

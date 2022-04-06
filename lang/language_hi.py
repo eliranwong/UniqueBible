@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "भाषा फ़ाइलें अद्यतन करें",
     "menu11_audio": "ऑडियो",
     "readTillChapterEnd": "अध्याय के बाकी के माध्यम से पढ़ें",
+    "showHebrewGreekWordAudioLinks": "बाइबल के प्रत्येक हिब्रू और ग्रीक शब्दों के ऑडियो लिंक उपलब्ध दिखाएं.",
+    "displayHebrewGreekWordAudio": "हिब्रू/ग्रीक वर्ड ऑडियो प्रदर्शित करें",
+    "hideVlcInterfaceReadingSingleVerse": "एकल कविता पढ़ने के लिए VLC ग्राफिकल अंतरफलक छुपाएँ.",
 }

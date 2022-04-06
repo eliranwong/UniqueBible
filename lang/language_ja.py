@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "言語ファイルの更新",
     "menu11_audio": "オーディオ",
     "readTillChapterEnd": "この章の Rest を読む",
+    "showHebrewGreekWordAudioLinks": "各ヘブライ語およびギリシャ語の単語の使用可能な音声リンクをビブルで表示します。",
+    "displayHebrewGreekWordAudio": "ヘブライ語 / ギリシャ語の語の音声",
+    "hideVlcInterfaceReadingSingleVerse": "単一の句を読み取るための VLC グラフィカル・インターフェースを隠す。",
 }

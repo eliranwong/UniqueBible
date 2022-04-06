@@ -82,6 +82,7 @@ class AlephMainWindow:
             ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator),
             ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator),
             ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible),
+            ("displayHebrewGreekWordAudio", self.toggleShowHebrewGreekWordAudioLinks, sc.toggleShowWordAudio),
             ("readTillChapterEnd", self.toggleReadTillChapterEnd, sc.toggleReadTillChapterEnd),
             ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
             ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),

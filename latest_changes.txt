@@ -1,3 +1,10 @@
+Changes in 28.62:
+* Added config item config.hideVlcInterfaceForSingleVerseReading to hide VlcInterface for single verse reading.  Currently, this works only on webtop version, desktop version on Linux and macOS.
+* Added audio links to lexemes on "Words" feature content.
+* Added config item config.showHebrewGreekWordAudioLinks to toggle feature to show or hide audio links for indiviudal Hebrew and Greek words in marvel bibles, MOB, MIB, MPB, MTB & MAB.
+* Hide word-by-word Hebrew / Greek audio links on http server content page.
+* Prompt users to download word-by-word Hebrew / Greek audio when a word audio link is clicked and its audio file is not installed.
+
 Changes in 28.61:
 * Added READWORD::: and READLEXEME::: commands to work with audio of individual Hebrew / Greek words and lexemes.
 * Added audio link to _instantWord::: content.  Therefore, instant lookup of a Hebrew / Greek word shows audio links for its word and lexeme.

@@ -892,6 +892,22 @@ function luW(v,wid,cl,lex,morph,bdb) {
     document.title = "WORD:::"+activeB+":::"+wid;
 }
 
+function wah(v,wid) {
+    document.title = "READWORD:::BHS5."+activeB+"."+activeC+"."+v+"."+wid;
+}
+
+function wag(v,wid) {
+    document.title = "READWORD:::OGNT."+activeB+"."+activeC+"."+v+"."+wid;
+}
+
+function wahl(v,wid) {
+    document.title = "READLEXEME:::BHS5."+activeB+"."+activeC+"."+v+"."+wid;
+}
+
+function wagl(v,wid) {
+    document.title = "READLEXEME:::OGNT."+activeB+"."+activeC+"."+v+"."+wid;
+}
+
 function checkCompare() {
     versionList.forEach(addCompare);
     if (compareList.length == 0) {

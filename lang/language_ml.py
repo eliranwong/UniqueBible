@@ -792,4 +792,7 @@ translation = {
     "updateLanguageFiles": "ഭാഷ ഫയലുകള് പരിഷ്കരിക്കുക",
     "menu11_audio": "ഓഡിയോ",
     "readTillChapterEnd": "അദ്ധ്യായത്തിന്റെ രചനയിലൂടെ വായിക്കുക",
+    "showHebrewGreekWordAudioLinks": "ബൈബിളിലെ ഓരോ ഹീബ്രു ഗ്രീക്ക് വാക്കുകളുടെ ഓഡിയോ ലിങ്കുകളും കാണിക്കുക.",
+    "displayHebrewGreekWordAudio": "ഹീബ്രി/ഗ്രീക്ക് വാക്കു് ഓഡിയോ കാണിക്കുക",
+    "hideVlcInterfaceReadingSingleVerse": "ഒരു വേഗത വായിക്കുവാന് VLC ഗ്രാഫിക്കല് ഇന്റര്ഫെയിസ് മറയ്ക്കുക.",
 }

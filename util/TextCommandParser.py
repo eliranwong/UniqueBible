@@ -930,9 +930,17 @@ class TextCommandParser:
     def invalidCommand(self, source="main"):
         return (source, "INVALID_COMMAND_ENTERED", {})
 
-    # return invalid command
+    # return no audio
     def noAudio(self, source="main"):
         return (source, "NO_AUDIO", {})
+
+    # return no Hebrew audio
+    def noHebrewAudio(self, source="main"):
+        return (source, "NO_HEBREW_AUDIO", {})
+
+    # return no Greek audio
+    def noGreekAudio(self, source="main"):
+        return (source, "NO_GREEK_AUDIO", {})
 
     # sort out keywords from a single line command
     def splitCommand(self, command):
@@ -1057,6 +1065,10 @@ class TextCommandParser:
                 return (view, content, {'tab_title': text})
 
     def toggleBibleText(self, text):
+        if config.showHebrewGreekWordAudioLinks:
+            text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
+            text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
+            text = re.sub("""( <ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref> )(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
         if not config.showVerseReference:
             text = re.sub('<vid .*?>.*?</vid>', '', text)
         if not config.showBibleNoteIndicator:
@@ -1483,9 +1495,10 @@ class TextCommandParser:
         audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
         if os.path.isfile(audioFile):
             try:
-                if WebtopUtil.isPackageInstalled("vlc"):
+                player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
+                if WebtopUtil.isPackageInstalled(player):
                     os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    WebtopUtil.runNohup(f"{player} {audioFile}")
                     return ("", "", {})
                 else:
                     self.openVlcPlayer(audioFile, "main")
@@ -1501,16 +1514,21 @@ class TextCommandParser:
         audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
         if os.path.isfile(audioFile):
             try:
-                if WebtopUtil.isPackageInstalled("vlc"):
+                if WebtopUtil.isPackageInstalled("cvlc"):
                     os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    WebtopUtil.runNohup(f"cvlc {audioFile}")
                     return ("", "", {})
                 else:
                     self.openVlcPlayer(audioFile, "main")
             except:
                 return self.invalidCommand()
         else:
-            return self.noAudio()
+            if text == "BHS5":
+                return self.noHebrewAudio()
+            if text == "OGNT":
+                return self.noGreekAudio()
+            else:
+                return self.noAudio()
 
     # READLEXEME:::
     def readLexeme(self, command, source):
@@ -1519,16 +1537,21 @@ class TextCommandParser:
         audioFile = os.path.join(folder, "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
         if os.path.isfile(audioFile):
             try:
-                if WebtopUtil.isPackageInstalled("vlc"):
+                if WebtopUtil.isPackageInstalled("cvlc"):
                     os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"vlc {audioFile}")
+                    WebtopUtil.runNohup(f"cvlc {audioFile}")
                     return ("", "", {})
                 else:
                     self.openVlcPlayer(audioFile, "main")
             except:
                 return self.invalidCommand()
         else:
-            return self.noAudio()
+            if text == "BHS5":
+                return self.noHebrewAudio()
+            if text == "OGNT":
+                return self.noGreekAudio()
+            else:
+                return self.noAudio()
 
     # VLC:::
     def openVlcPlayer(self, command, source):
@@ -3183,8 +3206,16 @@ class TextCommandParser:
             contentList = []
             for b, c, v in verseList:
                 subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
-                subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
-                subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                if not config.enableHttpServer:
+                    if b < 40:
+                        subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                    else:
+                        subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                    if filename == "words":
+                        if b < 40:
+                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
+                        else:
+                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
                 contentList.append(subContent)
             content = "<hr>".join(contentList)
             del verseData
