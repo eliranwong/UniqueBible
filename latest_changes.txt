@@ -1,3 +1,6 @@
+Changes in 28.64:
+* Fixed some other missing Greek word audio links.
+
 Changes in 28.63:
 * Fixed missing Greek word audio links before punctuation marks.
 

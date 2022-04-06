@@ -1066,7 +1066,7 @@ class TextCommandParser:
 
     def toggleBibleText(self, text):
         if config.showHebrewGreekWordAudioLinks:
-            text = re.sub("(<pm>|</pm>)", "", text)
+            text = re.sub("(<pm>|</pm>|<n>|</n>)", "", text)
             text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
             text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
             text = re.sub("""( <ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref> )(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
