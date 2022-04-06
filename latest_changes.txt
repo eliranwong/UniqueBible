@@ -1,3 +1,6 @@
+Changes in 28.63:
+* Fixed missing Greek word audio links before punctuation marks.
+
 Changes in 28.62:
 * Added config item config.hideVlcInterfaceForSingleVerseReading to hide VlcInterface for single verse reading.  Currently, this works only on webtop version, desktop version on Linux and macOS.
 * Added audio links to lexemes on "Words" feature content.
