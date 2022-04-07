@@ -1,3 +1,8 @@
+Changes in 28.67:
+* Fine tune word-by-word Hebrew and Greek audio.
+* Hide built-in media player interface for reading a single word or lexeme.
+* Built-in media player now works with config.hideVlcInterfaceReadingSingleVerse.
+
 Changes in 28.66:
 * Added a wiki page on word-by-word Hebrew and Greek audio:
     https://github.com/eliranwong/UniqueBible/wiki/Word-by-word-Hebrew-and-Greek-Audio

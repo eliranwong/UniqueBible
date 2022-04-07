@@ -1502,7 +1502,7 @@ class TextCommandParser:
                     WebtopUtil.runNohup(f"{player} {audioFile}")
                     return ("", "", {})
                 else:
-                    self.openVlcPlayer(audioFile, "main")
+                    self.openVlcPlayer(audioFile, "main", (player == "vlc"))
             except:
                 return self.invalidCommand()
         else:
@@ -1520,7 +1520,7 @@ class TextCommandParser:
                     WebtopUtil.runNohup(f"cvlc {audioFile}")
                     return ("", "", {})
                 else:
-                    self.openVlcPlayer(audioFile, "main")
+                    self.openVlcPlayer(audioFile, "main", False)
             except:
                 return self.invalidCommand()
         else:
@@ -1543,7 +1543,7 @@ class TextCommandParser:
                     WebtopUtil.runNohup(f"cvlc {audioFile}")
                     return ("", "", {})
                 else:
-                    self.openVlcPlayer(audioFile, "main")
+                    self.openVlcPlayer(audioFile, "main", False)
             except:
                 return self.invalidCommand()
         else:
@@ -1555,7 +1555,7 @@ class TextCommandParser:
                 return self.noAudio()
 
     # VLC:::
-    def openVlcPlayer(self, command, source):
+    def openVlcPlayer(self, command, source, gui=True):
         try:
             if config.isVlcInstalled:
                 from gui.VlcPlayer import VlcPlayer
@@ -1565,7 +1565,8 @@ class TextCommandParser:
                     #self.parent.vlcPlayer.loadAndPlayFile(filename)
                     self.parent.vlcPlayer.close()
                 self.parent.vlcPlayer = VlcPlayer(self, command)
-                self.parent.vlcPlayer.show()
+                if gui:
+                    self.parent.vlcPlayer.show()
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})

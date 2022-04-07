@@ -679,7 +679,7 @@ input.addEventListener('keyup', function(event) {0}
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
 
-            if config.showHebrewGreekWordAudioLinks and text in ("OHGB", "OHGBi"):
+            if not config.enableHttpServer and config.showHebrewGreekWordAudioLinks and text in ("OHGB", "OHGBi"):
                 if b < 40:
                     verseText = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), verseText)
                 else:
@@ -1024,7 +1024,7 @@ class Bible:
                 return (b, c, v, "")
             # return a tuple
             textVerse = textVerse[-1].strip()
-            if config.showHebrewGreekWordAudioLinks and self.text in ("OHGB", "OHGBi"):
+            if not config.enableHttpServer and config.showHebrewGreekWordAudioLinks and self.text in ("OHGB", "OHGBi"):
                 if b < 40:
                     textVerse = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), textVerse)
                 else:
