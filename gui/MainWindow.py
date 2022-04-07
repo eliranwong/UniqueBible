@@ -2569,37 +2569,37 @@ class MainWindow(QMainWindow):
     def toggleShowUserNoteIndicator(self):
         config.showUserNoteIndicator = not config.showUserNoteIndicator
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def toggleShowBibleNoteIndicator(self):
         config.showBibleNoteIndicator = not config.showBibleNoteIndicator
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def toggleShowVerseReference(self):
         config.showVerseReference = not config.showVerseReference
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def toggleShowHebrewGreekWordAudioLinks(self):
         config.showHebrewGreekWordAudioLinks = not config.showHebrewGreekWordAudioLinks
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def toggleHideLexicalEntryInBible(self):
         config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def toggleReadTillChapterEnd(self):
         config.readTillChapterEnd = not config.readTillChapterEnd
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
 
     def enableSubheadingButtonClicked(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         self.newTabException = True
-        self.reloadCurrentRecord()
+        self.reloadCurrentRecord(True)
         enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
         self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
 
@@ -3425,7 +3425,7 @@ class MainWindow(QMainWindow):
                                         items.index(config.standardAbbreviation), False)
         if ok and item:
             config.standardAbbreviation = item
-            self.reloadCurrentRecord()
+            self.reloadCurrentRecord(True)
 
     # set default font
     def setDefaultFont(self):

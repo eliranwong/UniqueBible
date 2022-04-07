@@ -1,3 +1,8 @@
+Changes in 28.65:
+* Added word-by-word Hebrew and Greek audio to bibles, OHGB and OHGBi.
+* Added word-by-word Hebrew and Greek audio to OHGBi in morphology search result.
+* Fixed reloading current records.
+
 Changes in 28.64:
 * Fixed some other missing Greek word audio links.
 

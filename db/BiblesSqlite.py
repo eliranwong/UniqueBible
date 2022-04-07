@@ -678,6 +678,13 @@ input.addEventListener('keyup', function(event) {0}
         verseList = self.readTextChapter(text, b, c)
         for verseTuple in verseList:
             b, c, v, verseText = verseTuple
+
+            if config.showHebrewGreekWordAudioLinks and text in ("OHGB", "OHGBi"):
+                if b < 40:
+                    verseText = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), verseText)
+                else:
+                    verseText = re.sub("""(<grk onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), verseText)
+
             divTag = "<div>"
             if b < 40 and text in config.rtlTexts:
                 divTag = "<div style='direction: rtl;'>"
@@ -1016,7 +1023,13 @@ class Bible:
             if not textVerse:
                 return (b, c, v, "")
             # return a tuple
-            return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse[-1].strip()}")
+            textVerse = textVerse[-1].strip()
+            if config.showHebrewGreekWordAudioLinks and self.text in ("OHGB", "OHGBi"):
+                if b < 40:
+                    textVerse = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), textVerse)
+                else:
+                    textVerse = re.sub("""(<grk onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), textVerse)
+            return (b, c, v, f"{FileUtil.getVerseAudioTag(self.text, b, c, v)}{textVerse}")
         else:
             print("Verse table does not exist")
             return (b, c, v, "")
