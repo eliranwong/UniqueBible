@@ -316,15 +316,15 @@ class ConfigUtil:
         if not hasattr(config, "audioBibleIcon"):
             #config.audioBibleIcon = "&#9834;"
             config.audioBibleIcon = "&#119136; "
-        elif not config.audioBibleIcon.endswith(" "):
-            config.audioBibleIcon = f"{config.audioBibleIcon} "
+        elif not config.audioBibleIcon.endswith("&nbsp;"):
+            config.audioBibleIcon = f"{config.audioBibleIcon.strip()}&nbsp;"
         config.help["audioBibleIcon2"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon2"):
             #config.audioBibleIcon2 = "&#9834;"
             config.audioBibleIcon2 = "&#119137; "
-        elif not config.audioBibleIcon2.endswith(" "):
-            config.audioBibleIcon2 = f"{config.audioBibleIcon2} "
+        elif not config.audioBibleIcon2.endswith("&nbsp;"):
+            config.audioBibleIcon2 = f"{config.audioBibleIcon2.strip()}&nbsp;"
         config.help["videoFolder"] = """
         # Specify the folder path of video files"""
         if not hasattr(config, "videoFolder"):

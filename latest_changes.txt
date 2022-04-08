@@ -1,3 +1,6 @@
+Changes in 28.69:
+* Fixed display of audio bible icons on Linux.
+
 Changes in 28.68:
 * Fixed missing playing audio in a playlist, as described in issue:
     https://github.com/eliranwong/UniqueBible/issues/976
