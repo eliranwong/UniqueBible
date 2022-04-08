@@ -161,7 +161,8 @@ class VlcPlayer(QWidget):
             self.mediaplayer.set_media(self.media)
             self.media.parse()
             self.mediaplayer.play()
-            self.mediaplayer.set_position(0)
+            # Disable the following line to fix issue: https://github.com/eliranwong/UniqueBible/issues/976
+            #self.mediaplayer.set_position(0)
             self.setWindowTitle(self.media.get_meta(0))
 
             # The media player has to be 'connected' to the QFrame (otherwise the

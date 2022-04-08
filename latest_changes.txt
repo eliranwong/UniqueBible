@@ -1,3 +1,7 @@
+Changes in 28.68:
+* Fixed missing playing audio in a playlist, as described in issue:
+    https://github.com/eliranwong/UniqueBible/issues/976
+
 Changes in 28.67:
 * Fine tune word-by-word Hebrew and Greek audio.
 * Hide built-in media player interface for reading a single word or lexeme.
