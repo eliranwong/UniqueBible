@@ -1,3 +1,6 @@
+Changes in 28.71:
+* Fixed missing word audio links in discourse content.
+
 Changes in 28.70:
 * Removed duplicated spaces after audio icons.
 * Added four more verse-by-verse audio bibles:

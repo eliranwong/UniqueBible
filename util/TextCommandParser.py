@@ -3209,6 +3209,8 @@ class TextCommandParser:
             for b, c, v in verseList:
                 subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
                 if not config.enableHttpServer:
+                    if filename == "discourse":
+                        subContent = re.sub("(<pm>|</pm>|<n>|</n>)", "", subContent)
                     if b < 40:
                         subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
                     else:
