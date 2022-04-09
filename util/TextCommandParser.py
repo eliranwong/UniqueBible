@@ -1067,9 +1067,9 @@ class TextCommandParser:
     def toggleBibleText(self, text):
         if config.showHebrewGreekWordAudioLinks:
             text = re.sub("(<pm>|</pm>|<n>|</n>)", "", text)
-            text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
-            text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref> """.format(config.audioBibleIcon), text)
-            text = re.sub("""( <ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref> )(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
+            text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
+            text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
+            text = re.sub("""([ ]*<ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref>)(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
         if not config.showVerseReference:
             text = re.sub('<vid .*?>.*?</vid>', '', text)
         if not config.showBibleNoteIndicator:
@@ -3210,9 +3210,9 @@ class TextCommandParser:
                 subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
                 if not config.enableHttpServer:
                     if b < 40:
-                        subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                        subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
                     else:
-                        subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref> """.format(b, c, v, config.audioBibleIcon), subContent)
+                        subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
                     if filename == "words":
                         if b < 40:
                             subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)

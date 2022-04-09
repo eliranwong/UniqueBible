@@ -1,3 +1,11 @@
+Changes in 28.70:
+* Removed duplicated spaces after audio icons.
+* Added four more verse-by-verse audio bibles:
+    SBLGNT (Greek; fast; verse-by-verse)
+    SBLGNT (Greek; slow; verse-by-verse)
+    WLC (Hebrew; fast; verse-by-verse)
+    WLC (Hebrew; slow; verse-by-verse)
+
 Changes in 28.69:
 * Fixed display of audio bible icons on Linux.
 

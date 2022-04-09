@@ -46,10 +46,14 @@ class DownloadBibleMp3Dialog(QDialog):
             "OHGB (Hebrew & Greek; fast; verse-by-verse)": ("OHGB", "eliranwong/MP3_OpenHebrewGreekBible_fast", "default"),
             "OHGB (Hebrew & Greek; slow; verse-by-verse)": ("OHGB", "eliranwong/MP3_OpenHebrewGreekBible_slow", "default"),
             "RVA (Spanish)": ("RVA", "otseng/UniqueBible_MP3_RVA", "default"),
+            "SBLGNT (Greek; fast; verse-by-verse)": ("SBLGNT", "eliranwong/MP3_SBLGNT_fast", "default"),
+            "SBLGNT (Greek; slow; verse-by-verse)": ("SBLGNT", "eliranwong/MP3_SBLGNT_slow", "default"),
             "TR (Modern Greek)": ("TR", "otseng/UniqueBible_MP3_TR", "modern"),
             "WEB (American accent)": ("WEB", "otseng/UniqueBible_MP3_WEB", "default"),
             "WEB (British accent; verse-by-verse)": ("WEB", "eliranwong/MP3_WebEnglishBible_british", "default"), 
             "WLC (Hebrew)": ("WLC", "otseng/UniqueBible_MP3_WLC", "default"),
+            "WLC (Hebrew; fast; verse-by-verse)": ("WLC", "eliranwong/MP3_WLC_fast", "default"),
+            "WLC (Hebrew; slow; verse-by-verse)": ("WLC", "eliranwong/MP3_WLC_slow", "default"),
         }
         self.parent = parent
         self.audioModule = audioModule
