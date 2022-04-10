@@ -1,3 +1,7 @@
+Changes in 28.72:
+* Added support of audio links to instant verse feature.
+* Removed duplicated spaces after audio icons for multiple verse display.
+
 Changes in 28.71:
 * Fixed missing word audio links in discourse content.
 

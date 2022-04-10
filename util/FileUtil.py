@@ -133,7 +133,7 @@ class FileUtil:
         audioFile = os.path.join(config.audioFolder, "bibles", text, "default", f"{b}_{c}", f"{text}_{b}_{c}_{v}.mp3")
         if os.path.isfile(audioFile):
             command = f"READVERSE:::{text}.{b}.{c}.{v}"
-            return f"""<ref onclick="document.title='{command}'" title="{command}" style="font-size: 1em">{config.audioBibleIcon}</ref> """
+            return f"""<ref onclick="document.title='{command}'" title="{command}" style="font-size: 1em">{config.audioBibleIcon}</ref>"""
         else:
             return ""
 

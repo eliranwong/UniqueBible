@@ -367,7 +367,7 @@ input.addEventListener('keyup', function(event) {0}
                 divTag = "<div style='direction: rtl;'>" if b < 40 and text in config.rtlTexts else "<div>"
                 ref = "<sup>{0}{1}:{2}</ref></sup> ".format(self.formVerseTag(b, c, verse, text), c, verse)
                 verseBlock = "<span id='s{0}.{1}.{2}'>".format(b, c, verse)
-                verseBlock += "{0}".format(verseText)
+                verseBlock += verseText
                 verseBlock += "</span>"
                 content += "<td valign='top'><bibleText class='{0}'>{1}{2}{3}</div></bibleText></td>".format(text, divTag, ref, verseBlock)
             content += "</tr>"
@@ -710,7 +710,7 @@ input.addEventListener('keyup', function(event) {0}
             if v in highlightDict.keys():
                 hlClass = " class='{0}'".format(highlightDict[v])
             chapter += "<span id='s{0}.{1}.{2}'{3}>".format(b, c, v, hlClass)
-            chapter += "{0}".format(verseText)
+            chapter += verseText
             chapter += "</span>"
             chapter += "</div>"
         return chapter
@@ -1346,7 +1346,13 @@ class MorphologySqlite:
     def instantVerse(self, b, c, v, wordID="", text="interlinear"):
         # Note: Verses drawn from interlinear are suitable to be placed on bottom window, as they have no mouse over feature.
         *_, verseText = self.readTextVerse(text, b, c, v)
-        interlinearVerse = """{0}(<ref onclick="document.title='MAIN:::OHGBi:::{1}'">{1}</ref>) {2}</div>""".format("<div style='direction: rtl;'>" if b < 40 else "<div>", self.bcvToVerseReference(b, c, v), verseText)
+        if not config.enableHttpServer and config.showHebrewGreekWordAudioLinks:
+            if b < 40:
+                verseText = re.sub("""(<heb onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), verseText)
+            else:
+                verseText = re.sub("""(<grk onclick="w\([0-9]+?,)([0-9]+?)(\)".*?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), verseText)
+        verseAudioTag = FileUtil.getVerseAudioTag("OHGB", b, c, v)
+        interlinearVerse = """{0}(<ref onclick="document.title='MAIN:::OHGBi:::{1}'">{1}</ref>) {3}{2}</div>""".format("<div style='direction: rtl;'>" if b < 40 else "<div>", self.bcvToVerseReference(b, c, v), verseText, verseAudioTag)
         if wordID:
             interlinearVerse = re.sub(r"""<(heb|grk)( onclick="w\({0},{1}\)".*?</\1>)""".format(b, wordID), r"<z><\1\2</z>", interlinearVerse)
         return interlinearVerse
