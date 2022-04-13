@@ -1078,7 +1078,7 @@ class Bible:
                             command = "READBIBLE:::{0}:::{1} {2}:{3}:::{4}".format(text, BibleBooks.eng[str(b)][0], c, v, dir)
                         else:
                             command = "READBIBLE:::@{0}".format(dir)
-                        data += """ <ref onclick="document.title='{0}'" title="{0}" style="font-size: 1em">{1}</ref> """.format(command, icon)
+                        data += """ <ref onclick="document.title='{0}'" style="font-size: 1em">{1}</ref> """.format(command, icon)
         return data
 
     def formatVerseNumber(self, match):
