@@ -14,7 +14,6 @@ if __name__ == "__main__":
     config.noQt = True
 
 from util.BibleVerseParser import BibleVerseParser
-from util.BibleBooks import BibleBooks
 from db.NoteSqlite import NoteSqlite
 from db.Highlight import Highlight
 from util.ConfigUtil import ConfigUtil

@@ -97,6 +97,10 @@ class ConfigUtil:
         # Specify a homepage, to which only developers can access."""
         if not hasattr(config, "webPrivateHomePage"):
             config.webPrivateHomePage = ""
+        config.help["httpServerUbaFile"] = """
+        # Specify a python file to start http-server mode."""
+        if not hasattr(config, "httpServerUbaFile"):
+            config.httpServerUbaFile = "uba.py"
         config.help["webUI"] = """
         # To specify web user interface."""
         if not hasattr(config, "webUI"):
@@ -1121,6 +1125,7 @@ class ConfigUtil:
             ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
             ("telnetServerPort", config.telnetServerPort),
+            ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),

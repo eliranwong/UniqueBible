@@ -171,7 +171,7 @@ if (len(sys.argv) > 1) and sys.argv[1] == "http-server":
     startHttpServer()
     ConfigUtil.save()
     if config.restartHttpServer:
-        subprocess.Popen("{0} uba.py http-server".format(sys.executable), shell=True)
+        subprocess.Popen("{0} {1} http-server".format(sys.executable, config.httpServerUbaFile), shell=True)
     exit(0)
 
 def printContentOnConsole(text):

@@ -6,6 +6,7 @@ from util.ThirdParty import Converter
 from util.CrossPlatform import CrossPlatform
 from util.DatafileLocation import DatafileLocation
 from util.TextUtil import TextUtil
+from db.BiblesSqlite import Bible
 
 
 class RemoteCliMainWindow(CrossPlatform):
@@ -106,6 +107,20 @@ class RemoteCliMainWindow(CrossPlatform):
                 return ("main", "Could not load {0}".format(file), {})
         else:
             return("main", "No file specified", {})
+
+    def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
+        playlist = []
+        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
+        if os.path.isdir(folder):
+            verses = Bible(text).getVerseList(b, c)
+            for verse in verses:
+                if verse >= startVerse:
+                    audioFile = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse)
+                    audioFilePath = os.path.join(folder, audioFile)
+                    if os.path.isfile(audioFilePath):
+                        playlist.append((audioFile, audioFilePath))
+        return playlist
+        #return [("_NET_1_1_3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("_NET_1_1_4", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

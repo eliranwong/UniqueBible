@@ -5,9 +5,76 @@ from db.BiblesSqlite import BiblesSqlite
 from db.ToolsSqlite import Commentary
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
-
+from util.BibleBooks import BibleBooks
 
 class HtmlGeneratorUtil:
+
+    @staticmethod
+    def getAudioPlayer(playlist):
+        items = """
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Audio player HTML5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.21">
+    <style>
+
+    #player{
+        position: relative;
+        max-width: 700px;
+        height: 500px;
+        border: solid 1px gray;
+    }
+    </style>
+  </head>
+
+  <body>
+      <!-- Audio player container-->
+     <div id='player'></div>
+
+    <!-- Audio player js begin-->
+    <script src="js/AudioPlayer.js?v=1.21"></script>
+
+    <script>
+        // test image for web notifications
+        var iconImage = null;
+
+        AP.init({
+            container:'#player',//a string containing one CSS selector
+            volume   : 0.7,
+            autoPlay : true,
+            notification: false,
+            playList: [ 
+"""
+        booksMap = {
+            "ENG": BibleBooks.eng,
+            "TC": BibleBooks.tc,
+            "SC": BibleBooks.sc,
+        }
+        books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+        for title, filePath in playlist:
+            elements = title.split("_")
+            if len(elements) == 4:
+                text, b, c, v = elements
+                if b in books:
+                    title = "{1} {2}:{3} ({0})".format(text, books[b][0], c, v[:-4])
+            items += "{"
+            items += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
+            items += "},"
+        items += """
+          ]
+        });
+    </script>
+    <!-- Audio player js end-->
+
+  </body>
+</html>        
+"""
+        return items
 
     @staticmethod
     def getMenu(command, source="main"):

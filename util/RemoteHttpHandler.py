@@ -229,7 +229,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.038'>
-                <script src='js/http_server.js?v=1.038'></script>
+                <script src='js/http_server.js?v=1.042'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -556,7 +556,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <script src='js/common.js?v=1.038'></script>
                 <script src='js/{9}.js?v=1.038'></script>
                 <script src='w3.js?v=1.038'></script>
-                <script src='js/http_server.js?v=1.038'></script>
+                <script src='js/http_server.js?v=1.042'></script>
                 <script>
                 checkCookie();
                 {21}
@@ -889,7 +889,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<script src='js/common.js?v=1.038'></script>"
                 "<script src='js/{7}.js?v=1.038'></script>"
                 "<script src='w3.js?v=1.038'></script>"
-                "<script src='js/http_server.js?v=1.038'></script>"
+                "<script src='js/http_server.js?v=1.042'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}

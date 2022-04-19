@@ -1,5 +1,6 @@
 **/__pycache__/**
 /venv*
+/venv_*
 /marvelData
 /marvelData_init
 /build
@@ -22,6 +23,7 @@
 /tmp
 /Documents
 /htmlResources/images/export
+/htmlResources/audio
 uba.spec
 config.py
 custom.py

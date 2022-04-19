@@ -1478,14 +1478,24 @@ class TextCommandParser:
     # READCHAPTER:::
     def readChapter(self, command, source):
         try:
+            content = ""
+            target = "study" if config.enableHttpServer else ""
             items = command.split(".")
             if len(items) == 3:
                 text, b, c = items
-                self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+                if config.enableHttpServer:
+                    playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
+                    content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+                else:
+                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c)
             elif len(items) == 4:
                 text, b, c, startVerse = items
-                self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
-            return ("", "", {})
+                if config.enableHttpServer:
+                    playlist = self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
+                    content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+                else:
+                    self.parent.playAudioBibleChapterVerseByVerse(text, b, c, int(startVerse))
+            return (target, content, {})
         except:
             return self.invalidCommand()
 
@@ -1493,18 +1503,24 @@ class TextCommandParser:
     def readVerse(self, command, source):
         text, b, c, v = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
-        audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
+        filename = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
+        audioFile = os.path.join(folder, filename)
         if os.path.isfile(audioFile):
-            try:
-                player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
-                if WebtopUtil.isPackageInstalled(player):
-                    os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"{player} {audioFile}")
-                    return ("", "", {})
-                else:
-                    self.openVlcPlayer(audioFile, "main", (player == "vlc"))
-            except:
-                return self.invalidCommand()
+            if config.enableHttpServer:
+                playlist = [(filename, audioFile)]
+                content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+                return ("study", content, {})
+            else:
+                try:
+                    player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
+                    if WebtopUtil.isPackageInstalled(player):
+                        os.system("pkill vlc")
+                        WebtopUtil.runNohup(f"{player} {audioFile}")
+                        return ("", "", {})
+                    else:
+                        self.openVlcPlayer(audioFile, "main", (player == "vlc"))
+                except:
+                    return self.invalidCommand()
         else:
             return self.noAudio()
 
