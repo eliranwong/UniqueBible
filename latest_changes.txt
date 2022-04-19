@@ -1,3 +1,6 @@
+Changes in 28.74:
+* Added support of Google material icons to http-server display content.
+
 Changes in 28.73:
 * Added support to specify the python file to start http-server.
 * Added initial support of verse-by-verse audio bible in htttp-server, will test on https://bible.gospelchurch.uk

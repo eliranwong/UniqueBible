@@ -228,6 +228,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
+                <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.038'>
                 <script src='js/http_server.js?v=1.042'></script>
                 </head>
@@ -422,6 +423,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
+                <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.038'>
                 <style>
                 ::-webkit-scrollbar {4}
@@ -884,6 +886,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
+                "<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.038'>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.038'>"
                 "<script src='js/common.js?v=1.038'></script>"
