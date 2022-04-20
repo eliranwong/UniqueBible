@@ -318,15 +318,21 @@ class ConfigUtil:
         config.help["audioBibleIcon"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon"):
-            #config.audioBibleIcon = "&#9834;"
-            config.audioBibleIcon = "&#119136;&nbsp;"
+            if config.enableHttpServer:
+                config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
+            else:
+                #config.audioBibleIcon = "&#9834;"
+                config.audioBibleIcon = "&#119136;&nbsp;"
         elif not config.audioBibleIcon.endswith("&nbsp;"):
             config.audioBibleIcon = f"{config.audioBibleIcon.strip()}&nbsp;"
         config.help["audioBibleIcon2"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon2"):
-            #config.audioBibleIcon2 = "&#9834;"
-            config.audioBibleIcon2 = "&#119137;&nbsp;"
+            if config.enableHttpServer:
+                config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
+            else:
+                #config.audioBibleIcon2 = "&#9834;"
+                config.audioBibleIcon2 = "&#119137;&nbsp;"
         elif not config.audioBibleIcon2.endswith("&nbsp;"):
             config.audioBibleIcon2 = f"{config.audioBibleIcon2.strip()}&nbsp;"
         config.help["videoFolder"] = """
@@ -519,6 +525,10 @@ class ConfigUtil:
         # Options to display word-by-word Hebrew & Greek audio links: True / False"""
         if not hasattr(config, "showHebrewGreekWordAudioLinks"):
             config.showHebrewGreekWordAudioLinks = False
+        config.help["showHebrewGreekWordAudioLinksInMIB"] = """
+        # Options to display word-by-word Hebrew & Greek audio links in bible module, MIB: True / False"""
+        if not hasattr(config, "showHebrewGreekWordAudioLinksInMIB"):
+            config.showHebrewGreekWordAudioLinksInMIB = False
         config.help["hideLexicalEntryInBible"] = """
         # Options to hide lexical entries or Strong's numbers: True / False"""
         if not hasattr(config, "hideLexicalEntryInBible"):
@@ -1248,6 +1258,7 @@ class ConfigUtil:
             ("readFormattedBibles", config.readFormattedBibles),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse),
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
+            ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("readTillChapterEnd", config.readTillChapterEnd),

@@ -2586,6 +2586,11 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
 
+    def toggleShowHebrewGreekWordAudioLinksInMIB(self):
+        config.showHebrewGreekWordAudioLinksInMIB = not config.showHebrewGreekWordAudioLinksInMIB
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+
     def toggleHideLexicalEntryInBible(self):
         config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
         self.newTabException = True

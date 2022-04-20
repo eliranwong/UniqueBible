@@ -795,4 +795,5 @@ translation = {
     "showHebrewGreekWordAudioLinks": "Mostra link audio disponibili di ogni frase ebraica e greca in bibles.",
     "displayHebrewGreekWordAudio": "Visualizza ebraico / greco Word Audio",
     "hideVlcInterfaceReadingSingleVerse": "Nascondere interfaccia grafica VLC per la lettura di un singolo verso.",
+    "showHebrewGreekWordAudioLinksInMIB": "Mostra link audio disponibili di ogni parola ebraica e greca in MIB.",
 }

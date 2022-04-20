@@ -795,4 +795,5 @@ translation = {
     "showHebrewGreekWordAudioLinks": "각각의 히브리어 및 그리스어 단어의 사용 가능한 오디오 링크를 성경에 표시합니다.",
     "displayHebrewGreekWordAudio": "히브리어/그리스 단어 오디오 표시",
     "hideVlcInterfaceReadingSingleVerse": "단일 절을 읽기 위해 VLC 그래픽 인터페이스를 숨깁니다.",
+    "showHebrewGreekWordAudioLinksInMIB": "MIB에 있는 히브리어 및 그리스어 단어 각각의 사용 가능한 오디오 링크를 표시합니다.",
 }

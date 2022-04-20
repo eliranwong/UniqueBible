@@ -1,3 +1,12 @@
+Changes in 28.80:
+* Added support of READLEXEME::: and READWORD::: commands in http-server.
+* Added support of word-by-word audio to http-server.
+* Added ".wordaudiolinks" command to http-server.
+* Fixed plain mode chapter reading showing audio icons in http-server.
+* Added config value config.showHebrewGreekWordAudioLinksInMIB.  If it is set to True, MIB will display audio icons even config.config.showHebrewGreekWordAudioLinks is set to False.
+* Application of config.showHebrewGreekWordAudioLinks now check if bible text is one of the marvel bibles. 
+* UBA now uses Google material icon for audio bible icons by default in http-server.
+
 Changes in 28.79:
 * http-server built-in audio player now display playlist by default.
 

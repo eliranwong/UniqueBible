@@ -795,4 +795,5 @@ translation = {
     "showHebrewGreekWordAudioLinks": "在聖經中，顯示每一個希伯來文和希臘文的可用語音鏈結。",
     "displayHebrewGreekWordAudio": "顯示希伯來文 / 希臘文字音訊",
     "hideVlcInterfaceReadingSingleVerse": "當閱讀單節時，隱藏 VLC 圖形介面。",
+    "showHebrewGreekWordAudioLinksInMIB": "在 MIB 聖經中，顯示每一個希伯來文和希臘文的可用語音鏈結。",
 }

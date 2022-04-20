@@ -89,6 +89,7 @@ class ConfigFlagsWindow(QDialog):
             ("showBibleNoteIndicator", config.showBibleNoteIndicator, self.parent.toggleShowBibleNoteIndicator, True, config.thisTranslation["displayBibleNoteIndicator"]),
             ("showVerseReference", config.showVerseReference, self.parent.toggleShowVerseReference, True, config.thisTranslation["displayVerseReference"]),
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks, self.parent.toggleShowHebrewGreekWordAudioLinks, False, config.thisTranslation["showHebrewGreekWordAudioLinks"]),
+            ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB, self.parent.toggleShowHebrewGreekWordAudioLinksInMIB, False, config.thisTranslation["showHebrewGreekWordAudioLinksInMIB"]),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible, self.parent.toggleHideLexicalEntryInBible, False, config.thisTranslation["displayLexicalEntry"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),

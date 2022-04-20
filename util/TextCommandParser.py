@@ -1065,11 +1065,18 @@ class TextCommandParser:
                 return (view, content, {'tab_title': text})
 
     def toggleBibleText(self, text):
-        if config.showHebrewGreekWordAudioLinks:
+        isMarvelBibles = True if re.search("_instantVerse:::(MOB|MIB|MPB|MTB|MAB|OHGB|OHGBi):::", text) else False
+        isMIB = ("_instantVerse:::MIB:::" in text)
+        if (config.showHebrewGreekWordAudioLinks and isMarvelBibles) or (config.showHebrewGreekWordAudioLinksInMIB and isMIB):
             text = re.sub("(<pm>|</pm>|<n>|</n>)", "", text)
             text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
             text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
-            text = re.sub("""([ ]*<ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref>)(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
+            if isMIB:
+                if config.enableHttpServer:
+                    text = text.replace(config.audioBibleIcon, "＊＊＊")
+                text = re.sub("""([ ]*<ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref>)(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
+                if config.enableHttpServer:
+                    text = text.replace("＊＊＊", config.audioBibleIcon)
         if not config.showVerseReference:
             text = re.sub('<vid .*?>.*?</vid>', '', text)
         if not config.showBibleNoteIndicator:
@@ -1528,17 +1535,23 @@ class TextCommandParser:
     def readWord(self, command, source):
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
-        audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
+        filename = "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
+        audioFile = os.path.join(folder, filename)
         if os.path.isfile(audioFile):
-            try:
-                if WebtopUtil.isPackageInstalled("cvlc"):
-                    os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"cvlc {audioFile}")
-                    return ("", "", {})
-                else:
-                    self.openVlcPlayer(audioFile, "main", False)
-            except:
-                return self.invalidCommand()
+            if config.enableHttpServer:
+                playlist = [(filename, audioFile)]
+                content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+                return ("study", content, {})
+            else:
+                try:
+                    if WebtopUtil.isPackageInstalled("cvlc"):
+                        os.system("pkill vlc")
+                        WebtopUtil.runNohup(f"cvlc {audioFile}")
+                        return ("", "", {})
+                    else:
+                        self.openVlcPlayer(audioFile, "main", False)
+                except:
+                    return self.invalidCommand()
         else:
             if text == "BHS5":
                 return self.noHebrewAudio()
@@ -1551,17 +1564,23 @@ class TextCommandParser:
     def readLexeme(self, command, source):
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
-        audioFile = os.path.join(folder, "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID))
+        filename = "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
+        audioFile = os.path.join(folder, filename)
         if os.path.isfile(audioFile):
-            try:
-                if WebtopUtil.isPackageInstalled("cvlc"):
-                    os.system("pkill vlc")
-                    WebtopUtil.runNohup(f"cvlc {audioFile}")
-                    return ("", "", {})
-                else:
-                    self.openVlcPlayer(audioFile, "main", False)
-            except:
-                return self.invalidCommand()
+            if config.enableHttpServer:
+                playlist = [(filename, audioFile)]
+                content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+                return ("study", content, {})
+            else:
+                try:
+                    if WebtopUtil.isPackageInstalled("cvlc"):
+                        os.system("pkill vlc")
+                        WebtopUtil.runNohup(f"cvlc {audioFile}")
+                        return ("", "", {})
+                    else:
+                        self.openVlcPlayer(audioFile, "main", False)
+                except:
+                    return self.invalidCommand()
         else:
             if text == "BHS5":
                 return self.noHebrewAudio()
@@ -3224,18 +3243,17 @@ class TextCommandParser:
             contentList = []
             for b, c, v in verseList:
                 subContent = "<h2>{0}: <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}".format(feature, biblesSqlite.bcvToVerseReference(b, c, v), verseData.getContent((b, c, v)))
-                if not config.enableHttpServer:
-                    if filename == "discourse":
-                        subContent = re.sub("(<pm>|</pm>|<n>|</n>)", "", subContent)
+                if filename == "discourse":
+                    subContent = re.sub("(<pm>|</pm>|<n>|</n>)", "", subContent)
+                if b < 40:
+                    subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
+                else:
+                    subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
+                if filename == "words":
                     if b < 40:
-                        subContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
+                        subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
                     else:
-                        subContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), subContent)
-                    if filename == "words":
-                        if b < 40:
-                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><heb>[^<>]+?</heb>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
-                        else:
-                            subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
+                        subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
                 contentList.append(subContent)
             content = "<hr>".join(contentList)
             del verseData

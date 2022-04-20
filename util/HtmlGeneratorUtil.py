@@ -63,6 +63,14 @@ class HtmlGeneratorUtil:
                 text, b, c, v = elements
                 if b in books:
                     title = "{1} {2}:{3} ({0})".format(text, books[b][0], c, v[:-4])
+            elif len(elements) == 5:
+                text, b, c, v, wordID = elements
+                if b in books:
+                    title = "{1} {2}:{3} - {4} ({0})".format(text, books[b][0], c, v, wordID[:-4])
+            elif len(elements) == 6:
+                lex, text, b, c, v, wordID = elements
+                if b in books:
+                    title = "{1} {2}:{3} - {4} [{5}] ({0})".format(text, books[b][0], c, v[:-4], wordID[:-4], lex)
             html += "{"
             html += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
             html += "},"

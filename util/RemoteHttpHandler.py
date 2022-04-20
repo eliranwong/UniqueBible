@@ -278,6 +278,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "setversenosingleclickaction": self.setVerseNoClickActionContent,
             "setversenodoubleclickaction": lambda: self.setVerseNoClickActionContent(True),
             "setwebubaicon": self.setWebUBAIconContent,
+            "wordaudiolinks": self.toggleWordAudioLinks,
         }
         functions = {
             "login": self.login,
@@ -312,6 +313,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          '.setversenosingleclickaction',
                          '.setversenodoubleclickaction',
                          '.setwebubaicon',
+                         '.wordaudiolinks',
                          )
         # Convert command shortcut
         commandFunction = ""
@@ -1190,6 +1192,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         config.readFormattedBibles = not config.readFormattedBibles
         return self.getBibleChapter()
 
+    def toggleWordAudioLinks(self):
+        config.showHebrewGreekWordAudioLinks = not config.showHebrewGreekWordAudioLinks
+        return self.getBibleChapter()
+
     def toggleSubheadings(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         return self.getBibleChapter()
@@ -1299,6 +1305,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.increasefontsize')">.increaseFontSize</ref> - Increase font size.<br>
         <ref onclick="window.parent.submitCommand('.decreasefontsize')">.decreaseFontSize</ref> - Decrease font size.<br>
         <ref onclick="window.parent.submitCommand('.plainmode')">.plainMode</ref> - Toggle 'plain mode' for displaying bible chapters.<br>
+        <ref onclick="window.parent.submitCommand('.wordaudiolinks')">.wordAudioLinks</ref> - Toggle 'Hebrew & Greek word audio links' for displaying bible chapters of marvel bibles.<br>
         <ref onclick="window.parent.submitCommand('.subheadings')">.subHeadings</ref> - Toggle 'sub-headings' for displaying bible chapters in plain mode.<br>
         <ref onclick="window.parent.submitCommand('.compareparallelmode')">.compareParallelMode</ref> - Toggle 'compare / parallel mode' for bible reading.<br>
         <ref onclick="window.parent.submitCommand('.regexcasesensitive')">.regexCaseSensitive</ref> - Toggle 'case sensitive' for searching bible with regular expression.<br>

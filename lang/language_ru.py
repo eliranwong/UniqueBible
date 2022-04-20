@@ -795,4 +795,5 @@ translation = {
     "showHebrewGreekWordAudioLinks": "Показать доступные звуковые ссылки каждого иврита и греческого слова в библии.",
     "displayHebrewGreekWordAudio": "Показать аудиозапись на иврите/",
     "hideVlcInterfaceReadingSingleVerse": "Скрыть графический интерфейс VLC для чтения одного куплета.",
+    "showHebrewGreekWordAudioLinksInMIB": "Показать доступные звуковые ссылки каждого иврита и греческого слова в MIB.",
 }
