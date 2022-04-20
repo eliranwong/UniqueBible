@@ -3206,7 +3206,7 @@ class MainWindow(QMainWindow):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>" if config.enableHttpServer else ""
+                "{10}"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.043'>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.043'>"
                 "<script src='js/common.js?v=1.043'></script>"
@@ -3226,7 +3226,9 @@ class MainWindow(QMainWindow):
                          config.fontChinese,
                          config.theme,
                          self.getHighlightCss(),
-                         bibleCss)
+                         bibleCss,
+                         "<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>" if config.enableHttpServer else ""
+                         )
         return html
 
     # add a history record
