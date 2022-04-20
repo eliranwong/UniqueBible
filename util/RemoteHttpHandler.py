@@ -229,8 +229,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
                 <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.038'>
-                <script src='js/http_server.js?v=1.042'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.043'>
+                <script src='js/http_server.js?v=1.043'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -424,7 +424,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Expires" content="0" />
 
                 <link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.038'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.043'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -553,12 +553,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.038'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.038'>
-                <script src='js/common.js?v=1.038'></script>
-                <script src='js/{9}.js?v=1.038'></script>
-                <script src='w3.js?v=1.038'></script>
-                <script src='js/http_server.js?v=1.042'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.043'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.043'>
+                <script src='js/common.js?v=1.043'></script>
+                <script src='js/{9}.js?v=1.043'></script>
+                <script src='w3.js?v=1.043'></script>
+                <script src='js/http_server.js?v=1.043'></script>
                 <script>
                 checkCookie();
                 {21}
@@ -887,12 +887,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
                 "<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.038'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.038'>"
-                "<script src='js/common.js?v=1.038'></script>"
-                "<script src='js/{7}.js?v=1.038'></script>"
-                "<script src='w3.js?v=1.038'></script>"
-                "<script src='js/http_server.js?v=1.042'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.043'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.043'>"
+                "<script src='js/common.js?v=1.043'></script>"
+                "<script src='js/{7}.js?v=1.043'></script>"
+                "<script src='w3.js?v=1.043'></script>"
+                "<script src='js/http_server.js?v=1.043'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -908,7 +908,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.038'></script>"
+                "<script src='js/custom.js?v=1.043'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,

@@ -1,3 +1,6 @@
+Changes in 28.75:
+* Updated javascript files for http-server.
+
 Changes in 28.74:
 * Added support of Google material icons to http-server display content.
 
