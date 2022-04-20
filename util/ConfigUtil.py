@@ -318,21 +318,13 @@ class ConfigUtil:
         config.help["audioBibleIcon"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon"):
-            if config.enableHttpServer:
-                config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
-            else:
-                #config.audioBibleIcon = "&#9834;"
-                config.audioBibleIcon = "&#119136;&nbsp;"
+            config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
         elif not config.audioBibleIcon.endswith("&nbsp;"):
             config.audioBibleIcon = f"{config.audioBibleIcon.strip()}&nbsp;"
         config.help["audioBibleIcon2"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon2"):
-            if config.enableHttpServer:
-                config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
-            else:
-                #config.audioBibleIcon2 = "&#9834;"
-                config.audioBibleIcon2 = "&#119137;&nbsp;"
+            config.audioBibleIcon2 = '<span class="material-icons">audiotrack</span>&nbsp;'
         elif not config.audioBibleIcon2.endswith("&nbsp;"):
             config.audioBibleIcon2 = f"{config.audioBibleIcon2.strip()}&nbsp;"
         config.help["videoFolder"] = """

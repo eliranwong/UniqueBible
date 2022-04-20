@@ -1,3 +1,7 @@
+Changes in 28.81:
+* Added Google material icons fonts
+* Added support of offline use of Google material icons fonts
+
 Changes in 28.80:
 * Added support of READLEXEME::: and READWORD::: commands in http-server.
 * Added support of word-by-word audio to http-server.

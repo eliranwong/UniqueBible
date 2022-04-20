@@ -1072,11 +1072,9 @@ class TextCommandParser:
             text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
             text = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</grk>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wag(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
             if isMIB:
-                if config.enableHttpServer:
-                    text = text.replace(config.audioBibleIcon, "＊＊＊")
+                text = text.replace(config.audioBibleIcon, "＊＊＊")
                 text = re.sub("""([ ]*<ref onclick="wa[gh])(\([0-9]+?,[0-9]+?\)">[^<>]+?</ref>)(.*?</wform>.*?<wlex>.*?</wlex></ref>)""", r"\1\2\3\1l\2", text)
-                if config.enableHttpServer:
-                    text = text.replace("＊＊＊", config.audioBibleIcon)
+                text = text.replace("＊＊＊", config.audioBibleIcon)
         if not config.showVerseReference:
             text = re.sub('<vid .*?>.*?</vid>', '', text)
         if not config.showBibleNoteIndicator:

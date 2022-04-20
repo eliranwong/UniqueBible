@@ -3211,13 +3211,12 @@ class MainWindow(QMainWindow):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8} {9}</style>"
-                "{10}"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.043'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.043'>"
-                "<script src='js/common.js?v=1.043'></script>"
-                "<script src='js/{7}.js?v=1.043'></script>"
-                "<script src='w3.js?v=1.043'></script>"
-                "<script src='js/custom.js?v=1.043'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.044'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.044'>"
+                "<script src='js/common.js?v=1.044'></script>"
+                "<script src='js/{7}.js?v=1.044'></script>"
+                "<script src='w3.js?v=1.044'></script>"
+                "<script src='js/custom.js?v=1.044'></script>"
                 "{0}"
                 "<script>var versionList = []; var compareList = []; var parallelList = []; "
                 "var diffList = []; var searchList = [];</script></head>"
@@ -3232,7 +3231,7 @@ class MainWindow(QMainWindow):
                          config.theme,
                          self.getHighlightCss(),
                          bibleCss,
-                         "<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>" if config.enableHttpServer else ""
+                         #"<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>" if config.enableHttpServer else ""
                          )
         return html
 
