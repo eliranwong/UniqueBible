@@ -1,3 +1,6 @@
+Changes in 28.77:
+* Added association of Chinese bible versions for audio features.
+
 Changes in 28.76:
 * Fixed a startup issue introduced by a recent update.
 

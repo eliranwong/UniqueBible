@@ -152,6 +152,9 @@ class FileUtil:
             "MAB": "OHGB",
             "WLCx": "WLC",
             "SBLGNTl": "SBLGNT",
+            "CUVx": "CUV",
+            "和合本": "CUV",
+            "和合本〔简〕": "CUVs",
         }
         if text in matchTexts:
             text = matchTexts[text]
