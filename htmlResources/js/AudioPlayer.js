@@ -53,7 +53,7 @@ var AudioPlayer = (function() {
     '        <button class="ap-controls ap-shuffle-btn">'+
     '          <i class="material-icons md-dark">shuffle</i>'+
     '        </button>'+
-    '        <button class="ap-controls ap-playlist-btn">'+
+    '        <button class="ap-controls ap-playlist-btn ap-active">'+
     '          <i class="material-icons md-dark">queue_music</i>'+
     '        </button>'+
     '      </div>'+
@@ -230,7 +230,9 @@ var AudioPlayer = (function() {
       });
 
       pl = create('div', {
-        'className': 'pl-container hide',
+        //'className': 'pl-container hide',
+        // Show playlist by default
+        'className': 'pl-container',
         'id': 'pl',
         'innerHTML': !isEmptyList() ? '<ul class="pl-list">' + html.join('') + '</ul>' : '<div class="pl-empty">PlayList is empty</div>'
       });

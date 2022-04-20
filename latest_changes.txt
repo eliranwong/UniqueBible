@@ -1,3 +1,6 @@
+Changes in 28.79:
+* http-server built-in audio player now display playlist by default.
+
 Changes in 28.78:
 * Fix font issue in desktop mode
 

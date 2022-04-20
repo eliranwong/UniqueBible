@@ -11,7 +11,8 @@ class HtmlGeneratorUtil:
 
     @staticmethod
     def getAudioPlayer(playlist):
-        items = """
+        # Audio Player souce codes: https://github.com/likev/html5-audio-player
+        html = """
 <!DOCTYPE html>
 <html >
   <head>
@@ -20,7 +21,7 @@ class HtmlGeneratorUtil:
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.21">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.22">
     <style>
 
     #player{
@@ -37,7 +38,7 @@ class HtmlGeneratorUtil:
      <div id='player'></div>
 
     <!-- Audio player js begin-->
-    <script src="js/AudioPlayer.js?v=1.21"></script>
+    <script src="js/AudioPlayer.js?v=1.22"></script>
 
     <script>
         // test image for web notifications
@@ -62,10 +63,10 @@ class HtmlGeneratorUtil:
                 text, b, c, v = elements
                 if b in books:
                     title = "{1} {2}:{3} ({0})".format(text, books[b][0], c, v[:-4])
-            items += "{"
-            items += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
-            items += "},"
-        items += """
+            html += "{"
+            html += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
+            html += "},"
+        html += """
           ]
         });
     </script>
@@ -74,7 +75,7 @@ class HtmlGeneratorUtil:
   </body>
 </html>        
 """
-        return items
+        return html
 
     @staticmethod
     def getMenu(command, source="main"):
