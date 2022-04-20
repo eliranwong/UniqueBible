@@ -412,6 +412,7 @@ optional = (
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
     ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
+    ("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
 )
 for module, feature, isInstalled in optional:

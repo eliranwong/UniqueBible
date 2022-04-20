@@ -1,3 +1,6 @@
+Changes in 28.76:
+* Fixed a startup issue introduced by a recent update.
+
 Changes in 28.75:
 * Updated javascript files for http-server.
 
