@@ -508,7 +508,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                   position: absolute;
                   top: 0;
                   right: 50px;
-                  font-size: 25px;
+                  font-size: 35px;
                 {5}
 
                 #navBtns {4}
