@@ -507,8 +507,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 .sidenav .fullscreenbtn {4}
                   position: absolute;
                   top: 0;
-                  right: 50px;
-                  font-size: 35px;
+                  right: 45px;
+                  font-size: 30px;
                 {5}
 
                 #navBtns {4}
