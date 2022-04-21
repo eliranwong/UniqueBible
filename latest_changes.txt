@@ -1,3 +1,7 @@
+Changes in 28.85:
+* Relocated buttons on http-server index page side panel.
+* Added new associations of bible audio modules.
+
 Changes in 28.83, 28.84:
 * Fixed display of lexeme title on html media player in http-server.
 * http-server index page buttons now use Google material icons.

@@ -141,6 +141,10 @@ class FileUtil:
     def getMP3TextFile(text):
         matchTexts = {
             "KJVx": "KJV",
+            "NLT": "NLT2015",
+            "NLT2015x": "NLT2015",
+            "NIV2011x": "NIV",
+            "NRSVx": "NRSV",
             "NETx": "NET",
             "WEBx": "WEB",
             "TRx": "TR",
