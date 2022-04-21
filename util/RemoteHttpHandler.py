@@ -507,19 +507,20 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 .sidenav .fullscreenbtn {4}
                   position: absolute;
                   top: 0;
+                  right: 50px;
                   font-size: 25px;
                 {5}
 
                 #navBtns {4}
                   position: absolute;
                   top: 20;
-                  left: 60px;
+                  left: 30px;
                 {5}
 
                 .sidenav .closebtn {4}
                   position: absolute;
                   top: 0;
-                  right: 25px;
+                  right: 5px;
                   font-size: 35px;
                   margin-left: 50px;
                 {5}

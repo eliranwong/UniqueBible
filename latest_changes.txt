@@ -1,6 +1,7 @@
-Changes in 28.83:
+Changes in 28.83, 28.84:
 * Fixed display of lexeme title on html media player in http-server.
 * http-server index page buttons now use Google material icons.
+* http-server index page side panel buttons relocated.
 
 Changes in 28.82:
 * Workaround issue of loading OHGB and OHGBi in bible.gospelchurch.uk
