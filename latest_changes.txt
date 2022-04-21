@@ -1,3 +1,6 @@
+Changes in 28.86:
+* Fixed default config.audioBibleIcon on fresh installation.
+
 Changes in 28.85:
 * Relocated buttons on http-server index page side panel.
 * Added new associations of bible audio modules.

@@ -318,11 +318,11 @@ class ConfigUtil:
         config.help["audioBibleIcon"] = """
         # Specify the icon used for playing audio bible features"""
         if not hasattr(config, "audioBibleIcon"):
-            config.audioBibleIcon2 = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
+            config.audioBibleIcon = '<span class="material-icons-outlined">audiotrack</span>&nbsp;'
         elif not config.audioBibleIcon.endswith("&nbsp;"):
             config.audioBibleIcon = f"{config.audioBibleIcon.strip()}&nbsp;"
         config.help["audioBibleIcon2"] = """
-        # Specify the icon used for playing audio bible features"""
+        # Specify the icon used for playing audio bible features, which work with config.readTillChapterEnd."""
         if not hasattr(config, "audioBibleIcon2"):
             config.audioBibleIcon2 = '<span class="material-icons">audiotrack</span>&nbsp;'
         elif not config.audioBibleIcon2.endswith("&nbsp;"):
