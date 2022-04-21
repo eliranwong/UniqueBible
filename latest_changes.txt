@@ -1,3 +1,6 @@
+Changes in 28.82:
+* Workaround issue of loading OHGB and OHGBi in bible.gospelchurch.uk
+
 Changes in 28.81:
 * Added Google material icons fonts
 * Added support of offline use of Google material icons fonts

@@ -323,6 +323,18 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         shortcuts = self.getShortcuts()
         commands = self.getCommands()
         commandLower = self.command.lower()
+
+        if not self.checkPermission()[0] and config.readFormattedBibles:
+            checkOhgb = {
+                "text:::ohgb": "TEXT:::MOB",
+                "text:::ohgbi": "TEXT:::MIB",
+            }
+            if commandLower in checkOhgb.keys():
+                self.command = checkOhgb[commandLower]
+            elif commandLower.startswith("bible:::ohgb:::"):
+                self.command = "BIBLE:::MOB:::{0}".format(self.command[15:])
+            elif commandLower.startswith("bible:::ohgbi:::"):
+                self.command = "BIBLE:::MIB:::{0}".format(self.command[16:])
         
         if commandLower in config.customCommandShortcuts.keys():
             self.command = config.customCommandShortcuts[commandLower]
