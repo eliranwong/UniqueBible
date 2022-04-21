@@ -513,7 +513,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 #navBtns {4}
                   position: absolute;
                   top: 20;
-                  left: 70px;
+                  left: 60px;
                 {5}
 
                 .sidenav .closebtn {4}
@@ -1060,7 +1060,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if newChapter < 1:
             newChapter = 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = "<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'>&lt;</button>".format(command, config.thisTranslation["menu4_previous"])
+        html = """<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'><span class="material-icons-outlined">navigate_before</span></button>""".format(command, config.thisTranslation["menu4_previous"])
         return html
 
     def nextChapter(self):
@@ -1068,15 +1068,16 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.mainC < BibleBooks.getLastChapter(config.mainB):
             newChapter += 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = "<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'>&gt;</button>".format(command, config.thisTranslation["menu4_next"])
+        html = """<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'><span class="material-icons-outlined">navigate_next</span></button>""".format(command, config.thisTranslation["menu4_next"])
         return html
 
     def toggleFullscreen(self):
-        html = "<button type='button' title='{0}' onclick='fullScreenSwitch()'>+ / -</button>".format(config.thisTranslation["menu1_fullScreen"])
+        html = """<button type='button' title='{0}' onclick='fullScreenSwitch()'><span class="material-icons-outlined">fullscreen</span></button>""".format(config.thisTranslation["menu1_fullScreen"])
         return html
 
     def openSideNav(self):
-        html = "<button type='button' title='{0}' onclick='openSideNav()'>&equiv;</button>".format(config.thisTranslation["menu_bibleMenu"])
+        #html = "<button type='button' title='{0}' onclick='openSideNav()'>&equiv;</button>".format(config.thisTranslation["menu_bibleMenu"])
+        html = """<button type='button' title='{0}' onclick='openSideNav()'><span class="material-icons-outlined">menu</span></button>""".format(config.thisTranslation["menu_bibleMenu"])
         return html
 
     def getUserManual(self):
@@ -1087,39 +1088,48 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         return userManual
 
     def internalHelpButton(self):
-        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["ubaCommands"])
+        #html = """<button type='button' title='{0}' onclick='submitCommand(".help")'>&quest;</button>""".format(config.thisTranslation["ubaCommands"])
+        html = """<button type='button' title='{0}' onclick='submitCommand(".help")'><span class="material-icons-outlined">help_outline</span></button>""".format(config.thisTranslation["ubaCommands"])
         return html
 
     def externalHelpButton(self):
-        html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
+        #html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'>&quest;&quest;</button>""".format(config.thisTranslation["userManual"], self.getUserManual())
+        html = """<button type='button' title='{0}' onclick='window.open("{1}", "_blank")'><span class="material-icons-outlined">menu_book</span></button>""".format(config.thisTranslation["userManual"], self.getUserManual())
         return html
 
     def submitButton(self):
-        html = """<button type='button' title='{0}' onclick='document.getElementById("commandForm").submit();'>&crarr;</button>""".format(config.thisTranslation["enter"])
+        #html = """<button type='button' title='{0}' onclick='document.getElementById("commandForm").submit();'>&crarr;</button>""".format(config.thisTranslation["enter"])
+        html = """<button type='button' title='{0}' onclick='document.getElementById("commandForm").submit();'><span class="material-icons-outlined">keyboard_return</span></button>""".format(config.thisTranslation["enter"])
         return html
 
     def qrButton(self):
-        html = """<button type='button' title='{0}' onclick='submitCommand("qrcode:::"+window.location.href)'>&#9641;</button>""".format(config.thisTranslation["qrcode"])
+        #html = """<button type='button' title='{0}' onclick='submitCommand("qrcode:::"+window.location.href)'>&#9641;</button>""".format(config.thisTranslation["qrcode"])
+        html = """<button type='button' title='{0}' onclick='submitCommand("qrcode:::"+window.location.href)'><span class="material-icons-outlined">qr_code</span></button>""".format(config.thisTranslation["qrcode"])
         return html
 
     def qrScannerButton(self):
-        html = """<button type='button' title='{0}' onclick="document.getElementById('bibleFrame').src = '{1}';">&#9635;</button>""".format(config.thisTranslation["qrcodeScanner"], self.getQrScannerPage())
+        #html = """<button type='button' title='{0}' onclick="document.getElementById('bibleFrame').src = '{1}';">&#9635;</button>""".format(config.thisTranslation["qrcodeScanner"], self.getQrScannerPage())
+        html = """<button type='button' title='{0}' onclick="document.getElementById('bibleFrame').src = '{1}';"><span class="material-icons-outlined">qr_code_scanner</span></button>""".format(config.thisTranslation["qrcodeScanner"], self.getQrScannerPage())
         return html
 
     def passageSelectionButton(self):
-        html = """<button type='button' title='{1}' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(config.webHomePage, config.thisTranslation["bibleNavigation"])
+        #html = """<button type='button' title='{1}' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(config.webHomePage, config.thisTranslation["bibleNavigation"])
+        html = """<button type='button' title='{1}' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'><span class="material-icons-outlined">add</span></button>""".format(config.webHomePage, config.thisTranslation["bibleNavigation"])
         return html
 
     def libraryButton(self):
-        html = """<button type='button' onclick='submitCommand(".library")'>{0}</button>""".format(config.thisTranslation["menu_library"])
+        #html = """<button type='button' onclick='submitCommand(".library")'>{0}</button>""".format(config.thisTranslation["menu_library"])
+        html = """<button type='button' onclick='submitCommand(".library")'><span class="material-icons-outlined">local_library</span></button>"""
         return html
 
     def searchButton(self):
-        html = """<button type='button' onclick='submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
+        #html = """<button type='button' onclick='submitCommand(".search")'>{0}</button>""".format(config.thisTranslation["menu_search"])
+        html = """<button type='button' onclick='submitCommand(".search")'><span class="material-icons-outlined">search</span></button>"""
         return html
 
     def newWindowButton(self):
-        html = """<button type='button' title='{0}' onclick='openCommandInNewWindow()'>&#8663;</button>""".format(config.thisTranslation["openOnNewWindow"])
+        #html = """<button type='button' title='{0}' onclick='openCommandInNewWindow()'>&#8663;</button>""".format(config.thisTranslation["openOnNewWindow"])
+        html = """<button type='button' title='{0}' onclick='openCommandInNewWindow()'><span class="material-icons-outlined">open_in_new</span></button>""".format(config.thisTranslation["openOnNewWindow"])
         return html
 
     def favouriteBibleButton(self, text):
