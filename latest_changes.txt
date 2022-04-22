@@ -1,3 +1,7 @@
+Changes in 28.88:
+* Added a command ".chapters" in http-server, to open a menu of all available chapters
+* Changed the passage selection button on http-server side bar to a button for displaying chapter menu.
+
 Changes in 28.87:
 * Added chapter navigation to http-server media player page.
 * Added table of content on bible audio.

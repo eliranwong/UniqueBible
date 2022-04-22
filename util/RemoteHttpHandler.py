@@ -229,8 +229,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.045'>
-                <script src='js/http_server.js?v=1.045'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.046'>
+                <script src='js/http_server.js?v=1.046'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -438,7 +438,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.045'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.046'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -568,12 +568,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.045'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.045'>
-                <script src='js/common.js?v=1.045'></script>
-                <script src='js/{9}.js?v=1.045'></script>
-                <script src='w3.js?v=1.045'></script>
-                <script src='js/http_server.js?v=1.045'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.046'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.046'>
+                <script src='js/common.js?v=1.046'></script>
+                <script src='js/{9}.js?v=1.046'></script>
+                <script src='w3.js?v=1.046'></script>
+                <script src='js/http_server.js?v=1.046'></script>
                 <script>
                 checkCookie();
                 {21}
@@ -735,7 +735,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.wfile.write(bytes(html, "utf8"))
 
     def getSideNavContent(self):
-        html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.passageSelectionButton(), self.nextChapter())
+        html = """<div id="navBtns">{0} {1} {2}</div>""".format(self.previousChapter(), self.chapterSelectionButton(), self.nextChapter())
         #html += """<a href="#" onclick="submitCommand('.bible')">{0}</a>""".format(self.parser.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         html += """<span id="lastVerse"></span>"""
         html += """<a href="#">{0}</a>""".format(self.verseActiionSelection())
@@ -902,12 +902,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.045'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.045'>"
-                "<script src='js/common.js?v=1.045'></script>"
-                "<script src='js/{7}.js?v=1.045'></script>"
-                "<script src='w3.js?v=1.045'></script>"
-                "<script src='js/http_server.js?v=1.045'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.046'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.046'>"
+                "<script src='js/common.js?v=1.046'></script>"
+                "<script src='js/{7}.js?v=1.046'></script>"
+                "<script src='w3.js?v=1.046'></script>"
+                "<script src='js/http_server.js?v=1.046'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -923,7 +923,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.045'></script>"
+                "<script src='js/custom.js?v=1.046'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
@@ -1072,7 +1072,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         if config.mainC < BibleBooks.getLastChapter(config.mainB):
             newChapter += 1
         command = self.parser.bcvToVerseReference(config.mainB, newChapter, 1)
-        html = """<button type='button' title='{1}' onclick='submitCommand(\"{0}\")'><span class="material-icons-outlined">navigate_next</span></button>""".format(command, config.thisTranslation["menu4_next"])
+        html = """<button type='button' title='{1}' onclick='submitCommand("{0}")'><span class="material-icons-outlined">navigate_next</span></button>""".format(command, config.thisTranslation["menu4_next"])
         return html
 
     def toggleFullscreen(self):
@@ -1119,6 +1119,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def passageSelectionButton(self):
         #html = """<button type='button' title='{1}' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'>&dagger;</button>""".format(config.webHomePage, config.thisTranslation["bibleNavigation"])
         html = """<button type='button' title='{1}' onclick='mod = "KJV"; updateBook("KJV", "{0}"); openNav("navB");'><span class="material-icons-outlined">add</span></button>""".format(config.webHomePage, config.thisTranslation["bibleNavigation"])
+        return html
+
+    def chapterSelectionButton(self):
+        html = """<button type='button' title='{0}' onclick='submitCommand(".chapters")'><span class="material-icons-outlined">auto_stories</span></button>""".format(config.thisTranslation["bibleNavigation"])
         return html
 
     def libraryButton(self):
@@ -1282,9 +1286,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.myqrcode')">.myQRcode</ref> - Display a QR code for other users connecting to the same UBA http-server.<br>
         <ref onclick="window.parent.submitCommand('.bible')">.bible</ref> - Open bible chapter.<br>
         <ref onclick="window.parent.submitCommand('.biblemenu')">.bibleMenu</ref> - Open bible menu.<br>
+        <ref onclick="window.parent.submitCommand('.chapters')">.chapters</ref> - Open a menu of all available chapters.<br>
         <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentaryMenu</ref> - Open Commentary menu.<br>
         <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelineMenu</ref> - Open Timeline menu.<br>
-        <ref onclick="window.parent.submitCommand('.audio')">.audio</ref> - Display available bible audio.<br>
+        <ref onclick="window.parent.submitCommand('.audio')">.audio</ref> - Open audio bible content page.<br>
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
         <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>

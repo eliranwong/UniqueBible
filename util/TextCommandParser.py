@@ -100,6 +100,12 @@ class TextCommandParser:
             # Usage - TEXT:::[BIBLE_VERSION]
             # e.g. TEXT:::KJV
             # e.g. TEXT:::NET"""),
+            "chapters": (self.textChapters, """
+            # [KEYWORD] CHAPTERS
+            # Feature - Display all available chapters of a bible version.
+            # Usage - CHAPTERS:::[BIBLE_VERSION]
+            # e.g. CHAPTERS:::KJV
+            # e.g. CHAPTERS:::NET"""),
             "compare": (self.textCompare, """
             # [KEYWORD] COMPARE
             # Feature - Compare bible versions of a single or multiple references.
@@ -1760,6 +1766,30 @@ class TextCommandParser:
                     self.parent.enforceCompareParallelButtonClicked()
                 updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                 return self.textBibleVerseParser(viewReference, texts[0], source)
+
+    # CHAPTERS:::
+    def textChapters(self, command, source):
+        texts = self.getConfirmedTexts(command)
+        if not texts:
+            return self.invalidCommand()
+        else:
+            booksMap = {
+                "ENG": BibleBooks.eng,
+                "TC": BibleBooks.tc,
+                "SC": BibleBooks.sc,
+            }
+            books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+
+            text = texts[0]
+            bible = Bible(text)
+            bookList = bible.getBookList()
+            html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
+            for bNo in bookList:
+                abb = books[str(bNo)][0]
+                chapterList = bible.getChapterList(bNo)
+                commandPrefix = f"BIBLE:::{text}:::{abb} "
+                html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
+            return ("study", html, {})
 
     # MAIN:::
     def textMain(self, command, source):

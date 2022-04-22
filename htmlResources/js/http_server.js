@@ -189,6 +189,9 @@ function checkCommands(cmd) {
         case ".bible":
             el.value = "BIBLE:::" + getLastText() + ":::" + getLastVerse();
             break;
+        case ".chapters":
+                el.value = "CHAPTERS:::" + getLastText();
+                break;
         case ".compare":
             el.value = el.value.slice(1) + ":::" + getLastVerse();
             break;
