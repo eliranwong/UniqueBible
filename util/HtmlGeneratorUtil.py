@@ -1,7 +1,7 @@
 import re
 
 import config
-from db.BiblesSqlite import BiblesSqlite
+from db.BiblesSqlite import BiblesSqlite, Bible
 from db.ToolsSqlite import Commentary
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
@@ -11,6 +11,14 @@ class HtmlGeneratorUtil:
 
     @staticmethod
     def getAudioPlayer(playlist):
+        # Get book name translation
+        booksMap = {
+            "ENG": BibleBooks.eng,
+            "TC": BibleBooks.tc,
+            "SC": BibleBooks.sc,
+        }
+        books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+
         # Audio Player souce codes: https://github.com/likev/html5-audio-player
         html = """
 <!DOCTYPE html>
@@ -21,7 +29,7 @@ class HtmlGeneratorUtil:
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.22">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.27">
     <style>
 
     #player{
@@ -34,11 +42,15 @@ class HtmlGeneratorUtil:
   </head>
 
   <body>
-      <!-- Audio player container-->
-     <div id='player'></div>
+"""
+
+        # Media player
+        html += """
+    <!-- Audio player container-->
+    <div id='player' style='margin: auto;'></div>
 
     <!-- Audio player js begin-->
-    <script src="js/AudioPlayer.js?v=1.22"></script>
+    <script src="js/AudioPlayer.js?v=1.27"></script>
 
     <script>
         // test image for web notifications
@@ -51,12 +63,8 @@ class HtmlGeneratorUtil:
             notification: false,
             playList: [ 
 """
-        booksMap = {
-            "ENG": BibleBooks.eng,
-            "TC": BibleBooks.tc,
-            "SC": BibleBooks.sc,
-        }
-        books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+
+        # Add playlist content
         for title, filePath in playlist:
             elements = title.split("_")
             if len(elements) == 4:
@@ -79,11 +87,80 @@ class HtmlGeneratorUtil:
         });
     </script>
     <!-- Audio player js end-->
+"""
 
+        # Add chapter navigation
+        if playlist:
+            firstFile = playlist[0][0]
+            elements = firstFile.split("_")
+            if elements[0] == "lex":
+                lex, text, b, c, *_ = elements
+            else:
+                text, b, c, *_ = elements
+            if not text in ("BHS5", "OGNT"):
+                html += "<div style='margin: auto;'><p style='text-align: center;'>"
+                html += HtmlGeneratorUtil.previousChapterAudio(text, int(b), int(c))
+                html += HtmlGeneratorUtil.getChapterAudioButton(text, b, c, "{0} {1}".format(books[b][0], c))
+                html += HtmlGeneratorUtil.nextChapterAudio(text, int(b), int(c))
+                html += "</p></div>"
+
+                bible = Bible(text)
+                bookList = bible.getBookList()
+                for bNo in bookList:
+                    chapterList = bible.getChapterList(bNo)
+                    commandPrefix = f"READCHAPTER:::{text}.{bNo}."
+                    html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], books[str(bNo)][0], chapterList, commandPrefix)
+
+        html += """
   </body>
 </html>        
 """
         return html
+
+    @staticmethod
+    def getChapterAudioButton(text, b, c, title):
+        command = f"READCHAPTER:::{text}.{b}.{c}"
+        html = """<button type='button' class='button1' title='{1}' onclick='document.title="{0}"'>{1}</button>""".format(command, title)
+        return html
+
+    @staticmethod
+    def previousChapterAudio(text, b, c):
+        if c > 1:
+            newChapter = c - 1
+        else:
+            newChapter = BibleBooks.getLastChapter(b)
+        command = f"READCHAPTER:::{text}.{b}.{newChapter}"
+        html = """<button type='button' class='button1' title='{1}' onclick='document.title="{0}"'><span class="material-icons-outlined">navigate_before</span></button>""".format(command, config.thisTranslation["menu4_previous"])
+        return html
+
+    @staticmethod
+    def nextChapterAudio(text, b, c):
+        if c < BibleBooks.getLastChapter(b):
+            newChapter = c + 1
+        else:
+            newChapter = 1
+        command = f"READCHAPTER:::{text}.{b}.{newChapter}"
+        html = """<button type='button' class='button1' title='{1}' onclick='document.title="{0}"'><span class="material-icons-outlined">navigate_next</span></button>""".format(command, config.thisTranslation["menu4_next"])
+        return html
+
+
+    @staticmethod
+    def getBibleChapterTable(bookName, bookAbb, chapterList, commandPrefix="", commandSuffix=""):
+        chapters = ""
+        for c in chapterList:
+            command = "{0}{1}{2}".format(commandPrefix, c, commandSuffix)
+            chapters += """<button type='button' class='button2' title='{0} {1}' onclick="document.title='{2}'">{1}</button>""".format(bookAbb, c, command)
+            #chapters += """<ref title='{0} {1}' onclick="document.title='{2}'">{1}</ref> """.format(bookAbb, c, command)
+        return """
+<table>
+  <tr>
+    <th>{0}</th>
+  </tr>
+  <tr>
+    <td><div style='margin: auto;'><p style='text-align: center;'>{1}</p></div></td>
+  </tr>
+</table>
+""".format(bookName, chapters)
 
     @staticmethod
     def getMenu(command, source="main"):

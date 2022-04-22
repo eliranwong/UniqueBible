@@ -796,4 +796,5 @@ translation = {
     "displayHebrewGreekWordAudio": "ഹീബ്രി/ഗ്രീക്ക് വാക്കു് ഓഡിയോ കാണിക്കുക",
     "hideVlcInterfaceReadingSingleVerse": "ഒരു വേഗത വായിക്കുവാന് VLC ഗ്രാഫിക്കല് ഇന്റര്ഫെയിസ് മറയ്ക്കുക.",
     "showHebrewGreekWordAudioLinksInMIB": "MIB-ല് ഓരോ ഹീബ്രു ഗ്രീക്ക് വാക്കുകളുടേയും ഓഡിയോ ലിങ്കുകളും കാണിക്കുക.",
+    "bibleAudio": "ബൈബിള് ഓഡിയോ",
 }

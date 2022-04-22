@@ -19,6 +19,7 @@ from urllib.parse import urlparse, parse_qs
 from util.FileUtil import FileUtil
 from util.LanguageUtil import LanguageUtil
 from pathlib import Path
+from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 
 
 class RemoteHttpHandler(SimpleHTTPRequestHandler):
@@ -228,8 +229,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.044'>
-                <script src='js/http_server.js?v=1.044'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.045'>
+                <script src='js/http_server.js?v=1.045'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -244,6 +245,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
 
     def loadContent(self):
         features = {
+            "audio": self.audioContent,
             "config": self.configContent,
             "download": self.downloadContent,
             "history": self.historyContent,
@@ -436,7 +438,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.044'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.045'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -566,12 +568,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.044'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.044'>
-                <script src='js/common.js?v=1.044'></script>
-                <script src='js/{9}.js?v=1.044'></script>
-                <script src='w3.js?v=1.044'></script>
-                <script src='js/http_server.js?v=1.044'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.045'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.045'>
+                <script src='js/common.js?v=1.045'></script>
+                <script src='js/{9}.js?v=1.045'></script>
+                <script src='w3.js?v=1.045'></script>
+                <script src='js/http_server.js?v=1.045'></script>
                 <script>
                 checkCookie();
                 {21}
@@ -751,6 +753,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             (config.thisTranslation["commentaries"], ".commentarymenu"),
             (config.thisTranslation["menu_library"], ".library"),
             (config.thisTranslation["html_timelines"], ".timelineMenu"),
+            (config.thisTranslation["bibleAudio"], ".audio"),
             (config.thisTranslation["menu5_names"], ".names"),
             (config.thisTranslation["menu5_characters"], ".characters"),
             (config.thisTranslation["menu5_locations"], ".maps"),
@@ -899,12 +902,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.044'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.044'>"
-                "<script src='js/common.js?v=1.044'></script>"
-                "<script src='js/{7}.js?v=1.044'></script>"
-                "<script src='w3.js?v=1.044'></script>"
-                "<script src='js/http_server.js?v=1.044'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.045'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.045'>"
+                "<script src='js/common.js?v=1.045'></script>"
+                "<script src='js/{7}.js?v=1.045'></script>"
+                "<script src='w3.js?v=1.045'></script>"
+                "<script src='js/http_server.js?v=1.045'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -920,7 +923,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.044'></script>"
+                "<script src='js/custom.js?v=1.045'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
@@ -1281,6 +1284,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.biblemenu')">.bibleMenu</ref> - Open bible menu.<br>
         <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentaryMenu</ref> - Open Commentary menu.<br>
         <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelineMenu</ref> - Open Timeline menu.<br>
+        <ref onclick="window.parent.submitCommand('.audio')">.audio</ref> - Display available bible audio.<br>
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
         <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
@@ -1401,6 +1405,41 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.session)
         else:
             return "QRCODE:::server"
+
+    def audioContent(self):
+        content = ""
+        modules = {
+            "ASV": "American Standard Version",
+            "BBE": "Bible in Basic English",
+            "BSB": "Berean Study Bible",
+            "CUV": "中文和合本〔廣東話〕",
+            "CUVs": "中文和合本〔普通話〕",
+            "ERV": "English Revised Version",
+            "ISV": "International Standard Version",
+            "KJV": "King James Version",
+            "LEB": "Lexham English Bible",
+            "NET": "New English Translation",
+            "OHGB": "Open Hebrew & Greek Bible",
+            "SBLGNT": "SBL Greek New Testament",
+            "WEB": "World English Bible",
+            "WLC": "Westminster Leningrad Codex",
+        }
+        for module in modules.keys():
+            if os.path.isdir(os.path.join("audio", "bibles", module)):
+                try:
+                    bible = Bible(module)
+                    bookList = bible.getBookList()
+                    if bookList:
+                        b = bookList[0]
+                        chapterList = bible.getChapterList(b)
+                        if chapterList:
+                            c = chapterList[0]
+                            content += "<p>{0}</p>".format(HtmlGeneratorUtil.getChapterAudioButton(module, b, c, modules[module]))
+                except:
+                    pass
+        if not content:
+            content = config.thisTranslation["search_notFound"]
+        return "<div style='margin: auto; text-align: center;'><h2>{0}</h2><p style='text-align: center;'>{1}</p></div>".format(config.thisTranslation["bibleAudio"], content)
 
     def libraryContent(self):
         self.textCommandParser.parent.setupResourceLists()
