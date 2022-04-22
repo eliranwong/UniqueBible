@@ -1,4 +1,5 @@
 Changes in 28.88:
+* Added a command keyword "CHAPTERS:::".
 * Added a command ".chapters" in http-server, to open a menu of all available chapters
 * Changed the passage selection button on http-server side bar to a button for displaying chapter menu.
 
