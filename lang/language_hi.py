@@ -797,4 +797,5 @@ translation = {
     "hideVlcInterfaceReadingSingleVerse": "एकल कविता पढ़ने के लिए VLC ग्राफिकल अंतरफलक छुपाएँ.",
     "showHebrewGreekWordAudioLinksInMIB": "एमआईबी में प्रत्येक हिब्रू और ग्रीक शब्दों के उपलब्ध ऑडियो लिंक दिखाएँ.",
     "bibleAudio": "बाइबल ऑडियो",
+    "noBibleAudioLink": "कोई बाईबल ऑडियो मौजूदा सामग्री के साथ जुड़ा हुआ है!",
 }

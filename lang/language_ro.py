@@ -797,4 +797,5 @@ translation = {
     "hideVlcInterfaceReadingSingleVerse": "Ascunde interfața grafică VLC pentru citirea unui singur verset.",
     "showHebrewGreekWordAudioLinksInMIB": "Afișează link-uri audio disponibile ale fiecărui ebraică și cuvinte grecești în MIB.",
     "bibleAudio": "Biblia Audio",
+    "noBibleAudioLink": "Nici un audio biblic nu este legat cu continutul curent!",
 }

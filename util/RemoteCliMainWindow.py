@@ -120,7 +120,7 @@ class RemoteCliMainWindow(CrossPlatform):
                     if os.path.isfile(audioFilePath):
                         playlist.append((audioFile, audioFilePath))
         return playlist
-        #return [("_NET_1_1_3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("_NET_1_1_4", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
+        #return [("NET_1_1_3.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_3.mp3"), ("NET_1_1_4.mp3", "audio/bibles/NET-UK/default/1_1/NET_1_1_4.mp3")]
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel

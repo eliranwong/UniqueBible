@@ -1,3 +1,7 @@
+Changes in 28.90:
+* Added a ".play" command and a button to http-server to play all available bible audio linked with the current content.
+* Relocate QR code scanner link in http-server.
+
 Changes in 28.89:
 * Added a context plugin "Read All Verses" to read all available single verse audio linked in the currently opened content.
 

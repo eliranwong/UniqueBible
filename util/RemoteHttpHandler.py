@@ -246,6 +246,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def loadContent(self):
         features = {
             "audio": self.audioContent,
+            "play": self.playAudio,
             "config": self.configContent,
             "download": self.downloadContent,
             "history": self.historyContent,
@@ -773,6 +774,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html += """<a href="index.html">English</a>""" if config.webHomePage != "index.html" else ""
         html += """<hr>{0}""".format(self.getOrganisationIcon())
         html += """<a href="https://github.com/eliranwong/UniqueBible" target="_blank"><img style="width:85px; height:auto;" src="icons/{0}"></a>""".format(config.webUBAIcon)
+        html += "<hr>"
+        html += """<a href="#" onclick="document.getElementById('bibleFrame').src = '{1}';">{0} <span class="material-icons-outlined">qr_code_scanner</span></a>""".format(config.thisTranslation["qrcodeScanner"], self.getQrScannerPage())
+        html += "<hr>"
         html += """<a href="#">&nbsp;</a>"""
         html += """<a href="#">&nbsp;</a>"""
         return html
@@ -805,13 +809,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.qrButton(),
                     config.webHomePage,
                     self.newWindowButton(),
-                    self.qrScannerButton(),
+                    #self.qrScannerButton(),
+                    self.playAudioButton(),
                 )
             else:
                 return """
                     <form id="commandForm" action="{0}" action="get">
                     {10}&nbsp;&nbsp;{5}&nbsp;&nbsp;{3}&nbsp;&nbsp;{4}&nbsp;&nbsp;{6}&nbsp;&nbsp;{7}&nbsp;&nbsp;
-                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{19}&nbsp;&nbsp;{18}&nbsp;&nbsp;{9}
+                    {11}&nbsp;&nbsp;{12}{13}{14}{15}&nbsp;&nbsp;{8}&nbsp;&nbsp;{16}&nbsp;&nbsp;{19}&nbsp;&nbsp;{20}&nbsp;&nbsp;{18}&nbsp;&nbsp;{9}
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
                     <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value=""/>
@@ -838,6 +843,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     self.newWindowButton(),
                     self.internalHelpButton(),
                     self.qrScannerButton(),
+                    self.playAudioButton(),
                 )
         else:
             return ""
@@ -1075,6 +1081,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         html = """<button type='button' title='{1}' onclick='submitCommand("{0}")'><span class="material-icons-outlined">navigate_next</span></button>""".format(command, config.thisTranslation["menu4_next"])
         return html
 
+    def playAudioButton(self):
+        return """<button type='button' title='{0}' onclick='submitCommand(".play")'><span class="material-icons-outlined">audiotrack</span></button>""".format(config.thisTranslation["bibleAudio"])
+
     def toggleFullscreen(self):
         html = """<button type='button' title='{0}' onclick='fullScreenSwitch()'><span class="material-icons-outlined">fullscreen</span></button>""".format(config.thisTranslation["menu1_fullScreen"])
         return html
@@ -1290,6 +1299,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.commentarymenu')">.commentaryMenu</ref> - Open Commentary menu.<br>
         <ref onclick="window.parent.submitCommand('.timelinemenu')">.timelineMenu</ref> - Open Timeline menu.<br>
         <ref onclick="window.parent.submitCommand('.audio')">.audio</ref> - Open audio bible content page.<br>
+        <ref onclick="window.parent.submitCommand('.play')">.play</ref> - Play all available bible audio linked with the current content.<br>
         <ref onclick="window.parent.submitCommand('.names')">.names</ref> - Open bible names content page.<br>
         <ref onclick="window.parent.submitCommand('.characters')">.characters</ref> - Open bible characters content page.<br>
         <ref onclick="window.parent.submitCommand('.maps')">.maps</ref> - Open bible maps content page.<br>
@@ -1410,6 +1420,49 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             return "QRCODE:::{0}/index.php?code={1}".format(config.httpServerViewerBaseUrl, self.session)
         else:
             return "QRCODE:::server"
+
+    def getPlaylistFromHTML(self, html):
+        playlist = []
+        #searchPattern = """[Rr][Ee][Aa][Dd][Cc][Hh][Aa][Pp][Tt][Ee][Rr]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)[\."']"""
+        searchPattern = """_[Mm][Ee][Nn][Uu]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
+        found = re.search(searchPattern, html)
+        if found:
+            text, b, c = found[1], found[2], found[3]
+            text = FileUtil.getMP3TextFile(text)
+            playlist = RemoteCliMainWindow().playAudioBibleChapterVerseByVerse(text, b, c)
+        else:
+            searchPattern = """[Rr][Ee][Aa][Dd][Vv][Ee][Rr][Ss][Ee]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+            found = re.findall(searchPattern, html)
+            if found:
+                for entry in found:
+                    text, b, c, v = entry
+                    audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
+                    audioFile = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
+                    audioFilePath = os.path.join(audioFolder, audioFile)
+                    if os.path.isfile(audioFilePath):
+                        playlist.append((audioFile, audioFilePath))
+            else:
+                searchPattern = """[Rr][Ee][Aa][Dd]([Ww][Oo][Rr][Dd]|[Ll][Ee][Xx][Ee][Mm][Ee]):::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)\.([0-9]+?)["']"""
+                found = re.findall(searchPattern, html)
+                if found:
+                    for entry in found:
+                        wordType, text, b, c, v, wordID = entry
+                        audioFolder = os.path.join("audio", "bibles", text, "default", "{1}_{2}".format(text, b, c))
+                        prefix = "lex_" if wordType.lower() == "lexeme" else ""
+                        audioFile = "{5}{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID, prefix)
+                        audioFilePath = os.path.join(audioFolder, audioFile)
+                        if os.path.isfile(audioFilePath):
+                            playlist.append((audioFile, audioFilePath))
+        return playlist
+
+    def playAudio(self):
+        mainFileHTML = open(os.path.join("htmlResources", "main-{0}.html".format(self.session)), 'r').read()
+        playlist = self.getPlaylistFromHTML(mainFileHTML)
+        if playlist:
+            content = HtmlGeneratorUtil().getAudioPlayer(playlist)
+        else:
+            content = config.thisTranslation["noBibleAudioLink"]
+        return content
 
     def audioContent(self):
         content = ""

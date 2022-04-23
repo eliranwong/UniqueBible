@@ -731,7 +731,7 @@ translation = {
     "pdfFiles": "PDF Files",
     "_blank": "",
     "allBooksPDF": "All Books/PDF",
-    "qrcodeScanner": "QR Code Scanner",
+    "qrcodeScanner": "QR Scanner",
     "night_theme": "Night Theme",
     "includeStrictDocTypeInNote": "Include the strict doc type in first line of notes",
     "bibleCollections": "Bible Collections",
@@ -797,4 +797,5 @@ translation = {
     "hideVlcInterfaceReadingSingleVerse": "Hide VLC graphical interface for reading a single verse.",
     "showHebrewGreekWordAudioLinksInMIB": "Show available audio links of each Hebrew and Greek words in MIB.",
     "bibleAudio": "Bible Audio",
+    "noBibleAudioLink": "No bible audio is linked with the current content!",
 }

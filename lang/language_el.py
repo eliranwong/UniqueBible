@@ -797,4 +797,5 @@ translation = {
     "hideVlcInterfaceReadingSingleVerse": "Απόκρυψη VLC γραφικό περιβάλλον για την ανάγνωση ενός μόνο στίχο.",
     "showHebrewGreekWordAudioLinksInMIB": "Εμφάνιση διαθέσιμων συνδέσμων ήχου για κάθε εβραϊκή και ελληνική λέξη στο MIB.",
     "bibleAudio": "Αγία Γραφή ήχου",
+    "noBibleAudioLink": "Δεν bible ήχο συνδέεται με το τρέχον περιεχόμενο!",
 }
