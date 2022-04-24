@@ -717,7 +717,7 @@ class TextCommandParser:
             # e.g. _uba:::file://note_editor_key_combo.uba"""),
             "_biblenote": (self.textBiblenote, """
             # [KEYWORD] _biblenote
-            # e.g. _biblenote:::1.1.1.[1]"""),
+            # e.g. _biblenote:::KJV:::1.1.1.1"""),
             "_wordnote": (self.textWordNote, """
             # [KEYWORD] _wordnote
             # e.g. _wordnote:::LXX1:::l1"""),
@@ -988,7 +988,6 @@ class TextCommandParser:
     def getConfirmedTexts(self, texts):
         biblesSqlite = BiblesSqlite()
         bibleList = biblesSqlite.getBibleList()
-        del biblesSqlite
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
         return confirmedTexts
 
@@ -1109,14 +1108,12 @@ class TextCommandParser:
     def getChaptersMenu(self, b, c, text):
         biblesSqlite = BiblesSqlite()
         chapteruMenu = biblesSqlite.getChaptersMenu(b, c, text)
-        del biblesSqlite
         return chapteruMenu
 
     # access to formatted chapter or plain verses of a bible text, called by textBibleVerseParser
     def textPlainBible(self, verseList, text):
         biblesSqlite = BiblesSqlite()
         verses = biblesSqlite.readMultipleVerses(text, verseList)
-        del biblesSqlite
         return verses
 
     def textFormattedBible(self, verse, text, source=""):
@@ -1129,11 +1126,9 @@ class TextCommandParser:
         #    b, c, v, *_ = verse
         #    bibleSqlite = Bible(text)
         #    b, c, v, content = bibleSqlite.readTextVerse(b, c, v)
-        #    del bibleSqlite
         if text in formattedBibles and text not in ("OHGB", "OHGBi", "LXX") and config.readFormattedBibles:
             bibleSqlite = Bible(text)
             content = bibleSqlite.readFormattedChapter(verse)
-            del bibleSqlite
         else:
             # use plain bibles database when corresponding formatted version is not available
             language = Bible(text).getLanguage()
@@ -1924,7 +1919,6 @@ class TextCommandParser:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.compareVerse(verseList, confirmedTexts)
-            del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             if confirmedTexts == ["ALL"]:
                 updateViewConfig(viewText, verseList[-1])
@@ -1950,7 +1944,6 @@ class TextCommandParser:
                 (fontFile, fontSize, css) = Bible(text).getFontInfo()
                 config.mainCssBibleFontStyle += css
             verses = biblesSqlite.parallelVerse(verseList, confirmedTexts)
-            del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             if confirmedTexts == ["ALL"]:
                 updateViewConfig(viewText, verseList[-1])
@@ -1973,7 +1966,6 @@ class TextCommandParser:
         else:
             biblesSqlite = BiblesSqlite()
             verses = biblesSqlite.diffVerse(verseList, confirmedTexts)
-            del biblesSqlite
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             if confirmedTexts == ["ALL"]:
                 updateViewConfig(viewText, verseList[-1])
@@ -2059,7 +2051,6 @@ class TextCommandParser:
                 biblesSqlite = BiblesSqlite()
                 cs = CollectionsSqlite()
                 topic, passagesString = cs.readData("PARALLEL", references.split("."))
-                del cs
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
                 versions, verses = zip(*tableList)
@@ -2089,25 +2080,18 @@ class TextCommandParser:
                 biblesSqlite = BiblesSqlite()
                 cs = CollectionsSqlite()
                 topic, passagesString = cs.readData("PROMISES", references.split("."))
-                del cs
                 passages = bibleVerseParser.extractAllReferences(passagesString, tagged=True)
                 return ("study", "<h2>{0}</h2>{1}".format(topic, biblesSqlite.readMultipleVerses(text, passages)), {})
 
     # _biblenote:::
     def textBiblenote(self, command, source):
-        if source == "http":
-            source = "main"
-        texts = {
-            "main": config.mainText,
-            "study": config.studyText,
-        }
-        if source in texts:
-            bible = Bible(texts[source])
-            note = bible.readBiblenote(command)
-            del bible
+        text, references = self.splitCommand(command)
+        if text in self.getConfirmedTexts(text):
+            bible = Bible(text)
+            note = bible.readBiblenote(references)
             return ("study", note, {})
         else:
-            return ("", "", {})
+            return self.invalidCommand()
 
     # openbooknote:::
     def openBookNoteRef(self, command, source):
@@ -2364,7 +2348,6 @@ class TextCommandParser:
             wordID = commandList[1]
             wordID = re.sub('^[h0]+?([^h0])', r'\1', wordID, flags=re.M)
             info = morphologySqlite.instantWord(int(commandList[0]), int(wordID))
-            del morphologySqlite
             return ("instant", info, {})
         else:
             return ("", "", {})
@@ -2374,7 +2357,6 @@ class TextCommandParser:
         if self.getConfirmedTexts(command):
             biblesSqlite = BiblesSqlite()
             info = biblesSqlite.bibleInfo(command)
-            del biblesSqlite
             if info:
                 return ("instant", info, {})
             else:
@@ -2391,7 +2373,6 @@ class TextCommandParser:
             else:
                 commentarySqlite = Commentary(command)
                 info = commentarySqlite.commentaryInfo()
-                del commentarySqlite
                 if info:
                     return ("instant", info, {})
                 else:
@@ -2508,7 +2489,6 @@ class TextCommandParser:
         text, *_ = command.split(".")
         commentary = Commentary(text)
         commentaryMenu = commentary.getMenu(command)
-        del commentary
         return ("study", commentaryMenu, {})
 
     # _book:::
@@ -2516,7 +2496,6 @@ class TextCommandParser:
         bookData = BookData()
         bookMenu = bookData.getMenu(command)
         config.bookChapNum = 0
-        del bookData
         self.parent.updateBookButton()
         return ("study", bookMenu, {'tab_title':command[:20]})
 
@@ -2558,7 +2537,6 @@ class TextCommandParser:
         module, entry = self.splitCommand(command)
         imageSqlite = ImageSqlite()
         imageSqlite.exportImage(module, entry)
-        del imageSqlite
         if module == "EXLBL":
             imageFile = "htmlResources/images/exlbl/EXLBL_{0}".format(entry)
         else:
@@ -2588,7 +2566,6 @@ class TextCommandParser:
             content = commentary.getContent(bcvTuple)
             if not content == "INVALID_COMMAND_ENTERED":
                 self.setCommentaryVerse(module, bcvTuple)
-            del commentary
             return ("study", content, {'tab_title':'Com:' + module})
 
     # COMMENTARY2:::
@@ -2608,7 +2585,6 @@ class TextCommandParser:
                 content = commentary.getContent(bcvTuple)
                 if not content == "INVALID_COMMAND_ENTERED":
                     self.setCommentaryVerse(module, bcvTuple)
-                del commentary
                 return ("study", content, {})
         else:
             return self.invalidCommand()
@@ -2637,9 +2613,7 @@ class TextCommandParser:
                 searchSqlite = SearchSqlite()
                 exactMatch = searchSqlite.getContent(module, entry)
                 similarMatch = searchSqlite.getSimilarContent(module, entry)
-                del searchSqlite
                 content += "<h2>Search <span style='color: brown;'>{0}</span> for <span style='color: brown;'>{1}</span></h2><p>{4}</p><p><b>Exact match:</b><br><br>{2}</p><p><b>Partial match:</b><br><br>{3}".format(module, entry, exactMatch, similarMatch, selectList)
-        del indexes
         if len(content) > 0:
             return ("study", content, {'tab_title': 'Search:' + origModule + ':' + entry})
         else:
@@ -2666,7 +2640,6 @@ class TextCommandParser:
         else:
             biblesSqlite = BiblesSqlite()
             searchResult = "<hr>".join([biblesSqlite.countSearchBible(text, searchEntry, interlinear, booksRange) for text in texts])
-            del biblesSqlite
             return ("study", searchResult, {})
 
     # SEARCHALL:::
@@ -2737,7 +2710,6 @@ class TextCommandParser:
         else:
             biblesSqlite = BiblesSqlite()
             searchResult = "<hr>".join([biblesSqlite.searchBible(text, mode, searchEntry, favouriteVersion, referenceOnly, booksRange) for text in texts])
-            del biblesSqlite
             return ("study", searchResult, {})
 
     # SEARCHHIGHLIGHT:::
@@ -2761,7 +2733,6 @@ class TextCommandParser:
         bNo = int(book)
         morphologySqlite = MorphologySqlite()
         bcvTuple, content = morphologySqlite.wordData(bNo, int(wordId))
-        del morphologySqlite
 
         # extra data for Greek words
         if bNo >= 40:
@@ -2826,7 +2797,6 @@ class TextCommandParser:
                 content += "<hr>".join([lexicon.getReverseContent(entry) for entry in entryList])
             else:
                 content += "<hr>".join([lexicon.getContent(entry, showLexiconMenu) for entry in entryList])
-            del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
@@ -2850,7 +2820,6 @@ class TextCommandParser:
             config.lexicon = module
             lexicon = Lexicon(module)
             content += lexicon.searchTopic(search)
-            del lexicon
         if not content or content == "INVALID_COMMAND_ENTERED":
             return self.invalidCommand()
         else:
@@ -2871,10 +2840,8 @@ class TextCommandParser:
     def getLexiconMorphologyContent(self, lexicon, lexicalEntry, morphologyModule, morphologyCode):
         lexicon = Lexicon(lexicon)
         lexiconContent = "<hr>".join([lexicon.getContent(entry) for entry in lexicalEntry.split("_")])
-        del lexicon
         searchSqlite = SearchSqlite()
         morphologyDescription = "<hr>".join([searchSqlite.getContent("m"+morphologyModule.upper(), code) for code in morphologyCode.split("_")])
-        del searchSqlite
         return ("study", "{0}<hr>{1}".format(morphologyDescription, lexiconContent), {})
 
     # _wordnote:::
@@ -2883,7 +2850,6 @@ class TextCommandParser:
             module, wordID = self.splitCommand(command)
             bibleSqlite = Bible(module)
             data = bibleSqlite.readWordNote(wordID)
-            del bibleSqlite
             if data:
                 return ("study", data, {})
             else:
@@ -2919,7 +2885,6 @@ class TextCommandParser:
     def textMorphologyFeature(self, command, source, mode):
         morphologySqlite = MorphologySqlite()
         searchResult = morphologySqlite.searchMorphology(mode, command)
-        del morphologySqlite
         return ("study", searchResult, {})
 
     # _searchword:::
@@ -3018,7 +2983,6 @@ class TextCommandParser:
                     config.topic = "EXLBT"
                 exlbData = ExlbData()
                 content = exlbData.getContent(commandList[0], commandList[1])
-                del exlbData
                 if config.theme in ("dark", "night"):
                     content = self.adjustDarkThemeColorsForExl(content)
                 return ("study", content, {})
@@ -3038,7 +3002,6 @@ class TextCommandParser:
             else:
                 testament = "NT"
             content = "<h2>Clause id: c{0}</h2>{1}".format(entry, clauseData.getContent(testament, entry))
-            del clauseData
             self.setStudyVerse(config.studyText, (b, c, v))
             return ("study", content, {})
         else:
@@ -3048,14 +3011,12 @@ class TextCommandParser:
     def textDictionary(self, command, source):
         indexes = IndexesSqlite()
         dictionaryList = dict(indexes.dictionaryList).keys()
-        del indexes
         module = command[:3]
         if module in dictionaryList:
             if not module == "HBN":
                 config.dictionary = module
             dictionaryData = DictionaryData()
             content = dictionaryData.getContent(command)
-            del dictionaryData
             return ("study", content, {})
         else:
             return self.invalidCommand("study")
@@ -3067,12 +3028,10 @@ class TextCommandParser:
             module, entry = commandList
             indexes = IndexesSqlite()
             encyclopediaList = dict(indexes.encyclopediaList).keys()
-            del indexes
             if module in encyclopediaList:
                 config.encyclopedia = module
                 encyclopediaData = EncyclopediaData()
                 content = encyclopediaData.getContent(module, entry)
-                del encyclopediaData
                 return ("study", content, {})
             else:
                 return self.invalidCommand("study")
@@ -3101,7 +3060,6 @@ class TextCommandParser:
             pdfFilename = None
             if isPDF:
                 pdfFilename = entry
-            del bookData
             if not content:
                 return self.invalidCommand("study")
             else:
@@ -3138,7 +3096,6 @@ class TextCommandParser:
             config.bookSearchString = searchString
             modules = modules.split(",")
             content = "<hr>".join([bookData.getSearchedMenu(module, searchString, chapterOnly=chapterOnly) for module in modules])
-            del bookData
             if not content:
                 return ("study", config.thisTranslation["search_notFound"], {})
                 #return self.invalidCommand("study")
@@ -3160,7 +3117,6 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             books = noteSqlite.getSearchedBookList(command)
-            del noteSqlite
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on book(s)</p><p>{2}</p>".format(command, len(books), "; ".join(books)), {})
 
     # SEARCHCHAPTERNOTE:::
@@ -3171,7 +3127,6 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             chapters = noteSqlite.getSearchedChapterList(command)
-            del noteSqlite
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on chapter(s)</p><p>{2}</p>".format(command, len(chapters), "; ".join(chapters)), {})
 
     # SEARCHVERSENOTE:::
@@ -3182,7 +3137,6 @@ class TextCommandParser:
             config.noteSearchString = command
             noteSqlite = NoteSqlite()
             verses = noteSqlite.getSearchedVerseList(command)
-            del noteSqlite
             return ("study", "<p>\"<b style='color: brown;'>{0}</b>\" is found in <b style='color: brown;'>{1}</b> note(s) on verse(s)</p><p>{2}</p>".format(command, len(verses), "; ".join(verses)), {})
 
     # CROSSREFERENCE:::
@@ -3212,8 +3166,6 @@ class TextCommandParser:
                     crossReferenceList.insert(0, tuple(verse))
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-        del crossReferenceSqlite
-        del biblesSqlite
         self.setStudyVerse(config.studyText, verseList[-1])
         return ("study", content, {})
 
@@ -3237,8 +3189,6 @@ class TextCommandParser:
                     crossReferenceList.insert(0, tuple(verse))
                     content += biblesSqlite.readMultipleVerses(config.mainText, crossReferenceList)
                 content += "<hr>"
-            del crossReferenceSqlite
-            del biblesSqlite
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content, {})
 
@@ -3284,8 +3234,6 @@ class TextCommandParser:
                         subContent = re.sub("""(<ref onclick="document.title=')READWORD(.*?)(<tlit>[^<>]*?</tlit><br><hlr><grk>[^<>]+?</grk>)""", r"\1READWORD\2\3 \1READLEXEME\2", subContent)
                 contentList.append(subContent)
             content = "<hr>".join(contentList)
-            del verseData
-            del biblesSqlite
             self.setStudyVerse(config.studyText, verseList[-1])
             return content
 
@@ -3301,8 +3249,6 @@ class TextCommandParser:
             for verse in verseList:
                 b, c, v = verse
                 content += "<h2>{0} - <ref onclick='document.title=\"{1}\"'>{1}</ref></h2>{2}<hr>".format(config.thisTranslation["menu4_indexes"], parser.bcvToVerseReference(b, c, v), indexesSqlite.getAllIndexes(verse))
-            del indexesSqlite
-            del parser
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content, {})
 
@@ -3318,8 +3264,6 @@ class TextCommandParser:
             for verse in verseList:
                 b, c, v = verse
                 content += "<h2>Indexes: <ref onclick='document.title=\"{0}\"'>{0}</ref></h2>{1}<hr>".format(parser.bcvToVerseReference(b, c, v, isChapter=True), indexesSqlite.getChapterIndexes(verse[:2]))
-            del indexesSqlite
-            del parser
             self.setStudyVerse(config.studyText, verseList[-1])
             return ("study", content, {})
 
@@ -3340,7 +3284,6 @@ class TextCommandParser:
             if entry and module:
                 thirdPartyDictionary = ThirdPartyDictionary(module)
                 content += thirdPartyDictionary.search(entry, showMenu)
-                del thirdPartyDictionary
         if len(content) > 0:
             return ("study", content, {})
         else:
@@ -3357,7 +3300,6 @@ class TextCommandParser:
         else:
             thirdPartyDictionary = ThirdPartyDictionary(module)
             content = thirdPartyDictionary.getData(entry)
-            del thirdPartyDictionary
             return ("study", content, {})
 
     # _HIGHLIGHT:::

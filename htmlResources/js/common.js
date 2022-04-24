@@ -1190,7 +1190,7 @@ function uba(file) {
 }
 
 function bn(b, c, v, n) {
-    document.title = "_biblenote:::"+b+"."+c+"."+v+"."+n;
+    document.title = "_biblenote:::"+activeText+":::"+b+"."+c+"."+v+"."+n;
 }
 
 function wordnote(module, wordID) {

@@ -1,3 +1,6 @@
+Changes in 28.91:
+* Fixed loading bible note in http-server when private data are loaded.
+
 Changes in 28.90:
 * Added a ".play" command and a button to http-server to play all available bible audio linked with the current content.
 * Relocate QR code scanner link in http-server.
