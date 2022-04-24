@@ -1,7 +1,7 @@
 import re
 
 import config
-from db.BiblesSqlite import BiblesSqlite, Bible
+from db.BiblesSqlite import BiblesSqlite, Bible, MorphologySqlite
 from db.ToolsSqlite import Commentary
 from util.BibleBooks import BibleBooks
 from util.BibleVerseParser import BibleVerseParser
@@ -67,18 +67,34 @@ class HtmlGeneratorUtil:
         # Add playlist content
         for title, filePath in playlist:
             elements = title.split("_")
+            if len(elements) in (5, 6):
+                morphology = MorphologySqlite()
             if len(elements) == 4:
                 text, b, c, v = elements
                 if b in books:
                     title = "{1} {2}:{3} ({0})".format(text, books[b][0], c, v[:-4])
             elif len(elements) == 5:
                 text, b, c, v, wordID = elements
+                wordID = wordID[:-4]
                 if b in books:
-                    title = "{1} {2}:{3} - {4} ({0})".format(text, books[b][0], c, v, wordID[:-4])
+                    word = morphology.getWord(b, wordID)
+                    if word:
+                        tag = "heb" if int(b) < 40 else "grk"
+                        word = "<{0}>{1}</{0}>".format(tag, word)
+                    else:
+                        word = wordID
+                    title = "{1} {2}:{3} - {4} ({0})".format(text, books[b][0], c, v, word)
             elif len(elements) == 6:
                 lex, text, b, c, v, wordID = elements
+                wordID = wordID[:-4]
                 if b in books:
-                    title = "{1} {2}:{3} - {4} [{5}] ({0})".format(text, books[b][0], c, v, wordID[:-4], lex)
+                    lexeme = morphology.getLexeme(int(b), int(wordID))
+                    if lexeme:
+                        tag = "heb" if int(b) < 40 else "grk"
+                        lexeme = "<{0}>{1}</{0}>".format(tag, lexeme)
+                    else:
+                        lexeme = wordID
+                    title = "{1} {2}:{3} - {4} [{5}] ({0})".format(text, books[b][0], c, v, lexeme, lex)
             html += "{"
             html += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
             html += "},"

@@ -1298,7 +1298,7 @@ class ClauseONTData:
         self.cursor.execute(query, ("c{0}".format(entry),))
         content = self.cursor.fetchone()
         if not content:
-            return "[not found]"
+            return config.thisTranslation["notFound"]
         else:
             return content[0]
 
@@ -1313,6 +1313,26 @@ class MorphologySqlite:
 
     def __del__(self):
         self.connection.close()
+
+    def getWord(self, book, wordId):
+        t = (book, wordId)
+        query = "SELECT Word FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        word = self.cursor.fetchone()
+        if word:
+            return word[0]
+        else:
+            return config.thisTranslation["notFound"]
+
+    def getLexeme(self, book, wordId):
+        t = (book, wordId)
+        query = "SELECT Lexeme FROM morphology WHERE Book = ? AND WordID = ?"
+        self.cursor.execute(query, t)
+        lexeme = self.cursor.fetchone()
+        if lexeme:
+            return lexeme[0]
+        else:
+            return config.thisTranslation["notFound"]
 
     def allWords(self, b, c, v):
         query = """

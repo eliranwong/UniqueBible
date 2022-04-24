@@ -1,3 +1,6 @@
+Changes in 28.92:
+* Now show actual Hebrew / Greek word in http-server audio playlist.
+
 Changes in 28.91:
 * Fixed loading bible note in http-server when private data are loaded.
 
