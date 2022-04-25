@@ -1,6 +1,8 @@
-Changes in 28.96, 28.97:
-* Fixed WLC font display on http-server audio player.
-* Fixed single or double quote display issue on http-server audio player.
+Changes in 28.96, 28.97, 28.98:
+Fixed all known display issues of http-server audio player.
+    - Fixed WLC font display
+    - Fixed single or double quote display issue
+    - Fixed last bible verse text in a playlist was partially hidden
 
 Changes in 28.95:
 * Fixed loading last visited verse issue on iPhone.

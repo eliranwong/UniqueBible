@@ -29,7 +29,7 @@ class HtmlGeneratorUtil:
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.318">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.320">
     <style>
 
     #player{
@@ -51,7 +51,7 @@ class HtmlGeneratorUtil:
     <div id='player' style='margin: auto;'></div>
 
     <!-- Audio player js begin-->
-    <script src="js/AudioPlayer.js?v=1.318"></script>
+    <script src="js/AudioPlayer.js?v=1.320"></script>
 
     <script>
         // test image for web notifications
