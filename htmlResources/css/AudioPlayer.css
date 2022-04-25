@@ -322,7 +322,8 @@ button {
 }
 .pl-list {
   width: 100%;
-  max-width: 550px;
+  /*max-width: 550px;*/
+  max-width: 100%;
   margin: 0 auto;
   padding: 30px 10px;
 }
@@ -367,8 +368,9 @@ button {
   overflow: hidden;
   cursor: pointer;
   text-align: left;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  /* comment the following two lines, so that full bible verse text can be displayed. */
+  /*white-space: nowrap;*/
+  /*text-overflow: ellipsis;*/
   -webkit-box-flex: 1;
   -webkit-flex: 1;
       -ms-flex: 1;

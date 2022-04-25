@@ -178,7 +178,7 @@ var AudioPlayer = (function() {
 
     audio.src = playList[index].file;
     audio.preload = 'auto';
-    trackTitle.innerHTML = playList[index].title;
+    trackTitle.innerHTML = playList[index].title.substring(0, 30) + " ...";
     volumeBar.style.height = audio.volume * 100 + '%';
     volumeLength = volumeBar.css('height');
 
@@ -281,7 +281,7 @@ var AudioPlayer = (function() {
               else {
                 // audio.currentTime = 0;
                 audio.src = playList[index].file;
-                document.title = trackTitle.innerHTML = playList[index].title;
+                document.title = trackTitle.innerHTML = playList[index].title.substring(0, 30) + " ...";
                 progressBar.style.width = 0;
               }
             }
@@ -338,7 +338,7 @@ var AudioPlayer = (function() {
 
     audio.src = playList[index].file;
     audio.preload = 'auto';
-    document.title = trackTitle.innerHTML = playList[index].title;
+    document.title = trackTitle.innerHTML = playList[index].title.substring(0, 30) + " ...";
     audio.play();
     notify(playList[index].title, {
       icon: playList[index].icon,

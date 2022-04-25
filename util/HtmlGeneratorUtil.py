@@ -22,19 +22,20 @@ class HtmlGeneratorUtil:
         # Audio Player souce codes: https://github.com/likev/html5-audio-player
         html = """
 <!DOCTYPE html>
-<html >
+<html>
   <head>
     <meta charset="UTF-8">
     <title>Audio player HTML5</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.27">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.306">
     <style>
 
     #player{
         position: relative;
-        max-width: 700px;
+        max-width: 100%;
+        /*max-width: 700px;*/
         height: 500px;
         border: solid 1px gray;
     }
@@ -50,7 +51,7 @@ class HtmlGeneratorUtil:
     <div id='player' style='margin: auto;'></div>
 
     <!-- Audio player js begin-->
-    <script src="js/AudioPlayer.js?v=1.27"></script>
+    <script src="js/AudioPlayer.js?v=1.306"></script>
 
     <script>
         // test image for web notifications
@@ -72,7 +73,13 @@ class HtmlGeneratorUtil:
             if len(elements) == 4:
                 text, b, c, v = elements
                 if b in books:
-                    title = "{1} {2}:{3} ({0})".format(text, books[b][0], c, v[:-4])
+                    v = v[:-4]
+                    if text == "OHGB":
+                        verseText = MorphologySqlite().getOriginalVerse(b, c, v)
+                    else:
+                        verseText = Bible(text).readTextVerse(b, c, v)
+                        verseText = re.sub("({0}|<.*?>)".format(config.audioBibleIcon), "", verseText[-1])
+                    title = "({1} {2}:{3}, {0}) {4}".format(text, books[b][0], c, v, verseText)
             elif len(elements) == 5:
                 text, b, c, v, wordID = elements
                 wordID = wordID[:-4]

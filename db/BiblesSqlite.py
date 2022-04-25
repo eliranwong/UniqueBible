@@ -1334,6 +1334,12 @@ class MorphologySqlite:
         else:
             return config.thisTranslation["notFound"]
 
+    def getOriginalVerse(self, b, c, v):
+        query = "SELECT Scripture FROM original WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
+        textVerse = self.cursor.fetchone()
+        return textVerse[0] if textVerse else ""
+
     def allWords(self, b, c, v):
         query = """
         SELECT WordID, Book, Chapter, Verse, Word, Lexeme FROM morphology WHERE
