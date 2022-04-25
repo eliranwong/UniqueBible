@@ -1,88 +1,3 @@
-/* Cookie */
-
-function checkCookie() {
-    var cookieEnabled = navigator.cookieEnabled;
-    if (!cookieEnabled){ 
-        document.cookie = "testcookie";
-        cookieEnabled = document.cookie.indexOf("testcookie")!=-1;
-    }
-    return cookieEnabled || showCookieFail();
-}
-
-function showCookieFail() {
-    // do something here
-    alert("You need cookies to run Unique Bible App web version properly, but cookies are not currently enabled on your browser!  Our app uses cookies to keep a record of your recently opened bible passage on your browser.  The record is kept only on your own devices without sharing with anyone.");
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-}
-
-function getLastText() {
-    var lastText = getCookie("lastText");
-    if (lastText != "") {
-      return lastText;
-    } else {
-      return "KJV";
-    }
-  }
-
-function getLastVerse() {
-  var lastVerse = getCookie("lastVerse");
-  if (lastVerse != "") {
-    return lastVerse;
-  } else {
-    return "John 3:16";
-  }
-}
-
-function getLastBookName() {
-    var lastBookName = getCookie("lastBookName");
-    if (lastBookName != "") {
-      return lastBookName;
-    } else {
-      return "John";
-    }
-}
-
-function getLastBookFullNameEnglish() {
-    var lastBookFullNameEnglish = getCookie("lastBookFullNameEnglish");
-    if (lastBookFullNameEnglish != "") {
-      return lastBookFullNameEnglish;
-    } else {
-      return "John";
-    }
-}
-
-function getLastChapterNumber() {
-    var lastChapterNumber = getCookie("lastChapterNumber");
-    if (lastChapterNumber != "") {
-      return lastChapterNumber;
-    } else {
-      return "3";
-    }
-}
-
-function getLastVerseNumber() {
-    var lastVerseNumber = getCookie("lastVerseNumber");
-    if (lastVerseNumber != "") {
-      return lastVerseNumber;
-    } else {
-      return "16";
-    }
-}
-
 /* Onload functions */
 
 function onBodyLoad() {
@@ -183,88 +98,15 @@ function displayCommand(cmd) {
     el.focus();
 }
 
-function checkCommands(cmd) {
-    el = document.getElementById('commandInput');
-    switch (el.value.toLowerCase()) {
-        case ".bible":
-            el.value = "BIBLE:::" + getLastText() + ":::" + getLastVerse();
-            break;
-        case ".chapters":
-                el.value = "CHAPTERS:::" + getLastText();
-                break;
-        case ".compare":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".crossreference":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".tske":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".translation":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".discourse":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".words":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".combo":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".commentary":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".index":
-            el.value = el.value.slice(1) + ":::" + getLastVerse();
-            break;
-        case ".overview":
-            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
-            break;
-        case ".chapterindex":
-            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
-            break;
-        case ".summary":
-            el.value = el.value.slice(1) + ":::" + getLastBookName() + " " + getLastChapterNumber();
-            break;
-        case ".introduction":
-            el.value = "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::" + getLastBookFullNameEnglish();
-            break;
-        case ".timeline":
-            el.value = "SEARCHBOOKCHAPTER:::Timelines:::" + getLastBookFullNameEnglish();
-            break;
-        case ".timelines":
-            el.value = "SEARCHBOOKCHAPTER:::Timelines:::" + getLastBookFullNameEnglish();
-            break;
-        case ".mob":
-            el.value = "BIBLE:::MOB:::" + getLastVerse();
-            break;
-        case ".mib":
-            el.value = "BIBLE:::MIB:::" + getLastVerse();
-            break;
-        case ".mtb":
-            el.value = "BIBLE:::MTB:::" + getLastVerse();
-            break;
-        case ".mpb":
-            el.value = "BIBLE:::MPB:::" + getLastVerse();
-            break;
-        case ".mab":
-            el.value = "BIBLE:::MAB:::" + getLastVerse();
-            break;
-        }
-}
-
 function submitCommand(cmd) {
     el = document.getElementById('commandInput');
     el.value = cmd;
-    checkCommands()
     document.getElementById("commandForm").submit();
 }
 
 function submitTextCommand(id) {
     el = document.getElementById(id);
-    submitCommand("BIBLE:::" + el.value + ":::" + getLastVerse());
+    submitCommand("BIBLE:::" + el.value + ":::");
 }
 
 function submitBookCommand(id) {

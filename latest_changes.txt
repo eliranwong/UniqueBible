@@ -1,3 +1,8 @@
+Changes in 28.95:
+* Fixed loading last visited verse issue on iPhone.
+* Http-server content no longer uses cookie on client side.
+* Private and public access to http-server now have two separate data to keep records of the last visited bible verse and commentary module.
+
 Changes in 28.94:
 * Http-server audio playlist current title is now made clear for reading.
 
