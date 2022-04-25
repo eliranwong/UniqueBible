@@ -1,3 +1,7 @@
+Changes in 28.96:
+* Fixed WLC font display on http-server audio player.
+* Fixed single or double quote display issue on http-server audio player.
+
 Changes in 28.95:
 * Fixed loading last visited verse issue on iPhone.
 * Http-server content no longer uses cookie on client side.

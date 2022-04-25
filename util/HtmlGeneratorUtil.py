@@ -77,8 +77,10 @@ class HtmlGeneratorUtil:
                     if text == "OHGB":
                         verseText = MorphologySqlite().getOriginalVerse(b, c, v)
                     else:
-                        verseText = Bible(text).readTextVerse(b, c, v)
-                        verseText = re.sub("({0}|<.*?>)".format(config.audioBibleIcon), "", verseText[-1])
+                        verseText = Bible(text).readTextVerse(b, c, v)[-1]
+                        verseText = re.sub("'", "&apos;", verseText)
+                        verseText = re.sub('"', "&quot;", verseText)
+                        verseText = re.sub("({0}|<[^hg].*?>)".format(config.audioBibleIcon), "", verseText)
                     title = "({1} {2}:{3}, {0}) {4}".format(text, books[b][0], c, v, verseText)
             elif len(elements) == 5:
                 text, b, c, v, wordID = elements
