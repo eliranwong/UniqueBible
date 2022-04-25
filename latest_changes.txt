@@ -1,4 +1,4 @@
-Changes in 28.96:
+Changes in 28.96, 28.97:
 * Fixed WLC font display on http-server audio player.
 * Fixed single or double quote display issue on http-server audio player.
 
