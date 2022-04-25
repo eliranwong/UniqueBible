@@ -29,7 +29,7 @@ class HtmlGeneratorUtil:
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.306">
+    <link rel="stylesheet" href="css/AudioPlayer.css?v=1.318">
     <style>
 
     #player{
@@ -51,7 +51,7 @@ class HtmlGeneratorUtil:
     <div id='player' style='margin: auto;'></div>
 
     <!-- Audio player js begin-->
-    <script src="js/AudioPlayer.js?v=1.306"></script>
+    <script src="js/AudioPlayer.js?v=1.318"></script>
 
     <script>
         // test image for web notifications
@@ -103,7 +103,7 @@ class HtmlGeneratorUtil:
                         lexeme = wordID
                     title = "{1} {2}:{3} - {4} [{5}] ({0})".format(text, books[b][0], c, v, lexeme, lex)
             html += "{"
-            html += "'icon': iconImage, 'title': '_{0}_', 'file': '{1}'".format(title, filePath)
+            html += "'icon': iconImage, 'title': '_{0}', 'file': '{1}'".format(title, filePath)
             html += "},"
         html += """
           ]

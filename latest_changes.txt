@@ -1,3 +1,6 @@
+Changes in 28.94:
+* Http-server audio playlist current title is now made clear for reading.
+
 Changes in 28.93:
 * Now show bible verse text in http-server audio playlist.
 

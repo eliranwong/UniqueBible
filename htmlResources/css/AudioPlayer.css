@@ -362,6 +362,7 @@ button {
 }
 .pl-current .pl-title {
   font-weight: 700;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 .pl-title {
