@@ -798,4 +798,5 @@ translation = {
     "showHebrewGreekWordAudioLinksInMIB": "Εμφάνιση διαθέσιμων συνδέσμων ήχου για κάθε εβραϊκή και ελληνική λέξη στο MIB.",
     "bibleAudio": "Αγία Γραφή ήχου",
     "noBibleAudioLink": "Δεν bible ήχο συνδέεται με το τρέχον περιεχόμενο!",
+    "menu1_material_menu_layout": "Υλικό:",
 }

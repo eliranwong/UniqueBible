@@ -798,4 +798,5 @@ translation = {
     "showHebrewGreekWordAudioLinksInMIB": "MIB에 있는 히브리어 및 그리스어 단어 각각의 사용 가능한 오디오 링크를 표시합니다.",
     "bibleAudio": "성경 오디오",
     "noBibleAudioLink": "현재 컨텐츠와 연결된 바이블 오디오가 없습니다.",
+    "menu1_material_menu_layout": "재료",
 }

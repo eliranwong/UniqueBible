@@ -798,4 +798,5 @@ translation = {
     "showHebrewGreekWordAudioLinksInMIB": "MIB-ല് ഓരോ ഹീബ്രു ഗ്രീക്ക് വാക്കുകളുടേയും ഓഡിയോ ലിങ്കുകളും കാണിക്കുക.",
     "bibleAudio": "ബൈബിള് ഓഡിയോ",
     "noBibleAudioLink": "നിലവിലുള്ള ഉള്ളടക്കത്താല് ബൈബിള് ഓഡിയോ ബന്ധപ്പെട്ടിട്ടില്ല!",
+    "menu1_material_menu_layout": "മാതൃക",
 }

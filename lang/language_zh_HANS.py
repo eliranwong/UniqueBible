@@ -798,4 +798,5 @@ translation = {
     "showHebrewGreekWordAudioLinksInMIB": "显示 MIB 圣经中每个希伯来语和希腊语单词的语音链接。",
     "bibleAudio": "圣经语音",
     "noBibleAudioLink": "在当前内容中没有找到圣经语音的链接 !",
+    "menu1_material_menu_layout": "物料",
 }

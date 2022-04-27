@@ -6,7 +6,7 @@ from functools import partial
 from pathlib import Path
 
 from qtpy.QtCore import QUrl, Qt, QEvent, QThread
-from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor
+from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
                                QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
 from qtpy.QtWidgets import QComboBox
@@ -65,6 +65,7 @@ from util.CrossPlatform import CrossPlatform
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
 from gui.FocusMainWindow import FocusMainWindow
+from gui.MaterialMainWindow import MaterialMainWindow
 
 class MainWindow(QMainWindow):
 
@@ -202,7 +203,7 @@ class MainWindow(QMainWindow):
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
         config.shortcutList = []
-        config.noStudyBibleToolbar = True if layout == "focus" else False
+        config.noStudyBibleToolbar = True if layout in ("focus", "material") else False
         try:
             self.menuBar().clear()
             self.removeToolBar(self.firstToolBar)
@@ -214,7 +215,7 @@ class MainWindow(QMainWindow):
             pass
 
         windowClass = None
-        if layout in ("classic", "focus", "aleph"):
+        if layout in ("classic", "focus", "aleph", "material"):
             windowName = layout.capitalize() + "MainWindow"
             windowClass = getattr(sys.modules[__name__], windowName)
         elif config.enablePlugins:
@@ -867,6 +868,9 @@ class MainWindow(QMainWindow):
 
     def setFocusMenuLayout(self):
         self.setMenuLayout("focus")
+
+    def setMaterialMenuLayout(self):
+        self.setMenuLayout("material")
 
     def setAlephMenuLayout(self):
         self.setMenuLayout("aleph")
@@ -2403,9 +2407,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable enforcement of comparison / parallel
     def getEnableCompareParallelDisplay(self):
         if config.enforceCompareParallel:
-            return "sync.png"
+            return self.getCrossplatformPath("material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return "noSync.png"
+            return self.getCrossplatformPath("material/maps/layers_clear/materialiconsoutlined/18dp/2x/outline_layers_clear_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getEnableCompareParallelDisplayToolTip(self):
         if config.enforceCompareParallel:
@@ -2422,9 +2426,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable sync main and secondary bibles
     def getSyncStudyWindowBibleDisplay(self):
         if config.syncStudyWindowBibleWithMainWindow:
-            return "sync.png"
+            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/18dp/2x/outline_sync_black_18dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return "noSync.png"
+            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/18dp/2x/outline_sync_disabled_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncStudyWindowBibleDisplayToolTip(self):
         if config.syncStudyWindowBibleWithMainWindow:
@@ -2435,7 +2439,8 @@ class MainWindow(QMainWindow):
     def enableSyncStudyWindowBibleButtonClicked(self):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
         enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        self.enableSyncStudyWindowBibleButton.setIcon(QIcon(enableSyncStudyWindowBibleButtonFile))
+        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
+        self.enableSyncStudyWindowBibleButton.setIcon(qIcon)
         self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
         if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
             self.syncButtonChanging = True
@@ -2446,9 +2451,9 @@ class MainWindow(QMainWindow):
 
     def getSyncCommentaryDisplay(self):
         if config.syncCommentaryWithMainWindow:
-            return "sync.png"
+            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/18dp/2x/outline_sync_black_18dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return "noSync.png"
+            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/18dp/2x/outline_sync_disabled_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncCommentaryDisplayToolTip(self):
         if config.syncCommentaryWithMainWindow:
@@ -2471,9 +2476,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
-            return "addStudyViewBible.png"
+            return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/18dp/2x/outline_add_circle_outline_black_18dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
         else:
-            return "deleteStudyViewBible.png"
+            return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/18dp/2x/outline_remove_circle_outline_black_18dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
 
     def getStudyBibleDisplayToolTip(self):
         if config.openBibleInMainViewOnly:
@@ -2507,23 +2512,12 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
         if config.instantInformationEnabled:
-            return "show.png"
+            return self.getCrossplatformPath("material/image/flash_auto/materialiconsoutlined/18dp/2x/outline_flash_auto_black_18dp.png") if config.menuLayout == "material" else "show.png"
         else:
-            return "hide.png"
+            return self.getCrossplatformPath("material/image/flash_off/materialiconsoutlined/18dp/2x/outline_flash_off_black_18dp.png") if config.menuLayout == "material" else "hide.png"
 
     def enableInstantButtonClicked(self):
         config.instantInformationEnabled = not config.instantInformationEnabled
-        self.updateEnableInstantButton()
-
-    def enableInstantInformation(self):
-        config.instantInformationEnabled = True
-        self.updateEnableInstantButton()
-
-    def disableInstantInformation(self):
-        config.instantInformationEnabled = False
-        self.updateEnableInstantButton()
-
-    def updateEnableInstantButton(self):
         if hasattr(self, 'enableInstantButton'):
             enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
             self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
@@ -2544,11 +2538,14 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
 
+    def getCrossplatformPath(self, filePath):
+        return os.path.join(*filePath.split("/"))
+
     def getReadFormattedBibles(self):
         if config.readFormattedBibles:
-            return "paragraph.png"
+            return self.getCrossplatformPath("material/maps/local_parking/materialiconsoutlined/18dp/2x/outline_local_parking_black_18dp.png") if config.menuLayout == "material" else "numbered_list.png"
         else:
-            return "numbered_list.png"
+            return self.getCrossplatformPath("material/editor/format_list_numbered/materialiconsoutlined/18dp/2x/outline_format_list_numbered_black_18dp.png") if config.menuLayout == "material" else "paragraph.png"
 
     def enableParagraphButtonClicked(self):
         self.enableParagraphButtonAction(True)
@@ -2562,9 +2559,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable sub-heading for plain bibles
     def getAddSubheading(self):
         if config.addTitleToPlainChapter:
-            return "subheadingEnable.png"
+            return self.getCrossplatformPath("material/av/subtitles/materialiconsoutlined/18dp/2x/outline_subtitles_black_18dp.png") if config.menuLayout == "material" else "subheadingEnable.png"
         else:
-            return "subheadingDisable.png"
+            return self.getCrossplatformPath("material/action/subtitles_off/materialiconsoutlined/18dp/2x/outline_subtitles_off_black_18dp.png") if config.menuLayout == "material" else "subheadingDisable.png"
 
     def toggleShowUserNoteIndicator(self):
         config.showUserNoteIndicator = not config.showUserNoteIndicator
@@ -2787,7 +2784,7 @@ class MainWindow(QMainWindow):
             self.runTextCommand(command)
 
     def updateVersionCombo(self):
-        if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph"):
+        if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph", "material"):
             self.refreshing = True
             textIndex = 0
             if config.mainText in self.bibleVersions:
@@ -3740,6 +3737,45 @@ class MainWindow(QMainWindow):
             #button.setFixedHeight(config.iconButtonWidth)
         elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
             button.setFixedWidth(40)
+        button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
+        buttonIconFile = os.path.join("htmlResources", icon)
+        button.setIcon(QIcon(buttonIconFile))
+        button.clicked.connect(action)
+        toolbar.addWidget(button)
+
+    def getMaskedQIcon(self, iconFile, color=config.materialIconMaskColor, maskBackground=config.maskBackground):
+        if color:
+            pixmap = QPixmap(iconFile)
+            if maskBackground:
+                # To change transparent to gray
+                # The following line has the same result as mask = pixmap.createMaskFromColor(QColor(0,0,0,0), Qt.MaskOutColor)
+                mask = pixmap.createMaskFromColor(Qt.transparent, Qt.MaskOutColor)
+                pixmap.fill(QColor(color))
+            else:
+                # To change the foreground black color
+                mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
+                pixmap.fill(QColor(color))
+            pixmap.setMask(mask)
+            return QIcon(pixmap)
+        else:
+            return QIcon(iconFile)
+
+    def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
+        icon = os.path.join(*icon.split("/"))
+        buttonStyle = "QPushButton {background-color: "
+        buttonStyle += config.PushButtonBackgroundColor
+        buttonStyle += "; color: "
+        buttonStyle += config.PushButtonForegroundColor
+        buttonStyle += ";}"
+        if button is None:
+            button = QPushButton()
+        if config.qtMaterial and config.qtMaterialTheme:
+            #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
+            button.setFixedWidth(config.iconButtonWidth)
+            #button.setFixedHeight(config.iconButtonWidth)
+        elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
+            button.setFixedWidth(40)
+        button.setStyleSheet(buttonStyle)
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         buttonIconFile = os.path.join("htmlResources", icon)
         button.setIcon(QIcon(buttonIconFile))

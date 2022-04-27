@@ -798,4 +798,5 @@ translation = {
     "showHebrewGreekWordAudioLinksInMIB": "在 MIB 聖經中，顯示每一個希伯來文和希臘文的可用語音鏈結。",
     "bibleAudio": "聖經語音",
     "noBibleAudioLink": "在當前內容中沒有找到聖經語音的連結！",
+    "menu1_material_menu_layout": "物料",
 }

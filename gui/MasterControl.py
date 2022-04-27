@@ -59,7 +59,7 @@ class MasterControl(QWidget):
         self.textList = self.parent.textList
         self.textFullNameList = self.parent.textFullNameList
         self.strongBibles =  self.parent.strongBibles
-        if self.parent.versionCombo is not None and config.menuLayout in ("classic", "focus", "aleph"):
+        if self.parent.versionCombo is not None and config.menuLayout in ("classic", "focus", "aleph", "material"):
             for index, fullName in enumerate(self.textFullNameList):
                 self.parent.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
         # commentaries

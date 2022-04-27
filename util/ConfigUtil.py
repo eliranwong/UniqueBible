@@ -860,6 +860,24 @@ class ConfigUtil:
         # Theme (default, dark)"""
         if not hasattr(config, "theme"):
             config.theme = "default"
+        config.help["materialIconMaskColor"] = """
+        # Use this color for masking material icon."""
+        if not hasattr(config, "materialIconMaskColor"):
+            config.materialIconMaskColor = '#e7e7e7'
+        config.help["maskBackground"] = """
+        # Either mask background or foreground color of material icon. 
+        # Set True to mask background color. 
+        # Set False to mask foreground color."""
+        if not hasattr(config, "maskBackground"):
+            config.maskBackground = True
+        config.help["PushButtonBackgroundColor"] = """
+        # Push button background color in 'material' menu layout."""
+        if not hasattr(config, "PushButtonBackgroundColor"):
+            config.PushButtonBackgroundColor = '#e7e7e7'
+        config.help["PushButtonForegroundColor"] = """
+        # Push button foreground color in 'material' menu layout."""
+        if not hasattr(config, "PushButtonForegroundColor"):
+            config.PushButtonForegroundColor = 'black'
         config.help["qtMaterial"] = """
         # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
@@ -1306,6 +1324,10 @@ class ConfigUtil:
             ("showInformation", config.showInformation),
             ("windowStyle", config.windowStyle),
             ("theme", config.theme),
+            ("materialIconMaskColor", config.materialIconMaskColor),
+            ("maskBackground", config.maskBackground),
+            ("PushButtonBackgroundColor", config.PushButtonBackgroundColor),
+            ("PushButtonForegroundColor", config.PushButtonForegroundColor),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),

@@ -1,3 +1,8 @@
+Changes in 28.99
+* Initial support of "Material" menu layout.  When finished, it will replace "Focus" as default menu layout.
+* Multiple config values added for customisation of "Material" menu layout button color.
+* Fixed changing instant information button icon on Focus menu layout.
+
 Changes in 28.96, 28.97, 28.98:
 Fixed all known display issues of http-server audio player.
     - Fixed WLC font display
