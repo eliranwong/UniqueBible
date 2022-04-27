@@ -3787,8 +3787,12 @@ class MainWindow(QMainWindow):
         button.setStyleSheet(buttonStyle)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
-        buttonIconFile = os.path.join("htmlResources", icon)
-        button.setIcon(QIcon(buttonIconFile))
+        iconFilePath = os.path.join("htmlResources", icon)
+        if config.maskBackground:
+            qIcon = QIcon(iconFilePath)
+        else:
+            qIcon = self.getMaskedQIcon(iconFilePath)
+        button.setIcon(qIcon)
         button.clicked.connect(action)
         toolbar.addWidget(button)
 

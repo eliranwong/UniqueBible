@@ -1,3 +1,8 @@
+Changes in 29.03:
+* Fixed icon color customisation with Material menu layout.
+* Wrote a wiki page on how to change icon colours: 
+https://github.com/eliranwong/UniqueBible/wiki/How-to-Change-Icon-Colour%3F
+
 Changes in 29.02:
 * Built-in media player now uses material icons when Material menu layout is used.
 
