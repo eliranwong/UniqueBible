@@ -1784,7 +1784,7 @@ class TextCommandParser:
                 chapterList = bible.getChapterList(bNo)
                 commandPrefix = f"BIBLE:::{text}:::{abb} "
                 html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
-            return ("study", html, {})
+            return (source, html, {})
 
     # MAIN:::
     def textMain(self, command, source):

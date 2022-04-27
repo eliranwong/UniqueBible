@@ -6,7 +6,7 @@ from functools import partial
 from pathlib import Path
 
 from qtpy.QtCore import QUrl, Qt, QEvent, QThread
-from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap
+from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
                                QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
 from qtpy.QtWidgets import QComboBox
@@ -2659,6 +2659,10 @@ class MainWindow(QMainWindow):
                 self.runTextCommand(textCommand, False, view, forceExecute)
 
     # Actions - previous / next chapter
+    def showAllChaptersMenu(self):
+        #self.newTabException = True
+        self.textCommandChanged("CHAPTERS:::{0}".format(config.mainText), "main")
+
     def previousMainChapter(self):
         newChapter = config.mainC - 1
         if newChapter == 0:
@@ -3720,11 +3724,15 @@ class MainWindow(QMainWindow):
         WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
-        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        if config.menuLayout == "material":
+            textButtonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
+        else:
+            textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
         if button is None:
             button = QPushButton()
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         button.setStyleSheet(textButtonStyle)
+        button.setCursor(QCursor(Qt.PointingHandCursor))
         button.clicked.connect(action)
         toolbar.addWidget(button)
 
@@ -3740,6 +3748,7 @@ class MainWindow(QMainWindow):
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         buttonIconFile = os.path.join("htmlResources", icon)
         button.setIcon(QIcon(buttonIconFile))
+        button.setCursor(QCursor(Qt.PointingHandCursor))
         button.clicked.connect(action)
         toolbar.addWidget(button)
 
@@ -3760,13 +3769,13 @@ class MainWindow(QMainWindow):
         else:
             return QIcon(iconFile)
 
+    def addMaterialIconAction(self, toolTip, icon, action, toolbar, translation=True):
+        icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
+        return toolbar.addAction(self.getMaskedQIcon(icon), config.thisTranslation[toolTip] if translation else toolTip, action)
+
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         icon = os.path.join(*icon.split("/"))
-        buttonStyle = "QPushButton {background-color: "
-        buttonStyle += config.PushButtonBackgroundColor
-        buttonStyle += "; color: "
-        buttonStyle += config.PushButtonForegroundColor
-        buttonStyle += ";}"
+        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
         if button is None:
             button = QPushButton()
         if config.qtMaterial and config.qtMaterialTheme:
@@ -3776,6 +3785,7 @@ class MainWindow(QMainWindow):
         elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
             button.setFixedWidth(40)
         button.setStyleSheet(buttonStyle)
+        button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         buttonIconFile = os.path.join("htmlResources", icon)
         button.setIcon(QIcon(buttonIconFile))

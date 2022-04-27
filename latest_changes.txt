@@ -1,4 +1,10 @@
-Changes in 28.99
+Changes in 29.00:
+* Fixed loding developer menu on Aleph menu layout.
+* Updated Material menu layout:
+    - Complete main window ui.
+    - Configs for customisation of ui color: materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed
+
+Changes in 28.99:
 * Initial support of "Material" menu layout.  When finished, it will replace "Focus" as default menu layout.
 * Multiple config values added for customisation of "Material" menu layout button color.
 * Fixed changing instant information button icon on Focus menu layout.

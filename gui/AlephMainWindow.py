@@ -141,6 +141,7 @@ class AlephMainWindow:
         if config.developer:
             menu = addMenu(menu1, "developer")
             if config.docker:
+                icon = "/usr/share/pixmaps/pycharm.png"
                 addIconMenuItem(icon, menu, "Pycharm", self, self.pycharm, "", translation=False)
             addMenuItem(menu, "checkLanguageFiles", self, lambda: LanguageUtil.checkLanguageStringToAllFiles("checked"))
             addMenuItem(menu, "edit_language_file", self, self.selectLanguageFileToEdit)

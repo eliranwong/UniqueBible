@@ -870,14 +870,30 @@ class ConfigUtil:
         # Set False to mask foreground color."""
         if not hasattr(config, "maskBackground"):
             config.maskBackground = True
-        config.help["PushButtonBackgroundColor"] = """
+        config.help["pushButtonBackgroundColor"] = """
         # Push button background color in 'material' menu layout."""
-        if not hasattr(config, "PushButtonBackgroundColor"):
-            config.PushButtonBackgroundColor = '#e7e7e7'
-        config.help["PushButtonForegroundColor"] = """
+        if not hasattr(config, "pushButtonBackgroundColor"):
+            config.pushButtonBackgroundColor = '#e7e7e7'
+        config.help["pushButtonForegroundColor"] = """
         # Push button foreground color in 'material' menu layout."""
-        if not hasattr(config, "PushButtonForegroundColor"):
-            config.PushButtonForegroundColor = 'black'
+        if not hasattr(config, "pushButtonForegroundColor"):
+            config.pushButtonForegroundColor = 'black'
+        config.help["pushButtonBackgroundColorHover"] = """
+        # Push button background hover color in 'material' menu layout."""
+        if not hasattr(config, "pushButtonBackgroundColorHover"):
+            config.pushButtonBackgroundColorHover = '#f8f8a0'
+        config.help["pushButtonForegroundColorHover"] = """
+        # Push button foreground hover color in 'material' menu layout."""
+        if not hasattr(config, "pushButtonForegroundColorHover"):
+            config.pushButtonForegroundColorHover = 'black'
+        config.help["pushButtonBackgroundColorPressed"] = """
+        # Push button background pressed color in 'material' menu layout."""
+        if not hasattr(config, "pushButtonBackgroundColorPressed"):
+            config.pushButtonBackgroundColorPressed = '#a2a934'
+        config.help["pushButtonForegroundColorPressed"] = """
+        # Push button foreground pressed color in 'material' menu layout."""
+        if not hasattr(config, "pushButtonForegroundColorPressed"):
+            config.pushButtonForegroundColorPressed = 'white'
         config.help["qtMaterial"] = """
         # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
@@ -1326,8 +1342,12 @@ class ConfigUtil:
             ("theme", config.theme),
             ("materialIconMaskColor", config.materialIconMaskColor),
             ("maskBackground", config.maskBackground),
-            ("PushButtonBackgroundColor", config.PushButtonBackgroundColor),
-            ("PushButtonForegroundColor", config.PushButtonForegroundColor),
+            ("pushButtonBackgroundColor", config.pushButtonBackgroundColor),
+            ("pushButtonForegroundColor", config.pushButtonForegroundColor),
+            ("pushButtonBackgroundColorHover", config.pushButtonBackgroundColorHover),
+            ("pushButtonForegroundColorHover", config.pushButtonForegroundColorHover),
+            ("pushButtonBackgroundColorPressed", config.pushButtonBackgroundColorPressed),
+            ("pushButtonForegroundColorPressed", config.pushButtonForegroundColorPressed),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
