@@ -654,7 +654,7 @@ class MaterialMainWindow:
         self.leftToolBar.addSeparator()
         icon = "material/editor/format_align_justify/materialiconsoutlined/18dp/2x/outline_format_align_justify_black_18dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
-        icon = "material/image/contrast/materialiconsoutlined/18dp/2x/outline_contrast_black_18dp.png"
+        icon = "material/image/compare/materialicons/18dp/2x/baseline_compare_black_18dp.png"
         self.addMaterialIconButton("menu4_moreComparison", icon, lambda: self.openControlPanelTab(0), self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addMaterialIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
@@ -924,7 +924,7 @@ class MaterialMainWindow:
         self.leftToolBar.addSeparator()
         icon = "material/editor/format_align_justify/materialiconsoutlined/18dp/2x/outline_format_align_justify_black_18dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
-        icon = "material/image/contrast/materialiconsoutlined/18dp/2x/outline_contrast_black_18dp.png"
+        icon = "material/image/compare/materialicons/18dp/2x/baseline_compare_black_18dp.png"
         self.addMaterialIconButton("menu4_moreComparison", icon, lambda: self.openControlPanelTab(0), self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addMaterialIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)

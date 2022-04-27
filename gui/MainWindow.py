@@ -224,8 +224,8 @@ class MainWindow(QMainWindow):
                 mod = __import__('plugins.layout.{0}'.format(layout), fromlist=[layout])
                 windowClass = getattr(mod, layout)
         if windowClass is None:
-            config.menuLayout = "focus"
-            windowClass = getattr(sys.modules[__name__], "FocusMainWindow")
+            config.menuLayout = "material"
+            windowClass = getattr(sys.modules[__name__], "MaterialMainWindow")
         getattr(windowClass, 'create_menu')(self)
         if config.toolBarIconFullSize:
             getattr(windowClass, 'setupToolBarFullIconSize')(self)

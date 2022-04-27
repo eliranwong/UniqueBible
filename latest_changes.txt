@@ -1,3 +1,13 @@
+Changes in 29.01:
+* Changed http-server QR scanner page background color to match dark theme.
+* Completed Material menu layout note editor ui.
+* Material menu layout now replaces Focus menu layout as default menu layout.
+Remarks: Material menu layout is designed based on Focus menu layout with several improvements, e.g.:
+    - Bible version dropdown button is added
+    - Use of icons are more consistent
+    - Users can customise button color by modifying config values of materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed
+    - easier to be maintained
+
 Changes in 29.00:
 * Fixed loding developer menu on Aleph menu layout.
 * Updated Material menu layout:
