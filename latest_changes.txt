@@ -1,3 +1,6 @@
+Changes in 29.02:
+* Built-in media player now uses material icons when Material menu layout is used.
+
 Changes in 29.01:
 * Changed http-server QR scanner page background color to match dark theme.
 * Completed Material menu layout note editor ui.

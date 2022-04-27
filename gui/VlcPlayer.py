@@ -54,16 +54,26 @@ class VlcPlayer(QWidget):
 
         self.hbuttonbox = QtWidgets.QHBoxLayout()
 
+        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
+
         self.openbutton = QtWidgets.QPushButton()
         self.openbutton.setToolTip(config.thisTranslation["open"])
-        file = os.path.join("htmlResources", "buttons", "playlist.png")
+        if config.menuLayout == "material":
+            file = self.parent.getCrossplatformPath("htmlResources/material/file/file_open/materialiconsoutlined/18dp/2x/outline_file_open_black_18dp.png")
+            self.openbutton.setStyleSheet(buttonStyle)
+        else:
+            file = os.path.join("htmlResources", "buttons", "playlist.png")
         self.openbutton.setIcon(QIcon(file))
         self.openbutton.clicked.connect(self.open_file)
         self.hbuttonbox.addWidget(self.openbutton)
 
         self.playbutton = QtWidgets.QPushButton()
         self.playbutton.setToolTip(config.thisTranslation["play"])
-        file = os.path.join("htmlResources", "buttons", "play.png")
+        if config.menuLayout == "material":
+            file = self.parent.getCrossplatformPath("htmlResources/material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png")
+            self.playbutton.setStyleSheet(buttonStyle)
+        else:
+            file = os.path.join("htmlResources", "buttons", "play.png")
         self.playbutton.setIcon(QIcon(file))
         self.playbutton.clicked.connect(self.play_pause)
         self.playbutton.setEnabled(True)
@@ -71,7 +81,11 @@ class VlcPlayer(QWidget):
 
         self.stopbutton = QtWidgets.QPushButton()
         self.stopbutton.setToolTip(config.thisTranslation["stop"])
-        file = os.path.join("htmlResources", "buttons", "stop.png")
+        if config.menuLayout == "material":
+            file = self.parent.getCrossplatformPath("htmlResources/material/av/stop_circle/materialiconsoutlined/18dp/2x/outline_stop_circle_black_18dp.png")
+            self.stopbutton.setStyleSheet(buttonStyle)
+        else:
+            file = os.path.join("htmlResources", "buttons", "stop.png")
         self.stopbutton.setIcon(QIcon(file))
         self.stopbutton.clicked.connect(self.stop)
         self.stopbutton.setEnabled(False)
@@ -79,7 +93,11 @@ class VlcPlayer(QWidget):
 
         self.nextbutton = QtWidgets.QPushButton()
         # self.nextbutton.setToolTip(config.thisTranslation["next"])
-        file = os.path.join("htmlResources", "buttons", "next.png")
+        if config.menuLayout == "material":
+            file = self.parent.getCrossplatformPath("htmlResources/material/av/skip_next/materialiconsoutlined/18dp/2x/outline_skip_next_black_18dp.png")
+            self.nextbutton.setStyleSheet(buttonStyle)
+        else:
+            file = os.path.join("htmlResources", "buttons", "next.png")
         self.nextbutton.setIcon(QIcon(file))
         self.nextbutton.clicked.connect(self.playNextInPlaylist)
         self.nextbutton.setEnabled(False)
@@ -91,6 +109,7 @@ class VlcPlayer(QWidget):
         self.volumeslider.setValue(self.mediaplayer.audio_get_volume())
         self.volumeslider.setToolTip(config.thisTranslation["volume"])
         self.hbuttonbox.addWidget(self.volumeslider)
+        self.volumeslider.setValue(70)
         self.volumeslider.valueChanged.connect(self.set_volume)
 
         self.vboxlayout = QtWidgets.QVBoxLayout()
@@ -104,7 +123,10 @@ class VlcPlayer(QWidget):
         if self.mediaplayer.is_playing():
             self.stopbutton.setEnabled(False)
             self.mediaplayer.pause()
-            file = os.path.join("htmlResources", "buttons", "play.png")
+            if config.menuLayout == "material":
+                file = self.parent.getCrossplatformPath("htmlResources/material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png")
+            else:
+                file = os.path.join("htmlResources", "buttons", "play.png")
             self.playbutton.setIcon(QIcon(file))
             self.is_paused = True
             self.timer.stop()
@@ -115,14 +137,20 @@ class VlcPlayer(QWidget):
 
             self.stopbutton.setEnabled(True)
             self.mediaplayer.play()
-            file = os.path.join("htmlResources", "buttons", "pause.png")
+            if config.menuLayout == "material":
+                file = self.parent.getCrossplatformPath("htmlResources/material/av/pause_circle/materialiconsoutlined/18dp/2x/outline_pause_circle_black_18dp.png")
+            else:
+                file = os.path.join("htmlResources", "buttons", "pause.png")
             self.playbutton.setIcon(QIcon(file))
             self.timer.start()
             self.is_paused = False
 
     def stop(self):
         self.mediaplayer.stop()
-        file = os.path.join("htmlResources", "buttons", "play.png")
+        if config.menuLayout == "material":
+            file = self.parent.getCrossplatformPath("htmlResources/material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png")
+        else:
+            file = os.path.join("htmlResources", "buttons", "play.png")
         self.playbutton.setIcon(QIcon(file))
         self.stopbutton.setEnabled(False)
 
