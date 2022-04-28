@@ -1,3 +1,6 @@
+Changes in 29.07:
+* Fixed loading chapter audio on http-server.  Error was introduced in a recent update.
+
 Changes in 29.05, 29.06:
 * Improved Material menu layout:
     - Added chapter and verse selector for opening a passage on bible window.

@@ -168,7 +168,8 @@ input.addEventListener('keyup', function(event) {0}
 
     def formChapterTag(self, b, c, text=config.mainText):
         #return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
-        return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
+        #return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
+        return "<ref onclick='document.title=\"_chapters:::{0}_{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
 
     def formVerseTag(self, b, c, v, text=config.mainText):
         verseReference = self.bcvToVerseReference(b, c, v)
