@@ -1553,7 +1553,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         self.textCommandParser.parent.setupResourceLists()
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
-        mainVerse = self.getMainVerse()
+        #mainVerse = self.getMainVerse()
         content += "<br>".join(["""<ref onclick ="document.title = '_commentarychapters:::{0}'">{1}</ref>""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
@@ -1601,19 +1601,29 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def searchContent(self):
         content = ""
         content += """<h2>{0}</h2><p><ref onclick="document.title='_menu:::'">Click HERE to Search Bibles</ref></p>""".format(config.thisTranslation["html_bibles"])
+        content += "<hr>"
         abbList = ["HBN", "EXLBP", "EXLBL"]
         nameList = ["Bible Names", "Bible Characters", "Bible Locations"]
         content += self.formatSearchSection(config.thisTranslation["bibleBackground"], "SEARCHTOOL", "SEARCHTOOL", abbList, nameList)
+        content += "<hr>"
         abbList = ["Bible_Promises", "Harmonies_and_Parallels", "FAV", "ALL"]
         nameList = ["Bible Promises", "Harmonies and Parallels", "Favourite Books", "All Books"]
         content += self.formatSearchSection(config.thisTranslation["collection"], "collection", "SEARCHBOOK", abbList, nameList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["menu5_topics"], "topics", "SEARCHTOOL", self.textCommandParser.parent.topicListAbb, self.textCommandParser.parent.topicList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["context1_dict"], "dictionary", "SEARCHTOOL", self.textCommandParser.parent.dictionaryListAbb, self.textCommandParser.parent.dictionaryList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["context1_encyclopedia"], "encyclopedia", "SEARCHTOOL", self.textCommandParser.parent.encyclopediaListAbb, self.textCommandParser.parent.encyclopediaList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["bibleConcordance"], "CONCORDANCE", "CONCORDANCE", self.textCommandParser.parent.strongBibles)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["menu5_lexicon"], "LEXICON", "LEXICON", self.textCommandParser.parent.lexiconList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["installBooks"], "SEARCHBOOK", "SEARCHBOOK", self.textCommandParser.parent.referenceBookList)
+        content += "<hr>"
         content += self.formatSearchSection(config.thisTranslation["menu5_3rdDict"], "SEARCHTHIRDDICTIONARY", "SEARCHTHIRDDICTIONARY", self.textCommandParser.parent.thirdPartyDictionaryList)
+        content += "<hr>"
         return content
 
     def getSession(self):

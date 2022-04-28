@@ -1,3 +1,6 @@
+Changes in 29.13:
+* Added dividers to different sessions of http-server search page.
+
 Changes in 29.12:
 * Display bible version full name on chapters menu.
 
