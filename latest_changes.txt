@@ -1,4 +1,4 @@
-Changes in 29.05:
+Changes in 29.05, 29.06:
 * Improved Material menu layout:
     - Added chapter and verse selector for opening a passage on bible window.
     - Added chapter and verse selector for opening a passage on study window.

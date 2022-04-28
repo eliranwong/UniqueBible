@@ -160,7 +160,7 @@ input.addEventListener('keyup', function(event) {0}
 </script>""".format("{", "}", inputID, buttonID)
 
     def formTextTag(self, text=config.mainText):
-        return "<ref onclick='document.title=\"_menu:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
+        return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='textName(\"{0}\")'>".format(text)
 
     def formBookTag(self, b, text=config.mainText):
         bookAbb = self.bcvToVerseReference(b, 1, 1)[:-4]
