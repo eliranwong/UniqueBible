@@ -451,6 +451,8 @@ class MaterialMainWindow:
             addMenuItem(menu, "updateLanguageFiles", self, self.showUpdateLanguageItemWindow)
 
     def setupToolBarStandardIconSize(self):
+
+        self.defineStyle()
         
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
@@ -468,18 +470,7 @@ class MaterialMainWindow:
             initialIndex = self.bibleVersions.index(config.mainText)
         self.versionCombo.setCurrentIndex(initialIndex)
         self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-        if config.qtMaterial and config.qtMaterialTheme:
-            textButtonStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
-        else:
-            textButtonStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            QComboBox QAbstractItemView {0}background-color: {2}; color: {3};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
-        self.versionCombo.setStyleSheet(textButtonStyle)
+        self.versionCombo.setStyleSheet(config.comboBoxStyle)
         self.firstToolBar.addWidget(self.versionCombo)
 
         #self.versionCombo = None
@@ -722,6 +713,8 @@ class MaterialMainWindow:
 
     def setupToolBarFullIconSize(self):
 
+        self.defineStyle()
+
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
         self.firstToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
@@ -738,18 +731,7 @@ class MaterialMainWindow:
             initialIndex = self.bibleVersions.index(config.mainText)
         self.versionCombo.setCurrentIndex(initialIndex)
         self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-        if config.qtMaterial and config.qtMaterialTheme:
-            textButtonStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
-        else:
-            textButtonStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            QComboBox QAbstractItemView {0}background-color: {2}; color: {3};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
-        self.versionCombo.setStyleSheet(textButtonStyle)
+        self.versionCombo.setStyleSheet(config.comboBoxStyle)
         self.firstToolBar.addWidget(self.versionCombo)
 
         #self.versionCombo = None

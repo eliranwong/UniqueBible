@@ -64,16 +64,25 @@ class MiniBrowser(QWidget):
         self.youTubeView.load(QUrl("about:blank"))
 
     def setupUI(self, initialUrl=None):
+
         self.youTubeView = YouTubePopover(self)
 
         mainLayout = QVBoxLayout()
 
         layout = QHBoxLayout()
-        button = QPushButton("<")
+        if config.menuLayout == "material":
+            icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+            button = self.parent.getIconPushButton(icon)
+        else:
+            button = QPushButton("<")
         button.setToolTip(config.thisTranslation["youtube_back"])
         button.clicked.connect(self.youTubeView.back)
         layout.addWidget(button)
-        button = QPushButton(">")
+        if config.menuLayout == "material":
+            icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+            button = self.parent.getIconPushButton(icon)
+        else:
+            button = QPushButton(">")
         button.setToolTip(config.thisTranslation["youtube_forward"])
         button.clicked.connect(self.youTubeView.forward)
         layout.addWidget(button)
@@ -83,6 +92,9 @@ class MiniBrowser(QWidget):
         self.addressBar.returnPressed.connect(self.openURL)
         layout.addWidget(self.addressBar)
         button = QPushButton("mp3")
+        button.setFixedWidth(50)
+        if config.menuLayout == "material":
+            button.setStyleSheet(config.buttonStyle)
         button.setToolTip(config.thisTranslation["youtube_mp3"])
         button.clicked.connect(lambda: self.convertToFormat("mp3"))
         layout.addWidget(button)
@@ -90,13 +102,19 @@ class MiniBrowser(QWidget):
             button = QPushButton("mp4")
             button.setToolTip(config.thisTranslation["youtube_mp4"])
             button.clicked.connect(lambda: self.convertToFormat("mp4"))
-            layout.addWidget(button)
         else:
             button = QPushButton(config.thisTranslation["menu11_video"])
             button.setToolTip(config.thisTranslation["downloadVideo"])
             button.clicked.connect(self.downloadLastOption)
-            layout.addWidget(button)
-        button = QPushButton("+")
+        button.setFixedWidth(50)
+        if config.menuLayout == "material":
+            button.setStyleSheet(config.buttonStyle)
+        layout.addWidget(button)
+        if config.menuLayout == "material":
+            icon = "material/av/video_settings/materialiconsoutlined/18dp/2x/outline_video_settings_black_18dp.png"
+            button = self.parent.getIconPushButton(icon)
+        else:
+            button = QPushButton("+")
         button.setToolTip(config.thisTranslation["downloadOptions"])
         button.clicked.connect(self.downloadOptions)
         layout.addWidget(button)

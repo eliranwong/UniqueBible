@@ -3725,7 +3725,7 @@ class MainWindow(QMainWindow):
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         if config.menuLayout == "material":
-            textButtonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
+            textButtonStyle = config.buttonStyle
         else:
             textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
         if button is None:
@@ -3752,6 +3752,36 @@ class MainWindow(QMainWindow):
         button.clicked.connect(action)
         toolbar.addWidget(button)
 
+    def defineStyle(self):
+        config.buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
+        if config.qtMaterial and config.qtMaterialTheme:
+            config.comboBoxStyle = """
+            QComboBox {0}background-color: {2}; color: {3};{1} 
+            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
+            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
+        else:
+            config.comboBoxStyle = """
+            QComboBox {0}background-color: {2}; color: {3};{1} 
+            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
+            QComboBox QAbstractItemView {0}background-color: {2}; color: {3};{1} 
+            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
+
+    def getIconPushButton(self, iconFilePath):
+        button = QPushButton()
+        qIcon = self.getQIcon(iconFilePath)
+        button.setIcon(qIcon)
+        if config.menuLayout == "material":
+            button.setStyleSheet(config.buttonStyle)
+        return button
+
+    def getQIcon(self, iconFilePath):
+        iconFilePath = os.path.join("htmlResources", *iconFilePath.split("/"))
+        if not config.menuLayout == "material" or config.maskBackground:
+            qIcon = QIcon(iconFilePath)
+        else:
+            qIcon = self.getMaskedQIcon(iconFilePath)
+        return qIcon
+
     def getMaskedQIcon(self, iconFile, color=config.materialIconMaskColor, maskBackground=config.maskBackground):
         if color:
             pixmap = QPixmap(iconFile)
@@ -3774,8 +3804,6 @@ class MainWindow(QMainWindow):
         return toolbar.addAction(self.getMaskedQIcon(icon), config.thisTranslation[toolTip] if translation else toolTip, action)
 
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
-        icon = os.path.join(*icon.split("/"))
-        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
         if button is None:
             button = QPushButton()
         if config.qtMaterial and config.qtMaterialTheme:
@@ -3784,14 +3812,10 @@ class MainWindow(QMainWindow):
             #button.setFixedHeight(config.iconButtonWidth)
         elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
             button.setFixedWidth(40)
-        button.setStyleSheet(buttonStyle)
+        button.setStyleSheet(config.buttonStyle)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
-        iconFilePath = os.path.join("htmlResources", icon)
-        if config.maskBackground:
-            qIcon = QIcon(iconFilePath)
-        else:
-            qIcon = self.getMaskedQIcon(iconFilePath)
+        qIcon = self.getQIcon(icon)
         button.setIcon(qIcon)
         button.clicked.connect(action)
         toolbar.addWidget(button)
