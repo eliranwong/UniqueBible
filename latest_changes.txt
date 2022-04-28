@@ -1,3 +1,6 @@
+Changes in 29.09:
+* Mini Control "Active Only" button now work with materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed.
+
 Changes in 29.08:
 * Integrated config.refButtonClickAction into Material menu layout.
 
