@@ -1,3 +1,12 @@
+Changes in 29.10:
+* Further improvement of Material menu layout to work with Mini Control:
+    - Button, instead of dropdown menu, is displayed for bible selection when config.refButtonClickAction is set to "mini".
+    - Button, instead of dropdown menu, is displayed for commentary selection when config.refButtonClickAction is set to "mini".
+* Improved commentary selection with Mini Control:
+    - If "Sync Commentary with Bible Window" feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
+    - If "Sync Commentary with Bible Window" feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
+    - This same logic is used by Master Control.
+
 Changes in 29.09:
 * Mini Control "Active Only" button now work with materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed.
 

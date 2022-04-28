@@ -461,25 +461,26 @@ class MaterialMainWindow:
 
         # Version selection
 
-        self.versionButton = None
-        self.versionCombo = QComboBox()
-        self.bibleVersions = BiblesSqlite().getBibleList()
-        self.versionCombo.addItems(self.bibleVersions)
-        initialIndex = 0
-        if config.mainText in self.bibleVersions:
-            initialIndex = self.bibleVersions.index(config.mainText)
-        self.versionCombo.setCurrentIndex(initialIndex)
-        self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-        self.versionCombo.setStyleSheet(config.comboBoxStyle)
-        self.firstToolBar.addWidget(self.versionCombo)
-
-        #self.versionCombo = None
-        #self.versionButton = QPushButton(config.mainText)
-        #self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar, self.versionButton)
+        if config.refButtonClickAction == "mini":
+            self.versionCombo = None
+            self.versionButton = QPushButton(config.mainText)
+            self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar, self.versionButton)
+        else:
+            self.versionButton = None
+            self.versionCombo = QComboBox()
+            self.bibleVersions = BiblesSqlite().getBibleList()
+            self.versionCombo.addItems(self.bibleVersions)
+            initialIndex = 0
+            if config.mainText in self.bibleVersions:
+                initialIndex = self.bibleVersions.index(config.mainText)
+            self.versionCombo.setCurrentIndex(initialIndex)
+            self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.versionCombo.setStyleSheet(config.comboBoxStyle)
+            self.firstToolBar.addWidget(self.versionCombo)
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
         if config.qtMaterial and config.qtMaterialTheme:
-            versionButtonHeight = self.versionCombo.height() 
+            versionButtonHeight = self.versionButton.height() if config.refButtonClickAction == "mini" else self.versionCombo.height() 
             config.iconButtonWidth = config.maximumIconButtonWidth if versionButtonHeight > config.maximumIconButtonWidth else versionButtonHeight
 
         icon = "material/navigation/unfold_more/materialiconsoutlined/18dp/2x/outline_unfold_more_black_18dp.png"
@@ -557,19 +558,21 @@ class MaterialMainWindow:
 
         # Commentary selection
 
-        self.commentaryCombo = QComboBox()
-        self.commentaryCombo.addItems(self.commentaryList)
-        initialIndex = 0
-        if config.commentaryText in self.commentaryList:
-            initialIndex = self.commentaryList.index(config.commentaryText)
-        self.commentaryCombo.setCurrentIndex(initialIndex)
-        self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
-        self.commentaryCombo.setStyleSheet(config.comboBoxStyle)
-        self.secondToolBar.addWidget(self.commentaryCombo)
-
-        self.commentaryRefButton = None
-        #self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
-        #self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
+        if config.refButtonClickAction == "mini":
+            self.commentaryCombo = None
+            self.commentaryRefButton = QPushButton(self.verseReference("commentary"))
+            self.addStandardTextButton("menu4_commentary", self.commentaryRefButtonClicked, self.secondToolBar, self.commentaryRefButton)
+        else:
+            self.commentaryRefButton = None
+            self.commentaryCombo = QComboBox()
+            self.commentaryCombo.addItems(self.commentaryList)
+            initialIndex = 0
+            if config.commentaryText in self.commentaryList:
+                initialIndex = self.commentaryList.index(config.commentaryText)
+            self.commentaryCombo.setCurrentIndex(initialIndex)
+            self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
+            self.commentaryCombo.setStyleSheet(config.comboBoxStyle)
+            self.secondToolBar.addWidget(self.commentaryCombo)
 
         self.enableSyncCommentaryButton = QPushButton()
         self.addMaterialIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)

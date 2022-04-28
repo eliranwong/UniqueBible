@@ -513,8 +513,10 @@ class MiniControl(QWidget):
         self.populateBooksButtons(config.mainText)
 
     def commentaryAction(self, commentary):
-        command = "COMMENTARY:::{0}:::{1}".format(commentary, self.parent.verseReference("main")[1])
-        self.runCommmand(command)
+        #command = "COMMENTARY:::{0}:::{1}".format(commentary, self.parent.verseReference("main")[1])
+        #self.runCommmand(command)
+        index = self.parent.commentaryList.index(commentary)
+        self.parent.changeCommentaryVersion(index)
         command = "_commentaryinfo:::{0}".format(commentary)
         self.parent.runTextCommand(command)
 
