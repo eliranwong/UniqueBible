@@ -100,12 +100,6 @@ class TextCommandParser:
             # Usage - TEXT:::[BIBLE_VERSION]
             # e.g. TEXT:::KJV
             # e.g. TEXT:::NET"""),
-            "chapters": (self.textChapters, """
-            # [KEYWORD] CHAPTERS
-            # Feature - Display all available chapters of a bible version.
-            # Usage - CHAPTERS:::[BIBLE_VERSION]
-            # e.g. CHAPTERS:::KJV
-            # e.g. CHAPTERS:::NET"""),
             "compare": (self.textCompare, """
             # [KEYWORD] COMPARE
             # Feature - Compare bible versions of a single or multiple references.
@@ -645,6 +639,32 @@ class TextCommandParser:
             # e.g. _menu:::43
             # e.g. _menu:::43.3
             # e.g. _menu:::43.3.16"""),
+            "_chapters": (self.textChapters, """
+            # [KEYWORD] _chapters
+            # Feature - Display all available chapters of a bible version.
+            # Usage - _chapters:::[BIBLE_VERSION]
+            # e.g. _chapters:::KJV
+            # e.g. _chapters:::NET"""),
+            "_verses": (self.textVerses, """
+            # [KEYWORD] _verses
+            # Feature - Display all available verses of a bible chapter.
+            # Usage - _verses:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
+            # e.g. _verses:::Jn 3
+            # e.g. _verses:::KJV:::Jn 3
+            # e.g. _verses:::NET:::Jn 3"""),
+            "_commentarychapters": (self.textCommentaryChapters, """
+            # [KEYWORD] _commentarychapters
+            # Feature - Display all available chapters of a bible version.
+            # Usage - _commentarychapters:::[BIBLE_VERSION]
+            # e.g. _commentarychapters:::KJV
+            # e.g. _commentarychapters:::NET"""),
+            "_commentaryverses": (self.textCommentaryVerses, """
+            # [KEYWORD] _commentaryverses
+            # Feature - Display all available verses of a bible chapter.
+            # Usage - _commentaryverses:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
+            # e.g. _commentaryverses:::Jn 3
+            # e.g. _commentaryverses:::KJV:::Jn 3
+            # e.g. _commentaryverses:::NET:::Jn 3"""),
             "_commentary": (self.textCommentaryMenu, """
             # [KEYWORD] _commentary
             # e.g. _commentary:::CBSC.1.1.1"""),
@@ -1762,7 +1782,7 @@ class TextCommandParser:
                 updateViewConfig, viewText, viewReference, *_ = self.getViewConfig(source)
                 return self.textBibleVerseParser(viewReference, texts[0], source)
 
-    # CHAPTERS:::
+    # _chapters:::
     def textChapters(self, command, source):
         texts = self.getConfirmedTexts(command)
         if not texts:
@@ -1782,9 +1802,88 @@ class TextCommandParser:
             for bNo in bookList:
                 abb = books[str(bNo)][0]
                 chapterList = bible.getChapterList(bNo)
-                commandPrefix = f"BIBLE:::{text}:::{abb} "
+                commandPrefix = f"_verses:::{text}:::{abb} "
                 html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
             return (source, html, {})
+
+    # _verses:::
+    def textVerses(self, command, source):
+        if command.count(":::") == 0:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts)
+        verseList = self.extractAllVerses(references)
+        if texts and verseList:
+            text = texts[0]
+            booksMap = {
+                "ENG": BibleBooks.eng,
+                "TC": BibleBooks.tc,
+                "SC": BibleBooks.sc,
+            }
+            books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+            b, c, *_ = verseList[0]
+            abb = books[str(b)][0]
+            bible = Bible(text)
+            chapterVerseList = bible.getVerseList(b, c)
+            window = "STUDY" if source.lower() == "study" else "BIBLE"
+            commandPrefix = f"{window}:::{text}:::{abb} {c}:"
+            html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
+            html += HtmlGeneratorUtil.getBibleVerseTable(books[str(b)][1], abb, c, chapterVerseList, commandPrefix)
+            return (source, html, {})
+        else:
+            return self.invalidCommand()
+
+    # _commentarychapters:::
+    def textCommentaryChapters(self, command, source):
+        if not command in self.parent.commentaryList:
+            return self.invalidCommand()
+        else:
+            booksMap = {
+                "ENG": BibleBooks.eng,
+                "TC": BibleBooks.tc,
+                "SC": BibleBooks.sc,
+            }
+            books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+
+            commentary = Commentary(command)
+            bookList = commentary.getBookList()
+            info = commentary.commentaryInfo()
+            if info == "https://Marvel.Bible Commentary" and command in Commentary.marvelCommentaries:
+                info = Commentary.marvelCommentaries[command]
+            moreLink = """<p style='text-align: center;'>[ <ref onclick="window.parent.submitCommand('.library')">{0}</ref> ]</p>""".format(config.thisTranslation["change"]) if config.enableHttpServer else ""
+            html = "{1}<h2 style='text-align: center;'>{0}</h2>".format(info, moreLink)
+            for bNo in bookList:
+                abb = books[str(bNo)][0]
+                chapterList = commentary.getChapterList(bNo)
+                commandPrefix = f"_commentaryverses:::{command}:::{abb} "
+                html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
+            return ("study", html, {})
+
+    # _commentaryverses:::
+    def textCommentaryVerses(self, command, source):
+        if command.count(":::") == 0:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        text, references = self.splitCommand(command)
+        verseList = self.extractAllVerses(references)
+        if text in self.parent.commentaryList and verseList:
+            booksMap = {
+                "ENG": BibleBooks.eng,
+                "TC": BibleBooks.tc,
+                "SC": BibleBooks.sc,
+            }
+            books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+            b, c, *_ = verseList[0]
+            abb = books[str(b)][0]
+            bible = Bible("KJV")
+            chapterVerseList = bible.getVerseList(b, c)
+            commandPrefix = f"COMMENTARY:::{text}:::{abb} {c}:"
+            html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
+            html += HtmlGeneratorUtil.getBibleVerseTable(books[str(b)][1], abb, c, chapterVerseList, commandPrefix)
+            return ("study", html, {})
+        else:
+            return self.invalidCommand()
 
     # MAIN:::
     def textMain(self, command, source):

@@ -174,7 +174,7 @@ class HtmlGeneratorUtil:
         chapters = ""
         for c in chapterList:
             command = "{0}{1}{2}".format(commandPrefix, c, commandSuffix)
-            chapters += """<button type='button' class='button2' title='{0} {1}' onclick="document.title='{2}'">{1}</button>""".format(bookAbb, c, command)
+            chapters += """<button type='button' class='ubaButton' title='{0} {1}' onclick="document.title='{2}'">{1}</button>""".format(bookAbb, c, command)
             #chapters += """<ref title='{0} {1}' onclick="document.title='{2}'">{1}</ref> """.format(bookAbb, c, command)
         return """
 <table>
@@ -186,6 +186,23 @@ class HtmlGeneratorUtil:
   </tr>
 </table>
 """.format(bookName, chapters)
+
+    @staticmethod
+    def getBibleVerseTable(bookName, bookAbb, c, verseList, commandPrefix="", commandSuffix=""):
+        verses = ""
+        for v in verseList:
+            command = "{0}{1}{2}".format(commandPrefix, v, commandSuffix)
+            verses += """<button type='button' class='ubaButton' title='{0} {1}' onclick="document.title='{2}'">{1}</button>""".format(bookAbb, v, command)
+        return """
+<table>
+  <tr>
+    <th>{0} {1}</th>
+  </tr>
+  <tr>
+    <td><div style='margin: auto;'><p style='text-align: center;'>{2}</p></div></td>
+  </tr>
+</table>
+""".format(bookName, c, verses)
 
     @staticmethod
     def getMenu(command, source="main"):
@@ -206,13 +223,13 @@ class HtmlGeneratorUtil:
         if text:
             # i.e. text specified; add book menu
             if config.openBibleInMainViewOnly or config.enableHttpServer:
-                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button>".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button>".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
             else:
                 if source == "study":
-                    anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
+                    anotherView = "<button class='ubaButton' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
                 else:
-                    anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
-                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {4}".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_openHere"], anotherView)
+                    anotherView = "<button class='ubaButton' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
+                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {4}".format(text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_openHere"], anotherView)
             menu += "<hr><b>{1}</b> {0}".format(biblesSqlite.getBooks(text), config.thisTranslation["html_book"])
             # create a list of inters b, c, v
             bcList = [int(i) for i in items[1:]]
@@ -231,28 +248,28 @@ class HtmlGeneratorUtil:
                     bookAbb = bookReference[:-4]
                     # build open book button
                     if config.openBibleInMainViewOnly or config.enableHttpServer:
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_open"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openMain"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openMain"])
                         else:
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openStudy"])
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, bookReference, anotherView, config.thisTranslation["html_openHere"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, bookReference, config.thisTranslation["html_openStudy"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, bookReference, anotherView, config.thisTranslation["html_openHere"])
                     # build search book by book introduction button
-                    introductionButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_introduction"])
+                    introductionButton = "<button class='ubaButton' onclick='document.title=\"SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_introduction"])
                     # build search timelines button
-                    timelinesButton = "<button class='feature' onclick='document.title=\"SEARCHBOOKCHAPTER:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_timelines"])
+                    timelinesButton = "<button class='ubaButton' onclick='document.title=\"SEARCHBOOKCHAPTER:::Timelines:::{0}\"'>{1}</button>".format(engFullBookName, config.thisTranslation["html_timelines"])
                     # build search encyclopedia button
-                    encyclopediaButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookNameWithoutNumber, config.thisTranslation["context1_encyclopedia"])
+                    encyclopediaButton = "<button class='ubaButton' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.encyclopedia, engFullBookNameWithoutNumber, config.thisTranslation["context1_encyclopedia"])
                     # build search dictionary button
-                    dictionaryButton = "<button class='feature' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookNameWithoutNumber, config.thisTranslation["context1_dict"])
+                    dictionaryButton = "<button class='ubaButton' onclick='document.title=\"SEARCHTOOL:::{0}:::{1}\"'>{2}</button>".format(config.dictionary, engFullBookNameWithoutNumber, config.thisTranslation["context1_dict"])
                     # display selected book
                     menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span> {1}<br>{3} {4} {5} {6}".format(bookAbb, openOption, config.thisTranslation["html_current"], introductionButton, timelinesButton, dictionaryButton, encyclopediaButton)
                     # display book commentaries
                     menu += "<br><br><b>{1}:</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>".format(bookAbb, config.thisTranslation["commentaries"])
                     list = Commentary().getCommentaryListThatHasBookAndChapter(bookNo, 0)
                     for commentary in list:
-                        button = " <button class='feature' onmouseover='instantInfo(\"{2}\")' onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>{0}</button>".format(
+                        button = " <button class='ubaButton' onmouseover='instantInfo(\"{2}\")' onclick='document.title=\"COMMENTARY:::{0}:::{1}\"'>{0}</button>".format(
                             commentary[0], engFullBookName, commentary[1])
                         menu += button
                     # Chapter specific buttons
@@ -265,23 +282,23 @@ class HtmlGeneratorUtil:
                     chapterReference = parser.bcvToVerseReference(bookNo, chapterNo, 1)
                     # build open chapter button
                     if config.openBibleInMainViewOnly or config.enableHttpServer:
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_open"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openMain"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openMain"])
                         else:
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openStudy"])
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, chapterReference, anotherView, config.thisTranslation["html_openHere"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, chapterReference, config.thisTranslation["html_openStudy"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, chapterReference, anotherView, config.thisTranslation["html_openHere"])
                     # overview button
-                    overviewButton = "<button class='feature' onclick='document.title=\"OVERVIEW:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_overview"])
+                    overviewButton = "<button class='ubaButton' onclick='document.title=\"OVERVIEW:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_overview"])
                     # chapter index button
-                    chapterIndexButton = "<button class='feature' onclick='document.title=\"CHAPTERINDEX:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_chapterIndex"])
+                    chapterIndexButton = "<button class='ubaButton' onclick='document.title=\"CHAPTERINDEX:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_chapterIndex"])
                     # summary button
-                    summaryButton = "<button class='feature' onclick='document.title=\"SUMMARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_summary"])
+                    summaryButton = "<button class='ubaButton' onclick='document.title=\"SUMMARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["html_summary"])
                     # chapter commentary button
-                    # chapterCommentaryButton = "<button class='feature' onclick='document.title=\"COMMENTARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["menu4_commentary"])
+                    # chapterCommentaryButton = "<button class='ubaButton' onclick='document.title=\"COMMENTARY:::{0} {1}\"'>{2}</button>".format(bookAbb, chapterNo, config.thisTranslation["menu4_commentary"])
                     # chapter note button
-                    chapterNoteButton = " <button class='feature' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</button>".format(bookNo, chapterNo, config.thisTranslation["menu6_notes"])
+                    chapterNoteButton = " <button class='ubaButton' onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</button>".format(bookNo, chapterNo, config.thisTranslation["menu6_notes"])
                     # selected chapter
                     menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {1}\"'>{1}</span> {2}{4}<br>{5} {6} {7}".format(bookNo, chapterNo, openOption, config.thisTranslation["html_current"], "" if config.enableHttpServer else chapterNoteButton, overviewButton, chapterIndexButton, summaryButton)
 
@@ -290,7 +307,7 @@ class HtmlGeneratorUtil:
                         chapterNo, config.thisTranslation["commentaries"])
                     list = Commentary().getCommentaryListThatHasBookAndChapter(bookNo, config.mainC)
                     for commentary in list:
-                        button = " <button class='feature' onmouseover='instantInfo(\"{2}\")' onclick='document.title=\"COMMENTARY:::{0}:::{1} {3}\"'>{0}</button>".format(
+                        button = " <button class='ubaButton' onmouseover='instantInfo(\"{2}\")' onclick='document.title=\"COMMENTARY:::{0}:::{1} {3}\"'>{0}</button>".format(
                             commentary[0], engFullBookName, commentary[1], config.mainC)
                         menu += button
 
@@ -300,14 +317,14 @@ class HtmlGeneratorUtil:
                 if check == 3:
                     verseNo = bcList[2]
                     if config.openBibleInMainViewOnly or config.enableHttpServer:
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_open"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_open"])
                     else:
                         if source == "study":
-                            anotherView = "<button class='feature' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"MAIN:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openMain"])
                         else:
-                            anotherView = "<button class='feature' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
-                        openOption = "<button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, mainVerseReference, anotherView, config.thisTranslation["html_openHere"])
-                    verseNoteButton = " <button class='feature' onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</button>".format(bookNo, chapterNo, verseNo, config.thisTranslation["menu6_notes"])
+                            anotherView = "<button class='ubaButton' onclick='document.title=\"STUDY:::{0}:::{1}\"'>{2}</button>".format(text, mainVerseReference, config.thisTranslation["html_openStudy"])
+                        openOption = "<button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"BIBLE:::{0}:::{1}\"'>{3}</button> {2}".format(text, mainVerseReference, anotherView, config.thisTranslation["html_openHere"])
+                    verseNoteButton = " <button class='ubaButton' onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</button>".format(bookNo, chapterNo, verseNo, config.thisTranslation["menu6_notes"])
                     menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> {4}{6}".format(text, bookNo, chapterNo, verseNo, openOption, config.thisTranslation["html_current"], "" if config.enableHttpServer else verseNoteButton)
                     #menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_features"])
                     menu += "<br>"
@@ -323,7 +340,7 @@ class HtmlGeneratorUtil:
                         ("INDEX", config.thisTranslation["menu4_indexes"]),
                     )
                     for keyword, description in features:
-                        menu += "<button class='feature' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
+                        menu += "<button class='ubaButton' onclick='document.title=\"{0}:::{1}\"'>{2}</button> ".format(keyword, mainVerseReference, description)
                     #versions = biblesSqlite.getBibleList()
                     # Compare menu
                     menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
@@ -331,19 +348,19 @@ class HtmlGeneratorUtil:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='compare{0}'></div> ".format(version)
                             menu += "<script>versionList.push('{0}');</script>".format(version)
-                    menu += "<br><button type='button' onclick='checkCompare();' class='feature'>{0}</button>".format(config.thisTranslation["html_showCompare"])
+                    menu += "<br><button type='button' onclick='checkCompare();' class='ubaButton'>{0}</button>".format(config.thisTranslation["html_showCompare"])
                     # Parallel menu
                     menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='parallel{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkParallel();' class='feature'>{0}</button>".format(config.thisTranslation["html_showParallel"])
+                    menu += "<br><button type='button' onclick='checkParallel();' class='ubaButton'>{0}</button>".format(config.thisTranslation["html_showParallel"])
                     # Diff menu
                     menu += "<hr><b><span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span> {1}</b><br>".format(text, config.thisTranslation["html_and"])
                     for version in versions:
                         if not version == text:
                             menu += "<div style='display: inline-block' onmouseover='textName(\"{0}\")'>{0} <input type='checkbox' id='diff{0}'></div> ".format(version)
-                    menu += "<br><button type='button' onclick='checkDiff();' class='feature'>{0}</button>".format(config.thisTranslation["html_showDifference"])
+                    menu += "<br><button type='button' onclick='checkDiff();' class='ubaButton'>{0}</button>".format(config.thisTranslation["html_showDifference"])
         else:
             # menu - Search a bible
             if source == "study":
@@ -354,7 +371,7 @@ class HtmlGeneratorUtil:
             menu += "<br><br><input type='text' id='bibleSearch' style='width:95%' autofocus><br><br>"
             searchOptions = ("SEARCH", "SEARCHREFERENCE", "SEARCHOT", "SEARCHNT", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
             for searchMode in searchOptions:
-                menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='feature'>{0}</button> ".format(searchMode, defaultSearchText)
+                menu += "<button  id='{0}' type='button' onclick='checkSearch(\"{0}\", \"{1}\");' class='ubaButton'>{0}</button> ".format(searchMode, defaultSearchText)
             # menu - Search multiple bibles
             menu += "<hr><b>{0}</b> ".format(config.thisTranslation["html_searchBibles2"])
             for version in versions:
@@ -365,7 +382,7 @@ class HtmlGeneratorUtil:
                 menu += "<script>versionList.push('{0}');</script>".format(version)
             menu += "<br><br><input type='text' id='multiBibleSearch' style='width:95%'><br><br>"
             for searchMode in searchOptions:
-                menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='feature'>{0}</button> ".format(searchMode)
+                menu += "<button id='multi{0}' type='button' onclick='checkMultiSearch(\"{0}\");' class='ubaButton'>{0}</button> ".format(searchMode)
             # Perform search when "ENTER" key is pressed
             menu += biblesSqlite.inputEntered("bibleSearch", "SEARCH")
             menu += biblesSqlite.inputEntered("multiBibleSearch", "multiSEARCH")

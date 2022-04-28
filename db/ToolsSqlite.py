@@ -241,12 +241,12 @@ class IndexesSqlite:
         return content
 
     def searchCharacters(self):
-        content = "<button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>search for a character</button>".format('"')
-        content += "<br><button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>search for a name & its meaning</button>".format('"')
+        content = "<button class='ubaButton' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBP:::{0}'>search for a character</button>".format('"')
+        content += "<br><button class='ubaButton' onclick='document.title={0}_command:::SEARCHTOOL:::HBN:::{0}'>search for a name & its meaning</button>".format('"')
         return content
 
     def searchLocations(self):
-        return "<button class='feature' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>search for a location</button>".format('"')
+        return "<button class='ubaButton' onclick='document.title={0}_command:::SEARCHTOOL:::EXLBL:::{0}'>search for a location</button>".format('"')
 
     def searchTopics(self):
         action = "searchResource(this.value)"
@@ -358,7 +358,7 @@ class DictionaryData:
 
             abb = entry[:3]
             moduleName = dict(IndexesSqlite().dictionaryList)[abb]
-            searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(abb)
+            searchButton = "&ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(abb)
             return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, contentText)
 
 
@@ -393,7 +393,7 @@ class EncyclopediaData:
             contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
 
             moduleName = dict(IndexesSqlite().encyclopediaList)[module]
-            searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
+            searchButton = "&ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module)
             return "<p><b>{0}</b> {1}</p>{2}".format(moduleName, searchButton, contentText)
 
 
@@ -464,7 +464,7 @@ class ExlbData:
                     "exlbl": "Exhaustive Library of Bible Locations",
                     "exlbt": "Exhaustive Library of Bible Topics",
                 }
-                searchButton = "&ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module.upper())
+                searchButton = "&ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHTOOL:::{0}:::\"'>search</button>".format(module.upper())
                 return "<p><b>{0}</b> {1}</p>{2}".format(moduleName[module], searchButton, content[0])
 
 
@@ -619,7 +619,7 @@ class Commentary:
 
     def getCommentaries(self):
         commentaryList = self.getCommentaryList()
-        commentaries = " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formCommentaryTag(commentary), commentary) for commentary in commentaryList])
+        commentaries = " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formCommentaryTag(commentary), commentary) for commentary in commentaryList])
         return commentaries
 
     def getBookList(self):
@@ -630,7 +630,7 @@ class Commentary:
     def getBooks(self):
         bookList = self.getBookList()
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
-        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
+        return " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formBookTag(book), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
     def getChapterList(self, b=config.commentaryB):
         t = (b,)
@@ -661,21 +661,21 @@ class Commentary:
             text = items[0]
             if not text == "":
                 # i.e. text specified; add book menu
-                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='commentaryName(\"{0}\")'>{0}</span>  <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{1}\"'>{3}</button>".format(self.text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                menu += "<br><br><b>{2}</b> <span style='color: brown;' onmouseover='commentaryName(\"{0}\")'>{0}</span>  <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{1}\"'>{3}</button>".format(self.text, mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
                 menu += "<hr><b>{1}</b> {0}".format(self.getBooks(), config.thisTranslation["html_book"])
                 bcList = [int(i) for i in items[1:]]
                 if bcList:
                     check = len(bcList)
                     if check >= 1:
                         # i.e. book specified; add chapter menu
-                        menu += "<br><br><b>{1}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>   <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{3}:::{0} 1\"'>{2}</button>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], config.thisTranslation["html_current"], config.thisTranslation["html_open"], self.text)
+                        menu += "<br><br><b>{1}</b> <span style='color: brown;' onmouseover='bookName(\"{0}\")'>{0}</span>   <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{3}:::{0} 1\"'>{2}</button>".format(self.bcvToVerseReference(bcList[0], 1, 1)[:-4], config.thisTranslation["html_current"], config.thisTranslation["html_open"], self.text)
                         menu += "<hr><b>{1}</b> {0}".format(self.getChapters(bcList[0]), config.thisTranslation["html_chapter"])
                     if check >= 2:
                         # i.e. both book and chapter specified; add verse menu
-                        menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>  <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{1}:::{2}\"'>{4}</button>".format(bcList[1], self.text, self.bcvToVerseReference(bcList[0], bcList[1], 1)[:-2], config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                        menu += "<br><br><b>{3}</b> <span style='color: brown;' onmouseover='document.title=\"_info:::Chapter {0}\"'>{0}</span>  <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{1}:::{2}\"'>{4}</button>".format(bcList[1], self.text, self.bcvToVerseReference(bcList[0], bcList[1], 1)[:-2], config.thisTranslation["html_current"], config.thisTranslation["html_open"])
                         menu += "<hr><b>{1}</b> {0}".format(self.getVerses(bcList[0], bcList[1]), config.thisTranslation["html_verse"])
                     if check == 3:
-                        menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='feature' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{4}\"'>{6}</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
+                        menu += "<br><br><b>{5}</b> <span style='color: brown;' onmouseover='document.title=\"_instantVerse:::{0}:::{1}.{2}.{3}\"'>{3}</span> <button class='ubaButton' onclick='document.title=\"_stayOnSameTab:::\"; document.title=\"COMMENTARY:::{0}:::{4}\"'>{6}</button>".format(self.text, bcList[0], bcList[1], bcList[2], mainVerseReference, config.thisTranslation["html_current"], config.thisTranslation["html_open"])
             return menu
         else:
             return "INVALID_COMMAND_ENTERED"
@@ -899,7 +899,7 @@ class BookData:
             topicList = Book(module).getTopicList()
             topics = "<br>".join(["<ref onclick='document.title=\"BOOK:::{0}:::{1}\"'>{2}</ref>".format(module, re.sub("'", "@", topic), topic) for topic in topicList])
             config.book = module
-            return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
+            return "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::SEARCHBOOK:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics)
         else:
             return "INVALID_COMMAND_ENTERED"
 
@@ -915,7 +915,7 @@ class BookData:
                     searchCommand = "SEARCHBOOKCHAPTER"
                 else:
                     searchCommand = "SEARCHBOOK"
-                return "<p>{0} &ensp;<button class='feature' onclick='document.title=\"_command:::{3}:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics, searchCommand)
+                return "<p>{0} &ensp;<button class='ubaButton' onclick='document.title=\"_command:::{3}:::{1}:::\"'>search</button></p><p>{2}</p>".format(books, module, topics, searchCommand)
             else:
                 return ""
         else:

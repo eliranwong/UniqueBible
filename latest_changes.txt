@@ -1,3 +1,21 @@
+Changes in 29.05:
+* Improved Material menu layout:
+    - Added chapter and verse selector for opening a passage on bible window.
+    - Added chapter and verse selector for opening a passage on study window.
+    - Added commentary drop down selection menu.
+    - "Sync Commentary with Bible Window" button is now placed right next to the new commentary drop down menu.
+* Improved commentary selection:
+    - If "Sync Commentary with Bible Window" feature is turned on and a commentary is selected, commentary is opened directly with the same passage with the Bible Window.
+    - If "Sync Commentary with Bible Window" feature is turned off and a commentary is selected, chapter and verse selection for a commentary are displayed first.
+* Also improved bible and commentary selection on http-server interface.
+* Added found commands, which works on both desktop and http-server versions:
+    - _chapters:::
+    - _verses:::
+    - _commentarychapters:::
+    - _commentaryverses:::
+* Now changing config.pushButtonBackgroundColor and config.pushButtonForegroundColor also changes button colour on chapter / verse selection menu.
+* All previous html buttons now use config.pushButtonBackgroundColor and config.pushButtonForegroundColor for colours.
+
 Changes in 29.04:
 * Built-in mini browser now uses material icons when Material menu layout is used.
 

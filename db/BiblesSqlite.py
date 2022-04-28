@@ -167,7 +167,8 @@ input.addEventListener('keyup', function(event) {0}
         return "<ref onclick='document.title=\"_menu:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(text, b, bookAbb)
 
     def formChapterTag(self, b, c, text=config.mainText):
-        return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
+        #return "<ref onclick='document.title=\"_menu:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
+        return "<ref onclick='document.title=\"_chapters:::{0}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(text, b, c)
 
     def formVerseTag(self, b, c, v, text=config.mainText):
         verseReference = self.bcvToVerseReference(b, c, v)
@@ -201,7 +202,7 @@ input.addEventListener('keyup', function(event) {0}
 
     def getTexts(self):
         textList = self.getBibleList()
-        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
+        return " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formTextTag(text), text) for text in textList])
 
     def getBookList(self, text=config.mainText):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -220,7 +221,7 @@ input.addEventListener('keyup', function(event) {0}
     def getBooks(self, text=config.mainText):
         bookList = self.getBookList(text)
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
-        return " ".join(["{0}<button class='feature'>{1}</button></ref>".format(self.formBookTag(book, text), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
+        return " ".join(["{0}<button class='ubaButton'>{1}</button></ref>".format(self.formBookTag(book, text), standardAbbreviation[str(book)]) for book in bookList if str(book) in standardAbbreviation])
 
     def getChapterList(self, b=config.mainB, text=config.mainText):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
@@ -1428,11 +1429,11 @@ class MorphologySqlite:
         lexicalEntryButtons = ""
         for index, entry in enumerate(lexicalEntry[:-1].split(",")):
             if index == 0:
-                lexicalEntryButtons += "<button class='feature' onclick='concord(\"{0}\")'>{0}</button>".format(entry)
+                lexicalEntryButtons += "<button class='ubaButton' onclick='concord(\"{0}\")'>{0}</button>".format(entry)
             else:
-                lexicalEntryButtons += " <button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry)
+                lexicalEntryButtons += " <button class='ubaButton' onclick='lex(\"{0}\")'>{0}</button>".format(entry)
         lexicalEntry = lexicalEntryButtons
-        #lexicalEntry = " ".join(["<button class='feature' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
+        #lexicalEntry = " ".join(["<button class='ubaButton' onclick='lex(\"{0}\")'>{0}</button>".format(entry) for entry in lexicalEntry[:-1].split(",")])
         morphologyCode = "<ref onclick='searchCode(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyCode)
         morphology = ", ".join(["<ref onclick='searchMorphologyItem(\"{0}\", \"{1}\")'>{1}</ref>".format(firstLexicalEntry, morphologyItem) for morphologyItem in morphology[:-1].split(",")])
         if b < 40:
@@ -1448,7 +1449,7 @@ class MorphologySqlite:
                 lexemeAudioLink = ""
             testament = "OT"
             textWord = "<heb>{0}</heb>{1}".format(textWord, wordAudioLink)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref>{2} &ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><heb>{1}</heb></ref>{2} &ensp;<button class='ubaButton' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
         else:
             wordAudioFile = os.path.join(config.audioFolder, "bibles", "OGNT", "default", "{0}_{1}".format(b, c), "OGNT_{0}_{1}_{2}_{3}.mp3".format(b, c, v, wordID))
             if os.path.isfile(wordAudioFile):
@@ -1462,13 +1463,13 @@ class MorphologySqlite:
                 lexemeAudioLink = ""
             testament = "NT"
             textWord = "<grk>{0}</grk>{1}".format(textWord, wordAudioLink)
-            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>{2}&ensp;<button class='feature' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
+            lexeme = "<ref onclick='searchLexicalEntry(\"{0}\")'><grk>{1}</grk></ref>{2}&ensp;<button class='ubaButton' onclick='lexicon(\"Morphology\", \"{0}\")'>Analytical Lexicon</button>".format(firstLexicalEntry, lexeme, lexemeAudioLink)
         clauseContent = ClauseData().getContent(testament, clauseID)
         if b < 40:
             clauseContent = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?>[^<>]+?</heb>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::BHS5.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), clauseContent)
         else:
             clauseContent = re.sub("""(<grk id="w[0]*?)([1-9]+[0-9]*?)("[^<>]*?>[^<>]+?</grk>)""", r"""\1\2\3 <ref onclick="document.title='READWORD:::OGNT.{0}.{1}.{2}.\2'">{3}</ref>""".format(b, c, v, config.audioBibleIcon), clauseContent)
-        return ((b, c, v), "<p><button class='feature' onclick='document.title=\"{0}\"'>{0}</button> <button class='feature' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='feature' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='feature' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='feature' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='feature' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1}[<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='feature' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='feature' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
+        return ((b, c, v), "<p><button class='ubaButton' onclick='document.title=\"{0}\"'>{0}</button> <button class='ubaButton' onclick='document.title=\"COMPARE:::{0}\"'>Compare</button> <button class='ubaButton' onclick='document.title=\"CROSSREFERENCE:::{0}\"'>X-Ref</button> <button class='ubaButton' onclick='document.title=\"TSKE:::{0}\"'>TSKE</button> <button class='ubaButton' onclick='document.title=\"COMBO:::{0}\"'>TDW</button> <button class='ubaButton' onclick='document.title=\"INDEX:::{0}\"'>Indexes</button></p><div style='border: 1px solid gray; border-radius: 5px; padding: 2px 5px;'>{13}</div><h3>{1}[<transliteration>{2}</transliteration> / <transliteration>{3}</transliteration>]</h3><p><b>Lexeme:</b> {4}<br><b>Morphology code:</b> {5}<br><b>Morphology:</b> {6}<table><tr><th>Gloss</th><th>Interlinear</th><th>Translation</th></tr><tr><td>{7}</td><td>{8}</td><td>{9}</td></tr></table><br>{10} <button class='ubaButton' onclick='lexicon(\"ConcordanceBook\", \"{14}\")'>Concordance [Book]</button> <button class='ubaButton' onclick='lexicon(\"ConcordanceMorphology\", \"{14}\")'>Concordance [Morphology]</button></p>".format(verseReference, textWord, transliteration, pronuciation, lexeme, morphologyCode, morphology, gloss, interlinear, translation, lexicalEntry, clauseID, wordID, clauseContent, firstLexicalEntry))
 
     def searchWord(self, portion, wordID):
         if portion == "1":

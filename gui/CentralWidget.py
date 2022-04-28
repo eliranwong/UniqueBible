@@ -48,7 +48,7 @@ class CentralWidget(QWidget):
             tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
 
         self.instantView = WebEngineView(self, "instant")
-        self.instantView.setHtml("<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{1}.css?v=1.049'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.049'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font, config.theme), config.baseUrl)
+        self.instantView.setHtml("<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{1}.css?v=1.051'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.051'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font, config.theme), config.baseUrl)
 
         self.parallelSplitter.addWidget(self.mainView)
         self.parallelSplitter.addWidget(self.studyView)

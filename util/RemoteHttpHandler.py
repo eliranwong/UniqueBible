@@ -120,7 +120,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getShortcuts(self):
         mainVerse = self.getMainVerse()
         return {
-            ".chapters": "CHAPTERS:::{0}".format(mainVerse["text"]),
+            ".chapters": "_chapters:::{0}".format(mainVerse["text"]),
             ".bible": "BIBLE:::{0}:::{1}".format(mainVerse["text"], mainVerse["reference"]),
             ".mob": "BIBLE:::MOB:::{0}".format(mainVerse["reference"]),
             ".mib": "BIBLE:::MIB:::{0}".format(mainVerse["reference"]),
@@ -134,9 +134,9 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             ".discourse": "discourse:::{0}".format(mainVerse["reference"]),
             ".words": "words:::{0}".format(mainVerse["reference"]),
             ".combo": "combo:::{0}".format(mainVerse["reference"]),
-            ".commentary": "commentary:::{0}".format(mainVerse["reference"]),
+            ".commentary": "commentary:::{0}:::{1}".format(mainVerse["commentary"], mainVerse["reference"]),
             ".index": "index:::{0}".format(mainVerse["reference"]),
-            ".commentarymenu": "_commentary:::{0}".format(mainVerse["commentary"]),
+            ".commentarymenu": "_commentarychapters:::{0}".format(mainVerse["commentary"]),
             ".introduction": "SEARCHBOOKCHAPTER:::Tidwell_The_Bible_Book_by_Book:::{0}".format(mainVerse["bFullEnglishName"]),
             ".timeline": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(mainVerse["bFullEnglishName"]),
             ".timelines": "SEARCHBOOKCHAPTER:::Timelines:::{0}".format(mainVerse["bFullEnglishName"]),
@@ -288,8 +288,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.049'>
-                <script src='js/http_server.js?v=1.049'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.051'>
+                <script src='js/http_server.js?v=1.051'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -491,7 +491,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.049'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.051'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -621,12 +621,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.049'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.049'>
-                <script src='js/common.js?v=1.049'></script>
-                <script src='js/{9}.js?v=1.049'></script>
-                <script src='w3.js?v=1.049'></script>
-                <script src='js/http_server.js?v=1.049'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.051'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.051'>
+                <script src='js/common.js?v=1.051'></script>
+                <script src='js/{9}.js?v=1.051'></script>
+                <script src='w3.js?v=1.051'></script>
+                <script src='js/http_server.js?v=1.051'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -953,13 +953,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Expires" content="0" />"""
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
+                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.049'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.049'>"
-                "<script src='js/common.js?v=1.049'></script>"
-                "<script src='js/{7}.js?v=1.049'></script>"
-                "<script src='w3.js?v=1.049'></script>"
-                "<script src='js/http_server.js?v=1.049'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.051'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.051'>"
+                "<script src='js/common.js?v=1.051'></script>"
+                "<script src='js/{7}.js?v=1.051'></script>"
+                "<script src='w3.js?v=1.051'></script>"
+                "<script src='js/http_server.js?v=1.051'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -975,7 +976,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.049'></script>"
+                "<script src='js/custom.js?v=1.051'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,
@@ -987,7 +988,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          config.fontChinese,
                          config.theme,
                          self.getHighlightCss(),
-                         config.webUBAIcon,)
+                         config.webUBAIcon,
+                         config.pushButtonBackgroundColor,
+                         config.pushButtonForegroundColor,
+                         )
         return html
 
     def getBibleNavigationMenu(self):
@@ -1550,7 +1554,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         content = ""
         content += """<h2><ref onclick="window.parent.submitCommand('.commentarymenu')">{0}</ref></h2>""".format(config.thisTranslation["menu4_commentary"])
         mainVerse = self.getMainVerse()
-        content += "<br>".join(["""<ref onclick ="document.title = 'COMMENTARY:::{0}:::{2}'">{1}</ref>""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index], mainVerse["reference"]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
+        content += "<br>".join(["""<ref onclick ="document.title = '_commentarychapters:::{0}'">{1}</ref>""".format(abb, self.textCommandParser.parent.commentaryFullNameList[index]) for index, abb in enumerate(self.textCommandParser.parent.commentaryList)])
         content += "<h2>{0}</h2>".format(config.thisTranslation["menu5_selectBook"])
         content += "<br>".join(["""<ref onclick ="document.title = 'BOOK:::{0}'">{0}</ref>""".format(book) for book in self.textCommandParser.parent.referenceBookList])
         content += "<h2>PDF {0}</h2>".format(config.thisTranslation["file"])

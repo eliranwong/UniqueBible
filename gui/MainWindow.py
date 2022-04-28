@@ -227,7 +227,7 @@ class MainWindow(QMainWindow):
             config.menuLayout = "material"
             windowClass = getattr(sys.modules[__name__], "MaterialMainWindow")
         getattr(windowClass, 'create_menu')(self)
-        if config.toolBarIconFullSize:
+        if config.toolBarIconFullSize and not config.menuLayout == "material":
             getattr(windowClass, 'setupToolBarFullIconSize')(self)
         else:
             getattr(windowClass, 'setupToolBarStandardIconSize')(self)
@@ -1084,7 +1084,7 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getBookNote(b)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(
+        note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(
             reference[:-4], note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -1099,7 +1099,7 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getChapterNote(b, c)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(
+        note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(
             reference[:-2], note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -1114,7 +1114,7 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getVerseNote(b, c, v)
         note = self.fixNoteFontDisplay(note)
-        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='feature' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(
+        note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(
             reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
         self.openTextOnStudyView(note, tab_title=reference)
@@ -2660,8 +2660,12 @@ class MainWindow(QMainWindow):
 
     # Actions - previous / next chapter
     def showAllChaptersMenu(self):
-        #self.newTabException = True
-        self.textCommandChanged("CHAPTERS:::{0}".format(config.mainText), "main")
+        self.newTabException = True
+        self.textCommandChanged("_chapters:::{0}".format(config.mainText), "main")
+
+    def showAllChaptersMenuStudy(self):
+        self.newTabException = True
+        self.textCommandChanged("_chapters:::{0}".format(config.studyText), "study")
 
     def previousMainChapter(self):
         newChapter = config.mainC - 1
@@ -2798,6 +2802,15 @@ class MainWindow(QMainWindow):
         if self.versionButton is not None and config.menuLayout not in ("Starter"):
             self.versionButton.setText(config.mainText)
 
+    def changeCommentaryVersion(self, index):
+        if not self.refreshing:
+            commentary = self.commentaryList[index]
+            if config.syncCommentaryWithMainWindow:
+                command = "COMMENTARY:::{0}:::{1}".format(commentary, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+            else:
+                command = "_commentarychapters:::{0}".format(commentary)
+            self.runTextCommand(command)
+
     def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
@@ -2824,7 +2837,19 @@ class MainWindow(QMainWindow):
             self.runTextCommand(newTextCommand, True, "main")
 
     def updateCommentaryRefButton(self):
-        self.commentaryRefButton.setText(self.verseReference("commentary"))
+        if hasattr(self, "commentaryCombo"):
+            self.updateCommentaryCombo()
+        if self.commentaryRefButton:
+            self.commentaryRefButton.setText(self.verseReference("commentary"))
+
+    def updateCommentaryCombo(self):
+        if self.commentaryCombo is not None and config.menuLayout == "material":
+            self.refreshing = True
+            textIndex = 0
+            if config.commentaryText in self.commentaryList:
+                textIndex = self.commentaryList.index(config.commentaryText)
+            self.commentaryCombo.setCurrentIndex(textIndex)
+            self.refreshing = False
 
     def verseReference(self, view):
         if view == "main":
@@ -3211,13 +3236,15 @@ class MainWindow(QMainWindow):
         html = ("<!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>"
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
-                "{8} {9}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.049'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.049'>"
-                "<script src='js/common.js?v=1.049'></script>"
-                "<script src='js/{7}.js?v=1.049'></script>"
-                "<script src='w3.js?v=1.049'></script>"
-                "<script src='js/custom.js?v=1.049'></script>"
+                "{8} {9}"
+                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 2px 2px; cursor: pointer; {3}"
+                "</style>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.051'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.051'>"
+                "<script src='js/common.js?v=1.051'></script>"
+                "<script src='js/{7}.js?v=1.051'></script>"
+                "<script src='w3.js?v=1.051'></script>"
+                "<script src='js/custom.js?v=1.051'></script>"
                 "{0}"
                 "<script>var versionList = []; var compareList = []; var parallelList = []; "
                 "var diffList = []; var searchList = [];</script></head>"
@@ -3232,7 +3259,8 @@ class MainWindow(QMainWindow):
                          config.theme,
                          self.getHighlightCss(),
                          bibleCss,
-                         #"<link href='https://fonts.googleapis.com/icon?family=Material+Icons+Outlined' rel='stylesheet'>" if config.enableHttpServer else ""
+                         config.pushButtonBackgroundColor,
+                         config.pushButtonForegroundColor,
                          )
         return html
 

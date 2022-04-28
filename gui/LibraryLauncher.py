@@ -153,10 +153,13 @@ class LibraryLauncher(QWidget):
 
     def commentarySelected(self, selection):
         index = selection[0].indexes()[0].row()
-        reverseLookup = {v: k for k, v in Commentary.fileLookup.items()}
-        config.commentaryText = reverseLookup[self.commentaryList[index]]
-        command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
-        self.parent.runTextCommand(command)
+        self.parent.parent.changeCommentaryVersion(index)
+        if config.closeControlPanelAfterRunningCommand and not self.parent.isRefreshing:
+            self.parent.hide()
+        #reverseLookup = {v: k for k, v in Commentary.fileLookup.items()}
+        #config.commentaryText = reverseLookup[self.commentaryList[index]]
+        #command = "COMMENTARY:::{0}:::{1}".format(config.commentaryText, self.parent.bibleTab.getSelectedReference())
+        #self.parent.runTextCommand(command)
 
     def showActiveOnlyCommentaries(self):
         self.reloadCommentariesListModel(True)
