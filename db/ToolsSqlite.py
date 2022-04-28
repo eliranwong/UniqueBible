@@ -592,7 +592,8 @@ class Commentary:
         return "<ref onclick='document.title=\"_commentary:::{0}.{1}\"' onmouseover='bookName(\"{2}\")'>".format(self.text, b, bookAbb)
 
     def formChapterTag(self, b, c):
-        return "<ref onclick='document.title=\"_commentary:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(self.text, b, c)
+        #return "<ref onclick='document.title=\"_commentary:::{0}.{1}.{2}\"' onmouseover='document.title=\"_info:::Chapter {2}\"'>".format(self.text, b, c)
+        return "<ref onclick='document.title=\"_commentarychapters:::{0}\"' onmouseover='document.title=\"_info:::Chapter {1}\"'>".format(self.text, c)
 
     def formVerseTag(self, b, c, v):
         verseReference = self.bcvToVerseReference(b, c, v)

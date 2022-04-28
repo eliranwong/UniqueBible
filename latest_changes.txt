@@ -1,3 +1,6 @@
+Changes in 29.11:
+* Modified commentary chapter heading link.
+
 Changes in 29.10:
 * Further improvement of Material menu layout to work with Mini Control:
     - Button, instead of dropdown menu, is displayed for bible selection when config.refButtonClickAction is set to "mini".
