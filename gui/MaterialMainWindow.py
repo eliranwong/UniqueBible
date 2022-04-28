@@ -492,7 +492,7 @@ class MaterialMainWindow:
         icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
         self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar)
         self.mainRefButton = QPushButton(self.verseReference("main")[-1])
-        self.addStandardTextButton("bar1_reference", self.showAllChaptersMenu, self.firstToolBar, self.mainRefButton)
+        self.addStandardTextButton("bar1_reference", self.mainRefButtonClickedMaterial, self.firstToolBar, self.mainRefButton)
         self.mainRefButton.setVisible(False)
         icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
         self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar)

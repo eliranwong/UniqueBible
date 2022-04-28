@@ -2742,7 +2742,10 @@ class MainWindow(QMainWindow):
 
     # Actions - recently opened bibles & commentary
     def mainTextMenu(self):
-        self.openControlPanelTab(0)
+        if config.refButtonClickAction == "mini":
+            self.openMiniControlTab(0)
+        else:
+            self.openControlPanelTab(0)
 
     def studyTextMenu(self):
         self.openControlPanelTab(0)
@@ -2762,6 +2765,12 @@ class MainWindow(QMainWindow):
             self.openMainChapter()
         else:
             self.openControlPanelTab(0)
+
+    def mainRefButtonClickedMaterial(self):
+        if config.refButtonClickAction == "direct":
+            self.openMainChapter()
+        else:
+            self.showAllChaptersMenu()
 
     def studyRefButtonClicked(self):
         if config.refButtonClickAction == "master":

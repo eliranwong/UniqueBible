@@ -1,3 +1,6 @@
+Changes in 29.08:
+* Integrated config.refButtonClickAction into Material menu layout.
+
 Changes in 29.07:
 * Fixed loading chapter audio on http-server.  Error was introduced in a recent update.
 
