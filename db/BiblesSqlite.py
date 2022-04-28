@@ -922,7 +922,7 @@ class Bible:
         if info:
             return info[0]
         else:
-            return ""
+            return self.text
 
     def formatStrongConcordance(self, strongNo):
         if self.text == "OHGBi":

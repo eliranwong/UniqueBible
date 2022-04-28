@@ -579,7 +579,7 @@ class Commentary:
         if info:
             return info[0]
         else:
-            return ""
+            return self.text
 
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)

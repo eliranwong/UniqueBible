@@ -1797,8 +1797,9 @@ class TextCommandParser:
 
             text = texts[0]
             bible = Bible(text)
+            info = bible.bibleInfo()
             bookList = bible.getBookList()
-            html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
+            html = "<h2 style='text-align: center;'>{0}</h2>".format(info)
             for bNo in bookList:
                 abb = books[str(bNo)][0]
                 chapterList = bible.getChapterList(bNo)
