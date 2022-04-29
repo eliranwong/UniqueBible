@@ -69,7 +69,7 @@ class UpdateUtil:
                             else:
                                 if contentType == "folder":
                                     if not os.path.isdir(localPath):
-                                        os.makedirs(localPath)
+                                        os.makedirs(localPath, exist_ok=True)
                                 elif contentType == "file":
                                     requestObject2 = requests.get("{0}{1}".format(UpdateUtil.repository, filePath))
                                     with open(localPath, "wb") as fileObject:

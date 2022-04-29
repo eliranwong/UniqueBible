@@ -1,3 +1,6 @@
+Changes in 29.14:
+* Fixed downloading material icons.
+
 Changes in 29.13:
 * Added dividers to different sessions of http-server search page.
 
