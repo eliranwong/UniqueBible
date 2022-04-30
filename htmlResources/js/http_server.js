@@ -80,7 +80,7 @@ function ubaCommandChanged(cmd) {
     if (cmd.startsWith("_cp")) {
         cmd = "_menu:::";
     }
-    essential = (cmd.search(/^_menu:::|^_vnsc:::|^_vndc:::|^_book:::|^_promise:::|^_harmony:::|^_biblenote:::|^_setconfig:::|^_history|^_open:::|^_htmlimage:::|^_website:::|^_commentary:::|^_chapters:::|^_verses:::|^_commentarychapters:::|^_qr:::/i));
+    essential = (cmd.search(/^_menu:::|^_vnsc:::|^_vndc:::|^_book:::|^_promise:::|^_harmony:::|^_biblenote:::|^_setconfig:::|^_history|^_open:::|^_htmlimage:::|^_website:::|^_commentary:::|^_commentaries:::|^_chapters:::|^_verses:::|^_commentarychapters:::|^_commentaryverses:::|^_qr:::/i));
     const ignore = ["_stayOnSameTab:::"];
     if ((essential >= 0) || (!(cmd.startsWith("_")) && !(ignore.includes(cmd)))) {
         window.parent.submitCommand(cmd);

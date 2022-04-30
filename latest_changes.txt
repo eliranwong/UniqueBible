@@ -1,3 +1,6 @@
+Changes in 29.19:
+* Fixed opening commentary via chapter or verse selection menu on http-server.
+
 Changes in 29.18:
 * Removed a "Copy" button, which is duplicated, on _qr::: command content.
 
