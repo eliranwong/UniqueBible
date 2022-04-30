@@ -1,3 +1,8 @@
+Changes in 29.15:
+* Fixed qrcode::: command
+* qrcode::: command content now includes a hyperlink and a copy button.
+* Changed http-server qr code button to share button.
+
 Changes in 29.14:
 * Fixed downloading material icons.
 

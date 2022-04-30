@@ -799,4 +799,5 @@ translation = {
     "bibleAudio": "Bibbia Audio",
     "noBibleAudioLink": "Nessun audio bibbia è collegato con il contenuto corrente!",
     "menu1_material_menu_layout": "Materiale",
+    "share": "Condividi",
 }

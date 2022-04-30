@@ -251,6 +251,14 @@ def isQrCodeInstalled():
     except:
         return False
 
+def isPillowInstalled():
+    try:
+        import qrcode
+        from PIL import Image
+        return True
+    except:
+        return False
+
 def isPurePythonPngInstalled():
     try:
         import qrcode
@@ -310,8 +318,10 @@ def setInstallConfig(module, isInstalled):
         config.isHtml5libInstalled = isInstalled
     elif module == "qrcode":
         config.isQrCodeInstalled = isInstalled
-    elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
-        config.isPurePythonPngInstalled = isInstalled
+    elif module == "pillow":
+        config.isPillowInstalled = isInstalled
+    #elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
+        #config.isPurePythonPngInstalled = isInstalled
     elif module == "python-vlc":
         config.isVlcInstalled = isInstalled
     elif module == "yt-dlp":
@@ -392,7 +402,8 @@ optional = (
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
-    ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
+    ("pillow", "QR Code", isPillowInstalled),
+    #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
     ("gTTS", "Google text-to-speech", isGTTSInstalled)
@@ -411,7 +422,8 @@ optional = (
     ("telnetlib3", "Telnet Client and Server library", isTelnetlib3Installed),
     ("ibm-watson", "IBM-Watson Language Translator", isIbmWatsonInstalled),
     ("qrcode", "QR Code", isQrCodeInstalled),
-    ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
+    ("pillow", "QR Code", isPillowInstalled),
+    #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
 )

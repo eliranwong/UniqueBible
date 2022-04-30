@@ -799,4 +799,5 @@ translation = {
     "bibleAudio": "Bible Audio",
     "noBibleAudioLink": "No bible audio is linked with the current content!",
     "menu1_material_menu_layout": "Material",
+    "share": "Share",
 }

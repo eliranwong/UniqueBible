@@ -1,3 +1,14 @@
+/* Copy text to clipboard */
+
+function copyTextToClipboard(text) {
+  
+    /* Copy the text inside the text field */
+    navigator.clipboard.writeText(text);
+    
+    /* Alert the copied text */
+    alert("Copied " + "'" + text + "'");
+}
+
 /* SECTION - SCROLLING BIBLES */
 
 function scrollBibles() {

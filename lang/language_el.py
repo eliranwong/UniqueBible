@@ -799,4 +799,5 @@ translation = {
     "bibleAudio": "Αγία Γραφή ήχου",
     "noBibleAudioLink": "Δεν bible ήχο συνδέεται με το τρέχον περιεχόμενο!",
     "menu1_material_menu_layout": "Υλικό:",
+    "share": "Κοινή χρήση:",
 }

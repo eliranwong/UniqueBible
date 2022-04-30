@@ -799,4 +799,5 @@ translation = {
     "bibleAudio": "聖經語音",
     "noBibleAudioLink": "在當前內容中沒有找到聖經語音的連結！",
     "menu1_material_menu_layout": "物料",
+    "share": "分享",
 }
