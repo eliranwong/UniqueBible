@@ -1,3 +1,6 @@
+Changes in 29.18:
+* Removed a "Copy" button, which is duplicated, on _qr::: command content.
+
 Changes in 29.17:
 * Fixed http-server shared links with spaces.
 

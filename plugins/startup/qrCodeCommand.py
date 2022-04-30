@@ -35,7 +35,7 @@ def qrCode(command, source):
         link = """<ref onclick="document.title='_website:::{0}'">{0}</ref>""".format(data)
         copyAction = 'document.title="_copy:::{0}"'.format(data)
     #content = "<p><img style='position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>"
-    content = """<p style='text-align: center;'><button type='button' title='{2}' class='ubaButton' onclick='{1}'><span class="material-icons-outlined">content_copy</span></button> {0} <button type='button' title='{2}' class='ubaButton' onclick='{1}'><span class="material-icons-outlined">content_copy</span></button></p><p style='text-align: center;'><img style='margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>""".format(link, copyAction, config.thisTranslation["context1_copy"])
+    content = """<p style='text-align: center;'>{0} <button type='button' title='{2}' class='ubaButton' onclick='{1}'><span class="material-icons-outlined">content_copy</span></button></p><p style='text-align: center;'><img style='margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>""".format(link, copyAction, config.thisTranslation["context1_copy"])
     target = "main" if source == "http" else "popover.fullscreen"
     return (target, content, {})
 
