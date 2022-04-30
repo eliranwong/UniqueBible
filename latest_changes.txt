@@ -1,3 +1,6 @@
+Changes in 29.17:
+* Fixed http-server shared links with spaces.
+
 Changes in 29.16:
 Multiple improvements on Material menu layout:
     * Added "Swap" button on material menu layout, to swap bible chapter between Bible Window and Study window.
