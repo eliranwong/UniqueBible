@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "Nessun audio bibbia è collegato con il contenuto corrente!",
     "menu1_material_menu_layout": "Materiale",
     "share": "Condividi",
+    "copied": "Copiato in clipboard!",
+    "goOnline": "Vai online",
+    "swap": "Swap",
 }

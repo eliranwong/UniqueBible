@@ -1,5 +1,6 @@
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 import time
+import urllib.parse
 from datetime import datetime
 from distutils import util
 from functools import partial
@@ -2492,6 +2493,7 @@ class MainWindow(QMainWindow):
             if config.noStudyBibleToolbar:
                 self.studyRefButton.setVisible(True)
                 self.enableSyncStudyWindowBibleButton.setVisible(True)
+                self.swapBibleButton.setVisible(True)
             else:
                 self.studyBibleToolBar.show()
         else:
@@ -2499,6 +2501,7 @@ class MainWindow(QMainWindow):
             if config.noStudyBibleToolbar:
                 self.studyRefButton.setVisible(False)
                 self.enableSyncStudyWindowBibleButton.setVisible(False)
+                self.swapBibleButton.setVisible(False)
             else:
                 self.studyBibleToolBar.hide()
         enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
@@ -2772,6 +2775,30 @@ class MainWindow(QMainWindow):
         else:
             self.showAllChaptersMenu()
 
+    def getOnlineLink(self):
+        command = self.textCommandLineEdit.text()
+        # https://stackoverflow.com/questions/40557606/how-to-url-encode-in-python-3
+        command = urllib.parse.quote(command)
+        htmlPages = {
+            "ENG": "index.html",
+            "TC": "traditional.html",
+            "SC": "simplified.html",
+        }
+        htmlPage = htmlPages.get(htmlPages[config.standardAbbreviation], "index.html")
+        return "{0}/{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
+
+    def goOnline(self):
+        webbrowser.open(self.getOnlineLink())
+
+    def shareOnline(self):
+        self.runTextCommand("_qr:::{0}".format(self.getOnlineLink()))
+
+    def studyRefButtonClickedMaterial(self):
+        if config.syncStudyWindowBibleWithMainWindow:
+            self.runTextCommand("STUDY:::{0}:::{1}".format(config.studyText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)))
+        else:
+            self.showAllChaptersMenuStudy()
+    
     def studyRefButtonClicked(self):
         if config.refButtonClickAction == "master":
             self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
@@ -2781,6 +2808,15 @@ class MainWindow(QMainWindow):
             self.openStudyChapter()
         else:
             self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
+
+    def swapBibles(self):
+        mText, mb, mc, mv = config.mainText, config.mainB, config.mainC, config.mainV
+        sText, sb, sc, sv = config.studyText, config.studyB, config.studyC, config.studyV
+        config.mainText, config.mainB, config.mainC, config.mainV = sText, sb, sc, sv
+        config.studyText, config.studyB, config.studyC, config.studyV = mText, mb, mc, mv
+        self.runTextCommand("BIBLE:::{0}:::{1}".format(config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)))
+        if not config.syncStudyWindowBibleWithMainWindow:
+            self.runTextCommand("STUDY:::{0}:::{1}".format(config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)))        
 
     def commentaryRefButtonClicked(self):
         if self.textCommandParser.isDatabaseInstalled("commentary"):

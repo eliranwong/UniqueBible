@@ -1,3 +1,19 @@
+Changes in 29.16:
+Multiple improvements on Material menu layout:
+    * Added "Swap" button on material menu layout, to swap bible chapter between Bible Window and Study window.
+    * Added "Go online" and "Share" button on material menu layout.
+    * Added config.webUBAServer to specify a web server to work with the share links created on desktop version.
+    * Added "More ..." button, right next to bible title on bible chapter menu, so that users can change bible versions easily.
+    * Added "More ..." button, right next to commentary title on commentary chapter menu.
+    * Added _copy::: and _commentaries::: commands.
+    * Fixed opening bible chapters menu for some bible modules having non-standard book numbers.
+    * Fixed qrcode::: content copy button action on desktop version.
+    * Changed compare all version button icon on material menu layout.
+    * Improved handling when study bible reference button is clicked:
+        - When "Sync Study Window Bible with Bible Window" is turned on, bible is opened directly with the same passage with the Bible Window.
+        - When "Sync Study Window Bible with Bible Window" is turned off, chapter and verse selection are displayed first.
+        - This logic is currently implemented on material menu layout only.
+
 Changes in 29.15:
 * Fixed qrcode::: command
 * qrcode::: command content now includes a hyperlink and a copy button.

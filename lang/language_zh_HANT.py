@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "在當前內容中沒有找到聖經語音的連結！",
     "menu1_material_menu_layout": "物料",
     "share": "分享",
+    "copied": "已複製到剪貼簿！",
+    "goOnline": "開啟網絡版本",
+    "swap": "交換",
 }

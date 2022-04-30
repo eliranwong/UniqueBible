@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "Nici un audio biblic nu este legat cu continutul curent!",
     "menu1_material_menu_layout": "Material",
     "share": "Share",
+    "copied": "Copiat în clipboard!",
+    "goOnline": "Du-te online",
+    "swap": "Swap",
 }

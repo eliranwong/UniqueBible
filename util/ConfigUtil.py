@@ -73,6 +73,10 @@ class ConfigUtil:
         # Set to true to enable global mode for http-server viewer.  If false, only viewers on same wifi can access the link"""
         if not hasattr(config, "httpServerViewerGlobalMode"):
             config.httpServerViewerGlobalMode = False
+        config.help["webUBAServer"] = """
+        # Specify a web server to work with the share links created on desktop version."""
+        if not hasattr(config, "webUBAServer"):
+            config.webUBAServer = "https://bible.gospelchurch.uk"
         config.help["httpServerViewerBaseUrl"] = """
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
@@ -1165,6 +1169,7 @@ class ConfigUtil:
             ("httpServerPort", config.httpServerPort),
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
+            ("webUBAServer", config.webUBAServer),
             ("webUBAIcon", config.webUBAIcon),
             ("webOrganisationIcon", config.webOrganisationIcon),
             ("webOrganisationLink", config.webOrganisationLink),

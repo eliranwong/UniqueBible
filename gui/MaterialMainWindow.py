@@ -518,6 +518,13 @@ class MaterialMainWindow:
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
+        icon = "material/action/open_in_new/materialiconsoutlined/18dp/2x/outline_open_in_new_black_18dp.png"
+        self.addMaterialIconButton("goOnline", icon, self.goOnline, self.firstToolBar)
+        icon = "material/social/share/materialiconsoutlined/18dp/2x/outline_share_black_18dp.png"
+        self.addMaterialIconButton("share", icon, self.shareOnline, self.firstToolBar)
+
+        self.firstToolBar.addSeparator()
+
         self.enableStudyBibleButton = QPushButton()
         self.addMaterialIconButton(self.getStudyBibleDisplayToolTip(), self.getStudyBibleDisplay(), self.enableStudyBibleButtonClicked, self.firstToolBar, self.enableStudyBibleButton, False)
 
@@ -528,12 +535,16 @@ class MaterialMainWindow:
         else:
             self.firstToolBar.setIconSize(QSize(17, 17))
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
-        self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.showAllChaptersMenuStudy)
+        self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClickedMaterial)
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/18dp/2x/outline_swap_calls_black_18dp.png"
+        iconFile = os.path.join(*icon.split("/"))
+        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile), config.thisTranslation["swap"], self.swapBibles)
         if config.openBibleInMainViewOnly:
             self.studyRefButton.setVisible(False)
             self.enableSyncStudyWindowBibleButton.setVisible(False)
+            self.swapBibleButton.setVisible(False)
         self.firstToolBar.addSeparator()
 
         icon = "material/notification/more/materialiconsoutlined/18dp/2x/outline_more_black_18dp.png"
@@ -659,7 +670,7 @@ class MaterialMainWindow:
         self.enableSubheadingButton = QPushButton()
         self.addMaterialIconButton("menu2_subHeadings", self.getAddSubheading(), self.enableSubheadingButtonClicked, self.leftToolBar, self.enableSubheadingButton)
         self.leftToolBar.addSeparator()
-        icon = "material/editor/format_align_justify/materialiconsoutlined/18dp/2x/outline_format_align_justify_black_18dp.png"
+        icon = "material/action/compare_arrows/materialiconsoutlined/18dp/2x/outline_compare_arrows_black_18dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
         icon = "material/image/compare/materialicons/18dp/2x/baseline_compare_black_18dp.png"
         self.addMaterialIconButton("menu4_moreComparison", icon, lambda: self.openControlPanelTab(0), self.leftToolBar)

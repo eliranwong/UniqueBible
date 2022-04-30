@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "現在のコンテンツにバイブル・オーディオはリンクされていません。",
     "menu1_material_menu_layout": "材質",
     "share": "シェア",
+    "copied": "クリップボードにコピーしました。",
+    "goOnline": "オンラインに進む",
+    "swap": "スワップ",
 }

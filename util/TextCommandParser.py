@@ -652,6 +652,11 @@ class TextCommandParser:
             # e.g. _verses:::Jn 3
             # e.g. _verses:::KJV:::Jn 3
             # e.g. _verses:::NET:::Jn 3"""),
+            "_commentaries": (self.textCommentaries, """
+            # [KEYWORD] _commentaries
+            # Feature - Display all available commentary modules.
+            # Usage - _commentaries:::
+            # e.g. _commentaries:::"""),
             "_commentarychapters": (self.textCommentaryChapters, """
             # [KEYWORD] _commentarychapters
             # Feature - Display all available chapters of a bible version.
@@ -779,10 +784,16 @@ class TextCommandParser:
             # Remarks: This command works ONLY when config.developer is set to True.
             # Example:
             # e.g. _setconfig:::favouriteBible:::'BSB'"""),
-            "fixlinksincommentary": (self.fixLinksInCommentary, """
-            # Usage - FIXLINKSINCOMMENTARY:::[commentary]
+            "_fixlinksincommentary": (self.fixLinksInCommentary, """
+            # Usage - _fixlinksincommentary:::[commentary]
             # Example:
-            # FIXLINKSINCOMMENTARY:::Dakes
+            # _fixlinksincommentary:::Dakes
+            """),
+            "_copy": (self.copyText, """
+            # Usage - _copy:::[text]
+            # Remarks: This commands works only on desktop or webtop version.
+            # Example:
+            # _copy:::Unique Bible App
             """),
         }
         for key, value in BibleBooks.eng.items():
@@ -1799,12 +1810,15 @@ class TextCommandParser:
             bible = Bible(text)
             info = bible.bibleInfo()
             bookList = bible.getBookList()
-            html = "<h2 style='text-align: center;'>{0}</h2>".format(info)
+            html = """<h2 style='text-align: center;'>{0} <button title='{1}' type='button' class='ubaButton' onclick='document.title="_menu:::"'><span class="material-icons-outlined">more_vert</span></button></h2>""".format(info, config.thisTranslation["menu_more"])
+            print(html)
             for bNo in bookList:
-                abb = books[str(bNo)][0]
-                chapterList = bible.getChapterList(bNo)
-                commandPrefix = f"_verses:::{text}:::{abb} "
-                html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
+                bkNoStr = str(bNo)
+                if bkNoStr in books:
+                    abb = books[bkNoStr][0]
+                    chapterList = bible.getChapterList(bNo)
+                    commandPrefix = f"_verses:::{text}:::{abb} "
+                    html += HtmlGeneratorUtil.getBibleChapterTable(books[bkNoStr][1], abb, chapterList, commandPrefix)
             return (source, html, {})
 
     # _verses:::
@@ -1835,6 +1849,14 @@ class TextCommandParser:
         else:
             return self.invalidCommand()
 
+    # _commentaries:::
+    def textCommentaries(self, command, source):
+        html = ""
+        for index, text in enumerate(self.parent.commentaryList):
+            fullName = self.parent.commentaryFullNameList[index]
+            html += """<p style='text-align: center;'><button title='{0}' type='button' class='ubaButton' onclick='document.title="_commentarychapters:::{0}"'>{1}</button></p>""".format(text, fullName)
+        return ("study", html, {})
+
     # _commentarychapters:::
     def textCommentaryChapters(self, command, source):
         if not command in self.parent.commentaryList:
@@ -1852,13 +1874,15 @@ class TextCommandParser:
             info = commentary.commentaryInfo()
             if info == "https://Marvel.Bible Commentary" and command in Commentary.marvelCommentaries:
                 info = Commentary.marvelCommentaries[command]
-            moreLink = """<p style='text-align: center;'>[ <ref onclick="window.parent.submitCommand('.library')">{0}</ref> ]</p>""".format(config.thisTranslation["change"]) if config.enableHttpServer else ""
-            html = "{1}<h2 style='text-align: center;'>{0}</h2>".format(info, moreLink)
+            #moreLink = """<p style='text-align: center;'>[ <ref onclick="window.parent.submitCommand('.library')">{0}</ref> ]</p>""".format(config.thisTranslation["change"]) if config.enableHttpServer else ""
+            html = """<h2 style='text-align: center;'>{0} <button title='{1}' type='button' class='ubaButton' onclick='document.title="_commentaries:::"'><span class="material-icons-outlined">more_vert</span></button></h2>""".format(info, config.thisTranslation["menu_more"])
             for bNo in bookList:
-                abb = books[str(bNo)][0]
-                chapterList = commentary.getChapterList(bNo)
-                commandPrefix = f"_commentaryverses:::{command}:::{abb} "
-                html += HtmlGeneratorUtil.getBibleChapterTable(books[str(bNo)][1], abb, chapterList, commandPrefix)
+                bkNoStr = str(bNo)
+                if bkNoStr in books:
+                    abb = books[bkNoStr][0]
+                    chapterList = commentary.getChapterList(bNo)
+                    commandPrefix = f"_commentaryverses:::{command}:::{abb} "
+                    html += HtmlGeneratorUtil.getBibleChapterTable(books[bkNoStr][1], abb, chapterList, commandPrefix)
             return ("study", html, {})
 
     # _commentaryverses:::
@@ -1869,20 +1893,21 @@ class TextCommandParser:
         text, references = self.splitCommand(command)
         verseList = self.extractAllVerses(references)
         if text in self.parent.commentaryList and verseList:
-            booksMap = {
-                "ENG": BibleBooks.eng,
-                "TC": BibleBooks.tc,
-                "SC": BibleBooks.sc,
-            }
-            books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
             b, c, *_ = verseList[0]
-            abb = books[str(b)][0]
-            bible = Bible("KJV")
-            chapterVerseList = bible.getVerseList(b, c)
-            commandPrefix = f"COMMENTARY:::{text}:::{abb} {c}:"
-            html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
-            html += HtmlGeneratorUtil.getBibleVerseTable(books[str(b)][1], abb, c, chapterVerseList, commandPrefix)
-            return ("study", html, {})
+            if b > 0 and b <= 66:
+                booksMap = {
+                    "ENG": BibleBooks.eng,
+                    "TC": BibleBooks.tc,
+                    "SC": BibleBooks.sc,
+                }
+                books = booksMap.get(config.standardAbbreviation, BibleBooks.eng)
+                abb = books[str(b)][0]
+                bible = Bible("KJV")
+                chapterVerseList = bible.getVerseList(b, c)
+                commandPrefix = f"COMMENTARY:::{text}:::{abb} {c}:"
+                html = "<h2 style='text-align: center;'>{0}</h2>".format(text)
+                html += HtmlGeneratorUtil.getBibleVerseTable(books[str(b)][1], abb, c, chapterVerseList, commandPrefix)
+                return ("study", html, {})
         else:
             return self.invalidCommand()
 
@@ -1893,6 +1918,16 @@ class TextCommandParser:
     # STUDY:::
     def textStudy(self, command, source):
         return self.textAnotherView(command, source, "study")
+
+    # _copy:::
+    def copyText(self, command, source):
+        try:
+            from qtpy.QtWidgets import QApplication
+            QApplication.clipboard().setText(command)
+            self.parent.displayMessage(config.thisTranslation["copied"])
+        except:
+            return self.invalidCommand()
+        return ("", "", {})
 
     # TRANSLATE:::
     # Translate text using IBM Watson service
@@ -3571,7 +3606,7 @@ class TextCommandParser:
         else:
             return ("", "", {})
 
-    # FIXLINKSINCOMMENTARY:::
+    # _fixlinksincommentary:::
     def fixLinksInCommentary(self, command, source):
         commentary = Commentary(command)
         if commentary.connection is None:
@@ -3579,6 +3614,7 @@ class TextCommandParser:
         else:
             commentary.fixLinksInCommentary()
             self.parent.displayMessage(config.thisTranslation["message_done"])
+        return ("", "", {})
 
     # DEVOTIONAL:::
     def openDevotional(self, command, source):

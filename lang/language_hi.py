@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "कोई बाईबल ऑडियो मौजूदा सामग्री के साथ जुड़ा हुआ है!",
     "menu1_material_menu_layout": "सामग्री",
     "share": "साझा करें",
+    "copied": "क्लिपबोर्ड पर नक़ल किया गया!",
+    "goOnline": "ऑनलाइन जाएँ",
+    "swap": "स्वैप",
 }

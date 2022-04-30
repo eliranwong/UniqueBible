@@ -800,4 +800,7 @@ translation = {
     "noBibleAudioLink": "Δεν bible ήχο συνδέεται με το τρέχον περιεχόμενο!",
     "menu1_material_menu_layout": "Υλικό:",
     "share": "Κοινή χρήση:",
+    "copied": "Αντιγραφή στο Πρόχειρο!",
+    "goOnline": "Πηγαίνετε online.",
+    "swap": "Ανταλλαγή:",
 }
