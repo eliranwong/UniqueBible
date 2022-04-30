@@ -1,3 +1,6 @@
+Changes in 29.20:
+* Increased html button font size.
+
 Changes in 29.19:
 * Fixed opening commentary via chapter or verse selection menu on http-server.
 

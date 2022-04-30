@@ -966,7 +966,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Expires" content="0" />"""
                 "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
                 "zh {2} font-family:'{6}'; {3} "
-                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 14px; margin: 2px 2px; cursor: pointer; {3}"
+                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.054'>"
                 "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.054'>"
