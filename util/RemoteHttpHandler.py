@@ -714,8 +714,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 window.onresize = function() {4}resizeSite(){5};
 
                 function getCommandURL() {4}
-                    cmd = encodeURI(document.getElementById('commandInput').value);
                     var url;
+                    cmd = encodeURI(document.getElementById('commandInput').value);
                     if (cmd == "") {4}
                         url = "{19}";
                     {5} else {4}
@@ -725,14 +725,23 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     return url;
                 {5}
 
+                function getCurrentURL() {4}
+                    var url;
+                    url = window.location.href;
+                    if (url == "") {4}
+                        url = "{19}";
+                    {5}
+                    return url;
+                {5}
+
                 function openCommandInNewWindow() {4}
                     url = getCommandURL();
                     window.open(url, "_blank");
                 {5}
 
                 function shareInfo() {4}
-                    url = getCommandURL();
-                    command="_qr:::{21}/"+url;
+                    url = getCurrentURL();
+                    command="_qr:::"+url;
                     submitCommand(command);
                 {5}
 

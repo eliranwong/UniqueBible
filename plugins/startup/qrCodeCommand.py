@@ -21,6 +21,7 @@ def qrCode(command, source):
         data = aliases[cmd]
     else:
         data = command
+    data = data.replace(" ", "%20")
     #img = qrcode.make(data, image_factory=qrcode.image.pure.PymagingImage)
     img = qrcode.make(data)
     qrCodeFile = os.path.join(".", "htmlResources", "images", "qrcode.png")
