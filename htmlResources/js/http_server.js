@@ -5,8 +5,10 @@ function onBodyLoad() {
     cmd = cmd.replace("?cmd=", "")
              .replace("+", " ");
     el = document.getElementById('commandInput')
+    el2 = document.getElementById('commandInputHolder')
     if (cmd != "") {
         el.value = cmd
+        el2.title = cmd
     }
     el.focus();
 }

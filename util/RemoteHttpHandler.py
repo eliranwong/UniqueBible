@@ -288,8 +288,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.054'>
-                <script src='js/http_server.js?v=1.054'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{3}.css?v=1.058'>
+                <script src='js/http_server.js?v=1.058'></script>
                 </head>
                 <body>... {1} ...
                 <script>
@@ -491,7 +491,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 <meta http-equiv="Pragma" content="no-cache" />
                 <meta http-equiv="Expires" content="0" />
 
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.054'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{9}.css?v=1.058'>
                 <style>
                 ::-webkit-scrollbar {4}
                   display: none;
@@ -621,12 +621,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 zh {4} font-family:'{8}'; {5}
                 {10}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.054'>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.054'>
-                <script src='js/common.js?v=1.054'></script>
-                <script src='js/{9}.js?v=1.054'></script>
-                <script src='w3.js?v=1.054'></script>
-                <script src='js/http_server.js?v=1.054'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/http_server.css?v=1.058'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>
+                <script src='js/common.js?v=1.058'></script>
+                <script src='js/{9}.js?v=1.058'></script>
+                <script src='w3.js?v=1.058'></script>
+                <script src='js/http_server.js?v=1.058'></script>
                 <script>
                 var queryString = window.location.search;	
                 queryString = queryString.substring(1);
@@ -725,24 +725,14 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     return url;
                 {5}
 
-                function getCurrentURL() {4}
-                    var url;
-                    url = window.location.href;
-                    if (url == "") {4}
-                        url = "{19}";
-                    {5}
-                    return url;
-                {5}
-
                 function openCommandInNewWindow() {4}
                     url = getCommandURL();
                     window.open(url, "_blank");
                 {5}
 
                 function shareInfo() {4}
-                    url = getCurrentURL();
-                    command="_qr:::"+url;
-                    submitCommand(command);
+                    document.getElementById('commandInput').value =  "_qrc:::" + document.getElementById('commandInputHolder').title;
+                    document.getElementById("commandForm").submit();
                 {5}
 
                 // Open and close side navigation bar
@@ -779,7 +769,6 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             self.getBibleNavigationMenu(),
             config.webHomePage,
             config.webUBAIcon,
-            config.webUBAServer,
         )
         self.wfile.write(bytes(html, "utf8"))
 
@@ -866,7 +855,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <form id="commandForm" onsubmit="checkCommands()" action="{4}" action="get">
                     <table class='layout' style='border-collapse: collapse;'><tr>
                     <td class='layout' style='white-space: nowrap;'>{1}&nbsp;</td>
-                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value=""/></td>
+                    <td class='layout' style='width: 100%;'><input type="search" autocomplete="on" id="commandInput" style="width:100%" name="cmd" value=""/><span id="commandInputHolder" title=""></span></td>
                     <td class='layout' style='white-space: nowrap;'>&nbsp;{2}&nbsp;{5}&nbsp;{3}&nbsp;{6}&nbsp;{0}</td>
                     </tr></table>
                     </form>
@@ -977,12 +966,12 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "zh {2} font-family:'{6}'; {3} "
                 ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
                 "{8}</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.054'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.054'>"
-                "<script src='js/common.js?v=1.054'></script>"
-                "<script src='js/{7}.js?v=1.054'></script>"
-                "<script src='w3.js?v=1.054'></script>"
-                "<script src='js/http_server.js?v=1.054'></script>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.058'>"
+                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>"
+                "<script src='js/common.js?v=1.058'></script>"
+                "<script src='js/{7}.js?v=1.058'></script>"
+                "<script src='w3.js?v=1.058'></script>"
+                "<script src='js/http_server.js?v=1.058'></script>"
                 """<script>
                 var target = document.querySelector('title');
                 var observer = new MutationObserver(function(mutations) {2}
@@ -998,7 +987,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                 "{0}"
                 """<script>var versionList = []; var compareList = []; var parallelList = [];
                 var diffList = []; var searchList = [];</script>"""
-                "<script src='js/custom.js?v=1.054'></script>"
+                "<script src='js/custom.js?v=1.058'></script>"
                 "</head><body><span id='v0.0.0'></span>{1}"
                 "<p>&nbsp;</p><div id='footer'><span id='lastElement'></span></div><script>loadBible();document.querySelector('body').addEventListener('click', window.parent.closeSideNav);</script></body></html>"
                 ).format(activeBCVsettings,

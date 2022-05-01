@@ -2,6 +2,12 @@ import os
 import config
 from util.NetworkUtil import NetworkUtil
 
+def qrCodeCmd(command, source):
+    if config.enableHttpServer:
+        command = "{0}/{1}?cmd={2}".format(config.webUBAServer, config.webHomePage, command)
+        return qrCode(command, source)
+    else:
+        return ("", "", {})
 
 def qrCode(command, source):
     if not config.isQrCodeInstalled or not config.isPillowInstalled:
@@ -30,9 +36,12 @@ def qrCode(command, source):
     #qrCodeStream.close()
     img.save(qrCodeFile)
     if config.enableHttpServer:
+        data = data.replace("'", "%27")
         link = "<a href='{0}' target='_blank'>{0}</a>".format(data)
         copyAction = 'copyTextToClipboard("{0}")'.format(data)
     else:
+        data = data.replace("'", "%27")
+        data = data.replace('"', "%22")
         link = """<ref onclick="document.title='_website:::{0}'">{0}</ref>""".format(data)
         copyAction = 'document.title="_copy:::{0}"'.format(data)
     #content = "<p><img style='position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>"
@@ -47,6 +56,11 @@ config.mainWindow.textCommandParser.interpreters["qrcode"] = (qrCode, """
 # Usage - QRCODE:::[Text to convert to QR Code]
 """)
 config.mainWindow.textCommandParser.interpreters["_qr"] = (qrCode, """
-# [KEYWORD] _QR
+# [KEYWORD] _qr
 # Shortcut version of QRCODE
+""")
+config.mainWindow.textCommandParser.interpreters["_qrc"] = (qrCodeCmd, """
+# [KEYWORD] _qrc
+# This command is created for use in http-server only.
+# Shortcut version of QRCODE, for specifying a command used by uba http-server
 """)
