@@ -533,10 +533,10 @@ class MaterialMainWindow:
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
         self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClickedMaterial)
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.materialIconMaskColor, config.maskBackground), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
         icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/18dp/2x/outline_swap_calls_black_18dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile), config.thisTranslation["swap"], self.swapBibles)
+        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.materialIconMaskColor, config.maskBackground), config.thisTranslation["swap"], self.swapBibles)
         if config.openBibleInMainViewOnly:
             self.studyRefButton.setVisible(False)
             self.enableSyncStudyWindowBibleButton.setVisible(False)

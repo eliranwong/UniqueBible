@@ -2445,7 +2445,7 @@ class MainWindow(QMainWindow):
     def enableSyncStudyWindowBibleButtonClicked(self):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
         enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
+        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.materialIconMaskColor, config.maskBackground) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
         self.enableSyncStudyWindowBibleButton.setIcon(qIcon)
         self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
         if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
@@ -3857,7 +3857,7 @@ class MainWindow(QMainWindow):
         if not config.menuLayout == "material" or config.maskBackground:
             qIcon = QIcon(iconFilePath)
         else:
-            qIcon = self.getMaskedQIcon(iconFilePath)
+            qIcon = self.getMaskedQIcon(iconFilePath, config.materialIconMaskColor, config.maskBackground)
         return qIcon
 
     def getMaskedQIcon(self, iconFile, color=config.materialIconMaskColor, maskBackground=config.maskBackground):
@@ -3879,7 +3879,7 @@ class MainWindow(QMainWindow):
 
     def addMaterialIconAction(self, toolTip, icon, action, toolbar, translation=True):
         icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
-        return toolbar.addAction(self.getMaskedQIcon(icon), config.thisTranslation[toolTip] if translation else toolTip, action)
+        return toolbar.addAction(self.getMaskedQIcon(icon, config.materialIconMaskColor, config.maskBackground), config.thisTranslation[toolTip] if translation else toolTip, action)
 
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         if button is None:

@@ -1,4 +1,4 @@
-Changes in 29.26:
+Changes in 29.26, 29.27:
 * Fixed updated material menu layout colours after settings are changed.
 
 Changes in 29.25:
