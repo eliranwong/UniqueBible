@@ -1,3 +1,6 @@
+Changes in 29.26:
+* Fixed updated material menu layout colours after settings are changed.
+
 Changes in 29.25:
 * Fixed Button Colour Customisation dialog.
 

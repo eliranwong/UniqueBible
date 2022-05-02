@@ -92,6 +92,7 @@ class MaterialColorDialog(QDialog):
         config.pushButtonBackgroundColorPressed = '#a2a934'
         config.pushButtonForegroundColorPressed = 'white'
         self.setConfigColor()
+        self.parent.defineStyle()
         self.parent.setupMenuLayout("material")
 
     def setConfigColor(self):
@@ -105,6 +106,7 @@ class MaterialColorDialog(QDialog):
     def setMaskColor(self):
         config.maskBackground = False
         config.materialIconMaskColor = config.pushButtonForegroundColor
+        self.parent.defineStyle()
         self.parent.setupMenuLayout("material")
 
     def setPushButtonBackgroundColor(self):
@@ -120,6 +122,8 @@ class MaterialColorDialog(QDialog):
             self.setLabelColor(self.pushButtonForegroundColor, color)
             config.pushButtonForegroundColor = color.name()
             self.setMaskColor()
+            print(config.pushButtonForegroundColor)
+            print(config.materialIconMaskColor)
 
     def setPushButtonBackgroundColorHover(self):
         color = QColorDialog.getColor(QColor(config.pushButtonBackgroundColorHover), self)
