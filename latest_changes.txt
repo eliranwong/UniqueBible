@@ -1,3 +1,6 @@
+Changes in 29.25:
+* Fixed Button Colour Customisation dialog.
+
 Changes in 29.24:
 * Removed from Material menu layout the duplicated item for setting config.
 * Added to Material menu layout a graphical user interface dialog for button color customisation.

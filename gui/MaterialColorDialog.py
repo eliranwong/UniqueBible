@@ -122,31 +122,31 @@ class MaterialColorDialog(QDialog):
             self.setMaskColor()
 
     def setPushButtonBackgroundColorHover(self):
-        color = QColorDialog.getColor(QColor(config.pushButtonBackgroundColor), self)
+        color = QColorDialog.getColor(QColor(config.pushButtonBackgroundColorHover), self)
         if color.isValid():
             self.setLabelColor(self.pushButtonBackgroundColorHover, color)
-            config.pushButtonBackgroundColor = color.name()
+            config.pushButtonBackgroundColorHover = color.name()
             self.setMaskColor()
 
     def setPushButtonForegroundColorHover(self):
-        color = QColorDialog.getColor(QColor(config.pushButtonForegroundColor), self)
+        color = QColorDialog.getColor(QColor(config.pushButtonForegroundColorHover), self)
         if color.isValid():
             self.setLabelColor(self.pushButtonForegroundColorHover, color)
-            config.pushButtonForegroundColor = color.name()
+            config.pushButtonForegroundColorHover = color.name()
             self.setMaskColor()
 
     def setPushButtonBackgroundColorPressed(self):
-        color = QColorDialog.getColor(QColor(config.pushButtonBackgroundColor), self)
+        color = QColorDialog.getColor(QColor(config.pushButtonBackgroundColorPressed), self)
         if color.isValid():
             self.setLabelColor(self.pushButtonBackgroundColorPressed, color)
-            config.pushButtonBackgroundColor = color.name()
+            config.pushButtonBackgroundColorPressed = color.name()
             self.setMaskColor()
 
     def setPushButtonForegroundColorPressed(self):
-        color = QColorDialog.getColor(QColor(config.pushButtonForegroundColor), self)
+        color = QColorDialog.getColor(QColor(config.pushButtonForegroundColorPressed), self)
         if color.isValid():
             self.setLabelColor(self.pushButtonForegroundColorPressed, color)
-            config.pushButtonForegroundColor = color.name()
+            config.pushButtonForegroundColorPressed = color.name()
             self.setMaskColor()
 
 if __name__ == '__main__':
