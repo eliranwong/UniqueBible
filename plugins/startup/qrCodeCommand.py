@@ -27,7 +27,13 @@ def qrCode(command, source):
         data = aliases[cmd]
     else:
         data = command
-    data = data.replace(" ", "%20")
+    searchReplace = {
+        (" ", "%20"),
+        ("'", "%27"),
+        ('"', "%22"),
+    }
+    for search, replace in searchReplace:
+        data = data.replace(search, replace)
     #img = qrcode.make(data, image_factory=qrcode.image.pure.PymagingImage)
     img = qrcode.make(data)
     qrCodeFile = os.path.join(".", "htmlResources", "images", "qrcode.png")
@@ -36,12 +42,9 @@ def qrCode(command, source):
     #qrCodeStream.close()
     img.save(qrCodeFile)
     if config.enableHttpServer:
-        data = data.replace("'", "%27")
         link = "<a href='{0}' target='_blank'>{0}</a>".format(data)
         copyAction = 'copyTextToClipboard("{0}")'.format(data)
     else:
-        data = data.replace("'", "%27")
-        data = data.replace('"', "%22")
         link = """<ref onclick="document.title='_website:::{0}'">{0}</ref>""".format(data)
         copyAction = 'document.title="_copy:::{0}"'.format(data)
     #content = "<p><img style='position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>"

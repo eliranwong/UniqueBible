@@ -877,6 +877,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                     <br/><br/>
                     <span onclick="focusCommandInput()">{1}</span>:
                     <input type="search" autocomplete="on" id="commandInput" style="width:60%" name="cmd" value=""/>
+                    <span id="commandInputHolder" title=""></span>
                     {2}&nbsp;&nbsp;{17}
                     </form>
                     """.format(
