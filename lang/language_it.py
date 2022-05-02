@@ -803,4 +803,5 @@ translation = {
     "copied": "Copiato in clipboard!",
     "goOnline": "Vai online",
     "swap": "Swap",
+    "buttonColourCustomisation": "Pulsante Colour Colour Customisation",
 }

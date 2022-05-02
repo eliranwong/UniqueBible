@@ -1,3 +1,9 @@
+Changes in 29.24:
+* Removed from Material menu layout the duplicated item for setting config.
+* Added to Material menu layout a graphical user interface dialog for button color customisation.
+    Read more about button colour customisation at: 
+    https://github.com/eliranwong/UniqueBible/wiki/Button-Colour-Customisation
+
 Changes in 29.23:
 * Fixed shared link creation on http-server page with non-mini layout.
 
@@ -94,7 +100,7 @@ Changes in 29.04:
 Changes in 29.03:
 * Fixed icon color customisation with Material menu layout.
 * Wrote a wiki page on how to change icon colours: 
-https://github.com/eliranwong/UniqueBible/wiki/How-to-Change-Icon-Colour%3F
+https://github.com/eliranwong/UniqueBible/wiki/Button-Colour-Customisation
 
 Changes in 29.02:
 * Built-in media player now uses material icons when Material menu layout is used.

@@ -803,4 +803,5 @@ translation = {
     "copied": "クリップボードにコピーしました。",
     "goOnline": "オンラインに進む",
     "swap": "スワップ",
+    "buttonColourCustomisation": "ボタンの色のカスタマイズ",
 }

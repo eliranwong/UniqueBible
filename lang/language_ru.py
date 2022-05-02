@@ -803,4 +803,5 @@ translation = {
     "copied": "Скопировано в буфер обмена!",
     "goOnline": "Перейти в Интернет",
     "swap": "Замена",
+    "buttonColourCustomisation": "Настройка цвета кнопок",
 }

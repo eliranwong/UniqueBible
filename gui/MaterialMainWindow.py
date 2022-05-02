@@ -30,6 +30,7 @@ class MaterialMainWindow:
         items = (
             ("bibleCollections", self.showBibleCollectionDialog),
             ("refButtonAction", self.selectRefButtonSingleClickActionDialog),
+            ("buttonColourCustomisation", self.changeButtonColour),
             ("activeVerseColour", self.changeActiveVerseColour),
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
@@ -112,11 +113,6 @@ class MaterialMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
-        items = (
-            ("menu_config_flags", self.moreConfigOptionsDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu0, feature, self, action)
 
         subMenu0 = addSubMenu(menu, "menu2_view")
         subMenu = addSubMenu(subMenu0, "menu1_screenSize")

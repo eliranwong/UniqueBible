@@ -803,4 +803,5 @@ translation = {
     "copied": "ക്ലിപ്ബോര്ഡില് പകര്ത്തിയിരിക്കുന്നു!",
     "goOnline": "ഓണ്ലൈനില് പോ",
     "swap": "Swap",
+    "buttonColourCustomisation": "ബട്ടണ് നിറം",
 }

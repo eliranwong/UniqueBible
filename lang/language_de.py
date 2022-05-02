@@ -803,4 +803,5 @@ translation = {
     "copied": "In Zwischenablage kopiert!",
     "goOnline": "Online gehen",
     "swap": "Austauschen",
+    "buttonColourCustomisation": "Farbanpassungen für Knopfdruck",
 }

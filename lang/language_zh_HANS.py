@@ -803,4 +803,5 @@ translation = {
     "copied": "复制到剪贴板!",
     "goOnline": "開啟網絡版本",
     "swap": "交换",
+    "buttonColourCustomisation": "按钮颜色设定",
 }

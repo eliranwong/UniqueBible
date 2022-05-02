@@ -803,4 +803,5 @@ translation = {
     "copied": "क्लिपबोर्ड पर नक़ल किया गया!",
     "goOnline": "ऑनलाइन जाएँ",
     "swap": "स्वैप",
+    "buttonColourCustomisation": "बटन रंग अनुकूलन बटन",
 }

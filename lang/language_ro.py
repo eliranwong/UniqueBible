@@ -803,4 +803,5 @@ translation = {
     "copied": "Copiat în clipboard!",
     "goOnline": "Du-te online",
     "swap": "Swap",
+    "buttonColourCustomisation": "Personalizarea culorii butonului",
 }

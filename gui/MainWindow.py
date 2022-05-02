@@ -50,6 +50,7 @@ from gui.MorphDialog import MorphDialog
 from gui.MiniBrowser import MiniBrowser
 from gui.CentralWidget import CentralWidget
 from gui.AppUpdateDialog import AppUpdateDialog
+from gui.MaterialColorDialog import MaterialColorDialog
 from db.ToolsSqlite import LexiconData
 from util.TtsLanguages import TtsLanguages
 from util.DatafileLocation import DatafileLocation
@@ -2094,6 +2095,10 @@ class MainWindow(QMainWindow):
             else:
                 config.activeVerseNoColourLight = colorName
             self.reloadCurrentRecord(True)
+
+    def changeButtonColour(self):
+        dialog = MaterialColorDialog(self)
+        dialog.exec_()
 
     def setTabNumberDialog(self):
         integer, ok = QInputDialog.getInt(self,

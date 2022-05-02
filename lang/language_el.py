@@ -803,4 +803,5 @@ translation = {
     "copied": "Αντιγραφή στο Πρόχειρο!",
     "goOnline": "Πηγαίνετε online.",
     "swap": "Ανταλλαγή:",
+    "buttonColourCustomisation": "Προσαρμογή χρωματισμού κουμπιών",
 }

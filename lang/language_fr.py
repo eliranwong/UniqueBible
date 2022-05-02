@@ -803,4 +803,5 @@ translation = {
     "copied": "Copié dans le presse-papiers !",
     "goOnline": "Aller en ligne",
     "swap": "Permutation",
+    "buttonColourCustomisation": "Personnaliser la couleur du bouton",
 }

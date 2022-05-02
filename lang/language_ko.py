@@ -803,4 +803,5 @@ translation = {
     "copied": "클립보드로 복사!",
     "goOnline": "온라인으로 이동",
     "swap": "스왑",
+    "buttonColourCustomisation": "단추 색상 사용자 정의",
 }
