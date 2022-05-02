@@ -1,3 +1,6 @@
+Changes in 29.23:
+* Fixed shared link creation on http-server page with non-mini layout.
+
 Changes in 29.22:
 * Fixed creation of shared links on http-server for command containing non-English characters.
 
