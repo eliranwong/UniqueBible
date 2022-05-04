@@ -1,3 +1,6 @@
+Changes in 29.29:
+* Fixed QR code window so that it can be opened as a normal window rather than fullscreen.
+
 Changes in 29.28:
 * Improved Button Colour Customisation dialog:
     Apply colour changes on "Default" and "About" buttons immediately after a setting is changed.

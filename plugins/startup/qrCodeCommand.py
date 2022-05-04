@@ -22,7 +22,8 @@ def qrCode(command, source):
 
     cmd = command.lower().strip()
     if cmd in ["", "http-server", "http", "server"]:
-        data = "http://{0}:{1}".format(NetworkUtil.get_ip(), config.thisHttpServerPort if hasattr(config, "thisHttpServerPort") else config.httpServerPort)
+        #data = "http://{0}:{1}".format(NetworkUtil.get_ip(), config.thisHttpServerPort if hasattr(config, "thisHttpServerPort") else config.httpServerPort)
+        data = config.webUBAServer
     elif cmd in aliases.keys():
         data = aliases[cmd]
     else:
@@ -49,7 +50,7 @@ def qrCode(command, source):
         copyAction = 'document.title="_copy:::{0}"'.format(data)
     #content = "<p><img style='position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>"
     content = """<p style='text-align: center;'>{0} <button type='button' title='{2}' class='ubaButton' onclick='{1}'><span class="material-icons-outlined">content_copy</span></button></p><p style='text-align: center;'><img style='margin:auto;top:0;left:0;right:0;bottom:0;max-width:100%;height:auto;' src='./images/qrcode.png'></p>""".format(link, copyAction, config.thisTranslation["context1_copy"])
-    target = "main" if source == "http" else "popover.fullscreen"
+    target = "main" if source == "http" else "popover.{0}".format(source)
     return (target, content, {})
 
 config.mainWindow.textCommandParser.interpreters["qrcode"] = (qrCode, """
