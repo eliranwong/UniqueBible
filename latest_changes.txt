@@ -3,12 +3,12 @@ Changes in 29.32:
 
 Changes in 29.31:
 Improved material menu layout:
-* Added four new buttons:
-    - Single Version button.  It is basically the same action as the main reference button action when config.refButtonClickAction is set to "direct" on other menu layouts.
-    - Parallel Versions button.
-    - Side by Side Comparison button.
-    - Row by Row Comparison button.
 * Added a new drop down menu for selection of multiple bible versions to work with the four new buttons.
+* Added four new buttons:
+    - Single Version button.  Open a bible chapter of the bible version currectly selected.  It is basically the same action as the main reference button action when config.refButtonClickAction is set to "direct" on other menu layouts.
+    - Parallel Versions button.  Open a parallel chapter view of different bible versions selected from the newly added multiple bible version selection drop down menu.
+    - Side by Side Comparison button.  Display a verse-by-verse comparison view of different bible versions, with a side by side layout.
+    - Row by Row Comparison button.  Display a verse-by-verse comparison view of different bible versions, with a row by row layout.
 * Integrated config.enforceCompareParallel into running COMPARESIDEBYSIDE::: command.
 * Improved handling of config.enforceCompareParallel:
     - Clicking the newly added "Single Version" button set config.enforceCompareParallel to False automatically.
