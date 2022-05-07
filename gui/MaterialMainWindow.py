@@ -1,5 +1,6 @@
 from qtpy.QtCore import QSize
 from gui.MenuItems import *
+from gui.CheckableComboBox import CheckableComboBox
 from db.BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
@@ -35,6 +36,8 @@ class MaterialMainWindow:
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
+            ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
+            ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
@@ -479,6 +482,11 @@ class MaterialMainWindow:
             versionButtonHeight = self.versionButton.height() if config.refButtonClickAction == "mini" else self.versionCombo.height() 
             config.iconButtonWidth = config.maximumIconButtonWidth if versionButtonHeight > config.maximumIconButtonWidth else versionButtonHeight
 
+        items = self.textList
+        self.bibleVersionCombo = CheckableComboBox(items, config.compareParallelList, toolTips=self.textFullNameList)
+        self.bibleVersionCombo.setStyleSheet(config.comboBoxStyle)
+        self.firstToolBar.addWidget(self.bibleVersionCombo)
+
         icon = "material/navigation/unfold_more/materialiconsoutlined/18dp/2x/outline_unfold_more_black_18dp.png"
         self.addMaterialIconButton("cp0", icon, self.mainTextMenu, self.firstToolBar)
         icon = "material/action/search/materialiconsoutlined/18dp/2x/outline_search_black_18dp.png"
@@ -496,12 +504,14 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        icon = "material/maps/rate_review/materialiconsoutlined/18dp/2x/outline_rate_review_black_18dp.png"
-        self.addMaterialIconButton("menu_bookNote", icon, self.openMainBookNote, self.firstToolBar)
-        icon = "material/file/drive_file_rename_outline/materialiconsoutlined/18dp/2x/outline_drive_file_rename_outline_black_18dp.png"
-        self.addMaterialIconButton("menu_chapterNote", icon, self.openMainChapterNote, self.firstToolBar)
-        icon = "material/editor/edit_note/materialiconsoutlined/18dp/2x/outline_edit_note_black_18dp.png"
-        self.addMaterialIconButton("menu_verseNote", icon, self.openMainVerseNote, self.firstToolBar)
+        icon = "material/action/ads_click/materialiconsoutlined/18dp/2x/outline_ads_click_black_18dp.png"
+        self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)
+        icon = "material/image/auto_awesome_motion/materialiconsoutlined/18dp/2x/outline_auto_awesome_motion_black_18dp.png"
+        self.addMaterialIconButton("parallelVersions", icon, lambda: self.runCompareAction("PARALLEL"), self.firstToolBar)
+        icon = "material/action/view_column/materialiconsoutlined/18dp/2x/outline_view_column_black_18dp.png"
+        self.addMaterialIconButton("sideBySideComparison", icon, lambda: self.runCompareAction("COMPARESIDEBYSIDE"), self.firstToolBar)
+        icon = "material/editor/table_rows/materialiconsoutlined/18dp/2x/outline_table_rows_black_18dp.png"
+        self.addMaterialIconButton("rowByRowComparison", icon, lambda: self.runCompareAction("COMPARE"), self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
@@ -597,6 +607,15 @@ class MaterialMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        icon = "material/maps/rate_review/materialiconsoutlined/18dp/2x/outline_rate_review_black_18dp.png"
+        self.addMaterialIconButton("menu_bookNote", icon, self.openMainBookNote, self.secondToolBar)
+        icon = "material/file/drive_file_rename_outline/materialiconsoutlined/18dp/2x/outline_drive_file_rename_outline_black_18dp.png"
+        self.addMaterialIconButton("menu_chapterNote", icon, self.openMainChapterNote, self.secondToolBar)
+        icon = "material/editor/edit_note/materialiconsoutlined/18dp/2x/outline_edit_note_black_18dp.png"
+        self.addMaterialIconButton("menu_verseNote", icon, self.openMainVerseNote, self.secondToolBar)
+
+        self.secondToolBar.addSeparator()
+
         icon = "material/action/note_add/materialiconsoutlined/18dp/2x/outline_note_add_black_18dp.png"
         self.addMaterialIconButton("menu7_create", icon, self.createNewNoteFile, self.secondToolBar)
         icon = "material/file/file_open/materialiconsoutlined/18dp/2x/outline_file_open_black_18dp.png"
@@ -669,13 +688,13 @@ class MaterialMainWindow:
         icon = "material/action/compare_arrows/materialiconsoutlined/18dp/2x/outline_compare_arrows_black_18dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
         icon = "material/image/compare/materialicons/18dp/2x/baseline_compare_black_18dp.png"
-        self.addMaterialIconButton("menu4_moreComparison", icon, lambda: self.openControlPanelTab(0), self.leftToolBar)
+        self.addMaterialIconButton("contrasts", icon, lambda: self.runCONTRASTS, self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addMaterialIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
         icon = "material/image/wb_sunny/materialiconsoutlined/18dp/2x/outline_wb_sunny_black_18dp.png"
         self.addMaterialIconButton("Marvel Original Bible", icon, self.runMOB, self.leftToolBar, None, False)
-        icon = "material/image/auto_awesome_motion/materialiconsoutlined/18dp/2x/outline_auto_awesome_motion_black_18dp.png"
+        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
         self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIB, self.leftToolBar, None, False)
         icon = "material/file/workspaces/materialiconsoutlined/18dp/2x/outline_workspaces_black_18dp.png"
         self.addMaterialIconButton("Marvel Trilingual Bible", icon, self.runMTB, self.leftToolBar, None, False)
@@ -706,7 +725,7 @@ class MaterialMainWindow:
         icon = "material/image/picture_as_pdf/materialiconsoutlined/18dp/2x/outline_picture_as_pdf_black_18dp.png"
         self.addMaterialIconButton("bar3_pdf", icon, self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/image/auto_awesome_motion/materialiconsoutlined/18dp/2x/outline_auto_awesome_motion_black_18dp.png"
+        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
         self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIBStudy, self.rightToolBar, None, False)
         self.rightToolBar.addSeparator()
         icon = "material/editor/highlight/materialiconsoutlined/18dp/2x/outline_highlight_black_18dp.png"

@@ -112,6 +112,11 @@ class TextCommandParser:
             # e.g. COMPARE:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8"""),
+            "comparesidebyside": (self.textCompareSideBySide, """
+            # [KEYWORD] COMPARESIDEBYSIDE
+            # Feature - Compare bible versions side by side
+            # Usage - COMPARESIDEBYSIDE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
+            # Remarks: Multiple bible versions for comparison are separated by "_"."""),
             "difference": (self.textDiff, """
             # [KEYWORD] DIFFERENCE
             # Feature - same as [KEYWORD] DIFF
@@ -134,10 +139,6 @@ class TextCommandParser:
             # 4) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16
             # e.g. PARALLEL:::NIV_CCB_CEB:::John 3:16; Rm 5:8"""),
-            "parallelverses": (self.textParallelVerses, """
-            # [KEYWORD] PARALLELVERSES
-            # Feature - Display bible versions of the same chapter in parallel columns with verses aligned"""),
-            "parallelverse": (self.textParallelVerses, ""),
             "passages": (self.textPassages, """
             # [KEYWORD] PASSAGES
             # Feature - Display different bible passages of the same bible version in parallel columns. It is created for studying similar passages.
@@ -1035,14 +1036,19 @@ class TextCommandParser:
 
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view, parallel=False):
-        compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
-        if config.enforceCompareParallel and view in ("main", "http") and compareMatches and not parallel:
-            config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
-            return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
-        parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
-        if config.enforceCompareParallel and view in ("main", "http") and parallelMatches and not parallel:
-            config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
-            return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
+        if config.enforceCompareParallel and not parallel:
+            compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
+            if view in ("main", "http") and compareMatches:
+                config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
+                return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
+            parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
+            if view in ("main", "http") and parallelMatches:
+                config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
+                return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
+            compareSideBySideMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee][Ss][Ii][Dd][Ee][Bb][Yy][Ss][Ii][Dd][Ee]:::(.*?:::)", config.history["main"][-1])
+            if view in ("main", "http") and compareSideBySideMatches:
+                config.tempRecord = "COMPARESIDEBYSIDE:::{0}{1}".format(compareSideBySideMatches.group(1), command)
+                return self.textCompareSideBySide("{0}{1}".format(compareSideBySideMatches.group(1), command), view)
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:
@@ -2063,8 +2069,8 @@ class TextCommandParser:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
             return ("main", verses, {})
 
-    # PARALLELVERSES:::
-    def textParallelVerses(self, command, source):
+    # COMPARESIDEBYSIDE:::
+    def textCompareSideBySide(self, command, source):
         if command.count(":::") == 0:
             return ("", "", {})
         else:

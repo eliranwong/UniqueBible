@@ -131,15 +131,15 @@ class BibleExplorer(QWidget):
         return self.parent.comboFeatureLayout(feature, self.parallelCombo, action)
 
     def navigationLayout3b(self):
-        feature = "parallelVerses"
-        action = lambda: self.versionsAction("PARALLELVERSES")
+        feature = "sideBySide"
+        action = lambda: self.versionsAction("COMPARESIDEBYSIDE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.parallelVersesCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
         return self.parent.comboFeatureLayout(feature, self.parallelVersesCombo, action)
 
     def navigationLayout4(self):
-        feature = "html_showCompare"
+        feature = "rowByRow"
         action = lambda: self.versionsAction("COMPARE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
@@ -147,7 +147,7 @@ class BibleExplorer(QWidget):
         return self.parent.comboFeatureLayout(feature, self.compareCombo, action)
 
     def navigationLayout5(self):
-        feature = "html_showDifference"
+        feature = "contrasts"
         action = lambda: self.versionsAction("DIFFERENCE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
@@ -383,7 +383,7 @@ class BibleExplorer(QWidget):
     def versionsAction(self, keyword):
         selectedVersionsMap = {
             "PARALLEL": self.parallelCombo.checkItems,
-            "PARALLELVERSES": self.parallelVersesCombo.checkItems,
+            "COMPARESIDEBYSIDE": self.parallelVersesCombo.checkItems,
             "COMPARE": self.compareCombo.checkItems,
             "DIFFERENCE": self.differenceCombo.checkItems,
         }

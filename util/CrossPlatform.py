@@ -100,7 +100,7 @@ class CrossPlatform:
             if not textCommand.startswith("_") and not re.search("^download:::|^qrcode:::", textCommand.lower()):
     
                 if view in ("main", "study"):
-                    compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::"))
+                    compareParallel = (textCommand.lower().startswith("compare:::") or textCommand.lower().startswith("parallel:::") or textCommand.lower().startswith("comparesidebyside:::"))
                     if config.enforceCompareParallel and not config.tempRecord:
                         if not ":::" in textCommand:
                             view = "study"

@@ -662,6 +662,10 @@ class ConfigUtil:
         # Options to display "favouriteBible" together with the main version for reading multiple references: True / False"""
         if not hasattr(config, "addFavouriteToMultiRef"):
             config.addFavouriteToMultiRef = False
+        config.help["compareParallelList"] = """
+        # Specify bible versions to work with parallel:::, compare:::, and comparesidebyside::: commands in material menu layout."""
+        if not hasattr(config, "compareParallelList"):
+            config.compareParallelList = list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
         config.help["enforceCompareParallel"] = """
         # Options to enforce comparison / parallel: True / False
         # When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
@@ -1155,6 +1159,8 @@ class ConfigUtil:
     # Save configurations on exit
     @staticmethod
     def save():
+        if config.menuLayout == "material":
+            config.compareParallelList = config.mainWindow.bibleVersionCombo.checkItems
         if config.removeHighlightOnExit:
             config.bookSearchString = ""
             config.noteSearchString = ""
@@ -1280,6 +1286,7 @@ class ConfigUtil:
             ("favouriteBibleSC2", config.favouriteBibleSC2),
             ("favouriteBibleSC3", config.favouriteBibleSC3),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef),
+            ("compareParallelList", config.compareParallelList),
             ("addOHGBiToMorphologySearch", config.addOHGBiToMorphologySearch),
             ("maximumOHGBiVersesDisplayedInSearchResult", config.maximumOHGBiVersesDisplayedInSearchResult),
             ("showVerseReference", config.showVerseReference),

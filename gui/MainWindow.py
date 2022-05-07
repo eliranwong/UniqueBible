@@ -800,7 +800,7 @@ class MainWindow(QMainWindow):
         else:
             self.mainView.setHtml(text, baseUrl)
         reference = "-".join(self.verseReference("main"))
-        if self.textCommandParser.lastKeyword in ("compare", "parallel"):
+        if self.textCommandParser.lastKeyword in ("compare", "parallel", "comparesidebyside"):
             *_, reference2 = reference.split("-")
             reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
@@ -2413,9 +2413,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable enforcement of comparison / parallel
     def getEnableCompareParallelDisplay(self):
         if config.enforceCompareParallel:
-            return self.getCrossplatformPath("material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png") if config.menuLayout == "material" else "sync.png"
+            return self.getCrossplatformPath("material/action/done_all/materialiconsoutlined/18dp/2x/outline_done_all_black_18dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return self.getCrossplatformPath("material/maps/layers_clear/materialiconsoutlined/18dp/2x/outline_layers_clear_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
+            return self.getCrossplatformPath("material/action/remove_done/materialiconsoutlined/18dp/2x/outline_remove_done_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getEnableCompareParallelDisplayToolTip(self):
         if config.enforceCompareParallel:
@@ -2738,6 +2738,12 @@ class MainWindow(QMainWindow):
         newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         self.textCommandChanged(newTextCommand, "main")
 
+    def openMainChapterMaterial(self):
+        if config.enforceCompareParallel:
+            self.enforceCompareParallelButtonClicked()
+        newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        self.textCommandChanged(newTextCommand, "main")
+
     def openStudyChapter(self):
         newTextCommand = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
         self.textCommandChanged(newTextCommand, "study")
@@ -2775,10 +2781,11 @@ class MainWindow(QMainWindow):
             self.openControlPanelTab(0)
 
     def mainRefButtonClickedMaterial(self):
-        if config.refButtonClickAction == "direct":
-            self.openMainChapter()
-        else:
-            self.showAllChaptersMenu()
+        #if config.refButtonClickAction == "direct":
+        #    self.openMainChapter()
+        #else:
+        #    self.showAllChaptersMenu()
+        self.showAllChaptersMenu()
 
     def getOnlineLink(self):
         command = self.textCommandLineEdit.text()
@@ -2992,6 +2999,12 @@ class MainWindow(QMainWindow):
         newTextCommand = "{0}:::{1}".format(keyword, mainVerseReference)
         self.textCommandChanged(newTextCommand, "main")
 
+    def runCompareAction(self, keyword):
+        if not config.enforceCompareParallel:
+            self.enforceCompareParallelButtonClicked()
+        selectedVersions = "_".join(self.bibleVersionCombo.checkItems)
+        self.runFeature("{0}:::{1}".format(keyword, selectedVersions))
+
     def runMOB(self):
         self.runFeature("BIBLE:::MOB")
 
@@ -3019,6 +3032,9 @@ class MainWindow(QMainWindow):
 
     def runCOMPARE(self):
         self.runFeature("COMPARE")
+
+    def runCONTRASTS(self):
+        self.runFeature("DIFFERENCE")
 
     def runCROSSREFERENCE(self):
         self.runFeature("CROSSREFERENCE")
@@ -3479,6 +3495,26 @@ class MainWindow(QMainWindow):
             config.addFavouriteToMultiRef = True
         else:
             config.addFavouriteToMultiRef = False
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteBibleDialog2(self):
+        items = BiblesSqlite().getBibleList()
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible2"],
+                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        items.index(config.favouriteBible2), False)
+        if ok and item:
+            config.favouriteBible2 = item
+            config.addFavouriteToMultiRef = True
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteBibleDialog3(self):
+        items = BiblesSqlite().getBibleList()
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible3"],
+                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        items.index(config.favouriteBible3), False)
+        if ok and item:
+            config.favouriteBible3 = item
+            config.addFavouriteToMultiRef = True
         self.reloadCurrentRecord(True)
 
     # Set text-to-speech default language

@@ -1,3 +1,22 @@
+Changes in 29.31:
+Improved material menu layout:
+* Added four new buttons:
+    - Single Version button.  It is basically the same action as the main reference button action when config.refButtonClickAction is set to "direct" on other menu layouts.
+    - Parallel Versions button.
+    - Side by Side Comparison button.
+    - Row by Row Comparison button.
+* Added a new drop down menu for selection of multiple bible versions to work with the four new buttons.
+* Integrated config.enforceCompareParallel into running COMPARESIDEBYSIDE::: command.
+* Improved handling of config.enforceCompareParallel:
+    - Clicking the newly added "Single Version" button set config.enforceCompareParallel to False automatically.
+    - Clicking the newly added "Parallel Versions / Side by Side Comparison / Row by Row Comparison" buttons set config.enforceCompareParallel to True automatically.
+* Clicking the "Contrasts" button now directly contrast the currently opened bible version with all other versions of the currently opened verse.
+* Main reference button now always open chapter menu even config.refButtonClickAction is set to "direct" to avoid duplication.
+* Relocated book / chapter / Verse note buttons to second menu bar from the top.
+* Renamed PARALLELVERSES::: command to COMPARESIDEBYSIDE::: command.
+* Added config.compareParallelList to record users selection of bible versions to work with compare / parallel features with material menu layout.
+* Changed a few icons on material menu layout.
+
 Changes in 29.30:
 * Integrated button colour customisation in Master Control tabs.
 * Redirect to config.favouriteBible, if bible version requested is not installed.
