@@ -2425,8 +2425,8 @@ class MainWindow(QMainWindow):
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel
-        enforceCompareParallelButtonFile = os.path.join("htmlResources", self.getEnableCompareParallelDisplay())
-        self.enforceCompareParallelButton.setIcon(QIcon(enforceCompareParallelButtonFile))
+        icon = self.getQIcon(self.getEnableCompareParallelDisplay())
+        self.enforceCompareParallelButton.setIcon(icon)
         self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
 
     # Actions - enable or disable sync main and secondary bibles
@@ -2469,8 +2469,8 @@ class MainWindow(QMainWindow):
 
     def enableSyncCommentaryButtonClicked(self):
         config.syncCommentaryWithMainWindow = not config.syncCommentaryWithMainWindow
-        enableSyncCommentaryButtonFile = os.path.join("htmlResources", self.getSyncCommentaryDisplay())
-        self.enableSyncCommentaryButton.setIcon(QIcon(enableSyncCommentaryButtonFile))
+        icon = self.getQIcon(self.getSyncCommentaryDisplay())
+        self.enableSyncCommentaryButton.setIcon(icon)
         self.enableSyncCommentaryButton.setToolTip(self.getSyncCommentaryDisplayToolTip())
         if config.syncStudyWindowBibleWithMainWindow and not self.syncButtonChanging:
             self.syncButtonChanging = True
@@ -2527,8 +2527,8 @@ class MainWindow(QMainWindow):
     def enableInstantButtonClicked(self):
         config.instantInformationEnabled = not config.instantInformationEnabled
         if hasattr(self, 'enableInstantButton'):
-            enableInstantButtonFile = os.path.join("htmlResources", self.getInstantInformation())
-            self.enableInstantButton.setIcon(QIcon(enableInstantButtonFile))
+            icon = self.getQIcon(self.getInstantInformation())
+            self.enableInstantButton.setIcon(icon)
 
     # Actions - enable or disable paragraphs feature
     def displayBiblesInParagraphs(self):
@@ -2561,8 +2561,8 @@ class MainWindow(QMainWindow):
     def enableParagraphButtonAction(self, display):
         if display:
             self.displayBiblesInParagraphs()
-        enableParagraphButtonFile = os.path.join("htmlResources", self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(QIcon(enableParagraphButtonFile))
+        icon = self.getQIcon(self.getReadFormattedBibles())
+        self.enableParagraphButton.setIcon(icon)
 
     # Actions - enable or disable sub-heading for plain bibles
     def getAddSubheading(self):
@@ -2610,8 +2610,8 @@ class MainWindow(QMainWindow):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         self.newTabException = True
         self.reloadCurrentRecord(True)
-        enableSubheadingButtonFile = os.path.join("htmlResources", self.getAddSubheading())
-        self.enableSubheadingButton.setIcon(QIcon(enableSubheadingButtonFile))
+        icon = self.getQIcon(self.getAddSubheading())
+        self.enableSubheadingButton.setIcon(icon)
 
     # Actions - change font size
     def smallerFont(self):
