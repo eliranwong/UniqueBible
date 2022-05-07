@@ -79,6 +79,8 @@ class BibleExplorer(QWidget):
         navigationLayout1.setSpacing(5)
         # Version selection
         self.versionCombo = QComboBox()
+        if config.menuLayout == 'material':
+            self.versionCombo.setStyleSheet(config.comboBoxStyle)
         #self.textList = self.biblesSqlite.getBibleList()
         self.textList = self.parent.textList
         self.versionCombo.addItems(self.textList)
@@ -91,10 +93,16 @@ class BibleExplorer(QWidget):
         navigationLayout1.addWidget(self.versionCombo)
         # Book / Chapter / Verse selection
         self.bookCombo = QComboBox()
+        if config.menuLayout == 'material':
+            self.bookCombo.setStyleSheet(config.comboBoxStyle)
         navigationLayout1.addWidget(self.bookCombo)
         self.chapterCombo = QComboBox()
+        if config.menuLayout == 'material':
+            self.chapterCombo.setStyleSheet(config.comboBoxStyle)
         navigationLayout1.addWidget(self.chapterCombo)
         self.verseCombo = QComboBox()
+        if config.menuLayout == 'material':
+            self.verseCombo.setStyleSheet(config.comboBoxStyle)
         navigationLayout1.addWidget(self.verseCombo)
         # Initial setup
         self.updateBookCombo()

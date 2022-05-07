@@ -30,12 +30,18 @@ class Library2Launcher(QWidget):
         buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousPdf)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["import"])
         button.clicked.connect(self.parent.parent.importPdfDialog)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["others"])
         button.clicked.connect(self.parent.parent.openPdfDialog)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         pdfLayout.addLayout(buttons)
         leftColumnWidget.setLayout(pdfLayout)
@@ -46,12 +52,18 @@ class Library2Launcher(QWidget):
         buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousDocx)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["import"])
         button.clicked.connect(self.parent.parent.importDocxDialog)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         button = QPushButton(config.thisTranslation["others"])
         button.clicked.connect(self.parent.parent.openDocxDialog)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         pdfLayout.addLayout(buttons)
         centerColumnWidget.setLayout(pdfLayout)
@@ -62,6 +74,8 @@ class Library2Launcher(QWidget):
         buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openDevotional)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         buttons.addWidget(button)
         devotionalLayout.addLayout(buttons)

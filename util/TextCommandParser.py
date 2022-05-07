@@ -1020,6 +1020,8 @@ class TextCommandParser:
         biblesSqlite = BiblesSqlite()
         bibleList = biblesSqlite.getBibleList()
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
+        if not confirmedTexts:
+            confirmedTexts = [config.favouriteBible]
         return confirmedTexts
 
     def extractAllVerses(self, text, tagged=False):

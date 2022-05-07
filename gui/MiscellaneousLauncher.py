@@ -37,10 +37,14 @@ class MiscellaneousLauncher(QWidget):
         button = QPushButton(config.thisTranslation["menu7_create"])
         button.setToolTip(config.thisTranslation["menu7_create"])
         button.clicked.connect(self.parent.parent.createNewNoteFile)
+        if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["menu7_open"])
         button.setToolTip(config.thisTranslation["menu7_open"])
         button.clicked.connect(self.parent.parent.openTextFileDialog)
+        if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         box.setLayout(subLayout)
         return box
@@ -51,12 +55,16 @@ class MiscellaneousLauncher(QWidget):
         button = QPushButton(config.thisTranslation["presentation"])
         button.setToolTip(config.thisTranslation["presentation"])
         button.clicked.connect(lambda: self.parent.parent.runPlugin("Presentation"))
+        if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         if config.isYoutubeDownloaderInstalled:
             button = QPushButton(config.thisTranslation["youtube_utility"])
             button.setToolTip(config.thisTranslation["youtube_utility"])
             button.clicked.connect(self.parent.parent.openYouTube)
-            subLayout.addWidget(button)
+            if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
+        subLayout.addWidget(button)
         box.setLayout(subLayout)
         return box
 
@@ -84,6 +92,8 @@ class MiscellaneousLauncher(QWidget):
         subLayout = QHBoxLayout()
 
         self.languageCombo = QComboBox()
+        if config.menuLayout == 'material':
+                self.languageCombo.setStyleSheet(config.comboBoxStyle)
         subLayout.addWidget(self.languageCombo)
         if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
             languages = {}
@@ -109,10 +119,14 @@ class MiscellaneousLauncher(QWidget):
         button = QPushButton(config.thisTranslation["speak"])
         button.setToolTip(config.thisTranslation["speak"])
         button.clicked.connect(self.speakText)
+        if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["stop"])
         button.setToolTip(config.thisTranslation["stop"])
         button.clicked.connect(self.parent.parent.textCommandParser.stopTtsAudio)
+        if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         layout.addLayout(subLayout)
 

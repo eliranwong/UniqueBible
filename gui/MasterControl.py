@@ -186,6 +186,8 @@ class MasterControl(QWidget):
             buttonLabel = config.thisTranslation[label] if translation else label
             button = QPushButton(buttonLabel)
             button.clicked.connect(action)
+            if config.menuLayout == 'material':
+                button.setStyleSheet(config.buttonStyle)
             buttonsLayout.addWidget(button)
         return buttonsLayout
 
@@ -194,10 +196,14 @@ class MasterControl(QWidget):
         layout = QGridLayout()
         layout.setSpacing(5)
         # combo
+        if config.menuLayout == 'material':
+            combo.setStyleSheet(config.comboBoxStyle)
         layout.addWidget(combo, 0, 0, 1, 3)
         # button
         button = QPushButton(config.thisTranslation[feature])
         button.clicked.connect(action)
+        if config.menuLayout == 'material':
+            button.setStyleSheet(config.buttonStyle)
         layout.addWidget(button, 0, 3, 1, 1)
         return layout
 

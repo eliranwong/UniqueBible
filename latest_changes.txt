@@ -1,3 +1,8 @@
+Changes in 29.30:
+* Integrated button colour customisation in Master Control tabs.
+* Redirect to config.favouriteBible, if bible version requested is not installed.
+* Fixed http-server .play feature on bible version title having non-English title.
+
 Changes in 29.29:
 * Fixed QR code window so that it can be opened as a normal window rather than fullscreen.
 

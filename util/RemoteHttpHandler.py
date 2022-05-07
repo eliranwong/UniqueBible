@@ -1487,7 +1487,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
     def getPlaylistFromHTML(self, html):
         playlist = []
         #searchPattern = """[Rr][Ee][Aa][Dd][Cc][Hh][Aa][Pp][Tt][Ee][Rr]:::([A-Za-z0-9]+?)\.([0-9]+?)\.([0-9]+?)[\."']"""
-        searchPattern = """_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([A-Za-z0-9]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
+        searchPattern = """_[Cc][Hh][Aa][Pp][Tt][Ee][Rr][Ss]:::([^\.>]+?)_([0-9]+?)\.([0-9]+?)["'].*onclick=["']rC\("""
         found = re.search(searchPattern, html)
         if found:
             text, b, c = found[1], found[2], found[3]
