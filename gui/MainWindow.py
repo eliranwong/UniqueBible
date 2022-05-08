@@ -2509,8 +2509,8 @@ class MainWindow(QMainWindow):
                 self.swapBibleButton.setVisible(False)
             else:
                 self.studyBibleToolBar.hide()
-        enableStudyBibleButtonFile = os.path.join("htmlResources", self.getStudyBibleDisplay())
-        self.enableStudyBibleButton.setIcon(QIcon(enableStudyBibleButtonFile))
+        icon = self.getQIcon(self.getStudyBibleDisplay())
+        self.enableStudyBibleButton.setIcon(icon)
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
 
     def updateBookButton(self):

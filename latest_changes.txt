@@ -1,4 +1,4 @@
-Changes in 29.32:
+Changes in 29.32, 33:
 * Fixed icon colour of some buttons in material menu layout.
 
 Changes in 29.31:
