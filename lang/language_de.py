@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "Farbanpassung",
     "interlinearData": "Interlineare Daten",
     "appearance": "Darstellung",
+    "otherPreferences": "Weitere Vorgaben",
+    "collections": "Objektgruppen",
+    "controlPreference": "Steuervorgabe auswählen",
 }

@@ -1,3 +1,9 @@
+Changes in 29.35:
+* Improved Material menu layout main menu arrangement, e.g.:
+    - Preferences are divided into two main sections, Appearance & Other Preferences.
+    - Renamed "Reference Button Action" to "Select Control Preference"
+* Added 20 new themes.
+
 Changes in 29.34:
 * Initial support of global changes of widget colours, colour customisation now applies to::
     - QPushButton

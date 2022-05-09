@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "रंग-संगलीकरण",
     "interlinearData": "इंटरलीनियर डाटा",
     "appearance": "प्रकटन",
+    "otherPreferences": "अन्य वरीयताएँ",
+    "collections": "संग्रह",
+    "controlPreference": "नियंत्रण वरीयता चुनें",
 }

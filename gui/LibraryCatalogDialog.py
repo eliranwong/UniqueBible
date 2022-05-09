@@ -60,11 +60,13 @@ class LibraryCatalogDialog(QDialog):
 
         typesLayout = QHBoxLayout()
         button = QPushButton("All")
-        button.setStyleSheet(self.textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(lambda: self.selectAllTypes(True))
         typesLayout.addWidget(button)
         button = QPushButton("None")
-        button.setStyleSheet(self.textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(lambda: self.selectAllTypes(False))
         typesLayout.addWidget(button)
         self.bookCheckbox = QCheckBox("BOOK")
@@ -109,7 +111,8 @@ class LibraryCatalogDialog(QDialog):
         buttonLayout = QHBoxLayout()
         self.openButton = QPushButton(config.thisTranslation["open"])
         self.openButton.setEnabled(True)
-        self.openButton.setStyleSheet(self.textButtonStyle)
+        if not config.menuLayout == "material":
+            self.openButton.setStyleSheet(self.textButtonStyle)
         self.openButton.clicked.connect(self.open)
         buttonLayout.addWidget(self.openButton)
         self.downloadButton = QPushButton(config.thisTranslation["download"])
@@ -117,7 +120,8 @@ class LibraryCatalogDialog(QDialog):
         self.downloadButton.clicked.connect(self.download)
         buttonLayout.addWidget(self.downloadButton)
         button = QPushButton(config.thisTranslation["close"])
-        button.setStyleSheet(self.textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(self.textButtonStyle)
         button.clicked.connect(self.close)
         buttonLayout.addWidget(button)
         mainLayout.addLayout(buttonLayout)
@@ -129,11 +133,13 @@ class LibraryCatalogDialog(QDialog):
         self.resetItems()
         if location == "local":
             self.openButton.setEnabled(True)
-            self.openButton.setStyleSheet(self.textButtonStyle)
+            if not config.menuLayout == "material":
+                self.openButton.setStyleSheet(self.textButtonStyle)
             self.downloadButton.setEnabled(False)
         else:
             self.openButton.setEnabled(False)
-            self.openButton.setStyleSheet("")
+            if not config.menuLayout == "material":
+                self.openButton.setStyleSheet("")
             self.downloadButton.setEnabled(True)
 
     def selectAllTypes(self, value):
@@ -250,10 +256,12 @@ class LibraryCatalogDialog(QDialog):
             installDirectory = os.path.join(config.marvelData, installDirectory)
             if FileUtil.regexFileExists("{0}.*".format(GithubUtil.getShortname(filename)), installDirectory):
                 self.downloadButton.setEnabled(False)
-                self.downloadButton.setStyleSheet("")
+                if not config.menuLayout == "material":
+                    self.downloadButton.setStyleSheet("")
             else:
                 self.downloadButton.setEnabled(True)
-                self.downloadButton.setStyleSheet(self.textButtonStyle)
+                if not config.menuLayout == "material":
+                    self.downloadButton.setStyleSheet(self.textButtonStyle)
 
     def displayMessage(self, message="", title="UniqueBible"):
         QMessageBox.information(self, title, message)
@@ -303,7 +311,8 @@ class LibraryCatalogDialog(QDialog):
 
     def download(self):
         self.downloadButton.setEnabled(False)
-        self.downloadButton.setStyleSheet("")
+        if not config.menuLayout == "material":
+            self.downloadButton.setStyleSheet("")
         item = self.remoteCatalogData[self.catalogEntryId]
         id, filename, type, directory, file, description, repo, installDirectory, sha = item
         github = GithubUtil(repo)

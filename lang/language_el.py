@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "Έγχρωμου Customisation",
     "interlinearData": "Γραμμικά δεδομένα:",
     "appearance": "Εμφάνιση:",
+    "otherPreferences": "Άλλες Προτιμήσεις:",
+    "collections": "Συλλογές:",
+    "controlPreference": "Επιλογή προτίμησης ελέγχου",
 }

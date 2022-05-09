@@ -3511,11 +3511,15 @@ class MainWindow(QMainWindow):
 
     # Set reference button single-click action (config.refButtonClickAction)
     def selectRefButtonSingleClickActionDialog(self):
-        values = ("master", "mini", "direct")
-        features = ["controlPanel", "menu1_miniControl", "direct"]
+        if config.menuLayout == "material":
+            values = ("master", "mini")
+            features = ["controlPanel", "menu1_miniControl"]
+        else:
+            values = ("master", "mini", "direct")
+            features = ["controlPanel", "menu1_miniControl", "direct"]
         items = [config.thisTranslation[feature] for feature in features]
         itemsDict = dict(zip(items, values))
-        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["refButtonAction"], items, values.index(config.refButtonClickAction), False)
+        item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["controlPreference"], items, values.index(config.refButtonClickAction), False)
         if ok and item:
             config.refButtonClickAction = itemsDict[item]
             self.setupMenuLayout(config.menuLayout)

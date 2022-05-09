@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "Personnaliser la couleur",
     "interlinearData": "Données interlinéaires",
     "appearance": "Apparence",
+    "otherPreferences": "Autres préférences",
+    "collections": "Collections",
+    "controlPreference": "Sélectionner la préférence de contrôle",
 }

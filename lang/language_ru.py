@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "Настройка цвета",
     "interlinearData": "Межлинейные данные",
     "appearance": "Внешний вид",
+    "otherPreferences": "Другие параметры",
+    "collections": "Собрания",
+    "controlPreference": "Выбрать параметр управления",
 }

@@ -75,7 +75,7 @@ class HtmlColorCodes:
         "LightSeaGreen": ("#20B2AA", "rgb(32, 178, 170)"),
         "DarkCyan": ("#008B8B", "rgb(0, 139, 139)"),
         "Teal": ("#008080", "rgb(0, 128, 128)"),
-        "Aqua": ("#00FFFF", "rgb(0, 255, 255)"),
+        "Aqua": ("#55FFFF", "rgb(0, 255, 255)"),
         "Cyan": ("#00FFFF", "rgb(0, 255, 255)"),
         "LightCyan": ("#E0FFFF", "rgb(224, 255, 255)"),
         "PaleTurquoise": ("#AFEEEE", "rgb(175, 238, 238)"),

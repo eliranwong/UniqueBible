@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "നിറക്കൂട്ടം",
     "interlinearData": "ഇന്ററിനിയര് ഡാറ്റ",
     "appearance": "പ്രദര്ശനം",
+    "otherPreferences": "മറ്റ് മുന്ഗണനകള്",
+    "collections": "ശേഖരം",
+    "controlPreference": "നിയന്ത്രണ മുന്ഗണന തെരഞ്ഞെടുക്കുക",
 }

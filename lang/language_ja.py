@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "色のカスタマイズ",
     "interlinearData": "線形データ",
     "appearance": "外観",
+    "otherPreferences": "その他の設定",
+    "collections": "コレクション",
+    "controlPreference": "制御設定の選択",
 }

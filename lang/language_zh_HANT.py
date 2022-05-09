@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "顏色設定",
     "interlinearData": "原文數據",
     "appearance": "外觀",
+    "otherPreferences": "其他喜好設定",
+    "collections": "組合",
+    "controlPreference": "選取控制喜好設定",
 }

@@ -36,10 +36,15 @@ def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translat
 
 def addMenuLayoutItems(parent, menu):
     items = (
+        ("menu1_material_menu_layout", lambda: parent.setMenuLayout("material")),
+    )
+    for feature, action in items:
+        addMenuItem(menu, feature, parent, action)
+    menu.addSeparator()
+    items = (
         ("menu1_aleph_menu_layout", lambda: parent.setMenuLayout("aleph")),
         ("menu1_focus_menu_layout", lambda: parent.setMenuLayout("focus")),
         ("menu1_classic_menu_layout", lambda: parent.setMenuLayout("classic")),
-        ("menu1_material_menu_layout", lambda: parent.setMenuLayout("material")),
     )
     for feature, action in items:
         addMenuItem(menu, feature, parent, action)

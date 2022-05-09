@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "색상 사용자 정의",
     "interlinearData": "선형 데이터",
     "appearance": "모양",
+    "otherPreferences": "기타 환경 설정",
+    "collections": "콜렉션",
+    "controlPreference": "제어 환경 설정 선택",
 }

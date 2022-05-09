@@ -816,4 +816,7 @@ translation = {
     "colourCustomisation": "Personalizare coloristică",
     "interlinearData": "Date interlineare",
     "appearance": "Aspect",
+    "otherPreferences": "Alte Preferințe",
+    "collections": "Colecții",
+    "controlPreference": "Selectați preferința de control",
 }

@@ -79,13 +79,18 @@ class ClassicMainWindow:
             subMenu.addSeparator()
             themes = (
                 "Light MediumVioletRed",
+                "Light Tomato",
+                "Light DarkOrange",
                 "Light DarkRed",
                 "Light Indigo",
+                "Light DarkSlateBlue",
                 "Light DarkGreen",
                 "Light DarkOliveGreen",
                 "Light Teal",
                 "Light DarkBlue",
                 "Light MidnightBlue",
+                "Light DarkGoldenrod",
+                "Light SaddleBrown",
                 "Light Maroon",
                 "Light DarkSlateGray",
             )
@@ -97,16 +102,40 @@ class ClassicMainWindow:
                 "Dark LightYellow",
                 "Dark LightGoldenrodYellow",
                 "Dark Lavender",
+                "Dark Fuchsia",
                 "Dark GreenYellow",
                 "Dark SpringGreen",
                 "Dark Aqua",
+                "Dark Cyan",
                 "Dark LightCyan",
+                "Dark Aquamarine",
+                "Dark Turquoise",
                 "Dark LightBlue",
+                "Dark DeepSkyBlue",
                 "Dark Azure",
             )
             for theme in themes:
                 addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
-
+            subMenu.addSeparator()
+            themes = (
+                "Night Pink",
+                "Night LightYellow",
+                "Night LightGoldenrodYellow",
+                "Night Lavender",
+                "Night Fuchsia",
+                "Night GreenYellow",
+                "Night SpringGreen",
+                "Night Aqua",
+                "Night Cyan",
+                "Night LightCyan",
+                "Night Aquamarine",
+                "Night Turquoise",
+                "Night LightBlue",
+                "Night DeepSkyBlue",
+                "Night Azure",
+            )
+            for theme in themes:
+                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
         subMenu.addSeparator()

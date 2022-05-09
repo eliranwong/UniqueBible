@@ -26,133 +26,13 @@ class MaterialMainWindow:
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)
         menu.addSeparator()
-        subMenu0 = addSubMenu(menu, "menu1_preferences")
-        subMenu = addSubMenu(subMenu0, "menu1_generalPreferences")
-        items = (
-            ("colourCustomisation", self.changeButtonColour),
-            ("refButtonAction", self.selectRefButtonSingleClickActionDialog),
-            ("bibleCollections", self.showBibleCollectionDialog),
-            #("activeVerseColour", self.changeActiveVerseColour),
-            ("menu1_tabNo", self.setTabNumberDialog),
-            ("menu1_setAbbreviations", self.setBibleAbbreviations),
-            ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
-            ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
-            ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
-            ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
-            ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
-        if config.developer:
-            items = (
-                ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
-                ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
-                ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
-                ("resourceDirectory", self.customMarvelData),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
-        subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
-        for style in QStyleFactory.keys():
-            addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
-        subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
-#        if config.qtMaterial:
-#            qtMaterialThemes = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
-#            for theme in qtMaterialThemes:
-#                addMenuItem(subMenu, theme[:-4], self, partial(self.setQtMaterialTheme, theme), None, False)
-#            subMenu.addSeparator()
-#            addMenuItem(subMenu, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
-#        else:
-#        items = (
-#            ("default", lambda: self.setTheme("default")),
-#            ("dark", lambda: self.setTheme("dark")),
-#            ("night", lambda: self.setTheme("night")),
-#        )
-        themes = (
-            "Light",
-            "Dark",
-            "Night",
-        )
-        for theme in themes:
-            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
-        subMenu.addSeparator()
-        themes = (
-            "Light MediumVioletRed",
-            "Light DarkRed",
-            "Light Indigo",
-            "Light DarkGreen",
-            "Light DarkOliveGreen",
-            "Light Teal",
-            "Light DarkBlue",
-            "Light MidnightBlue",
-            "Light Maroon",
-            "Light DarkSlateGray",
-        )
-        for theme in themes:
-            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
-        subMenu.addSeparator()
-        themes = (
-            "Dark Pink",
-            "Dark LightYellow",
-            "Dark LightGoldenrodYellow",
-            "Dark Lavender",
-            "Dark GreenYellow",
-            "Dark SpringGreen",
-            "Dark Aqua",
-            "Dark LightCyan",
-            "Dark LightBlue",
-            "Dark Azure",
-        )
-        for theme in themes:
-            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
-        #addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
-        subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
-        addMenuLayoutItems(self, subMenu)
+        
+        # Appearance
+        subMenu0 = addSubMenu(menu, "appearance")
+        # Window layout
 
-        subMenu = addSubMenu(subMenu0, "menu_shortcuts")
-        items = (
-            ("menu_brachys", lambda: self.setShortcuts("brachys")),
-            ("menu_micron", lambda: self.setShortcuts("micron")),
-            ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
-            ("menu_blank", lambda: self.setShortcuts("blank")),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
-        for shortcut in ShortcutUtil.getListCustomShortcuts():
-            addMenuItem(subMenu, shortcut, self, partial(self.setShortcuts, shortcut), None, False)
-#        subMenu = addSubMenu(subMenu0, "toolbarIcon")
-#        items = (
-#            ("toolbarIconStandard", lambda: self.setFullIconSize(False)),
-#            ("toolbarIconFull", lambda: self.setFullIconSize(True)),
-#        )
-#        for feature, action in items:
-#            addMenuItem(subMenu, feature, self, action)
-        subMenu = addSubMenu(subMenu0, "menu2_fonts")
-        items = (
-            ("menu1_setDefaultFont", self.setDefaultFont),
-            ("menu1_setChineseFont", self.setChineseFont),
-            ("individualBibles", self.selectDatabaseToModify),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
-        subMenu = addSubMenu(subMenu0, "menu2_fontSize")
-        items = (
-            ("menu2_larger", self.largerFont, sc.largerFont),
-            ("menu2_smaller", self.smallerFont, sc.smallerFont),
-        )
-        for feature, action, shortcut in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
-        if config.developer:
-            subMenu = addSubMenu(subMenu0, "gistSync")
-            items = (
-                ("setup", self.setupGist),
-                ("menu_gist", self.showGistWindow),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
-
-        subMenu0 = addSubMenu(menu, "menu2_view")
-        subMenu = addSubMenu(subMenu0, "menu1_screenSize")
+        subMenu01 = addSubMenu(subMenu0, "menu2_view")
+        subMenu = addSubMenu(subMenu01, "menu1_screenSize")
         items = (
             ("menu1_fullScreen", self.fullsizeWindow, sc.fullsizeWindow),
             ("menu1_maximized", self.maximizedWindow, sc.maximizedWindow),
@@ -164,7 +44,7 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        subMenu = addSubMenu(subMenu0, "menu2_toobars")
+        subMenu = addSubMenu(subMenu01, "menu2_toobars")
         items = (
             ("menu2_all", self.setNoToolBar, sc.setNoToolBar),
             ("menu2_topOnly", self.hideShowAdditionalToolBar, sc.hideShowAdditionalToolBar),
@@ -175,21 +55,180 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        subMenu0.addSeparator()
+        subMenu01.addSeparator()
         items = (
             ("menu2_study", self.parallel, sc.parallel),
             ("menu2_bottom", self.cycleInstant, sc.cycleInstant),
         )
         for feature, action, shortcut in items:
-            addMenuItem(subMenu0, feature, self, action, shortcut)
-        subMenu0.addSeparator()
-        addMenuItem(subMenu0, "menu2_landscape", self, self.switchLandscapeMode)
+            addMenuItem(subMenu01, feature, self, action, shortcut)
+        subMenu01.addSeparator()
+        addMenuItem(subMenu01, "menu2_landscape", self, self.switchLandscapeMode)
 
-        subMenu0 = addSubMenu(menu, "languageSettings")
-        subMenu = addSubMenu(subMenu0, "menu1_programInterface")
+        # Window style
+        subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
+        for style in QStyleFactory.keys():
+            addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
+        # Menu layouts
+        subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
+        addMenuLayoutItems(self, subMenu)
+        # Themes
+        subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
+        themes = (
+            "Light",
+            "Dark",
+            "Night",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        subMenu.addSeparator()
+        themes = (
+            "Light MediumVioletRed",
+            "Light Tomato",
+            "Light DarkOrange",
+            "Light DarkRed",
+            "Light Indigo",
+            "Light DarkSlateBlue",
+            "Light DarkGreen",
+            "Light DarkOliveGreen",
+            "Light Teal",
+            "Light DarkBlue",
+            "Light MidnightBlue",
+            "Light DarkGoldenrod",
+            "Light SaddleBrown",
+            "Light Maroon",
+            "Light DarkSlateGray",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        subMenu.addSeparator()
+        themes = (
+            "Dark Pink",
+            "Dark LightYellow",
+            "Dark LightGoldenrodYellow",
+            "Dark Lavender",
+            "Dark Fuchsia",
+            "Dark GreenYellow",
+            "Dark SpringGreen",
+            "Dark Aqua",
+            "Dark Cyan",
+            "Dark LightCyan",
+            "Dark Aquamarine",
+            "Dark Turquoise",
+            "Dark LightBlue",
+            "Dark DeepSkyBlue",
+            "Dark Azure",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        subMenu.addSeparator()
+        themes = (
+            "Night Pink",
+            "Night LightYellow",
+            "Night LightGoldenrodYellow",
+            "Night Lavender",
+            "Night Fuchsia",
+            "Night GreenYellow",
+            "Night SpringGreen",
+            "Night Aqua",
+            "Night Cyan",
+            "Night LightCyan",
+            "Night Aquamarine",
+            "Night Turquoise",
+            "Night LightBlue",
+            "Night DeepSkyBlue",
+            "Night Azure",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        # Colour Customisation
+        items = (
+            ("colourCustomisation", self.changeButtonColour),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu0, feature, self, action)
+        # Fonts
+        subMenu = addSubMenu(subMenu0, "menu2_fonts")
+        items = (
+            ("menu1_setDefaultFont", self.setDefaultFont),
+            ("menu1_setChineseFont", self.setChineseFont),
+            ("individualBibles", self.selectDatabaseToModify),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        # Font Size
+        subMenu = addSubMenu(subMenu0, "menu2_fontSize")
+        items = (
+            ("menu2_larger", self.largerFont, sc.largerFont),
+            ("menu2_smaller", self.smallerFont, sc.smallerFont),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
+
+        # Other Preferences
+        subMenu0 = addSubMenu(menu, "otherPreferences")
+
+        # Collections
+        subMenu = addSubMenu(subMenu0, "collections")
+        items = (
+            ("bibleCollections", self.showBibleCollectionDialog, None),
+            ("libraryCatalog", self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
+        # Verse number Action
+        subMenu = addSubMenu(subMenu0, "verseNoAction")
+        items = (
+            ("singleClick", self.selectSingleClickActionDialog),
+            ("doubleClick", self.selectDoubleClickActionDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        # Others
+        items = (
+            ("controlPreference", self.selectRefButtonSingleClickActionDialog),
+            ("menu1_tabNo", self.setTabNumberDialog),
+            ("menu1_setAbbreviations", self.setBibleAbbreviations),
+            ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
+            ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
+            ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
+            ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
+            ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu0, feature, self, action)
+        if config.developer:
+            items = (
+                ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
+                ("selectNoOfLinesPerChunkForParsing", self.setNoOfLinesPerChunkForParsingDialog),
+                ("selectMaximumOHGBiVerses", self.setMaximumOHGBiVersesDisplayDialog),
+                ("resourceDirectory", self.customMarvelData),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu0, feature, self, action)
+        # Shortcuts
+        subMenu = addSubMenu(subMenu0, "menu_shortcuts")
+        items = (
+            ("menu_micron", lambda: self.setShortcuts("micron")),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        subMenu.addSeparator()
+        items = (
+            ("menu_brachys", lambda: self.setShortcuts("brachys")),
+            ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
+            ("menu_blank", lambda: self.setShortcuts("blank")),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu, feature, self, action)
+        for shortcut in ShortcutUtil.getListCustomShortcuts():
+            addMenuItem(subMenu, shortcut, self, partial(self.setShortcuts, shortcut), None, False)
+        # Language settings
+        subMenu01 = addSubMenu(subMenu0, "languageSettings")
+        subMenu = addSubMenu(subMenu01, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
             addMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), translation=False)
-        subMenu = addSubMenu(subMenu0, "watsonTranslator")
+        subMenu = addSubMenu(subMenu01, "watsonTranslator")
         items = (
             ("setup", self.setupWatsonTranslator),
             ("enterCredentials", self.showWatsonCredentialWindow),
@@ -201,13 +240,22 @@ class MaterialMainWindow:
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]
-            
-            subMenu = addSubMenu(subMenu0, "ttsLanguage")
+
+            subMenu = addSubMenu(subMenu01, "ttsLanguage")
             for index, item in enumerate(items):
                 languageCode = languageCodes[index]
                 addMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), translation=False)
-            #addMenuItem(subMenu0, "ttsLanguage", self, self.setDefaultTtsLanguageDialog)
 
+        # Gist
+        if config.developer:
+            subMenu = addSubMenu(subMenu0, "gistSync")
+            items = (
+                ("setup", self.setupGist),
+                ("menu_gist", self.showGistWindow),
+            )
+            for feature, action in items:
+                addMenuItem(subMenu, feature, self, action)
+        # Config Flags
         addMenuItem(menu, "configFlags", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
         menu.addSeparator()
         if config.enableMacros:
@@ -264,14 +312,7 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        menu.addSeparator()
-        subMenu = addSubMenu(menu, "verseNoAction")
-        items = (
-            ("singleClick", self.selectSingleClickActionDialog),
-            ("doubleClick", self.selectDoubleClickActionDialog),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+        
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
@@ -308,10 +349,8 @@ class MaterialMainWindow:
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
-        menu.addSeparator()
-        addMenuItem(menu, "libraryCatalog", self, self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog)
-        menu.addSeparator()
-        addMenuItem(menu, "liveFilter", self, self.showLiveFilterDialog, sc.liveFilterDialog)
+        #menu.addSeparator()
+        #addMenuItem(menu, "liveFilter", self, self.showLiveFilterDialog, sc.liveFilterDialog)
         menu.addSeparator()
         addMenuItem(menu, "reloadResources", self, self.reloadResources)
         addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
