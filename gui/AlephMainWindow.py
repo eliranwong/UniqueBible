@@ -43,6 +43,39 @@ class AlephMainWindow:
             )
             for feature, action in items:
                 addMenuItem(selectTheme, feature, self, action)
+
+            selectTheme.addSeparator()
+            themes = (
+                "Light MediumVioletRed",
+                "Light DarkRed",
+                "Light Indigo",
+                "Light DarkGreen",
+                "Light DarkOliveGreen",
+                "Light Teal",
+                "Light DarkBlue",
+                "Light MidnightBlue",
+                "Light Maroon",
+                "Light DarkSlateGray",
+            )
+            for theme in themes:
+                addMenuItem(selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+            selectTheme.addSeparator()
+            themes = (
+                "Dark Pink",
+                "Dark LightYellow",
+                "Dark LightGoldenrodYellow",
+                "Dark Lavender",
+                "Dark GreenYellow",
+                "Dark SpringGreen",
+                "Dark Aqua",
+                "Dark LightCyan",
+                "Dark LightBlue",
+                "Dark Azure",
+            )
+            for theme in themes:
+                addMenuItem(selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+            selectTheme.addSeparator()
+
             addMenuItem(selectTheme, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         layoutMenu = menu1_defaults.addMenu(config.thisTranslation["menu1_menuLayout"])
         addMenuLayoutItems(self, layoutMenu)

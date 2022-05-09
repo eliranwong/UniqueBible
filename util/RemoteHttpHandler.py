@@ -1001,8 +1001,8 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
                          config.theme,
                          self.getHighlightCss(),
                          config.webUBAIcon,
-                         config.pushButtonBackgroundColor,
-                         config.pushButtonForegroundColor,
+                         config.widgetBackgroundColor,
+                         config.widgetForegroundColor,
                          )
         return html
 

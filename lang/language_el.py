@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "Παράλληλες Εκδόσεις",
     "sideBySide": "Side by Side",
     "rowByRow": "Γραμμή κατά σειρά",
+    "colourCustomisation": "Έγχρωμου Customisation",
+    "interlinearData": "Γραμμικά δεδομένα:",
+    "appearance": "Εμφάνιση:",
 }

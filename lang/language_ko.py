@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "병렬 버전",
     "sideBySide": "옆으로",
     "rowByRow": "행별 행",
+    "colourCustomisation": "색상 사용자 정의",
+    "interlinearData": "선형 데이터",
+    "appearance": "모양",
 }

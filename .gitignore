@@ -63,3 +63,4 @@ htmlResources/popover.html
 /snippets/**
 credentials_*
 uba_*.py
+htmlResources/material/.DS_Store

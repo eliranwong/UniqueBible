@@ -47,8 +47,9 @@ class InterlinearDataWindow(QWidget):
         layout = QHBoxLayout()
         layout.addWidget(QLabel(self.translation[1]))
         self.searchEntry = QLineEdit()
+        self.searchEntry.setClearButtonEnabled(True)
         # Set initial entry
-        self.searchEntry.setText(initialVerse if initialVerse else "John 3:16")
+        self.searchEntry.setText(initialVerse if initialVerse else self.parent.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
         self.searchEntry.returnPressed.connect(self.resetItems)
         layout.addWidget(self.searchEntry)
         mainLayout.addLayout(layout)

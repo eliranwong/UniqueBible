@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "സാമാന്യ വേര്ഷന്",
     "sideBySide": "Side by Side",
     "rowByRow": "Row by Row",
+    "colourCustomisation": "നിറക്കൂട്ടം",
+    "interlinearData": "ഇന്ററിനിയര് ഡാറ്റ",
+    "appearance": "പ്രദര്ശനം",
 }

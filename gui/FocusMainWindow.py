@@ -65,6 +65,38 @@ class FocusMainWindow:
             )
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
+
+            subMenu.addSeparator()
+            themes = (
+                "Light MediumVioletRed",
+                "Light DarkRed",
+                "Light Indigo",
+                "Light DarkGreen",
+                "Light DarkOliveGreen",
+                "Light Teal",
+                "Light DarkBlue",
+                "Light MidnightBlue",
+                "Light Maroon",
+                "Light DarkSlateGray",
+            )
+            for theme in themes:
+                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subMenu.addSeparator()
+            themes = (
+                "Dark Pink",
+                "Dark LightYellow",
+                "Dark LightGoldenrodYellow",
+                "Dark Lavender",
+                "Dark GreenYellow",
+                "Dark SpringGreen",
+                "Dark Aqua",
+                "Dark LightCyan",
+                "Dark LightBlue",
+                "Dark Azure",
+            )
+            for theme in themes:
+                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+
             subMenu.addSeparator()
             addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")

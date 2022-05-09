@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "Versions parallèles",
     "sideBySide": "Côté par côté",
     "rowByRow": "Ligne par ligne",
+    "colourCustomisation": "Personnaliser la couleur",
+    "interlinearData": "Données interlinéaires",
+    "appearance": "Apparence",
 }

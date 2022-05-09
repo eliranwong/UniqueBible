@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "平行版本",
     "sideBySide": "并排比较",
     "rowByRow": "逐行比较",
+    "colourCustomisation": "颜色设定",
+    "interlinearData": "原文数据",
+    "appearance": "外观",
 }

@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "समांतर संस्करण",
     "sideBySide": "साइड से बाजू",
     "rowByRow": "पंक्ति द्वारा पंक्ति",
+    "colourCustomisation": "रंग-संगलीकरण",
+    "interlinearData": "इंटरलीनियर डाटा",
+    "appearance": "प्रकटन",
 }

@@ -868,40 +868,50 @@ class ConfigUtil:
         # Theme (default, dark)"""
         if not hasattr(config, "theme"):
             config.theme = "default"
-        config.help["materialIconMaskColor"] = """
-        # Use this color for masking material icon."""
-        if not hasattr(config, "materialIconMaskColor"):
-            config.materialIconMaskColor = '#e7e7e7'
-        config.help["maskBackground"] = """
-        # Either mask background or foreground color of material icon. 
-        # Set True to mask background color. 
-        # Set False to mask foreground color."""
-        if not hasattr(config, "maskBackground"):
-            config.maskBackground = True
-        config.help["pushButtonBackgroundColor"] = """
-        # Push button background color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonBackgroundColor"):
-            config.pushButtonBackgroundColor = '#e7e7e7'
-        config.help["pushButtonForegroundColor"] = """
-        # Push button foreground color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonForegroundColor"):
-            config.pushButtonForegroundColor = 'black'
-        config.help["pushButtonBackgroundColorHover"] = """
-        # Push button background hover color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonBackgroundColorHover"):
-            config.pushButtonBackgroundColorHover = '#f8f8a0'
-        config.help["pushButtonForegroundColorHover"] = """
-        # Push button foreground hover color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonForegroundColorHover"):
-            config.pushButtonForegroundColorHover = 'black'
-        config.help["pushButtonBackgroundColorPressed"] = """
-        # Push button background pressed color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonBackgroundColorPressed"):
-            config.pushButtonBackgroundColorPressed = '#a2a934'
-        config.help["pushButtonForegroundColorPressed"] = """
-        # Push button foreground pressed color in 'material' menu layout."""
-        if not hasattr(config, "pushButtonForegroundColorPressed"):
-            config.pushButtonForegroundColorPressed = 'white'
+        config.help["widgetBackgroundColor"] = """
+        # Widget background color in 'material' menu layout."""
+        if not hasattr(config, "widgetBackgroundColor"):
+            config.widgetBackgroundColor = "#e7e7e7" if config.theme == "default" else "#2f2f2f"
+        config.help["widgetForegroundColor"] = """
+        # Widget foreground color in 'material' menu layout."""
+        if not hasattr(config, "widgetForegroundColor"):
+            config.widgetForegroundColor = "#483D8B" if config.theme == "default" else "#ffffff"
+        config.help["widgetBackgroundColorHover"] = """
+        # Widget background color when a widget is hovered in 'material' menu layout."""
+        if not hasattr(config, "widgetBackgroundColorHover"):
+            config.widgetBackgroundColorHover = "#f8f8a0" if config.theme == "default" else "#3d3d3d"
+        config.help["widgetForegroundColorHover"] = """
+        # Widget foreground color when a widget is hovered in 'material' menu layout."""
+        if not hasattr(config, "widgetForegroundColorHover"):
+            config.widgetForegroundColorHover = "#483D8B" if config.theme == "default" else "#ffffff"
+        config.help["widgetBackgroundColorPressed"] = """
+        # Widget background color when a widget is pressed in 'material' menu layout."""
+        if not hasattr(config, "widgetBackgroundColorPressed"):
+            config.widgetBackgroundColorPressed = "#d9d9d9" if config.theme == "default" else "#232323"
+        config.help["widgetForegroundColorPressed"] = """
+        # Widget foreground color when a widget is pressed in 'material' menu layout."""
+        if not hasattr(config, "widgetForegroundColorPressed"):
+            config.widgetForegroundColorPressed = "#483D8B" if config.theme == "default" else "#ffffff"
+        config.help["maskMaterialIconBackground"] = """
+        # config.maskMaterialIconColor applies to either background or foreground of material icons. 
+        # Set True to apply the mask to background. 
+        # Set False to apply the mask to foreground."""
+        if not hasattr(config, "maskMaterialIconBackground"):
+            config.maskMaterialIconBackground = False
+        config.help["maskMaterialIconColor"] = """
+        # Use this color for masking material icons."""
+        if not config.maskMaterialIconBackground:
+            config.maskMaterialIconColor = config.widgetForegroundColor
+        elif not hasattr(config, "maskMaterialIconColor"):
+            config.maskMaterialIconColor = "#483D8B" if config.theme == "default" else "#ffffff"
+        config.help["activeVerseColourLight"] = """
+        # Active verse number colour displayed on light theme."""
+        if not hasattr(config, "activeVerseColourLight"):
+            config.activeVerseColourLight = "#483D8B"
+        config.help["activeVerseColourDark"] = """
+        # Active verse number colour displayed on dark theme."""
+        if not hasattr(config, "activeVerseColourDark"):
+            config.activeVerseColourDark = "#aaff7f"
         config.help["qtMaterial"] = """
         # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
@@ -1065,14 +1075,6 @@ class ConfigUtil:
         # {0}""".format(language_en_GB.translation["addOHGBiToMorphologySearch"])
         if not hasattr(config, "addOHGBiToMorphologySearch"):
             config.addOHGBiToMorphologySearch = True
-        config.help["activeVerseNoColourLight"] = """
-        # Active verse number colour displayed on light theme."""
-        if not hasattr(config, "activeVerseNoColourLight"):
-            config.activeVerseNoColourLight = "#204a87"
-        config.help["activeVerseNoColourDark"] = """
-        # Active verse number colour displayed on dark theme."""
-        if not hasattr(config, "activeVerseNoColourDark"):
-            config.activeVerseNoColourDark = "#aaff7f"
         config.help["maximumOHGBiVersesDisplayedInSearchResult"] = """
         # Maximum number of OHGBi verses displayed in each search result."""
         if not hasattr(config, "maximumOHGBiVersesDisplayedInSearchResult"):
@@ -1352,14 +1354,16 @@ class ConfigUtil:
             ("showInformation", config.showInformation),
             ("windowStyle", config.windowStyle),
             ("theme", config.theme),
-            ("materialIconMaskColor", config.materialIconMaskColor),
-            ("maskBackground", config.maskBackground),
-            ("pushButtonBackgroundColor", config.pushButtonBackgroundColor),
-            ("pushButtonForegroundColor", config.pushButtonForegroundColor),
-            ("pushButtonBackgroundColorHover", config.pushButtonBackgroundColorHover),
-            ("pushButtonForegroundColorHover", config.pushButtonForegroundColorHover),
-            ("pushButtonBackgroundColorPressed", config.pushButtonBackgroundColorPressed),
-            ("pushButtonForegroundColorPressed", config.pushButtonForegroundColorPressed),
+            ("maskMaterialIconColor", config.maskMaterialIconColor),
+            ("maskMaterialIconBackground", config.maskMaterialIconBackground),
+            ("widgetBackgroundColor", config.widgetBackgroundColor),
+            ("widgetForegroundColor", config.widgetForegroundColor),
+            ("widgetBackgroundColorHover", config.widgetBackgroundColorHover),
+            ("widgetForegroundColorHover", config.widgetForegroundColorHover),
+            ("widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
+            ("widgetForegroundColorPressed", config.widgetForegroundColorPressed),
+            ("activeVerseColourLight", config.activeVerseColourLight),
+            ("activeVerseColourDark", config.activeVerseColourDark),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
@@ -1384,8 +1388,6 @@ class ConfigUtil:
             ("enableGist", config.enableGist),
             ("gistToken", config.gistToken),
             ("clearCommandEntry", config.clearCommandEntry),
-            ("activeVerseNoColourLight", config.activeVerseNoColourLight),
-            ("activeVerseNoColourDark", config.activeVerseNoColourDark),
             ("highlightCollections", config.highlightCollections),
             ("highlightLightThemeColours", config.highlightLightThemeColours),
             ("highlightDarkThemeColours", config.highlightDarkThemeColours),

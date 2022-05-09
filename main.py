@@ -24,6 +24,7 @@ import config
 # Setup config values
 from util.ConfigUtil import ConfigUtil
 ConfigUtil.setup()
+from gui.Styles import *
 
 # Check argument passed to UBA as a parameter
 initialCommand = " ".join(sys.argv[1:]).strip()
@@ -413,13 +414,18 @@ app.aboutToQuit.connect(exitApplication)
 if config.windowStyle and config.windowStyle in QStyleFactory.keys():
     app.setStyle(config.windowStyle)
 # Apply theme style
-if config.qtMaterial and config.qtMaterialTheme:
+config.defineStyle()
+if config.menuLayout == "material":
+    app.setPalette(Themes.getPalette())
+    app.setStyleSheet(config.materialStyle)
+elif config.qtMaterial and config.qtMaterialTheme:
     apply_stylesheet(app, theme=config.qtMaterialTheme)
     config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
 else:
     app.setPalette(Themes.getPalette())
+
 # Active verse number colour
-#config.activeVerseNoColour = config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight
+#config.activeVerseNoColour = config.activeVerseColourDark if config.theme == "dark" else config.activeVerseColourLight
 
 # Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
 config.mainWindow = MainWindow()

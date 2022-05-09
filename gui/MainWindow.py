@@ -19,6 +19,7 @@ from gui.LiveFilterDialog import LiveFilterDialog
 from util import exlbl
 from util.WebtopUtil import WebtopUtil
 from util.BibleBooks import BibleBooks
+from util.HtmlColorCodes import HtmlColorCodes
 from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
@@ -228,6 +229,8 @@ class MainWindow(QMainWindow):
         if windowClass is None:
             config.menuLayout = "material"
             windowClass = getattr(sys.modules[__name__], "MaterialMainWindow")
+        if config.menuLayout == "material":
+            config.defineStyle()
         getattr(windowClass, 'create_menu')(self)
         if config.toolBarIconFullSize and not config.menuLayout == "material":
             getattr(windowClass, 'setupToolBarFullIconSize')(self)
@@ -858,8 +861,57 @@ class MainWindow(QMainWindow):
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def setTheme(self, theme):
+        theme = theme.split(" ")
+        if len(theme) == 2:
+            theme, mainColor = theme
+        else:
+            theme = theme[0]
+            mainColor = ""
+        theme = theme.lower()
+        if theme == "light":
+            theme = "default"
         config.theme = theme
+        if mainColor:
+            self.setColours(mainColor)
+        elif config.menuLayout == "material":
+            self.setColours()
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+
+    def setColours(self, color=""):
+        config.menuLayout = "material"
+        if config.theme in ("dark", "night"):
+            config.maskMaterialIconColor = "#ffffff"
+            config.maskMaterialIconBackground = False
+            config.widgetBackgroundColor = "#2f2f2f"
+            config.widgetForegroundColor = "#ffffff"
+            config.widgetBackgroundColorHover = "#3d3d3d"
+            config.widgetForegroundColorHover = "#ffffff"
+            config.widgetBackgroundColorPressed = "#232323"
+            config.widgetForegroundColorPressed = "#ffffff"
+            config.activeVerseColourDark = "#aaff7f"
+        else:
+            config.maskMaterialIconColor = "#483D8B"
+            config.maskMaterialIconBackground = False
+            config.widgetBackgroundColor = "#e7e7e7"
+            config.widgetForegroundColor = "#483D8B"
+            config.widgetBackgroundColorHover = "#f8f8a0"
+            config.widgetForegroundColorHover = "#483D8B"
+            config.widgetBackgroundColorPressed = "#d9d9d9"
+            config.widgetForegroundColorPressed = "#483D8B"
+            config.activeVerseColourLight = "#483D8B"
+        if color:
+            color = HtmlColorCodes.colors[color][0]
+            config.maskMaterialIconBackground = False
+            config.maskMaterialIconColor = color
+            config.widgetForegroundColor = color
+            config.widgetForegroundColorHover = color
+            config.widgetForegroundColorPressed = color
+            if config.theme in ("dark", "night"):
+                config.activeVerseColourDark = color
+            else:
+                config.activeVerseColourLight = color
+        config.defineStyle()
+        self.setupMenuLayout("material")
 
     def setMenuLayout(self, layout):
         config.menuLayout = layout
@@ -2087,13 +2139,13 @@ class MainWindow(QMainWindow):
             config.maximumOHGBiVersesDisplayedInSearchResult = integer
 
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight), self)
+        color = QColorDialog.getColor(QColor(config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight), self)
         if color.isValid():
             colorName = color.name()
             if config.theme in ("dark", "night"):
-                config.activeVerseNoColourDark = colorName
+                config.activeVerseColourDark = colorName
             else:
-                config.activeVerseNoColourLight = colorName
+                config.activeVerseColourLight = colorName
             self.reloadCurrentRecord(True)
 
     def changeButtonColour(self):
@@ -2445,7 +2497,7 @@ class MainWindow(QMainWindow):
     def enableSyncStudyWindowBibleButtonClicked(self):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
         enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.materialIconMaskColor, config.maskBackground) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
+        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.maskMaterialIconColor, config.maskMaterialIconBackground) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
         self.enableSyncStudyWindowBibleButton.setIcon(qIcon)
         self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
         if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
@@ -2969,14 +3021,14 @@ class MainWindow(QMainWindow):
 
     # finish view loading
     def finishMainViewLoading(self):
-        activeVerseNoColour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
+        activeVerseNoColour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
         # scroll to the main verse
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
-        activeVerseNoColour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
+        activeVerseNoColour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
         # scroll to the study verse
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
@@ -3012,6 +3064,8 @@ class MainWindow(QMainWindow):
         self.runFeature("BIBLE:::MIB")
 
     def runMIBStudy(self):
+        if config.openBibleInMainViewOnly:
+            self.enableStudyBibleButtonClicked()
         mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         self.runTextCommand("STUDY:::MIB:::{0}".format(mainVerseReference), addRecord=True, source="study", forceExecute=True)
 
@@ -3325,8 +3379,8 @@ class MainWindow(QMainWindow):
                          config.theme,
                          self.getHighlightCss(),
                          bibleCss,
-                         config.pushButtonBackgroundColor,
-                         config.pushButtonForegroundColor,
+                         config.widgetBackgroundColor,
+                         config.widgetForegroundColor,
                          )
         return html
 
@@ -3867,18 +3921,18 @@ class MainWindow(QMainWindow):
         toolbar.addWidget(button)
 
     def defineStyle(self):
-        config.buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover, config.pushButtonBackgroundColorPressed, config.pushButtonForegroundColorPressed)
+        config.buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)
         if config.qtMaterial and config.qtMaterialTheme:
             config.comboBoxStyle = """
             QComboBox {0}background-color: {2}; color: {3};{1} 
             QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
+            """.format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
         else:
             config.comboBoxStyle = """
             QComboBox {0}background-color: {2}; color: {3};{1} 
             QComboBox:hover {0}background-color: {4}; color: {5};{1} 
             QComboBox QAbstractItemView {0}background-color: {2}; color: {3};{1} 
-            """.format("{", "}", config.pushButtonBackgroundColor, config.pushButtonForegroundColor, config.pushButtonBackgroundColorHover, config.pushButtonForegroundColorHover)
+            """.format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
 
     def getIconPushButton(self, iconFilePath):
         button = QPushButton()
@@ -3890,16 +3944,16 @@ class MainWindow(QMainWindow):
 
     def getQIcon(self, iconFilePath):
         iconFilePath = os.path.join("htmlResources", *iconFilePath.split("/"))
-        if not config.menuLayout == "material" or config.maskBackground:
+        if not config.menuLayout == "material" or config.maskMaterialIconBackground:
             qIcon = QIcon(iconFilePath)
         else:
-            qIcon = self.getMaskedQIcon(iconFilePath, config.materialIconMaskColor, config.maskBackground)
+            qIcon = self.getMaskedQIcon(iconFilePath, config.maskMaterialIconColor, config.maskMaterialIconBackground)
         return qIcon
 
-    def getMaskedQIcon(self, iconFile, color=config.materialIconMaskColor, maskBackground=config.maskBackground):
+    def getMaskedQIcon(self, iconFile, color=config.maskMaterialIconColor, maskMaterialIconBackground=config.maskMaterialIconBackground):
         if color:
             pixmap = QPixmap(iconFile)
-            if maskBackground:
+            if maskMaterialIconBackground:
                 # To change transparent to gray
                 # The following line has the same result as mask = pixmap.createMaskFromColor(QColor(0,0,0,0), Qt.MaskOutColor)
                 mask = pixmap.createMaskFromColor(Qt.transparent, Qt.MaskOutColor)
@@ -3915,7 +3969,7 @@ class MainWindow(QMainWindow):
 
     def addMaterialIconAction(self, toolTip, icon, action, toolbar, translation=True):
         icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
-        return toolbar.addAction(self.getMaskedQIcon(icon, config.materialIconMaskColor, config.maskBackground), config.thisTranslation[toolTip] if translation else toolTip, action)
+        return toolbar.addAction(self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation[toolTip] if translation else toolTip, action)
 
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         if button is None:

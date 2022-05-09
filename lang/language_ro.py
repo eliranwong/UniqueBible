@@ -813,4 +813,7 @@ translation = {
     "parallelVersions": "Versiuni paralele",
     "sideBySide": "Side by Side",
     "rowByRow": "Row by Row",
+    "colourCustomisation": "Personalizare coloristică",
+    "interlinearData": "Date interlineare",
+    "appearance": "Aspect",
 }

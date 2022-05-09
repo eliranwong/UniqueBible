@@ -1,3 +1,49 @@
+Changes in 29.34:
+* Initial support of global changes of widget colours, colour customisation now applies to::
+    - QPushButton
+    - QComboBox
+    - QRadioButton
+    - QMenu
+    - QTabBar
+    - QLineEdit
+    - QSplitter
+    - QTableView
+    - QCheckBox
+    - QGroupBox
+* Added 20 new themes, which work with Material menu layout only:
+            "Light MediumVioletRed",
+            "Light DarkRed",
+            "Light Indigo",
+            "Light DarkGreen",
+            "Light DarkOliveGreen",
+            "Light Teal",
+            "Light DarkBlue",
+            "Light MidnightBlue",
+            "Light Maroon",
+            "Light DarkSlateGray",
+            "Dark Pink",
+            "Dark LightYellow",
+            "Dark LightGoldenrodYellow",
+            "Dark Lavender",
+            "Dark GreenYellow",
+            "Dark SpringGreen",
+            "Dark Aqua",
+            "Dark LightCyan",
+            "Dark LightBlue",
+            "Dark Azure",
+* Renamed config attributes:
+    from "activeVerseNoColourLight, activeVerseNoColourDark, maskBackground, materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed" 
+    to "activeVerseColourLight, activeVerseColourDark, maskMaterialIconBackground, maskMaterialIconColor, widgetBackgroundColor, widgetForegroundColor, widgetBackgroundColorHover, widgetForegroundColorHover, widgetBackgroundColorPressed, widgetForegroundColorPressed"
+* Removed QtMaterialTheme options from Material menu layout, as QtMaterialTheme would be in conflict with Colour Customisation with Material menu layout.
+* Added a button to open Interlinear Data directly.
+* Relocated the open-MIB-on-study-window button.
+* Colour customisation dialog now include activeVerseNoColour item.
+* Created a new wiki on colour customisation: https://github.com/eliranwong/UniqueBible/wiki/Customise-Interface-Colours
+* Changed the Colour Customisation dialog about link to: https://github.com/eliranwong/UniqueBible/wiki/Customise-Interface-Colours
+* Improved Interlinear Data plugin:
+    - Added a clear button to search entry field
+    - Now display currentlly active verse data by default
+
 Changes in 29.32, 33:
 * Fixed icon colour of some buttons in material menu layout.
 

@@ -1,7 +1,7 @@
 import config, re
 
 def highlightActiveVerseMain(text):
-    colour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
+    colour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
     searchReplace = (
         # underline
         #('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.mainB, config.mainC, config.mainV), r"\1<u>\2</u></verse>"),
@@ -14,7 +14,7 @@ def highlightActiveVerseMain(text):
     return text
 
 def highlightActiveVerseStudy(text):
-    colour = config.activeVerseNoColourDark if config.theme in ("dark", "night") else config.activeVerseNoColourLight
+    colour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
     searchReplace = (
         # underline
         #('(<vid id="v{0}\.{1}\.{2}".*?</vid>)(.*?)</verse>'.format(config.studyB, config.studyC, config.studyV), r"\1<u>\2</u></verse>"),

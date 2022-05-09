@@ -29,10 +29,10 @@ class MaterialMainWindow:
         subMenu0 = addSubMenu(menu, "menu1_preferences")
         subMenu = addSubMenu(subMenu0, "menu1_generalPreferences")
         items = (
-            ("bibleCollections", self.showBibleCollectionDialog),
+            ("colourCustomisation", self.changeButtonColour),
             ("refButtonAction", self.selectRefButtonSingleClickActionDialog),
-            ("buttonColourCustomisation", self.changeButtonColour),
-            ("activeVerseColour", self.changeActiveVerseColour),
+            ("bibleCollections", self.showBibleCollectionDialog),
+            #("activeVerseColour", self.changeActiveVerseColour),
             ("menu1_tabNo", self.setTabNumberDialog),
             ("menu1_setAbbreviations", self.setBibleAbbreviations),
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
@@ -56,22 +56,56 @@ class MaterialMainWindow:
         for style in QStyleFactory.keys():
             addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
         subMenu = addSubMenu(subMenu0, "menu1_selectTheme")
-        if config.qtMaterial:
-            qtMaterialThemes = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
-            for theme in qtMaterialThemes:
-                addMenuItem(subMenu, theme[:-4], self, partial(self.setQtMaterialTheme, theme), None, False)
-            subMenu.addSeparator()
-            addMenuItem(subMenu, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
-        else:
-            items = (
-                ("menu_light_theme", lambda: self.setTheme("default")),
-                ("menu1_dark_theme", lambda: self.setTheme("dark")),
-                ("night_theme", lambda: self.setTheme("night")),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
-            subMenu.addSeparator()
-            addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
+#        if config.qtMaterial:
+#            qtMaterialThemes = ("light_amber.xml",  "light_blue.xml",  "light_cyan.xml",  "light_cyan_500.xml",  "light_lightgreen.xml",  "light_pink.xml",  "light_purple.xml",  "light_red.xml",  "light_teal.xml",  "light_yellow.xml", "dark_amber.xml",  "dark_blue.xml",  "dark_cyan.xml",  "dark_lightgreen.xml",  "dark_pink.xml",  "dark_purple.xml",  "dark_red.xml",  "dark_teal.xml",  "dark_yellow.xml")
+#            for theme in qtMaterialThemes:
+#                addMenuItem(subMenu, theme[:-4], self, partial(self.setQtMaterialTheme, theme), None, False)
+#            subMenu.addSeparator()
+#            addMenuItem(subMenu, "disableQtMaterial", self, lambda: self.enableQtMaterial(False))
+#        else:
+#        items = (
+#            ("default", lambda: self.setTheme("default")),
+#            ("dark", lambda: self.setTheme("dark")),
+#            ("night", lambda: self.setTheme("night")),
+#        )
+        themes = (
+            "Light",
+            "Dark",
+            "Night",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        subMenu.addSeparator()
+        themes = (
+            "Light MediumVioletRed",
+            "Light DarkRed",
+            "Light Indigo",
+            "Light DarkGreen",
+            "Light DarkOliveGreen",
+            "Light Teal",
+            "Light DarkBlue",
+            "Light MidnightBlue",
+            "Light Maroon",
+            "Light DarkSlateGray",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        subMenu.addSeparator()
+        themes = (
+            "Dark Pink",
+            "Dark LightYellow",
+            "Dark LightGoldenrodYellow",
+            "Dark Lavender",
+            "Dark GreenYellow",
+            "Dark SpringGreen",
+            "Dark Aqua",
+            "Dark LightCyan",
+            "Dark LightBlue",
+            "Dark Azure",
+        )
+        for theme in themes:
+            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+        #addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
 
@@ -498,9 +532,13 @@ class MaterialMainWindow:
         self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar)
         self.mainRefButton = QPushButton(self.verseReference("main")[-1])
         self.addStandardTextButton("bar1_reference", self.mainRefButtonClickedMaterial, self.firstToolBar, self.mainRefButton)
-        self.mainRefButton.setVisible(False)
         icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
         self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar)
+
+        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")):
+            self.firstToolBar.addSeparator()
+            icon = "material/image/flare/materialiconsoutlined/18dp/2x/outline_flare_black_18dp.png"
+            self.addMaterialIconButton("interlinearData", icon, partial(self.runPlugin, "Interlinear Data"), self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
@@ -543,10 +581,10 @@ class MaterialMainWindow:
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
         self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClickedMaterial)
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.materialIconMaskColor, config.maskBackground), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
         icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/18dp/2x/outline_swap_calls_black_18dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.materialIconMaskColor, config.maskBackground), config.thisTranslation["swap"], self.swapBibles)
+        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["swap"], self.swapBibles)
         if config.openBibleInMainViewOnly:
             self.studyRefButton.setVisible(False)
             self.enableSyncStudyWindowBibleButton.setVisible(False)
@@ -725,9 +763,6 @@ class MaterialMainWindow:
         icon = "material/image/picture_as_pdf/materialiconsoutlined/18dp/2x/outline_picture_as_pdf_black_18dp.png"
         self.addMaterialIconButton("bar3_pdf", icon, self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
-        self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIBStudy, self.rightToolBar, None, False)
-        self.rightToolBar.addSeparator()
         icon = "material/editor/highlight/materialiconsoutlined/18dp/2x/outline_highlight_black_18dp.png"
         self.addMaterialIconButton("menu4_indexes", icon, self.runINDEX, self.rightToolBar)
         icon = "material/maps/local_library/materialiconsoutlined/18dp/2x/outline_local_library_black_18dp.png"
@@ -738,6 +773,8 @@ class MaterialMainWindow:
         icon = "material/maps/diamond/materialiconsoutlined/18dp/2x/outline_diamond_black_18dp.png"
         self.addMaterialIconButton("menu4_tske", icon, self.runTSKE, self.rightToolBar)
         self.rightToolBar.addSeparator()
+        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
+        self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIBStudy, self.rightToolBar, None, False)
         icon = "material/action/translate/materialiconsoutlined/18dp/2x/outline_translate_black_18dp.png"
         self.addMaterialIconButton("menu4_traslations", icon, self.runTRANSLATION, self.rightToolBar)
         icon = "material/editor/align_horizontal_right/materialicons/18dp/2x/baseline_align_horizontal_right_black_18dp.png"

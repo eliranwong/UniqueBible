@@ -21,7 +21,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addMenuActions()
 
     def finishViewLoading(self):
-        activeVerseNoColour = config.activeVerseNoColourDark if config.theme == "dark" else config.activeVerseNoColourLight
+        activeVerseNoColour = config.activeVerseColourDark if config.theme == "dark" else config.activeVerseColourLight
         # scroll to the study verse
         self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
