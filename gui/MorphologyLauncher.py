@@ -28,51 +28,35 @@ class MorphologyLauncher(QWidget):
         subLayout.addWidget(self.searchFieldWidget())
         button = QPushButton("Search")
         button.clicked.connect(self.searchMorphology)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         mainLayout.addLayout(subLayout)
 
         subLayout = QHBoxLayout()
         subLayout.addWidget(QLabel("Start:"))
         self.startBookCombo = QComboBox()
-        if config.menuLayout == 'material':
-            self.startBookCombo.setStyleSheet(config.comboBoxStyle)
         subLayout.addWidget(self.startBookCombo)
         self.startBookCombo.addItems(self.bookList)
         self.startBookCombo.setCurrentIndex(0)
         subLayout.addWidget(QLabel("End:"))
         self.endBookCombo = QComboBox()
-        if config.menuLayout == 'material':
-            self.endBookCombo.setStyleSheet(config.comboBoxStyle)
         subLayout.addWidget(self.endBookCombo)
         self.endBookCombo.addItems(self.bookList)
         self.endBookCombo.setCurrentIndex(65)
         subLayout.addWidget(QLabel(" "))
         button = QPushButton("Entire Bible")
         button.clicked.connect(lambda: self.selectBookCombos(0, 65))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton("Current Book")
         button.clicked.connect(lambda: self.selectBookCombos(config.mainB-1, config.mainB-1))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton("OT")
         button.clicked.connect(lambda: self.selectBookCombos(0, 38))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton("NT")
         button.clicked.connect(lambda: self.selectBookCombos(39, 65))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton("Gospels")
         button.clicked.connect(lambda: self.selectBookCombos(39, 42))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         subLayout.addStretch()
         mainLayout.addLayout(subLayout)

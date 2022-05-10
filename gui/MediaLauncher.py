@@ -26,8 +26,6 @@ class MediaLauncher(QWidget):
         buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(lambda: self.playMedia("music"))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         musicLayout.addLayout(buttons)
         leftColumnWidget.setLayout(musicLayout)
@@ -38,8 +36,6 @@ class MediaLauncher(QWidget):
         buttons = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(lambda: self.playMedia("video"))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         buttons.addWidget(button)
         videoLayout.addLayout(buttons)
         rightColumnWidget.setLayout(videoLayout)

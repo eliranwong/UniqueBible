@@ -1,7 +1,7 @@
-import sys
+import sys, config
 from qtpy.QtCore import Qt, QEvent
 from qtpy.QtWidgets import QApplication
-from qtpy.QtGui import QGuiApplication, QStandardItem, QPalette, QFontMetrics
+from qtpy.QtGui import QGuiApplication, QStandardItem, QPalette, QFontMetrics, QColor
 from qtpy.QtWidgets import (QStyledItemDelegate, QComboBox)
 
 # We adpat the script shared from the following source.  We modified a bit to work with our application.
@@ -27,6 +27,7 @@ class CheckableComboBox(QComboBox):
         # Make the combo editable to set a custom text, but readonly
         self.setEditable(True)
         self.lineEdit().setReadOnly(True)
+        self.lineEdit().setStyleSheet(config.widgetStyle)
         # Make the lineedit the same color as QPushButton
         palette = QGuiApplication.instance().palette()
         palette.setBrush(QPalette.Base, palette.button())
@@ -97,7 +98,12 @@ class CheckableComboBox(QComboBox):
         self.checkItems = []
         for i in range(self.model().rowCount()):
             if self.model().item(i).checkState() == Qt.Checked:
+                self.model().item(i).setBackground(QColor(config.widgetBackgroundColorHover))
+                self.model().item(i).setForeground(QColor(config.widgetForegroundColor))
                 self.checkItems.append(self.model().item(i).text())
+            else:
+                self.model().item(i).setBackground(QColor(config.widgetBackgroundColor))
+                self.model().item(i).setForeground(QColor(config.widgetForegroundColor))
         text = ", ".join(self.checkItems)
 
         # Compute elided text (with "...")
@@ -116,6 +122,8 @@ class CheckableComboBox(QComboBox):
             item.setToolTip(toolTip)
         item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
         item.setData(Qt.Checked if text in self.checkItems else Qt.Unchecked, Qt.CheckStateRole)
+        item.setBackground(QColor(config.widgetBackgroundColor))
+        item.setForeground(QColor(config.widgetForegroundColor))
         self.model().appendRow(item)
 
     def addItems(self, texts, datalist=None, toolTips=None):

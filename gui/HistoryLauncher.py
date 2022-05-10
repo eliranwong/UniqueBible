@@ -23,8 +23,6 @@ class HistoryLauncher(QWidget):
         layout.addWidget(self.createMainListView())
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(lambda: self.openLastRecord("main"))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         layout.addWidget(button)
         leftColumnWidget.setLayout(layout)
 
@@ -33,8 +31,6 @@ class HistoryLauncher(QWidget):
         layout.addWidget(self.createStudyListView())
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(lambda: self.openLastRecord("study"))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         layout.addWidget(button)
         middleColumnWidget.setLayout(layout)
 
@@ -44,13 +40,9 @@ class HistoryLauncher(QWidget):
         subLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(lambda: self.externalFileAction(False))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["edit"])
         button.clicked.connect(lambda: self.externalFileAction(True))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         layout.addLayout(subLayout)
         rightColumnWidget.setLayout(layout)

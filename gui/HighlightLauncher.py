@@ -67,8 +67,6 @@ class HighlightLauncher(QWidget):
             button.setFixedWidth(170)
             button.setToolTip(config.thisTranslation["rename"])
             button.clicked.connect(partial(self.rename, index))
-            if config.menuLayout == 'material':
-                button.setStyleSheet(config.buttonStyle)
             subLayout.addWidget(button)
 
             button = self.collectionColourButtons[index]
@@ -85,8 +83,6 @@ class HighlightLauncher(QWidget):
                 #combo.setItemData(index, toolTip, Qt.ToolTipRole)
             combo.setFixedWidth(100)
             combo.currentIndexChanged.connect(lambda selectedIndex, index=index: self.searchHighlight(selectedIndex, index))
-            if config.menuLayout == 'material':
-                combo.setStyleSheet(config.comboBoxStyle)
             subLayout.addWidget(combo)
             
             leftColumn.addLayout(subLayout) if (index % 2 == 0) else rightColumn.addLayout(subLayout)
@@ -105,16 +101,12 @@ class HighlightLauncher(QWidget):
         button = QPushButton(config.thisTranslation["noHightlight"])
         button.setToolTip(config.thisTranslation["selectRemoveHighlight"])
         button.clicked.connect(lambda: self.highlightOptionChanged(True))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         subLayout0.addLayout(subLayout)
         subLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["allCollections"])
         button.setToolTip(config.thisTranslation["allCollections"])
         button.clicked.connect(lambda: self.searchHighlight(1, "all"))
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         #subLayout.addWidget(QLabel("All Collections in:"))
         combo = QComboBox()
@@ -122,8 +114,6 @@ class HighlightLauncher(QWidget):
         combo.addItems(self.searchList)
         combo.setFixedWidth(100)
         combo.currentIndexChanged.connect(lambda selectedIndex: self.searchHighlight(selectedIndex, "all"))
-        if config.menuLayout == 'material':
-            combo.setStyleSheet(config.comboBoxStyle)
         subLayout.addWidget(combo)
         subLayout0.addLayout(subLayout)
         layout.addLayout(subLayout0)

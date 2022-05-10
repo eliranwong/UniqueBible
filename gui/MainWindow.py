@@ -22,6 +22,7 @@ from util.BibleBooks import BibleBooks
 from util.HtmlColorCodes import HtmlColorCodes
 from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
+from util.themes import Themes
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.TextCommandParser import TextCommandParser
 from util.BibleVerseParser import BibleVerseParser
@@ -205,38 +206,42 @@ class MainWindow(QMainWindow):
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
-        config.shortcutList = []
-        config.noStudyBibleToolbar = True if layout in ("focus", "material") else False
-        try:
-            self.menuBar().clear()
-            self.removeToolBar(self.firstToolBar)
-            self.removeToolBar(self.secondToolBar)
-            self.removeToolBar(self.leftToolBar)
-            self.removeToolBar(self.rightToolBar)
-            self.removeToolBar(self.studyBibleToolBar)
-        except:
-            pass
-
-        windowClass = None
-        if layout in ("classic", "focus", "aleph", "material"):
-            windowName = layout.capitalize() + "MainWindow"
-            windowClass = getattr(sys.modules[__name__], windowName)
-        elif config.enablePlugins:
-            file = os.path.join(os.getcwd(), "plugins", "layout", layout+".py")
-            if os.path.exists(file):
-                mod = __import__('plugins.layout.{0}'.format(layout), fromlist=[layout])
-                windowClass = getattr(mod, layout)
-        if windowClass is None:
+        if layout == "material" and not config.menuLayout == "material":
             config.menuLayout = "material"
-            windowClass = getattr(sys.modules[__name__], "MaterialMainWindow")
-        if config.menuLayout == "material":
-            config.defineStyle()
-        getattr(windowClass, 'create_menu')(self)
-        if config.toolBarIconFullSize and not config.menuLayout == "material":
-            getattr(windowClass, 'setupToolBarFullIconSize')(self)
+            self.setTheme(config.theme)
         else:
-            getattr(windowClass, 'setupToolBarStandardIconSize')(self)
-        self.setAdditionalToolBar()
+            config.shortcutList = []
+            config.noStudyBibleToolbar = True if layout in ("focus", "material") else False
+            try:
+                self.menuBar().clear()
+                self.removeToolBar(self.firstToolBar)
+                self.removeToolBar(self.secondToolBar)
+                self.removeToolBar(self.leftToolBar)
+                self.removeToolBar(self.rightToolBar)
+                self.removeToolBar(self.studyBibleToolBar)
+            except:
+                pass
+
+            windowClass = None
+            if layout in ("classic", "focus", "aleph", "material"):
+                windowName = layout.capitalize() + "MainWindow"
+                windowClass = getattr(sys.modules[__name__], windowName)
+            elif config.enablePlugins:
+                file = os.path.join(os.getcwd(), "plugins", "layout", layout+".py")
+                if os.path.exists(file):
+                    mod = __import__('plugins.layout.{0}'.format(layout), fromlist=[layout])
+                    windowClass = getattr(mod, layout)
+            if windowClass is None:
+                config.menuLayout = "material"
+                windowClass = getattr(sys.modules[__name__], "MaterialMainWindow")
+            if config.menuLayout == "material":
+                config.defineStyle()
+            getattr(windowClass, 'create_menu')(self)
+            if config.toolBarIconFullSize and not config.menuLayout == "material":
+                getattr(windowClass, 'setupToolBarFullIconSize')(self)
+            else:
+                getattr(windowClass, 'setupToolBarStandardIconSize')(self)
+            self.setAdditionalToolBar()
 
     def setOsOpenCmd(self):
         if platform.system() == "Linux":
@@ -409,6 +414,21 @@ class MainWindow(QMainWindow):
 
     def quitApp(self):
         QGuiApplication.instance().quit()
+
+    def resetUI(self):
+        config.defineStyle()
+        app = QGuiApplication.instance()
+        if config.qtMaterial and config.qtMaterialTheme:
+            from qt_material import apply_stylesheet
+            apply_stylesheet(app, theme=config.qtMaterialTheme)
+            config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
+        else:
+            app.setPalette(Themes.getPalette())
+            if config.menuLayout == "material":
+                app.setStyleSheet(config.materialStyle)
+            else:
+                app.setStyleSheet("")
+        self.reloadCurrentRecord(True)
 
     def restartApp(self):
         config.restartUBA = True
@@ -839,7 +859,8 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.qtMaterial = True
             config.qtMaterialTheme = item
-            self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+            self.resetUI()
+            #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def selectBuiltinTheme(self):
         items = ("default", "dark", "night")
@@ -850,7 +871,8 @@ class MainWindow(QMainWindow):
         if ok and item:
             config.qtMaterial = False
             config.theme = item
-            self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+            self.resetUI()
+            #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
     def setDefaultTheme(self):
         config.theme = "default"
@@ -875,7 +897,7 @@ class MainWindow(QMainWindow):
             self.setColours(mainColor)
         elif config.menuLayout == "material":
             self.setColours()
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.resetUI()
 
     def setColours(self, color=""):
         config.menuLayout = "material"
@@ -914,8 +936,8 @@ class MainWindow(QMainWindow):
         self.setupMenuLayout("material")
 
     def setMenuLayout(self, layout):
-        config.menuLayout = layout
         self.setupMenuLayout(layout)
+        config.menuLayout = layout
 
     def setClassicMenuLayout(self):
         self.setMenuLayout("classic")
@@ -3904,14 +3926,12 @@ class MainWindow(QMainWindow):
         WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
-        if config.menuLayout == "material":
-            textButtonStyle = config.buttonStyle
-        else:
-            textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
+        textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
         if button is None:
             button = QPushButton()
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
-        button.setStyleSheet(textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(textButtonStyle)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.clicked.connect(action)
         toolbar.addWidget(button)
@@ -3932,26 +3952,12 @@ class MainWindow(QMainWindow):
         button.clicked.connect(action)
         toolbar.addWidget(button)
 
-    def defineStyle(self):
-        config.buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)
-        if config.qtMaterial and config.qtMaterialTheme:
-            config.comboBoxStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            """.format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
-        else:
-            config.comboBoxStyle = """
-            QComboBox {0}background-color: {2}; color: {3};{1} 
-            QComboBox:hover {0}background-color: {4}; color: {5};{1} 
-            QComboBox QAbstractItemView {0}background-color: {2}; color: {3};{1} 
-            """.format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
-
     def getIconPushButton(self, iconFilePath):
         button = QPushButton()
         qIcon = self.getQIcon(iconFilePath)
         button.setIcon(qIcon)
-        if config.menuLayout == "material":
-            button.setStyleSheet(config.buttonStyle)
+        #if config.menuLayout == "material":
+        #    button.setStyleSheet(config.buttonStyle)
         return button
 
     def getQIcon(self, iconFilePath):
@@ -3992,7 +3998,7 @@ class MainWindow(QMainWindow):
             #button.setFixedHeight(config.iconButtonWidth)
         elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
             button.setFixedWidth(40)
-        button.setStyleSheet(config.buttonStyle)
+        #button.setStyleSheet(config.buttonStyle)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         qIcon = self.getQIcon(icon)

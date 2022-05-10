@@ -9,6 +9,13 @@ def defineStyle():
         config.theme = "dark" if config.qtMaterialTheme.startswith("dark_") else "default"
         config.qtMaterial = False
 
+    config.widgetStyle = """QWidget {0}
+    border: 0px;
+    border-radius: 0px;
+    padding: 0 0px;
+    background-color: {2}; color: {3};{1} QWidget:hover {0}background-color: {4}; color: {5};{1} QWidget:pressed {0}background-color: {6}; color: {7}
+    {1}""".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)
+
     config.materialStyle = """
 
 QLabel {0} font-size: {9}px; color: {3}; {1}
@@ -27,9 +34,18 @@ QToolBar {0} font-size: {9}px; icon-size: {8}px; {1}
 
 QPushButton {0} font-size: {9}px; icon-size: {8}px; background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}
 
-QComboBox {0} font-size: {9}px; background-color: {2}; color: {3}; {1} 
+QComboBox {0} font-size: {9}px; background-color: {2}; color: {3}; {1}
 QComboBox:hover {0} background-color: {4}; color: {5}; {1}
-QComboBox QAbstractItemView {0} background-color: {2}; color: {3}; {1} 
+/* selection-background-color in QAbstractItemView does not work if QComboBox has an assigned background-color
+QComboBox QAbstractItemView {0} background-color: {2}; color: {3}; {1}
+Therefore, we use QComboBox::item instead of QComboBox QAbstractItemView.
+*/
+QComboBox::item {0} background-color: {2}; color: {3}; {1}
+QComboBox::item:selected {0} border: solid {3}; background-color: {3}; color: {2}; {1}
+
+/* For checkbox in QComboBox */
+QAbstractItemView::indicator {0} background-color: {2}; {1}
+QAbstractItemView::indicator:checked {0} background-color: {3}; {1}
 
 QRadioButton {0} font-size: {9}px; background-color: {2}; color: {3}; {1}
 QRadioButton:hover {0} background-color: {4}; color: {5}; {1}
@@ -38,6 +54,17 @@ QRadioButton:checked {0} background-color: {6}; color: {7}; {1}
 QCheckBox {0} font-size: {9}px; background-color: {2}; color: {3}; {1}
 QCheckBox:hover {0} background-color: {4}; color: {5}; {1}
 QCheckBox:checked {0} background-color: {6}; color: {7}; {1}
+
+QLineEdit {0}
+    font-size: {9}px;
+    border: 2px solid {4};
+    border-radius: 10px;
+    padding: 0 8px;
+    background: {2};
+    color: {3};
+    selection-background-color: {3};
+    selection-color: {2};
+{1}
 
 QTextEdit {0}
     selection-background-color: {4};
@@ -62,17 +89,6 @@ QHeaderView::section {0}
     color: {3};
 {1}
 
-QLineEdit {0}
-    font-size: {9}px;
-    border: 2px solid {4};
-    border-radius: 10px;
-    padding: 0 8px;
-    background: {2};
-    color: {3};
-    selection-background-color: {6};
-    selection-color: {7};
-{1}
-
 /* Style the tab using the tab sub-control. Note that
     it reads QTabBar _not_ QTabWidget */
 QTabWidget::tab-bar {0}
@@ -87,7 +103,7 @@ QTabBar::tab {0}
     border-bottom-color: {3};
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    min-width: {10}ex;
+    min-width: {11}px;
     min-height: {9}px;
     padding: 4px;
 {1}
@@ -212,6 +228,7 @@ QSlider::sub-page {0}
         config.iconButtonSize,
         (int(config.iconButtonSize / 3 * 2)),
         (int(config.iconButtonSize / 2)),
+        (int(config.iconButtonSize * 5))
         )
 
 config.defineStyle = defineStyle

@@ -265,7 +265,8 @@ class MiniControl(QWidget):
         box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
         button = QPushButton(config.thisTranslation["activeOnly"])
-        button.setStyleSheet(config.buttonStyle if config.menuLayout == "material" else textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(textButtonStyle)
         button.clicked.connect(self.activeCommentaries)
         row_layout.addWidget(button)
         box_layout.addLayout(row_layout)
@@ -348,7 +349,8 @@ class MiniControl(QWidget):
         box_layout.setSpacing(1)
         row_layout = self.newRowLayout()
         button = QPushButton(config.thisTranslation["activeOnly"])
-        button.setStyleSheet(config.buttonStyle if config.menuLayout == "material" else textButtonStyle)
+        if not config.menuLayout == "material":
+            button.setStyleSheet(textButtonStyle)
         button.clicked.connect(self.activeBookIntros)
         row_layout.addWidget(button)
         box_layout.addLayout(row_layout)

@@ -10,6 +10,8 @@ import shortcut as sc
 import re, os
 
 
+# Search for material icons at: https://fonts.google.com/icons?selected=Material+Icons
+
 class MaterialMainWindow:
 
     def create_menu(self):
@@ -525,8 +527,6 @@ class MaterialMainWindow:
             addMenuItem(menu, "updateLanguageFiles", self, self.showUpdateLanguageItemWindow)
 
     def setupToolBarStandardIconSize(self):
-
-        self.defineStyle()
         
         self.firstToolBar = QToolBar()
         self.firstToolBar.setWindowTitle(config.thisTranslation["bar1_title"])
@@ -549,7 +549,6 @@ class MaterialMainWindow:
                 initialIndex = self.bibleVersions.index(config.mainText)
             self.versionCombo.setCurrentIndex(initialIndex)
             self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
-            self.versionCombo.setStyleSheet(config.comboBoxStyle)
             self.firstToolBar.addWidget(self.versionCombo)
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
@@ -560,7 +559,6 @@ class MaterialMainWindow:
 
         items = self.textList
         self.bibleVersionCombo = CheckableComboBox(items, config.compareParallelList, toolTips=self.textFullNameList)
-        self.bibleVersionCombo.setStyleSheet(config.comboBoxStyle)
         self.firstToolBar.addWidget(self.bibleVersionCombo)
 
         icon = "material/navigation/unfold_more/materialiconsoutlined/48dp/2x/outline_unfold_more_black_48dp.png"
@@ -670,7 +668,6 @@ class MaterialMainWindow:
                 initialIndex = self.commentaryList.index(config.commentaryText)
             self.commentaryCombo.setCurrentIndex(initialIndex)
             self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
-            self.commentaryCombo.setStyleSheet(config.comboBoxStyle)
             self.secondToolBar.addWidget(self.commentaryCombo)
 
         self.enableSyncCommentaryButton = QPushButton()

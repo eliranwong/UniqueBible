@@ -93,8 +93,6 @@ class MiniBrowser(QWidget):
         layout.addWidget(self.addressBar)
         button = QPushButton("mp3")
         button.setFixedWidth(50)
-        if config.menuLayout == "material":
-            button.setStyleSheet(config.buttonStyle)
         button.setToolTip(config.thisTranslation["youtube_mp3"])
         button.clicked.connect(lambda: self.convertToFormat("mp3"))
         layout.addWidget(button)
@@ -107,8 +105,6 @@ class MiniBrowser(QWidget):
             button.setToolTip(config.thisTranslation["downloadVideo"])
             button.clicked.connect(self.downloadLastOption)
         button.setFixedWidth(50)
-        if config.menuLayout == "material":
-            button.setStyleSheet(config.buttonStyle)
         layout.addWidget(button)
         if config.menuLayout == "material":
             icon = "material/av/video_settings/materialiconsoutlined/48dp/2x/outline_video_settings_black_48dp.png"

@@ -29,13 +29,9 @@ class LibraryLauncher(QWidget):
         subSubLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousCommentary)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["activeOnly"])
         button.clicked.connect(self.showActiveOnlyCommentaries)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         commentaryLayout.addLayout(subSubLayout)
 
@@ -49,23 +45,15 @@ class LibraryLauncher(QWidget):
         subSubLayout = QHBoxLayout()
         button = QPushButton(config.thisTranslation["showAll"])
         button.clicked.connect(self.showAllBooks)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["favouriteOnly"])
         button.clicked.connect(self.favouriteBookOnly)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["addFavourite"])
         button.clicked.connect(self.addFavorite)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         button = QPushButton(config.thisTranslation["removeFavourite"])
         button.clicked.connect(self.removeFavorite)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subSubLayout.addWidget(button)
         subLayout.addLayout(subSubLayout)
         bookLayout.addLayout(subLayout)
@@ -74,8 +62,6 @@ class LibraryLauncher(QWidget):
         subLayout.addWidget(self.chapterListView())
         button = QPushButton(config.thisTranslation["open"])
         button.clicked.connect(self.openPreviousBookChapter)
-        if config.menuLayout == 'material':
-            button.setStyleSheet(config.buttonStyle)
         subLayout.addWidget(button)
         bookLayout.addLayout(subLayout)
         rightColumnWidget.setLayout(bookLayout)

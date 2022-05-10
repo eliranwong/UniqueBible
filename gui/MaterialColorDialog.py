@@ -112,6 +112,7 @@ class MaterialColorDialog(QDialog):
         self.updateMyButtons()
 
     def updateMyButtons(self):
+        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)
         myButtons = (
             self.widgetBackgroundColorButton,
             self.widgetBackgroundColorHoverButton,
@@ -124,9 +125,7 @@ class MaterialColorDialog(QDialog):
             self.aboutButton,
         )
         for button in myButtons:
-            button.setStyleSheet(config.buttonStyle)
-        #self.defaultButton.setStyleSheet(config.buttonStyle)
-        #self.aboutButton.setStyleSheet(config.buttonStyle)
+            button.setStyleSheet(buttonStyle)
 
     def setPushButtonBackgroundColor(self):
         color = QColorDialog.getColor(QColor(config.widgetBackgroundColor), self)
