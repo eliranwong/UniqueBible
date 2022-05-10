@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "Παράλληλες Εκδόσεις",
     "sideBySide": "Side by Side",
     "rowByRow": "Γραμμή κατά σειρά",
-    "colourCustomisation": "Έγχρωμου Customisation",
+    "colourCustomisation": "Προσαρμογή Colour",
     "interlinearData": "Γραμμικά δεδομένα:",
     "appearance": "Εμφάνιση:",
     "otherPreferences": "Άλλες Προτιμήσεις:",
     "collections": "Συλλογές:",
     "controlPreference": "Επιλογή προτίμησης ελέγχου",
+    "customiseIconSize": "Προσαρμογή μεγέθους εικονιδίου",
 }

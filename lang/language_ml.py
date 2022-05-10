@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "സാമാന്യ വേര്ഷന്",
     "sideBySide": "Side by Side",
     "rowByRow": "Row by Row",
-    "colourCustomisation": "നിറക്കൂട്ടം",
+    "colourCustomisation": "കസ്റ്റംസ് നിറം",
     "interlinearData": "ഇന്ററിനിയര് ഡാറ്റ",
     "appearance": "പ്രദര്ശനം",
     "otherPreferences": "മറ്റ് മുന്ഗണനകള്",
     "collections": "ശേഖരം",
     "controlPreference": "നിയന്ത്രണ മുന്ഗണന തെരഞ്ഞെടുക്കുക",
+    "customiseIconSize": "ചിഹ്നത്തിന്റെ വലിപ്പം മാറ്റുക",
 }

@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "Versiuni paralele",
     "sideBySide": "Side by Side",
     "rowByRow": "Row by Row",
-    "colourCustomisation": "Personalizare coloristică",
+    "colourCustomisation": "Culoarea personalizării",
     "interlinearData": "Date interlineare",
     "appearance": "Aspect",
     "otherPreferences": "Alte Preferințe",
     "collections": "Colecții",
     "controlPreference": "Selectați preferința de control",
+    "customiseIconSize": "Personalizează dimensiunea pictogramei",
 }

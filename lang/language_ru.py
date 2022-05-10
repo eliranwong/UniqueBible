@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "Параллельные версии",
     "sideBySide": "Бок о бок",
     "rowByRow": "Строка по строке",
-    "colourCustomisation": "Настройка цвета",
+    "colourCustomisation": "Цвет",
     "interlinearData": "Межлинейные данные",
     "appearance": "Внешний вид",
     "otherPreferences": "Другие параметры",
     "collections": "Собрания",
     "controlPreference": "Выбрать параметр управления",
+    "customiseIconSize": "Размер значка Customise",
 }

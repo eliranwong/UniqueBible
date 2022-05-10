@@ -71,7 +71,7 @@ class MiniBrowser(QWidget):
 
         layout = QHBoxLayout()
         if config.menuLayout == "material":
-            icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+            icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
             button = self.parent.getIconPushButton(icon)
         else:
             button = QPushButton("<")
@@ -79,7 +79,7 @@ class MiniBrowser(QWidget):
         button.clicked.connect(self.youTubeView.back)
         layout.addWidget(button)
         if config.menuLayout == "material":
-            icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+            icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
             button = self.parent.getIconPushButton(icon)
         else:
             button = QPushButton(">")
@@ -111,7 +111,7 @@ class MiniBrowser(QWidget):
             button.setStyleSheet(config.buttonStyle)
         layout.addWidget(button)
         if config.menuLayout == "material":
-            icon = "material/av/video_settings/materialiconsoutlined/18dp/2x/outline_video_settings_black_18dp.png"
+            icon = "material/av/video_settings/materialiconsoutlined/48dp/2x/outline_video_settings_black_48dp.png"
             button = self.parent.getIconPushButton(icon)
         else:
             button = QPushButton("+")

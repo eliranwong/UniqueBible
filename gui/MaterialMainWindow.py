@@ -144,6 +144,7 @@ class MaterialMainWindow:
         # Colour Customisation
         items = (
             ("colourCustomisation", self.changeButtonColour),
+            ("customiseIconSize", self.setIconButtonSize),
         )
         for feature, action in items:
             addMenuItem(subMenu0, feature, self, action)
@@ -314,6 +315,9 @@ class MaterialMainWindow:
             addMenuItem(subMenu, feature, self, action, shortcut)
         
         menu.addSeparator()
+        addMenuItem(menu, "liveFilter", self, self.showLiveFilterDialog, sc.liveFilterDialog)
+
+        menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
             ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
@@ -349,8 +353,6 @@ class MaterialMainWindow:
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
-        #menu.addSeparator()
-        #addMenuItem(menu, "liveFilter", self, self.showLiveFilterDialog, sc.liveFilterDialog)
         menu.addSeparator()
         addMenuItem(menu, "reloadResources", self, self.reloadResources)
         addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
@@ -551,43 +553,44 @@ class MaterialMainWindow:
             self.firstToolBar.addWidget(self.versionCombo)
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
-        if config.qtMaterial and config.qtMaterialTheme:
-            versionButtonHeight = self.versionButton.height() if config.refButtonClickAction == "mini" else self.versionCombo.height() 
-            config.iconButtonWidth = config.maximumIconButtonWidth if versionButtonHeight > config.maximumIconButtonWidth else versionButtonHeight
+        # Icon size is now controlled by gui/Styles.py
+#        if config.qtMaterial and config.qtMaterialTheme:
+#            versionButtonHeight = self.versionButton.height() if config.refButtonClickAction == "mini" else self.versionCombo.height() 
+#            config.iconButtonWidth = config.maximumIconButtonWidth if versionButtonHeight > config.maximumIconButtonWidth else versionButtonHeight
 
         items = self.textList
         self.bibleVersionCombo = CheckableComboBox(items, config.compareParallelList, toolTips=self.textFullNameList)
         self.bibleVersionCombo.setStyleSheet(config.comboBoxStyle)
         self.firstToolBar.addWidget(self.bibleVersionCombo)
 
-        icon = "material/navigation/unfold_more/materialiconsoutlined/18dp/2x/outline_unfold_more_black_18dp.png"
+        icon = "material/navigation/unfold_more/materialiconsoutlined/48dp/2x/outline_unfold_more_black_48dp.png"
         self.addMaterialIconButton("cp0", icon, self.mainTextMenu, self.firstToolBar)
-        icon = "material/action/search/materialiconsoutlined/18dp/2x/outline_search_black_18dp.png"
+        icon = "material/action/search/materialiconsoutlined/48dp/2x/outline_search_black_48dp.png"
         self.addMaterialIconButton("cp3", icon, self.displaySearchBibleMenu, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
-        icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar)
         self.mainRefButton = QPushButton(self.verseReference("main")[-1])
         self.addStandardTextButton("bar1_reference", self.mainRefButtonClickedMaterial, self.firstToolBar, self.mainRefButton)
-        icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar)
 
         if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")):
             self.firstToolBar.addSeparator()
-            icon = "material/image/flare/materialiconsoutlined/18dp/2x/outline_flare_black_18dp.png"
+            icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
             self.addMaterialIconButton("interlinearData", icon, partial(self.runPlugin, "Interlinear Data"), self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
-        icon = "material/action/ads_click/materialiconsoutlined/18dp/2x/outline_ads_click_black_18dp.png"
+        icon = "material/action/ads_click/materialiconsoutlined/48dp/2x/outline_ads_click_black_48dp.png"
         self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)
-        icon = "material/image/auto_awesome_motion/materialiconsoutlined/18dp/2x/outline_auto_awesome_motion_black_18dp.png"
+        icon = "material/image/auto_awesome_motion/materialiconsoutlined/48dp/2x/outline_auto_awesome_motion_black_48dp.png"
         self.addMaterialIconButton("parallelVersions", icon, lambda: self.runCompareAction("PARALLEL"), self.firstToolBar)
-        icon = "material/action/view_column/materialiconsoutlined/18dp/2x/outline_view_column_black_18dp.png"
+        icon = "material/action/view_column/materialiconsoutlined/48dp/2x/outline_view_column_black_48dp.png"
         self.addMaterialIconButton("sideBySideComparison", icon, lambda: self.runCompareAction("COMPARESIDEBYSIDE"), self.firstToolBar)
-        icon = "material/editor/table_rows/materialiconsoutlined/18dp/2x/outline_table_rows_black_18dp.png"
+        icon = "material/editor/table_rows/materialiconsoutlined/48dp/2x/outline_table_rows_black_48dp.png"
         self.addMaterialIconButton("rowByRowComparison", icon, lambda: self.runCompareAction("COMPARE"), self.firstToolBar)
 
         self.firstToolBar.addSeparator()
@@ -601,9 +604,9 @@ class MaterialMainWindow:
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
 
-        icon = "material/action/open_in_new/materialiconsoutlined/18dp/2x/outline_open_in_new_black_18dp.png"
+        icon = "material/action/open_in_new/materialiconsoutlined/48dp/2x/outline_open_in_new_black_48dp.png"
         self.addMaterialIconButton("goOnline", icon, self.goOnline, self.firstToolBar)
-        icon = "material/social/share/materialiconsoutlined/18dp/2x/outline_share_black_18dp.png"
+        icon = "material/social/share/materialiconsoutlined/48dp/2x/outline_share_black_48dp.png"
         self.addMaterialIconButton("share", icon, self.shareOnline, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
@@ -612,16 +615,18 @@ class MaterialMainWindow:
         self.addMaterialIconButton(self.getStudyBibleDisplayToolTip(), self.getStudyBibleDisplay(), self.enableStudyBibleButtonClicked, self.firstToolBar, self.enableStudyBibleButton, False)
 
         # Toolbar height here is affected by the actual size of icon file used in a QAction
-        if config.qtMaterial and config.qtMaterialTheme:
-            self.firstToolBar.setFixedHeight(config.iconButtonWidth + 4)
-            self.firstToolBar.setIconSize(QSize(int(config.iconButtonWidth / 2), int(config.iconButtonWidth / 2)))
-        else:
-            self.firstToolBar.setIconSize(QSize(17, 17))
+        # Icon size is now controlled by gui/Styles.py
+#        if config.qtMaterial and config.qtMaterialTheme:
+#            self.firstToolBar.setFixedHeight(config.iconButtonWidth + 4)
+#            self.firstToolBar.setIconSize(QSize(int(config.iconButtonWidth / 2), int(config.iconButtonWidth / 2)))
+#        else:
+#            self.firstToolBar.setIconSize(QSize(17, 17))
+
         # QAction can use setVisible whereas QPushButton cannot when it is placed on a toolbar.
         self.studyRefButton = self.firstToolBar.addAction(":::".join(self.verseReference("study")), self.studyRefButtonClickedMaterial)
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
-        icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/18dp/2x/outline_swap_calls_black_18dp.png"
+        icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         iconFile = os.path.join(*icon.split("/"))
         self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["swap"], self.swapBibles)
         if config.openBibleInMainViewOnly:
@@ -630,7 +635,7 @@ class MaterialMainWindow:
             self.swapBibleButton.setVisible(False)
         self.firstToolBar.addSeparator()
 
-        icon = "material/notification/more/materialiconsoutlined/18dp/2x/outline_more_black_18dp.png"
+        icon = "material/notification/more/materialiconsoutlined/48dp/2x/outline_more_black_48dp.png"
         self.addMaterialIconButton("bar1_toolbars", icon, self.hideShowAdditionalToolBar, self.firstToolBar)
 
         if config.addBreakAfterTheFirstToolBar:
@@ -672,69 +677,69 @@ class MaterialMainWindow:
         self.addMaterialIconButton(self.getSyncCommentaryDisplayToolTip(), self.getSyncCommentaryDisplay(), self.enableSyncCommentaryButtonClicked, self.secondToolBar, self.enableSyncCommentaryButton, False)
         self.secondToolBar.addSeparator()
 
-        icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         self.addMaterialIconButton("menu_previous_chapter", icon, self.openBookPreviousChapter, self.secondToolBar)
         self.bookButton = QPushButton(config.book[:20])
         self.addStandardTextButton(config.book, self.openBookMenu, self.secondToolBar, self.bookButton, translation=False)
-        icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu_next_chapter", icon, self.openBookNextChapter, self.secondToolBar)
 
-        icon = "material/action/search/materialiconsoutlined/18dp/2x/outline_search_black_18dp.png"
+        icon = "material/action/search/materialiconsoutlined/48dp/2x/outline_search_black_48dp.png"
         self.addMaterialIconButton("bar2_searchBooks", icon, self.displaySearchBookCommand, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 
-        icon = "material/maps/rate_review/materialiconsoutlined/18dp/2x/outline_rate_review_black_18dp.png"
+        icon = "material/maps/rate_review/materialiconsoutlined/48dp/2x/outline_rate_review_black_48dp.png"
         self.addMaterialIconButton("menu_bookNote", icon, self.openMainBookNote, self.secondToolBar)
-        icon = "material/file/drive_file_rename_outline/materialiconsoutlined/18dp/2x/outline_drive_file_rename_outline_black_18dp.png"
+        icon = "material/file/drive_file_rename_outline/materialiconsoutlined/48dp/2x/outline_drive_file_rename_outline_black_48dp.png"
         self.addMaterialIconButton("menu_chapterNote", icon, self.openMainChapterNote, self.secondToolBar)
-        icon = "material/editor/edit_note/materialiconsoutlined/18dp/2x/outline_edit_note_black_18dp.png"
+        icon = "material/editor/edit_note/materialiconsoutlined/48dp/2x/outline_edit_note_black_48dp.png"
         self.addMaterialIconButton("menu_verseNote", icon, self.openMainVerseNote, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 
-        icon = "material/action/note_add/materialiconsoutlined/18dp/2x/outline_note_add_black_18dp.png"
+        icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
         self.addMaterialIconButton("menu7_create", icon, self.createNewNoteFile, self.secondToolBar)
-        icon = "material/file/file_open/materialiconsoutlined/18dp/2x/outline_file_open_black_18dp.png"
+        icon = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
         self.addMaterialIconButton("menu7_open", icon, self.openTextFileDialog, self.secondToolBar)
 
         fileName = self.getLastExternalFileName()
         self.externalFileButton = QPushButton(fileName[:20])
         self.addStandardTextButton(fileName, self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton, translation=False)
 
-        icon = "material/image/edit/materialiconsoutlined/18dp/2x/outline_edit_black_18dp.png"
+        icon = "material/image/edit/materialiconsoutlined/48dp/2x/outline_edit_black_48dp.png"
         self.addMaterialIconButton("menu7_edit", icon, self.editExternalFileButtonClicked, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 
-        icon = "material/action/description/materialiconsoutlined/18dp/2x/outline_description_black_18dp.png"
+        icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
         self.addMaterialIconButton("wordDocument", icon, self.openDocxDialog, self.secondToolBar)
-        icon = "material/image/picture_as_pdf/materialiconsoutlined/18dp/2x/outline_picture_as_pdf_black_18dp.png"
+        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
         self.addMaterialIconButton("pdfDocument", icon, self.openPdfDialog, self.secondToolBar)
-        icon = "material/content/save_as/materialiconsoutlined/18dp/2x/outline_save_as_black_18dp.png"
+        icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
         self.addMaterialIconButton("savePdfCurrentPage", icon, self.invokeSavePdfPage, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 
-        icon = "material/editor/text_decrease/materialiconsoutlined/18dp/2x/outline_text_decrease_black_18dp.png"
+        icon = "material/editor/text_decrease/materialiconsoutlined/48dp/2x/outline_text_decrease_black_48dp.png"
         self.addMaterialIconButton("menu2_smaller", icon, self.smallerFont, self.secondToolBar)
 
         self.defaultFontButton = QPushButton("{0} {1}".format(config.font, config.fontSize))
         self.addStandardTextButton("menu1_setDefaultFont", self.setDefaultFont, self.secondToolBar, self.defaultFontButton)
 
-        icon = "material/editor/text_increase/materialiconsoutlined/18dp/2x/outline_text_increase_black_18dp.png"
+        icon = "material/editor/text_increase/materialiconsoutlined/48dp/2x/outline_text_increase_black_48dp.png"
         self.addMaterialIconButton("menu2_larger", icon, self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
         if config.isVlcInstalled:
-            icon = "material/av/play_circle/materialiconsoutlined/18dp/2x/outline_play_circle_black_18dp.png"
+            icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
             self.addMaterialIconButton("mediaPlayer", icon, lambda: self.openVlcPlayer(""), self.secondToolBar)
         if config.isYoutubeDownloaderInstalled:
-            icon = "material/hardware/browser_updated/materialiconsoutlined/18dp/2x/outline_browser_updated_black_18dp.png"
+            icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
             self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)
             self.secondToolBar.addSeparator()
-        icon = "material/navigation/refresh/materialiconsoutlined/18dp/2x/outline_refresh_black_18dp.png"
+        icon = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
         self.addMaterialIconButton("menu1_reload", icon, lambda: self.reloadCurrentRecord(True), self.secondToolBar)
-        icon = "material/action/fit_screen/materialiconsoutlined/18dp/2x/outline_fit_screen_black_18dp.png"
+        icon = "material/action/fit_screen/materialiconsoutlined/48dp/2x/outline_fit_screen_black_48dp.png"
         self.addMaterialIconButton("menu1_fullScreen", icon, self.fullsizeWindow, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
@@ -744,17 +749,17 @@ class MaterialMainWindow:
         self.leftToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.LeftToolBarArea, self.leftToolBar)
 
-        icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         self.addMaterialIconButton("menu3_mainBack", icon, self.back, self.leftToolBar)
-        icon = "material/action/history/materialiconsoutlined/18dp/2x/outline_history_black_18dp.png"
+        icon = "material/action/history/materialiconsoutlined/48dp/2x/outline_history_black_48dp.png"
         self.addMaterialIconButton("menu3_main", icon, self.mainHistoryButtonClicked, self.leftToolBar)
-        icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_mainForward", icon, self.forward, self.leftToolBar)
         self.leftToolBar.addSeparator()
         if config.isHtmldocxInstalled:
-            icon = "material/action/description/materialiconsoutlined/18dp/2x/outline_description_black_18dp.png"
+            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
             self.addMaterialIconButton("exportToDocx", icon, self.exportMainPageToDocx, self.leftToolBar)
-        icon = "material/image/picture_as_pdf/materialiconsoutlined/18dp/2x/outline_picture_as_pdf_black_18dp.png"
+        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
         self.addMaterialIconButton("bar3_pdf", icon, self.printMainPage, self.leftToolBar)
         self.leftToolBar.addSeparator()
         self.enableParagraphButton = QPushButton()
@@ -762,22 +767,22 @@ class MaterialMainWindow:
         self.enableSubheadingButton = QPushButton()
         self.addMaterialIconButton("menu2_subHeadings", self.getAddSubheading(), self.enableSubheadingButtonClicked, self.leftToolBar, self.enableSubheadingButton)
         self.leftToolBar.addSeparator()
-        icon = "material/action/compare_arrows/materialiconsoutlined/18dp/2x/outline_compare_arrows_black_18dp.png"
+        icon = "material/action/compare_arrows/materialiconsoutlined/48dp/2x/outline_compare_arrows_black_48dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
-        icon = "material/image/compare/materialicons/18dp/2x/baseline_compare_black_18dp.png"
+        icon = "material/image/compare/materialicons/48dp/2x/baseline_compare_black_48dp.png"
         self.addMaterialIconButton("contrasts", icon, lambda: self.runCONTRASTS, self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addMaterialIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
-        icon = "material/image/wb_sunny/materialiconsoutlined/18dp/2x/outline_wb_sunny_black_18dp.png"
+        icon = "material/image/wb_sunny/materialiconsoutlined/48dp/2x/outline_wb_sunny_black_48dp.png"
         self.addMaterialIconButton("Marvel Original Bible", icon, self.runMOB, self.leftToolBar, None, False)
-        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
+        icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
         self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIB, self.leftToolBar, None, False)
-        icon = "material/file/workspaces/materialiconsoutlined/18dp/2x/outline_workspaces_black_18dp.png"
+        icon = "material/file/workspaces/materialiconsoutlined/48dp/2x/outline_workspaces_black_48dp.png"
         self.addMaterialIconButton("Marvel Trilingual Bible", icon, self.runMTB, self.leftToolBar, None, False)
-        icon = "material/action/horizontal_split/materialiconsoutlined/18dp/2x/outline_horizontal_split_black_18dp.png"
+        icon = "material/action/horizontal_split/materialiconsoutlined/48dp/2x/outline_horizontal_split_black_48dp.png"
         self.addMaterialIconButton("Marvel Parallel Bible", icon, self.runMPB, self.leftToolBar, None, False)
-        icon = "material/editor/schema/materialiconsoutlined/18dp/2x/outline_schema_black_18dp.png"
+        icon = "material/editor/schema/materialiconsoutlined/48dp/2x/outline_schema_black_48dp.png"
         self.addMaterialIconButton("Marvel Annotated Bible", icon, self.runMAB, self.leftToolBar, None, False)
         self.leftToolBar.addSeparator()
 
@@ -787,44 +792,44 @@ class MaterialMainWindow:
         self.rightToolBar.setContextMenuPolicy(Qt.PreventContextMenu)
         self.addToolBar(Qt.RightToolBarArea, self.rightToolBar)
 
-        #icon = "material/navigation/arrow_back_ios/materialiconsoutlined/18dp/2x/outline_arrow_back_ios_black_18dp.png"
-        icon = "material/image/navigate_before/materialiconsoutlined/18dp/2x/outline_navigate_before_black_18dp.png"
+        #icon = "material/navigation/arrow_back_ios/materialiconsoutlined/48dp/2x/outline_arrow_back_ios_black_48dp.png"
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         self.addMaterialIconButton("menu3_studyBack", icon, self.studyBack, self.rightToolBar)
-        icon = "material/action/history/materialiconsoutlined/18dp/2x/outline_history_black_18dp.png"
+        icon = "material/action/history/materialiconsoutlined/48dp/2x/outline_history_black_48dp.png"
         self.addMaterialIconButton("menu3_study", icon, self.studyHistoryButtonClicked, self.rightToolBar)
-        #icon = "material/navigation/arrow_forward_ios/materialiconsoutlined/18dp/2x/outline_arrow_forward_ios_black_18dp.png"
-        icon = "material/image/navigate_next/materialiconsoutlined/18dp/2x/outline_navigate_next_black_18dp.png"
+        #icon = "material/navigation/arrow_forward_ios/materialiconsoutlined/48dp/2x/outline_arrow_forward_ios_black_48dp.png"
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_studyForward", icon, self.studyForward, self.rightToolBar)
         self.rightToolBar.addSeparator()
         if config.isHtmldocxInstalled:
-            icon = "material/action/description/materialiconsoutlined/18dp/2x/outline_description_black_18dp.png"
+            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
             self.addMaterialIconButton("exportToDocx", icon, self.exportStudyPageToDocx, self.rightToolBar)
-        icon = "material/image/picture_as_pdf/materialiconsoutlined/18dp/2x/outline_picture_as_pdf_black_18dp.png"
+        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
         self.addMaterialIconButton("bar3_pdf", icon, self.printStudyPage, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/editor/highlight/materialiconsoutlined/18dp/2x/outline_highlight_black_18dp.png"
+        icon = "material/editor/highlight/materialiconsoutlined/48dp/2x/outline_highlight_black_48dp.png"
         self.addMaterialIconButton("menu4_indexes", icon, self.runINDEX, self.rightToolBar)
-        icon = "material/maps/local_library/materialiconsoutlined/18dp/2x/outline_local_library_black_18dp.png"
+        icon = "material/maps/local_library/materialiconsoutlined/48dp/2x/outline_local_library_black_48dp.png"
         self.addMaterialIconButton("menu4_commentary", icon, self.runCOMMENTARY, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/editor/insert_link/materialiconsoutlined/18dp/2x/outline_insert_link_black_18dp.png"
+        icon = "material/editor/insert_link/materialiconsoutlined/48dp/2x/outline_insert_link_black_48dp.png"
         self.addMaterialIconButton("menu4_crossRef", icon, self.runCROSSREFERENCE, self.rightToolBar)
-        icon = "material/maps/diamond/materialiconsoutlined/18dp/2x/outline_diamond_black_18dp.png"
+        icon = "material/maps/diamond/materialiconsoutlined/48dp/2x/outline_diamond_black_48dp.png"
         self.addMaterialIconButton("menu4_tske", icon, self.runTSKE, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/maps/layers/materialiconsoutlined/18dp/2x/outline_layers_black_18dp.png"
+        icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
         self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIBStudy, self.rightToolBar, None, False)
-        icon = "material/action/translate/materialiconsoutlined/18dp/2x/outline_translate_black_18dp.png"
+        icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         self.addMaterialIconButton("menu4_traslations", icon, self.runTRANSLATION, self.rightToolBar)
-        icon = "material/editor/align_horizontal_right/materialicons/18dp/2x/baseline_align_horizontal_right_black_18dp.png"
+        icon = "material/editor/align_horizontal_right/materialicons/48dp/2x/baseline_align_horizontal_right_black_48dp.png"
         self.addMaterialIconButton("menu4_discourse", icon, self.runDISCOURSE, self.rightToolBar)
-        icon = "material/action/drag_indicator/materialiconsoutlined/18dp/2x/outline_drag_indicator_black_18dp.png"
+        icon = "material/action/drag_indicator/materialiconsoutlined/48dp/2x/outline_drag_indicator_black_48dp.png"
         self.addMaterialIconButton("menu4_words", icon, self.runWORDS, self.rightToolBar)
-        icon = "material/device/widgets/materialiconsoutlined/18dp/2x/outline_widgets_black_18dp.png"
+        icon = "material/device/widgets/materialiconsoutlined/48dp/2x/outline_widgets_black_48dp.png"
         self.addMaterialIconButton("menu4_tdw", icon, self.runCOMBO, self.rightToolBar)
         self.rightToolBar.addSeparator()
         self.enableInstantButton = QPushButton()
         self.addMaterialIconButton("menu2_hover", self.getInstantInformation(), self.enableInstantButtonClicked, self.rightToolBar, self.enableInstantButton)
-        icon = "material/content/bolt/materialiconsoutlined/18dp/2x/outline_bolt_black_18dp.png"
+        icon = "material/content/bolt/materialiconsoutlined/48dp/2x/outline_bolt_black_48dp.png"
         self.addMaterialIconButton("menu2_bottom", icon, self.cycleInstant, self.rightToolBar)
         self.rightToolBar.addSeparator()

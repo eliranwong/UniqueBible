@@ -2160,6 +2160,14 @@ class MainWindow(QMainWindow):
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
 
+    def setIconButtonSize(self):
+        integer, ok = QInputDialog.getInt(self,
+                                          "UniqueBible", config.thisTranslation["customiseIconSize"], config.iconButtonSize, 12,
+                                          config.maximumIconButtonWidth, 3)
+        if ok:
+            config.iconButtonSize = integer
+            self.displayMessage(config.thisTranslation["message_restart"])
+
     def setNoOfLinesPerChunkForParsingDialog(self):
         integer, ok = QInputDialog.getInt(self,
                                           "UniqueBible", config.thisTranslation["noOfLinesPerChunkForParsing"], config.noOfLinesPerChunkForParsing, 1,
@@ -2465,9 +2473,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable enforcement of comparison / parallel
     def getEnableCompareParallelDisplay(self):
         if config.enforceCompareParallel:
-            return self.getCrossplatformPath("material/action/done_all/materialiconsoutlined/18dp/2x/outline_done_all_black_18dp.png") if config.menuLayout == "material" else "sync.png"
+            return self.getCrossplatformPath("material/action/done_all/materialiconsoutlined/48dp/2x/outline_done_all_black_48dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return self.getCrossplatformPath("material/action/remove_done/materialiconsoutlined/18dp/2x/outline_remove_done_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
+            return self.getCrossplatformPath("material/action/remove_done/materialiconsoutlined/48dp/2x/outline_remove_done_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getEnableCompareParallelDisplayToolTip(self):
         if config.enforceCompareParallel:
@@ -2484,9 +2492,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable sync main and secondary bibles
     def getSyncStudyWindowBibleDisplay(self):
         if config.syncStudyWindowBibleWithMainWindow:
-            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/18dp/2x/outline_sync_black_18dp.png") if config.menuLayout == "material" else "sync.png"
+            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/48dp/2x/outline_sync_black_48dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/18dp/2x/outline_sync_disabled_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
+            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/48dp/2x/outline_sync_disabled_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncStudyWindowBibleDisplayToolTip(self):
         if config.syncStudyWindowBibleWithMainWindow:
@@ -2509,9 +2517,9 @@ class MainWindow(QMainWindow):
 
     def getSyncCommentaryDisplay(self):
         if config.syncCommentaryWithMainWindow:
-            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/18dp/2x/outline_sync_black_18dp.png") if config.menuLayout == "material" else "sync.png"
+            return self.getCrossplatformPath("material/notification/sync/materialiconsoutlined/48dp/2x/outline_sync_black_48dp.png") if config.menuLayout == "material" else "sync.png"
         else:
-            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/18dp/2x/outline_sync_disabled_black_18dp.png") if config.menuLayout == "material" else "noSync.png"
+            return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/48dp/2x/outline_sync_disabled_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncCommentaryDisplayToolTip(self):
         if config.syncCommentaryWithMainWindow:
@@ -2534,9 +2542,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
-            return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/18dp/2x/outline_add_circle_outline_black_18dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
+            return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/48dp/2x/outline_add_circle_outline_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
         else:
-            return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/18dp/2x/outline_remove_circle_outline_black_18dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
+            return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/48dp/2x/outline_remove_circle_outline_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
 
     def getStudyBibleDisplayToolTip(self):
         if config.openBibleInMainViewOnly:
@@ -2572,9 +2580,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable lightning feature
     def getInstantInformation(self):
         if config.instantInformationEnabled:
-            return self.getCrossplatformPath("material/image/flash_auto/materialiconsoutlined/18dp/2x/outline_flash_auto_black_18dp.png") if config.menuLayout == "material" else "show.png"
+            return self.getCrossplatformPath("material/image/flash_auto/materialiconsoutlined/48dp/2x/outline_flash_auto_black_48dp.png") if config.menuLayout == "material" else "show.png"
         else:
-            return self.getCrossplatformPath("material/image/flash_off/materialiconsoutlined/18dp/2x/outline_flash_off_black_18dp.png") if config.menuLayout == "material" else "hide.png"
+            return self.getCrossplatformPath("material/image/flash_off/materialiconsoutlined/48dp/2x/outline_flash_off_black_48dp.png") if config.menuLayout == "material" else "hide.png"
 
     def enableInstantButtonClicked(self):
         config.instantInformationEnabled = not config.instantInformationEnabled
@@ -2603,9 +2611,9 @@ class MainWindow(QMainWindow):
 
     def getReadFormattedBibles(self):
         if config.readFormattedBibles:
-            return self.getCrossplatformPath("material/maps/local_parking/materialiconsoutlined/18dp/2x/outline_local_parking_black_18dp.png") if config.menuLayout == "material" else "numbered_list.png"
+            return self.getCrossplatformPath("material/maps/local_parking/materialiconsoutlined/48dp/2x/outline_local_parking_black_48dp.png") if config.menuLayout == "material" else "numbered_list.png"
         else:
-            return self.getCrossplatformPath("material/editor/format_list_numbered/materialiconsoutlined/18dp/2x/outline_format_list_numbered_black_18dp.png") if config.menuLayout == "material" else "paragraph.png"
+            return self.getCrossplatformPath("material/editor/format_list_numbered/materialiconsoutlined/48dp/2x/outline_format_list_numbered_black_48dp.png") if config.menuLayout == "material" else "paragraph.png"
 
     def enableParagraphButtonClicked(self):
         self.enableParagraphButtonAction(True)
@@ -2619,9 +2627,9 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable sub-heading for plain bibles
     def getAddSubheading(self):
         if config.addTitleToPlainChapter:
-            return self.getCrossplatformPath("material/av/subtitles/materialiconsoutlined/18dp/2x/outline_subtitles_black_18dp.png") if config.menuLayout == "material" else "subheadingEnable.png"
+            return self.getCrossplatformPath("material/av/subtitles/materialiconsoutlined/48dp/2x/outline_subtitles_black_48dp.png") if config.menuLayout == "material" else "subheadingEnable.png"
         else:
-            return self.getCrossplatformPath("material/action/subtitles_off/materialiconsoutlined/18dp/2x/outline_subtitles_off_black_18dp.png") if config.menuLayout == "material" else "subheadingDisable.png"
+            return self.getCrossplatformPath("material/action/subtitles_off/materialiconsoutlined/48dp/2x/outline_subtitles_off_black_48dp.png") if config.menuLayout == "material" else "subheadingDisable.png"
 
     def toggleShowUserNoteIndicator(self):
         config.showUserNoteIndicator = not config.showUserNoteIndicator

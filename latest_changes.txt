@@ -1,3 +1,16 @@
+Changes in 29.36:
+* Upgraded quality of materials icons, used by material menu layout, for scaling to differnt sizes.
+* Added support to customise Icon size and other widget size in Material menu layout.  Users can either:
+    - manually edit "iconButtonSize" value when UBA is not running, or
+    - use GUI dialog availble on material menu layout, UniqueBible > Appearance > Customise Icon Size.
+    - This config value specifies the width and height of material icons.
+    - All other widgets are scaled relatively to this value too.
+    - Ideally, the value is a multiple of 3, within a range from 12 to 48.
+* Fixed issues about font size too small in table or list view.  Font size now changes relatively to button icon size value.
+* Apply colour and font customisation to more widgets, e.g. QToolTip, QToolButton, QTextEdit, QListView, QSlider
+* Added "Live Filter" to Material menu layout Bible menu.
+    - Watch https://www.youtube.com/watch?v=A08KTzWLwDc for demonstration about "Live Filter" feature.
+
 Changes in 29.35:
 * Improved Material menu layout main menu arrangement, e.g.:
     - Preferences are divided into two main sections, Appearance & Other Preferences.

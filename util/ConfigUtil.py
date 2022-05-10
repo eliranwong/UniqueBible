@@ -452,10 +452,16 @@ class ConfigUtil:
         # Options to use large sets of icons: True / False"""
         if not hasattr(config, "toolBarIconFullSize"):
             config.toolBarIconFullSize = False
+        config.help["iconButtonSize"] = """
+        # Options to set icon button size.  This value applies to icon width and height.
+        # Ideally, the value is a multiple of 3, within a range from 12 to 48.
+        # This value is used as a reference point to scale all other widgets when you use Material menu layout."""
+        if not hasattr(config, "iconButtonSize"):
+            config.iconButtonSize = 18
         config.help["maximumIconButtonWidth"] = """
         # Options to set maximum icon button width"""
         if not hasattr(config, "maximumIconButtonWidth"):
-            config.maximumIconButtonWidth = 36
+            config.maximumIconButtonWidth = 48
         config.help["toolbarIconSizeFactor"] = """
         # Toolbar icon size factor"""
         if not hasattr(config, "toolbarIconSizeFactor"):
@@ -479,7 +485,7 @@ class ConfigUtil:
         config.help["fontSize"] = """
         # Default font size of content in main window and workspace"""
         if not hasattr(config, "fontSize"):
-            config.fontSize = 17
+            config.fontSize = 18
         config.help["font"] = """
         # Default font"""
         if not hasattr(config, "font"):
@@ -1250,6 +1256,7 @@ class ConfigUtil:
             ("noToolBar", config.noToolBar),
             ("topToolBarOnly", config.topToolBarOnly),
             ("toolBarIconFullSize", config.toolBarIconFullSize),
+            ("iconButtonSize", config.iconButtonSize),
             ("maximumIconButtonWidth", config.maximumIconButtonWidth),
             ("toolbarIconSizeFactor", config.toolbarIconSizeFactor),
             ("sidebarIconSizeFactor", config.sidebarIconSizeFactor),

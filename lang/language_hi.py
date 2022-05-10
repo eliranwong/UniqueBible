@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "समांतर संस्करण",
     "sideBySide": "साइड से बाजू",
     "rowByRow": "पंक्ति द्वारा पंक्ति",
-    "colourCustomisation": "रंग-संगलीकरण",
+    "colourCustomisation": "रंग का अनुकूलन",
     "interlinearData": "इंटरलीनियर डाटा",
     "appearance": "प्रकटन",
     "otherPreferences": "अन्य वरीयताएँ",
     "collections": "संग्रह",
     "controlPreference": "नियंत्रण वरीयता चुनें",
+    "customiseIconSize": "प्रतीक आकार अनुकूलित करें",
 }

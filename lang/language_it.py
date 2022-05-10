@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "Versioni Parallele",
     "sideBySide": "Lato per Side",
     "rowByRow": "Riga per riga",
-    "colourCustomisation": "Personalizzazione del colore",
+    "colourCustomisation": "Personise Colour",
     "interlinearData": "Dati interlineari",
     "appearance": "Aspetto",
     "otherPreferences": "Altre preferenze",
     "collections": "Raccolte",
     "controlPreference": "Seleziona Preferenza di controllo",
+    "customiseIconSize": "Dimensione Icona Customise",
 }

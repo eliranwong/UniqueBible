@@ -57,7 +57,7 @@ class VlcPlayer(QWidget):
         self.openbutton = QtWidgets.QPushButton()
         self.openbutton.setToolTip(config.thisTranslation["open"])
         if config.menuLayout == "material":
-            file = "material/file/file_open/materialiconsoutlined/18dp/2x/outline_file_open_black_18dp.png"
+            file = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
             self.openbutton.setStyleSheet(config.buttonStyle)
         else:
             file = os.path.join("buttons", "playlist.png")
@@ -68,7 +68,7 @@ class VlcPlayer(QWidget):
         self.playbutton = QtWidgets.QPushButton()
         self.playbutton.setToolTip(config.thisTranslation["play"])
         if config.menuLayout == "material":
-            file = "material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png"
+            file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
             self.playbutton.setStyleSheet(config.buttonStyle)
         else:
             file = os.path.join("buttons", "play.png")
@@ -80,7 +80,7 @@ class VlcPlayer(QWidget):
         self.stopbutton = QtWidgets.QPushButton()
         self.stopbutton.setToolTip(config.thisTranslation["stop"])
         if config.menuLayout == "material":
-            file = "material/av/stop_circle/materialiconsoutlined/18dp/2x/outline_stop_circle_black_18dp.png"
+            file = "material/av/stop_circle/materialiconsoutlined/48dp/2x/outline_stop_circle_black_48dp.png"
             self.stopbutton.setStyleSheet(config.buttonStyle)
         else:
             file = os.path.join("buttons", "stop.png")
@@ -92,7 +92,7 @@ class VlcPlayer(QWidget):
         self.nextbutton = QtWidgets.QPushButton()
         # self.nextbutton.setToolTip(config.thisTranslation["next"])
         if config.menuLayout == "material":
-            file = "material/av/skip_next/materialiconsoutlined/18dp/2x/outline_skip_next_black_18dp.png"
+            file = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
             self.nextbutton.setStyleSheet(config.buttonStyle)
         else:
             file = os.path.join("buttons", "next.png")
@@ -122,7 +122,7 @@ class VlcPlayer(QWidget):
             self.stopbutton.setEnabled(False)
             self.mediaplayer.pause()
             if config.menuLayout == "material":
-                file = "material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png"
+                file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
             else:
                 file = os.path.join("buttons", "play.png")
             self.playbutton.setIcon(self.parent.getQIcon(file))
@@ -136,7 +136,7 @@ class VlcPlayer(QWidget):
             self.stopbutton.setEnabled(True)
             self.mediaplayer.play()
             if config.menuLayout == "material":
-                file = "material/av/pause_circle/materialiconsoutlined/18dp/2x/outline_pause_circle_black_18dp.png"
+                file = "material/av/pause_circle/materialiconsoutlined/48dp/2x/outline_pause_circle_black_48dp.png"
             else:
                 file = os.path.join("buttons", "pause.png")
             self.playbutton.setIcon(self.parent.getQIcon(file))
@@ -146,7 +146,7 @@ class VlcPlayer(QWidget):
     def stop(self):
         self.mediaplayer.stop()
         if config.menuLayout == "material":
-            file = "material/av/play_circle_outline/materialiconsoutlined/18dp/2x/outline_play_circle_outline_black_18dp.png"
+            file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
         else:
             file = os.path.join("buttons", "play.png")
         self.playbutton.setIcon(self.parent.getQIcon(file))

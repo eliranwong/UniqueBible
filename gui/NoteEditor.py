@@ -245,33 +245,33 @@ class NoteEditor(QMainWindow):
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(self.menuBar)
 
-        icon = "material/action/note_add/materialiconsoutlined/18dp/2x/outline_note_add_black_18dp.png"
+        icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"])
         self.parent.addMaterialIconButton(toolTip, icon, self.newNoteFile, self.menuBar, None, False)
 
-        icon = "material/file/file_open/materialiconsoutlined/18dp/2x/outline_file_open_black_18dp.png"
+        icon = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"])
         self.parent.addMaterialIconButton(toolTip, icon, self.openFileDialog, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
-        icon = "material/content/save/materialiconsoutlined/18dp/2x/outline_save_black_18dp.png"
+        icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"])
         self.parent.addMaterialIconButton(toolTip, icon, self.saveNote, self.menuBar, None, False)
 
-        icon = "material/content/save_as/materialiconsoutlined/18dp/2x/outline_save_as_black_18dp.png"
+        icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
         toolTip = config.thisTranslation["note_saveAs"]
         self.parent.addMaterialIconButton(toolTip, icon, self.openSaveAsDialog, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
-        icon = "material/maps/local_printshop/materialiconsoutlined/18dp/2x/outline_local_printshop_black_18dp.png"
+        icon = "material/maps/local_printshop/materialiconsoutlined/48dp/2x/outline_local_printshop_black_48dp.png"
         toolTip = config.thisTranslation["note_print"]
         self.parent.addMaterialIconButton(toolTip, icon, self.printNote, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
-        icon = "material/communication/swap_calls/materialiconsoutlined/18dp/2x/outline_swap_calls_black_18dp.png"
+        icon = "material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         toolTip = config.thisTranslation["note_mode"]
         self.parent.addMaterialIconButton(toolTip, icon, self.switchMode, self.menuBar, None, False)
 
@@ -286,12 +286,12 @@ class NoteEditor(QMainWindow):
 
         self.menuBar.addSeparator()
 
-        icon = "material/notification/more/materialiconsoutlined/18dp/2x/outline_more_black_18dp.png"
+        icon = "material/notification/more/materialiconsoutlined/48dp/2x/outline_more_black_48dp.png"
         toolTip = config.thisTranslation["note_toolbar"]
         self.parent.addMaterialIconButton(toolTip, icon, self.toggleToolbar, self.menuBar, None, False)
 
-        #icon = "material/navigation/campaign/materialiconsoutlined/18dp/2x/outline_campaign_black_18dp.png"
-        icon = "material/action/record_voice_over/materialiconsoutlined/18dp/2x/outline_record_voice_over_black_18dp.png"
+        #icon = "material/navigation/campaign/materialiconsoutlined/48dp/2x/outline_campaign_black_48dp.png"
+        icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
         toolTip = config.thisTranslation["note_textUtility"]
         self.parent.addMaterialIconButton(toolTip, icon, self.toggleTextUtility, self.menuBar, None, False)
 
@@ -401,9 +401,9 @@ class NoteEditor(QMainWindow):
         self.addToolBar(self.toolBar)
         
         items = (
-            ("noteTool_textFont", "material/editor/format_size/materialiconsoutlined/18dp/2x/outline_format_size_black_18dp.png", self.format_font),
-            ("noteTool_textColor", "material/editor/format_color_text/materialiconsoutlined/18dp/2x/outline_format_color_text_black_18dp.png", self.format_textColor),
-            ("noteTool_textBackgroundColor", "material/editor/format_color_fill/materialiconsoutlined/18dp/2x/outline_format_color_fill_black_18dp.png", self.format_textBackgroundColor),
+            ("noteTool_textFont", "material/editor/format_size/materialiconsoutlined/48dp/2x/outline_format_size_black_48dp.png", self.format_font),
+            ("noteTool_textColor", "material/editor/format_color_text/materialiconsoutlined/48dp/2x/outline_format_color_text_black_48dp.png", self.format_textColor),
+            ("noteTool_textBackgroundColor", "material/editor/format_color_fill/materialiconsoutlined/48dp/2x/outline_format_color_fill_black_48dp.png", self.format_textBackgroundColor),
         )
         for item in items:
             toolTip, icon, action = item
@@ -426,9 +426,9 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
         
         items = (
-            ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "material/editor/format_bold/materialiconsoutlined/18dp/2x/outline_format_bold_black_18dp.png", self.format_bold),
-            ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "material/editor/format_italic/materialiconsoutlined/18dp/2x/outline_format_italic_black_18dp.png", self.format_italic),
-            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "material/editor/format_underlined/materialiconsoutlined/18dp/2x/outline_format_underlined_black_18dp.png", self.format_underline),
+            ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "material/editor/format_bold/materialiconsoutlined/48dp/2x/outline_format_bold_black_48dp.png", self.format_bold),
+            ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "material/editor/format_italic/materialiconsoutlined/48dp/2x/outline_format_italic_black_48dp.png", self.format_italic),
+            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "material/editor/format_underlined/materialiconsoutlined/48dp/2x/outline_format_underlined_black_48dp.png", self.format_underline),
         )
         for item in items:
             toolTip, icon, action = item
@@ -437,8 +437,8 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         items = (
-            ("noteTool_superscript", "material/editor/superscript/materialiconsoutlined/18dp/2x/outline_superscript_black_18dp.png", self.format_superscript),
-            ("noteTool_subscript", "material/editor/subscript/materialiconsoutlined/18dp/2x/outline_subscript_black_18dp.png", self.format_subscript),
+            ("noteTool_superscript", "material/editor/superscript/materialiconsoutlined/48dp/2x/outline_superscript_black_48dp.png", self.format_superscript),
+            ("noteTool_subscript", "material/editor/subscript/materialiconsoutlined/48dp/2x/outline_subscript_black_48dp.png", self.format_subscript),
         )
         for item in items:
             toolTip, icon, action = item
@@ -446,15 +446,15 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/18dp/2x/outline_auto_fix_high_black_18dp.png", self.format_custom, self.toolBar, translation=False)
+        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
         items = (
-            ("noteTool_left", "material/editor/format_align_left/materialiconsoutlined/18dp/2x/outline_format_align_left_black_18dp.png", self.format_left),
-            ("noteTool_centre", "material/editor/format_align_center/materialiconsoutlined/18dp/2x/outline_format_align_center_black_18dp.png", self.format_center),
-            ("noteTool_right", "material/editor/format_align_right/materialiconsoutlined/18dp/2x/outline_format_align_right_black_18dp.png", self.format_right),
-            ("noteTool_justify", "material/editor/format_align_justify/materialiconsoutlined/18dp/2x/outline_format_align_justify_black_18dp.png", self.format_justify),
+            ("noteTool_left", "material/editor/format_align_left/materialiconsoutlined/48dp/2x/outline_format_align_left_black_48dp.png", self.format_left),
+            ("noteTool_centre", "material/editor/format_align_center/materialiconsoutlined/48dp/2x/outline_format_align_center_black_48dp.png", self.format_center),
+            ("noteTool_right", "material/editor/format_align_right/materialiconsoutlined/48dp/2x/outline_format_align_right_black_48dp.png", self.format_right),
+            ("noteTool_justify", "material/editor/format_align_justify/materialiconsoutlined/48dp/2x/outline_format_align_justify_black_48dp.png", self.format_justify),
         )
         for item in items:
             toolTip, icon, action = item
@@ -462,13 +462,13 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/18dp/2x/outline_format_clear_black_18dp.png", self.format_clear, self.toolBar, translation=False)
+        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
         items = (
-            ("noteTool_hyperlink", "material/content/add_link/materialiconsoutlined/18dp/2x/outline_add_link_black_18dp.png", self.openHyperlinkDialog),
-            ("noteTool_externalImage", "material/image/add_photo_alternate/materialiconsoutlined/18dp/2x/outline_add_photo_alternate_black_18dp.png", self.openImageDialog),
+            ("noteTool_hyperlink", "material/content/add_link/materialiconsoutlined/48dp/2x/outline_add_link_black_48dp.png", self.openHyperlinkDialog),
+            ("noteTool_externalImage", "material/image/add_photo_alternate/materialiconsoutlined/48dp/2x/outline_add_photo_alternate_black_48dp.png", self.openImageDialog),
         )
         for item in items:
             toolTip, icon, action = item
@@ -477,8 +477,8 @@ class NoteEditor(QMainWindow):
         self.toolBar.addSeparator()
 
         items = (
-            ("noteTool_image", "material/editor/insert_photo/materialiconsoutlined/18dp/2x/outline_insert_photo_black_18dp.png", self.addInternalImage),
-            ("noteTool_exportImage", "material/device/sim_card_download/materialiconsoutlined/18dp/2x/outline_sim_card_download_black_18dp.png", self.exportNoteImages),
+            ("noteTool_image", "material/editor/insert_photo/materialiconsoutlined/48dp/2x/outline_insert_photo_black_48dp.png", self.addInternalImage),
+            ("noteTool_exportImage", "material/device/sim_card_download/materialiconsoutlined/48dp/2x/outline_sim_card_download_black_48dp.png", self.exportNoteImages),
         )
         for item in items:
             toolTip, icon, action = item

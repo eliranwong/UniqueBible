@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "パラレル・バージョン",
     "sideBySide": "横並び",
     "rowByRow": "行ごと",
-    "colourCustomisation": "色のカスタマイズ",
+    "colourCustomisation": "カスタマイズ色",
     "interlinearData": "線形データ",
     "appearance": "外観",
     "otherPreferences": "その他の設定",
     "collections": "コレクション",
     "controlPreference": "制御設定の選択",
+    "customiseIconSize": "カスタマイズ・アイコン・サイズ",
 }

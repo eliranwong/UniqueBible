@@ -813,10 +813,11 @@ translation = {
     "parallelVersions": "平行版本",
     "sideBySide": "并排比较",
     "rowByRow": "逐行比较",
-    "colourCustomisation": "颜色设定",
+    "colourCustomisation": "定制颜色",
     "interlinearData": "原文数据",
     "appearance": "外观",
     "otherPreferences": "其他喜好设定",
     "collections": "組合",
     "controlPreference": "选择控制首选项",
+    "customiseIconSize": "定制图标大小",
 }
