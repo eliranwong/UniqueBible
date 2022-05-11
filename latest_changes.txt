@@ -1,4 +1,4 @@
-Changes in 29.41:
+Changes in 29.41, 42:
 * Fixed dynamic loading of menu layout without a restart.
 
 Changes in 29.40:

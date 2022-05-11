@@ -221,10 +221,9 @@ class MainWindow(QMainWindow):
                     self.removeToolBar(self.secondToolBar)
                     self.removeToolBar(self.leftToolBar)
                     self.removeToolBar(self.rightToolBar)
-                    if not config.menuLayout in ("focus", "material"):
-                        self.removeToolBar(self.studyBibleToolBar)
+                    self.removeToolBar(self.studyBibleToolBar)
                 except:
-                    print("errors")
+                    pass
 
             windowClass = None
             if layout in ("classic", "focus", "aleph", "material"):
