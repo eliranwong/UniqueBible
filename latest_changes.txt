@@ -1,3 +1,6 @@
+Changes in 29.40:
+* Set maximum width to limit the width of a few combo boxes on material menu layout toolbar.
+
 Changes in 29.38, 39:
 * Added "Live Filter" icon button on the Material menu layout top toolbar.
 * Added "Ctrl+Shift+F" shortcut to open "Live Filter" dialog in "micron" shortcut set.

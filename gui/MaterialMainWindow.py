@@ -549,6 +549,7 @@ class MaterialMainWindow:
                 initialIndex = self.bibleVersions.index(config.mainText)
             self.versionCombo.setCurrentIndex(initialIndex)
             self.versionCombo.currentIndexChanged.connect(self.changeBibleVersion)
+            self.versionCombo.setMaximumWidth(int(config.iconButtonSize * 7))
             self.firstToolBar.addWidget(self.versionCombo)
 
         # The height of the first text button is used to fix icon button width when a qt-material theme is applied.
@@ -559,6 +560,7 @@ class MaterialMainWindow:
 
         items = self.textList
         self.bibleVersionCombo = CheckableComboBox(items, config.compareParallelList, toolTips=self.textFullNameList)
+        self.bibleVersionCombo.setMaximumWidth(int(config.iconButtonSize * 7))
         self.firstToolBar.addWidget(self.bibleVersionCombo)
 
         icon = "material/navigation/unfold_more/materialiconsoutlined/48dp/2x/outline_unfold_more_black_48dp.png"
@@ -670,6 +672,7 @@ class MaterialMainWindow:
                 initialIndex = self.commentaryList.index(config.commentaryText)
             self.commentaryCombo.setCurrentIndex(initialIndex)
             self.commentaryCombo.currentIndexChanged.connect(self.changeCommentaryVersion)
+            self.commentaryCombo.setMaximumWidth(int(config.iconButtonSize * 7))
             self.secondToolBar.addWidget(self.commentaryCombo)
 
         self.enableSyncCommentaryButton = QPushButton()
@@ -679,6 +682,7 @@ class MaterialMainWindow:
         icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         self.addMaterialIconButton("menu_previous_chapter", icon, self.openBookPreviousChapter, self.secondToolBar)
         self.bookButton = QPushButton(config.book[:20])
+        self.bookButton.setMaximumWidth(int(config.iconButtonSize * 7))
         self.addStandardTextButton(config.book, self.openBookMenu, self.secondToolBar, self.bookButton, translation=False)
         icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu_next_chapter", icon, self.openBookNextChapter, self.secondToolBar)
@@ -704,6 +708,7 @@ class MaterialMainWindow:
 
         fileName = self.getLastExternalFileName()
         self.externalFileButton = QPushButton(fileName[:20])
+        self.externalFileButton.setMaximumWidth(int(config.iconButtonSize * 7))
         self.addStandardTextButton(fileName, self.externalFileButtonClicked, self.secondToolBar, self.externalFileButton, translation=False)
 
         icon = "material/image/edit/materialiconsoutlined/48dp/2x/outline_edit_black_48dp.png"
