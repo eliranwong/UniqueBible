@@ -672,6 +672,7 @@ class ConfigUtil:
         # Specify bible versions to work with parallel:::, compare:::, and comparesidebyside::: commands in material menu layout."""
         if not hasattr(config, "compareParallelList"):
             config.compareParallelList = list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
+            config.compareParallelList.sort()
         config.help["enforceCompareParallel"] = """
         # Options to enforce comparison / parallel: True / False
         # When it is enabled after comparison / parallel feature is loaded once, subsequence entries of bible references will be treated as launching comparison / parallel even COMPARE::: or PARALLEL::: keywords is not used.
@@ -1168,7 +1169,9 @@ class ConfigUtil:
     @staticmethod
     def save():
         if config.menuLayout == "material":
-            config.compareParallelList = config.mainWindow.bibleVersionCombo.checkItems
+            texts = config.mainWindow.bibleVersionCombo.checkItems
+            config.compareParallelList = list(set(texts)) if texts else list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
+            config.compareParallelList.sort()
         if config.removeHighlightOnExit:
             config.bookSearchString = ""
             config.noteSearchString = ""

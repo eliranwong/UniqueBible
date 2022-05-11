@@ -1023,7 +1023,7 @@ class TextCommandParser:
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
         if not confirmedTexts:
             confirmedTexts = [config.favouriteBible]
-        return confirmedTexts
+        return sorted(list(set(confirmedTexts)))
 
     def extractAllVerses(self, text, tagged=False):
         return BibleVerseParser(config.parserStandarisation).extractAllReferences(text, tagged)

@@ -1,3 +1,7 @@
+Changes in 29.43:
+* Fixed duplicated versions selected for comparison view.
+* Relocated "Reload Resources" to "Resources" menu on Material menu layout.
+
 Changes in 29.41, 42:
 * Fixed dynamic loading of menu layout without a restart.
 

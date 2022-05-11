@@ -3085,8 +3085,13 @@ class MainWindow(QMainWindow):
     def runCompareAction(self, keyword):
         if not config.enforceCompareParallel:
             self.enforceCompareParallelButtonClicked()
-        selectedVersions = "_".join(self.bibleVersionCombo.checkItems)
+        selectedVersions = "_".join(self.getSelectedTexts())
         self.runFeature("{0}:::{1}".format(keyword, selectedVersions))
+
+    def getSelectedTexts(self):
+        texts = self.bibleVersionCombo.checkItems
+        texts = list(set(texts)) if texts else list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
+        return sorted(texts)
 
     def runMOB(self):
         self.runFeature("BIBLE:::MOB")

@@ -356,7 +356,6 @@ class MaterialMainWindow:
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
         menu.addSeparator()
-        addMenuItem(menu, "reloadResources", self, self.reloadResources)
         addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
 
         # 4th column
@@ -416,6 +415,9 @@ class MaterialMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+
+        menu.addSeparator()
+        addMenuItem(menu, "reloadResources", self, self.reloadResources)
 
         # macros
         if config.enableMacros:
