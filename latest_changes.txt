@@ -1,3 +1,8 @@
+Changes in 29.38:
+* Added "Live Filter" icon button on the Material menu layout top toolbar.
+* Added "Ctrl+Shift+F" shortcut to open "Live Filter" dialog in "micron" shortcut set.
+* Removed duplicated entry in "micron" shortcut set.  Changed "toggleHideLexicalEntryInBible" to "Ctrl+Shift+X"
+
 Changes in 29.37:
 * Changing theme now does not require a restart.
 * Improved colour customisation in drop down selection widgets.

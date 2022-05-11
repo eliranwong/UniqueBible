@@ -565,6 +565,8 @@ class MaterialMainWindow:
         self.addMaterialIconButton("cp0", icon, self.mainTextMenu, self.firstToolBar)
         icon = "material/action/search/materialiconsoutlined/48dp/2x/outline_search_black_48dp.png"
         self.addMaterialIconButton("cp3", icon, self.displaySearchBibleMenu, self.firstToolBar)
+        icon = "material/action/filter_alt/materialiconsoutlined/48dp/2x/outline_filter_alt_black_48dp.png"
+        self.addMaterialIconButton("liveFilter", icon, self.showLiveFilterDialog, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 

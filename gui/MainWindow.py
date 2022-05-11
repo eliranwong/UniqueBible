@@ -2185,7 +2185,7 @@ class MainWindow(QMainWindow):
     def setIconButtonSize(self):
         integer, ok = QInputDialog.getInt(self,
                                           "UniqueBible", config.thisTranslation["customiseIconSize"], config.iconButtonSize, 12,
-                                          config.maximumIconButtonWidth, 3)
+                                          48, 3)
         if ok:
             config.iconButtonSize = integer
             self.displayMessage(config.thisTranslation["message_restart"])
