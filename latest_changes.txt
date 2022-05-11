@@ -1,3 +1,6 @@
+Changes in 29.41:
+* Fixed dynamic loading of menu layout without a restart.
+
 Changes in 29.40:
 * Set maximum width to limit the width of a few combo boxes on material menu layout toolbar.
 

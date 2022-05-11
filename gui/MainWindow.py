@@ -206,21 +206,25 @@ class MainWindow(QMainWindow):
 
     # Dynamically load menu layout
     def setupMenuLayout(self, layout):
-        if layout == "material" and not config.menuLayout == "material":
-            config.menuLayout = "material"
+        if not layout == config.menuLayout:
+            config.menuLayout = layout
             self.setTheme(config.theme)
         else:
             config.shortcutList = []
             config.noStudyBibleToolbar = True if layout in ("focus", "material") else False
-            try:
-                self.menuBar().clear()
-                self.removeToolBar(self.firstToolBar)
-                self.removeToolBar(self.secondToolBar)
-                self.removeToolBar(self.leftToolBar)
-                self.removeToolBar(self.rightToolBar)
-                self.removeToolBar(self.studyBibleToolBar)
-            except:
-                pass
+            if config.startup:
+                config.startup = False
+            else:
+                try:
+                    self.menuBar().clear()
+                    self.removeToolBar(self.firstToolBar)
+                    self.removeToolBar(self.secondToolBar)
+                    self.removeToolBar(self.leftToolBar)
+                    self.removeToolBar(self.rightToolBar)
+                    if not config.menuLayout in ("focus", "material"):
+                        self.removeToolBar(self.studyBibleToolBar)
+                except:
+                    print("errors")
 
             windowClass = None
             if layout in ("classic", "focus", "aleph", "material"):
@@ -318,7 +322,7 @@ class MainWindow(QMainWindow):
         self.loadResourceDescriptions()
         CrossPlatform().setupResourceLists()
         self.controlPanel.setupResourceLists()
-        self.setMenuLayout(config.menuLayout)
+        self.setupMenuLayout(config.menuLayout)
         self.reloadControlPanel(False)
 
     def reloadControlPanel(self, show=True):
@@ -897,6 +901,8 @@ class MainWindow(QMainWindow):
             self.setColours(mainColor)
         elif config.menuLayout == "material":
             self.setColours()
+        else:
+            self.setupMenuLayout(config.menuLayout)
         self.resetUI()
 
     def setColours(self, color=""):
@@ -935,21 +941,17 @@ class MainWindow(QMainWindow):
         config.defineStyle()
         self.setupMenuLayout("material")
 
-    def setMenuLayout(self, layout):
-        self.setupMenuLayout(layout)
-        config.menuLayout = layout
-
     def setClassicMenuLayout(self):
-        self.setMenuLayout("classic")
+        self.setupMenuLayout("classic")
 
     def setFocusMenuLayout(self):
-        self.setMenuLayout("focus")
+        self.setupMenuLayout("focus")
 
     def setMaterialMenuLayout(self):
-        self.setMenuLayout("material")
+        self.setupMenuLayout("material")
 
     def setAlephMenuLayout(self):
-        self.setMenuLayout("aleph")
+        self.setupMenuLayout("aleph")
 
     def setShortcuts(self, shortcut):
         config.menuShortcuts = shortcut

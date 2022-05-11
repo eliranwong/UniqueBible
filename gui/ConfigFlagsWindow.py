@@ -451,7 +451,7 @@ class ConfigFlagsWindow(QDialog):
 
     def enablePluginsChanged(self):
         config.enablePlugins = not config.enablePlugins
-        self.parent.setMenuLayout(config.menuLayout)
+        self.parent.setupMenuLayout(config.menuLayout)
 
     def clearCommandEntryChanged(self):
         config.clearCommandEntry = not config.clearCommandEntry
@@ -481,7 +481,7 @@ class ConfigFlagsWindow(QDialog):
             config.menuUnderline = "&"
         else:
             config.menuUnderline = ""
-        self.parent.setMenuLayout(config.menuLayout)
+        self.parent.setupMenuLayout(config.menuLayout)
 
     def includeStrictDocTypeInNoteChanged(self):
         config.includeStrictDocTypeInNote = not config.includeStrictDocTypeInNote

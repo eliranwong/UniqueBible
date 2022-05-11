@@ -402,6 +402,7 @@ if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 # Start PySide2 gui
+config.startup = True
 app = QApplication(sys.argv)
 # Set application name
 app.setApplicationName("UniqueBible.app")
