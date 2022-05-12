@@ -1,3 +1,15 @@
+Changes in 29.44:
+* Added a READ::: command:
+            # [KEYWORD] READ
+            # Feature - Read a single bible passage or multiple bible passages, with support of multiple bible versions.
+            # Usage - BIBLE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # e.g. READ:::Jn 3:16-18
+            # e.g. READ:::KJV:::Jn 3:16-18; Deut 6:4
+            # e.g. READ:::KJV_CUV:::Jn 3:16-18; Deut 6:4
+* Fixed an issue about saving config in http-server.
+
 Changes in 29.43:
 * Fixed duplicated versions selected for comparison view.
 * Relocated "Reload Resources" to "Resources" menu on Material menu layout.

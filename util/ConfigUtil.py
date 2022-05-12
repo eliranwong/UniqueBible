@@ -1168,7 +1168,7 @@ class ConfigUtil:
     # Save configurations on exit
     @staticmethod
     def save():
-        if config.menuLayout == "material":
+        if config.menuLayout == "material" and not config.noQt:
             texts = config.mainWindow.bibleVersionCombo.checkItems
             config.compareParallelList = list(set(texts)) if texts else list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
             config.compareParallelList.sort()

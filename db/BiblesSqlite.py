@@ -189,7 +189,7 @@ input.addEventListener('keyup', function(event) {0}
             return Bible(text).readTextChapter(b, c)
 
     def readTextVerse(self, text, b, c, v):
-        plainBibleList, formattedBibleList = self.getTwoBibleLists()
+        plainBibleList, *_ = self.getTwoBibleLists()
         if text in plainBibleList or text == "title":
             query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
             self.cursor.execute(query, (b, c, v))
@@ -801,6 +801,46 @@ class Bible:
             self.connection.commit()
             self.connection.close()
 
+    # Check if a verse is empty
+    def isNonEmptyVerse(self, b, c, v):
+        query = "SELECT Scripture FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
+        self.cursor.execute(query, (b, c, v))
+        scripture = self.cursor.fetchone()
+        if not scripture:
+            return False
+        return True if scripture[-1].strip() else False
+
+    # Expand a list of verse range to include individual verses
+    def getEverySingleVerseList(self, verseList):
+        allVerses = []
+        for verse in verseList:
+            if len(verse) == 3:
+                allVerses.append(verse)
+            elif len(verse) == 4:
+                b, c, vs, ve = verse
+                for v in self.getVerseList(b, c, vs, ve):
+                    allVerses.append((b, c, v))
+            elif len(verse) == 5:
+                b, cs, vs, ce, ve = verse
+                if (cs > ce):
+                    pass
+                elif (cs == ce):
+                    for v in self.getVerseList(b, cs, vs, ve):
+                        allVerses.append((b, cs, v))
+                else:
+                    c = cs
+                    for v in self.getVerseList(b, c, vs):
+                        allVerses.append((b, c, v))
+                    c += 1
+                    while (c < ce):
+                        for v in self.getVerseList(b, c):
+                            allVerses.append((b, c, v))
+                        c += 1
+                    if (c == ce):
+                        for v in self.getVerseList(b, cs, 1, ve):
+                            allVerses.append((b, c, v))
+        return allVerses
+
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
@@ -831,17 +871,40 @@ class Bible:
     def getBookList(self):
         query = "SELECT DISTINCT Book FROM Verses ORDER BY Book"
         self.cursor.execute(query)
-        return [book[0] for book in self.cursor.fetchall() if not book[0] == 0]
+        return sorted([book[0] for book in self.cursor.fetchall() if not book[0] == 0])
 
     def getChapterList(self, b=config.mainB):
         query = "SELECT DISTINCT Chapter FROM Verses WHERE Book=? ORDER BY Chapter"
         self.cursor.execute(query, (b,))
-        return [chapter[0] for chapter in self.cursor.fetchall()]
+        return sorted([chapter[0] for chapter in self.cursor.fetchall()])
 
-    def getVerseList(self, b, c):
-        query = "SELECT DISTINCT Verse FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
-        self.cursor.execute(query, (b, c))
-        return [verse[0] for verse in self.cursor.fetchall()]
+    def getFirstChapter(self, b=config.mainB):
+        chapterList = self.getChapterList(b)
+        return chapterList[0] if chapterList else -1
+
+    def getLastChapter(self, b=config.mainB):
+        chapterList = self.getChapterList(b)
+        return chapterList[-1] if chapterList else -1
+
+    def getVerseList(self, b, c, vs=None, ve=None):
+        if not vs and not ve:
+            query = "SELECT DISTINCT Verse FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
+            self.cursor.execute(query, (b, c))
+        elif vs and ve:
+            query = "SELECT DISTINCT Verse FROM Verses WHERE Book=? AND Chapter=? AND Verse BETWEEN ? AND ? ORDER BY Verse"
+            self.cursor.execute(query, (b, c, vs, ve))
+        elif vs:
+            query = "SELECT DISTINCT Verse FROM Verses WHERE Book=? AND Chapter=? AND Verse>=? ORDER BY Verse"
+            self.cursor.execute(query, (b, c, vs))
+        return sorted([verse[0] for verse in self.cursor.fetchall()])
+
+    def getFirstVerse(self, b, c):
+        verseList = self.getVerseList(b, c)
+        return verseList[0] if verseList else -1
+
+    def getLastVerse(self, b, c):
+        verseList = self.getVerseList(b, c)
+        return verseList[-1] if verseList else -1
 
     def bibleInfo(self):
         if self.connection is None:

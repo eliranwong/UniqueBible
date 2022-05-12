@@ -464,6 +464,16 @@ class TextCommandParser:
             # e.g. VLC:::music/AmazingGrace.mp3
             # e.g. VLC:::video/ProdigalSon.mp4
             """),
+            "read": (self.textRead, """
+            # [KEYWORD] READ
+            # Feature - Read a single bible passage or multiple bible passages.
+            # Usage - BIBLE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE(S)]
+            # Remarks:
+            # 1) The bible version last opened on main view is opened by default if "[BIBLE_VERSION]:::" is omitted.
+            # e.g. READ:::Jn 3:16-18
+            # e.g. READ:::KJV:::Jn 3:16-18; Deut 6:4
+            # e.g. READ:::KJV_CUV:::Jn 3:16-18; Deut 6:4
+            """),
             "readchapter": (self.readChapter, """
             # [KEYWORD] READCHAPTER
             # Feature: read a bible chapter verse by verse
@@ -1519,6 +1529,38 @@ class TextCommandParser:
                 subprocess.Popen("{0} {1}".format(config.open, wikiPage), shell=True)
             else:
                 webbrowser.open(wikiPage)
+
+    # READ:::
+    def textRead(self, command, source):
+        if command.count(":::") == 0:
+            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            command = "{0}:::{1}".format(viewText, command)
+        texts, references = self.splitCommand(command)
+        texts = self.getConfirmedTexts(texts)
+        verseList = self.extractAllVerses(references)
+        if verseList:
+            allPlayList = []
+            for verse in verseList:
+                for text in texts:
+                    everySingleVerseList = Bible(text).getEverySingleVerseList([verse])
+                    playlist = []
+                    for b, c, v in everySingleVerseList:
+                        folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
+                        audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v))
+                        if os.path.isfile(audioFile):
+                            playlist.append(audioFile)
+                    allPlayList += playlist
+            if config.enableHttpServer:
+                target = "study"
+                allPlayList = [(os.path.basename(fullpath), fullpath) for fullpath in allPlayList]
+                content = HtmlGeneratorUtil().getAudioPlayer(allPlayList)
+            else:
+                target = ""
+                content = ""
+                self.parent.playAudioBibleFilePlayList(allPlayList)
+            return (target, content, {})
+        else:
+            self.invalidCommand()
 
     # READCHAPTER:::
     def readChapter(self, command, source):

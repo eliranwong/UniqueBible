@@ -297,7 +297,7 @@ class BibleVerseParser:
     def runExtractAllReferences(self, text, tagged=False):
         if not tagged:
             text = self.parseText(text, False, True)
-        # return a list of tuples (b, c, v)
+        # return a list of tuples (b, c, v) or (b, cs, vs, ce, ve)
         return [literal_eval(m) for m in re.findall('bcv(\([0-9]+?,[ ]*[0-9]+?,[ ]*[0-9, ]*?\))', text)]
 
     def extractAllReferencesFast(self, text, tagged=False):

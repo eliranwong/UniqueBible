@@ -4051,6 +4051,9 @@ class MainWindow(QMainWindow):
                     audioFile = os.path.join(folder, "{0}_{1}_{2}_{3}.mp3".format(text, b, c, verse))
                     if os.path.isfile(audioFile):
                         playlist.append(audioFile)
+        self.playAudioBibleFilePlayList(playlist)
+    
+    def playAudioBibleFilePlayList(self, playlist):
         if playlist and WebtopUtil.isPackageInstalled("vlc"):
             audioFiles = ' '.join(playlist)
             os.system("pkill vlc")
