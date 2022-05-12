@@ -7,6 +7,7 @@ from util.CatalogUtil import CatalogUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
 from util.HtmlGeneratorUtil import HtmlGeneratorUtil
 from util.TextUtil import TextUtil
+from util.FileUtil import FileUtil
 from util.LexicalData import LexicalData
 from functools import partial
 from util.BibleVerseParser import BibleVerseParser
@@ -1536,13 +1537,13 @@ class TextCommandParser:
             updateViewConfig, viewText, *_ = self.getViewConfig(source)
             command = "{0}:::{1}".format(viewText, command)
         texts, references = self.splitCommand(command)
-        texts = self.getConfirmedTexts(texts)
+        texts = list(set([FileUtil.getMP3TextFile(text) for text in self.getConfirmedTexts(texts)]))
         verseList = self.extractAllVerses(references)
         if verseList:
             allPlayList = []
             for verse in verseList:
                 for text in texts:
-                    everySingleVerseList = Bible(text).getEverySingleVerseList([verse])
+                    everySingleVerseList = Bible(text).getEverySingleVerseList((verse,))
                     playlist = []
                     for b, c, v in everySingleVerseList:
                         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))

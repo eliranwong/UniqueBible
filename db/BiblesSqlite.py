@@ -544,105 +544,48 @@ input.addEventListener('keyup', function(event) {0}
             return config.favouriteBible2
 
     def readMultipleVerses(self, inputText, verseList, displayRef=True, presentMode=False):
-        verses = ""
         if config.addFavouriteToMultiRef and not presentMode:
             favouriteBible = self.getFavouriteBible()
             if inputText == favouriteBible:
                 favouriteBible = self.getFavouriteBible2()
-            (fontFile, fontSize, css) = Bible(favouriteBible).getFontInfo()
+            *_, css = Bible(favouriteBible).getFontInfo()
             config.mainCssBibleFontStyle += css
-            textList = [inputText, favouriteBible]
+            textList = (inputText, favouriteBible)
+            bibles = (Bible(inputText), Bible(favouriteBible))
         else:
             textList = [inputText]
+            bibles = (Bible(inputText),)
+        verses = ""
         for index, verse in enumerate(verseList):
             for counter, text in enumerate(textList):
-                b = verse[0]
+                bible = bibles[counter]
+                b, c, v, *_ = verse
+                isRtl = (b < 40 and text in config.rtlTexts)
+                isFavouriteBible = (counter == 1 and text == favouriteBible)
+                # Format html
                 verses += "<div class={0}>".format(text)
-                # format opening tag
-                if counter == 1 and text == favouriteBible:
-                    extraStyle = " border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;"
-                else:
-                    extraStyle = ""
-                if b < 40 and text in config.rtlTexts:
-                    divTag = "<div style='direction: rtl;{0}'>".format(extraStyle)
-                else:
-                    divTag = "<div style='{0}'>".format(extraStyle)
+                # format opening tag                
+                direction = "direction: rtl;" if isRtl else ""
+                extraStyle = " border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;" if isFavouriteBible else ""
+                divTag = "<div style='{0}{1}'>".format(direction, extraStyle)
                 # format verse text
+                verseReference = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(*verse)
                 verseText = ""
                 if len(verse) == 3:
-                    b, c, v = verse
-                    verseReference = self.bcvToVerseReference(b, c, v)
-                    verseText = self.readTextVerse(text, b, c, v)[3].strip()
-                    verseText += " "
-                elif len(verse) == 4:
-                    b, c, vs, ve = verse
-                    verseReference = self.bcvToVerseReference(b, c, vs) if vs == ve else "{0}-{1}".format(self.bcvToVerseReference(b, c, vs), ve)
-                    v = vs
-                    while (v <= ve):
-                        if config.showVerseNumbersInRange:
-                            verseText += "{0}<vid>{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip())
-                        else:
-                            verseText += self.readTextVerse(text, b, c, v)[3].strip()
-                        verseText += " "
-                        v += 1
-                    v = vs
-                elif len(verse) == 5:
-                    b, cs, vs, ce, ve = verse
-                    if (cs > ce):
-                        pass
-                    elif (cs == ce):
-                        verseReference = self.bcvToVerseReference(b, cs, vs) if vs == ve else "{0}-{1}".format(self.bcvToVerseReference(b, cs, vs), ve)
-                        v = vs
-                        while (v <= ve):
-                            if config.showVerseNumbersInRange:
-                                verseText += "{0}<vid>{1}</vid></ref> {2}".format(self.formVerseTag(b, cs, v, text), v, self.readTextVerse(text, b, cs, v)[3].strip())
-                            else:
-                                verseText += self.readTextVerse(text, b, cs, v)[3].strip()
-                            verseText += " "
-                            v += 1
-                        c = cs
-                        v = vs
-                    else:
-                        verseReference = "{0}-{1}:{2}".format(self.bcvToVerseReference(b, cs, vs), ce, ve)
-                        verseText = ""
-                        c = cs
-                        v = vs
-                        while (self.readTextVerse(text, b, c, v)[3].strip()):
-                            if config.showVerseNumbersInRange:
-                                verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
-                            else:
-                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
-                            verseText += " "
-                            v += 1
-                        c += 1
-                        while (c < ce):
-                            v = 1
-                            while (self.readTextVerse(text, b, c, v)[3].strip()):
-                                if config.showVerseNumbersInRange:
-                                    verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
-                                else:
-                                    verseText += self.readTextVerse(text, b, c, v)[3].strip()
-                                verseText += " "
-                                v += 1
-                            c += 1
-                        v = 1
-                        while (v <= ve):
-                            if config.showVerseNumbersInRange:
-                                verseText += "{0}<vid>{3}:{1}</vid></ref> {2}".format(self.formVerseTag(b, c, v, text), v, self.readTextVerse(text, b, c, v)[3].strip(), c)
-                            else:
-                                verseText += self.readTextVerse(text, b, c, v)[3].strip()
-                            verseText += " "
-                            v += 1
-                        c = cs
-                        v = vs
+                    verseText += "{0} ".format(bible.readTextVerse(*verse)[3].strip())
+                else:
+                    everySingleVerseList = bible.getEverySingleVerseList((verse,))
+                    for item in everySingleVerseList:
+                        b2, c2, v2 = item
+                        verseNo = "{0}<vid>{1}</vid></ref> ".format(self.formVerseTag(b2, c2, v2, text), v2) if config.showVerseNumbersInRange else ""
+                        verseText += "{0}{1} ".format(verseNo, bible.readTextVerse(b2, c2, v2)[3].strip())
                 if presentMode:
                     verses += "{2} ({0}, {1})".format(verseReference, text, verseText)
                     if index != len(verseList) - 1:
                         verses += "<br><br>"
-                elif not displayRef or (counter == 1 and text == favouriteBible):
-                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), text, verseText)
                 else:
-                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), verseReference, verseText)
+                    display = verseReference if displayRef else text
+                    verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), display, verseText)
                 verses += "</div>"
         return verses
 

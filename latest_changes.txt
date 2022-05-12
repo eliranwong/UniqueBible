@@ -1,3 +1,6 @@
+Changes in 29.45:
+* Important fix on displaying multiple verse reference.
+
 Changes in 29.44:
 * Added a READ::: command:
             # [KEYWORD] READ
