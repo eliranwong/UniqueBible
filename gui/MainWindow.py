@@ -3393,22 +3393,25 @@ class MainWindow(QMainWindow):
             bibleCss = ""
         bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
-        html = ("<!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>"
-                "<style>body {2} font-size: {4}; font-family:'{5}';{3} "
-                "zh {2} font-family:'{6}'; {3} "
-                "{8} {9}"
-                ".ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}"
-                "</style>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.058'>"
-                "<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>"
-                "<script src='js/common.js?v=1.058'></script>"
-                "<script src='js/{7}.js?v=1.058'></script>"
-                "<script src='w3.js?v=1.058'></script>"
-                "<script src='js/custom.js?v=1.058'></script>"
-                "{0}"
-                "<script>var versionList = []; var compareList = []; var parallelList = []; "
-                "var diffList = []; var searchList = [];</script></head>"
-                "<body><span id='v0.0.0'></span>{1}</body></html>"
+        html = ("""
+                <!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>
+                <style>body {2} font-size: {4}; font-family:'{5}';{3} 
+                zh {2} font-family:'{6}'; {3} 
+                {8} {9}
+                .ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}
+                </style>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.058'>
+                {12}
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>
+                <script src='js/common.js?v=1.058'></script>
+                <script src='js/{7}.js?v=1.058'></script>
+                <script src='w3.js?v=1.058'></script>
+                <script src='js/custom.js?v=1.058'></script>
+                {0}
+                <script>var versionList = []; var compareList = []; var parallelList = []; 
+                var diffList = []; var searchList = [];</script></head>
+                <body><span id='v0.0.0'></span>{1}</body></html>
+                """
                 ).format(activeBCVsettings,
                          content,
                          "{",
@@ -3421,8 +3424,19 @@ class MainWindow(QMainWindow):
                          bibleCss,
                          config.widgetBackgroundColor,
                          config.widgetForegroundColor,
+                         self.getMaterialCss(),
                          )
         return html
+
+    def getMaterialCss(self):
+        activeColor = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
+        return "" if not config.menuLayout == "material" else """
+<style>
+ref, entry {0} color: {2}; {1}
+red, z, red ref, red entry, ref:hover, entry:hover, ch:hover, text:hover, addon:hover, vb {0} color: {3}; {1}
+ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
+</style>
+        """.format("{", "}", config.widgetForegroundColor, activeColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
 
     # add a history record
     def addHistoryRecord(self, view, textCommand, tab="0"):

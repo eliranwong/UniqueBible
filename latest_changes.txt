@@ -1,3 +1,6 @@
+Changes in 29.47:
+* Apply colour customisation to hyperlinnks when material menu layout is used.
+
 Changes in 29.46:
 * Removed requirement of restart for colour and icon size customisation on material menu layout.
 
