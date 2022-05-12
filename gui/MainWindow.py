@@ -2183,13 +2183,17 @@ class MainWindow(QMainWindow):
             config.numberOfTab = integer
             self.displayMessage(config.thisTranslation["message_restart"])
 
-    def setIconButtonSize(self):
-        integer, ok = QInputDialog.getInt(self,
-                                          "UniqueBible", config.thisTranslation["customiseIconSize"], config.iconButtonSize, 12,
-                                          48, 3)
-        if ok:
-            config.iconButtonSize = integer
-            self.displayMessage(config.thisTranslation["message_restart"])
+    def setIconButtonSize(self, size=None):
+        if size is None:
+            integer, ok = QInputDialog.getInt(self,
+                                            "UniqueBible", config.thisTranslation["customiseIconSize"], config.iconButtonSize, 12,
+                                            48, 3)
+            if ok:
+                config.iconButtonSize = integer
+                self.resetUI()
+        else:
+            config.iconButtonSize = size
+            self.resetUI()
 
     def setNoOfLinesPerChunkForParsingDialog(self):
         integer, ok = QInputDialog.getInt(self,

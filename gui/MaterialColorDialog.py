@@ -107,9 +107,10 @@ class MaterialColorDialog(QDialog):
     def setMaskColor(self):
         config.maskMaterialIconBackground = False
         config.maskMaterialIconColor = config.widgetForegroundColor
-        config.defineStyle()
-        self.parent.setupMenuLayout("material")
-        self.updateMyButtons()
+        #config.defineStyle()
+        #self.parent.setupMenuLayout("material")
+        #self.updateMyButtons()
+        self.parent.resetUI()
 
     def updateMyButtons(self):
         buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)

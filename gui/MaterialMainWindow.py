@@ -146,10 +146,15 @@ class MaterialMainWindow:
         # Colour Customisation
         items = (
             ("colourCustomisation", self.changeButtonColour),
-            ("customiseIconSize", self.setIconButtonSize),
+            #("customiseIconSize", self.setIconButtonSize),
         )
         for feature, action in items:
             addMenuItem(subMenu0, feature, self, action)
+        # Icon Size Customisation
+        subMenu = addSubMenu(subMenu0, "customiseIconSize")
+        sizes = (12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48)
+        for size in sizes:
+            addMenuItem(subMenu, str(size), self, partial(self.setIconButtonSize, size), None, False)
         # Fonts
         subMenu = addSubMenu(subMenu0, "menu2_fonts")
         items = (

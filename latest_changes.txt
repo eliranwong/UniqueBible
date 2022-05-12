@@ -1,3 +1,6 @@
+Changes in 29.46:
+* Removed requirement of restart for colour and icon size customisation on material menu layout.
+
 Changes in 29.45:
 * Important fix on displaying multiple verse reference.
 
