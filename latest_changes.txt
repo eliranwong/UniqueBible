@@ -1,5 +1,5 @@
-Changes in 29.48:
-* Changed default widget background colour when a widget is hovered.
+Changes in 29.48, 29.49:
+* Changed default dark theme colours of material menu layout.
 
 Changes in 29.47:
 * Apply colour customisation to hyperlinnks when material menu layout is used.

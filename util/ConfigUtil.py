@@ -882,7 +882,7 @@ class ConfigUtil:
         config.help["widgetForegroundColor"] = """
         # Widget foreground color in 'material' menu layout."""
         if not hasattr(config, "widgetForegroundColor"):
-            config.widgetForegroundColor = "#483D8B" if config.theme == "default" else "#ffffff"
+            config.widgetForegroundColor = "#483D8B" if config.theme == "default" else "#FFFFE0"
         config.help["widgetBackgroundColorHover"] = """
         # Widget background color when a widget is hovered in 'material' menu layout."""
         if not hasattr(config, "widgetBackgroundColorHover"):
@@ -890,7 +890,7 @@ class ConfigUtil:
         config.help["widgetForegroundColorHover"] = """
         # Widget foreground color when a widget is hovered in 'material' menu layout."""
         if not hasattr(config, "widgetForegroundColorHover"):
-            config.widgetForegroundColorHover = "#483D8B" if config.theme == "default" else "#ffffff"
+            config.widgetForegroundColorHover = "#483D8B" if config.theme == "default" else "#FFFFE0"
         config.help["widgetBackgroundColorPressed"] = """
         # Widget background color when a widget is pressed in 'material' menu layout."""
         if not hasattr(config, "widgetBackgroundColorPressed"):
@@ -898,7 +898,7 @@ class ConfigUtil:
         config.help["widgetForegroundColorPressed"] = """
         # Widget foreground color when a widget is pressed in 'material' menu layout."""
         if not hasattr(config, "widgetForegroundColorPressed"):
-            config.widgetForegroundColorPressed = "#483D8B" if config.theme == "default" else "#ffffff"
+            config.widgetForegroundColorPressed = "#483D8B" if config.theme == "default" else "#FFFFE0"
         config.help["maskMaterialIconBackground"] = """
         # config.maskMaterialIconColor applies to either background or foreground of material icons. 
         # Set True to apply the mask to background. 
@@ -910,7 +910,7 @@ class ConfigUtil:
         if not config.maskMaterialIconBackground:
             config.maskMaterialIconColor = config.widgetForegroundColor
         elif not hasattr(config, "maskMaterialIconColor"):
-            config.maskMaterialIconColor = "#483D8B" if config.theme == "default" else "#ffffff"
+            config.maskMaterialIconColor = "#483D8B" if config.theme == "default" else "#FFFFE0"
         config.help["activeVerseColourLight"] = """
         # Active verse number colour displayed on light theme."""
         if not hasattr(config, "activeVerseColourLight"):

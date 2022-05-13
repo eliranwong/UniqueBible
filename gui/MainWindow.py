@@ -907,15 +907,15 @@ class MainWindow(QMainWindow):
     def setColours(self, color=""):
         config.menuLayout = "material"
         if config.theme in ("dark", "night"):
-            config.maskMaterialIconColor = "#ffffff"
+            config.maskMaterialIconColor = '#FFFFE0'
             config.maskMaterialIconBackground = False
-            config.widgetBackgroundColor = "#2f2f2f"
-            config.widgetForegroundColor = "#ffffff"
-            config.widgetBackgroundColorHover = "#545454"
-            config.widgetForegroundColorHover = "#ffffff"
-            config.widgetBackgroundColorPressed = "#232323"
-            config.widgetForegroundColorPressed = "#ffffff"
-            config.activeVerseColourDark = "#aaff7f"
+            config.widgetBackgroundColor = '#2f2f2f'
+            config.widgetForegroundColor = '#FFFFE0'
+            config.widgetBackgroundColorHover = '#545454'
+            config.widgetForegroundColorHover = '#FFFFE0'
+            config.widgetBackgroundColorPressed = '#232323'
+            config.widgetForegroundColorPressed = '#FFFFE0'
+            config.activeVerseColourDark = '#aaff7f'
         else:
             config.maskMaterialIconColor = "#483D8B"
             config.maskMaterialIconBackground = False
