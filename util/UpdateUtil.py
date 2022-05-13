@@ -116,7 +116,10 @@ class UpdateUtil:
         f = open("patches.txt", "r")
         lines = f.readlines()
         for line in lines:
-            ver, contentType, filePath = literal_eval(line)
+            try:
+                ver, contentType, filePath = literal_eval(line)
+            except Exception as e:
+                print(f"{e} in '{line}'")
             patches[filePath] = "{0}".format(ver)
         f.close()
         lines = UpdateUtil.getFilesChanged(sha1, sha2)
@@ -140,22 +143,28 @@ class UpdateUtil:
         f = open("patches.txt", "r")
         lines = f.readlines()
         for line in lines:
-            version, contentType, filePath = literal_eval(line)
+            try:
+                version, contentType, filePath = literal_eval(line)
+            except Exception as e:
+                print(f"{e} in '{line}'")
             patches[filePath] = version
         f.close()
         patch = open("patches.txt", "w")
         for line in lines:
-            version, contentType, filePath = literal_eval(line)
+            try:
+                version, contentType, filePath = literal_eval(line)
+            except Exception as e:
+                print(f"{e} in '{line}'")
             if patches[filePath] == version:
                 patch.write(line)
         patch.close()
 
 if __name__ == "__main__":
 
-    version = "28.09"
+    version = "29.51"
     # Run "git log" to find the sha of commits to compare
-    sha1 = "dec108f8431303fbf105b5fcb502815af7fb7921"
-    sha2 = "4de5fca3c41ee80ffaafff1f79373f79e2e5108b"
+    sha1 = "8d3df70f795f91ad202bba17ef48cae113bd03fb"
+    sha2 = "d36ef8852ea4eb5a985c54399a555933b0442b24"
     if len(sys.argv) == 4:
         version = sys.argv[1].strip()
         sha1 = sys.argv[2].strip()
