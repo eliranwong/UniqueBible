@@ -49,7 +49,7 @@ class MaterialColorDialog(QDialog):
         self.textSelectionColor = QLabel()
         self.textSelectionColor.setFrameStyle(frameStyle)
         self.textSelectionColorButton = QPushButton("textSelectionColor")
-        self.textSelectionColorButton.clicked.connect(self.setTextSelectionColor)
+        self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
 
         self.defaultButton = QPushButton(config.thisTranslation["default"])
         self.defaultButton.clicked.connect(self.setDefault)
@@ -190,12 +190,12 @@ class MaterialColorDialog(QDialog):
                 config.activeVerseColourLight = colorName
             self.parent.reloadCurrentRecord(True)
 
-    def setTextSelectionColor(self):
+    def changeTextSelectionColor(self):
         color = QColorDialog.getColor(QColor(config.textSelectionColor), self)
         if color.isValid():
             self.setLabelColor(self.textSelectionColor, color)
             config.textSelectionColor = color.name()
-            self.setMaskColor()
+            self.parent.reloadCurrentRecord(True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

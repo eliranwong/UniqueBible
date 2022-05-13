@@ -1,3 +1,6 @@
+Changes in 29.54:
+* Fixed updating the colour lable of textSelectionColor displayed on Material menu layout colour customisation dialog.
+
 Changes in 29.53:
 * Enhanced search result display:
     - add audio buttons to search result.
