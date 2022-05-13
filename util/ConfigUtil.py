@@ -886,7 +886,7 @@ class ConfigUtil:
         config.help["widgetBackgroundColorHover"] = """
         # Widget background color when a widget is hovered in 'material' menu layout."""
         if not hasattr(config, "widgetBackgroundColorHover"):
-            config.widgetBackgroundColorHover = "#f8f8a0" if config.theme == "default" else "#3d3d3d"
+            config.widgetBackgroundColorHover = "#f8f8a0" if config.theme == "default" else "#545454"
         config.help["widgetForegroundColorHover"] = """
         # Widget foreground color when a widget is hovered in 'material' menu layout."""
         if not hasattr(config, "widgetForegroundColorHover"):

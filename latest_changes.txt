@@ -1,3 +1,6 @@
+Changes in 29.48:
+* Changed default widget background colour when a widget is hovered.
+
 Changes in 29.47:
 * Apply colour customisation to hyperlinnks when material menu layout is used.
     The hyperlink colours could be overridden by use of UniqueBible/htmlResources/css/custom.css

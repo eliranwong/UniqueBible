@@ -911,7 +911,7 @@ class MainWindow(QMainWindow):
             config.maskMaterialIconBackground = False
             config.widgetBackgroundColor = "#2f2f2f"
             config.widgetForegroundColor = "#ffffff"
-            config.widgetBackgroundColorHover = "#3d3d3d"
+            config.widgetBackgroundColorHover = "#545454"
             config.widgetForegroundColorHover = "#ffffff"
             config.widgetBackgroundColorPressed = "#232323"
             config.widgetForegroundColorPressed = "#ffffff"
@@ -3433,7 +3433,7 @@ class MainWindow(QMainWindow):
         return "" if not config.menuLayout == "material" else """
 <style>
 ref, entry {0} color: {2}; {1}
-red, z, red ref, red entry, ref:hover, entry:hover, ch:hover, text:hover, addon:hover, vb {0} color: {3}; {1}
+red, z, red ref, red entry, vb {0} color: {3}; {1}
 ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
 </style>
         """.format("{", "}", config.widgetForegroundColor, activeColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover)
