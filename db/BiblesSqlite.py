@@ -490,19 +490,21 @@ input.addEventListener('keyup', function(event) {0}
             parser = BibleVerseParser(config.parserStandarisation)
             formatedText += "; ".join(["<ref onclick='bcv({0}, {1}, {2})'>{3}</ref>".format(b, c, v, parser.bcvToVerseReference(b, c, v)) for b, c, v, *_ in verses])
         else:
+            favouriteBible = self.getMultiReferenceFavouriteBible(text)
+            favouriteBibleData = Bible(favouriteBible)
             for verse in verses:
                 b, c, v, verseText = verse
                 if b < 40 and text in config.rtlTexts:
                     divTag = "<div style='direction: rtl;'>"
                 else:
                     divTag = "<div>"
-                formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip())
-                if interlinear and not config.favouriteBible == text:
-                    if b < 40 and config.favouriteBible in config.rtlTexts:
+                formatedText += "{0}<span style='color: purple;'>({1}{2}</ref>)</span> {4}{3}</div>".format(divTag, self.formVerseTag(b, c, v, text), self.bcvToVerseReference(b, c, v), verseText.strip(), FileUtil.getVerseAudioTag(text, b, c, v))
+                if interlinear:
+                    if b < 40 and favouriteBible in config.rtlTexts:
                         divTag = "<div style='direction: rtl; border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
                     else:
                         divTag = "<div style='border: 1px solid gray; border-radius: 2px; margin: 5px; padding: 5px;'>"
-                    formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, config.favouriteBible), config.favouriteBible, self.readTextVerse(config.favouriteBible, b, c, v)[3])
+                    formatedText += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, favouriteBible), favouriteBible, favouriteBibleData.readTextVerse(b, c, v)[3])
             # add highlighting to search string with tags <z>...</z>
             if mode == "BASIC" and not searchString == "z":
                 for searchWord in searchString.split("%"):
@@ -543,11 +545,15 @@ input.addEventListener('keyup', function(event) {0}
         else:
             return config.favouriteBible2
 
+    def getMultiReferenceFavouriteBible(self, inputText):
+        favouriteBible = self.getFavouriteBible()
+        if inputText == favouriteBible:
+            favouriteBible = self.getFavouriteBible2()
+        return favouriteBible
+
     def readMultipleVerses(self, inputText, verseList, displayRef=True, presentMode=False):
         if config.addFavouriteToMultiRef and not presentMode:
-            favouriteBible = self.getFavouriteBible()
-            if inputText == favouriteBible:
-                favouriteBible = self.getFavouriteBible2()
+            favouriteBible = self.getMultiReferenceFavouriteBible(inputText)
             *_, css = Bible(favouriteBible).getFontInfo()
             config.mainCssBibleFontStyle += css
             textList = (inputText, favouriteBible)

@@ -1,3 +1,10 @@
+Changes in 29.53:
+* Enhanced search result display:
+    - add audio buttons to search result.
+    - now works better when config.addFavouriteToMultiRef is set to True.
+        Previously, there was no secondary version displayed when main text is the same as favourite text.
+        Search result now display config.favouriteBible2 if config.favouriteBible is the same os the text being searched.
+
 Changes in 29.52:
 * Added config.textSelectionColor for users to specify text selection colour on material menu layout.
 * Added textSelectionColor option in colour customisation dialog, available on material menu layout.
