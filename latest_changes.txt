@@ -1,3 +1,6 @@
+Changes in 29.51:
+* Fix commentary in miniControl
+
 Changes in 29.50:
 * Added 426 built-in colour themes, which support Material menu layout.
 * New colour theme options are added to Material / Focus / Aleph / Classic menu layout.
@@ -7,7 +10,7 @@ Changes in 29.48, 29.49:
 * Changed default dark theme colours of material menu layout.
 
 Changes in 29.47:
-* Apply colour customisation to hyperlinnks when material menu layout is used.
+* Apply colour customisation to hyperlinks when material menu layout is used.
     The hyperlink colours could be overridden by use of UniqueBible/htmlResources/css/custom.css
 
 Changes in 29.46:
