@@ -85,7 +85,10 @@ class FocusMainWindow:
                 "Light DarkSlateGray",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Light", subSubMenu, self, self.setTheme)
             subMenu.addSeparator()
             themes = (
                 "Dark Pink",
@@ -105,7 +108,10 @@ class FocusMainWindow:
                 "Dark Azure",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Dark", subSubMenu, self, self.setTheme)
             subMenu.addSeparator()
             themes = (
                 "Night Pink",
@@ -125,7 +131,10 @@ class FocusMainWindow:
                 "Night Azure",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Night", subSubMenu, self, self.setTheme)
             subMenu.addSeparator()
             addMenuItem(subMenu, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")

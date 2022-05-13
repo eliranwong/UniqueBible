@@ -1,9 +1,10 @@
 import os, config
 
 from util.FileUtil import FileUtil
+from util.HtmlColorCodes import HtmlColorCodes
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
-from qtpy.QtGui import QIcon
+from qtpy.QtGui import QIcon, QColor, QPixmap
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
 from functools import partial
@@ -24,6 +25,25 @@ def addMenuItem(menu, feature, object, action, shortcut=None, translation=True):
     if shortcut is None:
         shortcut = ""
     return menu.addAction(QAction(config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
+
+def addAllThemeColorMenuItem(theme, menu, object, action):
+    for color in HtmlColorCodes.colors:
+        themeName = "{0} {1}".format(theme, color)
+        addColorIconMenuItem(color, menu, themeName, object, partial(action, themeName), None, False)
+
+def addColorIconMenuItem(color, menu, feature, object, action, shortcut=None, translation=True):
+    color = HtmlColorCodes.colors[color][0]
+    color = QColor(color)
+    menuFontSize = int(config.iconButtonSize / 3 * 2)
+    pixmap = QPixmap(menuFontSize, menuFontSize)
+    pixmap.fill(color)
+    if shortcut:
+        if shortcut in config.shortcutList:
+            shortcut = None
+        else:
+            config.shortcutList.append(shortcut)
+    icon = QIcon(pixmap)
+    return menu.addAction(QAction(icon, config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
 
 def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translation=True):
     if shortcut:

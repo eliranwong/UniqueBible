@@ -95,7 +95,10 @@ class ClassicMainWindow:
                 "Light DarkSlateGray",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Light", subSubMenu, self, self.setTheme)
             subMenu.addSeparator()
             themes = (
                 "Dark Pink",
@@ -115,7 +118,10 @@ class ClassicMainWindow:
                 "Dark Azure",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Dark", subSubMenu, self, self.setTheme)
             subMenu.addSeparator()
             themes = (
                 "Night Pink",
@@ -135,7 +141,10 @@ class ClassicMainWindow:
                 "Night Azure",
             )
             for theme in themes:
-                addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(subMenu, "menu_more")
+            addAllThemeColorMenuItem("Night", subSubMenu, self, self.setTheme)
         subMenu = addSubMenu(menu, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
         subMenu.addSeparator()

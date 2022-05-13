@@ -63,7 +63,10 @@ class AlephMainWindow:
                 "Light DarkSlateGray",
             )
             for theme in themes:
-                addMenuItem(selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(selectTheme, "menu_more")
+            addAllThemeColorMenuItem("Light", subSubMenu, self, self.setTheme)
             selectTheme.addSeparator()
             themes = (
                 "Dark Pink",
@@ -83,7 +86,10 @@ class AlephMainWindow:
                 "Dark Azure",
             )
             for theme in themes:
-                addMenuItem(selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(selectTheme, "menu_more")
+            addAllThemeColorMenuItem("Dark", subSubMenu, self, self.setTheme)
             selectTheme.addSeparator()
             themes = (
                 "Night Pink",
@@ -103,7 +109,10 @@ class AlephMainWindow:
                 "Night Azure",
             )
             for theme in themes:
-                addMenuItem(selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+                color = theme.split(" ")[-1]
+                addColorIconMenuItem(color, selectTheme, theme, self, partial(self.setTheme, theme), None, False)
+            subSubMenu = addSubMenu(selectTheme, "menu_more")
+            addAllThemeColorMenuItem("Night", subSubMenu, self, self.setTheme)
             selectTheme.addSeparator()
 
             addMenuItem(selectTheme, "enableQtMaterial", self, lambda: self.enableQtMaterial(True))

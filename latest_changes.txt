@@ -1,3 +1,8 @@
+Changes in 29.50:
+* Added 426 built-in colour themes, which support Material menu layout.
+* New colour theme options are added to Material / Focus / Aleph / Classic menu layout.
+* Colour icons are now displayed next to colour theme name on menu.
+
 Changes in 29.48, 29.49:
 * Changed default dark theme colours of material menu layout.
 
