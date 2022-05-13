@@ -1,3 +1,7 @@
+Changes in 29.52:
+* Added config.textSelectionColor for users to specify text selection colour on material menu layout.
+* Added textSelectionColor option in colour customisation dialog, available on material menu layout.
+
 Changes in 29.51:
 * Fix commentary in miniControl
 

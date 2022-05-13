@@ -919,6 +919,10 @@ class ConfigUtil:
         # Active verse number colour displayed on dark theme."""
         if not hasattr(config, "activeVerseColourDark"):
             config.activeVerseColourDark = "#aaff7f"
+        config.help["textSelectionColor"] = """
+        # Colour for text selection."""
+        if not hasattr(config, "textSelectionColor"):
+            config.textSelectionColor = "#ffb7b7"
         config.help["qtMaterial"] = """
         # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
@@ -1374,6 +1378,7 @@ class ConfigUtil:
             ("widgetForegroundColorPressed", config.widgetForegroundColorPressed),
             ("activeVerseColourLight", config.activeVerseColourLight),
             ("activeVerseColourDark", config.activeVerseColourDark),
+            ("textSelectionColor", config.textSelectionColor),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
