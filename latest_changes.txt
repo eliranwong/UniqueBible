@@ -1,3 +1,6 @@
+Changes in 29.65:
+* Fixed reload current records, when config.openBibleInMainViewOnly is toggled.
+
 Changes in 29.64:
 * Fixed opening bible link with bible version selected on the main window when config.openBibleInMainViewOnly is set to True.
 * Added a Micron shortcut to show / all all toolbars, as escape key in webtop fullscreen mode exits the fullscreen.
