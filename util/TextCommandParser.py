@@ -143,7 +143,7 @@ class TextCommandParser:
             "passages": (self.textPassages, """
             # [KEYWORD] PASSAGES
             # Feature - Display different bible passages of the same bible version in parallel columns. It is created for studying similar passages.
-            # Usage - PARALLEL:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
+            # Usage - PASSAGES:::[BIBLE_VERSION]:::[BIBLE_REFERENCE]
             # Remarks:
             # 1) Only the bible version last opened on main view is opened if "[BIBLE_VERSION(S)]:::" is omitted.
             # 2) Only the first bible version specified in the command is taken, even multiple bible versions are entered and separated by "_".

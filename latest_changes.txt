@@ -1,3 +1,18 @@
+Changes in 29.58:
+* Added a bible toggle feature "Insert Favourite Version in Fetching Verses" on material menu layout menu.
+    - It toggles configuration flag "config.addFavouriteToMultiRef" and refresh current display.
+    - For example, enter "John 3:16-18; Deu 6:4" in search command field and press enter,
+        or opens a cross-reference result,
+        then toggle this feature to see the difference.
+    - The bible version being inserted is determined by config.favouriteBible and config.config.favouriteBible2
+        If the currently selection bible version is different from the version specified in config.favouriteBible, verses of the config.favouriteBible version are inserted.
+        If the currently selection bible version is the same as the version specified in config.favouriteBible, verses of the config.favouriteBible2 version are inserted.
+        On material menu layout, users can specify their favorite versions of config.favouriteBible and config.favouriteBible2 via menu:
+            UniqueBible > Other Preferences > Select Favourite Bible & Select Favourite Bible 2
+* Added shortcut support for toggling "Insert Favourite Version in Fetching Verses".
+    - Micron uses "Ctrl+Shift+I" to toggle this feature by default.
+* Fixed an issue of verse reference display.
+
 Changes in 29.57:
 * Add import, export to Bible collection
 * Use .filter extension for Live filter import, export

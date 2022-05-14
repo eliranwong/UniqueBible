@@ -823,4 +823,5 @@ translation = {
     "clear": "Löschen",
     "export": "Exportieren",
     "loadMySettings": "Meine Einstellungen laden",
+    "toggleFavouriteVersionIntoMultiRef": "Lieblingsversion einfügen beim Abrufen mehrerer Vers",
 }

@@ -136,6 +136,7 @@ class ShortcutUtil:
             "liveFilterDialog": '',
             "bibleCollections": "",
             "showLibraryCatalogDialog": "",
+            "toggleFavouriteVersionIntoMultiRef": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -258,7 +259,7 @@ class ShortcutUtil:
             "liveFilterDialog": '',
             "bibleCollections": "",
             "showLibraryCatalogDialog": "Ctrl+Shift+O",
-
+            "toggleFavouriteVersionIntoMultiRef": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -381,6 +382,7 @@ class ShortcutUtil:
             "liveFilterDialog": 'Ctrl+Shift+F',
             "bibleCollections": "",
             "showLibraryCatalogDialog": "",
+            "toggleFavouriteVersionIntoMultiRef": "Ctrl+Shift+I",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -503,6 +505,7 @@ class ShortcutUtil:
             "liveFilterDialog": 'Ctrl+*',
             "bibleCollections": "Ctrl+D,B",
             "showLibraryCatalogDialog": "Ctrl+I",
+            "toggleFavouriteVersionIntoMultiRef": "",
         }
     }
 
@@ -542,7 +545,7 @@ class ShortcutUtil:
         "Ctrl+Shift+F": "liveFilterDialog",
         "Ctrl+Shift+G": "",
         "Ctrl+Shift+H": "",
-        "Ctrl+Shift+I": "",
+        "Ctrl+Shift+I": "toggleFavouriteVersionIntoMultiRef",
         "Ctrl+Shift+J": "",
         "Ctrl+Shift+K": "",
         "Ctrl+Shift+L": "openControlPanelTab2",

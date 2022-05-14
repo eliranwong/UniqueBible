@@ -823,4 +823,5 @@ translation = {
     "clear": "Claro",
     "export": "Exportación",
     "loadMySettings": "Cargar mis valores",
+    "toggleFavouriteVersionIntoMultiRef": "Insertar versión favorita en la captación de varios versículos",
 }

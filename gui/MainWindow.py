@@ -2684,6 +2684,11 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
 
+    def toggleFavouriteVersionIntoMultiRef(self):
+        config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+
     def toggleHideLexicalEntryInBible(self):
         config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
         self.newTabException = True

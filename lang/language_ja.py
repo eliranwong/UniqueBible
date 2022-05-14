@@ -823,4 +823,5 @@ translation = {
     "clear": "Clear - クリア",
     "export": "輸出",
     "loadMySettings": "設定のロード",
+    "toggleFavouriteVersionIntoMultiRef": "複数のバージョンをフェッチする際のお気に入りバージョンの挿入",
 }

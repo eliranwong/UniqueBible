@@ -823,4 +823,5 @@ translation = {
     "clear": "지우기",
     "export": "내보내기",
     "loadMySettings": "내 설정 로드하기",
+    "toggleFavouriteVersionIntoMultiRef": "다중 Verses 페치 시 즐겨찾기 버전 삽입하기",
 }

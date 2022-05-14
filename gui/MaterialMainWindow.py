@@ -338,6 +338,7 @@ class MaterialMainWindow:
         items = (
             ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
             ("menu2_subHeadings", self.enableSubheadingButtonClicked, sc.enableSubheadingButtonClicked),
+            ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef),
             ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference),
             ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator),
             ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator),

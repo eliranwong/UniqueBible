@@ -823,4 +823,5 @@ translation = {
     "clear": "清除",
     "export": "出口",
     "loadMySettings": "载入我的设定",
+    "toggleFavouriteVersionIntoMultiRef": "在显示经文组合时插入最爱版本",
 }
