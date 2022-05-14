@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "-Λάργκο",
     "menu2_smaller": "Μικρότερο",
     "menu2_format": "Μορφοποιημένο/απλό στυλ",
-    "menu2_subHeadings": "Εμφάνιση υποτίτλων στην προβολή "Απλή στυλ"",
+    "menu2_subHeadings": "Εμφάνιση υποτίτλων στην προβολή 'Απλή στυλ'",
     "menu_toggleFeatures": "Εναλλαγή λειτουργιών:",
     "menu_toggleEnforceCompareParallel": "Διατήρηση σύγκρισης/παράλληλης προβολής",
     "menu_syncStudyWindowBible": "Συγχρονισμός Βίβλων Παράθυρο Μελέτη",
