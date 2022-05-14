@@ -1,4 +1,4 @@
-Changes in 29.60:
+Changes in 29.60, 61:
 * Added "Swap" bibles feature and shortcut support to material menu layout.
 * Micron shortcuts:
     - Changed the shortcut to open Master Control Morpholo"G"y tab to "Ctrl+Shift+G"
