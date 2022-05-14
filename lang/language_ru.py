@@ -823,5 +823,5 @@ translation = {
     "clear": "Очистить",
     "export": "Экспорт",
     "loadMySettings": "Загрузить мои параметры",
-    "toggleFavouriteVersionIntoMultiRef": "Вставить избранную версию в выборку нескольких версов",
+    "toggleFavouriteVersionIntoMultiRef": "Вставить избранную версию в выборку нескольких ссылок",
 }

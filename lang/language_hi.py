@@ -823,5 +823,5 @@ translation = {
     "clear": "साफ़ करें",
     "export": "निर्यात",
     "loadMySettings": "मेरी सेटिंग लोड करें",
-    "toggleFavouriteVersionIntoMultiRef": "बहु-वर्सेस को प्राप्त करने में पसंदीदा संस्करण प्रविष्ट करें",
+    "toggleFavouriteVersionIntoMultiRef": "एकाधिक सन्दर्भों को लाने में पसंदीदा संस्करण प्रविष्ट करें",
 }

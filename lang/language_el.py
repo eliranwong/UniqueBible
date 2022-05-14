@@ -823,5 +823,5 @@ translation = {
     "clear": "' Εκκαθάριση",
     "export": "' Εξαγωγή",
     "loadMySettings": "Φόρτωση ρυθμίσεων.",
-    "toggleFavouriteVersionIntoMultiRef": "Εισαγωγή θετικής εκδοχής στο Fetching Multiple Verses",
+    "toggleFavouriteVersionIntoMultiRef": "Εισαγωγή θετικής εκδοχής στο Fetching Πολλαπλές παραπομπές",
 }

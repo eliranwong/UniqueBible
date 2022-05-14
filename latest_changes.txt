@@ -1,4 +1,4 @@
-Changes in 29.58:
+Changes in 29.58, 59:
 * Added a bible toggle feature "Insert Favourite Version in Fetching Verses" on material menu layout menu.
     - It toggles configuration flag "config.addFavouriteToMultiRef" and refresh current display.
     - For example, enter "John 3:16-18; Deu 6:4" in search command field and press enter,

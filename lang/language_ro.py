@@ -823,5 +823,5 @@ translation = {
     "clear": "Clar",
     "export": "Export",
     "loadMySettings": "Încarcă setările mele",
-    "toggleFavouriteVersionIntoMultiRef": "Inserați versiunea preferată în introducerea versurilor multiple",
+    "toggleFavouriteVersionIntoMultiRef": "Inserați versiunea preferată în introducerea mai multor referințe",
 }

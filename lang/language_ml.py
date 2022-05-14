@@ -823,5 +823,5 @@ translation = {
     "clear": "വൃത്തിയാക്കുക",
     "export": "പുറത്തുവയ്ക്കുക",
     "loadMySettings": "സജ്ജീകരണങ്ങള് ലോഡ് ചെയ്യുക",
-    "toggleFavouriteVersionIntoMultiRef": "ഒന്നിലധികം വരികളില് ഫീവറൈറ്റ് പതിപ്പു് ചേര്ക്കുക",
+    "toggleFavouriteVersionIntoMultiRef": "à '- à' - à ', à', à ', à', à ', à', à ', à', à ', à',",
 }
