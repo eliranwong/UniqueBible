@@ -64,4 +64,6 @@ htmlResources/popover.html
 credentials_*
 uba_*.py
 htmlResources/material/.DS_Store
-uba.color
+*.color
+*.filter
+*.collection
