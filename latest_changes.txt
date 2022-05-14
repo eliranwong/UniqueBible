@@ -1,3 +1,6 @@
+Changes in 29.62:
+* Allow users to configure private page in config.webUBAServer.
+
 Changes in 29.60, 61:
 * Added "Swap" bibles feature and shortcut support to material menu layout.
 * Micron shortcuts:

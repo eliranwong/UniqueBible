@@ -2889,8 +2889,8 @@ class MainWindow(QMainWindow):
             "TC": "traditional.html",
             "SC": "simplified.html",
         }
-        htmlPage = htmlPages.get(htmlPages[config.standardAbbreviation], "index.html")
-        return "{0}/{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
+        htmlPage = "" if config.webUBAServer.endswith(".html") else "/{0}".format(htmlPages.get(htmlPages[config.standardAbbreviation], "index.html"))
+        return "{0}{1}?cmd={2}".format(config.webUBAServer, htmlPage, command)
 
     def goOnline(self):
         webbrowser.open(self.getOnlineLink())
