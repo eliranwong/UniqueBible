@@ -1112,7 +1112,7 @@ class TextCommandParser:
             content = "<bibletext class='{0}'>{1}</bibletext>".format(text, content)
             if config.openBibleInMainViewOnly:
                 self.setMainVerse(text, bcvTuple)
-                self.setStudyVerse(text, bcvTuple)
+                #self.setStudyVerse(text, bcvTuple)
                 return ("main", content, {})
             else:
                 updateViewConfig, *_ = self.getViewConfig(view)

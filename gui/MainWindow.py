@@ -2600,6 +2600,7 @@ class MainWindow(QMainWindow):
         icon = self.getQIcon(self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(icon)
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
+        self.reloadCurrentRecord(True)
 
     def updateBookButton(self):
         self.bookButton.setText(config.book[:20])
@@ -3399,7 +3400,8 @@ class MainWindow(QMainWindow):
             bibleCss = config.studyCssBibleFontStyle
         else:
             bibleCss = ""
-        bcv = (config.studyText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
+        studyActiveText = config.mainText if config.openBibleInMainViewOnly else config.studyText
+        bcv = (studyActiveText, config.studyB, config.studyC, config.studyV) if view == "study" else (config.mainText, config.mainB, config.mainC, config.mainV)
         activeBCVsettings = "<script>var activeText = '{0}'; var activeB = {1}; var activeC = {2}; var activeV = {3};</script>".format(*bcv)
         html = ("""
                 <!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>
