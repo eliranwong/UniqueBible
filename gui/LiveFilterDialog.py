@@ -1,5 +1,4 @@
 import os
-
 import config
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
@@ -214,7 +213,7 @@ class LiveFilterDialog(QDialog):
         filename, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["import"],
                                                       config.thisTranslation["liveFilter"],
-                                                      "File (*.*)",
+                                                      "File (*.filter)",
                                                       "", options)
         if filename:
             try:
@@ -235,10 +234,10 @@ class LiveFilterDialog(QDialog):
         fileName, *_ = QFileDialog.getSaveFileName(self,
                                            config.thisTranslation["export"],
                                            config.thisTranslation["liveFilter"],
-                                           "File (*.*)", "", options)
+                                           "File (*.filter)", "", options)
         if fileName:
             if not "." in os.path.basename(fileName):
-                fileName = fileName + ".txt"
+                fileName = fileName + ".filter"
             data = ""
             for name, description in self.db.getAll():
                 data += f"{name}:::{description}\n"
