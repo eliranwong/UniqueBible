@@ -2600,7 +2600,11 @@ class MainWindow(QMainWindow):
         icon = self.getQIcon(self.getStudyBibleDisplay())
         self.enableStudyBibleButton.setIcon(icon)
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
-        self.reloadCurrentRecord(True)
+        # Reload Study Window content to update active text setting only when Study Window content is not a bible chapter view
+        view = "study"
+        textCommand = config.history[view][config.currentRecord[view]]
+        if not re.search('^(study:::|bible:::)', textCommand.lower()):
+            self.runTextCommand(textCommand, False, view, True)
 
     def updateBookButton(self):
         self.bookButton.setText(config.book[:20])
@@ -2743,8 +2747,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(plainBible, formattedBible)
-                if not (view == "study" and textCommand.lower().startswith("bible:::")):
-                    self.runTextCommand(textCommand, False, view, forceExecute)
+                self.runTextCommand(textCommand, False, view, forceExecute)
         else:
             mappedBibles = (
                 ("MIB", "OHGBi"),
@@ -2759,8 +2762,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
-                if not (view == "study" and textCommand.lower().startswith("bible:::")):
-                    self.runTextCommand(textCommand, False, view, forceExecute)
+                self.runTextCommand(textCommand, False, view, forceExecute)
 
     # Actions - previous / next chapter
     def showAllChaptersMenu(self):

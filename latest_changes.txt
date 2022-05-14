@@ -1,4 +1,4 @@
-Changes in 29.65:
+Changes in 29.65, 29.66:
 * Fixed reload current records, when config.openBibleInMainViewOnly is toggled.
 
 Changes in 29.64:
