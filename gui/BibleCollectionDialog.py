@@ -1,3 +1,4 @@
+import os
 import config
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
@@ -5,6 +6,7 @@ from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBox
 from qtpy.QtWidgets import QInputDialog
 from qtpy.QtWidgets import QRadioButton
 from qtpy.QtWidgets import QListWidget
+from qtpy.QtWidgets import QFileDialog
 
 
 class BibleCollectionDialog(QDialog):
@@ -15,6 +17,7 @@ class BibleCollectionDialog(QDialog):
         self.setMinimumSize(680, 500)
         self.selectedCollection = None
         self.settingBibles = False
+        self.bibleNames = []
         self.bibles = self.getBibles()
         self.setupUI()
         self.parent = parent
@@ -42,7 +45,12 @@ class BibleCollectionDialog(QDialog):
         renameButton = QPushButton(config.thisTranslation["rename"])
         renameButton.clicked.connect(self.renameCollection)
         buttonsLayout.addWidget(renameButton)
-        buttonsLayout.addStretch()
+        importButton = QPushButton(config.thisTranslation["import"])
+        importButton.clicked.connect(self.importFile)
+        buttonsLayout.addWidget(importButton)
+        exportButton = QPushButton(config.thisTranslation["export"])
+        exportButton.clicked.connect(self.exportFile)
+        buttonsLayout.addWidget(exportButton)
         mainLayout.addLayout(buttonsLayout)
 
         self.biblesTable = QTableView()
@@ -101,9 +109,9 @@ class BibleCollectionDialog(QDialog):
         from db.BiblesSqlite import BiblesSqlite
         from db.BiblesSqlite import Bible
 
-        bibles = BiblesSqlite().getBibleList()
+        self.bibleNames = BiblesSqlite().getBibleList()
         bibleInfo = []
-        for bible in bibles:
+        for bible in self.bibleNames:
             description = Bible(bible).bibleInfo()
             bibleInfo.append((bible, description))
         return bibleInfo
@@ -150,6 +158,52 @@ class BibleCollectionDialog(QDialog):
     def reloadControlPanel(self):
         self.parent.reloadControlPanel(False)
 
+    def importFile(self):
+        options = QFileDialog.Options()
+        filename, filtr = QFileDialog.getOpenFileName(self,
+                                                      config.thisTranslation["import"],
+                                                      config.thisTranslation["bibleCollections"],
+                                                      "File (*.collection)",
+                                                      "", options)
+        if filename:
+            try:
+                with open(filename, errors='ignore') as f:
+                    for line in f:
+                        data = line.split(":::")
+                        name = data[0].strip()
+                        bibles = data[1].strip()
+                        bibleCollection = []
+                        for bible in bibles.split(","):
+                            if bible in self.bibleNames:
+                                bibleCollection.append(bible)
+                        config.bibleCollections[name] = bibleCollection
+            except Exception as e:
+                print(e)
+            self.showListOfCollections()
+
+    def exportFile(self):
+        options = QFileDialog.Options()
+        fileName, *_ = QFileDialog.getSaveFileName(self,
+                                           config.thisTranslation["export"],
+                                           config.thisTranslation["bibleCollections"],
+                                           "File (*.collection)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".collection"
+            data = ""
+            for name in config.bibleCollections.keys():
+                bibles = ",".join(config.bibleCollections[name])
+                data += f"{name}:::{bibles}\n"
+            f = open(fileName, "w", encoding="utf-8")
+            f.write(data)
+            f.close()
+
+
+class Mock:
+
+    def __init__(self):
+        pass
+
 if __name__ == '__main__':
     import sys
     from qtpy.QtWidgets import QApplication
@@ -164,5 +218,5 @@ if __name__ == '__main__':
     config.thisTranslation = LanguageUtil.loadTranslation("en_US")
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication(sys.argv)
-    dialog = BibleCollectionDialog()
+    dialog = BibleCollectionDialog(Mock())
     dialog.exec_()

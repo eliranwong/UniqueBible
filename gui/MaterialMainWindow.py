@@ -188,7 +188,7 @@ class MaterialMainWindow:
         # Collections
         subMenu = addSubMenu(subMenu0, "collections")
         items = (
-            ("bibleCollections", self.showBibleCollectionDialog, None),
+            ("bibleCollections", self.showBibleCollectionDialog, sc.bibleCollections),
             ("libraryCatalog", self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog),
         )
         for feature, action, shortcut in items:

@@ -1,3 +1,8 @@
+Changes in 29.57:
+* Add import, export to Bible collection
+* Use .filter extension for Live filter import, export
+* Add shortcut to Bible collection in Material layout
+
 Changes in 29.56:
 * Add clear and export buttons to Live Filter
 
