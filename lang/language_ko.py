@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "라거",
     "menu2_smaller": "더 작은",
     "menu2_format": "형식화된/단순 스타일",
-    "menu2_subHeadings": "간단한 양식장에 하위 표제 삽입",
+    "menu2_subHeadings": "단순 스타일 장 보기에 하위 표제 표시",
     "menu_toggleFeatures": "기능 토글",
     "menu_toggleEnforceCompareParallel": "비교/병렬 보기 유지",
     "menu_syncStudyWindowBible": "동기화 연구 창 성서",
@@ -823,5 +823,5 @@ translation = {
     "clear": "지우기",
     "export": "내보내기",
     "loadMySettings": "내 설정 로드하기",
-    "toggleFavouriteVersionIntoMultiRef": "다중 참조 페치 시 즐겨찾기 버전 삽입",
+    "toggleFavouriteVersionIntoMultiRef": "다중 참조 페치 시 즐겨찾기 버전 표시",
 }

@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "വലുത് ",
     "menu2_smaller": "ചെറുത് ",
     "menu2_format": "ഫോർമാറ്റഡ്/ലളിതമായ ശൈലി",
-    "menu2_subHeadings": "ഉപവിഭാഗങ്ങൾ ലളിത ശൈലി അദ്ധ്യായത്തിൽ ചേര്‍ക്കുക",
+    "menu2_subHeadings": "ലളിതമായ ശൈലി അദ്ധ്യായത്തിന്റെ ദൃശ്യം കാണിയ്ക്കുക",
     "menu_toggleFeatures": "പ്രത്യേകതകൾ മാറ്റുക",
     "menu_toggleEnforceCompareParallel": "സമ്പ്രദായം സൂക്ഷിക്കുക",
     "menu_syncStudyWindowBible": "പഠന ജാലക ബൈബിൾ സിങ്ക് ചെയ്യുക",
@@ -823,5 +823,5 @@ translation = {
     "clear": "വൃത്തിയാക്കുക",
     "export": "പുറത്തുവയ്ക്കുക",
     "loadMySettings": "സജ്ജീകരണങ്ങള് ലോഡ് ചെയ്യുക",
-    "toggleFavouriteVersionIntoMultiRef": "à '- à' - à ', à', à ', à', à ', à', à ', à', à ', à',",
+    "toggleFavouriteVersionIntoMultiRef": "à '- à', à ', à', à ', à', à ', à', à ', à', à ', à',",
 }

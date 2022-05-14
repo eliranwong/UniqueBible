@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Größer",
     "menu2_smaller": "Kleiner",
     "menu2_format": "Formatierter/einfacher Stil",
-    "menu2_subHeadings": "Teilüberschriften in Kapitel Einfaches Stil einfügen",
+    "menu2_subHeadings": "Teilüberschriften in der Ansicht "Einfache Darstellung" anzeigen",
     "menu_toggleFeatures": "Komponenten umschalten",
     "menu_toggleEnforceCompareParallel": "Vergleich/Parallelansicht beibehalten",
     "menu_syncStudyWindowBible": "Synchronisation von Study Window Bible",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Löschen",
     "export": "Exportieren",
     "loadMySettings": "Meine Einstellungen laden",
-    "toggleFavouriteVersionIntoMultiRef": "Favoritenversion beim Abrufen mehrerer Referenzen einfügen",
+    "toggleFavouriteVersionIntoMultiRef": "Favoritenversion beim Abrufen mehrerer Referenzen anzeigen",
 }

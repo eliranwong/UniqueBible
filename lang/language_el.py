@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "-Λάργκο",
     "menu2_smaller": "Μικρότερο",
     "menu2_format": "Μορφοποιημένο/απλό στυλ",
-    "menu2_subHeadings": "Εισαγωγή υποτίτλων στο κεφάλαιο απλού στυλ",
+    "menu2_subHeadings": "Εμφάνιση υποτίτλων στην προβολή "Απλή στυλ"",
     "menu_toggleFeatures": "Εναλλαγή λειτουργιών:",
     "menu_toggleEnforceCompareParallel": "Διατήρηση σύγκρισης/παράλληλης προβολής",
     "menu_syncStudyWindowBible": "Συγχρονισμός Βίβλων Παράθυρο Μελέτη",
@@ -823,5 +823,5 @@ translation = {
     "clear": "' Εκκαθάριση",
     "export": "' Εξαγωγή",
     "loadMySettings": "Φόρτωση ρυθμίσεων.",
-    "toggleFavouriteVersionIntoMultiRef": "Εισαγωγή θετικής εκδοχής στο Fetching Πολλαπλές παραπομπές",
+    "toggleFavouriteVersionIntoMultiRef": "Εμφάνιση θετικής εκδοχής στο Fetching πολλαπλών παραπομπών",
 }

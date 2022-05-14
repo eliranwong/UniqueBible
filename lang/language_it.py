@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Più grande",
     "menu2_smaller": "Più piccolo",
     "menu2_format": "Stile formattato / Semplice",
-    "menu2_subHeadings": "Inserisci le sottovoci in Stile Semplice",
+    "menu2_subHeadings": "Visualizza le sottovoci in stile semplice Capitolo Visualizza",
     "menu_toggleFeatures": "Funzioni Toggle",
     "menu_toggleEnforceCompareParallel": "Keep Confronta / Parallel View",
     "menu_syncStudyWindowBible": "Sync Study Window Bible",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Chiaro",
     "export": "Esportazione",
     "loadMySettings": "Carica le mie impostazioni",
-    "toggleFavouriteVersionIntoMultiRef": "Inserire Versione Preferita in Fetching Più riferimenti",
+    "toggleFavouriteVersionIntoMultiRef": "Visualizza Versione Preferita in Fetching Più riferimenti",
 }

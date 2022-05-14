@@ -2915,6 +2915,8 @@ class MainWindow(QMainWindow):
             self.openControlPanelTab(0, config.studyB, config.studyC, config.studyV, config.studyText)
 
     def swapBibles(self):
+        if config.openBibleInMainViewOnly:
+            self.enableStudyBibleButtonClicked()
         mText, mb, mc, mv = config.mainText, config.mainB, config.mainC, config.mainV
         sText, sb, sc, sv = config.studyText, config.studyB, config.studyC, config.studyV
         config.mainText, config.mainB, config.mainC, config.mainV = sText, sb, sc, sv

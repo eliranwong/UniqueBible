@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "ラーガー",
     "menu2_smaller": "スモーラー",
     "menu2_format": "フォーマット済み / 単純スタイル",
-    "menu2_subHeadings": "副見出しをシンプル・スタイルの章に挿入",
+    "menu2_subHeadings": "単純スタイルのチャプタビューに副見出しを表示",
     "menu_toggleFeatures": "フィーチャーの切り替え",
     "menu_toggleEnforceCompareParallel": "比較 / パラレル・ビューを保持",
     "menu_syncStudyWindowBible": "同期学習ウィンドウのバイブル",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Clear - クリア",
     "export": "輸出",
     "loadMySettings": "設定のロード",
-    "toggleFavouriteVersionIntoMultiRef": "複数の参照をフェッチする際にお気に入りバージョンを挿入",
+    "toggleFavouriteVersionIntoMultiRef": "複数の参照をフェッチする際に使用するお気に入りのバージョンを表示",
 }

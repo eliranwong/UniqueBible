@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Mai mare",
     "menu2_smaller": "Mai mic",
     "menu2_format": "Stil formatat/simplu",
-    "menu2_subHeadings": "Inserare subpoziţii în capitolul stil simplu",
+    "menu2_subHeadings": "Afișează subpozițiile în stil simplu Capitolul View",
     "menu_toggleFeatures": "Comutare caracteristici",
     "menu_toggleEnforceCompareParallel": "Păstrare comparare/Vizualizare paralelă",
     "menu_syncStudyWindowBible": "Biblia fereastră de studiu de sincronizare",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Clar",
     "export": "Export",
     "loadMySettings": "Încarcă setările mele",
-    "toggleFavouriteVersionIntoMultiRef": "Inserați versiunea preferată în introducerea mai multor referințe",
+    "toggleFavouriteVersionIntoMultiRef": "Afișează versiunea preferată în prezentarea mai multor referințe",
 }

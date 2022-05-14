@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Larger",
     "menu2_smaller": "Smaller",
     "menu2_format": "Formatted / Simple Style",
-    "menu2_subHeadings": "Insert Subheadings into Simple Style Chapter",
+    "menu2_subHeadings": "Display Subheadings in Simple Style Chapter View",
     "menu_toggleFeatures": "Toggle Features",
     "menu_toggleEnforceCompareParallel": "Keep Compare / Parallel View",
     "menu_syncStudyWindowBible": "Sync Study Window Bible",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Clear",
     "export": "Export",
     "loadMySettings": "Load my settings",
-    "toggleFavouriteVersionIntoMultiRef": "Insert Favorite Version in Fetching Multiple References",
+    "toggleFavouriteVersionIntoMultiRef": "Display Favorite Version in Fetching Multiple References",
 }

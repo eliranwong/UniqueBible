@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "बड़ा",
     "menu2_smaller": "छोटा",
     "menu2_format": "प्रारूपित/सरल शैली",
-    "menu2_subHeadings": "सबशीर्षकों को सरल शैली अध्याय में प्रविष्ट करें",
+    "menu2_subHeadings": "सरल शैली अध्याय दृश्य में उपशीर्षकों को प्रदर्शित करें",
     "menu_toggleFeatures": "विशेषताएँ टॉगल करें",
     "menu_toggleEnforceCompareParallel": "तुलना करें/समानांतर दृश्य रखें",
     "menu_syncStudyWindowBible": "विंडो बाइबिल सिंक करें",
@@ -823,5 +823,5 @@ translation = {
     "clear": "साफ़ करें",
     "export": "निर्यात",
     "loadMySettings": "मेरी सेटिंग लोड करें",
-    "toggleFavouriteVersionIntoMultiRef": "एकाधिक सन्दर्भों को लाने में पसंदीदा संस्करण प्रविष्ट करें",
+    "toggleFavouriteVersionIntoMultiRef": "एकाधिक सन्दर्भों को लाने में पसंदीदा संस्करण प्रदर्शित करें",
 }

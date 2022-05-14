@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Más grande",
     "menu2_smaller": "Menor",
     "menu2_format": "Formato/Estilo simple",
-    "menu2_subHeadings": "Insertar subpartidas en el capítulo de estilo simple",
+    "menu2_subHeadings": "Mostrar las subcabeceras en la vista de capítulo de estilo simple",
     "menu_toggleFeatures": "Cómo cambiar características",
     "menu_toggleEnforceCompareParallel": "Mantener comparación/vista paralela",
     "menu_syncStudyWindowBible": "Biblia de Ventana de Estudio de",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Claro",
     "export": "Exportación",
     "loadMySettings": "Cargar mis valores",
-    "toggleFavouriteVersionIntoMultiRef": "Insertar versión favorita en Fetching Multiple References",
+    "toggleFavouriteVersionIntoMultiRef": "Mostrar la versión favorita en Fetching Multiple References",
 }

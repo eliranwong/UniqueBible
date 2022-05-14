@@ -1,3 +1,10 @@
+Changes in 29.60:
+* Added "Swap" bibles feature and shortcut support to material menu layout.
+* Micron shortcuts:
+    - Changed the shortcut to open Master Control Morpholo"G"y tab to "Ctrl+Shift+G"
+    - Added "Ctrl+Shift+S" to "S"wap bible versions between Main and Study windows.
+* Changed two item translation description.
+
 Changes in 29.58, 59:
 * Added a bible toggle feature "Insert Favourite Version in Fetching Verses" on material menu layout menu.
     - It toggles configuration flag "config.addFavouriteToMultiRef" and refresh current display.

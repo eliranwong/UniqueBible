@@ -329,6 +329,7 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
+        addMenuItem(subMenu, "swap", self, self.swapBibles, sc.swapBibles)
         
         menu.addSeparator()
         addMenuItem(menu, "liveFilter", self, self.showLiveFilterDialog, sc.liveFilterDialog)

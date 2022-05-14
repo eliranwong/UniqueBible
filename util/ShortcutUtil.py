@@ -137,6 +137,7 @@ class ShortcutUtil:
             "bibleCollections": "",
             "showLibraryCatalogDialog": "",
             "toggleFavouriteVersionIntoMultiRef": "",
+            "swapBibles": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -260,6 +261,7 @@ class ShortcutUtil:
             "bibleCollections": "",
             "showLibraryCatalogDialog": "Ctrl+Shift+O",
             "toggleFavouriteVersionIntoMultiRef": "",
+            "swapBibles": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -320,7 +322,7 @@ class ShortcutUtil:
             "openControlPanelTab4": 'Ctrl+Y',
             "openControlPanelTab5": 'Ctrl+M',
             "openControlPanelTab6": 'Ctrl+Shift+M',
-            "openControlPanelTab7": 'Ctrl+Shift+S',
+            "openControlPanelTab7": 'Ctrl+Shift+G',
             "openMainBookNote": '',
             "openMainChapterNote": '',
             "openMainVerseNote": '',
@@ -383,6 +385,7 @@ class ShortcutUtil:
             "bibleCollections": "",
             "showLibraryCatalogDialog": "",
             "toggleFavouriteVersionIntoMultiRef": "Ctrl+Shift+I",
+            "swapBibles": "Ctrl+Shift+S",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -506,6 +509,7 @@ class ShortcutUtil:
             "bibleCollections": "Ctrl+D,B",
             "showLibraryCatalogDialog": "Ctrl+I",
             "toggleFavouriteVersionIntoMultiRef": "",
+            "swapBibles": "",
         }
     }
 
@@ -543,7 +547,7 @@ class ShortcutUtil:
         "Ctrl+Shift+D": "",
         "Ctrl+Shift+E": "toggleShowVerseReference",
         "Ctrl+Shift+F": "liveFilterDialog",
-        "Ctrl+Shift+G": "",
+        "Ctrl+Shift+G": "openControlPanelTab7",
         "Ctrl+Shift+H": "",
         "Ctrl+Shift+I": "toggleFavouriteVersionIntoMultiRef",
         "Ctrl+Shift+J": "",
@@ -555,7 +559,7 @@ class ShortcutUtil:
         "Ctrl+Shift+P": "",
         "Ctrl+Shift+Q": "",
         "Ctrl+Shift+R": "toggleReadTillChapterEnd",
-        "Ctrl+Shift+S": "openControlPanelTab7",
+        "Ctrl+Shift+S": "swapBibles",
         "Ctrl+Shift+T": "",
         "Ctrl+Shift+U": "fullsizeWindow",
         "Ctrl+Shift+V": "mediaPlayer",

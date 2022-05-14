@@ -62,7 +62,7 @@ translation = {
     "menu2_larger": "Больше",
     "menu2_smaller": "Меньший",
     "menu2_format": "Форматированный/Простой стиль",
-    "menu2_subHeadings": "Вставить подзаголовки в раздел Простой стиль",
+    "menu2_subHeadings": "Показать подзаголовки в разделе Простой стиль главы",
     "menu_toggleFeatures": "Переключить функции",
     "menu_toggleEnforceCompareParallel": "Сохранить сравнение/Параллельное представление",
     "menu_syncStudyWindowBible": "Библия для исследования синхронизации",
@@ -823,5 +823,5 @@ translation = {
     "clear": "Очистить",
     "export": "Экспорт",
     "loadMySettings": "Загрузить мои параметры",
-    "toggleFavouriteVersionIntoMultiRef": "Вставить избранную версию в выборку нескольких ссылок",
+    "toggleFavouriteVersionIntoMultiRef": "Показать избранную версию при получении нескольких ссылок",
 }
