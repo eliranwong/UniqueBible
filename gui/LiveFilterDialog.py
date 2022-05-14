@@ -1,3 +1,5 @@
+import os
+
 import config
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QStandardItemModel, QStandardItem
@@ -89,6 +91,9 @@ class LiveFilterDialog(QDialog):
         self.reloadFilters()
 
         buttonsLayout = QHBoxLayout()
+        clearButton = QPushButton(config.thisTranslation["clear"])
+        clearButton.clicked.connect(self.clearFilter)
+        buttonsLayout.addWidget(clearButton)
         addButton = QPushButton(config.thisTranslation["add"])
         addButton.clicked.connect(self.addNewFilter)
         buttonsLayout.addWidget(addButton)
@@ -98,9 +103,15 @@ class LiveFilterDialog(QDialog):
         editButton = QPushButton(config.thisTranslation["edit"])
         editButton.clicked.connect(self.editFilter)
         buttonsLayout.addWidget(editButton)
+        mainLayout.addLayout(buttonsLayout)
+
+        buttonsLayout = QHBoxLayout()
         importButton = QPushButton(config.thisTranslation["import"])
         importButton.clicked.connect(self.importFile)
         buttonsLayout.addWidget(importButton)
+        exportButton = QPushButton(config.thisTranslation["export"])
+        exportButton.clicked.connect(self.exportFile)
+        buttonsLayout.addWidget(exportButton)
         buttonsLayout.addStretch()
         mainLayout.addLayout(buttonsLayout)
 
@@ -120,9 +131,9 @@ class LiveFilterDialog(QDialog):
         self.filters = self.db.getAll()
         self.dataViewModel.clear()
         rowCount = 0
-        for bible, description in self.filters:
-            item = QStandardItem(bible)
-            item.setToolTip(bible)
+        for name, description in self.filters:
+            item = QStandardItem(name)
+            item.setToolTip(name)
             item.setCheckable(True)
             self.dataViewModel.setItem(rowCount, 0, item)
             item = QStandardItem(description)
@@ -150,17 +161,20 @@ class LiveFilterDialog(QDialog):
             if numChecked == 0:
                 config.mainWindow.studyPage.runJavaScript(self.JS_HIDE.format("false"))
             else:
-                sets = []
                 config.mainWindow.studyPage.runJavaScript(self.JS_HIDE.format("true"))
-                for index in range(self.dataViewModel.rowCount()):
-                    item = self.dataViewModel.item(index)
-                    if item.checkState() == Qt.Checked:
-                        sets.append('"{0}"'.format(self.filters[index][1]))
-                wordSets = ",".join(sets)
-                js = self.JS_SHOW.format(wordSets)
-                config.mainWindow.studyPage.runJavaScript(js)
+                self.runFilter()
         except Exception as e:
             print(str(e))
+
+    def runFilter(self):
+        sets = []
+        for index in range(self.dataViewModel.rowCount()):
+            item = self.dataViewModel.item(index)
+            if item.checkState() == Qt.Checked:
+                sets.append('"{0}"'.format(self.filters[index][1]))
+        wordSets = ",".join(sets)
+        js = self.JS_SHOW.format(wordSets)
+        config.mainWindow.studyPage.runJavaScript(js)
 
     def addNewFilter(self):
         fields = [(config.thisTranslation["filter2"], ""),
@@ -189,6 +203,12 @@ class LiveFilterDialog(QDialog):
             self.db.insert(data[0], data[1])
             self.reloadFilters()
 
+    def clearFilter(self):
+        for index in range(self.dataViewModel.rowCount()):
+            item = self.dataViewModel.item(index)
+            item.setCheckState(Qt.CheckState.Unchecked)
+        self.runFilter()
+
     def importFile(self):
         options = QFileDialog.Options()
         filename, filtr = QFileDialog.getOpenFileName(self,
@@ -210,10 +230,30 @@ class LiveFilterDialog(QDialog):
                 print(e)
             self.reloadFilters()
 
+    def exportFile(self):
+        options = QFileDialog.Options()
+        fileName, *_ = QFileDialog.getSaveFileName(self,
+                                           config.thisTranslation["export"],
+                                           config.thisTranslation["liveFilter"],
+                                           "File (*.*)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".txt"
+            data = ""
+            for name, description in self.db.getAll():
+                data += f"{name}:::{description}\n"
+            f = open(fileName, "w", encoding="utf-8")
+            f.write(data)
+            f.close()
+
+
 class Dummy:
+
     def __init__(self):
         pass
 
+    def disableBiblesInParagraphs(self):
+        pass
 
 if __name__ == '__main__':
     import sys

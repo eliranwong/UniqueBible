@@ -820,5 +820,7 @@ translation = {
     "collections": "Συλλογές:",
     "controlPreference": "Επιλογή προτίμησης ελέγχου",
     "customiseIconSize": "Προσαρμογή μεγέθους εικονιδίου",
+    "clear": "' Εκκαθάριση",
+    "export": "' Εξαγωγή",
     "loadMySettings": "Φόρτωση ρυθμίσεων.",
 }
