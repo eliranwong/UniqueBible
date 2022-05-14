@@ -820,4 +820,5 @@ translation = {
     "collections": "Raccolte",
     "controlPreference": "Seleziona Preferenza di controllo",
     "customiseIconSize": "Dimensione Icona Customise",
+    "loadMySettings": "Carica le mie impostazioni",
 }

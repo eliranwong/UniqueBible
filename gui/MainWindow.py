@@ -926,6 +926,7 @@ class MainWindow(QMainWindow):
             config.widgetBackgroundColorPressed = "#d9d9d9"
             config.widgetForegroundColorPressed = "#483D8B"
             config.activeVerseColourLight = "#483D8B"
+        config.textSelectionColor = "#ffb7b7"
         if color:
             color = HtmlColorCodes.colors[color][0]
             config.maskMaterialIconBackground = False

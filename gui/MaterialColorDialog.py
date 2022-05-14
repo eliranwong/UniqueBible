@@ -1,6 +1,6 @@
-import sys, config
+import sys, config, pprint, os
 import webbrowser
-from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication
+from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
 from qtpy.QtGui import QColor, QPalette
 
 class MaterialColorDialog(QDialog):
@@ -51,6 +51,11 @@ class MaterialColorDialog(QDialog):
         self.textSelectionColorButton = QPushButton("textSelectionColor")
         self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
 
+        self.saveButton = QPushButton(config.thisTranslation["note_saveAs"])
+        self.saveButton.clicked.connect(self.openSaveAsDialog)
+        self.loadButton = QPushButton(config.thisTranslation["loadMySettings"])
+        self.loadButton.clicked.connect(self.openFileDialogAction)
+
         self.defaultButton = QPushButton(config.thisTranslation["default"])
         self.defaultButton.clicked.connect(self.setDefault)
 
@@ -81,9 +86,11 @@ class MaterialColorDialog(QDialog):
         layout.addWidget(self.textSelectionColorButton, 7, 0)
         layout.addWidget(self.textSelectionColor, 7, 1)
 
-        layout.addWidget(self.defaultButton, 8, 0)
-        layout.addWidget(self.aboutButton, 8, 1)
-        self.updateMyButtons()
+        layout.addWidget(self.saveButton, 8, 0)
+        layout.addWidget(self.loadButton, 8, 1)
+
+        layout.addWidget(self.defaultButton, 9, 0)
+        layout.addWidget(self.aboutButton, 9, 1)
 
         self.setLayout(layout)
 
@@ -97,10 +104,52 @@ class MaterialColorDialog(QDialog):
         label.setPalette(QPalette(color))
         label.setAutoFillBackground(True)
 
+    def openFileDialogAction(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getOpenFileName(self,
+                config.thisTranslation["menu7_open"],
+                "",
+                "UniqueBible.app Color Settings (*.color)", "", options)
+        if fileName:
+            with open(fileName, "r") as f:
+                settings = f.read()
+                exec(settings)
+            self.parent.resetUI()
+            self.setConfigColor()
+
+    def openSaveAsDialog(self):
+        defaultName = "uba.color"
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                defaultName,
+                "UniqueBible.app Color Settings (*.color)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".color"
+            self.saveData(fileName)
+
+    def saveData(self, fileName):
+        data = (
+            ("config.maskMaterialIconColor", config.maskMaterialIconColor),
+            ("config.maskMaterialIconBackground", config.maskMaterialIconBackground),
+            ("config.widgetBackgroundColor", config.widgetBackgroundColor),
+            ("config.widgetForegroundColor", config.widgetForegroundColor),
+            ("config.widgetBackgroundColorHover", config.widgetBackgroundColorHover),
+            ("config.widgetForegroundColorHover", config.widgetForegroundColorHover),
+            ("config.widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
+            ("config.widgetForegroundColorPressed", config.widgetForegroundColorPressed),
+            ("config.activeVerseColourLight", config.activeVerseColourLight),
+            ("config.activeVerseColourDark", config.activeVerseColourDark),
+            ("config.textSelectionColor", config.textSelectionColor),
+        )
+        with open(fileName, "w", encoding="utf-8") as fileObj:
+            for name, value in data:
+                fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
+
     def setDefault(self):
         self.parent.setTheme(config.theme)
         self.setConfigColor()
-        self.updateMyButtons()
 
     def setConfigColor(self):
         self.setLabelColor(self.widgetBackgroundColor, QColor(config.widgetBackgroundColor))
@@ -117,25 +166,7 @@ class MaterialColorDialog(QDialog):
         config.maskMaterialIconColor = config.widgetForegroundColor
         #config.defineStyle()
         #self.parent.setupMenuLayout("material")
-        #self.updateMyButtons()
         self.parent.resetUI()
-
-    def updateMyButtons(self):
-        buttonStyle = "QPushButton {0}background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}".format("{", "}", config.widgetBackgroundColor, config.widgetForegroundColor, config.widgetBackgroundColorHover, config.widgetForegroundColorHover, config.widgetBackgroundColorPressed, config.widgetForegroundColorPressed)
-        myButtons = (
-            self.widgetBackgroundColorButton,
-            self.widgetBackgroundColorHoverButton,
-            self.widgetBackgroundColorPressedButton,
-            self.widgetForegroundColorButton,
-            self.widgetForegroundColorHoverButton,
-            self.widgetForegroundColorPressedButton,
-            self.activeVerseColourButton,
-            self.textSelectionColorButton,
-            self.defaultButton,
-            self.aboutButton,
-        )
-        for button in myButtons:
-            button.setStyleSheet(buttonStyle)
 
     def setPushButtonBackgroundColor(self):
         color = QColorDialog.getColor(QColor(config.widgetBackgroundColor), self)

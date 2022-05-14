@@ -820,4 +820,5 @@ translation = {
     "collections": "ശേഖരം",
     "controlPreference": "നിയന്ത്രണ മുന്ഗണന തെരഞ്ഞെടുക്കുക",
     "customiseIconSize": "ചിഹ്നത്തിന്റെ വലിപ്പം മാറ്റുക",
+    "loadMySettings": "സജ്ജീകരണങ്ങള് ലോഡ് ചെയ്യുക",
 }

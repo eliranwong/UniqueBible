@@ -820,4 +820,5 @@ translation = {
     "collections": "Colecții",
     "controlPreference": "Selectați preferința de control",
     "customiseIconSize": "Personalizează dimensiunea pictogramei",
+    "loadMySettings": "Încarcă setările mele",
 }

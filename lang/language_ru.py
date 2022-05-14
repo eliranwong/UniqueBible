@@ -820,4 +820,5 @@ translation = {
     "collections": "Собрания",
     "controlPreference": "Выбрать параметр управления",
     "customiseIconSize": "Размер значка Customise",
+    "loadMySettings": "Загрузить мои параметры",
 }

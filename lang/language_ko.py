@@ -820,4 +820,5 @@ translation = {
     "collections": "콜렉션",
     "controlPreference": "제어 환경 설정 선택",
     "customiseIconSize": "사용자 정의 아이콘 크기",
+    "loadMySettings": "내 설정 로드하기",
 }
