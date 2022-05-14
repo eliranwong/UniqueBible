@@ -3440,9 +3440,9 @@ class MainWindow(QMainWindow):
         activeColor = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
         return "" if not config.menuLayout == "material" else """
 <style>
-ref, entry {0} color: {2}; {1}
+a, a:link, a:visited, ref, entry {0} color: {2}; {1}
 red, z, red ref, red entry, vb {0} color: {3}; {1}
-ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
+a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
 ::selection {0} background: {6}; {1}
 ::-moz-selection {0} background: {6}; {1}
 </style>
