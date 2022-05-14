@@ -820,5 +820,7 @@ translation = {
     "collections": "Collections",
     "controlPreference": "Sélectionner la préférence de contrôle",
     "customiseIconSize": "Personnaliser la taille de l'icône",
+    "clear": "Effacer",
+    "export": "Exportation",
     "loadMySettings": "Charger mes paramètres",
 }

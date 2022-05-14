@@ -820,5 +820,7 @@ translation = {
     "collections": "Objektgruppen",
     "controlPreference": "Steuervorgabe auswählen",
     "customiseIconSize": "Symbolgröße anpassen",
+    "clear": "Löschen",
+    "export": "Exportieren",
     "loadMySettings": "Meine Einstellungen laden",
 }

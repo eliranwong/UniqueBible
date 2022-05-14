@@ -1,9 +1,12 @@
+Changes in 29.56:
+* Add clear and export buttons to Live Filter
+
 Changes in 29.55:
 * Added "Save as" and "Load my settings" buttons to Material colour customisation dialog.  
     Users can use them to save or load a copy of their customised settings.
 
 Changes in 29.54:
-* Fixed updating the colour lable of textSelectionColor displayed on Material menu layout colour customisation dialog.
+* Fixed updating the colour label of textSelectionColor displayed on Material menu layout colour customisation dialog.
 
 Changes in 29.53:
 * Enhanced search result display:

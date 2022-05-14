@@ -820,5 +820,7 @@ translation = {
     "collections": "組合",
     "controlPreference": "選取控制喜好設定",
     "customiseIconSize": "自訂圖示大小",
+    "clear": "清除",
+    "export": "匯出",
     "loadMySettings": "載入我的設定",
 }
