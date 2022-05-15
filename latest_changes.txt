@@ -1,6 +1,9 @@
-Changes in 29.67:
+Changes in 29.68:
 * Update main text and reference button when a tab is changed in the main bible window.
 * Improved display of PASSAGES::: command content.
+
+Changes in 29.67:
+* Fixed updating label colours in Colour Customisation diaolog after selection of new colours.
 
 Changes in 29.65, 29.66:
 * Fixed reload current records, when config.openBibleInMainViewOnly is toggled.
