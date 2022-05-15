@@ -484,6 +484,19 @@ class MainWindow(QMainWindow):
         if isinstance(event, QEvent):
             return QWidget.event(self, event)
 
+    def checkToolTipCommand(self, tabToolTip):
+        texts = re.search(":::([^:]+?):::", tabToolTip)
+        if texts:
+            textList = self.textCommandParser.getConfirmedTexts(texts[0], True)
+            text = textList[0] if textList else config.mainText
+        elif tabToolTip.lower().startswith("text:::"):
+            *_, textForCheck = self.textCommandParser.splitCommand(tabToolTip)
+            textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
+            text = textList[0] if textList else config.mainText
+        else:
+            text = config.mainText
+        return text
+
     # manage main page
     def setMainPage(self):
         # main page changes as tab is changed.
@@ -501,20 +514,15 @@ class MainWindow(QMainWindow):
             else:
                 bcvTuple = (config.mainB, config.mainC, config.mainV)
             # check text
-            texts = re.search(":::([^:]+?):::", tabToolTip)
-            if texts:
-                textList = self.textCommandParser.getConfirmedTexts(texts[0])
-                text = textList[0] if textList else config.mainText
-            elif tabToolTip.lower().startswith("text:::"):
-                *_, textForCheck = self.textCommandParser.splitCommand(tabToolTip)
-                textList = self.textCommandParser.getConfirmedTexts(textForCheck)
-                text = textList[0] if textList else config.mainText
-            elif "-" in tabText:
+            if "-" in tabText:
                 textForCheck = tabText.split("-", 1)[0]
-                textList = self.textCommandParser.getConfirmedTexts(textForCheck)
-                text = textList[0] if textList else config.mainText
+                textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
+                if textList:
+                    text = textList[0]
+                else:
+                    text = self.checkToolTipCommand(tabToolTip)
             else:
-                text = config.mainText
+                text = self.checkToolTipCommand(tabToolTip)
             # Update main reference button and text
             self.textCommandParser.setMainVerse(text, bcvTuple)
         if config.theme in ("dark", "night"):
