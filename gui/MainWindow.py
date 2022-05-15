@@ -489,6 +489,34 @@ class MainWindow(QMainWindow):
         # main page changes as tab is changed.
         # print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
+        # check command stored in each tab's tooltip
+        tabText = self.mainView.tabText(self.mainView.currentIndex()).strip()
+        tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
+        if tabToolTip:
+            # check reference
+            references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
+            if references:
+                b, c, v, *_ = references[-1]
+                bcvTuple = (b, c, v)
+            else:
+                bcvTuple = (config.mainB, config.mainC, config.mainV)
+            # check text
+            texts = re.search(":::([^:]+?):::", tabToolTip)
+            if texts:
+                textList = self.textCommandParser.getConfirmedTexts(texts[0])
+                text = textList[0] if textList else config.mainText
+            elif tabToolTip.lower().startswith("text:::"):
+                *_, textForCheck = self.textCommandParser.splitCommand(tabToolTip)
+                textList = self.textCommandParser.getConfirmedTexts(textForCheck)
+                text = textList[0] if textList else config.mainText
+            elif "-" in tabText:
+                textForCheck = tabText.split("-", 1)[0]
+                textList = self.textCommandParser.getConfirmedTexts(textForCheck)
+                text = textList[0] if textList else config.mainText
+            else:
+                text = config.mainText
+            # Update main reference button and text
+            self.textCommandParser.setMainVerse(text, bcvTuple)
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -800,7 +828,7 @@ class MainWindow(QMainWindow):
         return verseReference
 
     # Open text on left and right view
-    def openTextOnMainView(self, text):
+    def openTextOnMainView(self, text, textCommand):
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 text = transformer(text)
@@ -830,7 +858,7 @@ class MainWindow(QMainWindow):
             *_, reference2 = reference.split("-")
             reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
-        self.mainView.setTabToolTip(self.mainView.currentIndex(), reference)
+        self.mainView.setTabToolTip(self.mainView.currentIndex(), textCommand)
 
     def setAppWindowStyle(self, style):
         config.windowStyle = "" if style == "default" else style
@@ -2974,7 +3002,7 @@ class MainWindow(QMainWindow):
             if config.menuLayout == "aleph":
                 self.mainRefButton.setText(":::".join(self.verseReference("main")))
             else:
-                self.mainRefButton.setText(self.verseReference("main")[-1])
+                self.mainRefButton.setText(verseReference)
             self.updateVersionCombo()
             if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
                 self.syncingBibles = True
@@ -3308,7 +3336,7 @@ class MainWindow(QMainWindow):
                         anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
                         self.openTextOnStudyView(html, tab_title, anchor)
                 elif view == "main":
-                    self.openTextOnMainView(html)
+                    self.openTextOnMainView(html, textCommand)
                 elif view.startswith("popover"):
                     if pdfFilename is not None:
                         self.openPdfReader(outputFile)

@@ -1028,11 +1028,11 @@ class TextCommandParser:
         self.parent.updateStudyRefButton()
 
     # shared functions about bible text
-    def getConfirmedTexts(self, texts):
+    def getConfirmedTexts(self, texts, returnEmptyList=False):
         biblesSqlite = BiblesSqlite()
         bibleList = biblesSqlite.getBibleList()
         confirmedTexts = [text for text in texts.split("_") if text in bibleList or text in self.getMarvelBibles()]
-        if not confirmedTexts:
+        if not confirmedTexts and not returnEmptyList:
             confirmedTexts = [config.favouriteBible]
         return sorted(list(set(confirmedTexts)))
 
@@ -2212,9 +2212,14 @@ class TextCommandParser:
                 bibleVerseParser = BibleVerseParser(config.parserStandarisation)
                 biblesSqlite = BiblesSqlite()
                 passages = bibleVerseParser.extractAllReferences(references)
-                tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
-                versions, verses = zip(*tableList)
-                return ("study", "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
+                if passages:
+                    tableList = [("<th><ref onclick='document.title=\"BIBLE:::{0}\"'>{0}</ref></th>".format(bibleVerseParser.bcvToVerseReference(*passage)), "<td style='vertical-align: text-top;'>{0}</td>".format(biblesSqlite.readMultipleVerses(text, [passage], displayRef=False))) for passage in passages]
+                    versions, verses = zip(*tableList)
+                    b, c, v, *_ = passages[-1]
+                    updateViewConfig(text, (b, c, v))
+                    return (source, "<table style='width:100%; table-layout:fixed;'><tr>{0}</tr><tr>{1}</tr></table>".format("".join(versions), "".join(verses)), {})
+                else:
+                    return self.invalidCommand()
 
     # _harmony:::
     def textHarmony(self, command, source):
