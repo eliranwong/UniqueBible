@@ -171,44 +171,44 @@ class MaterialColorDialog(QDialog):
     def setPushButtonBackgroundColor(self):
         color = QColorDialog.getColor(QColor(config.widgetBackgroundColor), self)
         if color.isValid():
-            self.setLabelColor(self.widgetBackgroundColor, color)
             config.widgetBackgroundColor = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetBackgroundColor, color)
 
     def setPushButtonForegroundColor(self):
         color = QColorDialog.getColor(QColor(config.widgetForegroundColor), self)
         if color.isValid():
-            self.setLabelColor(self.widgetForegroundColor, color)
             config.widgetForegroundColor = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetForegroundColor, color)
 
     def setPushButtonBackgroundColorHover(self):
         color = QColorDialog.getColor(QColor(config.widgetBackgroundColorHover), self)
         if color.isValid():
-            self.setLabelColor(self.widgetBackgroundColorHover, color)
             config.widgetBackgroundColorHover = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetBackgroundColorHover, color)
 
     def setPushButtonForegroundColorHover(self):
         color = QColorDialog.getColor(QColor(config.widgetForegroundColorHover), self)
         if color.isValid():
-            self.setLabelColor(self.widgetForegroundColorHover, color)
             config.widgetForegroundColorHover = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetForegroundColorHover, color)
 
     def setPushButtonBackgroundColorPressed(self):
         color = QColorDialog.getColor(QColor(config.widgetBackgroundColorPressed), self)
         if color.isValid():
-            self.setLabelColor(self.widgetBackgroundColorPressed, color)
             config.widgetBackgroundColorPressed = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetBackgroundColorPressed, color)
 
     def setPushButtonForegroundColorPressed(self):
         color = QColorDialog.getColor(QColor(config.widgetForegroundColorPressed), self)
         if color.isValid():
-            self.setLabelColor(self.widgetForegroundColorPressed, color)
             config.widgetForegroundColorPressed = color.name()
             self.setMaskColor()
+            self.setLabelColor(self.widgetForegroundColorPressed, color)
 
     def changeActiveVerseColour(self):
         color = QColorDialog.getColor(QColor(config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight), self)

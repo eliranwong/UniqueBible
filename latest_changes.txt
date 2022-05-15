@@ -1,3 +1,6 @@
+Changes in 29.67:
+* Fixed updating label colours in Colour Customisation diaolog after selection of new colours.
+
 Changes in 29.65, 29.66:
 * Fixed reload current records, when config.openBibleInMainViewOnly is toggled.
 
