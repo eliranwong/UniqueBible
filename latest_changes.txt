@@ -1,3 +1,6 @@
+Changes in 29.73:
+* Removed a print command.
+
 Changes in 29.72:
 * Added shortcut support of context menu built-in features.
 * Micron shorcuts:
