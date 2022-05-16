@@ -1,3 +1,6 @@
+Changes in 29.75:
+* Fixed "sample.color".
+
 Changes in 29.74:
 * Added "STUDYTEXT:::" command to open bible text on Study view quickly.
 * Integrate config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 in Master Control "Bible" and "Search" tabs:
