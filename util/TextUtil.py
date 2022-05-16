@@ -15,6 +15,12 @@ except:
 
 class TextUtil:
 
+    def formatConfigLabel(text):
+        text = re.sub("([a-z])([A-Z])", r"\1 \2", text)
+        words = text.split(" ")
+        words[0] = words[0].capitalize()
+        return " ".join(words)
+
     @staticmethod
     def htmlToPlainText(content):
         if isHtmlTextInstalled:

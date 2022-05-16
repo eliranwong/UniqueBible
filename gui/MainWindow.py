@@ -951,7 +951,7 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = '#FFFFE0'
             config.widgetBackgroundColorPressed = '#232323'
             config.widgetForegroundColorPressed = '#FFFFE0'
-            config.activeVerseColourDark = '#aaff7f'
+            config.activeVerseColorDark = '#aaff7f'
         else:
             config.maskMaterialIconColor = "#483D8B"
             config.maskMaterialIconBackground = False
@@ -961,7 +961,7 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = "#483D8B"
             config.widgetBackgroundColorPressed = "#d9d9d9"
             config.widgetForegroundColorPressed = "#483D8B"
-            config.activeVerseColourLight = "#483D8B"
+            config.activeVerseColorLight = "#483D8B"
         config.textSelectionColor = "#ffb7b7"
         if color:
             color = HtmlColorCodes.colors[color][0]
@@ -971,9 +971,9 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = color
             config.widgetForegroundColorPressed = color
             if config.theme in ("dark", "night"):
-                config.activeVerseColourDark = color
+                config.activeVerseColorDark = color
             else:
-                config.activeVerseColourLight = color
+                config.activeVerseColorLight = color
         config.defineStyle()
         self.setupMenuLayout("material")
 
@@ -2199,13 +2199,13 @@ class MainWindow(QMainWindow):
             config.maximumOHGBiVersesDisplayedInSearchResult = integer
 
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight), self)
+        color = QColorDialog.getColor(QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight), self)
         if color.isValid():
             colorName = color.name()
             if config.theme in ("dark", "night"):
-                config.activeVerseColourDark = colorName
+                config.activeVerseColorDark = colorName
             else:
-                config.activeVerseColourLight = colorName
+                config.activeVerseColorLight = colorName
             self.reloadCurrentRecord(True)
 
     def changeButtonColour(self):
@@ -3105,14 +3105,14 @@ class MainWindow(QMainWindow):
 
     # finish view loading
     def finishMainViewLoading(self):
-        activeVerseNoColour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
+        activeVerseNoColour = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
         # scroll to the main verse
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
-        activeVerseNoColour = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
+        activeVerseNoColour = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
         # scroll to the study verse
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
@@ -3479,7 +3479,7 @@ class MainWindow(QMainWindow):
         return html
 
     def getMaterialCss(self):
-        activeColor = config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight
+        activeColor = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
         return "" if not config.menuLayout == "material" else """
 <style>
 a, a:link, a:visited, ref, entry {0} color: {2}; {1}

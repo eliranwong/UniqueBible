@@ -1,0 +1,11 @@
+config.maskMaterialIconColor = '#7FFFD4'
+config.maskMaterialIconBackground = False
+config.widgetBackgroundColor = '#2f2f2f'
+config.widgetForegroundColor = '#7FFFD4'
+config.widgetBackgroundColorHover = '#545454'
+config.widgetForegroundColorHover = '#52daff'
+config.widgetBackgroundColorPressed = '#232323'
+config.widgetForegroundColorPressed = '#ffb4fe'
+config.activeVerseColourLight = '#98FB98'
+config.activeVerseColourDark = '#ac91fd'
+config.textSelectionColor = '#ffc9c9'

@@ -426,7 +426,7 @@ else:
     app.setPalette(Themes.getPalette())
 
 # Active verse number colour
-#config.activeVerseNoColour = config.activeVerseColourDark if config.theme == "dark" else config.activeVerseColourLight
+#config.activeVerseNoColour = config.activeVerseColorDark if config.theme == "dark" else config.activeVerseColorLight
 
 # Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
 config.mainWindow = MainWindow()

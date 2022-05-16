@@ -1,7 +1,8 @@
-import sys, config, pprint, os
+import sys, config, pprint, os, re
 import webbrowser
 from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
 from qtpy.QtGui import QColor, QPalette
+from util.TextUtil import TextUtil
 
 class MaterialColorDialog(QDialog):
 
@@ -13,42 +14,43 @@ class MaterialColorDialog(QDialog):
 
         self.widgetBackgroundColor = QLabel()
         self.widgetBackgroundColor.setFrameStyle(frameStyle)
-        self.widgetBackgroundColorButton = QPushButton("widgetBackgroundColor")
+        self.widgetBackgroundColorButton = QPushButton(TextUtil.formatConfigLabel("widgetBackgroundColor"))
         self.widgetBackgroundColorButton.clicked.connect(self.setPushButtonBackgroundColor)
 
         self.widgetForegroundColor = QLabel()
         self.widgetForegroundColor.setFrameStyle(frameStyle)
-        self.widgetForegroundColorButton = QPushButton("widgetForegroundColor")
+        self.widgetForegroundColorButton = QPushButton(TextUtil.formatConfigLabel("widgetForegroundColor"))
         self.widgetForegroundColorButton.clicked.connect(self.setPushButtonForegroundColor)
 
         self.widgetBackgroundColorHover = QLabel()
         self.widgetBackgroundColorHover.setFrameStyle(frameStyle)
-        self.widgetBackgroundColorHoverButton = QPushButton("widgetBackgroundColorHover")
+        self.widgetBackgroundColorHoverButton = QPushButton(TextUtil.formatConfigLabel("widgetBackgroundColorHover"))
         self.widgetBackgroundColorHoverButton.clicked.connect(self.setPushButtonBackgroundColorHover)
 
         self.widgetForegroundColorHover = QLabel()
         self.widgetForegroundColorHover.setFrameStyle(frameStyle)
-        self.widgetForegroundColorHoverButton = QPushButton("widgetForegroundColorHover")
+        self.widgetForegroundColorHoverButton = QPushButton(TextUtil.formatConfigLabel("widgetForegroundColorHover"))
         self.widgetForegroundColorHoverButton.clicked.connect(self.setPushButtonForegroundColorHover)
 
         self.widgetBackgroundColorPressed = QLabel()
         self.widgetBackgroundColorPressed.setFrameStyle(frameStyle)
-        self.widgetBackgroundColorPressedButton = QPushButton("widgetBackgroundColorPressed")
+        self.widgetBackgroundColorPressedButton = QPushButton(TextUtil.formatConfigLabel("widgetBackgroundColorPressed"))
         self.widgetBackgroundColorPressedButton.clicked.connect(self.setPushButtonBackgroundColorPressed)
 
         self.widgetForegroundColorPressed = QLabel()
         self.widgetForegroundColorPressed.setFrameStyle(frameStyle)
-        self.widgetForegroundColorPressedButton = QPushButton("widgetForegroundColorPressed")
+        self.widgetForegroundColorPressedButton = QPushButton(TextUtil.formatConfigLabel("widgetForegroundColorPressed"))
         self.widgetForegroundColorPressedButton.clicked.connect(self.setPushButtonForegroundColorPressed)
 
         self.activeVerseColour = QLabel()
         self.activeVerseColour.setFrameStyle(frameStyle)
-        self.activeVerseColourButton = QPushButton("activeVerseColourDark" if config.theme in ("dark", "night") else "activeVerseColourLight")
+        label = TextUtil.formatConfigLabel("activeVerseColorDark" if config.theme in ("dark", "night") else "activeVerseColorLight")
+        self.activeVerseColourButton = QPushButton(label)
         self.activeVerseColourButton.clicked.connect(self.changeActiveVerseColour)
 
         self.textSelectionColor = QLabel()
         self.textSelectionColor.setFrameStyle(frameStyle)
-        self.textSelectionColorButton = QPushButton("textSelectionColor")
+        self.textSelectionColorButton = QPushButton(TextUtil.formatConfigLabel("textSelectionColor"))
         self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
 
         self.saveButton = QPushButton(config.thisTranslation["note_saveAs"])
@@ -139,8 +141,8 @@ class MaterialColorDialog(QDialog):
             ("config.widgetForegroundColorHover", config.widgetForegroundColorHover),
             ("config.widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
             ("config.widgetForegroundColorPressed", config.widgetForegroundColorPressed),
-            ("config.activeVerseColourLight", config.activeVerseColourLight),
-            ("config.activeVerseColourDark", config.activeVerseColourDark),
+            ("config.activeVerseColorLight", config.activeVerseColorLight),
+            ("config.activeVerseColorDark", config.activeVerseColorDark),
             ("config.textSelectionColor", config.textSelectionColor),
         )
         with open(fileName, "w", encoding="utf-8") as fileObj:
@@ -158,7 +160,7 @@ class MaterialColorDialog(QDialog):
         self.setLabelColor(self.widgetForegroundColorHover, QColor(config.widgetForegroundColorHover))
         self.setLabelColor(self.widgetBackgroundColorPressed, QColor(config.widgetBackgroundColorPressed))
         self.setLabelColor(self.widgetForegroundColorPressed, QColor(config.widgetForegroundColorPressed))
-        self.setLabelColor(self.activeVerseColour, QColor(config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight))
+        self.setLabelColor(self.activeVerseColour, QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight))
         self.setLabelColor(self.textSelectionColor, QColor(config.textSelectionColor))
 
     def setMaskColor(self):
@@ -211,14 +213,14 @@ class MaterialColorDialog(QDialog):
             self.setLabelColor(self.widgetForegroundColorPressed, color)
 
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseColourDark if config.theme in ("dark", "night") else config.activeVerseColourLight), self)
+        color = QColorDialog.getColor(QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight), self)
         if color.isValid():
             self.setLabelColor(self.activeVerseColour, color)
             colorName = color.name()
             if config.theme in ("dark", "night"):
-                config.activeVerseColourDark = colorName
+                config.activeVerseColorDark = colorName
             else:
-                config.activeVerseColourLight = colorName
+                config.activeVerseColorLight = colorName
             self.parent.reloadCurrentRecord(True)
 
     def changeTextSelectionColor(self):

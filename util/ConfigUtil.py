@@ -911,14 +911,14 @@ class ConfigUtil:
             config.maskMaterialIconColor = config.widgetForegroundColor
         elif not hasattr(config, "maskMaterialIconColor"):
             config.maskMaterialIconColor = "#483D8B" if config.theme == "default" else "#FFFFE0"
-        config.help["activeVerseColourLight"] = """
+        config.help["activeVerseColorLight"] = """
         # Active verse number colour displayed on light theme."""
-        if not hasattr(config, "activeVerseColourLight"):
-            config.activeVerseColourLight = "#483D8B"
-        config.help["activeVerseColourDark"] = """
+        if not hasattr(config, "activeVerseColorLight"):
+            config.activeVerseColorLight = "#483D8B"
+        config.help["activeVerseColorDark"] = """
         # Active verse number colour displayed on dark theme."""
-        if not hasattr(config, "activeVerseColourDark"):
-            config.activeVerseColourDark = "#aaff7f"
+        if not hasattr(config, "activeVerseColorDark"):
+            config.activeVerseColorDark = "#aaff7f"
         config.help["textSelectionColor"] = """
         # Colour for text selection."""
         if not hasattr(config, "textSelectionColor"):
@@ -1376,8 +1376,8 @@ class ConfigUtil:
             ("widgetForegroundColorHover", config.widgetForegroundColorHover),
             ("widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
             ("widgetForegroundColorPressed", config.widgetForegroundColorPressed),
-            ("activeVerseColourLight", config.activeVerseColourLight),
-            ("activeVerseColourDark", config.activeVerseColourDark),
+            ("activeVerseColorLight", config.activeVerseColorLight),
+            ("activeVerseColorDark", config.activeVerseColorDark),
             ("textSelectionColor", config.textSelectionColor),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),

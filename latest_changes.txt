@@ -1,3 +1,8 @@
+Changes in 29.71:
+* Renamed config names "activeVerseColourLight" and "activeVerseColourLight" to "activeVerseColorLight" and "activeVerseColorDark".
+* Make Colour Customisation Dialog config button labels more readable.
+* Added a sample set of colours, defined by a 10-year-old kid.
+
 Changes in 29.70:
 * Fixed speaking default English with Google cloud text-to-speech service.
 
@@ -179,7 +184,7 @@ Changes in 29.34:
             "Dark Azure",
 * Renamed config attributes:
     from "activeVerseNoColourLight, activeVerseNoColourDark, maskBackground, materialIconMaskColor, pushButtonBackgroundColor, pushButtonForegroundColor, pushButtonBackgroundColorHover, pushButtonForegroundColorHover, pushButtonBackgroundColorPressed, pushButtonForegroundColorPressed" 
-    to "activeVerseColourLight, activeVerseColourDark, maskMaterialIconBackground, maskMaterialIconColor, widgetBackgroundColor, widgetForegroundColor, widgetBackgroundColorHover, widgetForegroundColorHover, widgetBackgroundColorPressed, widgetForegroundColorPressed"
+    to "activeVerseColorLight, activeVerseColorDark, maskMaterialIconBackground, maskMaterialIconColor, widgetBackgroundColor, widgetForegroundColor, widgetBackgroundColorHover, widgetForegroundColorHover, widgetBackgroundColorPressed, widgetForegroundColorPressed"
 * Removed QtMaterialTheme options from Material menu layout, as QtMaterialTheme would be in conflict with Colour Customisation with Material menu layout.
 * Added a button to open Interlinear Data directly.
 * Relocated the open-MIB-on-study-window button.
