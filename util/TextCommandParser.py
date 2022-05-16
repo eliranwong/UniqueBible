@@ -1051,21 +1051,42 @@ class TextCommandParser:
     def bcvToVerseReference(self, b, c, v):
         return BibleVerseParser(config.parserStandarisation).bcvToVerseReference(b, c, v)
 
+    def isTextInCompareTexts(self, text, compareTexts):
+        return True if text in compareTexts[:-3].split("_") else False
+
+    def switchCompareView(self):
+        if self.parent.enforceCompareParallelButton:
+            self.parent.enforceCompareParallelButtonClicked()
+        else:
+            config.enforceCompareParallel = not config.enforceCompareParallel
+
     # default function if no special keyword is specified
     def textBibleVerseParser(self, command, text, view, parallel=False):
         if config.enforceCompareParallel and not parallel:
             compareMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee]:::(.*?:::)", config.history["main"][-1])
             if view in ("main", "http") and compareMatches:
-                config.tempRecord = "COMPARE:::{0}{1}".format(compareMatches.group(1), command)
-                return self.textCompare("{0}{1}".format(compareMatches.group(1), command), view)
+                compareTexts = compareMatches.group(1)
+                if self.isTextInCompareTexts(text, compareTexts):
+                    config.tempRecord = "COMPARE:::{0}{1}".format(compareTexts, command)
+                    return self.textCompare("{0}{1}".format(compareTexts, command), view)
+                else:
+                    self.switchCompareView()
             parallelMatches = re.match("^[Pp][Aa][Rr][Aa][Ll][Ll][Ee][Ll]:::(.*?:::)", config.history["main"][-1])
             if view in ("main", "http") and parallelMatches:
-                config.tempRecord = "PARALLEL:::{0}{1}".format(parallelMatches.group(1), command)
-                return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
-            compareSideBySideMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee][Ss][Ii][Dd][Ee][Bb][Yy][Ss][Ii][Dd][Ee]:::(.*?:::)", config.history["main"][-1])
+                compareTexts = parallelMatches.group(1)
+                if self.isTextInCompareTexts(text, compareTexts):
+                    config.tempRecord = "PARALLEL:::{0}{1}".format(compareTexts, command)
+                    return self.textParallel("{0}{1}".format(compareTexts, command), view)
+                else:
+                    self.switchCompareView()
+            compareSideBySideMatches = re.match("^[Ss][Ii][Dd][Ee][Bb][Yy][Ss][Ii][Dd][Ee]:::(.*?:::)", config.history["main"][-1])
             if view in ("main", "http") and compareSideBySideMatches:
-                config.tempRecord = "SIDEBYSIDE:::{0}{1}".format(compareSideBySideMatches.group(1), command)
-                return self.textCompareSideBySide("{0}{1}".format(compareSideBySideMatches.group(1), command), view)
+                compareTexts = compareSideBySideMatches.group(1)
+                if self.isTextInCompareTexts(text, compareTexts):
+                    config.tempRecord = "SIDEBYSIDE:::{0}{1}".format(compareTexts, command)
+                    return self.textCompareSideBySide("{0}{1}".format(compareTexts, command), view)
+                else:
+                    self.switchCompareView()
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
             if verseList[0][0] == 0:

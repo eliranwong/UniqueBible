@@ -1,3 +1,9 @@
+Changes in 29.77:
+* Improved switching between single chapter and comparison view.  
+    - BIBLE::: command switches back to single chapter view if text specified in BIBLE::: command is not in the texts in previous comparison view.
+* Fixed side by side comparison to work with config.enforceCompareParallel.
+* Fixed context menu shortcuts which failed startup for users who use customised shortcuts.
+
 Changes in 29.76:
 * Micron shortcuts:
     - Assign "Ctrl+1", "Ctrl+2", "Ctrl+3" to open favourite bibles 1, 2, 3 in main bible window.

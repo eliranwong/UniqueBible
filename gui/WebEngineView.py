@@ -74,7 +74,10 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
 
-        sc = ShortcutUtil.data[config.menuShortcuts]
+        if config.menuShortcuts in ShortcutUtil.data:
+            sc = ShortcutUtil.data[config.menuShortcuts]
+        else:
+            sc = ShortcutUtil.data['micron']
 
         action = QAction(self)
         action.setText(config.thisTranslation["context1_search"])
