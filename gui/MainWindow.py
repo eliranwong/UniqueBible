@@ -457,6 +457,12 @@ class MainWindow(QMainWindow):
         else:
             reply = QMessageBox.information(self, title, message)
 
+    def addContextMenuShortcut(self, action, shortcut):
+        if not shortcut in config.shortcutList:
+            sc = QShortcut(QKeySequence(shortcut), self)
+            sc.activated.connect(action)
+            config.shortcutList.append(shortcut)
+
     def addContextPluginShortcut(self, plugin, shortcut):
         if not shortcut in config.shortcutList:
             sc = QShortcut(QKeySequence(shortcut), self)

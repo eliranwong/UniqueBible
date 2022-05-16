@@ -138,6 +138,8 @@ class ShortcutUtil:
             "showLibraryCatalogDialog": "",
             "toggleFavouriteVersionIntoMultiRef": "",
             "swapBibles": "",
+            "contextSearchBible": "",
+            "contextDefaultTTS": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -262,6 +264,8 @@ class ShortcutUtil:
             "showLibraryCatalogDialog": "Ctrl+Shift+O",
             "toggleFavouriteVersionIntoMultiRef": "",
             "swapBibles": "",
+            "contextSearchBible": "",
+            "contextDefaultTTS": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -385,7 +389,9 @@ class ShortcutUtil:
             "bibleCollections": "",
             "showLibraryCatalogDialog": "",
             "toggleFavouriteVersionIntoMultiRef": "Ctrl+Shift+I",
-            "swapBibles": "Ctrl+Shift+S",
+            "swapBibles": "Ctrl+Shift+W",
+            "contextSearchBible": "Ctrl+Shift+S",
+            "contextDefaultTTS": "Ctrl+Shift+T",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -510,6 +516,8 @@ class ShortcutUtil:
             "showLibraryCatalogDialog": "Ctrl+I",
             "toggleFavouriteVersionIntoMultiRef": "",
             "swapBibles": "",
+            "contextSearchBible": "",
+            "contextDefaultTTS": "",
         }
     }
 
@@ -559,11 +567,11 @@ class ShortcutUtil:
         "Ctrl+Shift+P": "",
         "Ctrl+Shift+Q": "",
         "Ctrl+Shift+R": "toggleReadTillChapterEnd",
-        "Ctrl+Shift+S": "swapBibles",
-        "Ctrl+Shift+T": "",
+        "Ctrl+Shift+S": "contextSearchBible",
+        "Ctrl+Shift+T": "contextDefaultTTS",
         "Ctrl+Shift+U": "fullsizeWindow",
         "Ctrl+Shift+V": "mediaPlayer",
-        "Ctrl+Shift+W": "",
+        "Ctrl+Shift+W": "swapBibles",
         "Ctrl+Shift+X": "toggleHideLexicalEntryInBible",
         "Ctrl+Shift+Y": "",
         "Ctrl+Shift+Z": "",

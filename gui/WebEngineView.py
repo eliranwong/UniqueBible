@@ -4,7 +4,7 @@ import config, os, platform, webbrowser, re, subprocess
 from functools import partial
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QUrl
-from qtpy.QtGui import QGuiApplication
+from qtpy.QtGui import QGuiApplication, QKeySequence
 from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu, QFileDialog
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 from util.BibleVerseParser import BibleVerseParser
@@ -16,6 +16,7 @@ from util.TextUtil import TextUtil
 from util.BibleBooks import BibleBooks
 from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
+from util.ShortcutUtil import ShortcutUtil
 from install.module import *
 
 
@@ -39,9 +40,7 @@ class WebEngineView(QWebEngineView):
 
     def updateContextMenu(self):
         text = self.getText()
-        parser = BibleVerseParser(config.parserStandarisation)
-        book = parser.bcvToVerseReference(self.getBook(), 1, 1)[:-4]
-        del parser
+        book = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
         self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, config.thisTranslation["context1_search"]))
         #self.searchBibleTopic.setText("{1} > {0}".format(config.topic, config.thisTranslation["menu5_topics"]))
@@ -74,6 +73,8 @@ class WebEngineView(QWebEngineView):
             self.displayMessage("CLI feature is not enabled! \n Install module 'html-text' first, by running 'pip3 install html-text'!")
 
     def addMenuActions(self):
+
+        sc = ShortcutUtil.data[config.menuShortcuts]
 
         action = QAction(self)
         action.setText(config.thisTranslation["context1_search"])
@@ -121,6 +122,7 @@ class WebEngineView(QWebEngineView):
         self.searchText = QAction(self)
         self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
         self.searchText.triggered.connect(self.searchSelectedText)
+        self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc["contextSearchBible"])
         subMenu.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
@@ -576,6 +578,7 @@ class WebEngineView(QWebEngineView):
             tts = QAction(self)
             tts.setText("{0} test[{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
             tts.triggered.connect(self.textToSpeech)
+            self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc["contextDefaultTTS"])
             self.addAction(tts)
 
             ttsMenu = QMenu()
@@ -603,6 +606,7 @@ class WebEngineView(QWebEngineView):
             tts = QAction(self)
             tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], config.gTTSDefaultLanguage.capitalize()))
             tts.triggered.connect(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage))
+            self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc["contextDefaultTTS"])
             self.addAction(tts)
 
             ttsMenu = QMenu()
@@ -712,8 +716,13 @@ class WebEngineView(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
-    def selectedTextProcessed(self):
-        selectedText = self.selectedText().strip()
+    def selectedTextProcessed(self, activeSelection=False):
+        if not activeSelection:
+            selectedText = self.selectedText().strip()
+        else:
+            selectedText = self.parent.parent.mainView.currentWidget().selectedText().strip()
+            if not selectedText:
+                selectedText = self.parent.parent.studyView.currentWidget().selectedText().strip()
         if not selectedText and config.commandTextIfNoSelection:
             selectedText = self.parent.parent.textCommandLineEdit.text().strip()
         return selectedText
@@ -842,9 +851,9 @@ class WebEngineView(QWebEngineView):
             config.mainWindow.openWebsite("https://github.com/eliranwong/UniqueBible/wiki/IBM-Watson-Language-Translator")
 
     # TEXT-TO-SPEECH feature
-    def textToSpeech(self):
+    def textToSpeech(self, activeSelection=False):
         if config.isTtsInstalled:
-            selectedText = self.selectedTextProcessed()
+            selectedText = self.selectedTextProcessed(activeSelection)
             if not selectedText:
                 self.messageNoSelection()
             elif config.isLangdetectInstalled and config.useLangDetectOnTts:
@@ -878,10 +887,10 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsVoice()
             return False
 
-    def googleTextToSpeechLanguage(self, language):
+    def googleTextToSpeechLanguage(self, language, activeSelection=False):
         if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) and language == "en":
             language = "en-GB"
-        selectedText = self.selectedTextProcessed()
+        selectedText = self.selectedTextProcessed(activeSelection)
         if not selectedText:
             self.messageNoSelection()
         elif self.isGttsLanguage(language):
@@ -1006,8 +1015,8 @@ class WebEngineView(QWebEngineView):
             config.contextItem = selectedText
         self.parent.parent.openControlPanelTab(3)
 
-    def searchSelectedText(self, text=None):
-        selectedText = self.selectedTextProcessed()
+    def searchSelectedText(self, text=None, activeSelection=False):
+        selectedText = self.selectedTextProcessed(activeSelection)
         if not selectedText:
             self.messageNoSelection()
         else:

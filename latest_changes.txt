@@ -1,3 +1,11 @@
+Changes in 29.72:
+* Added shortcut support of context menu built-in features.
+* Micron shorcuts:
+    - Added two shortcuts for context menu:
+        "Ctrl+Shift+S" for searching the bible currently selected in the main bible window.
+        "Ctrl+Shift+T" for launching text-to-speech feature to read with default language.
+    - Changed "Swap Bibles" shortcut to "Ctrl+Shift+W
+
 Changes in 29.71:
 * Renamed config names "activeVerseColourLight" and "activeVerseColourLight" to "activeVerseColorLight" and "activeVerseColorDark".
 * Make Colour Customisation Dialog config button labels more readable.
