@@ -868,7 +868,7 @@ class MainWindow(QMainWindow):
         else:
             self.mainView.setHtml(text, baseUrl)
         reference = "-".join(self.verseReference("main"))
-        if self.textCommandParser.lastKeyword in ("compare", "parallel", "comparesidebyside"):
+        if self.textCommandParser.lastKeyword in ("compare", "parallel", "sidebyside"):
             *_, reference2 = reference.split("-")
             reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
@@ -2645,7 +2645,7 @@ class MainWindow(QMainWindow):
         # Reload Study Window content to update active text setting only when Study Window content is not a bible chapter view
         view = "study"
         textCommand = config.history[view][config.currentRecord[view]]
-        if not re.search('^(study:::|bible:::)', textCommand.lower()):
+        if not re.search('^(study:::|studytext:::|bible:::)', textCommand.lower()):
             self.runTextCommand(textCommand, False, view, True)
 
     def updateBookButton(self):
@@ -3136,6 +3136,14 @@ class MainWindow(QMainWindow):
             print("Failed to print pdf")
 
     # running specific commands
+    def runMainText(self, text):
+        newTextCommand = "TEXT:::{0}".format(text)
+        self.textCommandChanged(newTextCommand, "main")
+
+    def runStudyText(self, text):
+        newTextCommand = "STUDYTEXT:::{0}".format(text)
+        self.textCommandChanged(newTextCommand, "main")
+
     def runFeature(self, keyword):
         mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         newTextCommand = "{0}:::{1}".format(keyword, mainVerseReference)
@@ -3673,6 +3681,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
             config.addFavouriteToMultiRef = True
         else:
             config.addFavouriteToMultiRef = False
+        self.reloadResources()
         self.reloadCurrentRecord(True)
 
     def openFavouriteBibleDialog2(self):
@@ -3683,6 +3692,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
         if ok and item:
             config.favouriteBible2 = item
             config.addFavouriteToMultiRef = True
+        self.reloadResources()
         self.reloadCurrentRecord(True)
 
     def openFavouriteBibleDialog3(self):
@@ -3693,6 +3703,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
         if ok and item:
             config.favouriteBible3 = item
             config.addFavouriteToMultiRef = True
+        self.reloadResources()
         self.reloadCurrentRecord(True)
 
     # Set text-to-speech default language

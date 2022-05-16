@@ -140,6 +140,12 @@ class ShortcutUtil:
             "swapBibles": "",
             "contextSearchBible": "",
             "contextDefaultTTS": "",
+            "openFavouriteBibleOnMain1": "",
+            "openFavouriteBibleOnMain2": "",
+            "openFavouriteBibleOnMain3": "",
+            "openFavouriteBibleOnStudy1": "",
+            "openFavouriteBibleOnStudy2": "",
+            "openFavouriteBibleOnStudy3": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -266,6 +272,12 @@ class ShortcutUtil:
             "swapBibles": "",
             "contextSearchBible": "",
             "contextDefaultTTS": "",
+            "openFavouriteBibleOnMain1": "",
+            "openFavouriteBibleOnMain2": "",
+            "openFavouriteBibleOnMain3": "",
+            "openFavouriteBibleOnStudy1": "",
+            "openFavouriteBibleOnStudy2": "",
+            "openFavouriteBibleOnStudy3": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -392,6 +404,12 @@ class ShortcutUtil:
             "swapBibles": "Ctrl+Shift+W",
             "contextSearchBible": "Ctrl+Shift+S",
             "contextDefaultTTS": "Ctrl+Shift+T",
+            "openFavouriteBibleOnMain1": "",
+            "openFavouriteBibleOnMain2": "",
+            "openFavouriteBibleOnMain3": "",
+            "openFavouriteBibleOnStudy1": "",
+            "openFavouriteBibleOnStudy2": "",
+            "openFavouriteBibleOnStudy3": "",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -518,6 +536,12 @@ class ShortcutUtil:
             "swapBibles": "",
             "contextSearchBible": "",
             "contextDefaultTTS": "",
+            "openFavouriteBibleOnMain1": "",
+            "openFavouriteBibleOnMain2": "",
+            "openFavouriteBibleOnMain3": "",
+            "openFavouriteBibleOnStudy1": "",
+            "openFavouriteBibleOnStudy2": "",
+            "openFavouriteBibleOnStudy3": "",
         }
     }
 

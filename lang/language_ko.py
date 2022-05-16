@@ -824,4 +824,5 @@ translation = {
     "export": "내보내기",
     "loadMySettings": "내 설정 로드하기",
     "toggleFavouriteVersionIntoMultiRef": "다중 참조 페치 시 즐겨찾기 버전 표시",
+    "favourite": "가장 좋아하는",
 }

@@ -14,7 +14,7 @@ def addMenu(menuBar, title, translation=True):
     return menuBar.addMenu("{0}{1}".format(config.menuUnderline, config.thisTranslation[title] if translation else title))
 
 def addSubMenu(parentMenu, translation):
-    return parentMenu.addMenu(config.thisTranslation[translation])
+    return parentMenu.addMenu(config.thisTranslation.get(translation, translation))
 
 def addMenuItem(menu, feature, object, action, shortcut=None, translation=True):
     if shortcut:

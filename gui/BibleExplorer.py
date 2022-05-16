@@ -124,7 +124,7 @@ class BibleExplorer(QWidget):
 
     def navigationLayout3b(self):
         feature = "sideBySide"
-        action = lambda: self.versionsAction("COMPARESIDEBYSIDE")
+        action = lambda: self.versionsAction("SIDEBYSIDE")
         items = self.textList
         initialItems = list({config.mainText, config.studyText, config.favouriteBible})
         self.parallelVersesCombo = CheckableComboBox(items, initialItems, toolTips=self.parent.textFullNameList)
@@ -164,6 +164,11 @@ class BibleExplorer(QWidget):
         return self.parent.buttonsWidget(rows, False, False)
 
     def navigationLayout7(self):
+        buttonRow0 = (
+            (config.favouriteBible, lambda: self.openInWindow("BIBLE", config.favouriteBible)),
+            (config.favouriteBible2, lambda: self.openInWindow("BIBLE", config.favouriteBible2)),
+            (config.favouriteBible3, lambda: self.openInWindow("BIBLE", config.favouriteBible3)),
+        )
         buttonRow1 = (
             ("MOB", lambda: self.openInWindow("BIBLE", "MOB")),
             ("MIB", lambda: self.openInWindow("BIBLE", "MIB")),
@@ -180,7 +185,7 @@ class BibleExplorer(QWidget):
             ("OHGB", lambda: self.openInWindow("BIBLE", "OHGB")),
             ("OHGBi", lambda: self.openInWindow("BIBLE", "OHGBi")),
         )
-        buttonElementTupleTuple = (buttonRow1, buttonRow2)
+        buttonElementTupleTuple = (buttonRow0, buttonRow1, buttonRow2)
         return self.parent.buttonsWidget(buttonElementTupleTuple, False, False)
 
     def updateBCVText(self, b, c, v, text):
@@ -375,7 +380,7 @@ class BibleExplorer(QWidget):
     def versionsAction(self, keyword):
         selectedVersionsMap = {
             "PARALLEL": self.parallelCombo.checkItems,
-            "COMPARESIDEBYSIDE": self.parallelVersesCombo.checkItems,
+            "SIDEBYSIDE": self.parallelVersesCombo.checkItems,
             "COMPARE": self.compareCombo.checkItems,
             "DIFFERENCE": self.differenceCombo.checkItems,
         }

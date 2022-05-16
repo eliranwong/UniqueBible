@@ -824,4 +824,5 @@ translation = {
     "export": "' Εξαγωγή",
     "loadMySettings": "Φόρτωση ρυθμίσεων.",
     "toggleFavouriteVersionIntoMultiRef": "Εμφάνιση θετικής εκδοχής στο Fetching πολλαπλών παραπομπών",
+    "favourite": "Αγαπημένο:",
 }

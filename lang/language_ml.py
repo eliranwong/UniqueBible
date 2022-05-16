@@ -824,4 +824,5 @@ translation = {
     "export": "പുറത്തുവയ്ക്കുക",
     "loadMySettings": "സജ്ജീകരണങ്ങള് ലോഡ് ചെയ്യുക",
     "toggleFavouriteVersionIntoMultiRef": "à '- à', à ', à', à ', à', à ', à', à ', à', à ', à',",
+    "favourite": "Favourite",
 }

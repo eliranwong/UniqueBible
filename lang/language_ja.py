@@ -824,4 +824,5 @@ translation = {
     "export": "輸出",
     "loadMySettings": "設定のロード",
     "toggleFavouriteVersionIntoMultiRef": "複数の参照をフェッチする際に使用するお気に入りのバージョンを表示",
+    "favourite": "最恵国石",
 }

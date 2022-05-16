@@ -309,6 +309,29 @@ class MaterialMainWindow:
 
         # 2nd column
         menu = addMenu(menuBar, "menu_bible")
+        subMenu = addSubMenu(menu, "favourite")
+        subMenu1 = addSubMenu(subMenu, config.favouriteBible)
+        items = (
+            ("openInMainWindow", partial(self.runMainText, config.favouriteBible), sc.openFavouriteBibleOnMain1),
+            ("openInStudyWindow", partial(self.runStudyText, config.favouriteBible), sc.openFavouriteBibleOnStudy1),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu1, feature, self, action, shortcut)
+        subMenu2 = addSubMenu(subMenu, config.favouriteBible2)
+        items = (
+            ("openInMainWindow", partial(self.runMainText, config.favouriteBible2), sc.openFavouriteBibleOnMain2),
+            ("openInStudyWindow", partial(self.runStudyText, config.favouriteBible2), sc.openFavouriteBibleOnStudy2),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu2, feature, self, action, shortcut)
+        subMenu3 = addSubMenu(subMenu, config.favouriteBible3)
+        items = (
+            ("openInMainWindow", partial(self.runMainText, config.favouriteBible3), sc.openFavouriteBibleOnMain3),
+            ("openInStudyWindow", partial(self.runStudyText, config.favouriteBible3), sc.openFavouriteBibleOnStudy3),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu3, feature, self, action, shortcut)
+
         subMenu = addSubMenu(menu, "menu_navigation")
         items = (
             ("menu_next_book", self.nextMainBook, sc.nextMainBook),
@@ -609,7 +632,7 @@ class MaterialMainWindow:
         icon = "material/image/auto_awesome_motion/materialiconsoutlined/48dp/2x/outline_auto_awesome_motion_black_48dp.png"
         self.addMaterialIconButton("parallelVersions", icon, lambda: self.runCompareAction("PARALLEL"), self.firstToolBar)
         icon = "material/action/view_column/materialiconsoutlined/48dp/2x/outline_view_column_black_48dp.png"
-        self.addMaterialIconButton("sideBySideComparison", icon, lambda: self.runCompareAction("COMPARESIDEBYSIDE"), self.firstToolBar)
+        self.addMaterialIconButton("sideBySideComparison", icon, lambda: self.runCompareAction("SIDEBYSIDE"), self.firstToolBar)
         icon = "material/editor/table_rows/materialiconsoutlined/48dp/2x/outline_table_rows_black_48dp.png"
         self.addMaterialIconButton("rowByRowComparison", icon, lambda: self.runCompareAction("COMPARE"), self.firstToolBar)
 

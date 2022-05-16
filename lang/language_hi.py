@@ -824,4 +824,5 @@ translation = {
     "export": "निर्यात",
     "loadMySettings": "मेरी सेटिंग लोड करें",
     "toggleFavouriteVersionIntoMultiRef": "एकाधिक सन्दर्भों को लाने में पसंदीदा संस्करण प्रदर्शित करें",
+    "favourite": "प्रिय",
 }

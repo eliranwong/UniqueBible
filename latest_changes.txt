@@ -1,3 +1,11 @@
+Changes in 29.74:
+* Added "STUDYTEXT:::" command to open bible text on Study view quickly.
+* Integrate config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 in Master Control "Bible" and "Search" tabs:
+    - Users can now open or favourtie bibles directly.
+    - Remarks: Users can define config.favouriteBible, config.favouriteBible2 and config.favouriteBible3 via menu UniqueBible > Other Preferences.
+* Added favourite bibles into Material menu layout "Bible" menu.
+* Shorten the commad "COMPARESIDEBYSIDE:::" to "SIDEBYSIDE:::".
+
 Changes in 29.73:
 * Removed a print command.
 

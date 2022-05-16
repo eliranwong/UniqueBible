@@ -669,7 +669,7 @@ class ConfigUtil:
         if not hasattr(config, "addFavouriteToMultiRef"):
             config.addFavouriteToMultiRef = False
         config.help["compareParallelList"] = """
-        # Specify bible versions to work with parallel:::, compare:::, and comparesidebyside::: commands in material menu layout."""
+        # Specify bible versions to work with parallel:::, compare:::, and sidebyside::: commands in material menu layout."""
         if not hasattr(config, "compareParallelList"):
             config.compareParallelList = list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
             config.compareParallelList.sort()

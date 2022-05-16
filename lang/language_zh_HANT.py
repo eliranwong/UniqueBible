@@ -824,4 +824,5 @@ translation = {
     "export": "匯出",
     "loadMySettings": "載入我的設定",
     "toggleFavouriteVersionIntoMultiRef": "在載入多個經文參照時加入最愛版本",
+    "favourite": "我的最愛",
 }

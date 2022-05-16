@@ -101,6 +101,12 @@ class TextCommandParser:
             # Usage - TEXT:::[BIBLE_VERSION]
             # e.g. TEXT:::KJV
             # e.g. TEXT:::NET"""),
+            "studytext": (self.textStudyText, """
+            # [KEYWORD] STUDYTEXT
+            # Feature - Change the bible version of the last opened passage on study view.
+            # Usage - STUDYTEXT:::[BIBLE_VERSION]
+            # e.g. STUDYTEXT:::KJV
+            # e.g. STUDYTEXT:::NET"""),
             "compare": (self.textCompare, """
             # [KEYWORD] COMPARE
             # Feature - Compare bible versions of a single or multiple references.
@@ -113,10 +119,10 @@ class TextCommandParser:
             # e.g. COMPARE:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16
             # e.g. COMPARE:::KJV_NET_CUV:::John 3:16; Rm 5:8"""),
-            "comparesidebyside": (self.textCompareSideBySide, """
-            # [KEYWORD] COMPARESIDEBYSIDE
+            "sidebyside": (self.textCompareSideBySide, """
+            # [KEYWORD] SIDEBYSIDE
             # Feature - Compare bible versions side by side
-            # Usage - COMPARESIDEBYSIDE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
+            # Usage - SIDEBYSIDE:::[BIBLE_VERSION(S)]:::[BIBLE_REFERENCE]
             # Remarks: Multiple bible versions for comparison are separated by "_"."""),
             "difference": (self.textDiff, """
             # [KEYWORD] DIFFERENCE
@@ -1058,7 +1064,7 @@ class TextCommandParser:
                 return self.textParallel("{0}{1}".format(parallelMatches.group(1), command), view)
             compareSideBySideMatches = re.match("^[Cc][Oo][Mm][Pp][Aa][Rr][Ee][Ss][Ii][Dd][Ee][Bb][Yy][Ss][Ii][Dd][Ee]:::(.*?:::)", config.history["main"][-1])
             if view in ("main", "http") and compareSideBySideMatches:
-                config.tempRecord = "COMPARESIDEBYSIDE:::{0}{1}".format(compareSideBySideMatches.group(1), command)
+                config.tempRecord = "SIDEBYSIDE:::{0}{1}".format(compareSideBySideMatches.group(1), command)
                 return self.textCompareSideBySide("{0}{1}".format(compareSideBySideMatches.group(1), command), view)
         if config.useLiteVerseParsing:
             verseList = self.extractAllVersesFast(command)
@@ -1967,7 +1973,14 @@ class TextCommandParser:
 
     # STUDY:::
     def textStudy(self, command, source):
+        if config.openBibleInMainViewOnly:
+            self.parent.enableStudyBibleButtonClicked()
         return self.textAnotherView(command, source, "study")
+
+    # STUDYTEXT:::
+    def textStudyText(self, command, source):
+        command = "{0}:::{1}".format(command, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
+        return self.textStudy(command, "study")
 
     # _copy:::
     def copyText(self, command, source):
@@ -2111,7 +2124,7 @@ class TextCommandParser:
                 updateViewConfig(confirmedTexts[0], verseList[-1])
             return ("main", verses, {})
 
-    # COMPARESIDEBYSIDE:::
+    # SIDEBYSIDE:::
     def textCompareSideBySide(self, command, source):
         if command.count(":::") == 0:
             return ("", "", {})

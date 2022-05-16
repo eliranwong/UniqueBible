@@ -103,24 +103,24 @@ class SearchLauncher(QWidget):
         widgetLayout0.addLayout(subLayout)
 
         buttonRow1 = (
+            (config.favouriteBible, lambda: self.searchBible(config.favouriteBible)),
+            (config.favouriteBible2, lambda: self.searchBible(config.favouriteBible2)),
+            (config.favouriteBible3, lambda: self.searchBible(config.favouriteBible3)),
             ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
+        )
+        buttonRow2 = (
             ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
             ("menu5_locations", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBL")),
             ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
-        )
-        buttonRow2 = (
             ("bibleHarmonies", lambda: self.runSearchCommand("SEARCHBOOK:::Harmonies_and_Parallels")),
-            ("menu5_allBook", lambda: self.runSearchCommand("SEARCHBOOK:::ALL")),
-            ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
-            ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
         )
         buttonRow3 = (
+            ("favouriteBooks", lambda: self.runSearchCommand("SEARCHBOOK:::FAV")),
+            ("menu5_allBook", lambda: self.runSearchCommand("SEARCHBOOK:::ALL")),
+            ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
             ("allBooksPDF", lambda: self.runSearchCommand("SEARCHALLBOOKSPDF")),
-            ("_blank", lambda: self.blankOperation()),
-            ("_blank", lambda: self.blankOperation()),
-            ("_blank", lambda: self.blankOperation()),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3)))
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3), translation=False))
 
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
@@ -249,10 +249,11 @@ class SearchLauncher(QWidget):
         command = "SEARCHHIGHLIGHT:::hl{0}".format(index + 1)
         self.parent.runTextCommand(command)
 
-    def searchBible(self):
+    def searchBible(self, text=""):
         searchItem = self.getSearchItem()
         if searchItem:
-            command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], "_".join(self.bibleCombo.checkItems), self.searchField.text())
+            text = text if text else "_".join(self.bibleCombo.checkItems)
+            command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], text, self.searchField.text())
             if config.bibleSearchRange == "Custom":
                 command += ":::{0}".format(config.customBooksRangeSearch)
             elif config.bibleSearchRange != config.thisTranslation["all"]:

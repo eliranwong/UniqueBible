@@ -183,7 +183,7 @@ class MasterControl(QWidget):
         buttonsLayout = QBoxLayout(QBoxLayout.RightToLeft if r2l else QBoxLayout.LeftToRight)
         buttonsLayout.setSpacing(5)
         for label, action in buttonElementTuple:
-            buttonLabel = config.thisTranslation[label] if translation else label
+            buttonLabel = config.thisTranslation.get(label, label) if translation else label
             button = QPushButton(buttonLabel)
             button.clicked.connect(action)
             buttonsLayout.addWidget(button)

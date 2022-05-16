@@ -824,4 +824,5 @@ translation = {
     "export": "Export",
     "loadMySettings": "Încarcă setările mele",
     "toggleFavouriteVersionIntoMultiRef": "Afișează versiunea preferată în prezentarea mai multor referințe",
+    "favourite": "Favorit",
 }
