@@ -574,7 +574,7 @@ class WebEngineView(QWebEngineView):
         if config.isTtsInstalled:
             languages = self.parent.parent.getTtsLanguages()
             tts = QAction(self)
-            tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
+            tts.setText("{0} test[{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
             tts.triggered.connect(self.textToSpeech)
             self.addAction(tts)
 
@@ -879,6 +879,8 @@ class WebEngineView(QWebEngineView):
             return False
 
     def googleTextToSpeechLanguage(self, language):
+        if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) and language == "en":
+            language = "en-GB"
         selectedText = self.selectedTextProcessed()
         if not selectedText:
             self.messageNoSelection()

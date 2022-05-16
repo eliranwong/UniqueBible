@@ -1,3 +1,6 @@
+Changes in 29.70:
+* Fixed speaking default English with Google cloud text-to-speech service.
+
 Changes in 29.69:
 * Fixed updating main text when a tab is changed in the main bible window.
 
