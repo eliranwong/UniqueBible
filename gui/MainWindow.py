@@ -514,12 +514,17 @@ class MainWindow(QMainWindow):
         tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
         if tabToolTip:
             # check reference
-            references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
+            references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabText)
             if references:
                 b, c, v, *_ = references[-1]
                 bcvTuple = (b, c, v)
             else:
-                bcvTuple = (config.mainB, config.mainC, config.mainV)
+                references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
+                if references:
+                    b, c, v, *_ = references[-1]
+                    bcvTuple = (b, c, v)
+                else:
+                    bcvTuple = (config.mainB, config.mainC, config.mainV)
             # check text
             if "-" in tabText:
                 textForCheck = tabText.split("-", 1)[0]
@@ -3297,7 +3302,7 @@ class MainWindow(QMainWindow):
             self.logger.debug("Repeated command blocked {0}:{1}".format(textCommand, source))
         else:
             # handle exception for new tab features
-            if re.search('^(_commentary:::|_menu:::|_vnsc:::)', textCommand.lower()):
+            if re.search('^(_commentary:::|_menu:::|_vnsc:::|_chapters:::|_verses:::|_commentaries|_commentarychapters:::|_commentaryverses:::)', textCommand.lower()):
                 self.newTabException = True
             # parse command
             view, content, dict = self.textCommandParser.parser(textCommand, source)
@@ -3463,10 +3468,9 @@ class MainWindow(QMainWindow):
                 <style>body {2} font-size: {4}; font-family:'{5}';{3} 
                 zh {2} font-family:'{6}'; {3} 
                 {8} {9}
-                .ubaButton {2} background-color: {10}; color: {11}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {3}
                 </style>
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.058'>
-                {12}
+                {10}
                 <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>
                 <script src='js/common.js?v=1.058'></script>
                 <script src='js/{7}.js?v=1.058'></script>
@@ -3487,8 +3491,8 @@ class MainWindow(QMainWindow):
                          config.theme,
                          self.getHighlightCss(),
                          bibleCss,
-                         config.widgetBackgroundColor,
-                         config.widgetForegroundColor,
+                         #config.widgetBackgroundColor,
+                         #config.widgetForegroundColor,
                          self.getMaterialCss(),
                          )
         return html
@@ -3497,6 +3501,8 @@ class MainWindow(QMainWindow):
         activeColor = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
         return "" if not config.menuLayout == "material" else """
 <style>
+.ubaButton {0} background-color: {7}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
+.ubaButton:hover {0} background-color: {4}; color: {5}; {1}
 a, a:link, a:visited, ref, entry {0} color: {2}; {1}
 red, z, red ref, red entry, vb {0} color: {3}; {1}
 a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
@@ -3511,6 +3517,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
             config.widgetBackgroundColorHover, 
             config.widgetForegroundColorHover, 
             config.textSelectionColor,
+            config.widgetBackgroundColor,
             )
 
     # add a history record

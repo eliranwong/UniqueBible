@@ -1,3 +1,7 @@
+Changes in 29.80:
+* Improved updating main reference button.
+* Fixed the issue that chapter and verse menu are opened in new tabs.
+
 Changes in 29.79:
 * Added config.favouriteOriginalBible2 for users to configure secondary favourite Hebrew and Greek bible.
 * Added a gui dialog to configure config.favouriteOriginalBible2.

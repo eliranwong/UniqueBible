@@ -192,7 +192,7 @@ class HtmlGeneratorUtil:
         verses = ""
         for v in verseList:
             command = "{0}{1}{2}".format(commandPrefix, v, commandSuffix)
-            verses += """<button type='button' class='ubaButton' title='{0} {1}' onclick="document.title='{2}'">{1}</button>""".format(bookAbb, v, command)
+            verses += """<button type='button' class='ubaButton' title='{0} {1}' onclick="document.title='_stayOnSameTab:::'; document.title='{2}'">{1}</button>""".format(bookAbb, v, command)
         return """
 <table>
   <tr>
