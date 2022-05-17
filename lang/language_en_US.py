@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "Load my settings",
     "toggleFavouriteVersionIntoMultiRef": "Display Favorite Version in Fetching Multiple References",
     "favourite": "Favorite",
+    "favouriteOriginalBible": "Select my Favorite Marvel Bible",
+    "selectFavouriteHebrewGreekBible": "Select my Favorite Hebrew and Greek Bible",
+    "openFavouriteHebrewGreekBible": "My Favorite Hebrew and Greek Bible",
 }

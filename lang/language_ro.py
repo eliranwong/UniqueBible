@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "Încarcă setările mele",
     "toggleFavouriteVersionIntoMultiRef": "Afișează versiunea preferată în prezentarea mai multor referințe",
     "favourite": "Favorit",
+    "favouriteOriginalBible": "Selectează Biblia mea preferată",
+    "selectFavouriteHebrewGreekBible": "Select my Favourite ebraică & greacă Biblie",
+    "openFavouriteHebrewGreekBible": "Deschide mea Favourite ebraică & greacă Biblie",
 }

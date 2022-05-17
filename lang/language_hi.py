@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "मेरी सेटिंग लोड करें",
     "toggleFavouriteVersionIntoMultiRef": "एकाधिक सन्दर्भों को लाने में पसंदीदा संस्करण प्रदर्शित करें",
     "favourite": "प्रिय",
+    "favouriteOriginalBible": "मेरी पसंदीदा चमत्कार बाइबल का चयन करें",
+    "selectFavouriteHebrewGreekBible": "मेरी पसंदीदा हिब्रू और ग्रीक बाइबल का चयन करें",
+    "openFavouriteHebrewGreekBible": "मेरी पसंदीदा हिब्रू और ग्रीक बाइबल खोलें",
 }

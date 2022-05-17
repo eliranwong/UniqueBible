@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "載入我的設定",
     "toggleFavouriteVersionIntoMultiRef": "在載入多個經文參照時加入最愛版本",
     "favourite": "我的最愛",
+    "favouriteOriginalBible": "配置我最喜歡的原文聖經",
+    "selectFavouriteHebrewGreekBible": "配置我最喜歡的希伯來語和希臘文聖經",
+    "openFavouriteHebrewGreekBible": "我最喜歡的希伯來語和希臘文聖經",
 }

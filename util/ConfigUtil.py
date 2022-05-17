@@ -616,6 +616,11 @@ class ConfigUtil:
         # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")"""
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
+        config.help["favouriteOriginalBible"] = """
+        # Set your favourite marvel bible version here
+        # MOB, MIB, MTB, MPB, MAB"""
+        if not hasattr(config, "favouriteOriginalBible"):
+            config.favouriteOriginalBible = "MIB"
         config.help["favouriteBible"] = """
         # Set your favourite bible version here"""
         if not hasattr(config, "favouriteBible"):
@@ -667,7 +672,7 @@ class ConfigUtil:
         config.help["addFavouriteToMultiRef"] = """
         # Options to display "favouriteBible" together with the main version for reading multiple references: True / False"""
         if not hasattr(config, "addFavouriteToMultiRef"):
-            config.addFavouriteToMultiRef = False
+            config.addFavouriteToMultiRef = True
         config.help["compareParallelList"] = """
         # Specify bible versions to work with parallel:::, compare:::, and sidebyside::: commands in material menu layout."""
         if not hasattr(config, "compareParallelList"):
@@ -1289,6 +1294,7 @@ class ConfigUtil:
             ("mainB", config.mainB),
             ("mainC", config.mainC),
             ("mainV", config.mainV),
+            ("favouriteOriginalBible", config.favouriteOriginalBible),
             ("favouriteBible", config.favouriteBible),
             ("favouriteBible2", config.favouriteBible2),
             ("favouriteBible3", config.favouriteBible3),

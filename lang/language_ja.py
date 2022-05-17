@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "設定のロード",
     "toggleFavouriteVersionIntoMultiRef": "複数の参照をフェッチする際に使用するお気に入りのバージョンを表示",
     "favourite": "最恵国石",
+    "favouriteOriginalBible": "私のお気に入りのマーベル聖書を選択してください",
+    "selectFavouriteHebrewGreekBible": "お気に入りのヘブライ語聖書を選択してください。",
+    "openFavouriteHebrewGreekBible": "オープン私のお気に入りのヘブライ語聖書",
 }

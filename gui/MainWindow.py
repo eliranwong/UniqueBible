@@ -350,7 +350,8 @@ class MainWindow(QMainWindow):
                 if textCommandText:
                     self.controlPanel.commandField.setText(textCommandText)
                 selectedText = self.mainView.currentWidget().selectedText().strip()
-                self.controlPanel.morphologyTab.searchField.setText(selectedText)
+                # Removed morphology tab temporarily until a fix.
+                #self.controlPanel.morphologyTab.searchField.setText(selectedText)
                 self.controlPanel.raise_()
                 # Method activateWindow() does not work with qt.qpa.wayland
                 # platform.system() == "Linux" and not os.getenv('QT_QPA_PLATFORM') is None and os.getenv('QT_QPA_PLATFORM') == "wayland"
@@ -3170,7 +3171,7 @@ class MainWindow(QMainWindow):
         if config.openBibleInMainViewOnly:
             self.enableStudyBibleButtonClicked()
         mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        self.runTextCommand("STUDY:::MIB:::{0}".format(mainVerseReference), addRecord=True, source="study", forceExecute=True)
+        self.runTextCommand("STUDY:::{0}:::{1}".format(config.favouriteOriginalBible, mainVerseReference), addRecord=True, source="study", forceExecute=True)
 
     def runMAB(self):
         self.runFeature("BIBLE:::MAB")
@@ -3671,38 +3672,43 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
             config.defaultLexiconStrongH = item
 
     # Set Favourite Bible Version
+    def openFavouriteMarvelBibleDialog(self):
+        items = ["MOB", "MIB", "MTB", "MPB", "MAB"]
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["selectFavouriteHebrewGreekBible"],
+                                        config.thisTranslation["selectFavouriteHebrewGreekBible"], items,
+                                        items.index(config.favouriteOriginalBible), False)
+        if ok and item:
+            config.favouriteOriginalBible = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
     def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible"],
-                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        config.thisTranslation["menu1_setMyFavouriteBible"], items,
                                         items.index(config.favouriteBible), False)
         if ok and item:
             config.favouriteBible = item
-            config.addFavouriteToMultiRef = True
-        else:
-            config.addFavouriteToMultiRef = False
         self.reloadResources()
         self.reloadCurrentRecord(True)
 
     def openFavouriteBibleDialog2(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible2"],
-                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        config.thisTranslation["menu1_setMyFavouriteBible2"], items,
                                         items.index(config.favouriteBible2), False)
         if ok and item:
             config.favouriteBible2 = item
-            config.addFavouriteToMultiRef = True
         self.reloadResources()
         self.reloadCurrentRecord(True)
 
     def openFavouriteBibleDialog3(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible3"],
-                                        config.thisTranslation["message_addFavouriteVersion"], items,
+                                        config.thisTranslation["menu1_setMyFavouriteBible3"], items,
                                         items.index(config.favouriteBible3), False)
         if ok and item:
             config.favouriteBible3 = item
-            config.addFavouriteToMultiRef = True
         self.reloadResources()
         self.reloadCurrentRecord(True)
 

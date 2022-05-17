@@ -209,6 +209,7 @@ class MaterialMainWindow:
             ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
             ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
             ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
+            ("selectFavouriteHebrewGreekBible", self.openFavouriteMarvelBibleDialog),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
@@ -331,6 +332,13 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu3, feature, self, action, shortcut)
+        subMenu3 = addSubMenu(subMenu, config.favouriteOriginalBible)
+        items = (
+            ("openInMainWindow", partial(self.runMainText, config.favouriteOriginalBible), sc.openFavouriteOriginalBibleOnMain),
+            ("openInStudyWindow", partial(self.runStudyText, config.favouriteOriginalBible), sc.openFavouriteOriginalBibleOnStudy),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu3, feature, self, action, shortcut)
 
         subMenu = addSubMenu(menu, "menu_navigation")
         items = (
@@ -384,9 +392,12 @@ class MaterialMainWindow:
         if hasattr(config, "cli"):
             addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
             menu.addSeparator()
-        for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
-                                          sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5,
-                                          sc.openControlPanelTab6, sc.openControlPanelTab7)):
+        items = [sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
+                                          sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5]
+        if config.isVlcInstalled:
+            items.append(sc.openControlPanelTab6)
+        for index, shortcut in enumerate(items):
+        # removed sc.openControlPanelTab7 until morophology search tab is fixed.
             addMenuItem(menu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
         menu.addSeparator()
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
@@ -862,8 +873,9 @@ class MaterialMainWindow:
         icon = "material/maps/diamond/materialiconsoutlined/48dp/2x/outline_diamond_black_48dp.png"
         self.addMaterialIconButton("menu4_tske", icon, self.runTSKE, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
-        self.addMaterialIconButton("Marvel Interlinear Bible", icon, self.runMIBStudy, self.rightToolBar, None, False)
+        #icon = "material/maps/layers/materialiconsoutlined/48dp/2x/outline_layers_black_48dp.png"
+        icon = "material/image/auto_awesome/materialiconsoutlined/48dp/2x/outline_auto_awesome_black_48dp.png"
+        self.addMaterialIconButton("openFavouriteHebrewGreekBible", icon, self.runMIBStudy, self.rightToolBar)
         icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         self.addMaterialIconButton("menu4_traslations", icon, self.runTRANSLATION, self.rightToolBar)
         icon = "material/editor/align_horizontal_right/materialicons/48dp/2x/baseline_align_horizontal_right_black_48dp.png"

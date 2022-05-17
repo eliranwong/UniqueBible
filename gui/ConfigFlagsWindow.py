@@ -79,7 +79,7 @@ class ConfigFlagsWindow(QDialog):
             ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound, self.regexSearchBibleIfCommandNotFoundChanged, False, config.thisTranslation["regexSearchBibleIfCommandNotFound"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
-            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, False, config.thisTranslation["addFavouriteToMultiRef"]),
+            ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, True, config.thisTranslation["addFavouriteToMultiRef"]),
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, True, config.thisTranslation["enableVerseHighlighting"]),
             ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, False, config.thisTranslation["regexCaseSensitive"]),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, False, config.thisTranslation["alwaysDisplayStaticMaps"]),

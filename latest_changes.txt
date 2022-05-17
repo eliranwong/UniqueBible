@@ -1,3 +1,15 @@
+Changes in 29.78:
+* Added a configuration item config.favouriteOriginalBible for users to users to specify their most favourite Marvel Bible.
+    - Default is 'MIB'.
+* Added menu items for users to select and open "Favourite Hebrew & Greek Bible"
+* Added "Micron" shortcuts "Ctrl+7" and "Ctrl+8" to open users favourite Hebrew & Greek bible directly.
+* Changed the previous Open Marvel Interlinear Bible on Study Window icon.
+* The previous Open Marvel Interlinear Bible on Study Window button now opens the bible version, defined in config.favouriteOriginalBible.
+* Removed Morphology tab for now, as it does not reflect morphology items UBA use.  We may fix it.
+    Meanwhile, sers can search morphology with commands or by double-clicking a word in marvel bibles.
+* Display media player tab on Master Control menu only if config.isVlcInstalled is True.
+* Fixed context menu shortcuts to support customised shortcuts.
+
 Changes in 29.77:
 * Improved switching between single chapter and comparison view.  
     - BIBLE::: command switches back to single chapter view if text specified in BIBLE::: command is not in the texts in previous comparison view.

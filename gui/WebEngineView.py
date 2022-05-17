@@ -1,6 +1,7 @@
 from util.Languages import Languages
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
 import config, os, platform, webbrowser, re, subprocess
+import shortcut as sc
 from functools import partial
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QUrl
@@ -74,10 +75,10 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
 
-        if config.menuShortcuts in ShortcutUtil.data:
-            sc = ShortcutUtil.data[config.menuShortcuts]
-        else:
-            sc = ShortcutUtil.data['micron']
+#        if config.menuShortcuts in ShortcutUtil.data:
+#            sc = ShortcutUtil.data[config.menuShortcuts]
+#        else:
+#            sc = ShortcutUtil.data['micron']
 
         action = QAction(self)
         action.setText(config.thisTranslation["context1_search"])
@@ -125,7 +126,8 @@ class WebEngineView(QWebEngineView):
         self.searchText = QAction(self)
         self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
         self.searchText.triggered.connect(self.searchSelectedText)
-        self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc["contextSearchBible"])
+        #self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc["contextSearchBible"])
+        self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc.contextSearchBible)
         subMenu.addAction(self.searchText)
 
         self.searchTextInBook = QAction(self)
@@ -581,7 +583,8 @@ class WebEngineView(QWebEngineView):
             tts = QAction(self)
             tts.setText("{0} test[{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
             tts.triggered.connect(self.textToSpeech)
-            self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc["contextDefaultTTS"])
+            #self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc["contextDefaultTTS"])
+            self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc.contextDefaultTTS)
             self.addAction(tts)
 
             ttsMenu = QMenu()
@@ -609,7 +612,8 @@ class WebEngineView(QWebEngineView):
             tts = QAction(self)
             tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], config.gTTSDefaultLanguage.capitalize()))
             tts.triggered.connect(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage))
-            self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc["contextDefaultTTS"])
+            #self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc["contextDefaultTTS"])
+            self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc.contextDefaultTTS)
             self.addAction(tts)
 
             ttsMenu = QMenu()

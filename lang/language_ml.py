@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "സജ്ജീകരണങ്ങള് ലോഡ് ചെയ്യുക",
     "toggleFavouriteVersionIntoMultiRef": "à '- à', à ', à', à ', à', à ', à', à ', à', à ', à',",
     "favourite": "Favourite",
+    "favouriteOriginalBible": "എന്റെ ഫവറൈറ്റ് മാർവൽ ബൈബിളിനെ തിരഞ്ഞെടുക്കുക",
+    "selectFavouriteHebrewGreekBible": "എന്റെ ഫവറൈറ്റ് ഹീബ്രു & ഗ്രീക്ക് ബൈബിള് തിരഞ്ഞെടുക്കുക",
+    "openFavouriteHebrewGreekBible": "എന്റെ ഫവറൈറ്റ് ഹീബ്രു & ഗ്രീക്ക് ബൈബിള് തുറക്കുക",
 }

@@ -825,4 +825,7 @@ translation = {
     "loadMySettings": "Φόρτωση ρυθμίσεων.",
     "toggleFavouriteVersionIntoMultiRef": "Εμφάνιση θετικής εκδοχής στο Fetching πολλαπλών παραπομπών",
     "favourite": "Αγαπημένο:",
+    "favouriteOriginalBible": "Επιλέξτε την Αγία Γραφή Marvel μου",
+    "selectFavouriteHebrewGreekBible": "Επιλέξτε την Εβραϊκή & Ελληνική Βίβλο μου",
+    "openFavouriteHebrewGreekBible": "Ανοίξτε την Εβραϊκή & Ελληνική Βίβλο μου",
 }
