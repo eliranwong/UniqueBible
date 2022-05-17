@@ -874,9 +874,10 @@ class MainWindow(QMainWindow):
         else:
             self.mainView.setHtml(text, baseUrl)
         reference = "-".join(self.verseReference("main"))
-        if self.textCommandParser.lastKeyword in ("compare", "parallel", "sidebyside"):
+        lastKeyword = self.textCommandParser.lastKeyword
+        if lastKeyword in ("compare", "parallel", "sidebyside"):
             *_, reference2 = reference.split("-")
-            reference = "{0}-{1}".format(self.textCommandParser.lastKeyword, reference2)
+            reference = "{0}-{1}".format(lastKeyword[0:4], reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), textCommand)
 

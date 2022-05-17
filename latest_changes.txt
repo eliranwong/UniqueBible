@@ -1,3 +1,6 @@
+Changes in 29.81:
+* Shorten main window tab title.
+
 Changes in 29.80:
 * Improved updating main reference button.
 * Fixed the issue that chapter and verse menu are opened in new tabs.
