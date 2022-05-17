@@ -210,6 +210,7 @@ class MaterialMainWindow:
             ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
             ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
             ("selectFavouriteHebrewGreekBible", self.openFavouriteMarvelBibleDialog),
+            ("selectFavouriteHebrewGreekBible2", self.openFavouriteMarvelBibleDialog2),
             ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
             ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
@@ -336,6 +337,13 @@ class MaterialMainWindow:
         items = (
             ("openInMainWindow", partial(self.runMainText, config.favouriteOriginalBible), sc.openFavouriteOriginalBibleOnMain),
             ("openInStudyWindow", partial(self.runStudyText, config.favouriteOriginalBible), sc.openFavouriteOriginalBibleOnStudy),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu3, feature, self, action, shortcut)
+        subMenu3 = addSubMenu(subMenu, config.favouriteOriginalBible2)
+        items = (
+            ("openInMainWindow", partial(self.runMainText, config.favouriteOriginalBible2), sc.openFavouriteOriginalBibleOnMain2),
+            ("openInStudyWindow", partial(self.runStudyText, config.favouriteOriginalBible2), sc.openFavouriteOriginalBibleOnStudy2),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu3, feature, self, action, shortcut)

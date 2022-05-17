@@ -621,6 +621,11 @@ class ConfigUtil:
         # MOB, MIB, MTB, MPB, MAB"""
         if not hasattr(config, "favouriteOriginalBible"):
             config.favouriteOriginalBible = "MIB"
+        config.help["favouriteOriginalBible2"] = """
+        # Set your second favourite marvel bible version here
+        # MOB, MIB, MTB, MPB, MAB"""
+        if not hasattr(config, "favouriteOriginalBible2"):
+            config.favouriteOriginalBible2 = "MPB"
         config.help["favouriteBible"] = """
         # Set your favourite bible version here"""
         if not hasattr(config, "favouriteBible"):
@@ -1295,6 +1300,7 @@ class ConfigUtil:
             ("mainC", config.mainC),
             ("mainV", config.mainV),
             ("favouriteOriginalBible", config.favouriteOriginalBible),
+            ("favouriteOriginalBible2", config.favouriteOriginalBible2),
             ("favouriteBible", config.favouriteBible),
             ("favouriteBible2", config.favouriteBible2),
             ("favouriteBible3", config.favouriteBible3),

@@ -828,4 +828,5 @@ translation = {
     "favouriteOriginalBible": "Seleziona la mia Bibbia Marvel preferita",
     "selectFavouriteHebrewGreekBible": "Seleziona la mia Bibbia Preferita & Bibbia greca",
     "openFavouriteHebrewGreekBible": "Apri la mia Bibbia Preferita & Bibbia greca",
+    "selectFavouriteHebrewGreekBible2": "Seleziona il mio Ebraico Preferito e Bibbia greca 2",
 }

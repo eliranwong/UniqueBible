@@ -1,3 +1,8 @@
+Changes in 29.79:
+* Added config.favouriteOriginalBible2 for users to configure secondary favourite Hebrew and Greek bible.
+* Added a gui dialog to configure config.favouriteOriginalBible2.
+* Added menu items and shortcuts to launch secondary favourite bible directly.
+
 Changes in 29.78:
 * Added a configuration item config.favouriteOriginalBible for users to users to specify their most favourite Marvel Bible.
     - Default is 'MIB'.

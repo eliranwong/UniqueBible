@@ -828,4 +828,5 @@ translation = {
     "favouriteOriginalBible": "내가 가장 좋아하는 마블 성서를 선택하다.",
     "selectFavouriteHebrewGreekBible": "내가 좋아하는 히브리어와 그리스의 성경을 선택하다.",
     "openFavouriteHebrewGreekBible": "내가 좋아하는 히브리어와 그리스어 성경을 연다.",
+    "selectFavouriteHebrewGreekBible2": "내 즐겨찾기 히브리어 및 그리스 성서 2를 선택하십시오.",
 }

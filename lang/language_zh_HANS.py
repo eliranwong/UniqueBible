@@ -828,4 +828,5 @@ translation = {
     "favouriteOriginalBible": "配置我最喜欢的原文圣经",
     "selectFavouriteHebrewGreekBible": "配置我最喜欢的希伯来语和希腊语圣经",
     "openFavouriteHebrewGreekBible": "我最喜欢的希伯来语和希腊语圣经",
+    "selectFavouriteHebrewGreekBible2": "配置我最喜欢的希伯来语和希腊语圣经 2",
 }

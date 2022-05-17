@@ -3682,6 +3682,16 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
         self.reloadResources()
         self.reloadCurrentRecord(True)
 
+    def openFavouriteMarvelBibleDialog2(self):
+        items = ["MOB", "MIB", "MTB", "MPB", "MAB"]
+        item, ok = QInputDialog.getItem(self, config.thisTranslation["selectFavouriteHebrewGreekBible2"],
+                                        config.thisTranslation["selectFavouriteHebrewGreekBible2"], items,
+                                        items.index(config.favouriteOriginalBible2), False)
+        if ok and item:
+            config.favouriteOriginalBible2 = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
     def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible"],
