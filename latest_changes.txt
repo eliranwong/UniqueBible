@@ -1,3 +1,6 @@
+Changes in 29.82:
+* Removed a built-in shortcut in Micron set.
+
 Changes in 29.81:
 * Shorten main window tab title.
 
