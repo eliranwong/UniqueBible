@@ -743,7 +743,7 @@ translation = {
     "play": "കളിക്കുക",
     "volume": "വാല്യം",
     "pause": "താങ്ങുക",
-    "cp6": "മീഡിയ പ്ലെയര്Name",
+    "cp6": "മാധ്യമം",
     "gitHubBibleMp3Files": "GitHub ബൈബിള് MP3 ഫയലുകള്",
     "selectAll": "എല്ലാം തെരഞ്ഞെടുക്കുക",
     "selectNone": "ഒന്നുമല്ല തെരഞ്ഞെടുക്കുക",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "എന്റെ ഫവറൈറ്റ് ഹീബ്രു & ഗ്രീക്ക് ബൈബിള് തിരഞ്ഞെടുക്കുക",
     "openFavouriteHebrewGreekBible": "എന്റെ ഫവറൈറ്റ് ഹീബ്രു & ഗ്രീക്ക് ബൈബിള് തുറക്കുക",
     "selectFavouriteHebrewGreekBible2": "എന്റെ ഫവറൈറ്റ് ഹീബ്രു, ഗ്രീക്ക് ബൈബിള് 2 തെരഞ്ഞെടുക്കുക",
+    "media": "മാധ്യമം",
+    "multimedia": "മള്ട്ടിമീഡിയ",
+    "noMediaPlayer": "മീഡിയ കളിക്കാരന് ലഭ്യമല്ല!",
+    "launch": "തുടങ്ങുക",
+    "content": "ഉള്ളടക്കം",
 }

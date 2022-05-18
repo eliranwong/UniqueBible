@@ -1937,22 +1937,6 @@ class MainWindow(QMainWindow):
     def openYouTube(self):
         self.openMiniBrowser()
 
-    def openVlcPlayer(self, filename=""):
-        if config.isVlcInstalled:
-            try:
-                from gui.VlcPlayer import VlcPlayer
-                if self.vlcPlayer is not None:
-                    self.vlcPlayer.stop()
-                    self.vlcPlayer.clearPlaylist()
-                    self.vlcPlayer.resetTimer()
-                    self.vlcPlayer.update()
-                else:
-                    self.vlcPlayer = VlcPlayer(self, filename)
-                self.vlcPlayer.loadAndPlayFile(filename)
-                self.vlcPlayer.show()
-            except:
-                pass
-
     def openMiniBrowser(self, initialUrl=None):
         self.youTubeView = MiniBrowser(self, initialUrl)
         self.youTubeView.show()
@@ -4160,6 +4144,28 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
 
+    def openVlcPlayer(self, filename=""):
+        try:
+            if WebtopUtil.isPackageInstalled("vlc"):
+                if filename:
+                    self.playAudioBibleFilePlayList([filename])
+                else:
+                    WebtopUtil.run("vlc")
+            elif config.isVlcInstalled:
+                from gui.VlcPlayer import VlcPlayer
+                if self.vlcPlayer is not None:
+                    self.vlcPlayer.close()
+                self.vlcPlayer = VlcPlayer(self, filename)
+                self.vlcPlayer.show()
+        except:
+            self.displayMessage(config.thisTranslation["noMediaPlayer"])
+
+    def closeMediaPlayer(self):
+        if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
+            os.system("pkill vlc")
+        if self.vlcPlayer is not None:
+            self.vlcPlayer.close()
+
     def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
         playlist = []
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
@@ -4171,12 +4177,13 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
                     if os.path.isfile(audioFile):
                         playlist.append(audioFile)
         self.playAudioBibleFilePlayList(playlist)
-    
-    def playAudioBibleFilePlayList(self, playlist):
+
+    def playAudioBibleFilePlayList(self, playlist, gui=True):
         if playlist and WebtopUtil.isPackageInstalled("vlc"):
             audioFiles = ' '.join(playlist)
+            vlcCmd = "vlc" if gui else "cvlc"
             os.system("pkill vlc")
-            WebtopUtil.runNohup(f"vlc {audioFiles}")
+            WebtopUtil.run(f"{vlcCmd} {audioFiles}")
         elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:
@@ -4184,7 +4191,8 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
             self.vlcPlayer = VlcPlayer(self)
             for file in playlist:
                 self.vlcPlayer.addToPlaylist(file)
-            self.vlcPlayer.show()
+            if gui:
+                self.vlcPlayer.show()
             self.vlcPlayer.playNextInPlaylist()
 
     def playBibleMP3Playlist(self, playlist):
@@ -4197,7 +4205,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
                     fileList.append(file)
             audioFiles = ' '.join(fileList)
             os.system("pkill vlc")
-            WebtopUtil.runNohup(f"vlc {audioFiles}")
+            WebtopUtil.run(f"vlc {audioFiles}")
         elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
             if self.vlcPlayer is not None:

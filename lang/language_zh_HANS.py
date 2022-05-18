@@ -743,7 +743,7 @@ translation = {
     "play": "玩玩",
     "volume": "卷",
     "pause": "暂停",
-    "cp6": "媒体播放器",
+    "cp6": "媒体",
     "gitHubBibleMp3Files": "GitHub 圣经 MP3 文件",
     "selectAll": "全部选中",
     "selectNone": "选择无",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "配置我最喜欢的希伯来语和希腊语圣经",
     "openFavouriteHebrewGreekBible": "我最喜欢的希伯来语和希腊语圣经",
     "selectFavouriteHebrewGreekBible2": "配置我最喜欢的希伯来语和希腊语圣经 2",
+    "media": "媒体",
+    "multimedia": "多媒体",
+    "noMediaPlayer": "找不到媒体播放器 !",
+    "launch": "启动",
+    "content": "内容",
 }

@@ -743,7 +743,7 @@ translation = {
     "play": "Воспроизведение",
     "volume": "Том",
     "pause": "Пауза",
-    "cp6": "проигрыватель мультимедиа",
+    "cp6": "Носитель",
     "gitHubBibleMp3Files": "Файлы GitHub Bible MP3",
     "selectAll": "Выбрать все",
     "selectNone": "Выберите Нет",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "Выберите мою любимую еврейскую и греческую Библию",
     "openFavouriteHebrewGreekBible": "Открыть мою любимую еврейскую и греческую Библию",
     "selectFavouriteHebrewGreekBible2": "Выберите мой любимый иврит и греческая Библия 2",
+    "media": "Носитель",
+    "multimedia": "Мультимедиа",
+    "noMediaPlayer": "Проигрыватель мультимедиа не найден!",
+    "launch": "Запуск",
+    "content": "Содержимое",
 }

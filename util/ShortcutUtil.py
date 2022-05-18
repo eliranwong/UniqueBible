@@ -150,6 +150,8 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy": "",
             "openFavouriteOriginalBibleOnMain2": "",
             "openFavouriteOriginalBibleOnStudy2": "",
+            "launchMediaPlayer": "",
+            "stopMediaPlayer": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -286,6 +288,8 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy": "",
             "openFavouriteOriginalBibleOnMain2": "",
             "openFavouriteOriginalBibleOnStudy2": "",
+            "launchMediaPlayer": "",
+            "stopMediaPlayer": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -422,6 +426,8 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy": "Ctrl+8",
             "openFavouriteOriginalBibleOnMain2": "Ctrl+9",
             "openFavouriteOriginalBibleOnStudy2": "Ctrl+0",
+            "launchMediaPlayer": "Ctrl+Shift+P",
+            "stopMediaPlayer": "Ctrl+Shift+Q",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -558,6 +564,8 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy": "",
             "openFavouriteOriginalBibleOnMain2": "",
             "openFavouriteOriginalBibleOnStudy2": "",
+            "launchMediaPlayer": "",
+            "stopMediaPlayer": "",
         }
     }
 
@@ -604,8 +612,8 @@ class ShortcutUtil:
         "Ctrl+Shift+M": "openControlPanelTab6",
         "Ctrl+Shift+N": "toggleShowUserNoteIndicator",
         "Ctrl+Shift+O": "",
-        "Ctrl+Shift+P": "",
-        "Ctrl+Shift+Q": "",
+        "Ctrl+Shift+P": "launchMediaPlayer",
+        "Ctrl+Shift+Q": "stopMediaPlayer",
         "Ctrl+Shift+R": "toggleReadTillChapterEnd",
         "Ctrl+Shift+S": "contextSearchBible",
         "Ctrl+Shift+T": "contextDefaultTTS",

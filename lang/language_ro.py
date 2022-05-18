@@ -743,7 +743,7 @@ translation = {
     "play": "Joacă",
     "volume": "Volum",
     "pause": "Pauză",
-    "cp6": "Jucător media",
+    "cp6": "Media",
     "gitHubBibleMp3Files": "Fişiere MP3 biblice GitHub",
     "selectAll": "Selectare tot",
     "selectNone": "Selectare Fără",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "Select my Favourite ebraică & greacă Biblie",
     "openFavouriteHebrewGreekBible": "Deschide mea Favourite ebraică & greacă Biblie",
     "selectFavouriteHebrewGreekBible2": "Selectaţi mea preferată ebraică şi greacă Biblie 2",
+    "media": "Media",
+    "multimedia": "Multimedia",
+    "noMediaPlayer": "Nu s-a găsit niciun media player!",
+    "launch": "Lansare",
+    "content": "Conținut",
 }

@@ -743,7 +743,7 @@ translation = {
     "play": "활동",
     "volume": "볼륨",
     "pause": "일시 중지",
-    "cp6": "미디어 플레이어",
+    "cp6": "미디어",
     "gitHubBibleMp3Files": "깃허브 성경책 MP3 파일",
     "selectAll": "모두 선택",
     "selectNone": "없음 선택",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "내가 좋아하는 히브리어와 그리스의 성경을 선택하다.",
     "openFavouriteHebrewGreekBible": "내가 좋아하는 히브리어와 그리스어 성경을 연다.",
     "selectFavouriteHebrewGreekBible2": "내 즐겨찾기 히브리어 및 그리스 성서 2를 선택하십시오.",
+    "media": "미디어",
+    "multimedia": "멀티미디어",
+    "noMediaPlayer": "미디어 플레이어를 찾을 수 없습니다!",
+    "launch": "실행",
+    "content": "내용",
 }

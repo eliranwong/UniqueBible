@@ -5,6 +5,13 @@ import subprocess
 class WebtopUtil:
 
     @staticmethod
+    def run(command):
+        if WebtopUtil.isPackageInstalled("nohup"):
+            WebtopUtil.runNohup(command)
+        else:
+            os.system("{0} > /dev/null 2>&1 &".format(command))
+
+    @staticmethod
     def runNohup(command):
         os.system("nohup {0} > /dev/null 2>&1 &".format(command))
 
@@ -26,7 +33,10 @@ class WebtopUtil:
             else:
                 # The following works on macOS and Linux. (Darwin = mac, xdg-open = linux).
                 opener = "open" if sys.platform == "darwin" else "xdg-open"
-                subprocess.call([opener, filename])
+                if WebtopUtil.isPackageInstalled("nohup"):
+                    WebtopUtil.runNohup("{0} {1}".format(opener, filename))
+                else:
+                    subprocess.call([opener, filename])
         except:
             print(f"Unable to open file '{filename}'!")
 

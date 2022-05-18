@@ -743,7 +743,7 @@ translation = {
     "play": "玩",
     "volume": "卷",
     "pause": "暫停",
-    "cp6": "媒體播放程式",
+    "cp6": "媒體",
     "gitHubBibleMp3Files": "GitHub 聖經 MP3 檔案",
     "selectAll": "全選",
     "selectNone": "選取無",
@@ -829,4 +829,9 @@ translation = {
     "selectFavouriteHebrewGreekBible": "配置我最喜歡的希伯來語和希臘文聖經",
     "openFavouriteHebrewGreekBible": "我最喜歡的希伯來語和希臘文聖經",
     "selectFavouriteHebrewGreekBible2": "配置我最喜歡的希伯來語和希臘文聖經 2",
+    "media": "媒體",
+    "multimedia": "多媒體",
+    "noMediaPlayer": "找不到媒體播放程式！",
+    "launch": "啟動",
+    "content": "內容",
 }

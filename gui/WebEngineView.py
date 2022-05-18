@@ -940,11 +940,9 @@ class WebEngineView(QWebEngineView):
                         if os.path.isfile(fileName):
                             # Open the directory where the file is saved
                             outputFolder = os.path.dirname(fileName)
-                            if config.docker:
-                                WebtopUtil.runNohup(f"{config.open} {outputFolder}")
-                            elif platform.system() == "Linux":
-                                subprocess.Popen([config.open, outputFolder])
-                            else:
+                            try:
+                                WebtopUtil.run(f"{config.open} {outputFolder}")
+                            except:
                                 os.system(r"{0} {1}".format(config.open, outputFolder))
                     except:
                         self.displayMessage(config.thisTranslation["message_fail"])

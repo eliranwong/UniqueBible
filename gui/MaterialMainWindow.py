@@ -400,10 +400,9 @@ class MaterialMainWindow:
         if hasattr(config, "cli"):
             addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
             menu.addSeparator()
-        items = [sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
-                                          sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5]
-        if config.isVlcInstalled:
-            items.append(sc.openControlPanelTab6)
+        items = (sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
+                                          sc.openControlPanelTab3, sc.openControlPanelTab4,
+                                          sc.openControlPanelTab5, sc.openControlPanelTab6)
         for index, shortcut in enumerate(items):
         # removed sc.openControlPanelTab7 until morophology search tab is fixed.
             addMenuItem(menu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
@@ -413,8 +412,23 @@ class MaterialMainWindow:
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
+        if WebtopUtil.isPackageInstalled("vlc") or config.isVlcInstalled:
+            menu.addSeparator()
+            subMenu = addSubMenu(menu, "mediaPlayer")
+            items = (
+                ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
+                ("stop", self.closeMediaPlayer, sc.stopMediaPlayer),
+            )
+            for feature, action, shortcut in items:
+                addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
-        addMenuItem(menu, "menu1_reload", self, lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord)
+        subMenu = addSubMenu(menu, "menu_reload")
+        items = (
+            ("content", lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord),
+            ("menu8_resources", self.reloadResources, None),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
 
         # 4th column
         menu = addMenu(menuBar, "menu8_resources")
@@ -473,9 +487,6 @@ class MaterialMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-
-        menu.addSeparator()
-        addMenuItem(menu, "reloadResources", self, self.reloadResources)
 
         # macros
         if config.enableMacros:
@@ -794,9 +805,9 @@ class MaterialMainWindow:
         icon = "material/editor/text_increase/materialiconsoutlined/48dp/2x/outline_text_increase_black_48dp.png"
         self.addMaterialIconButton("menu2_larger", icon, self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
-        if config.isVlcInstalled:
+        if WebtopUtil.isPackageInstalled("vlc") or config.isVlcInstalled:
             icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
-            self.addMaterialIconButton("mediaPlayer", icon, lambda: self.openVlcPlayer(""), self.secondToolBar)
+            self.addMaterialIconButton("mediaPlayer", icon, self.openVlcPlayer, self.secondToolBar)
         if config.isYoutubeDownloaderInstalled:
             icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
             self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)

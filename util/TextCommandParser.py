@@ -1258,15 +1258,19 @@ class TextCommandParser:
         # Stop current playing first if any:
         self.stopTtsAudio()
 
+        # Check if Google Cloud TTS is in place
+        isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
+
         # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-        language = "en"
-        text = command
         if command.count(":::") != 0:
             language, text = self.splitCommand(command)
+        else:
+            language = "en-GB" if isGoogleCloudTTSAvailable else "en"
+            text = command
         
         # fine-tune
         text = re.sub("[\[\]\(\)'\"]", "", text)
-        if not os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")):
+        if not isGoogleCloudTTSAvailable:
             language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
@@ -1275,15 +1279,14 @@ class TextCommandParser:
             text = TextUtil.removeVowelAccent(text)
 
         try:
-            credentials = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
-            if os.path.isfile(credentials):
+            if isGoogleCloudTTSAvailable:
                 self.saveCloudTTSAudio(text, language)
             else:
                 self.saveGTTSAudio(text, language)
 
             audioFile = self.getGttsFilename()
             if os.path.isfile(audioFile):
-                self.openVlcPlayer(audioFile, "main")
+                self.openVlcPlayer(audioFile, "main", gui=False)
         except:
             self.parent.displayMessage(config.thisTranslation["message_fail"])
 
@@ -1588,7 +1591,7 @@ class TextCommandParser:
                 self.parent.playAudioBibleFilePlayList(allPlayList)
             return (target, content, {})
         else:
-            self.invalidCommand()
+            return self.invalidCommand()
 
     # READCHAPTER:::
     def readChapter(self, command, source):
@@ -1630,7 +1633,7 @@ class TextCommandParser:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
                     if WebtopUtil.isPackageInstalled(player):
                         os.system("pkill vlc")
-                        WebtopUtil.runNohup(f"{player} {audioFile}")
+                        WebtopUtil.run(f"{player} {audioFile}")
                         return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", (player == "vlc"))
@@ -1654,7 +1657,7 @@ class TextCommandParser:
                 try:
                     if WebtopUtil.isPackageInstalled("cvlc"):
                         os.system("pkill vlc")
-                        WebtopUtil.runNohup(f"cvlc {audioFile}")
+                        WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", False)
@@ -1683,7 +1686,7 @@ class TextCommandParser:
                 try:
                     if WebtopUtil.isPackageInstalled("cvlc"):
                         os.system("pkill vlc")
-                        WebtopUtil.runNohup(f"cvlc {audioFile}")
+                        WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", False)
@@ -1700,14 +1703,17 @@ class TextCommandParser:
     # VLC:::
     def openVlcPlayer(self, command, source, gui=True):
         try:
-            if config.isVlcInstalled:
+            if WebtopUtil.isPackageInstalled("vlc"):
+                vlcCmd = "vlc" if gui else "cvlc"
+                WebtopUtil.run("{0} '{1}'".format(vlcCmd, command))
+            elif config.isVlcInstalled:
                 from gui.VlcPlayer import VlcPlayer
                 if self.parent.vlcPlayer is not None:
                     # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
                     #self.parent.vlcPlayer.stop()
                     #self.parent.vlcPlayer.loadAndPlayFile(filename)
                     self.parent.vlcPlayer.close()
-                self.parent.vlcPlayer = VlcPlayer(self, command)
+                self.parent.vlcPlayer = VlcPlayer(self.parent, command)
                 if gui:
                     self.parent.vlcPlayer.show()
         except:
