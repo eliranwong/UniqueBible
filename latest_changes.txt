@@ -2,6 +2,7 @@ Changes in 29.83:
 * Added context plugin "English Dictionaries" with a shortcut "Ctrl+Shift+D.
 * Added menu items and shortcuts to launch and stop media player.
 * Added support of using full vlc with Master Control Media tab.
+* Added wordnet third party dictionary.
 * Fixed and improved VLC::: command.
 
 Changes in 29.82:
