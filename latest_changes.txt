@@ -1,3 +1,10 @@
+Changes in 29.84:
+* Improved Study Window tabs' tooltips.
+* Changed a toolbar button to open Master Control media tab, instead of media player.
+    - This skips a step for users who want to open a media file.
+    - Users can still use menu item or shortcut to open media player directly.
+* Fixed opening media file with filename containing "'".
+
 Changes in 29.83:
 * Added context plugin "English Dictionaries" with a shortcut "Ctrl+Shift+D.
 * Added menu items and shortcuts to launch and stop media player.

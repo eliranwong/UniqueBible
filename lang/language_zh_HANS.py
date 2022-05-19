@@ -743,7 +743,7 @@ translation = {
     "play": "玩玩",
     "volume": "卷",
     "pause": "暂停",
-    "cp6": "媒体",
+    "cp6": "多媒体",
     "gitHubBibleMp3Files": "GitHub 圣经 MP3 文件",
     "selectAll": "全部选中",
     "selectNone": "选择无",

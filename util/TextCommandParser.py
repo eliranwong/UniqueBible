@@ -1701,21 +1701,27 @@ class TextCommandParser:
                 return self.noAudio()
 
     # VLC:::
+    def openBuiltinPlayer(self, command, gui):
+        from gui.VlcPlayer import VlcPlayer
+        if self.parent.vlcPlayer is not None:
+            # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
+            #self.parent.vlcPlayer.stop()
+            #self.parent.vlcPlayer.loadAndPlayFile(filename)
+            self.parent.vlcPlayer.close()
+        self.parent.vlcPlayer = VlcPlayer(self.parent, command)
+        if gui:
+            self.parent.vlcPlayer.show()
+
     def openVlcPlayer(self, command, source, gui=True):
         try:
             if WebtopUtil.isPackageInstalled("vlc"):
                 vlcCmd = "vlc" if gui else "cvlc"
-                WebtopUtil.run("{0} '{1}'".format(vlcCmd, command))
-            elif config.isVlcInstalled:
-                from gui.VlcPlayer import VlcPlayer
-                if self.parent.vlcPlayer is not None:
-                    # Fix issue: https://github.com/eliranwong/UniqueBible/issues/947
-                    #self.parent.vlcPlayer.stop()
-                    #self.parent.vlcPlayer.loadAndPlayFile(filename)
-                    self.parent.vlcPlayer.close()
-                self.parent.vlcPlayer = VlcPlayer(self.parent, command)
-                if gui:
-                    self.parent.vlcPlayer.show()
+                if '"' in command:
+                    self.openBuiltinPlayer(command, gui)
+                else:
+                    WebtopUtil.run('{0} "{1}"'.format(vlcCmd, command))
+            else:
+                self.openBuiltinPlayer(command, gui)
         except:
             WebtopUtil.openFile(command)
         return ("", "", {})

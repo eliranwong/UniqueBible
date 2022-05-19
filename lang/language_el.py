@@ -743,7 +743,7 @@ translation = {
     "play": "Παίξε!",
     "volume": "' Τόμος",
     "pause": "-Γιατί;",
-    "cp6": "Media.",
+    "cp6": "Πολυμέσα:",
     "gitHubBibleMp3Files": "GitHub Αρχεία MP3 αρχεία MP3",
     "selectAll": "Επιλογή όλων:",
     "selectNone": "Επιλέξτε Χωρίς.",

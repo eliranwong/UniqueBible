@@ -1,3 +1,4 @@
+from json import tool
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 import time
 import urllib.parse
@@ -1079,7 +1080,7 @@ class MainWindow(QMainWindow):
         # Alternatively,
         # self.studyView.setCurrentWidget(self.studyView.widget(nextIndex))
 
-    def openTextOnStudyView(self, text, tab_title='', anchor=None):
+    def openTextOnStudyView(self, text, tab_title='', anchor=None, toolTip=""):
         if config.studyWindowContentTransformers:
             for transformer in config.studyWindowContentTransformers:
                 text = transformer(text)
@@ -1121,7 +1122,8 @@ class MainWindow(QMainWindow):
         if tab_title == '':
             tab_title = self.textCommandParser.lastKeyword
         self.studyView.setTabText(self.studyView.currentIndex(), tab_title)
-        self.studyView.setTabToolTip(self.studyView.currentIndex(), tab_title)
+        toolTip = toolTip if toolTip else tab_title
+        self.studyView.setTabToolTip(self.studyView.currentIndex(), toolTip)
 
     def studyViewFinishedLoading(self, js):
         self.studyView.currentWidget().page().runJavaScript(js)
@@ -1211,11 +1213,13 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getBookNote(b)
         note = self.fixNoteFontDisplay(note)
+        reference = reference[:-4]
         note = "<p style=\"font-family:'{3}'; font-size:{4}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editbooknote:::{2}\"'>edit</button></p>{1}".format(
-            reference[:-4], note, b, config.font, config.fontSize)
+            reference, note, b, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note, tab_title=reference)
-        self.addHistoryRecord("study", "OPENBOOKNOTE:::{0}".format(reference[:-4]))
+        history = "OPENBOOKNOTE:::{0}".format(reference)
+        self.openTextOnStudyView(note, tab_title="note-{0}".format(reference), toolTip=history)
+        self.addHistoryRecord("study", history)
 
     def openChapterNote(self, b, c):
         self.textCommandParser.lastKeyword = "note"
@@ -1226,11 +1230,13 @@ class MainWindow(QMainWindow):
         self.updateCommentaryRefButton()
         note = NoteService.getChapterNote(b, c)
         note = self.fixNoteFontDisplay(note)
+        reference = reference[:-2]
+        history = "OPENCHAPTERNOTE:::{0}".format(reference)
         note = "<p style=\"font-family:'{4}'; font-size:{5}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editchapternote:::{2}.{3}\"'>edit</button></p>{1}".format(
-            reference[:-2], note, b, c, config.font, config.fontSize)
+            reference, note, b, c, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note, tab_title=reference)
-        self.addHistoryRecord("study", "OPENCHAPTERNOTE:::{0}".format(reference[:-2]))
+        self.openTextOnStudyView(note, tab_title="note-{0}".format(reference), toolTip=history)
+        self.addHistoryRecord("study", history)
 
     def openVerseNote(self, b, c, v):
         self.textCommandParser.lastKeyword = "note"
@@ -1244,8 +1250,9 @@ class MainWindow(QMainWindow):
         note = "<p style=\"font-family:'{5}'; font-size:{6}pt;\"><b>Note on {0}</b> &ensp;<button class='ubaButton' onclick='document.title=\"_editversenote:::{2}.{3}.{4}\"'>edit</button></p>{1}".format(
             reference, note, b, c, v, config.font, config.fontSize)
         note = self.htmlWrapper(note, True, "study", False)
-        self.openTextOnStudyView(note, tab_title=reference)
-        self.addHistoryRecord("study", "OPENVERSENOTE:::{0}".format(reference))
+        history = "OPENVERSENOTE:::{0}".format(reference)
+        self.openTextOnStudyView(note, tab_title="note-{0}".format(reference), toolTip=history)
+        self.addHistoryRecord("study", history)
 
     def getHighlightCss(self):
         css = ""
@@ -1285,7 +1292,7 @@ class MainWindow(QMainWindow):
         clipboardText = QApplication.clipboard().text()
         #clipboardText = QGuiApplication.instance().clipboard().text()
         # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
-        self.openTextOnStudyView(self.htmlWrapper(clipboardText, True))
+        self.openTextOnStudyView(self.htmlWrapper(clipboardText, True), tab_title="clipboard")
 
     def parseContentOnClipboard(self):
         clipboardText = QApplication.clipboard().text()
@@ -1438,14 +1445,14 @@ class MainWindow(QMainWindow):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.htmlWrapper(text, True)
-            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+            self.openTextOnStudyView(text, tab_title=".txt", toolTip=os.path.basename(fileName))
 
     def openUbaFile(self, fileName):
         if fileName:
             text = TextFileReader().readTxtFile(fileName)
             text = self.fixNoteFontDisplay(text)
             text = self.htmlWrapper(text, True, "study", False)
-            self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+            self.openTextOnStudyView(text, tab_title=".uba", toolTip=os.path.basename(fileName))
 
     def openDocxFile(self, fileName):
         #if config.isPythonDocxInstalled:
@@ -1459,7 +1466,7 @@ class MainWindow(QMainWindow):
                     text = BibleVerseParser(config.parserStandarisation).parseText(text)
                 text = self.wrapHtml(text, "study")
                 #text = self.htmlWrapper(text, True)
-                self.openTextOnStudyView(text, tab_title=os.path.basename(fileName))
+                self.openTextOnStudyView(text, tab_title=".docx", toolTip=os.path.basename(fileName))
             else:
                 self.displayMessage(config.thisTranslation["message_noSupportedFile"])
         else:
@@ -3347,7 +3354,7 @@ class MainWindow(QMainWindow):
                     else:
                         tab_title = dict['tab_title'] if 'tab_title' in dict.keys() else ""
                         anchor = dict['jump_to'] if "jump_to" in dict.keys() else None
-                        self.openTextOnStudyView(html, tab_title, anchor)
+                        self.openTextOnStudyView(html, tab_title, anchor, textCommand)
                 elif view == "main":
                     self.openTextOnMainView(html, textCommand)
                 elif view.startswith("popover"):
@@ -4251,7 +4258,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
                 "<ref onclick='document.title=\"DEVOTIONAL:::{0}:::{1}-{2}\"'>".format(devotional, nextMonth, nextDay))
         text = header + text
 
-        self.openTextOnStudyView(text, tab_title=devotional)
+        self.openTextOnStudyView(text, tab_title="devotional", toolTip=devotional)
 
 
     def testing(self):

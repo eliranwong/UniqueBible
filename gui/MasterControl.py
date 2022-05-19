@@ -138,10 +138,9 @@ class MasterControl(QWidget):
         self.tabs.addTab(self.miscellaneousTab, config.thisTranslation["cp5"])
         self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
         # 6
-        if config.isVlcInstalled:
-            mediaTab = MediaLauncher(self)
-            self.tabs.addTab(mediaTab, config.thisTranslation["mediaPlayer"])
-            self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
+        mediaTab = MediaLauncher(self)
+        self.tabs.addTab(mediaTab, config.thisTranslation["multimedia"])
+        self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
         #7
         # Removed morphology tab temporarily until a fix
         #self.morphologyTab = MorphologyLauncher(self)

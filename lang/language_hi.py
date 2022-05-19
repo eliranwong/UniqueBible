@@ -743,7 +743,7 @@ translation = {
     "play": "खेल",
     "volume": "आवाज़ निर्धारक",
     "pause": "ठहराना",
-    "cp6": "मीडिया",
+    "cp6": "मल्टीमीडिया",
     "gitHubBibleMp3Files": "Githb बाइबिल MP3 फ़ाइलें",
     "selectAll": "सभी को चुनें",
     "selectNone": "कुछ नहीं चुनें",
