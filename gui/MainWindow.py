@@ -3461,13 +3461,13 @@ class MainWindow(QMainWindow):
                 zh {2} font-family:'{6}'; {3} 
                 {8} {9}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.058'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.059'>
                 {10}
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.058'>
-                <script src='js/common.js?v=1.058'></script>
-                <script src='js/{7}.js?v=1.058'></script>
-                <script src='w3.js?v=1.058'></script>
-                <script src='js/custom.js?v=1.058'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.059'>
+                <script src='js/common.js?v=1.059'></script>
+                <script src='js/{7}.js?v=1.059'></script>
+                <script src='w3.js?v=1.059'></script>
+                <script src='js/custom.js?v=1.059'></script>
                 {0}
                 <script>var versionList = []; var compareList = []; var parallelList = []; 
                 var diffList = []; var searchList = [];</script></head>
@@ -4185,9 +4185,10 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
                         playlist.append(audioFile)
         self.playAudioBibleFilePlayList(playlist)
 
-    def playAudioBibleFilePlayList(self, playlist, gui=True):
-        if playlist and WebtopUtil.isPackageInstalled("vlc"):
-            audioFiles = ' '.join(playlist)
+    def playAudioBibleFilePlayList(self, playlist, gui=True, useBuiltinPlayer=False):
+        if playlist and WebtopUtil.isPackageInstalled("vlc") and not useBuiltinPlayer:
+            audioFiles = '" "'.join(playlist)
+            audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
             os.system("pkill vlc")
             WebtopUtil.run(f"{vlcCmd} {audioFiles}")

@@ -86,14 +86,16 @@ class LibraryLauncher(QWidget):
     def reloadCommentariesListModel(self, showOnlyActiveCommentaries=False):
         self.commentaryList = []
         activeCommentaries = []
+        model = QStandardItemModel(self.commentaryListView)
         if showOnlyActiveCommentaries:
             activeCommentaries = [item[1] for item in Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)]
         for index, commentary in enumerate(self.parent.commentaryFullNameList):
             if not showOnlyActiveCommentaries or commentary in activeCommentaries:
-                # item = QStandardItem(commentary)
-                # item.setToolTip(self.parent.commentaryList[index])
+                item = QStandardItem(self.parent.commentaryList[index])
+                item.setToolTip(commentary)
+                model.appendRow(item)
                 self.commentaryList.append(commentary)
-        model = QStringListModel(self.commentaryList)
+        #model = QStringListModel(self.commentaryList)
         self.commentaryListView.setModel(model)
         if config.commentaryText in self.commentaryList:
             self.commentaryListView.setCurrentIndex(model.index(self.commentaryList.index(config.commentaryText), 0))
@@ -108,6 +110,7 @@ class LibraryLauncher(QWidget):
 
 
     def reloadBookListModel(self, files=None):
+        self.bookModel = QStandardItemModel(self.bookList)
         self.dirsAndFiles = self.getSubdirectories()
         if files is None:
             self.dirsAndFiles += BookData().getBooks()
@@ -116,7 +119,11 @@ class LibraryLauncher(QWidget):
             for file in files:
                 if file in books:
                     self.dirsAndFiles.append(file)
-        self.bookModel = QStringListModel(self.dirsAndFiles)
+        for fileItem in self.dirsAndFiles:
+            item = QStandardItem(fileItem)
+            item.setToolTip(fileItem)
+            self.bookModel.appendRow(item)
+        #self.bookModel = QStringListModel(self.dirsAndFiles)
         self.bookList.setModel(self.bookModel)
         if config.book in self.dirsAndFiles:
             self.bookList.setCurrentIndex(self.bookModel.index(self.dirsAndFiles.index(config.book), 0))
@@ -125,12 +132,21 @@ class LibraryLauncher(QWidget):
     def getSubdirectories(self):
         return ["../"] + BookData().getDirectories()
 
+    def updateChapterModel(self, topicList):
+        for topicItem in topicList:
+            item = QStandardItem(topicItem)
+            item.setToolTip(topicItem)
+            self.chapterModel.appendRow(item)
+
     def chapterListView(self):
         self.chapterlist = QListView()
         self.chapterlist.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        topicList = self.getBookTopicList()
-        self.chapterModel = QStringListModel(topicList)
+        self.chapterModel = QStandardItemModel(self.chapterlist)
         self.chapterlist.setModel(self.chapterModel)
+        topicList = self.getBookTopicList()
+        self.updateChapterModel(topicList)
+        #self.chapterModel = QStringListModel(topicList)
+        #self.chapterlist.setModel(self.chapterModel)
         self.scrollChapterList(topicList)
         self.chapterlist.selectionModel().selectionChanged.connect(self.chapterSelected)
         return self.chapterlist
@@ -178,10 +194,14 @@ class LibraryLauncher(QWidget):
                 config.booksFolder = FileUtil.normalizePath(os.path.join(config.booksFolder, self.selectedBook))
                 self.reloadBookListModel()
             else:
+                self.updatingChapter = True
                 config.book = self.selectedBook
                 topicList = self.getBookTopicList()
-                self.chapterModel.setStringList(topicList)
+                #self.chapterModel.setStringList(topicList)
+                self.chapterModel.clear()
+                self.updateChapterModel(topicList)
                 config.bookChapter = topicList[0] if topicList else ""
+                self.updatingChapter = False
                 self.scrollChapterList(topicList)
                 command = "SEARCHBOOK:::{0}:::".format(config.book)
                 self.parent.commandField.setText(command)
@@ -197,11 +217,13 @@ class LibraryLauncher(QWidget):
             self.reloadBookListModel(sorted(config.favouriteBooks))
 
     def chapterSelected(self, selection):
-        config.bookSearchString = ''
-        config.bookChapter = selection[0].indexes()[0].data()
-        if self.selectedBook:
-            config.book = self.selectedBook
-        command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
-        if not self.parent.isRefreshing:
-            self.parent.runTextCommand(command)
-        self.parent.isRefreshing = False
+        if not self.updatingChapter:
+            config.bookSearchString = ''
+            config.bookChapter = selection[0].indexes()[0].data()
+            #config.bookChapter = selection[0].indexes()[0].row()
+            if self.selectedBook:
+                config.book = self.selectedBook
+            command = "BOOK:::{0}:::{1}".format(config.book, config.bookChapter)
+            if not self.parent.isRefreshing:
+                self.parent.runTextCommand(command)
+            self.parent.isRefreshing = False

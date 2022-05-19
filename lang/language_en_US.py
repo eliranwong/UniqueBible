@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "No media player is found!",
     "launch": "Launch",
     "content": "Content",
+    "openAll": "Open All",
 }

@@ -77,6 +77,12 @@ QListView {0}
     selection-color: {5};
 {1}
 
+QListView::item:hover {0}
+    font-size: {9}px;
+    background-color: {5};
+    color: {4};
+{1}
+
 QTableView {0}
     font-size: {9}px;
     selection-background-color: {4};

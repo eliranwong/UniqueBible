@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "Aucun lecteur de support n'est trouvé !",
     "launch": "Lancer",
     "content": "Contenu",
+    "openAll": "Ouvrir tout",
 }

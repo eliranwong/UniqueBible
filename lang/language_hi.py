@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "कोई मीडिया प्लेयर नहीं मिला!",
     "launch": "लॉन्च करें",
     "content": "सामग्री",
+    "openAll": "सभी खोलें",
 }

@@ -2,6 +2,8 @@ import config
 import os.path
 from qtpy.QtCore import QStringListModel
 from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+from qtpy.QtGui import QStandardItemModel, QStandardItem
+
 
 class HistoryLauncher(QWidget):
 
@@ -55,7 +57,8 @@ class HistoryLauncher(QWidget):
     def createMainListView(self):
         # Main and study history records are editable, so users can slightly modify a command and execute a new one.
         self.mainListView = QListView()
-        self.mainModel = QStringListModel()
+        #self.mainModel = QStringListModel()
+        self.mainModel = QStandardItemModel(self.mainListView)
         self.mainListView.setModel(self.mainModel)
         self.mainListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "main"))
         return self.mainListView
@@ -64,7 +67,8 @@ class HistoryLauncher(QWidget):
         #studyItems = list(reversed(config.history["study"]))
         # Main and study history records are editable, so users can slightly modify a command and execute a new one.
         self.studyListView = QListView()
-        self.studyModel = QStringListModel()
+        #self.studyModel = QStringListModel()
+        self.studyModel = QStandardItemModel(self.studyListView)
         self.studyListView.setModel(self.studyModel)
         self.studyListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "study"))
         return self.studyListView
@@ -73,7 +77,8 @@ class HistoryLauncher(QWidget):
         self.externalListView = QListView()
         # Only external file history record is not editable
         self.externalListView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.externalModel = QStringListModel()
+        #self.externalModel = QStringListModel()
+        self.externalModel = QStandardItemModel(self.externalListView)
         self.externalListView.setModel(self.externalModel)
         self.externalListView.selectionModel().selectionChanged.connect(lambda selection: self.historyAction(selection, "external"))
         return self.externalListView
@@ -86,11 +91,23 @@ class HistoryLauncher(QWidget):
 
     def refresh(self):
         mainItems = list(reversed(config.history["main"]))
+        for mainItem in mainItems:
+            item = QStandardItem(mainItem)
+            item.setToolTip(mainItem)
+            self.mainModel.appendRow(item)
         studyItems = list(reversed(config.history["study"]))
+        for studyItem in studyItems:
+            item = QStandardItem(studyItem)
+            item.setToolTip(studyItem)
+            self.studyModel.appendRow(item)
         externalItems = self.filterExternalFileRecords()
-        self.mainModel.setStringList(mainItems)
-        self.studyModel.setStringList(studyItems)
-        self.externalModel.setStringList(externalItems)
+        for externalItem in externalItems:
+            item = QStandardItem(externalItem)
+            item.setToolTip(externalItem)
+            self.externalModel.appendRow(item)
+        #self.mainModel.setStringList(mainItems)
+        #self.studyModel.setStringList(studyItems)
+        #self.externalModel.setStringList(externalItems)
         self.setSelection(mainItems, studyItems, externalItems)
 
     def setSelection(self, mainItems, studyItems, externalItems):

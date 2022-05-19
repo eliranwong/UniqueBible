@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "മീഡിയ കളിക്കാരന് ലഭ്യമല്ല!",
     "launch": "തുടങ്ങുക",
     "content": "ഉള്ളടക്കം",
+    "openAll": "എല്ലാം തുറക്കുക",
 }

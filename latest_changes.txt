@@ -1,3 +1,10 @@
+Changes in 29.85:
+* Added tooltips to all ListView in Master Control.
+* Added hover styles to ListView.
+* Fixed keyboard shortcut to navigate to Media tab when Master Control is opened.
+* Improved handling of bible link:
+    - When secondary bible on Study Window is not enabled, bible links opened the bible version currently selected on Main Window.
+
 Changes in 29.84:
 * Improved Study Window tabs' tooltips.
 * Changed a toolbar button to open Master Control media tab, instead of media player.

@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "找不到媒体播放器 !",
     "launch": "启动",
     "content": "内容",
+    "openAll": "全部打开",
 }

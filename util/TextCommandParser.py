@@ -1838,7 +1838,10 @@ class TextCommandParser:
     # BIBLE:::
     def textBible(self, command, source):
         if command.count(":::") == 0:
-            updateViewConfig, viewText, *_ = self.getViewConfig(source)
+            if config.openBibleInMainViewOnly:
+                updateViewConfig, viewText, *_ = self.getViewConfig("main")
+            else:
+                updateViewConfig, viewText, *_ = self.getViewConfig(source)
             command = "{0}:::{1}".format(viewText, command)
         texts, references = self.splitCommand(command)
         texts = self.getConfirmedTexts(texts)

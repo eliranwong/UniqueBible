@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "Nu s-a găsit niciun media player!",
     "launch": "Lansare",
     "content": "Conținut",
+    "openAll": "Deschide toate",
 }

@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "미디어 플레이어를 찾을 수 없습니다!",
     "launch": "실행",
     "content": "내용",
+    "openAll": "모두 열기",
 }

@@ -78,6 +78,7 @@ class Library2Launcher(QWidget):
         model = QStandardItemModel(list)
         for pdf in self.pdfList:
             item = QStandardItem(pdf)
+            item.setToolTip(pdf)
             model.appendRow(item)
         list.setModel(model)
         if config.pdfText in self.parent.pdfList:
@@ -102,6 +103,7 @@ class Library2Launcher(QWidget):
         model = QStandardItemModel(list)
         for docx in self.docxList:
             item = QStandardItem(docx)
+            item.setToolTip(docx)
             model.appendRow(item)
         list.setModel(model)
         if config.docxText in self.parent.docxList:
@@ -115,6 +117,7 @@ class Library2Launcher(QWidget):
         model = QStandardItemModel(list)
         for devotional in self.devotionals:
             item = QStandardItem(devotional)
+            item.setToolTip(devotional)
             model.appendRow(item)
         list.setModel(model)
         list.selectionModel().selectionChanged.connect(self.devotionalSelected)

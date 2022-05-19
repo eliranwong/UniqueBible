@@ -35,7 +35,7 @@ class MasterControl(QWidget):
         self.isRefreshing = False
 
     def setupKeyboardShortcuts(self):
-        for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2, sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5)):
+        for index, shortcut in enumerate((sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2, sc.openControlPanelTab3, sc.openControlPanelTab4, sc.openControlPanelTab5, sc.openControlPanelTab6)):
             shortcut = QShortcut(QKeySequence(shortcut), self)
             shortcut.activated.connect(lambda index=index: self.tabs.setCurrentIndex(index))
 

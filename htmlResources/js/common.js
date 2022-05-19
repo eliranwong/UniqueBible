@@ -786,7 +786,8 @@ function bookAbbToNo(bookAbb) {
 }
 
 function bcv(b,c,v,opt1,opt2) {
-    tbcv(activeText,b,c,v,opt1,opt2);
+    //tbcv(activeText,b,c,v,opt1,opt2);
+    tbcv("",b,c,v,opt1,opt2);
 }
 
 function tbcv(text,b,c,v,opt1,opt2) {
@@ -800,7 +801,11 @@ function tbcv(text,b,c,v,opt1,opt2) {
     } else if (opt1 != undefined) {
         verseReference = verseReference+"-"+String(opt1);
     }
-    document.title = "BIBLE:::"+text+":::"+verseReference;
+    if (text == "") {
+        document.title = "BIBLE:::"+verseReference;
+    } else {
+        document.title = "BIBLE:::"+text+":::"+verseReference;
+    }
 }
 
 function imv(b,c,v,opt1,opt2) {

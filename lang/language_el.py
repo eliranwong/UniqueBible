@@ -834,4 +834,5 @@ translation = {
     "noMediaPlayer": "Δεν υπάρχει media player!",
     "launch": "Εκκίνηση:",
     "content": "' Περιεχόμενο",
+    "openAll": "' νοιξε.",
 }
