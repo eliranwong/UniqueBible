@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Léxicos",
     "dictionaries": "Diccionarios",
     "setDefault": "Establecer como valor predeterminado",
-    "ttsLanguage": "Lenguaje De Texto A Discurso",
+    "ttsLanguage": "Seleccionar voz por omisión de voz a voz",
     "setDefaultTtsLanguage": "Seleccionar Lenguaje De Texto A Voz Predeterminado",
     "searchRB0": "Búsqueda básica; ordenada por libros",
     "searchRB1": "Mostrar todos los resultados de búsqueda sin ordenar por libros",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Lanzamiento",
     "content": "Contenido",
     "openAll": "Abrir todo",
+    "forceOnlineTts": "Esto fuerza la función de texto a voz predeterminada para utilizar el servicio en línea, incluso si está fuera de línea un motor tts está instalado.",
 }

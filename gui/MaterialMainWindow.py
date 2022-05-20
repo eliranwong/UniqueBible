@@ -216,6 +216,17 @@ class MaterialMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu0, feature, self, action)
+
+        if not config.noTtsFound:
+            languages = self.getTtsLanguages()
+            languageCodes = list(languages.keys())
+            items = [languages[code][1] for code in languageCodes]
+            
+            subMenu = addSubMenu(subMenu0, "ttsLanguage")
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                addMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), translation=False)
+
         if config.developer:
             items = (
                 ("setMaximumHistoryRecord", self.setMaximumHistoryRecordDialog),
@@ -255,7 +266,7 @@ class MaterialMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if config.isTtsInstalled:
+        if config.isOfflineTtsInstalled:
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]

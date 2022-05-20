@@ -118,7 +118,7 @@ class MiniControl(QWidget):
             commandLayout2.addStretch()
             commandBox.addLayout(commandLayout2)
 
-        if config.showMiniKeyboardInMiniControl and (config.isTtsInstalled or config.gTTS):
+        if config.showMiniKeyboardInMiniControl and not config.noTtsFound:
             ttsLayout = QBoxLayout(QBoxLayout.LeftToRight)
             ttsLayout.setSpacing(5)
     
@@ -479,7 +479,7 @@ class MiniControl(QWidget):
         text = self.searchLineEdit.text()
         if ":::" in text:
             text = text.split(":::")[-1]
-        if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
             command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
         else:
             command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
@@ -613,7 +613,7 @@ if __name__ == "__main__":
    config.parserStandarisation = 'NO'
    config.standardAbbreviation = 'ENG'
    config.marvelData = "/Users/otseng/dev/UniqueBible/marvelData/"
-   config.isTtsInstalled = False
+   config.isOfflineTtsInstalled = False
 
    ConfigUtil.setup()
    config.noQt = False

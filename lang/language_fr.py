@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Lexiques",
     "dictionaries": "Dictionnaires",
     "setDefault": "Définir comme valeur par défaut",
-    "ttsLanguage": "Langue du texte à la parole",
+    "ttsLanguage": "Sélectionner la voix par texte par défaut",
     "setDefaultTtsLanguage": "Sélectionner la langue par défaut du texte à la parole",
     "searchRB0": "Recherche de base ; triée par livre",
     "searchRB1": "Afficher tous les résultats de la recherche sans trier les livres",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Lancer",
     "content": "Contenu",
     "openAll": "Ouvrir tout",
+    "forceOnlineTts": "Cela force la fonction de texte-parole par défaut à utiliser le service en ligne, même si un moteur tts est installé hors ligne.",
 }

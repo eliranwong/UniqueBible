@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Lexicons",
     "dictionaries": "Dictionaries",
     "setDefault": "Set as default",
-    "ttsLanguage": "Text-to-speech Language",
+    "ttsLanguage": "Select Default Text-to-speech Voice",
     "setDefaultTtsLanguage": "Select Default Text-to-speech Language",
     "searchRB0": "Basic search; sorted by books",
     "searchRB1": "Show all search result without sorting by books",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Launch",
     "content": "Content",
     "openAll": "Open All",
+    "forceOnlineTts": "This forces default text-to-speech feature to use online service, even if offline an tts engine is installed.",
 }

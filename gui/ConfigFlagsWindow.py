@@ -122,8 +122,9 @@ class ConfigFlagsWindow(QDialog):
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
+            ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
         ]
-        if config.isTtsInstalled:
+        if config.isOfflineTtsInstalled:
             options += [
                 ("useLangDetectOnTts", config.useLangDetectOnTts, self.useLangDetectOnTtsChanged, False, config.thisTranslation["useLangDetectOnTts"]),
                 ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS, self.ttsEnglishAlwaysUSChanged, False, config.thisTranslation["ttsEnglishAlwaysUS"]),
@@ -131,17 +132,16 @@ class ConfigFlagsWindow(QDialog):
                 ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin, self.ttsChineseAlwaysMandarinChanged, False, config.thisTranslation["ttsChineseAlwaysMandarin"]),
                 ("ttsChineseAlwaysCantonese", config.ttsChineseAlwaysCantonese, self.ttsChineseAlwaysCantoneseChanged, False, config.thisTranslation["ttsChineseAlwaysCantonese"]),
             ]
+        if config.isOnlineTtsInstalled:
+            options += [
+                ("forceOnlineTts", config.forceOnlineTts, self.forceOnlineTtsChanged, False, config.thisTranslation["forceOnlineTts"]),
+            ]
         if platform.system() == "Linux":
             options += [
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, False, config.thisTranslation["linuxStartFullScreen"]),
                 ("fcitx", config.fcitx, self.fcitxChanged, False, config.thisTranslation["fcitx"]),
                 ("ibus", config.ibus, self.ibusChanged, False, config.thisTranslation["ibus"]),
                 ("espeak", config.espeak, self.espeakChanged, False, config.thisTranslation["espeak"]),
-            ]
-        if not platform.system() == "Windows":
-            options += [
-                ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
-                ("gTTS", config.gTTS, self.gTTSChanged, False, config.thisTranslation["gTTS"]),
             ]
         if config.developer:
             options += [
@@ -424,8 +424,8 @@ class ConfigFlagsWindow(QDialog):
         config.espeak = not config.espeak
         self.handleRestart()
 
-    def gTTSChanged(self):
-        config.gTTS = not config.gTTS
+    def forceOnlineTtsChanged(self):
+        config.forceOnlineTts = not config.forceOnlineTts
         self.handleRestart()
 
     def enableLoggingChanged(self):

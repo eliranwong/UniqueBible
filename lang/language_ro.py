@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Lexicons",
     "dictionaries": "Dicţionare",
     "setDefault": "Setare ca implicit",
-    "ttsLanguage": "Limbaj text-la-vorbire",
+    "ttsLanguage": "Selectați textul implicit al vocii text-to-speech",
     "setDefaultTtsLanguage": "Selectare limbă implicită text-la-vorbire",
     "searchRB0": "Căutare de bază; sortate după cărţi",
     "searchRB1": "Afişare toate rezultatele de căutare fără sortare după cărţi",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Lansare",
     "content": "Conținut",
     "openAll": "Deschide toate",
+    "forceOnlineTts": "Această forță implicită caracteristica text-to-speech pentru a utiliza serviciul online, chiar dacă offline un motor tts este instalat.",
 }

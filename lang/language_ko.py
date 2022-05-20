@@ -467,7 +467,7 @@ translation = {
     "lexicons": "렉시아이콘",
     "dictionaries": "사전",
     "setDefault": "기본값으로 설정하기",
-    "ttsLanguage": "텍스트 대 음성 언어",
+    "ttsLanguage": "기본 텍스트 대 음성 음성 선택",
     "setDefaultTtsLanguage": "기본 텍스트 대 언어 언어 선택",
     "searchRB0": "기본 검색, 서적별로 정렬",
     "searchRB1": "서적별로 정렬하지 않고 모든 검색 결과 표시",
@@ -835,4 +835,5 @@ translation = {
     "launch": "실행",
     "content": "내용",
     "openAll": "모두 열기",
+    "forceOnlineTts": "이는 오프라인 서비스 엔진이 설치된 경우에도 온라인 서비스를 사용하기 위해 기본 텍스트 대화 기능을 강제 실행합니다.",
 }

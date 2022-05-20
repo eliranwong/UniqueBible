@@ -1,3 +1,11 @@
+Changes in 29.87:
+* Added support for Windows users to use GTTS::: command.
+* Added "Select Default Text-to-speech Voice" menu item in Material menu layout.
+* Now update context menu about default tts voice automatically.
+* Improved handling text-to-speech engine detection.
+* Changing text-to-speech voice in Master Control Miscellaneous tab no longer changes Default Text-to-speech Voice.
+    - Use menu item to change the Default Text-to-speech Voice.
+
 Changes in 29.86:
 * Added "Reload Resources" button on Master Control.
 * Added "Open All" buttons to Master Control Media tab.

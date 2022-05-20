@@ -467,7 +467,7 @@ translation = {
     "lexicons": "語彙者",
     "dictionaries": "辞書",
     "setDefault": "デフォルトとして設定",
-    "ttsLanguage": "テキストから言語への",
+    "ttsLanguage": "デフォルト・テキストから音声への音声の選択",
     "setDefaultTtsLanguage": "デフォルトのテキスト / 音声言語を選択します。",
     "searchRB0": "基本検索; ブックによるソート",
     "searchRB1": "ブックをソートせずにすべての検索結果を表示",
@@ -835,4 +835,5 @@ translation = {
     "launch": "発射",
     "content": "内容",
     "openAll": "すべて開く",
+    "forceOnlineTts": "これは、オフラインの tts エンジンがインストールされている場合でも、オンライン・サービスを使用するためにデフォルトの音声合成機能を強制します。",
 }

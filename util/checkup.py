@@ -223,7 +223,8 @@ def isHtmlTextInstalled():
     except:
         return False
 
-def isTtsInstalled():
+# Check if OFFLINE text-to-speech feature is in place.
+def isOfflineTtsInstalled():
     if platform.system() == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
         if not espeakInstalled:
@@ -438,12 +439,27 @@ for module, feature, isInstalled in optional:
 
 # Check if other optional features are installed
 # [Optional] Text-to-Speech feature
+# Check is OFFLINE tts is in place
 if config.docker:
-    config.isTtsInstalled = False
+    config.isOfflineTtsInstalled = False
 else:
-    config.isTtsInstalled = isTtsInstalled()
-if not config.isTtsInstalled and not config.gTTS and not config.isGoogleCloudTTSAvailable:
+    config.isOfflineTtsInstalled = isOfflineTtsInstalled()
+# Check if python package 'gTTS' is in place
+config.gTTS = isGTTSInstalled()
+# Check if official Google Cloud text-to-speech service is in place
+config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
+if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
+    config.ttsDefaultLangauge = "en-GB"
+elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
+    config.ttsDefaultLangauge = "en"
+# Check if ONLINE tts is in place
+config.isOnlineTtsInstalled = True if config.gTTS or config.isGoogleCloudTTSAvailable else False
+# Check if any tts is in place
+if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
+    config.noTtsFound = True
     print("Text-to-speech feature is not enabled or supported on your device.")
+else:
+    config.noTtsFound = False
 
 # Import modules for developer
 if config.developer:

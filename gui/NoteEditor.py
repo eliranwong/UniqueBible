@@ -1232,12 +1232,12 @@ p, li {0} white-space: pre-wrap; {1}
     def speakText(self):
         text = self.editor.textCursor().selectedText()
         if text:
-            if not config.isTtsInstalled and not config.gTTS:
+            if config.noTtsFound:
                 self.displayMessage(config.thisTranslation["message_noSupport"])
             else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+                if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
                     command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 else:
                     command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)

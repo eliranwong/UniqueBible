@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Lexicons",
     "dictionaries": "Dizionari",
     "setDefault": "Imposta come predefinito",
-    "ttsLanguage": "Lingua di testo - parola",
+    "ttsLanguage": "Seleziona Voce di testo predefinito - vocale",
     "setDefaultTtsLanguage": "Seleziona lingua predefinita - Lingua vocale",
     "searchRB0": "Ricerca di base; ordinato per libri",
     "searchRB1": "Mostra tutto il risultato della ricerca senza ordinamento per libri",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Lancio",
     "content": "Contenuto",
     "openAll": "Apri tutto",
+    "forceOnlineTts": "Questa forza predefinita la funzione text-to-speech per utilizzare il servizio online, anche se offline è installato un motore tts.",
 }

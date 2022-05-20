@@ -233,7 +233,7 @@ class FocusMainWindow:
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
-        if config.isTtsInstalled:
+        if config.isOfflineTtsInstalled:
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]

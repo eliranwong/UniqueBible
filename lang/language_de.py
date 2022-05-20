@@ -467,7 +467,7 @@ translation = {
     "lexicons": "Lexisymbole",
     "dictionaries": "Wörterbücher",
     "setDefault": "Als Standard festlegen",
-    "ttsLanguage": "Text-to-Speech-Sprache",
+    "ttsLanguage": "Standard-Text-zu-Sprache-Sprache auswählen",
     "setDefaultTtsLanguage": "Standard-Text-zu-Sprache-Sprache auswählen",
     "searchRB0": "Grundsuche; sortiert nach Büchern",
     "searchRB1": "Alle Suchergebnis ohne Sortierung nach Büchern anzeigen",
@@ -835,4 +835,5 @@ translation = {
     "launch": "Starten",
     "content": "Inhalt",
     "openAll": "Alle öffnen",
+    "forceOnlineTts": "Dadurch wird die Standard-Text-zu-Sprache-Funktion für die Verwendung von Onlinedienst erzwungen, auch wenn offline eine TTS-Engine installiert ist.",
 }

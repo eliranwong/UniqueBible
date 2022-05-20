@@ -1266,28 +1266,22 @@ class TextCommandParser:
             text = command
         
         # fine-tune
-        text = re.sub("[\[\]\(\)'\"]", "", text)
-        if not config.isGoogleCloudTTSAvailable:
-            language = re.sub("\-.*?$", "", language)
-        if language in ("iw", "he"):
-            text = HebrewTransliteration().transliterateHebrew(text)
-            language = "el"
-        elif language == "el" or language.startswith("el-"):
-            text = TextUtil.removeVowelAccent(text)
+        text, language = self.parent.fineTuneGtts(text, language)
 
         try:
             if config.isGoogleCloudTTSAvailable:
-                self.saveCloudTTSAudio(text, language)
+                self.parent.saveCloudTTSAudio(text, language)
             else:
-                self.saveGTTSAudio(text, language)
+                self.parent.saveGTTSAudio(text, language)
 
-            audioFile = self.getGttsFilename()
+            audioFile = self.parent.getGttsFilename()
             if os.path.isfile(audioFile):
                 self.openVlcPlayer(audioFile, "main", gui=False)
         except:
             self.parent.displayMessage(config.thisTranslation["message_fail"])
 
 # Keep the following codes for future reference
+# The following method does not work on Windows
 #        if not platform.system() == "Windows" and config.gTTS:
 #            if not self.isCommandInstalled("gtts-cli"):
 #                installmodule("gTTS")
@@ -1302,77 +1296,6 @@ class TextCommandParser:
 #                message = "Install gTTS and sox FIRST! \nFor example, on Arch Linux, run:\n'pip3 install gTSS' and \n'sudo pacman -S sox'"
 #                self.parent.displayMessage(message)
         return ("", "", {})
-
-    def getGttsFilename(self):
-        folder = os.path.join(config.musicFolder, "tmp")
-        if not os.path.isdir(folder):
-            os.makedirs(folder, exist_ok=True)
-        return os.path.join(folder, "gtts.mp3")
-
-    def saveGTTSAudio(self, inputText, languageCode):
-        try:
-            from gtts import gTTS
-            moduleInstalled = True
-        except:
-            moduleInstalled = False
-        if not moduleInstalled:
-            installmodule("--upgrade gTTS")
-
-        from gtts import gTTS
-        tts = gTTS(inputText, lang=languageCode)
-        tts.save(self.getGttsFilename())
-
-    def saveCloudTTSAudio(self, inputText, languageCode):
-        try:
-            from google.cloud import texttospeech
-            moduleInstalled = True
-        except:
-            moduleInstalled = False
-        if not moduleInstalled:
-            installmodule("--upgrade google-cloud-texttospeech")
-
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
-
-        # Modified from ource: https://cloud.google.com/text-to-speech/docs/create-audio-text-client-libraries#client-libraries-install-python
-        """Synthesizes speech from the input string of text or ssml.
-        Make sure to be working in a virtual environment.
-
-        Note: ssml must be well-formed according to:
-            https://www.w3.org/TR/speech-synthesis/
-        """
-        from google.cloud import texttospeech
-
-        # Instantiates a client
-        client = texttospeech.TextToSpeechClient()
-
-        # Set the text input to be synthesized
-        synthesis_input = texttospeech.SynthesisInput(text=inputText)
-
-        # Build the voice request, select the language code (e.g. "yue-HK") and the ssml
-        # voice gender ("neutral")
-        voice = texttospeech.VoiceSelectionParams(
-            language_code=languageCode, ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
-        )
-
-        # Select the type of audio file you want returned
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.MP3,
-            # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
-            speaking_rate=config.gcttsSpeed,
-        )
-
-        # Perform the text-to-speech request on the text input with the selected
-        # voice parameters and audio file type
-        response = client.synthesize_speech(
-            input=synthesis_input, voice=voice, audio_config=audio_config
-        )
-
-        # The response's audio_content is binary.
-        # Save into mp3
-        with open(self.getGttsFilename(), "wb") as out:
-            # Write the response to the output file.
-            out.write(response.audio_content)
-            #print('Audio content written to file "{0}"'.format(outputFile))
 
     # speak:::
     # run text to speech feature
@@ -1466,7 +1389,7 @@ class TextCommandParser:
 
     def stopTtsAudio(self):
         self.parent.closeMediaPlayer()
-        if (config.espeak or config.gTTS) and (self.cliTtsProcess is not None):
+        if config.espeak and (self.cliTtsProcess is not None):
             # The following two lines do not work:
             #self.cliTtsProcess.kill()
             #self.cliTtsProcess.terminate()

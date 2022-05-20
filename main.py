@@ -34,7 +34,7 @@ config.cli = False
 if initialCommand == "docker":
     docker = True
     initialCommand = "gui"
-    config.gTTS = True
+    #config.gTTS = True
     config.fcitx = True
     config.docker = True
     config.updateWithGitPull = True

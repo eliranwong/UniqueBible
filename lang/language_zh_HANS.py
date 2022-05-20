@@ -467,7 +467,7 @@ translation = {
     "lexicons": "原文词典",
     "dictionaries": "字典",
     "setDefault": "设定预设值",
-    "ttsLanguage": "语音",
+    "ttsLanguage": "选择预设语音",
     "setDefaultTtsLanguage": "选择预设语音",
     "searchRB0": "基本搜寻；按书卷分组排序",
     "searchRB1": "不按书卷分组排序，直接显示所有搜寻结果",
@@ -835,4 +835,5 @@ translation = {
     "launch": "启动",
     "content": "内容",
     "openAll": "全部打开",
+    "forceOnlineTts": "这会强制使用线上语音功能，即使已安装离线的语音引擎也是一样。",
 }

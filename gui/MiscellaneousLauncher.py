@@ -108,7 +108,7 @@ class MiscellaneousLauncher(QWidget):
         ttsLanguageIndex = self.languageCodes.index(config.ttsDefaultLangauge)
         self.languageCombo.setCurrentIndex(ttsLanguageIndex)
         # Change default tts language as users select a new language
-        self.languageCombo.currentIndexChanged.connect(self.defaultTtsLanguageChanged)
+        #self.languageCombo.currentIndexChanged.connect(self.defaultTtsLanguageChanged)
 
         button = QPushButton(config.thisTranslation["speak"])
         button.setToolTip(config.thisTranslation["speak"])
@@ -130,12 +130,12 @@ class MiscellaneousLauncher(QWidget):
         
         text = self.ttsEdit.text()
         if text:
-            if not config.isTtsInstalled and not config.gTTS and not config.isGoogleCloudTTSAvailable:
+            if config.noTtsFound:
                 self.parent.displayMessage(config.thisTranslation["message_noSupport"])
             else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                if config.isGoogleCloudTTSAvailable or (not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS):
+                if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
                     command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 else:
                     command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
