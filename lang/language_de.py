@@ -743,7 +743,7 @@ translation = {
     "play": "Spielen",
     "volume": "Datenträger",
     "pause": "Pause",
-    "cp6": "Multimedia",
+    "cp6": "Datenträger",
     "gitHubBibleMp3Files": "GitHub Bibel MP3 Dateien",
     "selectAll": "Alles auswählen",
     "selectNone": "Keine auswählen",

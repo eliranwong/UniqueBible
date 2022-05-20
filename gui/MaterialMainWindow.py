@@ -806,7 +806,7 @@ class MaterialMainWindow:
         self.addMaterialIconButton("menu2_larger", icon, self.largerFont, self.secondToolBar)
         self.secondToolBar.addSeparator()
         icon = "material/av/play_circle/materialiconsoutlined/48dp/2x/outline_play_circle_black_48dp.png"
-        self.addMaterialIconButton("multimedia", icon, partial(self.openControlPanelTab, 6), self.secondToolBar)
+        self.addMaterialIconButton("media", icon, partial(self.openControlPanelTab, 6), self.secondToolBar)
         if config.isYoutubeDownloaderInstalled:
             icon = "material/hardware/browser_updated/materialiconsoutlined/48dp/2x/outline_browser_updated_black_48dp.png"
             self.addMaterialIconButton("menu11_youtube", icon, self.openYouTube, self.secondToolBar)

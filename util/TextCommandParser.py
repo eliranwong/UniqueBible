@@ -1258,19 +1258,16 @@ class TextCommandParser:
         # Stop current playing first if any:
         self.stopTtsAudio()
 
-        # Check if Google Cloud TTS is in place
-        isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
-
         # Language codes: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
         if command.count(":::") != 0:
             language, text = self.splitCommand(command)
         else:
-            language = "en-GB" if isGoogleCloudTTSAvailable else "en"
+            language = "en-GB" if config.isGoogleCloudTTSAvailable else "en"
             text = command
         
         # fine-tune
         text = re.sub("[\[\]\(\)'\"]", "", text)
-        if not isGoogleCloudTTSAvailable:
+        if not config.isGoogleCloudTTSAvailable:
             language = re.sub("\-.*?$", "", language)
         if language in ("iw", "he"):
             text = HebrewTransliteration().transliterateHebrew(text)
@@ -1279,7 +1276,7 @@ class TextCommandParser:
             text = TextUtil.removeVowelAccent(text)
 
         try:
-            if isGoogleCloudTTSAvailable:
+            if config.isGoogleCloudTTSAvailable:
                 self.saveCloudTTSAudio(text, language)
             else:
                 self.saveGTTSAudio(text, language)
@@ -1361,7 +1358,7 @@ class TextCommandParser:
         audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3,
             # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
-            speaking_rate=1,
+            speaking_rate=config.gcttsSpeed,
         )
 
         # Perform the text-to-speech request on the text input with the selected
@@ -1468,6 +1465,7 @@ class TextCommandParser:
         return ("", "", {})
 
     def stopTtsAudio(self):
+        self.parent.closeMediaPlayer()
         if (config.espeak or config.gTTS) and (self.cliTtsProcess is not None):
             # The following two lines do not work:
             #self.cliTtsProcess.kill()

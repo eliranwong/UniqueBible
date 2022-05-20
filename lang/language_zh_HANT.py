@@ -743,7 +743,7 @@ translation = {
     "play": "玩",
     "volume": "卷",
     "pause": "暫停",
-    "cp6": "多媒體",
+    "cp6": "媒體",
     "gitHubBibleMp3Files": "GitHub 聖經 MP3 檔案",
     "selectAll": "全選",
     "selectNone": "選取無",

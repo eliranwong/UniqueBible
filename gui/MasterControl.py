@@ -104,6 +104,7 @@ class MasterControl(QWidget):
         subLayout = QHBoxLayout()
         subLayout.addWidget(self.commandFieldWidget())
         subLayout.addWidget(self.autoCloseCheckBox())
+        subLayout.addWidget(self.refreshButton())
         sharedWidgetLayout.addLayout(subLayout)
         sharedWidget.setLayout(sharedWidgetLayout)
         return sharedWidget
@@ -139,7 +140,7 @@ class MasterControl(QWidget):
         self.tabs.setTabToolTip(5, sc.openControlPanelTab5)
         # 6
         mediaTab = MediaLauncher(self)
-        self.tabs.addTab(mediaTab, config.thisTranslation["multimedia"])
+        self.tabs.addTab(mediaTab, config.thisTranslation["media"])
         self.tabs.setTabToolTip(6, sc.openControlPanelTab6)
         #7
         # Removed morphology tab temporarily until a fix
@@ -167,6 +168,14 @@ class MasterControl(QWidget):
         checkbox.setChecked(config.closeControlPanelAfterRunningCommand)
         checkbox.stateChanged.connect(self.closeControlPanelAfterRunningCommandChanged)
         return checkbox
+
+    def refreshButton(self):
+        button = QPushButton()
+        button.setToolTip(config.thisTranslation["reloadResources"])
+        file = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
+        button.setIcon(self.parent.getQIcon(file))
+        button.clicked.connect(lambda: self.parent.reloadResources(True))
+        return button
 
     # Common layout
 

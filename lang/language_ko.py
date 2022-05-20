@@ -743,7 +743,7 @@ translation = {
     "play": "활동",
     "volume": "볼륨",
     "pause": "일시 중지",
-    "cp6": "멀티미디어",
+    "cp6": "미디어",
     "gitHubBibleMp3Files": "깃허브 성경책 MP3 파일",
     "selectAll": "모두 선택",
     "selectNone": "없음 선택",

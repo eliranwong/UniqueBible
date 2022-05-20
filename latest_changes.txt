@@ -1,3 +1,12 @@
+Changes in 29.86:
+* Added "Reload Resources" button on Master Control.
+* Added "Open All" buttons to Master Control Media tab.
+* Added support of Goggle Cloud text-to-speech feature in Master Control Miscellaneous tab, mini Control, Note Editor.
+* Added support of changing speed for Goggle Cloud text-to-speech feature.
+* Master Control Library tab now shows both abbreviations and full names of commentaries.
+* Master Control Miscellaneous tab "Stop" button now closes media player if one is opened.
+* Removed config.gTTSDefaultLanguage.
+
 Changes in 29.85:
 * Added tooltips to all ListView in Master Control.
 * Added hover styles to ListView.

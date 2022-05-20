@@ -442,7 +442,7 @@ if config.docker:
     config.isTtsInstalled = False
 else:
     config.isTtsInstalled = isTtsInstalled()
-if not config.isTtsInstalled and not config.gTTS:
+if not config.isTtsInstalled and not config.gTTS and not config.isGoogleCloudTTSAvailable:
     print("Text-to-speech feature is not enabled or supported on your device.")
 
 # Import modules for developer

@@ -1185,20 +1185,13 @@ p, li {0} white-space: pre-wrap; {1}
 
         self.languageCombo = QComboBox()
         self.ttsToolbar.addWidget(self.languageCombo)
-        if not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
-            languages = {}
-            for language, languageCode in Languages.gTTSLanguageCodes.items():
-                languages[languageCode] = ("", language)
-        elif config.espeak:
-            languages = TtsLanguages().isoLang2epeakLang
-        else:
-            languages = TtsLanguages().isoLang2qlocaleLang
+        languages = self.parent.getTtsLanguages()
         self.languageCodes = list(languages.keys())
         for code in self.languageCodes:
             self.languageCombo.addItem(languages[code][1])
         # Check if selected tts engine has the language user specify.
         if not (config.ttsDefaultLangauge in self.languageCodes):
-            config.ttsDefaultLangauge = "en"
+            config.ttsDefaultLangauge = "en-GB" if config.isGoogleCloudTTSAvailable else "en"
         # Set initial item
         initialIndex = self.languageCodes.index(config.ttsDefaultLangauge)
         self.languageCombo.setCurrentIndex(initialIndex)

@@ -222,10 +222,6 @@ class ConfigUtil:
         # 'sudo pacman -S sox'"""
         if not hasattr(config, "gTTS"):
             config.gTTS = False
-        config.help["gTTSDefaultLanguage"] = """
-        # Default Google text-to-speech language"""
-        if not hasattr(config, "gTTSDefaultLanguage"):
-            config.gTTSDefaultLanguage = "en"
         config.help["espeak"] = """
         # Use espeak for text-to-speech feature instead of built-in qt tts engine
         # espeak is a text-to-speech tool that can run offline
@@ -242,8 +238,12 @@ class ConfigUtil:
         # espeak speed"""
         if not hasattr(config, "espeakSpeed"):
             config.espeakSpeed = 160
+        config.help["gcttsSpeed"] = """
+        # Google Cloud text-to-speech speed"""
+        if not hasattr(config, "gcttsSpeed"):
+            config.gcttsSpeed = 1.0
         config.help["qttsSpeed"] = """
-        # qtts speed"""
+        # Qt text-to-speech speed"""
         if not hasattr(config, "qttsSpeed"):
             config.qttsSpeed = 0.0
         config.help["useLangDetectOnTts"] = """
@@ -253,6 +253,11 @@ class ConfigUtil:
         config.help["ttsDefaultLangauge"] = """
         # Default text-to-speech language"""
         if not hasattr(config, "ttsDefaultLangauge"):
+            config.ttsDefaultLangauge = "en"
+        config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
+        if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
+            config.ttsDefaultLangauge = "en-GB"
+        elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
             config.ttsDefaultLangauge = "en"
         config.help["ttsChineseAlwaysCantonese"] = """
         # Force text-to-speech feature to use Cantonese for all Chinese text."""
@@ -1226,10 +1231,10 @@ class ConfigUtil:
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             #("showTtsOnLinux", config.showTtsOnLinux),
             ("gTTS", config.gTTS),
-            ("gTTSDefaultLanguage", config.gTTSDefaultLanguage),
             ("espeak", config.espeak),
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),
+            ("gcttsSpeed", config.gcttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
             ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),

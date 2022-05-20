@@ -743,7 +743,7 @@ translation = {
     "play": "Joacă",
     "volume": "Volum",
     "pause": "Pauză",
-    "cp6": "Multimedia",
+    "cp6": "Media",
     "gitHubBibleMp3Files": "Fişiere MP3 biblice GitHub",
     "selectAll": "Selectare tot",
     "selectNone": "Selectare Fără",

@@ -91,7 +91,8 @@ class LibraryLauncher(QWidget):
             activeCommentaries = [item[1] for item in Commentary().getCommentaryListThatHasBookAndChapter(config.mainB, config.mainC)]
         for index, commentary in enumerate(self.parent.commentaryFullNameList):
             if not showOnlyActiveCommentaries or commentary in activeCommentaries:
-                item = QStandardItem(self.parent.commentaryList[index])
+                description = "[{0}] {1}".format(self.parent.commentaryList[index], commentary)
+                item = QStandardItem(description)
                 item.setToolTip(commentary)
                 model.appendRow(item)
                 self.commentaryList.append(commentary)

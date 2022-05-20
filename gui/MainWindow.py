@@ -66,6 +66,7 @@ import shortcut as sc
 from util.UpdateUtil import UpdateUtil
 from util.DateUtil import DateUtil
 from util.CrossPlatform import CrossPlatform
+from util.GoogleCloudTTSVoices import GoogleCloudTTS
 # These "unused" window imports are actually used.  Do not delete these lines.
 from gui.AlephMainWindow import AlephMainWindow
 from gui.ClassicMainWindow import ClassicMainWindow
@@ -317,13 +318,13 @@ class MainWindow(QMainWindow):
         else:
             self.textCommandParser.databaseNotInstalled("bible")
 
-    def reloadResources(self):
+    def reloadResources(self, show=False):
         CatalogUtil.reloadLocalCatalog()
         self.loadResourceDescriptions()
         CrossPlatform().setupResourceLists()
         self.controlPanel.setupResourceLists()
         self.setupMenuLayout(config.menuLayout)
-        self.reloadControlPanel(False)
+        self.reloadControlPanel(show)
 
     def reloadControlPanel(self, show=True):
         if self.controlPanel:
@@ -3723,7 +3724,19 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
 
     # Set text-to-speech default language
     def getTtsLanguages(self):
-        return TtsLanguages().isoLang2epeakLang if config.espeak else TtsLanguages().isoLang2qlocaleLang
+        if config.isGoogleCloudTTSAvailable:
+            languages = {}
+            for language, languageCode in GoogleCloudTTS.getLanguages().items():
+                languages[languageCode] = ("", language)
+        elif not config.isTtsInstalled and not platform.system() == "Windows" and config.gTTS:
+            languages = {}
+            for language, languageCode in Languages.gTTSLanguageCodes.items():
+                languages[languageCode] = ("", language)
+        elif config.espeak:
+            languages = TtsLanguages().isoLang2epeakLang
+        else:
+            languages = TtsLanguages().isoLang2qlocaleLang
+        return languages
 
     def setDefaultTtsLanguage(self, language):
         config.ttsDefaultLangauge = language
@@ -3734,7 +3747,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
         items = [languages[code][1] for code in languageCodes]
         # Check if selected tts engine has the language user specify.
         if not (config.ttsDefaultLangauge in languageCodes):
-            config.ttsDefaultLangauge = "en"
+            config.ttsDefaultLangauge = "en-GB" if config.isGoogleCloudTTSAvailable else "en"
         # Initial index
         initialIndex = languageCodes.index(config.ttsDefaultLangauge)
         item, ok = QInputDialog.getItem(self, "UniqueBible",

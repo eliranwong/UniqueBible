@@ -607,17 +607,16 @@ class WebEngineView(QWebEngineView):
             self.addAction(separator)
 
         # Google TEXT-TO-SPEECH feature
-        if not platform.system() == "Windows" and config.gTTS:
+        if config.isGoogleCloudTTSAvailable or (not platform.system() == "Windows" and config.gTTS):
 
             tts = QAction(self)
-            tts.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], config.gTTSDefaultLanguage.capitalize()))
-            tts.triggered.connect(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage))
-            #self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc["contextDefaultTTS"])
-            self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, config.gTTSDefaultLanguage, True), sc.contextDefaultTTS)
+            tts.setText(config.thisTranslation["context1_speak"])
+            tts.triggered.connect(self.googleTextToSpeechLanguage)
+            self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, "", True), sc.contextDefaultTTS)
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+            languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
             for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
@@ -630,7 +629,7 @@ class WebEngineView(QWebEngineView):
             self.addAction(tts)
 
             ttsMenu = QMenu()
-            languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+            languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
             for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
@@ -887,15 +886,17 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsEngine()
 
     def isGttsLanguage(self, languageCode):
-        languageCodes = GoogleCloudTTS.getLanguages() if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) else Languages.gTTSLanguageCodes
+        languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
         if languageCode in [languageCode for *_, languageCode in languageCodes.items()]:
             return True
         else:
             self.messageNoTtsVoice()
             return False
 
-    def googleTextToSpeechLanguage(self, language, activeSelection=False):
-        if os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")) and language == "en":
+    def googleTextToSpeechLanguage(self, language="", activeSelection=False):
+        if not language:
+            language = config.ttsDefaultLangauge
+        if config.isGoogleCloudTTSAvailable and language == "en":
             language = "en-GB"
         selectedText = self.selectedTextProcessed(activeSelection)
         if not selectedText:
@@ -911,7 +912,7 @@ class WebEngineView(QWebEngineView):
         elif config.gTTS:
             # fine-tune
             selectedText = re.sub("[\[\]\(\)'\"]", "", selectedText)
-            if not os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")):
+            if not config.isGoogleCloudTTSAvailable:
                 language = re.sub("\-.*?$", "", language)
             if language in ("iw", "he"):
                 selectedText = HebrewTransliteration().transliterateHebrew(selectedText)
@@ -931,8 +932,7 @@ class WebEngineView(QWebEngineView):
                         fileName = fileName + ".mp3"
                     # Save mp3 file
                     try:
-                        credentials = os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json")
-                        if os.path.isfile(credentials):
+                        if config.isGoogleCloudTTSAvailable:
                             self.saveCloudTTSAudio(selectedText, language, fileName)
                         else:
                             self.saveGTTSAudio(selectedText, language, fileName)
@@ -996,7 +996,7 @@ class WebEngineView(QWebEngineView):
         audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3,
             # For more config, read https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize#audioconfig
-            speaking_rate=1,
+            speaking_rate=config.gcttsSpeed,
         )
 
         # Perform the text-to-speech request on the text input with the selected
