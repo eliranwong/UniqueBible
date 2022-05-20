@@ -434,6 +434,7 @@ class MainWindow(QMainWindow):
             app.setPalette(Themes.getPalette())
             if config.menuLayout == "material":
                 app.setStyleSheet(config.materialStyle)
+                self.setupMenuLayout("material")
             else:
                 app.setStyleSheet("")
         self.reloadCurrentRecord(True)

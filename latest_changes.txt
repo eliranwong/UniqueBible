@@ -1,5 +1,5 @@
-Changes in 29.88:
-* Fixed Material colour dialog.  Loading colour profile from a *.color file does not require a restart now.
+Changes in 29.88, 89:
+* Fixed Material Colour dialog - apply colour change immediately without a restart.
 
 Changes in 29.87:
 * Added support for Windows users to use GTTS::: command.
