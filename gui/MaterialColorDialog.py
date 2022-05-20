@@ -117,6 +117,7 @@ class MaterialColorDialog(QDialog):
                 settings = f.read()
                 exec(settings)
             self.parent.resetUI()
+            self.parent.setupMenuLayout("material")
             self.setConfigColor()
 
     def openSaveAsDialog(self):
