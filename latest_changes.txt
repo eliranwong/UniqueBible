@@ -1,3 +1,6 @@
+Changes in 29.93:
+* Apply colour customisation on verse number display.
+
 Changes in 29.92:
 * Adjusted text colour in sample.color.
 

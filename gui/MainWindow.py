@@ -3506,9 +3506,9 @@ class MainWindow(QMainWindow):
 body {0} color: {8}; {1}
 .ubaButton {0} background-color: {7}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
 .ubaButton:hover {0} background-color: {4}; color: {5}; {1}
-a, a:link, a:visited, ref, entry {0} color: {2}; {1}
+vid, a, a:link, a:visited, ref, entry {0} color: {2}; {1}
 red, z, red ref, red entry, vb {0} color: {3}; {1}
-a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
+vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
 ::selection {0} background: {6}; {1}
 ::-moz-selection {0} background: {6}; {1}
 </style>
