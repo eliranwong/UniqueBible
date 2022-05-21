@@ -1,3 +1,8 @@
+Changes in 29.96:
+* Support instant highlight on both Bible Window and Study Window, via context menu.
+* If no text is selection, a text dialog will come up to ask for an entry.
+* Removed three "Find Text ..." context plugins.
+
 Changes in 29.95:
 * Fixed installing wps-office for webtop users.
 

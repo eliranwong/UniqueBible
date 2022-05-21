@@ -3325,8 +3325,8 @@ class MainWindow(QMainWindow):
                 self.focusCommandLineField()
                 self.textCommandLineEdit.setText(content)
             else:
-                if view == "main":
-                    content = self.instantHighlight(content)
+                #if view == "main":
+                #    content = self.instantHighlight(content)
                 pdfFilename = dict['pdf_filename'] if "pdf_filename" in dict.keys() else None
                 outputFile = None
                 if pdfFilename is not None:
@@ -3423,12 +3423,12 @@ class MainWindow(QMainWindow):
         }
         views[view].currentWidget().closePopover()
 
-    def instantHighlight(self, text):
-        if config.instantHighlightString:
-            text = re.sub("({0})".format(config.instantHighlightString), r"<z>\1</z>", text, flags=re.IGNORECASE)
-            return TextUtil.fixTextHighlighting(text)
-        else:
-            return text
+#    def instantHighlight(self, text):
+#        if config.instantHighlightString:
+#            text = re.sub("({0})".format(config.instantHighlightString), r"<z>\1</z>", text, flags=re.IGNORECASE)
+#            return TextUtil.fixTextHighlighting(text)
+#        else:
+#            return text
 
     def convertCrLink(self, match):
         *_, b, c, v = match.groups()
@@ -3507,7 +3507,8 @@ body {0} color: {8}; {1}
 .ubaButton {0} background-color: {7}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
 .ubaButton:hover {0} background-color: {4}; color: {5}; {1}
 vid, a, a:link, a:visited, ref, entry {0} color: {2}; {1}
-red, z, red ref, red entry, vb {0} color: {3}; {1}
+bb, hp, vb, red, red ref, red entry {0} color: {3}; {1}
+z {0} background-color: {10}; color: {9}; {1}
 vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
 ::selection {0} background: {6}; {1}
 ::-moz-selection {0} background: {6}; {1}
@@ -3522,6 +3523,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             config.textSelectionColor,
             config.widgetBackgroundColor,
             textColor,
+            config.widgetBackgroundColorPressed, 
+            config.widgetForegroundColorPressed, 
             )
 
     # add a history record

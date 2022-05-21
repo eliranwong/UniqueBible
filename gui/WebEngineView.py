@@ -6,7 +6,7 @@ from functools import partial
 from qtpy.QtCore import Qt
 from qtpy.QtCore import QUrl
 from qtpy.QtGui import QGuiApplication, QKeySequence
-from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu, QFileDialog
+from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu, QFileDialog, QInputDialog, QLineEdit
 from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
@@ -294,28 +294,27 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
-        if self.name == "main":
-            subMenu = QMenu()
+        subMenu = QMenu()
 
-            # Instant highlight feature
-            action = QAction(self)
-            action.setText(config.thisTranslation["menu_highlight"])
-            action.triggered.connect(self.instantHighlight)
-            subMenu.addAction(action)
+        # Instant highlight feature
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu_highlight"])
+        action.triggered.connect(self.instantHighlight)
+        subMenu.addAction(action)
 
-            action = QAction(self)
-            action.setText(config.thisTranslation["remove"])
-            action.triggered.connect(self.removeInstantHighlight)
-            subMenu.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["remove"])
+        action.triggered.connect(self.removeInstantHighlight)
+        subMenu.addAction(action)
 
-            action = QAction(self)
-            action.setText(config.thisTranslation["instantHighlight"])
-            action.setMenu(subMenu)
-            self.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["instantHighlight"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         subMenu = QMenu()
 
@@ -798,15 +797,26 @@ class WebEngineView(QWebEngineView):
     def instantHighlight(self):
         selectedText = self.selectedTextProcessed()
         if not selectedText:
-            self.messageNoSelection()
+            #self.messageNoSelection()
+            text, ok = QInputDialog.getText(self.parent.parent, "QInputDialog.getText()",
+                    config.thisTranslation["menu5_search"], QLineEdit.Normal,
+                    "")
+            if ok and text != '':
+                self.findText(text, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
         else:
-            config.instantHighlightString = selectedText
-            self.parent.parent.reloadCurrentRecord()
+            #config.instantHighlightString = selectedText
+            #self.parent.parent.reloadCurrentRecord()
+            self.findText(selectedText, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
+
+    def checkIfTextIsFound(self, found):
+        if not found:
+            self.displayMessage(config.thisTranslation["notFound"])
 
     def removeInstantHighlight(self):
-        if config.instantHighlightString:
-            config.instantHighlightString = ""
-            self.parent.parent.reloadCurrentRecord()
+        #if config.instantHighlightString:
+        #    config.instantHighlightString = ""
+        #    self.parent.parent.reloadCurrentRecord()
+        self.findText("", QWebEnginePage.FindFlags())
 
     # Translate selected words into Selected Language (Google Translate)
     # Url format to translate a phrase:

@@ -803,10 +803,10 @@ class ConfigUtil:
         # Last string entered for searching book"""
         if not hasattr(config, "bookSearchString"):
             config.bookSearchString = ""
-        config.help["instantHighlightString"] = """
-        # Instant Highlight: highlighted word in Main Window"""
-        if not hasattr(config, "instantHighlightString"):
-            config.instantHighlightString = ""
+#        config.help["instantHighlightString"] = """
+#        # Instant Highlight: highlighted word in Main Window"""
+#        if not hasattr(config, "instantHighlightString"):
+#            config.instantHighlightString = ""
         config.help["noteSearchString"] = """
         # Last string entered for searching note"""
         if not hasattr(config, "noteSearchString"):
@@ -1193,7 +1193,7 @@ class ConfigUtil:
         if config.removeHighlightOnExit:
             config.bookSearchString = ""
             config.noteSearchString = ""
-            config.instantHighlightString = ""
+            #config.instantHighlightString = ""
         configs = (
             # ("version", config.version),
             ("developer", config.developer),
@@ -1371,7 +1371,7 @@ class ConfigUtil:
             ("removeHighlightOnExit", config.removeHighlightOnExit),
             ("bookSearchString", config.bookSearchString),
             ("noteSearchString", config.noteSearchString),
-            ("instantHighlightString", config.instantHighlightString),
+            #("instantHighlightString", config.instantHighlightString),
             ("thirdDictionary", config.thirdDictionary),
             ("lexicon", config.lexicon),
             ("defaultLexiconStrongH", config.defaultLexiconStrongH),
