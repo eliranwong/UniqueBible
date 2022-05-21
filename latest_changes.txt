@@ -1,3 +1,16 @@
+Changes in 29.90:
+* Changes in configuration settings:
+    - Added "lightThemeTextColor" for users to customise text colour in Light theme.
+    - Added "darkThemeTextColor" for users to customise text colour in Dark theme.
+    - Renamed "activeVerseColorLight" to "lightThemeActiveVerseColor"
+    - Renamed "activeVerseColorDark" to "darkThemeActiveVerseColor"
+    Remarks: Renaming of the two labels above affects users who previously define "activeVerseColorLight" or "activeVerseColorDark".
+                They may need to re-customise the colours.
+* Colour customisation dialog now supports customisation of "lightThemeTextColor" and "darkThemeTextColor".
+* Colour customisation file now includes theme data.
+* Undated the colour customisation sample file "sample.color".
+* Added a colour customisation sample file "sample_eliran.color".
+
 Changes in 29.88, 89:
 * Fixed Material Colour dialog - apply colour change immediately without a restart.
 

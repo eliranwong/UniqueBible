@@ -8,15 +8,15 @@ class Themes():
         if config.theme in ("dark", "night"):
             palette = QPalette()
             palette.setColor(QPalette.Window, QColor(50, 50, 50))
-            palette.setColor(QPalette.WindowText, QColor(200, 200, 200))
+            palette.setColor(QPalette.WindowText, QColor(config.darkThemeTextColor))
             palette.setColor(QPalette.Background, QColor(50, 50, 50))
             palette.setColor(QPalette.Base, QColor(50, 50, 50))
             palette.setColor(QPalette.AlternateBase, QColor(50, 50, 50))
             palette.setColor(QPalette.ToolTipBase, QColor(50, 50, 50))
             palette.setColor(QPalette.ToolTipText, QColor(200,200,200))
-            palette.setColor(QPalette.Text, QColor(200, 200, 200))
+            palette.setColor(QPalette.Text, QColor(config.darkThemeTextColor))
             palette.setColor(QPalette.Button, QColor(50, 50, 50))
-            palette.setColor(QPalette.ButtonText, QColor(200, 200, 200))
+            palette.setColor(QPalette.ButtonText, QColor(config.darkThemeTextColor))
             palette.setColor(QPalette.BrightText, QColor(255,255,255))
             palette.setColor(QPalette.Link, QColor(42, 130, 218))
             palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
@@ -24,6 +24,9 @@ class Themes():
             return palette
         else:
             palette = QPalette()
+            palette.setColor(QPalette.WindowText, QColor(config.lightThemeTextColor))
+            palette.setColor(QPalette.Text, QColor(config.lightThemeTextColor))
+            palette.setColor(QPalette.ButtonText, QColor(config.lightThemeTextColor))
             # palette.setColor(QPalette.Background, QColor("white"))
             return palette
 

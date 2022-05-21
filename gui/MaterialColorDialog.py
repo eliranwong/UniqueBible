@@ -42,9 +42,15 @@ class MaterialColorDialog(QDialog):
         self.widgetForegroundColorPressedButton = QPushButton(TextUtil.formatConfigLabel("widgetForegroundColorPressed"))
         self.widgetForegroundColorPressedButton.clicked.connect(self.setPushButtonForegroundColorPressed)
 
+        self.textColour = QLabel()
+        self.textColour.setFrameStyle(frameStyle)
+        label = TextUtil.formatConfigLabel("darkThemeTextColor" if config.theme in ("dark", "night") else "lightThemeTextColor")
+        self.textColourButton = QPushButton(label)
+        self.textColourButton.clicked.connect(self.changeTextColour)
+
         self.activeVerseColour = QLabel()
         self.activeVerseColour.setFrameStyle(frameStyle)
-        label = TextUtil.formatConfigLabel("activeVerseColorDark" if config.theme in ("dark", "night") else "activeVerseColorLight")
+        label = TextUtil.formatConfigLabel("darkThemeActiveVerseColor" if config.theme in ("dark", "night") else "lightThemeActiveVerseColor")
         self.activeVerseColourButton = QPushButton(label)
         self.activeVerseColourButton.clicked.connect(self.changeActiveVerseColour)
 
@@ -83,16 +89,18 @@ class MaterialColorDialog(QDialog):
         layout.addWidget(self.widgetForegroundColorPressedButton, 5, 0)
         layout.addWidget(self.widgetForegroundColorPressed, 5, 1)
 
-        layout.addWidget(self.activeVerseColourButton, 6, 0)
-        layout.addWidget(self.activeVerseColour, 6, 1)
-        layout.addWidget(self.textSelectionColorButton, 7, 0)
-        layout.addWidget(self.textSelectionColor, 7, 1)
+        layout.addWidget(self.textColourButton, 6, 0)
+        layout.addWidget(self.textColour, 6, 1)
+        layout.addWidget(self.activeVerseColourButton, 7, 0)
+        layout.addWidget(self.activeVerseColour, 7, 1)
+        layout.addWidget(self.textSelectionColorButton, 8, 0)
+        layout.addWidget(self.textSelectionColor, 8, 1)
 
-        layout.addWidget(self.saveButton, 8, 0)
-        layout.addWidget(self.loadButton, 8, 1)
+        layout.addWidget(self.saveButton, 9, 0)
+        layout.addWidget(self.loadButton, 9, 1)
 
-        layout.addWidget(self.defaultButton, 9, 0)
-        layout.addWidget(self.aboutButton, 9, 1)
+        layout.addWidget(self.defaultButton, 10, 0)
+        layout.addWidget(self.aboutButton, 10, 1)
 
         self.setLayout(layout)
 
@@ -116,7 +124,8 @@ class MaterialColorDialog(QDialog):
             with open(fileName, "r") as f:
                 settings = f.read()
                 exec(settings)
-            self.parent.resetUI()
+            #self.parent.resetUI()
+            self.parent.setTheme(config.theme, setColours=False)
             self.setConfigColor()
 
     def openSaveAsDialog(self):
@@ -133,6 +142,7 @@ class MaterialColorDialog(QDialog):
 
     def saveData(self, fileName):
         data = (
+            ("config.theme", config.theme),
             ("config.maskMaterialIconColor", config.maskMaterialIconColor),
             ("config.maskMaterialIconBackground", config.maskMaterialIconBackground),
             ("config.widgetBackgroundColor", config.widgetBackgroundColor),
@@ -141,8 +151,10 @@ class MaterialColorDialog(QDialog):
             ("config.widgetForegroundColorHover", config.widgetForegroundColorHover),
             ("config.widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
             ("config.widgetForegroundColorPressed", config.widgetForegroundColorPressed),
-            ("config.activeVerseColorLight", config.activeVerseColorLight),
-            ("config.activeVerseColorDark", config.activeVerseColorDark),
+            ("config.lightThemeTextColor", config.lightThemeTextColor),
+            ("config.darkThemeTextColor", config.darkThemeTextColor),
+            ("config.lightThemeActiveVerseColor", config.lightThemeActiveVerseColor),
+            ("config.darkThemeActiveVerseColor", config.darkThemeActiveVerseColor),
             ("config.textSelectionColor", config.textSelectionColor),
         )
         with open(fileName, "w", encoding="utf-8") as fileObj:
@@ -160,7 +172,8 @@ class MaterialColorDialog(QDialog):
         self.setLabelColor(self.widgetForegroundColorHover, QColor(config.widgetForegroundColorHover))
         self.setLabelColor(self.widgetBackgroundColorPressed, QColor(config.widgetBackgroundColorPressed))
         self.setLabelColor(self.widgetForegroundColorPressed, QColor(config.widgetForegroundColorPressed))
-        self.setLabelColor(self.activeVerseColour, QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight))
+        self.setLabelColor(self.textColour, QColor(config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor))
+        self.setLabelColor(self.activeVerseColour, QColor(config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor))
         self.setLabelColor(self.textSelectionColor, QColor(config.textSelectionColor))
 
     def setMaskColor(self):
@@ -212,15 +225,27 @@ class MaterialColorDialog(QDialog):
             self.setMaskColor()
             self.setLabelColor(self.widgetForegroundColorPressed, color)
 
+    def changeTextColour(self):
+        color = QColorDialog.getColor(QColor(config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor), self)
+        if color.isValid():
+            self.setLabelColor(self.textColour, color)
+            colorName = color.name()
+            if config.theme in ("dark", "night"):
+                config.darkThemeTextColor = colorName
+            else:
+                config.lightThemeTextColor = colorName
+            self.parent.reloadCurrentRecord(True)
+            self.parent.resetUI()
+
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight), self)
+        color = QColorDialog.getColor(QColor(config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor), self)
         if color.isValid():
             self.setLabelColor(self.activeVerseColour, color)
             colorName = color.name()
             if config.theme in ("dark", "night"):
-                config.activeVerseColorDark = colorName
+                config.darkThemeActiveVerseColor = colorName
             else:
-                config.activeVerseColorLight = colorName
+                config.lightThemeActiveVerseColor = colorName
             self.parent.reloadCurrentRecord(True)
 
     def changeTextSelectionColor(self):

@@ -917,14 +917,22 @@ class ConfigUtil:
             config.maskMaterialIconColor = config.widgetForegroundColor
         elif not hasattr(config, "maskMaterialIconColor"):
             config.maskMaterialIconColor = "#483D8B" if config.theme == "default" else "#FFFFE0"
-        config.help["activeVerseColorLight"] = """
-        # Active verse number colour displayed on light theme."""
-        if not hasattr(config, "activeVerseColorLight"):
-            config.activeVerseColorLight = "#483D8B"
-        config.help["activeVerseColorDark"] = """
-        # Active verse number colour displayed on dark theme."""
-        if not hasattr(config, "activeVerseColorDark"):
-            config.activeVerseColorDark = "#aaff7f"
+        config.help["lightThemeTextColor"] = """
+        # Text colour displayed on light theme."""
+        if not hasattr(config, "lightThemeTextColor"):
+            config.lightThemeTextColor = "#000000"
+        config.help["darkThemeTextColor"] = """
+        # Text colour displayed on dark theme."""
+        if not hasattr(config, "darkThemeTextColor"):
+            config.darkThemeTextColor = "#ffffff"
+        config.help["lightThemeActiveVerseColor"] = """
+        # Active verse colour displayed on light theme."""
+        if not hasattr(config, "lightThemeActiveVerseColor"):
+            config.lightThemeActiveVerseColor = "#483D8B"
+        config.help["darkThemeActiveVerseColor"] = """
+        # Active verse colour displayed on dark theme."""
+        if not hasattr(config, "darkThemeActiveVerseColor"):
+            config.darkThemeActiveVerseColor = "#aaff7f"
         config.help["textSelectionColor"] = """
         # Colour for text selection."""
         if not hasattr(config, "textSelectionColor"):
@@ -1384,8 +1392,10 @@ class ConfigUtil:
             ("widgetForegroundColorHover", config.widgetForegroundColorHover),
             ("widgetBackgroundColorPressed", config.widgetBackgroundColorPressed),
             ("widgetForegroundColorPressed", config.widgetForegroundColorPressed),
-            ("activeVerseColorLight", config.activeVerseColorLight),
-            ("activeVerseColorDark", config.activeVerseColorDark),
+            ("lightThemeTextColor", config.lightThemeTextColor),
+            ("darkThemeTextColor", config.darkThemeTextColor),
+            ("lightThemeActiveVerseColor", config.lightThemeActiveVerseColor),
+            ("darkThemeActiveVerseColor", config.darkThemeActiveVerseColor),
             ("textSelectionColor", config.textSelectionColor),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),

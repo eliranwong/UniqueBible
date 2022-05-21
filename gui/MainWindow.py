@@ -941,7 +941,7 @@ class MainWindow(QMainWindow):
         config.theme = "dark"
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
 
-    def setTheme(self, theme):
+    def setTheme(self, theme, setColours=True):
         theme = theme.split(" ")
         if len(theme) == 2:
             theme, mainColor = theme
@@ -952,10 +952,11 @@ class MainWindow(QMainWindow):
         if theme == "light":
             theme = "default"
         config.theme = theme
-        if mainColor:
+        if mainColor and setColours:
             self.setColours(mainColor)
         elif config.menuLayout == "material":
-            self.setColours()
+            if setColours:
+                self.setColours()
         else:
             self.setupMenuLayout(config.menuLayout)
         self.resetUI()
@@ -971,7 +972,8 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = '#FFFFE0'
             config.widgetBackgroundColorPressed = '#232323'
             config.widgetForegroundColorPressed = '#FFFFE0'
-            config.activeVerseColorDark = '#aaff7f'
+            config.darkThemeTextColor = '#ffffff'
+            config.darkThemeActiveVerseColor = '#aaff7f'
         else:
             config.maskMaterialIconColor = "#483D8B"
             config.maskMaterialIconBackground = False
@@ -981,7 +983,8 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = "#483D8B"
             config.widgetBackgroundColorPressed = "#d9d9d9"
             config.widgetForegroundColorPressed = "#483D8B"
-            config.activeVerseColorLight = "#483D8B"
+            config.lightThemeTextColor = "#000000"
+            config.lightThemeActiveVerseColor = "#483D8B"
         config.textSelectionColor = "#ffb7b7"
         if color:
             color = HtmlColorCodes.colors[color][0]
@@ -991,9 +994,9 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorHover = color
             config.widgetForegroundColorPressed = color
             if config.theme in ("dark", "night"):
-                config.activeVerseColorDark = color
+                config.darkThemeActiveVerseColor = color
             else:
-                config.activeVerseColorLight = color
+                config.lightThemeActiveVerseColor = color
         config.defineStyle()
         self.setupMenuLayout("material")
 
@@ -2209,13 +2212,13 @@ class MainWindow(QMainWindow):
             config.maximumOHGBiVersesDisplayedInSearchResult = integer
 
     def changeActiveVerseColour(self):
-        color = QColorDialog.getColor(QColor(config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight), self)
+        color = QColorDialog.getColor(QColor(config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor), self)
         if color.isValid():
             colorName = color.name()
             if config.theme in ("dark", "night"):
-                config.activeVerseColorDark = colorName
+                config.darkThemeActiveVerseColor = colorName
             else:
-                config.activeVerseColorLight = colorName
+                config.lightThemeActiveVerseColor = colorName
             self.reloadCurrentRecord(True)
 
     def changeButtonColour(self):
@@ -3115,14 +3118,14 @@ class MainWindow(QMainWindow):
 
     # finish view loading
     def finishMainViewLoading(self):
-        activeVerseNoColour = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
+        activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         # scroll to the main verse
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
 
     def finishStudyViewLoading(self):
-        activeVerseNoColour = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
+        activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         # scroll to the study verse
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
@@ -3496,9 +3499,11 @@ class MainWindow(QMainWindow):
         return html
 
     def getMaterialCss(self):
-        activeColor = config.activeVerseColorDark if config.theme in ("dark", "night") else config.activeVerseColorLight
+        textColor = config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor
+        activeColor = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         return "" if not config.menuLayout == "material" else """
 <style>
+body {0} color: {8}; {1}
 .ubaButton {0} background-color: {7}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
 .ubaButton:hover {0} background-color: {4}; color: {5}; {1}
 a, a:link, a:visited, ref, entry {0} color: {2}; {1}
@@ -3516,6 +3521,7 @@ a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0}
             config.widgetForegroundColorHover, 
             config.textSelectionColor,
             config.widgetBackgroundColor,
+            textColor,
             )
 
     # add a history record
