@@ -1,3 +1,6 @@
+Changes in 29.92:
+* Adjusted text colour in sample.color.
+
 Changes in 29.91:
 * Adjusted original bibles colour display on dark theme.
 
