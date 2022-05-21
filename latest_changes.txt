@@ -1,3 +1,6 @@
+Changes in 29.95:
+* Fixed installing wps-office for webtop users.
+
 Changes in 29.94:
 * Display ip address on information dialog.
 
