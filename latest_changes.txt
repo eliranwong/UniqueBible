@@ -1,3 +1,6 @@
+Changes in 29.91:
+* Adjusted original bibles colour display on dark theme.
+
 Changes in 29.90:
 * Changes in configuration settings:
     - Added "lightThemeTextColor" for users to customise text colour in Light theme.

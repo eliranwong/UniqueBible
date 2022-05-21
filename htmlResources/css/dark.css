@@ -268,7 +268,7 @@ blu {
 }
 
 points {
-    color: gray;
+    color: #d0d0d0;
     font-weight: bold;
     font-size: 80%;
 }
@@ -289,7 +289,7 @@ highlight {
 }
 
 transliteration {
-    color: gray;
+    color: #d0d0d0;
 }
 
 div.section, div.point {
@@ -303,7 +303,7 @@ div.section, div.point {
 
 div.remarks {
     display: block;
-    border: 1px solid gray;
+    border: 1px solid #d0d0d0;
     border-radius: 5px;
     padding: 2px 5px;
     margin-top: 5px;
@@ -381,7 +381,7 @@ div.bhc {
 }
 
 div.bhp {
-    border: 1px solid gray;
+    border: 1px solid #d0d0d0;
     border-radius: 5px;
     padding: 2px 5px;
     margin-top: 3px;
@@ -417,11 +417,11 @@ ckind, ctyp, crela {
 
 ptyp {
     text-decoration: underline;
-    color: gray;
+    color: #d0d0d0;
 }
 
 pfunction {
-    color: #3498DB;
+    color: #3baaf5;
     font-size: 90%;
 }
 
@@ -441,7 +441,7 @@ hbint, gntint, gloss {
     direction: ltr;
     vertical-align: super;
     display: inline-block;
-    color: #da6b21;
+    color: #f37724;
 }
 
 gntint, gloss {
@@ -453,31 +453,31 @@ cllevel {
 }
 
 clinfo {
-    color: #9b8482;
+    color: #cfb0ae;
     font-weight: bold;
 }
 
 subclinfo {
-    color: #795d5a;
+    color: #d4a6a1;
     font-weight: bold;
     font-size: 80%;
 }
 
 funcinfo {
-    color: #3498DB;
+    color: #3baaf5;
     font-size: 90%;
 }
 
 wordid {
     text-decoration: underline;
     font-size: 80%;
-    color: gray;
+    color: #d0d0d0;
 }
 
 wsbl, wphono {
     direction: ltr;
     display: inline-block;
-    color: gray;
+    color: #d0d0d0;
     font-size: 80%;
 }
 
@@ -491,7 +491,7 @@ wgloss {
     direction: ltr;
     display: inline-block;
     font-size: 90%;
-    color: #da6b21;
+    color: #f37724;
 }
 
 wtrans {
@@ -505,7 +505,7 @@ wlex {
     direction: ltr;
     display: inline-block;
     font-size: 90%;
-    color: #3498DB;
+    color: #3baaf5;
 }
 
 cit, clt, cst, cbhs, cbsb, cleb {
@@ -513,11 +513,11 @@ cit, clt, cst, cbhs, cbsb, cleb {
 }
 
 clt, cbsb {
-    color: #3498DB;
+    color: #3baaf5;
 }
 
 cst, cleb {
-    color: #7979bb;
+    color: #9b9bef;
 }
 
 cbsb, cleb {
@@ -528,7 +528,7 @@ div.cltrans {
     margin-left: 10px;
     margin-right: 10px;
     display: block;
-    border: 1px solid #3498DB;
+    border: 1px solid #3baaf5;
     border-radius: 5px;
     padding: 2px 5px;
     margin-top: 3px;
@@ -557,7 +557,7 @@ div.p {
     display: inline-block;
     vertical-align: top;
     text-align: left;
-    border: 1px solid gray;
+    border: 1px solid #d0d0d0;
     border-radius: 5px;
     padding: 2px 5px;
     margin-top: 3px;
@@ -847,11 +847,11 @@ mentry {
 }
 
 wform {
-    color: #3498DB;
+    color: #3baaf5;
 }
 
 morphCode {
-    color: gray;
+    color: #d0d0d0;
 }
 
 morphContent {
@@ -867,17 +867,17 @@ hl {
 }
 
 hlb {
-    color: #da6b21;
+    color: #f37724;
     direction: ltr;
     display: inline-block;
 }
 
 hlr {
-    color: #3498DB;
+    color: #3baaf5;
 }
 
 tlit {
-    color: gray;
+    color: #d0d0d0;
     direction: ltr;
     display: inline-block;
 }
@@ -910,7 +910,7 @@ mbe {
 }
 
 mbn {
-    color: gray;
+    color: #d0d0d0;
 }
 
 .ohl1 {
@@ -925,5 +925,5 @@ mbn {
     text-decoration: underline;
 }
 .oul1 {
-    color: gray;
+    color: #d0d0d0;
 }

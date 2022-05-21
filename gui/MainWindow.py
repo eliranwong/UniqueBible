@@ -3470,13 +3470,13 @@ class MainWindow(QMainWindow):
                 zh {2} font-family:'{6}'; {3} 
                 {8} {9}
                 </style>
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.059'>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{7}.css?v=1.062'>
                 {10}
-                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.059'>
-                <script src='js/common.js?v=1.059'></script>
-                <script src='js/{7}.js?v=1.059'></script>
-                <script src='w3.js?v=1.059'></script>
-                <script src='js/custom.js?v=1.059'></script>
+                <link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.062'>
+                <script src='js/common.js?v=1.062'></script>
+                <script src='js/{7}.js?v=1.062'></script>
+                <script src='w3.js?v=1.062'></script>
+                <script src='js/custom.js?v=1.062'></script>
                 {0}
                 <script>var versionList = []; var compareList = []; var parallelList = []; 
                 var diffList = []; var searchList = [];</script></head>
