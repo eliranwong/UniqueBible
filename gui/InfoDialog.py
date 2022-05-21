@@ -7,6 +7,7 @@ from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout,
 from qtpy.QtWidgets import QHBoxLayout
 
 from util.FileUtil import FileUtil
+from util.NetworkUtil import NetworkUtil
 
 
 class InfoDialog(QDialog):
@@ -63,6 +64,9 @@ class InfoDialog(QDialog):
         filesHBox.addLayout(filesVBox3)
 
         self.layout.addLayout(filesHBox)
+
+        ipLabel = QLabel("IP: {0}".format(NetworkUtil.get_ip()))
+        self.layout.addWidget(ipLabel)
 
         if content is None:
             with open("latest_changes.txt", "r", encoding="utf-8") as fileObject:

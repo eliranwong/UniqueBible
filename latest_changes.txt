@@ -1,3 +1,6 @@
+Changes in 29.94:
+* Display ip address on information dialog.
+
 Changes in 29.93:
 * Apply colour customisation on verse number display.
 
