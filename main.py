@@ -50,7 +50,7 @@ if initialCommand == "docker":
     if os.path.isdir("/opt/yay") and not WebtopUtil.isPackageInstalled("yay"):
         print("Installing yay ...")
         os.system("sudo chown -R abc:users /opt/yay && cd /opt/yay && makepkg -si --noconfirm --needed && cd -")
-    if os.path.isdir("/opt/yay") and not WebtopUtil.isPackageInstalled("wps"):
+    if WebtopUtil.isPackageInstalled("yay") and not WebtopUtil.isPackageInstalled("wps"):
         print("Installing fonts ...")
         os.system("yay -Syu --noconfirm --needed ttf-wps-fonts ttf-ms-fonts wps-office-fonts")
         print("Installing wps-office ...")
