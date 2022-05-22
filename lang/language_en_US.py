@@ -836,4 +836,6 @@ translation = {
     "content": "Content",
     "openAll": "Open All",
     "forceOnlineTts": "This forces default text-to-speech feature to use online service, even if offline an tts engine is installed.",
+    "on": "ON",
+    "off": "OFF",
 }

@@ -836,4 +836,6 @@ translation = {
     "content": "Contenu",
     "openAll": "Ouvrir tout",
     "forceOnlineTts": "Cela force la fonction de texte-parole par défaut à utiliser le service en ligne, même si un moteur tts est installé hors ligne.",
+    "on": "SUR",
+    "off": "DÉSACTIVÉ",
 }

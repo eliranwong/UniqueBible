@@ -836,4 +836,6 @@ translation = {
     "content": "Inhalt",
     "openAll": "Alle öffnen",
     "forceOnlineTts": "Dadurch wird die Standard-Text-zu-Sprache-Funktion für die Verwendung von Onlinedienst erzwungen, auch wenn offline eine TTS-Engine installiert ist.",
+    "on": "EIN",
+    "off": "AUS",
 }

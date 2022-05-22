@@ -1,3 +1,8 @@
+Changes in 29.97:
+* Added an "Instant Highlight" button, right next to command entry field on material menu layout.
+    - With this button, users can toggle instant highlight on both Bible Window and Study Window of text entered in command field.
+    - For example, try to enter "a" in command field, toggle the button and see the changes.
+
 Changes in 29.96:
 * Support instant highlight on both Bible Window and Study Window, via context menu.
 * If no text is selection, a text dialog will come up to ask for an entry.

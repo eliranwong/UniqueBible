@@ -836,4 +836,6 @@ translation = {
     "content": "Contenuto",
     "openAll": "Apri tutto",
     "forceOnlineTts": "Questa forza predefinita la funzione text-to-speech per utilizzare il servizio online, anche se offline è installato un motore tts.",
+    "on": "ON",
+    "off": "OFF",
 }

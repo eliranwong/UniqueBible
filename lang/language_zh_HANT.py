@@ -836,4 +836,6 @@ translation = {
     "content": "內容",
     "openAll": "全部開啟",
     "forceOnlineTts": "這會強制使用線上語音功能，即使已安裝離線的語音引擎也是一樣。",
+    "on": "開",
+    "off": "關",
 }

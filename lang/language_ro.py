@@ -836,4 +836,6 @@ translation = {
     "content": "Conținut",
     "openAll": "Deschide toate",
     "forceOnlineTts": "Această forță implicită caracteristica text-to-speech pentru a utiliza serviciul online, chiar dacă offline un motor tts este instalat.",
+    "on": "ON",
+    "off": "OFF",
 }

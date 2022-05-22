@@ -683,10 +683,17 @@ class MaterialMainWindow:
         self.textCommandLineEdit.setClearButtonEnabled(True)
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
+        self.instantHighlight = False
+        self.textCommandLineEdit.textChanged.connect(self.runInstantHighlight)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         if not config.preferControlPanelForCommandLineEntry:
             self.firstToolBar.addWidget(self.textCommandLineEdit)
             self.firstToolBar.addSeparator()
+
+        self.enableInstantHighlightButton = QPushButton()
+        self.addMaterialIconButton(self.getInstantHighlightToolTip(), self.getInstantHighlightDisplay(), self.enableInstantHighlightButtonClicked, self.firstToolBar, self.enableInstantHighlightButton, False)
+
+        #self.firstToolBar.addSeparator()
 
         icon = "material/action/open_in_new/materialiconsoutlined/48dp/2x/outline_open_in_new_black_48dp.png"
         self.addMaterialIconButton("goOnline", icon, self.goOnline, self.firstToolBar)

@@ -10,8 +10,8 @@ from pathlib import Path
 from qtpy.QtCore import QUrl, Qt, QEvent, QThread
 from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
 from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog)
-from qtpy.QtWidgets import QComboBox
+                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox)
+from qtpy.QtWebEngineWidgets import QWebEnginePage
 
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -3223,6 +3223,41 @@ class MainWindow(QMainWindow):
 
     def runINDEX(self):
         self.runFeature("INDEX")
+
+    # Actions - enable or disable instant highlight
+    def getInstantHighlightDisplay(self):
+        if self.instantHighlight:
+            return self.getCrossplatformPath("material/image/auto_fix_normal/materialiconsoutlined/48dp/2x/outline_auto_fix_normal_black_48dp.png")
+        else:
+            return self.getCrossplatformPath("material/image/auto_fix_off/materialiconsoutlined/48dp/2x/outline_auto_fix_off_black_48dp.png")
+
+    def getInstantHighlightToolTip(self):
+        if self.instantHighlight:
+            return "{0}: {1}".format(config.thisTranslation["instantHighlight"], config.thisTranslation["on"])
+        else:
+            return "{0}: {1}".format(config.thisTranslation["instantHighlight"], config.thisTranslation["off"])
+
+    def enableInstantHighlightButtonClicked(self):
+        if self.instantHighlight:
+            self.removeInstantHighlight()
+        else:
+            self.instantHighlight = True
+            self.runInstantHighlight()
+        icon = self.getQIcon(self.getInstantHighlightDisplay())
+        self.enableInstantHighlightButton.setIcon(icon)
+        self.enableInstantHighlightButton.setToolTip(self.getInstantHighlightToolTip())
+
+    # Run instant highlight
+    def runInstantHighlight(self):
+        if self.instantHighlight:
+            text = self.textCommandLineEdit.text()
+            self.mainView.currentWidget().findText(text, QWebEnginePage.FindFlags())
+            self.studyView.currentWidget().findText(text, QWebEnginePage.FindFlags())
+
+    def removeInstantHighlight(self):
+        self.instantHighlight = False
+        self.mainView.currentWidget().findText("", QWebEnginePage.FindFlags())
+        self.studyView.currentWidget().findText("", QWebEnginePage.FindFlags())
 
     # change of unique bible commands
 
