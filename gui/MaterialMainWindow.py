@@ -4,6 +4,7 @@ from gui.CheckableComboBox import CheckableComboBox
 from db.BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
+from util.Languages import Languages
 from util.FileUtil import FileUtil
 from util.WebtopUtil import WebtopUtil
 import shortcut as sc
@@ -70,7 +71,7 @@ class MaterialMainWindow:
         # Window style
         subMenu = addSubMenu(subMenu0, "menu1_selectWindowStyle")
         for style in QStyleFactory.keys():
-            addMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), None, False)
+            addCheckableMenuItem(subMenu, style, self, partial(self.setAppWindowStyle, style), config.windowStyle, style, None, False)
         # Menu layouts
         subMenu = addSubMenu(subMenu0, "menu1_selectMenuLayout")
         addMenuLayoutItems(self, subMenu)
@@ -82,7 +83,7 @@ class MaterialMainWindow:
             "Night",
         )
         for theme in themes:
-            addMenuItem(subMenu, theme, self, partial(self.setTheme, theme), None, False)
+            addCheckableMenuItem(subMenu, theme, self, partial(self.setTheme, theme), config.theme, "default" if theme == "Light" else theme.lower(), None, False)
         subMenu.addSeparator()
         themes = (
             "Light MediumVioletRed",
@@ -163,7 +164,7 @@ class MaterialMainWindow:
         subMenu = addSubMenu(subMenu0, "customiseIconSize")
         sizes = (12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48)
         for size in sizes:
-            addMenuItem(subMenu, str(size), self, partial(self.setIconButtonSize, size), None, False)
+            addCheckableMenuItem(subMenu, str(size), self, partial(self.setIconButtonSize, size), config.iconButtonSize, size, None, False)
         # Fonts
         subMenu = addSubMenu(subMenu0, "menu2_fonts")
         items = (
@@ -193,30 +194,70 @@ class MaterialMainWindow:
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
-        # Verse number Action
-        subMenu = addSubMenu(subMenu0, "verseNoAction")
-        items = (
-            ("singleClick", self.selectSingleClickActionDialog),
-            ("doubleClick", self.selectDoubleClickActionDialog),
+        # Control Preference
+        subMenu = addSubMenu(subMenu0, "controlPreference")
+        options = (
+            ("master", "controlPanel"),
+            ("mini", "menu1_miniControl"),
         )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+        for option, description in options:
+            addCheckableMenuItem(subMenu, description, self, partial(self.selectRefButtonSingleClickAction, option), config.refButtonClickAction, option)
         # Others
         items = (
-            ("controlPreference", self.selectRefButtonSingleClickActionDialog),
+            #("controlPreference", self.selectRefButtonSingleClickActionDialog),
             ("menu1_tabNo", self.setTabNumberDialog),
-            ("menu1_setAbbreviations", self.setBibleAbbreviations),
-            ("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
-            ("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
-            ("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
-            ("selectFavouriteHebrewGreekBible", self.openFavouriteMarvelBibleDialog),
-            ("selectFavouriteHebrewGreekBible2", self.openFavouriteMarvelBibleDialog2),
-            ("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
-            ("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
+            #("menu1_setAbbreviations", self.setBibleAbbreviations),
+            #("menu1_setMyFavouriteBible", self.openFavouriteBibleDialog),
+            #("menu1_setMyFavouriteBible2", self.openFavouriteBibleDialog2),
+            #("menu1_setMyFavouriteBible3", self.openFavouriteBibleDialog3),
+            #("selectFavouriteHebrewGreekBible", self.openFavouriteMarvelBibleDialog),
+            #("selectFavouriteHebrewGreekBible2", self.openFavouriteMarvelBibleDialog2),
+            #("menu1_setDefaultStrongsHebrewLexicon", self.openSelectDefaultStrongsHebrewLexiconDialog),
+            #("menu1_setDefaultStrongsGreekLexicon", self.openSelectDefaultStrongsGreekLexiconDialog),
         )
         for feature, action in items:
             addMenuItem(subMenu0, feature, self, action)
-
+        # Verse number Action
+        subMenu = addSubMenu(subMenu0, "selectVerseNumberAction")
+        values = ("_noAction", "_cp0", "_cp1", "_cp2", "_cp3", "_cp4", "_cp5", "_cp6", "STUDY", "COMPARE", "CROSSREFERENCE", "TSKE", "TRANSLATION", "DISCOURSE", "WORDS", "COMBO", "INDEX", "COMMENTARY", "STUDY", "_menu")
+        descriptions = ["noAction", "cp0", "cp1", "cp2", "cp3", "cp4", "cp5", "cp6", "openInStudyWindow", "menu4_compareAll", "menu4_crossRef", "menu4_tske", "menu4_traslations", "menu4_discourse", "menu4_words", "menu4_tdw", "menu4_indexes", "menu4_commentary", "menu_syncStudyWindowBible", "classicMenu"]
+        options = dict(zip(values, descriptions))
+        subMenu1 = addSubMenu(subMenu, "singleClick")
+        for option, description in options.items():
+            addCheckableMenuItem(subMenu1, description, self, partial(self.singleClickActionSelected, option), config.verseNoSingleClickAction, option)
+        subMenu1 = addSubMenu(subMenu, "doubleClick")
+        for option, description in options.items():
+            addCheckableMenuItem(subMenu1, description, self, partial(self.doubleClickActionSelected, option), config.verseNoDoubleClickAction, option)
+        # Abbreviation language
+        subMenu = addSubMenu(subMenu0, "menu1_setAbbreviations")
+        options = ("ENG", "TC", "SC")
+        for option in options:
+            addCheckableMenuItem(subMenu, option, self, partial(self.setBibleAbbreviationsSelected, option), config.standardAbbreviation, option, translation=False)
+        # My Favourite Bibles
+        subMenu = addSubMenu(subMenu0, "menu1_setMyFavouriteBible")
+        for option in self.textList:
+            addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteBibleSelected1, option), config.favouriteBible, option, translation=False)
+        subMenu = addSubMenu(subMenu0, "menu1_setMyFavouriteBible2")
+        for option in self.textList:
+            addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteBibleSelected2, option), config.favouriteBible2, option, translation=False)
+        subMenu = addSubMenu(subMenu0, "menu1_setMyFavouriteBible3")
+        for option in self.textList:
+            addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteBibleSelected3, option), config.favouriteBible3, option, translation=False)
+        # My Favourite Hebrew & Greek Bibles
+        subMenu = addSubMenu(subMenu0, "selectFavouriteHebrewGreekBible")
+        for option in ("MOB", "MIB", "MTB", "MPB", "MAB"):
+            addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteMarvelBibleSelected1, option), config.favouriteOriginalBible, option, translation=False)
+        subMenu = addSubMenu(subMenu0, "selectFavouriteHebrewGreekBible2")
+        for option in ("MOB", "MIB", "MTB", "MPB", "MAB"):
+            addCheckableMenuItem(subMenu, option, self, partial(self.openFavouriteMarvelBibleSelected2, option), config.favouriteOriginalBible2, option, translation=False)
+        # Default Lexicons
+        subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsHebrewLexicon")
+        for option in self.lexiconList:
+            addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsHebrewLexiconSelected, option), config.defaultLexiconStrongH, option, translation=False)
+        subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsGreekLexicon")
+        for option in self.lexiconList:
+            addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsGreekLexiconSelected, option), config.defaultLexiconStrongG, option, translation=False)
+        # Default TTS voice
         if not config.noTtsFound:
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
@@ -225,7 +266,7 @@ class MaterialMainWindow:
             subMenu = addSubMenu(subMenu0, "ttsLanguage")
             for index, item in enumerate(items):
                 languageCode = languageCodes[index]
-                addMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), translation=False)
+                addCheckableMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), config.ttsDefaultLangauge, languageCode, translation=False)
 
         if config.developer:
             items = (
@@ -239,25 +280,25 @@ class MaterialMainWindow:
         # Shortcuts
         subMenu = addSubMenu(subMenu0, "menu_shortcuts")
         items = (
-            ("menu_micron", lambda: self.setShortcuts("micron")),
+            ("menu_micron", lambda: self.setShortcuts("micron"), "micron"),
         )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+        for feature, action, thisValue in items:
+            addCheckableMenuItem(subMenu, feature, self, action, config.menuShortcuts, thisValue)
         subMenu.addSeparator()
         items = (
-            ("menu_brachys", lambda: self.setShortcuts("brachys")),
-            ("menu_syntemno", lambda: self.setShortcuts("syntemno")),
-            ("menu_blank", lambda: self.setShortcuts("blank")),
+            ("menu_brachys", lambda: self.setShortcuts("brachys"), "brachys"),
+            ("menu_syntemno", lambda: self.setShortcuts("syntemno"), "syntemno"),
+            ("menu_blank", lambda: self.setShortcuts("blank"), "blank"),
         )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
+        for feature, action, thisValue in items:
+            addCheckableMenuItem(subMenu, feature, self, action, config.menuShortcuts, thisValue)
         for shortcut in ShortcutUtil.getListCustomShortcuts():
             addMenuItem(subMenu, shortcut, self, partial(self.setShortcuts, shortcut), None, False)
         # Language settings
         subMenu01 = addSubMenu(subMenu0, "languageSettings")
         subMenu = addSubMenu(subMenu01, "menu1_programInterface")
         for language in LanguageUtil.getNamesSupportedLanguages():
-            addMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), translation=False)
+            addCheckableMenuItem(subMenu, language, self, partial(self.changeInterfaceLanguage, language), config.displayLanguage, Languages.code[language], translation=False)
         subMenu = addSubMenu(subMenu01, "watsonTranslator")
         items = (
             ("setup", self.setupWatsonTranslator),
@@ -292,8 +333,8 @@ class MaterialMainWindow:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
         subMenu = addSubMenu(menu, "menu1_clipboard")
         items = (
-            ("menu1_readClipboard", self.pasteFromClipboard, None),
-            ("menu1_runClipboard", self.parseContentOnClipboard, sc.parseContentOnClipboard),
+            ("pasteOnStudyWindow", self.pasteFromClipboard, None),
+            ("context1_command", self.parseContentOnClipboard, sc.parseContentOnClipboard),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -387,25 +428,25 @@ class MaterialMainWindow:
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
-            ("formattedTextPlainText", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
-            ("menu2_subHeadings", self.enableSubheadingButtonClicked, sc.enableSubheadingButtonClicked),
-            ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef),
-            ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference),
-            ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator),
-            ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator),
-            ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible),
-            ("displayHebrewGreekWordAudio", self.toggleShowHebrewGreekWordAudioLinks, sc.toggleShowWordAudio),
-            ("readTillChapterEnd", self.toggleReadTillChapterEnd, sc.toggleReadTillChapterEnd),
-            ("instantHighlight", self.enableInstantHighlightButtonClicked, sc.toggleInstantHighlight),
-            ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
-            ("parallelMode", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),
-            ("studyBibleSyncsWithMainBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible),
-            ("commentarySyncsWithMainBible", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary),
+            ("formattedText", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked, config.readFormattedBibles),
+            ("menu2_subHeadings", self.enableSubheadingButtonClicked2, sc.enableSubheadingButtonClicked, config.addTitleToPlainChapter),
+            ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef, config.addFavouriteToMultiRef),
+            ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference, config.showVerseReference),
+            ("displayUserNoteIndicator", self.toggleShowUserNoteIndicator, sc.toggleShowUserNoteIndicator, config.showUserNoteIndicator),
+            ("displayBibleNoteIndicator", self.toggleShowBibleNoteIndicator, sc.toggleShowBibleNoteIndicator, config.showBibleNoteIndicator),
+            ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible, (not config.hideLexicalEntryInBible)),
+            ("displayHebrewGreekWordAudio", self.toggleShowHebrewGreekWordAudioLinks, sc.toggleShowWordAudio, config.showHebrewGreekWordAudioLinks),
+            ("readTillChapterEnd", self.toggleReadTillChapterEnd, sc.toggleReadTillChapterEnd, config.readTillChapterEnd),
+            ("instantHighlight", self.enableInstantHighlightButtonClicked, sc.toggleInstantHighlight, config.enableInstantHighlight),
+            ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked, config.instantInformationEnabled),
+            ("parallelMode", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel, config.enforceCompareParallel),
+            ("studyBibleSyncsWithMainBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible, config.syncStudyWindowBibleWithMainWindow),
+            ("commentarySyncsWithMainBible", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary, config.syncCommentaryWithMainWindow),
         )
-        for feature, action, shortcut in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
+        for feature, action, shortcut, currentValue in items:
+            addCheckableMenuItem(subMenu, feature, self, action, currentValue, True, shortcut)
         if config.enableVerseHighlighting:
-            addMenuItem(subMenu, "menu2_toggleHighlightMarkers", self, self.toggleHighlightMarker, sc.toggleHighlightMarker)
+            addCheckableMenuItem(subMenu, "menu2_toggleHighlightMarkers", self, self.toggleHighlightMarker, config.showHighlightMarkers, True, sc.toggleHighlightMarker)
 
         # 3rd column
         menu = addMenu(menuBar, "controlPanel")
@@ -684,7 +725,6 @@ class MaterialMainWindow:
         self.textCommandLineEdit.setClearButtonEnabled(True)
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
-        self.instantHighlight = False
         self.textCommandLineEdit.textChanged.connect(self.runInstantHighlight)
         self.textCommandLineEdit.returnPressed.connect(self.textCommandEntered)
         if not config.preferControlPanelForCommandLineEntry:

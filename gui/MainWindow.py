@@ -545,7 +545,7 @@ class MainWindow(QMainWindow):
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
-        self.mainView.currentWidget().updateDefaultTtsVoice()
+        self.mainView.currentWidget().updateContextMenu()
 
     def setStudyPage(self, tabIndex=None):
         if tabIndex != None:
@@ -556,7 +556,7 @@ class MainWindow(QMainWindow):
         if config.theme in ("dark", "night"):
             self.studyPage.setBackgroundColor(Qt.transparent)
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
-        self.studyView.currentWidget().updateDefaultTtsVoice()
+        self.studyView.currentWidget().updateContextMenu()
 
     # manage latest update
     def checkApplicationUpdate(self):
@@ -891,6 +891,8 @@ class MainWindow(QMainWindow):
     def setAppWindowStyle(self, style):
         config.windowStyle = "" if style == "default" else style
         self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def setQtMaterialTheme(self, theme):
         config.qtMaterialTheme = theme
@@ -1614,7 +1616,7 @@ class MainWindow(QMainWindow):
         self.studyPage.printToPdf(filename)
 
     # Actions - export to Word Document (*.docx)
-    def exportHtmlToDocx(self, html):
+    def exportHtmlToDocx(self, html, filename=""):
         try:
             from htmldocx import HtmlToDocx
             new_parser = HtmlToDocx()
@@ -1625,9 +1627,14 @@ class MainWindow(QMainWindow):
             text = html_text.extract_text(html)
             docx = Document()
             docx.add_paragraph(text)
-        filename = "UniqueBibleApp.docx"
+        if not filename:
+            filename = "UniqueBibleApp.docx"
+            openFile = True
+        else:
+            openFile = False
         docx.save(filename)
-        subprocess.Popen("{0} {1}".format(config.open, filename), shell=True)
+        if openFile:
+            subprocess.Popen("{0} {1}".format(config.open, filename), shell=True)
 
     def exportMainPageToDocx(self):
         if config.isHtmldocxInstalled:
@@ -2562,6 +2569,8 @@ class MainWindow(QMainWindow):
         icon = self.getQIcon(self.getEnableCompareParallelDisplay())
         self.enforceCompareParallelButton.setIcon(icon)
         self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Actions - enable or disable sync main and secondary bibles
     def getSyncStudyWindowBibleDisplay(self):
@@ -2585,6 +2594,8 @@ class MainWindow(QMainWindow):
         if config.syncStudyWindowBibleWithMainWindow:
             self.reloadCurrentRecord()
         self.syncButtonChanging = False
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def getSyncCommentaryDisplay(self):
         if config.syncCommentaryWithMainWindow:
@@ -2606,6 +2617,8 @@ class MainWindow(QMainWindow):
         if config.syncCommentaryWithMainWindow:
             self.reloadCurrentRecord()
         self.syncButtonChanging = False
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
@@ -2662,6 +2675,8 @@ class MainWindow(QMainWindow):
         if hasattr(self, 'enableInstantButton'):
             icon = self.getQIcon(self.getInstantInformation())
             self.enableInstantButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Actions - enable or disable paragraphs feature
     def displayBiblesInParagraphs(self):
@@ -2699,31 +2714,42 @@ class MainWindow(QMainWindow):
             self.displayBiblesInParagraphs()
         icon = self.getQIcon(self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(icon)
+        self.enableParagraphButton.setToolTip(self.getReadFormattedBiblesToolTip())
         if config.menuLayout == "material":
-            if config.readFormattedBibles:
-                self.enableSubheadingButton.setVisible(False)
-            else:
-                self.enableSubheadingButton.setVisible(True)
+            self.setupMenuLayout("material")
+            #if config.readFormattedBibles:
+            #    self.enableSubheadingButton.setVisible(False)
+            #else:
+            #    self.enableSubheadingButton.setVisible(True)
 
     def toggleShowUserNoteIndicator(self):
         config.showUserNoteIndicator = not config.showUserNoteIndicator
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
 
     def toggleShowBibleNoteIndicator(self):
         config.showBibleNoteIndicator = not config.showBibleNoteIndicator
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def toggleShowVerseReference(self):
         config.showVerseReference = not config.showVerseReference
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def toggleShowHebrewGreekWordAudioLinks(self):
         config.showHebrewGreekWordAudioLinks = not config.showHebrewGreekWordAudioLinks
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def toggleShowHebrewGreekWordAudioLinksInMIB(self):
         config.showHebrewGreekWordAudioLinksInMIB = not config.showHebrewGreekWordAudioLinksInMIB
@@ -2734,16 +2760,22 @@ class MainWindow(QMainWindow):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def toggleHideLexicalEntryInBible(self):
         config.hideLexicalEntryInBible = not config.hideLexicalEntryInBible
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def toggleReadTillChapterEnd(self):
         config.readTillChapterEnd = not config.readTillChapterEnd
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Actions - enable or disable sub-heading for plain bibles
     def getAddSubheading(self):
@@ -2767,6 +2799,8 @@ class MainWindow(QMainWindow):
         self.enableSubheadingButton.setToolTip(self.enableSubheadingToolTip())
         self.newTabException = True
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def enableSubheadingToolTip(self):
         return "{0}: {1}".format(config.thisTranslation["menu_subheadings"], config.thisTranslation["on"] if config.addTitleToPlainChapter else config.thisTranslation["off"])
@@ -3237,36 +3271,38 @@ class MainWindow(QMainWindow):
 
     # Actions - enable or disable instant highlight
     def getInstantHighlightDisplay(self):
-        if self.instantHighlight:
+        if config.enableInstantHighlight:
             return self.getCrossplatformPath("material/image/auto_fix_normal/materialiconsoutlined/48dp/2x/outline_auto_fix_normal_black_48dp.png")
         else:
             return self.getCrossplatformPath("material/image/auto_fix_off/materialiconsoutlined/48dp/2x/outline_auto_fix_off_black_48dp.png")
 
     def getInstantHighlightToolTip(self):
-        if self.instantHighlight:
+        if config.enableInstantHighlight:
             return "{0}: {1}".format(config.thisTranslation["instantHighlight"], config.thisTranslation["on"])
         else:
             return "{0}: {1}".format(config.thisTranslation["instantHighlight"], config.thisTranslation["off"])
 
     def enableInstantHighlightButtonClicked(self):
-        if self.instantHighlight:
+        if config.enableInstantHighlight:
             self.removeInstantHighlight()
         else:
-            self.instantHighlight = True
+            config.enableInstantHighlight = True
             self.runInstantHighlight()
         icon = self.getQIcon(self.getInstantHighlightDisplay())
         self.enableInstantHighlightButton.setIcon(icon)
         self.enableInstantHighlightButton.setToolTip(self.getInstantHighlightToolTip())
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Run instant highlight
     def runInstantHighlight(self):
-        if self.instantHighlight:
+        if config.enableInstantHighlight:
             text = self.textCommandLineEdit.text()
             self.mainView.currentWidget().findText(text, QWebEnginePage.FindFlags())
             self.studyView.currentWidget().findText(text, QWebEnginePage.FindFlags())
 
     def removeInstantHighlight(self):
-        self.instantHighlight = False
+        config.enableInstantHighlight = False
         self.mainView.currentWidget().findText("", QWebEnginePage.FindFlags())
         self.studyView.currentWidget().findText("", QWebEnginePage.FindFlags())
 
@@ -3372,7 +3408,7 @@ class MainWindow(QMainWindow):
                 self.textCommandLineEdit.setText(content)
             else:
                 #if view == "main":
-                #    content = self.instantHighlight(content)
+                #    content = config.enableInstantHighlight(content)
                 pdfFilename = dict['pdf_filename'] if "pdf_filename" in dict.keys() else None
                 outputFile = None
                 if pdfFilename is not None:
@@ -3687,6 +3723,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["assignSingleClick"], items, values.index(config.verseNoSingleClickAction), False)
         if ok and item:
             config.verseNoSingleClickAction = itemsDict[item]
+    
+    def singleClickActionSelected(self, item):
+        config.verseNoSingleClickAction = item
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Set verse number double-click action (config.verseNoDoubleClickAction)
     def selectDoubleClickActionDialog(self):
@@ -3697,6 +3738,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         item, ok = QInputDialog.getItem(self, "UniqueBible", config.thisTranslation["assignDoubleClick"], items, values.index(config.verseNoDoubleClickAction), False)
         if ok and item:
             config.verseNoDoubleClickAction = itemsDict[item]
+
+    def doubleClickActionSelected(self, item):
+        config.verseNoDoubleClickAction = item
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Set reference button single-click action (config.refButtonClickAction)
     def selectRefButtonSingleClickActionDialog(self):
@@ -3713,6 +3759,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             config.refButtonClickAction = itemsDict[item]
             self.setupMenuLayout(config.menuLayout)
 
+    def selectRefButtonSingleClickAction(self, option):
+        config.refButtonClickAction = option
+        self.setupMenuLayout(config.menuLayout)
+
     # Set default Strongs Greek lexicon (config.defaultLexiconStrongG)
     def openSelectDefaultStrongsGreekLexiconDialog(self):
         items = LexiconData().lexiconList
@@ -3722,6 +3772,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if ok and item:
             config.defaultLexiconStrongG = item
 
+    def defaultStrongsGreekLexiconSelected(self, item):
+        config.defaultLexiconStrongG = item
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
     # Set default Strongs Hebrew lexicon (config.defaultLexiconStrongH)
     def openSelectDefaultStrongsHebrewLexiconDialog(self):
         items = LexiconData().lexiconList
@@ -3730,6 +3785,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                                         items.index(config.defaultLexiconStrongH), False)
         if ok and item:
             config.defaultLexiconStrongH = item
+
+    def defaultStrongsHebrewLexiconSelected(self, item):
+        config.defaultLexiconStrongH = item
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # Set Favourite Bible Version
     def openFavouriteMarvelBibleDialog(self):
@@ -3752,6 +3812,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.reloadResources()
         self.reloadCurrentRecord(True)
 
+    def openFavouriteMarvelBibleSelected1(self, item):
+        config.favouriteOriginalBible = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteMarvelBibleSelected2(self, item):
+        config.favouriteOriginalBible = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
     def openFavouriteBibleDialog(self):
         items = BiblesSqlite().getBibleList()
         item, ok = QInputDialog.getItem(self, config.thisTranslation["menu1_setMyFavouriteBible"],
@@ -3759,6 +3829,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                                         items.index(config.favouriteBible), False)
         if ok and item:
             config.favouriteBible = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteBibleSelected1(self, item):
+        config.favouriteBible = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteBibleSelected2(self, item):
+        config.favouriteBible2 = item
+        self.reloadResources()
+        self.reloadCurrentRecord(True)
+
+    def openFavouriteBibleSelected3(self, item):
+        config.favouriteBible3 = item
         self.reloadResources()
         self.reloadCurrentRecord(True)
 
@@ -3802,6 +3887,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         config.ttsDefaultLangauge = language
         self.mainView.currentWidget().updateDefaultTtsVoice()
         self.studyView.currentWidget().updateDefaultTtsVoice()
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     def setDefaultTtsLanguageDialog(self):
         languages = self.getTtsLanguages()
@@ -3827,6 +3914,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if ok and item:
             config.standardAbbreviation = item
             self.reloadCurrentRecord(True)
+
+    def setBibleAbbreviationsSelected(self, option):
+        config.standardAbbreviation = option
+        self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
 
     # set default font
     def setDefaultFont(self):

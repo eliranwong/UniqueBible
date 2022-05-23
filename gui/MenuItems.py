@@ -16,6 +16,20 @@ def addMenu(menuBar, title, translation=True):
 def addSubMenu(parentMenu, translation):
     return parentMenu.addMenu(config.thisTranslation.get(translation, translation))
 
+def addCheckableMenuItem(menu, feature, object, action, currentValue, thisValue, shortcut=None, translation=True):
+    if shortcut:
+        if shortcut in config.shortcutList:
+            shortcut = None
+        else:
+            config.shortcutList.append(shortcut)
+    if shortcut is None:
+        shortcut = ""
+    qAction = QAction(config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut)
+    qAction.setCheckable(True)
+    if currentValue == thisValue:
+        qAction.setChecked(True)
+    return menu.addAction(qAction)
+
 def addMenuItem(menu, feature, object, action, shortcut=None, translation=True):
     if shortcut:
         if shortcut in config.shortcutList:
@@ -56,23 +70,23 @@ def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translat
 
 def addMenuLayoutItems(parent, menu):
     items = (
-        ("menu1_material_menu_layout", lambda: parent.setupMenuLayout("material")),
+        ("menu1_material_menu_layout", lambda: parent.setupMenuLayout("material"), "material"),
     )
-    for feature, action in items:
-        addMenuItem(menu, feature, parent, action)
+    for feature, action, thisValue in items:
+        addCheckableMenuItem(menu, feature, parent, action, config.menuLayout, thisValue)
     menu.addSeparator()
     items = (
-        ("menu1_aleph_menu_layout", lambda: parent.setupMenuLayout("aleph")),
-        ("menu1_focus_menu_layout", lambda: parent.setupMenuLayout("focus")),
-        ("menu1_classic_menu_layout", lambda: parent.setupMenuLayout("classic")),
+        ("menu1_aleph_menu_layout", lambda: parent.setupMenuLayout("aleph"), "aleph"),
+        ("menu1_focus_menu_layout", lambda: parent.setupMenuLayout("focus"), "focus"),
+        ("menu1_classic_menu_layout", lambda: parent.setupMenuLayout("classic"), "classic"),
     )
-    for feature, action in items:
-        addMenuItem(menu, feature, parent, action)
+    for feature, action, thisValue in items:
+        addCheckableMenuItem(menu, feature, parent, action, config.menuLayout, thisValue)
     layouts = FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "layout"), "py")
     if layouts:
         menu.addSeparator()
         for pluginLayout in layouts:
-            addMenuItem(menu, pluginLayout, parent, lambda: parent.setupMenuLayout(pluginLayout), translation=False)
+            addCheckableMenuItem(menu, pluginLayout, parent, lambda: parent.setupMenuLayout(pluginLayout), config.menuLayout, pluginLayout, translation=False)
 
 def addGithubDownloadMenuItems(self, subMenu):
     if config.isPygithubInstalled:

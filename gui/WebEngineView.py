@@ -40,14 +40,18 @@ class WebEngineView(QWebEngineView):
         self.parent.parent.displayMessage(message)
 
     def updateDefaultTtsVoice(self):
-        display = "{0} [{1}]".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge)
+        display = "{0} [{1}] | {2}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge, sc.contextDefaultTTS)
         self.defaultTTSVoice.setText(display)
 
     def updateContextMenu(self):
         text = self.getText()
         book = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(self.getBook(), 1, 1)[:-4]
-        self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
+        if self.name == "main":
+            self.searchText.setText("{1} {0} | {2}".format(text, config.thisTranslation["context1_search"], sc.contextSearchBible))
+        else:
+            self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
         self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, config.thisTranslation["context1_search"]))
+        self.updateDefaultTtsVoice()
         #self.searchBibleTopic.setText("{1} > {0}".format(config.topic, config.thisTranslation["menu5_topics"]))
         #self.searchBibleDictionary.setText("{1} > {0}".format(config.dictionary, config.thisTranslation["context1_dict"]))
         #self.searchBibleEncyclopedia.setText("{1} > {0}".format(config.encyclopedia, config.thisTranslation["context1_encyclopedia"]))
@@ -79,186 +83,7 @@ class WebEngineView(QWebEngineView):
 
     def addMenuActions(self):
 
-#        if config.menuShortcuts in ShortcutUtil.data:
-#            sc = ShortcutUtil.data[config.menuShortcuts]
-#        else:
-#            sc = ShortcutUtil.data['micron']
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_search"])
-        action.triggered.connect(self.searchPanel)
-        self.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["saveHtml"])
-        action.triggered.connect(self.saveHtml)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        copyText = QAction(self)
-        copyText.setText(config.thisTranslation["text"])
-        copyText.triggered.connect(self.copySelectedText)
-        subMenu.addAction(copyText)
-
-        copyText = QAction(self)
-        copyText.setText(config.thisTranslation["textWithReference"])
-        copyText.triggered.connect(self.copySelectedTextWithReference)
-        subMenu.addAction(copyText)
-
-        copyReferences = QAction(self)
-        copyReferences.setText(config.thisTranslation["bibleReferences"])
-        copyReferences.triggered.connect(self.copyAllReferences)
-        subMenu.addAction(copyReferences)
-
-        copyHtml = QAction(self)
-        copyHtml.setText(config.thisTranslation["htmlCode"])
-        copyHtml.triggered.connect(self.copyHtmlCode)
-        subMenu.addAction(copyHtml)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_copy"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        subMenu = QMenu()
-
-        self.searchText = QAction(self)
-        self.searchText.setText("{0} [{1}]".format(config.thisTranslation["context1_search"], config.mainText))
-        self.searchText.triggered.connect(self.searchSelectedText)
-        #self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc["contextSearchBible"])
-        self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc.contextSearchBible)
-        subMenu.addAction(self.searchText)
-
-        self.searchTextInBook = QAction(self)
-        self.searchTextInBook.setText(config.thisTranslation["context1_current"])
-        self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
-        subMenu.addAction(self.searchTextInBook)
-
-        searchFavouriteBible = QAction(self)
-        searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
-        searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
-        subMenu.addAction(searchFavouriteBible)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["cp0"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
-        for bookNo in range(1, 67):
-            action = QAction(self)
-            bookName = bibleVerseParser.standardFullBookName[str(bookNo)]
-            action.setText(bookName)
-            action.triggered.connect(partial(self.openReferencesInBook, bookName))
-            subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["openInBook"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        subMenu = QMenu()
-
-        for text in self.parent.parent.textList:
-            action = QAction(self)
-            action.setText(text)
-            action.triggered.connect(partial(self.openReferenceInBibleVersion, text))
-            subMenu.addAction(action)
-        
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.compareAllVersions)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["openReferences"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        for text in self.parent.parent.textList:
-            action = QAction(self)
-            action.setText(text)
-            action.triggered.connect(partial(self.compareReferenceWithBibleVersion, text))
-            subMenu.addAction(action)
-        
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.compareAllVersions)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["compareReferences"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        for text in self.parent.parent.textList:
-            action = QAction(self)
-            action.setText(text)
-            action.triggered.connect(partial(self.parallelReferenceWithBibleVersion, text))
-            subMenu.addAction(action)
-        
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.compareAllVersions)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["parallelReferences"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
-
-        subMenu = QMenu()
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
-        searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
-        searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["bottomWindow"])
-        searchBibleReferences.triggered.connect(self.displayVersesInBottomWindow)
-        subMenu.addAction(searchBibleReferences)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["displayVerses"])
-        action.setMenu(subMenu)
-        self.addAction(action)
+        # Open Content in
 
         if self.name in ("main", "study"):
 
@@ -280,23 +105,214 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(self.openOnFullScreen)
             subMenu.addAction(action)
 
-            action = QAction(self)
-            action.setText(config.thisTranslation["pdfDocument"])
-            action.triggered.connect(self.exportToPdf)
-            subMenu.addAction(action)
+            #action = QAction(self)
+            #action.setText(config.thisTranslation["pdfDocument"])
+            #action.triggered.connect(self.exportToPdf)
+            #subMenu.addAction(action)
     
             action = QAction(self)
-            action.setText(config.thisTranslation["displayContent"])
+            action.setText(config.thisTranslation["displayContentIn"])
             action.setMenu(subMenu)
             self.addAction(action)
+
+        # Open References in 
+
+        subMenu = QMenu()
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["openOnNewWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInNewWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        searchBibleReferences = QAction(self)
+        searchBibleReferences.setText(config.thisTranslation["bottomWindow"])
+        searchBibleReferences.triggered.connect(self.displayVersesInBottomWindow)
+        subMenu.addAction(searchBibleReferences)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openReferencesIn"])
+        action.setMenu(subMenu)
+        self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
         self.addAction(separator)
 
+        # Open Reference section
+
         subMenu = QMenu()
 
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.openReferenceInBibleVersion, text))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openReferencesWith"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        # Open bookless reference
+
+        subMenu = QMenu()
+
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        for bookNo in range(1, 67):
+            action = QAction(self)
+            bookName = bibleVerseParser.standardFullBookName[str(bookNo)]
+            action.setText(bookName)
+            action.triggered.connect(partial(self.openReferencesInBook, bookName))
+            subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["openBooklessReferences"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        # Compare references
+
+        subMenu = QMenu()
+
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.parallelReferenceWithBibleVersion, text))
+            subMenu.addAction(action)
+        
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["compareReferenceSideBySide"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        subMenu = QMenu()
+
+        for text in self.parent.parent.textList:
+            action = QAction(self)
+            action.setText(text)
+            action.triggered.connect(partial(self.compareReferenceWithBibleVersion, text))
+            subMenu.addAction(action)
+        
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.compareAllVersions)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["compareReferenceRowByRow"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        # Copy
+
+        subMenu = QMenu()
+
+        copyText = QAction(self)
+        copyText.setText(config.thisTranslation["text"])
+        copyText.triggered.connect(self.copySelectedText)
+        subMenu.addAction(copyText)
+
+        copyText = QAction(self)
+        copyText.setText(config.thisTranslation["textWithReference"])
+        copyText.triggered.connect(self.copySelectedTextWithReference)
+        subMenu.addAction(copyText)
+
+        copyReferences = QAction(self)
+        copyReferences.setText(config.thisTranslation["bibleReferences"])
+        copyReferences.triggered.connect(self.copyAllReferences)
+        subMenu.addAction(copyReferences)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_copy"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        # Copy All
+
+        subMenu = QMenu()
+
+        copyHtml = QAction(self)
+        copyHtml.setText(config.thisTranslation["plainText"])
+        copyHtml.triggered.connect(self.copyPlainText)
+        subMenu.addAction(copyHtml)
+
+        copyHtml = QAction(self)
+        copyHtml.setText(config.thisTranslation["htmlCode"])
+        copyHtml.triggered.connect(self.copyHtmlCode)
+        subMenu.addAction(copyHtml)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["copyAll"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        # Save As
+
+        subMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["plainTextFile"])
+        action.triggered.connect(self.savePlainText)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["htmlFile"])
+        action.triggered.connect(self.saveHtml)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["pdfFile"])
+        action.triggered.connect(self.savePdf)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["wordFile"])
+        action.triggered.connect(self.saveDocx)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["exportTo"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
         # Instant highlight feature
+        subMenu = QMenu()
+        
         action = QAction(self)
         action.setText(config.thisTranslation["menu_highlight"])
         action.triggered.connect(self.instantHighlight)
@@ -316,6 +332,38 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        # Start Search section
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_search"])
+        action.triggered.connect(self.searchPanel)
+        self.addAction(action)
+
+        # Search in currently selected bible
+        #subMenu = QMenu()
+
+        self.searchText = QAction(self)
+        #self.searchText.setText("{0} [{1}] | {2}".format(config.thisTranslation["context1_search"], config.mainText, sc.contextSearchBible))
+        self.searchText.triggered.connect(self.searchSelectedText)
+        self.parent.parent.addContextMenuShortcut(partial(self.searchSelectedText, activeSelection=True), sc.contextSearchBible)
+        self.addAction(self.searchText)
+
+        self.searchTextInBook = QAction(self)
+        self.searchTextInBook.setText(config.thisTranslation["context1_current"])
+        self.searchTextInBook.triggered.connect(self.searchSelectedTextInBook)
+        self.addAction(self.searchTextInBook)
+
+        #searchFavouriteBible = QAction(self)
+        #searchFavouriteBible.triggered.connect(self.searchSelectedFavouriteBible)
+        #searchFavouriteBible.setText(config.thisTranslation["context1_favourite"])
+        #subMenu.addAction(searchFavouriteBible)
+
+        #action = QAction(self)
+        #action.setText(config.thisTranslation["cp0"])
+        #action.setMenu(subMenu)
+        #self.addAction(action)
+
+        # Search in other books & versions
+
         subMenu = QMenu()
 
         bibleVerseParser = BibleVerseParser(config.parserStandarisation)
@@ -326,7 +374,7 @@ class WebEngineView(QWebEngineView):
             subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["bibleBook"])
+        action.setText(config.thisTranslation["searchOtherBibleBooks"])
         action.setMenu(subMenu)
         self.addAction(action)
 
@@ -339,7 +387,33 @@ class WebEngineView(QWebEngineView):
             subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["bibleVersion"])
+        action.setText(config.thisTranslation["searchOtherBibleVersions"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
+        # Search Other Resources
+
+        # Search Bible Notes
+
+        subMenu = QMenu()
+        notes = {"SEARCHBOOKNOTE": "menu_bookNotes", "SEARCHCHAPTERNOTE": "menu_chapterNotes", "SEARCHVERSENOTE": "menu_verseNotes"}
+        for keyword, translation in notes.items():
+            action = QAction(self)
+            action.setText(config.thisTranslation[translation])
+            action.triggered.connect(partial(self.searchBibleNote, keyword))
+            subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["removeNoteHighlight"])
+        action.triggered.connect(self.removeNoteHighlight)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["searchNotes"])
         action.setMenu(subMenu)
         self.addAction(action)
 
@@ -362,30 +436,65 @@ class WebEngineView(QWebEngineView):
             subMenu.addAction(action)
 
             action = QAction(self)
-            action.setText(config.thisTranslation["bibleConcordance"])
+            action.setText(config.thisTranslation["searchConcordance"])
             action.setMenu(subMenu)
             self.addAction(action)
 
+        # Search Reference Books
+
         subMenu = QMenu()
-        for keyword in ("SEARCHBOOKNOTE", "SEARCHCHAPTERNOTE", "SEARCHVERSENOTE"):
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["previous"])
+        action.triggered.connect(self.searchPreviousBook)
+        subMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subMenu.addAction(separator)
+
+        subSubMenu = QMenu()
+
+        for module in config.favouriteBooks:
             action = QAction(self)
-            action.setText(config.thisTranslation[keyword])
-            action.triggered.connect(partial(self.searchBibleNote, keyword))
-            subMenu.addAction(action)
+            action.setText(module)
+            action.triggered.connect(partial(self.searchSelectedBook, module))
+            subSubMenu.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        subSubMenu.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.triggered.connect(self.searchFavouriteBooks)
+        subSubMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_favouriteBooks"])
+        action.setMenu(subSubMenu)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["context1_allBooks"])
+        action.triggered.connect(self.searchAllBooks)
+        subMenu.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
         subMenu.addAction(separator)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["removeNoteHighlight"])
-        action.triggered.connect(self.removeNoteHighlight)
+        action.setText(config.thisTranslation["removeBookHighlight"])
+        action.triggered.connect(self.removeBookHighlight)
         subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["menu6_notes"])
+        action.setText(config.thisTranslation["searchReferenceBooks"])
         action.setMenu(subMenu)
         self.addAction(action)
+
+        # Search Other Resources
 
         subMenu = QMenu()
 
@@ -520,59 +629,7 @@ class WebEngineView(QWebEngineView):
         subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["bibleResources"])
-        action.setMenu(subMenu)
-        self.addAction(action)
-
-        subMenu = QMenu()
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["previous"])
-        action.triggered.connect(self.searchPreviousBook)
-        subMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        subSubMenu = QMenu()
-
-        for module in config.favouriteBooks:
-            action = QAction(self)
-            action.setText(module)
-            action.triggered.connect(partial(self.searchSelectedBook, module))
-            subSubMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subSubMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.searchFavouriteBooks)
-        subSubMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_favouriteBooks"])
-        action.setMenu(subSubMenu)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["context1_allBooks"])
-        action.triggered.connect(self.searchAllBooks)
-        subMenu.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["removeBookHighlight"])
-        action.triggered.connect(self.removeBookHighlight)
-        subMenu.addAction(action)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["installBooks"])
+        action.setText(config.thisTranslation["searchOtherResources"])
         action.setMenu(subMenu)
         self.addAction(action)
 
@@ -580,12 +637,12 @@ class WebEngineView(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
+        # End of Search section
+
         # Google TEXT-TO-SPEECH feature
         if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
 
             self.defaultTTSVoice = QAction(self)
-            #self.defaultTTSVoice.setText(config.thisTranslation["context1_speak"])
-            #self.updateDefaultTtsVoice()
             self.defaultTTSVoice.triggered.connect(self.googleTextToSpeechLanguage)
             self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, "", True), sc.contextDefaultTTS)
             self.addAction(self.defaultTTSVoice)
@@ -624,8 +681,6 @@ class WebEngineView(QWebEngineView):
         elif config.isOfflineTtsInstalled:
             languages = self.parent.parent.getTtsLanguages()
             self.defaultTTSVoice = QAction(self)
-            #self.defaultTTSVoice.setText("{0} [{1}]".format(config.thisTranslation["context1_speak"], languages[config.ttsDefaultLangauge][1].capitalize()))
-            #self.updateDefaultTtsVoice()
             self.defaultTTSVoice.triggered.connect(self.textToSpeech)
             self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc.contextDefaultTTS)
             self.addAction(self.defaultTTSVoice)
@@ -703,7 +758,7 @@ class WebEngineView(QWebEngineView):
                     action = QAction(self)
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)
-                        action.setText(feature)
+                        action.setText("{0} | {1}".format(feature, shortcut) if shortcut else feature)
                         # The following line does not work
                         #action.setShortcut(QKeySequence(shortcut))
                         self.parent.parent.addContextPluginShortcut(plugin, shortcut)
@@ -790,8 +845,11 @@ class WebEngineView(QWebEngineView):
         #self.page().runJavaScript("document.documentElement.outerHTML", 0, self.copyHtmlToClipboard)
         self.page().toHtml(self.copyHtmlToClipboard)
 
-    def copyHtmlToClipboard(self, html):
-        QApplication.clipboard().setText(html)
+    def copyPlainText(self):
+        self.page().toPlainText(self.copyHtmlToClipboard)
+
+    def copyHtmlToClipboard(self, text):
+        QApplication.clipboard().setText(text)
 
     # Instant highligh feature
     def instantHighlight(self):
@@ -1335,6 +1393,50 @@ class WebEngineView(QWebEngineView):
     def saveHtml(self):
         self.page().toHtml(self.saveHtmlToFile)
 
+    def savePlainText(self):
+        self.page().toPlainText(self.savePlainTextToFile)
+
+    def saveDocx(self):
+        self.page().toHtml(self.saveDocxFile)
+
+    def saveDocxFile(self, html):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "Word Documents (*.docx)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".docx"
+            self.parent.parent.exportHtmlToDocx(html, fileName)
+            self.displayMessage(config.thisTranslation["saved"])
+
+    def savePdf(self):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "PDF Files (*.pdf)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".pdf"
+            self.page().printToPdf(fileName)
+            self.displayMessage(config.thisTranslation["saved"])
+
+    def savePlainTextToFile(self, text):
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "Plain Text Files (*.txt)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".txt"
+            with open(fileName, "w") as fileObj:
+                fileObj.write(text)
+                fileObj.close()
+            self.displayMessage(config.thisTranslation["saved"])
+
     def saveHtmlToFile(self, html):
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getSaveFileName(self,
@@ -1344,9 +1446,9 @@ class WebEngineView(QWebEngineView):
         if fileName:
             if not "." in os.path.basename(fileName):
                 fileName = fileName + ".html"
-            file = open(fileName, "w")
-            file.write(html)
-            file.close()
+            with open(fileName, "w") as fileObj:
+                fileObj.write(html)
+                fileObj.close()
             self.displayMessage(config.thisTranslation["saved"])
 
 

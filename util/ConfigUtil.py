@@ -474,6 +474,10 @@ class ConfigUtil:
         # Options to display the window showing instant information: 0, 1"""
         if not hasattr(config, "instantMode"):
             config.instantMode = 1
+        config.help["enableInstantHighlight"] = """
+        # Options to implement instant highlight feature: True / False"""
+        if not hasattr(config, "enableInstantHighlight"):
+            config.enableInstantHighlight = False
         config.help["instantInformationEnabled"] = """
         # Options to trigger instant information: True / False"""
         if not hasattr(config, "instantInformationEnabled"):
@@ -1283,6 +1287,7 @@ class ConfigUtil:
             ("sidebarIconSizeFactor", config.sidebarIconSizeFactor),
             ("parallelMode", config.parallelMode),
             ("instantMode", config.instantMode),
+            ("enableInstantHighlight", config.enableInstantHighlight),
             ("instantInformationEnabled", config.instantInformationEnabled),
             ("miniBrowserHome", config.miniBrowserHome),
             ("fontSize", config.fontSize),

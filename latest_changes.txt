@@ -1,3 +1,9 @@
+Changes in 29.99:
+* Improved Material menu layouts
+    - display "tick" signs to show the currently selected values in preferences and bible toggle menu items, where applicable.
+    - changed some preference settings to be selectable directly from menu.
+* Re-organised and improved context menu.
+
 Changes in 29.98:
 * Improved Material menu layout:
     - improved item description
