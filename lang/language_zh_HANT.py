@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "這會強制使用線上語音功能，即使已安裝離線的語音引擎也是一樣。",
     "on": "開",
     "off": "關",
+    "parallelView": "平行檢視",
+    "parallelMode": "平行模式",
+    "displayBibleOnStudyWindow": "在學習視窗上顯示聖經",
+    "commentarySyncsWithMainBible": "聖經註釋與主視窗聖經同步",
+    "studyBibleSyncsWithMainBible": "研究視窗聖經與主視窗聖經同步",
+    "formattedText": "格式化文字",
+    "formattedTextPlainText": "格式化文字 / 純文字",
 }

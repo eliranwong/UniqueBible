@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Cela force la fonction de texte-parole par défaut à utiliser le service en ligne, même si un moteur tts est installé hors ligne.",
     "on": "SUR",
     "off": "DÉSACTIVÉ",
+    "parallelView": "Vue parallèle",
+    "parallelMode": "Mode parallèle",
+    "displayBibleOnStudyWindow": "Afficher la Bible sur la fenêtre d'étude",
+    "commentarySyncsWithMainBible": "Syncs Commentaire avec la Bible de la fenêtre principale",
+    "studyBibleSyncsWithMainBible": "Fenêtre d'étude Syncs bibliques avec la Bible de la fenêtre principale",
+    "formattedText": "Texte formaté",
+    "formattedTextPlainText": "Texte formaté / Texte en clair",
 }

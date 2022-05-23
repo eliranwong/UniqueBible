@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Αυτό αναγκάζει προεπιλεγμένη λειτουργία κειμένου σε ομιλία για να χρησιμοποιήσετε online υπηρεσία, ακόμη και αν offline ένα tts κινητήρα είναι εγκατεστημένο.",
     "on": "-",
     "off": "-ΌΧΙ.",
+    "parallelView": "Παράλληλη προβολή",
+    "parallelMode": "Κατάσταση παράλληλης λειτουργίας",
+    "displayBibleOnStudyWindow": "Εμφάνιση Βίβλου για το παράθυρο της μελέτης",
+    "commentarySyncsWithMainBible": "Σχολιάζει Syncs με Κύρια Βίβλο Παράθυρο",
+    "studyBibleSyncsWithMainBible": "Παράθυρο Μελέτη Παράθυρο Syncs Παράθυρο με την Κύρια Βίβλο Παράθυρο",
+    "formattedText": "Μορφωμένο κείμενο.",
+    "formattedTextPlainText": "Μορφωμένο κείμενο/απλό κείμενο",
 }

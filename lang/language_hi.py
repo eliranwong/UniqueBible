@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "यह ऑनलाइन सेवा का उपयोग करने के लिए डिफ़ॉल्ट पाठ-से-वार्ता सुविधा प्रदान करता है, यहां तक कि यदि ऑफ़लाइन एक tts इंजन स्थापित है.",
     "on": "पर",
     "off": "अजा",
+    "parallelView": "समांतर दृश्य",
+    "parallelMode": "समांतर मोड",
+    "displayBibleOnStudyWindow": "अध्ययन विंडो पर बाइबल प्रदर्शित करें",
+    "commentarySyncsWithMainBible": "मुख्य विंडो बाइबिल के साथ कमेंट्री सिंक्स",
+    "studyBibleSyncsWithMainBible": "मुख्य विंडो बाइबल के साथ अध्ययन विंडो बाइबल सिंक्स",
+    "formattedText": "प्रारूपित पाठ",
+    "formattedTextPlainText": "संरूपित पाठ/सादा पाठ",
 }

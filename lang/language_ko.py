@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "이는 오프라인 서비스 엔진이 설치된 경우에도 온라인 서비스를 사용하기 위해 기본 텍스트 대화 기능을 강제 실행합니다.",
     "on": "켜면",
     "off": "꺼짐",
+    "parallelView": "병렬 보기",
+    "parallelMode": "병렬 모드",
+    "displayBibleOnStudyWindow": "연구 창에 성경을 표시하기",
+    "commentarySyncsWithMainBible": "주창 성서의 복합성 (한글)",
+    "studyBibleSyncsWithMainBible": "주창성서를 중심으로 한 창고성경에 관한 연구",
+    "formattedText": "형식화된 텍스트",
+    "formattedTextPlainText": "형식화된 텍스트/일반 텍스트",
 }

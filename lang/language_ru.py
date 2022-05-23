@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Эта функция по умолчанию применяется для работы с текстовой службой, даже если установлен автономный модуль tts.",
     "on": "ВКО",
     "off": "ВЫКЛЮЧЕНО",
+    "parallelView": "Параллельное представление",
+    "parallelMode": "Параллельный режим",
+    "displayBibleOnStudyWindow": "Показать библию в окне исследования",
+    "commentarySyncsWithMainBible": "Комментарий Syncs с Библией главного окна",
+    "studyBibleSyncsWithMainBible": "Bible Syncs с помощью Библии главного окна",
+    "formattedText": "Форматированный текст",
+    "formattedTextPlainText": "Форматированный текст/Обычный текст",
 }

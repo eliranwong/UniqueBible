@@ -1,3 +1,9 @@
+Changes in 29.98:
+* Improved Material menu layout:
+    - improved item description
+    - added instant hightlight shortcut
+    - add subheading option is displayed only in plain text mode
+
 Changes in 29.97:
 * Added an "Instant Highlight" button, right next to command entry field on material menu layout.
     - With this button, users can toggle instant highlight on both Bible Window and Study Window of text entered in command field.

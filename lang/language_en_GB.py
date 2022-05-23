@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "This forces default text-to-speech feature to use online service, even if offline an tts engine is installed.",
     "on": "ON",
     "off": "OFF",
+    "parallelView": "Parallel View",
+    "parallelMode": "Parallel Mode",
+    "displayBibleOnStudyWindow": "Display Bible on Study Window",
+    "commentarySyncsWithMainBible": "Commentary Syncs with Main Window Bible",
+    "studyBibleSyncsWithMainBible": "Study Window Bible Syncs with Main Window Bible",
+    "formattedText": "Formatted Text",
+    "formattedTextPlainText": "Formatted Text / Plain Text",
 }

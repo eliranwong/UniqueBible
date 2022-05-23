@@ -2555,10 +2555,7 @@ class MainWindow(QMainWindow):
             return self.getCrossplatformPath("material/action/remove_done/materialiconsoutlined/48dp/2x/outline_remove_done_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getEnableCompareParallelDisplayToolTip(self):
-        if config.enforceCompareParallel:
-            return config.thisTranslation["menu4_enableEnforceCompareParallel"]
-        else:
-            return config.thisTranslation["menu4_disableEnforceCompareParallel"]
+        return "{0}: {1}".format(config.thisTranslation["parallelMode"], config.thisTranslation["on"] if config.enforceCompareParallel else config.thisTranslation["off"])
 
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel
@@ -2574,10 +2571,7 @@ class MainWindow(QMainWindow):
             return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/48dp/2x/outline_sync_disabled_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncStudyWindowBibleDisplayToolTip(self):
-        if config.syncStudyWindowBibleWithMainWindow:
-            return config.thisTranslation["bar2_studyWindowBibleSyncEnabled"]
-        else:
-            return config.thisTranslation["bar2_studyWindowBibleSyncDisabled"]
+        return "{0}: {1}".format(config.thisTranslation["studyBibleSyncsWithMainBible"], config.thisTranslation["on"] if config.syncStudyWindowBibleWithMainWindow else config.thisTranslation["off"])
 
     def enableSyncStudyWindowBibleButtonClicked(self):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
@@ -2599,10 +2593,7 @@ class MainWindow(QMainWindow):
             return self.getCrossplatformPath("material/notification/sync_disabled/materialiconsoutlined/48dp/2x/outline_sync_disabled_black_48dp.png") if config.menuLayout == "material" else "noSync.png"
 
     def getSyncCommentaryDisplayToolTip(self):
-        if config.syncCommentaryWithMainWindow:
-            return config.thisTranslation["bar2_commentarySyncEnabled"]
-        else:
-            return config.thisTranslation["bar2_commentarySyncDisabled"]
+        return "{0}: {1}".format(config.thisTranslation["commentarySyncsWithMainBible"], config.thisTranslation["on"] if config.syncCommentaryWithMainWindow else config.thisTranslation["off"])
 
     def enableSyncCommentaryButtonClicked(self):
         config.syncCommentaryWithMainWindow = not config.syncCommentaryWithMainWindow
@@ -2624,10 +2615,7 @@ class MainWindow(QMainWindow):
             return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/48dp/2x/outline_remove_circle_outline_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
 
     def getStudyBibleDisplayToolTip(self):
-        if config.openBibleInMainViewOnly:
-            return config.thisTranslation["bar2_enableBible"]
-        else:
-            return config.thisTranslation["bar2_disableBible"]
+        return "{0}: {1}".format(config.thisTranslation["displayBibleOnStudyWindow"], config.thisTranslation["on"] if not config.openBibleInMainViewOnly else config.thisTranslation["off"])
 
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
@@ -2666,6 +2654,9 @@ class MainWindow(QMainWindow):
         else:
             return self.getCrossplatformPath("material/image/flash_off/materialiconsoutlined/48dp/2x/outline_flash_off_black_48dp.png") if config.menuLayout == "material" else "hide.png"
 
+    def getInstantLookupDisplayToolTip(self):
+        return "{0}: {1}".format(config.thisTranslation["menu2_hover"], config.thisTranslation["on"] if config.instantInformationEnabled else config.thisTranslation["off"])
+
     def enableInstantButtonClicked(self):
         config.instantInformationEnabled = not config.instantInformationEnabled
         if hasattr(self, 'enableInstantButton'):
@@ -2691,6 +2682,9 @@ class MainWindow(QMainWindow):
     def getCrossplatformPath(self, filePath):
         return os.path.join(*filePath.split("/"))
 
+    def getReadFormattedBiblesToolTip(self):
+        return "{0}: {1}".format(config.thisTranslation["formattedText"], config.thisTranslation["on"] if config.readFormattedBibles else config.thisTranslation["off"])
+
     def getReadFormattedBibles(self):
         if config.readFormattedBibles:
             return self.getCrossplatformPath("material/maps/local_parking/materialiconsoutlined/48dp/2x/outline_local_parking_black_48dp.png") if config.menuLayout == "material" else "numbered_list.png"
@@ -2705,13 +2699,11 @@ class MainWindow(QMainWindow):
             self.displayBiblesInParagraphs()
         icon = self.getQIcon(self.getReadFormattedBibles())
         self.enableParagraphButton.setIcon(icon)
-
-    # Actions - enable or disable sub-heading for plain bibles
-    def getAddSubheading(self):
-        if config.addTitleToPlainChapter:
-            return self.getCrossplatformPath("material/av/subtitles/materialiconsoutlined/48dp/2x/outline_subtitles_black_48dp.png") if config.menuLayout == "material" else "subheadingEnable.png"
-        else:
-            return self.getCrossplatformPath("material/action/subtitles_off/materialiconsoutlined/48dp/2x/outline_subtitles_off_black_48dp.png") if config.menuLayout == "material" else "subheadingDisable.png"
+        if config.menuLayout == "material":
+            if config.readFormattedBibles:
+                self.enableSubheadingButton.setVisible(False)
+            else:
+                self.enableSubheadingButton.setVisible(True)
 
     def toggleShowUserNoteIndicator(self):
         config.showUserNoteIndicator = not config.showUserNoteIndicator
@@ -2753,12 +2745,31 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
 
+    # Actions - enable or disable sub-heading for plain bibles
+    def getAddSubheading(self):
+        if config.addTitleToPlainChapter:
+            return self.getCrossplatformPath("material/av/subtitles/materialiconsoutlined/48dp/2x/outline_subtitles_black_48dp.png") if config.menuLayout == "material" else "subheadingEnable.png"
+        else:
+            return self.getCrossplatformPath("material/action/subtitles_off/materialiconsoutlined/48dp/2x/outline_subtitles_off_black_48dp.png") if config.menuLayout == "material" else "subheadingDisable.png"
+
     def enableSubheadingButtonClicked(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         self.newTabException = True
         self.reloadCurrentRecord(True)
         icon = self.getQIcon(self.getAddSubheading())
         self.enableSubheadingButton.setIcon(icon)
+
+    def enableSubheadingButtonClicked2(self):
+        config.addTitleToPlainChapter = not config.addTitleToPlainChapter
+        icon = os.path.join("htmlResources", self.getAddSubheading())
+        qIcon = self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground)
+        self.enableSubheadingButton.setIcon(qIcon)
+        self.enableSubheadingButton.setToolTip(self.enableSubheadingToolTip())
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+
+    def enableSubheadingToolTip(self):
+        return "{0}: {1}".format(config.thisTranslation["menu_subheadings"], config.thisTranslation["on"] if config.addTitleToPlainChapter else config.thisTranslation["off"])
 
     # Actions - change font size
     def smallerFont(self):

@@ -152,6 +152,7 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy2": "",
             "launchMediaPlayer": "",
             "stopMediaPlayer": "",
+            "toggleInstantHighlight": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -290,6 +291,7 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy2": "",
             "launchMediaPlayer": "",
             "stopMediaPlayer": "",
+            "toggleInstantHighlight": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -324,7 +326,7 @@ class ShortcutUtil:
             "gotoFirstChapter": '',
             "gotoLastChapter": '',
             "hideShowSideToolBars": '',
-            "hideShowAdditionalToolBar": 'Ctrl+T',
+            "hideShowAdditionalToolBar": '',
             "hideShowLeftToolBar": '',
             "hideShowMainToolBar": '',
             "hideShowRightToolBar": '',
@@ -390,7 +392,7 @@ class ShortcutUtil:
             "searchCommandLexicon": '',
             "searchCommandVerseNote": '',
             "setDefaultFont": '',
-            "setNoToolBar": "Ctrl+Shift+H",
+            "setNoToolBar": "Ctrl+T",
             "showGistWindow": '',
             "smallerFont": 'Ctrl+-',
             "studyBack": '',
@@ -428,6 +430,7 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy2": "Ctrl+0",
             "launchMediaPlayer": "Ctrl+Shift+P",
             "stopMediaPlayer": "Ctrl+Shift+Q",
+            "toggleInstantHighlight": "Ctrl+Shift+H",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -566,6 +569,7 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnStudy2": "",
             "launchMediaPlayer": "",
             "stopMediaPlayer": "",
+            "toggleInstantHighlight": "",
         }
     }
 
@@ -590,7 +594,7 @@ class ShortcutUtil:
         "Ctrl+Q": "quitApp",
         "Ctrl+R": "reloadCurrentRecord",
         "Ctrl+S": "",
-        "Ctrl+T": "hideShowAdditionalToolBar",
+        "Ctrl+T": "setNoToolBar",
         "Ctrl+U": "maximizedWindow",
         "Ctrl+V": "",
         "Ctrl+W": "parallel",
@@ -604,7 +608,7 @@ class ShortcutUtil:
         "Ctrl+Shift+E": "toggleShowVerseReference",
         "Ctrl+Shift+F": "liveFilterDialog",
         "Ctrl+Shift+G": "openControlPanelTab7",
-        "Ctrl+Shift+H": "setNoToolBar",
+        "Ctrl+Shift+H": "toggleInstantHighlight",
         "Ctrl+Shift+I": "toggleFavouriteVersionIntoMultiRef",
         "Ctrl+Shift+J": "",
         "Ctrl+Shift+K": "",

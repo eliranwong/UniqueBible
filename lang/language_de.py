@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Dadurch wird die Standard-Text-zu-Sprache-Funktion für die Verwendung von Onlinedienst erzwungen, auch wenn offline eine TTS-Engine installiert ist.",
     "on": "EIN",
     "off": "AUS",
+    "parallelView": "Parallele Ansicht",
+    "parallelMode": "Paralleler Modus",
+    "displayBibleOnStudyWindow": "Bibel im Studienfenster anzeigen",
+    "commentarySyncsWithMainBible": "Kommentare Syncs mit Hauptfenster Bibel",
+    "studyBibleSyncsWithMainBible": "Studie Fenster Bibel Syncs mit Hauptfenster Bibel",
+    "formattedText": "Formatierter Text",
+    "formattedTextPlainText": "Formatierter Text/Plain Text",
 }

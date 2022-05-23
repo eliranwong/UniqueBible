@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "ഓണ്ലൈന് സേവനം ഉപയോഗിക്കുവാന് ഈ സേവനം സഹജമായ പാഠം സവിശേഷതയും, ഓഫ്ലൈന് എഞ്ചിന് ഇന്സ്റ്റോള് ചെയ്തിട്ടുണ്ടെങ്കില് പോലും.",
     "on": "ഓണ്",
     "off": "ഒഫ്",
+    "parallelView": "സമാന്തരമായ കാഴ്ച",
+    "parallelMode": "സാമാന്യ ദശ",
+    "displayBibleOnStudyWindow": "പഠന ജാലകത്തില് ബൈബിള് കാണിക്കുക",
+    "commentarySyncsWithMainBible": "പ്രധാന ജാലകബൈബിളുമായി കമാന്ററി സിങ്ക്സ്",
+    "studyBibleSyncsWithMainBible": "പ്രധാന ജാലകബൈബിളുമായി ജാലക ബൈബിൾ സിങ്കുകൾ പഠിപ്പിക്കുന്നു.",
+    "formattedText": "ഫോര്മാറ്റഡ് പദാവലി",
+    "formattedTextPlainText": "Formatted text/Plain Text",
 }

@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Esto fuerza la función de texto a voz predeterminada para utilizar el servicio en línea, incluso si está fuera de línea un motor tts está instalado.",
     "on": "EN",
     "off": "OFF",
+    "parallelView": "Vista paralela",
+    "parallelMode": "Modo paralelo",
+    "displayBibleOnStudyWindow": "Mostrar la Biblia en la ventana de estudio",
+    "commentarySyncsWithMainBible": "Sincronización de comentarios con la Biblia de la ventana principal",
+    "studyBibleSyncsWithMainBible": "Estudio de la ventana de la Biblia con la ventana principal de la Biblia",
+    "formattedText": "Texto formateado",
+    "formattedTextPlainText": "Texto formateado/Texto sin formato",
 }

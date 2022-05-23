@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "これは、オフラインの tts エンジンがインストールされている場合でも、オンライン・サービスを使用するためにデフォルトの音声合成機能を強制します。",
     "on": "オン",
     "off": "オフ",
+    "parallelView": "パラレル・ビュー",
+    "parallelMode": "並列モード",
+    "displayBibleOnStudyWindow": "学習ウィンドウに聖書を表示",
+    "commentarySyncsWithMainBible": "メイン・ウィンドウ・バイブル付きの合成語",
+    "studyBibleSyncsWithMainBible": "スタディ・ウィンドウ・バイブル・シンク・イン・メイン・",
+    "formattedText": "フォーマット済みテキスト",
+    "formattedTextPlainText": "フォーマット済みテキスト / プレーン・テキスト",
 }

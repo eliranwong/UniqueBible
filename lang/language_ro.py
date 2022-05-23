@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Această forță implicită caracteristica text-to-speech pentru a utiliza serviciul online, chiar dacă offline un motor tts este instalat.",
     "on": "ON",
     "off": "OFF",
+    "parallelView": "Vizualizare paralelă",
+    "parallelMode": "Modul paralel",
+    "displayBibleOnStudyWindow": "Afișează Biblia pe fereastra de studiu",
+    "commentarySyncsWithMainBible": "Comentarii Syncs cu Biblia principală",
+    "studyBibleSyncsWithMainBible": "Studiul Window Bible Syncs cu Biblia principală",
+    "formattedText": "Text formatat",
+    "formattedTextPlainText": "Text formatat/Text simplu",
 }

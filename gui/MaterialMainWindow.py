@@ -387,7 +387,7 @@ class MaterialMainWindow:
         menu.addSeparator()
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
-            ("menu2_format", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
+            ("formattedTextPlainText", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked),
             ("menu2_subHeadings", self.enableSubheadingButtonClicked, sc.enableSubheadingButtonClicked),
             ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef),
             ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference),
@@ -396,10 +396,11 @@ class MaterialMainWindow:
             ("displayLexicalEntry", self.toggleHideLexicalEntryInBible, sc.toggleHideLexicalEntryInBible),
             ("displayHebrewGreekWordAudio", self.toggleShowHebrewGreekWordAudioLinks, sc.toggleShowWordAudio),
             ("readTillChapterEnd", self.toggleReadTillChapterEnd, sc.toggleReadTillChapterEnd),
+            ("instantHighlight", self.enableInstantHighlightButtonClicked, sc.toggleInstantHighlight),
             ("menu2_hover", self.enableInstantButtonClicked, sc.enableInstantButtonClicked),
-            ("menu_toggleEnforceCompareParallel", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),
-            ("menu_syncStudyWindowBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible),
-            ("menu_syncBibleCommentary", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary),
+            ("parallelMode", self.enforceCompareParallelButtonClicked, sc.enforceCompareParallel),
+            ("studyBibleSyncsWithMainBible", self.enableSyncStudyWindowBibleButtonClicked, sc.syncStudyWindowBible),
+            ("commentarySyncsWithMainBible", self.enableSyncCommentaryButtonClicked, sc.syncStudyWindowCommentary),
         )
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
@@ -855,9 +856,11 @@ class MaterialMainWindow:
         self.addMaterialIconButton("bar3_pdf", icon, self.printMainPage, self.leftToolBar)
         self.leftToolBar.addSeparator()
         self.enableParagraphButton = QPushButton()
-        self.addMaterialIconButton("menu2_format", self.getReadFormattedBibles(), self.enableParagraphButtonClicked, self.leftToolBar, self.enableParagraphButton)
-        self.enableSubheadingButton = QPushButton()
-        self.addMaterialIconButton("menu2_subHeadings", self.getAddSubheading(), self.enableSubheadingButtonClicked, self.leftToolBar, self.enableSubheadingButton)
+        self.addMaterialIconButton(self.getReadFormattedBiblesToolTip(), self.getReadFormattedBibles(), self.enableParagraphButtonClicked, self.leftToolBar, self.enableParagraphButton, False)
+        iconFile = os.path.join("htmlResources", self.getAddSubheading())
+        self.enableSubheadingButton = self.leftToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), self.enableSubheadingToolTip(), self.enableSubheadingButtonClicked2)
+        if config.readFormattedBibles:
+            self.enableSubheadingButton.setVisible(False)
         self.leftToolBar.addSeparator()
         icon = "material/action/compare_arrows/materialiconsoutlined/48dp/2x/outline_compare_arrows_black_48dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
@@ -922,7 +925,7 @@ class MaterialMainWindow:
         self.addMaterialIconButton("menu4_tdw", icon, self.runCOMBO, self.rightToolBar)
         self.rightToolBar.addSeparator()
         self.enableInstantButton = QPushButton()
-        self.addMaterialIconButton("menu2_hover", self.getInstantInformation(), self.enableInstantButtonClicked, self.rightToolBar, self.enableInstantButton)
+        self.addMaterialIconButton(self.getInstantLookupDisplayToolTip(), self.getInstantInformation(), self.enableInstantButtonClicked, self.rightToolBar, self.enableInstantButton, False)
         icon = "material/content/bolt/materialiconsoutlined/48dp/2x/outline_bolt_black_48dp.png"
         self.addMaterialIconButton("menu2_bottom", icon, self.cycleInstant, self.rightToolBar)
         self.rightToolBar.addSeparator()

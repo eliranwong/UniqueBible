@@ -838,4 +838,11 @@ translation = {
     "forceOnlineTts": "Questa forza predefinita la funzione text-to-speech per utilizzare il servizio online, anche se offline è installato un motore tts.",
     "on": "ON",
     "off": "OFF",
+    "parallelView": "Vista parallela",
+    "parallelMode": "Modalità parallela",
+    "displayBibleOnStudyWindow": "Visualizza la Bibbia su Finestra di studio",
+    "commentarySyncsWithMainBible": "Sincroni commentati con Main Window Bible",
+    "studyBibleSyncsWithMainBible": "Studio Window Bible Syncs con Main Window Bible",
+    "formattedText": "Testo formattato",
+    "formattedTextPlainText": "Testo formattato / Testo in plastica",
 }
