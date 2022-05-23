@@ -1265,7 +1265,7 @@ class WebEngineView(QWebEngineView):
         verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
         config.useLiteVerseParsing = useLiteVerseParsing
         if verses:
-            command = "PARALLEL:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
+            command = "SIDEBYSIDE:::{0}_{1}:::{2}".format(config.mainText, bible, selectedText)
         elif not config.openBibleInMainViewOnly and self.name == "study":
             command = "STUDY:::{0}:::{1} {2}:{3}".format(bible, BibleBooks.eng[str(config.studyB)][0], config.studyC, config.studyV)
         else:
