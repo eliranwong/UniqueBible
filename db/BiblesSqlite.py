@@ -460,13 +460,13 @@ input.addEventListener('keyup', function(event) {0}
                 searchCommand = "SEARCHREFERENCE"
             else:
                 searchCommand = "SEARCHALL"
-            formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
+            formatedText += "{0}:::<aa>{1}</aa>:::{2}".format(searchCommand, text, searchString)
             t = ("%{0}%".format(searchString),)
             query += "(Scripture LIKE ?)"
         elif mode == "ADVANCED":
             t = tuple()
             searchCommand = "ADVANCEDSEARCH"
-            formatedText += "{0}:::<z>{1}</z>:::{2}".format(searchCommand, text, searchString)
+            formatedText += "{0}:::<aa>{1}</aa>:::{2}".format(searchCommand, text, searchString)
             query += "({0})".format(searchString)
         else:
             query += " 1=1"
@@ -481,7 +481,7 @@ input.addEventListener('keyup', function(event) {0}
             verses = Bible(text).getSearchVerses(query, t)
         # Search fetched result with regular express here
         if mode == "REGEX":
-            formatedText = "REGEXSEARCH:::<z>{0}</z>:::{1}".format(text, searchString)
+            formatedText = "REGEXSEARCH:::<aa>{0}</aa>:::{1}".format(text, searchString)
             if booksRange:
                 formatedText += ":::{0}".format(booksRange)
             verses = [(b, c, v, re.sub("({0})".format(searchString), r"<z>\1</z>", verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)) for b, c, v, verseText in verses if re.search(searchString, verseText, flags=0 if config.regexCaseSensitive else re.IGNORECASE)]
