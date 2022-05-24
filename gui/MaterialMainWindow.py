@@ -23,13 +23,50 @@ class MaterialMainWindow:
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
         items = (
-            ("menu7_create", self.createNewNoteFile, sc.createNewNoteFile),
-            ("menu7_open", self.openTextFileDialog, sc.openTextFileDialog),
+            ("note_editor", self.createNewNoteFile, sc.createNewNoteFile),
         )
         for feature, action, shortcut in items:
             addMenuItem(menu, feature, self, action, shortcut)
         menu.addSeparator()
-        
+        items = (
+            ("menu7_open", self.openTextFileDialog, sc.openTextFileDialog),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(menu, feature, self, action, shortcut)
+
+        subMenu = addSubMenu(menu, "saveFile")
+        subMenu1 = addSubMenu(subMenu, "bibleWindowContent")
+        items = (
+            ("plainTextFile", self.savePlainText),
+            ("htmlFile", self.saveHtml),
+            ("pdfFile", self.savePdf),
+            ("wordFile", self.saveDocx),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu1, feature, self, action)
+        subMenu2 = addSubMenu(subMenu, "studyWindowContent")
+        items = (
+            ("plainTextFile", lambda: self.savePlainText("study")),
+            ("htmlFile", lambda: self.saveHtml("study")),
+            ("pdfFile", lambda: self.savePdf("study")),
+            ("wordFile", lambda: self.saveDocx("study")),
+        )
+        for feature, action in items:
+            addMenuItem(subMenu2, feature, self, action)
+
+        menu.addSeparator()
+
+        # Clipboard Content
+        subMenu = addSubMenu(menu, "menu1_clipboard")
+        items = (
+            ("pasteOnStudyWindow", self.pasteFromClipboard, None),
+            ("context1_command", self.parseContentOnClipboard, sc.parseContentOnClipboard),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
+
+        menu.addSeparator()
+
         # Appearance
         subMenu0 = addSubMenu(menu, "appearance")
         # Window layout
@@ -331,30 +368,7 @@ class MaterialMainWindow:
         menu.addSeparator()
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)
-        subMenu = addSubMenu(menu, "menu1_clipboard")
-        items = (
-            ("pasteOnStudyWindow", self.pasteFromClipboard, None),
-            ("context1_command", self.parseContentOnClipboard, sc.parseContentOnClipboard),
-        )
-        for feature, action, shortcut in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
-        menu.addSeparator()
-        if config.isHtmldocxInstalled:
-            subMenu = addSubMenu(menu, "exportToDocx")
-            items = (
-                ("bar1_menu", self.exportMainPageToDocx),
-                ("bar2_menu", self.exportStudyPageToDocx),
-            )
-            for feature, action in items:
-                addMenuItem(subMenu, feature, self, action)
-        subMenu = addSubMenu(menu, "bar3_pdf")
-        items = (
-            ("bar1_menu", self.printMainPage),
-            ("bar2_menu", self.printStudyPage),
-        )
-        for feature, action in items:
-            addMenuItem(subMenu, feature, self, action)
-        menu.addSeparator()
+            menu.addSeparator()
         addMenuItem(menu, "menu1_update", self, self.showUpdateAppWindow)
         menu.addSeparator()
         if hasattr(config, "cli"):

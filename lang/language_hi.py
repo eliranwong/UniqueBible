@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "बाइबल संस्करण के साथ पूर्ण संदर्भ खोलें",
     "displayContentIn": "सामग्री प्रदर्शित करें",
     "openBooklessReferences": "बाइबल बुक के साथ ओपन बुकलेस संदर्भ",
-    "compareReferenceSideBySide": "साइड तुलना के द्वारा किनारे के लिए खुला संदर्भ",
-    "compareReferenceRowByRow": "पंक्ति तुलना के द्वारा पंक्ति के लिए खुला संदर्भ",
+    "compareReferenceSideBySide": "साइड से संदर्भ पक्ष की तुलना करें",
+    "compareReferenceRowByRow": "पंक्ति द्वारा संदर्भ पंक्ति की तुलना करें",
     "pasteOnStudyWindow": "अध्ययन विंडो पर चिपकाएं",
+    "saveFile": "फ़ाइल सहेजें",
+    "bibleWindowContent": "बाइबल विंडो सामग्री",
+    "studyWindowContent": "विंडो सामग्री का अध्ययन करें",
+    "noClipboardContent": "कोई क्लिपबोर्ड सामग्री नहीं मिली है!",
 }

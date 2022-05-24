@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "ബൈബിൾ പതിപ്പുമായി പൂർണ്ണ റഫറൻസ് തുറക്കുക",
     "displayContentIn": "ഉള്ളടക്കം കാണിയ്ക്കുക",
     "openBooklessReferences": "ബൈബിൾ പുസ്തകത്തിൽ ഓപ്പൺ ഓപ്പൺ റഫറൻസ്",
-    "compareReferenceSideBySide": "സൈഡ് താരതമ്യേന സൈഡിനെ തുറക്കുക",
-    "compareReferenceRowByRow": "Row Comparison by Row for Row for Row for Row",
+    "compareReferenceSideBySide": "സൈഡ് ആയ റഫറൻസ് സൈഡ്",
+    "compareReferenceRowByRow": "റീവിലെ റീഫറന്സ് റീവ്",
     "pasteOnStudyWindow": "പഠന ജാലകത്തില് പകര്ത്തുക",
+    "saveFile": "ഫയല് സൂക്ഷിക്കുക",
+    "bibleWindowContent": "ബൈബിള് ജാലക ഉള്ളടക്കം",
+    "studyWindowContent": "ജാലകം ഉള്ളടക്കം പഠിപ്പിക്കുക",
+    "noClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം ലഭ്യമല്ല!",
 }

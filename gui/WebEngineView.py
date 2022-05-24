@@ -182,57 +182,71 @@ class WebEngineView(QWebEngineView):
 
         separator = QAction(self)
         separator.setSeparator(True)
-        subMenu.addAction(separator)
+        self.addAction(separator)
 
         # Compare references
 
-        subMenu = QMenu()
-
-        for text in self.parent.parent.textList:
-            action = QAction(self)
-            action.setText(text)
-            action.triggered.connect(partial(self.parallelReferenceWithBibleVersion, text))
-            subMenu.addAction(action)
-        
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.compareAllVersions)
-        subMenu.addAction(action)
-
         action = QAction(self)
         action.setText(config.thisTranslation["compareReferenceSideBySide"])
-        action.setMenu(subMenu)
+        action.triggered.connect(partial(self.compareReference, "SIDEBYSIDE"))
         self.addAction(action)
-
-        subMenu = QMenu()
-
-        for text in self.parent.parent.textList:
-            action = QAction(self)
-            action.setText(text)
-            action.triggered.connect(partial(self.compareReferenceWithBibleVersion, text))
-            subMenu.addAction(action)
-        
-        separator = QAction(self)
-        separator.setSeparator(True)
-        subMenu.addAction(separator)
-
-        action = QAction(self)
-        action.setText(config.thisTranslation["all"])
-        action.triggered.connect(self.compareAllVersions)
-        subMenu.addAction(action)
 
         action = QAction(self)
         action.setText(config.thisTranslation["compareReferenceRowByRow"])
-        action.setMenu(subMenu)
+        action.triggered.connect(partial(self.compareReference, "COMPARE"))
         self.addAction(action)
 
         separator = QAction(self)
         separator.setSeparator(True)
         self.addAction(separator)
+
+#        subMenu = QMenu()
+#
+#        for text in self.parent.parent.textList:
+#            action = QAction(self)
+#            action.setText(text)
+#            action.triggered.connect(partial(self.parallelReferenceWithBibleVersion, text))
+#            subMenu.addAction(action)
+#        
+#        separator = QAction(self)
+#        separator.setSeparator(True)
+#        subMenu.addAction(separator)
+#
+#        action = QAction(self)
+#        action.setText(config.thisTranslation["all"])
+#        action.triggered.connect(self.compareAllVersions)
+#        subMenu.addAction(action)
+#
+#        action = QAction(self)
+#        action.setText(config.thisTranslation["compareReferenceSideBySide"])
+#        action.setMenu(subMenu)
+#        self.addAction(action)
+#
+#        subMenu = QMenu()
+#
+#        for text in self.parent.parent.textList:
+#            action = QAction(self)
+#            action.setText(text)
+#            action.triggered.connect(partial(self.compareReferenceWithBibleVersion, text))
+#            subMenu.addAction(action)
+#        
+#        separator = QAction(self)
+#        separator.setSeparator(True)
+#        subMenu.addAction(separator)
+#
+#        action = QAction(self)
+#        action.setText(config.thisTranslation["all"])
+#        action.triggered.connect(self.compareAllVersions)
+#        subMenu.addAction(action)
+#
+#        action = QAction(self)
+#        action.setText(config.thisTranslation["compareReferenceRowByRow"])
+#        action.setMenu(subMenu)
+#        self.addAction(action)
+#
+#        separator = QAction(self)
+#        separator.setSeparator(True)
+#        self.addAction(separator)
 
         # Copy
 
@@ -1243,6 +1257,17 @@ class WebEngineView(QWebEngineView):
         else:
             command = "TEXT:::{0}".format(bible)
         self.parent.parent.textCommandChanged(command, self.name)
+
+    def compareReference(self, keyword):
+        selectedText = self.selectedTextProcessed()
+        useLiteVerseParsing = config.useLiteVerseParsing
+        config.useLiteVerseParsing = False
+        verses = BibleVerseParser(config.parserStandarisation).extractAllReferences(selectedText, False)
+        config.useLiteVerseParsing = useLiteVerseParsing
+        if verses:
+            self.parent.parent.runCompareAction(keyword, selectedText)
+        else:
+            self.displayMessage(config.thisTranslation["message_noReference"])
 
     def compareReferenceWithBibleVersion(self, bible):
         selectedText = self.selectedTextProcessed()

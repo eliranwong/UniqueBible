@@ -1,8 +1,16 @@
+Changes in 30.00:
+* Added "Save File" items in Material menu layout menu.
+* Simplified "Compare Reference ..." features on context menu.
+    When these features are triggered, the following bible versions are used for comparison:
+    - for Material menu layout users, versions selected in "Multiple Bible Version Selection" drop down menu are used.
+    - for other menu layout users, favourite bibles defined in config.py are used. 
+
 Changes in 29.99:
 * Improved Material menu layouts
     - display "tick" signs to show the currently selected values in preferences and bible toggle menu items, where applicable.
     - changed some preference settings to be selectable directly from menu.
 * Re-organised and improved context menu.
+* Now display context menu shortcuts on context menu item, where applicable.
 
 Changes in 29.98:
 * Improved Material menu layout:

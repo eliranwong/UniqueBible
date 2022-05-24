@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Άνοιγμα πλήρους παραπομπής με την έκδοση της Βίβλου",
     "displayContentIn": "Εμφάνιση περιεχομένου σε:",
     "openBooklessReferences": "Ανοιχτό εγχειρίδιο εγχειρίδιο με βιβλίο Βίβλου",
-    "compareReferenceSideBySide": "Άνοιγμα αναφοράς για Side by Side Comparison",
-    "compareReferenceRowByRow": "Άνοιγμα αναφοράς για γραμμή κατά σειρά σύγκρισης",
+    "compareReferenceSideBySide": "Πλευρά αναφοράς σύγκρισης.",
+    "compareReferenceRowByRow": "Σύγκριση γραμμής αναφοράς ανά γραμμή",
     "pasteOnStudyWindow": "Επικόλληση στο παράθυρο Σπουδών",
+    "saveFile": "Αποθήκευση αρχείου",
+    "bibleWindowContent": "Περιεχόμενο παραθύρου βίβλου",
+    "studyWindowContent": "Περιεχόμενο παραθύρου μελέτης",
+    "noClipboardContent": "Δεν βρέθηκε περιεχόμενο πρόχειρο!",
 }

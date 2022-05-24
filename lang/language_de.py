@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Vollständige Referenz mit Bibelversion öffnen",
     "displayContentIn": "Inhalt anzeigen in",
     "openBooklessReferences": "Open Bookless Reference mit Bibelbuch",
-    "compareReferenceSideBySide": "Referenz für Seite nach Seitenvergleich öffnen",
-    "compareReferenceRowByRow": "Referenz für Zeile nach Zeilenvergleich öffnen",
+    "compareReferenceSideBySide": "Referenzseite nach Seite vergleichen",
+    "compareReferenceRowByRow": "Referenzzeile nach Zeile vergleichen",
     "pasteOnStudyWindow": "In das Studienfenster einfügen",
+    "saveFile": "Datei speichern",
+    "bibleWindowContent": "Inhalt des Bibel-Fensters",
+    "studyWindowContent": "Studienfensterinhalt",
+    "noClipboardContent": "Es wurde kein Inhalt der Zwischenablage gefunden!",
 }

@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Open Full Reference con versione della Bibbia",
     "displayContentIn": "Visualizza il contenuto in",
     "openBooklessReferences": "Open Bookless Reference con Bibbia Book",
-    "compareReferenceSideBySide": "Open Reference for Side by Side Comparison",
-    "compareReferenceRowByRow": "Open Reference per Row by Row Comparison",
+    "compareReferenceSideBySide": "Confronta Side Reference Side per Side",
+    "compareReferenceRowByRow": "Confronta riga di riferimento per riga",
     "pasteOnStudyWindow": "Incolla su Finestra di studio",
+    "saveFile": "Salva file",
+    "bibleWindowContent": "Contenuto Finestra della Bibbia",
+    "studyWindowContent": "Contenuto Finestra Studio",
+    "noClipboardContent": "Non viene trovato alcun contenuto di appunti!",
 }

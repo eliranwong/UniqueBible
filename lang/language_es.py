@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Abrir referencia completa con la versión de la Biblia",
     "displayContentIn": "Mostrar contenido en",
     "openBooklessReferences": "Abrir la referencia sin reservas con el libro de la Biblia",
-    "compareReferenceSideBySide": "Referencia abierta para la comparación lateral por lado",
-    "compareReferenceRowByRow": "Abrir referencia para fila por comparación de filas",
+    "compareReferenceSideBySide": "Comparar referencia de lado a lado",
+    "compareReferenceRowByRow": "Comparar fila de referencia por fila",
     "pasteOnStudyWindow": "Ventana Pegar en el estudio",
+    "saveFile": "Guardar archivo",
+    "bibleWindowContent": "Contenido de la ventana bíblica",
+    "studyWindowContent": "Contenido de ventana de estudio",
+    "noClipboardContent": "No se ha encontrado ningún contenido del portapapeles.",
 }

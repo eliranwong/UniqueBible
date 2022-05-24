@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Deschide referința completă cu versiunea Bibliei",
     "displayContentIn": "Afișează conținutul în",
     "openBooklessReferences": "Open Bookless Referință cu Biblia Cartea",
-    "compareReferenceSideBySide": "Open Reference for Side by Side Comparison",
-    "compareReferenceRowByRow": "Open Reference for Row by Row Comparison",
+    "compareReferenceSideBySide": "Comparați partea de referință cu partea laterală",
+    "compareReferenceRowByRow": "Comparați rândul de referință cu Row",
     "pasteOnStudyWindow": "Pasta pe fereastra de studiu",
+    "saveFile": "Salvează fișierul",
+    "bibleWindowContent": "Conţinutul ferestrei Bibliei",
+    "studyWindowContent": "Conținutul ferestrei de studiu",
+    "noClipboardContent": "Nu se găsește conținut de clipboard!",
 }

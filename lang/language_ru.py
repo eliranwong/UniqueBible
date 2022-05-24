@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Открыть полный справочник с библейской версией",
     "displayContentIn": "Показать содержимое в",
     "openBooklessReferences": "Открыть Книжный справочник с библейской книгой",
-    "compareReferenceSideBySide": "Открыть ссылку на параллельное сравнение",
-    "compareReferenceRowByRow": "Открыть ссылку для сравнения строк по строкам",
+    "compareReferenceSideBySide": "Сравнить исходную сторону по боковым",
+    "compareReferenceRowByRow": "Сравнить ссылочные строки по строке",
     "pasteOnStudyWindow": "Вставить в окно исследования",
+    "saveFile": "Сохранить файл",
+    "bibleWindowContent": "Содержимое окна Библии",
+    "studyWindowContent": "Содержимое окна исследования",
+    "noClipboardContent": "Содержимое буфера обмена не найдено!",
 }

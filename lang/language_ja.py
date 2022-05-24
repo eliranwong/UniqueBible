@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "聖書バージョンを使用した完全な参照のオープン",
     "displayContentIn": "コンテンツの表示",
     "openBooklessReferences": "聖書のブックによるオープン・ブックレス参照",
-    "compareReferenceSideBySide": "側面比較による側面の参照を開く",
-    "compareReferenceRowByRow": "行ごとの参照を行ごとに開く",
+    "compareReferenceSideBySide": "基準を横並びに比較",
+    "compareReferenceRowByRow": "行ごとの参照行の比較",
     "pasteOnStudyWindow": "スタディー・ウィンドウに貼り付け",
+    "saveFile": "ファイルの保存",
+    "bibleWindowContent": "「バイブル」",
+    "studyWindowContent": "学習ウィンドウの内容",
+    "noClipboardContent": "クリップボードの内容が見つかりません。",
 }

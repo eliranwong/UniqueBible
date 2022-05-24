@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "Open Full Reference with Bible Version",
     "displayContentIn": "Display Content in",
     "openBooklessReferences": "Open Bookless Reference with Bible Book",
-    "compareReferenceSideBySide": "Open Reference for Side by Side Comparison",
-    "compareReferenceRowByRow": "Open Reference for Row by Row Comparison",
+    "compareReferenceSideBySide": "Compare Reference Side by Side",
+    "compareReferenceRowByRow": "Compare Reference Row by Row",
     "pasteOnStudyWindow": "Paste on Study Window",
+    "saveFile": "Save File",
+    "bibleWindowContent": "Bible Window Content",
+    "studyWindowContent": "Study Window Content",
+    "noClipboardContent": "No clipboard content is found!",
 }

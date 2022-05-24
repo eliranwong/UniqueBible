@@ -866,7 +866,11 @@ translation = {
     "openReferencesWith": "성경 버전을 사용하여 전체 참조 열기",
     "displayContentIn": "내용 표시하기",
     "openBooklessReferences": "성경 북으로 북적서지 않은 책 참조하기",
-    "compareReferenceSideBySide": "사이드에 의한 사이드에 대한 열린 참조 비교",
-    "compareReferenceRowByRow": "행별 행에 대한 참조 열기",
+    "compareReferenceSideBySide": "기준면을 나란히 비교",
+    "compareReferenceRowByRow": "행별 참조 행 비교",
     "pasteOnStudyWindow": "연구 창에 붙여넣기",
+    "saveFile": "파일 저장",
+    "bibleWindowContent": "성서 창 내용",
+    "studyWindowContent": "연구 창 내용",
+    "noClipboardContent": "클립보드 컨텐츠를 찾을 수 없습니다!",
 }

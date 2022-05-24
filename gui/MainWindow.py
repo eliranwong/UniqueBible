@@ -558,6 +558,31 @@ class MainWindow(QMainWindow):
         self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
         self.studyView.currentWidget().updateContextMenu()
 
+    # Export File
+    def savePlainText(self, view="main"):
+        if view == "study":
+            self.studyView.currentWidget().savePlainText()
+        else:
+            self.mainView.currentWidget().savePlainText()
+
+    def saveHtml(self, view="main"):
+        if view == "study":
+            self.studyView.currentWidget().saveHtml()
+        else:
+            self.mainView.currentWidget().saveHtml()
+
+    def savePdf(self, view="main"):
+        if view == "study":
+            self.studyView.currentWidget().savePdf()
+        else:
+            self.mainView.currentWidget().savePdf()
+
+    def saveDocx(self, view="main"):
+        if view == "study":
+            self.studyView.currentWidget().saveDocx()
+        else:
+            self.mainView.currentWidget().saveDocx()
+
     # manage latest update
     def checkApplicationUpdate(self):
         try:
@@ -1303,13 +1328,19 @@ class MainWindow(QMainWindow):
         clipboardText = QApplication.clipboard().text()
         #clipboardText = QGuiApplication.instance().clipboard().text()
         # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
-        self.openTextOnStudyView(self.htmlWrapper(clipboardText, True), tab_title="clipboard")
+        if clipboardText:
+            self.openTextOnStudyView(self.htmlWrapper(clipboardText, True), tab_title="clipboard")
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
 
     def parseContentOnClipboard(self):
         clipboardText = QApplication.clipboard().text()
-        self.textCommandLineEdit.setText(clipboardText)
-        self.runTextCommand(clipboardText)
-        #self.manageControlPanel()
+        if clipboardText:
+            self.textCommandLineEdit.setText(clipboardText)
+            self.runTextCommand(clipboardText)
+            #self.manageControlPanel()
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
 
     def openTextFileDialog(self):
         options = QFileDialog.Options()
@@ -3196,16 +3227,20 @@ class MainWindow(QMainWindow):
         newTextCommand = "STUDYTEXT:::{0}".format(text)
         self.textCommandChanged(newTextCommand, "main")
 
-    def runFeature(self, keyword):
-        mainVerseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
-        newTextCommand = "{0}:::{1}".format(keyword, mainVerseReference)
+    def runFeature(self, keyword, verseReference=None):
+        if verseReference is None:
+            verseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        newTextCommand = "{0}:::{1}".format(keyword, verseReference)
         self.textCommandChanged(newTextCommand, "main")
 
-    def runCompareAction(self, keyword):
+    def runCompareAction(self, keyword, verseReference=None):
         if not config.enforceCompareParallel:
             self.enforceCompareParallelButtonClicked()
-        selectedVersions = "_".join(self.getSelectedTexts())
-        self.runFeature("{0}:::{1}".format(keyword, selectedVersions))
+        if config.menuLayout == "material":
+            selectedVersions = "_".join(self.getSelectedTexts())
+        else:
+            selectedVersions = "{0}_{1}_{2}".format(config.favouriteBible, config.favouriteBible2, config.favouriteBible3)
+        self.runFeature("{0}:::{1}".format(keyword, selectedVersions), verseReference)
 
     def getSelectedTexts(self):
         texts = self.bibleVersionCombo.checkItems
