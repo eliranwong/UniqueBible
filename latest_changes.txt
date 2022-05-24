@@ -1,3 +1,6 @@
+Changes in 30.01:
+* Added a wiki link to context menu.
+
 Changes in 30.00:
 * Added "Save File" items in Material menu layout menu.
 * Simplified "Compare Reference ..." features on context menu.

@@ -115,6 +115,10 @@ class WebEngineView(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
+
         # Open References in 
 
         subMenu = QMenu()
@@ -138,10 +142,6 @@ class WebEngineView(QWebEngineView):
         action.setText(config.thisTranslation["openReferencesIn"])
         action.setMenu(subMenu)
         self.addAction(action)
-
-        separator = QAction(self)
-        separator.setSeparator(True)
-        self.addAction(separator)
 
         # Open Reference section
 
@@ -794,6 +794,15 @@ class WebEngineView(QWebEngineView):
             action.setText(config.thisTranslation["menu_plugins"])
             action.setMenu(subMenu)
             self.addAction(action)
+
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["menu_about"])
+        action.triggered.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Context-Menu"))
+        self.addAction(action)
 
     def selectedTextProcessed(self, activeSelection=False):
         if not activeSelection:
