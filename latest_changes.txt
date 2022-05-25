@@ -1,4 +1,4 @@
-Changes in 30.06:
+Changes in 30.06, 30.07:
 * Added text dialog for searching selected reference book.
 * Fixed loading bible verse reference from Study Window when secondary bible is not enabled on Study Bible.
 * Fixed book and note search result colour.
