@@ -820,6 +820,12 @@ class WebEngineView(QWebEngineView):
                 selectedText = self.parent.parent.studyView.currentWidget().selectedText().strip()
         if not selectedText and config.commandTextIfNoSelection:
             selectedText = self.parent.parent.textCommandLineEdit.text().strip()
+        if not selectedText:
+            text, ok = QInputDialog.getText(self.parent.parent, "QInputDialog.getText()",
+                    config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                    "")
+            if ok and text:
+                selectedText = text
         return selectedText
 
     def runPlugin(self, fileName, selectedText=None):
@@ -1134,7 +1140,7 @@ class WebEngineView(QWebEngineView):
     def removeBookHighlight(self):
         if config.bookSearchString:
             config.bookSearchString = ""
-            self.parent.parent.reloadCurrentRecord()
+            self.parent.parent.reloadCurrentRecord(True)
 
     def searchBibleNote(self, keyword):
         selectedText = self.selectedTextProcessed()
@@ -1147,7 +1153,7 @@ class WebEngineView(QWebEngineView):
     def removeNoteHighlight(self):
         if config.noteSearchString:
             config.noteSearchString = ""
-            self.parent.parent.reloadCurrentRecord()
+            self.parent.parent.reloadCurrentRecord(True)
 
     def searchStrongBible(self, module):
         selectedText = self.selectedTextProcessed()

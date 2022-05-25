@@ -2900,6 +2900,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(plainBible, formattedBible)
+                self.newTabException = True
                 self.runTextCommand(textCommand, False, view, forceExecute)
         else:
             mappedBibles = (
@@ -2915,6 +2916,7 @@ class MainWindow(QMainWindow):
                 textCommand = config.history[view][config.currentRecord[view]]
                 for formattedBible, plainBible in mappedBibles:
                     textCommand = textCommand.replace(formattedBible, plainBible)
+                self.newTabException = True
                 self.runTextCommand(textCommand, False, view, forceExecute)
 
     # Actions - previous / next chapter
