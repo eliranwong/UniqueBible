@@ -2,7 +2,7 @@
 
 Simple to install! Great for Bible Study!
 
-https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED
+<a href="https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED">https://github.com/eliranwong/UniqueBible/wiki/Webtop-Version---RECOMMENDED</a>
 
 # UniqueBible
 A cross-platform & offline bible application, integrated with high-quality resources and unique features.

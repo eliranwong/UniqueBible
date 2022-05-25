@@ -229,14 +229,6 @@ class MaterialMainWindow:
         # Other Preferences
         subMenu0 = addSubMenu(menu, "otherPreferences")
 
-        # Collections
-        subMenu = addSubMenu(subMenu0, "collections")
-        items = (
-            ("bibleCollections", self.showBibleCollectionDialog, sc.bibleCollections),
-            ("libraryCatalog", self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog),
-        )
-        for feature, action, shortcut in items:
-            addMenuItem(subMenu, feature, self, action, shortcut)
         # Control Preference
         subMenu = addSubMenu(subMenu0, "controlPreference")
         options = (
@@ -475,9 +467,23 @@ class MaterialMainWindow:
 
         # 3rd column
         menu = addMenu(menuBar, "controlPanel")
+
+        # Collections
+        subMenu = addSubMenu(menu, "collections")
+        items = (
+            ("bibleCollections", self.showBibleCollectionDialog, sc.bibleCollections),
+            ("libraryCatalog", self.showLibraryCatalogDialog, sc.showLibraryCatalogDialog),
+        )
+        for feature, action, shortcut in items:
+            addMenuItem(subMenu, feature, self, action, shortcut)
+        menu.addSeparator()
+
+        # Cli interface
         if hasattr(config, "cli"):
             addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
             menu.addSeparator()
+
+        # Master Control Tabs
         items = (sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
                                           sc.openControlPanelTab3, sc.openControlPanelTab4,
                                           sc.openControlPanelTab5, sc.openControlPanelTab6)
@@ -485,13 +491,16 @@ class MaterialMainWindow:
         # removed sc.openControlPanelTab7 until morophology search tab is fixed.
             addMenuItem(menu, "cp{0}".format(index), self, partial(self.openControlPanelTab, index), shortcut)
         menu.addSeparator()
+        # Mini Control Tabs
         addMenuItem(menu, "menu1_miniControl", self, self.manageMiniControl, sc.manageMiniControl)
         tabs = ("bible", "translations", "commentaries", "lexicons", "dictionaries", "bookIntro")
         subMenu = addSubMenu(menu, "miniControlTabs")
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
+        menu.addSeparator()
+
+        # Media Player
         if WebtopUtil.isPackageInstalled("vlc") or config.isVlcInstalled:
-            menu.addSeparator()
             subMenu = addSubMenu(menu, "mediaPlayer")
             items = (
                 ("launch", self.openVlcPlayer, sc.launchMediaPlayer),
@@ -499,7 +508,9 @@ class MaterialMainWindow:
             )
             for feature, action, shortcut in items:
                 addMenuItem(subMenu, feature, self, action, shortcut)
-        menu.addSeparator()
+            menu.addSeparator()
+        
+        # Reload
         subMenu = addSubMenu(menu, "menu_reload")
         items = (
             ("content", lambda: self.reloadCurrentRecord(True), sc.reloadCurrentRecord),
@@ -877,6 +888,11 @@ class MaterialMainWindow:
         self.addMaterialIconButton("pdfDocument", icon, self.openPdfDialog, self.secondToolBar)
         icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
         self.addMaterialIconButton("savePdfCurrentPage", icon, self.invokeSavePdfPage, self.secondToolBar)
+
+        self.secondToolBar.addSeparator()
+
+        icon = "material/image/auto_stories/materialiconsoutlined/48dp/2x/outline_auto_stories_black_48dp.png"
+        self.addMaterialIconButton("libraryCatalog", icon, self.showLibraryCatalogDialog, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 

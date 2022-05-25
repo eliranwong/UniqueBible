@@ -1,10 +1,21 @@
+Changes in 30.05:
+* Relocated "Collections" menu item from "Other Preferences" to "Master Control"
+* Added "Library Catalog" button on Material menu layout toolbar.
+* Added micron shortcuts:
+    - Assign "Ctrl+Shift+K" to launch "Bible Collections"
+    - Assign "Ctrl+Shift+O" to launch "Library Catalog"
+
 Changes in 30.04:
 * Fix loading PDF from Library Catalog
+* Added a video tutorial on Library Catalog at: https://www.youtube.com/watch?v=8m2reoTtgvY
 
 Changes in 30.03:
 * Added support of Markdown:
 1) Open markdown file and display on Study Window
 2) Save Bible Window / Study Window content in a markdown file
+    - UBA uses python package markdownify to implement the mardown export.
+    - Users can define heading style for the export via menu, UniqueBible > Other Preferences > Select Markdown Export Heading Style
+    - Read more about markdownify at https://pypi.org/project/markdownify/
 3) Added "Convert from Markdown" feature in Note Editor
 
 Changes in 30.02:
