@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "圣经窗口内容",
     "studyWindowContent": "研习窗口内容",
     "noClipboardContent": "找不到剪贴板内容 !",
+    "markdownFile": "Markdown 文件 (*.md)",
+    "markdownExportHeadingStyle": "选择 Markdown 导出标题样式",
+    "convertFromMarkdown": "从 Markdown 转换",
 }

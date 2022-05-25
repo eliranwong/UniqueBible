@@ -305,15 +305,22 @@ class WebEngineView(QWebEngineView):
         action.triggered.connect(self.saveHtml)
         subMenu.addAction(action)
 
+        if config.isMarkdownInstalled:
+            action = QAction(self)
+            action.setText(config.thisTranslation["markdownFile"])
+            action.triggered.connect(self.saveMarkdown)
+            subMenu.addAction(action)
+
         action = QAction(self)
         action.setText(config.thisTranslation["pdfFile"])
         action.triggered.connect(self.savePdf)
         subMenu.addAction(action)
 
-        action = QAction(self)
-        action.setText(config.thisTranslation["wordFile"])
-        action.triggered.connect(self.saveDocx)
-        subMenu.addAction(action)
+        if config.isHtmldocxInstalled:
+            action = QAction(self)
+            action.setText(config.thisTranslation["wordFile"])
+            action.triggered.connect(self.saveDocx)
+            subMenu.addAction(action)
 
         action = QAction(self)
         action.setText(config.thisTranslation["exportTo"])
@@ -654,7 +661,7 @@ class WebEngineView(QWebEngineView):
         # End of Search section
 
         # Google TEXT-TO-SPEECH feature
-        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
+        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
 
             self.defaultTTSVoice = QAction(self)
             self.defaultTTSVoice.triggered.connect(self.googleTextToSpeechLanguage)
@@ -1427,6 +1434,9 @@ class WebEngineView(QWebEngineView):
     def saveHtml(self):
         self.page().toHtml(self.saveHtmlToFile)
 
+    def saveMarkdown(self):
+        self.page().toHtml(self.saveMarkdownToFile)
+
     def savePlainText(self):
         self.page().toPlainText(self.savePlainTextToFile)
 
@@ -1468,6 +1478,22 @@ class WebEngineView(QWebEngineView):
                 fileName = fileName + ".txt"
             with open(fileName, "w") as fileObj:
                 fileObj.write(text)
+                fileObj.close()
+            self.displayMessage(config.thisTranslation["saved"])
+
+    def saveMarkdownToFile(self, html):
+        from markdownify import markdownify
+        md = markdownify(html, heading_style=config.markdownifyHeadingStyle)
+        options = QFileDialog.Options()
+        fileName, filtr = QFileDialog.getSaveFileName(self,
+                config.thisTranslation["note_saveAs"],
+                "",
+                "Markdown Files (*.md)", "", options)
+        if fileName:
+            if not "." in os.path.basename(fileName):
+                fileName = fileName + ".md"
+            with open(fileName, "w") as fileObj:
+                fileObj.write(md)
                 fileObj.close()
             self.displayMessage(config.thisTranslation["saved"])
 

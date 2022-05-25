@@ -36,21 +36,27 @@ class MaterialMainWindow:
 
         subMenu = addSubMenu(menu, "saveFile")
         subMenu1 = addSubMenu(subMenu, "bibleWindowContent")
-        items = (
+        items = [
             ("plainTextFile", self.savePlainText),
             ("htmlFile", self.saveHtml),
             ("pdfFile", self.savePdf),
-            ("wordFile", self.saveDocx),
-        )
+        ]
+        if config.isMarkdownInstalled:
+            items.append(("markdownFile", self.saveMarkdown))
+        if config.isHtmldocxInstalled:
+            items.append(("wordFile", self.saveDocx))
         for feature, action in items:
             addMenuItem(subMenu1, feature, self, action)
         subMenu2 = addSubMenu(subMenu, "studyWindowContent")
-        items = (
+        items = [
             ("plainTextFile", lambda: self.savePlainText("study")),
             ("htmlFile", lambda: self.saveHtml("study")),
             ("pdfFile", lambda: self.savePdf("study")),
-            ("wordFile", lambda: self.saveDocx("study")),
-        )
+        ]
+        if config.isMarkdownInstalled:
+            items.append(("markdownFile", lambda: self.saveMarkdown("study")))
+        if config.isHtmldocxInstalled:
+            items.append(("wordFile", lambda: self.saveDocx("study")))
         for feature, action in items:
             addMenuItem(subMenu2, feature, self, action)
 
@@ -294,6 +300,11 @@ class MaterialMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsGreekLexicon")
         for option in self.lexiconList:
             addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsGreekLexiconSelected, option), config.defaultLexiconStrongG, option, translation=False)
+        # Markdown export heading style
+        subMenu = addSubMenu(subMenu0, "markdownExportHeadingStyle")
+        options = ("ATX", "ATX_CLOSED", "SETEXT", "UNDERLINED")
+        for option in options:
+            addCheckableMenuItem(subMenu, option, self, partial(self.setMarkdownExportHeadingStyle, option), config.markdownifyHeadingStyle, option, translation=False)
         # Default TTS voice
         if not config.noTtsFound:
             languages = self.getTtsLanguages()

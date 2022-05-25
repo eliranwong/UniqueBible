@@ -289,6 +289,20 @@ def isGTTSInstalled():
     except:
         return False
 
+def isMarkdownifyInstalled():
+    try:
+        from markdownify import markdownify
+        return True
+    except:
+        return False
+
+def isMarkdownInstalled():
+    try:
+        import markdown
+        return True
+    except:
+        return False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -329,6 +343,10 @@ def setInstallConfig(module, isInstalled):
         config.isYoutubeDownloaderInstalled = isInstalled
     elif module == "gTTS":
         config.isGTTSInstalled = isInstalled
+    elif module == "markdownify":
+        config.isMarkdownifyInstalled = isInstalled
+    elif module == "markdown":
+        config.isMarkdownInstalled = isInstalled
 
 # Check if required modules are installed
 required = (
@@ -407,7 +425,9 @@ optional = (
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
     ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
-    ("gTTS", "Google text-to-speech", isGTTSInstalled)
+    ("gTTS", "Google text-to-speech", isGTTSInstalled),
+    ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
+    ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
 ) if config.noQt else (
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -426,7 +446,10 @@ optional = (
     ("pillow", "QR Code", isPillowInstalled),
     #("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "Pure Python PNG", isPurePythonPngInstalled),
     ("python-vlc", "VLC Player", isVlcInstalled),
-    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled)
+    ("yt-dlp", "YouTube Downloader", isYoutubeDownloaderInstalled),
+    ("gTTS", "Google text-to-speech", isGTTSInstalled),
+    ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
+    ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
 )
 for module, feature, isInstalled in optional:
     if not isInstalled():
@@ -444,8 +467,6 @@ if config.docker:
     config.isOfflineTtsInstalled = False
 else:
     config.isOfflineTtsInstalled = isOfflineTtsInstalled()
-# Check if python package 'gTTS' is in place
-config.gTTS = isGTTSInstalled()
 # Check if official Google Cloud text-to-speech service is in place
 config.isGoogleCloudTTSAvailable = os.path.isfile(os.path.join(os.getcwd(), "credentials_GoogleCloudTextToSpeech.json"))
 if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
@@ -453,7 +474,7 @@ if config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en":
 elif not config.isGoogleCloudTTSAvailable and config.ttsDefaultLangauge == "en-GB":
     config.ttsDefaultLangauge = "en"
 # Check if ONLINE tts is in place
-config.isOnlineTtsInstalled = True if config.gTTS or config.isGoogleCloudTTSAvailable else False
+config.isOnlineTtsInstalled = True if config.isGTTSInstalled or config.isGoogleCloudTTSAvailable else False
 # Check if any tts is in place
 if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
     config.noTtsFound = True

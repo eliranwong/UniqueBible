@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Conţinutul ferestrei Bibliei",
     "studyWindowContent": "Conținutul ferestrei de studiu",
     "noClipboardContent": "Nu se găsește conținut de clipboard!",
+    "markdownFile": "Fișier de marcare (*.md)",
+    "markdownExportHeadingStyle": "Selectați Markdown Export Rubrica Stil",
+    "convertFromMarkdown": "Conversia de la Markdown",
 }

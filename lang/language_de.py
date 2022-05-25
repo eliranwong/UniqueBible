@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Inhalt des Bibel-Fensters",
     "studyWindowContent": "Studienfensterinhalt",
     "noClipboardContent": "Es wurde kein Inhalt der Zwischenablage gefunden!",
+    "markdownFile": "Markdown-Datei (*.md)",
+    "markdownExportHeadingStyle": "Markdown-Export-Überschriftstil auswählen",
+    "convertFromMarkdown": "Von Markdown umrechnen",
 }

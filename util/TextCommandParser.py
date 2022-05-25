@@ -1282,7 +1282,7 @@ class TextCommandParser:
 
 # Keep the following codes for future reference
 # The following method does not work on Windows
-#        if not platform.system() == "Windows" and config.gTTS:
+#        if not platform.system() == "Windows" and config.isGTTSInstalled:
 #            if not self.isCommandInstalled("gtts-cli"):
 #                installmodule("gTTS")
 #            if self.isCommandInstalled("gtts-cli") and self.isCommandInstalled("play"):

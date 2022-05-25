@@ -1,3 +1,9 @@
+Changes in 30.03:
+* Added support of Markdown:
+1) Open markdown file and display on Study Window
+2) Save Bible Window / Study Window content in a markdown file
+3) Added "Convert from Markdown" feature in Note Editor
+
 Changes in 30.02:
 * Fixed a few colours.
 

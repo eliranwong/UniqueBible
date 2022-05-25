@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Bible Window Content",
     "studyWindowContent": "Study Window Content",
     "noClipboardContent": "No clipboard content is found!",
+    "markdownFile": "Markdown File (*.md)",
+    "markdownExportHeadingStyle": "Select Markdown Export Heading Style",
+    "convertFromMarkdown": "Convert from Markdown",
 }

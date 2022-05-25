@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "聖經視窗內容",
     "studyWindowContent": "研習視窗內容",
     "noClipboardContent": "找不到剪貼簿內容！",
+    "markdownFile": "Markdown 檔案 (*.md)",
+    "markdownExportHeadingStyle": "選取 Markdown 匯出標題樣式",
+    "convertFromMarkdown": "從 Markdown 轉換",
 }

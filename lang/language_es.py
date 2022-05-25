@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Contenido de la ventana bíblica",
     "studyWindowContent": "Contenido de ventana de estudio",
     "noClipboardContent": "No se ha encontrado ningún contenido del portapapeles.",
+    "markdownFile": "Archivo de rebajas (*.md)",
+    "markdownExportHeadingStyle": "Seleccione Estilo de cabecera de exportación de rebaja",
+    "convertFromMarkdown": "Convertir de Markdown",
 }

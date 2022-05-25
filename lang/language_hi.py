@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "बाइबल विंडो सामग्री",
     "studyWindowContent": "विंडो सामग्री का अध्ययन करें",
     "noClipboardContent": "कोई क्लिपबोर्ड सामग्री नहीं मिली है!",
+    "markdownFile": "मार्क्डाउन फ़ाइल (*.md)",
+    "markdownExportHeadingStyle": "निर्यात शीर्षक शैली का चयन करें",
+    "convertFromMarkdown": "मार्कडाउन से बदलें",
 }

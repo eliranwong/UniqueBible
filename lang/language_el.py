@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Περιεχόμενο παραθύρου βίβλου",
     "studyWindowContent": "Περιεχόμενο παραθύρου μελέτης",
     "noClipboardContent": "Δεν βρέθηκε περιεχόμενο πρόχειρο!",
+    "markdownFile": "Αρχείο μορφοποίησης (*.md)",
+    "markdownExportHeadingStyle": "Επιλογή στυλ επικεφαλίδας εξαγωγής μορφοποίησης",
+    "convertFromMarkdown": "Μετατροπή από Markdown",
 }

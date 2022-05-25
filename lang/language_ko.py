@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "성서 창 내용",
     "studyWindowContent": "연구 창 내용",
     "noClipboardContent": "클립보드 컨텐츠를 찾을 수 없습니다!",
+    "markdownFile": "마크다운 파일 (*.md)",
+    "markdownExportHeadingStyle": "마크다운 내보내기 표제 스타일 선택",
+    "convertFromMarkdown": "마크다운에서 변환",
 }

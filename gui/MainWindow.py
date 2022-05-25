@@ -1,6 +1,6 @@
 from json import tool
 import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
-import time
+import time, markdown
 import urllib.parse
 from datetime import datetime
 from distutils import util
@@ -582,6 +582,12 @@ class MainWindow(QMainWindow):
             self.studyView.currentWidget().saveDocx()
         else:
             self.mainView.currentWidget().saveDocx()
+
+    def saveMarkdown(self, view="main"):
+        if view == "study":
+            self.studyView.currentWidget().saveMarkdown()
+        else:
+            self.mainView.currentWidget().saveMarkdown()
 
     # manage latest update
     def checkApplicationUpdate(self):
@@ -1347,7 +1353,7 @@ class MainWindow(QMainWindow):
         fileName, filtr = QFileDialog.getOpenFileName(self,
                                                       config.thisTranslation["menu7_open"],
                                                       "notes",
-                                                      "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)",
+                                                      "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;Markdown Files (*.md);;Word Documents (*.docx);;Plain Text Files (*.txt);;PDF Files (*.pdf);;All Files (*)",
                                                       "", options)
         if fileName:
             self.openTextFile(fileName)
@@ -1360,6 +1366,7 @@ class MainWindow(QMainWindow):
             "uba": self.openUbaFile,
             "html": self.openUbaFile,
             "htm": self.openUbaFile,
+            "md": self.openMarkdownFile,
         }
         function = functions.get(fileName.split(".")[-1].lower(), self.openTxtFile)
         function(fileName)
@@ -1495,6 +1502,15 @@ class MainWindow(QMainWindow):
             text = self.fixNoteFontDisplay(text)
             text = self.htmlWrapper(text, True, "study", False)
             self.openTextOnStudyView(text, tab_title=".uba", toolTip=os.path.basename(fileName))
+
+    def openMarkdownFile(self, fileName):
+        if fileName:
+            with open(fileName, "r", encoding="utf-8") as input_file:
+                text = input_file.read()
+            text = markdown.markdown(text)
+            text = self.fixNoteFontDisplay(text)
+            text = self.htmlWrapper(text, True, "study", False)
+            self.openTextOnStudyView(text, tab_title=".md", toolTip=os.path.basename(fileName))
 
     def openDocxFile(self, fileName):
         #if config.isPythonDocxInstalled:
@@ -3908,7 +3924,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             languages = {}
             for language, languageCode in GoogleCloudTTS.getLanguages().items():
                 languages[languageCode] = ("", language)
-        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS:
+        elif (not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled:
             languages = {}
             for language, languageCode in Languages.gTTSLanguageCodes.items():
                 languages[languageCode] = ("", language)
@@ -3953,6 +3969,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def setBibleAbbreviationsSelected(self, option):
         config.standardAbbreviation = option
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
+    def setMarkdownExportHeadingStyle(self, option):
+        config.markdownifyHeadingStyle = option
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 

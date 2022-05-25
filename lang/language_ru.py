@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Содержимое окна Библии",
     "studyWindowContent": "Содержимое окна исследования",
     "noClipboardContent": "Содержимое буфера обмена не найдено!",
+    "markdownFile": "Файл скидок (*.md)",
+    "markdownExportHeadingStyle": "Выбрать стиль заголовка экспорта скидок",
+    "convertFromMarkdown": "Преобразовать из Markdown",
 }

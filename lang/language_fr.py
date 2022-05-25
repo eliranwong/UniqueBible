@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "Contenu de la fenêtre biblique",
     "studyWindowContent": "Contenu de la fenêtre d'étude",
     "noClipboardContent": "Aucun contenu de presse-papiers n'a été trouvé !",
+    "markdownFile": "Fichier de démarque (*.md)",
+    "markdownExportHeadingStyle": "Sélectionner le style d'en-tête d'exportation de démarque",
+    "convertFromMarkdown": "Convertir à partir de la démarque",
 }

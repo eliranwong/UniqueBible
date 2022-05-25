@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "「バイブル」",
     "studyWindowContent": "学習ウィンドウの内容",
     "noClipboardContent": "クリップボードの内容が見つかりません。",
+    "markdownFile": "マークダウン・ファイル (*.md)",
+    "markdownExportHeadingStyle": "マークダウンエクスポートの見出しスタイルを選択します",
+    "convertFromMarkdown": "マークダウンからの変換",
 }

@@ -873,4 +873,7 @@ translation = {
     "bibleWindowContent": "ബൈബിള് ജാലക ഉള്ളടക്കം",
     "studyWindowContent": "ജാലകം ഉള്ളടക്കം പഠിപ്പിക്കുക",
     "noClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം ലഭ്യമല്ല!",
+    "markdownFile": "Markdown File (*.md)",
+    "markdownExportHeadingStyle": "à '- à', à ', à', à ', à', à ',",
+    "convertFromMarkdown": "മാര്ഗനില് നിന്ന് മാറ്റം വരയ്ക്കുക",
 }

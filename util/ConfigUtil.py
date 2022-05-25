@@ -954,6 +954,12 @@ class ConfigUtil:
         # Disable modules update check"""
         if not hasattr(config, "disableModulesUpdateCheck"):
             config.disableModulesUpdateCheck = True
+        config.help["markdownifyHeadingStyle"] = """
+        # Specify heading style to work with markdownify
+        # Options: ATX, ATX_CLOSED, SETEXT, and UNDERLINED
+        # Read more at https://pypi.org/project/markdownify/"""
+        if not hasattr(config, "markdownifyHeadingStyle"):
+            config.markdownifyHeadingStyle = "UNDERLINED"
         config.help["forceGenerateHtml"] = """
         # Force generate main.html for all pages"""
         if not hasattr(config, "forceGenerateHtml"):
@@ -1413,6 +1419,7 @@ class ConfigUtil:
             ("miniControlInitialTab", config.miniControlInitialTab),
             ("addBreakAfterTheFirstToolBar", config.addBreakAfterTheFirstToolBar),
             ("addBreakBeforeTheLastToolBar", config.addBreakBeforeTheLastToolBar),
+            ("markdownifyHeadingStyle", config.markdownifyHeadingStyle),
             ("forceGenerateHtml", config.forceGenerateHtml),
             ("enableLogging", config.enableLogging),
             ("logCommands", config.logCommands),

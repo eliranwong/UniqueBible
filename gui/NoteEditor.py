@@ -1,4 +1,4 @@
-import os, re, config, base64, webbrowser, platform
+import os, re, config, base64, webbrowser, platform, markdown
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
 from qtpy.QtPrintSupport import QPrinter, QPrintDialog
@@ -446,7 +446,8 @@ class NoteEditor(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        #self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]".format(config.thisTranslation["convertFromMarkdown"]), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -1068,7 +1069,8 @@ p, li {0} white-space: pre-wrap; {1}
     def format_custom(self):
         selectedText = self.editor.textCursor().selectedText()
         if selectedText:
-            selectedText = self.customFormat(selectedText)
+            #selectedText = self.customFormat(selectedText)
+            selectedText = markdown.markdown(selectedText)
             if self.html:
                 self.editor.insertHtml(selectedText)
             else:
@@ -1237,7 +1239,7 @@ p, li {0} white-space: pre-wrap; {1}
             else:
                 if ":::" in text:
                     text = text.split(":::")[-1]
-                if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.gTTS):
+                if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
                     command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 else:
                     command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
