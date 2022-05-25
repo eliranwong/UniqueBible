@@ -45,7 +45,7 @@ progress==1.6
 pycparser==2.21
 pycryptodomex==3.14.1
 PyGithub==1.55
-PyJWT==2.3.0
+PyJWT==2.4.0
 git+git://github.com/ojii/pymaging.git#egg=pymaging
 git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png
 pymaging-png==0.1
