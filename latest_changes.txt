@@ -1,3 +1,8 @@
+Changes in 30.06:
+* Added text dialog for searching selected reference book.
+* Fixed loading bible verse reference from Study Window when secondary bible is not enabled on Study Bible.
+* Fixed book and note search result colour.
+
 Changes in 30.05:
 * Relocated "Collections" menu item from "Other Preferences" to "Master Control"
 * Added "Library Catalog" button on Material menu layout toolbar.

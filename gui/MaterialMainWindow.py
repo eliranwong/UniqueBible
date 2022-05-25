@@ -854,7 +854,7 @@ class MaterialMainWindow:
         self.addMaterialIconButton("menu_next_chapter", icon, self.openBookNextChapter, self.secondToolBar)
 
         icon = "material/action/search/materialiconsoutlined/48dp/2x/outline_search_black_48dp.png"
-        self.addMaterialIconButton("bar2_searchBooks", icon, self.displaySearchBookCommand, self.secondToolBar)
+        self.addMaterialIconButton("bar2_searchBooks", icon, self.searchBookCommand, self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 

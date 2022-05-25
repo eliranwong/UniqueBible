@@ -1067,7 +1067,7 @@ class Book:
                                      content)
             for searchString in config.bookSearchString.split("%"):
                 if searchString and not searchString == "z":
-                    content = re.sub("({0})".format(searchString), r"<z>\1</z>", content, flags=re.IGNORECASE)
+                    content = re.sub("({0})".format(searchString), r"<z><z>\1</z></z>", content, flags=re.IGNORECASE)
                     content = TextUtil.fixTextHighlighting(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)

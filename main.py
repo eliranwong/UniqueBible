@@ -430,6 +430,7 @@ else:
 #config.activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme == "dark" else config.lightThemeActiveVerseColor
 
 # Assign mainWindow to config.mainWindow, to make it acessible from user customised user script
+config.studyTextTemp = config.studyText
 config.mainWindow = MainWindow()
 
 # Check screen size

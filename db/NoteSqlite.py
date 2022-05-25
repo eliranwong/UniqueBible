@@ -181,7 +181,7 @@ class NoteSqlite:
     def highlightSearch(self, content):
         highlight = config.noteSearchString
         if highlight and not highlight == "z":
-            content = re.sub("("+highlight+")", r"<z>\1</z>", content, flags=re.IGNORECASE)
+            content = re.sub("("+highlight+")", r"<z><z>\1</z></z>", content, flags=re.IGNORECASE)
             content = TextUtil.fixTextHighlighting(content)
             # add an id so as to scroll to the first result
             content = re.sub("<z>", "<z id='v{0}.{1}.{2}'>".format(config.studyB, config.studyC, config.studyV), content, count=1)

@@ -546,6 +546,8 @@ class MainWindow(QMainWindow):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
         self.mainView.currentWidget().updateContextMenu()
+        if config.openBibleInMainViewOnly:
+            config.studyText = config.mainText
 
     def setStudyPage(self, tabIndex=None):
         if tabIndex != None:
@@ -2195,6 +2197,13 @@ class MainWindow(QMainWindow):
         self.focusCommandLineField()
         self.textCommandLineEdit.setText("SEARCHBOOK:::{0}:::".format(config.book))
 
+    def searchBookCommand(self):
+        text, ok = QInputDialog.getText(self, "QInputDialog.getText()",
+                "{0} - {1}".format(config.thisTranslation["menu5_search"], config.book), QLineEdit.Normal,
+                "")
+        if ok and text:
+            self.runTextCommand("SEARCHBOOK:::{0}:::{1}".format(config.book, text))
+
     def displaySearchAllBookCommand(self):
         config.bookSearchString = ""
         self.focusCommandLineField()
@@ -2680,6 +2689,7 @@ class MainWindow(QMainWindow):
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
             config.openBibleInMainViewOnly = False
+            config.studyText = config.studyTextTemp
             if config.noStudyBibleToolbar:
                 self.studyRefButton.setVisible(True)
                 self.enableSyncStudyWindowBibleButton.setVisible(True)
@@ -2688,6 +2698,8 @@ class MainWindow(QMainWindow):
                 self.studyBibleToolBar.show()
         else:
             config.openBibleInMainViewOnly = True
+            config.studyTextTemp = config.studyText
+            config.studyText = config.mainText
             if config.noStudyBibleToolbar:
                 self.studyRefButton.setVisible(False)
                 self.enableSyncStudyWindowBibleButton.setVisible(False)
