@@ -287,7 +287,7 @@ class LibraryCatalogDialog(QDialog):
         directory = self.fixDirectory(directory, type)
         command = ""
         if type == "PDF":
-            command = "PDF:::{0}{1}".format(directory, file)
+            command = f"PDF:::{file}"
         elif type == "MP3":
             command = "VLC:::{0}{1}".format(directory, file)
         elif type == "MP4":

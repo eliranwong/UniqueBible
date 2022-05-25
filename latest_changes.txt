@@ -1,3 +1,6 @@
+Changes in 30.04:
+* Fix loading PDF from Library Catalog
+
 Changes in 30.03:
 * Added support of Markdown:
 1) Open markdown file and display on Study Window
