@@ -1,3 +1,7 @@
+Changes in 30.09:
+* Add tool to split chapter MP3 file into verses
+- See https://github.com/eliranwong/UniqueBible/wiki/Split-chapter-MP3-audio-chapter-file-into-verse-files
+
 Changes in 30.08:
 * When there is no text selection and a context menu feature is triggered, a text input dialog is opened to prompt users for text entry.
 * Fixed removing book / note highlight.
