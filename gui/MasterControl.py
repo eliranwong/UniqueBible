@@ -3,14 +3,20 @@ import shortcut as sc
 from gui.BibleExplorer import BibleExplorer
 from gui.Library2Launcher import Library2Launcher
 from gui.MediaLauncher import MediaLauncher
-from gui.MorphologyLauncher import MorphologyLauncher
+#from gui.MorphologyLauncher import MorphologyLauncher
 from gui.SearchLauncher import SearchLauncher
 from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from gui.MiscellaneousLauncher import MiscellaneousLauncher
-from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QShortcut
-from qtpy.QtCore import Qt, QEvent
-from qtpy.QtGui import QKeySequence
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
+    from PySide6.QtCore import Qt, QEvent
+    from PySide6.QtGui import QKeySequence, QShortcut
+else:
+    from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QShortcut
+    from qtpy.QtCore import Qt, QEvent
+    from qtpy.QtGui import QKeySequence
+
 
 class MasterControl(QWidget):
 

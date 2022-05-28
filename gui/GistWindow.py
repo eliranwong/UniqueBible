@@ -1,10 +1,11 @@
 import sys
 import config
-
-from qtpy.QtCore import QThread, QCoreApplication, Qt
-#from qtpy import QtCore
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, \
-    QPushButton
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QThread, QCoreApplication, Qt
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QPushButton
+else:
+    from qtpy.QtCore import QThread, QCoreApplication, Qt
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit, QPushButton
 from util.GitHubGist import GitHubGist
 from util.LanguageUtil import LanguageUtil
 from util.SyncNotesWithGist import SyncNotesWithGist

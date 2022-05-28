@@ -1,7 +1,10 @@
 import config, webbrowser
-
-from qtpy.QtGui import QMouseEvent
-from qtpy.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QMouseEvent
+    from PySide6.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
+else:
+    from qtpy.QtGui import QMouseEvent
+    from qtpy.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QLineEdit
 
 
 class LanguageItemWindow(QDialog):

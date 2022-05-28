@@ -1,5 +1,8 @@
 import config
-from qtpy.QtWidgets import QWidget
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QWidget
+else:
+    from qtpy.QtWidgets import QWidget
 
 
 class BibleReadingPlan(QWidget):
@@ -416,8 +419,12 @@ class BibleReadingPlan(QWidget):
         self.hideCheckedItems = False
 
     def setupUI(self):
-        from qtpy.QtGui import QStandardItemModel
-        from qtpy.QtWidgets import (QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit)
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItemModel
+            from PySide6.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
+        else:
+            from qtpy.QtGui import QStandardItemModel
+            from qtpy.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
 
         mainLayout = QVBoxLayout()
 
@@ -467,7 +474,10 @@ class BibleReadingPlan(QWidget):
         self.setLayout(mainLayout)
 
     def itemChanged(self, standardItem):
-        from qtpy.QtCore import Qt
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import Qt
+        else:
+            from qtpy.QtCore import Qt
         key = int(standardItem.text().split(".")[0])
         if standardItem.checkState() is Qt.CheckState.Checked:
             self.plan[key][0] = True
@@ -477,8 +487,12 @@ class BibleReadingPlan(QWidget):
             self.resetItems()
 
     def resetItems(self):
-        from qtpy.QtGui import QStandardItem
-        from qtpy.QtCore import Qt
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItem
+            from PySide6.QtCore import Qt
+        else:
+            from qtpy.QtGui import QStandardItem
+            from qtpy.QtCore import Qt
         # Empty the model before reset
         self.readingListModel.clear()
         # Reset
@@ -534,7 +548,10 @@ class BibleReadingPlan(QWidget):
 
     def saveProgress(self):
         import pprint
-        from qtpy.QtWidgets import QMessageBox
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtWidgets import QMessageBox
+        else:
+            from qtpy.QtWidgets import QMessageBox
         try:
             with open(self.progressFile, "w", encoding="utf-8") as fileObj:
                 fileObj.write(pprint.pformat(self.plan))

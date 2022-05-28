@@ -5,8 +5,12 @@ from db.BiblesSqlite import BiblesSqlite, Bible
 from util.BibleBooks import BibleBooks
 from gui.CheckableComboBox import CheckableComboBox
 from util.BibleVerseParser import BibleVerseParser
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QLabel, QWidget, QComboBox
 
 class BibleExplorer(QWidget):
 

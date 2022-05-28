@@ -1,7 +1,14 @@
 import config
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QAction, QApplication
-from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QAction
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
+    from PySide6.QtWebEngineWidgets import QWebEngineView
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QAction, QApplication
+    from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 
 class YouTubePopover(QWebEngineView):
 

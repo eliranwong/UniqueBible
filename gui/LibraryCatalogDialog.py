@@ -1,12 +1,20 @@
 import pprint
 import zipfile
 import config, os
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QRadioButton
-from qtpy.QtWidgets import QCheckBox
-from qtpy.QtWidgets import QGroupBox
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QRadioButton
+    from PySide6.QtWidgets import QCheckBox
+    from PySide6.QtWidgets import QGroupBox
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QRadioButton
+    from qtpy.QtWidgets import QCheckBox
+    from qtpy.QtWidgets import QGroupBox
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 from util.BibleBooks import BibleBooks
 from util.CatalogUtil import CatalogUtil
 from util.FileUtil import FileUtil
@@ -336,8 +344,8 @@ class DummyParent():
 
 if __name__ == '__main__':
     import sys
-    from qtpy.QtWidgets import QApplication
-    from qtpy.QtCore import QCoreApplication
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtCore import QCoreApplication
     from util.ConfigUtil import ConfigUtil
     from util.LanguageUtil import LanguageUtil
 

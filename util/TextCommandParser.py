@@ -1942,7 +1942,10 @@ class TextCommandParser:
     # _copy:::
     def copyText(self, command, source):
         try:
-            from qtpy.QtWidgets import QApplication
+            if config.qtLibrary == "pyside6":
+                from PySide6.QtWidgets import QApplication
+            else:
+                from qtpy.QtWidgets import QApplication
             QApplication.clipboard().setText(command)
             self.parent.displayMessage(config.thisTranslation["copied"])
         except:
@@ -1989,7 +1992,10 @@ class TextCommandParser:
             translation = translator.translate(text, fromLanguage, toLanguage)
             self.parent.displayMessage(translation)
             if config.autoCopyTranslateResult and not config.noQt:
-                from qtpy.QtWidgets import QApplication
+                if config.qtLibrary == "pyside6":
+                    from PySide6.QtWidgets import QApplication
+                else:
+                    from qtpy.QtWidgets import QApplication
                 QApplication.clipboard().setText(translation)
         else:
             self.parent.displayMessage(config.thisTranslation["ibmWatsonNotEnalbed"])
@@ -2935,7 +2941,10 @@ class TextCommandParser:
         entries = entries.strip()
         if config.useLiteVerseParsing and not config.noQt:
             try:
-                from qtpy.QtWidgets import QApplication
+                if config.qtLibrary == "pyside6":
+                    from PySide6.QtWidgets import QApplication
+                else:
+                    from qtpy.QtWidgets import QApplication
                 QApplication.clipboard().setText(entries)
             except:
                 pass

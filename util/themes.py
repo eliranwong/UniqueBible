@@ -1,6 +1,11 @@
 import config
 if not config.noQt:
-    from qtpy.QtGui import QPalette, QColor
+    if config.qtLibrary == "pyside6":
+        from PySide6.QtGui import QPalette, QColor
+    else:
+        from qtpy.QtGui import QPalette, QColor
+
+
 class Themes():
 
     @staticmethod
@@ -9,7 +14,7 @@ class Themes():
             palette = QPalette()
             palette.setColor(QPalette.Window, QColor(50, 50, 50))
             palette.setColor(QPalette.WindowText, QColor(config.darkThemeTextColor))
-            palette.setColor(QPalette.Background, QColor(50, 50, 50))
+            #palette.setColor(QPalette.Background, QColor(50, 50, 50))
             palette.setColor(QPalette.Base, QColor(50, 50, 50))
             palette.setColor(QPalette.AlternateBase, QColor(50, 50, 50))
             palette.setColor(QPalette.ToolTipBase, QColor(50, 50, 50))

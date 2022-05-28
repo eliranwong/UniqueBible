@@ -1,15 +1,15 @@
 import glob
 import os
 import sys
-
-from qtpy.QtGui import QFontDatabase
-
 import config
-
-from qtpy import QtCore
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, \
-    QComboBox, QRadioButton, QGridLayout
-
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QFontDatabase
+    from PySide6 import QtCore
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, QComboBox, QRadioButton, QGridLayout
+else:
+    from qtpy.QtGui import QFontDatabase
+    from qtpy import QtCore
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QHBoxLayout, QLineEdit, QComboBox, QRadioButton, QGridLayout
 from util.Languages import Languages
 
 

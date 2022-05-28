@@ -1,8 +1,12 @@
 import glob
 import os
 import config
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+else:
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
 
 class MediaLauncher(QWidget):
 
@@ -107,8 +111,8 @@ class DummyParent():
 
 
 if __name__ == "__main__":
-    from qtpy import QtWidgets
-    from qtpy.QtWidgets import QWidget
+    from PySide6 import QtWidgets
+    from PySide6.QtWidgets import QWidget
     import sys
 
     from util.LanguageUtil import LanguageUtil

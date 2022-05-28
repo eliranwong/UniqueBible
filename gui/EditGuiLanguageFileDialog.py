@@ -1,8 +1,12 @@
 import operator, sys, config
-from qtpy.QtCore import QAbstractTableModel, Qt
-from qtpy import QtCore
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit, \
-    QHBoxLayout
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QAbstractTableModel, Qt
+    from PySide6 import QtCore
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit, QHBoxLayout
+else:
+    from qtpy.QtCore import QAbstractTableModel, Qt
+    from qtpy import QtCore
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit, QHBoxLayout
 from util.Languages import Languages
 from util.LanguageUtil import LanguageUtil
 

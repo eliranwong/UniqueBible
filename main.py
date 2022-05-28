@@ -213,7 +213,10 @@ from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from gui.MainWindow import MainWindow
-from qtpy.QtWidgets import QApplication, QStyleFactory
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QApplication, QStyleFactory
+else:
+    from qtpy.QtWidgets import QApplication, QStyleFactory
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -434,7 +437,7 @@ config.studyTextTemp = config.studyText
 config.mainWindow = MainWindow()
 
 # Check screen size
-availableGeometry = app.desktop().availableGeometry(config.mainWindow)
+availableGeometry = config.mainWindow.screen().availableGeometry()
 setupMainWindow(availableGeometry)
 
 # A container of functions to be run after UBA loaded history records on startup
@@ -498,4 +501,4 @@ def global_excepthook(type, value, traceback):
 sys.excepthook = global_excepthook
 
 config.restartUBA = False
-sys.exit(app.exec_())
+sys.exit(app.exec() if config.qtLibrary == "pyside6" else app.exec_())

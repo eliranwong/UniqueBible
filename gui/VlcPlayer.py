@@ -2,10 +2,14 @@ import config
 import os
 import platform
 import sys
-from qtpy import QtWidgets, QtGui, QtCore
-from qtpy.QtWidgets import QWidget
-from qtpy.QtGui import QIcon
-from qtpy.QtCore import QEvent, Qt
+if config.qtLibrary == "pyside6":
+    from PySide6 import QtWidgets, QtGui, QtCore
+    from PySide6.QtWidgets import QWidget
+    from PySide6.QtCore import QEvent, Qt
+else:
+    from qtpy import QtWidgets, QtGui, QtCore
+    from qtpy.QtWidgets import QWidget
+    from qtpy.QtCore import QEvent, Qt
 import vlc
 
 """

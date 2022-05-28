@@ -1,6 +1,9 @@
 import config
 from util.BibleVerseParser import BibleVerseParser
-from qtpy.QtWebEngineWidgets import QWebEngineView
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWebEngineWidgets import QWebEngineView
+else:
+    from qtpy.QtWebEngineWidgets import QWebEngineView
 
 
 def generateCharts(text):

@@ -1,7 +1,11 @@
-import sys, config, pprint, os, re
+import sys, config, pprint, os
 import webbrowser
-from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
-from qtpy.QtGui import QColor, QPalette
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
+    from PySide6.QtGui import QColor, QPalette
+else:
+    from qtpy.QtWidgets import QLabel, QPushButton, QFrame, QDialog, QGridLayout, QColorDialog, QApplication, QFileDialog
+    from qtpy.QtGui import QColor, QPalette
 from util.TextUtil import TextUtil
 
 class MaterialColorDialog(QDialog):

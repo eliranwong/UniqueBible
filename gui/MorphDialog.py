@@ -1,5 +1,8 @@
 import config
-from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QDialog, QLabel, QCheckBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QDialog, QLabel, QCheckBox
+else:
+    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QPushButton, QDialog, QLabel, QCheckBox
 from gui.CheckableComboBox import CheckableComboBox
 
 class MorphDialog(QDialog):

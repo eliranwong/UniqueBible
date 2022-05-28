@@ -1,3 +1,17 @@
+Changes in 30.10:
+* Added support of PySide6
+* Fallback support of PySide2 and PyQt5
+* Support multiple environment and multiple venv directory with a single uba.py file.
+    The venv folder will be created and named according to platform and python version.
+    For example, at the time of writing, webtop version creates and uses "venv_Linux_3.10.4" as its venv directory.
+    This feature is helpful for users who use both webtop or desktop versions, without duplicating resources.
+    This is also helpful for those who place UBA directory in a USB stick and use it on different devices.
+    After upgrade, users may manually delete the old "venv" directory, to save storage space.
+* Added config options:
+    usePySide2onWebtop - use PySide2 as Qt Library, even config.qtLibrary is set to a value other than 'pyside2'
+    usePySide6onMacOS - use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'
+    fixLoadingContent - Fix loading content issues encountered with PySide6.
+
 Changes in 30.09:
 * Add tool to split chapter MP3 file into verses
 - See https://github.com/eliranwong/UniqueBible/wiki/Split-chapter-MP3-audio-chapter-file-into-verse-files

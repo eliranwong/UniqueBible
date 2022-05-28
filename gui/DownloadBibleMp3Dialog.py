@@ -2,15 +2,26 @@ import glob
 import os
 import zipfile
 import config
-from qtpy.QtCore import Qt
-from qtpy.QtCore import QObject
-from qtpy.QtCore import Signal
-from qtpy.QtCore import QThread
-from qtpy.QtCore import QTimer
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
-from qtpy.QtWidgets import QApplication
-from qtpy.QtWidgets import QListWidget, QListWidgetItem
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtCore import QObject
+    from PySide6.QtCore import Signal
+    from PySide6.QtCore import QThread
+    from PySide6.QtCore import QTimer
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtWidgets import QListWidget, QListWidgetItem
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtCore import QObject
+    from qtpy.QtCore import Signal
+    from qtpy.QtCore import QThread
+    from qtpy.QtCore import QTimer
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
+    from qtpy.QtWidgets import QApplication
+    from qtpy.QtWidgets import QListWidget, QListWidgetItem
 from util.BibleBooks import BibleBooks
 
 
@@ -465,11 +476,17 @@ class DummyParent():
         pass
 
 def main():
-    import sys
-    from qtpy.QtWidgets import QApplication
-    from qtpy.QtCore import QCoreApplication
-    from util.ConfigUtil import ConfigUtil
-    from util.LanguageUtil import LanguageUtil
+    import sys, config
+    if config.qtLibrary == "pyside6":
+        from PySide6.QtWidgets import QApplication
+        from PySide6.QtCore import QCoreApplication
+        from util.ConfigUtil import ConfigUtil
+        from util.LanguageUtil import LanguageUtil
+    else:
+        from qtpy.QtWidgets import QApplication
+        from qtpy.QtCore import QCoreApplication
+        from util.ConfigUtil import ConfigUtil
+        from util.LanguageUtil import LanguageUtil
 
     ConfigUtil.setup()
     config.noQt = False

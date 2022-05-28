@@ -91,7 +91,10 @@ class TtsLanguages:
     if config.noQt:
         isoLang2qlocaleLang = {}
     else:
-        from qtpy.QtCore import QLocale
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import QLocale
+        else:
+            from qtpy.QtCore import QLocale
 
         # QLocale: https://doc-snapshots.qt.io/qtforpython-5.14/PySide2/QtCore/QLocale.html
         isoLang2qlocaleLang = {

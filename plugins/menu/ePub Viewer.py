@@ -1,5 +1,8 @@
 import config, os, platform
-from qtpy.QtCore import QUrl
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QUrl
+else:
+    from qtpy.QtCore import QUrl
 
 config.mainWindow.studyView.setTabText(config.mainWindow.studyView.currentIndex(), "EPUB")
 config.mainWindow.studyView.setTabToolTip(config.mainWindow.studyView.currentIndex(), "EPUB")

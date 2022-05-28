@@ -1,8 +1,9 @@
 import sys
 import config
-
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton, QLineEdit, \
-    QHBoxLayout
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout
+else:
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QPushButton, QLineEdit, QHBoxLayout
 from util.DateUtil import DateUtil
 from util.LanguageUtil import LanguageUtil
 from util.TextUtil import TextUtil

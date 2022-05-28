@@ -1,7 +1,12 @@
 import config, platform, webbrowser, os
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QPushButton, QMessageBox
 
 
 class ConfigFlagsWindow(QDialog):

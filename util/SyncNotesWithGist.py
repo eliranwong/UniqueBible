@@ -1,8 +1,11 @@
-import logging
+import logging, config
 from util.NoteService import NoteService
 from util.DateUtil import DateUtil
 from util.GitHubGist import GitHubGist
-from qtpy.QtCore import QObject, Signal
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QObject, Signal
+else:
+    from qtpy.QtCore import QObject, Signal
 
 
 class SyncNotesWithGist(QObject):

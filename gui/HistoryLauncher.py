@@ -1,8 +1,11 @@
 import config
 import os.path
-from qtpy.QtCore import QStringListModel
-from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
-from qtpy.QtGui import QStandardItemModel, QStandardItem
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+else:
+    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
 
 
 class HistoryLauncher(QWidget):

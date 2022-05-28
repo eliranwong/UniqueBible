@@ -1,5 +1,8 @@
 import config, os, platform
-from qtpy.QtCore import QUrl
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QUrl
+else:
+    from qtpy.QtCore import QUrl
 
 file = "htmlResources/lib/bibi-v1.2.0/bibi/index.html" if platform.system() == "Windows" else "plugins/menu/ePubViewer/ePubViewer.html"
 file = os.path.join(os.getcwd(), file)

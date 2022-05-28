@@ -1,6 +1,10 @@
 import config, re, webbrowser
-from qtpy.QtWidgets import (QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog)
-from qtpy.QtCore import QUrl, QStringListModel
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog
+    from PySide6.QtCore import QUrl, QStringListModel
+else:
+    from qtpy.QtWidgets import QPushButton, QLineEdit, QHBoxLayout, QVBoxLayout, QWidget, QListView, QAbstractItemView, QMessageBox, QLabel, QDialog
+    from qtpy.QtCore import QUrl, QStringListModel
 from gui.YouTubePopover import YouTubePopover
 
 

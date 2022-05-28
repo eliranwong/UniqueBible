@@ -1,9 +1,12 @@
 if not __name__ == "__main__":
     import config
 from functools import partial
-#from qtpy.QtCore import Qt
-from qtpy.QtGui import QColor
-from qtpy.QtWidgets import QRadioButton, QComboBox, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QColor
+    from PySide6.QtWidgets import QRadioButton, QComboBox, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
+else:
+    from qtpy.QtGui import QColor
+    from qtpy.QtWidgets import QRadioButton, QComboBox, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QColorDialog, QInputDialog, QLineEdit
 from util.BibleVerseParser import BibleVerseParser
 from db.Highlight import Highlight
 
@@ -175,7 +178,7 @@ class HighlightLauncher(QWidget):
 
 if __name__ == "__main__":
     import sys
-    from qtpy.QtWidgets import QApplication
+    from PySide6.QtWidgets import QApplication
     
     app = QApplication(sys.argv)
     ui = HighlightLauncher(None)

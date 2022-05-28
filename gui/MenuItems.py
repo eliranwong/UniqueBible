@@ -4,9 +4,14 @@ from util.FileUtil import FileUtil
 from util.HtmlColorCodes import HtmlColorCodes
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
-from qtpy.QtGui import QIcon, QColor, QPixmap
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QIcon, QColor, QPixmap, QAction
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
+else:
+    from qtpy.QtGui import QIcon, QColor, QPixmap
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QAction, QToolBar, QPushButton, QLineEdit, QStyleFactory, QComboBox
 from functools import partial
 
 
@@ -57,6 +62,8 @@ def addColorIconMenuItem(color, menu, feature, object, action, shortcut=None, tr
         else:
             config.shortcutList.append(shortcut)
     icon = QIcon(pixmap)
+    if shortcut is None:
+        shortcut = ""
     return menu.addAction(QAction(icon, config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut))
 
 def addIconMenuItem(icon, menu, feature, object, action, shortcut=None, translation=True):

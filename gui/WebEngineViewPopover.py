@@ -1,10 +1,17 @@
 import os
 import config
-from qtpy.QtGui import QKeySequence
-from qtpy.QtWidgets import QFileDialog
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QAction, QMenu
-from qtpy.QtWebEngineWidgets import QWebEngineView
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QKeySequence, QAction
+    from PySide6.QtWidgets import QFileDialog
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QMenu
+    from PySide6.QtWebEngineWidgets import QWebEngineView
+else:
+    from qtpy.QtGui import QKeySequence
+    from qtpy.QtWidgets import QFileDialog
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QAction, QMenu
+    from qtpy.QtWebEngineWidgets import QWebEngineView
 
 class WebEngineViewPopover(QWebEngineView):
 

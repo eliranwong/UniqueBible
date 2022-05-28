@@ -1,11 +1,13 @@
 import operator
-import sys
-
-from qtpy.QtCore import QAbstractTableModel, Qt
-
-from qtpy import QtCore
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
-
+import sys, config
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QAbstractTableModel, Qt
+    from PySide6 import QtCore
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
+else:
+    from qtpy.QtCore import QAbstractTableModel, Qt
+    from qtpy import QtCore
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QTableView, QInputDialog, QLineEdit
 from util.ShortcutUtil import ShortcutUtil
 
 

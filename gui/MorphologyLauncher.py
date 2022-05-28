@@ -3,10 +3,14 @@ from util.BibleBooks import BibleBooks
 
 if __name__ == "__main__":
     config.noQt = False
-
-from qtpy.QtWidgets import QComboBox, QLabel
-from qtpy.QtWidgets import QPushButton
-from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QLineEdit, QRadioButton, QCheckBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QComboBox, QLabel
+    from PySide6.QtWidgets import QPushButton
+    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QLineEdit, QRadioButton, QCheckBox
+else:
+    from qtpy.QtWidgets import QComboBox, QLabel
+    from qtpy.QtWidgets import QPushButton
+    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QLineEdit, QRadioButton, QCheckBox
 
 # Hebrew:
 # https://uhg.readthedocs.io/en/latest/
@@ -441,8 +445,8 @@ class DummyParent():
 
 
 if __name__ == "__main__":
-    from qtpy import QtWidgets
-    from qtpy.QtWidgets import QWidget
+    from PySide6 import QtWidgets
+    from PySide6.QtWidgets import QWidget
     import sys
 
     from util.LanguageUtil import LanguageUtil

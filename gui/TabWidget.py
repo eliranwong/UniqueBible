@@ -1,4 +1,9 @@
-from qtpy.QtWidgets import QTabWidget
+import config
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QTabWidget
+else:
+    from qtpy.QtWidgets import QTabWidget
+
 
 class TabWidget(QTabWidget):
 

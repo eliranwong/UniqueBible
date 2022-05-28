@@ -1,9 +1,12 @@
-import glob
+import glob, config
 from pathlib import Path
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
+else:
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
 
-import config
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget)
 
 class Library2Launcher(QWidget):
 

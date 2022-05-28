@@ -61,6 +61,14 @@ class ConfigUtil:
                 os.environ["QT_API"] = config.qtLibrary
         else:
             os.environ["QT_API"] = config.qtLibrary
+        config.help["usePySide2onWebtop"] = """
+        # Use PySide2 as Qt Library, even config.qtLibrary is set to a value other than 'pyside2'."""
+        if not hasattr(config, "usePySide2onWebtop"):
+            config.usePySide2onWebtop = True
+        config.help["usePySide6onMacOS"] = """
+        # Use PySide6 as Qt Library, even config.qtLibrary is set to a value other than 'pyside6'."""
+        if not hasattr(config, "usePySide6onMacOS"):
+            config.usePySide6onMacOS = True
         config.help["telnetServerPort"] = """
         # To specify the port used by telnet-server."""
         if not hasattr(config, "telnetServerPort"):
@@ -351,6 +359,10 @@ class ConfigUtil:
         # Options to open Study Window's content in the tab next to the current one: True / False"""
         if not hasattr(config, "openStudyWindowContentOnNextTab"):
             config.openStudyWindowContentOnNextTab = True
+        config.help["fixLoadingContent"] = """
+        # Fix loading content issues encountered with PySide6."""
+        if not hasattr(config, "fixLoadingContent"):
+            config.fixLoadingContent = False
         config.help["preferHtmlMenu"] = """
         # Options to open classic html menu when a bible chapter heading is clicked
         # It is set to False by default that clicking a chapter heading opens Master Control panel."""
@@ -1211,6 +1223,8 @@ class ConfigUtil:
             ("developer", config.developer),
             ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
+            ("usePySide2onWebtop", config.usePySide2onWebtop),
+            ("usePySide6onMacOS", config.usePySide6onMacOS),
             ("telnetServerPort", config.telnetServerPort),
             ("httpServerUbaFile", config.httpServerUbaFile),
             ("httpServerPort", config.httpServerPort),
@@ -1268,6 +1282,7 @@ class ConfigUtil:
             ("populateTabsOnStartup", config.populateTabsOnStartup),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
+            ("fixLoadingContent", config.fixLoadingContent),
             ("preferHtmlMenu", config.preferHtmlMenu),
             ("parserStandarisation", config.parserStandarisation),
             ("standardAbbreviation", config.standardAbbreviation),

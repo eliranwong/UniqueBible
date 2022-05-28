@@ -1,6 +1,6 @@
-from qtpy.QtWidgets import QApplication
-from qtpy.QtWebEngineWidgets import QWebEngineView
-from qtpy.QtCore import QUrl
+from PySide6.QtWidgets import QApplication
+from PySide6.QtWebEngineCore import QWebEngineView
+from PySide6.QtCore import QUrl
 
 def finishLoading():
     print("loadFinished")

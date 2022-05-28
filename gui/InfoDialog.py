@@ -2,10 +2,14 @@ import re
 import sys
 import webbrowser
 import config
-from qtpy.QtCore import QCoreApplication, Qt
-from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QTextBrowser
-from qtpy.QtWidgets import QHBoxLayout
-
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QCoreApplication, Qt
+    from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QTextBrowser
+    from PySide6.QtWidgets import QHBoxLayout
+else:
+    from qtpy.QtCore import QCoreApplication, Qt
+    from qtpy.QtWidgets import QApplication, QDialog, QDialogButtonBox, QVBoxLayout, QLabel, QTextBrowser
+    from qtpy.QtWidgets import QHBoxLayout                      
 from util.FileUtil import FileUtil
 from util.NetworkUtil import NetworkUtil
 

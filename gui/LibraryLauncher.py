@@ -1,9 +1,12 @@
 import os
 
 import config
-from qtpy.QtCore import QStringListModel
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import (QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget)
+if config.qtLibrary == "pyside6":
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget
+else:
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QPushButton, QListView, QAbstractItemView, QGroupBox, QGridLayout, QHBoxLayout, QVBoxLayout, QWidget
 from db.ToolsSqlite import Book, BookData, Commentary
 from util.FileUtil import FileUtil
 

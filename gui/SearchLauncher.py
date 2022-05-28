@@ -1,8 +1,11 @@
 from functools import partial
-
 import config
 from gui.CheckableComboBox import CheckableComboBox
-from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+else:
+    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+
 
 class SearchLauncher(QWidget):
 

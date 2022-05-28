@@ -6,12 +6,14 @@ if __name__ == "__main__":
     config.noQt = True
 
 from functools import partial
-from util.TtsLanguages import TtsLanguages
-from util.Languages import Languages
-from qtpy.QtCore import Qt, QEvent
-from qtpy.QtGui import QGuiApplication
-from qtpy.QtWidgets import (QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget,
-                               QApplication, QBoxLayout, QGridLayout, QComboBox)
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt, QEvent
+    from PySide6.QtGui import QGuiApplication
+    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox
+else:
+    from qtpy.QtCore import Qt, QEvent
+    from qtpy.QtGui import QGuiApplication
+    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox
 
 
 from util.BibleVerseParser import BibleVerseParser
@@ -47,7 +49,8 @@ class MiniControl(QWidget):
 
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        #availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        availableGeometry = QGuiApplication.primaryScreen().availableGeometry()
         self.setMinimumWidth(500)
         self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
@@ -601,7 +604,7 @@ if __name__ == "__main__":
    import config
    from util.LanguageUtil import LanguageUtil
    from util.ConfigUtil import ConfigUtil
-   from qtpy.QtCore import QCoreApplication
+   from PySide6.QtCore import QCoreApplication
 
    config.mainText = ""
    config.mainB = ""

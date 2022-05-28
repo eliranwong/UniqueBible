@@ -1,4 +1,3 @@
-from qtpy.QtCore import QSize
 from gui.MenuItems import *
 from gui.CheckableComboBox import CheckableComboBox
 from db.BiblesSqlite import BiblesSqlite
@@ -367,7 +366,7 @@ class MaterialMainWindow:
             for feature, action in items:
                 addMenuItem(subMenu, feature, self, action)
         # Config Flags
-        addMenuItem(menu, "configFlags", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
+        addMenuItem(menu, "menu_config_flags", self, self.moreConfigOptionsDialog, sc.moreConfigOptionsDialog)
         menu.addSeparator()
         if config.enableMacros:
             addMenuItem(menu, "menu_startup_macro", self, self.setStartupMacro)

@@ -1,6 +1,9 @@
 import config
 import sys
-from qtpy.QtWidgets import QApplication, QWidget
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QApplication, QWidget
+else:
+    from qtpy.QtWidgets import QApplication, QWidget
 
 from util.BibleBooks import BibleBooks
 
@@ -30,9 +33,14 @@ class ConfigurePresentationWindow(QWidget):
     def setupUI(self):
 
         from functools import partial
-        from qtpy.QtCore import Qt
-        from qtpy.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox, QComboBox
-        from qtpy.QtWidgets import QRadioButton, QWidget, QVBoxLayout, QListView, QSpacerItem, QSizePolicy
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import Qt
+            from PySide6.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox, QComboBox
+            from PySide6.QtWidgets import QRadioButton, QWidget, QVBoxLayout, QListView, QSpacerItem, QSizePolicy
+        else:
+            from qtpy.QtCore import Qt
+            from qtpy.QtWidgets import QHBoxLayout, QFormLayout, QSlider, QPushButton, QPlainTextEdit, QCheckBox, QComboBox
+            from qtpy.QtWidgets import QRadioButton, QWidget, QVBoxLayout, QListView, QSpacerItem, QSizePolicy
 
         layout = QHBoxLayout()
 
@@ -185,7 +193,10 @@ class ConfigurePresentationWindow(QWidget):
 
     def selectHymnBook(self, option):
         from db.ToolsSqlite import Book
-        from qtpy.QtCore import QStringListModel
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtCore import QStringListModel
+        else:
+            from qtpy.QtCore import QStringListModel
         if len(self.books) > 0:
             self.hymnBook = self.books[option]
             self.hymns = sorted(Book(self.hymnBook).getTopicList())
@@ -219,9 +230,12 @@ class ConfigurePresentationWindow(QWidget):
         self.parent.runTextCommand(command)
 
     def changeColor(self):
-
-        from qtpy.QtGui import QColor
-        from qtpy.QtWidgets import QColorDialog
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QColor
+            from PySide6.QtWidgets import QColorDialog
+        else:
+            from qtpy.QtGui import QColor
+            from qtpy.QtWidgets import QColorDialog
 
         color = QColorDialog.getColor(QColor(config.presentationColorOnDarkTheme if config.theme in ("dark", "night") else config.presentationColorOnLightTheme), self)
         if color.isValid():

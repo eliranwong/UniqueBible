@@ -1,7 +1,11 @@
 import os, config, zipfile, gdown, platform
 # import threading
-from qtpy.QtWidgets import (QGridLayout, QPushButton, QDialog, QLabel)
-from qtpy.QtCore import QObject, Signal
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel
+    from PySide6.QtCore import QObject, Signal
+else:
+    from qtpy.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel
+    from qtpy.QtCore import QObject, Signal
 
 
 class DownloadProcess(QObject):

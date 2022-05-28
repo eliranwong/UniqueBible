@@ -50,7 +50,8 @@ if platform.system() == "Linux" and os.path.exists("/mnt/chromeos/"):
 # Do NOT use sys.executable directly
 python = os.path.basename(sys.executable)
 mainFile = os.path.join(os.getcwd(), "main.py")
-venvDir = "venv"
+major, minor, micro, *_ = sys.version_info
+venvDir = "venv_{0}_{1}.{2}.{3}".format(platform.system(), major, minor, micro)
 binDir = "Scripts" if platform.system() == "Windows" else "bin"
 
 def desktopFileContent():

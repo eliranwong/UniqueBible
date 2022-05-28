@@ -1,5 +1,8 @@
 import config
-from qtpy.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel, QCheckBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel, QCheckBox
+else:
+    from qtpy.QtWidgets import QGridLayout, QPushButton, QDialog, QLabel, QCheckBox
 
 class ImportSettings(QDialog):
 

@@ -1,10 +1,11 @@
-import config, platform, os
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import (QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget)
+import config
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QPushButton, QLineEdit, QComboBox, QGroupBox, QGridLayout, QHBoxLayout, QSlider, QVBoxLayout, QWidget
 from gui.HighlightLauncher import HighlightLauncher
-from util.TtsLanguages import TtsLanguages
-from util.Languages import Languages
-from util.GoogleCloudTTSVoices import GoogleCloudTTS
 
 class MiscellaneousLauncher(QWidget):
 

@@ -6,13 +6,16 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from pathlib import Path
-
-from qtpy.QtCore import QUrl, Qt, QEvent, QThread
-from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
-from qtpy.QtWidgets import (QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel,
-                               QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox)
-from qtpy.QtWebEngineWidgets import QWebEnginePage
-
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread
+    from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
+    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox
+    from PySide6.QtWebEngineCore import QWebEnginePage
+else:
+    from qtpy.QtCore import QUrl, Qt, QEvent, QThread
+    from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
+    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox
+    from qtpy.QtWebEngineWidgets import QWebEnginePage
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
 from gui.LibraryCatalogDialog import LibraryCatalogDialog
@@ -1109,6 +1112,26 @@ class MainWindow(QMainWindow):
     def addOpenImageAction(self, text):
         return re.sub(r"(<img[^<>]*?src=)(['{0}])(images/[^<>]*?)\2([^<>]*?>)".format('"'),
                       r"<ref onclick={0}openHtmlFile('\3'){0}>\1\2\3\2\4</ref>".format('"'), text)
+
+    def refreshBibleWindowTab(self):
+        self.previousBibleWindowTab()
+        self.nextBibleWindowTab()
+
+    def refreshStudyWindowTab(self):
+        self.previousStudyWindowTab()
+        self.nextStudyWindowTab()
+
+    def previousBibleWindowTab(self):
+        previousIndex = self.mainView.currentIndex() - 1
+        if previousIndex < 0:
+            previousIndex = config.numberOfTab - 1
+        self.mainView.setCurrentIndex(previousIndex)
+
+    def previousStudyWindowTab(self):
+        previousIndex = self.studyView.currentIndex() - 1
+        if previousIndex < 0:
+            previousIndex = config.numberOfTab - 1
+        self.studyView.setCurrentIndex(previousIndex)
 
     def nextBibleWindowTab(self):
         nextIndex = self.mainView.currentIndex() + 1
@@ -2333,7 +2356,8 @@ class MainWindow(QMainWindow):
     def showLiveFilterDialog(self):
         self.liveFilterDialog = LiveFilterDialog(self)
         self.liveFilterDialog.reloadFilters()
-        screen = QGuiApplication.instance().desktop().availableGeometry()
+        #screen = QGuiApplication.instance().desktop().availableGeometry()
+        screen = QGuiApplication.primaryScreen().availableGeometry()
         x = screen.width() * float(1/8)
         y = screen.height() * float(1/5)
         self.liveFilterDialog.move(int(x), int(y))
@@ -2341,7 +2365,8 @@ class MainWindow(QMainWindow):
 
     def showLibraryCatalogDialog(self):
         self.libraryCatalogDialog = LibraryCatalogDialog(self)
-        screen = QGuiApplication.instance().desktop().availableGeometry()
+        #screen = QGuiApplication.instance().desktop().availableGeometry()
+        screen = QGuiApplication.primaryScreen().availableGeometry()
         x = screen.width() * float(1/8)
         y = screen.height() * float(1/5)
         self.libraryCatalogDialog.move(int(x), int(y))
@@ -2600,12 +2625,14 @@ class MainWindow(QMainWindow):
     def resizeWindow(self, widthFactor, heightFactor):
         if platform.system() == "Linux":
             self.showNormal()
-        availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        #availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        availableGeometry = QGuiApplication.primaryScreen().availableGeometry()
         self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def moveWindow(self, horizontal, vertical):
         # Note: move feature does not work on Chrome OS
-        screen = QGuiApplication.instance().desktop().availableGeometry()
+        #screen = QGuiApplication.instance().desktop().availableGeometry()
+        screen = QGuiApplication.primaryScreen().availableGeometry()
         x = screen.width() * float(horizontal)
         y = screen.height() * float(vertical)
         self.move(int(x), int(y))
@@ -3229,6 +3256,11 @@ class MainWindow(QMainWindow):
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        if config.fixLoadingContent:
+            self.refreshBibleWindowTab()
+            self.refreshStudyWindowTab()
+            self.refreshBibleWindowTab()
+            self.refreshStudyWindowTab()
 
     def finishStudyViewLoading(self):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
@@ -3236,6 +3268,10 @@ class MainWindow(QMainWindow):
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
                 config.studyV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        if config.fixLoadingContent:
+            self.refreshStudyWindowTab()
+            self.refreshBibleWindowTab()
+            self.refreshStudyWindowTab()
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):

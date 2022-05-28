@@ -1,6 +1,9 @@
 import config, sys, os
 from install.module import *
-from qtpy.QtWidgets import QFileDialog
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QFileDialog
+else:
+    from qtpy.QtWidgets import QFileDialog
 try:
     import textract
     moduleInstalled = True

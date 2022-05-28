@@ -1,5 +1,8 @@
 import config
-from qtpy.QtWidgets import QWidget
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QWidget
+else:
+    from qtpy.QtWidgets import QWidget
 
 
 class InterlinearDataWindow(QWidget):
@@ -36,8 +39,12 @@ class InterlinearDataWindow(QWidget):
         self.connection.close()
 
     def setupUI(self, initialVerse=""):
-        from qtpy.QtGui import QStandardItemModel
-        from qtpy.QtWidgets import (QPushButton, QLabel, QTableView, QHBoxLayout, QVBoxLayout, QLineEdit)
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItemModel
+            from PySide6.QtWidgets import QPushButton, QLabel, QTableView, QHBoxLayout, QVBoxLayout, QLineEdit
+        else:
+            from qtpy.QtGui import QStandardItemModel
+            from qtpy.QtWidgets import QPushButton, QLabel, QTableView, QHBoxLayout, QVBoxLayout, QLineEdit
         #from qtpy.QtWidgets import QAbstractItemView
 
         mainLayout = QVBoxLayout()
@@ -76,7 +83,10 @@ class InterlinearDataWindow(QWidget):
 
     def resetItems(self):
         from util.BibleVerseParser import BibleVerseParser
-        from qtpy.QtGui import QStandardItem
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtGui import QStandardItem
+        else:
+            from qtpy.QtGui import QStandardItem
 
         # Empty the model before reset
         self.dataViewModel.clear()
@@ -105,7 +115,10 @@ class InterlinearDataWindow(QWidget):
         self.dataView.resizeColumnsToContents()
 
     def displayMessage(self, message):
-        from qtpy.QtWidgets import QMessageBox
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtWidgets import QMessageBox
+        else:
+            from qtpy.QtWidgets import QMessageBox
         QMessageBox.information(self, self.translation[0], message)
 
     def exportSpreadsheet(self):
@@ -253,7 +266,10 @@ class InterlinearDataWindow(QWidget):
             self.openFile(filePath)
 
     def getFilePath(self, fileExtension="xlsx"):
-        from qtpy.QtWidgets import QFileDialog
+        if config.qtLibrary == "pyside6":
+            from PySide6.QtWidgets import QFileDialog
+        else:
+            from qtpy.QtWidgets import QFileDialog
 
         defaultName = "Interlinear_Data.{0}".format(fileExtension)
         options = QFileDialog.Options()

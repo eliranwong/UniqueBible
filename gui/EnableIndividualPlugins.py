@@ -1,7 +1,12 @@
 import config, os
-from qtpy.QtWidgets import QWidget, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItemModel, QStandardItem
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QWidget, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+else:
+    from qtpy.QtWidgets import QWidget, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
 from util.FileUtil import FileUtil
 
 class EnableIndividualPlugins(QWidget):

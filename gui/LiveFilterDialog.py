@@ -1,11 +1,19 @@
 import os
 import config
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QStandardItemModel, QStandardItem
-from qtpy.QtWidgets import QMessageBox
-from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
-from qtpy.QtWidgets import QFileDialog
-from qtpy.QtWidgets import QDialogButtonBox
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QStandardItemModel, QStandardItem
+    from PySide6.QtWidgets import QMessageBox
+    from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
+    from PySide6.QtWidgets import QFileDialog
+    from PySide6.QtWidgets import QDialogButtonBox
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QStandardItemModel, QStandardItem
+    from qtpy.QtWidgets import QMessageBox
+    from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
+    from qtpy.QtWidgets import QFileDialog
+    from qtpy.QtWidgets import QDialogButtonBox
 from db.LiveFilterSqlite import LiveFilterSqlite
 from gui.MultiLineInputDialog import MultiLineInputDialog
 
@@ -256,8 +264,8 @@ class Dummy:
 
 if __name__ == '__main__':
     import sys
-    from qtpy.QtWidgets import QApplication
-    from qtpy.QtCore import QCoreApplication
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtCore import QCoreApplication
     from util.ConfigUtil import ConfigUtil
     from util.LanguageUtil import LanguageUtil
 

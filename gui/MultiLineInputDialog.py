@@ -1,7 +1,15 @@
-from qtpy.QtWidgets import QComboBox
-from qtpy.QtWidgets import QLineEdit, QFormLayout
-from qtpy.QtWidgets import QDialog
-from qtpy.QtWidgets import QDialogButtonBox
+import config
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QComboBox
+    from PySide6.QtWidgets import QLineEdit, QFormLayout
+    from PySide6.QtWidgets import QDialog
+    from PySide6.QtWidgets import QDialogButtonBox
+else:
+    from qtpy.QtWidgets import QComboBox
+    from qtpy.QtWidgets import QLineEdit, QFormLayout
+    from qtpy.QtWidgets import QDialog
+    from qtpy.QtWidgets import QDialogButtonBox
+
 
 class MultiLineInputDialog(QDialog):
     def __init__(self, title, fields):
@@ -39,7 +47,7 @@ class MultiLineInputDialog(QDialog):
 
 
 if __name__ == '__main__':
-    from qtpy.QtWidgets import QApplication
+    from PySide6.QtWidgets import QApplication
     from util.ConfigUtil import ConfigUtil
     from util.LanguageUtil import LanguageUtil
     import sys

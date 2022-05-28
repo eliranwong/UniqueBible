@@ -1,6 +1,10 @@
 import config
-from qtpy.QtCore import Qt
-from qtpy.QtWidgets import QGridLayout, QWidget, QSplitter
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QGridLayout, QWidget, QSplitter
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtWidgets import QGridLayout, QWidget, QSplitter
 from gui.TabWidget import TabWidget
 from gui.WebEngineView import WebEngineView
 

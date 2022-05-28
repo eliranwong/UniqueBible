@@ -1,5 +1,8 @@
 from gui.MenuItems import *
-from qtpy.QtCore import QSize
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import QSize
+else:
+    from qtpy.QtCore import QSize
 from util.LanguageUtil import LanguageUtil
 from util.ShortcutUtil import ShortcutUtil
 from util.FileUtil import FileUtil

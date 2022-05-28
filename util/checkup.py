@@ -80,6 +80,14 @@ def isConfigInstalled():
     except:
         return False
 
+def isPySide6Installed():
+    try:
+        from PySide6.QtWidgets import QApplication, QStyleFactory
+        fixFcitxOnLinux("PySide2")
+        return True
+    except:
+        return False
+
 def isPySide2Installed():
     try:
         from PySide2.QtWidgets import QApplication, QStyleFactory
@@ -348,20 +356,36 @@ def setInstallConfig(module, isInstalled):
     elif module == "markdown":
         config.isMarkdownInstalled = isInstalled
 
+# Specify qtLibrary for particular os
+if config.docker and config.usePySide2onWebtop:
+    config.qtLibrary = "pyside2"
+    os.environ["QT_API"] = config.qtLibrary
+    config.fixLoadingContent = False
+elif platform.system() == "Darwin" and config.usePySide6onMacOS:
+    config.qtLibrary = "pyside6"
+    config.fixLoadingContent = True
 # Check if required modules are installed
 required = (
     ("config", "Configurations", isConfigInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
-) if config.noQt else (
+) if config.noQt else [
     ("config", "Configurations", isConfigInstalled),
-    ("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary == "pyside2" else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
-    ("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
+    #("PySide2", "Qt Graphical Interface Library", isPySide2Installed) if config.qtLibrary.startswith("pyside") else ("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed),
+    #("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled),
     ("gdown", "Download UBA modules from Google drive", isGdownInstalled),
     ("babel", "Internationalization and localization library", isBabelInstalled),
     ("requests", "Download / Update files", isRequestsInstalled),
-)
+]
+if config.qtLibrary == "pyside6":
+    required.append(("PySide6", "Qt Graphical Interface Library", isPySide6Installed))
+else:
+    if config.qtLibrary == "pyside2":
+        required.append(("PySide2", "Qt Graphical Interface Library", isPySide2Installed))
+    else:
+        required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
+    required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
 for module, feature, isInstalled in required:
     if not isInstalled():
         pip3InstallModule(module)

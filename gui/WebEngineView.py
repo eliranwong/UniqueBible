@@ -1,13 +1,21 @@
 from util.Languages import Languages
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
-import config, os, platform, webbrowser, re, subprocess
+import config, os, platform, webbrowser, re
 import shortcut as sc
 from functools import partial
-from qtpy.QtCore import Qt
-from qtpy.QtCore import QUrl
-from qtpy.QtGui import QGuiApplication, QKeySequence
-from qtpy.QtWidgets import QAction, QApplication, QDesktopWidget, QMenu, QFileDialog, QInputDialog, QLineEdit
-from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtCore import QUrl
+    from PySide6.QtGui import QGuiApplication, QAction
+    from PySide6.QtWidgets import QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit
+    from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
+    from PySide6.QtWebEngineWidgets import QWebEngineView
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtCore import QUrl
+    from qtpy.QtGui import QGuiApplication
+    from qtpy.QtWidgets import QAction, QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit
+    from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
 from util.Translator import Translator
@@ -1403,7 +1411,8 @@ class WebEngineView(QWebEngineView):
         else:
             self.parent.popoverView.setHtml(html, config.baseUrl)
         if fullScreen:
-            monitor = QDesktopWidget().screenGeometry(screenNo)
+            #monitor = QDesktopWidget().screenGeometry(screenNo)
+            monitor = QGuiApplication.screens()[screenNo].availableGeometry()
             self.parent.popoverView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
                 # Using self.parent.popoverView.showFullScreen() directly does not work on Linux
@@ -1419,7 +1428,8 @@ class WebEngineView(QWebEngineView):
             self.parent.popoverUrlView = WebEngineViewPopover(self, name, self.name)
         self.parent.popoverUrlView.load(url)
         if fullScreen:
-            monitor = QDesktopWidget().screenGeometry(screenNo)
+            #monitor = QDesktopWidget().screenGeometry(screenNo)
+            monitor = QGuiApplication.screens()[screenNo].availableGeometry()
             self.parent.popoverUrlView.move(monitor.left(), monitor.top())
             if platform.system() == "Linux":
                 # Using self.parent.popoverUrlView.showFullScreen() directly does not work on Linux

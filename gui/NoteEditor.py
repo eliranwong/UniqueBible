@@ -1,11 +1,15 @@
 import os, re, config, base64, webbrowser, platform, markdown
-from qtpy.QtCore import Qt
-from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
-from qtpy.QtPrintSupport import QPrinter, QPrintDialog
-from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
+if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
+    from PySide6.QtPrintSupport import QPrinter, QPrintDialog
+    from PySide6.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
+else:
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
+    from qtpy.QtPrintSupport import QPrinter, QPrintDialog
+    from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
-from util.TtsLanguages import TtsLanguages
-from util.Languages import Languages
 from util.Translator import Translator
 
 
@@ -92,7 +96,8 @@ class NoteEditor(QMainWindow):
 
     # window appearance
     def resizeWindow(self, widthFactor, heightFactor):
-        availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        #availableGeometry = QGuiApplication.instance().desktop().availableGeometry()
+        availableGeometry = QGuiApplication.primaryScreen().availableGeometry()
         self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def updateWindowTitle(self):
