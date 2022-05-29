@@ -1192,9 +1192,6 @@ class MainWindow(QMainWindow):
         toolTip = toolTip if toolTip else tab_title
         self.studyView.setTabToolTip(self.studyView.currentIndex(), toolTip)
 
-    def studyViewFinishedLoading(self, js):
-        self.studyView.currentWidget().page().runJavaScript(js)
-
     # warning for next action without saving modified notes
     def warningNotSaved(self):
         msgBox = QMessageBox(QMessageBox.Warning,
@@ -3256,11 +3253,7 @@ class MainWindow(QMainWindow):
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
-        if config.fixLoadingContent:
-            self.refreshBibleWindowTab()
-            self.refreshStudyWindowTab()
-            self.refreshBibleWindowTab()
-            self.refreshStudyWindowTab()
+        self.fixLoadingBibleWindowContent()
 
     def finishStudyViewLoading(self):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
@@ -3268,10 +3261,25 @@ class MainWindow(QMainWindow):
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
                 config.studyV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.fixLoadingStudyWindowContent()
+
+    def studyViewFinishedLoading(self, js):
+        self.studyView.currentWidget().page().runJavaScript(js)
+        self.fixLoadingStudyWindowContent()
+
+    def fixLoadingBibleWindowContent(self):
         if config.fixLoadingContent:
-            self.refreshStudyWindowTab()
-            self.refreshBibleWindowTab()
-            self.refreshStudyWindowTab()
+            thisIndex = self.mainView.currentIndex()
+            self.mainView.setTabEnabled(thisIndex, False)
+            self.mainView.setTabEnabled(thisIndex, True)
+            self.previousBibleWindowTab()
+
+    def fixLoadingStudyWindowContent(self):
+        if config.fixLoadingContent:
+            thisIndex = self.studyView.currentIndex()
+            self.studyView.setTabEnabled(thisIndex, False)
+            self.studyView.setTabEnabled(thisIndex, True)
+            self.previousStudyWindowTab()
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
@@ -4460,7 +4468,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.playAudioBibleFilePlayList(playlist)
 
     def playAudioBibleFilePlayList(self, playlist, gui=True, useBuiltinPlayer=False):
-        if playlist and WebtopUtil.isPackageInstalled("vlc") and not useBuiltinPlayer:
+        macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
+        if platform.system() == "Darwin" and os.path.isfile(macVlc) and not useBuiltinPlayer:
+            audioFiles = '" "'.join(playlist)
+            audioFiles = '"{0}"'.format(audioFiles)
+            WebtopUtil.runNohup(f"{macVlc} {audioFiles}")
+        elif playlist and WebtopUtil.isPackageInstalled("vlc") and not useBuiltinPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"

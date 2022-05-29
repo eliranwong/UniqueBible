@@ -1,3 +1,10 @@
+Changes in 30.11:
+* Improved support of macOS:
+    - Users can now use VLC player for reading MP3 audio bibles.
+    - VLC player is a third-party free software.  Users can install via command, for exmaple, "brew install vlc", if homebrew (https://brew.sh) is in place.
+    - Fixed loading issues.
+* Fixed material menu layout contrast button.
+
 Changes in 30.10:
 * Added support of PySide6
 * Fallback support of PySide2 and PyQt5

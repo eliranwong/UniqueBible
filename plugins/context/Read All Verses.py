@@ -1,6 +1,6 @@
 # This plugin is written for non-Windows device.  This is not tested on Windows platform.
 
-import config, re, os
+import config, re, os, platform
 from util.WebtopUtil import WebtopUtil
 
 def findText(html):
@@ -16,7 +16,11 @@ def findText(html):
                 playlist.append(audioFile)
         if playlist:
 
-            if playlist and WebtopUtil.isPackageInstalled("vlc"):
+            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
+            if platform.system() == "Darwin" and os.path.isfile(macVlc):
+                audioFiles = ' '.join(playlist)
+                WebtopUtil.runNohup(f"{macVlc} {audioFiles}")
+            elif playlist and WebtopUtil.isPackageInstalled("vlc"):
                 audioFiles = ' '.join(playlist)
                 os.system("pkill vlc")
                 WebtopUtil.runNohup(f"vlc {audioFiles}")

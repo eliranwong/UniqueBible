@@ -945,7 +945,7 @@ class MaterialMainWindow:
         icon = "material/action/compare_arrows/materialiconsoutlined/48dp/2x/outline_compare_arrows_black_48dp.png"
         self.addMaterialIconButton("menu4_compareAll", icon, self.runCOMPARE, self.leftToolBar)
         icon = "material/image/compare/materialicons/48dp/2x/baseline_compare_black_48dp.png"
-        self.addMaterialIconButton("contrasts", icon, lambda: self.runCONTRASTS, self.leftToolBar)
+        self.addMaterialIconButton("contrasts", icon, self.runCONTRASTS, self.leftToolBar)
         self.enforceCompareParallelButton = QPushButton()
         self.addMaterialIconButton(self.getEnableCompareParallelDisplayToolTip(), self.getEnableCompareParallelDisplay(), self.enforceCompareParallelButtonClicked, self.leftToolBar, self.enforceCompareParallelButton, False)
         self.leftToolBar.addSeparator()
