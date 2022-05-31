@@ -4790,15 +4790,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.setBibleSelectionMenuButton(self.studyBibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
 
     def setBibleSelection(self):
-        label = config.mainText
-        toolTip = config.thisTranslation["selectSingleBible"]
-        selectedList = [config.mainText]
-        triggered = self.openMainChapterMaterial
-        checkable = True
-        bibleCollections = True
-        bibleCollectionTriggered = self.openMainChapterMaterial
-        bibleCollectionExpansion = True
-        self.setBibleSelectionMenuButton(self.bibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
+        if not config.refButtonClickAction == "mini":
+            label = config.mainText
+            toolTip = config.thisTranslation["selectSingleBible"]
+            selectedList = [config.mainText]
+            triggered = self.openMainChapterMaterial
+            checkable = True
+            bibleCollections = True
+            bibleCollectionTriggered = self.openMainChapterMaterial
+            bibleCollectionExpansion = True
+            self.setBibleSelectionMenuButton(self.bibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
 
     def bibleSelectionForComparisonSelected(self, text):
         if text in config.compareParallelList:

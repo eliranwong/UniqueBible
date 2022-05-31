@@ -1,3 +1,6 @@
+Changes in 30.14:
+* Fixed blank bible selection button when config.refButtonClickAction is set to "mini".
+
 Changes in 30.13:
 * Added support to use third-party VLC player on macOS to work with GTTS::: and VLC::: commands.
 * Added a "Speak" button on the second top tool bar.
