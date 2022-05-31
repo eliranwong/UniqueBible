@@ -4790,16 +4790,15 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.setBibleSelectionMenuButton(self.studyBibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
 
     def setBibleSelection(self):
-        if not config.refButtonClickAction == "mini":
-            label = config.mainText
-            toolTip = config.thisTranslation["selectSingleBible"]
-            selectedList = [config.mainText]
-            triggered = self.openMainChapterMaterial
-            checkable = True
-            bibleCollections = True
-            bibleCollectionTriggered = self.openMainChapterMaterial
-            bibleCollectionExpansion = True
-            self.setBibleSelectionMenuButton(self.bibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
+        label = config.mainText
+        toolTip = config.thisTranslation["selectSingleBible"]
+        selectedList = [config.mainText]
+        triggered = self.openMainChapterMaterial
+        checkable = True
+        bibleCollections = True
+        bibleCollectionTriggered = self.openMainChapterMaterial
+        bibleCollectionExpansion = True
+        self.setBibleSelectionMenuButton(self.bibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
 
     def bibleSelectionForComparisonSelected(self, text):
         if text in config.compareParallelList:
@@ -4830,48 +4829,49 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.setBibleSelectionMenuButton(self.bibleSelectionForComparison, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered)
 
     def setBibleSelectionMenuButton(self, menuButton, label, toolTip, triggered, checkable=False, selectedList=[], bibleCollections=False, bibleCollectionTriggered=None, bibleCollectionExpansion=False):
-        menuButton.setText(label)
-        menuButton.setToolTip(toolTip)
-        menuButton.setPopupMode(QToolButton.InstantPopup)
-        menuButton.setAutoRaise(True)
-        menuButton.setArrowType(Qt.NoArrow)
-        menu = QMenu(menuButton)
-        if bibleCollections:
-            if bibleCollectionExpansion:
-                subMenu = menu.addMenu(config.thisTranslation["menu_favouriteBible"])
-                for text in [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]:
-                    action = subMenu.addAction(text)
-                    action.setCheckable(True if checkable else False)
-                    if checkable and selectedList:
-                        action.setChecked(True if text in selectedList else False)
-                    if bibleCollectionTriggered:
-                        action.triggered.connect(partial(bibleCollectionTriggered, text))
-                for collection in config.bibleCollections:
-                    subMenu = menu.addMenu(collection)
-                    for text in config.bibleCollections[collection]:
+        if menuButton:
+            menuButton.setText(label)
+            menuButton.setToolTip(toolTip)
+            menuButton.setPopupMode(QToolButton.InstantPopup)
+            menuButton.setAutoRaise(True)
+            menuButton.setArrowType(Qt.NoArrow)
+            menu = QMenu(menuButton)
+            if bibleCollections:
+                if bibleCollectionExpansion:
+                    subMenu = menu.addMenu(config.thisTranslation["menu_favouriteBible"])
+                    for text in [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]:
                         action = subMenu.addAction(text)
                         action.setCheckable(True if checkable else False)
                         if checkable and selectedList:
                             action.setChecked(True if text in selectedList else False)
                         if bibleCollectionTriggered:
                             action.triggered.connect(partial(bibleCollectionTriggered, text))
-            else:
-                action = menu.addAction(config.thisTranslation["menu_favouriteBible"])
-                if bibleCollectionTriggered:
-                    action.triggered.connect(bibleCollectionTriggered)
-                for collection in config.bibleCollections:
-                    action = menu.addAction(collection)
+                    for collection in config.bibleCollections:
+                        subMenu = menu.addMenu(collection)
+                        for text in config.bibleCollections[collection]:
+                            action = subMenu.addAction(text)
+                            action.setCheckable(True if checkable else False)
+                            if checkable and selectedList:
+                                action.setChecked(True if text in selectedList else False)
+                            if bibleCollectionTriggered:
+                                action.triggered.connect(partial(bibleCollectionTriggered, text))
+                else:
+                    action = menu.addAction(config.thisTranslation["menu_favouriteBible"])
                     if bibleCollectionTriggered:
-                        action.triggered.connect(partial(bibleCollectionTriggered, collection))
-            menu.addSeparator()
-        for text in self.textList:
-            action = menu.addAction(text)
-            action.triggered.connect(partial(triggered, text))
-            action.setCheckable(True if checkable else False)
-            if checkable and selectedList:
-                selectedList = list(set(sorted(selectedList)))
-                action.setChecked(True if text in selectedList else False)
-        menuButton.setMenu(menu)
+                        action.triggered.connect(bibleCollectionTriggered)
+                    for collection in config.bibleCollections:
+                        action = menu.addAction(collection)
+                        if bibleCollectionTriggered:
+                            action.triggered.connect(partial(bibleCollectionTriggered, collection))
+                menu.addSeparator()
+            for text in self.textList:
+                action = menu.addAction(text)
+                action.triggered.connect(partial(triggered, text))
+                action.setCheckable(True if checkable else False)
+                if checkable and selectedList:
+                    selectedList = list(set(sorted(selectedList)))
+                    action.setChecked(True if text in selectedList else False)
+            menuButton.setMenu(menu)
 
     def addBibleVersionButton(self):
         if self.textCommandParser.isDatabaseInstalled("bible"):
