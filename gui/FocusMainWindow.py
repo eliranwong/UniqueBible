@@ -498,7 +498,7 @@ class FocusMainWindow:
                     if "icon=" in line and not 'label="Unique Bible App"' in line:
                         line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
                         webtopApp, icon, command = line[:-1].split(",", 3)
-                        addIconMenuItem(icon, menu, webtopApp, self, partial(WebtopUtil.runNohup, command), "", translation=False)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(WebtopUtil.run, command), "", translation=False)
 
         if config.developer:
             menu = addMenu(menuBar, "developer")

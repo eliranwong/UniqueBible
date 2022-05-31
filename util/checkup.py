@@ -505,6 +505,9 @@ if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
     print("Text-to-speech feature is not enabled or supported on your device.")
 else:
     config.noTtsFound = False
+# Check if builtin media player is in place:
+if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
+    config.forceUseBuiltinMediaPlayer = False
 
 # Import modules for developer
 if config.developer:

@@ -58,10 +58,10 @@ class MaterialColorDialog(QDialog):
         self.activeVerseColourButton = QPushButton(label)
         self.activeVerseColourButton.clicked.connect(self.changeActiveVerseColour)
 
-        self.textSelectionColor = QLabel()
-        self.textSelectionColor.setFrameStyle(frameStyle)
-        self.textSelectionColorButton = QPushButton(TextUtil.formatConfigLabel("textSelectionColor"))
-        self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
+#        self.textSelectionColor = QLabel()
+#        self.textSelectionColor.setFrameStyle(frameStyle)
+#        self.textSelectionColorButton = QPushButton(TextUtil.formatConfigLabel("textSelectionColor"))
+#        self.textSelectionColorButton.clicked.connect(self.changeTextSelectionColor)
 
         self.saveButton = QPushButton(config.thisTranslation["note_saveAs"])
         self.saveButton.clicked.connect(self.openSaveAsDialog)
@@ -97,14 +97,14 @@ class MaterialColorDialog(QDialog):
         layout.addWidget(self.textColour, 6, 1)
         layout.addWidget(self.activeVerseColourButton, 7, 0)
         layout.addWidget(self.activeVerseColour, 7, 1)
-        layout.addWidget(self.textSelectionColorButton, 8, 0)
-        layout.addWidget(self.textSelectionColor, 8, 1)
+        #layout.addWidget(self.textSelectionColorButton, 8, 0)
+        #layout.addWidget(self.textSelectionColor, 8, 1)
 
-        layout.addWidget(self.saveButton, 9, 0)
-        layout.addWidget(self.loadButton, 9, 1)
+        layout.addWidget(self.saveButton, 8, 0)
+        layout.addWidget(self.loadButton, 8, 1)
 
-        layout.addWidget(self.defaultButton, 10, 0)
-        layout.addWidget(self.aboutButton, 10, 1)
+        layout.addWidget(self.defaultButton, 9, 0)
+        layout.addWidget(self.aboutButton, 9, 1)
 
         self.setLayout(layout)
 
@@ -129,6 +129,7 @@ class MaterialColorDialog(QDialog):
                 settings = f.read()
                 exec(settings)
             #self.parent.resetUI()
+            self.parent.setTheme(config.theme, setColours=False)
             self.parent.setTheme(config.theme, setColours=False)
             self.setConfigColor()
 
@@ -159,13 +160,14 @@ class MaterialColorDialog(QDialog):
             ("config.darkThemeTextColor", config.darkThemeTextColor),
             ("config.lightThemeActiveVerseColor", config.lightThemeActiveVerseColor),
             ("config.darkThemeActiveVerseColor", config.darkThemeActiveVerseColor),
-            ("config.textSelectionColor", config.textSelectionColor),
+            #("config.textSelectionColor", config.textSelectionColor),
         )
         with open(fileName, "w", encoding="utf-8") as fileObj:
             for name, value in data:
                 fileObj.write("{0} = {1}\n".format(name, pprint.pformat(value)))
 
     def setDefault(self):
+        self.parent.setTheme(config.theme)
         self.parent.setTheme(config.theme)
         self.setConfigColor()
 
@@ -178,7 +180,7 @@ class MaterialColorDialog(QDialog):
         self.setLabelColor(self.widgetForegroundColorPressed, QColor(config.widgetForegroundColorPressed))
         self.setLabelColor(self.textColour, QColor(config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor))
         self.setLabelColor(self.activeVerseColour, QColor(config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor))
-        self.setLabelColor(self.textSelectionColor, QColor(config.textSelectionColor))
+        #self.setLabelColor(self.textSelectionColor, QColor(config.textSelectionColor))
 
     def setMaskColor(self):
         config.maskMaterialIconBackground = False
@@ -252,12 +254,12 @@ class MaterialColorDialog(QDialog):
                 config.lightThemeActiveVerseColor = colorName
             self.parent.reloadCurrentRecord(True)
 
-    def changeTextSelectionColor(self):
-        color = QColorDialog.getColor(QColor(config.textSelectionColor), self)
-        if color.isValid():
-            self.setLabelColor(self.textSelectionColor, color)
-            config.textSelectionColor = color.name()
-            self.parent.reloadCurrentRecord(True)
+#    def changeTextSelectionColor(self):
+#        color = QColorDialog.getColor(QColor(config.textSelectionColor), self)
+#        if color.isValid():
+#            self.setLabelColor(self.textSelectionColor, color)
+#            config.textSelectionColor = color.name()
+#            self.parent.reloadCurrentRecord(True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

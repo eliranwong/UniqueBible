@@ -1218,7 +1218,7 @@ class TextCommandParser:
         window = ""
         display = ""
         if config.docker:
-            WebtopUtil.runNohup(command)
+            WebtopUtil.run(command)
         elif config.runMode == "http-server" and not config.enableCmd:
             print("Command keyword CMD::: is not enabled for security reason.  To enable it, set 'enableCmd = True' in file 'config.py'.")
         else:
@@ -1635,7 +1635,10 @@ class TextCommandParser:
 
     def openVlcPlayer(self, command, source, gui=True):
         try:
-            if WebtopUtil.isPackageInstalled("vlc"):
+            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
+            if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
+                WebtopUtil.run(f'{macVlc} "{command}"')
+            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 vlcCmd = "vlc" if gui else "cvlc"
                 if '"' in command:
                     self.openBuiltinPlayer(command, gui)

@@ -661,7 +661,7 @@ class MaterialMainWindow:
                     if "icon=" in line and not 'label="Unique Bible App"' in line:
                         line = re.sub('^.*?<item label="(.*?)" icon="(.*?)"><action name="Execute"><command>(.*?)</command></action></item>.*?$', r'\1,\2,\3', line)
                         webtopApp, icon, command = line[:-1].split(",", 3)
-                        addIconMenuItem(icon, menu, webtopApp, self, partial(WebtopUtil.runNohup, command), "", translation=False)
+                        addIconMenuItem(icon, menu, webtopApp, self, partial(WebtopUtil.run, command), "", translation=False)
 
         if config.developer:
             menu = addMenu(menuBar, "developer")
@@ -947,7 +947,12 @@ class MaterialMainWindow:
         if os.path.isfile(os.path.join("plugins", "context", "English Dictionaries_Ctrl+Shift+D.py")):
             icon = "material/action/abc/materialiconsoutlined/48dp/2x/outline_abc_black_48dp.png"
             self.addMaterialIconButton("englishDictionaries", icon, lambda: self.mainView.currentWidget().runPlugin("English Dictionaries_Ctrl+Shift+D"), self.secondToolBar)
-            self.secondToolBar.addSeparator()
+        if not config.noTtsFound:
+            icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
+            triggered = lambda: self.mainView.currentWidget().googleTextToSpeechLanguage("", True) if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled) else lambda: self.mainView.currentWidget().textToSpeech(True)
+            self.addMaterialIconButton("context1_speak", icon, triggered, self.secondToolBar)
+        self.secondToolBar.addSeparator()
+
 
         if os.path.isfile(os.path.join("plugins", "menu", "ePub Viewer.py")):
             icon = "material/action/book/materialiconsoutlined/48dp/2x/outline_book_black_48dp.png"

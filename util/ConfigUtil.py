@@ -531,6 +531,10 @@ class ConfigUtil:
         # Options to display verse reference: True / False"""
         if not hasattr(config, "showVerseReference"):
             config.showVerseReference = True
+        config.help["forceUseBuiltinMediaPlayer"] = """
+        # Options to force UBA to use builtin media player even third-party VLC player is installed: True / False"""
+        if not hasattr(config, "forceUseBuiltinMediaPlayer"):
+            config.forceUseBuiltinMediaPlayer = False
         config.help["hideVlcInterfaceReadingSingleVerse"] = """
         # Options to hide VLC graphical interface on supported operating systems: True / False"""
         if not hasattr(config, "hideVlcInterfaceReadingSingleVerse"):
@@ -949,10 +953,6 @@ class ConfigUtil:
         # Active verse colour displayed on dark theme."""
         if not hasattr(config, "darkThemeActiveVerseColor"):
             config.darkThemeActiveVerseColor = "#aaff7f"
-        config.help["textSelectionColor"] = """
-        # Colour for text selection."""
-        if not hasattr(config, "textSelectionColor"):
-            config.textSelectionColor = "#ffb7b7"
         config.help["qtMaterial"] = """
         # Apply qt-material theme."""
         if not hasattr(config, "qtMaterial"):
@@ -1354,6 +1354,7 @@ class ConfigUtil:
             ("showBibleNoteIndicator", config.showBibleNoteIndicator),
             ("enforceCompareParallel", config.enforceCompareParallel),
             ("readFormattedBibles", config.readFormattedBibles),
+            ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse),
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
             ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB),
@@ -1424,7 +1425,6 @@ class ConfigUtil:
             ("darkThemeTextColor", config.darkThemeTextColor),
             ("lightThemeActiveVerseColor", config.lightThemeActiveVerseColor),
             ("darkThemeActiveVerseColor", config.darkThemeActiveVerseColor),
-            ("textSelectionColor", config.textSelectionColor),
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),

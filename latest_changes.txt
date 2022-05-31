@@ -1,3 +1,11 @@
+Changes in 30.13:
+* Added support to use third-party VLC player on macOS to work with GTTS::: and VLC::: commands.
+* Added a "Speak" button on the second top tool bar.
+* Added config.forceUseBuiltinMediaPlayer for users to choose builtin media player for player audio even third-party VLC player is installed.
+* Removed config.textSelectionColor and use config.widgetBackgroundColorHover and config.widgetForegroundColorHover to display colours for text selection.
+* Updated color sample files sample.color and sample2.color.
+* Fixed dynamic loading of *.color file.
+
 Changes in 30.12:
 Most changes in this release apply to Material menu layout only.
 * Enhanced bible selection on both Bible and Study Window.

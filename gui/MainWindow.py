@@ -1023,7 +1023,6 @@ class MainWindow(QMainWindow):
             config.widgetForegroundColorPressed = "#483D8B"
             config.lightThemeTextColor = "#000000"
             config.lightThemeActiveVerseColor = "#483D8B"
-        config.textSelectionColor = "#ffb7b7"
         if color:
             color = HtmlColorCodes.colors[color][0]
             config.maskMaterialIconBackground = False
@@ -3835,15 +3834,15 @@ class MainWindow(QMainWindow):
         activeColor = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         return "" if not config.menuLayout == "material" else """
 <style>
-body {0} color: {8}; {1}
-.ubaButton {0} background-color: {7}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
+body {0} color: {7}; {1}
+.ubaButton {0} background-color: {6}; color: {2}; border: none; padding: 2px 10px; text-align: center; text-decoration: none; display: inline-block; font-size: 17px; margin: 2px 2px; cursor: pointer; {1}
 .ubaButton:hover {0} background-color: {4}; color: {5}; {1}
 vid, a, a:link, a:visited, ref, entry {0} color: {2}; {1}
 aa, bb, hp, vb, red, red ref, red entry {0} color: {3}; {1}
-z {0} background-color: {10}; color: {9}; {1}
+z {0} background-color: {9}; color: {8}; {1}
 vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addon:hover {0} background-color: {4}; color: {5}; {1}
-::selection {0} background: {6}; {1}
-::-moz-selection {0} background: {6}; {1}
+::selection {0} background: {5}; color: {4}; {1}
+::-moz-selection {0} background: {5}; color: {4}; {1}
 </style>
         """.format(
             "{", 
@@ -3852,7 +3851,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             activeColor, 
             config.widgetBackgroundColorHover, 
             config.widgetForegroundColorHover, 
-            config.textSelectionColor,
             config.widgetBackgroundColor,
             textColor,
             config.widgetBackgroundColorPressed, 
@@ -4455,14 +4453,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         if not isInstalled:
             self.displayMessage("Installing '{0}' ...".format(pkg if pkg else app))
             WebtopUtil.installPackage(pkg if pkg else app)
-        WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
+        WebtopUtil.run("{0} {1}".format(app, arg) if arg else app)
 
     def webtopAurApp(self, app, pkg="", arg=""):
         isInstalled = WebtopUtil.isPackageInstalled(app)
         if not isInstalled:
             self.displayMessage("Installing '{0}' ...".format(pkg if pkg else app))
             WebtopUtil.installAurPackage(pkg if pkg else app)
-        WebtopUtil.runNohup("{0} {1}".format(app, arg) if arg else app)
+        WebtopUtil.run("{0} {1}".format(app, arg) if arg else app)
 
     def addStandardTextButton(self, toolTip, action, toolbar, button=None, translation=True):
         textButtonStyle = "QPushButton {background-color: #151B54; color: white;} QPushButton:hover {background-color: #333972;} QPushButton:pressed { background-color: #515790;}"
@@ -4905,7 +4903,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def openVlcPlayer(self, filename=""):
         try:
-            if WebtopUtil.isPackageInstalled("vlc"):
+            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
+            if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
+                if filename:
+                    WebtopUtil.run(f'{macVlc} "{filename}"')
+                else:
+                    WebtopUtil.run(macVlc)
+            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 if filename:
                     self.playAudioBibleFilePlayList([filename])
                 else:
@@ -4937,13 +4941,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                         playlist.append(audioFile)
         self.playAudioBibleFilePlayList(playlist)
 
-    def playAudioBibleFilePlayList(self, playlist, gui=True, useBuiltinPlayer=False):
+    def playAudioBibleFilePlayList(self, playlist, gui=True):
         macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
-        if platform.system() == "Darwin" and os.path.isfile(macVlc) and not useBuiltinPlayer:
+        if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
-            WebtopUtil.runNohup(f"{macVlc} {audioFiles}")
-        elif playlist and WebtopUtil.isPackageInstalled("vlc") and not useBuiltinPlayer:
+            WebtopUtil.run(f"{macVlc} {audioFiles}")
+        elif playlist and WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
