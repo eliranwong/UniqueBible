@@ -34,6 +34,30 @@ QToolBar {0} font-size: {9}px; icon-size: {8}px; {1}
 
 QPushButton {0} font-size: {9}px; icon-size: {8}px; background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}
 
+QToolButton {0} /* all types of tool button */
+    font-size: {9}px;
+    background-color: {2};
+    color: {3};
+{1}
+
+QToolButton:hover {0}
+    background-color: {4};
+    color: {5};
+{1}
+
+QToolButton:pressed {0}
+    background-color: {6};
+    color: {7};
+{1}
+
+QToolButton::menu-button {0}
+    border: 2px solid gray;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    /* 16px width + 4px for border = 20px allocated above */
+    width: 150px;
+{1}
+
 QComboBox {0} font-size: {9}px; background-color: {2}; color: {3}; {1}
 QComboBox:hover {0} background-color: {4}; color: {5}; {1}
 /* selection-background-color in QAbstractItemView does not work if QComboBox has an assigned background-color
@@ -132,12 +156,6 @@ QTabBar::tab:!selected {0}
     margin-top: 2px; /* make non-selected tabs look smaller */
 {1}
 
-QToolButton {0} /* all types of tool button, including QAction */
-    background-color: {2};
-    color: {3};
-    font-size: {9}px;
-{1}
-
 QMenu {0}
     font-size: {9}px;
     background-color: {2}; /* sets background of the menu */
@@ -152,8 +170,12 @@ QMenu::item {0}
 {1}
 
 QMenu::item:selected {0} /* when user selects item using mouse or keyboard */
-    background-color: {4};
-    color: {5};
+    background-color: {3};
+    color: {2};
+{1}
+
+QMenu::separator {0}
+    background: {4};
 {1}
 
 QMenuBar {0}

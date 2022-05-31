@@ -1,3 +1,29 @@
+Changes in 30.12:
+Most changes in this release apply to Material menu layout only.
+* Enhanced bible selection on both Bible and Study Window.
+    - Users can now select bible versions, books, chapters and versions separately on both Bible and Study Window.
+    - Drop down menu for both single version and multiple version selection is now replaced by menu buttons.
+    - Bible Collection settings were integrated for both single version and multiple version selection.
+    - Remarks: Menu button for single version selection for Bible Window is only available for users who set "Control Preference" to "Master".
+    - Book, chapter and verse features are note integrated into book, chapter and verse menu buttons, on both Bible and Study Window.
+* Reorganised items on the top horizontal tool bar.
+* Added "Bible Collections", "Bible Reading Plan", "English Dictionaries", "Epub Reader", "Clear All" button on horizontal toolbar.
+* Added "Instant Highlight", "Remove Instant Highlight", "Refresh", "Full Screen", and "Clear All" on both left and right toolbars.
+* Removed book, chapter and verse notes buttons from toolbars.
+    - Users can use the new reference menu buttons to open or edit notes.
+* Relocated "Instant Lookup" and "Bottom Window" buttons from right tool bar to the second-top horizontal tool bar.
+* Bible Collection dialog now have to be closed before using the main UI.
+    - This helps to make sure the main UI have all the latest changes about bible collections when they use it.
+* Added new colour styles to:
+    - menu separator
+    - menu item selection
+    - menu button
+* Fixed loading issues found on macOS with Apple chip.
+    - Content was not visible after a new command is triggered even though its loading was finished.
+    - Content was shown only after users manually, e.g. changing tabs, moving the splitter.
+    - Workaround approach was implemented to fixed the issue.
+* Fixed loading bible modules which has non-standard book numbers.
+
 Changes in 30.11:
 * Improved support of macOS:
     - Users can now use VLC player for reading MP3 audio bibles.

@@ -24,6 +24,7 @@ class BibleCollectionDialog(QDialog):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["bibleCollections"])
         self.setMinimumSize(680, 500)
+        self.setModal(True)
         self.selectedCollection = None
         self.settingBibles = False
         self.bibleNames = []
@@ -166,6 +167,8 @@ class BibleCollectionDialog(QDialog):
 
     def reloadControlPanel(self):
         self.parent.reloadControlPanel(False)
+        if config.menuLayout == "material":
+            self.parent.setupMenuLayout("material")
 
     def importFile(self):
         options = QFileDialog.Options()

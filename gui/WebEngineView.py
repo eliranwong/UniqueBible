@@ -829,7 +829,7 @@ class WebEngineView(QWebEngineView):
         if not selectedText and config.commandTextIfNoSelection:
             selectedText = self.parent.parent.textCommandLineEdit.text().strip()
         if not selectedText:
-            text, ok = QInputDialog.getText(self.parent.parent, "QInputDialog.getText()",
+            text, ok = QInputDialog.getText(self.parent.parent, "Unique Bible App",
                     config.thisTranslation["enter_text_here"], QLineEdit.Normal,
                     "")
             if ok and text:
@@ -898,26 +898,13 @@ class WebEngineView(QWebEngineView):
     # Instant highligh feature
     def instantHighlight(self):
         selectedText = self.selectedTextProcessed()
-        if not selectedText:
-            #self.messageNoSelection()
-            text, ok = QInputDialog.getText(self.parent.parent, "QInputDialog.getText()",
-                    config.thisTranslation["menu5_search"], QLineEdit.Normal,
-                    "")
-            if ok and text != '':
-                self.findText(text, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
-        else:
-            #config.instantHighlightString = selectedText
-            #self.parent.parent.reloadCurrentRecord()
-            self.findText(selectedText, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
+        self.findText(selectedText, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
 
     def checkIfTextIsFound(self, found):
         if not found:
             self.displayMessage(config.thisTranslation["notFound"])
 
     def removeInstantHighlight(self):
-        #if config.instantHighlightString:
-        #    config.instantHighlightString = ""
-        #    self.parent.parent.reloadCurrentRecord()
         self.findText("", QWebEnginePage.FindFlags())
 
     # Translate selected words into Selected Language (Google Translate)

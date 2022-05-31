@@ -113,6 +113,7 @@ class CheckableComboBox(QComboBox):
         text = ", ".join(self.checkItems)
 
         # Compute elided text (with "...")
+        # The following three lines does not work on macOS with Apple chip when PySide6 is used.
         metrics = QFontMetrics(self.lineEdit().font())
         elidedText = metrics.elidedText(text, Qt.ElideRight, self.lineEdit().width())
         self.lineEdit().setText(elidedText)

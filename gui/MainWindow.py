@@ -9,12 +9,12 @@ from pathlib import Path
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
-    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox
+    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
-    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox
+    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu
     from qtpy.QtWebEngineWidgets import QWebEnginePage
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
@@ -1267,6 +1267,30 @@ class MainWindow(QMainWindow):
         if config.overwriteNoteFontSize:
             content = re.sub("font-size:[^<>]*?;", "", content)
         return content
+
+    def openBibleNotes(self, noteType, bcv=None):
+        # bcv should look like 43.3.16
+        if bcv is None:
+            bcv = "{0}.{1}.{2}".format(config.mainB, config.mainC, config.mainV)
+        keywords = {
+            "book": "_openbooknote",
+            "chapter": "_openchapternote",
+            "verse": "_openversenote",
+        }
+        command = "{0}:::{1}".format(keywords[noteType], bcv)
+        self.runTextCommand(command)
+
+    def editBibleNotes(self, noteType, bcv=None):
+        # bcv should look like 43.3.16
+        if bcv is None:
+            bcv = "{0}.{1}.{2}".format(config.mainB, config.mainC, config.mainV)
+        keywords = {
+            "book": "_editbooknote",
+            "chapter": "_editchapternote",
+            "verse": "_editversenote",
+        }
+        command = "{0}:::{1}".format(keywords[noteType], bcv)
+        self.runTextCommand(command)
 
     def openBookNote(self, b):
         self.textCommandParser.lastKeyword = "note"
@@ -2703,19 +2727,28 @@ class MainWindow(QMainWindow):
     # Actions - enable or disable study bible / bible displayed on study view
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
-            return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/48dp/2x/outline_add_circle_outline_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
+            #return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/48dp/2x/outline_add_circle_outline_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
+            return self.getCrossplatformPath("material/toggle/toggle_off/materialiconsoutlined/48dp/2x/outline_toggle_off_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
         else:
-            return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/48dp/2x/outline_remove_circle_outline_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
+            #return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/48dp/2x/outline_remove_circle_outline_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
+            return self.getCrossplatformPath("material/toggle/toggle_on/materialiconsoutlined/48dp/2x/outline_toggle_on_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
 
     def getStudyBibleDisplayToolTip(self):
-        return "{0}: {1}".format(config.thisTranslation["displayBibleOnStudyWindow"], config.thisTranslation["on"] if not config.openBibleInMainViewOnly else config.thisTranslation["off"])
+        return "{0}: {1}".format(config.thisTranslation["enableStudyWindowBible"], config.thisTranslation["on"] if not config.openBibleInMainViewOnly else config.thisTranslation["off"])
 
     def enableStudyBibleButtonClicked(self):
         if config.openBibleInMainViewOnly:
             config.openBibleInMainViewOnly = False
             config.studyText = config.studyTextTemp
             if config.noStudyBibleToolbar:
-                self.studyRefButton.setVisible(True)
+                if config.menuLayout == "material":
+                    self.studyBibleSelection.setEnabled(True)
+                    self.studyB.setEnabled(True)
+                    self.studyC.setEnabled(True)
+                    self.studyRefLabel.setEnabled(True)
+                    self.studyV.setEnabled(True)
+                else:
+                    self.studyRefButton.setVisible(True)
                 self.enableSyncStudyWindowBibleButton.setVisible(True)
                 self.swapBibleButton.setVisible(True)
             else:
@@ -2725,7 +2758,14 @@ class MainWindow(QMainWindow):
             config.studyTextTemp = config.studyText
             config.studyText = config.mainText
             if config.noStudyBibleToolbar:
-                self.studyRefButton.setVisible(False)
+                if config.menuLayout == "material":
+                    self.studyBibleSelection.setDisabled(True)
+                    self.studyB.setDisabled(True)
+                    self.studyC.setDisabled(True)
+                    self.studyRefLabel.setDisabled(True)
+                    self.studyV.setDisabled(True)
+                else:
+                    self.studyRefButton.setVisible(False)
                 self.enableSyncStudyWindowBibleButton.setVisible(False)
                 self.swapBibleButton.setVisible(False)
             else:
@@ -3015,10 +3055,14 @@ class MainWindow(QMainWindow):
         newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
         self.textCommandChanged(newTextCommand, "main")
 
-    def openMainChapterMaterial(self):
+    def openMainChapterMaterial(self, text=""):
         if config.enforceCompareParallel:
             self.enforceCompareParallelButtonClicked()
-        newTextCommand = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
+        newTextCommand = "BIBLE:::{0}:::{1}".format(text if text else config.mainText, self.bcvToVerseReference(config.mainB, config.mainC, config.mainV))
+        self.textCommandChanged(newTextCommand, "main")
+
+    def openStudyChapterMaterial(self, text=""):
+        newTextCommand = "STUDY:::{0}:::{1}".format(text if text else config.studyText, self.bcvToVerseReference(config.studyB, config.studyC, config.studyV))
         self.textCommandChanged(newTextCommand, "main")
 
     def openStudyChapter(self):
@@ -3124,10 +3168,15 @@ class MainWindow(QMainWindow):
 
     def changeBibleVersion(self, index):
         if not self.refreshing:
+            if config.enforceCompareParallel:
+                self.enforceCompareParallelButtonClicked()
             command = "TEXT:::{0}".format(self.bibleVersions[index])
             self.runTextCommand(command)
 
     def updateVersionCombo(self):
+        if self.bibleSelection is not None and config.menuLayout in ("material",):
+            #self.bibleSelection.setText(config.mainText)
+            self.setBibleSelection()
         if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph", "material"):
             self.refreshing = True
             textIndex = 0
@@ -3135,7 +3184,7 @@ class MainWindow(QMainWindow):
                 textIndex = self.bibleVersions.index(config.mainText)
             self.versionCombo.setCurrentIndex(textIndex)
             self.refreshing = False
-        if self.versionButton is not None and config.menuLayout not in ("Starter"):
+        if self.versionButton is not None and config.menuLayout not in ("Starter",):
             self.versionButton.setText(config.mainText)
 
     def changeCommentaryVersion(self, index):
@@ -3150,7 +3199,10 @@ class MainWindow(QMainWindow):
     def updateMainRefButton(self):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
-            if config.menuLayout == "aleph":
+            if config.menuLayout == "material":
+                self.setBibleSelection()
+                self.setMainRefMenu()
+            elif config.menuLayout == "aleph":
                 self.mainRefButton.setText(":::".join(self.verseReference("main")))
             else:
                 self.mainRefButton.setText(verseReference)
@@ -3166,7 +3218,11 @@ class MainWindow(QMainWindow):
 
     def updateStudyRefButton(self):
         text, verseReference = self.verseReference("study")
-        self.studyRefButton.setText(":::".join(self.verseReference("study")))
+        if config.menuLayout == "material":
+            self.setStudyBibleSelection()
+            self.setStudyRefMenu()
+        else:
+            self.studyRefButton.setText(":::".join(self.verseReference("study")))
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
             self.syncingBibles = True
             newTextCommand = "MAIN:::{0}".format(verseReference)
@@ -3247,6 +3303,12 @@ class MainWindow(QMainWindow):
             self.openHistoryRecord("study", studyCurrentRecord)
 
     # finish view loading
+    def checkMainPageTermination(terminationStatus, exitCode):
+        print(terminationStatus, exitCode)
+
+    def checkStudyPageTermination(terminationStatus, exitCode):
+        print(terminationStatus, exitCode)
+
     def finishMainViewLoading(self):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
         # scroll to the main verse
@@ -3268,18 +3330,38 @@ class MainWindow(QMainWindow):
         self.fixLoadingStudyWindowContent()
 
     def fixLoadingBibleWindowContent(self):
-        if config.fixLoadingContent:
-            thisIndex = self.mainView.currentIndex()
-            self.mainView.setTabEnabled(thisIndex, False)
-            self.mainView.setTabEnabled(thisIndex, True)
-            self.previousBibleWindowTab()
+        if config.fixLoadingContent and config.menuLayout == "material":
+            cmd = self.textCommandLineEdit.text()
+            self.setupMenuLayout("material")
+            self.textCommandLineEdit.setText(cmd)
+#            splitter = self.centralWidget.instantSplitter
+#            thisPos = config.iModeSplitterSizes[0]
+#            splitter.moveSplitter(1, 1)
+#            splitter.moveSplitter(thisPos, 1)
+#            splitterWidth = splitter.handleWidth()
+#            splitter.setHandleWidth(splitterWidth + 7)
+#            splitter.setHandleWidth(splitterWidth)
+#            self.setNoToolBar()
+#            self.setNoToolBar()
+#            splitter.refresh()
 
     def fixLoadingStudyWindowContent(self):
-        if config.fixLoadingContent:
-            thisIndex = self.studyView.currentIndex()
-            self.studyView.setTabEnabled(thisIndex, False)
-            self.studyView.setTabEnabled(thisIndex, True)
-            self.previousStudyWindowTab()
+        if config.fixLoadingContent and config.menuLayout == "material":
+            cmd = self.textCommandLineEdit.text()
+            self.setupMenuLayout("material")
+            self.textCommandLineEdit.setText(cmd)
+#            splitter = self.centralWidget.parallelSplitter
+#            splitterWidth = splitter.handleWidth()
+#            splitter.setHandleWidth(splitterWidth + 7)
+#            splitter.setHandleWidth(splitterWidth)
+#            splitter.refresh()
+#            self.setNoToolBar()
+#            self.setNoToolBar()
+#            thisPos = config.pModeSplitterSizes[0]
+#            splitter.moveSplitter(1, 1)
+#            splitter.moveSplitter(thisPos, 1)
+            
+
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):
@@ -3301,6 +3383,31 @@ class MainWindow(QMainWindow):
         newTextCommand = "STUDYTEXT:::{0}".format(text)
         self.textCommandChanged(newTextCommand, "main")
 
+    def chapterAction(self, keyword, verseReference=None):
+        if verseReference is None:
+            verseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV).split(":")[0]
+        else:
+            verseReference = verseReference.split(":")[0]
+        newTextCommand = "{0}:::{1}".format(keyword, verseReference)
+        self.textCommandChanged(newTextCommand, "main")
+
+    def searchBookName(self, dictionary, b=None):
+        if b is None:
+            b = config.mainB
+        engFullBookName = BibleBooks().eng[str(b)][1]
+        matches = re.match("^[0-9]+? (.*?)$", engFullBookName)
+        if matches:
+            engFullBookName = matches.group(1)
+        newTextCommand = "SEARCHTOOL:::{0}:::{1}".format(config.dictionary if dictionary else config.encyclopedia, engFullBookName)
+        self.textCommandChanged(newTextCommand, "main")
+
+    def searchBookChapter(self, resource, b=None):
+        if b is None:
+            b = config.mainB
+        engFullBookName = BibleBooks().eng[str(b)][1]
+        newTextCommand = "SEARCHBOOKCHAPTER:::{0}:::{1}".format(resource, engFullBookName)
+        self.textCommandChanged(newTextCommand, "main")
+
     def runFeature(self, keyword, verseReference=None):
         if verseReference is None:
             verseReference = self.bcvToVerseReference(config.mainB, config.mainC, config.mainV)
@@ -3311,15 +3418,10 @@ class MainWindow(QMainWindow):
         if not config.enforceCompareParallel:
             self.enforceCompareParallelButtonClicked()
         if config.menuLayout == "material":
-            selectedVersions = "_".join(self.getSelectedTexts())
+            selectedVersions = "_".join(config.compareParallelList)
         else:
             selectedVersions = "{0}_{1}_{2}".format(config.favouriteBible, config.favouriteBible2, config.favouriteBible3)
         self.runFeature("{0}:::{1}".format(keyword, selectedVersions), verseReference)
-
-    def getSelectedTexts(self):
-        texts = self.bibleVersionCombo.checkItems
-        texts = list(set(texts)) if texts else list({config.favouriteBible, config.favouriteBible2, config.favouriteBible3})
-        return sorted(texts)
 
     def runMOB(self):
         self.runFeature("BIBLE:::MOB")
@@ -3414,6 +3516,45 @@ class MainWindow(QMainWindow):
         config.enableInstantHighlight = False
         self.mainView.currentWidget().findText("", QWebEnginePage.FindFlags())
         self.studyView.currentWidget().findText("", QWebEnginePage.FindFlags())
+
+    # Clear all tabs
+    def refreshAllMainWindowTabs(self):
+        thisIndex = self.mainView.currentIndex()
+        nextIndex = thisIndex + 1
+        for tab in range(0, config.numberOfTab):
+            if nextIndex >= config.numberOfTab:
+                nextIndex = 0
+            self.mainView.setCurrentIndex(nextIndex)
+            nextIndex += 1
+
+    def refreshAllStudyWindowTabs(self):
+        thisIndex = self.studyView.currentIndex()
+        nextIndex = thisIndex + 1
+        for tab in range(0, config.numberOfTab):
+            if nextIndex >= config.numberOfTab:
+                nextIndex = 0
+            self.studyView.setCurrentIndex(nextIndex)
+            nextIndex += 1
+
+    def clearAllWindowTabs(self):
+        self.clearAllMainWindowTabs()
+        self.clearAllStudyWindowTabs()
+
+    def clearAllMainWindowTabs(self):
+        for tab in range(0, config.numberOfTab):
+            self.mainView.setCurrentIndex(tab)
+            self.mainView.setHtml("", "")
+            self.mainView.setTabText(tab, "Bible")
+            config.tabHistory["main"][str(tab)] = ''
+        self.mainView.setCurrentIndex(0)
+
+    def clearAllStudyWindowTabs(self):
+        for tab in range(0, config.numberOfTab):
+            self.studyView.setCurrentIndex(tab)
+            self.studyView.setHtml("", "")
+            self.studyView.setTabText(tab, "Study")
+            config.tabHistory["study"][str(tab)] = ''
+        self.studyView.setCurrentIndex(0)
 
     # change of unique bible commands
 
@@ -4403,6 +4544,335 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         button.setIcon(qIcon)
         button.clicked.connect(action)
         toolbar.addWidget(button)
+
+    def setMainRefMenu(self):
+        bible = Bible(config.mainText)
+        # Book menu
+        abbreviations = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        self.mainB.setText(abbreviations[str(config.mainB)])
+        self.mainB.setToolTip(config.thisTranslation["menu_book"])
+        self.mainB.setPopupMode(QToolButton.InstantPopup)
+        self.mainB.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.mainB)
+        subMenu = menu.addMenu(config.thisTranslation["menu_bookNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "book"))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "book"))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_book"])
+        features = (
+            ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book")),
+            ("html_timelines", lambda: self.searchBookChapter("Timelines")),
+            ("context1_dict", lambda: self.searchBookName(True)),
+            ("context1_encyclopedia", lambda: self.searchBookName(False)),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        menu.addSeparator()
+        for b in bible.getBookList():
+            if str(b) in abbreviations:
+                action = menu.addAction(abbreviations[str(b)])
+                action.triggered.connect(partial(self.mainRefMenuSelected, (bible, "b", b)))
+                action.setCheckable(True)
+                action.setChecked(True if b == config.mainB else False)
+        self.mainB.setMenu(menu)
+        # Chapter menu
+        self.mainC.setText(str(config.mainC))
+        self.mainC.setToolTip(config.thisTranslation["menu_chapter"])
+        self.mainC.setPopupMode(QToolButton.InstantPopup)
+        self.mainC.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.mainC)
+        subMenu = menu.addMenu(config.thisTranslation["menu_chapterNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "chapter"))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "chapter"))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_chapter"])
+        features = (
+            ("html_overview", lambda: self.chapterAction("OVERVIEW")),
+            ("html_chapterIndex", lambda: self.chapterAction("CHAPTERINDEX")),
+            ("html_summary", lambda: self.chapterAction("SUMMARY")),
+            ("menu4_commentary", lambda: self.chapterAction("COMMENTARY")),
+            ("parallelVersions", lambda: self.runCompareAction("PARALLEL")),
+            ("sideBySideComparison", lambda: self.runCompareAction("SIDEBYSIDE")),
+            ("rowByRowComparison", lambda: self.runCompareAction("COMPARE")),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        menu.addSeparator()
+        for c in bible.getChapterList(config.mainB):
+            action = menu.addAction(str(c))
+            action.triggered.connect(partial(self.mainRefMenuSelected, (bible, "c", c)))
+            action.setCheckable(True)
+            action.setChecked(True if c == config.mainC else False)
+        self.mainC.setMenu(menu)
+        # Verse menu
+        self.mainV.setText(str(config.mainV))
+        self.mainV.setToolTip(config.thisTranslation["menu_verse"])
+        self.mainV.setPopupMode(QToolButton.InstantPopup)
+        self.mainV.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.mainV)
+        subMenu = menu.addMenu(config.thisTranslation["menu_verseNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "verse"))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "verse"))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_verse"])
+        features = (
+            ("menu4_compareAll", lambda: self.runFeature("COMPARE")),
+            ("contrasts", lambda: self.runFeature("DIFFERENCE")),
+            ("menu4_crossRef", lambda: self.runFeature("CROSSREFERENCE")),
+            ("menu4_tske", lambda: self.runFeature("TSKE")),
+            ("menu4_traslations", lambda: self.runFeature("TRANSLATION")),
+            ("menu4_discourse", lambda: self.runFeature("DISCOURSE")),
+            ("menu4_words", lambda: self.runFeature("WORDS")),
+            ("menu4_tdw", lambda: self.runFeature("COMBO")),
+            ("menu4_indexes", lambda: self.runFeature("INDEX")),
+            ("menu4_commentary", lambda: self.runFeature("COMMENTARY")),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        action = subMenu.addAction(config.thisTranslation["interlinearData"])
+        action.triggered.connect(partial(self.runPlugin, "Interlinear Data"))
+        menu.addSeparator()
+        for v in bible.getVerseList(config.mainB, config.mainC):
+            action = menu.addAction(str(v))
+            action.triggered.connect(partial(self.mainRefMenuSelected, (bible, "v", v)))
+            action.setCheckable(True)
+            action.setChecked(True if v == config.mainV else False)
+        self.mainV.setMenu(menu)
+
+    def mainRefMenuSelected(self, bcvValue):
+        bible, bcv, value = bcvValue
+        if bcv == "b":
+            config.mainB = value
+            chapterList = bible.getChapterList(config.mainB)
+            config.mainC = chapterList[0] if chapterList else 1
+            verseList = bible.getVerseList(config.mainB, config.mainC)
+            config.mainV = verseList[0] if verseList else 1
+        elif bcv == "c":
+            config.mainC = value
+            verseList = bible.getVerseList(config.mainB, config.mainC)
+            config.mainV = verseList[0] if verseList else 1
+        elif bcv == "v":
+            config.mainV = value
+        self.openMainChapterMaterial()
+
+    def setStudyRefMenu(self):
+        bible = Bible(config.studyText)
+        noteBcv = "{0}.{1}.{2}".format(config.studyB, config.studyC, config.studyV)
+        bcv = self.bcvToVerseReference(config.studyB, config.studyC, config.studyV)
+        bc = bcv.split(":")[0]
+        # Book menu
+        abbreviations = BibleVerseParser(config.parserStandarisation).standardAbbreviation
+        self.studyB.setText(abbreviations[str(config.studyB)])
+        self.studyB.setToolTip(config.thisTranslation["menu_book"])
+        self.studyB.setPopupMode(QToolButton.InstantPopup)
+        self.studyB.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.studyB)
+        subMenu = menu.addMenu(config.thisTranslation["menu_bookNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "book", noteBcv))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "book", noteBcv))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_book"])
+        features = (
+            ("html_introduction", lambda: self.searchBookChapter("Tidwell_The_Bible_Book_by_Book", config.studyB)),
+            ("html_timelines", lambda: self.searchBookChapter("Timelines", config.studyB)),
+            ("context1_dict", lambda: self.searchBookName(True, config.studyB)),
+            ("context1_encyclopedia", lambda: self.searchBookName(False, config.studyB)),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        menu.addSeparator()
+        for b in bible.getBookList():
+            if str(b) in abbreviations:
+                action = menu.addAction(abbreviations[str(b)])
+                action.triggered.connect(partial(self.studyRefMenuSelected, (bible, "b", b)))
+                action.setCheckable(True)
+                action.setChecked(True if b == config.studyB else False)
+        self.studyB.setMenu(menu)
+        # Chapter menu
+        self.studyC.setText(str(config.studyC))
+        self.studyC.setToolTip(config.thisTranslation["menu_chapter"])
+        self.studyC.setPopupMode(QToolButton.InstantPopup)
+        self.studyC.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.studyC)
+        subMenu = menu.addMenu(config.thisTranslation["menu_chapterNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "chapter", noteBcv))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "chapter", noteBcv))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_chapter"])
+        features = (
+            ("html_overview", lambda: self.chapterAction("OVERVIEW", bc)),
+            ("html_chapterIndex", lambda: self.chapterAction("CHAPTERINDEX", bc)),
+            ("html_summary", lambda: self.chapterAction("SUMMARY", bc)),
+            ("menu4_commentary", lambda: self.chapterAction("COMMENTARY", bc)),
+            ("parallelVersions", lambda: self.runCompareAction("PARALLEL", bcv)),
+            ("sideBySideComparison", lambda: self.runCompareAction("SIDEBYSIDE", bcv)),
+            ("rowByRowComparison", lambda: self.runCompareAction("COMPARE", bcv)),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        menu.addSeparator()
+        for c in bible.getChapterList(config.studyB):
+            action = menu.addAction(str(c))
+            action.triggered.connect(partial(self.studyRefMenuSelected, (bible, "c", c)))
+            action.setCheckable(True)
+            action.setChecked(True if c == config.studyC else False)
+        self.studyC.setMenu(menu)
+        # Verse menu
+        self.studyV.setText(str(config.studyV))
+        self.studyV.setToolTip(config.thisTranslation["menu_verse"])
+        self.studyV.setPopupMode(QToolButton.InstantPopup)
+        self.studyV.setArrowType(Qt.NoArrow)
+        menu = QMenu(self.studyV)
+        subMenu = menu.addMenu(config.thisTranslation["menu_verseNote"])
+        action = subMenu.addAction(config.thisTranslation["open"])
+        action.triggered.connect(partial(self.openBibleNotes, "verse", noteBcv))
+        action = subMenu.addAction(config.thisTranslation["edit"])
+        action.triggered.connect(partial(self.editBibleNotes, "verse", noteBcv))
+        subMenu = menu.addMenu(config.thisTranslation["menu4_verse"])
+        features = (
+            ("menu4_compareAll", lambda: self.runFeature("COMPARE", bcv)),
+            ("contrasts", lambda: self.runFeature("DIFFERENCE", bcv)),
+            ("menu4_crossRef", lambda: self.runFeature("CROSSREFERENCE", bcv)),
+            ("menu4_tske", lambda: self.runFeature("TSKE", bcv)),
+            ("menu4_traslations", lambda: self.runFeature("TRANSLATION", bcv)),
+            ("menu4_discourse", lambda: self.runFeature("DISCOURSE", bcv)),
+            ("menu4_words", lambda: self.runFeature("WORDS", bcv)),
+            ("menu4_tdw", lambda: self.runFeature("COMBO", bcv)),
+            ("menu4_indexes", lambda: self.runFeature("INDEX", bcv)),
+            ("menu4_commentary", lambda: self.runFeature("COMMENTARY", bcv)),
+        )
+        for description, triggered in features:
+            action = subMenu.addAction(config.thisTranslation[description])
+            action.triggered.connect(triggered)
+        #action = subMenu.addAction(config.thisTranslation["interlinearData"])
+        #action.triggered.connect(partial(self.runPlugin, "Interlinear Data"))
+        menu.addSeparator()
+        for v in bible.getVerseList(config.studyB, config.studyC):
+            action = menu.addAction(str(v))
+            action.triggered.connect(partial(self.studyRefMenuSelected, (bible, "v", v)))
+            action.setCheckable(True)
+            action.setChecked(True if v == config.studyV else False)
+        self.studyV.setMenu(menu)
+
+    def studyRefMenuSelected(self, bcvValue):
+        bible, bcv, value = bcvValue
+        if bcv == "b":
+            config.studyB = value
+            chapterList = bible.getChapterList(config.studyB)
+            config.studyC = chapterList[0] if chapterList else 1
+            verseList = bible.getVerseList(config.studyB, config.studyC)
+            config.studyV = verseList[0] if verseList else 1
+        elif bcv == "c":
+            config.studyC = value
+            verseList = bible.getVerseList(config.studyB, config.studyC)
+            config.studyV = verseList[0] if verseList else 1
+        elif bcv == "v":
+            config.studyV = value
+        self.openStudyChapterMaterial()
+
+    def setStudyBibleSelection(self):
+        label = config.studyText
+        toolTip = config.thisTranslation["studyWindowBible"]
+        selectedList = [config.studyText]
+        triggered = self.openStudyChapterMaterial
+        checkable = True
+        bibleCollections = True
+        bibleCollectionTriggered = self.openStudyChapterMaterial
+        bibleCollectionExpansion = True
+        self.setBibleSelectionMenuButton(self.studyBibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
+
+    def setBibleSelection(self):
+        label = config.mainText
+        toolTip = config.thisTranslation["selectSingleBible"]
+        selectedList = [config.mainText]
+        triggered = self.openMainChapterMaterial
+        checkable = True
+        bibleCollections = True
+        bibleCollectionTriggered = self.openMainChapterMaterial
+        bibleCollectionExpansion = True
+        self.setBibleSelectionMenuButton(self.bibleSelection, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered, bibleCollectionExpansion)
+
+    def bibleSelectionForComparisonSelected(self, text):
+        if text in config.compareParallelList:
+            config.compareParallelList.remove(text)
+        else:
+            config.compareParallelList.append(text)
+        config.compareParallelList.sort()
+        self.setBibleSelectionForComparison()
+
+    def bibleCollectionSelectionForComparisonSelected(self, collection=[]):
+        if not collection:
+            config.compareParallelList = [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]
+        elif collection in config.bibleCollections:
+            config.compareParallelList = config.bibleCollections[collection]
+        config.compareParallelList.sort()
+        self.setBibleSelectionForComparison()
+
+    def setBibleSelectionForComparison(self):
+        if not config.compareParallelList:
+            config.compareParallelList = [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]
+        label = "{0}, ...".format(config.compareParallelList[0])
+        toolTip = config.thisTranslation["selectMultipleBibles"]
+        selectedList = config.compareParallelList
+        triggered = self.bibleSelectionForComparisonSelected
+        checkable = True
+        bibleCollections = True
+        bibleCollectionTriggered = self.bibleCollectionSelectionForComparisonSelected
+        self.setBibleSelectionMenuButton(self.bibleSelectionForComparison, label, toolTip, triggered, checkable, selectedList, bibleCollections, bibleCollectionTriggered)
+
+    def setBibleSelectionMenuButton(self, menuButton, label, toolTip, triggered, checkable=False, selectedList=[], bibleCollections=False, bibleCollectionTriggered=None, bibleCollectionExpansion=False):
+        menuButton.setText(label)
+        menuButton.setToolTip(toolTip)
+        menuButton.setPopupMode(QToolButton.InstantPopup)
+        menuButton.setAutoRaise(True)
+        menuButton.setArrowType(Qt.NoArrow)
+        menu = QMenu(menuButton)
+        if bibleCollections:
+            if bibleCollectionExpansion:
+                subMenu = menu.addMenu(config.thisTranslation["menu_favouriteBible"])
+                for text in [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]:
+                    action = subMenu.addAction(text)
+                    action.setCheckable(True if checkable else False)
+                    if checkable and selectedList:
+                        action.setChecked(True if text in selectedList else False)
+                    if bibleCollectionTriggered:
+                        action.triggered.connect(partial(bibleCollectionTriggered, text))
+                for collection in config.bibleCollections:
+                    subMenu = menu.addMenu(collection)
+                    for text in config.bibleCollections[collection]:
+                        action = subMenu.addAction(text)
+                        action.setCheckable(True if checkable else False)
+                        if checkable and selectedList:
+                            action.setChecked(True if text in selectedList else False)
+                        if bibleCollectionTriggered:
+                            action.triggered.connect(partial(bibleCollectionTriggered, text))
+            else:
+                action = menu.addAction(config.thisTranslation["menu_favouriteBible"])
+                if bibleCollectionTriggered:
+                    action.triggered.connect(bibleCollectionTriggered)
+                for collection in config.bibleCollections:
+                    action = menu.addAction(collection)
+                    if bibleCollectionTriggered:
+                        action.triggered.connect(partial(bibleCollectionTriggered, collection))
+            menu.addSeparator()
+        for text in self.textList:
+            action = menu.addAction(text)
+            action.triggered.connect(partial(triggered, text))
+            action.setCheckable(True if checkable else False)
+            if checkable and selectedList:
+                selectedList = list(set(sorted(selectedList)))
+                action.setChecked(True if text in selectedList else False)
+        menuButton.setMenu(menu)
 
     def addBibleVersionButton(self):
         if self.textCommandParser.isDatabaseInstalled("bible"):
