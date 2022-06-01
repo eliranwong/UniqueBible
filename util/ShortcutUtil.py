@@ -432,7 +432,7 @@ class ShortcutUtil:
             "openFavouriteOriginalBibleOnMain2": "Ctrl+9",
             "openFavouriteOriginalBibleOnStudy2": "Ctrl+0",
             "launchMediaPlayer": "Ctrl+Shift+P",
-            "stopMediaPlayer": "Ctrl+Shift+Q",
+            "stopMediaPlayer": "Ctrl+Shift+Z",
             "toggleInstantHighlight": "Ctrl+Shift+H",
         },
         "syntemno": {
@@ -620,7 +620,7 @@ class ShortcutUtil:
         "Ctrl+Shift+N": "toggleShowUserNoteIndicator",
         "Ctrl+Shift+O": "showLibraryCatalogDialog",
         "Ctrl+Shift+P": "launchMediaPlayer",
-        "Ctrl+Shift+Q": "stopMediaPlayer",
+        "Ctrl+Shift+Q": "",
         "Ctrl+Shift+R": "toggleReadTillChapterEnd",
         "Ctrl+Shift+S": "contextSearchBible",
         "Ctrl+Shift+T": "contextDefaultTTS",
@@ -629,7 +629,7 @@ class ShortcutUtil:
         "Ctrl+Shift+W": "swapBibles",
         "Ctrl+Shift+X": "toggleHideLexicalEntryInBible",
         "Ctrl+Shift+Y": "",
-        "Ctrl+Shift+Z": "",
+        "Ctrl+Shift+Z": "stopMediaPlayer",
     }
 
     @staticmethod

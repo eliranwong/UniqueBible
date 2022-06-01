@@ -1,3 +1,7 @@
+Changes in 30.19:
+* Changed micron shortcut to stop media player from playing, to avoid conflict with the built-in shortcut combo "Ctrl+Shift+Q" on macOS.
+    Changed from Ctrl+Shift+Q to Ctrl+Shift+Z
+
 Changes in 30.18:
 * Added config.updateMainReferenceOnChaningTabs to enable / disable updating main reference buttons when Bible Window tabs are changed.
 * Added a wiki page on how to create an application shortcut on macOS:
