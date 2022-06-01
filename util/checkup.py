@@ -311,6 +311,13 @@ def isMarkdownInstalled():
     except:
         return False
 
+def isMacvlcInstalled():
+    try:
+        os.system("vlc kill")
+        return True
+    except:
+        return False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -355,6 +362,8 @@ def setInstallConfig(module, isInstalled):
         config.isMarkdownifyInstalled = isInstalled
     elif module == "markdown":
         config.isMarkdownInstalled = isInstalled
+    elif module == "mac-vlc":
+        config.isMacvlcInstalled = isMacvlcInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -435,7 +444,7 @@ for module, feature, isInstalled in required:
             exit(1)
 
 # Check if optional modules are installed
-optional = (
+optional = [
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
     ("mammoth", "Open DOCX file", isMammothInstalled),
@@ -452,7 +461,7 @@ optional = (
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
-) if config.noQt else (
+] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
@@ -474,7 +483,9 @@ optional = (
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
-)
+]
+if platform.system() == "Darwin":
+    optional.append(("mac-vlc", "macOS VLC.app scripts", isMacvlcInstalled))
 for module, feature, isInstalled in optional:
     if not isInstalled():
         pip3InstallModule(module)
@@ -505,9 +516,19 @@ if not config.isOfflineTtsInstalled and not config.isOnlineTtsInstalled:
     print("Text-to-speech feature is not enabled or supported on your device.")
 else:
     config.noTtsFound = False
+# Check if TTS speed adjustment is supported
+if config.forceOnlineTts and not config.isOnlineTtsInstalled:
+    config.forceOnlineTts = False
+config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
 # Check if builtin media player is in place:
 if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
     config.forceUseBuiltinMediaPlayer = False
+# Check if 3rd-party VLC player is installed on macOS
+macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
+config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
+# Disable mac-vlc feature when UBA is running on a non-macOS device even mac-vlc package is installed.
+if not platform.system() == "Darwin":
+    config.isMacvlcInstalled = False
 
 # Import modules for developer
 if config.developer:

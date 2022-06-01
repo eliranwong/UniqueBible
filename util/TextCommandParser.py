@@ -1552,7 +1552,11 @@ class TextCommandParser:
             else:
                 try:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
-                    if WebtopUtil.isPackageInstalled(player):
+                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                        if config.isMacvlcInstalled:
+                            os.system("vlc kill")
+                        WebtopUtil.run(f"{config.macVlc} {audioFile}")
+                    elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
                         os.system("pkill vlc")
                         WebtopUtil.run(f"{player} {audioFile}")
                         return ("", "", {})
@@ -1576,7 +1580,11 @@ class TextCommandParser:
                 return ("study", content, {})
             else:
                 try:
-                    if WebtopUtil.isPackageInstalled("cvlc"):
+                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                        if config.isMacvlcInstalled:
+                            os.system("vlc kill")
+                        WebtopUtil.run(f"{config.macVlc} {audioFile}")
+                    elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
@@ -1605,7 +1613,11 @@ class TextCommandParser:
                 return ("study", content, {})
             else:
                 try:
-                    if WebtopUtil.isPackageInstalled("cvlc"):
+                    if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                        if config.isMacvlcInstalled:
+                            os.system("vlc kill")
+                        WebtopUtil.run(f"{config.macVlc} {audioFile}")
+                    elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
@@ -1635,9 +1647,10 @@ class TextCommandParser:
 
     def openVlcPlayer(self, command, source, gui=True):
         try:
-            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
-            if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
-                WebtopUtil.run(f'{macVlc} "{command}"')
+            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                if config.isMacvlcInstalled:
+                    os.system("vlc kill")
+                WebtopUtil.run(f'{config.macVlc} "{command}"')
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 vlcCmd = "vlc" if gui else "cvlc"
                 if '"' in command:

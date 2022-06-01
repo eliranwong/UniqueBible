@@ -91,7 +91,8 @@ class MiscellaneousLauncher(QWidget):
             self.ttsSlider.setMaximum(310)
             self.ttsSlider.setValue(int(config.espeakSpeed if config.espeak else (160 + config.qttsSpeed * 150)))
             self.ttsSlider.valueChanged.connect(self.changeEspeakSpeed if config.espeak else self.changeQttsSpeed)
-        layout.addWidget(self.ttsSlider)
+        if not config.noTtsSpeedAdjustment:
+            layout.addWidget(self.ttsSlider)
 
         subLayout = QHBoxLayout()
 

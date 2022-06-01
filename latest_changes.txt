@@ -1,3 +1,10 @@
+Changes in 30.17:
+* Added ability to stop third-party VLC player from playing before launching another audio featuers on macOS.
+* Added support of using third-party VLC player on macOS to play audio with READVERSE::: READWORD::: and READLEXEME::: commands.
+* Integrated config.forceUseBuiltinMediaPlayer into various audio featuers.
+* Changed note editor text utility icon.
+* Master Control Miscellaneous tab now does not display speed adjustment slider when the chosen TTS engine does not support speed adjustment.
+
 Changes in 30.16:
 * Changed single version button appearance on material menu layout when control preference is set to "mini".
 * Added the following config flags to Set Config Flag window:

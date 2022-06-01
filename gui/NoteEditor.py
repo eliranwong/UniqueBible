@@ -296,7 +296,8 @@ class NoteEditor(QMainWindow):
         self.parent.addMaterialIconButton(toolTip, icon, self.toggleToolbar, self.menuBar, None, False)
 
         #icon = "material/navigation/campaign/materialiconsoutlined/48dp/2x/outline_campaign_black_48dp.png"
-        icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
+        #icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
+        icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         toolTip = config.thisTranslation["note_textUtility"]
         self.parent.addMaterialIconButton(toolTip, icon, self.toggleTextUtility, self.menuBar, None, False)
 

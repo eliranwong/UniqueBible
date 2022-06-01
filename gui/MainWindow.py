@@ -4904,12 +4904,13 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def openVlcPlayer(self, filename=""):
         try:
-            macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
-            if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
+            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                if config.isMacvlcInstalled:
+                    os.system("vlc kill")
                 if filename:
-                    WebtopUtil.run(f'{macVlc} "{filename}"')
+                    WebtopUtil.run(f'{config.macVlc} "{filename}"')
                 else:
-                    WebtopUtil.run(macVlc)
+                    WebtopUtil.run(config.macVlc)
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 if filename:
                     self.playAudioBibleFilePlayList([filename])
@@ -4925,6 +4926,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
+        if config.isMacvlcInstalled:
+            os.system("vlc kill")
         if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
             os.system("pkill vlc")
         if self.vlcPlayer is not None:
@@ -4943,11 +4946,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.playAudioBibleFilePlayList(playlist)
 
     def playAudioBibleFilePlayList(self, playlist, gui=True):
-        macVlc = '/Applications/VLC.app/Contents/MacOS/VLC'
-        if platform.system() == "Darwin" and os.path.isfile(macVlc) and not config.forceUseBuiltinMediaPlayer:
+        if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+            if config.isMacvlcInstalled:
+                os.system("vlc kill")
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
-            WebtopUtil.run(f"{macVlc} {audioFiles}")
+            WebtopUtil.run(f"{config.macVlc} {audioFiles}")
         elif playlist and WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
@@ -4966,28 +4970,40 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.vlcPlayer.playNextInPlaylist()
 
     def playBibleMP3Playlist(self, playlist):
-        if playlist and WebtopUtil.isPackageInstalled("vlc"):
-            fileList = []
-            for listItem in playlist:
-                (text, book, chapter, verse, folder) = listItem
-                file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
-                if file:
-                    fileList.append(file)
-            audioFiles = ' '.join(fileList)
-            os.system("pkill vlc")
-            WebtopUtil.run(f"vlc {audioFiles}")
-        elif playlist and config.isVlcInstalled:
-            from gui.VlcPlayer import VlcPlayer
-            if self.vlcPlayer is not None:
-                self.vlcPlayer.close()
-            self.vlcPlayer = VlcPlayer(self)
-            for listItem in playlist:
-                (text, book, chapter, verse, folder) = listItem
-                file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
-                if file:
-                    self.vlcPlayer.addToPlaylist(file)
-            self.vlcPlayer.show()
-            self.vlcPlayer.playNextInPlaylist()
+        if playlist:
+            if config.macVlc and not config.forceUseBuiltinMediaPlayer:
+                fileList = []
+                for listItem in playlist:
+                    (text, book, chapter, verse, folder) = listItem
+                    file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
+                    if file:
+                        fileList.append(file)
+                audioFiles = ' '.join(fileList)
+                if config.isMacvlcInstalled:
+                    os.system("vlc kill")
+                WebtopUtil.run(f"{config.macVlc} {audioFiles}")
+            elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
+                fileList = []
+                for listItem in playlist:
+                    (text, book, chapter, verse, folder) = listItem
+                    file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
+                    if file:
+                        fileList.append(file)
+                audioFiles = ' '.join(fileList)
+                os.system("pkill vlc")
+                WebtopUtil.run(f"vlc {audioFiles}")
+            elif config.isVlcInstalled:
+                from gui.VlcPlayer import VlcPlayer
+                if self.vlcPlayer is not None:
+                    self.vlcPlayer.close()
+                self.vlcPlayer = VlcPlayer(self)
+                for listItem in playlist:
+                    (text, book, chapter, verse, folder) = listItem
+                    file = FileUtil.getBibleMP3File(text, book, folder, chapter, verse)
+                    if file:
+                        self.vlcPlayer.addToPlaylist(file)
+                self.vlcPlayer.show()
+                self.vlcPlayer.playNextInPlaylist()
 
     def playBibleMP3File(self, text, book, chapter, folder=config.defaultMP3BibleFolder):
         playlist = []
