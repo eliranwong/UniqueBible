@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "サードパーティのメディアプレーヤーではなく、内蔵のメディアプレーヤーを",
     "usePySide2onWebtop": "Webtop バージョンで PySide2 を使用する",
     "usePySide6onMacOS": "macOS で PySide6 を使用する",
+    "updateMainReferenceOnChaningTabs": "「バイブル」ウィンドウのタブが変更された場合のメイン参照ボタン",
 }

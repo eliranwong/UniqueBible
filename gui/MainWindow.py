@@ -499,6 +499,8 @@ class MainWindow(QMainWindow):
         if isinstance(event, QEvent):
             return QWidget.event(self, event)
 
+    # manage main page
+
     def checkToolTipCommand(self, tabToolTip):
         texts = re.search(":::([^:]+?):::", tabToolTip)
         if texts:
@@ -512,39 +514,39 @@ class MainWindow(QMainWindow):
             text = config.mainText
         return text
 
-    # manage main page
     def setMainPage(self):
         # main page changes as tab is changed.
         # print(self.mainView.currentIndex())
         self.mainPage = self.mainView.currentWidget().page()
-        # check command stored in each tab's tooltip
-        tabText = self.mainView.tabText(self.mainView.currentIndex()).strip()
-        tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
-        if tabToolTip:
-            # check reference
-            references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabText)
-            if references:
-                b, c, v, *_ = references[-1]
-                bcvTuple = (b, c, v)
-            else:
-                references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
+        if config.updateMainReferenceOnChaningTabs:
+            # check command stored in each tab's tooltip
+            tabText = self.mainView.tabText(self.mainView.currentIndex()).strip()
+            tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
+            if tabToolTip:
+                # check reference
+                references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabText)
                 if references:
                     b, c, v, *_ = references[-1]
                     bcvTuple = (b, c, v)
                 else:
-                    bcvTuple = (config.mainB, config.mainC, config.mainV)
-            # check text
-            if "-" in tabText:
-                textForCheck = tabText.split("-", 1)[0]
-                textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
-                if textList:
-                    text = textList[0]
+                    references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
+                    if references:
+                        b, c, v, *_ = references[-1]
+                        bcvTuple = (b, c, v)
+                    else:
+                        bcvTuple = (config.mainB, config.mainC, config.mainV)
+                # check text
+                if "-" in tabText:
+                    textForCheck = tabText.split("-", 1)[0]
+                    textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
+                    if textList:
+                        text = textList[0]
+                    else:
+                        text = self.checkToolTipCommand(tabToolTip)
                 else:
                     text = self.checkToolTipCommand(tabToolTip)
-            else:
-                text = self.checkToolTipCommand(tabToolTip)
-            # Update main reference button and text
-            self.textCommandParser.setMainVerse(text, bcvTuple)
+                # Update main reference button and text
+                self.textCommandParser.setMainVerse(text, bcvTuple)
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)

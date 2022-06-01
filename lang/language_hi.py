@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "तीसरे पक्ष के मीडिया प्लेयर के बजाय अंतर्निहित मीडिया प्लेयर का उपयोग करें.",
     "usePySide2onWebtop": "वेबटॉप संस्करण पर Pysie2 का उपयोग करें",
     "usePySide6onMacOS": "मैक्रोस पर PySO6 का प्रयोग करें",
+    "updateMainReferenceOnChaningTabs": "मुख्य संदर्भ बटन को अद्यतन करें जब बाइबल विंडो के टैब बदल दिए जाते हैं.",
 }

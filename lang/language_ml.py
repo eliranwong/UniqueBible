@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "മൂന്നാം പാർട്ടി മീഡിയ കളിക്കാരന്റെ പകരം ബിൽറ്റ് ഉപയോഗിക്കുക.",
     "usePySide2onWebtop": "വെബ്ടോപ്പ് പതിപ്പില് PySide2 ഉപയോഗിക്കുക",
     "usePySide6onMacOS": "à '- à', à ', à', à ', à', à ', à '",
+    "updateMainReferenceOnChaningTabs": "ബൈബിള് ജാലകം ടാബുകള് മാറ്റുമ്പോള് പ്രധാന റഫറൻസ് ബട്ടണുകള് പരിഷ്കരിക്കുക.",
 }

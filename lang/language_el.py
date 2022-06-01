@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Χρησιμοποιήστε ενσωματωμένο media player αντί για τρίτο παίκτη media player.",
     "usePySide2onWebtop": "Χρήση PySide2 για Webtop έκδοση",
     "usePySide6onMacOS": "Χρήση του PySide6 για μακροεντολές",
+    "updateMainReferenceOnChaningTabs": "Ενημέρωση κύριων κουμπιών αναφοράς όταν αλλάζουν οι καρτέλες παραθύρων της Βίβλου.",
 }

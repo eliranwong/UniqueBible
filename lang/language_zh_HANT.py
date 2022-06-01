@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "使用內建媒體播放器，而非第三方媒體播放程式。",
     "usePySide2onWebtop": "在 Webtop 版本上使用 PySide2",
     "usePySide6onMacOS": "在 macOS 上使用 PySide6",
+    "updateMainReferenceOnChaningTabs": "轉換聖經視窗的頁籤時，更新經文參照按鈕的顯示。",
 }

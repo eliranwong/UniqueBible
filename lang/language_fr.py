@@ -890,4 +890,5 @@ translation = {
     "forceUseBuiltinMediaPlayer": "Utilisez un lecteur multimédia intégré au lieu d'un lecteur tiers.",
     "usePySide2onWebtop": "Utiliser PySide2 sur la version Webtop",
     "usePySide6onMacOS": "Utiliser PySide6 sur macOS",
+    "updateMainReferenceOnChaningTabs": "Mettre à jour les boutons de référence principaux lorsque les onglets de la fenêtre de la Bible sont modifiés.",
 }

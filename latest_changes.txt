@@ -1,3 +1,8 @@
+Changes in 30.18:
+* Added config.updateMainReferenceOnChaningTabs to enable / disable updating main reference buttons when Bible Window tabs are changed.
+* Added a wiki page on how to create an application shortcut on macOS:
+    https://github.com/eliranwong/UniqueBible/wiki/Create-an-Executable-Shortcut-on-macOS
+
 Changes in 30.17:
 * Added ability to stop third-party VLC player from playing before launching another audio featuers on macOS.
 * Added support of using third-party VLC player on macOS to play audio with READVERSE::: READWORD::: and READLEXEME::: commands.

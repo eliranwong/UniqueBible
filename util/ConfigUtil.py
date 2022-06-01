@@ -359,6 +359,10 @@ class ConfigUtil:
         # Options to open Study Window's content in the tab next to the current one: True / False"""
         if not hasattr(config, "openStudyWindowContentOnNextTab"):
             config.openStudyWindowContentOnNextTab = True
+        config.help["updateMainReferenceOnChaningTabs"] = """
+        # Options to update main reference buttons when Bible Window tabs are changed: True / False"""
+        if not hasattr(config, "updateMainReferenceOnChaningTabs"):
+            config.updateMainReferenceOnChaningTabs = True
         config.help["fixLoadingContent"] = """
         # Fix loading content issues encountered with PySide6."""
         if not hasattr(config, "fixLoadingContent"):
@@ -1282,6 +1286,7 @@ class ConfigUtil:
             ("populateTabsOnStartup", config.populateTabsOnStartup),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab),
+            ("updateMainReferenceOnChaningTabs", config.updateMainReferenceOnChaningTabs),
             ("fixLoadingContent", config.fixLoadingContent),
             ("preferHtmlMenu", config.preferHtmlMenu),
             ("parserStandarisation", config.parserStandarisation),
