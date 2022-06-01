@@ -886,4 +886,8 @@ translation = {
     "enableStudyWindowBible": "Включить Библию окон исследования",
     "clearAll": "Очистить все",
     "englishDictionaries": "Английские словари",
+    "fixLoadingContent": "В macOS возникла неполадка при загрузке содержимого.",
+    "forceUseBuiltinMediaPlayer": "Используйте встроенный проигрыватель мультимедиа вместо стороннего медиаплеера.",
+    "usePySide2onWebtop": "Использовать PySide2 в версии Webtop",
+    "usePySide6onMacOS": "Использовать PySide6 в macOS",
 }

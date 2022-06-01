@@ -68,6 +68,9 @@ class ConfigFlagsWindow(QDialog):
             ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, False, config.thisTranslation["clearCommandEntry"]),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, False, config.thisTranslation["openBibleWindowContentOnNextTab"]),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, True, config.thisTranslation["openStudyWindowContentOnNextTab"]),
+            ("fixLoadingContent", config.fixLoadingContent, self.fixLoadingContentChanged, False, config.thisTranslation["fixLoadingContent"]),
+            ("usePySide2onWebtop", config.usePySide2onWebtop, self.usePySide2onWebtopChanged, True, config.thisTranslation["usePySide2onWebtop"]),
+            ("usePySide6onMacOS", config.usePySide6onMacOS, self.usePySide6onMacOSChanged, True, config.thisTranslation["usePySide6onMacOS"]),
             ("populateTabsOnStartup", config.populateTabsOnStartup, self.populateTabsOnStartupChanged, False, config.thisTranslation["populateTabsOnStartup"]),
             ("qtMaterial", config.qtMaterial, self.qtMaterialChanged, False, config.thisTranslation["qtMaterial"]),
             ("startFullScreen", config.startFullScreen, self.startFullScreenChanged, False, "Option to launch UBA in fullscreen."),
@@ -127,6 +130,7 @@ class ConfigFlagsWindow(QDialog):
             ("disableLoadLastOpenFilesOnStartup", config.disableLoadLastOpenFilesOnStartup, self.disableLoadLastOpenFilesOnStartupChanged, False, config.thisTranslation["disableLoadLastOpenFilesOnStartup"]),
             ("disableOpenPopupWindowOnStartup", config.disableOpenPopupWindowOnStartup, self.disableOpenPopupWindowOnStartupChanged, True, config.thisTranslation["disableOpenPopupWindowOnStartup"]),
             ("showMiniKeyboardInMiniControl", config.showMiniKeyboardInMiniControl, self.showMiniKeyboardInMiniControlChanged, False, config.thisTranslation["showMiniKeyboardInMiniControl"]),
+            ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer, self.forceUseBuiltinMediaPlayerChanged, False, config.thisTranslation["forceUseBuiltinMediaPlayer"]),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse, self.hideVlcInterfaceReadingSingleVerseChanged, True, config.thisTranslation["hideVlcInterfaceReadingSingleVerse"]),
         ]
         if config.isOfflineTtsInstalled:
@@ -275,6 +279,9 @@ class ConfigFlagsWindow(QDialog):
         if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
             config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
 
+    def forceUseBuiltinMediaPlayerChanged(self):
+        config.forceUseBuiltinMediaPlayer = not config.forceUseBuiltinMediaPlayer
+
     def ttsChineseAlwaysCantoneseChanged(self):
         config.ttsChineseAlwaysCantonese = not config.ttsChineseAlwaysCantonese
         if config.ttsChineseAlwaysMandarin and config.ttsChineseAlwaysCantonese:
@@ -314,6 +321,9 @@ class ConfigFlagsWindow(QDialog):
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab
         self.newTabException = False
+
+    def fixLoadingContentChanged(self):
+        config.fixLoadingContent = not config.fixLoadingContent
 
     def addFavouriteToMultiRefChanged(self):
         config.addFavouriteToMultiRef = not config.addFavouriteToMultiRef
@@ -457,6 +467,14 @@ class ConfigFlagsWindow(QDialog):
     def enablePluginsChanged(self):
         config.enablePlugins = not config.enablePlugins
         self.parent.setupMenuLayout(config.menuLayout)
+
+    def usePySide2onWebtopChanged(self):
+        config.usePySide2onWebtop = not config.usePySide2onWebtop
+        self.handleRestart()
+
+    def usePySide6onMacOSChanged(self):
+        config.usePySide6onMacOS = not config.usePySide6onMacOS
+        self.handleRestart()
 
     def clearCommandEntryChanged(self):
         config.clearCommandEntry = not config.clearCommandEntry

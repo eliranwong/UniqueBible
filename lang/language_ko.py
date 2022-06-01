@@ -886,4 +886,8 @@ translation = {
     "enableStudyWindowBible": "연구 창 성서 사용 가능",
     "clearAll": "모두 지우기",
     "englishDictionaries": "영어 사전",
+    "fixLoadingContent": "수정사항 로드 컨텐츠 문제가 macOS에 표시되었습니다.",
+    "forceUseBuiltinMediaPlayer": "타사 미디어 플레이어 대신 내장 미디어 플레이어를 사용합니다.",
+    "usePySide2onWebtop": "Webtop 버전에서 PySide2 사용하기",
+    "usePySide6onMacOS": "macOS 에서 PySide6 사용하기",
 }

@@ -886,4 +886,8 @@ translation = {
     "enableStudyWindowBible": "Activați Biblia de studiu",
     "clearAll": "Șterge toate",
     "englishDictionaries": "Dicţionare engleză",
+    "fixLoadingContent": "Fix problema conținutului de încărcare a apărut pe macOS.",
+    "forceUseBuiltinMediaPlayer": "Utilizați built-in media player în loc de terță parte media player.",
+    "usePySide2onWebtop": "Utilizați PySide2 pe versiunea Webtop",
+    "usePySide6onMacOS": "Utilizați PySide6 pe macOS",
 }

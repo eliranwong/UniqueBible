@@ -709,8 +709,9 @@ class MaterialMainWindow:
         if config.refButtonClickAction == "mini":
             self.versionCombo = None
             self.bibleSelection = None
-            self.versionButton = QPushButton(config.mainText)
-            self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar, self.versionButton)
+            #self.versionButton = QPushButton(config.mainText)
+            #self.addStandardTextButton("bibleVersion", self.versionButtonClicked, self.firstToolBar, self.versionButton)
+            self.versionButton = self.firstToolBar.addAction(config.mainText, self.versionButtonClicked)
         else:
             self.versionButton = None
             self.versionCombo = None

@@ -886,4 +886,8 @@ translation = {
     "enableStudyWindowBible": "啟用研習視窗聖經",
     "clearAll": "全部清除",
     "englishDictionaries": "英文字典",
+    "fixLoadingContent": "修正在 macOS 上出現的載入內容問題。",
+    "forceUseBuiltinMediaPlayer": "使用內建媒體播放器，而非第三方媒體播放程式。",
+    "usePySide2onWebtop": "在 Webtop 版本上使用 PySide2",
+    "usePySide6onMacOS": "在 macOS 上使用 PySide6",
 }

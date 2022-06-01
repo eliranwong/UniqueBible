@@ -1,3 +1,11 @@
+Changes in 30.16:
+* Changed single version button appearance on material menu layout when control preference is set to "mini".
+* Added the following config flags to Set Config Flag window:
+    forceUseBuiltinMediaPlayer
+    usePySide2onWebtop
+    usePySide6onMacOS
+    fixLoadingContent
+
 Changes in 30.14, 30.15:
 * Fixed blank bible selection button when config.refButtonClickAction is set to "mini".
 

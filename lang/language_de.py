@@ -886,4 +886,8 @@ translation = {
     "enableStudyWindowBible": "Bibel für Studienfenster aktivieren",
     "clearAll": "Alle löschen",
     "englishDictionaries": "Englische Wörterbücher",
+    "fixLoadingContent": "Fehler beim Laden des Ladeinhalts sind auf macOS aufgetreten.",
+    "forceUseBuiltinMediaPlayer": "Verwenden Sie den integrierten Mediaplayer anstelle des Media-Players eines anderen Anbieters",
+    "usePySide2onWebtop": "PySide2 auf Webtop-Version verwenden",
+    "usePySide6onMacOS": "PySide6 auf macOS verwenden",
 }
