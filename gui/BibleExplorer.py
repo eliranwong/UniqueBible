@@ -40,6 +40,13 @@ class BibleExplorer(QWidget):
         mainLayout.addWidget(self.featuresWidget())
         self.setLayout(mainLayout)
 
+        # Workaround display issues on macOS with PySide6
+        collectionList = [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]
+        self.parallelCombo.checkFromList(collectionList)
+        self.parallelVersesCombo.checkFromList(collectionList)
+        self.compareCombo.checkFromList(collectionList)
+        self.differenceCombo.checkFromList(collectionList)
+
     def navigationWidget(self):
         navigation = QWidget()
 
@@ -155,6 +162,7 @@ class BibleExplorer(QWidget):
         row = [
             ("All", lambda: self.selectCollection("All")),
             ("None", lambda: self.selectCollection("None")),
+            ("Favourite", lambda: self.selectCollection("Favourite")),
         ]
         count = len(row)
         for collection in sorted(config.bibleCollections.keys()):
@@ -282,13 +290,17 @@ class BibleExplorer(QWidget):
         features = QWidget()
         featuresLayout = QFormLayout()
         featuresLayout.setSpacing(5)
-        featuresLayout.addRow(self.bookLabel, self.bookFeatures())
-        featuresLayout.addRow(self.chapterLabel, self.chapterFeatures())
-        featuresLayout.addRow(self.verseLabel, self.verseFeatures())
+        featuresLayout.addRow("", self.bookLabel)
+        featuresLayout.addRow("", self.bookFeatures())
+        featuresLayout.addRow("", self.chapterLabel)
+        featuresLayout.addRow("", self.chapterFeatures())
+        featuresLayout.addRow("", self.verseLabel)
+        featuresLayout.addRow("", self.verseFeatures())
         features.setLayout(featuresLayout)
         return features
     
     def updateBcvLabels(self):
+        pass
         self.bookLabel.setText(self.getSelectedReferenceBook())
         self.chapterLabel.setText(self.getSelectedReferenceChapter())
         self.verseLabel.setText(self.getSelectedReference())
@@ -433,18 +445,29 @@ class BibleExplorer(QWidget):
             self.compareCombo.checkAll()
             self.differenceCombo.checkAll()
         elif collection == "None":
+            self.versionCombo.clear()
+            self.versionCombo.addItems(self.textList)
+            for index, fullName in enumerate(self.parent.textFullNameList):
+                self.versionCombo.setItemData(index, fullName, Qt.ToolTipRole)
             self.parallelCombo.clearAll()
             self.parallelVersesCombo.clearAll()
             self.compareCombo.clearAll()
             self.differenceCombo.clearAll()
+        elif collection == "Favourite":
+            collectionList = [config.favouriteBible, config.favouriteBible2, config.favouriteBible3]
+            self.updateBibleVersionCombo(collectionList)
         else:
-            self.versionCombo.clear()
-            self.versionCombo.addItems(config.bibleCollections[collection])
-            for i in range(self.versionCombo.model().rowCount()):
-                text = self.versionCombo.model().item(i).text()
-                fullName = Bible(text).bibleInfo()
-                self.versionCombo.setItemData(i, fullName, Qt.ToolTipRole)
-            self.parallelCombo.checkFromList(config.bibleCollections[collection])
-            self.parallelVersesCombo.checkFromList(config.bibleCollections[collection])
-            self.compareCombo.checkFromList(config.bibleCollections[collection])
-            self.differenceCombo.checkFromList(config.bibleCollections[collection])
+            collectionList = config.bibleCollections[collection]
+            self.updateBibleVersionCombo(collectionList)
+
+    def updateBibleVersionCombo(self, collectionList):
+        self.versionCombo.clear()
+        self.versionCombo.addItems(collectionList)
+        for i in range(self.versionCombo.model().rowCount()):
+            text = self.versionCombo.model().item(i).text()
+            fullName = Bible(text).bibleInfo()
+            self.versionCombo.setItemData(i, fullName, Qt.ToolTipRole)
+        self.parallelCombo.checkFromList(collectionList)
+        self.parallelVersesCombo.checkFromList(collectionList)
+        self.compareCombo.checkFromList(collectionList)
+        self.differenceCombo.checkFromList(collectionList)

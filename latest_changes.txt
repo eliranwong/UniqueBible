@@ -1,3 +1,11 @@
+Changes in 30.20:
+* Added direct support of macOS text-to-speech engine.
+    We will write a wiki about adding additional voices.
+* Fixed checkable combo box display issues on macOS with PySide6.
+* Reduced Master Control Width.
+* Added tooltips in Master Ccontrol Search Tab drop down menu.
+* Changed default value of config.updateMainReferenceOnChaningTabs to False.
+
 Changes in 30.19:
 * Changed micron shortcut to stop media player from playing, to avoid conflict with the built-in shortcut combo "Ctrl+Shift+Q" on macOS.
     Changed from Ctrl+Shift+Q to Ctrl+Shift+Z

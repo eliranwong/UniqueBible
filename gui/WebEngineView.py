@@ -48,7 +48,7 @@ class WebEngineView(QWebEngineView):
         self.parent.parent.displayMessage(message)
 
     def updateDefaultTtsVoice(self):
-        display = "{0} [{1}] | {2}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge, sc.contextDefaultTTS)
+        display = "{0} {3}{1}{4} | {2}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge, sc.contextDefaultTTS, "" if config.macVoices else "[", "" if config.macVoices else "]")
         self.defaultTTSVoice.setText(display)
 
     def updateContextMenu(self):

@@ -1,4 +1,4 @@
-import config, subprocess, os, zipfile, platform, sys
+import config, subprocess, os, zipfile, platform, sys, re
 from shutil import copyfile
 from util.WebtopUtil import WebtopUtil
 
@@ -233,7 +233,27 @@ def isHtmlTextInstalled():
 
 # Check if OFFLINE text-to-speech feature is in place.
 def isOfflineTtsInstalled():
-    if platform.system() == "Linux" and config.espeak:
+
+    # Check macOS built-in text-to-speech voices
+    config.macVoices = {}
+    if platform.system() == "Darwin":
+        macVoices = {}
+        os.system('say -v "?" > macOS_voices.txt')
+        with open('macOS_voices.txt', 'r') as textFile:
+            voices = textFile.read()
+        voices = re.sub(" [ ]+?([^ ])", r" \1", voices)
+        voices = re.sub(" [ ]*?#.*?$", "", voices, flags=re.M)
+        voices = re.sub(" ([A-Za-z_]+?)$", r"＊\1", voices, flags=re.M)
+        voices = voices.split("\n")
+        for voice in voices:
+            if "＊" in voice:
+                voice, language = voice.split("＊")
+                label = "[{0}] {1}".format(language, voice)
+                macVoices[label] = ("", label)
+        for key in sorted(macVoices):
+            config.macVoices[key] = macVoices[key]
+        return True if config.macVoices else False
+    elif platform.system() == "Linux" and config.espeak:
         espeakInstalled, _ = subprocess.Popen("which espeak", shell=True, stdout=subprocess.PIPE).communicate()
         if not espeakInstalled:
             config.espeak = False
@@ -520,6 +540,8 @@ else:
 if config.forceOnlineTts and not config.isOnlineTtsInstalled:
     config.forceOnlineTts = False
 config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
+if not config.noTtsSpeedAdjustment and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts and config.macVoices:
+    config.noTtsSpeedAdjustment = True
 # Check if builtin media player is in place:
 if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
     config.forceUseBuiltinMediaPlayer = False

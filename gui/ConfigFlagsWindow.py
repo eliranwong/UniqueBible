@@ -68,7 +68,7 @@ class ConfigFlagsWindow(QDialog):
             ("clearCommandEntry", config.clearCommandEntry, self.clearCommandEntryChanged, False, config.thisTranslation["clearCommandEntry"]),
             ("openBibleWindowContentOnNextTab", config.openBibleWindowContentOnNextTab, self.openBibleWindowContentOnNextTabChanged, False, config.thisTranslation["openBibleWindowContentOnNextTab"]),
             ("openStudyWindowContentOnNextTab", config.openStudyWindowContentOnNextTab, self.openStudyWindowContentOnNextTabChanged, True, config.thisTranslation["openStudyWindowContentOnNextTab"]),
-            ("updateMainReferenceOnChaningTabs", config.updateMainReferenceOnChaningTabs, self.updateMainReferenceOnChaningTabsChanged, True, config.thisTranslation["updateMainReferenceOnChaningTabs"]),
+            ("updateMainReferenceOnChaningTabs", config.updateMainReferenceOnChaningTabs, self.updateMainReferenceOnChaningTabsChanged, False, config.thisTranslation["updateMainReferenceOnChaningTabs"]),
             ("fixLoadingContent", config.fixLoadingContent, self.fixLoadingContentChanged, False, config.thisTranslation["fixLoadingContent"]),
             ("usePySide2onWebtop", config.usePySide2onWebtop, self.usePySide2onWebtopChanged, True, config.thisTranslation["usePySide2onWebtop"]),
             ("usePySide6onMacOS", config.usePySide6onMacOS, self.usePySide6onMacOSChanged, True, config.thisTranslation["usePySide6onMacOS"]),

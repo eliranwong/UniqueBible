@@ -2,8 +2,10 @@ from functools import partial
 import config
 from gui.CheckableComboBox import CheckableComboBox
 if config.qtLibrary == "pyside6":
+    from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
 else:
+    from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
 
 
@@ -41,6 +43,7 @@ class SearchLauncher(QWidget):
         bibleLayout = QVBoxLayout()
         bibleLayout.setSpacing(10)
         self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText], toolTips=self.parent.textFullNameList)
+        self.bibleCombo.checkFromList([config.mainText])
         bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, self.searchBible))
         subLayout = QHBoxLayout()
         subLayout.setSpacing(5)
@@ -147,29 +150,40 @@ class SearchLauncher(QWidget):
         return self.parent.buttonsWidget(rows, False, False)
 
     def column2Widget(self):
+        maximumComboWidth = 350
+
         widget = QWidget()
 
         widgetLayout = QVBoxLayout()
         widgetLayout.setSpacing(10)
 
         subLayout = QHBoxLayout()
-        self.bookCombo = CheckableComboBox(self.parent.referenceBookList, [config.book])
+        self.bookCombo = CheckableComboBox(self.parent.referenceBookList, [config.book], toolTips=self.parent.referenceBookList)
+        # Workaround display issues on macOS with PySide6
+        self.bookCombo.checkFromList([config.book])
+        self.bookCombo.setMaximumWidth(maximumComboWidth)
         subLayout.addLayout(self.parent.comboFeatureLayout("menu5_selectBook", self.bookCombo, self.searchBook))
         #checkbox = self.highlightBookSearchResultCheckBox()
         #subLayout.addWidget(checkbox)
         widgetLayout.addLayout(subLayout)
 
         self.topicCombo = QComboBox()
+        self.topicCombo.setMaximumWidth(maximumComboWidth)
         initialTopicIndex = self.parent.topicListAbb.index(config.topic) if config.topic in self.parent.topicListAbb else 0
         self.lexiconCombo = QComboBox()
+        self.lexiconCombo.setMaximumWidth(maximumComboWidth)
         initialLexiconIndex = self.parent.lexiconList.index(config.lexicon) if config.lexicon in self.parent.lexiconList else 0
         self.reverseLexiconCombo = QComboBox()
+        self.reverseLexiconCombo.setMaximumWidth(maximumComboWidth)
         initialReverseLexiconIndex = self.parent.lexiconList.index(config.lexicon) if config.lexicon in self.parent.lexiconList else 0
         self.encyclopediaCombo = QComboBox()
+        self.encyclopediaCombo.setMaximumWidth(maximumComboWidth)
         initialEncyclopediaIndex = self.parent.encyclopediaListAbb.index(config.encyclopedia) if config.encyclopedia in self.parent.encyclopediaListAbb else 0
         self.dictionaryCombo = QComboBox()
+        self.dictionaryCombo.setMaximumWidth(maximumComboWidth)
         initialDictionaryIndex = self.parent.dictionaryListAbb.index(config.dictionary) if config.dictionary in self.parent.dictionaryListAbb else 0
         self.thirdPartyDictionaryCombo = QComboBox()
+        self.thirdPartyDictionaryCombo.setMaximumWidth(maximumComboWidth)
         initialThridPartyDictionaryIndex = self.parent.thirdPartyDictionaryList.index(config.thirdDictionary) if config.thirdDictionary in self.parent.thirdPartyDictionaryList else 0
         self.lexiconList = self.parent.lexiconList
         self.lexiconList.append(config.thisTranslation['searchAllLexicons'])
@@ -203,6 +217,8 @@ class SearchLauncher(QWidget):
 
     def singleSelectionLayout(self, combo, feature, action, items, initialIndex=0):
         combo.addItems(items)
+        for i, item in enumerate(items):
+            combo.setItemData(i, item, Qt.ToolTipRole)
         combo.setCurrentIndex(initialIndex)
         return self.parent.comboFeatureLayout(feature, combo, action)
 

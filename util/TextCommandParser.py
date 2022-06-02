@@ -1309,82 +1309,91 @@ class TextCommandParser:
         if command.count(":::") != 0:
             language, text = self.splitCommand(command)
 
-        # espeak has no support of "ko", "ko" here is used to correct detection of traditional chinese
-        # It is not recommended to use "ko" to correct language detection for "zh-tw", if qt built-in tts engine is used.
-        # Different from espeak, Qt text-to-speech has a qlocale on Korean.
-        # If the following two lines are uncommented, Korean text cannot be read.
-        # In case the language is wrongly detected, users can still use command line to specify a correct language.
-        if (config.espeak) and (language == "ko"):
-            language = "zh-tw"
-        if (language == "zh-cn") or (language == "zh-tw"):
-            if config.ttsChineseAlwaysCantonese:
-                language = "zh-tw"
-            elif config.ttsChineseAlwaysMandarin:
-                language = "zh-cn"
-        elif (language == "en") or (language == "en-gb"):
-            if config.ttsEnglishAlwaysUS:
-                language = "en"
-            elif config.ttsEnglishAlwaysUK:
-                language = "en-gb"
-        elif (language == "el"):
-            # Modern Greek
-            #language = "el"
-            # Ancient Greek
-            # To read accented Greek text, language have to be "grc" instead of "el" for espeak
-            # In dictionary mapping language to qlocale, we use "grc" for Greek language too.
-            language = "grc"
-        elif (config.espeak) and (language == "he"):
-            # espeak itself does not support Hebrew language
-            # Below workaround on Hebrew text-to-speech feature for espeak
-            # Please note this workaround is not a perfect solution, but something workable.
-            text = HebrewTransliteration().transliterateHebrew(text)
-            # Use "grc" to read, becuase it sounds closer to "he" than "en" does.
-            language = "grc"
-
-        if platform.system() == "Linux" and config.espeak:
-            if self.isEspeakInstalled:
-                isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
-                languages = TtsLanguages().isoLang2epeakLang.keys()
-                if not (config.ttsDefaultLangauge in languages):
-                    config.ttsDefaultLangauge = "en"
-                if not (language in languages):
-                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
-                    language = config.ttsDefaultLangauge
-                language = isoLang2epeakLang[language][0]
-                # subprocess is used
-                # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
-                self.cliTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if language.startswith("["):
+            if language in config.macVoices:
+                # save a text file first to avoid quotation marks in the text
+                with open('temp.txt', 'w') as file:
+                    file.write(text)
+                voice = re.sub("^\[.*?\] ", "", language)
+                WebtopUtil.run(f"say -v {voice} -f temp.txt")
             else:
-                self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
+                self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
         else:
-            # use qt built-in tts engine
-            engineNames = QTextToSpeech.availableEngines()
-            if engineNames:
-                self.qtTtsEngine = QTextToSpeech(engineNames[0])
-                #locales = self.qtTtsEngine.availableLocales()
-                #print(locales)
+            # espeak has no support of "ko", "ko" here is used to correct detection of traditional chinese
+            # It is not recommended to use "ko" to correct language detection for "zh-tw", if qt built-in tts engine is used.
+            # Different from espeak, Qt text-to-speech has a qlocale on Korean.
+            # If the following two lines are uncommented, Korean text cannot be read.
+            # In case the language is wrongly detected, users can still use command line to specify a correct language.
+            if (config.espeak) and (language == "ko"):
+                language = "zh-tw"
+            if (language == "zh-cn") or (language == "zh-tw"):
+                if config.ttsChineseAlwaysCantonese:
+                    language = "zh-tw"
+                elif config.ttsChineseAlwaysMandarin:
+                    language = "zh-cn"
+            elif (language == "en") or (language == "en-gb"):
+                if config.ttsEnglishAlwaysUS:
+                    language = "en"
+                elif config.ttsEnglishAlwaysUK:
+                    language = "en-gb"
+            elif (language == "el"):
+                # Modern Greek
+                #language = "el"
+                # Ancient Greek
+                # To read accented Greek text, language have to be "grc" instead of "el" for espeak
+                # In dictionary mapping language to qlocale, we use "grc" for Greek language too.
+                language = "grc"
+            elif (config.espeak) and (language == "he"):
+                # espeak itself does not support Hebrew language
+                # Below workaround on Hebrew text-to-speech feature for espeak
+                # Please note this workaround is not a perfect solution, but something workable.
+                text = HebrewTransliteration().transliterateHebrew(text)
+                # Use "grc" to read, becuase it sounds closer to "he" than "en" does.
+                language = "grc"
 
-                isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
-                languages = TtsLanguages().isoLang2qlocaleLang.keys()
-                if not (config.ttsDefaultLangauge in languages):
-                    config.ttsDefaultLangauge = "en"
-                if not (language in languages):
-                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
-                    language = config.ttsDefaultLangauge
-                self.qtTtsEngine.setLocale(isoLang2qlocaleLang[language][0])
-
-                self.qtTtsEngine.setVolume(1.0)
-                engineVoices = self.qtTtsEngine.availableVoices()
-                if engineVoices:
-                    self.qtTtsEngine.setVoice(engineVoices[0])
-
-                    # Control speed here
-                    self.qtTtsEngine.setRate(config.qttsSpeed)
-
-                    self.qtTtsEngine.say(text)
+            if platform.system() == "Linux" and config.espeak:
+                if self.isEspeakInstalled:
+                    isoLang2epeakLang = TtsLanguages().isoLang2epeakLang
+                    languages = TtsLanguages().isoLang2epeakLang.keys()
+                    if not (config.ttsDefaultLangauge in languages):
+                        config.ttsDefaultLangauge = "en"
+                    if not (language in languages):
+                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                        language = config.ttsDefaultLangauge
+                    language = isoLang2epeakLang[language][0]
+                    # subprocess is used
+                    # Discussion on use of "preexec_fn=os.setpgrp": https://stackoverflow.com/questions/23811650/is-there-a-way-to-make-os-killpg-not-kill-the-script-that-calls-it
+                    self.cliTtsProcess = subprocess.Popen(["espeak -s {0} -v {1} '{2}'".format(config.espeakSpeed, language, text)], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 else:
-                    self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                    self.parent.displayMessage(config.thisTranslation["message_noEspeak"])
+            else:
+                # use qt built-in tts engine
+                engineNames = QTextToSpeech.availableEngines()
+                if engineNames:
+                    self.qtTtsEngine = QTextToSpeech(engineNames[0])
+                    #locales = self.qtTtsEngine.availableLocales()
+                    #print(locales)
 
+                    isoLang2qlocaleLang = TtsLanguages().isoLang2qlocaleLang
+                    languages = TtsLanguages().isoLang2qlocaleLang.keys()
+                    if not (config.ttsDefaultLangauge in languages):
+                        config.ttsDefaultLangauge = "en"
+                    if not (language in languages):
+                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
+                        language = config.ttsDefaultLangauge
+                    self.qtTtsEngine.setLocale(isoLang2qlocaleLang[language][0])
+
+                    self.qtTtsEngine.setVolume(1.0)
+                    engineVoices = self.qtTtsEngine.availableVoices()
+                    if engineVoices:
+                        self.qtTtsEngine.setVoice(engineVoices[0])
+
+                        # Control speed here
+                        self.qtTtsEngine.setRate(config.qttsSpeed)
+
+                        self.qtTtsEngine.say(text)
+                    else:
+                        self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
         return ("", "", {})
 
     def stopTtsAudio(self):

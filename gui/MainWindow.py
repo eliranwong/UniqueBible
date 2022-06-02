@@ -2729,10 +2729,10 @@ class MainWindow(QMainWindow):
     def getStudyBibleDisplay(self):
         if config.openBibleInMainViewOnly:
             #return self.getCrossplatformPath("material/content/add_circle_outline/materialiconsoutlined/48dp/2x/outline_add_circle_outline_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
-            return self.getCrossplatformPath("material/toggle/toggle_off/materialiconsoutlined/48dp/2x/outline_toggle_off_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
+            return self.getCrossplatformPath("material/toggle/toggle_on/materialiconsoutlined/48dp/2x/outline_toggle_on_black_48dp.png") if config.menuLayout == "material" else "addStudyViewBible.png"
         else:
             #return self.getCrossplatformPath("material/content/remove_circle_outline/materialiconsoutlined/48dp/2x/outline_remove_circle_outline_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
-            return self.getCrossplatformPath("material/toggle/toggle_on/materialiconsoutlined/48dp/2x/outline_toggle_on_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
+            return self.getCrossplatformPath("material/toggle/toggle_off/materialiconsoutlined/48dp/2x/outline_toggle_off_black_48dp.png") if config.menuLayout == "material" else "deleteStudyViewBible.png"
 
     def getStudyBibleDisplayToolTip(self):
         return "{0}: {1}".format(config.thisTranslation["enableStudyWindowBible"], config.thisTranslation["on"] if not config.openBibleInMainViewOnly else config.thisTranslation["off"])
@@ -4127,10 +4127,21 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             languages = {}
             for language, languageCode in Languages.gTTSLanguageCodes.items():
                 languages[languageCode] = ("", language)
+        elif config.macVoices:
+            languages = config.macVoices
         elif config.espeak:
             languages = TtsLanguages().isoLang2epeakLang
         else:
             languages = TtsLanguages().isoLang2qlocaleLang
+        # Check default TTS language
+        if not config.ttsDefaultLangauge in languages:
+            notFound = True
+            while notFound:
+                for key in languages.keys():
+                    if key.startswith("en") or key.startswith("[en"):
+                        config.ttsDefaultLangauge = key
+                        notFound = False
+        # return languages
         return languages
 
     def setDefaultTtsLanguage(self, language):

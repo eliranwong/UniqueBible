@@ -362,7 +362,7 @@ class ConfigUtil:
         config.help["updateMainReferenceOnChaningTabs"] = """
         # Options to update main reference buttons when Bible Window tabs are changed: True / False"""
         if not hasattr(config, "updateMainReferenceOnChaningTabs"):
-            config.updateMainReferenceOnChaningTabs = True
+            config.updateMainReferenceOnChaningTabs = False
         config.help["fixLoadingContent"] = """
         # Fix loading content issues encountered with PySide6."""
         if not hasattr(config, "fixLoadingContent"):
