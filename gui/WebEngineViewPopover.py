@@ -1,5 +1,6 @@
 import os
 import config
+import shortcut as sc
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QKeySequence, QAction
     from PySide6.QtWidgets import QFileDialog
@@ -60,14 +61,14 @@ class WebEngineViewPopover(QWebEngineView):
 
         if not self.name == "popover":
             action = QAction(self)
-            action.setText(config.thisTranslation["openOnNewWindow"])
-            action.setShortcut(QKeySequence("Ctrl+Alt+B"))
+            action.setText("{0} | {1}".format(config.thisTranslation["openOnNewWindow"], sc.displayReferenceOnNewWindowPopover))
+            action.setShortcut(QKeySequence(sc.displayReferenceOnNewWindowPopover))
             action.triggered.connect(self.displayVersesInNewWindow)
             subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["bar1_menu"])
-        action.setShortcut(QKeySequence("Ctrl+Shift+B"))
+        action.setText("{0} | {1}".format(config.thisTranslation["bar1_menu"], sc.displayReferenceOnBibleWindowPopover))
+        action.setShortcut(QKeySequence(sc.displayReferenceOnBibleWindowPopover))
         action.triggered.connect(self.displayVersesInBibleWindow)
         subMenu.addAction(action)
 
@@ -77,8 +78,8 @@ class WebEngineViewPopover(QWebEngineView):
         subMenu.addAction(action)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["presentation"])
-        action.setShortcut(QKeySequence("Ctrl+Shift+P"))
+        action.setText("{0} | {1}".format(config.thisTranslation["presentation"], sc.presentPopover))
+        action.setShortcut(QKeySequence(sc.presentPopover))
         action.triggered.connect(self.displayVersesInPresentation)
         subMenu.addAction(action)
 
@@ -126,14 +127,14 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(separator)
 
         action = QAction(self)
-        action.setText(config.thisTranslation["context1_search"])
-        action.setShortcut(QKeySequence("Ctrl+F"))
+        action.setText("{0} | {1}".format(config.thisTranslation["context1_search"], sc.searchPopover))
+        action.setShortcut(QKeySequence(sc.searchPopover))
         action.triggered.connect(self.searchPanel)
         self.addAction(action)
         
         runAsCommandLine = QAction(self)
-        runAsCommandLine.setText(config.thisTranslation["context1_command"])
-        runAsCommandLine.setShortcut(QKeySequence("Ctrl+Shift+C"))
+        runAsCommandLine.setText("{0} | {1}".format(config.thisTranslation["context1_command"], sc.runCommandPopover))
+        runAsCommandLine.setShortcut(QKeySequence(sc.runCommandPopover))
         runAsCommandLine.triggered.connect(self.runAsCommand)
         self.addAction(runAsCommandLine)
 
@@ -142,8 +143,8 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(separator)
 
         qKey = QAction(self)
-        qKey.setText(config.thisTranslation["close"])
-        qKey.setShortcut(QKeySequence("Alt+Q"))
+        qKey.setText("{0} | {1}".format(config.thisTranslation["close"], sc.closePopoverWindow))
+        qKey.setShortcut(QKeySequence(sc.closePopoverWindow))
         qKey.triggered.connect(self.qKeyPressed)
         self.addAction(qKey)
 
@@ -170,7 +171,7 @@ class WebEngineViewPopover(QWebEngineView):
 
     def displayVersesInPresentation(self):
         selectedText = self.selectedText().strip()
-        self.parent.runPlugin("Presentation_Ctrl+Shift+P", selectedText)
+        self.parent.runPlugin("Presentation_Ctrl+Alt+P", selectedText)
 
     def searchPanel(self):
         selectedText = self.selectedText().strip()
@@ -204,6 +205,7 @@ class WebEngineViewPopover(QWebEngineView):
             config.pauseMode = False
 
     def qKeyPressed(self):
+        print("hello")
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
             config.quitMacro = True
             config.pauseMode = False

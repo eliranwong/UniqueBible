@@ -891,4 +891,7 @@ translation = {
     "usePySide2onWebtop": "വെബ്ടോപ്പ് പതിപ്പില് PySide2 ഉപയോഗിക്കുക",
     "usePySide6onMacOS": "à '- à', à ', à', à ', à', à ', à '",
     "updateMainReferenceOnChaningTabs": "ബൈബിള് ജാലകം ടാബുകള് മാറ്റുമ്പോള് പ്രധാന റഫറൻസ് ബട്ടണുകള് പരിഷ്കരിക്കുക.",
+    "ttsLanguage2": "à ', à', à ', à', à ', à', à ', à '",
+    "ttsLanguage3": "മൂന്നാം വാചകത്തിനുള്ള ശബ്ദം തെരഞ്ഞെടുക്കുക",
+    "doNotStop3rdPartyMediaPlayerOnExit": "UBA അടച്ചുപൂട്ടുമ്പോൾ മൂന്നാമത്തെ പാർട്ടി മീഡിയ കളിക്കാരൻ അടക്കരുത്.",
 }

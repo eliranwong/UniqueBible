@@ -891,4 +891,7 @@ translation = {
     "usePySide2onWebtop": "在 Webtop 版本上使用 PySide2",
     "usePySide6onMacOS": "在 macOS 上使用 PySide6",
     "updateMainReferenceOnChaningTabs": "轉換聖經視窗的頁籤時，更新經文參照按鈕的顯示。",
+    "ttsLanguage2": "選取第二語音",
+    "ttsLanguage3": "選取第三語音",
+    "doNotStop3rdPartyMediaPlayerOnExit": "在 UBA 關閉時，不要關閉第三方媒體播放機。",
 }

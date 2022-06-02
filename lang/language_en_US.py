@@ -891,4 +891,7 @@ translation = {
     "usePySide2onWebtop": "Use PySide2 on Webtop version",
     "usePySide6onMacOS": "Use PySide6 on macOS",
     "updateMainReferenceOnChaningTabs": "Update main reference buttons when Bible Window tabs are changed.",
+    "ttsLanguage2": "Select Second Text-to-speech Voice",
+    "ttsLanguage3": "Select Third Text-to-speech Voice",
+    "doNotStop3rdPartyMediaPlayerOnExit": "Do not close third-party media player when UBA is closed.",
 }

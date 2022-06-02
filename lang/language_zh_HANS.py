@@ -891,4 +891,7 @@ translation = {
     "usePySide2onWebtop": "在 Webtop 版本上使用 PySide2",
     "usePySide6onMacOS": "在 macOS 上使用 PySide6",
     "updateMainReferenceOnChaningTabs": "转换圣经视窗的页签时，更新经文参照按钮的显示。",
+    "ttsLanguage2": "选择第二语音",
+    "ttsLanguage3": "选择第三语音",
+    "doNotStop3rdPartyMediaPlayerOnExit": "当 UBA 关闭时，请勿关闭第三方媒体播放器。",
 }

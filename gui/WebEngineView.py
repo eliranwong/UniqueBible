@@ -1072,9 +1072,9 @@ class WebEngineView(QWebEngineView):
                 except:
                     self.displayMessage(config.thisTranslation["message_fail"])
 
-    def textToSpeechLanguage(self, language):
+    def textToSpeechLanguage(self, language, activeSelection=False):
         if config.isOfflineTtsInstalled:
-            selectedText = self.selectedTextProcessed()
+            selectedText = self.selectedTextProcessed(activeSelection)
             if not selectedText:
                 self.messageNoSelection()
             speakCommand = "SPEAK:::{0}:::{1}".format(language, selectedText)

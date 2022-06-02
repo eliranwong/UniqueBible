@@ -262,6 +262,14 @@ class ConfigUtil:
         # Default text-to-speech language"""
         if not hasattr(config, "ttsDefaultLangauge"):
             config.ttsDefaultLangauge = "en"
+        config.help["ttsDefaultLangauge2"] = """
+        # Second text-to-speech language"""
+        if not hasattr(config, "ttsDefaultLangauge2"):
+            config.ttsDefaultLangauge2 = ""
+        config.help["ttsDefaultLangauge3"] = """
+        # Third text-to-speech language"""
+        if not hasattr(config, "ttsDefaultLangauge3"):
+            config.ttsDefaultLangauge3 = ""
         config.help["ttsChineseAlwaysCantonese"] = """
         # Force text-to-speech feature to use Cantonese for all Chinese text."""
         if not hasattr(config, "ttsChineseAlwaysCantonese"):
@@ -543,6 +551,10 @@ class ConfigUtil:
         # Options to force UBA to use builtin media player even third-party VLC player is installed: True / False"""
         if not hasattr(config, "forceUseBuiltinMediaPlayer"):
             config.forceUseBuiltinMediaPlayer = False
+        config.help["doNotStop3rdPartyMediaPlayerOnExit"] = """
+        # Options to not stop 3rd-party media player on exit: True / False"""
+        if not hasattr(config, "doNotStop3rdPartyMediaPlayerOnExit"):
+            config.doNotStop3rdPartyMediaPlayerOnExit = False
         config.help["hideVlcInterfaceReadingSingleVerse"] = """
         # Options to hide VLC graphical interface on supported operating systems: True / False"""
         if not hasattr(config, "hideVlcInterfaceReadingSingleVerse"):
@@ -1271,6 +1283,8 @@ class ConfigUtil:
             ("macOSttsSpeed", config.macOSttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
+            ("ttsDefaultLangauge2", config.ttsDefaultLangauge2),
+            ("ttsDefaultLangauge3", config.ttsDefaultLangauge3),
             ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),
             ("ttsEnglishAlwaysUK", config.ttsEnglishAlwaysUK),
             ("ttsChineseAlwaysMandarin", config.ttsChineseAlwaysMandarin),
@@ -1365,6 +1379,7 @@ class ConfigUtil:
             ("enforceCompareParallel", config.enforceCompareParallel),
             ("readFormattedBibles", config.readFormattedBibles),
             ("forceUseBuiltinMediaPlayer", config.forceUseBuiltinMediaPlayer),
+            ("doNotStop3rdPartyMediaPlayerOnExit", config.doNotStop3rdPartyMediaPlayerOnExit),
             ("hideVlcInterfaceReadingSingleVerse", config.hideVlcInterfaceReadingSingleVerse),
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
             ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB),

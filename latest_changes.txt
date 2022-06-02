@@ -1,3 +1,13 @@
+Changes in 30.25:
+* Added support of three text-to-speech buttons on second top toolbar.
+    For material menu layout users only:
+    Users can set up three buttons for three different voices of their own choices, e.g. English, Hebrew & Greek.
+    Read https://github.com/eliranwong/UniqueBible/wiki/Text-to-Speech#select-second-and-third-text-to-speech-voices
+* Added config.doNotStop3rdPartyMediaPlayerOnExit so users can use third party VLC player to listen to bible audio even UBA is closed.
+* Added shortcut support of popover window.
+* Added shortcut display to menu plugins where applicable.
+* Fixed launching "Presentation" from popover window.
+
 Changes in 30.24:
 * Update instant text-to-speech button tooltip when default text-to-speech voice is changed.
 

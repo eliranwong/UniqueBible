@@ -2339,7 +2339,7 @@ class MainWindow(QMainWindow):
                                           20, 1)
         if ok:
             config.numberOfTab = integer
-            self.displayMessage(config.thisTranslation["message_restart"])
+            self.handleRestart()
 
     def setIconButtonSize(self, size=None):
         if size is None:
@@ -4150,6 +4150,45 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.setupMenuLayout("material")
             self.instantTtsButton.setToolTip("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge))
 
+    def setDefaultTtsLanguage2(self, language):
+        config.ttsDefaultLangauge2 = language
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+            if hasattr(config, "instantTtsButton2"):
+                self.instantTtsButton2.setToolTip("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge))
+            else:
+                self.handleRestart()
+
+    def setDefaultTtsLanguage3(self, language):
+        config.ttsDefaultLangauge3 = language
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+            if hasattr(config, "instantTtsButton3"):
+                self.instantTtsButton3.setToolTip("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge))
+            else:
+                self.handleRestart()
+
+    # handling restart
+    def handleRestart(self):
+        if hasattr(config, "cli") and self.warningRestart():
+            self.restartApp()
+        else:
+            self.displayMessage(config.thisTranslation["message_restart"])
+
+    def warningRestart(self):
+        msgBox = QMessageBox(QMessageBox.Warning,
+                             "QMessageBox.warning()",
+                             "Restart Unique Bible App to make the changes effective?",
+                             QMessageBox.NoButton, self)
+        msgBox.addButton("Later", QMessageBox.AcceptRole)
+        msgBox.addButton("&Now", QMessageBox.RejectRole)
+        if msgBox.exec_() == QMessageBox.AcceptRole:
+            # Cancel
+            return False
+        else:
+            # Continue
+            return True
+
     def setDefaultTtsLanguageDialog(self):
         languages = self.getTtsLanguages()
         languageCodes = list(languages.keys())
@@ -4921,6 +4960,22 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         else:
             # offline tts
             self.mainView.currentWidget().textToSpeech(True)
+
+    def instantTTS2(self):
+        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+            # online tts
+            self.mainView.currentWidget().googleTextToSpeechLanguage(config.ttsDefaultLangauge2, True)
+        else:
+            # offline tts
+            self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge2, True)
+
+    def instantTTS3(self):
+        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+            # online tts
+            self.mainView.currentWidget().googleTextToSpeechLanguage(config.ttsDefaultLangauge3, True)
+        else:
+            # offline tts
+            self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
 
     def openVlcPlayer(self, filename=""):
         try:

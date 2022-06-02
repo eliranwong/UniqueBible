@@ -298,6 +298,7 @@ class MaterialMainWindow:
             addCheckableMenuItem(subMenu, option, self, partial(self.setMarkdownExportHeadingStyle, option), config.markdownifyHeadingStyle, option, translation=False)
         # Default TTS voice
         if not config.noTtsFound:
+            # Default tts voice
             languages = self.getTtsLanguages()
             languageCodes = list(languages.keys())
             items = [languages[code][1] for code in languageCodes]
@@ -306,6 +307,16 @@ class MaterialMainWindow:
             for index, item in enumerate(items):
                 languageCode = languageCodes[index]
                 addCheckableMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage, languageCode), config.ttsDefaultLangauge, languageCode, translation=False)
+            # Second tts voice
+            subMenu = addSubMenu(subMenu0, "ttsLanguage2")
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                addCheckableMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage2, languageCode), config.ttsDefaultLangauge2, languageCode, translation=False)
+            # Third tts voice
+            subMenu = addSubMenu(subMenu0, "ttsLanguage3")
+            for index, item in enumerate(items):
+                languageCode = languageCodes[index]
+                addCheckableMenuItem(subMenu, item, self, partial(self.setDefaultTtsLanguage3, languageCode), config.ttsDefaultLangauge3, languageCode, translation=False)
 
         if config.developer:
             items = (
@@ -591,6 +602,7 @@ class MaterialMainWindow:
                 if not plugin in config.excludeMenuPlugins:
                     if "_" in plugin:
                         feature, shortcut = plugin.split("_", 1)
+                        feature = "{0} | {1}".format(feature, shortcut)
                         # Note the difference between PySide2 & PyQt5
                         # For PySide2
                         #addMenuItem(menu, feature, self, lambda plugin=plugin: self.runPlugin(plugin), shortcut=shortcut, translation=False)
@@ -952,6 +964,14 @@ class MaterialMainWindow:
             icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
             self.instantTtsButton = QPushButton()
             self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge), icon, self.instantTTS, self.secondToolBar, self.instantTtsButton, False)
+            if config.ttsDefaultLangauge2:
+                icon = "material/av/interpreter_mode/materialiconsoutlined/48dp/2x/outline_interpreter_mode_black_48dp.png"
+                self.instantTtsButton2 = QPushButton()
+                self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge2), icon, self.instantTTS2, self.secondToolBar, self.instantTtsButton2, False)
+            if config.ttsDefaultLangauge3:
+                icon = "material/av/interpreter_mode/materialiconsoutlined/48dp/2x/outline_interpreter_mode_black_48dp.png"
+                self.instantTtsButton3 = QPushButton()
+                self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge3), icon, self.instantTTS3, self.secondToolBar, self.instantTtsButton3, False)
         self.secondToolBar.addSeparator()
 
 
