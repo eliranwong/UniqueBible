@@ -1,3 +1,6 @@
+Changes in 30.24:
+* Update instant text-to-speech button tooltip when default text-to-speech voice is changed.
+
 Changes in 30.23:
 * Added config.macOSttsSpeed to define speaking rate of macOS built-in text-to-speech feature.
 * Added GUI support for chaning macOS built-in text-to-speech speaking rate via Master Control Miscellaneous tab.

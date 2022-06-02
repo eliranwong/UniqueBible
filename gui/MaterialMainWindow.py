@@ -950,7 +950,8 @@ class MaterialMainWindow:
             self.addMaterialIconButton("englishDictionaries", icon, lambda: self.mainView.currentWidget().runPlugin("English Dictionaries_Ctrl+Shift+D"), self.secondToolBar)
         if not config.noTtsFound:
             icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
-            self.addMaterialIconButton("context1_speak", icon, self.instantTTS, self.secondToolBar)
+            self.instantTtsButton = QPushButton()
+            self.addMaterialIconButton("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge), icon, self.instantTTS, self.secondToolBar, self.instantTtsButton, False)
         self.secondToolBar.addSeparator()
 
 

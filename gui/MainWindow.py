@@ -4135,12 +4135,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             languages = TtsLanguages().isoLang2qlocaleLang
         # Check default TTS language
         if not config.ttsDefaultLangauge in languages:
-            notFound = True
-            while notFound:
-                for key in languages.keys():
-                    if key.startswith("en") or key.startswith("[en"):
-                        config.ttsDefaultLangauge = key
-                        notFound = False
+            for key in languages.keys():
+                if key.startswith("en") or key.startswith("[en"):
+                    config.ttsDefaultLangauge = key
+                    break
         # return languages
         return languages
 
@@ -4150,6 +4148,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.studyView.currentWidget().updateDefaultTtsVoice()
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
+            self.instantTtsButton.setToolTip("{0} - {1}".format(config.thisTranslation["context1_speak"], config.ttsDefaultLangauge))
 
     def setDefaultTtsLanguageDialog(self):
         languages = self.getTtsLanguages()
