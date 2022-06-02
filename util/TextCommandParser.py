@@ -1312,6 +1312,8 @@ class TextCommandParser:
         if language.startswith("["):
             if language in config.macVoices:
                 # save a text file first to avoid quotation marks in the text
+                if language.startswith("[el_GR]"):
+                    text = TextUtil.removeVowelAccent(text)
                 with open('temp/temp.txt', 'w') as file:
                     file.write(text)
                 voice = re.sub("^\[.*?\] ", "", language)

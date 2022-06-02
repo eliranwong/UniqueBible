@@ -1,3 +1,6 @@
+Changes in 30.22:
+* Fixed reading Greek text with Apple macOS builtin text-to-speech engine.
+
 Changes in 30.21:
 * Added ability to export *.aiff and *.mp3 with text-to-speech features on macOS.
     - Remarks: *.mp3 export with macOS tts is only available if users have "ffmpeg" package installed.

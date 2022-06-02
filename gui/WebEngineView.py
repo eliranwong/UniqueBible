@@ -1031,6 +1031,8 @@ class WebEngineView(QWebEngineView):
                     fileName = fileName + ".aiff"
                 # Save aiff file
                 try:
+                    if language.startswith("[el_GR]"):
+                        selectedText = TextUtil.removeVowelAccent(selectedText)
                     with open('temp/temp.txt', 'w') as file:
                         file.write(selectedText)
                     voice = re.sub("^\[.*?\] ", "", language)
@@ -1056,6 +1058,8 @@ class WebEngineView(QWebEngineView):
                 aiffFilename = re.sub("\.mp3$", ".aiff", os.path.basename(fileName))
                 outputFolder = os.path.dirname(fileName)
                 try:
+                    if language.startswith("[el_GR]"):
+                        selectedText = TextUtil.removeVowelAccent(selectedText)
                     with open('temp/temp.txt', 'w') as file:
                         file.write(selectedText)
                     voice = re.sub("^\[.*?\] ", "", language)
