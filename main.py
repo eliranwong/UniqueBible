@@ -289,7 +289,7 @@ def setCurrentRecord():
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
 def exitApplication():
-    config.mainWindow.textCommandParser.stopTtsAudio()
+    config.mainWindow.closeMediaPlayer()
     # Run shutdown plugins
     if config.enablePlugins:
         for plugin in FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "shutdown"), "py"):

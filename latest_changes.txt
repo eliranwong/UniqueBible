@@ -1,3 +1,16 @@
+Changes in 30.21:
+* Added ability to export *.aiff and *.mp3 with text-to-speech features on macOS.
+    - Remarks: *.mp3 export with macOS tts is only available if users have "ffmpeg" package installed.
+    - Users may use home brew (https://brew.sh) to install "ffmpeg" by running:
+        brew install ffmpeg
+    - A wiki page is created about macOS built-in tts feature at: 
+        https://github.com/eliranwong/UniqueBible/wiki/Use-Apple-macOS-Built-in-Text-to-speech
+* Added support to stop built-in macOS text-to-speech playing.
+    If micron shortcut is used, Cmd+Shift+Z applies to stop media playing.
+* Fixed instant text-to-speech feature for using offline tts engine.
+* Fixed empty bible window issue with non-material menu layout.
+* Fixed stop playing audio features.
+
 Changes in 30.20:
 * Added direct support of macOS text-to-speech engine.
     We will write a wiki about adding additional voices.

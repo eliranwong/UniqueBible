@@ -1,5 +1,5 @@
 from json import tool
-import os, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
+import os, signal, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
 import time, markdown
 import urllib.parse
 from datetime import datetime
@@ -3175,7 +3175,7 @@ class MainWindow(QMainWindow):
             self.runTextCommand(command)
 
     def updateVersionCombo(self):
-        if self.bibleSelection is not None and config.menuLayout in ("material",):
+        if hasattr(self, "bibleSelection") and self.bibleSelection is not None and config.menuLayout in ("material",):
             #self.bibleSelection.setText(config.mainText)
             self.setBibleSelection()
         if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph", "material"):
@@ -3331,9 +3331,9 @@ class MainWindow(QMainWindow):
         self.fixLoadingStudyWindowContent()
 
     def fixLoadingBibleWindowContent(self):
-        if config.fixLoadingContent and config.menuLayout == "material":
+        if config.fixLoadingContent:
             cmd = self.textCommandLineEdit.text()
-            self.setupMenuLayout("material")
+            self.setupMenuLayout(config.menuLayout)
             self.textCommandLineEdit.setText(cmd)
 #            splitter = self.centralWidget.instantSplitter
 #            thisPos = config.iModeSplitterSizes[0]
@@ -3347,9 +3347,9 @@ class MainWindow(QMainWindow):
 #            splitter.refresh()
 
     def fixLoadingStudyWindowContent(self):
-        if config.fixLoadingContent and config.menuLayout == "material":
+        if config.fixLoadingContent:
             cmd = self.textCommandLineEdit.text()
-            self.setupMenuLayout("material")
+            self.setupMenuLayout(config.menuLayout)
             self.textCommandLineEdit.setText(cmd)
 #            splitter = self.centralWidget.parallelSplitter
 #            splitterWidth = splitter.handleWidth()
@@ -4915,6 +4915,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
 
+    def instantTTS(self):
+        if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+            # online tts
+            self.mainView.currentWidget().googleTextToSpeechLanguage("", True)
+        else:
+            # offline tts
+            self.mainView.currentWidget().textToSpeech(True)
+
     def openVlcPlayer(self, filename=""):
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
@@ -4945,6 +4953,20 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             os.system("pkill vlc")
         if self.vlcPlayer is not None:
             self.vlcPlayer.close()
+        # stop individual offline TTS audio
+        if self.textCommandParser.cliTtsProcess is not None:
+            #print(self.cliTtsProcess)
+            # The following two lines do not work:
+            #self.cliTtsProcess.kill()
+            #self.cliTtsProcess.terminate()
+            # Therefore, we use:
+            try:
+                os.killpg(os.getpgid(self.textCommandParser.cliTtsProcess.pid), signal.SIGTERM)
+            except:
+                pass
+            self.textCommandParser.cliTtsProcess = None
+        elif self.textCommandParser.qtTtsEngine is not None:
+            self.textCommandParser.qtTtsEngine.stop()
 
     def playAudioBibleChapterVerseByVerse(self, text, b, c, startVerse=0):
         playlist = []
@@ -4959,9 +4981,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.playAudioBibleFilePlayList(playlist)
 
     def playAudioBibleFilePlayList(self, playlist, gui=True):
+        self.closeMediaPlayer()
         if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-            if config.isMacvlcInstalled:
-                os.system("vlc kill")
+            #if config.isMacvlcInstalled:
+            #    os.system("vlc kill")
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             WebtopUtil.run(f"{config.macVlc} {audioFiles}")
@@ -4969,7 +4992,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             vlcCmd = "vlc" if gui else "cvlc"
-            os.system("pkill vlc")
+            #os.system("pkill vlc")
             WebtopUtil.run(f"{vlcCmd} {audioFiles}")
         elif playlist and config.isVlcInstalled:
             from gui.VlcPlayer import VlcPlayer
@@ -4983,6 +5006,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.vlcPlayer.playNextInPlaylist()
 
     def playBibleMP3Playlist(self, playlist):
+        self.closeMediaPlayer()
         if playlist:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 fileList = []
@@ -4992,8 +5016,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     if file:
                         fileList.append(file)
                 audioFiles = ' '.join(fileList)
-                if config.isMacvlcInstalled:
-                    os.system("vlc kill")
+                #if config.isMacvlcInstalled:
+                #    os.system("vlc kill")
                 WebtopUtil.run(f"{config.macVlc} {audioFiles}")
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 fileList = []
@@ -5003,7 +5027,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     if file:
                         fileList.append(file)
                 audioFiles = ' '.join(fileList)
-                os.system("pkill vlc")
+                #os.system("pkill vlc")
                 WebtopUtil.run(f"vlc {audioFiles}")
             elif config.isVlcInstalled:
                 from gui.VlcPlayer import VlcPlayer

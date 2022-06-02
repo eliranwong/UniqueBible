@@ -1,6 +1,6 @@
 # coding=utf-8
 import glob
-import os, signal, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
+import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
 
 from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
@@ -1312,10 +1312,13 @@ class TextCommandParser:
         if language.startswith("["):
             if language in config.macVoices:
                 # save a text file first to avoid quotation marks in the text
-                with open('temp.txt', 'w') as file:
+                with open('temp/temp.txt', 'w') as file:
                     file.write(text)
                 voice = re.sub("^\[.*?\] ", "", language)
-                WebtopUtil.run(f"say -v {voice} -f temp.txt")
+                # The following does not support "stop" feature
+                #WebtopUtil.run(f"say -v {voice} -f temp/temp.txt")
+                command = f"say -v {voice} -f temp/temp.txt"
+                self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
                 self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])
         else:
@@ -1398,15 +1401,19 @@ class TextCommandParser:
 
     def stopTtsAudio(self):
         self.parent.closeMediaPlayer()
-        if config.espeak and (self.cliTtsProcess is not None):
-            # The following two lines do not work:
-            #self.cliTtsProcess.kill()
-            #self.cliTtsProcess.terminate()
-            # Therefore, we use:
-            os.killpg(os.getpgid(self.cliTtsProcess.pid), signal.SIGTERM)
-            self.cliTtsProcess = None
-        elif (self.qtTtsEngine is not None):
-            self.qtTtsEngine.stop()
+#        if self.cliTtsProcess is not None:
+#            #print(self.cliTtsProcess)
+#            # The following two lines do not work:
+#            #self.cliTtsProcess.kill()
+#            #self.cliTtsProcess.terminate()
+#            # Therefore, we use:
+#            try:
+#                os.killpg(os.getpgid(self.cliTtsProcess.pid), signal.SIGTERM)
+#            except:
+#                pass
+#            self.cliTtsProcess = None
+#        elif self.qtTtsEngine is not None:
+#            self.qtTtsEngine.stop()
 
     # mp3:::
     def mp3Download(self, command, source):
@@ -1549,6 +1556,7 @@ class TextCommandParser:
 
     # READVERSE:::
     def readVerse(self, command, source):
+        self.parent.closeMediaPlayer()
         text, b, c, v = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "{0}_{1}_{2}_{3}.mp3".format(text, b, c, v)
@@ -1562,11 +1570,11 @@ class TextCommandParser:
                 try:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        if config.isMacvlcInstalled:
-                            os.system("vlc kill")
+                        #if config.isMacvlcInstalled:
+                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
-                        os.system("pkill vlc")
+                        #os.system("pkill vlc")
                         WebtopUtil.run(f"{player} {audioFile}")
                         return ("", "", {})
                     else:
@@ -1578,6 +1586,7 @@ class TextCommandParser:
 
     # READWORD:::
     def readWord(self, command, source):
+        self.parent.closeMediaPlayer()
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
@@ -1590,11 +1599,11 @@ class TextCommandParser:
             else:
                 try:
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        if config.isMacvlcInstalled:
-                            os.system("vlc kill")
+                        #if config.isMacvlcInstalled:
+                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
-                        os.system("pkill vlc")
+                        #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
                     else:
@@ -1611,6 +1620,7 @@ class TextCommandParser:
 
     # READLEXEME:::
     def readLexeme(self, command, source):
+        self.parent.closeMediaPlayer()
         text, b, c, v, wordID = command.split(".")
         folder = os.path.join(config.audioFolder, "bibles", text, "default", "{0}_{1}".format(b, c))
         filename = "lex_{0}_{1}_{2}_{3}_{4}.mp3".format(text, b, c, v, wordID)
@@ -1623,11 +1633,11 @@ class TextCommandParser:
             else:
                 try:
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        if config.isMacvlcInstalled:
-                            os.system("vlc kill")
+                        #if config.isMacvlcInstalled:
+                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
-                        os.system("pkill vlc")
+                        #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
                         return ("", "", {})
                     else:
@@ -1655,10 +1665,11 @@ class TextCommandParser:
             self.parent.vlcPlayer.show()
 
     def openVlcPlayer(self, command, source, gui=True):
+        self.parent.closeMediaPlayer()
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                if config.isMacvlcInstalled:
-                    os.system("vlc kill")
+                #if config.isMacvlcInstalled:
+                #    os.system("vlc kill")
                 WebtopUtil.run(f'{config.macVlc} "{command}"')
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 vlcCmd = "vlc" if gui else "cvlc"

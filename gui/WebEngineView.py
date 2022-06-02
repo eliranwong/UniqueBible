@@ -671,13 +671,14 @@ class WebEngineView(QWebEngineView):
         # Google TEXT-TO-SPEECH feature
         if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
 
+            languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
+
             self.defaultTTSVoice = QAction(self)
             self.defaultTTSVoice.triggered.connect(self.googleTextToSpeechLanguage)
             self.parent.parent.addContextMenuShortcut(partial(self.googleTextToSpeechLanguage, "", True), sc.contextDefaultTTS)
             self.addAction(self.defaultTTSVoice)
 
             ttsMenu = QMenu()
-            languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
             for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
@@ -689,8 +690,8 @@ class WebEngineView(QWebEngineView):
             tts.setMenu(ttsMenu)
             self.addAction(tts)
 
+            # MP3 export
             ttsMenu = QMenu()
-            languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
             for language, languageCode in languageCodes.items():
                 action = QAction(self)
                 action.setText("{0} [{1}]".format(language, languageCode))
@@ -708,7 +709,9 @@ class WebEngineView(QWebEngineView):
 
         # OFFLINE TEXT-TO-SPEECH feature
         elif config.isOfflineTtsInstalled:
+
             languages = self.parent.parent.getTtsLanguages()
+
             self.defaultTTSVoice = QAction(self)
             self.defaultTTSVoice.triggered.connect(self.textToSpeech)
             self.parent.parent.addContextMenuShortcut(partial(self.textToSpeech, True), sc.contextDefaultTTS)
@@ -720,7 +723,7 @@ class WebEngineView(QWebEngineView):
             for index, item in enumerate(items):
                 languageCode = languageCodes[index]
                 action = QAction(self)
-                action.setText(item.capitalize())
+                action.setText(item if config.ttsDefaultLangauge.startswith("[") else item.capitalize())
                 action.triggered.connect(partial(self.textToSpeechLanguage, languageCode))
                 ttsMenu.addAction(action)
 
@@ -728,6 +731,39 @@ class WebEngineView(QWebEngineView):
             tts.setText(config.thisTranslation["context1_speak"])
             tts.setMenu(ttsMenu)
             self.addAction(tts)
+
+            # Support *.aiff and *.mp3 export on macOS
+            if config.ttsDefaultLangauge.startswith("["):
+                ttsMenu = QMenu()
+                languageCodes = list(languages.keys())
+                items = [languages[code][1] for code in languageCodes]
+                for index, item in enumerate(items):
+                    languageCode = languageCodes[index]
+                    action = QAction(self)
+                    action.setText(item)
+                    action.triggered.connect(partial(self.exportAiffOnMacOS, languageCode))
+                    ttsMenu.addAction(action)
+
+                tts = QAction(self)
+                tts.setText("{0} AIFF".format(config.thisTranslation["note_saveAs"]))
+                tts.setMenu(ttsMenu)
+                self.addAction(tts)
+
+                if config.isAudioConverterInstalled and WebtopUtil.isPackageInstalled("ffmpeg"):
+                    ttsMenu = QMenu()
+                    languageCodes = list(languages.keys())
+                    items = [languages[code][1] for code in languageCodes]
+                    for index, item in enumerate(items):
+                        languageCode = languageCodes[index]
+                        action = QAction(self)
+                        action.setText(item)
+                        action.triggered.connect(partial(self.exportMp3OnMacOS, languageCode))
+                        ttsMenu.addAction(action)
+
+                    tts = QAction(self)
+                    tts.setText("{0} MP3".format(config.thisTranslation["note_saveAs"]))
+                    tts.setMenu(ttsMenu)
+                    self.addAction(tts)
 
             separator = QAction(self)
             separator.setSeparator(True)
@@ -978,6 +1014,59 @@ class WebEngineView(QWebEngineView):
                 self.parent.parent.textCommandChanged(speakCommand, self.name)
         else:
             self.messageNoTtsEngine()
+
+    def exportAiffOnMacOS(self, language):
+        selectedText = self.selectedTextProcessed()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            # Ask for a filename
+            options = QFileDialog.Options()
+            fileName, *_ = QFileDialog.getSaveFileName(self,
+                    config.thisTranslation["note_saveAs"],
+                    "music",
+                    "AIFF Files (*.aiff)", "", options)
+            if fileName:
+                if not fileName.endswith(".aiff"):
+                    fileName = fileName + ".aiff"
+                # Save aiff file
+                try:
+                    with open('temp/temp.txt', 'w') as file:
+                        file.write(selectedText)
+                    voice = re.sub("^\[.*?\] ", "", language)
+                    os.system(f"say -v {voice} -o {fileName} -f temp/temp.txt")
+                except:
+                    self.displayMessage(config.thisTranslation["message_fail"])
+
+    def exportMp3OnMacOS(self, language):
+        selectedText = self.selectedTextProcessed()
+        if not selectedText:
+            self.messageNoSelection()
+        else:
+            # Ask for a filename
+            options = QFileDialog.Options()
+            fileName, *_ = QFileDialog.getSaveFileName(self,
+                    config.thisTranslation["note_saveAs"],
+                    "music",
+                    "MP3 Files (*.mp3)", "", options)
+            if fileName:
+                if not fileName.endswith(".mp3"):
+                    fileName = fileName + ".mp3"
+                # Save aiff file first and convert it to mp3
+                aiffFilename = re.sub("\.mp3$", ".aiff", os.path.basename(fileName))
+                outputFolder = os.path.dirname(fileName)
+                try:
+                    with open('temp/temp.txt', 'w') as file:
+                        file.write(selectedText)
+                    voice = re.sub("^\[.*?\] ", "", language)
+                    try:
+                        os.system("rm -rf temp/*.aiff")
+                    except:
+                        pass
+                    os.system(f"say -v {voice} -o temp/{aiffFilename} -f temp/temp.txt")
+                    os.system(f"audioconvert convert temp/ {outputFolder}/")
+                except:
+                    self.displayMessage(config.thisTranslation["message_fail"])
 
     def textToSpeechLanguage(self, language):
         if config.isOfflineTtsInstalled:

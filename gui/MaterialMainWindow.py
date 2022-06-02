@@ -950,8 +950,7 @@ class MaterialMainWindow:
             self.addMaterialIconButton("englishDictionaries", icon, lambda: self.mainView.currentWidget().runPlugin("English Dictionaries_Ctrl+Shift+D"), self.secondToolBar)
         if not config.noTtsFound:
             icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
-            triggered = lambda: self.mainView.currentWidget().googleTextToSpeechLanguage("", True) if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled) else lambda: self.mainView.currentWidget().textToSpeech(True)
-            self.addMaterialIconButton("context1_speak", icon, triggered, self.secondToolBar)
+            self.addMaterialIconButton("context1_speak", icon, self.instantTTS, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
 

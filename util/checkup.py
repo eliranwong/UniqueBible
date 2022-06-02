@@ -338,6 +338,9 @@ def isMacvlcInstalled():
     except:
         return False
 
+def isAudioConverterInstalled():
+    return True if WebtopUtil.isPackageInstalled("audioconvert") else False
+
 # Set config values for optional features
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
@@ -383,7 +386,9 @@ def setInstallConfig(module, isInstalled):
     elif module == "markdown":
         config.isMarkdownInstalled = isInstalled
     elif module == "mac-vlc":
-        config.isMacvlcInstalled = isMacvlcInstalled
+        config.isMacvlcInstalled = isInstalled
+    elif module == "--upgrade AudioConverter":
+        config.isAudioConverterInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -503,6 +508,7 @@ optional = [
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
+    ("--upgrade AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("mac-vlc", "macOS VLC.app scripts", isMacvlcInstalled))
