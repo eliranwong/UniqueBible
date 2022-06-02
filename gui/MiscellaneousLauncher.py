@@ -86,6 +86,15 @@ class MiscellaneousLauncher(QWidget):
             self.ttsSlider.setMaximum(300)
             self.ttsSlider.setValue(int(config.gcttsSpeed * 100))
             self.ttsSlider.valueChanged.connect(self.changeGoogleCloudTTSSpeed)
+        elif config.macVoices and not config.forceOnlineTts:
+            if config.macOSttsSpeed < 100:
+                config.macOSttsSpeed = 100
+            elif config.macOSttsSpeed > 300:
+                config.macOSttsSpeed = 300
+            self.ttsSlider.setMinimum(100)
+            self.ttsSlider.setMaximum(300)
+            self.ttsSlider.setValue(int(config.macOSttsSpeed))
+            self.ttsSlider.valueChanged.connect(self.changeMacOSttsSpeed)
         else:
             self.ttsSlider.setMinimum(10)
             self.ttsSlider.setMaximum(310)
@@ -152,6 +161,9 @@ class MiscellaneousLauncher(QWidget):
 
     def changeEspeakSpeed(self, value):
         config.espeakSpeed = value
+
+    def changeMacOSttsSpeed(self, value):
+        config.macOSttsSpeed = int(value)
 
     def changeGoogleCloudTTSSpeed(self, value):
         config.gcttsSpeed = value / 100

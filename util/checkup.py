@@ -238,6 +238,8 @@ def isOfflineTtsInstalled():
     config.macVoices = {}
     if platform.system() == "Darwin":
         macVoices = {}
+        # reference about say command:
+        # https://maithegeek.medium.com/having-fun-in-macos-with-say-command-d4a0d3319668
         os.system('say -v "?" > macOS_voices.txt')
         with open('macOS_voices.txt', 'r') as textFile:
             voices = textFile.read()
@@ -546,8 +548,6 @@ else:
 if config.forceOnlineTts and not config.isOnlineTtsInstalled:
     config.forceOnlineTts = False
 config.noTtsSpeedAdjustment = (config.isGTTSInstalled and not config.isGoogleCloudTTSAvailable and ((not config.isOfflineTtsInstalled) or (config.isOfflineTtsInstalled and config.forceOnlineTts)))
-if not config.noTtsSpeedAdjustment and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts and config.macVoices:
-    config.noTtsSpeedAdjustment = True
 # Check if builtin media player is in place:
 if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
     config.forceUseBuiltinMediaPlayer = False

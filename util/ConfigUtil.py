@@ -246,6 +246,10 @@ class ConfigUtil:
         # Google Cloud text-to-speech speed"""
         if not hasattr(config, "gcttsSpeed"):
             config.gcttsSpeed = 1.0
+        config.help["macOSttsSpeed"] = """
+        # Apple macOS text-to-speech speaking rate"""
+        if not hasattr(config, "macOSttsSpeed"):
+            config.macOSttsSpeed = 200
         config.help["qttsSpeed"] = """
         # Qt text-to-speech speed"""
         if not hasattr(config, "qttsSpeed"):
@@ -1264,6 +1268,7 @@ class ConfigUtil:
             ("espeakSpeed", config.espeakSpeed),
             ("qttsSpeed", config.qttsSpeed),
             ("gcttsSpeed", config.gcttsSpeed),
+            ("macOSttsSpeed", config.macOSttsSpeed),
             ("useLangDetectOnTts", config.useLangDetectOnTts),
             ("ttsDefaultLangauge", config.ttsDefaultLangauge),
             ("ttsEnglishAlwaysUS", config.ttsEnglishAlwaysUS),

@@ -1319,7 +1319,7 @@ class TextCommandParser:
                 voice = re.sub("^\[.*?\] ", "", language)
                 # The following does not support "stop" feature
                 #WebtopUtil.run(f"say -v {voice} -f temp/temp.txt")
-                command = f"say -v {voice} -f temp/temp.txt"
+                command = f"say -r {config.macOSttsSpeed} -v {voice} -f temp/temp.txt"
                 self.cliTtsProcess = subprocess.Popen([command], shell=True, preexec_fn=os.setpgrp, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             else:
                 self.parent.displayMessage(config.thisTranslation["message_noTtsVoice"])

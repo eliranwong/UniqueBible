@@ -1036,7 +1036,7 @@ class WebEngineView(QWebEngineView):
                     with open('temp/temp.txt', 'w') as file:
                         file.write(selectedText)
                     voice = re.sub("^\[.*?\] ", "", language)
-                    os.system(f"say -v {voice} -o {fileName} -f temp/temp.txt")
+                    os.system(f"say -r {config.macOSttsSpeed} -v {voice} -o {fileName} -f temp/temp.txt")
                 except:
                     self.displayMessage(config.thisTranslation["message_fail"])
 
@@ -1067,7 +1067,7 @@ class WebEngineView(QWebEngineView):
                         os.system("rm -rf temp/*.aiff")
                     except:
                         pass
-                    os.system(f"say -v {voice} -o temp/{aiffFilename} -f temp/temp.txt")
+                    os.system(f"say -r {config.macOSttsSpeed} -v {voice} -o temp/{aiffFilename} -f temp/temp.txt")
                     os.system(f"audioconvert convert temp/ {outputFolder}/")
                 except:
                     self.displayMessage(config.thisTranslation["message_fail"])
