@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "성경 참조 열기",
     "searchBibleForClipboardContent": "클립보드 컨텐츠에 대한 성경 검색",
     "enableSystemTrayOnLinux": "Linux 에서 시스템 트레이 사용 가능",
+    "runContextPluginOnClipboardContent": "클립보드 컨텐츠에서 컨텍스트 플러그인 실행",
 }

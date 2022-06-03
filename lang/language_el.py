@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Παραπομπές:",
     "searchBibleForClipboardContent": "Αναζήτηση Βίβλο για το πρόχειρο περιεχόμενο",
     "enableSystemTrayOnLinux": "Ενεργοποίηση συστήματος Tray σε Linux",
+    "runContextPluginOnClipboardContent": "Εκτέλεση πρόσθετης λειτουργίας περιβάλλοντος στο πρόχειρο",
 }

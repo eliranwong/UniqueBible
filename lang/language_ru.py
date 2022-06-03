@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Открыть ссылки на Библию",
     "searchBibleForClipboardContent": "Поиск в Библии для содержимого буфера обмена",
     "enableSystemTrayOnLinux": "Включить Системный Лоток В Linux",
+    "runContextPluginOnClipboardContent": "Выполнить контекстный модуль в буфере обмена",
 }

@@ -1,3 +1,9 @@
+Changes in 30.30:
+* Added support of using context plugins with system tray to run featues on clipboard text.
+* System tray "Search Other Resources" now does not require clipboard content.
+* Fixed downloading the icon for "Bible Collections" on material menu layout top toolbar.
+* Changed shortcuts for a few context plugins.
+
 Changes in 30.29:
 * Minor update - changed a dialog title.
 

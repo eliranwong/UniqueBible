@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Referinţe biblice deschise",
     "searchBibleForClipboardContent": "Caută Biblia pentru Clipboard Content",
     "enableSystemTrayOnLinux": "Activează tava de sistem pe Linux",
+    "runContextPluginOnClipboardContent": "Rulați Context Plugin-ul de pe Clipboard Content",
 }

@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Ouvrages de référence bibliques",
     "searchBibleForClipboardContent": "Rechercher la Bible pour le contenu du presse-papiers",
     "enableSystemTrayOnLinux": "Activation du plateau système sous Linux",
+    "runContextPluginOnClipboardContent": "Exécuter le plug-in de contexte dans le contenu du presse-papiers",
 }

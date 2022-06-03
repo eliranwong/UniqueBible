@@ -566,6 +566,17 @@ if config.enableSystemTray:
     runClipboardCommand.triggered.connect(config.mainWindow.showFromTray)
     runClipboardCommand.triggered.connect(config.mainWindow.parseContentOnClipboard)
     trayMenu.addAction(runClipboardCommand)
+    # Context plugins
+    if config.enablePlugins:
+        subMenu = QMenu()
+        for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py")):
+            feature, *_ = plugin.split("_", 1)
+            exec("action{0} = QAction(feature)".format(index))
+            exec("action{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
+            exec("subMenu.addAction(action{0})".format(index))
+        contextPlugins = QAction(config.thisTranslation["runContextPluginOnClipboardContent"])
+        contextPlugins.setMenu(subMenu)
+        trayMenu.addAction(contextPlugins)
     # Add a separator
     trayMenu.addSeparator()
     # Media

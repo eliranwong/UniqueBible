@@ -605,7 +605,7 @@ class ShortcutUtil:
         "Ctrl+A": "",
         "Ctrl+B": "openControlPanelTab0",
         "Ctrl+C": "",
-        "Ctrl+D": "",
+        "Ctrl+D": "[context plugin - Run as Command]",
         "Ctrl+E": "cycleInstant",
         "Ctrl+F": "openControlPanelTab3",
         "Ctrl+G": "manageMiniControl",
@@ -637,7 +637,7 @@ class ShortcutUtil:
         "Ctrl+Shift+G": "openControlPanelTab7",
         "Ctrl+Shift+H": "toggleInstantHighlight",
         "Ctrl+Shift+I": "toggleFavouriteVersionIntoMultiRef",
-        "Ctrl+Shift+J": "",
+        "Ctrl+Shift+J": "[context plugin - Insert Text into Note Editor]",
         "Ctrl+Shift+K": "bibleCollections",
         "Ctrl+Shift+L": "openControlPanelTab2",
         "Ctrl+Shift+M": "openControlPanelTab6",
@@ -652,7 +652,7 @@ class ShortcutUtil:
         "Ctrl+Shift+V": "mediaPlayer",
         "Ctrl+Shift+W": "swapBibles",
         "Ctrl+Shift+X": "toggleHideLexicalEntryInBible",
-        "Ctrl+Shift+Y": "",
+        "Ctrl+Shift+Y": "[context plugin - Presentation]",
         "Ctrl+Shift+Z": "stopMediaPlayer",
         "Alt+B": "displayReferenceOnBibleWindowPopover",
         "Alt+C": "runCommandPopover",
@@ -660,8 +660,6 @@ class ShortcutUtil:
         "Alt+P": "presentPopover",
         "Alt+Q": "closePopoverWindow",
         "Ctrl+Alt+B": "displayReferenceOnNewWindowPopover",
-        "Ctrl+Alt+C": "[context plugin - Run as Command]",
-        "Ctrl+Alt+P": "[context plugin - Presentation]",
     }
 
     @staticmethod

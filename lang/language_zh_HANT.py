@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "開啟聖經參照",
     "searchBibleForClipboardContent": "搜尋聖經以取得剪貼簿內容",
     "enableSystemTrayOnLinux": "在 Linux 上啟用系統匣",
+    "runContextPluginOnClipboardContent": "在剪貼簿內容上執行環境定義外掛程式",
 }

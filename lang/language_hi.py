@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "बाइबल संदर्भ खोलें",
     "searchBibleForClipboardContent": "क्लिपबोर्ड सामग्री के लिए बाइबल खोजें",
     "enableSystemTrayOnLinux": "Linux पर तंत्र तश्तरी सक्षम करें",
+    "runContextPluginOnClipboardContent": "क्लिपबोर्ड सामग्री पर कॉन्टेक्स्ट प्लगइन चलाएं",
 }

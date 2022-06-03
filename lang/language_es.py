@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Referencias bíblicas abiertas",
     "searchBibleForClipboardContent": "Buscar en la Biblia el contenido del portapapeles",
     "enableSystemTrayOnLinux": "Habilitar La Bandeja Del Sistema En Linux",
+    "runContextPluginOnClipboardContent": "Ejecutar plugin de contexto en el contenido del portapapeles",
 }

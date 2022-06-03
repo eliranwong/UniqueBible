@@ -1,8 +1,8 @@
 config.theme = 'dark'
-config.maskMaterialIconColor = '#41fff2'
+config.maskMaterialIconColor = '#88f9e9'
 config.maskMaterialIconBackground = False
 config.widgetBackgroundColor = '#2f2f2f'
-config.widgetForegroundColor = '#41fff2'
+config.widgetForegroundColor = '#88f9e9'
 config.widgetBackgroundColorHover = '#545454'
 config.widgetForegroundColorHover = '#52daff'
 config.widgetBackgroundColorPressed = '#232323'

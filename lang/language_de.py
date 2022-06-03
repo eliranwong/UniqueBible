@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Biblische Referenzen öffnen",
     "searchBibleForClipboardContent": "Suche Bibel für Merkzettel",
     "enableSystemTrayOnLinux": "Systemablage unter Linux aktivieren",
+    "runContextPluginOnClipboardContent": "Kontext-Plug-in auf Merkzettel ausführen",
 }

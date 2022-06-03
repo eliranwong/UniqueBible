@@ -1437,9 +1437,13 @@ class MainWindow(QMainWindow):
 
     def searchResourcesForClipboardContent(self):
         clipboardText = QApplication.clipboard().text()
+        self.openControlPanelTab(3)
+        self.controlPanel.toolTab.searchField.setText(clipboardText if clipboardText else "")
+
+    def runContextPluginOnClipboardContent(self, plugin):
+        clipboardText = QApplication.clipboard().text()
         if clipboardText:
-            self.openControlPanelTab(3)
-            self.controlPanel.toolTab.searchField.setText(clipboardText)
+            self.mainView.currentWidget().runPlugin(plugin, clipboardText)
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 

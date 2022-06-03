@@ -905,4 +905,5 @@ translation = {
     "openBibleReferences": "Riferimenti della Bibbia aperta",
     "searchBibleForClipboardContent": "Bibbia di ricerca per Clipboard Content",
     "enableSystemTrayOnLinux": "Abilitare il Tray di sistema su Linux",
+    "runContextPluginOnClipboardContent": "Run Context Plugin su Clipboard Content",
 }
