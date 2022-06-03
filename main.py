@@ -572,6 +572,7 @@ if config.enableSystemTray:
         for index, plugin in enumerate(FileUtil.fileNamesWithoutExtension(os.path.join("plugins", "context"), "py")):
             feature, *_ = plugin.split("_", 1)
             exec("action{0} = QAction(feature)".format(index))
+            exec("action{0}.triggered.connect(config.mainWindow.showFromTray)".format(index))
             exec("action{0}.triggered.connect(partial(config.mainWindow.runContextPluginOnClipboardContent, plugin))".format(index))
             exec("subMenu.addAction(action{0})".format(index))
         contextPlugins = QAction(config.thisTranslation["runContextPluginOnClipboardContent"])
