@@ -1572,8 +1572,6 @@ class TextCommandParser:
                 try:
                     player = "cvlc" if config.hideVlcInterfaceReadingSingleVerse else "vlc"
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        #if config.isMacvlcInstalled:
-                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -1601,8 +1599,6 @@ class TextCommandParser:
             else:
                 try:
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        #if config.isMacvlcInstalled:
-                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -1635,8 +1631,6 @@ class TextCommandParser:
             else:
                 try:
                     if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                        #if config.isMacvlcInstalled:
-                        #    os.system("vlc kill")
                         WebtopUtil.run(f"{config.macVlc} {audioFile}")
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
@@ -1670,8 +1664,6 @@ class TextCommandParser:
         self.parent.closeMediaPlayer()
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                #if config.isMacvlcInstalled:
-                #    os.system("vlc kill")
                 WebtopUtil.run(f'{config.macVlc} "{command}"')
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 vlcCmd = "vlc" if gui else "cvlc"

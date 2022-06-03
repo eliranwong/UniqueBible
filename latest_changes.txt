@@ -1,3 +1,6 @@
+Changes in 30.27:
+* Fixed startup issues on macOS, caused by command "vlc kill".
+
 Changes in 30.26:
 * Added system tray for macOS and Windows users.
 * Added customisation of application icons, configurable via material menu.

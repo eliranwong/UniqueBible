@@ -5022,8 +5022,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def openVlcPlayer(self, filename=""):
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-                if config.isMacvlcInstalled:
-                    os.system("vlc kill")
+                os.system("pkill VLC")
                 if filename:
                     WebtopUtil.run(f'{config.macVlc} "{filename}"')
                 else:
@@ -5043,8 +5042,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.displayMessage(config.thisTranslation["noMediaPlayer"])
 
     def closeMediaPlayer(self):
-        if config.isMacvlcInstalled:
-            os.system("vlc kill")
+        if config.macVlc:
+            os.system("pkill VLC")
         if WebtopUtil.isPackageInstalled("vlc") and WebtopUtil.isPackageInstalled("pkill"):
             os.system("pkill vlc")
         if self.vlcPlayer is not None:
@@ -5079,8 +5078,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def playAudioBibleFilePlayList(self, playlist, gui=True):
         self.closeMediaPlayer()
         if config.macVlc and not config.forceUseBuiltinMediaPlayer:
-            #if config.isMacvlcInstalled:
-            #    os.system("vlc kill")
             audioFiles = '" "'.join(playlist)
             audioFiles = '"{0}"'.format(audioFiles)
             WebtopUtil.run(f"{config.macVlc} {audioFiles}")
@@ -5112,8 +5109,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                     if file:
                         fileList.append(file)
                 audioFiles = ' '.join(fileList)
-                #if config.isMacvlcInstalled:
-                #    os.system("vlc kill")
                 WebtopUtil.run(f"{config.macVlc} {audioFiles}")
             elif WebtopUtil.isPackageInstalled("vlc") and not config.forceUseBuiltinMediaPlayer:
                 fileList = []
