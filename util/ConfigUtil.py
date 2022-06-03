@@ -43,6 +43,14 @@ class ConfigUtil:
         # It is created to help documentation.
         config.help = {}
 
+        config.help["desktopUBAIcon"] = """
+        # Desktop version UBA icon filename.  UniqueBible.app provides official icons in different colours.  We ask our users to use one of our official icons to acknowledge our development."""
+        if not hasattr(config, "desktopUBAIcon"):
+            config.desktopUBAIcon = os.path.join("htmlResources", "UniqueBibleApp.png")
+        config.help["webUBAIcon"] = """
+        # Web version UBA icon filename.  UniqueBible.app provides official icons in different colours.  We ask our users to use one of our official icons to acknowledge our development."""
+        if not hasattr(config, "webUBAIcon"):
+            config.webUBAIcon = "UniqueBibleApp.png"
         config.help["developer"] = """
         # Option to enable developer menu and options"""
         if not hasattr(config, "developer"):
@@ -89,10 +97,6 @@ class ConfigUtil:
         # Base URL for http-server viewer"""
         if not hasattr(config, "httpServerViewerBaseUrl"):
             config.httpServerViewerBaseUrl = "https://marvelbible.com/uba_viewer"
-        config.help["webUBAIcon"] = """
-        # Web version UBA icon filename.  UBA icons are provided in different colours for users to choose one for display.  Users are required to display an officially provided UBA icon to acknowledge the source of this application."""
-        if not hasattr(config, "webUBAIcon"):
-            config.webUBAIcon = "UniqueBibleApp.png"
         config.help["webOrganisationIcon"] = """
         # Customise an organisation icon filename.  The filename given should be a path relative to directory 'htmlResouces/'."""
         if not hasattr(config, "webOrganisationIcon"):
@@ -1240,6 +1244,8 @@ class ConfigUtil:
             #config.instantHighlightString = ""
         configs = (
             # ("version", config.version),
+            ("desktopUBAIcon", config.desktopUBAIcon),
+            ("webUBAIcon", config.webUBAIcon),
             ("developer", config.developer),
             ("enableCmd", config.enableCmd),
             ("qtLibrary", config.qtLibrary),
@@ -1251,7 +1257,6 @@ class ConfigUtil:
             ("httpServerViewerGlobalMode", config.httpServerViewerGlobalMode),
             ("httpServerViewerBaseUrl", config.httpServerViewerBaseUrl),
             ("webUBAServer", config.webUBAServer),
-            ("webUBAIcon", config.webUBAIcon),
             ("webOrganisationIcon", config.webOrganisationIcon),
             ("webOrganisationLink", config.webOrganisationLink),
             ("webFullAccess", config.webFullAccess),

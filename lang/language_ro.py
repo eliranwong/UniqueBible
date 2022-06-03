@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Selectați a doua voce Text-to-speech",
     "ttsLanguage3": "Selectați A Treia Voce Text-to-speech",
     "doNotStop3rdPartyMediaPlayerOnExit": "Nu închideți playerul media al terților atunci când UBA este închis.",
+    "applicationIcon": "Pictograma aplicației",
+    "show": "Arată",
+    "stopPlayMedia": "Nu mai juca media",
+    "openClipboardContent": "Conținut deschis la clipboard",
+    "readClipboardContent": "Citește și Conținut Clipboard",
+    "displayClipboardContent": "Afișează conținutul clipboard",
+    "openClipboardReferences": "Open Clipboard Bible Referințe",
+    "runClipboardCommand": "Comandați comanda Clipboard",
+    "openBibleReferences": "Referinţe biblice deschise",
 }

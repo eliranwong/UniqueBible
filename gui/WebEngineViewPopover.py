@@ -205,7 +205,6 @@ class WebEngineViewPopover(QWebEngineView):
             config.pauseMode = False
 
     def qKeyPressed(self):
-        print("hello")
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
             config.quitMacro = True
             config.pauseMode = False

@@ -528,6 +528,7 @@ for module, feature, isInstalled in optional:
 # Check is OFFLINE tts is in place
 if config.docker:
     config.isOfflineTtsInstalled = False
+    config.macVoices = {}
 else:
     config.isOfflineTtsInstalled = isOfflineTtsInstalled()
 # Check if official Google Cloud text-to-speech service is in place

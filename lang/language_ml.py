@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "à ', à', à ', à', à ', à', à ', à '",
     "ttsLanguage3": "മൂന്നാം വാചകത്തിനുള്ള ശബ്ദം തെരഞ്ഞെടുക്കുക",
     "doNotStop3rdPartyMediaPlayerOnExit": "UBA അടച്ചുപൂട്ടുമ്പോൾ മൂന്നാമത്തെ പാർട്ടി മീഡിയ കളിക്കാരൻ അടക്കരുത്.",
+    "applicationIcon": "പ്രയോഗത്തിന്റെ ചിഹ്നം",
+    "show": "കാണിക്കുക",
+    "stopPlayMedia": "കളിക്കല് മാധ്യമം നിര്ത്തുക",
+    "openClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം തുറക്കുക",
+    "readClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം വായിയ്ക്കുക",
+    "displayClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം കാണിക്കുക",
+    "openClipboardReferences": "ക്ലിപ്ബോര്ഡ് ബൈബിള് റഫറന്സ് തുറക്കുക",
+    "runClipboardCommand": "ക്ലിപ്ബോര്ഡ് ആജ്ഞ പ്രവര്ത്തിപ്പിക്കുക",
+    "openBibleReferences": "ബൈബിള് റഫറന്സുകള് തുറക്കുക",
 }

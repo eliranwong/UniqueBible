@@ -1445,7 +1445,6 @@ class WebEngineView(QWebEngineView):
                 self.parent.parent.textCommandChanged(references, "main")
             else:
                 self.displayMessage(config.thisTranslation["message_noReference"])
-            del parser
         else:
             self.messageNoSelection()
 
@@ -1459,7 +1458,6 @@ class WebEngineView(QWebEngineView):
             else:
                 references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
                 QApplication.clipboard().setText(references)
-            del parser
         else:
             self.messageNoSelection()
 

@@ -23,7 +23,7 @@ def addMenu(menuBar, title, translation=True):
 def addSubMenu(parentMenu, translation):
     return parentMenu.addMenu(config.thisTranslation.get(translation, translation))
 
-def addCheckableMenuItem(menu, feature, object, action, currentValue, thisValue, shortcut=None, translation=True):
+def addCheckableMenuItem(menu, feature, object, action, currentValue, thisValue, shortcut=None, translation=True, icon=""):
     if shortcut:
         if shortcut in config.shortcutList:
             shortcut = None
@@ -32,6 +32,8 @@ def addCheckableMenuItem(menu, feature, object, action, currentValue, thisValue,
     if shortcut is None:
         shortcut = ""
     qAction = QAction(config.thisTranslation[feature] if translation else feature, object, triggered=action, shortcut=shortcut)
+    if icon:
+        qAction.setIcon(QIcon(icon))
     qAction.setCheckable(True)
     if currentValue == thisValue:
         qAction.setChecked(True)

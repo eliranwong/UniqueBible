@@ -212,11 +212,17 @@ if not platform.system() == "Windows" and not config.enableHttpServer:
 from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
+from util.LanguageUtil import LanguageUtil
+from functools import partial
 from gui.MainWindow import MainWindow
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory
+    from PySide6.QtWidgets import QMenu, QSystemTrayIcon
+    from PySide6.QtGui import QAction, QIcon
 else:
     from qtpy.QtWidgets import QApplication, QStyleFactory
+    from qtpy.QtWidgets import QMenu, QSystemTrayIcon, QAction
+    from qtpy.QtGui import QIcon
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -408,7 +414,9 @@ if config.virtualKeyboard:
 
 # Start PySide2 gui
 config.startup = True
+config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
 app = QApplication(sys.argv)
+
 # Set application name
 app.setApplicationName("UniqueBible.app")
 app.setApplicationDisplayName("UniqueBible.app")
@@ -501,5 +509,79 @@ def global_excepthook(type, value, traceback):
 
 sys.excepthook = global_excepthook
 
+
+# To work with system tray
+if not platform.system() == "Linux":
+    # Set up tray icon
+    app.setQuitOnLastWindowClosed(False)
+    if not os.path.isfile(config.desktopUBAIcon):
+        config.desktopUBAIcon = os.path.join("htmlResources", "UniqueBibleApp.png")
+    trayIcon = QIcon(config.desktopUBAIcon)
+    tray = QSystemTrayIcon()
+    tray.setIcon(trayIcon)
+    tray.setVisible(True)
+    trayMenu = QMenu()
+    # Show Main Window
+    showMainWindow = QAction(config.thisTranslation["show"])
+    showMainWindow.triggered.connect(config.mainWindow.showFromTray)
+    trayMenu.addAction(showMainWindow)
+    # Add a separator
+    trayMenu.addSeparator()
+    # Control Panel
+    masterControl = QAction(config.thisTranslation["controlPanel"])
+    masterControl.triggered.connect(config.mainWindow.showFromTray)
+    masterControl.triggered.connect(partial(config.mainWindow.openControlPanelTab, 0))
+    trayMenu.addAction(masterControl)
+    miniControl = QAction(config.thisTranslation["menu1_miniControl"])
+    miniControl.triggered.connect(config.mainWindow.showFromTray)
+    miniControl.triggered.connect(config.mainWindow.manageMiniControl)
+    trayMenu.addAction(miniControl)
+    # Add a separatorJohn 3:16, 19
+    trayMenu.addSeparator()
+    # Work with clipboard
+    displayClipboardContent = QAction(config.thisTranslation["displayClipboardContent"])
+    displayClipboardContent.triggered.connect(config.mainWindow.showFromTray)
+    displayClipboardContent.triggered.connect(config.mainWindow.pasteFromClipboard)
+    trayMenu.addAction(displayClipboardContent)
+    if not config.noTtsFound:
+        readClipboardContent = QAction(config.thisTranslation["readClipboardContent"])
+        readClipboardContent.triggered.connect(config.mainWindow.readClipboardContent)
+        trayMenu.addAction(readClipboardContent)
+    openClipboardReferences = QAction(config.thisTranslation["openClipboardReferences"])
+    openClipboardReferences.triggered.connect(config.mainWindow.showFromTray)
+    openClipboardReferences.triggered.connect(config.mainWindow.openReferencesOnClipboard)
+    trayMenu.addAction(openClipboardReferences)
+    runClipboardCommand = QAction(config.thisTranslation["runClipboardCommand"])
+    runClipboardCommand.triggered.connect(config.mainWindow.showFromTray)
+    runClipboardCommand.triggered.connect(config.mainWindow.parseContentOnClipboard)
+    trayMenu.addAction(runClipboardCommand)
+    # Add a separator
+    trayMenu.addSeparator()
+    # Media
+    youtubeDownloader = QAction(config.thisTranslation["youtube_utility"])
+    youtubeDownloader.triggered.connect(config.mainWindow.showFromTray)
+    youtubeDownloader.triggered.connect(config.mainWindow.openYouTube)
+    trayMenu.addAction(youtubeDownloader)
+    showMedia = QAction(config.thisTranslation["media"])
+    showMedia.triggered.connect(config.mainWindow.showFromTray)
+    showMedia.triggered.connect(partial(config.mainWindow.openControlPanelTab, 6))
+    trayMenu.addAction(showMedia)
+    stopPlayMedia = QAction(config.thisTranslation["stopPlayMedia"])
+    stopPlayMedia.triggered.connect(config.mainWindow.closeMediaPlayer)
+    trayMenu.addAction(stopPlayMedia)
+    # Add a separator
+    trayMenu.addSeparator()
+    # Restart UBA on macOS
+    if platform.system() == "Darwin":
+        restartApp = QAction(config.thisTranslation["restart"])
+        restartApp.triggered.connect(config.mainWindow.restartApp)
+        trayMenu.addAction(restartApp)
+    # Quit
+    quitApp = QAction(config.thisTranslation["menu_quit"])
+    quitApp.triggered.connect(app.quit)
+    trayMenu.addAction(quitApp)
+    tray.setContextMenu(trayMenu)
+
+# Launch UBA
 config.restartUBA = False
 sys.exit(app.exec() if config.qtLibrary == "pyside6" else app.exec_())

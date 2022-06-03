@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "选择第二语音",
     "ttsLanguage3": "选择第三语音",
     "doNotStop3rdPartyMediaPlayerOnExit": "当 UBA 关闭时，请勿关闭第三方媒体播放器。",
+    "applicationIcon": "应用程序图标",
+    "show": "显示",
+    "stopPlayMedia": "停止播放介质",
+    "openClipboardContent": "打开剪贴板内容",
+    "readClipboardContent": "阅读剪贴板内容",
+    "displayClipboardContent": "显示剪贴板内容",
+    "openClipboardReferences": "打开剪贴板经文参照",
+    "runClipboardCommand": "运行剪贴板命令",
+    "openBibleReferences": "打开经文参照",
 }

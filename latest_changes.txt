@@ -1,3 +1,10 @@
+Changes in 30.26:
+* Added system tray for macOS and Windows users.
+* Added customisation of application icons, configurable via material menu.
+* Added features to read clipboard content with default text-to-speech voice, and open bible references on clipboard.
+* Fixed bash script shortcut.
+* Fixed webtop version startup issue.
+
 Changes in 30.25:
 * Added support of three text-to-speech buttons on second top toolbar.
     For material menu layout users only:

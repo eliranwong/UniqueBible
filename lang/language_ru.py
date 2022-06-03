@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Выбрать второй голосовой голос",
     "ttsLanguage3": "Выбрать третий голосовой голос",
     "doNotStop3rdPartyMediaPlayerOnExit": "Не закрывая стороннего медиаплеера при закрытии UBA.",
+    "applicationIcon": "Значок приложения",
+    "show": "Показать",
+    "stopPlayMedia": "Остановить воспроизведение носителя",
+    "openClipboardContent": "Открыть содержимое буфера обмена",
+    "readClipboardContent": "Прочитать содержимое буфера обмена",
+    "displayClipboardContent": "Показать содержимое буфера обмена",
+    "openClipboardReferences": "Открыть Библию буфера обмена",
+    "runClipboardCommand": "Выполнить команду буфера обмена",
+    "openBibleReferences": "Открыть ссылки на Библию",
 }

@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Seleziona Second Text - to - speech Voice",
     "ttsLanguage3": "Seleziona Terza voce di testo - vocale",
     "doNotStop3rdPartyMediaPlayerOnExit": "Non chiudere il media player di terze parti quando l'UBA è chiuso.",
+    "applicationIcon": "Icona Applicazione",
+    "show": "Mostra",
+    "stopPlayMedia": "Stop Playing Media",
+    "openClipboardContent": "Apertura appunti - Contenuto",
+    "readClipboardContent": "Leggi il contenuto di appunti",
+    "displayClipboardContent": "Visualizza i contenuti di Clipboard",
+    "openClipboardReferences": "Riferimenti della Bibbia di apertura Clipboard",
+    "runClipboardCommand": "Esegui il comando Clipboard",
+    "openBibleReferences": "Riferimenti della Bibbia aperta",
 }

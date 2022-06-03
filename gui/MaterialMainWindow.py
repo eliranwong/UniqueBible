@@ -63,10 +63,13 @@ class MaterialMainWindow:
 
         # Clipboard Content
         subMenu = addSubMenu(menu, "menu1_clipboard")
-        items = (
-            ("pasteOnStudyWindow", self.pasteFromClipboard, None),
+        items = [
+            ("menu_display", self.pasteFromClipboard, None),
+            ("openBibleReferences", self.openReferencesOnClipboard, None),
             ("context1_command", self.parseContentOnClipboard, sc.parseContentOnClipboard),
-        )
+        ]
+        if not config.noTtsFound:
+            items.insert(1, ("speak", self.readClipboardContent, None))
         for feature, action, shortcut in items:
             addMenuItem(subMenu, feature, self, action, shortcut)
 
@@ -75,6 +78,12 @@ class MaterialMainWindow:
         # Appearance
         subMenu0 = addSubMenu(menu, "appearance")
         # Window layout
+
+        subMenu01 = addSubMenu(subMenu0, "applicationIcon")
+        for icon in FileUtil.fileNamesWithoutExtension(os.path.join("htmlResources", "icons"), "png"):
+            iconFile = os.path.join("htmlResources", "icons", f"{icon}.png")
+            currentIconFile = os.path.basename(config.desktopUBAIcon)[:-4]
+            addCheckableMenuItem(subMenu01, icon, self, partial(self.setApplicationIcon, iconFile), currentIconFile, icon, translation=False, icon=iconFile)
 
         subMenu01 = addSubMenu(subMenu0, "menu2_view")
         subMenu = addSubMenu(subMenu01, "menu1_screenSize")
@@ -386,7 +395,7 @@ class MaterialMainWindow:
         menu.addSeparator()
         if hasattr(config, "cli"):
             addMenuItem(menu, "restart", self, self.restartApp)
-        addIconMenuItem("UniqueBibleApp.png", menu, "menu1_exit", self, self.quitApp, sc.quitApp)
+        addIconMenuItem(config.desktopUBAIcon[14:], menu, "menu_quit", self, self.quitApp, sc.quitApp)
 
         # 2nd column
         menu = addMenu(menuBar, "menu_bible")

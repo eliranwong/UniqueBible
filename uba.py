@@ -136,11 +136,11 @@ if platform.system() == "Windows":
             subprocess.Popen("{0} {1}".format(python, mainPy), shell=True)
 else:
     # Create application shortcuts and set file permission
-    shortcutSh = os.path.join(os.getcwd(), "UniqueBibleApp.sh")
+    shortcutSh = os.path.join(os.getcwd(), "uba.sh")
     if not os.path.exists(shortcutSh):
         # Create .sh shortcut
         with open(shortcutSh, "w") as fileObj:
-            fileObj.write("#!{0}\n{1} {2}{3}".format("/bin/bash" if initialCommand == "docker" else os.environ["SHELL"], sys.executable, thisFile, " docker" if initialCommand == "docker" else ""))
+            fileObj.write("#!{0}\n{1} {2}{3}".format(os.environ["SHELL"], sys.executable, thisFile, " gui"))
         # Set permission
         for file in (thisFile, "main.py", "util/BibleVerseParser.py", "util/RegexSearch.py", shortcutSh):
             try:

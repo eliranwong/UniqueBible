@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Seleccione Second Text-to-speech Voice",
     "ttsLanguage3": "Seleccionar tercera voz de texto a voz",
     "doNotStop3rdPartyMediaPlayerOnExit": "No cierre el reproductor de medios de terceros cuando la UBA esté cerrada.",
+    "applicationIcon": "Icono de aplicación",
+    "show": "Mostrar",
+    "stopPlayMedia": "Detener el juego de medios",
+    "openClipboardContent": "Abrir contenido de portapapeles",
+    "readClipboardContent": "Leer contenido del portapapeles",
+    "displayClipboardContent": "Mostrar contenido del portapapeles",
+    "openClipboardReferences": "Abrir referencias de la Biblia del Portapapeles",
+    "runClipboardCommand": "Ejecutar mandato de portapapeles",
+    "openBibleReferences": "Referencias bíblicas abiertas",
 }

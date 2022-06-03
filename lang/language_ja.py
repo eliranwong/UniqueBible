@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "2 番目のテキストから音声への音声の選択",
     "ttsLanguage3": "3 番目のテキストから音声への音声を選択",
     "doNotStop3rdPartyMediaPlayerOnExit": "UBA のクローズ時には、サード・パーティーのメディアプレーヤーを閉じないでください",
+    "applicationIcon": "アプリケーション・アイコン",
+    "show": "ショー",
+    "stopPlayMedia": "メディアの再生の停止",
+    "openClipboardContent": "クリップボードの内容を開く",
+    "readClipboardContent": "クリップボードの内容をお読みください",
+    "displayClipboardContent": "クリップボードの内容を表示",
+    "openClipboardReferences": "Open Clipboard 聖書参照",
+    "runClipboardCommand": "クリップボードの実行コマンド",
+    "openBibleReferences": "聖書参照を開く",
 }

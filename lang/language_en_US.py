@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Select Second Text-to-speech Voice",
     "ttsLanguage3": "Select Third Text-to-speech Voice",
     "doNotStop3rdPartyMediaPlayerOnExit": "Do not close third-party media player when UBA is closed.",
+    "applicationIcon": "Application Icon",
+    "show": "Show",
+    "stopPlayMedia": "Stop Playing Media",
+    "openClipboardContent": "Open Clipboard Content",
+    "readClipboardContent": "Read Clipboard Content",
+    "displayClipboardContent": "Display Clipboard Content",
+    "openClipboardReferences": "Open Clipboard Bible References",
+    "runClipboardCommand": "Run Clipboard Command",
+    "openBibleReferences": "Open Bible References",
 }

@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Sélectionnez Second Text-to-speech Voice",
     "ttsLanguage3": "Sélectionnez Third Text-to-speech Voice",
     "doNotStop3rdPartyMediaPlayerOnExit": "Ne fermez pas le lecteur tiers lorsque l'UBA est fermée.",
+    "applicationIcon": "Icône d'application",
+    "show": "Afficher",
+    "stopPlayMedia": "Arrêter le support de jeu",
+    "openClipboardContent": "Ouvrir le contenu du presse-papiers",
+    "readClipboardContent": "Lire le contenu du presse-papiers",
+    "displayClipboardContent": "Afficher le contenu du presse-papiers",
+    "openClipboardReferences": "Ouvrir le presse-papiers Références bibliques",
+    "runClipboardCommand": "Exécuter la commande de presse-papiers",
+    "openBibleReferences": "Ouvrages de référence bibliques",
 }

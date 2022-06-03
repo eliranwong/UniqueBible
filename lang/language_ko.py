@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "두 번째 텍스트 대 음성 음성 선택",
     "ttsLanguage3": "3차 텍스트-음성 음성 선택",
     "doNotStop3rdPartyMediaPlayerOnExit": "UBA가 폐쇄될 때 제3자 미디어 플레이어를 닫지 마십시오.",
+    "applicationIcon": "애플리케이션 아이콘",
+    "show": "쇼",
+    "stopPlayMedia": "미디어 활동 중단",
+    "openClipboardContent": "클립보드 컨텐츠 열기",
+    "readClipboardContent": "클립보드 컨텐츠 읽기",
+    "displayClipboardContent": "클립보드 컨텐츠 표시",
+    "openClipboardReferences": "클립보드 성경 참조 열기",
+    "runClipboardCommand": "클립보드 명령어 실행",
+    "openBibleReferences": "성경 참조 열기",
 }

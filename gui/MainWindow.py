@@ -101,7 +101,7 @@ class MainWindow(QMainWindow):
         # set os open command
         self.setOsOpenCmd()
         # set translation of interface
-        self.setTranslation()
+        #self.setTranslation()
         # setup a parser for text commands
         self.textCommandParser = TextCommandParser(self)
         # set up resource lists
@@ -127,8 +127,7 @@ class MainWindow(QMainWindow):
 
         # setup UI
         self.setWindowTitle("UniqueBible.app [version {0:.2f}]".format(config.version))
-        appIconFile = os.path.join("htmlResources", "UniqueBibleApp.png")
-        appIcon = QIcon(appIconFile)
+        appIcon = QIcon(config.desktopUBAIcon)
         QGuiApplication.setWindowIcon(appIcon)
         # setup user menu & toolbars
 
@@ -411,8 +410,12 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.noteEditor:
             if self.noteEditor.close():
-                event.accept()
-                QGuiApplication.instance().quit()
+                if not platform.system() == "Linux":
+                    event.ignore()
+                    self.hide()
+                else:
+                    event.accept()
+                    QGuiApplication.instance().quit()
             else:
                 event.ignore()
                 # Bring forward the note editor.
@@ -420,8 +423,12 @@ class MainWindow(QMainWindow):
                 self.noteEditor.hide()
                 self.noteEditor.show()
         else:
-            event.accept()
-            QGuiApplication.instance().quit()
+            if not platform.system() == "Linux":
+                event.ignore()
+                self.hide()
+            else:
+                event.accept()
+                QGuiApplication.instance().quit()
 
     def quitApp(self):
         QGuiApplication.instance().quit()
@@ -928,13 +935,21 @@ class MainWindow(QMainWindow):
 
     def setAppWindowStyle(self, style):
         config.windowStyle = "" if style == "default" else style
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
+        self.handleRestart()
+
+    def setApplicationIcon(self, icon):
+        config.desktopUBAIcon = icon
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+        self.handleRestart()
 
     def setQtMaterialTheme(self, theme):
         config.qtMaterialTheme = theme
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.handleRestart()
 
     def enableQtMaterial(self, qtMaterial=True):
         if qtMaterial:
@@ -975,11 +990,13 @@ class MainWindow(QMainWindow):
 
     def setDefaultTheme(self):
         config.theme = "default"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.handleRestart()
 
     def setDarkTheme(self):
         config.theme = "dark"
-        self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
+        self.handleRestart()
 
     def setTheme(self, theme, setColours=True):
         theme = theme.split(" ")
@@ -1383,6 +1400,31 @@ class MainWindow(QMainWindow):
         # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
         if clipboardText:
             self.openTextOnStudyView(self.htmlWrapper(clipboardText, True), tab_title="clipboard")
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
+
+    def openReferencesOnClipboard(self):
+        clipboardText = QApplication.clipboard().text()
+        if clipboardText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verseList = parser.extractAllReferences(clipboardText, False)
+            if not verseList:
+                self.displayMessage(config.thisTranslation["message_noReference"])
+            else:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+                self.runTextCommand(references)
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
+
+    def readClipboardContent(self):
+        clipboardText = QApplication.clipboard().text()
+        if clipboardText:
+            if config.isOnlineTtsInstalled and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts:
+                keyword = "SPEAK"
+            else:
+                keyword = "GTTS"
+            command = "{0}:::{1}".format(keyword, clipboardText)
+            self.runTextCommand(command)
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
@@ -5225,3 +5267,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def testing(self):
         #pass
         print("testing")
+
+    # Work with system tray
+    def showFromTray(self):
+        self.show()
+        self.showMaximized()

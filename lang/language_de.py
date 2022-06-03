@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Zweite Text-zu-Sprache-Sprache auswählen",
     "ttsLanguage3": "Dritte Text-zu-Sprache-Stimme auswählen",
     "doNotStop3rdPartyMediaPlayerOnExit": "Schließen Sie den Media-Player von Drittanbietern nicht, wenn UBA geschlossen wird.",
+    "applicationIcon": "Anwendungssymbol",
+    "show": "Anzeigen",
+    "stopPlayMedia": "Wiedergabe von Datenträgern stoppen",
+    "openClipboardContent": "Inhalt der Zwischenablage öffnen",
+    "readClipboardContent": "Inhalt der Zwischenablage lesen",
+    "displayClipboardContent": "Inhalt der Zwischenablage anzeigen",
+    "openClipboardReferences": "Biblische Referenzen aus der Zwischenablage öffnen",
+    "runClipboardCommand": "Befehl Zwischenablage ausführen",
+    "openBibleReferences": "Biblische Referenzen öffnen",
 }

@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "Επιλέξτε Δεύτερη Φωνή από κείμενο σε ομιλία",
     "ttsLanguage3": "Επιλέξτε Φωνή κειμένου σε ομιλία",
     "doNotStop3rdPartyMediaPlayerOnExit": "Μην κλείσετε τον παίκτη μέσων τρίτων όταν κλείσει η UBA.",
+    "applicationIcon": "Εικονίδιο εφαρμογής:",
+    "show": "Εμφάνιση:",
+    "stopPlayMedia": "Σταμάτα να παίζεις Media",
+    "openClipboardContent": "Άνοιγμα περιεχομένου Clipboard",
+    "readClipboardContent": "Ανάγνωση περιεχομένου Clipboard",
+    "displayClipboardContent": "Εμφάνιση περιεχομένου Clipboard",
+    "openClipboardReferences": "Άνοιγμα παραπομπών στη Βίβλο Clipboard",
+    "runClipboardCommand": "Εκτέλεση εντολής Clipboard",
+    "openBibleReferences": "Παραπομπές:",
 }

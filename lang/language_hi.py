@@ -894,4 +894,13 @@ translation = {
     "ttsLanguage2": "द्वितीय पाठ-से-वार्ता ध्वनि चुनें",
     "ttsLanguage3": "तृतीय पाठ-से-वार्ता ध्वनि चुनें",
     "doNotStop3rdPartyMediaPlayerOnExit": "जब यूबीए बंद है, तो तीसरे पक्ष के मीडिया प्लेयर को बंद मत करो.",
+    "applicationIcon": "अनुप्रयोग प्रतीक",
+    "show": "दिखाएँ",
+    "stopPlayMedia": "मीडिया चलाना रोकें",
+    "openClipboardContent": "क्लिपबोर्ड सामग्री खोलें (O)",
+    "readClipboardContent": "क्लिपबोर्ड सामग्री पढ़ें (S)",
+    "displayClipboardContent": "क्लिपबोर्ड सामग्री प्रदर्शित करें",
+    "openClipboardReferences": "क्लिपबोर्ड बाइबल संदर्भ खोलें",
+    "runClipboardCommand": "क्लिपबोर्ड कमांड चलाएँ (S)",
+    "openBibleReferences": "बाइबल संदर्भ खोलें",
 }
