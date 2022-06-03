@@ -1,3 +1,6 @@
+Changes in 30.29:
+* Minor update - changed a dialog title.
+
 Changes in 30.28:
 * System tray enhancement:
     - Added search section to search for clipboard text in the bible and other resources.

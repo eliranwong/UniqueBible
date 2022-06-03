@@ -1213,7 +1213,7 @@ class MainWindow(QMainWindow):
     # warning for next action without saving modified notes
     def warningNotSaved(self):
         msgBox = QMessageBox(QMessageBox.Warning,
-                             "QMessageBox.warning()",
+                             "Warning",
                              "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
                              QMessageBox.NoButton, self)
         msgBox.addButton("Cancel", QMessageBox.AcceptRole)
@@ -4234,7 +4234,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def warningRestart(self):
         msgBox = QMessageBox(QMessageBox.Warning,
-                             "QMessageBox.warning()",
+                             "Warning",
                              "Restart Unique Bible App to make the changes effective?",
                              QMessageBox.NoButton, self)
         msgBox.addButton("Later", QMessageBox.AcceptRole)
