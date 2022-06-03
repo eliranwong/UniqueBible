@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "क्लिपबोर्ड सामग्री पढ़ें (S)",
     "displayClipboardContent": "क्लिपबोर्ड सामग्री प्रदर्शित करें",
     "openClipboardReferences": "क्लिपबोर्ड बाइबल संदर्भ खोलें",
-    "runClipboardCommand": "क्लिपबोर्ड कमांड चलाएँ (S)",
+    "runClipboardCommand": "क्लिपबोर्ड यूबीए कमांड चलाएँ (S)",
     "openBibleReferences": "बाइबल संदर्भ खोलें",
+    "searchBibleForClipboardContent": "क्लिपबोर्ड सामग्री के लिए बाइबल खोजें",
+    "enableSystemTrayOnLinux": "Linux पर तंत्र तश्तरी सक्षम करें",
 }

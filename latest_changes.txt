@@ -1,3 +1,13 @@
+Changes in 30.28:
+* System tray enhancement:
+    - Added search section to search for clipboard text in the bible and other resources.
+    - Added config.enableSystemTrayOnLinux for Linux uses to enable system tray.
+        System tray is enabled by default on Windows and macOS.
+        System tray is not enabled by default on Linux, as not all Linux desktops support system tray.
+        Linux users can enable UBA system tray manually via "Set Config Flags Window".
+    - Bring UBA window to the front when main window is called.
+* Fixed downloading UBA icons.
+
 Changes in 30.27:
 * Fixed startup issues on macOS, caused by command "vlc kill".
 

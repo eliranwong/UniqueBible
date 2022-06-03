@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Leer contenido del portapapeles",
     "displayClipboardContent": "Mostrar contenido del portapapeles",
     "openClipboardReferences": "Abrir referencias de la Biblia del Portapapeles",
-    "runClipboardCommand": "Ejecutar mandato de portapapeles",
+    "runClipboardCommand": "Ejecutar mandato de la UBA del portapapeles",
     "openBibleReferences": "Referencias bíblicas abiertas",
+    "searchBibleForClipboardContent": "Buscar en la Biblia el contenido del portapapeles",
+    "enableSystemTrayOnLinux": "Habilitar La Bandeja Del Sistema En Linux",
 }

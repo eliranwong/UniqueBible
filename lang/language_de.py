@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Inhalt der Zwischenablage lesen",
     "displayClipboardContent": "Inhalt der Zwischenablage anzeigen",
     "openClipboardReferences": "Biblische Referenzen aus der Zwischenablage öffnen",
-    "runClipboardCommand": "Befehl Zwischenablage ausführen",
+    "runClipboardCommand": "UBA-Befehl für die Zwischenablage ausführen",
     "openBibleReferences": "Biblische Referenzen öffnen",
+    "searchBibleForClipboardContent": "Suche Bibel für Merkzettel",
+    "enableSystemTrayOnLinux": "Systemablage unter Linux aktivieren",
 }

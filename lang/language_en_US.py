@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Read Clipboard Content",
     "displayClipboardContent": "Display Clipboard Content",
     "openClipboardReferences": "Open Clipboard Bible References",
-    "runClipboardCommand": "Run Clipboard Command",
+    "runClipboardCommand": "Run Clipboard UBA Command",
     "openBibleReferences": "Open Bible References",
+    "searchBibleForClipboardContent": "Search Bible for Clipboard Content",
+    "enableSystemTrayOnLinux": "Enable System Tray On Linux",
 }

@@ -511,7 +511,7 @@ sys.excepthook = global_excepthook
 
 
 # To work with system tray
-if not platform.system() == "Linux":
+if config.enableSystemTray:
     # Set up tray icon
     app.setQuitOnLastWindowClosed(False)
     if not os.path.isfile(config.desktopUBAIcon):
@@ -538,7 +538,22 @@ if not platform.system() == "Linux":
     trayMenu.addAction(miniControl)
     # Add a separatorJohn 3:16, 19
     trayMenu.addSeparator()
+    # Search section
+    searchBibleForClipboardContent = QAction(config.thisTranslation["searchBibleForClipboardContent"])
+    searchBibleForClipboardContent.triggered.connect(config.mainWindow.showFromTray)
+    searchBibleForClipboardContent.triggered.connect(config.mainWindow.searchBibleForClipboardContent)
+    trayMenu.addAction(searchBibleForClipboardContent)
+    searchResourcesForClipboardContent = QAction(config.thisTranslation["searchOtherResources"])
+    searchResourcesForClipboardContent.triggered.connect(config.mainWindow.showFromTray)
+    searchResourcesForClipboardContent.triggered.connect(config.mainWindow.searchResourcesForClipboardContent)
+    trayMenu.addAction(searchResourcesForClipboardContent)
+    # Add a separatorJohn 3:16, 19
+    trayMenu.addSeparator()
     # Work with clipboard
+    openClipboardReferences = QAction(config.thisTranslation["openClipboardReferences"])
+    openClipboardReferences.triggered.connect(config.mainWindow.showFromTray)
+    openClipboardReferences.triggered.connect(config.mainWindow.openReferencesOnClipboard)
+    trayMenu.addAction(openClipboardReferences)
     displayClipboardContent = QAction(config.thisTranslation["displayClipboardContent"])
     displayClipboardContent.triggered.connect(config.mainWindow.showFromTray)
     displayClipboardContent.triggered.connect(config.mainWindow.pasteFromClipboard)
@@ -547,10 +562,6 @@ if not platform.system() == "Linux":
         readClipboardContent = QAction(config.thisTranslation["readClipboardContent"])
         readClipboardContent.triggered.connect(config.mainWindow.readClipboardContent)
         trayMenu.addAction(readClipboardContent)
-    openClipboardReferences = QAction(config.thisTranslation["openClipboardReferences"])
-    openClipboardReferences.triggered.connect(config.mainWindow.showFromTray)
-    openClipboardReferences.triggered.connect(config.mainWindow.openReferencesOnClipboard)
-    trayMenu.addAction(openClipboardReferences)
     runClipboardCommand = QAction(config.thisTranslation["runClipboardCommand"])
     runClipboardCommand.triggered.connect(config.mainWindow.showFromTray)
     runClipboardCommand.triggered.connect(config.mainWindow.parseContentOnClipboard)

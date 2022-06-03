@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Lire le contenu du presse-papiers",
     "displayClipboardContent": "Afficher le contenu du presse-papiers",
     "openClipboardReferences": "Ouvrir le presse-papiers Références bibliques",
-    "runClipboardCommand": "Exécuter la commande de presse-papiers",
+    "runClipboardCommand": "Exécuter la commande UBA de presse-papiers",
     "openBibleReferences": "Ouvrages de référence bibliques",
+    "searchBibleForClipboardContent": "Rechercher la Bible pour le contenu du presse-papiers",
+    "enableSystemTrayOnLinux": "Activation du plateau système sous Linux",
 }

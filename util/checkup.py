@@ -545,6 +545,9 @@ if config.forceUseBuiltinMediaPlayer and not config.isVlcInstalled:
 macVlc = "/Applications/VLC.app/Contents/MacOS/VLC"
 config.macVlc = macVlc if platform.system() == "Darwin" and os.path.isfile(macVlc) else ""
 
+# Check if system tray is enabled
+config.enableSystemTray = True if config.enableSystemTrayOnLinux or not platform.system() == "Linux" else False
+
 # Import modules for developer
 if config.developer:
     # import exlbl

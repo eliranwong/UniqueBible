@@ -410,7 +410,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         if self.noteEditor:
             if self.noteEditor.close():
-                if not platform.system() == "Linux":
+                if config.enableSystemTray:
                     event.ignore()
                     self.hide()
                 else:
@@ -423,7 +423,7 @@ class MainWindow(QMainWindow):
                 self.noteEditor.hide()
                 self.noteEditor.show()
         else:
-            if not platform.system() == "Linux":
+            if config.enableSystemTray:
                 event.ignore()
                 self.hide()
             else:
@@ -1425,6 +1425,21 @@ class MainWindow(QMainWindow):
                 keyword = "GTTS"
             command = "{0}:::{1}".format(keyword, clipboardText)
             self.runTextCommand(command)
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
+
+    def searchBibleForClipboardContent(self):
+        clipboardText = QApplication.clipboard().text()
+        if clipboardText:
+            self.runTextCommand("SEARCH:::{0}".format(clipboardText))
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
+
+    def searchResourcesForClipboardContent(self):
+        clipboardText = QApplication.clipboard().text()
+        if clipboardText:
+            self.openControlPanelTab(3)
+            self.controlPanel.toolTab.searchField.setText(clipboardText)
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
@@ -5267,3 +5282,5 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def showFromTray(self):
         self.show()
         self.showMaximized()
+        self.activateWindow()
+        self.raise_()

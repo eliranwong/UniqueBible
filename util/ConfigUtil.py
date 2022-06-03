@@ -226,6 +226,10 @@ class ConfigUtil:
         # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
             config.linuxStartFullScreen = False
+        config.help["enableSystemTrayOnLinux"] = """
+        # Enable UBA system tray on Linux os"""
+        if not hasattr(config, "enableSystemTrayOnLinux"):
+            config.enableSystemTrayOnLinux = False
         config.help["forceOnlineTts"] = """
         # This forces default text-to-speech feature uses online service, even if offline tts engine is installed."""
         if not hasattr(config, "forceOnlineTts"):
@@ -1278,6 +1282,7 @@ class ConfigUtil:
             ("openMacos", config.openMacos),
             ("openLinux", config.openLinux),
             ("openLinuxPdf", config.openLinuxPdf),
+            ("enableSystemTrayOnLinux", config.enableSystemTrayOnLinux),
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             #("showTtsOnLinux", config.showTtsOnLinux),
             ("forceOnlineTts", config.forceOnlineTts),

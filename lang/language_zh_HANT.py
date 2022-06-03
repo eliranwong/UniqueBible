@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "閱讀剪貼簿內容",
     "displayClipboardContent": "顯示剪貼簿內容",
     "openClipboardReferences": "開啟剪貼簿聖經參照",
-    "runClipboardCommand": "執行剪貼簿指令",
+    "runClipboardCommand": "執行剪貼簿 UBA 指令",
     "openBibleReferences": "開啟聖經參照",
+    "searchBibleForClipboardContent": "搜尋聖經以取得剪貼簿內容",
+    "enableSystemTrayOnLinux": "在 Linux 上啟用系統匣",
 }

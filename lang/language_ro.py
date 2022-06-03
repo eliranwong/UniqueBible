@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Citește și Conținut Clipboard",
     "displayClipboardContent": "Afișează conținutul clipboard",
     "openClipboardReferences": "Open Clipboard Bible Referințe",
-    "runClipboardCommand": "Comandați comanda Clipboard",
+    "runClipboardCommand": "Rulați comanda UBA Clipboard",
     "openBibleReferences": "Referinţe biblice deschise",
+    "searchBibleForClipboardContent": "Caută Biblia pentru Clipboard Content",
+    "enableSystemTrayOnLinux": "Activează tava de sistem pe Linux",
 }

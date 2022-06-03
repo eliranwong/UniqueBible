@@ -149,6 +149,7 @@ class ConfigFlagsWindow(QDialog):
             ]
         if platform.system() == "Linux":
             options += [
+                ("enableSystemTrayOnLinux", config.enableSystemTrayOnLinux, self.enableSystemTrayOnLinuxChanged, False, config.thisTranslation["enableSystemTrayOnLinux"]),
                 ("linuxStartFullScreen", config.linuxStartFullScreen, self.linuxStartFullScreenChanged, False, config.thisTranslation["linuxStartFullScreen"]),
                 ("fcitx", config.fcitx, self.fcitxChanged, False, config.thisTranslation["fcitx"]),
                 ("ibus", config.ibus, self.ibusChanged, False, config.thisTranslation["ibus"]),
@@ -265,6 +266,10 @@ class ConfigFlagsWindow(QDialog):
 
     def doNotStop3rdPartyMediaPlayerOnExitChanged(self):
         config.doNotStop3rdPartyMediaPlayerOnExit = not config.doNotStop3rdPartyMediaPlayerOnExit
+        self.parent.handleRestart()
+
+    def enableSystemTrayOnLinuxChanged(self):
+        config.enableSystemTrayOnLinux = not config.enableSystemTrayOnLinux
         self.parent.handleRestart()
 
     def ttsChineseAlwaysCantoneseChanged(self):

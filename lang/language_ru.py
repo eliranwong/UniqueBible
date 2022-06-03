@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Прочитать содержимое буфера обмена",
     "displayClipboardContent": "Показать содержимое буфера обмена",
     "openClipboardReferences": "Открыть Библию буфера обмена",
-    "runClipboardCommand": "Выполнить команду буфера обмена",
+    "runClipboardCommand": "Выполнить команду UBA буфера обмена",
     "openBibleReferences": "Открыть ссылки на Библию",
+    "searchBibleForClipboardContent": "Поиск в Библии для содержимого буфера обмена",
+    "enableSystemTrayOnLinux": "Включить Системный Лоток В Linux",
 }

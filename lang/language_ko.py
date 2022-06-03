@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "클립보드 컨텐츠 읽기",
     "displayClipboardContent": "클립보드 컨텐츠 표시",
     "openClipboardReferences": "클립보드 성경 참조 열기",
-    "runClipboardCommand": "클립보드 명령어 실행",
+    "runClipboardCommand": "클립보드 UBA 명령 실행",
     "openBibleReferences": "성경 참조 열기",
+    "searchBibleForClipboardContent": "클립보드 컨텐츠에 대한 성경 검색",
+    "enableSystemTrayOnLinux": "Linux 에서 시스템 트레이 사용 가능",
 }

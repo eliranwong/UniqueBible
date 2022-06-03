@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "Ανάγνωση περιεχομένου Clipboard",
     "displayClipboardContent": "Εμφάνιση περιεχομένου Clipboard",
     "openClipboardReferences": "Άνοιγμα παραπομπών στη Βίβλο Clipboard",
-    "runClipboardCommand": "Εκτέλεση εντολής Clipboard",
+    "runClipboardCommand": "Εκτέλεση εντολής Clipboard UBA",
     "openBibleReferences": "Παραπομπές:",
+    "searchBibleForClipboardContent": "Αναζήτηση Βίβλο για το πρόχειρο περιεχόμενο",
+    "enableSystemTrayOnLinux": "Ενεργοποίηση συστήματος Tray σε Linux",
 }

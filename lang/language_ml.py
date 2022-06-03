@@ -901,6 +901,8 @@ translation = {
     "readClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം വായിയ്ക്കുക",
     "displayClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കം കാണിക്കുക",
     "openClipboardReferences": "ക്ലിപ്ബോര്ഡ് ബൈബിള് റഫറന്സ് തുറക്കുക",
-    "runClipboardCommand": "ക്ലിപ്ബോര്ഡ് ആജ്ഞ പ്രവര്ത്തിപ്പിക്കുക",
+    "runClipboardCommand": "ക്ലിപ്ബോര്ഡ് UBA ആജ്ഞ പ്രവര്ത്തിപ്പിക്കുക",
     "openBibleReferences": "ബൈബിള് റഫറന്സുകള് തുറക്കുക",
+    "searchBibleForClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കത്തിനുള്ള ബൈബിള് തെരയുക",
+    "enableSystemTrayOnLinux": "ലിനക്സില് സിസ്റ്റം ട്രേ പ്രാവര്ത്തികമാക്കുക",
 }
