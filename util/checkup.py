@@ -462,7 +462,7 @@ for module, feature, isInstalled in required:
             exit(1)
 
 # Check if optional modules are installed
-optional = (
+optional = [
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
     ("mammoth", "Open DOCX file", isMammothInstalled),
@@ -479,7 +479,7 @@ optional = (
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
-) if config.noQt else (
+] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
@@ -501,8 +501,9 @@ optional = (
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
-    ("--upgrade AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled),
-)
+]
+if platform.system() == "Darwin":
+    optional.append(("--upgrade AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
     if not isInstalled():
         pip3InstallModule(module)

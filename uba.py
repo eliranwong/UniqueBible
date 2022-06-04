@@ -117,9 +117,11 @@ if platform.system() == "Windows":
     if python.endswith(".exe"):
         python = python[:-4]
     # Create a .bat for application shortcut
-    shortcutSh = os.path.join(os.getcwd(), "UniqueBibleApp.bat")
-    with open(shortcutSh, "w") as fileObj:
-            fileObj.write('{0} "{1}"'.format(python, thisFile))
+    shortcutBat = os.path.join(os.getcwd(), "UniqueBibleApp.bat")
+    if not os.path.exists(shortcutBat):
+        with open(shortcutBat, "w") as fileObj:
+            #fileObj.write('{0} "{1}"'.format(python, thisFile))
+            fileObj.write('{0} "{1}" gui'.format(sys.executable, thisFile))
     # Activate virtual environment
     activator = os.path.join(os.getcwd(), venvDir, binDir, "activate")
     # Run main.py
