@@ -162,6 +162,7 @@ class ShortcutUtil:
             "presentPopover": "",
             "displayReferenceOnBibleWindowPopover": "",
             "displayReferenceOnNewWindowPopover": "",
+            "displayChapterMenuTogetherWithBibleChapter": "",
         },
         "brachys": {
             "back": "Ctrl+[",
@@ -307,6 +308,7 @@ class ShortcutUtil:
             "presentPopover": "",
             "displayReferenceOnBibleWindowPopover": "",
             "displayReferenceOnNewWindowPopover": "",
+            "displayChapterMenuTogetherWithBibleChapter": "",
         },
         "micron": {
             "back": 'Ctrl+[',
@@ -452,6 +454,7 @@ class ShortcutUtil:
             "presentPopover": "Alt+P",
             "displayReferenceOnBibleWindowPopover": "Alt+B",
             "displayReferenceOnNewWindowPopover": "Ctrl+Alt+B",
+            "displayChapterMenuTogetherWithBibleChapter": "",
         },
         "syntemno": {
             "back": "Ctrl+Y, 1",
@@ -597,6 +600,7 @@ class ShortcutUtil:
             "presentPopover": "",
             "displayReferenceOnBibleWindowPopover": "",
             "displayReferenceOnNewWindowPopover": "",
+            "displayChapterMenuTogetherWithBibleChapter": "",
         }
     }
 

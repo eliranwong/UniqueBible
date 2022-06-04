@@ -551,6 +551,10 @@ class ConfigUtil:
         # Options to add sub-headings when "readFormattedBibles" is set to "False": True / False"""
         if not hasattr(config, "addTitleToPlainChapter"):
             config.addTitleToPlainChapter = True
+        config.help["displayChapterMenuTogetherWithBibleChapter"] = """
+        # Display chapter menu together with bible chapter: True / False"""
+        if not hasattr(config, "displayChapterMenuTogetherWithBibleChapter"):
+            config.displayChapterMenuTogetherWithBibleChapter = True
         config.help["showVerseReference"] = """
         # Options to display verse reference: True / False"""
         if not hasattr(config, "showVerseReference"):
@@ -1394,6 +1398,7 @@ class ConfigUtil:
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
             ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
+            ("displayChapterMenuTogetherWithBibleChapter", config.displayChapterMenuTogetherWithBibleChapter)
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("readTillChapterEnd", config.readTillChapterEnd),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),

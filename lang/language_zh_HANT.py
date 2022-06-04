@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "在剪貼簿內容上執行環境定義外掛程式",
     "searchMore": "搜尋更多 ...",
     "runClipbaordTextToSpeech": "使用語音功能閱讀剪貼簿內的文字",
+    "displayChapterMenuTogetherWithBibleChapter": "在聖經章內容上方及下方的顯示章數選項",
 }

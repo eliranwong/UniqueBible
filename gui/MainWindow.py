@@ -2942,6 +2942,13 @@ class MainWindow(QMainWindow):
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 
+    def toggleChapterMenuTogetherWithBibleChapter(self):
+        config.displayChapterMenuTogetherWithBibleChapter = not config.displayChapterMenuTogetherWithBibleChapter
+        self.newTabException = True
+        self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
     def toggleShowVerseReference(self):
         config.showVerseReference = not config.showVerseReference
         self.newTabException = True

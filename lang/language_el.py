@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "Εκτέλεση πρόσθετης λειτουργίας περιβάλλοντος στο πρόχειρο",
     "searchMore": "Αναζήτηση περισσότερο ...",
     "runClipbaordTextToSpeech": "Εκτέλεση κειμένου Clipboard-σε-ομιλία",
+    "displayChapterMenuTogetherWithBibleChapter": "Εμφάνιση μενού κεφαλαίων πάνω και κάτω bible κεφάλαιο",
 }

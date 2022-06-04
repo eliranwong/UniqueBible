@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "क्लिपबोर्ड सामग्री पर कॉन्टेक्स्ट प्लगइन चलाएं",
     "searchMore": "और अधिक खोजें ...",
     "runClipbaordTextToSpeech": "क्लिपबोर्ड पाठ-से-वार्ता चलाएँ",
+    "displayChapterMenuTogetherWithBibleChapter": "द्विबल अध्याय से ऊपर और नीचे का अध्याय मेनू दिखाएँ",
 }

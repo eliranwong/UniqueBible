@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "Kontext-Plug-in auf Merkzettel ausführen",
     "searchMore": "Mehr suchen ...",
     "runClipbaordTextToSpeech": "Text-zu-Sprache-Zwischenablage ausführen",
+    "displayChapterMenuTogetherWithBibleChapter": "Kapitel über und unterhalb des Bibelkapitels anzeigen",
 }

@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "Rulați Context Plugin-ul de pe Clipboard Content",
     "searchMore": "Caută Mai Mult ...",
     "runClipbaordTextToSpeech": "Rulează Clipboard Text-to-speech",
+    "displayChapterMenuTogetherWithBibleChapter": "Afișați meniul capitolului de mai sus și sub capitolul biblic",
 }

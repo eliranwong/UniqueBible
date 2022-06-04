@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "Выполнить контекстный модуль в буфере обмена",
     "searchMore": "Поиск Подробнее ...",
     "runClipbaordTextToSpeech": "Запустить текст в виде текста в буфере обмена",
+    "displayChapterMenuTogetherWithBibleChapter": "Показать меню главы выше и ниже библию главы",
 }

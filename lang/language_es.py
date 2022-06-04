@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "Ejecutar plugin de contexto en el contenido del portapapeles",
     "searchMore": "Buscar Más ...",
     "runClipbaordTextToSpeech": "Ejecutar texto a voz del portapapeles",
+    "displayChapterMenuTogetherWithBibleChapter": "Mostrar el menú del capítulo anterior y el capítulo de la biblia",
 }

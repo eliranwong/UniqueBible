@@ -465,6 +465,7 @@ class MaterialMainWindow:
         subMenu = addSubMenu(menu, "menu_toggleFeatures")
         items = (
             ("formattedText", self.enableParagraphButtonClicked, sc.enableParagraphButtonClicked, config.readFormattedBibles),
+            ("displayChapterMenuTogetherWithBibleChapter", self.toggleChapterMenuTogetherWithBibleChapter, sc.displayChapterMenuTogetherWithBibleChapter, config.displayChapterMenuTogetherWithBibleChapter),
             ("menu2_subHeadings", self.enableSubheadingButtonClicked2, sc.enableSubheadingButtonClicked, config.addTitleToPlainChapter),
             ("toggleFavouriteVersionIntoMultiRef", self.toggleFavouriteVersionIntoMultiRef, sc.toggleFavouriteVersionIntoMultiRef, config.addFavouriteToMultiRef),
             ("displayVerseReference", self.toggleShowVerseReference, sc.toggleShowVerseReference, config.showVerseReference),

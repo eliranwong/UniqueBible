@@ -908,4 +908,5 @@ translation = {
     "runContextPluginOnClipboardContent": "ക്ലിപ്ബോര്ഡ് ഉള്ളടക്കത്തുള്ള കോണ്ടെക്സ്റ്റ് സംയോജകം പ്രവര്ത്തിപ്പിക്കുക",
     "searchMore": "കൂടുതല് തെരയുക ...",
     "runClipbaordTextToSpeech": "ക്ലിപ്ബോര്ഡ് പദാവലി പ്രവര്ത്തിപ്പിക്കുക",
+    "displayChapterMenuTogetherWithBibleChapter": "à '- à', à ', à', à ', à', à ', à',",
 }
