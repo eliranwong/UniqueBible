@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, platform
 import subprocess
 
 
@@ -42,8 +42,9 @@ class WebtopUtil:
 
     @staticmethod
     def isPackageInstalled(package):
+        whichCommand = "where.exe" if platform.system() == "Windows" else "which"
         try:
-            isInstalled, *_ = subprocess.Popen("which {0}".format(package), shell=True, stdout=subprocess.PIPE).communicate()
+            isInstalled, *_ = subprocess.Popen("{0} {1}".format(whichCommand, package), shell=True, stdout=subprocess.PIPE).communicate()
             return True if isInstalled else False
         except:
             return False

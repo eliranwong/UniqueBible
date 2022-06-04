@@ -518,6 +518,7 @@ for module, feature, isInstalled in optional:
 # Check is OFFLINE tts is in place
 if config.docker:
     config.isOfflineTtsInstalled = False
+    config.enableSystemTrayOnLinux = False
     config.macVoices = {}
 else:
     config.isOfflineTtsInstalled = isOfflineTtsInstalled()

@@ -1,3 +1,7 @@
+Changes in 30.38:
+* Fixed running "which" command on Windows.
+* Disable system tray on webtop version.
+
 Changes in 30.37:
 * Fixed Windows shortcut *.bat file.
 * Added support to restart UBA on Windows with use of the created "UniqueBibleApp.bat".
