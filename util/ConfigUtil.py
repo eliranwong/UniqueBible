@@ -1031,7 +1031,7 @@ class ConfigUtil:
         config.help["menuLayout"] = """
         # Menu layout"""
         if not hasattr(config, "menuLayout"):
-            config.menuLayout = "focus"
+            config.menuLayout = "material"
         config.help["useLiteVerseParsing"] = """
         # Verse parsing method"""
         if not hasattr(config, "useLiteVerseParsing"):

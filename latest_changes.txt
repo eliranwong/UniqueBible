@@ -1,3 +1,6 @@
+Changes in 30.36:
+* Changed default menu layout to "Material".
+
 Changes in 30.35:
 * Toggle fullscreen between fullscreen and maximised window instead of normal window.
 
