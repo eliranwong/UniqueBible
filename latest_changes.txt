@@ -1,3 +1,6 @@
+Changes in 30.39:
+* Fixed display favouriteBible bible version in fetching multiple verses.
+
 Changes in 30.38:
 * Fixed running "which" command on Windows.
 * Disable system tray on webtop version.

@@ -590,7 +590,8 @@ input.addEventListener('keyup', function(event) {0}
                     if index != len(verseList) - 1:
                         verses += "<br><br>"
                 else:
-                    display = verseReference if displayRef else text
+                    #display = verseReference if displayRef else text
+                    display = text if isFavouriteBible or not displayRef else verseReference
                     verses += "{0}({1}{2}</ref>) {3}</div>".format(divTag, self.formVerseTag(b, c, v, text), display, verseText)
                 verses += "</div>"
         return verses
