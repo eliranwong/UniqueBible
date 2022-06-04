@@ -1394,8 +1394,18 @@ class MainWindow(QMainWindow):
         text = self.wrapHtml(text, view)
         return text
 
-    def pasteFromClipboard(self):
+    def getClipboardText(self):
         clipboardText = QApplication.clipboard().text()
+        if not clipboardText:
+            text, ok = QInputDialog.getText(self.parent.parent, "Unique Bible App",
+                    config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                    "")
+            if ok and text:
+                clipboardText = text
+        return clipboardText
+
+    def pasteFromClipboard(self):
+        clipboardText = self.getClipboardText()
         #clipboardText = QGuiApplication.instance().clipboard().text()
         # note: can use QGuiApplication.instance().clipboard().setText to set text in clipboard
         if clipboardText:
@@ -1404,7 +1414,7 @@ class MainWindow(QMainWindow):
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
     def openReferencesOnClipboard(self):
-        clipboardText = QApplication.clipboard().text()
+        clipboardText = self.getClipboardText()
         if clipboardText:
             parser = BibleVerseParser(config.parserStandarisation)
             verseList = parser.extractAllReferences(clipboardText, False)
@@ -1416,8 +1426,18 @@ class MainWindow(QMainWindow):
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
+    def clipboardTts(self, language):
+        clipboardText = self.getClipboardText()
+        if clipboardText:
+            if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+                self.mainView.currentWidget().googleTextToSpeechLanguage(language, selectedText=clipboardText)
+            elif config.isOfflineTtsInstalled:
+                self.mainView.currentWidget().textToSpeechLanguage(language, selectedText=clipboardText)
+        else:
+            self.displayMessage(config.thisTranslation["noClipboardContent"])
+
     def readClipboardContent(self):
-        clipboardText = QApplication.clipboard().text()
+        clipboardText = self.getClipboardText()
         if clipboardText:
             if config.isOnlineTtsInstalled and not config.isGoogleCloudTTSAvailable and not config.forceOnlineTts:
                 keyword = "SPEAK"
@@ -1429,7 +1449,7 @@ class MainWindow(QMainWindow):
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
     def searchBibleForClipboardContent(self):
-        clipboardText = QApplication.clipboard().text()
+        clipboardText = self.getClipboardText()
         if clipboardText:
             self.runTextCommand("SEARCH:::{0}".format(clipboardText))
         else:
@@ -1441,14 +1461,14 @@ class MainWindow(QMainWindow):
         self.controlPanel.toolTab.searchField.setText(clipboardText if clipboardText else "")
 
     def runContextPluginOnClipboardContent(self, plugin):
-        clipboardText = QApplication.clipboard().text()
+        clipboardText = self.getClipboardText()
         if clipboardText:
             self.mainView.currentWidget().runPlugin(plugin, clipboardText)
         else:
             self.displayMessage(config.thisTranslation["noClipboardContent"])
 
     def parseContentOnClipboard(self):
-        clipboardText = QApplication.clipboard().text()
+        clipboardText = self.getClipboardText()
         if clipboardText:
             self.textCommandLineEdit.setText(clipboardText)
             self.runTextCommand(clipboardText)

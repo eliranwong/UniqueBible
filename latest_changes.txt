@@ -1,3 +1,7 @@
+Changes in 30.32:
+* Prompt text entry if clipboard text is empty for running system tray features.
+* Added "Run Clipboard Text-to-speech" to system tray.
+
 Changes in 30.31:
 * Shows main window before running context plugins on clipboard content.
 

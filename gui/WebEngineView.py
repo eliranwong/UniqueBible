@@ -728,7 +728,7 @@ class WebEngineView(QWebEngineView):
                 ttsMenu.addAction(action)
 
             tts = QAction(self)
-            tts.setText(config.thisTranslation["context1_speak"])
+            tts.setText(config.thisTranslation["tts_utility"])
             tts.setMenu(ttsMenu)
             self.addAction(tts)
 
@@ -1072,9 +1072,10 @@ class WebEngineView(QWebEngineView):
                 except:
                     self.displayMessage(config.thisTranslation["message_fail"])
 
-    def textToSpeechLanguage(self, language, activeSelection=False):
+    def textToSpeechLanguage(self, language, activeSelection=False, selectedText=""):
         if config.isOfflineTtsInstalled:
-            selectedText = self.selectedTextProcessed(activeSelection)
+            if not selectedText:
+                selectedText = self.selectedTextProcessed(activeSelection)
             if not selectedText:
                 self.messageNoSelection()
             speakCommand = "SPEAK:::{0}:::{1}".format(language, selectedText)
@@ -1090,12 +1091,13 @@ class WebEngineView(QWebEngineView):
             self.messageNoTtsVoice()
             return False
 
-    def googleTextToSpeechLanguage(self, language="", activeSelection=False):
+    def googleTextToSpeechLanguage(self, language="", activeSelection=False, selectedText=""):
         if not language:
             language = config.ttsDefaultLangauge
         if config.isGoogleCloudTTSAvailable and language == "en":
             language = "en-GB"
-        selectedText = self.selectedTextProcessed(activeSelection)
+        if not selectedText:
+            selectedText = self.selectedTextProcessed(activeSelection)
         if not selectedText:
             self.messageNoSelection()
         elif self.isGttsLanguage(language):
