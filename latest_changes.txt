@@ -1,4 +1,4 @@
-Changes in 30.33:
+Changes in 30.33, 30.34:
 * Added config.displayChapterMenuTogetherWithBibleChapter to toggle "Display chapter menu above and below bible chapter"
 * Configurable via material menu layout.
 

@@ -1398,7 +1398,7 @@ class ConfigUtil:
             ("showHebrewGreekWordAudioLinks", config.showHebrewGreekWordAudioLinks),
             ("showHebrewGreekWordAudioLinksInMIB", config.showHebrewGreekWordAudioLinksInMIB),
             ("addTitleToPlainChapter", config.addTitleToPlainChapter),
-            ("displayChapterMenuTogetherWithBibleChapter", config.displayChapterMenuTogetherWithBibleChapter)
+            ("displayChapterMenuTogetherWithBibleChapter", config.displayChapterMenuTogetherWithBibleChapter),
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible),
             ("readTillChapterEnd", config.readTillChapterEnd),
             ("hideBlankVerseCompare", config.hideBlankVerseCompare),
