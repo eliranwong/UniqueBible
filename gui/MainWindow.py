@@ -2693,7 +2693,7 @@ class MainWindow(QMainWindow):
     # Actions - resize the main window
     def fullsizeWindow(self):
         if self.isFullScreen():
-            self.showNormal()
+            self.showMaximized()
         else:
             self.showFullScreen()
 
