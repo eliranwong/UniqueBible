@@ -1,6 +1,4 @@
 from gui.MenuItems import *
-from gui.CheckableComboBox import CheckableComboBox
-from db.BiblesSqlite import BiblesSqlite
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.Languages import Languages
@@ -62,6 +60,10 @@ class MaterialMainWindow:
         menu.addSeparator()
 
         # Clipboard Content
+        subMenu = addSubMenu(menu, "clipboardMonitoring")
+        for option in ("enable", "disable"):
+            optionValue = True if option == "enable" else False
+            addCheckableMenuItem(subMenu, option, self, partial(self.setClipboardMonitoring, optionValue), config.enableClipboardMonitoring, optionValue)
         subMenu = addSubMenu(menu, "menu1_clipboard")
         items = [
             ("menu_display", self.pasteFromClipboard, None),

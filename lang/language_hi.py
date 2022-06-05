@@ -913,4 +913,9 @@ translation = {
     "Build Index": "निर्देशिका बिल्ड करें",
     "repository": "भंडार",
     "Configure User Custom Repos": "उपयोगकर्ता कस्टम रीपोस कॉन्फ़िगर करें",
+    "opening": "खोलना",
+    "clipboardMonitoring": "क्लिपबोर्ड मॉनीटरिंग",
+    "disable": "निष्क्रिय करें",
+    "enable": "सक्षम करें",
+    "monitorClipboardReferences": "क्लिपबोर्ड पाठ बाइबल संदर्भों की निगरानी करें",
 }

@@ -941,6 +941,19 @@ class MainWindow(QMainWindow):
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), textCommand)
 
+    def setClipboardMonitoring(self, option):
+        if not config.enableClipboardMonitoring == option:
+            config.enableClipboardMonitoring = not config.enableClipboardMonitoring
+        if config.enableSystemTray:
+            if config.enableClipboardMonitoring:
+                config.monitorOption1.setChecked(True)
+                config.monitorOption2.setChecked(False)
+            else:
+                config.monitorOption1.setChecked(False)
+                config.monitorOption2.setChecked(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
     def setAppWindowStyle(self, style):
         config.windowStyle = "" if style == "default" else style
         #self.displayMessage(config.thisTranslation["message_themeTakeEffectAfterRestart"])
@@ -5320,6 +5333,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     # Work with system tray
     def showFromTray(self):
         self.show()
-        self.showMaximized()
+        if not self.isFullScreen():
+            self.showMaximized()
         self.activateWindow()
         self.raise_()

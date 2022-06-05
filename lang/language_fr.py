@@ -913,4 +913,9 @@ translation = {
     "Build Index": "Index de génération",
     "repository": "Référentiel",
     "Configure User Custom Repos": "Configurer les répos personnalisées de l'utilisateur",
+    "opening": "Ouverture",
+    "clipboardMonitoring": "Surveillance du presse-papiers",
+    "disable": "Désactiver",
+    "enable": "Activer",
+    "monitorClipboardReferences": "Contrôler le texte du presse-papiers Références bibliques",
 }

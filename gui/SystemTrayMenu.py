@@ -27,7 +27,28 @@ miniControl = QAction(config.thisTranslation["menu1_miniControl"])
 miniControl.triggered.connect(config.mainWindow.showFromTray)
 miniControl.triggered.connect(config.mainWindow.manageMiniControl)
 trayMenu.addAction(miniControl)
-# Add a separatorJohn 3:16, 19
+# Add a separator
+trayMenu.addSeparator()
+# Work with clipboard
+openClipboardReferences = QAction(config.thisTranslation["openClipboardReferences"])
+openClipboardReferences.triggered.connect(config.mainWindow.showFromTray)
+openClipboardReferences.triggered.connect(config.mainWindow.openReferencesOnClipboard)
+trayMenu.addAction(openClipboardReferences)
+clipboardMonitoringMenuSubMenu = QMenu()
+config.monitorOption1 = QAction(config.thisTranslation["enable"])
+config.monitorOption1.triggered.connect(partial(config.mainWindow.setClipboardMonitoring, True))
+config.monitorOption1.setCheckable(True)
+config.monitorOption1.setChecked(True if config.enableClipboardMonitoring else False)
+clipboardMonitoringMenuSubMenu.addAction(config.monitorOption1)
+config.monitorOption2 = QAction(config.thisTranslation["disable"])
+config.monitorOption2.triggered.connect(partial(config.mainWindow.setClipboardMonitoring, False))
+config.monitorOption2.setCheckable(True)
+config.monitorOption2.setChecked(False if config.enableClipboardMonitoring else True)
+clipboardMonitoringMenuSubMenu.addAction(config.monitorOption2)
+clipboardMonitoringMenu = QAction(config.thisTranslation["monitorClipboardReferences"])
+clipboardMonitoringMenu.setMenu(clipboardMonitoringMenuSubMenu)
+trayMenu.addAction(clipboardMonitoringMenu)
+# Add a separator
 trayMenu.addSeparator()
 # Search section
 searchBibleForClipboardContent = QAction(config.thisTranslation["searchBibleForClipboardContent"])
@@ -38,51 +59,47 @@ searchResourcesForClipboardContent = QAction(config.thisTranslation["searchMore"
 searchResourcesForClipboardContent.triggered.connect(config.mainWindow.showFromTray)
 searchResourcesForClipboardContent.triggered.connect(config.mainWindow.searchResourcesForClipboardContent)
 trayMenu.addAction(searchResourcesForClipboardContent)
-# Add a separatorJohn 3:16, 19
+# Add a separator
 trayMenu.addSeparator()
-# Work with clipboard
-openClipboardReferences = QAction(config.thisTranslation["openClipboardReferences"])
-openClipboardReferences.triggered.connect(config.mainWindow.showFromTray)
-openClipboardReferences.triggered.connect(config.mainWindow.openReferencesOnClipboard)
-trayMenu.addAction(openClipboardReferences)
+# Display Clipboard Text
 displayClipboardContent = QAction(config.thisTranslation["displayClipboardContent"])
 displayClipboardContent.triggered.connect(config.mainWindow.showFromTray)
 displayClipboardContent.triggered.connect(config.mainWindow.pasteFromClipboard)
 trayMenu.addAction(displayClipboardContent)
+# Text-to-speech features
 if not config.noTtsFound:
     readClipboardContent = QAction(config.thisTranslation["readClipboardContent"])
     readClipboardContent.triggered.connect(config.mainWindow.readClipboardContent)
     trayMenu.addAction(readClipboardContent)
-# Text-to-speech
-# Google TEXT-TO-SPEECH feature
-if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
-    languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
-    ttsMenu = QMenu()
-    index = 0
-    for language, languageCode in languageCodes.items():
-        exec('ttsAction{0} = QAction(language)'.format(index))
-        exec('ttsAction{0}.triggered.connect(partial(config.mainWindow.clipboardTts, languageCode))'.format(index))
-        exec('ttsMenu.addAction(ttsAction{0})'.format(index))
-        exec('index += 1')
-    tts = QAction("{0} ...".format(config.thisTranslation["readClipboardContent"]))
-    tts.setMenu(ttsMenu)
-    trayMenu.addAction(tts)
-    # Add a separator
-    trayMenu.addSeparator()
-# OFFLINE TEXT-TO-SPEECH feature
-elif config.isOfflineTtsInstalled:
-    languages = config.mainWindow.getTtsLanguages()
-    ttsMenu = QMenu()
-    languageCodes = list(languages.keys())
-    items = [languages[code][1] for code in languageCodes]
-    for index, item in enumerate(items):
-        languageCode = languageCodes[index]
-        exec('ttsAction{0} = QAction(item if config.ttsDefaultLangauge.startswith("[") else item.capitalize())'.format(index))
-        exec('ttsAction{0}.triggered.connect(partial(config.mainWindow.clipboardTts, languageCode))'.format(index))
-        exec('ttsMenu.addAction(ttsAction{0})'.format(index))
-    tts = QAction("{0} ...".format(config.thisTranslation["readClipboardContent"]))
-    tts.setMenu(ttsMenu)
-    trayMenu.addAction(tts)
+    # Google TEXT-TO-SPEECH feature
+    if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):
+        languageCodes = GoogleCloudTTS.getLanguages() if config.isGoogleCloudTTSAvailable else Languages.gTTSLanguageCodes
+        ttsMenu = QMenu()
+        index = 0
+        for language, languageCode in languageCodes.items():
+            exec('ttsAction{0} = QAction(language)'.format(index))
+            exec('ttsAction{0}.triggered.connect(partial(config.mainWindow.clipboardTts, languageCode))'.format(index))
+            exec('ttsMenu.addAction(ttsAction{0})'.format(index))
+            exec('index += 1')
+        tts = QAction("{0} ...".format(config.thisTranslation["readClipboardContent"]))
+        tts.setMenu(ttsMenu)
+        trayMenu.addAction(tts)
+        # Add a separator
+        trayMenu.addSeparator()
+    # OFFLINE TEXT-TO-SPEECH feature
+    elif config.isOfflineTtsInstalled:
+        languages = config.mainWindow.getTtsLanguages()
+        ttsMenu = QMenu()
+        languageCodes = list(languages.keys())
+        items = [languages[code][1] for code in languageCodes]
+        for index, item in enumerate(items):
+            languageCode = languageCodes[index]
+            exec('ttsAction{0} = QAction(item if config.ttsDefaultLangauge.startswith("[") else item.capitalize())'.format(index))
+            exec('ttsAction{0}.triggered.connect(partial(config.mainWindow.clipboardTts, languageCode))'.format(index))
+            exec('ttsMenu.addAction(ttsAction{0})'.format(index))
+        tts = QAction("{0} ...".format(config.thisTranslation["readClipboardContent"]))
+        tts.setMenu(ttsMenu)
+        trayMenu.addAction(tts)
 #runClipboardCommand = QAction(config.thisTranslation["runClipboardCommand"])
 #runClipboardCommand.triggered.connect(config.mainWindow.showFromTray)
 #runClipboardCommand.triggered.connect(config.mainWindow.parseContentOnClipboard)

@@ -913,4 +913,9 @@ translation = {
     "Build Index": "Δείκτης δόμησης",
     "repository": "Χώρος αποθήκευσης:",
     "Configure User Custom Repos": "Ρύθμιση προσαρμοσμένων Repos",
+    "opening": "Άνοιγμα:",
+    "clipboardMonitoring": "Παρακολούθηση Clipboard",
+    "disable": "Απενεργοποίηση:",
+    "enable": "' Ενεργοποίηση",
+    "monitorClipboardReferences": "Παραπομπές στο πρόχειρο κείμενο του Clipboard",
 }

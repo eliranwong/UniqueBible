@@ -226,6 +226,10 @@ class ConfigUtil:
         # Start UBA with full-screen on Linux os"""
         if not hasattr(config, "linuxStartFullScreen"):
             config.linuxStartFullScreen = False
+        config.help["enableClipboardMonitoring"] = """
+        # Enable Clipboard Monitoring"""
+        if not hasattr(config, "enableClipboardMonitoring"):
+            config.enableClipboardMonitoring = False
         config.help["enableSystemTrayOnLinux"] = """
         # Enable UBA system tray on Linux os"""
         if not hasattr(config, "enableSystemTrayOnLinux"):
@@ -1286,6 +1290,7 @@ class ConfigUtil:
             ("openMacos", config.openMacos),
             ("openLinux", config.openLinux),
             ("openLinuxPdf", config.openLinuxPdf),
+            ("enableClipboardMonitoring", config.enableClipboardMonitoring),
             ("enableSystemTrayOnLinux", config.enableSystemTrayOnLinux),
             ("linuxStartFullScreen", config.linuxStartFullScreen),
             #("showTtsOnLinux", config.showTtsOnLinux),

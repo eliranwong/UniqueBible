@@ -913,4 +913,9 @@ translation = {
     "Build Index": "ഇന്ഡെക്സ് നിര്മ്മിക്കുകName",
     "repository": "ശേഖരം",
     "Configure User Custom Repos": "ഉപയോക്താവിനെ ക്രമീകരിക്കുകName",
+    "opening": "തുറക്കുന്നു",
+    "clipboardMonitoring": "ക്ലിപ്ബോര്ഡ് നിരീക്ഷണം",
+    "disable": "പ്രാവര്ത്തികമാക്കുക",
+    "enable": "പ്രാവര്ത്തികമാക്കുക",
+    "monitorClipboardReferences": "മോണിറ്റര് ക്ലിപ്ബോര്ഡ് ടെക്സ്റ്റ് ബൈബിള് റഫറന്സ്",
 }

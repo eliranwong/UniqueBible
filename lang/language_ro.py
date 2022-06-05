@@ -913,4 +913,9 @@ translation = {
     "Build Index": "Indicele de construcție",
     "repository": "Depozit",
     "Configure User Custom Repos": "Configurează Repourile personalizate ale utilizatorului",
+    "opening": "Deschidere",
+    "clipboardMonitoring": "Monitorizarea clipboard",
+    "disable": "Dezactivează",
+    "enable": "Activează",
+    "monitorClipboardReferences": "Monitor Clipboard Text Bible Referințe",
 }

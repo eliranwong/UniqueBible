@@ -213,6 +213,7 @@ from util.ShortcutUtil import ShortcutUtil
 ShortcutUtil.setup(config.menuShortcuts)
 # Setup GUI windows
 from util.LanguageUtil import LanguageUtil
+from util.BibleVerseParser import BibleVerseParser
 from gui.MainWindow import MainWindow
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory
@@ -517,6 +518,7 @@ if config.enableSystemTray:
     trayIcon = QIcon(config.desktopUBAIcon)
     tray = QSystemTrayIcon()
     tray.setIcon(trayIcon)
+    tray.setToolTip("Unique Bible App")
     tray.setVisible(True)
     # Import system tray menu
     from gui.SystemTrayMenu import *
@@ -525,6 +527,23 @@ if config.enableSystemTray:
     quitApp.triggered.connect(app.quit)
     trayMenu.addAction(quitApp)
     tray.setContextMenu(trayMenu)
+
+# Clipboard Monitoring
+def clipboardChanged():
+    if config.enableClipboardMonitoring:
+        clipboardText = QApplication.clipboard().text()
+        if clipboardText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verseList = parser.extractAllReferences(clipboardText, False)
+            if verseList:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+                if config.enableSystemTray:
+                    tray.showMessage("UBA", "{0}: {1}".format(config.thisTranslation["open"], references))
+                config.mainWindow.showFromTray()
+                config.mainWindow.runTextCommand(references)
+
+# Monitor Clipboard Changed
+QApplication.clipboard().dataChanged.connect(clipboardChanged)
 
 # Launch UBA
 config.restartUBA = False

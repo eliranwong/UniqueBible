@@ -913,4 +913,9 @@ translation = {
     "Build Index": "빌드 색인",
     "repository": "저장소",
     "Configure User Custom Repos": "사용자 사용자 정의 Repos 구성",
+    "opening": "열기",
+    "clipboardMonitoring": "클립보드 모니터링",
+    "disable": "사용 불가능",
+    "enable": "작동 가능",
+    "monitorClipboardReferences": "클립보드 텍스트 성경 참조 모니터",
 }

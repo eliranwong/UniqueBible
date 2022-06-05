@@ -913,4 +913,9 @@ translation = {
     "Build Index": "建置索引",
     "repository": "儲存庫",
     "Configure User Custom Repos": "配置使用者自訂儲存庫",
+    "opening": "正在開啟",
+    "clipboardMonitoring": "剪貼簿監視",
+    "disable": "停用",
+    "enable": "啟用",
+    "monitorClipboardReferences": "監視剪貼簿文字中的經文參照",
 }

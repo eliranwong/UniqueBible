@@ -913,4 +913,9 @@ translation = {
     "Build Index": "ビルド索引",
     "repository": "リポジトリー",
     "Configure User Custom Repos": "ユーザー・カスタム・レポスの構成",
+    "opening": "オープニング",
+    "clipboardMonitoring": "クリップボード・モニター",
+    "disable": "無効化",
+    "enable": "有効",
+    "monitorClipboardReferences": "モニター・クリップボード・テキストのバイブル・リファレンス",
 }

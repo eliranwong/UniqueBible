@@ -913,4 +913,9 @@ translation = {
     "Build Index": "Índice de construcción",
     "repository": "Repositorio",
     "Configure User Custom Repos": "Configurar repos personalizados de usuario",
+    "opening": "Apertura",
+    "clipboardMonitoring": "Supervisión del portapapeles",
+    "disable": "Inhabilitar",
+    "enable": "Habilitar",
+    "monitorClipboardReferences": "Referencias de la Biblia de texto del Portapapeles",
 }

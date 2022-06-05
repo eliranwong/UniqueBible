@@ -913,4 +913,9 @@ translation = {
     "Build Index": "Индекс компоновки",
     "repository": "Репозиторий",
     "Configure User Custom Repos": "Конфигурировать пользовательское пользовательское поле",
+    "opening": "Открытие",
+    "clipboardMonitoring": "Мониторинг буфера обмена",
+    "disable": "Выключить",
+    "enable": "Включить",
+    "monitorClipboardReferences": "Отслеживать ссылки на Библию текста буфера обмена",
 }
