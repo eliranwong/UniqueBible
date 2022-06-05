@@ -909,4 +909,8 @@ translation = {
     "searchMore": "검색 추가 ...",
     "runClipbaordTextToSpeech": "클립보드 텍스트로 텍스트 실행",
     "displayChapterMenuTogetherWithBibleChapter": "성경의 위와 아래에 있는 장 메뉴 표시",
+    "User Custom Repos": "사용자 정의 Repos",
+    "Build Index": "빌드 색인",
+    "repository": "저장소",
+    "Configure User Custom Repos": "사용자 사용자 정의 Repos 구성",
 }

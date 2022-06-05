@@ -834,29 +834,37 @@ class MainWindow(QMainWindow):
     def installGithubDevotionals(self):
         self.installFromGitHub(GitHubRepoInfo.devotionals)
 
+    def showUserReposDialog(self):
+        from gui.UserReposDialog import UserReposDialog
+        self.userReposDialog = UserReposDialog(self)
+        self.userReposDialog.show()
+
     def installFromGitHub(self, gitHubRepoInfo):
         repo, directory, title, extension = gitHubRepoInfo
         if config.isPygithubInstalled:
-            from util.GithubUtil import GithubUtil
+            try:
+                from util.GithubUtil import GithubUtil
 
-            github = GithubUtil(repo)
-            repoData = github.getRepoData()
-            folder = os.path.join(config.marvelData, directory)
-            items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
-            if not items:
-                items = ["[All Installed]"]
-            item, ok = QInputDialog.getItem(self, "UniqueBible",
-                                            config.thisTranslation[title], items, 0, False)
-            if ok and item and not item in ("[All Installed]"):
-                file = os.path.join(folder, item+".zip")
-                github.downloadFile(file, repoData[item])
-                with zipfile.ZipFile(file, 'r') as zipped:
-                    zipped.extractall(folder)
-                os.remove(file)
-                self.displayMessage(item + " " + config.thisTranslation["message_installed"])
-                self.reloadResources()
-                self.installFromGitHub(gitHubRepoInfo)
-                return True
+                github = GithubUtil(repo)
+                repoData = github.getRepoData()
+                folder = os.path.join(config.marvelData, directory)
+                items = [item for item in repoData.keys() if not FileUtil.regexFileExists("^{0}.*".format(GithubUtil.getShortname(item).replace(".", "\\.")), folder)]
+                if not items:
+                    items = ["[All Installed]"]
+                item, ok = QInputDialog.getItem(self, "UniqueBible",
+                                                config.thisTranslation[title], items, 0, False)
+                if ok and item and not item in ("[All Installed]"):
+                    file = os.path.join(folder, item+".zip")
+                    github.downloadFile(file, repoData[item])
+                    with zipfile.ZipFile(file, 'r') as zipped:
+                        zipped.extractall(folder)
+                    os.remove(file)
+                    self.displayMessage(item + " " + config.thisTranslation["message_installed"])
+                    self.reloadResources()
+                    self.installFromGitHub(gitHubRepoInfo)
+                    return True
+            except Exception as ex:
+                print(f"Could not access {repo}")
         return False
 
     # Select database to modify

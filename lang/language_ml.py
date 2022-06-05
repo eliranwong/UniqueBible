@@ -909,4 +909,8 @@ translation = {
     "searchMore": "കൂടുതല് തെരയുക ...",
     "runClipbaordTextToSpeech": "ക്ലിപ്ബോര്ഡ് പദാവലി പ്രവര്ത്തിപ്പിക്കുക",
     "displayChapterMenuTogetherWithBibleChapter": "à '- à', à ', à', à ', à', à ', à',",
+    "User Custom Repos": "ഉപയോക്താവു് തയ്യാറാക്കുക",
+    "Build Index": "ഇന്ഡെക്സ് നിര്മ്മിക്കുകName",
+    "repository": "ശേഖരം",
+    "Configure User Custom Repos": "ഉപയോക്താവിനെ ക്രമീകരിക്കുകName",
 }
