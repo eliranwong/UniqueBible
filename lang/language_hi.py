@@ -909,4 +909,8 @@ translation = {
     "searchMore": "और अधिक खोजें ...",
     "runClipbaordTextToSpeech": "क्लिपबोर्ड पाठ-से-वार्ता चलाएँ",
     "displayChapterMenuTogetherWithBibleChapter": "द्विबल अध्याय से ऊपर और नीचे का अध्याय मेनू दिखाएँ",
+    "User Custom Repos": "उपयोगकर्ता कस्टम रीपोस",
+    "Build Index": "निर्देशिका बिल्ड करें",
+    "repository": "भंडार",
+    "Configure User Custom Repos": "उपयोगकर्ता कस्टम रीपोस कॉन्फ़िगर करें",
 }

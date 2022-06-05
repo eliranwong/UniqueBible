@@ -29,6 +29,10 @@ class MultiLineInputDialog(QDialog):
             elif isinstance(value, list):
                 entry = QComboBox()
                 entry.addItems(value)
+                if len(field) > 2:
+                    index = entry.findText(field[2])
+                    if index != -1:
+                        entry.setCurrentIndex(index)
             self.inputs.append(entry)
             layout.addRow(field[0], entry)
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self);

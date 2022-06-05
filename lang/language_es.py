@@ -909,4 +909,8 @@ translation = {
     "searchMore": "Buscar Más ...",
     "runClipbaordTextToSpeech": "Ejecutar texto a voz del portapapeles",
     "displayChapterMenuTogetherWithBibleChapter": "Mostrar el menú del capítulo anterior y el capítulo de la biblia",
+    "User Custom Repos": "Repos personalizados del usuario",
+    "Build Index": "Índice de construcción",
+    "repository": "Repositorio",
+    "Configure User Custom Repos": "Configurar repos personalizados de usuario",
 }

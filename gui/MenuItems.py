@@ -1,6 +1,8 @@
 import os, config
 
+from db.UserRepoSqlite import UserRepoSqlite
 from util.FileUtil import FileUtil
+from util.GitHubRepoInfo import GitHubRepoInfo
 from util.HtmlColorCodes import HtmlColorCodes
 
 # Do not delete items from the following two lines.  It appears that some are not used but they are actually used somewhere else. 
@@ -118,6 +120,17 @@ def addGithubDownloadMenuItems(self, subMenu):
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)
+        subMenu.addSeparator()
+        addMenuItem(subMenu, config.thisTranslation["Configure User Custom Repos"],
+                    self, self.showUserReposDialog, None, False)
+        userRepoSqlite = UserRepoSqlite()
+        repos = userRepoSqlite.getAll()
+        if len(repos) > 0:
+            subMenu.addSeparator()
+            for id, active, name, type, repo, directory in repos:
+                data = GitHubRepoInfo.buildInfo(repo, type, directory)
+                addMenuItem(subMenu, f"{type}:{name}", self, lambda data=data: self.installFromGitHub(data), None, False)
+
 
 def addBuildMacroMenuItems(self, subMenu):
     if config.isPygithubInstalled:
