@@ -5,7 +5,7 @@ from util.Languages import Languages
 from util.FileUtil import FileUtil
 from util.WebtopUtil import WebtopUtil
 import shortcut as sc
-import re, os
+import re, os, webbrowser
 
 
 # Search for material icons at: https://fonts.google.com/icons?selected=Material+Icons
@@ -64,6 +64,9 @@ class MaterialMainWindow:
         for option in ("enable", "disable"):
             optionValue = True if option == "enable" else False
             addCheckableMenuItem(subMenu, option, self, partial(self.setClipboardMonitoring, optionValue), config.enableClipboardMonitoring, optionValue)
+        subMenu.addSeparator()
+        clipboardMonitoringWiki = "https://github.com/eliranwong/UniqueBible/wiki/Monitor-Clipboard-Text-Bible-References"
+        addMenuItem(subMenu, "menu_about", self, lambda: webbrowser.open(clipboardMonitoringWiki))
         subMenu = addSubMenu(menu, "menu1_clipboard")
         items = [
             ("menu_display", self.pasteFromClipboard, None),

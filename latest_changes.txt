@@ -1,3 +1,7 @@
+Changes in 30.43:
+* Added links to System Tray wiki and Clipboard Monitoring wiki.
+* Added ability to show UBA main window on macOS by clicking the dock icon after the main window is closed.
+
 Changes in 30.42:
 * Tweaked clipboard monitoring on macOS.
     Fixed showing system tray message on macOS.

@@ -1,4 +1,4 @@
-import config, platform, os
+import config, platform, os, webbrowser
 from util.FileUtil import FileUtil
 from functools import partial
 from util.Languages import Languages
@@ -130,6 +130,12 @@ trayMenu.addAction(showMedia)
 stopPlayMedia = QAction(config.thisTranslation["stopPlayMedia"])
 stopPlayMedia.triggered.connect(config.mainWindow.closeMediaPlayer)
 trayMenu.addAction(stopPlayMedia)
+# Add a separator
+trayMenu.addSeparator()
+# Wiki
+systemTrayWiki = QAction(config.thisTranslation["menu_about"])
+systemTrayWiki.triggered.connect(lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/UBA-System-Tray"))
+trayMenu.addAction(systemTrayWiki)
 # Add a separator
 trayMenu.addSeparator()
 # Restart UBA on macOS

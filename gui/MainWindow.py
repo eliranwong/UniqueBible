@@ -413,6 +413,7 @@ class MainWindow(QMainWindow):
                 if config.enableSystemTray:
                     event.ignore()
                     self.hide()
+                    config.mainWindowHidden = True
                 else:
                     event.accept()
                     QGuiApplication.instance().quit()
@@ -426,6 +427,7 @@ class MainWindow(QMainWindow):
             if config.enableSystemTray:
                 event.ignore()
                 self.hide()
+                config.mainWindowHidden = True
             else:
                 event.accept()
                 QGuiApplication.instance().quit()
@@ -5337,3 +5339,4 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.showMaximized()
         self.activateWindow()
         self.raise_()
+        config.mainWindowHidden = False

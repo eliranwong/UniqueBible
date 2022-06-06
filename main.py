@@ -219,10 +219,12 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QApplication, QStyleFactory
     from PySide6.QtWidgets import QSystemTrayIcon
     from PySide6.QtGui import QIcon
+    from PySide6.QtCore import QEvent
 else:
     from qtpy.QtWidgets import QApplication, QStyleFactory
     from qtpy.QtWidgets import QSystemTrayIcon
     from qtpy.QtGui import QIcon
+    from qtpy.QtCore import QEvent
 from util.themes import Themes
 # [Optional] qt-material
 # qt-material have to be imported after PySide2
@@ -413,9 +415,23 @@ if config.virtualKeyboard:
     os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 # Start PySide2 gui
+class UBA(QApplication):
+
+    def __init__(self, argv):
+        super().__init__(argv)
+        config.mainWindowHidden = False
+
+    # Captures the event when qapplication is activated on macOS by clicking the dock icon.
+    # On macOS, after main window is closed, clicking the dock icon shows the main window again.
+    def event(self, event):
+        if event.type() == QEvent.ApplicationActivate and config.mainWindowHidden:
+            config.mainWindow.showFromTray()
+        return super().event(event)
+
 config.startup = True
 config.thisTranslation = LanguageUtil.loadTranslation(config.displayLanguage)
-app = QApplication(sys.argv)
+#app = QApplication(sys.argv)
+app = UBA(sys.argv)
 
 # Set application name
 app.setApplicationName("UniqueBible.app")
@@ -541,8 +557,8 @@ def clipboardChanged():
                 config.mainWindow.runTextCommand(references)
                 if config.enableSystemTray:
                     tray.showMessage("UBA", "{0}: {1}".format(config.thisTranslation["open"], references))
-            elif platform.system() == "Darwin":
-                config.mainWindow.showFromTray()
+            #elif platform.system() == "Darwin":
+            #    config.mainWindow.showFromTray()
 
 # Monitor Clipboard Changed
 QApplication.clipboard().dataChanged.connect(clipboardChanged)
