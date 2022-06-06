@@ -5333,7 +5333,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     # Work with system tray
     def showFromTray(self):
         self.show()
-        if not self.isFullScreen():
+        if self.isMinimized():
             self.showMaximized()
         self.activateWindow()
         self.raise_()

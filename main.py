@@ -537,10 +537,12 @@ def clipboardChanged():
             verseList = parser.extractAllReferences(clipboardText, False)
             if verseList:
                 references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
-                if config.enableSystemTray:
-                    tray.showMessage("UBA", "{0}: {1}".format(config.thisTranslation["open"], references))
                 config.mainWindow.showFromTray()
                 config.mainWindow.runTextCommand(references)
+                if config.enableSystemTray:
+                    tray.showMessage("UBA", "{0}: {1}".format(config.thisTranslation["open"], references))
+            elif platform.system() == "Darwin":
+                config.mainWindow.showFromTray()
 
 # Monitor Clipboard Changed
 QApplication.clipboard().dataChanged.connect(clipboardChanged)

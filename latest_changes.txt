@@ -1,3 +1,9 @@
+Changes in 30.42:
+* Tweaked clipboard monitoring on macOS.
+    Fixed showing system tray message on macOS.
+    Show main UBA interface if no bible reference is detected and the UBA dock icon is clicked.
+* Created a wiki page https://github.com/eliranwong/UniqueBible/wiki/Monitor-Clipboard-Text-Bible-References
+
 Changes in 30.41:
 * Added Clipboard Monitoring feature to automatically detect bible references in clipboard text and open them.
     On Windows, copying a bible reference launches UBA opens the reference directly.
