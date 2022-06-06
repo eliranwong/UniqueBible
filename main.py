@@ -556,7 +556,7 @@ def clipboardChanged():
                 config.mainWindow.showFromTray()
                 config.mainWindow.runTextCommand(references)
                 if config.enableSystemTray:
-                    tray.showMessage("UBA", "{0}: {1}".format(config.thisTranslation["open"], references))
+                    tray.showMessage("Unique Bible App", "{0}: {1}".format(config.thisTranslation["open"], references))
             #elif platform.system() == "Darwin":
             #    config.mainWindow.showFromTray()
 

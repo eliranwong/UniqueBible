@@ -1,3 +1,6 @@
+Changes in 30.44:
+* Changed system tray message title from UBA to Unique Bible App.
+
 Changes in 30.43:
 * Added links to System Tray wiki and Clipboard Monitoring wiki.
 * Added ability to show UBA main window on macOS by clicking the dock icon after the main window is closed.
