@@ -918,4 +918,5 @@ translation = {
     "disable": "Disabilitare",
     "enable": "Abilitare",
     "monitorClipboardReferences": "Monitor appunti testo della Bibbia di testo",
+    "englishWordForms": "Italian Word Forms",
 }

@@ -918,4 +918,5 @@ translation = {
     "disable": "പ്രാവര്ത്തികമാക്കുക",
     "enable": "പ്രാവര്ത്തികമാക്കുക",
     "monitorClipboardReferences": "മോണിറ്റര് ക്ലിപ്ബോര്ഡ് ടെക്സ്റ്റ് ബൈബിള് റഫറന്സ്",
+    "englishWordForms": "ഇംഗ്ലീഷ് വിലാസം FormsName",
 }

@@ -1,3 +1,9 @@
+Changes in 30.45:
+* Added context plugin "Bible Search for English Word Forms"
+* The "abc" button on the scond top toolbar now opens "Bible Search for English Word Forms" plugin instead of "English Dictionaries".
+* Users can still use "Ctrl+Shift+D" keyboard combo to quickly open "English Dictionaries".
+* Try, for example, higlight "believe" in John 3:16 and open the plugin.
+
 Changes in 30.44:
 * Changed system tray message title from UBA to Unique Bible App.
 

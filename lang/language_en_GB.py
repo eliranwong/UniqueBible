@@ -918,4 +918,5 @@ translation = {
     "disable": "Disable",
     "enable": "Enable",
     "monitorClipboardReferences": "Monitor Clipboard Text Bible References",
+    "englishWordForms": "English Word Forms",
 }

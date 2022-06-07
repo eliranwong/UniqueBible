@@ -918,4 +918,5 @@ translation = {
     "disable": "Выключить",
     "enable": "Включить",
     "monitorClipboardReferences": "Отслеживать ссылки на Библию текста буфера обмена",
+    "englishWordForms": "Бланки на английском языке",
 }

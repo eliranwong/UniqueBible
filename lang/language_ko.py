@@ -918,4 +918,5 @@ translation = {
     "disable": "사용 불가능",
     "enable": "작동 가능",
     "monitorClipboardReferences": "클립보드 텍스트 성경 참조 모니터",
+    "englishWordForms": "영어 단어 양식",
 }

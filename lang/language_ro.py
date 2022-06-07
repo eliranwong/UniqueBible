@@ -918,4 +918,5 @@ translation = {
     "disable": "Dezactivează",
     "enable": "Activează",
     "monitorClipboardReferences": "Monitor Clipboard Text Bible Referințe",
+    "englishWordForms": "Formulare de cuvinte în limba engleză",
 }

@@ -918,4 +918,5 @@ translation = {
     "disable": "無効化",
     "enable": "有効",
     "monitorClipboardReferences": "モニター・クリップボード・テキストのバイブル・リファレンス",
+    "englishWordForms": "英語の Word フォーム",
 }

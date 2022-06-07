@@ -918,4 +918,5 @@ translation = {
     "disable": "停用",
     "enable": "啟用",
     "monitorClipboardReferences": "監視剪貼簿文字中的經文參照",
+    "englishWordForms": "英文單字表單",
 }

@@ -918,4 +918,5 @@ translation = {
     "disable": "Désactiver",
     "enable": "Activer",
     "monitorClipboardReferences": "Contrôler le texte du presse-papiers Références bibliques",
+    "englishWordForms": "Formulaires en anglais",
 }

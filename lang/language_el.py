@@ -918,4 +918,5 @@ translation = {
     "disable": "Απενεργοποίηση:",
     "enable": "' Ενεργοποίηση",
     "monitorClipboardReferences": "Παραπομπές στο πρόχειρο κείμενο του Clipboard",
+    "englishWordForms": "Πληροφορίες αγγλικών Word",
 }

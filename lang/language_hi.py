@@ -918,4 +918,5 @@ translation = {
     "disable": "निष्क्रिय करें",
     "enable": "सक्षम करें",
     "monitorClipboardReferences": "क्लिपबोर्ड पाठ बाइबल संदर्भों की निगरानी करें",
+    "englishWordForms": "अंग्रेजी शब्द फॉर्म्स",
 }

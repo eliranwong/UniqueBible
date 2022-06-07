@@ -333,6 +333,70 @@ def isMarkdownInstalled():
     except:
         return False
 
+def isNltkInstalled():
+    # Use wordnet https://www.educative.io/edpresso/how-to-use-wordnet-in-python
+    config.wordnet = None
+    import ssl
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+    try:
+        from nltk import download
+        from nltk.corpus import wordnet
+        try:
+            wordnet.lemmas("english")
+            config.wordnet = wordnet
+        except:
+            download('wordnet')
+            download('omw-1.4')
+            config.wordnet = wordnet
+        return True
+    except:
+        return False
+
+def isWordformsInstalled():
+    import ssl
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+    try:
+        # the following line causes the following error on macOS with the codes about ssl above:
+        # [nltk_data] Error loading wordnet: <urlopen error [SSL:
+        from word_forms.word_forms import get_word_forms
+        config.get_word_forms = get_word_forms
+        return True
+    except:
+        return False
+
+def isPaddleocrInstalled():
+    try:
+        from paddleocr import PaddleOCR,draw_ocr
+        return True
+    except:
+        return False
+
+def isWord2wordInstalled():
+    try:
+        from word2word import Word2word
+        return True
+    except:
+        return False
+
+def isLemmagen3Installed():
+    # Note: It looks like that lemmagen3 is a better lemmatizer than using "word_forms.lemmatize" installed with word_forms package
+    try:
+        from lemmagen3 import Lemmatizer
+        config.lemmatizer = Lemmatizer("en")
+        return True
+    except:
+        return False
+
 def isAudioConverterInstalled():
     return True if WebtopUtil.isPackageInstalled("audioconvert") else False
 
@@ -382,6 +446,16 @@ def setInstallConfig(module, isInstalled):
         config.isMarkdownInstalled = isInstalled
     elif module == "--upgrade AudioConverter":
         config.isAudioConverterInstalled = isInstalled
+    elif module == "lemmagen3":
+        config.isLemmagen3Installed = isInstalled
+    elif module == "-U word-forms":
+        config.isWordformsInstalled = isInstalled
+    elif module == "word2word":
+        config.isWord2wordInstalled = isInstalled
+    elif module == "paddleocr":
+        config.isPaddleocrInstalled = isInstalled
+    elif module == "nltk":
+        config.isNltkInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -479,6 +553,11 @@ optional = [
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
+    #("paddleocr", "Multilingual OCR", isPaddleocrInstalled),
+    ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
+    ("-U word-forms", "Generate English Word Forms", isWordformsInstalled),
+    ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
+    ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -501,6 +580,11 @@ optional = [
     ("gTTS", "Google text-to-speech", isGTTSInstalled),
     ("markdownify", "Convert HTML to Markdown", isMarkdownifyInstalled),
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
+    #("paddleocr", "Multilingual OCR", isPaddleocrInstalled),
+    ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
+    ("-U word-forms", "Generate English Word Forms", isWordformsInstalled),
+    ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
+    ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("--upgrade AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
