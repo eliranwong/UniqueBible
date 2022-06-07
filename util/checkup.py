@@ -404,57 +404,57 @@ def isAudioConverterInstalled():
 def setInstallConfig(module, isInstalled):
     #if module == "PyPDF2":
     #    config.isPyPDF2Installed = isInstalled
-    if module == "mammoth":
+    if module in ("mammoth", "-U mammoth", "--upgrade mammoth"):
         config.isMammothInstalled = isInstalled
-    elif module == "htmldocx":
+    elif module in ("htmldocx", "-U htmldocx", "--upgrade htmldocx"):
         config.isHtmldocxInstalled = isInstalled
-    elif module == "python-docx":
+    elif module in ("python-docx", "-U python-docx", "--upgrade python-docx"):
         config.isPythonDocxInstalled = isInstalled
-    elif module == "diff_match_patch":
+    elif module in ("diff_match_patch", "-U diff_match_patch", "--upgrade diff_match_patch"):
         config.isDiffMatchPatchInstalled = isInstalled
-    elif module == "langdetect":
+    elif module in ("langdetect", "-U langdetect", "--upgrade langdetect"):
         config.isLangdetectInstalled = isInstalled
-    elif module == "pygithub":
+    elif module in ("pygithub", "-U pygithub", "--upgrade pygithub"):
         config.isPygithubInstalled = isInstalled
-    elif module == "qt-material":
+    elif module in ("qt-material", "-U qt-material", "--upgrade qt-material"):
         config.isQtMaterialInstalled = isInstalled
-    elif module == "telnetlib3":
+    elif module in ("telnetlib3", "-U telnetlib3", "--upgrade telnetlib3"):
         config.isTelnetlib3Installed = isInstalled
-    elif module == "ibm-watson":
+    elif module in ("ibm-watson", "-U ibm-watson", "--upgrade ibm-watson"):
         config.isIbmWatsonInstalled = isInstalled
-    elif module == "html-text":
+    elif module in ("html-text", "-U html-text", "--upgrade html-text"):
         config.isHtmlTextInstalled = isInstalled
-    elif module == "beautifulsoup4":
+    elif module in ("beautifulsoup4", "-U beautifulsoup4", "--upgrade beautifulsoup4"):
         config.isBeautifulsoup4Installed = isInstalled
-    elif module == "html5lib":
+    elif module in ("html5lib", "-U html5lib", "--upgrade html5lib"):
         config.isHtml5libInstalled = isInstalled
-    elif module == "qrcode":
+    elif module in ("qrcode", "-U qrcode", "--upgrade qrcode"):
         config.isQrCodeInstalled = isInstalled
-    elif module == "pillow":
+    elif module in ("pillow", "-U pillow", "--upgrade pillow"):
         config.isPillowInstalled = isInstalled
-    #elif module == "git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png":
+    #elif module in ("git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "-U git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png", "--upgrade git+git://github.com/ojii/pymaging.git#egg=pymaging git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png"):
         #config.isPurePythonPngInstalled = isInstalled
-    elif module == "python-vlc":
+    elif module in ("python-vlc", "-U python-vlc", "--upgrade python-vlc"):
         config.isVlcInstalled = isInstalled
-    elif module == "yt-dlp":
+    elif module in ("yt-dlp", "-U yt-dlp", "--upgrade yt-dlp"):
         config.isYoutubeDownloaderInstalled = isInstalled
-    elif module == "gTTS":
+    elif module in ("gTTS", "-U gTTS", "--upgrade gTTS"):
         config.isGTTSInstalled = isInstalled
-    elif module == "markdownify":
+    elif module in ("markdownify", "-U markdownify", "--upgrade markdownify"):
         config.isMarkdownifyInstalled = isInstalled
-    elif module == "markdown":
+    elif module in ("markdown", "-U markdown", "--upgrade markdown"):
         config.isMarkdownInstalled = isInstalled
-    elif module == "--upgrade AudioConverter":
+    elif module in ("AudioConverter", "-U AudioConverter", "--upgrade AudioConverter"):
         config.isAudioConverterInstalled = isInstalled
-    elif module == "lemmagen3":
+    elif module in ("lemmagen3", "-U lemmagen3", "--upgrade lemmagen3"):
         config.isLemmagen3Installed = isInstalled
-    elif module == "-U word-forms":
+    elif module in ("word-forms", "-U word-forms", "--upgrade word-forms"):
         config.isWordformsInstalled = isInstalled
-    elif module == "word2word":
+    elif module in ("word2word", "-U word2word", "--upgrade word2word"):
         config.isWord2wordInstalled = isInstalled
-    elif module == "paddleocr":
+    elif module in ("paddleocr", "-U paddleocr", "--upgrade paddleocr"):
         config.isPaddleocrInstalled = isInstalled
-    elif module == "nltk":
+    elif module in ("nltk", "-U nltk", "--upgrade nltk"):
         config.isNltkInstalled = isInstalled
 
 # Specify qtLibrary for particular os
@@ -487,7 +487,9 @@ else:
     else:
         required.append(("PyQt5", "Qt Graphical Interface Library", isPyQt5Installed))
     required.append(("qtpy", "Qt Graphical Interface Layer", isQtpyInstalled))
-for module, feature, isInstalled in required:
+for module, feature, isInstalled in required or config.updateDependenciesOnStartup:
+    if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
+            module = "--upgrade {0}".format(module)
     if not isInstalled():
         pip3InstallModule(module)
         if module == "PySide2" and not isInstalled():
@@ -555,7 +557,7 @@ optional = [
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
     #("paddleocr", "Multilingual OCR", isPaddleocrInstalled),
     ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
-    ("-U word-forms", "Generate English Word Forms", isWordformsInstalled),
+    ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
 ] if config.noQt else [
@@ -582,14 +584,16 @@ optional = [
     ("markdown", "Convert Markdown to HTML", isMarkdownInstalled),
     #("paddleocr", "Multilingual OCR", isPaddleocrInstalled),
     ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
-    ("-U word-forms", "Generate English Word Forms", isWordformsInstalled),
+    ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
 ]
 if platform.system() == "Darwin":
-    optional.append(("--upgrade AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
+    optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))
 for module, feature, isInstalled in optional:
-    if not isInstalled():
+    if not isInstalled() or config.updateDependenciesOnStartup:
+        if config.updateDependenciesOnStartup and not (module.startswith("-U ") or module.startswith("--upgrade ")):
+            module = "--upgrade {0}".format(module)
         pip3InstallModule(module)
         available = isInstalled()
         print("Installed!" if available else "Optional feature '{0}' is not enabled.\nRun 'pip3 install {1}' to install it first.".format(feature, module))

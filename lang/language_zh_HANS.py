@@ -919,4 +919,5 @@ translation = {
     "enable": "启用",
     "monitorClipboardReferences": "监控剪贴簿文字中的经文参照",
     "englishWordForms": "英语单词表单",
+    "updateDependenciesOnStartup": "启动时更新依赖套件",
 }

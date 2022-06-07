@@ -172,6 +172,10 @@ class ConfigUtil:
         # IBM Watson service api version"""
         if not hasattr(config, "myIBMWatsonVersion"):
             config.myIBMWatsonVersion = "2018-05-01"
+        config.help["updateDependenciesOnStartup"] = """
+        # Update Dependencies on Startup: True / False"""
+        if not hasattr(config, "updateDependenciesOnStartup"):
+            config.updateDependenciesOnStartup = False
         config.help["showControlPanelOnStartup"] = """
         # Options to use control panel: True / False
         # This feature is created for use in church settings.
@@ -1473,6 +1477,7 @@ class ConfigUtil:
             ("qtMaterial", config.qtMaterial),
             ("qtMaterialTheme", config.qtMaterialTheme),
             ("disableModulesUpdateCheck", config.disableModulesUpdateCheck),
+            ("updateDependenciesOnStartup", config.updateDependenciesOnStartup),
             ("showControlPanelOnStartup", config.showControlPanelOnStartup),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand),

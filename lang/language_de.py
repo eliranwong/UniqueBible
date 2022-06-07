@@ -919,4 +919,5 @@ translation = {
     "enable": "Aktivieren",
     "monitorClipboardReferences": "Biblische Verweise auf Textbibel überwachen",
     "englishWordForms": "Englische Wortformen",
+    "updateDependenciesOnStartup": "Abhängigkeiten beim Start aktualisieren",
 }

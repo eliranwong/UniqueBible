@@ -61,6 +61,7 @@ class ConfigFlagsWindow(QDialog):
 
     def getOptions(self):
         options = [
+            ("updateDependenciesOnStartup", config.updateDependenciesOnStartup, self.updateDependenciesOnStartupChanged, False, config.thisTranslation["updateDependenciesOnStartup"]),
             ("showControlPanelOnStartup", config.showControlPanelOnStartup, self.showControlPanelOnStartupChanged, False, config.thisTranslation["showControlPanelOnStartup"]),
             ("preferControlPanelForCommandLineEntry", config.preferControlPanelForCommandLineEntry, self.preferControlPanelForCommandLineEntryChanged, False, config.thisTranslation["preferControlPanelForCommandLineEntry"]),
             ("closeControlPanelAfterRunningCommand", config.closeControlPanelAfterRunningCommand, self.closeControlPanelAfterRunningCommandChanged, True, config.thisTranslation["closeControlPanelAfterRunningCommand"]),
@@ -295,6 +296,10 @@ class ConfigFlagsWindow(QDialog):
 
     def showControlPanelOnStartupChanged(self):
         config.showControlPanelOnStartup = not config.showControlPanelOnStartup
+        self.parent.handleRestart()
+
+    def updateDependenciesOnStartupChanged(self):
+        config.updateDependenciesOnStartup = not config.updateDependenciesOnStartup
         self.parent.handleRestart()
 
     def preferControlPanelForCommandLineEntryChanged(self):

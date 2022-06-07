@@ -919,4 +919,5 @@ translation = {
     "enable": "' Ενεργοποίηση",
     "monitorClipboardReferences": "Παραπομπές στο πρόχειρο κείμενο του Clipboard",
     "englishWordForms": "Πληροφορίες αγγλικών Word",
+    "updateDependenciesOnStartup": "Ενημέρωση εξαρτήσεων από Startup",
 }

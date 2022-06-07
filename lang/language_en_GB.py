@@ -919,4 +919,5 @@ translation = {
     "enable": "Enable",
     "monitorClipboardReferences": "Monitor Clipboard Text Bible References",
     "englishWordForms": "English Word Forms",
+    "updateDependenciesOnStartup": "Update Dependencies on Startup",
 }

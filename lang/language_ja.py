@@ -919,4 +919,5 @@ translation = {
     "enable": "有効",
     "monitorClipboardReferences": "モニター・クリップボード・テキストのバイブル・リファレンス",
     "englishWordForms": "英語の Word フォーム",
+    "updateDependenciesOnStartup": "始動時に依存関係を更新",
 }

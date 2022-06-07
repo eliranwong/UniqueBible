@@ -1,3 +1,7 @@
+Changes in 30.46:
+* Added config flat "updateDependenciesOnStartup". configurable via "Set Config Flags" window.
+* When config.updateDependenciesOnStartup is set to True, UBA updates all dependency packages on startup.
+
 Changes in 30.45:
 * Added context plugin "Bible Search for English Word Forms"
 * The "abc" button on the scond top toolbar now opens "Bible Search for English Word Forms" plugin instead of "English Dictionaries".

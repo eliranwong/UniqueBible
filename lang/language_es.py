@@ -919,4 +919,5 @@ translation = {
     "enable": "Habilitar",
     "monitorClipboardReferences": "Referencias de la Biblia de texto del Portapapeles",
     "englishWordForms": "Formularios de Word en inglés",
+    "updateDependenciesOnStartup": "Actualizar dependencias al inicio",
 }

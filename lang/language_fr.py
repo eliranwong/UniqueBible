@@ -919,4 +919,5 @@ translation = {
     "enable": "Activer",
     "monitorClipboardReferences": "Contrôler le texte du presse-papiers Références bibliques",
     "englishWordForms": "Formulaires en anglais",
+    "updateDependenciesOnStartup": "Mettre à jour les dépendances au démarrage",
 }

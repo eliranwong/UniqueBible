@@ -919,4 +919,5 @@ translation = {
     "enable": "작동 가능",
     "monitorClipboardReferences": "클립보드 텍스트 성경 참조 모니터",
     "englishWordForms": "영어 단어 양식",
+    "updateDependenciesOnStartup": "시작 시 종속성 업데이트",
 }
