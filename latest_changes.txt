@@ -1,4 +1,5 @@
 Changes in 30.51:
+* Fixed radio button selection on Master Search Tab.
 * Added styles to Checkable Buttons, e.g. "Text Selection Monitoring" button, when they are pressed.
 * Save config.liveFilterBookFilter, config.bibleSearchRange, and config.customBooksRangeSearch when UBA quits.
     - They preseves book filter and search range settings for Master Search tab and Live Filter Dialog.
