@@ -4659,6 +4659,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         #    button.setStyleSheet(config.buttonStyle)
         return button
 
+    # experimental only
     def saveIconImage(self, iconFilePath):
         import io
         from PIL import Image
@@ -5076,6 +5077,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.openControlPanelTab(0)
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
+
+    def getSelectionMonitoringButtonToolTip(self):
+        return "{0}: {1}".format(config.thisTranslation["selectionMonitoring"], config.thisTranslation["on"] if config.enableSelectionMonitoring else config.thisTranslation["off"])
+
+    def selectionMonitoringButtonClicked(self):
+        config.enableSelectionMonitoring = not config.enableSelectionMonitoring
+        self.selectionMonitoringButton.setChecked(True if config.enableSelectionMonitoring else False)
+        self.selectionMonitoringButton.setToolTip(self.getSelectionMonitoringButtonToolTip())
 
     def instantTTS(self):
         if config.isGoogleCloudTTSAvailable or ((not config.isOfflineTtsInstalled or config.forceOnlineTts) and config.isGTTSInstalled):

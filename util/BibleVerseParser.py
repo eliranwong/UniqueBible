@@ -367,7 +367,8 @@ class BibleVerseParser:
     def bookNameToNum(self, bookName):
         bookName = bookName.strip()
         for key in self.sortedNames:
-            if bookName.startswith(key):
+            keyWihtoutDot = re.sub("\.$", "", key)
+            if bookName.startswith(keyWihtoutDot):
                 return self.bibleBooksDict[key]
         return None
 
@@ -403,13 +404,12 @@ class BibleVerseParser:
     def extractBookList(self, inputString):
         try:
             books = []
-            bibleVerseParser = BibleVerseParser(config.parserStandarisation)
             sections = re.split(",", inputString)
             for section in sections:
                 if "-" in section:
                     ranges = re.split("-", section)
-                    start = bibleVerseParser.bookNameToNum(ranges[0])
-                    end = bibleVerseParser.bookNameToNum(ranges[1])
+                    start = self.bookNameToNum(ranges[0])
+                    end = self.bookNameToNum(ranges[1])
                     if start is not None and end is not None:
                         for book in range(start, end + 1):
                             books.append(book)
@@ -424,7 +424,7 @@ class BibleVerseParser:
                         for book in range(1, 500):
                             books.append(book)
                     else:
-                        books.append(bibleVerseParser.bookNameToNum(section))
+                        books.append(self.bookNameToNum(section))
             return books
         except:
             return None

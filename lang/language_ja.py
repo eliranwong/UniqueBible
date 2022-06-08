@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "ブック・フィルターなし",
     "filterOTBooks": "旧約聖書の文書化",
     "filterNTBooks": "新規約聖書の文書化",
+    "forExample": "例えば",
+    "bibleBookFilter": "聖書の書フィルター",
+    "selectionMonitoring": "選択モニター",
 }

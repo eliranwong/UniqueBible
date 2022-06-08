@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "Nici un filtru de carte",
     "filterOTBooks": "Filtrați cărțile Vechiului Testament",
     "filterNTBooks": "Filtru de cărți nou testamentale",
+    "forExample": "De exemplu",
+    "bibleBookFilter": "Filtru de carte biblică",
+    "selectionMonitoring": "Monitorizarea selecției",
 }

@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "No Book Filter",
     "filterOTBooks": "Filter Old Testament Books",
     "filterNTBooks": "Filter New Testament Books",
+    "forExample": "For example",
+    "bibleBookFilter": "Bible Book Filter",
+    "selectionMonitoring": "Text Selection Monitoring",
 }

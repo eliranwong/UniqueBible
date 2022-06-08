@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "无过滤书卷",
     "filterOTBooks": "过滤旧约书卷",
     "filterNTBooks": "过滤新约书卷",
+    "forExample": "例如",
+    "bibleBookFilter": "圣经书卷过滤",
+    "selectionMonitoring": "文字选择监视",
 }

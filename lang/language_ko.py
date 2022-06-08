@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "Book 필터 없음",
     "filterOTBooks": "구약서를 필터링하기",
     "filterNTBooks": "신약 서적 필터링하기",
+    "forExample": "예:",
+    "bibleBookFilter": "성경책 필터",
+    "selectionMonitoring": "선택 모니터링",
 }

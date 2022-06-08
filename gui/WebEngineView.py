@@ -45,18 +45,24 @@ class WebEngineView(QWebEngineView):
         self.addMenuActions()
 
         # selection monitoring
-        #self.selectionChanged.connect(lambda: self.instantHighlight(True))
+        self.selectionChanged.connect(self.selectionMonitoringFeature)
 
     def selectionMonitoringFeature(self):
-        # check English definition of selected word
-        selectedText = self.selectedText().strip()
-        if selectedText:
-            lemma = config.lemmatizer.lemmatize(selectedText)
-            synsets = config.wordnet.synsets(lemma)
-            if synsets:
-                definition = synsets[0].definition()
-                if definition:
-                    self.parent.parent.runTextCommand("_info:::{0}".format(definition))
+        if config.enableSelectionMonitoring:
+            # check English definition of selected word
+            selectedText = self.selectedText().strip()
+            definition = self.getDefinition(selectedText)
+            if not definition:
+                lemma = config.lemmatizer.lemmatize(selectedText)
+                definition = self.getDefinition(lemma)
+            self.parent.parent.runTextCommand("_info:::{0}".format(definition))
+
+    def getDefinition(self, entry):
+        definition = ""
+        synsets = config.wordnet.synsets(entry)
+        if synsets:
+            definition = synsets[0].definition()
+        return definition
 
     def displayMessage(self, message):
         self.parent.parent.displayMessage(message)

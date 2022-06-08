@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "कोई पुस्तक फिल्टर नहीं",
     "filterOTBooks": "पुरानी वसीयपत्र पुस्तिका फ़िल्टर करें",
     "filterNTBooks": "नया वसीयतनामा पुस्तिकाएँ",
+    "forExample": "उदाहरण के लिए",
+    "bibleBookFilter": "बाइबल बुक फ़िल्टरName",
+    "selectionMonitoring": "चयन निगरानी",
 }

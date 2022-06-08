@@ -1,3 +1,14 @@
+Changes in 30.49:
+* Added "Selection Monitoring", when enabled word definition is diplayed in the bottom window.
+* Fixed quit application with system tray.
+* Fixed "Live Filter" book filter include favourite version in multi-verse fetching.
+* Relocated book filter row, which is now placed above text filter items.
+    - With this change, "add", "edit" buttons are placed right below text filter items.
+* Master Control Search Tab:
+    - Added tooltip about example of using custom book filter.
+    - Relocated book filter row inside bible serach bible.
+* Copy feature in "Search Bible for English Word Forms" now uses "|" as separator, so that users can use copied items directly in "Live Filter" dialog.
+
 Changes in 30.47, 30.48:
 * Added book filters in "Live Filter" dialog.
 * Changed the "abc" button tooltip to "Search English Bible".

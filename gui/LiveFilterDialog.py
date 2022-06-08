@@ -3,6 +3,7 @@ import os
 import config
 from gui.CheckableComboBox import CheckableComboBox
 from util.BibleVerseParser import BibleVerseParser
+from util.BibleBooks import BibleBooks
 
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
@@ -91,18 +92,6 @@ class LiveFilterDialog(QDialog):
         title = QLabel(config.thisTranslation["liveFilter"])
         mainLayout.addWidget(title)
 
-        self.filtersTable = QTableView()
-        self.filtersTable.setEnabled(True)
-        self.filtersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.filtersTable.setSortingEnabled(True)
-        self.dataViewModel = QStandardItemModel(self.filtersTable)
-        self.filtersTable.setModel(self.dataViewModel)
-        self.dataViewModel.itemChanged.connect(self.filterSelectionChanged)
-        self.selectionModel = self.filtersTable.selectionModel()
-        self.selectionModel.selectionChanged.connect(self.handleSelection)
-        mainLayout.addWidget(self.filtersTable)
-        self.reloadFilters()
-
         booksLayout = QHBoxLayout()
 
         bibleVerseParser = BibleVerseParser(config.parserStandarisation)
@@ -141,6 +130,18 @@ class LiveFilterDialog(QDialog):
 
         mainLayout.addLayout(booksLayout)
 
+        self.filtersTable = QTableView()
+        self.filtersTable.setEnabled(True)
+        self.filtersTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.filtersTable.setSortingEnabled(True)
+        self.dataViewModel = QStandardItemModel(self.filtersTable)
+        self.filtersTable.setModel(self.dataViewModel)
+        self.dataViewModel.itemChanged.connect(self.filterSelectionChanged)
+        self.selectionModel = self.filtersTable.selectionModel()
+        self.selectionModel.selectionChanged.connect(self.handleSelection)
+        mainLayout.addWidget(self.filtersTable)
+        self.reloadFilters()
+
         buttonsLayout = QHBoxLayout()
         clearButton = QPushButton(config.thisTranslation["clear"])
         clearButton.clicked.connect(self.clearFilter)
@@ -175,7 +176,7 @@ class LiveFilterDialog(QDialog):
 
         self.setLayout(mainLayout)
 
-    def filterModeChanged(self, checked, filter):
+    def filterBookChanged(self, checked, filter):
         if checked:
             self.bookFilterCombo.clearAll()
             bookMap = {
@@ -243,7 +244,12 @@ class LiveFilterDialog(QDialog):
     def getCustomBookListFilter(self):
         customList = []
         for bookAbb in self.bookFilterCombo.checkItems:
-            pattern = '<ref.*>{} .*</ref>'.format(bookAbb.replace(".", ""))
+            pattern = '<ref[^<>]*?>{0} .*</ref>'.format(bookAbb.replace(".", ""))
+            customList.append(pattern)
+            # Include favourite version in multi-verse fetching feature.
+            if not bookAbb in BibleBooks.name2number:
+                bookAbb = "{0}.".format(bookAbb)
+            pattern = "instantVerse:::[^:]+?:::{0}\\\.".format(BibleBooks.name2number[bookAbb])
             customList.append(pattern)
         return '"{}"'.format("|".join(customList))
 

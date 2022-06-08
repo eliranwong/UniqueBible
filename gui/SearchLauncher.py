@@ -3,10 +3,10 @@ import config
 from gui.CheckableComboBox import CheckableComboBox
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
-    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel
 else:
     from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox
+    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel
 
 
 class SearchLauncher(QWidget):
@@ -20,7 +20,7 @@ class SearchLauncher(QWidget):
         self.setWindowTitle(config.thisTranslation["tools"])
         # set up variables
         self.bibleSearchModeTuple = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
-        config.bibleSearchRange = config.thisTranslation["all"]
+        config.bibleSearchRange = "clear"
         # setup interface
         self.setupUI()
 
@@ -45,6 +45,12 @@ class SearchLauncher(QWidget):
         self.bibleCombo = CheckableComboBox(self.parent.textList, [config.mainText], toolTips=self.parent.textFullNameList)
         self.bibleCombo.checkFromList([config.mainText])
         bibleLayout.addLayout(self.parent.comboFeatureLayout("html_searchBible2", self.bibleCombo, self.searchBible))
+
+        # Bible Collections
+        if len(config.bibleCollections) > 0:
+            navigationLayout6 = self.navigationLayout6()
+            bibleLayout.addWidget(navigationLayout6)
+
         subLayout = QHBoxLayout()
         subLayout.setSpacing(5)
         leftGroupLayout = QVBoxLayout()
@@ -70,32 +76,32 @@ class SearchLauncher(QWidget):
         rightGroupLayout.addStretch()
         bibleLayout.addLayout(subLayout)
 
-        if len(config.bibleCollections) > 0:
-            navigationLayout6 = self.navigationLayout6()
-            bibleLayout.addWidget(navigationLayout6)
+        # Bible Book Filter
+        booksLayout = QHBoxLayout()
+        booksLayout.setSpacing(5)
+        booksLayout.addWidget(QLabel("{0}:".format(config.thisTranslation["filter2"])))
+        for range, tooltip in {"clear": "noBookFilter", "ot": "filterOTBooks", "nt": "filterNTBooks", "custom": "custom"}.items():
+            radioButton = QRadioButton(config.thisTranslation[range])
+            radioButton.setToolTip(config.thisTranslation[tooltip])
+            radioButton.toggled.connect(lambda checked, range=range: self.booksChanged(checked, range))
+            if config.bibleSearchRange == range:
+                radioButton.setChecked(True)
+            booksLayout.addWidget(radioButton)
+            if range == "custom":
+                self.customRangeRadioButton = radioButton
+        self.customBooksRangeSearchField = QLineEdit()
+        self.customBooksRangeSearchField.setText(config.customBooksRangeSearch)
+        self.customBooksRangeSearchField.setToolTip("{0}: Psa, Matt-John, Rev".format(config.thisTranslation["forExample"]))
+        self.customBooksRangeSearchField.textChanged.connect(self.customBooksRangeChanged)
+        self.customBooksRangeSearchField.returnPressed.connect(self.searchBible)
+        booksLayout.addWidget(self.customBooksRangeSearchField)
+        bibleLayout.addLayout(booksLayout)
 
         bibleWidget.setLayout(bibleLayout)
         
         widgetLayout0.addWidget(bibleWidget)
 
         # Books range selection
-        booksWidget = QGroupBox(config.thisTranslation["menu10_books"])
-        booksLayout = QHBoxLayout()
-        booksLayout.setSpacing(1)
-        for range in [config.thisTranslation["all"], "OT", "NT", "Custom"]:
-            radioButton = QRadioButton(range)
-            radioButton.toggled.connect(lambda checked, range=range: self.booksChanged(checked, range))
-            if config.bibleSearchRange == range:
-                radioButton.setChecked(True)
-            booksLayout.addWidget(radioButton)
-            if range == "Custom":
-                self.customRangeRadioButton = radioButton
-        self.customBooksRangeSearchField = QLineEdit()
-        self.customBooksRangeSearchField.setText(config.customBooksRangeSearch)
-        self.customBooksRangeSearchField.textChanged.connect(self.customBooksRangeChanged)
-        booksLayout.addWidget(self.customBooksRangeSearchField)
-        booksWidget.setLayout(booksLayout)
-        widgetLayout0.addWidget(booksWidget)
 
         subLayout = QHBoxLayout()
         buttonRow = (
@@ -249,7 +255,7 @@ class SearchLauncher(QWidget):
             config.bibleSearchRange = range
 
     def customBooksRangeChanged(self, text):
-        if len(text) > 0:
+        if text:
             self.customRangeRadioButton.setChecked(True)
             config.customBooksRangeSearch = text
 
@@ -273,9 +279,9 @@ class SearchLauncher(QWidget):
         if searchItem:
             text = text if text else "_".join(self.bibleCombo.checkItems)
             command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], text, self.searchField.text())
-            if config.bibleSearchRange == "Custom":
+            if config.bibleSearchRange == "custom":
                 command += ":::{0}".format(config.customBooksRangeSearch)
-            elif config.bibleSearchRange != config.thisTranslation["all"]:
+            elif config.bibleSearchRange != "clear":
                 command += ":::{0}".format(config.bibleSearchRange)
             self.parent.runTextCommand(command)
 

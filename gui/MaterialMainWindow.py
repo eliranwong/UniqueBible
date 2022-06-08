@@ -972,6 +972,11 @@ class MaterialMainWindow:
 
         self.secondToolBar.addSeparator()
 
+        icon = "material/action/highlight_alt/materialiconsoutlined/48dp/2x/outline_highlight_alt_black_48dp.png"
+        self.selectionMonitoringButton = QPushButton()
+        self.addMaterialIconButton(self.getSelectionMonitoringButtonToolTip(), icon, self.selectionMonitoringButtonClicked, self.secondToolBar, self.selectionMonitoringButton, translation=False)
+        self.selectionMonitoringButton.setCheckable(True)
+        self.selectionMonitoringButton.setChecked(True if config.enableSelectionMonitoring else False)
         if os.path.isfile(os.path.join("plugins", "context", "Search Bible for English Word Forms.py")):
             icon = "material/action/abc/materialiconsoutlined/48dp/2x/outline_abc_black_48dp.png"
             self.addMaterialIconButton("searchEnglishBible", icon, lambda: self.mainView.currentWidget().runPlugin("Search Bible for English Word Forms"), self.secondToolBar)

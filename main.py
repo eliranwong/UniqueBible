@@ -297,6 +297,7 @@ def setCurrentRecord():
     config.currentRecord = {'main': mainRecordPosition, 'study': studyRecordPosition}
 
 def exitApplication():
+    app.closeAllWindows()
     if not config.doNotStop3rdPartyMediaPlayerOnExit:
         config.mainWindow.closeMediaPlayer()
     # Run shutdown plugins

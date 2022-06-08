@@ -926,4 +926,7 @@ translation = {
     "noBookFilter": "ബുക്ക് ഫില്റ്റര് ലഭ്യമല്ല",
     "filterOTBooks": "ഫില്റ്റര് ഓള്ഡ് ടെസ്റ്റുമെന്റ് ബുക്സ്",
     "filterNTBooks": "പുതിയ ടെസ്റ്റുമെന്റ് ബുക്സ് ഫില്റ്റര് ചെയ്യുക",
+    "forExample": "ഉദാഹരണത്തിന്",
+    "bibleBookFilter": "ബൈബിള് ബുക്ക് ഫില്റ്റര്",
+    "selectionMonitoring": "തെരഞ്ഞെടുക്കല് നിരീക്ഷണം",
 }

@@ -195,7 +195,7 @@ class BibleSearchForEnglishForms(QWidget):
             else:
                 from qtpy.QtWidgets import QApplication
             print(", ".join(set(items)))
-            QApplication.clipboard().setText(", ".join(set(items)))
+            QApplication.clipboard().setText("|".join(set(items)))
 
     def searchAllSelectedItems(self):
         items = self.getAllSelectedItems()
