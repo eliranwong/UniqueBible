@@ -1,3 +1,4 @@
+from html import entities
 from util.Languages import Languages
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
 import config, os, platform, webbrowser, re
@@ -23,10 +24,11 @@ from gui.WebEngineViewPopover import WebEngineViewPopover
 from util.FileUtil import FileUtil
 from util.TextUtil import TextUtil
 from util.BibleBooks import BibleBooks
-from util.HebrewTransliteration import HebrewTransliteration
 from util.WebtopUtil import WebtopUtil
-from util.ShortcutUtil import ShortcutUtil
-from install.module import *
+from util.HBN import HBN
+#from util.HebrewTransliteration import HebrewTransliteration
+#from util.ShortcutUtil import ShortcutUtil
+#from install.module import *
 
 
 class WebEngineView(QWebEngineView):
@@ -51,10 +53,15 @@ class WebEngineView(QWebEngineView):
         if config.enableSelectionMonitoring:
             # check English definition of selected word
             selectedText = self.selectedText().strip()
-            definition = self.getDefinition(selectedText)
-            if not definition:
-                lemma = config.lemmatizer.lemmatize(selectedText)
-                definition = self.getDefinition(lemma)
+            if selectedText in HBN.entries:
+                definition = HBN.entries[selectedText]
+            else:
+                definition = self.getDefinition(selectedText)
+                if not definition:
+                    lemma = config.lemmatizer.lemmatize(selectedText)
+                    definition = "<b>{0}</b> - {1}".format(lemma, self.getDefinition(lemma))
+                else:
+                    definition = "<b>{0}</b> - {1}".format(selectedText, definition)
             self.parent.parent.runTextCommand("_info:::{0}".format(definition))
 
     def getDefinition(self, entry):

@@ -1,3 +1,9 @@
+Changes in 30.50:
+* Integrated "Hitchcock's Bible Names Dictionary" into "Text Selection Monitorning" feature.
+    When "Text Selection Monitoring" is turned on, UBA searches "Hitchcock's Bible Names Dictionary" first for meaning if the selected text is a bible name.
+    If the selected text does not match an entry in "Hitchcock's Bible Names Dictionary", UBA then searches English WordNet database for a definition.
+    To try this feature, you may open Matthew chapter one, select some names and check their meanings displayed on the bottom window.
+
 Changes in 30.49:
 * Added "Selection Monitoring", when enabled word definition is diplayed in the bottom window.
 * Fixed quit application with system tray.
