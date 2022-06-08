@@ -1,3 +1,8 @@
+Changes in 30.51:
+* Added styles to Checkable Buttons, e.g. "Text Selection Monitoring" button, when they are pressed.
+* Save config.liveFilterBookFilter, config.bibleSearchRange, and config.customBooksRangeSearch when UBA quits.
+    - They preseves book filter and search range settings for Master Search tab and Live Filter Dialog.
+
 Changes in 30.50:
 * Integrated "Hitchcock's Bible Names Dictionary" into "Text Selection Monitorning" feature.
     When "Text Selection Monitoring" is turned on, UBA searches "Hitchcock's Bible Names Dictionary" first for meaning if the selected text is a bible name.

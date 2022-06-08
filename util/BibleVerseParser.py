@@ -420,7 +420,7 @@ class BibleVerseParser:
                     elif section.lower() == "nt":
                         for book in range(40, 67):
                             books.append(book)
-                    elif section.lower() == "all":
+                    elif section.lower() in ("all", "clear"):
                         for book in range(1, 500):
                             books.append(book)
                     else:

@@ -32,7 +32,7 @@ QToolTip {0}
 
 QToolBar {0} font-size: {9}px; icon-size: {8}px; {1}
 
-QPushButton {0} font-size: {9}px; icon-size: {8}px; background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1}
+QPushButton {0} font-size: {9}px; icon-size: {8}px; background-color: {2}; color: {3};{1} QPushButton:hover {0}background-color: {4}; color: {5};{1} QPushButton:pressed {0}background-color: {6}; color: {7}{1} QPushButton:checked {0}background-color: {6}; color: {7}{1}
 
 QToolButton {0} /* all types of tool button */
     font-size: {9}px;

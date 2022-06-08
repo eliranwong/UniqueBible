@@ -34,7 +34,7 @@ class ConfigUtil:
         config.shortcutList = []
         config.enableHttpServer = False
         config.runMode = "gui"
-        config.customBooksRangeSearch = ""
+        #config.customBooksRangeSearch = ""
         config.mainCssBibleFontStyle = ""
 
         # Default settings for configurations:
@@ -670,6 +670,18 @@ class ConfigUtil:
         # Last-opened bible verse number on Study Window"""
         if not hasattr(config, "studyV"):
             config.studyV = 16
+        config.help["liveFilterBookFilter"] = """
+        # Book Filter for Live Filter"""
+        if not hasattr(config, "liveFilterBookFilter"):
+            config.liveFilterBookFilter = []
+        config.help["bibleSearchRange"] = """
+        # Pre-defined Book Range for Bible Search"""
+        if not hasattr(config, "bibleSearchRange"):
+            config.bibleSearchRange = "clear"
+        config.help["customBooksRangeSearch"] = """
+        # Custom Book Range for Bible Search"""
+        if not hasattr(config, "customBooksRangeSearch"):
+            config.customBooksRangeSearch = ""
         config.help["bibleSearchMode"] = """
         # Search Bible Mode
         # Accept value: 0-5
@@ -1422,6 +1434,9 @@ class ConfigUtil:
             ("studyB", config.studyB),
             ("studyC", config.studyC),
             ("studyV", config.studyV),
+            ("liveFilterBookFilter", config.liveFilterBookFilter),
+            ("bibleSearchRange", config.bibleSearchRange),
+            ("customBooksRangeSearch", config.customBooksRangeSearch),
             ("bibleSearchMode", config.bibleSearchMode),
             ("regexCaseSensitive", config.regexCaseSensitive),
             ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound),

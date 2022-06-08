@@ -108,14 +108,15 @@ class LiveFilterDialog(QDialog):
                 self.ntNameList.append(bookNameAbb)
             ontNameList.append(bookNameAbb)
 
-        self.bookFilterCombo = self.nounCombo = CheckableComboBox(ontNameList, [])
+        self.bookFilterCombo = CheckableComboBox(ontNameList, config.liveFilterBookFilter)
+        self.bookFilterCombo.checkFromList(config.liveFilterBookFilter)
         self.bookFilterCombo.editTextChanged.connect(self.filterSelectionChanged)
         booksLayout.addWidget(self.bookFilterCombo)
 
         radioButton = QRadioButton(config.thisTranslation["clear"])
         radioButton.setToolTip(config.thisTranslation["noBookFilter"])
         radioButton.toggled.connect(lambda checked: self.filterBookChanged(checked, "clear"))
-        radioButton.setChecked(True)
+        #radioButton.setChecked(True)
         booksLayout.addWidget(radioButton)
 
         radioButton = QRadioButton(config.thisTranslation["ot"])
@@ -215,6 +216,7 @@ class LiveFilterDialog(QDialog):
             self.selectedPattern = pattern.text()
 
     def filterSelectionChanged(self, item):
+        config.liveFilterBookFilter = self.bookFilterCombo.checkItems
         try:
             numChecked = 0
             for index in range(self.dataViewModel.rowCount()):

@@ -3,10 +3,10 @@ import config
 from gui.CheckableComboBox import CheckableComboBox
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
-    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel
+    from PySide6.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel, QButtonGroup
 else:
     from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel
+    from qtpy.QtWidgets import QGroupBox, QHBoxLayout, QVBoxLayout, QWidget, QComboBox, QLineEdit, QRadioButton, QCheckBox, QLabel, QButtonGroup
 
 
 class SearchLauncher(QWidget):
@@ -20,7 +20,7 @@ class SearchLauncher(QWidget):
         self.setWindowTitle(config.thisTranslation["tools"])
         # set up variables
         self.bibleSearchModeTuple = ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")
-        config.bibleSearchRange = "clear"
+        #config.bibleSearchRange = "clear"
         # setup interface
         self.setupUI()
 
@@ -59,8 +59,10 @@ class SearchLauncher(QWidget):
         subLayout.addLayout(leftGroupLayout)
         subLayout.addLayout(centerGroupLayout)
         subLayout.addLayout(rightGroupLayout)
+        radioButtonGroup1 = QButtonGroup()
         for index, searchMode in enumerate(self.bibleSearchModeTuple):
             radioButton = QRadioButton(searchMode)
+            radioButtonGroup1.addButton(radioButton)
             radioButton.setToolTip(config.thisTranslation["searchRB{0}".format(index)])
             radioButton.toggled.connect(lambda checked, mode=index: self.searchModeChanged(checked, mode))
             if index == config.bibleSearchMode:
@@ -77,11 +79,14 @@ class SearchLauncher(QWidget):
         bibleLayout.addLayout(subLayout)
 
         # Bible Book Filter
+        filterWidget = QGroupBox("")
         booksLayout = QHBoxLayout()
         booksLayout.setSpacing(5)
         booksLayout.addWidget(QLabel("{0}:".format(config.thisTranslation["filter2"])))
+        radioButtonGroup2 = QButtonGroup()
         for range, tooltip in {"clear": "noBookFilter", "ot": "filterOTBooks", "nt": "filterNTBooks", "custom": "custom"}.items():
             radioButton = QRadioButton(config.thisTranslation[range])
+            radioButtonGroup2.addButton(radioButton)
             radioButton.setToolTip(config.thisTranslation[tooltip])
             radioButton.toggled.connect(lambda checked, range=range: self.booksChanged(checked, range))
             if config.bibleSearchRange == range:
@@ -95,11 +100,13 @@ class SearchLauncher(QWidget):
         self.customBooksRangeSearchField.textChanged.connect(self.customBooksRangeChanged)
         self.customBooksRangeSearchField.returnPressed.connect(self.searchBible)
         booksLayout.addWidget(self.customBooksRangeSearchField)
-        bibleLayout.addLayout(booksLayout)
+        filterWidget.setLayout(booksLayout)
+        
+        bibleLayout.addWidget(filterWidget)
 
         bibleWidget.setLayout(bibleLayout)
-        
         widgetLayout0.addWidget(bibleWidget)
+        
 
         # Books range selection
 
@@ -255,9 +262,9 @@ class SearchLauncher(QWidget):
             config.bibleSearchRange = range
 
     def customBooksRangeChanged(self, text):
+        config.customBooksRangeSearch = text
         if text:
             self.customRangeRadioButton.setChecked(True)
-            config.customBooksRangeSearch = text
 
     def getSearchItem(self):
         searchItem = self.searchField.text()
@@ -279,9 +286,9 @@ class SearchLauncher(QWidget):
         if searchItem:
             text = text if text else "_".join(self.bibleCombo.checkItems)
             command = "{0}:::{1}:::{2}".format(self.bibleSearchModeTuple[config.bibleSearchMode], text, self.searchField.text())
-            if config.bibleSearchRange == "custom":
+            if config.bibleSearchRange == "custom" and config.customBooksRangeSearch:
                 command += ":::{0}".format(config.customBooksRangeSearch)
-            elif config.bibleSearchRange != "clear":
+            elif not config.bibleSearchRange in ("clear", "custom"):
                 command += ":::{0}".format(config.bibleSearchRange)
             self.parent.runTextCommand(command)
 
