@@ -44,6 +44,20 @@ class WebEngineView(QWebEngineView):
         self.selectionChanged.connect(self.updateContextMenu)
         self.addMenuActions()
 
+        # selection monitoring
+        #self.selectionChanged.connect(lambda: self.instantHighlight(True))
+
+    def selectionMonitoringFeature(self):
+        # check English definition of selected word
+        selectedText = self.selectedText().strip()
+        if selectedText:
+            lemma = config.lemmatizer.lemmatize(selectedText)
+            synsets = config.wordnet.synsets(lemma)
+            if synsets:
+                definition = synsets[0].definition()
+                if definition:
+                    self.parent.parent.runTextCommand("_info:::{0}".format(definition))
+
     def displayMessage(self, message):
         self.parent.parent.displayMessage(message)
 
@@ -932,9 +946,13 @@ class WebEngineView(QWebEngineView):
         QApplication.clipboard().setText(text)
 
     # Instant highligh feature
-    def instantHighlight(self):
-        selectedText = self.selectedTextProcessed()
-        self.findText(selectedText, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
+    def instantHighlight(self, selectionMonitoring=False):
+        if selectionMonitoring:
+            selectedText = self.selectedText().strip()
+            self.findText(selectedText, QWebEnginePage.FindFlags())
+        else:
+            selectedText = self.selectedTextProcessed()
+            self.findText(selectedText, QWebEnginePage.FindFlags(), self.checkIfTextIsFound)
 
     def checkIfTextIsFound(self, found):
         if not found:

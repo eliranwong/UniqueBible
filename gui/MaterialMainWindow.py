@@ -972,9 +972,9 @@ class MaterialMainWindow:
 
         self.secondToolBar.addSeparator()
 
-        if os.path.isfile(os.path.join("plugins", "context", "Bible Search for English Word Forms.py")):
+        if os.path.isfile(os.path.join("plugins", "context", "Search Bible for English Word Forms.py")):
             icon = "material/action/abc/materialiconsoutlined/48dp/2x/outline_abc_black_48dp.png"
-            self.addMaterialIconButton("englishWordForms", icon, lambda: self.mainView.currentWidget().runPlugin("Bible Search for English Word Forms"), self.secondToolBar)
+            self.addMaterialIconButton("searchEnglishBible", icon, lambda: self.mainView.currentWidget().runPlugin("Search Bible for English Word Forms"), self.secondToolBar)
         if not config.noTtsFound:
             icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
             self.instantTtsButton = QPushButton()

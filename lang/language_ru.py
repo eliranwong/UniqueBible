@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Отслеживать ссылки на Библию текста буфера обмена",
     "englishWordForms": "Бланки на английском языке",
     "updateDependenciesOnStartup": "Обновить зависимости при запуске",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Поиск по английской Библии",
+    "noBookFilter": "Нет фильтра книги",
+    "filterOTBooks": "Фильтровать книги ветхого",
+    "filterNTBooks": "Фильтровать книги нового завета",
 }

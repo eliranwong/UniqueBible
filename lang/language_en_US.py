@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Monitor Clipboard Text Bible References",
     "englishWordForms": "English Word Forms",
     "updateDependenciesOnStartup": "Update Dependencies on Startup",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Search English Bible",
+    "noBookFilter": "No Book Filter",
+    "filterOTBooks": "Filter Old Testament Books",
+    "filterNTBooks": "Filter New Testament Books",
 }

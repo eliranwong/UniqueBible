@@ -1,4 +1,3 @@
-# coding=utf-8
 class BibleBooks:
 
     # English abbreviations according to SBL-style
@@ -3265,10 +3264,20 @@ class BibleBooks:
             return 100
 
     @staticmethod
-    def getStandardBookAbbreviations():
+    def getStandardBookAbbreviations(lang=None):
+        import config
+
+        if lang is None:
+            lang = config.standardAbbreviation
         books = []
-        for item in BibleBooks.eng.keys():
-            books.append(BibleBooks.eng[item][0])
+        standardAbbreviations = {
+            "ENG": BibleBooks.eng,
+            "TC": BibleBooks.tc,
+            "SC": BibleBooks.sc,
+        }
+        standardAbbreviation = standardAbbreviations[lang]
+        for item in standardAbbreviation.keys():
+            books.append(standardAbbreviation[item][0])
             if item == "66":
                 break
         return books
@@ -3285,7 +3294,8 @@ if __name__ == '__main__':
 
     ot = []
     nt = []
-    for count, item in enumerate(BibleBooks.getStandardBookAbbreviations(), 1):
+    lang = "ENG"
+    for count, item in enumerate(BibleBooks.getStandardBookAbbreviations(lang), 1):
         pattern = "<ref.*>{0}.*</ref>".format(item)
         if count < 40:
             ot.append(pattern)

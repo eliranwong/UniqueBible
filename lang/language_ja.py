@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "モニター・クリップボード・テキストのバイブル・リファレンス",
     "englishWordForms": "英語の Word フォーム",
     "updateDependenciesOnStartup": "始動時に依存関係を更新",
+    "ot": "オート",
+    "nt": "ヌト",
+    "searchEnglishBible": "英訳聖書",
+    "noBookFilter": "ブック・フィルターなし",
+    "filterOTBooks": "旧約聖書の文書化",
+    "filterNTBooks": "新規約聖書の文書化",
 }

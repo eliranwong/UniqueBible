@@ -522,6 +522,14 @@ class ConfigUtil:
         # Options to implement instant highlight feature: True / False"""
         if not hasattr(config, "enableInstantHighlight"):
             config.enableInstantHighlight = False
+        config.help["enableInstantHighlightBibleWindow"] = """
+        # Options to implement instant highlight feature on Bible Window with changes in text selection: True / False"""
+        if not hasattr(config, "enableInstantHighlightBibleWindow"):
+            config.enableInstantHighlightBibleWindow = False
+        config.help["enableInstantHighlightStudyWindow"] = """
+        # Options to implement instant highlight feature on Study Window with changes in text selection: True / False"""
+        if not hasattr(config, "enableInstantHighlightStudyWindow"):
+            config.enableInstantHighlightStudyWindow = False
         config.help["instantInformationEnabled"] = """
         # Options to trigger instant information: True / False"""
         if not hasattr(config, "instantInformationEnabled"):
@@ -1358,6 +1366,8 @@ class ConfigUtil:
             ("parallelMode", config.parallelMode),
             ("instantMode", config.instantMode),
             ("enableInstantHighlight", config.enableInstantHighlight),
+            ("enableInstantHighlightBibleWindow", config.enableInstantHighlightBibleWindow),
+            ("enableInstantHighlightStudyWindow", config.enableInstantHighlightStudyWindow),
             ("instantInformationEnabled", config.instantInformationEnabled),
             ("miniBrowserHome", config.miniBrowserHome),
             ("fontSize", config.fontSize),

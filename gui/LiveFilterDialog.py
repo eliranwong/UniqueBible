@@ -1,5 +1,9 @@
 import os
+
 import config
+from gui.CheckableComboBox import CheckableComboBox
+from util.BibleVerseParser import BibleVerseParser
+
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QStandardItemModel, QStandardItem
@@ -7,6 +11,7 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
     from PySide6.QtWidgets import QFileDialog
     from PySide6.QtWidgets import QDialogButtonBox
+    from PySide6.QtWidgets import QRadioButton
 else:
     from qtpy.QtCore import Qt
     from qtpy.QtGui import QStandardItemModel, QStandardItem
@@ -14,6 +19,7 @@ else:
     from qtpy.QtWidgets import QDialog, QLabel, QTableView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QPushButton
     from qtpy.QtWidgets import QFileDialog
     from qtpy.QtWidgets import QDialogButtonBox
+    from qtpy.QtWidgets import QRadioButton
 from db.LiveFilterSqlite import LiveFilterSqlite
 from gui.MultiLineInputDialog import MultiLineInputDialog
 
@@ -97,6 +103,44 @@ class LiveFilterDialog(QDialog):
         mainLayout.addWidget(self.filtersTable)
         self.reloadFilters()
 
+        booksLayout = QHBoxLayout()
+
+        bibleVerseParser = BibleVerseParser(config.parserStandarisation)
+        bookNo2Abb = bibleVerseParser.standardAbbreviation
+        bookNoList = [i + 1 for i in range(66)]
+        ontNameList = []
+        self.otNameList = []
+        self.ntNameList = []
+        for b in bookNoList:
+            bookNameAbb = bookNo2Abb[str(b)]
+            if b < 40:
+                self.otNameList.append(bookNameAbb)
+            else:
+                self.ntNameList.append(bookNameAbb)
+            ontNameList.append(bookNameAbb)
+
+        self.bookFilterCombo = self.nounCombo = CheckableComboBox(ontNameList, [])
+        self.bookFilterCombo.editTextChanged.connect(self.filterSelectionChanged)
+        booksLayout.addWidget(self.bookFilterCombo)
+
+        radioButton = QRadioButton(config.thisTranslation["clear"])
+        radioButton.setToolTip(config.thisTranslation["noBookFilter"])
+        radioButton.toggled.connect(lambda checked: self.filterBookChanged(checked, "clear"))
+        radioButton.setChecked(True)
+        booksLayout.addWidget(radioButton)
+
+        radioButton = QRadioButton(config.thisTranslation["ot"])
+        radioButton.setToolTip(config.thisTranslation["filterOTBooks"])
+        radioButton.toggled.connect(lambda checked: self.filterBookChanged(checked, "ot"))
+        booksLayout.addWidget(radioButton)
+
+        radioButton = QRadioButton(config.thisTranslation["nt"])
+        radioButton.setToolTip(config.thisTranslation["filterNTBooks"])
+        radioButton.toggled.connect(lambda checked: self.filterBookChanged(checked, "nt"))
+        booksLayout.addWidget(radioButton)
+
+        mainLayout.addLayout(booksLayout)
+
         buttonsLayout = QHBoxLayout()
         clearButton = QPushButton(config.thisTranslation["clear"])
         clearButton.clicked.connect(self.clearFilter)
@@ -130,6 +174,17 @@ class LiveFilterDialog(QDialog):
         mainLayout.addWidget(self.buttonBox)
 
         self.setLayout(mainLayout)
+
+    def filterModeChanged(self, checked, filter):
+        if checked:
+            self.bookFilterCombo.clearAll()
+            bookMap = {
+                "ot": self.otNameList,
+                "nt": self.ntNameList,
+                "clear": [],
+            }
+            self.bookFilterCombo.checkFromList(bookMap[filter])
+            self.runFilter()
 
     def close(self):
         pass
@@ -165,7 +220,7 @@ class LiveFilterDialog(QDialog):
                 item = self.dataViewModel.item(index)
                 if item.checkState() == Qt.Checked:
                     numChecked += 1
-            if numChecked == 0:
+            if numChecked == 0 and not self.bookFilterCombo.checkItems:
                 config.mainWindow.studyPage.runJavaScript(self.JS_HIDE.format("false"))
             else:
                 config.mainWindow.studyPage.runJavaScript(self.JS_HIDE.format("true"))
@@ -179,9 +234,18 @@ class LiveFilterDialog(QDialog):
             item = self.dataViewModel.item(index)
             if item.checkState() == Qt.Checked:
                 sets.append('"{0}"'.format(self.filters[index][1]))
+        if self.bookFilterCombo.checkItems:
+            sets.append(self.getCustomBookListFilter())
         wordSets = ",".join(sets)
         js = self.JS_SHOW.format(wordSets)
         config.mainWindow.studyPage.runJavaScript(js)
+
+    def getCustomBookListFilter(self):
+        customList = []
+        for bookAbb in self.bookFilterCombo.checkItems:
+            pattern = '<ref.*>{} .*</ref>'.format(bookAbb.replace(".", ""))
+            customList.append(pattern)
+        return '"{}"'.format("|".join(customList))
 
     def addNewFilter(self):
         fields = [(config.thisTranslation["filter2"], ""),
@@ -264,8 +328,8 @@ class Dummy:
 
 if __name__ == '__main__':
     import sys
-    from PySide6.QtWidgets import QApplication
-    from PySide6.QtCore import QCoreApplication
+    from qtpy.QtWidgets import QApplication
+    from qtpy.QtCore import QCoreApplication
     from util.ConfigUtil import ConfigUtil
     from util.LanguageUtil import LanguageUtil
 

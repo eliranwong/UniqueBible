@@ -4659,6 +4659,19 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         #    button.setStyleSheet(config.buttonStyle)
         return button
 
+    def saveIconImage(self, iconFilePath):
+        import io
+        from PIL import Image
+        from PySide6.QtGui import QImage
+        from PySide6.QtCore import QBuffer
+
+        img = QImage(iconFilePath)
+        buffer = QBuffer()
+        buffer.open(QBuffer.ReadWrite)
+        img.save(buffer, "PNG")
+        pil_im = Image.open(io.BytesIO(buffer.data()))
+        pil_im.show()
+
     def getQIcon(self, iconFilePath):
         iconFilePath = os.path.join("htmlResources", *iconFilePath.split("/"))
         if not config.menuLayout == "material" or config.maskMaterialIconBackground:

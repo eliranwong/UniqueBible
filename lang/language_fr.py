@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Contrôler le texte du presse-papiers Références bibliques",
     "englishWordForms": "Formulaires en anglais",
     "updateDependenciesOnStartup": "Mettre à jour les dépendances au démarrage",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Rechercher dans la Bible anglaise",
+    "noBookFilter": "Aucun filtre de livre",
+    "filterOTBooks": "Filtrer les livres de l'Ancien Testament",
+    "filterNTBooks": "Filtrer les livres du Nouveau Testament",
 }

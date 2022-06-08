@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "മോണിറ്റര് ക്ലിപ്ബോര്ഡ് ടെക്സ്റ്റ് ബൈബിള് റഫറന്സ്",
     "englishWordForms": "ഇംഗ്ലീഷ് വിലാസം FormsName",
     "updateDependenciesOnStartup": "തുടക്കത്തില് അവലംബങ്ങള് പരിഷ്കരിക്കുക",
+    "ot": "ഓട്ട്CONSTELLATION NAME (OPTIONAL)",
+    "nt": "NT",
+    "searchEnglishBible": "ഇംഗ്ലീഷ് ബൈബിൾ തെരയുക",
+    "noBookFilter": "ബുക്ക് ഫില്റ്റര് ലഭ്യമല്ല",
+    "filterOTBooks": "ഫില്റ്റര് ഓള്ഡ് ടെസ്റ്റുമെന്റ് ബുക്സ്",
+    "filterNTBooks": "പുതിയ ടെസ്റ്റുമെന്റ് ബുക്സ് ഫില്റ്റര് ചെയ്യുക",
 }

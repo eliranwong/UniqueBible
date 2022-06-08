@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "क्लिपबोर्ड पाठ बाइबल संदर्भों की निगरानी करें",
     "englishWordForms": "अंग्रेजी शब्द फॉर्म्स",
     "updateDependenciesOnStartup": "आरंभ पर निर्भरता अद्यतन करें (U)",
+    "ot": "ओटी",
+    "nt": "NT",
+    "searchEnglishBible": "अंग्रेजी बाइबल खोजें",
+    "noBookFilter": "कोई पुस्तक फिल्टर नहीं",
+    "filterOTBooks": "पुरानी वसीयपत्र पुस्तिका फ़िल्टर करें",
+    "filterNTBooks": "नया वसीयतनामा पुस्तिकाएँ",
 }

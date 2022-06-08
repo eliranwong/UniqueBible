@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "클립보드 텍스트 성경 참조 모니터",
     "englishWordForms": "영어 단어 양식",
     "updateDependenciesOnStartup": "시작 시 종속성 업데이트",
+    "ot": "오트",
+    "nt": "NT",
+    "searchEnglishBible": "영국 성서를 검색하다",
+    "noBookFilter": "Book 필터 없음",
+    "filterOTBooks": "구약서를 필터링하기",
+    "filterNTBooks": "신약 서적 필터링하기",
 }

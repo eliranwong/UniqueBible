@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Referencias de la Biblia de texto del Portapapeles",
     "englishWordForms": "Formularios de Word en inglés",
     "updateDependenciesOnStartup": "Actualizar dependencias al inicio",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Buscar Biblia en inglés",
+    "noBookFilter": "Sin filtro de libro",
+    "filterOTBooks": "Filtrar libros del Antiguo Testamento",
+    "filterNTBooks": "Filtrar libros del nuevo testamento",
 }

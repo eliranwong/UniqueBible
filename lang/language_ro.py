@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Monitor Clipboard Text Bible Referințe",
     "englishWordForms": "Formulare de cuvinte în limba engleză",
     "updateDependenciesOnStartup": "Actualizează dependențele pe Startup",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Căutare în limba engleză",
+    "noBookFilter": "Nici un filtru de carte",
+    "filterOTBooks": "Filtrați cărțile Vechiului Testament",
+    "filterNTBooks": "Filtru de cărți nou testamentale",
 }

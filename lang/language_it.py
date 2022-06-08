@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Monitor appunti testo della Bibbia di testo",
     "englishWordForms": "Italian Word Forms",
     "updateDependenciesOnStartup": "Dipendenze di aggiornamento su Startup",
+    "ot": "OT",
+    "nt": "NT",
+    "searchEnglishBible": "Cerca Bibbia inglese",
+    "noBookFilter": "Nessun filtro del libro",
+    "filterOTBooks": "Filtro Old Testament Books",
+    "filterNTBooks": "Filtro New Testament Books",
 }

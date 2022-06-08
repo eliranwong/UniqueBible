@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "监控剪贴簿文字中的经文参照",
     "englishWordForms": "英语单词表单",
     "updateDependenciesOnStartup": "启动时更新依赖套件",
+    "ot": "旧约",
+    "nt": "新约",
+    "searchEnglishBible": "搜索英语圣经",
+    "noBookFilter": "无过滤书卷",
+    "filterOTBooks": "过滤旧约书卷",
+    "filterNTBooks": "过滤新约书卷",
 }

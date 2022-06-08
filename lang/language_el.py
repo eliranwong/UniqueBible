@@ -920,4 +920,10 @@ translation = {
     "monitorClipboardReferences": "Παραπομπές στο πρόχειρο κείμενο του Clipboard",
     "englishWordForms": "Πληροφορίες αγγλικών Word",
     "updateDependenciesOnStartup": "Ενημέρωση εξαρτήσεων από Startup",
+    "ot": "' ΟΤ",
+    "nt": "ΌΧΙ.",
+    "searchEnglishBible": "Αναζήτηση στην αγγλική Βίβλο",
+    "noBookFilter": "Δεν υπάρχει φίλτρο",
+    "filterOTBooks": "Φιλτράρισμα παλαιών βιβλίων Testament",
+    "filterNTBooks": "Φιλτράρισμα νέων βιβλίων Testament",
 }
