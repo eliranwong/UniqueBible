@@ -566,7 +566,7 @@ class ConfigUtil:
         config.help["displayChapterMenuTogetherWithBibleChapter"] = """
         # Display chapter menu together with bible chapter: True / False"""
         if not hasattr(config, "displayChapterMenuTogetherWithBibleChapter"):
-            config.displayChapterMenuTogetherWithBibleChapter = True
+            config.displayChapterMenuTogetherWithBibleChapter = False
         config.help["showVerseReference"] = """
         # Options to display verse reference: True / False"""
         if not hasattr(config, "showVerseReference"):

@@ -1,3 +1,7 @@
+Changes in 30.52:
+* Changed default value of config.displayChapterMenuTogetherWithBibleChapter to False.
+    It does not afffect current users.
+
 Changes in 30.51:
 * Fixed radio button selection on Master Search Tab.
 * Added styles to Checkable Buttons, e.g. "Text Selection Monitoring" button, when they are pressed.
