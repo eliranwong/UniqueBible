@@ -7,12 +7,12 @@ from distutils import util
 from functools import partial
 from pathlib import Path
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QUrl, Qt, QEvent, QThread
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
-    from qtpy.QtCore import QUrl, Qt, QEvent, QThread
+    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu
     from qtpy.QtWebEngineWidgets import QWebEnginePage
@@ -4715,10 +4715,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def getPushButtonIconStyle(self, icon):
         defaultIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColor)
+        folder, defaultIconFile = os.path.split(defaultIconFile)
         hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
+        hoveredIconFile = os.path.basename(hoveredIconFile)
         pressedIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorPressed)
+        pressedIconFile = os.path.basename(pressedIconFile)
+        QDir.addSearchPath(defaultIconFile, os.path.join(os.getcwd(), folder))
         return """
-                QPushButton {0} image: url({2}); {1} QPushButton:hover {0} image: url({3}); {1} QPushButton:pressed {0} image: url({4}); {1}
+                QPushButton {0} image: url({2}:{2}); {1} QPushButton:hover {0} image: url({2}:{3}); {1} QPushButton:pressed {0} image: url({2}:{4}); {1}
             """.format("{", "}", defaultIconFile, hoveredIconFile, pressedIconFile)
 
     def savePixmapIcon(self, iconFile, foregroundColor):
