@@ -381,9 +381,10 @@ def isPaddleocrInstalled():
     except:
         return False
 
-def isWord2wordInstalled():
+def isChineseEnglishLookupInstalled():
     try:
-        from word2word import Word2word
+        from chinese_english_lookup import Dictionary
+        config.cedict = Dictionary()
         return True
     except:
         return False
@@ -450,8 +451,8 @@ def setInstallConfig(module, isInstalled):
         config.isLemmagen3Installed = isInstalled
     elif module in ("word-forms", "-U word-forms", "--upgrade word-forms"):
         config.isWordformsInstalled = isInstalled
-    elif module in ("word2word", "-U word2word", "--upgrade word2word"):
-        config.isWord2wordInstalled = isInstalled
+    elif module in ("chinese-english-lookup", "-U chinese-english-lookup", "--upgrade chinese-english-lookup"):
+        config.isChineseEnglishLookupInstalled = isInstalled
     elif module in ("paddleocr", "-U paddleocr", "--upgrade paddleocr"):
         config.isPaddleocrInstalled = isInstalled
     elif module in ("nltk", "-U nltk", "--upgrade nltk"):
@@ -559,7 +560,7 @@ optional = [
     ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
-    ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
+    ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -586,7 +587,7 @@ optional = [
     ("nltk", "Natural Language Toolkit (NLTK)", isNltkInstalled),
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
-    ("word2word", "Easy-to-use word translations", isWord2wordInstalled),
+    ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

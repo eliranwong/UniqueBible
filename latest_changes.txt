@@ -1,3 +1,6 @@
+Changes in 30.57:
+* Improved "Text Selection Monitoring".
+
 Changes in 30.55, 30.56:
 * Fixed button icons on Windows.
 * Adjusted button icon size.

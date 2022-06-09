@@ -59,7 +59,11 @@ class WebEngineView(QWebEngineView):
                 definition = self.getDefinition(selectedText)
                 if not definition:
                     lemma = config.lemmatizer.lemmatize(selectedText)
-                    definition = "<b>{0}</b> - {1}".format(lemma, self.getDefinition(lemma))
+                    definition = self.getDefinition(lemma)
+                    if definition:
+                        definition = "<b>{0}</b> - {1}".format(lemma, definition)
+                    elif config.isChineseEnglishLookupInstalled:
+                        definition = "<b>{0}</b> - {1}".format(lemma, config.cedict.lookup(lemma))
                 else:
                     definition = "<b>{0}</b> - {1}".format(selectedText, definition)
             self.parent.parent.runTextCommand("_info:::{0}".format(definition))
