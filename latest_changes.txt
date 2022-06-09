@@ -1,5 +1,6 @@
-Changes in 30.55:
+Changes in 30.55, 30.56:
 * Fixed button icons on Windows.
+* Adjusted button icon size.
 
 Changes in 30.53, 30.54:
 * Added support of changing buttons icon when they are hovered or pressed.

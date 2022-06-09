@@ -4714,19 +4714,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             return QIcon(iconFile)
 
     def getPushButtonIconStyle(self, icon):
+        folder, icon = os.path.split(icon)
         defaultIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColor)
-        folder, defaultIconFile = os.path.split(defaultIconFile)
         hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
-        hoveredIconFile = os.path.basename(hoveredIconFile)
         pressedIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorPressed)
-        pressedIconFile = os.path.basename(pressedIconFile)
         QDir.addSearchPath(defaultIconFile, os.path.join(os.getcwd(), folder))
         return """
                 QPushButton {0} image: url({2}:{2}); {1} QPushButton:hover {0} image: url({2}:{3}); {1} QPushButton:pressed {0} image: url({2}:{4}); {1}
             """.format("{", "}", defaultIconFile, hoveredIconFile, pressedIconFile)
 
     def savePixmapIcon(self, iconFile, foregroundColor):
-        #basename, dirname = os.path.split(iconFile)
         pixmap = QPixmap(iconFile)
         mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
         pixmap.fill(QColor(foregroundColor))
@@ -4742,7 +4739,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         if button is None:
             button = QPushButton()
-        button.setFixedSize(config.iconButtonSize * 3/2, config.iconButtonSize * 3/2)
+        button.setFixedSize(config.iconButtonSize * 4/3, config.iconButtonSize * 4/3)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         qIcon = self.getQIcon(icon)
