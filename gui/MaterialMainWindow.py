@@ -729,7 +729,7 @@ class MaterialMainWindow:
         #icon = "htmlResources/material/navigation/more_vert/materialiconsoutlined/48dp/2x/outline_more_vert_black_48dp.png"
         icon = "htmlResources/material/content/stacked_bar_chart/materialiconsround/18dp/2x/round_stacked_bar_chart_black_18dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["bibleCollections"], self.showBibleCollectionDialog)
+        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["bibleCollections"], self.showBibleCollectionDialog)
 
         # Version selection
 
@@ -779,7 +779,7 @@ class MaterialMainWindow:
         #self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar)
         icon = "htmlResources/material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["menu_previous_chapter"], self.previousMainChapter)
+        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_previous_chapter"], self.previousMainChapter)
 
         self.mainB = QToolButton()
         self.mainC = QToolButton()
@@ -794,7 +794,7 @@ class MaterialMainWindow:
         #self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar)
         icon = "htmlResources/material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["menu_next_chapter"], self.nextMainChapter)
+        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_next_chapter"], self.nextMainChapter)
 
         icon = "material/action/ads_click/materialiconsoutlined/48dp/2x/outline_ads_click_black_48dp.png"
         self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)
@@ -875,10 +875,10 @@ class MaterialMainWindow:
         self.firstToolBar.addWidget(self.studyV)
         
         iconFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
+        self.enableSyncStudyWindowBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), self.getSyncStudyWindowBibleDisplayToolTip(), self.enableSyncStudyWindowBibleButtonClicked)
         icon = "htmlResources/material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         iconFile = os.path.join(*icon.split("/"))
-        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation["swap"], self.swapBibles)
+        self.swapBibleButton = self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["swap"], self.swapBibles)
         if config.openBibleInMainViewOnly:
             #self.studyRefButton.setVisible(False)
             self.studyBibleSelection.setDisabled(True)
@@ -1061,7 +1061,7 @@ class MaterialMainWindow:
         self.enableParagraphButton = QPushButton()
         self.addMaterialIconButton(self.getReadFormattedBiblesToolTip(), self.getReadFormattedBibles(), self.enableParagraphButtonClicked, self.leftToolBar, self.enableParagraphButton, False)
         iconFile = os.path.join("htmlResources", self.getAddSubheading())
-        self.enableSubheadingButton = self.leftToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground), self.enableSubheadingToolTip(), self.enableSubheadingButtonClicked2)
+        self.enableSubheadingButton = self.leftToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), self.enableSubheadingToolTip(), self.enableSubheadingButtonClicked2)
         if config.readFormattedBibles:
             self.enableSubheadingButton.setVisible(False)
         self.leftToolBar.addSeparator()

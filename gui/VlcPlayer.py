@@ -64,7 +64,11 @@ class VlcPlayer(QWidget):
             file = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
         else:
             file = os.path.join("buttons", "playlist.png")
-        self.openbutton.setIcon(self.parent.getQIcon(file))
+        iconFile = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            self.openbutton.setStyleSheet(iconFile)
+        else:
+            self.openbutton.setIcon(iconFile)
         self.openbutton.clicked.connect(self.open_file)
         self.hbuttonbox.addWidget(self.openbutton)
 
@@ -74,7 +78,11 @@ class VlcPlayer(QWidget):
             file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
         else:
             file = os.path.join("buttons", "play.png")
-        self.playbutton.setIcon(self.parent.getQIcon(file))
+        iconFile = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            self.playbutton.setStyleSheet(iconFile)
+        else:
+            self.playbutton.setIcon(iconFile)
         self.playbutton.clicked.connect(self.play_pause)
         self.playbutton.setEnabled(True)
         self.hbuttonbox.addWidget(self.playbutton)
@@ -85,7 +93,11 @@ class VlcPlayer(QWidget):
             file = "material/av/stop_circle/materialiconsoutlined/48dp/2x/outline_stop_circle_black_48dp.png"
         else:
             file = os.path.join("buttons", "stop.png")
-        self.stopbutton.setIcon(self.parent.getQIcon(file))
+        iconFile = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            self.stopbutton.setStyleSheet(iconFile)
+        else:
+            self.stopbutton.setIcon(iconFile)
         self.stopbutton.clicked.connect(self.stop)
         self.stopbutton.setEnabled(False)
         self.hbuttonbox.addWidget(self.stopbutton)
@@ -96,7 +108,11 @@ class VlcPlayer(QWidget):
             file = "material/av/skip_next/materialiconsoutlined/48dp/2x/outline_skip_next_black_48dp.png"
         else:
             file = os.path.join("buttons", "next.png")
-        self.nextbutton.setIcon(self.parent.getQIcon(file))
+        iconFile = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            self.nextbutton.setStyleSheet(iconFile)
+        else:
+            self.nextbutton.setIcon(iconFile)
         self.nextbutton.clicked.connect(self.playNextInPlaylist)
         self.nextbutton.setEnabled(False)
         self.hbuttonbox.addWidget(self.nextbutton)
@@ -125,7 +141,11 @@ class VlcPlayer(QWidget):
                 file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
             else:
                 file = os.path.join("buttons", "play.png")
-            self.playbutton.setIcon(self.parent.getQIcon(file))
+            iconFile = self.parent.getQIcon(file)
+            if config.menuLayout == "material":
+                self.playbutton.setStyleSheet(iconFile)
+            else:
+                self.playbutton.setIcon(iconFile)
             self.is_paused = True
             self.timer.stop()
         else:
@@ -139,7 +159,11 @@ class VlcPlayer(QWidget):
                 file = "material/av/pause_circle/materialiconsoutlined/48dp/2x/outline_pause_circle_black_48dp.png"
             else:
                 file = os.path.join("buttons", "pause.png")
-            self.playbutton.setIcon(self.parent.getQIcon(file))
+            iconFile = self.parent.getQIcon(file)
+            if config.menuLayout == "material":
+                self.playbutton.setStyleSheet(iconFile)
+            else:
+                self.playbutton.setIcon(iconFile)
             self.timer.start()
             self.is_paused = False
 
@@ -149,7 +173,11 @@ class VlcPlayer(QWidget):
             file = "material/av/play_circle_outline/materialiconsoutlined/48dp/2x/outline_play_circle_outline_black_48dp.png"
         else:
             file = os.path.join("buttons", "play.png")
-        self.playbutton.setIcon(self.parent.getQIcon(file))
+        iconFile = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            self.playbutton.setStyleSheet(iconFile)
+        else:
+            self.playbutton.setIcon(iconFile)
         self.stopbutton.setEnabled(False)
 
     def open_file(self):

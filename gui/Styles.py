@@ -254,7 +254,7 @@ QSlider::sub-page {0}
         config.widgetBackgroundColorPressed,
         config.widgetForegroundColorPressed,
         config.iconButtonSize,
-        (int(config.iconButtonSize / 3 * 2)),
+        (int(config.iconButtonSize * 2/3)),
         (int(config.iconButtonSize / 2)),
         (int(config.iconButtonSize * 5))
         )

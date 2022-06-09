@@ -179,7 +179,11 @@ class MasterControl(QWidget):
         button = QPushButton()
         button.setToolTip(config.thisTranslation["reloadResources"])
         file = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
-        button.setIcon(self.parent.getQIcon(file))
+        icon = self.parent.getQIcon(file)
+        if config.menuLayout == "material":
+            button.setStyleSheet(icon)
+        else:
+            button.setIcon(icon)
         button.clicked.connect(lambda: self.parent.reloadResources(True))
         return button
 

@@ -2776,7 +2776,10 @@ class MainWindow(QMainWindow):
     def enforceCompareParallelButtonClicked(self):
         config.enforceCompareParallel = not config.enforceCompareParallel
         icon = self.getQIcon(self.getEnableCompareParallelDisplay())
-        self.enforceCompareParallelButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enforceCompareParallelButton.setStyleSheet(icon)
+        else:
+            self.enforceCompareParallelButton.setIcon(icon)
         self.enforceCompareParallelButton.setToolTip(self.getEnableCompareParallelDisplayToolTip())
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
@@ -2818,7 +2821,10 @@ class MainWindow(QMainWindow):
     def enableSyncCommentaryButtonClicked(self):
         config.syncCommentaryWithMainWindow = not config.syncCommentaryWithMainWindow
         icon = self.getQIcon(self.getSyncCommentaryDisplay())
-        self.enableSyncCommentaryButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enableSyncCommentaryButton.setStyleSheet(icon)
+        else:
+            self.enableSyncCommentaryButton.setIcon(icon)
         self.enableSyncCommentaryButton.setToolTip(self.getSyncCommentaryDisplayToolTip())
         if config.syncStudyWindowBibleWithMainWindow and not self.syncButtonChanging:
             self.syncButtonChanging = True
@@ -2876,7 +2882,10 @@ class MainWindow(QMainWindow):
             else:
                 self.studyBibleToolBar.hide()
         icon = self.getQIcon(self.getStudyBibleDisplay())
-        self.enableStudyBibleButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enableStudyBibleButton.setStyleSheet(icon)
+        else:
+            self.enableStudyBibleButton.setIcon(icon)
         self.enableStudyBibleButton.setToolTip(self.getStudyBibleDisplayToolTip())
         # Reload Study Window content to update active text setting only when Study Window content is not a bible chapter view
         view = "study"
@@ -2902,7 +2911,10 @@ class MainWindow(QMainWindow):
         config.instantInformationEnabled = not config.instantInformationEnabled
         if hasattr(self, 'enableInstantButton'):
             icon = self.getQIcon(self.getInstantInformation())
-            self.enableInstantButton.setIcon(icon)
+            if config.menuLayout == "material":
+                self.enableInstantButton.setStyleSheet(icon)
+            else:
+                self.enableInstantButton.setIcon(icon)
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 
@@ -2941,7 +2953,10 @@ class MainWindow(QMainWindow):
         if display:
             self.displayBiblesInParagraphs()
         icon = self.getQIcon(self.getReadFormattedBibles())
-        self.enableParagraphButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enableParagraphButton.setStyleSheet(icon)
+        else:
+            self.enableParagraphButton.setIcon(icon)
         self.enableParagraphButton.setToolTip(self.getReadFormattedBiblesToolTip())
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
@@ -3024,7 +3039,10 @@ class MainWindow(QMainWindow):
         self.newTabException = True
         self.reloadCurrentRecord(True)
         icon = self.getQIcon(self.getAddSubheading())
-        self.enableSubheadingButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enableSubheadingButton.setStyleSheet(icon)
+        else:
+            self.enableSubheadingButton.setIcon(icon)
 
     def enableSubheadingButtonClicked2(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
@@ -3612,7 +3630,10 @@ class MainWindow(QMainWindow):
             config.enableInstantHighlight = True
             self.runInstantHighlight()
         icon = self.getQIcon(self.getInstantHighlightDisplay())
-        self.enableInstantHighlightButton.setIcon(icon)
+        if config.menuLayout == "material":
+            self.enableInstantHighlightButton.setStyleSheet(icon)
+        else:
+            self.enableInstantHighlightButton.setIcon(icon)
         self.enableInstantHighlightButton.setToolTip(self.getInstantHighlightToolTip())
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
@@ -4654,7 +4675,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def getIconPushButton(self, iconFilePath):
         button = QPushButton()
         qIcon = self.getQIcon(iconFilePath)
-        button.setIcon(qIcon)
+        if config.menuLayout == "material":
+            button.setStyleSheet(qIcon)
+        else:
+            button.setIcon(qIcon)
         #if config.menuLayout == "material":
         #    button.setStyleSheet(config.buttonStyle)
         return button
@@ -4667,33 +4691,45 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             qIcon = self.getMaskedQIcon(iconFilePath, config.maskMaterialIconColor, config.maskMaterialIconBackground)
         return qIcon
 
-    def getMaskedQIcon(self, iconFile, color=config.maskMaterialIconColor, maskMaterialIconBackground=config.maskMaterialIconBackground):
-        self.createHoveredIcon(iconFile)
+    def getMaskedQIcon(self, iconFile, color=config.maskMaterialIconColor, maskMaterialIconBackground=config.maskMaterialIconBackground, toolButton=False):
+        for foregroundColor in (config.widgetForegroundColor, config.widgetForegroundColorHover, config.widgetForegroundColorPressed):
+            self.savePixmapIcon(iconFile, foregroundColor)
         if color:
-            pixmap = QPixmap(iconFile)
-            if maskMaterialIconBackground:
-                # To change transparent to gray
-                # The following line has the same result as mask = pixmap.createMaskFromColor(QColor(0,0,0,0), Qt.MaskOutColor)
-                mask = pixmap.createMaskFromColor(Qt.transparent, Qt.MaskOutColor)
-                pixmap.fill(QColor(color))
+            if toolButton:
+                pixmap = QPixmap(iconFile)
+                if maskMaterialIconBackground:
+                    # To change transparent to gray
+                    # The following line has the same result as mask = pixmap.createMaskFromColor(QColor(0,0,0,0), Qt.MaskOutColor)
+                    mask = pixmap.createMaskFromColor(Qt.transparent, Qt.MaskOutColor)
+                    pixmap.fill(QColor(color))
+                else:
+                    # To change the foreground black color
+                    mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
+                    pixmap.fill(QColor(color))
+                pixmap.setMask(mask)
+                return QIcon(pixmap)
             else:
-                # To change the foreground black color
-                mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
-                pixmap.fill(QColor(color))
-            pixmap.setMask(mask)
-            return QIcon(pixmap)
+                return self.getPushButtonIconStyle(iconFile)
         else:
             return QIcon(iconFile)
 
-    def createHoveredIcon(self, iconFile):
+    def getPushButtonIconStyle(self, icon):
+        defaultIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColor)
+        hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
+        pressedIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorPressed)
+        return """
+                QPushButton {0} image: url({2}); {1} QPushButton:hover {0} image: url({3}); {1} QPushButton:pressed {0} image: url({4}); {1}
+            """.format("{", "}", defaultIconFile, hoveredIconFile, pressedIconFile)
+
+    def savePixmapIcon(self, iconFile, foregroundColor):
         #basename, dirname = os.path.split(iconFile)
         pixmap = QPixmap(iconFile)
         mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
-        pixmap.fill(QColor(config.widgetForegroundColorHover))
+        pixmap.fill(QColor(foregroundColor))
         pixmap.setMask(mask)
-        hoveredIconFile = "{0}_{1}.png".format(iconFile[:-4], config.widgetForegroundColorHover)
-        if not os.path.isfile(hoveredIconFile):
-            pixmap.save(hoveredIconFile)
+        pixmapIconFile = "{0}_{1}.png".format(iconFile[:-4], foregroundColor)
+        if not os.path.isfile(pixmapIconFile):
+            pixmap.save(pixmapIconFile)
 
     def addMaterialIconAction(self, toolTip, icon, action, toolbar, translation=True):
         icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
@@ -4702,19 +4738,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         if button is None:
             button = QPushButton()
-        hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
-        button.setStyleSheet("QPushButton:hover {0} image: url(htmlResources/{2}); {1}".format("{", "}", hoveredIconFile))
-        if config.qtMaterial and config.qtMaterialTheme:
-            #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
-            button.setFixedWidth(config.iconButtonWidth)
-            #button.setFixedHeight(config.iconButtonWidth)
-        elif platform.system() == "Darwin" and not config.windowStyle == "Fusion":
-            button.setFixedWidth(40)
-        #button.setStyleSheet(config.buttonStyle)
+        button.setFixedSize(config.iconButtonSize * 3/2, config.iconButtonSize * 3/2)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)
         qIcon = self.getQIcon(icon)
-        button.setIcon(qIcon)
+        #button.setIcon(qIcon)
+        button.setStyleSheet(qIcon)
         button.clicked.connect(action)
         toolbar.addWidget(button)
 
@@ -5110,6 +5139,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.mainView.currentWidget().textToSpeechLanguage(config.ttsDefaultLangauge3, True)
 
     def openVlcPlayer(self, filename=""):
+        print(config.isVlcInstalled)
+        from gui.VlcPlayer import VlcPlayer
+        self.vlcPlayer = VlcPlayer(self, filename)
         try:
             if config.macVlc and not config.forceUseBuiltinMediaPlayer:
                 os.system("pkill VLC")
@@ -5123,6 +5155,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
                 else:
                     WebtopUtil.run("vlc")
             elif config.isVlcInstalled:
+                print("testing")
                 from gui.VlcPlayer import VlcPlayer
                 if self.vlcPlayer is not None:
                     self.vlcPlayer.close()
