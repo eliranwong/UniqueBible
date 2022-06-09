@@ -4659,20 +4659,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         #    button.setStyleSheet(config.buttonStyle)
         return button
 
-    # experimental only
-    def saveIconImage(self, iconFilePath):
-        import io
-        from PIL import Image
-        from PySide6.QtGui import QImage
-        from PySide6.QtCore import QBuffer
-
-        img = QImage(iconFilePath)
-        buffer = QBuffer()
-        buffer.open(QBuffer.ReadWrite)
-        img.save(buffer, "PNG")
-        pil_im = Image.open(io.BytesIO(buffer.data()))
-        pil_im.show()
-
     def getQIcon(self, iconFilePath):
         iconFilePath = os.path.join("htmlResources", *iconFilePath.split("/"))
         if not config.menuLayout == "material" or config.maskMaterialIconBackground:
@@ -4682,6 +4668,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         return qIcon
 
     def getMaskedQIcon(self, iconFile, color=config.maskMaterialIconColor, maskMaterialIconBackground=config.maskMaterialIconBackground):
+        self.createHoveredIcon(iconFile)
         if color:
             pixmap = QPixmap(iconFile)
             if maskMaterialIconBackground:
@@ -4698,6 +4685,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         else:
             return QIcon(iconFile)
 
+    def createHoveredIcon(self, iconFile):
+        #basename, dirname = os.path.split(iconFile)
+        pixmap = QPixmap(iconFile)
+        mask = pixmap.createMaskFromColor(QColor('black'), Qt.MaskOutColor)
+        pixmap.fill(QColor(config.widgetForegroundColorHover))
+        pixmap.setMask(mask)
+        hoveredIconFile = "{0}_{1}.png".format(iconFile[:-4], config.widgetForegroundColorHover)
+        if not os.path.isfile(hoveredIconFile):
+            pixmap.save(hoveredIconFile)
+
     def addMaterialIconAction(self, toolTip, icon, action, toolbar, translation=True):
         icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
         return toolbar.addAction(self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation[toolTip] if translation else toolTip, action)
@@ -4705,6 +4702,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
         if button is None:
             button = QPushButton()
+        hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
+        button.setStyleSheet("QPushButton:hover {0} image: url(htmlResources/{2}); {1}".format("{", "}", hoveredIconFile))
         if config.qtMaterial and config.qtMaterialTheme:
             #button.setFixedSize(config.iconButtonWidth, config.iconButtonWidth)
             button.setFixedWidth(config.iconButtonWidth)
