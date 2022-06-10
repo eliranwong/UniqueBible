@@ -1,3 +1,9 @@
+Changes in 30.59:
+* Fixed displaying bible reference pie chart and bar chart on macOS.
+    - If "PySide6" is used, UBA uses QChart to display pie chart and bar chart.
+    - Otherwise, UBA uses HTML to display pie chart and bar chart.
+* Fixed downloading "Selection Monitoring" icon.
+
 Changes in 30.58:
 * Added more styles to QToolButton.
 

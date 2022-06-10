@@ -2,6 +2,8 @@ import config
 from util.BibleVerseParser import BibleVerseParser
 if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineWidgets import QWebEngineView
+    from gui.PieChart import PieChart
+    from gui.BarChart import BarChart
 else:
     from qtpy.QtWebEngineWidgets import QWebEngineView
 
@@ -31,28 +33,41 @@ def generateCharts(text):
         # Display a Table
         config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses))))
         # Formulate Charts Data
-        data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
-        # Display a Bar Chart
-        html = getBarChartHtml(",\n".join(data), str(len(verses)), len(counts.keys()))
-        html = config.mainWindow.wrapHtml(html)
-        config.mainWindow.barChart = QWebEngineView()
-        config.mainWindow.barChart.setHtml(html, config.baseUrl)
-        config.mainWindow.barChart.setMinimumSize(900, 550)
-        config.mainWindow.barChart.show()
-        # Display a Pie Chart
-        html = getPieChartHtml(",\n".join(data), str(len(verses)))
-        html = config.mainWindow.wrapHtml(html)
-        config.mainWindow.pieChart = QWebEngineView()
-        config.mainWindow.pieChart.setHtml(html, config.baseUrl)
-        config.mainWindow.pieChart.setMinimumSize(700, 380)
-        config.mainWindow.pieChart.show()
+        if config.qtLibrary == "pyside6":
+            # Chart Title
+            chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
+            # Data for feeding QChart
+            qtData = [(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
+            # QChart Bar Chart
+            config.mainWindow.barChart = BarChart(qtData, chartTitle)
+            config.mainWindow.barChart.show()
+            # QChart Pie Chart
+            config.mainWindow.pieChart = PieChart(qtData, chartTitle)
+            config.mainWindow.pieChart.show()
+        else:
+            # Data for HTML charts
+            data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
+            # Display a HTML Bar Chart
+            html = getBarChartHtml(",\n".join(data), str(len(verses)), len(counts.keys()))
+            html = config.mainWindow.wrapHtml(html)
+            config.mainWindow.barChart = QWebEngineView()
+            config.mainWindow.barChart.setHtml(html, config.baseUrl)
+            config.mainWindow.barChart.setMinimumSize(900, 550)
+            config.mainWindow.barChart.show()
+            # Display a HTML Pie Chart
+            html = getPieChartHtml(",\n".join(data), str(len(verses)))
+            html = config.mainWindow.wrapHtml(html)
+            config.mainWindow.pieChart = QWebEngineView()
+            config.mainWindow.pieChart.setHtml(html, config.baseUrl)
+            config.mainWindow.pieChart.setMinimumSize(700, 380)
+            config.mainWindow.pieChart.show()
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
 
 def getTableHtml(data, totalVerseCount):
     return """
-<h2>UniqueBible.app</h2>
-<h3>"""+totalVerseCount+""" Bible Reference(s)</h3>
+<h2>Unique Bible App</h2>
+<h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
 <table style="width:100%">
   <tr><th>Book</th><th>Reference</th><th>Count&nbsp;</th></tr>
 """+data+"""

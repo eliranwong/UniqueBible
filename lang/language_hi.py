@@ -929,4 +929,5 @@ translation = {
     "forExample": "उदाहरण के लिए",
     "bibleBookFilter": "बाइबल बुक फ़िल्टरName",
     "selectionMonitoring": "चयन निगरानी",
+    "count": "गिनना",
 }

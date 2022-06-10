@@ -929,4 +929,5 @@ translation = {
     "forExample": "例如",
     "bibleBookFilter": "圣经书卷过滤",
     "selectionMonitoring": "文字选择监视",
+    "count": "总数",
 }

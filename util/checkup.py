@@ -224,6 +224,13 @@ def isIbmWatsonInstalled():
     except:
         return False
 
+def isPyQtChartInstalled():
+    try:
+        import html_text
+        return True
+    except:
+        return False
+
 def isHtmlTextInstalled():
     try:
         import html_text
@@ -457,6 +464,8 @@ def setInstallConfig(module, isInstalled):
         config.isPaddleocrInstalled = isInstalled
     elif module in ("nltk", "-U nltk", "--upgrade nltk"):
         config.isNltkInstalled = isInstalled
+    elif module in ("PyQtChart", "-U PyQtChart", "--upgrade PyQtChart"):
+        config.isPyQtChartInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -561,6 +570,7 @@ optional = [
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
+    ("PyQtChart", "The Qt Company’s Qt Charts library", isPyQtChartInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -588,6 +598,7 @@ optional = [
     ("word-forms", "Generate English Word Forms", isWordformsInstalled),
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
+    ("PyQtChart", "The Qt Company’s Qt Charts library", isPyQtChartInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

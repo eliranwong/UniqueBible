@@ -929,4 +929,5 @@ translation = {
     "forExample": "For example",
     "bibleBookFilter": "Bible Book Filter",
     "selectionMonitoring": "Text Selection Monitoring",
+    "count": "Count",
 }

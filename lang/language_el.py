@@ -929,4 +929,5 @@ translation = {
     "forExample": "Για παράδειγμα:",
     "bibleBookFilter": "Φίλτρο βιβλίου Βίβλου",
     "selectionMonitoring": "Παρακολούθηση επιλογής:",
+    "count": "Κόμης!",
 }
