@@ -4719,8 +4719,10 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         hoveredIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorHover)
         pressedIconFile = "{0}_{1}.png".format(icon[:-4], config.widgetForegroundColorPressed)
         QDir.addSearchPath(defaultIconFile, os.path.join(os.getcwd(), folder))
+        # border-image scales image whereas background-image does not.
         return """
                 QPushButton {0} image: url({2}:{2}); {1} QPushButton:hover {0} image: url({2}:{3}); {1} QPushButton:pressed {0} image: url({2}:{4}); {1}
+                QToolButton {0} border-image: url({2}:{2}); {1} QToolButton:hover {0} border-image: url({2}:{3}) center no-repeat; {1} QToolButton:pressed {0} border-image: url({2}:{4}) center no-repeat; {1}
             """.format("{", "}", defaultIconFile, hoveredIconFile, pressedIconFile)
 
     def savePixmapIcon(self, iconFile, foregroundColor):
@@ -4736,9 +4738,9 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         icon = os.path.join("htmlResources", os.path.join(*icon.split("/")))
         return toolbar.addAction(self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground), config.thisTranslation[toolTip] if translation else toolTip, action)
 
-    def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True):
+    def addMaterialIconButton(self, toolTip, icon, action, toolbar, button=None, translation=True, toolButton=False):
         if button is None:
-            button = QPushButton()
+            button = QToolButton() if toolButton else QPushButton()
         button.setFixedSize(config.iconButtonSize * 4/3, config.iconButtonSize * 4/3)
         button.setCursor(QCursor(Qt.PointingHandCursor))
         button.setToolTip(config.thisTranslation[toolTip] if translation else toolTip)

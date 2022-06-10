@@ -724,12 +724,14 @@ class MaterialMainWindow:
         icon = "material/image/tune/materialiconsoutlined/48dp/2x/outline_tune_black_48dp.png"
         self.addMaterialIconButton("cp0", icon, self.mainTextMenu, self.firstToolBar)
 
+        icon = "material/content/stacked_bar_chart/materialiconsround/18dp/2x/round_stacked_bar_chart_black_18dp.png"
+        self.addMaterialIconButton("bibleCollections", icon, self.showBibleCollectionDialog, self.firstToolBar, toolButton=True)
         #icon = "htmlResources/material/action/settings/materialiconsoutlined/48dp/2x/outline_settings_black_48dp.png"
         #icon = "htmlResources/material/av/playlist_add_circle/materialiconsoutlined/48dp/2x/outline_playlist_add_circle_black_48dp.png"
         #icon = "htmlResources/material/navigation/more_vert/materialiconsoutlined/48dp/2x/outline_more_vert_black_48dp.png"
-        icon = "htmlResources/material/content/stacked_bar_chart/materialiconsround/18dp/2x/round_stacked_bar_chart_black_18dp.png"
-        iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["bibleCollections"], self.showBibleCollectionDialog)
+        #icon = "htmlResources/material/content/stacked_bar_chart/materialiconsround/18dp/2x/round_stacked_bar_chart_black_18dp.png"
+        #iconFile = os.path.join(*icon.split("/"))
+        #self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["bibleCollections"], self.showBibleCollectionDialog)
 
         # Version selection
 
@@ -775,11 +777,13 @@ class MaterialMainWindow:
         self.setBibleSelectionForComparison()
         self.firstToolBar.addWidget(self.bibleSelectionForComparison)
 
+        icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
+        self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar, toolButton=True)
         #icon = "material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
         #self.addMaterialIconButton("menu_previous_chapter", icon, self.previousMainChapter, self.firstToolBar)
-        icon = "htmlResources/material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
-        iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_previous_chapter"], self.previousMainChapter)
+        #icon = "htmlResources/material/image/navigate_before/materialiconsoutlined/48dp/2x/outline_navigate_before_black_48dp.png"
+        #iconFile = os.path.join(*icon.split("/"))
+        #self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_previous_chapter"], self.previousMainChapter)
 
         self.mainB = QToolButton()
         self.mainC = QToolButton()
@@ -790,11 +794,13 @@ class MaterialMainWindow:
         self.firstToolBar.addWidget(QLabel(":"))
         self.firstToolBar.addWidget(self.mainV)
 
+        icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
+        self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar, toolButton=True)
         #icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         #self.addMaterialIconButton("menu_next_chapter", icon, self.nextMainChapter, self.firstToolBar)
-        icon = "htmlResources/material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
-        iconFile = os.path.join(*icon.split("/"))
-        self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_next_chapter"], self.nextMainChapter)
+        #icon = "htmlResources/material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
+        #iconFile = os.path.join(*icon.split("/"))
+        #self.firstToolBar.addAction(self.getMaskedQIcon(iconFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, True), config.thisTranslation["menu_next_chapter"], self.nextMainChapter)
 
         icon = "material/action/ads_click/materialiconsoutlined/48dp/2x/outline_ads_click_black_48dp.png"
         self.addMaterialIconButton("singleVersion", icon, self.openMainChapterMaterial, self.firstToolBar)

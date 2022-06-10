@@ -1,3 +1,6 @@
+Changes in 30.58:
+* Added more styles to QToolButton.
+
 Changes in 30.57:
 * Improved "Text Selection Monitoring".
 
