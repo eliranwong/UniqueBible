@@ -5109,6 +5109,31 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         elif config.refButtonClickAction == "mini":
             self.openMiniControlTab(1)
 
+    def openInterlinearData(self):
+        selectedText = self.mainView.currentWidget().selectedText().strip()
+        if not selectedText:
+            selectedText = self.studyView.currentWidget().selectedText().strip()
+            if not selectedText:
+                self.runPlugin("Interlinear Data")
+            else:
+                self.studyView.currentWidget().runPlugin("Interlinear Data", selectedText)
+        else:
+            self.studyView.currentWidget().runPlugin("Interlinear Data", selectedText)
+
+    def generateChartsAndTable(self):
+        selectedText = self.mainView.currentWidget().selectedText().strip()
+        if not selectedText:
+            selectedText = self.studyView.currentWidget().selectedText().strip()
+            if not selectedText:
+                self.studyView.currentWidget().page().toPlainText(self.runChartsAndTable)
+            else:
+                self.runChartsAndTable(selectedText)
+        else:
+            self.runChartsAndTable(selectedText)
+
+    def runChartsAndTable(self, selectedText):
+        self.studyView.currentWidget().runPlugin("Charts and Table", selectedText)
+
     def getSelectionMonitoringButtonToolTip(self):
         return "{0}: {1}".format(config.thisTranslation["selectionMonitoring"], config.thisTranslation["on"] if config.enableSelectionMonitoring else config.thisTranslation["off"])
 

@@ -903,11 +903,11 @@ class WebEngineView(QWebEngineView):
                 selectedText = text
         return selectedText
 
-    def runPlugin(self, fileName, selectedText=None):
+    def runPlugin(self, fileName, selectedText=None, activeSelection=False):
         #if selectedText is None:
         # Note: Tested in Arch Linux using pyqt5, selectedText = False.  Therefore, the line above does not work.
         if not selectedText:
-            selectedText = self.selectedTextProcessed()
+            selectedText = self.selectedTextProcessed(activeSelection)
         config.contextSource = self
         config.pluginContext = selectedText
         script = os.path.join(os.getcwd(), "plugins", "context", "{0}.py".format(fileName))

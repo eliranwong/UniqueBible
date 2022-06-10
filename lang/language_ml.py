@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "ബൈബിള് ബുക്ക് ഫില്റ്റര്",
     "selectionMonitoring": "തെരഞ്ഞെടുക്കല് നിരീക്ഷണം",
     "count": "എണ്ണുക",
+    "chartsAndTable": "ചാർട്ടുകളും ടേബിളും",
 }

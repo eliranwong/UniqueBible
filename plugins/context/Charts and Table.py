@@ -16,28 +16,54 @@ def generateCharts(text):
     verses = parser.extractAllReferences(text, False)
     config.useLiteVerseParsing = useLiteVerseParsing
     if verses:
+        # Formulate Table Data
         # Sort by Books
         counts = countVersesByBook(verses)
-        # Formulate Table Data
-        data = []
-        for bookNo in sorted(counts):
-            bookName = parser.standardFullBookName[str(bookNo)]
-            references = []
-            for bcv in sorted(counts[bookNo]):
-                reference = parser.bcvToVerseReference(*bcv)
-                if len(bcv) == 3:
-                    references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
-                else:
-                    references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
-            data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(bookName, "; ".join(references), len(references)))
+        if not len(counts.keys()) == 1:
+            isSortedByChapter = False
+            firstColumnTitle = ""
+            data = []
+            for bookNo in sorted(counts):
+                bookName = parser.standardFullBookName[str(bookNo)]
+                references = []
+                for bcv in sorted(counts[bookNo]):
+                    reference = parser.bcvToVerseReference(*bcv)
+                    if len(bcv) == 3:
+                        references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
+                    else:
+                        references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
+                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(bookName, "; ".join(references), len(references)))
+        else:
+            isSortedByChapter = True
+            # Sort by Chapters
+            counts = countVersesByChapter(verses)
+            data = []
+            firstColumnTitle = ""
+            for chapterNo in sorted(counts):
+                if not firstColumnTitle:
+                    bookNo = counts[chapterNo][0][0]
+                    firstColumnTitle = parser.standardFullBookName[str(bookNo)]
+                references = []
+                for bcv in sorted(counts[chapterNo]):
+                    reference = parser.bcvToVerseReference(*bcv)
+                    if len(bcv) == 3:
+                        references.append('<ref onclick="bcv({0},{1},{2})">{3}</ref>'.format(*bcv, reference))
+                    else:
+                        references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
+                data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(chapterNo, "; ".join(references), len(references)))
         # Display a Table
-        config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses))))
+        config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle))
         # Formulate Charts Data
-        if config.qtLibrary == "pyside6":
-            # Chart Title
+        if isSortedByChapter:
+            chartTitle = "{0} x {1}".format(firstColumnTitle, len(verses))
+        else:
             chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
+        if config.qtLibrary == "pyside6":
             # Data for feeding QChart
-            qtData = [(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
+            if isSortedByChapter:
+                qtData = [(str(chapterNo), len(counts[chapterNo])) for chapterNo in sorted(counts)]
+            else:
+                qtData = [(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
             # QChart Bar Chart
             config.mainWindow.barChart = BarChart(qtData, chartTitle)
             config.mainWindow.barChart.show()
@@ -46,16 +72,19 @@ def generateCharts(text):
             config.mainWindow.pieChart.show()
         else:
             # Data for HTML charts
-            data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
+            if isSortedByChapter:
+                data = ["  ['{0}', {1}]".format(str(chapterNo), len(counts[chapterNo])) for chapterNo in sorted(counts)]
+            else:
+                data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
             # Display a HTML Bar Chart
-            html = getBarChartHtml(",\n".join(data), str(len(verses)), len(counts.keys()))
+            html = getBarChartHtml(",\n".join(data), len(counts.keys()), chartTitle)
             html = config.mainWindow.wrapHtml(html)
             config.mainWindow.barChart = QWebEngineView()
             config.mainWindow.barChart.setHtml(html, config.baseUrl)
             config.mainWindow.barChart.setMinimumSize(900, 550)
             config.mainWindow.barChart.show()
             # Display a HTML Pie Chart
-            html = getPieChartHtml(",\n".join(data), str(len(verses)))
+            html = getPieChartHtml(",\n".join(data), chartTitle)
             html = config.mainWindow.wrapHtml(html)
             config.mainWindow.pieChart = QWebEngineView()
             config.mainWindow.pieChart.setHtml(html, config.baseUrl)
@@ -64,17 +93,17 @@ def generateCharts(text):
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
 
-def getTableHtml(data, totalVerseCount):
+def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
     return """
 <h2>Unique Bible App</h2>
 <h3>{0} x """.format(config.thisTranslation["bibleReferences"])+totalVerseCount+"""</h3>
 <table style="width:100%">
-  <tr><th>Book</th><th>Reference</th><th>Count&nbsp;</th></tr>
-"""+data+"""
+  <tr><th>{0}</th><th>{1}</th><th>{2}&nbsp;</th></tr>
+""".format(firstColumnTitle if firstColumnTitle else config.thisTranslation["menu_book"], config.thisTranslation["bibleReferences"], config.thisTranslation["count"])+data+"""
 </table>
 """
 
-def getPieChartHtml(data, totalVerseCount):
+def getPieChartHtml(data, chartTitle=""):
     return """
 <h2>UniqueBible.app</h2>
 
@@ -95,7 +124,7 @@ function drawChart() {
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':700, 'height':500};
+  var options = {'title':'"""+chartTitle+"""', 'width':700, 'height':500};
 
   // Display the chart inside the <div> element with id="piechart"
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));
@@ -104,7 +133,7 @@ function drawChart() {
 </script>
 """
 
-def getBarChartHtml(data, totalVerseCount, noOfBooks):
+def getBarChartHtml(data, noOfBooks, chartTitle=""):
     return """
 <h2>UniqueBible.app</h2>
 
@@ -125,7 +154,7 @@ function drawChart() {
 ]);
 
   // Optional; add a title and set the width and height of the chart
-  var options = {'title':'"""+totalVerseCount+""" Bible Reference(s)', 'width':900, 'height':"""+str(noOfBooks * 50 if noOfBooks > 10 else 500)+"""};
+  var options = {'title':'"""+chartTitle+"""', 'width':900, 'height':"""+str(noOfBooks * 50 if noOfBooks > 10 else 500)+"""};
 
   // Display the chart inside the <div> element with id="barchart"
   var chart = new google.visualization.BarChart(document.getElementById('barchart'));
@@ -139,6 +168,14 @@ def countVersesByBook(verses):
     for verse in verses:
         b = verse[0]
         counts[b] = counts[b] + [verse] if b in counts else [verse]
+    return counts
+
+def countVersesByChapter(verses):
+    # assume all verses are in the same book
+    counts = {}
+    for verse in verses:
+        c = verse[1]
+        counts[c] = counts[c] + [verse] if c in counts else [verse]
     return counts
 
 if config.pluginContext:

@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "बाइबल बुक फ़िल्टरName",
     "selectionMonitoring": "चयन निगरानी",
     "count": "गिनना",
+    "chartsAndTable": "चार्ट और तालिका",
 }

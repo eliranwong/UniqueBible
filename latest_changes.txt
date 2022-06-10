@@ -1,3 +1,14 @@
+Changes in 30.60:
+* Improved context plugin "Charts and Table":
+    When selected text contains bible references from more than one book, the plugins generates charts and a table to compare occurrence in books.
+    When selected text contains references of a single book only, the plugin generates charts and table to compare occurrence in chapters instead.
+* Added an icon button on material menu toolbar to provide quick access of "Charts and Table" feature.
+    Clicking this newly added button to generate charts and table based on text in the following priority:
+    1) Text selection in the Bible Window
+    2) Text selection in the Study Window
+    3) Text content in the Study Window
+* Improved "Interlinear Data" and "Search English Bible" buttons to work with text selection detection.
+
 Changes in 30.59:
 * Fixed displaying bible reference pie chart and bar chart on macOS.
     - If "PySide6" is used, UBA uses QChart to display pie chart and bar chart.

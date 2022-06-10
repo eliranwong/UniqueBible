@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "Фильтр Библии",
     "selectionMonitoring": "Мониторинг выбора",
     "count": "Число",
+    "chartsAndTable": "Диаграммы и таблицы",
 }

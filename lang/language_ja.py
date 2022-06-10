@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "聖書の書フィルター",
     "selectionMonitoring": "選択モニター",
     "count": "伯爵",
+    "chartsAndTable": "チャートとテーブル",
 }

@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "聖經書卷過濾",
     "selectionMonitoring": "文字選取監視",
     "count": "總數",
+    "chartsAndTable": "圖表和表格",
 }

@@ -813,9 +813,9 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")):
+        if os.path.isfile(os.path.join("plugins", "menu", "Interlinear Data.py")) and os.path.isfile(os.path.join("plugins", "context", "Interlinear Data.py")):
             icon = "material/image/flare/materialiconsoutlined/48dp/2x/outline_flare_black_48dp.png"
-            self.addMaterialIconButton("interlinearData", icon, partial(self.runPlugin, "Interlinear Data"), self.firstToolBar)
+            self.addMaterialIconButton("interlinearData", icon, self.openInterlinearData, self.firstToolBar)
         if os.path.isfile(os.path.join("plugins", "menu", "Bible Reading Plan.py")):
             icon = "material/action/calendar_month/materialiconsoutlined/48dp/2x/outline_calendar_month_black_48dp.png"
             self.addMaterialIconButton("bibleReadingPlan", icon, partial(self.runPlugin, "Bible Reading Plan"), self.firstToolBar)
@@ -825,6 +825,9 @@ class MaterialMainWindow:
         self.addMaterialIconButton("masterSearch", icon, self.displaySearchBibleMenu, self.firstToolBar)
         icon = "material/action/filter_alt/materialiconsoutlined/48dp/2x/outline_filter_alt_black_48dp.png"
         self.addMaterialIconButton("liveFilter", icon, self.showLiveFilterDialog, self.firstToolBar)
+        if os.path.isfile(os.path.join("plugins", "context", "Charts and Table.py")):
+            icon = "material/action/addchart/materialiconsoutlined/48dp/2x/outline_addchart_black_48dp.png"
+            self.addMaterialIconButton("chartsAndTable", icon, self.generateChartsAndTable, self.firstToolBar)
 
         self.firstToolBar.addSeparator()
 
@@ -985,7 +988,7 @@ class MaterialMainWindow:
         self.selectionMonitoringButton.setChecked(True if config.enableSelectionMonitoring else False)
         if os.path.isfile(os.path.join("plugins", "context", "Search Bible for English Word Forms.py")):
             icon = "material/action/abc/materialiconsoutlined/48dp/2x/outline_abc_black_48dp.png"
-            self.addMaterialIconButton("searchEnglishBible", icon, lambda: self.mainView.currentWidget().runPlugin("Search Bible for English Word Forms"), self.secondToolBar)
+            self.addMaterialIconButton("searchEnglishBible", icon, lambda: self.mainView.currentWidget().runPlugin("Search Bible for English Word Forms", activeSelection=True), self.secondToolBar)
         if not config.noTtsFound:
             icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
             self.instantTtsButton = QPushButton()

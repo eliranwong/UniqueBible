@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "성경책 필터",
     "selectionMonitoring": "선택 모니터링",
     "count": "계수",
+    "chartsAndTable": "차트 및 표",
 }

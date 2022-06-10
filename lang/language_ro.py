@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "Filtru de carte biblică",
     "selectionMonitoring": "Monitorizarea selecției",
     "count": "Numărătoarea",
+    "chartsAndTable": "Diagrame și tabele",
 }

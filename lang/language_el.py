@@ -930,4 +930,5 @@ translation = {
     "bibleBookFilter": "Φίλτρο βιβλίου Βίβλου",
     "selectionMonitoring": "Παρακολούθηση επιλογής:",
     "count": "Κόμης!",
+    "chartsAndTable": "Γραφήματα και πίνακας",
 }
