@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Supervisión de selección",
     "count": "Recuento",
     "chartsAndTable": "Gráficos y tabla",
+    "insertBibleReferencesIntoNoteEditor": "Insertar referencias bíblicas en el editor de notas",
+    "insertTextIntoNoteEditor": "Insertar texto en el editor de notas",
+    "dockNoteEditor": "Habilite el Editor de notas para acoplar la ventana principal y desacoplarla.",
 }

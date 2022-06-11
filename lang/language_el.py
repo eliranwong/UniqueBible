@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Παρακολούθηση επιλογής:",
     "count": "Κόμης!",
     "chartsAndTable": "Γραφήματα και πίνακας",
+    "insertBibleReferencesIntoNoteEditor": "Εισαγωγή παραπομπών της Βίβλου στη λειτουργία επεξεργασίας σημειώσεων",
+    "insertTextIntoNoteEditor": "Εισαγωγή κειμένου στη λειτουργία επεξεργασίας σημειώσεων",
+    "dockNoteEditor": "Ενεργοποίηση επεξεργασίας σημειώσεων σε αποβάθρα γύρω από το κύριο παράθυρο και undock από αυτό.",
 }

@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "선택 모니터링",
     "count": "계수",
     "chartsAndTable": "차트 및 표",
+    "insertBibleReferencesIntoNoteEditor": "노트 편집기에 성경 참조 삽입하기",
+    "insertTextIntoNoteEditor": "노트 편집기에 텍스트 삽입하기",
+    "dockNoteEditor": "주 편집기를 사용하여 주 창 주위에 도킹하고 그로부터 도킹 해제하십시오.",
 }

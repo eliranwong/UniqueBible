@@ -1,3 +1,17 @@
+Changes in 30.61:
+* Added config.dockNoteEditor, to enable Note Editor both to dock around the main window and undock from it.
+    - It is set to True by default.
+    - Configurable via Config Flags Window.
+* "Note Editor" is now dockable:
+    - When "Note Editor" if first opened, it is docked on the right side of the main window.
+    - The "Note Editor" can be undocked from the main window by dragging the "Note Editor" menu bar out of the main window.
+    - The docking position of the "Note Editor" can also be changed to the left, top, right or bottom of the main window by dragging.
+* Changed the toolbar "Note Editor" button to toggle "Note Editor" instead of opening new note.
+* Added two buttons on second top tool bar on Material menu layout.
+    - To extract bible references from text selection and insert into Note Editor.
+    - To insert selected text into Note Editor.
+* Fixed context plugins "Insert References into Note Editor" and "Insert Text into Note Editor_Ctrl+Shift+J" about text insertion when note editor is already opened.
+
 Changes in 30.60:
 * Improved context plugin "Charts and Table":
     When selected text contains bible references from more than one book, the plugins generates charts and a table to compare occurrence in books.

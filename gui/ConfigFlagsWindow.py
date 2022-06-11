@@ -103,6 +103,7 @@ class ConfigFlagsWindow(QDialog):
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible, self.parent.toggleHideLexicalEntryInBible, False, config.thisTranslation["displayLexicalEntry"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
+            ("dockNoteEditor", config.dockNoteEditor, self.dockNoteEditorChanged, True, config.thisTranslation["dockNoteEditor"]),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, False, config.thisTranslation["hideNoteEditorStyleToolbar"]),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, True, config.thisTranslation["hideNoteEditorTextUtility"]),
             ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, True, config.thisTranslation["overwriteNoteFont"]),
@@ -271,6 +272,10 @@ class ConfigFlagsWindow(QDialog):
 
     def enableSystemTrayOnLinuxChanged(self):
         config.enableSystemTrayOnLinux = not config.enableSystemTrayOnLinux
+        self.parent.handleRestart()
+
+    def dockNoteEditorChanged(self):
+        config.dockNoteEditor = not config.dockNoteEditor
         self.parent.handleRestart()
 
     def ttsChineseAlwaysCantoneseChanged(self):

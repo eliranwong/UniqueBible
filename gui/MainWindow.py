@@ -49,7 +49,8 @@ from gui.ModifyDatabaseDialog import ModifyDatabaseDialog
 from gui.WatsonCredentialWindow import WatsonCredentialWindow
 from gui.LanguageItemWindow import LanguageItemWindow
 from gui.ImportSettings import ImportSettings
-from gui.NoteEditor import NoteEditor
+#from gui.NoteEditor import NoteEditor
+from gui.NoteEditorDocker import NoteEditor
 from gui.MasterControl import MasterControl
 from gui.MiniControl import MiniControl
 from gui.MorphDialog import MorphDialog
@@ -141,7 +142,7 @@ class MainWindow(QMainWindow):
         # mainView & studyView are assigned with class "CentralWidget"
         self.mainView = None
         self.studyView = None
-        self.noteEditor = None
+        #self.noteEditor = None
         self.centralWidget = CentralWidget(self)
         self.instantView = self.centralWidget.instantView
         # put up central widget
@@ -408,32 +409,41 @@ class MainWindow(QMainWindow):
             config.miniControl = True
 
     def closeEvent(self, event):
-        if self.noteEditor:
-            if self.noteEditor.close():
-                if config.enableSystemTray:
-                    event.ignore()
-                    self.hide()
-                    config.mainWindowHidden = True
-                else:
-                    event.accept()
-                    QGuiApplication.instance().quit()
-            else:
-                event.ignore()
-                # Bring forward the note editor.
-                # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
-                self.noteEditor.hide()
-                self.noteEditor.show()
+#        if self.noteEditor:
+#            if self.noteEditor.close():
+#                if config.enableSystemTray:
+#                    event.ignore()
+#                    self.hide()
+#                    config.mainWindowHidden = True
+#                else:
+#                    event.accept()
+#                    QGuiApplication.instance().quit()
+#            else:
+#                event.ignore()
+#                # Bring forward the note editor.
+#                # qt.qpa.wayland: Wayland does not support QWindow::requestActivate()
+#                self.noteEditor.hide()
+#                self.noteEditor.show()
+#        else:
+#            if config.enableSystemTray:
+#                event.ignore()
+#                self.hide()
+#                config.mainWindowHidden = True
+#            else:
+#                event.accept()
+#                QGuiApplication.instance().quit()
+        if config.enableSystemTray:
+            event.ignore()
+            self.hide()
+            config.mainWindowHidden = True
         else:
-            if config.enableSystemTray:
-                event.ignore()
-                self.hide()
-                config.mainWindowHidden = True
-            else:
-                event.accept()
-                QGuiApplication.instance().quit()
+            event.accept()
+            QGuiApplication.instance().quit()
 
     def quitApp(self):
-        QGuiApplication.instance().quit()
+        self.showFromTray()
+        if self.noteSaved or self.warningNotSaved():
+            QGuiApplication.instance().quit()
 
     def resetUI(self):
         config.defineStyle()
@@ -1234,7 +1244,19 @@ class MainWindow(QMainWindow):
         self.studyView.setTabToolTip(self.studyView.currentIndex(), toolTip)
 
     # warning for next action without saving modified notes
+    def toggleNoteEditor(self):
+        if hasattr(config, "toggleDockWidget"):
+            self.noteEditor.toggleViewAction().activate(QAction.Trigger)
+        else:
+            self.createNewNoteFile()
+
+    def showNoteEditor(self):
+        if hasattr(self, "noteEditor"):
+            if not self.noteEditor.isVisible():
+                self.noteEditor.setVisible(True)
+
     def warningNotSaved(self):
+        self.showNoteEditor()
         msgBox = QMessageBox(QMessageBox.Warning,
                              "Warning",
                              "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
@@ -1243,27 +1265,55 @@ class MainWindow(QMainWindow):
         msgBox.addButton("&Continue", QMessageBox.RejectRole)
         if msgBox.exec_() == QMessageBox.AcceptRole:
             # Cancel
+            self.noteSaved = False
             return False
         else:
             # Continue
+            self.noteSaved = True
             return True
+
+    def insertContextTextToNoteEditor(self):
+        if config.contextItem:
+            self.noteEditor.noteEditor.editor.insertPlainText(config.contextItem)
+            config.contextItem = ""
 
     # Actions - chapter / verse / new file note
     def createNewNoteFile(self):
-        if self.noteSaved:
+        if not hasattr(self, "noteEditor"):
             self.noteEditor = NoteEditor(self, "file")
-            if config.contextItem:
-                self.noteEditor.editor.insertPlainText(config.contextItem)
-                config.contextItem = ""
-            self.noteEditor.show()
-        elif self.warningNotSaved():
-            self.noteEditor = NoteEditor(self, "file")
-            if config.contextItem:
-                self.noteEditor.editor.insertPlainText(config.contextItem)
-                config.contextItem = ""
-            self.noteEditor.show()
+            self.insertContextTextToNoteEditor()
         else:
-            self.bringToForeground(self.noteEditor)
+            self.showNoteEditor()
+            if self.noteSaved or self.warningNotSaved():
+                self.noteEditor.noteEditor.resetVariables()
+                self.noteEditor.noteEditor.newNoteFileAction()
+        self.insertContextTextToNoteEditor()
+
+    def openNoteEditor(self, noteType, b=None, c=None, v=None):
+        if not hasattr(self, "noteEditor"):
+            self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
+        elif not config.lastOpenedNote == (noteType, b, c, v):
+            self.showNoteEditor()
+            if self.noteSaved or self.warningNotSaved():
+                self.noteEditor.noteEditor.resetVariables()
+                self.noteEditor.noteEditor.displayInitialContent(noteType, b, c, v)
+        self.insertContextTextToNoteEditor()
+
+    def editExternalFileHistoryRecord(self, record):
+        filename = config.history["external"][record]
+        fileExtension = filename.split(".")[-1].lower()
+        directEdit = ("uba", "html", "htm")
+        if fileExtension in directEdit:
+            if not hasattr(self, "noteEditor"):
+                self.noteEditor = NoteEditor(self, "file", filename)
+            else:
+                self.showNoteEditor()
+                if self.noteSaved or self.warningNotSaved():
+                    self.noteEditor.noteEditor.resetVariables()
+                    self.noteEditor.noteEditor.noteFileName = filename
+                    self.noteEditor.noteEditor.displayInitialContent("file")
+        else:
+            self.openExternalFile(filename)
 
     def bringToForeground(self, window):
         if window and not (window.isVisible() and window.isActiveWindow()):
@@ -1277,11 +1327,6 @@ class MainWindow(QMainWindow):
                 window.hide()
             window.show()
             window.activateWindow()
-
-    def openNoteEditor(self, noteType, b=None, c=None, v=None):
-        if not (config.noteOpened and config.lastOpenedNote == (noteType, b, c, v)):
-            self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
-            self.noteEditor.show()
 
     def openMainBookNote(self):
         self.openBookNote(config.mainB)
@@ -1610,21 +1655,7 @@ class MainWindow(QMainWindow):
         else:
             self.openTextFileDialog()
 
-    def editExternalFileHistoryRecord(self, record):
-        filename = config.history["external"][record]
-        fileExtension = filename.split(".")[-1].lower()
-        directEdit = ("uba", "html", "htm")
-        if fileExtension in directEdit:
-            if self.noteSaved:
-                self.noteEditor = NoteEditor(self, "file", filename)
-                self.noteEditor.show()
-            elif self.warningNotSaved():
-                self.noteEditor = NoteEditor(self, "file", filename)
-                self.noteEditor.show()
-            else:
-                self.bringToForeground(self.noteEditor)
-        else:
-            self.openExternalFile(filename)
+
 
     def openExternalFile(self, filename, isPdf=False):
         if platform.system() == "Linux":

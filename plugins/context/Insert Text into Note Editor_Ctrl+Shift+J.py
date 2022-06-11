@@ -1,14 +1,15 @@
 import config
 
 if config.pluginContext:
+    config.mainWindow.showNoteEditor()
     content = config.pluginContext.replace("\n", "<br>")
-    if config.noteOpened:
+
+    if hasattr(config.mainWindow, "noteEditor"):
         content = "<br><br>{0}<br><br>".format(content)
-        if config.mainWindow.noteEditor.html:
-            config.mainWindow.noteEditor.editor.insertHtml(content)
+        if config.mainWindow.noteEditor.noteEditor.html:
+            config.mainWindow.noteEditor.noteEditor.editor.insertHtml(content)
         else:
-            config.mainWindow.noteEditor.editor.insertPlainText(content)
-        config.mainWindow.bringToForeground(config.mainWindow.noteEditor)
+            config.mainWindow.noteEditor.noteEditor.editor.insertPlainText(content)
     else:
         config.contextItem = content
         config.mainWindow.createNewNoteFile()

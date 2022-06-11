@@ -13,7 +13,7 @@ from util.NoteService import NoteService
 from util.Translator import Translator
 
 
-class NoteEditor(QMainWindow):
+class NoteEditorWindow(QMainWindow):
 
     def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None):
         super().__init__()
@@ -28,8 +28,8 @@ class NoteEditor(QMainWindow):
         # default - "Rich" mode for editing
         self.html = True
         # default - text is not modified; no need for saving new content
-        self.parent.noteSaved = True
-        config.noteOpened = True
+        self.parent.parent.noteSaved = True
+        #config.noteOpened = True
         config.lastOpenedNote = (noteType, b, c, v)
 
         # specify window size
@@ -55,27 +55,31 @@ class NoteEditor(QMainWindow):
         # specify window title
         self.updateWindowTitle()
 
+    def resetVariables(self):
+        self.parent.parent.noteSaved = True
+        self.noteType, self.noteFileName, self.b, self.c, self.v = None, None, None, None, None
+
     # re-implementing close event, when users close this widget
     def closeEvent(self, event):
-        if self.parent.noteSaved:
-            config.noteOpened = False
+        if self.parent.parent.noteSaved:
+            #config.noteOpened = False
             event.accept()
             if config.lastOpenedNote and config.openBibleNoteAfterEditorClosed:
                 #if config.lastOpenedNote[0] == "file":
-                #    self.parent.externalFileButtonClicked()
+                #    self.parent.parent.externalFileButtonClicked()
                 if config.lastOpenedNote[0] == "book":
-                    self.parent.openStudyBookNote()
+                    self.parent.parent.openStudyBookNote()
                 elif config.lastOpenedNote[0] == "chapter":
-                    self.parent.openStudyChapterNote()
+                    self.parent.parent.openStudyChapterNote()
                 elif config.lastOpenedNote[0] == "verse":
-                    self.parent.openStudyVerseNote()
+                    self.parent.parent.openStudyVerseNote()
         else:
-            if self.parent.warningNotSaved():
-                self.parent.noteSaved = True
-                config.noteOpened = False
+            if self.parent.parent.warningNotSaved():
+                self.parent.parent.noteSaved = True
+                #config.noteOpened = False
                 event.accept()
             else:
-                self.parent.bringToForeground(self)
+                self.parent.parent.bringToForeground(self)
                 event.ignore()
 
     # re-implement keyPressEvent, control+S for saving file
@@ -107,14 +111,14 @@ class NoteEditor(QMainWindow):
             else:
                 title = "NEW"
         else:
-            title = self.parent.bcvToVerseReference(self.b, self.c, self.v)
+            title = self.parent.parent.bcvToVerseReference(self.b, self.c, self.v)
             if self.noteType == "book":
                 title, *_ = title.split(" ")            
             elif self.noteType == "chapter":
                 title, *_ = title.split(":")
         mode = {True: "rich", False: "plain"}
         notModified = {True: "", False: " [modified]"}
-        self.setWindowTitle("Note Editor ({1} mode) - {0}{2}".format(title, mode[self.html], notModified[self.parent.noteSaved]))
+        self.parent.setWindowTitle("Note Editor ({1} mode) - {0}{2}".format(title, mode[self.html], notModified[self.parent.parent.noteSaved]))
 
     # switching between "rich" & "plain" mode
     def switchMode(self):
@@ -252,33 +256,33 @@ class NoteEditor(QMainWindow):
 
         icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"])
-        self.parent.addMaterialIconButton(toolTip, icon, self.newNoteFile, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.newNoteFile, self.menuBar, None, False)
 
         icon = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"])
-        self.parent.addMaterialIconButton(toolTip, icon, self.openFileDialog, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.openFileDialog, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
         icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
         toolTip = "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"])
-        self.parent.addMaterialIconButton(toolTip, icon, self.saveNote, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.saveNote, self.menuBar, None, False)
 
         icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
         toolTip = config.thisTranslation["note_saveAs"]
-        self.parent.addMaterialIconButton(toolTip, icon, self.openSaveAsDialog, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.openSaveAsDialog, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
         icon = "material/maps/local_printshop/materialiconsoutlined/48dp/2x/outline_local_printshop_black_48dp.png"
         toolTip = config.thisTranslation["note_print"]
-        self.parent.addMaterialIconButton(toolTip, icon, self.printNote, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.printNote, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
         icon = "material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         toolTip = config.thisTranslation["note_mode"]
-        self.parent.addMaterialIconButton(toolTip, icon, self.switchMode, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.switchMode, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
@@ -293,13 +297,13 @@ class NoteEditor(QMainWindow):
 
         icon = "material/notification/more/materialiconsoutlined/48dp/2x/outline_more_black_48dp.png"
         toolTip = config.thisTranslation["note_toolbar"]
-        self.parent.addMaterialIconButton(toolTip, icon, self.toggleToolbar, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.toggleToolbar, self.menuBar, None, False)
 
         #icon = "material/navigation/campaign/materialiconsoutlined/48dp/2x/outline_campaign_black_48dp.png"
         #icon = "material/action/record_voice_over/materialiconsoutlined/48dp/2x/outline_record_voice_over_black_48dp.png"
         icon = "material/action/translate/materialiconsoutlined/48dp/2x/outline_translate_black_48dp.png"
         toolTip = config.thisTranslation["note_textUtility"]
-        self.parent.addMaterialIconButton(toolTip, icon, self.toggleTextUtility, self.menuBar, None, False)
+        self.parent.parent.addMaterialIconButton(toolTip, icon, self.toggleTextUtility, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
@@ -413,7 +417,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -427,7 +431,7 @@ class NoteEditor(QMainWindow):
             #toolTip, action, toolbar, button=None, translation=True)
             button = QPushButton(buttonTitle)
             button.setFixedWidth(30)
-            self.parent.addStandardTextButton(toolTip, action, self.toolBar, button)
+            self.parent.parent.addStandardTextButton(toolTip, action, self.toolBar, button)
 
         self.toolBar.addSeparator()
         
@@ -438,7 +442,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar, translation=False)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -448,12 +452,12 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        #self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
-        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]".format(config.thisTranslation["convertFromMarkdown"]), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        #self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]".format(config.thisTranslation["convertFromMarkdown"]), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -465,11 +469,11 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        self.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
+        self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -479,7 +483,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -489,7 +493,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addMaterialIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -509,7 +513,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -520,7 +524,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
         
@@ -531,7 +535,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar, translation=False)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -541,11 +545,11 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        self.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "custom.png", self.format_custom, self.toolBar, translation=False)
+        self.parent.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "custom.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -557,11 +561,11 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
-        self.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "clearFormat.png", self.format_clear, self.toolBar, translation=False)
+        self.parent.parent.addStandardIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "clearFormat.png", self.format_clear, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -571,7 +575,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -581,7 +585,7 @@ class NoteEditor(QMainWindow):
         )
         for item in items:
             toolTip, icon, action = item
-            self.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
+            self.parent.parent.addStandardIconButton(toolTip, icon, action, self.toolBar)
 
         self.toolBar.addSeparator()
 
@@ -711,25 +715,35 @@ class NoteEditor(QMainWindow):
 
     # track if the text being modified
     def textChanged(self):
-        if self.parent.noteSaved:
-            self.parent.noteSaved = False
+        if self.parent.parent.noteSaved:
+            self.parent.parent.noteSaved = False
             self.updateWindowTitle()
 
     # display content when first launched
-    def displayInitialContent(self):
-        if self.noteType == "file":
-            if self.noteFileName:
-                self.openNoteFile(self.noteFileName)
+    def displayInitialContent(self, noteType=None, b=None, c=None, v=None):
+        if self.parent.parent.noteSaved or self.parent.parent.warningNotSaved():
+            if noteType is not None:
+                self.noteType = noteType
+            if b is not None:
+                self.b = b
+            if c is not None:
+                self.c = c
+            if v is not None:
+                self.v = v
+            if self.noteType == "file":
+                if self.noteFileName:
+                    self.openNoteFile(self.noteFileName)
+                else:
+                    self.newNoteFile()
             else:
-                self.newNoteFile()
-        else:
-            self.openBibleNote()
+                self.openBibleNote()
 
-        self.editor.selectAll()
-        self.editor.setFontPointSize(config.noteEditorFontSize)
-        self.editor.moveCursor(QTextCursor.Start, QTextCursor.MoveAnchor)
+            self.editor.selectAll()
+            self.editor.setFontPointSize(config.noteEditorFontSize)
+            self.editor.moveCursor(QTextCursor.Start, QTextCursor.MoveAnchor)
 
-        self.parent.noteSaved = True
+            self.parent.parent.noteSaved = True
+            self.updateWindowTitle()
 
     def getEmptyPage(self):
         strict = ''
@@ -760,9 +774,7 @@ p, li {0} white-space: pre-wrap; {1}
 
     # File I / O
     def newNoteFile(self):
-        if self.parent.noteSaved:
-            self.newNoteFileAction()
-        elif self.parent.warningNotSaved():
+        if self.parent.parent.noteSaved or self.parent.parent.warningNotSaved():
             self.newNoteFileAction()
 
     def newNoteFileAction(self):
@@ -774,15 +786,15 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.setHtml(defaultText)
         else:
             self.editor.setPlainText(defaultText)
-        self.parent.noteSaved = True
+        self.parent.parent.noteSaved = True
         self.updateWindowTitle()
         self.hide()
         self.show()
 
     def openFileDialog(self):
-        if self.parent.noteSaved:
+        if self.parent.parent.noteSaved:
             self.openFileDialogAction()
-        elif self.parent.warningNotSaved():
+        elif self.parent.parent.warningNotSaved():
             self.openFileDialogAction()
 
     def openFileDialogAction(self):
@@ -808,7 +820,7 @@ p, li {0} white-space: pre-wrap; {1}
             self.editor.setHtml(note)
         else:
             self.editor.setPlainText(note)
-        self.parent.noteSaved = True
+        self.parent.parent.noteSaved = True
         self.updateWindowTitle()
         self.hide()
         self.show()
@@ -822,20 +834,20 @@ p, li {0} white-space: pre-wrap; {1}
         if self.noteType == "book":
             NoteService.saveBookNote(self.b, note)
             if config.openBibleNoteAfterSave:
-                self.parent.openBookNote(self.b,)
-            self.parent.noteSaved = True
+                self.parent.parent.openBookNote(self.b,)
+            self.parent.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "chapter":
             NoteService.saveChapterNote(self.b, self.c, note)
             if config.openBibleNoteAfterSave:
-                self.parent.openChapterNote(self.b, self.c)
-            self.parent.noteSaved = True
+                self.parent.parent.openChapterNote(self.b, self.c)
+            self.parent.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "verse":
             NoteService.saveVerseNote(self.b, self.c, self.v, note)
             if config.openBibleNoteAfterSave:
-                self.parent.openVerseNote(self.b, self.c, self.v)
-            self.parent.noteSaved = True
+                self.parent.parent.openVerseNote(self.b, self.c, self.v)
+            self.parent.parent.noteSaved = True
             self.updateWindowTitle()
         elif self.noteType == "file":
             if self.noteFileName == "":
@@ -868,9 +880,9 @@ p, li {0} white-space: pre-wrap; {1}
         f.write(note)
         f.close()
         self.noteFileName = fileName
-        self.parent.addExternalFileHistory(fileName)
-        self.parent.setExternalFileButton()
-        self.parent.noteSaved = True
+        self.parent.parent.addExternalFileHistory(fileName)
+        self.parent.parent.setExternalFileButton()
+        self.parent.parent.noteSaved = True
         self.updateWindowTitle()
 
     def fixNoteFont(self, note):
@@ -1120,7 +1132,7 @@ p, li {0} white-space: pre-wrap; {1}
         options = QFileDialog.Options()
         fileName, filtr = QFileDialog.getOpenFileName(self,
                 config.thisTranslation["html_open"],
-                self.parent.openFileNameLabel.text(),
+                self.parent.parent.openFileNameLabel.text(),
                 "JPG Files (*.jpg);;JPEG Files (*.jpeg);;PNG Files (*.png);;GIF Files (*.gif);;BMP Files (*.bmp);;All Files (*)", "", options)
         if fileName:
             if external:
@@ -1144,7 +1156,7 @@ p, li {0} white-space: pre-wrap; {1}
         options = QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self,
                 config.thisTranslation["select_a_folder"],
-                self.parent.directoryLabel.text(), options)
+                self.parent.parent.directoryLabel.text(), options)
         if directory:
             if self.html:
                 htmlText = self.editor.toHtml()
@@ -1193,7 +1205,7 @@ p, li {0} white-space: pre-wrap; {1}
 
         self.languageCombo = QComboBox()
         self.ttsToolbar.addWidget(self.languageCombo)
-        languages = self.parent.getTtsLanguages()
+        languages = self.parent.parent.getTtsLanguages()
         self.languageCodes = list(languages.keys())
         for code in self.languageCodes:
             self.languageCombo.addItem(languages[code][1])
@@ -1210,7 +1222,7 @@ p, li {0} white-space: pre-wrap; {1}
         self.ttsToolbar.addWidget(button)
         button = QPushButton(config.thisTranslation["stop"])
         button.setToolTip(config.thisTranslation["stop"])
-        button.clicked.connect(self.parent.textCommandParser.stopTtsAudio)
+        button.clicked.connect(self.parent.parent.textCommandParser.stopTtsAudio)
         self.ttsToolbar.addWidget(button)
 
         self.translateToolbar = QToolBar()
@@ -1249,7 +1261,7 @@ p, li {0} white-space: pre-wrap; {1}
                     command = "GTTS:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
                 else:
                     command = "SPEAK:::{0}:::{1}".format(self.languageCodes[self.languageCombo.currentIndex()], text)
-                self.parent.runTextCommand(command)
+                self.parent.parent.runTextCommand(command)
         else:
             self.selectTextFirst()
 

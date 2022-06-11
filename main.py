@@ -541,7 +541,9 @@ if config.enableSystemTray:
     from gui.SystemTrayMenu import *
     # Quit
     quitApp = QAction(config.thisTranslation["menu_quit"])
-    quitApp.triggered.connect(app.quit)
+    #quitApp.triggered.connect(app.quit)
+    # The following line instead of the one above is used to check unsaved changes in Note Editor.
+    quitApp.triggered.connect(config.mainWindow.quitApp)
     trayMenu.addAction(quitApp)
     tray.setContextMenu(trayMenu)
 

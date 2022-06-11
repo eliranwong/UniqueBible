@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "文字选择监视",
     "count": "总数",
     "chartsAndTable": "图表和表格",
+    "insertBibleReferencesIntoNoteEditor": "将经文参照插入笔记编辑器",
+    "insertTextIntoNoteEditor": "将文本插入笔记编辑器",
+    "dockNoteEditor": "使笔记编辑器能在主要视窗周围锁定位置，或随时解锁。",
 }

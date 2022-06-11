@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "選択モニター",
     "count": "伯爵",
     "chartsAndTable": "チャートとテーブル",
+    "insertBibleReferencesIntoNoteEditor": "注釈エディターへの聖書参照の挿入",
+    "insertTextIntoNoteEditor": "ノート・エディターにテキストを挿入",
+    "dockNoteEditor": "メイン・ウィンドウおよびドッキング解除を使用可能にするには、メモ・エディターを使用可能にします。",
 }

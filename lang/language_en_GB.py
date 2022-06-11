@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Text Selection Monitoring",
     "count": "Count",
     "chartsAndTable": "Charts and Table",
+    "insertBibleReferencesIntoNoteEditor": "Insert Bible References into Note Editor",
+    "insertTextIntoNoteEditor": "Insert Text into Note Editor",
+    "dockNoteEditor": "Enable Note Editor to dock around the main window and undock from it.",
 }

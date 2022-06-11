@@ -2399,8 +2399,8 @@ class TextCommandParser:
             b, c, v = None, None, None
         if self.parent.noteSaved or self.parent.warningNotSaved():
             self.parent.openNoteEditor("verse", b=b, c=c, v=v)
-        else:
-            self.parent.noteEditor.raise_()
+        #else:
+            #self.parent.noteEditor.raise_()
         return ("", "", {})
 
     # _open:::

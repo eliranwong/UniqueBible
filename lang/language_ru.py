@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Мониторинг выбора",
     "count": "Число",
     "chartsAndTable": "Диаграммы и таблицы",
+    "insertBibleReferencesIntoNoteEditor": "Вставка ссылок на Библию в редактор примечании",
+    "insertTextIntoNoteEditor": "Вставить текст в редактор примечании",
+    "dockNoteEditor": "Включите редактор примечании, чтобы закрепить за основным окном и отстыковаться от него.",
 }

@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "തെരഞ്ഞെടുക്കല് നിരീക്ഷണം",
     "count": "എണ്ണുക",
     "chartsAndTable": "ചാർട്ടുകളും ടേബിളും",
+    "insertBibleReferencesIntoNoteEditor": "നോട്ട് എഡിറ്ററിലേക്ക് ബൈബിള് റഫറന്സുകള് ചേര്ക്കുക",
+    "insertTextIntoNoteEditor": "കുറിപ്പ് എഡിറ്ററിലേക്ക് പദാവലി ചേര്ക്കുക",
+    "dockNoteEditor": "പ്രധാന ജാലകത്തിന്റെ ചുറ്റും ഡോക്ക് ചെയ്യാന് നോട്ട് എഡിറ്റര് സജ്ജമാക്കുക.",
 }

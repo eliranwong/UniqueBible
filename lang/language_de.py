@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Auswahlüberwachung",
     "count": "Anzahl",
     "chartsAndTable": "Diagramme und Tabelle",
+    "insertBibleReferencesIntoNoteEditor": "Bibel-Referenzen in den Notizeditor einfügen",
+    "insertTextIntoNoteEditor": "Text in Notizeditor einfügen",
+    "dockNoteEditor": "Aktivieren Sie den Notizeditor, um das Hauptfenster zu docken und von diesem abzudocken.",
 }

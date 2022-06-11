@@ -19,11 +19,10 @@ class MaterialMainWindow:
         menuBar = self.menuBar()
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
-        items = (
-            ("note_editor", self.createNewNoteFile, sc.createNewNoteFile),
-        )
-        for feature, action, shortcut in items:
-            addMenuItem(menu, feature, self, action, shortcut)
+        if hasattr(config, "toggleDockWidget"):
+            menu.addAction(config.toggleDockWidget)
+        else:
+            addMenuItem(menu, "note_editor", self, self.createNewNoteFile, sc.createNewNoteFile)
         menu.addSeparator()
         items = (
             ("menu7_open", self.openTextFileDialog, sc.openTextFileDialog),
@@ -966,11 +965,18 @@ class MaterialMainWindow:
 #
 #        self.secondToolBar.addSeparator()
 
-        icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
-        self.addMaterialIconButton("menu7_create", icon, self.createNewNoteFile, self.secondToolBar)
+        #icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
+        icon = "material/editor/edit_note/materialiconsoutlined/48dp/2x/outline_edit_note_black_48dp.png"
+        self.addMaterialIconButton("note_editor", icon, self.toggleNoteEditor, self.secondToolBar)
+        icon = "material/action/switch_access_shortcut_add/materialiconssharp/48dp/2x/sharp_switch_access_shortcut_add_black_48dp.png"
+        self.addMaterialIconButton("note_editor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert References into Note Editor", activeSelection=True), self.secondToolBar)
+        icon = "material/av/playlist_add/materialiconsoutlined/48dp/2x/outline_playlist_add_black_48dp.png"
+        self.addMaterialIconButton("note_editor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert Text into Note Editor_Ctrl+Shift+J", activeSelection=True), self.secondToolBar)
+
+        self.secondToolBar.addSeparator()
+
         icon = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
         self.addMaterialIconButton("menu7_open", icon, self.openTextFileDialog, self.secondToolBar)
-
         fileName = self.getLastExternalFileName()
         self.externalFileButton = QPushButton(fileName[:20])
         self.externalFileButton.setMaximumWidth(int(config.iconButtonSize * 7))

@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "चयन निगरानी",
     "count": "गिनना",
     "chartsAndTable": "चार्ट और तालिका",
+    "insertBibleReferencesIntoNoteEditor": "बाइबल संदर्भ को नोट संपादक में प्रविष्ट करें",
+    "insertTextIntoNoteEditor": "नोट संपादक में पाठ प्रविष्ट करें",
+    "dockNoteEditor": "नोट संपादक को मुख्य विंडो के चारों ओर डॉक करने के लिए सक्षम करें और इसे से अनडॉक करें.",
 }

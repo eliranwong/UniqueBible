@@ -931,4 +931,7 @@ translation = {
     "selectionMonitoring": "Monitorizarea selecției",
     "count": "Numărătoarea",
     "chartsAndTable": "Diagrame și tabele",
+    "insertBibleReferencesIntoNoteEditor": "Inserați referințele biblice în Nota Editor",
+    "insertTextIntoNoteEditor": "Introduceți textul în Nota Editor",
+    "dockNoteEditor": "Activați Note Editor pentru a andoca în jurul ferestrei principale și undock din ea.",
 }
