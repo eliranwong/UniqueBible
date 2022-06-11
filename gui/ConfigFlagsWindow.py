@@ -103,7 +103,7 @@ class ConfigFlagsWindow(QDialog):
             ("hideLexicalEntryInBible", config.hideLexicalEntryInBible, self.parent.toggleHideLexicalEntryInBible, False, config.thisTranslation["displayLexicalEntry"]),
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
-            ("dockNoteEditor", config.dockNoteEditor, self.dockNoteEditorChanged, True, config.thisTranslation["dockNoteEditor"]),
+            ("dockNoteEditorOnStartup", config.dockNoteEditorOnStartup, self.dockNoteEditorChanged, True, config.thisTranslation["dockNoteEditorOnStartup"]),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, False, config.thisTranslation["hideNoteEditorStyleToolbar"]),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, True, config.thisTranslation["hideNoteEditorTextUtility"]),
             ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, True, config.thisTranslation["overwriteNoteFont"]),
@@ -275,7 +275,7 @@ class ConfigFlagsWindow(QDialog):
         self.parent.handleRestart()
 
     def dockNoteEditorChanged(self):
-        config.dockNoteEditor = not config.dockNoteEditor
+        config.dockNoteEditorOnStartup = not config.dockNoteEditorOnStartup
         self.parent.handleRestart()
 
     def ttsChineseAlwaysCantoneseChanged(self):

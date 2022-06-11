@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "Bibel-Referenzen in den Notizeditor einfügen",
     "insertTextIntoNoteEditor": "Text in Notizeditor einfügen",
     "dockNoteEditor": "Aktivieren Sie den Notizeditor, um das Hauptfenster zu docken und von diesem abzudocken.",
+    "dockNoteEditorOnStartup": "Docknoteneditor, wenn er gestartet wird.",
 }

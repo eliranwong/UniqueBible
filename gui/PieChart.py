@@ -9,10 +9,10 @@ from util.BibleVerseParser import BibleVerseParser
 
 class PieChart(QWidget):
 
-    def __init__(self, data=[], chartTitle=""):
+    def __init__(self, data=[], chartTitle="", showFigure=True):
         super().__init__()
         self.data = data
-        self.chartTitle = chartTitle
+        self.chartTitle, self.showFigure = chartTitle, showFigure
 
         self.setWindowTitle("Unique Bible App")
         self.setGeometry(100,100, 1280,600)
@@ -25,7 +25,7 @@ class PieChart(QWidget):
 
         series = QPieSeries()
         for book, count in self.data:
-            series.append("{0} x {1}".format(book, count), count)
+            series.append("{0} x {1}".format(book, count) if self.showFigure else book, count)
         for slice in series.slices():
             slice.setLabelVisible(True)
 

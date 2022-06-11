@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "Вставка ссылок на Библию в редактор примечании",
     "insertTextIntoNoteEditor": "Вставить текст в редактор примечании",
     "dockNoteEditor": "Включите редактор примечании, чтобы закрепить за основным окном и отстыковаться от него.",
+    "dockNoteEditorOnStartup": "Закрепить редактор примечании при его запуске.",
 }

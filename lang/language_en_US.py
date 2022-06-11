@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "Insert Bible References into Note Editor",
     "insertTextIntoNoteEditor": "Insert Text into Note Editor",
     "dockNoteEditor": "Enable Note Editor to dock around the main window and undock from it.",
+    "dockNoteEditorOnStartup": "Dock Note Editor when it is launched.",
 }

@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "將經文參照插入筆記編輯器",
     "insertTextIntoNoteEditor": "將文字插入筆記編輯器",
     "dockNoteEditor": "使筆記編輯器能在主要視窗周圍鎖定位置，或隨時解鎖。",
+    "dockNoteEditorOnStartup": "筆記編輯器啟動時鎖定在主要視窗的右邊。",
 }

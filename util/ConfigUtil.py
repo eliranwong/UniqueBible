@@ -546,10 +546,10 @@ class ConfigUtil:
         # Default font size of content in note editor"""
         if not hasattr(config, "noteEditorFontSize"):
             config.noteEditorFontSize = 14
-        config.help["dockNoteEditor"] = """
-        # Enable Note Editor to dock around the main window and undock from it."""
-        if not hasattr(config, "dockNoteEditor"):
-            config.dockNoteEditor = True
+        config.help["dockNoteEditorOnStartup"] = """
+        # Dock Note Editor when it is launched."""
+        if not hasattr(config, "dockNoteEditorOnStartup"):
+            config.dockNoteEditorOnStartup = True
         config.help["hideNoteEditorStyleToolbar"] = """
         # Show Note Editor's style toolbar by default"""
         if not hasattr(config, "hideNoteEditorStyleToolbar"):
@@ -1385,7 +1385,7 @@ class ConfigUtil:
             ("font", config.font),
             ("fontChinese", config.fontChinese),
             ("noteEditorFontSize", config.noteEditorFontSize),
-            ("dockNoteEditor", config.dockNoteEditor),
+            ("dockNoteEditorOnStartup", config.dockNoteEditorOnStartup),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility),
             ("importDoNotStripStrongNo", config.importDoNotStripStrongNo),

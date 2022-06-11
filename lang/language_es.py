@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "Insertar referencias bíblicas en el editor de notas",
     "insertTextIntoNoteEditor": "Insertar texto en el editor de notas",
     "dockNoteEditor": "Habilite el Editor de notas para acoplar la ventana principal y desacoplarla.",
+    "dockNoteEditorOnStartup": "Editor de notas de muelle cuando se inicia.",
 }

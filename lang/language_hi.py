@@ -934,4 +934,5 @@ translation = {
     "insertBibleReferencesIntoNoteEditor": "बाइबल संदर्भ को नोट संपादक में प्रविष्ट करें",
     "insertTextIntoNoteEditor": "नोट संपादक में पाठ प्रविष्ट करें",
     "dockNoteEditor": "नोट संपादक को मुख्य विंडो के चारों ओर डॉक करने के लिए सक्षम करें और इसे से अनडॉक करें.",
+    "dockNoteEditorOnStartup": "डॉक नोट संपादक जब यह लॉन्च किया जाता है.",
 }
