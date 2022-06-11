@@ -1,3 +1,6 @@
+Changes in 30.62:
+* Updated tooltips of two buttons about Note Editor.
+
 Changes in 30.61:
 * Added config.dockNoteEditor, to enable Note Editor both to dock around the main window and undock from it.
     - It is set to True by default.

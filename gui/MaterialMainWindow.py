@@ -969,9 +969,9 @@ class MaterialMainWindow:
         icon = "material/editor/edit_note/materialiconsoutlined/48dp/2x/outline_edit_note_black_48dp.png"
         self.addMaterialIconButton("note_editor", icon, self.toggleNoteEditor, self.secondToolBar)
         icon = "material/action/switch_access_shortcut_add/materialiconssharp/48dp/2x/sharp_switch_access_shortcut_add_black_48dp.png"
-        self.addMaterialIconButton("note_editor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert References into Note Editor", activeSelection=True), self.secondToolBar)
+        self.addMaterialIconButton("insertBibleReferencesIntoNoteEditor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert References into Note Editor", activeSelection=True), self.secondToolBar)
         icon = "material/av/playlist_add/materialiconsoutlined/48dp/2x/outline_playlist_add_black_48dp.png"
-        self.addMaterialIconButton("note_editor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert Text into Note Editor_Ctrl+Shift+J", activeSelection=True), self.secondToolBar)
+        self.addMaterialIconButton("insertTextIntoNoteEditor", icon, lambda: self.mainView.currentWidget().runPlugin("Insert Text into Note Editor_Ctrl+Shift+J", activeSelection=True), self.secondToolBar)
 
         self.secondToolBar.addSeparator()
 
