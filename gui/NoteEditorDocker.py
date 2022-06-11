@@ -26,9 +26,8 @@ class NoteEditor(QDockWidget):
         # Show the dock widget around the main window
         # Options: https://doc.qt.io/qtforpython/PySide6/QtCore/Qt.html#PySide6.QtCore.PySide6.QtCore.Qt.DockWidgetArea
         self.setAllowedAreas(Qt.AllDockWidgetAreas)
+        self.parent.addDockWidget(Qt.RightDockWidgetArea, self)
         if config.dockNoteEditorOnStartup:
-            self.parent.addDockWidget(Qt.RightDockWidgetArea, self)
             self.setFloating(False)
         else:
-            self.parent.addDockWidget(Qt.RightDockWidgetArea, self)
             self.setFloating(True)
