@@ -935,4 +935,5 @@ translation = {
     "insertTextIntoNoteEditor": "노트 편집기에 텍스트 삽입하기",
     "dockNoteEditor": "주 편집기를 사용하여 주 창 주위에 도킹하고 그로부터 도킹 해제하십시오.",
     "dockNoteEditorOnStartup": "도크 노트 편집기가 실행될 때",
+    "doNotDockNoteEditorByDragging": "끌어서 노트 편집기를 도크하지 않음",
 }

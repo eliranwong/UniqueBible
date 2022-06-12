@@ -935,4 +935,5 @@ translation = {
     "insertTextIntoNoteEditor": "Insert Text into Note Editor",
     "dockNoteEditor": "Enable Note Editor to dock around the main window and undock from it.",
     "dockNoteEditorOnStartup": "Dock Note Editor when it is launched.",
+    "doNotDockNoteEditorByDragging": "Do not dock Note Editor by dragging",
 }

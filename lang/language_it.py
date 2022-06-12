@@ -935,4 +935,5 @@ translation = {
     "insertTextIntoNoteEditor": "Inserisci testo in Note Editor",
     "dockNoteEditor": "Abilitare Note Editor a dock intorno alla finestra principale e sgancarlo da esso.",
     "dockNoteEditorOnStartup": "Dock Note Editor quando viene lanciato.",
+    "doNotDockNoteEditorByDragging": "Non dock dock Editor trascinando",
 }

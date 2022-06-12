@@ -104,6 +104,7 @@ class ConfigFlagsWindow(QDialog):
             ("openBibleNoteAfterSave", config.openBibleNoteAfterSave, self.openBibleNoteAfterSaveChanged, False, config.thisTranslation["openBibleNoteAfterSave"]),
             ("openBibleNoteAfterEditorClosed", config.openBibleNoteAfterEditorClosed, self.openBibleNoteAfterEditorClosedChanged, False, config.thisTranslation["openBibleNoteAfterEditorClosed"]),
             ("dockNoteEditorOnStartup", config.dockNoteEditorOnStartup, self.dockNoteEditorChanged, True, config.thisTranslation["dockNoteEditorOnStartup"]),
+            ("doNotDockNoteEditorByDragging", config.doNotDockNoteEditorByDragging, self.doNotDockNoteEditorByDraggingChanged, False, config.thisTranslation["doNotDockNoteEditorByDragging"]),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar, self.hideNoteEditorStyleToolbarChanged, False, config.thisTranslation["hideNoteEditorStyleToolbar"]),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility, self.hideNoteEditorTextUtilityChanged, True, config.thisTranslation["hideNoteEditorTextUtility"]),
             ("overwriteNoteFont", config.overwriteNoteFont, self.overwriteNoteFontChanged, True, config.thisTranslation["overwriteNoteFont"]),
@@ -305,6 +306,10 @@ class ConfigFlagsWindow(QDialog):
 
     def updateDependenciesOnStartupChanged(self):
         config.updateDependenciesOnStartup = not config.updateDependenciesOnStartup
+        self.parent.handleRestart()
+
+    def doNotDockNoteEditorByDraggingChanged(self):
+        config.doNotDockNoteEditorByDragging = not config.doNotDockNoteEditorByDragging
         self.parent.handleRestart()
 
     def preferControlPanelForCommandLineEntryChanged(self):

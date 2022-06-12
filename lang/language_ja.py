@@ -935,4 +935,5 @@ translation = {
     "insertTextIntoNoteEditor": "ノート・エディターにテキストを挿入",
     "dockNoteEditor": "メイン・ウィンドウおよびドッキング解除を使用可能にするには、メモ・エディターを使用可能にします。",
     "dockNoteEditorOnStartup": "ドック・ノート・エディターを起動するとき。",
+    "doNotDockNoteEditorByDragging": "注釈エディターをドラッグしてドッキングしない",
 }

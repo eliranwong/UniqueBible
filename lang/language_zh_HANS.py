@@ -935,4 +935,5 @@ translation = {
     "insertTextIntoNoteEditor": "将文本插入笔记编辑器",
     "dockNoteEditor": "使笔记编辑器能在主要视窗周围锁定位置，或随时解锁。",
     "dockNoteEditorOnStartup": "笔记编辑器启动时锁定在主要视窗的右边。",
+    "doNotDockNoteEditorByDragging": "不通过拖曳方法锁定笔记编辑器位置",
 }

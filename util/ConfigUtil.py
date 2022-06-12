@@ -550,6 +550,10 @@ class ConfigUtil:
         # Dock Note Editor when it is launched."""
         if not hasattr(config, "dockNoteEditorOnStartup"):
             config.dockNoteEditorOnStartup = True
+        config.help["doNotDockNoteEditorByDragging"] = """
+        # Do not dock Note Editor by dragging."""
+        if not hasattr(config, "doNotDockNoteEditorByDragging"):
+            config.doNotDockNoteEditorByDragging = False
         config.help["hideNoteEditorStyleToolbar"] = """
         # Show Note Editor's style toolbar by default"""
         if not hasattr(config, "hideNoteEditorStyleToolbar"):
@@ -1386,6 +1390,7 @@ class ConfigUtil:
             ("fontChinese", config.fontChinese),
             ("noteEditorFontSize", config.noteEditorFontSize),
             ("dockNoteEditorOnStartup", config.dockNoteEditorOnStartup),
+            ("doNotDockNoteEditorByDragging", config.doNotDockNoteEditorByDragging),
             ("hideNoteEditorStyleToolbar", config.hideNoteEditorStyleToolbar),
             ("hideNoteEditorTextUtility", config.hideNoteEditorTextUtility),
             ("importDoNotStripStrongNo", config.importDoNotStripStrongNo),

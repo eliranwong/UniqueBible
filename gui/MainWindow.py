@@ -1292,9 +1292,9 @@ class MainWindow(QMainWindow):
     def openNoteEditor(self, noteType, b=None, c=None, v=None):
         if not hasattr(self, "noteEditor"):
             self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
-        elif not config.lastOpenedNote == (noteType, b, c, v):
+        else:
             self.showNoteEditor()
-            if self.noteSaved or self.warningNotSaved():
+            if not config.lastOpenedNote == (noteType, b, c, v) and (self.noteSaved or self.warningNotSaved()):
                 self.noteEditor.noteEditor.resetVariables()
                 self.noteEditor.noteEditor.displayInitialContent(noteType, b, c, v)
         self.insertContextTextToNoteEditor()

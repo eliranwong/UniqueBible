@@ -1,3 +1,8 @@
+Changes in 30.64:
+* Fixed displaying Note Editor when "edit" note button is clicked twice.
+* Added config.doNotDockNoteEditorByDragging, configurable via "Set Config Flags" window.
+    When it is set to True, Note Editor does not dock around main window by dragging.
+
 Changes in 30.63:
 * Changed a config option name from "dockNoteEditor" to "dockNoteEditorOnStartupOnStartup"
     - Note Editor can be docked around the main window whether config.dockNoteEditorOnStartupOnStartup is set to True or False.
