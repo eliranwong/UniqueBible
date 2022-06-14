@@ -939,4 +939,9 @@ translation = {
     "table": "Tabelle",
     "pieChart": "Kreisdiagramm",
     "barChart": "Balkendiagramm",
+    "openNoteEditorFileViaMenu": "Öffnen",
+    "saveNoteEditorFileViaMenu": "Hinweis speichern",
+    "saveAsNoteEditorFileViaMenu": "Hinweis speichern als",
+    "openNote": "Öffnen",
+    "noteFile": "Notizdatei",
 }

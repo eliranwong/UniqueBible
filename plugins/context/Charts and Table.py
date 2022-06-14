@@ -66,6 +66,9 @@ def generateCharts(text):
 
         tableHtml = getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle)
 
+        if hasattr(config.mainWindow, "charts"):
+            config.mainWindow.charts.close()
+            config.mainWindow.charts = None
         config.mainWindow.charts = QWidget()
         mainLayout = QVBoxLayout()
         controlLayout = QHBoxLayout()

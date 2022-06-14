@@ -86,7 +86,7 @@ class WebEngineView(QWebEngineView):
         text = self.getText()
         book = BibleVerseParser(config.parserStandarisation).bcvToVerseReference(self.getBook(), 1, 1)[:-4]
         if self.name == "main":
-            self.searchText.setText("{1} {0} | {2}".format(text, config.thisTranslation["context1_search"], sc.contextSearchBible))
+            self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
         else:
             self.searchText.setText("{1} {0}".format(text, config.thisTranslation["context1_search"]))
         self.searchTextInBook.setText("{2} {0} > {1}".format(text, book, config.thisTranslation["context1_search"]))
@@ -394,7 +394,7 @@ class WebEngineView(QWebEngineView):
 
         # Start Search section
         action = QAction(self)
-        action.setText(config.thisTranslation["context1_search"])
+        action.setText("{0} | {1}".format(config.thisTranslation["context1_search"], sc.openControlPanelTab3))
         action.triggered.connect(self.searchPanel)
         self.addAction(action)
 

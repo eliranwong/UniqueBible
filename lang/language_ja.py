@@ -939,4 +939,9 @@ translation = {
     "table": "表",
     "pieChart": "円グラフ",
     "barChart": "棒グラフ",
+    "openNoteEditorFileViaMenu": "メモを開く",
+    "saveNoteEditorFileViaMenu": "メモの保存",
+    "saveAsNoteEditorFileViaMenu": "メモの保存",
+    "openNote": "オープン",
+    "noteFile": "メモファイル",
 }

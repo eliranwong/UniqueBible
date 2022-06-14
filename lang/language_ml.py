@@ -939,4 +939,9 @@ translation = {
     "table": "ടേബിള്",
     "pieChart": "City name (optional, probably does not need a translation)",
     "barChart": "ബാര് ചर्ट",
+    "openNoteEditorFileViaMenu": "കുറിപ്പ് തുറക്കുക",
+    "saveNoteEditorFileViaMenu": "കുറിപ്പ് സൂക്ഷിക്കുക",
+    "saveAsNoteEditorFileViaMenu": "കുറിപ്പുകള് സൂക്ഷിയ്ക്കുക",
+    "openNote": "തുറക്കുക",
+    "noteFile": "കുറിപ്പ് ഫയല്",
 }

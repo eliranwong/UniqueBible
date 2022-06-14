@@ -939,4 +939,9 @@ translation = {
     "table": "圖表",
     "pieChart": "圓餅圖",
     "barChart": "長條圖",
+    "openNoteEditorFileViaMenu": "開啟筆記",
+    "saveNoteEditorFileViaMenu": "儲存筆記",
+    "saveAsNoteEditorFileViaMenu": "將筆記另存為",
+    "openNote": "打開",
+    "noteFile": "筆記檔案",
 }

@@ -155,14 +155,16 @@ class NoteEditorWindow(QMainWindow):
         self.addToolBar(self.menuBar)
 
         newButton = QPushButton()
-        newButton.setToolTip("{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]))
+        #newButton.setToolTip("{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]))
+        newButton.setToolTip(config.thisTranslation["menu7_create"])
         newButtonFile = os.path.join("htmlResources", "newfile.png")
         newButton.setIcon(QIcon(newButtonFile))
         newButton.clicked.connect(self.newNoteFile)
         self.menuBar.addWidget(newButton)
 
         openButton = QPushButton()
-        openButton.setToolTip("{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"]))
+        #openButton.setToolTip("{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"]))
+        openButton.setToolTip(config.thisTranslation["menu7_open"])
         openButtonFile = os.path.join("htmlResources", "open.png")
         openButton.setIcon(QIcon(openButtonFile))
         openButton.clicked.connect(self.openFileDialog)
@@ -255,17 +257,20 @@ class NoteEditorWindow(QMainWindow):
         self.addToolBar(self.menuBar)
 
         icon = "material/action/note_add/materialiconsoutlined/48dp/2x/outline_note_add_black_48dp.png"
-        toolTip = "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"])
+        #toolTip = "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"])
+        toolTip = config.thisTranslation["menu7_create"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.newNoteFile, self.menuBar, None, False)
 
         icon = "material/file/file_open/materialiconsoutlined/48dp/2x/outline_file_open_black_48dp.png"
-        toolTip = "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"])
+        #toolTip = "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"])
+        toolTip = config.thisTranslation["menu7_open"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.openFileDialog, self.menuBar, None, False)
 
         self.menuBar.addSeparator()
 
         icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
-        toolTip = "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"])
+        #toolTip = "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"])
+        toolTip = config.thisTranslation["note_save"]
         self.parent.parent.addMaterialIconButton(toolTip, icon, self.saveNote, self.menuBar, None, False)
 
         icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
@@ -317,15 +322,16 @@ class NoteEditorWindow(QMainWindow):
         self.addToolBar(self.menuBar)
 
         iconFile = os.path.join("htmlResources", "newfile.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]), self.newNoteFile)
+        #self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + N]".format(config.thisTranslation["menu7_create"]), self.newNoteFile)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_create"], self.newNoteFile)
 
         iconFile = os.path.join("htmlResources", "open.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + O]".format(config.thisTranslation["menu7_open"]), self.openFileDialog)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["menu7_open"], self.openFileDialog)
 
         self.menuBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "save.png")
-        self.menuBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + S]".format(config.thisTranslation["note_save"]), self.saveNote)
+        self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_save"], self.saveNote)
 
         iconFile = os.path.join("htmlResources", "saveas.png")
         self.menuBar.addAction(QIcon(iconFile), config.thisTranslation["note_saveAs"], self.openSaveAsDialog)
@@ -351,7 +357,7 @@ class NoteEditorWindow(QMainWindow):
 #        self.menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
-        self.searchLineEdit.setToolTip("{0}\n[Ctrl/Cmd + F]".format(config.thisTranslation["menu5_search"]))
+        self.searchLineEdit.setToolTip(config.thisTranslation["menu5_search"])
         self.searchLineEdit.setMaximumWidth(400)
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         self.menuBar.addWidget(self.searchLineEdit)
@@ -436,9 +442,12 @@ class NoteEditorWindow(QMainWindow):
         self.toolBar.addSeparator()
         
         items = (
-            ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "material/editor/format_bold/materialiconsoutlined/48dp/2x/outline_format_bold_black_48dp.png", self.format_bold),
-            ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "material/editor/format_italic/materialiconsoutlined/48dp/2x/outline_format_italic_black_48dp.png", self.format_italic),
-            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "material/editor/format_underlined/materialiconsoutlined/48dp/2x/outline_format_underlined_black_48dp.png", self.format_underline),
+            #("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "material/editor/format_bold/materialiconsoutlined/48dp/2x/outline_format_bold_black_48dp.png", self.format_bold),
+            #("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "material/editor/format_italic/materialiconsoutlined/48dp/2x/outline_format_italic_black_48dp.png", self.format_italic),
+            #("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "material/editor/format_underlined/materialiconsoutlined/48dp/2x/outline_format_underlined_black_48dp.png", self.format_underline),
+            (config.thisTranslation["noteTool_bold"], "material/editor/format_bold/materialiconsoutlined/48dp/2x/outline_format_bold_black_48dp.png", self.format_bold),
+            (config.thisTranslation["noteTool_italic"], "material/editor/format_italic/materialiconsoutlined/48dp/2x/outline_format_italic_black_48dp.png", self.format_italic),
+            (config.thisTranslation["noteTool_underline"], "material/editor/format_underlined/materialiconsoutlined/48dp/2x/outline_format_underlined_black_48dp.png", self.format_underline),
         )
         for item in items:
             toolTip, icon, action = item
@@ -456,8 +465,8 @@ class NoteEditorWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        #self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]\n\n{1}\n* {4}\n* {5}\n* {6}\n\n{2}\n*1 {4}\n*2 {5}\n*3 {6}\n\n{3}\n{10}{4}|{5}|{6}{11}\n{10}{7}|{8}|{9}{11}".format(config.thisTranslation["noteTool_trans0"], config.thisTranslation["noteTool_trans1"], config.thisTranslation["noteTool_trans2"], config.thisTranslation["noteTool_trans3"], config.thisTranslation["noteTool_no1"], config.thisTranslation["noteTool_no2"], config.thisTranslation["noteTool_no3"], config.thisTranslation["noteTool_no4"], config.thisTranslation["noteTool_no5"], config.thisTranslation["noteTool_no6"], "{", "}"), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
-        self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]".format(config.thisTranslation["convertFromMarkdown"]), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        #self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + M]".format(config.thisTranslation["convertFromMarkdown"]), "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
+        self.parent.parent.addMaterialIconButton(config.thisTranslation["convertFromMarkdown"], "material/image/auto_fix_high/materialiconsoutlined/48dp/2x/outline_auto_fix_high_black_48dp.png", self.format_custom, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -473,7 +482,8 @@ class NoteEditorWindow(QMainWindow):
 
         self.toolBar.addSeparator()
 
-        self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
+        #self.parent.parent.addMaterialIconButton("{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
+        self.parent.parent.addMaterialIconButton(config.thisTranslation["noteTool_delete"], "material/editor/format_clear/materialiconsoutlined/48dp/2x/outline_format_clear_black_48dp.png", self.format_clear, self.toolBar, translation=False)
 
         self.toolBar.addSeparator()
 
@@ -529,9 +539,12 @@ class NoteEditorWindow(QMainWindow):
         self.toolBar.addSeparator()
         
         items = (
-            ("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "bold.png", self.format_bold),
-            ("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "italic.png", self.format_italic),
-            ("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "underline.png", self.format_underline),
+            #("{0}\n[Ctrl/Cmd + B]".format(config.thisTranslation["noteTool_bold"]), "bold.png", self.format_bold),
+            #("{0}\n[Ctrl/Cmd + I]".format(config.thisTranslation["noteTool_italic"]), "italic.png", self.format_italic),
+            #("{0}\n[Ctrl/Cmd + U]".format(config.thisTranslation["noteTool_underline"]), "underline.png", self.format_underline),
+            (config.thisTranslation["noteTool_bold"], "bold.png", self.format_bold),
+            (config.thisTranslation["noteTool_italic"], "italic.png", self.format_italic),
+            (config.thisTranslation["noteTool_underline"], "underline.png", self.format_underline),
         )
         for item in items:
             toolTip, icon, action = item
@@ -651,7 +664,8 @@ class NoteEditorWindow(QMainWindow):
         self.toolBar.addSeparator()
 
         iconFile = os.path.join("htmlResources", "clearFormat.png")
-        self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), self.format_clear)
+        #self.toolBar.addAction(QIcon(iconFile), "{0}\n[Ctrl/Cmd + D]".format(config.thisTranslation["noteTool_delete"]), self.format_clear)
+        self.toolBar.addAction(QIcon(iconFile), config.thisTranslation["noteTool_delete"], self.format_clear)
 
         self.toolBar.addSeparator()
 
@@ -792,9 +806,7 @@ p, li {0} white-space: pre-wrap; {1}
         self.show()
 
     def openFileDialog(self):
-        if self.parent.parent.noteSaved:
-            self.openFileDialogAction()
-        elif self.parent.parent.warningNotSaved():
+        if self.parent.parent.noteSaved or self.parent.parent.warningNotSaved():
             self.openFileDialogAction()
 
     def openFileDialogAction(self):

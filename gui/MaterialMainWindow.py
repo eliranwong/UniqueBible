@@ -20,15 +20,24 @@ class MaterialMainWindow:
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
         if hasattr(config, "toggleDockWidget"):
+            config.toggleDockWidget.setShortcut(sc.createNewNoteFile)
             menu.addAction(config.toggleDockWidget)
         else:
             addMenuItem(menu, "note_editor", self, self.createNewNoteFile, sc.createNewNoteFile)
-        menu.addSeparator()
+        subMenu = addSubMenu(menu, "noteFile")
         items = (
-            ("menu7_open", self.openTextFileDialog, sc.openTextFileDialog),
+            ("openNote", self.openNoteEditorFileViaMenu, sc.openNoteEditorFileViaMenu),
+            ("note_save", self.saveNoteEditorFileViaMenu, sc.saveNoteEditorFileViaMenu),
+            ("note_saveAs", self.saveAsNoteEditorFileViaMenu, sc.saveAsNoteEditorFileViaMenu),
         )
         for feature, action, shortcut in items:
-            addMenuItem(menu, feature, self, action, shortcut)
+            addMenuItem(subMenu, feature, self, action, shortcut)
+        menu.addSeparator()
+        items = (
+            ("menu7_open", self.openTextFileDialog),
+        )
+        for feature, action in items:
+            addMenuItem(menu, feature, self, action)
 
         subMenu = addSubMenu(menu, "saveFile")
         subMenu1 = addSubMenu(subMenu, "bibleWindowContent")

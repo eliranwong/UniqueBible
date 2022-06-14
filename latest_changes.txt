@@ -1,3 +1,7 @@
+Changes in 30.67
+* Changes shortcuts for opening or saving Note Editor file.
+* Enable config.doNotDockNoteEditorByDragging to work even config.dockNoteEditorOnStartup is set to False.
+
 Changes in 30.66
 * Improved context plugin "Charts and Table" with use of stack widget, which makes switching between charts and table easier.
 * Make changes in WebEngineViewPopover.py so that context plugin can easily use it.

@@ -1255,6 +1255,24 @@ class MainWindow(QMainWindow):
             if not self.noteEditor.isVisible():
                 self.noteEditor.setVisible(True)
 
+    def openNoteEditorFileViaMenu(self):
+        if not hasattr(self, "noteEditor"):
+            self.noteEditor = NoteEditor(self, "file")
+        self.showNoteEditor()
+        self.noteEditor.noteEditor.openFileDialog()
+
+    def saveNoteEditorFileViaMenu(self):
+        if not hasattr(self, "noteEditor"):
+            self.noteEditor = NoteEditor(self, "file")
+        self.showNoteEditor()
+        self.noteEditor.noteEditor.saveNote()
+
+    def saveAsNoteEditorFileViaMenu(self):
+        if not hasattr(self, "noteEditor"):
+            self.noteEditor = NoteEditor(self, "file")
+        self.showNoteEditor()
+        self.noteEditor.noteEditor.openSaveAsDialog()
+
     def warningNotSaved(self):
         self.showNoteEditor()
         msgBox = QMessageBox(QMessageBox.Warning,
@@ -1528,8 +1546,9 @@ class MainWindow(QMainWindow):
         self.openControlPanelTab(3)
         self.controlPanel.toolTab.searchField.setText(clipboardText if clipboardText else "")
 
-    def runContextPluginOnClipboardContent(self, plugin):
-        clipboardText = self.getClipboardText()
+    def runContextPluginOnClipboardContent(self, plugin, clipboardText=""):
+        if not clipboardText:
+            clipboardText = self.getClipboardText()
         if clipboardText:
             self.mainView.currentWidget().runPlugin(plugin, clipboardText)
         else:

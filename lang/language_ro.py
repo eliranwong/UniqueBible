@@ -939,4 +939,9 @@ translation = {
     "table": "Tabel",
     "pieChart": "Pie Chart",
     "barChart": "Grafic de bare",
+    "openNoteEditorFileViaMenu": "Notă deschisă",
+    "saveNoteEditorFileViaMenu": "Salvează nota",
+    "saveAsNoteEditorFileViaMenu": "Salvează nota ca",
+    "openNote": "Deschide",
+    "noteFile": "Fișier Notă",
 }

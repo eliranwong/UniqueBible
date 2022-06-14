@@ -939,4 +939,9 @@ translation = {
     "table": "-Πίνακας",
     "pieChart": "Διάγραμμα πίτας:",
     "barChart": "Διάγραμμα ράβδων",
+    "openNoteEditorFileViaMenu": "Άνοιγμα σημείωσης",
+    "saveNoteEditorFileViaMenu": "Αποθήκευση σημείωσης",
+    "saveAsNoteEditorFileViaMenu": "Αποθήκευση σημείωσης ως",
+    "openNote": "' Ανοιξέ",
+    "noteFile": "Αρχείο σημειώσεων",
 }

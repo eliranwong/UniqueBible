@@ -939,4 +939,9 @@ translation = {
     "table": "Таблица",
     "pieChart": "Круговая диаграмма",
     "barChart": "Столбчатой",
+    "openNoteEditorFileViaMenu": "Открыть примечание",
+    "saveNoteEditorFileViaMenu": "Сохранить примечание",
+    "saveAsNoteEditorFileViaMenu": "Сохранить примечание как",
+    "openNote": "Открыть",
+    "noteFile": "Файл примечании",
 }

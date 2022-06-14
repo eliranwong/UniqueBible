@@ -939,4 +939,9 @@ translation = {
     "table": "सारणी",
     "pieChart": "पाई चार्ट",
     "barChart": "बार चार्ट",
+    "openNoteEditorFileViaMenu": "नोट खोलें",
+    "saveNoteEditorFileViaMenu": "नोट सहेजें",
+    "saveAsNoteEditorFileViaMenu": "नोट सहेजें",
+    "openNote": "खोलें",
+    "noteFile": "नोट फ़ाइल",
 }

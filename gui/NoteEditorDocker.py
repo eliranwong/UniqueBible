@@ -31,5 +31,5 @@ class NoteEditor(QDockWidget):
             self.setFloating(False)
         else:
             self.setFloating(True)
-            if config.doNotDockNoteEditorByDragging:
-                self.setAllowedAreas(Qt.NoDockWidgetArea)
+        if config.doNotDockNoteEditorByDragging:
+            self.setAllowedAreas(Qt.NoDockWidgetArea)
