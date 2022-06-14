@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "Abilitare Note Editor a dock intorno alla finestra principale e sgancarlo da esso.",
     "dockNoteEditorOnStartup": "Dock Note Editor quando viene lanciato.",
     "doNotDockNoteEditorByDragging": "Non dock dock Editor trascinando",
+    "table": "Tabella",
+    "pieChart": "Grafico a torta",
+    "barChart": "Grafico a barre",
 }

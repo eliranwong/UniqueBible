@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "नोट संपादक को मुख्य विंडो के चारों ओर डॉक करने के लिए सक्षम करें और इसे से अनडॉक करें.",
     "dockNoteEditorOnStartup": "डॉक नोट संपादक जब यह लॉन्च किया जाता है.",
     "doNotDockNoteEditorByDragging": "खींचना संपादक नोट संपादक को न करें",
+    "table": "सारणी",
+    "pieChart": "पाई चार्ट",
+    "barChart": "बार चार्ट",
 }

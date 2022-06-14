@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "Activez l'éditeur de notes pour qu'il s'ancre autour de la fenêtre principale et qu'il s'en ancre.",
     "dockNoteEditorOnStartup": "Editeur de notes d'ancrage lorsqu'il est lancé.",
     "doNotDockNoteEditorByDragging": "Ne pas mettre à quai l'éditeur de notes en faisant glisser",
+    "table": "Tableau",
+    "pieChart": "Graphique circulaire",
+    "barChart": "Diagramme à barres",
 }

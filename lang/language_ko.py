@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "주 편집기를 사용하여 주 창 주위에 도킹하고 그로부터 도킹 해제하십시오.",
     "dockNoteEditorOnStartup": "도크 노트 편집기가 실행될 때",
     "doNotDockNoteEditorByDragging": "끌어서 노트 편집기를 도크하지 않음",
+    "table": "표",
+    "pieChart": "원형 차트",
+    "barChart": "막대형 차트",
 }

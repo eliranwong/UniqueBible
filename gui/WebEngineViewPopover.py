@@ -39,7 +39,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.page().runJavaScript(changeTitle)
         # run textCommandChanged from parent
         if not newTextCommand == "ePubViewer.html" and not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
-            self.parent.parent.parent.textCommandChanged(newTextCommand, self.source)
+            config.mainWindow.textCommandChanged(newTextCommand, self.source)
 
     def addMenuActions(self):
 
@@ -149,7 +149,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.addAction(qKey)
 
     def messageNoSelection(self):
-        self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
+        config.mainWindow.studyView.currentWidget().displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
 
     def copySelectedText(self):
         if not self.selectedText():
@@ -159,42 +159,42 @@ class WebEngineViewPopover(QWebEngineView):
 
     def displayVersesInNewWindow(self):
         selectedText = self.selectedText().strip()
-        self.parent.displayVersesInNewWindow(selectedText)
+        config.mainWindow.studyView.currentWidget().displayVersesInNewWindow(selectedText)
     
     def displayVersesInBibleWindow(self):
         selectedText = self.selectedText().strip()
-        self.parent.displayVersesInBibleWindow(selectedText)
+        config.mainWindow.studyView.currentWidget().displayVersesInBibleWindow(selectedText)
 
     def displayVersesInBottomWindow(self):
         selectedText = self.selectedText().strip()
-        self.parent.displayVersesInBottomWindow(selectedText)
+        config.mainWindow.studyView.currentWidget().displayVersesInBottomWindow(selectedText)
 
     def displayVersesInPresentation(self):
         selectedText = self.selectedText().strip()
-        self.parent.runPlugin("Presentation_Ctrl+Alt+P", selectedText)
+        config.mainWindow.studyView.currentWidget().runPlugin("Presentation_Ctrl+Shift+Y", selectedText)
 
     def searchPanel(self):
         selectedText = self.selectedText().strip()
-        self.parent.searchPanel(selectedText)
+        config.mainWindow.studyView.currentWidget().searchPanel(selectedText)
 
     def openInStudyWindow(self):
         if self.name.lower().endswith("pdf"):
             openPdfViewerInNewWindow = config.openPdfViewerInNewWindow
             config.openPdfViewerInNewWindow = False
-            self.parent.parent.parent.openPdfReader(self.name, fullPath=True)
+            config.mainWindow.openPdfReader(self.name, fullPath=True)
             config.openPdfViewerInNewWindow = openPdfViewerInNewWindow
         elif self.name == "EPUB":
-            self.parent.parent.parent.runPlugin("ePub Viewer")
+            config.mainWindow.runPlugin("ePub Viewer")
         else:
             self.page().toHtml(self.openHtmlInStudyWindow)
         self.close()
     
     def openHtmlInStudyWindow(self, html):
-        self.parent.parent.parent.openTextOnStudyView(html, tab_title="study")
+        config.mainWindow.openTextOnStudyView(html, tab_title="study")
 
     def runAsCommand(self):
         selectedText = self.selectedText()
-        self.parent.parent.parent.textCommandChanged(selectedText, "main")
+        config.mainWindow.textCommandChanged(selectedText, "main")
 
     def closeEvent(self, event):
         if hasattr(config, "macroIsRunning") and config.macroIsRunning:
@@ -231,4 +231,4 @@ class WebEngineViewPopover(QWebEngineView):
             file = open(fileName, "w")
             file.write(html)
             file.close()
-            self.parent.displayMessage(config.thisTranslation["saved"])
+            config.mainWindow.studyView.currentWidget().displayMessage(config.thisTranslation["saved"])

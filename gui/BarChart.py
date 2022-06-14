@@ -14,7 +14,7 @@ class BarChart(QWidget):
         self.chartTitle = chartTitle
 
         self.setWindowTitle("Unique Bible App")
-        self.setGeometry(100,100, 680,500)
+        #self.setGeometry(100,100, 680,500)
         self.create_bar()
 
         layout = QVBoxLayout()

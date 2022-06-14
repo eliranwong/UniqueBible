@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "Habilite el Editor de notas para acoplar la ventana principal y desacoplarla.",
     "dockNoteEditorOnStartup": "Editor de notas de muelle cuando se inicia.",
     "doNotDockNoteEditorByDragging": "No acoplar el Editor de notas arrastrando",
+    "table": "Cuadro",
+    "pieChart": "Gráfico circular",
+    "barChart": "Gráfico de barras",
 }

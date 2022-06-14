@@ -1,3 +1,7 @@
+Changes in 30.66
+* Improved context plugin "Charts and Table" with use of stack widget, which makes switching between charts and table easier.
+* Make changes in WebEngineViewPopover.py so that context plugin can easily use it.
+
 Changes in 30.65
 * Fixed untranslated buttons in master control search
 
@@ -20,7 +24,7 @@ Changes in 30.61:
     - It is set to True by default.
     - Configurable via Config Flags Window.
 * "Note Editor" is now dockable:
-    - When "Note Editor" if first opened, it is docked on the right side of the main window.
+    - When "Note Editor" is first opened, it is docked on the right side of the main window.
     - The "Note Editor" can be undocked from the main window by dragging the "Note Editor" menu bar out of the main window.
     - The docking position of the "Note Editor" can also be changed to the left, top, right or bottom of the main window by dragging.
 * Changed the toolbar "Note Editor" button to toggle "Note Editor" instead of opening new note.

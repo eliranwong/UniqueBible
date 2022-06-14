@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "Activați Note Editor pentru a andoca în jurul ferestrei principale și undock din ea.",
     "dockNoteEditorOnStartup": "Dock Note Editor atunci când este lansat.",
     "doNotDockNoteEditorByDragging": "Nu dock Note Editor prin glisarea",
+    "table": "Tabel",
+    "pieChart": "Pie Chart",
+    "barChart": "Grafic de bare",
 }

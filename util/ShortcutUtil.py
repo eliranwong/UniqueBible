@@ -451,7 +451,7 @@ class ShortcutUtil:
             "closePopoverWindow": "Alt+Q",
             "searchPopover": "Alt+F",
             "runCommandPopover": "Alt+C",
-            "presentPopover": "Alt+P",
+            "presentPopover": "Ctrl+Shift+Y",
             "displayReferenceOnBibleWindowPopover": "Alt+B",
             "displayReferenceOnNewWindowPopover": "Ctrl+Alt+B",
             "displayChapterMenuTogetherWithBibleChapter": "",

@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "使筆記編輯器能在主要視窗周圍鎖定位置，或隨時解鎖。",
     "dockNoteEditorOnStartup": "筆記編輯器啟動時鎖定在主要視窗的右邊。",
     "doNotDockNoteEditorByDragging": "不通過拖曳方法鎖定筆記編輯器位置",
+    "table": "圖表",
+    "pieChart": "圓餅圖",
+    "barChart": "長條圖",
 }

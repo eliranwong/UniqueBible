@@ -15,7 +15,7 @@ class PieChart(QWidget):
         self.chartTitle, self.showFigure = chartTitle, showFigure
 
         self.setWindowTitle("Unique Bible App")
-        self.setGeometry(100,100, 1280,600)
+        #self.setGeometry(100,100, 1280,600)
 
         layout = QVBoxLayout()
         layout.addWidget(self.create_piechart())

@@ -1,11 +1,14 @@
 import config
 from util.BibleVerseParser import BibleVerseParser
+from gui.WebEngineViewPopover import WebEngineViewPopover
 if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineWidgets import QWebEngineView
+    from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton
     from gui.PieChart import PieChart
     from gui.BarChart import BarChart
 else:
     from qtpy.QtWebEngineWidgets import QWebEngineView
+    from qtpy.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton
 
 
 def generateCharts(text):
@@ -51,47 +54,114 @@ def generateCharts(text):
                     else:
                         references.append('<ref onclick="bcv({0},{1},{2},{3},{4})">{5}</ref>'.format(*bcv, reference))
                 data.append("  <tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>".format(chapterNo, "; ".join(references), len(references)))
-        # Display a Table
-        config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle))
+
         # Formulate Charts Data
         if isSortedByChapter:
             chartTitle = "{0} x {1}".format(firstColumnTitle, len(verses))
         else:
             chartTitle = "{0} x {1}".format(config.thisTranslation["bibleReferences"], len(verses))
+
+        # Display a Table
+        # config.mainWindow.studyView.currentWidget().openPopover(html=getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle))
+
+        tableHtml = getTableHtml("\n".join(data), str(len(verses)), firstColumnTitle)
+
+        config.mainWindow.charts = QWidget()
+        mainLayout = QVBoxLayout()
+        controlLayout = QHBoxLayout()
+        mainLayout.addLayout(controlLayout)
+
+        config.stackedCharts = QStackedWidget()
+        htmlTable = WebEngineViewPopover(None, "study", "study")
+        tableHtml = config.mainWindow.wrapHtml(tableHtml)
+        htmlTable.setHtml(tableHtml, config.baseUrl)
+        config.stackedCharts.addWidget(htmlTable)
+
         if config.qtLibrary == "pyside6":
+
             # Data for feeding QChart
             if isSortedByChapter:
                 qtData = [(str(chapterNo), len(counts[chapterNo])) for chapterNo in sorted(counts)]
             else:
                 qtData = [(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
             # QChart Bar Chart
-            config.mainWindow.barChart = BarChart(qtData, chartTitle)
-            config.mainWindow.barChart.show()
+            #config.mainWindow.barChart = BarChart(qtData, chartTitle)
+            #config.mainWindow.barChart.show()
             # QChart Pie Chart
-            config.mainWindow.pieChart = PieChart(qtData, chartTitle)
-            config.mainWindow.pieChart.show()
+            #config.mainWindow.pieChart = PieChart(qtData, chartTitle)
+            #config.mainWindow.pieChart.show()
+
+            config.stackedCharts.addWidget(PieChart(qtData, chartTitle))
+            config.stackedCharts.addWidget(BarChart(qtData, chartTitle))
+            mainLayout.addWidget(config.stackedCharts)
         else:
+
             # Data for HTML charts
             if isSortedByChapter:
                 data = ["  ['{0}', {1}]".format(str(chapterNo), len(counts[chapterNo])) for chapterNo in sorted(counts)]
             else:
                 data = ["  ['{0}', {1}]".format(parser.standardAbbreviation[str(bookNo)], len(counts[bookNo])) for bookNo in sorted(counts)]
             # Display a HTML Bar Chart
-            html = getBarChartHtml(",\n".join(data), len(counts.keys()), chartTitle)
-            html = config.mainWindow.wrapHtml(html)
-            config.mainWindow.barChart = QWebEngineView()
-            config.mainWindow.barChart.setHtml(html, config.baseUrl)
-            config.mainWindow.barChart.setMinimumSize(900, 550)
-            config.mainWindow.barChart.show()
+            #html = getBarChartHtml(",\n".join(data), len(counts.keys()), chartTitle)
+            #html = config.mainWindow.wrapHtml(html)
+            #config.mainWindow.barChart = QWebEngineView()
+            #config.mainWindow.barChart.setHtml(html, config.baseUrl)
+            #config.mainWindow.barChart.setMinimumSize(900, 550)
+            #config.mainWindow.barChart.show()
             # Display a HTML Pie Chart
+            #html = getPieChartHtml(",\n".join(data), chartTitle)
+            #html = config.mainWindow.wrapHtml(html)
+            #config.mainWindow.pieChart = QWebEngineView()
+            #config.mainWindow.pieChart.setHtml(html, config.baseUrl)
+            #config.mainWindow.pieChart.setMinimumSize(700, 380)
+            #config.mainWindow.pieChart.show()
+
             html = getPieChartHtml(",\n".join(data), chartTitle)
             html = config.mainWindow.wrapHtml(html)
-            config.mainWindow.pieChart = QWebEngineView()
-            config.mainWindow.pieChart.setHtml(html, config.baseUrl)
-            config.mainWindow.pieChart.setMinimumSize(700, 380)
-            config.mainWindow.pieChart.show()
+            htmlPieChart = QWebEngineView()
+            htmlPieChart.setHtml(html, config.baseUrl)
+            config.stackedCharts.addWidget(htmlPieChart)
+            html = getBarChartHtml(",\n".join(data), len(counts.keys()), chartTitle)
+            html = config.mainWindow.wrapHtml(html)
+            htmlBarChart = QWebEngineView()
+            htmlBarChart.setHtml(html, config.baseUrl)
+            config.stackedCharts.addWidget(htmlBarChart)
+            mainLayout.addWidget(config.stackedCharts)
+
+#        refTable, pieChart, barChart = QRadioButton("Table"), QRadioButton("Pie Chart"), QRadioButton("Bar Chart")
+#        refTable.setChecked(True)
+#        refTable.toggled.connect(lambda: config.stackedCharts.setCurrentIndex(0))
+#        pieChart.toggled.connect(lambda: config.stackedCharts.setCurrentIndex(1))
+#        barChart.toggled.connect(lambda: config.stackedCharts.setCurrentIndex(2))
+#        for radioButton in (refTable, pieChart, barChart):
+#            controlLayout.addWidget(radioButton)
+
+        refTable, pieChart, barChart = QPushButton(config.thisTranslation["table"]), QPushButton(config.thisTranslation["pieChart"]), QPushButton(config.thisTranslation["barChart"])
+        refTable.clicked.connect(lambda: config.stackedCharts.setCurrentIndex(0))
+        refTable.clicked.connect(lambda: updateButtons(refTable, pieChart, barChart))
+        pieChart.clicked.connect(lambda: config.stackedCharts.setCurrentIndex(1))
+        pieChart.clicked.connect(lambda: updateButtons(pieChart, refTable, barChart))
+        barChart.clicked.connect(lambda: config.stackedCharts.setCurrentIndex(2))
+        barChart.clicked.connect(lambda: updateButtons(barChart, refTable, pieChart))
+        for pushButton in (refTable, pieChart, barChart):
+            pushButton.setCheckable(True)
+            controlLayout.addWidget(pushButton)
+        refTable.setChecked(True)
+        refTable.setDisabled(True)
+
+        config.mainWindow.charts.setLayout(mainLayout)
+        config.mainWindow.charts.show()
+        config.mainWindow.charts.showMaximized()
+
     else:
         config.mainWindow.displayMessage(config.thisTranslation["message_noReference"])
+
+def updateButtons(button1, button2, button3):
+    button1.setDisabled(True)
+    button2.setDisabled(False)
+    button2.setChecked(False)
+    button3.setDisabled(False)
+    button3.setChecked(False)
 
 def getTableHtml(data, totalVerseCount, firstColumnTitle=""):
     return """

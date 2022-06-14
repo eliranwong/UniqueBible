@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "പ്രധാന ജാലകത്തിന്റെ ചുറ്റും ഡോക്ക് ചെയ്യാന് നോട്ട് എഡിറ്റര് സജ്ജമാക്കുക.",
     "dockNoteEditorOnStartup": "തുടങ്ങുമ്പോള് ഡോക്ക് നോട്ട് എഡിറ്റര്.",
     "doNotDockNoteEditorByDragging": "ഡ്രാഗ് ചെയ്ത് നോട്ട് എഡിറ്റര് രേഖപ്പെടുത്തരുത്",
+    "table": "ടേബിള്",
+    "pieChart": "City name (optional, probably does not need a translation)",
+    "barChart": "ബാര് ചर्ट",
 }

@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "使笔记编辑器能在主要视窗周围锁定位置，或随时解锁。",
     "dockNoteEditorOnStartup": "笔记编辑器启动时锁定在主要视窗的右边。",
     "doNotDockNoteEditorByDragging": "不通过拖曳方法锁定笔记编辑器位置",
+    "table": "图表",
+    "pieChart": "饼图",
+    "barChart": "条形图",
 }

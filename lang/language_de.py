@@ -936,4 +936,7 @@ translation = {
     "dockNoteEditor": "Aktivieren Sie den Notizeditor, um das Hauptfenster zu docken und von diesem abzudocken.",
     "dockNoteEditorOnStartup": "Docknoteneditor, wenn er gestartet wird.",
     "doNotDockNoteEditorByDragging": "Notizeditor nicht per Drag-and-drop andocken",
+    "table": "Tabelle",
+    "pieChart": "Kreisdiagramm",
+    "barChart": "Balkendiagramm",
 }
