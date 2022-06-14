@@ -1,3 +1,6 @@
+Changes in 30.65
+* Fixed untranslated buttons in master control search
+
 Changes in 30.64:
 * Fixed displaying Note Editor when "edit" note button is clicked twice.
 * Added config.doNotDockNoteEditorByDragging, configurable via "Set Config Flags" window.
