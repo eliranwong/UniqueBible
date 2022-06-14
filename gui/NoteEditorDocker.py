@@ -27,7 +27,7 @@ class NoteEditor(QDockWidget):
         # Options: https://doc.qt.io/qtforpython/PySide6/QtCore/Qt.html#PySide6.QtCore.PySide6.QtCore.Qt.DockWidgetArea
         self.setAllowedAreas(Qt.AllDockWidgetAreas)
         self.parent.addDockWidget(Qt.RightDockWidgetArea, self)
-        if config.dockNoteEditorOnStartup and not config.doNotDockNoteEditorByDragging:
+        if config.dockNoteEditorOnStartup:
             self.setFloating(False)
         else:
             self.setFloating(True)

@@ -1,4 +1,4 @@
-Changes in 30.67
+Changes in 30.67, 30.68
 * Changes shortcuts for opening or saving Note Editor file.
 * Enable config.doNotDockNoteEditorByDragging to work even config.dockNoteEditorOnStartup is set to False.
 
