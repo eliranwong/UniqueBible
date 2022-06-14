@@ -125,9 +125,10 @@ class SearchLauncher(QWidget):
             (config.favouriteBible, lambda: self.searchBible(config.favouriteBible)),
             (config.favouriteBible2, lambda: self.searchBible(config.favouriteBible2)),
             (config.favouriteBible3, lambda: self.searchBible(config.favouriteBible3)),
-            ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
         )
+
         buttonRow2 = (
+            ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
             ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
             ("menu5_locations", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBL")),
             ("biblePromises", lambda: self.runSearchCommand("SEARCHBOOK:::Bible_Promises")),
@@ -139,7 +140,8 @@ class SearchLauncher(QWidget):
             ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
             ("allBooksPDF", lambda: self.runSearchCommand("SEARCHALLBOOKSPDF")),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1, buttonRow2, buttonRow3), translation=False))
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1,), translation=False))
+        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow2, buttonRow3), translation=True))
 
         widgetLayout0.addStretch()
         widget.setLayout(widgetLayout0)
