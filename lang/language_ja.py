@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "メモの保存",
     "openNote": "オープン",
     "noteFile": "メモファイル",
+    "addToWorkSpace": "ワークスペースに追加",
+    "readOnly": "読み取り専用",
+    "editable": "編集可能",
+    "workspace": "ワークスペース",
+    "cascade": "カスケード",
+    "tile": "タイル",
+    "textEditor": "テキスト・エディター",
 }

@@ -8,15 +8,17 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtCore import QUrl
     from PySide6.QtGui import QGuiApplication, QAction
-    from PySide6.QtWidgets import QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit
+    from PySide6.QtWidgets import QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit, QDialog
     from PySide6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings
     from PySide6.QtWebEngineWidgets import QWebEngineView
+    from PySide6.QtPrintSupport import QPrinter, QPrintDialog
 else:
     from qtpy.QtCore import Qt
     from qtpy.QtCore import QUrl
     from qtpy.QtGui import QGuiApplication
-    from qtpy.QtWidgets import QAction, QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit
+    from qtpy.QtWidgets import QAction, QApplication, QMenu, QFileDialog, QInputDialog, QLineEdit, QDialog
     from qtpy.QtWebEngineWidgets import QWebEnginePage, QWebEngineView, QWebEngineSettings
+    from qtpy.QtPrintSupport import QPrinter, QPrintDialog
 from util.BibleVerseParser import BibleVerseParser
 from db.BiblesSqlite import BiblesSqlite
 from util.Translator import Translator
@@ -124,6 +126,23 @@ class WebEngineView(QWebEngineView):
 
         # Open Content in
 
+        subMenu = QMenu()
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["readOnly"])
+        action.triggered.connect(self.addToWorkspaceReadOnly)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["editable"])
+        action.triggered.connect(self.addToWorkspaceEditable)
+        subMenu.addAction(action)
+
+        action = QAction(self)
+        action.setText(config.thisTranslation["addToWorkSpace"])
+        action.setMenu(subMenu)
+        self.addAction(action)
+
         if self.name in ("main", "study"):
 
             subMenu = QMenu()
@@ -144,6 +163,11 @@ class WebEngineView(QWebEngineView):
             action.triggered.connect(self.openOnFullScreen)
             subMenu.addAction(action)
 
+            action = QAction(self)
+            action.setText(config.thisTranslation["note_editor"])
+            action.triggered.connect(self.openInNoteEditor)
+            subMenu.addAction(action)
+
             #action = QAction(self)
             #action.setText(config.thisTranslation["pdfDocument"])
             #action.triggered.connect(self.exportToPdf)
@@ -154,9 +178,9 @@ class WebEngineView(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         # Open References in 
 
@@ -962,6 +986,33 @@ class WebEngineView(QWebEngineView):
     def copyHtmlToClipboard(self, text):
         QApplication.clipboard().setText(text)
 
+    # Add to Workspace
+    def addToWorkspaceReadOnly(self):
+        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+
+    def addToWorkspaceReadOnlyAction(self, html):
+        windowTitle = ""
+        if self.name == "main":
+            windowTitle = self.parent.parent.mainView.tabText(self.parent.parent.mainView.currentIndex()).strip()
+        elif self.name == "study":
+            windowTitle = self.parent.parent.studyView.tabText(self.parent.parent.studyView.currentIndex()).strip()
+        config.mainWindow.ws.addHtmlContent(html, False, windowTitle)
+
+    def addToWorkspaceEditable(self):
+        self.page().toHtml(self.addToWorkspaceEditableAction)
+
+    def addToWorkspaceEditableAction(self, html):
+        windowTitle = ""
+        if self.name == "main":
+            windowTitle = self.parent.parent.mainView.tabText(self.parent.parent.mainView.currentIndex()).strip()
+        elif self.name == "study":
+            windowTitle = self.parent.parent.studyView.tabText(self.parent.parent.studyView.currentIndex()).strip()
+        config.mainWindow.ws.addHtmlContent(html, True, windowTitle)
+
+    # Open in Note Editor
+    def openInNoteEditor(self):
+        self.page().toHtml(config.mainWindow.displayContentInNoteEditor)
+
     # Instant highligh feature
     def instantHighlight(self, selectionMonitoring=False):
         if selectionMonitoring:
@@ -1641,6 +1692,12 @@ class WebEngineView(QWebEngineView):
                 fileObj.write(html)
                 fileObj.close()
             self.displayMessage(config.thisTranslation["saved"])
+
+    def printContent(self):
+        printer = QPrinter()
+        myPrintDialog = QPrintDialog(printer, self)
+        if myPrintDialog.exec_() == QDialog.Accepted:
+            return self.print(printer)
 
 
 class WebEnginePage(QWebEnginePage):

@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "കുറിപ്പുകള് സൂക്ഷിയ്ക്കുക",
     "openNote": "തുറക്കുക",
     "noteFile": "കുറിപ്പ് ഫയല്",
+    "addToWorkSpace": "@ title: tab",
+    "readOnly": "മാത്രം വായിയ്ക്കുക",
+    "editable": "ദൃശ്യം",
+    "workspace": "@ title: tab",
+    "cascade": "കാസ്കേഡ്",
+    "tile": "ടൈല്",
+    "textEditor": "ടെക്സ്റ്റ് എഡിറ്റര്",
 }

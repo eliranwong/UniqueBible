@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "다음과 같은 노트 저장",
     "openNote": "개방상태",
     "noteFile": "노트 파일",
+    "addToWorkSpace": "Workspace에 추가하기",
+    "readOnly": "읽기 전용",
+    "editable": "편집 가능",
+    "workspace": "Workspace",
+    "cascade": "캐스케이드",
+    "tile": "타일",
+    "textEditor": "텍스트 편집기",
 }

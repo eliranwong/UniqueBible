@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "Save Note as",
     "openNote": "Open",
     "noteFile": "Note File",
+    "addToWorkSpace": "Add to Workspace",
+    "readOnly": "Read-Only",
+    "editable": "Editable",
+    "workspace": "Workspace",
+    "cascade": "Cascade",
+    "tile": "Tile",
+    "textEditor": "Text Editor",
 }

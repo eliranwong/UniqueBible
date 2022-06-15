@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "Сохранить примечание как",
     "openNote": "Открыть",
     "noteFile": "Файл примечании",
+    "addToWorkSpace": "Добавить в рабочую область",
+    "readOnly": "Только для чтения",
+    "editable": "Редактируемый",
+    "workspace": "Рабочее пространство",
+    "cascade": "Каскад",
+    "tile": "Плитка",
+    "textEditor": "Текстовый редактор",
 }

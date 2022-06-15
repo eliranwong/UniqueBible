@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "Salvează nota ca",
     "openNote": "Deschide",
     "noteFile": "Fișier Notă",
+    "addToWorkSpace": "Adaugă la spațiul de lucru",
+    "readOnly": "Citește numai",
+    "editable": "Editabil",
+    "workspace": "Spațiu de lucru",
+    "cascade": "Cascadă",
+    "tile": "Țiglă",
+    "textEditor": "Editor de text",
 }

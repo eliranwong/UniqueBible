@@ -1,3 +1,14 @@
+Changes in 30.69:
+* Added "Display Content in > Note Editor" feature on context menu.
+* Added Workspace window to which users can add multiple Content
+    The added content can be either read-only or editable.
+* Added a toggle button on Material menu second top toolbar to toggle the Workspace window.
+* Added buttons on both the right and left toolbars [Material menu layout only] to quickly add content to workspace for viewing or editing.
+* Removed PDF and Word Document export buttons from the left and right toolbars.
+    File export features are accessible through menu or context menu.
+* Added a wiki page about the newly added Workspace:
+    https://github.com/eliranwong/UniqueBible/wiki/Workspace
+
 Changes in 30.67, 30.68
 * Changes shortcuts for opening or saving Note Editor file.
 * Enable config.doNotDockNoteEditorByDragging to work even config.dockNoteEditorOnStartup is set to False.

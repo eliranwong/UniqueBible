@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "Hinweis speichern als",
     "openNote": "Öffnen",
     "noteFile": "Notizdatei",
+    "addToWorkSpace": "Zu Arbeitsbereich hinzufügen",
+    "readOnly": "Lesezugriff",
+    "editable": "Bearbeitbar",
+    "workspace": "Arbeitsbereich",
+    "cascade": "Cascade",
+    "tile": "Fliese",
+    "textEditor": "Texteditor",
 }

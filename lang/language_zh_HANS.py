@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "另存笔记为",
     "openNote": "打开",
     "noteFile": "笔记文件",
+    "addToWorkSpace": "添加到工作空间",
+    "readOnly": "阅读模式",
+    "editable": "编辑模式",
+    "workspace": "工作空间",
+    "cascade": "斯喀特",
+    "tile": "瓦莱",
+    "textEditor": "文本编辑器",
 }

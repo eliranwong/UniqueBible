@@ -540,6 +540,7 @@ for module, feature, isInstalled in required or config.updateDependenciesOnStart
 
 # Check if optional modules are installed
 optional = [
+    ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
     ("html5lib", "HTML Library", isHtml5libInstalled),
     ("mammoth", "Open DOCX file", isMammothInstalled),

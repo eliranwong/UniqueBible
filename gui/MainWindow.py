@@ -16,6 +16,7 @@ else:
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu
     from qtpy.QtWebEngineWidgets import QWebEnginePage
+from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
 from gui.BibleCollectionDialog import BibleCollectionDialog
 from gui.LibraryCatalogDialog import LibraryCatalogDialog
@@ -181,6 +182,10 @@ class MainWindow(QMainWindow):
         self.loadResourceDescriptions()
         # Load local file catalog
         CatalogUtil.loadLocalCatalog()
+
+        # workspace
+        self.ws = Workspace(self)
+        self.ws.hide()
 
         config.inBootupMode = False
         bootEndTime = datetime.now()
@@ -1299,13 +1304,23 @@ class MainWindow(QMainWindow):
     def createNewNoteFile(self):
         if not hasattr(self, "noteEditor"):
             self.noteEditor = NoteEditor(self, "file")
-            self.insertContextTextToNoteEditor()
         else:
             self.showNoteEditor()
             if self.noteSaved or self.warningNotSaved():
                 self.noteEditor.noteEditor.resetVariables()
                 self.noteEditor.noteEditor.newNoteFileAction()
         self.insertContextTextToNoteEditor()
+
+    def displayContentInNoteEditor(self, html):
+        if not hasattr(self, "noteEditor"):
+            self.noteEditor = NoteEditor(self, "file")
+            self.noteEditor.noteEditor.editor.setHtml(html)
+        else:
+            self.showNoteEditor()
+            if self.noteSaved or self.warningNotSaved():
+                self.noteEditor.noteEditor.resetVariables()
+                self.noteEditor.noteEditor.newNoteFileAction()
+                self.noteEditor.noteEditor.editor.setHtml(html)
 
     def openNoteEditor(self, noteType, b=None, c=None, v=None):
         if not hasattr(self, "noteEditor"):
@@ -5463,6 +5478,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def testing(self):
         #pass
         print("testing")
+
+    # Display workspace
+    def displayWorkspace(self):
+        self.ws.show()
+        if self.ws.isMinimized():
+            self.ws.showMaximized()
+        self.ws.activateWindow()
+        self.ws.raise_()
 
     # Work with system tray
     def showFromTray(self):

@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "Αποθήκευση σημείωσης ως",
     "openNote": "' Ανοιξέ",
     "noteFile": "Αρχείο σημειώσεων",
+    "addToWorkSpace": "Προσθήκη στο χώρο εργασίας",
+    "readOnly": "Μόνο για ανάγνωση",
+    "editable": "Τροποποιήσιμο:",
+    "workspace": "Χώρος εργασίας",
+    "cascade": "Cascade",
+    "tile": "Tile.",
+    "textEditor": "Λειτουργία επεξεργασίας κειμένου",
 }

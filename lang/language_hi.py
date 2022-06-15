@@ -944,4 +944,11 @@ translation = {
     "saveAsNoteEditorFileViaMenu": "नोट सहेजें",
     "openNote": "खोलें",
     "noteFile": "नोट फ़ाइल",
+    "addToWorkSpace": "कार्यस्थान में जोड़ें (A)",
+    "readOnly": "केवल पठनीय",
+    "editable": "संपादन योग्य",
+    "workspace": "कार्यस्थान",
+    "cascade": "कैस्केड",
+    "tile": "टाइल",
+    "textEditor": "पाठ संपादक",
 }

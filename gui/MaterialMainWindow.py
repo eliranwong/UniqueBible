@@ -1055,6 +1055,10 @@ class MaterialMainWindow:
         self.addMaterialIconButton("menu2_bottom", icon, self.cycleInstant, self.secondToolBar)
         self.secondToolBar.addSeparator()
 
+        icon = "material/action/space_dashboard/materialiconsoutlined/48dp/2x/outline_space_dashboard_black_48dp.png"
+        self.addMaterialIconButton("workspace", icon, self.displayWorkspace, self.secondToolBar)
+        self.secondToolBar.addSeparator()
+
         icon = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
         self.addMaterialIconButton("menu1_reload", icon, lambda: self.reloadCurrentRecord(True), self.secondToolBar)
         icon = "material/action/fit_screen/materialiconsoutlined/48dp/2x/outline_fit_screen_black_48dp.png"
@@ -1076,11 +1080,17 @@ class MaterialMainWindow:
         icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_mainForward", icon, self.forward, self.leftToolBar)
         self.leftToolBar.addSeparator()
-        if config.isHtmldocxInstalled:
-            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
-            self.addMaterialIconButton("exportToDocx", icon, self.exportMainPageToDocx, self.leftToolBar)
-        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
-        self.addMaterialIconButton("bar3_pdf", icon, self.printMainPage, self.leftToolBar)
+#        if config.isHtmldocxInstalled:
+#            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
+#            self.addMaterialIconButton("exportToDocx", icon, self.exportMainPageToDocx, self.leftToolBar)
+#        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
+#        self.addMaterialIconButton("bar3_pdf", icon, self.printMainPage, self.leftToolBar)
+        icon = "material/device/reviews/materialiconsoutlined/48dp/2x/outline_reviews_black_48dp.png"
+        tooltip = "{0} [{1}]".format(config.thisTranslation["addToWorkSpace"], config.thisTranslation["readOnly"])
+        self.addMaterialIconButton(tooltip, icon, lambda: self.mainView.currentWidget().addToWorkspaceReadOnly(), self.leftToolBar, None, False)
+        icon = "material/maps/rate_review/materialiconsoutlined/48dp/2x/outline_rate_review_black_48dp.png"
+        tooltip = "{0} [{1}]".format(config.thisTranslation["addToWorkSpace"], config.thisTranslation["editable"])
+        self.addMaterialIconButton(tooltip, icon, lambda: self.mainView.currentWidget().addToWorkspaceEditable(), self.leftToolBar, None, False)
         self.leftToolBar.addSeparator()
         self.enableParagraphButton = QPushButton()
         self.addMaterialIconButton(self.getReadFormattedBiblesToolTip(), self.getReadFormattedBibles(), self.enableParagraphButtonClicked, self.leftToolBar, self.enableParagraphButton, False)
@@ -1137,11 +1147,17 @@ class MaterialMainWindow:
         icon = "material/image/navigate_next/materialiconsoutlined/48dp/2x/outline_navigate_next_black_48dp.png"
         self.addMaterialIconButton("menu3_studyForward", icon, self.studyForward, self.rightToolBar)
         self.rightToolBar.addSeparator()
-        if config.isHtmldocxInstalled:
-            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
-            self.addMaterialIconButton("exportToDocx", icon, self.exportStudyPageToDocx, self.rightToolBar)
-        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
-        self.addMaterialIconButton("bar3_pdf", icon, self.printStudyPage, self.rightToolBar)
+#        if config.isHtmldocxInstalled:
+#            icon = "material/action/description/materialiconsoutlined/48dp/2x/outline_description_black_48dp.png"
+#            self.addMaterialIconButton("exportToDocx", icon, self.exportStudyPageToDocx, self.rightToolBar)
+#        icon = "material/image/picture_as_pdf/materialiconsoutlined/48dp/2x/outline_picture_as_pdf_black_48dp.png"
+#        self.addMaterialIconButton("bar3_pdf", icon, self.printStudyPage, self.rightToolBar)
+        icon = "material/device/reviews/materialiconsoutlined/48dp/2x/outline_reviews_black_48dp.png"
+        tooltip = "{0} [{1}]".format(config.thisTranslation["addToWorkSpace"], config.thisTranslation["readOnly"])
+        self.addMaterialIconButton(tooltip, icon, lambda: self.studyView.currentWidget().addToWorkspaceReadOnly(), self.rightToolBar, None, False)
+        icon = "material/maps/rate_review/materialiconsoutlined/48dp/2x/outline_rate_review_black_48dp.png"
+        tooltip = "{0} [{1}]".format(config.thisTranslation["addToWorkSpace"], config.thisTranslation["editable"])
+        self.addMaterialIconButton(tooltip, icon, lambda: self.studyView.currentWidget().addToWorkspaceEditable(), self.rightToolBar, None, False)
         self.rightToolBar.addSeparator()
         icon = "material/editor/highlight/materialiconsoutlined/48dp/2x/outline_highlight_black_48dp.png"
         self.addMaterialIconButton("menu4_indexes", icon, self.runINDEX, self.rightToolBar)

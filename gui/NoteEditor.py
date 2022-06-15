@@ -1,4 +1,4 @@
-import os, re, config, base64, webbrowser, platform, markdown
+import os, re, config, base64, webbrowser, markdown
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt
     from PySide6.QtGui import QIcon, QTextCursor, QFont, QGuiApplication
