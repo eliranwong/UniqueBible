@@ -1,6 +1,6 @@
 import config
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QWidget, QVBoxLayout
+    from PySide6.QtWidgets import QWidget, QVBoxLayout, QMenu
     from PySide6.QtCharts import QChart, QChartView, QPieSeries
     from PySide6.QtGui import QPainter, QPen
     from PySide6.QtCore import Qt
@@ -14,12 +14,19 @@ class PieChart(QWidget):
         self.data = data
         self.chartTitle, self.showFigure = chartTitle, showFigure
 
-        self.setWindowTitle("Unique Bible App")
+        self.setWindowTitle(config.thisTranslation["pieChart"])
         #self.setGeometry(100,100, 1280,600)
 
         layout = QVBoxLayout()
         layout.addWidget(self.create_piechart())
         self.setLayout(layout)
+
+    def contextMenuEvent(self, event):     
+        menu = QMenu(self)
+        addToWorkSpace = menu.addAction(config.thisTranslation["addToWorkSpace"])
+        selectedAction = menu.exec_(self.mapToGlobal(event.pos()))
+        if selectedAction == addToWorkSpace:
+            config.mainWindow.ws.addWidgetAsSubWindow(self.create_piechart(), config.thisTranslation["pieChart"])
 
     def create_piechart(self):
 

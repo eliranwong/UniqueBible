@@ -1,5 +1,5 @@
 
-import config
+import config, re
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QIcon
     from PySide6.QtCore import Qt
@@ -73,11 +73,11 @@ class Workspace(QMainWindow):
             widget = QTextEdit()
             widget.setHtml(html)
         else:
-            widget = WebEngineViewPopover(None, "main", "main")
+            widget = WebEngineViewPopover(self, "main", "main")
             widget.setHtml(html, config.baseUrl)
         if not windowTitle:
             windowTitle = TextUtil.htmlToPlainText(html)
             windowTitle = windowTitle.replace("\n", " ")
-            windowTitle = windowTitle.replace("UniqueBible.app", "")
+            windowTitle = re.sub("UniqueBible.app|Unique Bible App", "", windowTitle)
             windowTitle = windowTitle.strip()
         self.addWidgetAsSubWindow(widget, windowTitle, windowTooltip)

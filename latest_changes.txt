@@ -1,3 +1,6 @@
+Changes in 30.70:
+* Added ability to add table, charts and popover content to Workspace.
+
 Changes in 30.69:
 * Added "Display Content in > Note Editor" feature on context menu.
 * Added Workspace window to which users can add multiple Content

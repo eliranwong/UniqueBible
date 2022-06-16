@@ -990,6 +990,9 @@ class WebEngineView(QWebEngineView):
     def addToWorkspaceReadOnly(self):
         self.page().toHtml(self.addToWorkspaceReadOnlyAction)
 
+    def addToWorkspaceEditable(self):
+        self.page().toHtml(self.addToWorkspaceEditableAction)
+
     def addToWorkspaceReadOnlyAction(self, html):
         windowTitle = ""
         if self.name == "main":
@@ -997,9 +1000,6 @@ class WebEngineView(QWebEngineView):
         elif self.name == "study":
             windowTitle = self.parent.parent.studyView.tabText(self.parent.parent.studyView.currentIndex()).strip()
         config.mainWindow.ws.addHtmlContent(html, False, windowTitle)
-
-    def addToWorkspaceEditable(self):
-        self.page().toHtml(self.addToWorkspaceEditableAction)
 
     def addToWorkspaceEditableAction(self, html):
         windowTitle = ""

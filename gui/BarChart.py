@@ -1,9 +1,10 @@
 import config
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QWidget, QVBoxLayout
+    from PySide6.QtWidgets import QWidget, QVBoxLayout, QMenu
     from PySide6.QtCharts import QChart, QChartView, QBarSet, QBarSeries, QBarCategoryAxis
     from PySide6.QtGui import QPainter
     from PySide6.QtCore import Qt
+    from PySide6.QtGui import QAction
 
 
 # https://doc.qt.io/qtforpython/overviews/qtcharts-barchart-example.html#barchart-example
@@ -13,14 +14,19 @@ class BarChart(QWidget):
         self.data = data
         self.chartTitle = chartTitle
 
-        self.setWindowTitle("Unique Bible App")
+        self.setWindowTitle(config.thisTranslation["barChart"])
         #self.setGeometry(100,100, 680,500)
-        self.create_bar()
 
         layout = QVBoxLayout()
         layout.addWidget(self.create_bar())
         self.setLayout(layout)
 
+    def contextMenuEvent(self, event):     
+        menu = QMenu(self)
+        addToWorkSpace = menu.addAction(config.thisTranslation["addToWorkSpace"])
+        selectedAction = menu.exec_(self.mapToGlobal(event.pos()))
+        if selectedAction == addToWorkSpace:
+            config.mainWindow.ws.addWidgetAsSubWindow(self.create_bar(), config.thisTranslation["barChart"])
 
     def create_bar(self):
         series = QBarSeries()

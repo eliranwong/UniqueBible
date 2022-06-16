@@ -1498,7 +1498,7 @@ class MainWindow(QMainWindow):
     def getClipboardText(self):
         clipboardText = QApplication.clipboard().text()
         if not clipboardText:
-            text, ok = QInputDialog.getText(self.parent.parent, "Unique Bible App",
+            text, ok = QInputDialog.getText(self, "Unique Bible App",
                     config.thisTranslation["enter_text_here"], QLineEdit.Normal,
                     "")
             if ok and text:
@@ -5479,14 +5479,6 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         #pass
         print("testing")
 
-    # Display workspace
-    def displayWorkspace(self):
-        self.ws.show()
-        if self.ws.isMinimized():
-            self.ws.showMaximized()
-        self.ws.activateWindow()
-        self.ws.raise_()
-
     # Work with system tray
     def showFromTray(self):
         self.show()
@@ -5495,3 +5487,17 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         self.activateWindow()
         self.raise_()
         config.mainWindowHidden = False
+
+    # Work with workspace
+    def displayWorkspace(self):
+        self.ws.show()
+        if self.ws.isMinimized():
+            self.ws.showMaximized()
+        self.ws.activateWindow()
+        self.ws.raise_()
+
+    def addToWorkspaceReadOnlyAction(self, html, windowTitle=""):
+        self.ws.addHtmlContent(html, False, windowTitle)
+
+    def addToWorkspaceEditableAction(self, html, windowTitle=""):
+        self.ws.addHtmlContent(html, True, windowTitle)

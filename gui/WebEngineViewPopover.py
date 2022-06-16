@@ -16,12 +16,12 @@ else:
 
 class WebEngineViewPopover(QWebEngineView):
 
-    def __init__(self, parent, name, source):
+    def __init__(self, parent, name, source, windowTitle=""):
         super().__init__()
         self.parent = parent
         self.name = name
         self.source = source
-        self.setWindowTitle("Unique Bible App")
+        self.setWindowTitle(windowTitle if windowTitle else "Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
         self.page().loadFinished.connect(self.finishViewLoading)
         # add context menu (triggered by right-clicking)
@@ -41,7 +41,43 @@ class WebEngineViewPopover(QWebEngineView):
         if not newTextCommand == "ePubViewer.html" and not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
             config.mainWindow.textCommandChanged(newTextCommand, self.source)
 
+    def addToWorkspaceReadOnly(self):
+        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+
+    def addToWorkspaceEditable(self):
+        self.page().toHtml(self.addToWorkspaceEditableAction)
+
+    def addToWorkspaceReadOnlyAction(self, html):
+        windowTitle = self.windowTitle() if not self.windowTitle() == "Unique Bible App" else ""
+        config.mainWindow.addToWorkspaceReadOnlyAction(html, windowTitle)
+
+    def addToWorkspaceEditableAction(self, html):
+        windowTitle = self.windowTitle() if not self.windowTitle() == "Unique Bible App" else ""
+        config.mainWindow.addToWorkspaceEditableAction(html, windowTitle)
+
     def addMenuActions(self):
+
+        if not self.parent is config.mainWindow.ws:
+            subMenu = QMenu()
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["readOnly"])
+            action.triggered.connect(self.addToWorkspaceReadOnly)
+            subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["editable"])
+            action.triggered.connect(self.addToWorkspaceEditable)
+            subMenu.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["addToWorkSpace"])
+            action.setMenu(subMenu)
+            self.addAction(action)
+
+            separator = QAction(self)
+            separator.setSeparator(True)
+            self.addAction(separator)
 
         copyText = QAction(self)
         copyText.setText(config.thisTranslation["context1_copy"])
@@ -232,3 +268,9 @@ class WebEngineViewPopover(QWebEngineView):
             file.write(html)
             file.close()
             config.mainWindow.studyView.currentWidget().displayMessage(config.thisTranslation["saved"])
+
+    def addToWorkspaceReadOnly(self):
+        self.page().toHtml(self.addToWorkspaceReadOnlyAction)
+
+    def addToWorkspaceEditable(self):
+        self.page().toHtml(self.addToWorkspaceEditableAction)
