@@ -10,6 +10,7 @@ else:
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from gui.MiniTextEditor import MiniTextEditor
 from util.TextUtil import TextUtil
+from util.ThirdParty import Converter
 
 
 class Workspace(QMainWindow):
@@ -44,10 +45,14 @@ class Workspace(QMainWindow):
         # In QMainWindow, the following line adds the configured QToolBar as part of the toolbar of the main window
         self.addToolBar(Qt.LeftToolBarArea, menuBar)
 
+        icon = "material/navigation/refresh/materialiconsoutlined/48dp/2x/outline_refresh_black_48dp.png"
+        self.parent.addMaterialIconButton("menu1_reload", icon, self.refreshWorkspace, menuBar)
         icon = "material/file/folder/materialiconsoutlined/48dp/2x/outline_folder_black_48dp.png"
         self.parent.addMaterialIconButton("loadWorkspaceFromDirectory", icon, self.changeWorkspaceDirectory, menuBar)
         icon = "material/file/drive_file_move/materialiconsoutlined/48dp/2x/outline_drive_file_move_black_48dp.png"
         self.parent.addMaterialIconButton("saveWorkspaceInDirectory", icon, self.saveAsWorkspaceDirectory, menuBar)
+        icon = "material/action/book/materialiconsoutlined/48dp/2x/outline_book_black_48dp.png"
+        self.parent.addMaterialIconButton("createReferenceBookFromWorkspace", icon, self.createBookModuleFromWorkspace, menuBar)
         menuBar.addSeparator()
         icon = "material/file/grid_view/materialiconsoutlined/48dp/2x/outline_grid_view_black_48dp.png"
         self.parent.addMaterialIconButton("tile", icon, self.mda.tileSubWindows, menuBar)
@@ -210,12 +215,25 @@ class Workspace(QMainWindow):
             self.mda.closeAllSubWindows()
             self.deleteWorkspaceFiles(config.workspaceDirectory)
 
+    def refreshWorkspace(self):
+        self.mda.closeAllSubWindows()
+        self.loadWorkspaceFiles()
+
     def saveAsWorkspaceDirectory(self):
         directory = self.getDirectory()
         if directory:
+            # Set config value
             config.workspaceDirectory = directory
             self.updateWindowTitle()
+            # Save Files
             self.saveWorkspace()
+            # Notify about saving
+            # Do not remove this line for reloading to work
+            # Without this line, windows close before reader html is saved, as *.page().toHtml() takes time
+            # Workaround is to get the html codes ready when page is finished loading.  We implement this workaround in WebEngineViewPopover.py
+            #self.parent.displayMessage(config.thisTranslation["message_done"])
+            # Reload according to the saving order
+            self.refreshWorkspace()
 
     def loadWorkspaceFiles(self, folderName=""):
         if not folderName:
@@ -232,6 +250,16 @@ class Workspace(QMainWindow):
             folderName = config.workspaceDirectory
         for fileName in self.getWorkspaceFiles(folderName):
             os.remove(fileName)
+
+    def createBookModuleFromWorkspace(self, folderName=""):
+        if not folderName:
+            folderName = config.workspaceDirectory
+        if Converter().createBookModuleFromNotes(folderName, workspace=True):
+            self.parent.reloadResources()
+            bookFileName = "{0}.book".format(os.path.basename(folderName))
+            self.parent.displayMessage("{0}\n{1}".format(config.thisTranslation["fileCreated"], bookFileName))
+        else:
+            self.parent.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
     def saveWorkspace(self, folderName=""):
         if not folderName:

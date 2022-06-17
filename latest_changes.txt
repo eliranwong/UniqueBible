@@ -1,3 +1,12 @@
+Changes in 30.73:
+* Added two buttons on Workspace:
+    - Refresh: Reload all windows according to saving order.
+    - Create Reference Book from Workspace: Create a UBA reference book. 
+        Users can locate or open the created book via Master Control > Library 1 tab.
+* Fixed Workspace reader saving content before reloading.
+* Revised wiki page:
+    https://github.com/eliranwong/UniqueBible/wiki/Workspace
+
 Changes in 30.72:
 * Fixed launching "Charts and Table"
 

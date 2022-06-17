@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "कार्यस्थान बचत आदेश का चयन करें",
     "warnCloseAllWindows": "आप सभी खिड़कियों को बंद करने के बारे में हैं!",
     "attention": "ध्यान दें!",
+    "createReferenceBookFromWorkspace": "कार्य-स्थान से संदर्भ पुस्तक बनाएँ",
+    "fileCreated": "फ़ाइल बनाया!",
 }

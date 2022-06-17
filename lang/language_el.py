@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Επιλογή σειράς αποθήκευσης χώρου εργασίας",
     "warnCloseAllWindows": "Θα κλείσεις όλα τα παράθυρα!",
     "attention": "Προσοχή!",
+    "createReferenceBookFromWorkspace": "Δημιουργία βιβλίου αναφοράς από το χώρο εργασίας",
+    "fileCreated": "Δημιουργία αρχείου!",
 }

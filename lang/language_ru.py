@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Выбрать порядок сохранения рабочего пространства",
     "warnCloseAllWindows": "Вы собираетесь закрыть все окна!",
     "attention": "Внимание!",
+    "createReferenceBookFromWorkspace": "Создать справочные книги из рабочей области",
+    "fileCreated": "Файл создан!",
 }

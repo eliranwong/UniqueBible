@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Select Workspace Saving Order",
     "warnCloseAllWindows": "You are about to close all windows!",
     "attention": "Attention!",
+    "createReferenceBookFromWorkspace": "Create Reference Book from Workspace",
+    "fileCreated": "File Created!",
 }

@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Arbeitsbereichsersparnis auswählen",
     "warnCloseAllWindows": "Sie sind dabei, alle Fenster zu schließen!",
     "attention": "Achtung!",
+    "createReferenceBookFromWorkspace": "Referenzbuch aus Arbeitsbereich erstellen",
+    "fileCreated": "Datei erstellt!",
 }

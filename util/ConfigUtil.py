@@ -704,7 +704,8 @@ class ConfigUtil:
         # Set the order for saving workspace files.
         # 0 - CreationOrder
         # 1 - StackingOrder
-        # 2 - ActivationHistoryOrder"""
+        # 2 - ActivationHistoryOrder
+        # Read more at https://github.com/eliranwong/UniqueBible/wiki/Workspace#auto-save"""
         if not hasattr(config, "workspaceSavingOrder") or not config.workspaceSavingOrder in (0, 1, 2):
             config.workspaceSavingOrder = 0
         config.help["favouriteOriginalBible"] = """

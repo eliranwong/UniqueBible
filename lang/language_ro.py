@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Selectați ordinea de economisire a spațiului de lucru",
     "warnCloseAllWindows": "Eşti pe cale să închizi toate ferestrele!",
     "attention": "Atenție!",
+    "createReferenceBookFromWorkspace": "Creați carte de referință din spațiul de lucru",
+    "fileCreated": "Fișier Creat!",
 }

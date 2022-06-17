@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "選取工作區儲存順序",
     "warnCloseAllWindows": "您即將關閉所有視窗！",
     "attention": "注意！",
+    "createReferenceBookFromWorkspace": "從工作區建立參照簿",
+    "fileCreated": "已建立檔案！",
 }

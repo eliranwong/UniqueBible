@@ -95,20 +95,21 @@ class Converter:
         else:
             return False
 
-    def createBookModuleFromNotes(self, folder):
+    def createBookModuleFromNotes(self, folder, workspace=False):
         module = os.path.basename(folder)
         bookContent = []
         for filepath in sorted([f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not re.search(r"^[\._]", f)]):
             fileBasename = os.path.basename(filepath)
             fileName, fileExtension = os.path.splitext(fileBasename)
-            if fileExtension.lower() == ".uba":
+            isNoteFile = True if (not workspace and fileExtension.lower() == ".uba") or (workspace and (fileExtension.lower() == ".reader" or fileExtension.lower() == ".editor")) else False
+            if isNoteFile:
                 self.logger.info("Reading file {0}".format(filepath))
                 with open(os.path.join(folder, filepath), "r", encoding="utf-8") as fileObject:
                     note = fileObject.read()
                     note = TextUtil.formulateUBACommandHyperlink(note)
                     if config.parseTextConvertNotesToBook:
                         note = BibleVerseParser(config.parserStandarisation).parseText(note, False, False, True)
-                    bookContent.append((fileName, note))
+                    bookContent.append((fileName[7:] if workspace else fileName, note))
         if bookContent and module:
             self.logger.info("Creating module {0}".format(module))
             self.createBookModule(module, bookContent)

@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "Workspace 저장 주문 선택하기",
     "warnCloseAllWindows": "모든 창을 닫으려고 합니다!",
     "attention": "주의!",
+    "createReferenceBookFromWorkspace": "Workspace 에서 참조 서적 작성하기",
+    "fileCreated": "파일 작성!",
 }

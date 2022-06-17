@@ -969,4 +969,6 @@ translation = {
     "selectWorkspaceSavingOrder": "പണിയിടം സൂക്ഷിയ്ക്കുന്ന ക്രമം തെരഞ്ഞെടുക്കുക",
     "warnCloseAllWindows": "നിങ്ങള് എല്ലാ ജാലകങ്ങളെയും അടക്കാന് പോകുന്നു!",
     "attention": "ശ്രദ്ധിക്കൂ!",
+    "createReferenceBookFromWorkspace": "à '- à', à ', à', à ', à', à ',",
+    "fileCreated": "ഫയല് ഉണ്ടാക്കിയിരിക്കുന്നു!",
 }

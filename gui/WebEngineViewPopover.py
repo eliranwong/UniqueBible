@@ -23,6 +23,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.name = name
         self.wsName = "reader"
         self.source = source
+        self.html = None
         self.setWindowTitle(windowTitle if windowTitle else "Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
         self.page().loadFinished.connect(self.finishViewLoading)
@@ -34,6 +35,11 @@ class WebEngineViewPopover(QWebEngineView):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme == "dark" else config.lightThemeActiveVerseColor
         # scroll to the study verse
         self.page().runJavaScript("var activeVerse = document.getElementById('v"+str(config.studyB)+"."+str(config.studyC)+"."+str(config.studyV)+"'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+        self.page().toHtml(self.getHtml)
+    
+    def getHtml(self, html):
+        # store html in a variable when page is finished loading to facilitate file saving
+        self.html = html
 
     def popoverTextCommandChanged(self, newTextCommand):
         # reset document.title
@@ -292,14 +298,20 @@ class WebEngineViewPopover(QWebEngineView):
             self.showMaximized()
 
     def saveHtml(self, fileName=""):
-        if not fileName:
-            self.page().toHtml(self.saveHtmlToFile)
+        if self.html is None:
+            if not fileName:
+                self.page().toHtml(self.saveHtmlToFile)
+            else:
+                self.page().toHtml(lambda html, fileName=fileName: self.saveHtmlToFileAction(html, fileName))
         else:
-            self.page().toHtml(lambda html: self.saveHtmlToFileAction(html, fileName))
+            if not fileName:
+                self.saveHtmlToFile(self.html)
+            else:
+                self.saveHtmlToFileAction(self.html, fileName)
 
     def saveHtmlToFile(self, html):
         options = QFileDialog.Options()
-        fileName, filtr = QFileDialog.getSaveFileName(self,
+        fileName, *_ = QFileDialog.getSaveFileName(self,
                 config.thisTranslation["note_saveAs"],
                 "",
                 "HTML Files (*.html)", "", options)
@@ -309,8 +321,8 @@ class WebEngineViewPopover(QWebEngineView):
                 self.saveHtmlToFileAction(html, fileName)
 
     def saveHtmlToFileAction(self, html, fileName):
-            with open(fileName, "w") as fileObj:
-                fileObj.write(html)
+        with open(fileName, "w", encoding="utf-8") as fileObj:
+            fileObj.write(html)
 
     def changeWindowTitle(self, windowTitle=""):
         if self.parent is config.mainWindow.ws:
