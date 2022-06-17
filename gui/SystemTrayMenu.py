@@ -4,18 +4,21 @@ from functools import partial
 from util.Languages import Languages
 from util.GoogleCloudTTSVoices import GoogleCloudTTS
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QMenu
+    from PySide6.QtWidgets import QMenu, QApplication
     from PySide6.QtGui import QAction
 else:
-    from qtpy.QtWidgets import QMenu, QAction
+    from qtpy.QtWidgets import QMenu, QAction, QApplication
 
 # Set up a system tray
 
 trayMenu = QMenu()
-# Show Main Window
-showMainWindow = QAction(config.thisTranslation["show"])
+# Show Main Window and Workspace
+showMainWindow = QAction(config.thisTranslation["mainInterface"])
 showMainWindow.triggered.connect(config.mainWindow.showFromTray)
 trayMenu.addAction(showMainWindow)
+showWorkspace = QAction(config.thisTranslation["workspace"])
+showWorkspace.triggered.connect(config.mainWindow.displayWorkspace)
+trayMenu.addAction(showWorkspace)
 # Add a separator
 trayMenu.addSeparator()
 # Control Panel
@@ -104,6 +107,36 @@ if not config.noTtsFound:
 #runClipboardCommand.triggered.connect(config.mainWindow.showFromTray)
 #runClipboardCommand.triggered.connect(config.mainWindow.parseContentOnClipboard)
 #trayMenu.addAction(runClipboardCommand)
+
+# Workspace
+# Text Only SubMenu
+textOnlySubMenu = QMenu()
+textOnlySubMenuReadOnly = QAction(config.thisTranslation["readOnly"])
+textOnlySubMenuReadOnly.triggered.connect(lambda: config.mainWindow.addTextSelectionToWorkspace(QApplication.clipboard().text(), False))
+textOnlySubMenu.addAction(textOnlySubMenuReadOnly)
+textOnlySubMenuEditable = QAction(config.thisTranslation["editable"])
+textOnlySubMenuEditable.triggered.connect(lambda: config.mainWindow.addTextSelectionToWorkspace(QApplication.clipboard().text(), True))
+textOnlySubMenu.addAction(textOnlySubMenuEditable)
+# Bible References in Text Selection SubMenu
+bibleReferencesInTextSelectionSubMenu = QMenu()
+bibleReferencesInTextSelectionSubMenuReadOnly = QAction(config.thisTranslation["readOnly"])
+bibleReferencesInTextSelectionSubMenuReadOnly.triggered.connect(lambda: config.mainWindow.addBibleReferencesInTextSelectionToWorkspace(QApplication.clipboard().text(), False))
+bibleReferencesInTextSelectionSubMenu.addAction(bibleReferencesInTextSelectionSubMenuReadOnly)
+bibleReferencesInTextSelectionEditable = QAction(config.thisTranslation["editable"])
+bibleReferencesInTextSelectionEditable.triggered.connect(lambda: config.mainWindow.addBibleReferencesInTextSelectionToWorkspace(QApplication.clipboard().text(), True))
+bibleReferencesInTextSelectionSubMenu.addAction(bibleReferencesInTextSelectionEditable)
+# Workspace SubMenu
+workspaceSubMenu = QMenu()
+textOnly = QAction(config.thisTranslation["textOnly"])
+textOnly.setMenu(textOnlySubMenu)
+workspaceSubMenu.addAction(textOnly)
+bibleReferencesInTextSelection = QAction(config.thisTranslation["bibleReferencesOnly"])
+bibleReferencesInTextSelection.setMenu(bibleReferencesInTextSelectionSubMenu)
+workspaceSubMenu.addAction(bibleReferencesInTextSelection)
+# Add Clipboard Text To Workspace
+addToWorkSpace = QAction(config.thisTranslation["addClipboardTextToWorkspace"])
+addToWorkSpace.setMenu(workspaceSubMenu)
+trayMenu.addAction(addToWorkSpace)
 # Context plugins
 if config.enablePlugins:
     subMenu = QMenu()

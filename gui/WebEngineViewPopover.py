@@ -3,16 +3,17 @@ import config
 import shortcut as sc
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QKeySequence, QAction
-    from PySide6.QtWidgets import QFileDialog
+    from PySide6.QtWidgets import QFileDialog, QInputDialog, QLineEdit
     from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QMenu
+    from PySide6.QtWebEngineCore import QWebEnginePage
     from PySide6.QtWebEngineWidgets import QWebEngineView
 else:
     from qtpy.QtGui import QKeySequence
-    from qtpy.QtWidgets import QFileDialog
+    from qtpy.QtWidgets import QFileDialog, QInputDialog, QLineEdit
     from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QAction, QMenu
-    from qtpy.QtWebEngineWidgets import QWebEngineView
+    from qtpy.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 
 class WebEngineViewPopover(QWebEngineView):
 
@@ -20,6 +21,7 @@ class WebEngineViewPopover(QWebEngineView):
         super().__init__()
         self.parent = parent
         self.name = name
+        self.wsName = "reader"
         self.source = source
         self.setWindowTitle(windowTitle if windowTitle else "Unique Bible App")
         self.titleChanged.connect(self.popoverTextCommandChanged)
@@ -57,17 +59,54 @@ class WebEngineViewPopover(QWebEngineView):
 
     def addMenuActions(self):
 
-        if not self.parent is config.mainWindow.ws:
-            subMenu = QMenu()
-
+        if self.parent.name == "workspace":
+            action = QAction(self)
+            action.setText(config.thisTranslation["changeWindowTitle"])
+            action.triggered.connect(self.changeWindowTitle)
+            self.addAction(action)
+        else:
+            subMenu1 = QMenu()
             action = QAction(self)
             action.setText(config.thisTranslation["readOnly"])
             action.triggered.connect(self.addToWorkspaceReadOnly)
-            subMenu.addAction(action)
-
+            subMenu1.addAction(action)
             action = QAction(self)
             action.setText(config.thisTranslation["editable"])
             action.triggered.connect(self.addToWorkspaceEditable)
+            subMenu1.addAction(action)
+
+            subMenu2 = QMenu()
+            action = QAction(self)
+            action.setText(config.thisTranslation["readOnly"])
+            action.triggered.connect(self.addTextSelectionToWorkspace)
+            subMenu2.addAction(action)
+            action = QAction(self)
+            action.setText(config.thisTranslation["editable"])
+            action.triggered.connect(lambda: self.addTextSelectionToWorkspace(editable=True))
+            subMenu2.addAction(action)
+
+            subMenu3 = QMenu()
+            action = QAction(self)
+            action.setText(config.thisTranslation["readOnly"])
+            action.triggered.connect(self.addBibleReferencesInTextSelectionToWorkspace)
+            subMenu3.addAction(action)
+            action = QAction(self)
+            action.setText(config.thisTranslation["editable"])
+            action.triggered.connect(lambda: self.addBibleReferencesInTextSelectionToWorkspace(editable=True))
+            subMenu3.addAction(action)
+
+            subMenu = QMenu()
+            action = QAction(self)
+            action.setText(config.thisTranslation["all"])
+            action.setMenu(subMenu1)
+            subMenu.addAction(action)
+            action = QAction(self)
+            action.setText(config.thisTranslation["textOnly"])
+            action.setMenu(subMenu2)
+            subMenu.addAction(action)
+            action = QAction(self)
+            action.setText(config.thisTranslation["bibleReferencesInTextSelection"])
+            action.setMenu(subMenu3)
             subMenu.addAction(action)
 
             action = QAction(self)
@@ -75,9 +114,9 @@ class WebEngineViewPopover(QWebEngineView):
             action.setMenu(subMenu)
             self.addAction(action)
 
-            separator = QAction(self)
-            separator.setSeparator(True)
-            self.addAction(separator)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        self.addAction(separator)
 
         copyText = QAction(self)
         copyText.setText(config.thisTranslation["context1_copy"])
@@ -252,8 +291,11 @@ class WebEngineViewPopover(QWebEngineView):
         else:
             self.showMaximized()
 
-    def saveHtml(self):
-        self.page().toHtml(self.saveHtmlToFile)
+    def saveHtml(self, fileName=""):
+        if not fileName:
+            self.page().toHtml(self.saveHtmlToFile)
+        else:
+            self.page().toHtml(lambda html: self.saveHtmlToFileAction(html, fileName))
 
     def saveHtmlToFile(self, html):
         options = QFileDialog.Options()
@@ -262,15 +304,65 @@ class WebEngineViewPopover(QWebEngineView):
                 "",
                 "HTML Files (*.html)", "", options)
         if fileName:
-            if not "." in os.path.basename(fileName):
+            if not os.path.basename(fileName).endswith(".html"):
                 fileName = fileName + ".html"
-            file = open(fileName, "w")
-            file.write(html)
-            file.close()
-            config.mainWindow.studyView.currentWidget().displayMessage(config.thisTranslation["saved"])
+                self.saveHtmlToFileAction(html, fileName)
+
+    def saveHtmlToFileAction(self, html, fileName):
+            with open(fileName, "w") as fileObj:
+                fileObj.write(html)
+
+    def changeWindowTitle(self, windowTitle=""):
+        if self.parent is config.mainWindow.ws:
+            if not windowTitle:
+                windowTitle, ok = QInputDialog.getText(self, config.thisTranslation["changeWindowTitle"],
+                        config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                        "")
+                if ok and windowTitle:
+                    self.setWindowTitle(windowTitle)
+                    self.parent.saveWorkspace()
+            else:
+                self.setWindowTitle(windowTitle)
+                self.parent.saveWorkspace()
 
     def addToWorkspaceReadOnly(self):
         self.page().toHtml(self.addToWorkspaceReadOnlyAction)
 
     def addToWorkspaceEditable(self):
         self.page().toHtml(self.addToWorkspaceEditableAction)
+
+    def addTextSelectionToWorkspace(self, selectedText=None, editable=False):
+        if not selectedText:
+            selectedText = self.selectedTextProcessed()
+        if selectedText:
+            config.mainWindow.addTextSelectionToWorkspace(selectedText, editable)
+        else:
+            self.messageNoSelection()
+
+    def addBibleReferencesInTextSelectionToWorkspace(self, selectedText=None, editable=False):
+        if not selectedText:
+            selectedText = self.selectedTextProcessed()
+        if selectedText:
+            config.mainWindow.addBibleReferencesInTextSelectionToWorkspace(selectedText, editable)
+        else:
+            self.messageNoSelection()
+
+    def selectedTextProcessed(self, activeSelection=False):
+        if not activeSelection:
+            selectedText = self.selectedText().strip()
+        else:
+            selectedText = config.mainWindow.mainView.currentWidget().selectedText().strip()
+            if not selectedText:
+                selectedText = config.mainWindow.studyView.currentWidget().selectedText().strip()
+        if not selectedText and config.commandTextIfNoSelection:
+            selectedText = config.mainWindow.textCommandLineEdit.text().strip()
+        if not selectedText:
+            text, ok = QInputDialog.getText(config.mainWindow, "Unique Bible App",
+                    config.thisTranslation["enter_text_here"], QLineEdit.Normal,
+                    "")
+            if ok and text:
+                selectedText = text
+        return selectedText
+
+    def searchText(self, searchString):
+        self.findText(searchString, QWebEnginePage.FindFlags())

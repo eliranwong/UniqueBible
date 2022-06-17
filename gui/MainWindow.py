@@ -447,6 +447,7 @@ class MainWindow(QMainWindow):
 
     def quitApp(self):
         self.showFromTray()
+        #self.ws.saveWorkspace()
         if self.noteSaved or self.warningNotSaved():
             QGuiApplication.instance().quit()
 
@@ -1281,7 +1282,7 @@ class MainWindow(QMainWindow):
     def warningNotSaved(self):
         self.showNoteEditor()
         msgBox = QMessageBox(QMessageBox.Warning,
-                             "Warning",
+                             config.thisTranslation["attention"],
                              "Notes are currently opened and modified.  Do you really want to continue, without saving the changes?",
                              QMessageBox.NoButton, self)
         msgBox.addButton("Cancel", QMessageBox.AcceptRole)
@@ -1492,7 +1493,8 @@ class MainWindow(QMainWindow):
             text = self.exportAllImages(text)
             text = TextUtil.formulateUBACommandHyperlink(text)
             text = BibleVerseParser(config.parserStandarisation).parseText(text)
-        text = self.wrapHtml(text, view)
+        if not "<!DOCTYPE html><html><head><meta charset='utf-8'><title>UniqueBible.app</title>" in text:
+            text = self.wrapHtml(text, view)
         return text
 
     def getClipboardText(self):
@@ -4374,7 +4376,7 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def warningRestart(self):
         msgBox = QMessageBox(QMessageBox.Warning,
-                             "Warning",
+                             config.thisTranslation["attention"],
                              "Restart Unique Bible App to make the changes effective?",
                              QMessageBox.NoButton, self)
         msgBox.addButton("Later", QMessageBox.AcceptRole)
@@ -4414,6 +4416,16 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def setBibleAbbreviationsSelected(self, option):
         config.standardAbbreviation = option
         self.reloadCurrentRecord(True)
+        if config.menuLayout == "material":
+            self.setupMenuLayout("material")
+
+    def setWorkspaceSavingOrder(self, option):
+        savingOrder = {
+            "Creation Order": 0,
+            "Stacking Order": 1,
+            "Activation History Order": 2,
+        }
+        config.workspaceSavingOrder = savingOrder[option]
         if config.menuLayout == "material":
             self.setupMenuLayout("material")
 
@@ -5501,3 +5513,33 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def addToWorkspaceEditableAction(self, html, windowTitle=""):
         self.ws.addHtmlContent(html, True, windowTitle)
+
+    def addTextSelectionToWorkspace(self, selectedText="", editable=False):
+        if selectedText:
+            html = self.htmlWrapper(selectedText, True)
+            windowTitle = selectedText.replace("\n", " ")
+            if editable:
+                self.addToWorkspaceEditableAction(html, windowTitle)
+            else:
+                self.addToWorkspaceReadOnlyAction(html, windowTitle)
+        else:
+            self.messageNoSelection()
+
+    def addBibleReferencesInTextSelectionToWorkspace(self, selectedText="", editable=False):
+        if selectedText:
+            parser = BibleVerseParser(config.parserStandarisation)
+            verseList = parser.extractAllReferences(selectedText, False)
+            if not verseList:
+                self.displayMessage(config.thisTranslation["message_noReference"])
+            else:
+                references = "; ".join([parser.bcvToVerseReference(*verse) for verse in verseList])
+                html = self.htmlWrapper(references, True)
+                if editable:
+                    self.addToWorkspaceEditableAction(html, references)
+                else:
+                    self.addToWorkspaceReadOnlyAction(html, references)
+        else:
+            self.messageNoSelection()
+
+    def messageNoSelection(self):
+        self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))

@@ -1,0 +1,1 @@
+Workspace files are placed here by default.

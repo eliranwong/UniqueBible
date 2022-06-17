@@ -696,6 +696,17 @@ class ConfigUtil:
         # Correspond to ("SEARCH", "SEARCHALL", "ANDSEARCH", "ORSEARCH", "ADVANCEDSEARCH", "REGEXSEARCH")"""
         if not hasattr(config, "bibleSearchMode"):
             config.bibleSearchMode = 0
+        config.help["workspaceDirectory"] = """
+        # Set the directory for storing workspace files."""
+        if not hasattr(config, "workspaceDirectory") or not os.path.isdir(config.workspaceDirectory):
+            config.workspaceDirectory = "workspace"
+        config.help["workspaceSavingOrder"] = """
+        # Set the order for saving workspace files.
+        # 0 - CreationOrder
+        # 1 - StackingOrder
+        # 2 - ActivationHistoryOrder"""
+        if not hasattr(config, "workspaceSavingOrder") or not config.workspaceSavingOrder in (0, 1, 2):
+            config.workspaceSavingOrder = 0
         config.help["favouriteOriginalBible"] = """
         # Set your favourite marvel bible version here
         # MOB, MIB, MTB, MPB, MAB"""
@@ -1034,7 +1045,7 @@ class ConfigUtil:
         # Specify heading style to work with markdownify
         # Options: ATX, ATX_CLOSED, SETEXT, and UNDERLINED
         # Read more at https://pypi.org/project/markdownify/"""
-        if not hasattr(config, "markdownifyHeadingStyle"):
+        if not hasattr(config, "markdownifyHeadingStyle") or not config.markdownifyHeadingStyle in ("ATX", "ATX_CLOSED", "SETEXT", "UNDERLINED"):
             config.markdownifyHeadingStyle = "UNDERLINED"
         config.help["forceGenerateHtml"] = """
         # Force generate main.html for all pages"""
@@ -1451,6 +1462,8 @@ class ConfigUtil:
             ("regexCaseSensitive", config.regexCaseSensitive),
             ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound),
             ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound),
+            ("workspaceDirectory", config.workspaceDirectory),
+            ("workspaceSavingOrder", config.workspaceSavingOrder),
             ("commentaryText", config.commentaryText),
             ("commentaryB", config.commentaryB),
             ("commentaryC", config.commentaryC),

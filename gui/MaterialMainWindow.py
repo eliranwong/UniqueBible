@@ -313,6 +313,16 @@ class MaterialMainWindow:
         subMenu = addSubMenu(subMenu0, "menu1_setDefaultStrongsGreekLexicon")
         for option in self.lexiconList:
             addCheckableMenuItem(subMenu, option, self, partial(self.defaultStrongsGreekLexiconSelected, option), config.defaultLexiconStrongG, option, translation=False)
+        # Workspace saving order
+        subMenu = addSubMenu(subMenu0, "selectWorkspaceSavingOrder")
+        options = ("Creation Order", "Stacking Order", "Activation History Order")
+        savingOrder = {
+            0: "Creation Order",
+            1: "Stacking Order",
+            2: "Activation History Order",
+        }
+        for option in options:
+            addCheckableMenuItem(subMenu, option, self, partial(self.setWorkspaceSavingOrder, option), savingOrder[config.workspaceSavingOrder], option, translation=False)
         # Markdown export heading style
         subMenu = addSubMenu(subMenu0, "markdownExportHeadingStyle")
         options = ("ATX", "ATX_CLOSED", "SETEXT", "UNDERLINED")

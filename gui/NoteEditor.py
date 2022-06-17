@@ -903,7 +903,6 @@ p, li {0} white-space: pre-wrap; {1}
             note = re.sub("""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n""", "", note)
         return note
 
-
     # formatting styles
     def format_clear(self):
         selectedText = self.editor.textCursor().selectedText()

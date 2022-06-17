@@ -1,3 +1,30 @@
+Changes in 30.71:
+* Multiple Workspace features are added:
+    - search for and highlight word(s) in all sub-windows
+    - add text selection for viewing or editing
+    - add clipbaord text via system tray
+    - open documents in Workspace reader or editor
+        supported formats: "txt", "uba", "csv", "doc", "docx", "eml", "epub", "gif", "jpg", "jpeg", "json", "html", "htm", "mp3", "msg", "odt", "ogg", "pdf", "png", "pptx", "ps", "rtf", "tiff", "tif", "wav", "xlsx", "xls"
+    - insert images into Workspace reader or editor
+    - auto saving feature
+    - auto loading workspace content when UBA is launched
+    - loading workspace from different directories
+    - saving workspace into different directories
+    - Workspace saving order configurable via Material menu 
+        "UniqueBible > Other Preferences > Select Workspace Saving Order"
+    - a button to show Main Window
+    - launch Workspace via System Tray
+    - ability to change Workspace sub-window titles
+        on editor, use toolbar button "Change Window Title"
+        on reader, use right-click context menu "Change Window Title"
+    - "Clear All" button to remove all Workspace windows
+    - a help button to open the wiki page about Workspace
+    - Workspace mini text editor interface:
+        "Change Window Title" button
+        "Save as" button
+        "Swap" button, to swap between plain text and html Format
+        "search" field
+
 Changes in 30.70:
 * Added ability to add table, charts and popover content to Workspace.
 

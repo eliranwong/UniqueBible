@@ -126,16 +126,48 @@ class WebEngineView(QWebEngineView):
 
         # Open Content in
 
-        subMenu = QMenu()
-
+        subMenu1 = QMenu()
         action = QAction(self)
         action.setText(config.thisTranslation["readOnly"])
         action.triggered.connect(self.addToWorkspaceReadOnly)
-        subMenu.addAction(action)
-
+        subMenu1.addAction(action)
         action = QAction(self)
         action.setText(config.thisTranslation["editable"])
         action.triggered.connect(self.addToWorkspaceEditable)
+        subMenu1.addAction(action)
+
+        subMenu2 = QMenu()
+        action = QAction(self)
+        action.setText(config.thisTranslation["readOnly"])
+        action.triggered.connect(self.addTextSelectionToWorkspace)
+        subMenu2.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["editable"])
+        action.triggered.connect(lambda: self.addTextSelectionToWorkspace(editable=True))
+        subMenu2.addAction(action)
+
+        subMenu3 = QMenu()
+        action = QAction(self)
+        action.setText(config.thisTranslation["readOnly"])
+        action.triggered.connect(self.addBibleReferencesInTextSelectionToWorkspace)
+        subMenu3.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["editable"])
+        action.triggered.connect(lambda: self.addBibleReferencesInTextSelectionToWorkspace(editable=True))
+        subMenu3.addAction(action)
+
+        subMenu = QMenu()
+        action = QAction(self)
+        action.setText(config.thisTranslation["all"])
+        action.setMenu(subMenu1)
+        subMenu.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["textOnly"])
+        action.setMenu(subMenu2)
+        subMenu.addAction(action)
+        action = QAction(self)
+        action.setText(config.thisTranslation["bibleReferencesInTextSelection"])
+        action.setMenu(subMenu3)
         subMenu.addAction(action)
 
         action = QAction(self)
@@ -1008,6 +1040,22 @@ class WebEngineView(QWebEngineView):
         elif self.name == "study":
             windowTitle = self.parent.parent.studyView.tabText(self.parent.parent.studyView.currentIndex()).strip()
         config.mainWindow.ws.addHtmlContent(html, True, windowTitle)
+
+    def addTextSelectionToWorkspace(self, selectedText=None, editable=False):
+        if not selectedText:
+            selectedText = self.selectedTextProcessed()
+        if selectedText:
+            self.parent.parent.addTextSelectionToWorkspace(selectedText, editable)
+        else:
+            self.messageNoSelection()
+
+    def addBibleReferencesInTextSelectionToWorkspace(self, selectedText=None, editable=False):
+        if not selectedText:
+            selectedText = self.selectedTextProcessed()
+        if selectedText:
+            self.parent.parent.addBibleReferencesInTextSelectionToWorkspace(selectedText, editable)
+        else:
+            self.messageNoSelection()
 
     # Open in Note Editor
     def openInNoteEditor(self):
