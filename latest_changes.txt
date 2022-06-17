@@ -1,3 +1,6 @@
+Changes in 30.72:
+* Fixed launching "Charts and Table"
+
 Changes in 30.71:
 * Multiple Workspace features are added:
     - search for and highlight word(s) in all sub-windows

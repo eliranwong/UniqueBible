@@ -2,12 +2,12 @@ import config
 from util.BibleVerseParser import BibleVerseParser
 from gui.WebEngineViewPopover import WebEngineViewPopover
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWebEngineWidgets import QWebEngineView
+    #from PySide6.QtWebEngineWidgets import QWebEngineView
     from PySide6.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton
     from gui.PieChart import PieChart
     from gui.BarChart import BarChart
 else:
-    from qtpy.QtWebEngineWidgets import QWebEngineView
+    #from qtpy.QtWebEngineWidgets import QWebEngineView
     from qtpy.QtWidgets import QStackedWidget, QWidget, QVBoxLayout, QHBoxLayout, QRadioButton, QPushButton
 
 
@@ -75,7 +75,7 @@ def generateCharts(text):
         mainLayout.addLayout(controlLayout)
 
         config.stackedCharts = QStackedWidget()
-        htmlTable = WebEngineViewPopover(None, "main", "main", windowTitle=config.thisTranslation["table"])
+        htmlTable = WebEngineViewPopover(config.mainWindow, "main", "main", windowTitle=config.thisTranslation["table"])
         tableHtml = config.mainWindow.wrapHtml(tableHtml)
         htmlTable.setHtml(tableHtml, config.baseUrl)
         config.stackedCharts.addWidget(htmlTable)

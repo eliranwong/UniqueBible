@@ -59,7 +59,7 @@ class WebEngineViewPopover(QWebEngineView):
 
     def addMenuActions(self):
 
-        if self.parent.name == "workspace":
+        if hasattr(self.parent, "name") and self.parent.name == "workspace":
             action = QAction(self)
             action.setText(config.thisTranslation["changeWindowTitle"])
             action.triggered.connect(self.changeWindowTitle)
