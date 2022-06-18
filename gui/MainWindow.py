@@ -1,6 +1,5 @@
-from json import tool
 import os, signal, sys, re, config, base64, webbrowser, platform, subprocess, requests, update, logging, zipfile, glob
-import time, markdown
+import markdown
 import urllib.parse
 from datetime import datetime
 from distutils import util
@@ -9,12 +8,12 @@ from pathlib import Path
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
-    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu
+    from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
     from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
-    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu
+    from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from qtpy.QtWebEngineWidgets import QWebEnginePage
 from gui.WorkSpace import Workspace
 from db.DevotionalSqlite import DevotionalSqlite
@@ -185,7 +184,9 @@ class MainWindow(QMainWindow):
 
         # workspace
         self.ws = Workspace(self)
+        self.ws.exemptSaving = True
         self.ws.hide()
+        self.ws.exemptSaving = False
 
         config.inBootupMode = False
         bootEndTime = datetime.now()
@@ -5501,12 +5502,20 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         config.mainWindowHidden = False
 
     # Work with workspace
+    def swapWorkspaceWithMainWindow(self):
+        if self.isActiveWindow():
+            self.displayWorkspace()
+        else:
+            self.showFromTray()
+
     def displayWorkspace(self):
+        self.ws.exemptSaving = True
         self.ws.show()
         if self.ws.isMinimized():
             self.ws.showMaximized()
         self.ws.activateWindow()
         self.ws.raise_()
+        self.ws.exemptSaving = False
 
     def addToWorkspaceReadOnlyAction(self, html, windowTitle=""):
         self.ws.addHtmlContent(html, False, windowTitle)
@@ -5543,3 +5552,12 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
 
     def messageNoSelection(self):
         self.displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
+
+    def getTextCommandSuggestion(self):
+        # Text command autocompletion/autosuggest
+        textCommandParser = TextCommandParser(self)
+        textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
+        bibleBooks = BibleBooks.getStandardBookAbbreviations()
+        textCommandAutosuggestion = QCompleter(textCommands + bibleBooks)
+        textCommandAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        return textCommandAutosuggestion

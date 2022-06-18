@@ -226,6 +226,7 @@ class WebEngineView(QWebEngineView):
         searchBibleReferences = QAction(self)
         searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
         searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
+        self.parent.parent.addContextMenuShortcut(partial(self.displayVersesInBibleWindow, activeSelection=True), sc.parseAndOpenBibleReference)
         subMenu.addAction(searchBibleReferences)
 
         searchBibleReferences = QAction(self)
@@ -1569,10 +1570,10 @@ class WebEngineView(QWebEngineView):
         else:
             self.messageNoSelection()
 
-    def displayVersesInBibleWindow(self, selectedText=None):
+    def displayVersesInBibleWindow(self, selectedText=None, activeSelection=False):
         #if selectedText is None:
         if not selectedText:
-            selectedText = self.selectedTextProcessed()
+            selectedText = self.selectedTextProcessed(activeSelection)
         if selectedText:
             parser = BibleVerseParser(config.parserStandarisation)
             verses = parser.extractAllReferences(selectedText, False)

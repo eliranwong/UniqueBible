@@ -1,3 +1,9 @@
+Changes in 30.77:
+* Automate Workspace auto-saving when window activation is changed.
+* Automate Workspace editor auto-saving changes.
+* Added a shortcut to parse and open references.  Micron shortcut uses "Ctrl+E" for that.
+* Changed a few Micron shortcuts.
+
 Changes in 30.76:
 * Added text command autocompletion to Master Control and mini Control command fields.
 

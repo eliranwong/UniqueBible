@@ -2,7 +2,7 @@ import os
 import config
 import shortcut as sc
 if config.qtLibrary == "pyside6":
-    from PySide6.QtGui import QKeySequence, QAction
+    from PySide6.QtGui import QKeySequence, QAction, QShortcut
     from PySide6.QtWidgets import QFileDialog, QInputDialog, QLineEdit
     from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QMenu
@@ -10,11 +10,10 @@ if config.qtLibrary == "pyside6":
     from PySide6.QtWebEngineWidgets import QWebEngineView
 else:
     from qtpy.QtGui import QKeySequence
-    from qtpy.QtWidgets import QFileDialog, QInputDialog, QLineEdit
+    from qtpy.QtWidgets import QFileDialog, QInputDialog, QLineEdit, QShortcut
     from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QAction, QMenu
     from qtpy.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
-from gui.MiniTextEditor import MiniTextEditor
 
 
 class WebEngineViewPopover(QWebEngineView):
@@ -24,6 +23,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.parent = parent
         self.name = name
         self.wsName = "reader"
+        self.wsFilename = ""
         self.source = source
         self.html = None
         self.setWindowTitle(windowTitle if windowTitle else "Unique Bible App")
@@ -32,6 +32,12 @@ class WebEngineViewPopover(QWebEngineView):
         # add context menu (triggered by right-clicking)
         self.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.addMenuActions()
+        self.setupKeyboardShortcuts()
+
+    def setupKeyboardShortcuts(self):
+        if hasattr(self.parent, "name") and self.parent.name == "workspace":
+            shortcut = QShortcut(QKeySequence(sc.swapWorkspaceWithMainWindow), self)
+            shortcut.activated.connect(self.parent.parent.swapWorkspaceWithMainWindow)
 
     def finishViewLoading(self):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme == "dark" else config.lightThemeActiveVerseColor
@@ -230,11 +236,12 @@ class WebEngineViewPopover(QWebEngineView):
         separator.setSeparator(True)
         self.addAction(separator)
 
-        qKey = QAction(self)
-        qKey.setText("{0} | {1}".format(config.thisTranslation["close"], sc.closePopoverWindow))
-        qKey.setShortcut(QKeySequence(sc.closePopoverWindow))
-        qKey.triggered.connect(self.qKeyPressed)
-        self.addAction(qKey)
+        if not (hasattr(self.parent, "name") and self.parent.name == "workspace"):
+            qKey = QAction(self)
+            qKey.setText("{0} | {1}".format(config.thisTranslation["close"], sc.closePopoverWindow))
+            qKey.setShortcut(QKeySequence(sc.closePopoverWindow))
+            qKey.triggered.connect(self.qKeyPressed)
+            self.addAction(qKey)
 
     def openInEditor(self):
         self.page().toPlainText(self.openInEditorAction)

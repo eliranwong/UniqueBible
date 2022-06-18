@@ -1,10 +1,14 @@
 import config, re, os
+import shortcut as sc
+from datetime import datetime
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import Qt
+    from PySide6.QtCore import Qt, QTimer
+    from PySide6.QtGui import QKeySequence, QShortcut
     from PySide6.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit
 else:
-    from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit
+    from qtpy.QtCore import Qt, QTimer
+    from qtpy.QtGui import QKeySequence
+    from qtpy.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit, QShortcut
 
 
 class MiniTextEditor(QMainWindow):
@@ -13,8 +17,19 @@ class MiniTextEditor(QMainWindow):
         super().__init__()
         self.parent = parent
         self.wsName = "editor"
+        self.wsFilename = ""
         self.html = True
         self.setupLayout()
+        self.setupKeyboardShortcuts()
+        # auto save changes
+        self.lastChangeTime = datetime.now()
+        self.editor.textChanged.connect(self.autoSaveTimer)
+        self.savingInProgress = False
+
+    def setupKeyboardShortcuts(self):
+        if hasattr(self.parent, "name") and self.parent.name == "workspace":
+            shortcut = QShortcut(QKeySequence(sc.swapWorkspaceWithMainWindow), self)
+            shortcut.activated.connect(self.parent.parent.swapWorkspaceWithMainWindow)
 
     def setupLayout(self):
         menuBar = self.getMenuBar()
@@ -48,6 +63,8 @@ class MiniTextEditor(QMainWindow):
         icon = "material/editor/title/materialiconsoutlined/48dp/2x/outline_title_black_48dp.png"
         self.parent.parent.addMaterialIconButton("changeWindowTitle", icon, self.changeWindowTitle, menuBar)
 
+        #icon = "material/content/save/materialiconsoutlined/48dp/2x/outline_save_black_48dp.png"
+        #self.parent.parent.addMaterialIconButton("note_save", icon, self.saveWsFile, menuBar)
         icon = "material/content/save_as/materialiconsoutlined/48dp/2x/outline_save_as_black_48dp.png"
         self.parent.parent.addMaterialIconButton("note_saveAs", icon, self.openSaveAsDialog, menuBar)
 
@@ -111,14 +128,32 @@ class MiniTextEditor(QMainWindow):
                 fileName = fileName + ".uba"
             self.saveHtml(fileName)
 
+    def autoSaveTimer(self):
+        self.lastChangeTime = datetime.now()
+        lastChangeTime = self.lastChangeTime
+        # Save changes 3 seconds after the last change
+        QTimer.singleShot(3000, lambda: self.autoSaveChanges(lastChangeTime))
+
+    def autoSaveChanges(self, lastChangeTime):
+        if lastChangeTime == self.lastChangeTime:
+            #print("Save changes now")
+            self.saveWsFile()
+
+    def saveWsFile(self):
+        if self.wsFilename:
+            self.saveHtml(self.wsFilename)
+
     def saveHtml(self, fileName):
-        if self.html:
-            note = self.editor.toHtml()
-        else:
-            note = self.editor.toPlainText()
-        note = self.fixNoteFont(note)
-        with open(fileName, "w", encoding="utf-8") as fileObj:
-            fileObj.write(note)
+        if not self.savingInProgress:
+            self.savingInProgress = True
+            if self.html:
+                note = self.editor.toHtml()
+            else:
+                note = self.editor.toPlainText()
+            note = self.fixNoteFont(note)
+            with open(fileName, "w", encoding="utf-8") as fileObj:
+                fileObj.write(note)
+            self.savingInProgress = False
 
     def changeWindowTitle(self, windowTitle=""):
         if self.parent is config.mainWindow.ws:

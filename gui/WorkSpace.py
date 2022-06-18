@@ -1,12 +1,13 @@
 import config, re, textract, os, base64, glob, webbrowser, markdown
+import shortcut as sc
 if config.qtLibrary == "pyside6":
-    from PySide6.QtGui import QIcon
-    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QIcon, QKeySequence, QShortcut
+    from PySide6.QtCore import Qt, QTimer
     from PySide6.QtWidgets import QMainWindow, QMdiArea, QToolBar, QFileDialog, QInputDialog, QLineEdit, QMessageBox
 else:
-    from qtpy.QtGui import QIcon
-    from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QMainWindow, QMdiArea, QToolBar, QFileDialog, QInputDialog, QLineEdit, QMessageBox
+    from qtpy.QtGui import QIcon, QKeySequence
+    from qtpy.QtCore import Qt, QTimer
+    from qtpy.QtWidgets import QMainWindow, QMdiArea, QToolBar, QFileDialog, QInputDialog, QLineEdit, QMessageBox, QShortcut
 from gui.WebEngineViewPopover import WebEngineViewPopover
 from gui.MiniTextEditor import MiniTextEditor
 from util.TextUtil import TextUtil
@@ -17,6 +18,7 @@ class Workspace(QMainWindow):
 
     def __init__(self, parent):
         super().__init__()
+        self.exemptSaving = True
         self.parent = parent
         self.name = "workspace"
 
@@ -32,6 +34,28 @@ class Workspace(QMainWindow):
 
         # load last saved content
         self.loadWorkspaceFiles()
+
+        self.setupKeyboardShortcuts()
+
+        # Automate saving
+        self.mda.subWindowActivated.connect(self.saveWorkspace)
+        #self.mda.subWindowActivated.connect(self.testingSubWindowActivated)
+        self.exemptSaving = False
+
+    def testingSubWindowActivated(self):
+        if not self.exemptSaving:
+            self.exemptSaving = True
+            QTimer.singleShot(1000, self.resetExemptSaving)
+            print("sub-window changed!")
+            #self.exemptSaving = False
+
+    def resetExemptSaving(self):
+        if self.isVisible():
+            self.exemptSaving = False
+
+    def setupKeyboardShortcuts(self):
+        shortcut = QShortcut(QKeySequence(sc.swapWorkspaceWithMainWindow), self)
+        shortcut.activated.connect(self.parent.swapWorkspaceWithMainWindow)
 
     def updateWindowTitle(self):
         self.setWindowTitle("Unique Bible App - {0} - {1}".format(config.thisTranslation["workspace"], os.path.basename(config.workspaceDirectory)))
@@ -55,9 +79,9 @@ class Workspace(QMainWindow):
         self.parent.addMaterialIconButton("createReferenceBookFromWorkspace", icon, self.createBookModuleFromWorkspace, menuBar)
         menuBar.addSeparator()
         icon = "material/file/grid_view/materialiconsoutlined/48dp/2x/outline_grid_view_black_48dp.png"
-        self.parent.addMaterialIconButton("tile", icon, self.mda.tileSubWindows, menuBar)
+        self.parent.addMaterialIconButton("tile", icon, self.tileSubWindows, menuBar)
         icon = "material/content/dynamic_feed/materialiconsoutlined/48dp/2x/outline_dynamic_feed_black_48dp.png"
-        self.parent.addMaterialIconButton("cascade", icon, self.mda.cascadeSubWindows, menuBar)
+        self.parent.addMaterialIconButton("cascade", icon, self.cascadeSubWindows, menuBar)
         icon = "material/communication/cancel_presentation/materialiconsoutlined/48dp/2x/outline_cancel_presentation_black_48dp.png"
         self.parent.addMaterialIconButton("clearAll", icon, self.clearWorkspace, menuBar)
         menuBar.addSeparator()
@@ -85,12 +109,25 @@ class Workspace(QMainWindow):
         icon = "material/action/help_outline/materialiconsoutlined/48dp/2x/outline_help_outline_black_48dp.png"
         self.parent.addMaterialIconButton("help", icon, lambda: webbrowser.open("https://github.com/eliranwong/UniqueBible/wiki/Workspace"), menuBar)
 
+    def tileSubWindows(self):
+        self.exemptSaving = True
+        self.mda.tileSubWindows()
+        self.exemptSaving = False
+
+    def cascadeSubWindows(self):
+        self.exemptSaving = True
+        self.mda.cascadeSubWindows()
+        self.exemptSaving = False
+
     def closeEvent(self, event):
         event.ignore()
         self.saveWorkspace()
+        self.exemptSaving = True
         self.hide()
+        self.exemptSaving = True
 
     def addWidgetAsSubWindow(self, widget, windowTitle="", windowTooltip="", autoSave=True):
+        self.exemptSaving = True
         # Display Workspace
         self.show()
         self.activateWindow()
@@ -113,8 +150,10 @@ class Workspace(QMainWindow):
         # Arrange subWindows
         self.mda.tileSubWindows()
         # Auto-save file
+        self.exemptSaving = False
         if autoSave:
-            self.saveWorkspace()
+            #self.saveWorkspace()
+            QTimer.singleShot(1000, self.saveWorkspace)
 
     def addHtmlContent(self, html, editable=False, windowTitle="", windowTooltip="", autoSave=True):
         html = self.parent.wrapHtml(html)
@@ -221,8 +260,10 @@ class Workspace(QMainWindow):
             self.deleteWorkspaceFiles(config.workspaceDirectory)
 
     def refreshWorkspace(self):
+        self.exemptSaving = True
         self.mda.closeAllSubWindows()
         self.loadWorkspaceFiles()
+        self.exemptSaving = False
 
     def saveAsWorkspaceDirectory(self):
         directory = self.getDirectory()
@@ -241,6 +282,7 @@ class Workspace(QMainWindow):
             self.refreshWorkspace()
 
     def loadWorkspaceFiles(self, folderName=""):
+        self.exemptSaving = True
         if not folderName:
             folderName = config.workspaceDirectory
         for fileName in self.getWorkspaceFiles(folderName):
@@ -249,6 +291,7 @@ class Workspace(QMainWindow):
             editable = True if fileName.endswith(".editor") else False
             windowTitle = os.path.basename(fileName)[10:-7]
             self.addHtmlContent(html, editable, windowTitle, autoSave=False)
+        self.exemptSaving = False
 
     def deleteWorkspaceFiles(self, folderName=""):
         if not folderName:
@@ -267,23 +310,29 @@ class Workspace(QMainWindow):
             self.parent.displayMessage(config.thisTranslation["message_noSupportedFile"])
 
     def saveWorkspace(self, folderName=""):
-        if not folderName:
-            folderName = config.workspaceDirectory
-        self.deleteWorkspaceFiles(folderName)
-        savingOrder = {
-            0: QMdiArea.WindowOrder.CreationOrder,
-            1: QMdiArea.WindowOrder.StackingOrder,
-            2: QMdiArea.WindowOrder.ActivationHistoryOrder,
-        }
-        for index, subWindow in enumerate(self.mda.subWindowList(order=savingOrder[config.workspaceSavingOrder])):
-            widget = subWindow.widget()
-            if hasattr(widget, "wsName"):
-                windowTitle = widget.windowTitle()
-                if len(windowTitle) > 20:
-                    windowTitle = windowTitle[:20]
-                fileName = "uba_ws_{3}{0}_{1}.{2}".format(index, windowTitle, widget.wsName, "0" if index < 10 else "")
-                fileName = os.path.join(folderName, fileName)
-                widget.saveHtml(fileName)
+        if not self.exemptSaving:
+            self.exemptSaving = True
+            # avoid repeated saving within a second
+            QTimer.singleShot(1000, self.resetExemptSaving)
+            if not folderName:
+                folderName = config.workspaceDirectory
+            self.deleteWorkspaceFiles(folderName)
+            savingOrder = {
+                0: QMdiArea.WindowOrder.CreationOrder,
+                1: QMdiArea.WindowOrder.StackingOrder,
+                2: QMdiArea.WindowOrder.ActivationHistoryOrder,
+            }
+            for index, subWindow in enumerate(self.mda.subWindowList(order=savingOrder[config.workspaceSavingOrder])):
+                widget = subWindow.widget()
+                if hasattr(widget, "wsName"):
+                    windowTitle = widget.windowTitle()
+                    if len(windowTitle) > 20:
+                        windowTitle = windowTitle[:20]
+                    fileName = "uba_ws_{3}{0}_{1}.{2}".format(index, windowTitle, widget.wsName, "0" if index < 10 else "")
+                    fileName = os.path.join(folderName, fileName)
+                    widget.saveHtml(fileName)
+                    widget.wsFilename = fileName
+            self.exemptSaving = False
 
     def getSearchString(self):
         searchString, ok = QInputDialog.getText(self, config.thisTranslation["instantHighlight"],

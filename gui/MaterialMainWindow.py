@@ -1,17 +1,9 @@
 import config
-from util.BibleBooks import BibleBooks
-
-if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QCompleter
-else:
-    from qtpy.QtWidgets import QCompleter
-
 from gui.MenuItems import *
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.Languages import Languages
 from util.FileUtil import FileUtil
-from util.TextCommandParser import TextCommandParser
 from util.WebtopUtil import WebtopUtil
 import shortcut as sc
 import re, os, webbrowser
@@ -28,6 +20,10 @@ class MaterialMainWindow:
         menuBar = self.menuBar()
         # 1st column
         menu = addMenu(menuBar, "menu1_app")
+        # Workspace
+        addMenuItem(menu, "workspace", self, self.swapWorkspaceWithMainWindow, sc.swapWorkspaceWithMainWindow)
+        menu.addSeparator()
+        # Note Editor
         if hasattr(config, "toggleDockWidget"):
             config.toggleDockWidget.setShortcut(sc.createNewNoteFile)
             menu.addAction(config.toggleDockWidget)
@@ -530,11 +526,6 @@ class MaterialMainWindow:
             addMenuItem(subMenu, feature, self, action, shortcut)
         menu.addSeparator()
 
-        # Cli interface
-        if hasattr(config, "cli"):
-            addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
-            menu.addSeparator()
-
         # Master Control Tabs
         items = (sc.openControlPanelTab0, sc.openControlPanelTab1, sc.openControlPanelTab2,
                                           sc.openControlPanelTab3, sc.openControlPanelTab4,
@@ -550,6 +541,11 @@ class MaterialMainWindow:
         for index, tab in enumerate(tabs):
             addMenuItem(subMenu, tab, self, partial(self.openMiniControlTab, index))
         menu.addSeparator()
+
+        # Cli interface
+        if hasattr(config, "cli"):
+            addMenuItem(menu, "cli", self, lambda: self.mainView.currentWidget().switchToCli(), sc.commandLineInterface)
+            menu.addSeparator()
 
         # Media Player
         if WebtopUtil.isPackageInstalled("vlc") or config.isVlcInstalled:
@@ -858,15 +854,8 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
-        # Text command autocompletion/autosuggest
-        textCommandParser = TextCommandParser(self)
-        textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
-        bibleBooks = BibleBooks.getStandardBookAbbreviations()
-        textCommandAutosuggest = QCompleter(textCommands + bibleBooks)
-        textCommandAutosuggest.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-
         self.textCommandLineEdit = QLineEdit()
-        self.textCommandLineEdit.setCompleter(textCommandAutosuggest)
+        self.textCommandLineEdit.setCompleter(self.getTextCommandSuggestion())
         self.textCommandLineEdit.setClearButtonEnabled(True)
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)
