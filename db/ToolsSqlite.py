@@ -828,27 +828,32 @@ class Lexicon:
             return "Could not search {0} in {1}".format(searchString, self.module)
 
     def getContent(self, entry, showMenu=True):
-        lexiconData = LexiconData()
-        query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
-        self.cursor.execute(query, (entry,))
-        information = self.cursor.fetchone()
-        contentText = """<h2>{0} - <ref onclick='concord("{1}")'>{1}</ref></h2>""".format(self.module, entry)
-        if showMenu:
-            contentText += "<p>{0}</p>".format(lexiconData.getSelectForm(entry, self.module))
-        if not information:
-            return contentText+"[not found]"
-        else:
-            contentText += information[0]
-            # deal with images
-            imageList = [m for m in re.findall(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
-            if imageList:
-                imageSqlite = ImageSqlite()
-                for (imgModule, imgEntry) in imageList:
-                    imageSqlite.exportImage(imgModule, imgEntry)
-                del imageSqlite
-            contentText = re.sub(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
-            contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
-            return contentText
+        try:
+            lexiconData = LexiconData()
+            query = "SELECT Definition FROM Lexicon WHERE Topic = ?"
+            self.cursor.execute(query, (entry,))
+            information = self.cursor.fetchone()
+            contentText = """<h2>{0} - <ref onclick='concord("{1}")'>{1}</ref></h2>""".format(self.module, entry)
+            if showMenu:
+                contentText += "<p>{0}</p>".format(lexiconData.getSelectForm(entry, self.module))
+            if not information:
+                return contentText+"[not found]"
+            else:
+                contentText += information[0]
+                # deal with images
+                imageList = [m for m in re.findall(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', contentText)]
+                if imageList:
+                    imageSqlite = ImageSqlite()
+                    for (imgModule, imgEntry) in imageList:
+                        imageSqlite.exportImage(imgModule, imgEntry)
+                    del imageSqlite
+                contentText = re.sub(r'src="getImage\.php\?resource=([^"]*?)&id=([^"]*?)"', r'src="images/\1/\1_\2"', contentText)
+                contentText = re.sub(r"src='getImage\.php\?resource=([^']*?)&id=([^']*?)'", r"src='images/\1/\1_\2'", contentText)
+                return contentText
+        except Exception as ex:
+            print(f"Cannot open {self.database}")
+            print(ex)
+            return ""
 
     def getReverseContent(self, entry):
         search = "%{0}%".format(entry)

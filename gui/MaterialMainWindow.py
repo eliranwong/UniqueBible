@@ -1,8 +1,17 @@
+import config
+from util.BibleBooks import BibleBooks
+
+if config.qtLibrary == "pyside6":
+    from PySide6.QtWidgets import QCompleter
+else:
+    from qtpy.QtWidgets import QCompleter
+
 from gui.MenuItems import *
 from util.ShortcutUtil import ShortcutUtil
 from util.LanguageUtil import LanguageUtil
 from util.Languages import Languages
 from util.FileUtil import FileUtil
+from util.TextCommandParser import TextCommandParser
 from util.WebtopUtil import WebtopUtil
 import shortcut as sc
 import re, os, webbrowser
@@ -849,7 +858,15 @@ class MaterialMainWindow:
 
         self.firstToolBar.addSeparator()
 
+        # Text command autocompletion/autosuggest
+        textCommandParser = TextCommandParser(self)
+        textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
+        bibleBooks = BibleBooks.getStandardBookAbbreviations()
+        textCommandAutosuggest = QCompleter(textCommands + bibleBooks)
+        textCommandAutosuggest.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+
         self.textCommandLineEdit = QLineEdit()
+        self.textCommandLineEdit.setCompleter(textCommandAutosuggest)
         self.textCommandLineEdit.setClearButtonEnabled(True)
         self.textCommandLineEdit.setToolTip(config.thisTranslation["bar1_command"])
         self.textCommandLineEdit.setMinimumWidth(100)

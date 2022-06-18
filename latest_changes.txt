@@ -1,3 +1,6 @@
+Changes in 30.75:
+* Add autocompletion to text command input in material layout
+
 Changes in 30.74:
 * Added support to open markdown file (*.md) in Workspace.
 * Added "Open in Reader" button on Workspace text editor toolbar.
