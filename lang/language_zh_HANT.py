@@ -971,4 +971,6 @@ translation = {
     "attention": "注意！",
     "createReferenceBookFromWorkspace": "從工作區建立參照簿",
     "fileCreated": "已建立檔案！",
+    "openInReader": "在讀者中開啟",
+    "openInEditor": "在編輯器中開啟",
 }

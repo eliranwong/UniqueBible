@@ -14,6 +14,8 @@ else:
     from qtpy.QtCore import Qt
     from qtpy.QtWidgets import QAction, QMenu
     from qtpy.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+from gui.MiniTextEditor import MiniTextEditor
+
 
 class WebEngineViewPopover(QWebEngineView):
 
@@ -69,6 +71,11 @@ class WebEngineViewPopover(QWebEngineView):
             action = QAction(self)
             action.setText(config.thisTranslation["changeWindowTitle"])
             action.triggered.connect(self.changeWindowTitle)
+            self.addAction(action)
+
+            action = QAction(self)
+            action.setText(config.thisTranslation["openInEditor"])
+            action.triggered.connect(self.openInEditor)
             self.addAction(action)
         else:
             subMenu1 = QMenu()
@@ -229,6 +236,14 @@ class WebEngineViewPopover(QWebEngineView):
         qKey.triggered.connect(self.qKeyPressed)
         self.addAction(qKey)
 
+    def openInEditor(self):
+        self.page().toPlainText(self.openInEditorAction)
+
+    def openInEditorAction(self, plainText):
+        windowTitle = self.windowTitle()
+        html = config.mainWindow.htmlWrapper(plainText, parsing=True, html=False)
+        self.parent.addHtmlContent(html, True, windowTitle)
+
     def messageNoSelection(self):
         config.mainWindow.studyView.currentWidget().displayMessage("{0}\n{1}".format(config.thisTranslation["message_run"], config.thisTranslation["selectTextFirst"]))
 
@@ -316,7 +331,7 @@ class WebEngineViewPopover(QWebEngineView):
                 "",
                 "HTML Files (*.html)", "", options)
         if fileName:
-            if not os.path.basename(fileName).endswith(".html"):
+            if not os.path.basename(fileName).lower().endswith(".html"):
                 fileName = fileName + ".html"
                 self.saveHtmlToFileAction(html, fileName)
 

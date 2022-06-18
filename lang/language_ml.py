@@ -971,4 +971,6 @@ translation = {
     "attention": "ശ്രദ്ധിക്കൂ!",
     "createReferenceBookFromWorkspace": "à '- à', à ', à', à ', à', à ',",
     "fileCreated": "ഫയല് ഉണ്ടാക്കിയിരിക്കുന്നു!",
+    "openInReader": "റീഡറില് തുറക്കുക",
+    "openInEditor": "എഡിറ്ററില് തുറക്കുക",
 }

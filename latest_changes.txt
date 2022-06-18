@@ -1,3 +1,9 @@
+Changes in 30.74:
+* Added support to open markdown file (*.md) in Workspace.
+* Added "Open in Reader" button on Workspace text editor toolbar.
+* Added "Open in Editor" option on Workspace reader context menu.
+* Set cursor focus when editor is added to workspace.
+
 Changes in 30.73:
 * Added two buttons on Workspace:
     - Refresh: Reload all windows according to saving order.

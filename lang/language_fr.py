@@ -971,4 +971,6 @@ translation = {
     "attention": "Attention !",
     "createReferenceBookFromWorkspace": "Créer un livre de référence dans l'espace de travail",
     "fileCreated": "Fichier créé !",
+    "openInReader": "Ouvrir dans le lecteur",
+    "openInEditor": "Ouvrir dans l'éditeur",
 }

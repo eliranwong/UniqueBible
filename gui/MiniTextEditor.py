@@ -1,11 +1,10 @@
 import config, re, os
 if config.qtLibrary == "pyside6":
-    from PySide6.QtGui import QAction
     from PySide6.QtCore import Qt
-    from PySide6.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit, QMenuBar
+    from PySide6.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit
 else:
     from qtpy.QtCore import Qt
-    from qtpy.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit, QAction, QMenuBar
+    from qtpy.QtWidgets import QMainWindow, QTextEdit, QToolBar, QFileDialog, QInputDialog, QLineEdit
 
 
 class MiniTextEditor(QMainWindow):
@@ -55,7 +54,7 @@ class MiniTextEditor(QMainWindow):
         icon = "material/communication/swap_calls/materialiconsoutlined/48dp/2x/outline_swap_calls_black_48dp.png"
         self.parent.parent.addMaterialIconButton("note_mode", icon, self.switchMode, menuBar)
 
-        menuBar.addSeparator()
+        #menuBar.addSeparator()
 
         self.searchLineEdit = QLineEdit()
         self.searchLineEdit.setClearButtonEnabled(True)
@@ -64,7 +63,17 @@ class MiniTextEditor(QMainWindow):
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)
         menuBar.addWidget(self.searchLineEdit)
 
+        #menuBar.addSeparator()
+
+        icon = "material/action/preview/materialiconsoutlined/48dp/2x/outline_preview_black_48dp.png"
+        self.parent.parent.addMaterialIconButton("openInReader", icon, self.openInReader, menuBar)
+
         return menuBar
+
+    def openInReader(self):
+        html = self.editor.toHtml() if self.html else self.editor.toPlainText()
+        windowTitle = self.windowTitle()
+        self.parent.addHtmlContent(html, False, windowTitle)
 
     def searchLineEntered(self):
         searchString = self.searchLineEdit.text()
@@ -98,7 +107,7 @@ class MiniTextEditor(QMainWindow):
                 os.path.join("notes", defaultName),
                 "UniqueBible.app Note Files (*.uba);;HTML Files (*.html);;HTM Files (*.htm);;All Files (*)", "", options)
         if fileName:
-            if not os.path.basename(fileName).endswith(".uba"):
+            if not os.path.basename(fileName).lower().endswith(".uba"):
                 fileName = fileName + ".uba"
             self.saveHtml(fileName)
 

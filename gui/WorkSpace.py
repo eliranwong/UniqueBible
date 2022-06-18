@@ -1,4 +1,4 @@
-import config, re, textract, os, base64, glob, webbrowser
+import config, re, textract, os, base64, glob, webbrowser, markdown
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QIcon
     from PySide6.QtCore import Qt
@@ -107,6 +107,9 @@ class Workspace(QMainWindow):
         subWindow.show()
         subWindow.activateWindow()
         subWindow.raise_()
+        # set cursor focus
+        if hasattr(widget, "wsName") and widget.wsName == "editor":
+            widget.editor.setFocus()
         # Arrange subWindows
         self.mda.tileSubWindows()
         # Auto-save file
@@ -129,7 +132,7 @@ class Workspace(QMainWindow):
         self.addWidgetAsSubWindow(widget, windowTitle, windowTooltip, autoSave=autoSave)
 
     def extractTextFromDocument(self, editable=False):
-        extensions = ("txt", "uba", "csv", "doc", "docx", "eml", "epub", "gif", "jpg", "jpeg", "json", "html", "htm", "mp3", "msg", "odt", "ogg", "pdf", "png", "pptx", "ps", "rtf", "tiff", "tif", "wav", "xlsx", "xls")
+        extensions = ("txt", "uba", "md", "csv", "doc", "docx", "eml", "epub", "gif", "jpg", "jpeg", "json", "html", "htm", "mp3", "msg", "odt", "ogg", "pdf", "png", "pptx", "ps", "rtf", "tiff", "tif", "wav", "xlsx", "xls")
         filters = ["{0} Files (*.{1})".format(extension.upper(), extension) for extension in extensions]
 
         options = QFileDialog.Options()
@@ -139,11 +142,13 @@ class Workspace(QMainWindow):
                                                     ";;".join(filters),
                                                     "", options)
         if fileName:
-            if fileName.endswith(".uba") or fileName.endswith(".html") or fileName.endswith(".htm"):
+            if fileName.lower().endswith(".uba") or fileName.lower().endswith(".html") or fileName.lower().endswith(".htm") or fileName.lower().endswith(".md"):
                 with open(fileName, "r", encoding="utf-8") as fileObj:
                     html = fileObj.read()
+                if fileName.lower().endswith(".md"):
+                    html = markdown.markdown(html)
                 html = self.fixNoteFont(html)
-                html = config.mainWindow.htmlWrapper(html, True)
+                html = config.mainWindow.htmlWrapper(html, True, html=False if fileName.lower().endswith(".md") else True)
             else:
                 html = textract.process(fileName).decode()
                 html = config.mainWindow.htmlWrapper(html, True, html=False)

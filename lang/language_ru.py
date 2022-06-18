@@ -971,4 +971,6 @@ translation = {
     "attention": "Внимание!",
     "createReferenceBookFromWorkspace": "Создать справочные книги из рабочей области",
     "fileCreated": "Файл создан!",
+    "openInReader": "Открыть в программе чтения",
+    "openInEditor": "Открыть в редакторе",
 }

@@ -971,4 +971,6 @@ translation = {
     "attention": "Atenție!",
     "createReferenceBookFromWorkspace": "Creați carte de referință din spațiul de lucru",
     "fileCreated": "Fișier Creat!",
+    "openInReader": "Deschide în Reader",
+    "openInEditor": "Deschide în Editor",
 }

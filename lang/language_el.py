@@ -971,4 +971,6 @@ translation = {
     "attention": "Προσοχή!",
     "createReferenceBookFromWorkspace": "Δημιουργία βιβλίου αναφοράς από το χώρο εργασίας",
     "fileCreated": "Δημιουργία αρχείου!",
+    "openInReader": "Άνοιγμα στο Reader",
+    "openInEditor": "Άνοιγμα στο Editor",
 }
