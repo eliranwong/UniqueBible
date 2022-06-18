@@ -1,3 +1,6 @@
+Changes in 30.76:
+* Added text command autocompletion to Master Control and mini Control command fields.
+
 Changes in 30.75:
 * Add autocompletion to text command input in material layout
 

@@ -9,11 +9,11 @@ from functools import partial
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import Qt, QEvent
     from PySide6.QtGui import QGuiApplication
-    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox
+    from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox, QCompleter
 else:
     from qtpy.QtCore import Qt, QEvent
     from qtpy.QtGui import QGuiApplication
-    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox
+    from qtpy.QtWidgets import QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QWidget, QTabWidget, QApplication, QBoxLayout, QGridLayout, QComboBox, QCompleter
 
 
 from util.BibleVerseParser import BibleVerseParser
@@ -92,7 +92,16 @@ class MiniControl(QWidget):
         commandBar = QWidget()
         commandLayout1 = QBoxLayout(QBoxLayout.LeftToRight)
         commandLayout1.setSpacing(5)
+
+        # Text command autocompletion/autosuggest
+        textCommandParser = TextCommandParser(self)
+        textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
+        bibleBooks = BibleBooks.getStandardBookAbbreviations()
+        textCommandAutosuggest = QCompleter(textCommands + bibleBooks)
+        textCommandAutosuggest.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+
         self.searchLineEdit = QLineEdit()
+        self.searchLineEdit.setCompleter(textCommandAutosuggest)
         self.searchLineEdit.setClearButtonEnabled(True)
         self.searchLineEdit.setToolTip(config.thisTranslation["enter_command_here"])
         self.searchLineEdit.returnPressed.connect(self.searchLineEntered)

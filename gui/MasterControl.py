@@ -1,5 +1,7 @@
 import config
 import shortcut as sc
+from util.BibleBooks import BibleBooks
+from util.TextCommandParser import TextCommandParser
 from gui.BibleExplorer import BibleExplorer
 from gui.Library2Launcher import Library2Launcher
 from gui.MediaLauncher import MediaLauncher
@@ -9,11 +11,11 @@ from gui.LibraryLauncher import LibraryLauncher
 from gui.HistoryLauncher import HistoryLauncher
 from gui.MiscellaneousLauncher import MiscellaneousLauncher
 if config.qtLibrary == "pyside6":
-    from PySide6.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox
+    from PySide6.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QCompleter
     from PySide6.QtCore import Qt, QEvent
     from PySide6.QtGui import QKeySequence, QShortcut
 else:
-    from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QShortcut
+    from qtpy.QtWidgets import QMessageBox, QGridLayout, QBoxLayout, QHBoxLayout, QVBoxLayout, QPushButton, QWidget, QTabWidget, QLineEdit, QCheckBox, QShortcut, QCompleter
     from qtpy.QtCore import Qt, QEvent
     from qtpy.QtGui import QKeySequence
 
@@ -161,7 +163,15 @@ class MasterControl(QWidget):
         return self.tabs
 
     def commandFieldWidget(self):
+        # Text command autocompletion/autosuggest
+        textCommandParser = TextCommandParser(self)
+        textCommands = [key + ":::" for key in textCommandParser.interpreters.keys()]
+        bibleBooks = BibleBooks.getStandardBookAbbreviations()
+        textCommandAutosuggest = QCompleter(textCommands + bibleBooks)
+        textCommandAutosuggest.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+
         self.commandField = QLineEdit()
+        self.commandField.setCompleter(textCommandAutosuggest)
         self.commandField.setClearButtonEnabled(True)
         self.commandField.setToolTip(config.thisTranslation["enter_command_here"])
         self.commandField.returnPressed.connect(self.commandEntered)
