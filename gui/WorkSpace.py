@@ -332,6 +332,7 @@ class Workspace(QMainWindow):
                     widget.saveHtml(fileName)
                     widget.wsFilename = fileName
             self.exemptSaving = False
+            self.statusBar().showMessage(config.thisTranslation["saved"], 2000)
 
     def getSearchString(self):
         searchString, ok = QInputDialog.getText(self, config.thisTranslation["instantHighlight"],

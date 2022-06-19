@@ -1,3 +1,6 @@
+Changes in 30.80:
+* Notify users about workspace auto-saving via status bar message.
+
 Changes in 30.79:
 * Added ability to add Interlinear data to Workspace.
 
