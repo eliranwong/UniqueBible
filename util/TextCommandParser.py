@@ -1576,9 +1576,9 @@ class TextCommandParser:
                     elif WebtopUtil.isPackageInstalled(player) and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"{player} {audioFile}")
-                        return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", (player == "vlc"))
+                    return ("", "", {})
                 except:
                     return self.invalidCommand()
         else:
@@ -1603,9 +1603,9 @@ class TextCommandParser:
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
-                        return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", False)
+                    return ("", "", {})
                 except:
                     return self.invalidCommand()
         else:
@@ -1635,9 +1635,9 @@ class TextCommandParser:
                     elif WebtopUtil.isPackageInstalled("cvlc") and not config.forceUseBuiltinMediaPlayer:
                         #os.system("pkill vlc")
                         WebtopUtil.run(f"cvlc {audioFile}")
-                        return ("", "", {})
                     else:
                         self.openVlcPlayer(audioFile, "main", False)
+                    return ("", "", {})
                 except:
                     return self.invalidCommand()
         else:

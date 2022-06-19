@@ -1,4 +1,5 @@
 import config, re, textract, os, base64, glob, webbrowser, markdown
+from datetime import datetime
 import shortcut as sc
 if config.qtLibrary == "pyside6":
     from PySide6.QtGui import QIcon, QKeySequence, QShortcut
@@ -38,20 +39,20 @@ class Workspace(QMainWindow):
         self.setupKeyboardShortcuts()
 
         # Automate saving
-        self.mda.subWindowActivated.connect(self.saveWorkspace)
-        #self.mda.subWindowActivated.connect(self.testingSubWindowActivated)
+        self.lastChangeTime = datetime.now()
+        self.mda.subWindowActivated.connect(self.autoSaveTimer)
         self.exemptSaving = False
 
-    def testingSubWindowActivated(self):
-        if not self.exemptSaving:
-            self.exemptSaving = True
-            QTimer.singleShot(1000, self.resetExemptSaving)
-            print("sub-window changed!")
-            #self.exemptSaving = False
+    def autoSaveTimer(self):
+        self.lastChangeTime = datetime.now()
+        lastChangeTime = self.lastChangeTime
+        # Run auto-save 2 seconds after active changes in sub-window activation were made.
+        QTimer.singleShot(2000, lambda: self.autoSaveChanges(lastChangeTime))
 
-    def resetExemptSaving(self):
-        if self.isVisible():
-            self.exemptSaving = False
+    def autoSaveChanges(self, lastChangeTime):
+        if lastChangeTime == self.lastChangeTime:
+            #print("Save changes now")
+            self.saveWorkspace()
 
     def setupKeyboardShortcuts(self):
         shortcut = QShortcut(QKeySequence(sc.swapWorkspaceWithMainWindow), self)
@@ -312,8 +313,6 @@ class Workspace(QMainWindow):
     def saveWorkspace(self, folderName=""):
         if not self.exemptSaving:
             self.exemptSaving = True
-            # avoid repeated saving within a second
-            QTimer.singleShot(1000, self.resetExemptSaving)
             if not folderName or not isinstance(folderName, str):
                 folderName = config.workspaceDirectory
             self.deleteWorkspaceFiles(folderName)

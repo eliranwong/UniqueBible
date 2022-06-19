@@ -131,7 +131,7 @@ class MiniTextEditor(QMainWindow):
     def autoSaveTimer(self):
         self.lastChangeTime = datetime.now()
         lastChangeTime = self.lastChangeTime
-        # Save changes 3 seconds after the last change
+        # Run auto-save 3 seconds after active changes in text entry were made.
         QTimer.singleShot(3000, lambda: self.autoSaveChanges(lastChangeTime))
 
     def autoSaveChanges(self, lastChangeTime):

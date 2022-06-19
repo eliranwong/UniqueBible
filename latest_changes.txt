@@ -1,3 +1,8 @@
+Changes in 30.78:
+* Optimised Workspace auto-saving when changes in sub-window activation were made.
+* Fixed path error when saving Workspace.
+* Fixed error message came with running readverse::: readlexeme::: and readword::: commands.
+
 Changes in 30.77:
 * Automate Workspace auto-saving when window activation is changed.
 * Automate Workspace editor auto-saving changes.

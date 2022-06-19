@@ -55,6 +55,7 @@ class WebEngineViewPopover(QWebEngineView):
         self.page().runJavaScript(changeTitle)
         # run textCommandChanged from parent
         if not newTextCommand == "ePubViewer.html" and not newTextCommand.endswith(".pdf") and not newTextCommand.startswith("viewer.html"):
+            #print(newTextCommand, self.source)
             config.mainWindow.textCommandChanged(newTextCommand, self.source)
 
     def addToWorkspaceReadOnly(self):
