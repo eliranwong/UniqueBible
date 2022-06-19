@@ -314,7 +314,7 @@ class Workspace(QMainWindow):
             self.exemptSaving = True
             # avoid repeated saving within a second
             QTimer.singleShot(1000, self.resetExemptSaving)
-            if not folderName:
+            if not folderName or not isinstance(folderName, str):
                 folderName = config.workspaceDirectory
             self.deleteWorkspaceFiles(folderName)
             savingOrder = {
