@@ -1,3 +1,6 @@
+Changes in 30.79:
+* Added ability to add Interlinear data to Workspace.
+
 Changes in 30.78:
 * Optimised Workspace auto-saving when changes in sub-window activation were made.
 * Fixed path error when saving Workspace.

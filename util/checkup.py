@@ -333,6 +333,13 @@ def isMarkdownifyInstalled():
     except:
         return False
 
+def isTabulateInstalled():
+    try:
+        from tabulate import tabulate
+        return True
+    except:
+        return False
+
 def isMarkdownInstalled():
     try:
         import markdown
@@ -466,6 +473,8 @@ def setInstallConfig(module, isInstalled):
         config.isNltkInstalled = isInstalled
     elif module in ("textract", "-U textract", "--upgrade textract"):
         config.isTextractInstalled = isInstalled
+    elif module in ("tabulate", "-U tabulate", "--upgrade tabulate"):
+        config.isTabulateInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -572,6 +581,7 @@ optional = [
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
+    ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -600,6 +610,7 @@ optional = [
     ("lemmagen3", "Lemmatizer", isLemmagen3Installed),
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
+    ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

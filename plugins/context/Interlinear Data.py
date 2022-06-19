@@ -13,6 +13,7 @@ class InterlinearDataWindow(QWidget):
         "No bible verse reference is found!",
         "Export to Spreadsheet",
         "Close",
+        "Add to Workspace",
     )
 
     def __init__(self, parent, initialVerse=""):
@@ -77,6 +78,10 @@ class InterlinearDataWindow(QWidget):
         button = QPushButton(self.translation[3])
         button.clicked.connect(self.exportSpreadsheet)
         buttonLayout.addWidget(button)
+        if config.isTabulateInstalled:
+            button = QPushButton(self.translation[5])
+            button.clicked.connect(self.addToWorkspace)
+            buttonLayout.addWidget(button)
         mainLayout.addLayout(buttonLayout)
 
         self.setLayout(mainLayout)
@@ -120,6 +125,13 @@ class InterlinearDataWindow(QWidget):
         else:
             from qtpy.QtWidgets import QMessageBox
         QMessageBox.information(self, self.translation[0], message)
+
+    def addToWorkspace(self):
+        from tabulate import tabulate
+        results = self.results
+        results.insert(0, ("WordID", "ClauseID", "Book", "Chapter", "Verse", "Word", "LexicalEntry", "MorphologyCode", "Morphology", "Lexeme", "Transliteration", "Pronunciation", "Interlinear", "Translation", "Gloss"))
+        html = tabulate(results, tablefmt='html')
+        config.mainWindow.addToWorkspaceReadOnlyAction(html, self.translation[0])
 
     def exportSpreadsheet(self):
         import sys
