@@ -50,7 +50,7 @@ class Workspace(QMainWindow):
         QTimer.singleShot(2000, lambda: self.autoSaveChanges(lastChangeTime))
 
     def autoSaveChanges(self, lastChangeTime):
-        if lastChangeTime == self.lastChangeTime:
+        if lastChangeTime == self.lastChangeTime and self.isVisible():
             #print("Save changes now")
             self.saveWorkspace()
 

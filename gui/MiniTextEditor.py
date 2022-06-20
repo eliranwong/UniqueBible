@@ -131,17 +131,18 @@ class MiniTextEditor(QMainWindow):
     def autoSaveTimer(self):
         self.lastChangeTime = datetime.now()
         lastChangeTime = self.lastChangeTime
-        # Run auto-save 3 seconds after active changes in text entry were made.
-        QTimer.singleShot(3000, lambda: self.autoSaveChanges(lastChangeTime))
+        # Run auto-save 2 seconds after active changes in text entry were made.
+        QTimer.singleShot(2000, lambda: self.autoSaveChanges(lastChangeTime))
 
     def autoSaveChanges(self, lastChangeTime):
-        if lastChangeTime == self.lastChangeTime:
+        if lastChangeTime == self.lastChangeTime and self.parent.isVisible():
             #print("Save changes now")
             self.saveWsFile()
 
     def saveWsFile(self):
         if self.wsFilename:
             self.saveHtml(self.wsFilename)
+            self.statusBar().showMessage(config.thisTranslation["saved"], 2000)
 
     def saveHtml(self, fileName):
         if not self.savingInProgress:
