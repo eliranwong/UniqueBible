@@ -972,7 +972,6 @@ class Bible:
                     for verse in verses[blockStart:blockEnd]:
                         whereList.append(f"'{verse[0]}'")
                     sql = 'SELECT * FROM Verses WHERE Ref IN ({})'.format(",".join(whereList))
-                    print(sql)
                     self.cursor.execute(sql)
                     for b, c, v, vsTxt, _ in self.cursor:
                         self.generateStrongsVerse(sNumList, csv, wdListAll, hits, b, c, v, vsTxt)
