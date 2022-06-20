@@ -1,3 +1,7 @@
+Changes in 30.82:
+* Add Bible indexing to speed up concordance
+- Download the index file from Resources/Add/GitHub Bibles Index
+
 Changes in 30.80, 30.81:
 * Notify users about workspace auto-saving via Workspace status bar message.
 * Notify users about workspace text editor auto-saving via text editor status bar message.

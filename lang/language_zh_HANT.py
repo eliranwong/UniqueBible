@@ -973,4 +973,5 @@ translation = {
     "fileCreated": "已建立檔案！",
     "openInReader": "在讀者中開啟",
     "openInEditor": "在編輯器中開啟",
+    "githubBiblesIndex": "GitHub Bibles 索引",
 }

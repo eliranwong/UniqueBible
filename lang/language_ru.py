@@ -973,4 +973,5 @@ translation = {
     "fileCreated": "Файл создан!",
     "openInReader": "Открыть в программе чтения",
     "openInEditor": "Открыть в редакторе",
+    "githubBiblesIndex": "Индекс библий GitHub",
 }

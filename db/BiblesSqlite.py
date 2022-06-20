@@ -3,8 +3,11 @@ Reading data from bibles.sqlite
 """
 import glob
 import os, sqlite3, config, re, logging
+from datetime import datetime
 from pathlib import Path
 from functools import partial
+
+from db.IndexSqlite import IndexSqlite
 
 if __name__ == "__main__":
     from util.ConfigUtil import ConfigUtil
@@ -76,7 +79,7 @@ class BiblesSqlite:
     def proceedMigration(self, biblesWithBothVersions):
             for bible in biblesWithBothVersions:
                 # retrieve plain verses from bibles.sqlite
-                query = "SELECT * FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
+                query = "SELECT Book, Chapter, Verse, Scripture FROM {0} ORDER BY Book, Chapter, Verse".format(bible)
                 self.cursor.execute(query)
                 verses = self.cursor.fetchall()
                 # import into formatted bible database
@@ -178,7 +181,7 @@ input.addEventListener('keyup', function(event) {0}
     def readTextChapter(self, text, b, c):
         plainBibleList, formattedBibleList = self.getTwoBibleLists()
         if text in plainBibleList:
-            query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
+            query = "SELECT Book, Chapter, Verse, Scripture FROM {0} WHERE Book=? AND Chapter=? ORDER BY Verse".format(text)
             self.cursor.execute(query, (b, c))
             textChapter = self.cursor.fetchall()
             if not textChapter:
@@ -191,7 +194,7 @@ input.addEventListener('keyup', function(event) {0}
     def readTextVerse(self, text, b, c, v):
         plainBibleList, *_ = self.getTwoBibleLists()
         if text in plainBibleList or text == "title":
-            query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
+            query = "SELECT Book, Chapter, Verse, Scripture FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
             self.cursor.execute(query, (b, c, v))
             textVerse = self.cursor.fetchone()
             if not textVerse:
@@ -450,9 +453,9 @@ input.addEventListener('keyup', function(event) {0}
 
         formatedText = "<b>{1}</b> <span style='color: brown;' onmouseover='textName(\"{0}\")'>{0}</span><br><br>".format(text, config.thisTranslation["html_searchBible2"])
         if text in plainBibleList:
-            query = "SELECT * FROM {0}".format(text)
+            query = "SELECT Book, Chapter, Verse, Scripture FROM {0}".format(text)
         elif text in formattedBibleList:
-            query = "SELECT * FROM Verses"
+            query = "SELECT Book, Chapter, Verse, Scripture FROM Verses"
         query += " WHERE "
         t = ()
         if mode == "BASIC":
@@ -738,6 +741,7 @@ class Bible:
 
     def __init__(self, text):
         # connect [text].bible
+        self.logger = logging.getLogger('uba')
         self.text = text
         self.connection = None
         self.cursor = None
@@ -946,51 +950,78 @@ class Bible:
         html = """<h1>Strong's Concordance - {5}</h1><h2><ref onclick='lex("{0}")'>{0}</ref> x {2} Hit(s) in {1} Verse(s)</h2>{6}<h3>Translation:</h3><p>{3}</p><h3>Verses:</h3><p>{4}</p>""".format(strongNo, verseHits, snHits, " <mbn>|</mbn> ".join(uniqueWdList), "<br>".join(verses), self.text, lexicalData)
         return html
 
-    def searchStrongNumber(self, sNumList):    
-        self.cursor.execute('SELECT * FROM Verses')
-    
-        #csv = ['Idx,Book,Ref.,KJB Verse,KJB Word,Original,Transliteration,Definition']
+    def searchStrongNumber(self, sNumList):
+        startTime = datetime.now()
         csv = []
         wdListAll = []
-        verseHits = 0
-        snHits = 0
+        hits = {'verseHits': 0, 'snHits': 0}
+        indexSqlite = IndexSqlite("bible", self.text)
+        if indexSqlite.exists:
+            self.updateRef()   # verify verses table has ref column
+            word = sNumList[0].replace('[', '').replace(']', '')
+            verses = indexSqlite.getRefs(word)
+            verseCount = len(verses)
+            if verseCount > 0:
+                blockStart = 0
+                blockSize = 10000
+                while blockStart < verseCount:
+                    blockEnd = blockStart + blockSize
+                    if blockEnd > verseCount:
+                        blockEnd = verseCount
+                    whereList = []
+                    for verse in verses[blockStart:blockEnd]:
+                        whereList.append(f"'{verse[0]}'")
+                    sql = 'SELECT * FROM Verses WHERE Ref IN ({})'.format(",".join(whereList))
+                    print(sql)
+                    self.cursor.execute(sql)
+                    for b, c, v, vsTxt, _ in self.cursor:
+                        self.generateStrongsVerse(sNumList, csv, wdListAll, hits, b, c, v, vsTxt)
+                    blockStart += blockSize
+        else:
+            self.cursor.execute('SELECT Book, Chapter, Verse, Scripture FROM Verses')
+            for b, c, v, vsTxt in self.cursor:
+                self.generateStrongsVerse(sNumList, csv, wdListAll, hits, b, c, v, vsTxt)
 
-        for b, c, v, vsTxt in self.cursor:
-            vsTxt = re.sub("([HG][0-9]+?) ", r" [\1] ", vsTxt)
-            vsTxt = re.sub("([HG][0-9]+?)[a-z] ", r" [\1] ", vsTxt)
-            
-            if any(sn in vsTxt for sn in sNumList):
-                vsTxt = re.sub(r'\[\([HG]\d+\)\]', r'', vsTxt)
-                vsTxt = re.sub(r'\[\([GH]\d+\)\]|<fn>\d+</fn>|<.+?>|[\r\n]', r'', vsTxt)
-                wdGrpList = re.findall(r'[^\]]+\]', vsTxt)
-                
-                wdList = []
-                wdGrpListFix = []
-                for wdGrp in wdGrpList:
-                    if all(sn not in wdGrp for sn in sNumList):
-                        wdGrp = re.sub(r'\[[HG][0-9]+?\]|\[[HG][0-9]+?[a-z]\]', r'', wdGrp)
-                    else:
-                        wds, *_ = wdGrp.split('[')
-                        wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1<z>\2</z>', wdGrp )
-                        if wds.strip():
-                            wdList.append( '%s' % (re.sub(r'[^\w\s]','', wds).strip()))
-                        
-                    wdGrpListFix.append(wdGrp)
-                
-                vsTxtFix = ''.join(wdGrpListFix)
-                
-                #wdHits = re.findall(r'[^\s]\*\*([^\[]+)', vsTxtFix)
-                snHits += len(re.findall(r'\[[GH]\d+\]', vsTxtFix))
-                #', '.join(wdList)
-                wdListAll += wdList
-                
-                verseReference = self.bcvToVerseReference(b, c, v)
-                line = """<ref onclick="document.title='BIBLE:::{0}'">({0})</ref> {1}""".format(verseReference, vsTxtFix)
-                
-                csv.append(line)
-                verseHits +=1
-        
-        return (verseHits, snHits, list(set(wdListAll)), csv)
+        endTime = datetime.now()
+        self.logger.debug(f"searchStrongNumber-{self.text}-{sNumList}: " + str((endTime - startTime).total_seconds()))
+
+        return (hits['verseHits'], hits['snHits'], list(set(wdListAll)), csv)
+
+    def generateStrongsVerse(self, sNumList, csv, wdListAll, hits, b, c, v, vsTxt):
+
+        vsTxt = re.sub("([HG][0-9]+?) ", r" [\1] ", vsTxt)
+        vsTxt = re.sub("([HG][0-9]+?)[a-z] ", r" [\1] ", vsTxt)
+
+        if any(sn in vsTxt for sn in sNumList):
+            vsTxt = re.sub(r'\[\([HG]\d+\)\]', r'', vsTxt)
+            vsTxt = re.sub(r'\[\([GH]\d+\)\]|<fn>\d+</fn>|<.+?>|[\r\n]', r'', vsTxt)
+            wdGrpList = re.findall(r'[^\]]+\]', vsTxt)
+
+            wdList = []
+            wdGrpListFix = []
+            for wdGrp in wdGrpList:
+                if all(sn not in wdGrp for sn in sNumList):
+                    wdGrp = re.sub(r'\[[HG][0-9]+?\]|\[[HG][0-9]+?[a-z]\]', r'', wdGrp)
+                else:
+                    wds, *_ = wdGrp.split('[')
+                    wdGrp = re.sub(r'(\W?\s?)(.+)', r'\1<z>\2</z>', wdGrp)
+                    if wds.strip():
+                        wdList.append('%s' % (re.sub(r'[^\w\s]', '', wds).strip()))
+
+                wdGrpListFix.append(wdGrp)
+
+            vsTxtFix = ''.join(wdGrpListFix)
+
+            # wdHits = re.findall(r'[^\s]\*\*([^\[]+)', vsTxtFix)
+            hits['snHits'] += len(re.findall(r'\[[GH]\d+\]', vsTxtFix))
+            # ', '.join(wdList)
+            wdListAll += wdList
+
+            verseReference = self.bcvToVerseReference(b, c, v)
+            line = """<ref onclick="document.title='BIBLE:::{0}'">({0})</ref> {1}""".format(verseReference, vsTxtFix)
+
+            csv.append(line)
+            hits['verseHits'] += 1
 
     def importPlainFormat(self, verses, description=""):
         query = "SELECT name FROM sqlite_master WHERE type='table' AND name=?"
@@ -1008,7 +1039,7 @@ class Bible:
         self.connection.commit()
 
     def readTextChapter(self, b, c):
-        query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
+        query = "SELECT Book, Chapter, Verse, Scripture FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
         self.cursor.execute(query, (b, c))
         textChapter = self.cursor.fetchall()
         if not textChapter:
@@ -1031,7 +1062,7 @@ class Bible:
 
     def readTextVerse(self, b, c, v):
         if self.checkTableExists("Verses"):
-            query = "SELECT * FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
+            query = "SELECT Book, Chapter, Verse, Scripture FROM Verses WHERE Book=? AND Chapter=? AND Verse=?"
             self.cursor.execute(query, (b, c, v))
             textVerse = self.cursor.fetchone()
             if not textVerse:
@@ -1158,6 +1189,15 @@ class Bible:
     def getSearchVerses(self, query, binding):
         self.cursor.execute(query, binding)
         return self.cursor.fetchall()
+
+    def updateRef(self):
+        if not self.checkColumnExists("Verses", "Ref"):
+            self.addColumnToTable("Verses", "Ref", "TEXT")
+            update = "UPDATE Verses SET Ref=Book || '-' || Chapter || '-' || Verse"
+            self.cursor.execute(update)
+            create = 'CREATE INDEX Verses_Index ON Verses (Ref ASC)'
+            self.cursor.execute(create)
+            self.connection.commit()
 
     def checkTableExists(self, table):
         if self.cursor:
@@ -1375,7 +1415,7 @@ class MorphologySqlite:
         return "<ref id='v{0}.{1}.{2}' onclick='document.title=\"BIBLE:::{3}:::{4}\"' onmouseover='document.title=\"_instantVerse:::{3}:::{0}.{1}.{2}\"' ondblclick='document.title=\"_menu:::{3}.{0}.{1}.{2}\"'>".format(b, c, v, text, verseReference)
 
     def readTextVerse(self, text, b, c, v):
-        query = "SELECT * FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
+        query = "SELECT Book, Chapter, Verse, Scripture FROM {0} WHERE Book=? AND Chapter=? AND Verse=?".format(text)
         self.cursor.execute(query, (b, c, v))
         textVerse = self.cursor.fetchone()
         if not textVerse:
