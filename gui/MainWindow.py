@@ -814,6 +814,9 @@ class MainWindow(QMainWindow):
     def installGithubBibles(self):
         self.installFromGitHub(GitHubRepoInfo.bibles)
 
+    def installGithubBiblesIndex(self):
+        self.installFromGitHub(GitHubRepoInfo.biblesIndex)
+
     def installGithubCommentaries(self):
         self.installFromGitHub(GitHubRepoInfo.commentaries)
 

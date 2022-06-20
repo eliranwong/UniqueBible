@@ -117,6 +117,7 @@ def addGithubDownloadMenuItems(self, subMenu):
             ("gitHubPluginsContext", self.installGithubPluginsContext),
             ("gitHubPluginsStartup", self.installGithubPluginsStartup),
             ("gitHubPluginsMenu", self.installGithubPluginsMenu),
+            ("githubBiblesIndex", self.installGithubBiblesIndex),
         )
         for feature, action in items:
             addMenuItem(subMenu, feature, self, action)

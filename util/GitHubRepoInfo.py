@@ -3,6 +3,7 @@ class GitHubRepoInfo:
 
     # repo, directory, language, extension
     bibles = ("otseng/UniqueBible_Bibles", "bibles", "githubBibles", "bible")
+    biblesIndex = ("otseng/UniqueBible_Bibles_Index", "indexes/bible", "githubBiblesIndex", "index")
     commentaries = ("otseng/UniqueBible_Commentaries", "commentaries", "githubCommentaries", "commentary")
     books = ("darrelwright/UniqueBible_Books", "books", "githubBooks", "book")
     hymnLyrics = ("otseng/UniqueBible_Hymn_Lyrics", "books", "githubHymnLyrics", "book")
