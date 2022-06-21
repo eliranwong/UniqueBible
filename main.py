@@ -549,8 +549,9 @@ if config.enableSystemTray:
 
 # Clipboard Monitoring
 def clipboardChanged():
+    clipboardText = QApplication.clipboard().text().strip()
+    config.clipboardText = clipboardText
     if config.enableClipboardMonitoring:
-        clipboardText = QApplication.clipboard().text()
         if clipboardText:
             parser = BibleVerseParser(config.parserStandarisation)
             verseList = parser.extractAllReferences(clipboardText, False)

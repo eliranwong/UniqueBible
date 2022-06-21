@@ -1509,6 +1509,7 @@ class MainWindow(QMainWindow):
                     "")
             if ok and text:
                 clipboardText = text
+        config.clipboardText = clipboardText
         return clipboardText
 
     def pasteFromClipboard(self):
@@ -5564,3 +5565,14 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
         textCommandAutosuggestion = QCompleter(textCommands + bibleBooks)
         textCommandAutosuggestion.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         return textCommandAutosuggestion
+
+    # For use in macros
+    def getSelectedText(self):
+        selectedText = self.mainView.currentWidget().selectedText().strip()
+        if not selectedText:
+            selectedText = self.studyView.currentWidget().selectedText().strip()
+        if not selectedText:
+            config.selectedText = None
+        else:
+            config.selectedText = selectedText
+
