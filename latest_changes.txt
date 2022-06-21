@@ -1,3 +1,6 @@
+Changes in 30.84:
+* Optimised the use of config.fixLoadingContent.
+
 Changes in 30.83:
 * Added support for macros to use values from clipboard or selected text
 

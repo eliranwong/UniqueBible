@@ -200,6 +200,25 @@ class Workspace(QMainWindow):
             note = re.sub("""<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n""", "", note)
         return note
 
+    def openVideoDialog(self):
+        options = QFileDialog.Options()
+        fileName, *_ = QFileDialog.getOpenFileName(self,
+                config.thisTranslation["html_open"],
+                config.mainWindow.openFileNameLabel.text(),
+                "MP4 Video (*.mp4);;All Files (*)", "", options)
+        if fileName:
+            self.openVideo(fileName)
+
+    def openVideo(self, fileName):
+        name, extension = os.path.splitext(os.path.basename(fileName))
+        html = """
+<video controls>
+  <source src="{0}" type="video/mp4">
+Your browser does not support the video tag.
+</video>""".format(fileName) if extension.lower() == ".mp4" else ""
+        if html:
+            self.addHtmlContent(html, False, name)
+
     def openImageDialog(self, editable=False):
         options = QFileDialog.Options()
         fileName, *_ = QFileDialog.getOpenFileName(self,

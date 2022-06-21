@@ -6,12 +6,12 @@ from distutils import util
 from functools import partial
 from pathlib import Path
 if config.qtLibrary == "pyside6":
-    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir
+    from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
     from PySide6.QtWidgets import QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from PySide6.QtWebEngineCore import QWebEnginePage
 else:
-    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir
+    from qtpy.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from qtpy.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor
     from qtpy.QtWidgets import QAction, QInputDialog, QLineEdit, QMainWindow, QMessageBox, QWidget, QFileDialog, QLabel, QFrame, QFontDialog, QApplication, QPushButton, QShortcut, QColorDialog, QComboBox, QToolButton, QMenu, QCompleter
     from qtpy.QtWebEngineWidgets import QWebEnginePage
@@ -572,7 +572,11 @@ class MainWindow(QMainWindow):
                 else:
                     text = self.checkToolTipCommand(tabToolTip)
                 # Update main reference button and text
-                self.textCommandParser.setMainVerse(text, bcvTuple)
+                #self.textCommandParser.setMainVerse(text, bcvTuple)
+                config.mainText = text
+                config.mainB, config.mainC, config.mainV, *_ = bcvTuple
+                config.setMainVerse = True
+                self.updateMainRefButton(True)
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
         self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
@@ -3377,8 +3381,9 @@ class MainWindow(QMainWindow):
 
     def updateVersionCombo(self):
         if hasattr(self, "bibleSelection") and self.bibleSelection is not None and config.menuLayout in ("material",):
-            #self.bibleSelection.setText(config.mainText)
-            self.setBibleSelection()
+            if not config.fixLoadingContent:
+                #self.bibleSelection.setText(config.mainText)
+                self.setBibleSelection()
         if self.versionCombo is not None and config.menuLayout in ("focus", "Starter", "aleph", "material"):
             self.refreshing = True
             textIndex = 0
@@ -3398,12 +3403,13 @@ class MainWindow(QMainWindow):
                 command = "_commentarychapters:::{0}".format(commentary)
             self.runTextCommand(command)
 
-    def updateMainRefButton(self):
+    def updateMainRefButton(self, forceUpdate=False):
         *_, verseReference = self.verseReference("main")
         if config.mainC > 0:
             if config.menuLayout == "material":
-                self.setBibleSelection()
-                self.setMainRefMenu()
+                if not config.fixLoadingContent or forceUpdate:
+                    self.setBibleSelection()
+                    self.setMainRefMenu()
             elif config.menuLayout == "aleph":
                 self.mainRefButton.setText(":::".join(self.verseReference("main")))
             else:
@@ -3419,10 +3425,11 @@ class MainWindow(QMainWindow):
                 self.runTextCommand(newTextCommand, True, "study")
 
     def updateStudyRefButton(self):
-        text, verseReference = self.verseReference("study")
+        *_, verseReference = self.verseReference("study")
         if config.menuLayout == "material":
-            self.setStudyBibleSelection()
-            self.setStudyRefMenu()
+            if not config.fixLoadingContent:
+                self.setStudyBibleSelection()
+                self.setStudyRefMenu()
         else:
             self.studyRefButton.setText(":::".join(self.verseReference("study")))
         if config.syncStudyWindowBibleWithMainWindow and not config.openBibleInMainViewOnly and not self.syncingBibles:
@@ -3437,7 +3444,7 @@ class MainWindow(QMainWindow):
             self.commentaryRefButton.setText(self.verseReference("commentary"))
 
     def updateCommentaryCombo(self):
-        if self.commentaryCombo is not None and config.menuLayout == "material":
+        if self.commentaryCombo is not None and config.menuLayout == "material" and not config.fixLoadingContent:
             self.refreshing = True
             textIndex = 0
             if config.commentaryText in self.commentaryList:
@@ -3517,7 +3524,8 @@ class MainWindow(QMainWindow):
         self.mainPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
                 config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
-        self.fixLoadingBibleWindowContent()
+        if config.fixLoadingContent:
+            QTimer.singleShot(1, self.fixLoadingContent)
 
     def finishStudyViewLoading(self):
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
@@ -3525,17 +3533,18 @@ class MainWindow(QMainWindow):
         self.studyPage.runJavaScript(
             "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
                 config.studyV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
-        self.fixLoadingStudyWindowContent()
+        if config.fixLoadingContent:
+            QTimer.singleShot(1, self.fixLoadingContent)
 
     def studyViewFinishedLoading(self, js):
         self.studyView.currentWidget().page().runJavaScript(js)
-        self.fixLoadingStudyWindowContent()
-
-    def fixLoadingBibleWindowContent(self):
         if config.fixLoadingContent:
-            cmd = self.textCommandLineEdit.text()
-            self.setupMenuLayout(config.menuLayout)
-            self.textCommandLineEdit.setText(cmd)
+            QTimer.singleShot(1, self.fixLoadingContent)
+
+    def fixLoadingContent(self):
+        cmd = self.textCommandLineEdit.text()
+        self.setupMenuLayout(config.menuLayout)
+        self.textCommandLineEdit.setText(cmd)
 #            splitter = self.centralWidget.instantSplitter
 #            thisPos = config.iModeSplitterSizes[0]
 #            splitter.moveSplitter(1, 1)
@@ -3546,24 +3555,6 @@ class MainWindow(QMainWindow):
 #            self.setNoToolBar()
 #            self.setNoToolBar()
 #            splitter.refresh()
-
-    def fixLoadingStudyWindowContent(self):
-        if config.fixLoadingContent:
-            cmd = self.textCommandLineEdit.text()
-            self.setupMenuLayout(config.menuLayout)
-            self.textCommandLineEdit.setText(cmd)
-#            splitter = self.centralWidget.parallelSplitter
-#            splitterWidth = splitter.handleWidth()
-#            splitter.setHandleWidth(splitterWidth + 7)
-#            splitter.setHandleWidth(splitterWidth)
-#            splitter.refresh()
-#            self.setNoToolBar()
-#            self.setNoToolBar()
-#            thisPos = config.pModeSplitterSizes[0]
-#            splitter.moveSplitter(1, 1)
-#            splitter.moveSplitter(thisPos, 1)
-            
-
 
     # finish pdf printing
     def pdfPrintingFinishedAction(self, filePath, success):

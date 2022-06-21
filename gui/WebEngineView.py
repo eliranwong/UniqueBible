@@ -224,7 +224,7 @@ class WebEngineView(QWebEngineView):
         subMenu.addAction(searchBibleReferences)
 
         searchBibleReferences = QAction(self)
-        searchBibleReferences.setText(config.thisTranslation["bar1_menu"])
+        searchBibleReferences.setText("{0}{1}{2}".format(config.thisTranslation["bar1_menu"], " | " if sc.parseAndOpenBibleReference else "", sc.parseAndOpenBibleReference))
         searchBibleReferences.triggered.connect(self.displayVersesInBibleWindow)
         self.parent.parent.addContextMenuShortcut(partial(self.displayVersesInBibleWindow, activeSelection=True), sc.parseAndOpenBibleReference)
         subMenu.addAction(searchBibleReferences)
@@ -451,7 +451,7 @@ class WebEngineView(QWebEngineView):
 
         # Start Search section
         action = QAction(self)
-        action.setText("{0} | {1}".format(config.thisTranslation["context1_search"], sc.openControlPanelTab3))
+        action.setText("{0}{1}{2}".format(config.thisTranslation["context1_search"], " | " if sc.openControlPanelTab3 else "", sc.openControlPanelTab3))
         action.triggered.connect(self.searchPanel)
         self.addAction(action)
 
