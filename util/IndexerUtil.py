@@ -35,6 +35,7 @@ class IndexerUtil:
                             if len(word) > 1:
                                 indexContent.append((word, bookNum, chapterNum, verseNum))
                         indexSqlite.insertBibleData(indexContent)
+            IndexerUtil.updateIndexRef(bibleName)
         else:
             print(f"Could not find Bible {bibleName}")
 
@@ -65,8 +66,9 @@ class IndexerUtil:
 
 if __name__ == "__main__":
 
-    bibleName = "KJVx"
-    # IndexerUtil.createBibleIndex(bibleName, 1, 66)
+    bibleName = "TRx"
+    IndexerUtil.createBibleIndex(bibleName, 1, 66)
     # IndexerUtil.testGetVerses(bibleName, "Adam")
-    IndexerUtil.updateBibleRef(bibleName)
+    # IndexerUtil.updateIndexRef(bibleName)
+    # IndexerUtil.updateBibleRef(bibleName)
     print("Done")

@@ -10,6 +10,7 @@ class MacroParser:
         self.lines = None
         self.parent = parent
         self.ifState = IF.na
+        self.mapping = {}
 
     def parse(self, file):
         filename = os.path.join(MacroParser.macros_dir, file)
@@ -27,7 +28,11 @@ class MacroParser:
     def parseLine(self, currentLine):
         try:
             line = self.lines[currentLine].strip()
-            if line.startswith("#") or line.startswith("!") or len(line) == 0:
+            for key, value in vars(config).items():
+                self.mapping[key] = value
+            line = line.format(**self.mapping)
+            # print(line)
+            if len(line) == 0 or line[0] in ['#', "!", ":"]:
                 pass
             elif line.lower().startswith("if "):
                 if eval(line[3:]):
@@ -101,3 +106,7 @@ class IF:
     na = 0
     match = 1
     nomatch = 2
+
+if __name__ == "__main__":
+
+    MacroParser(None)
