@@ -1,3 +1,6 @@
+Changes in 30.86:
+* Fixed switching between main window and workspace on some Linux versions.
+
 Changes in 30.85:
 * Support nested if command in macros
 

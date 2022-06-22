@@ -5494,6 +5494,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.showMaximized()
         self.activateWindow()
         self.raise_()
+        if platform.system() == "Linux":
+            self.bringToForeground(self)
         config.mainWindowHidden = False
 
     # Work with workspace
@@ -5510,6 +5512,8 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
             self.ws.showMaximized()
         self.ws.activateWindow()
         self.ws.raise_()
+        if platform.system() == "Linux":
+            self.bringToForeground(self.ws)
         self.ws.exemptSaving = False
 
     def addToWorkspaceReadOnlyAction(self, html, windowTitle=""):
