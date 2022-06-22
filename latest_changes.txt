@@ -1,3 +1,6 @@
+Changes in 30.85:
+* Support nested if command in macros
+
 Changes in 30.84:
 * Optimised the use of config.fixLoadingContent.
 

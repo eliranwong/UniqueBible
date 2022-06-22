@@ -9,7 +9,8 @@ class MacroParser:
     def __init__(self, parent):
         self.lines = None
         self.parent = parent
-        self.ifState = IF.na
+        self.ifStack = {}
+        self.ifDepth = -1
         self.mapping = {}
 
     def parse(self, file):
@@ -31,29 +32,30 @@ class MacroParser:
             for key, value in vars(config).items():
                 self.mapping[key] = value
             line = line.format(**self.mapping)
-            # print(line)
             if len(line) == 0 or line[0] in ['#', "!", ":"]:
                 pass
             elif line.lower().startswith("if "):
+                self.ifDepth += 1
                 if eval(line[3:]):
-                    self.ifState = IF.match
+                    self.ifStack[self.ifDepth] = IF.match
                 else:
-                    self.ifState = IF.nomatch
+                    self.ifStack[self.ifDepth] = IF.nomatch
             elif line.lower().startswith("elif "):
-                if self.ifState == IF.match:
-                    return self.goto("fi", currentLine)
+                if self.ifStack[self.ifDepth] == IF.match:
+                    return self.gotoMatchingEndIf(currentLine)
                 elif eval(line[4:]):
-                    self.ifState = IF.match
+                    self.ifStack[self.ifDepth] = IF.match
                 else:
-                    self.ifState = IF.nomatch
+                    self.ifStack[self.ifDepth] = IF.nomatch
             elif line.lower().startswith("else"):
-                if self.ifState == IF.match:
-                    return self.goto("fi", currentLine)
+                if self.ifStack[self.ifDepth] == IF.match:
+                    return self.gotoMatchingEndIf(currentLine)
                 else:
-                    self.ifState = IF.match
+                    self.ifStack[self.ifDepth] = IF.match
             elif line.lower().strip() == "fi":
-                self.ifState = IF.na
-            elif self.ifState == IF.nomatch:
+                self.ifDepth -= 1
+                self.ifStack[self.ifDepth] = IF.na
+            elif self.ifStack[self.ifDepth] == IF.nomatch:
                 pass
             elif line.lower().startswith("goto "):
                 num = self.findLabel(line[5:])
@@ -92,14 +94,20 @@ class MacroParser:
         print("Could not find label {0}".format(label))
         return -1
 
-    def goto(self, label, startFrom):
+    def gotoMatchingEndIf(self, startFrom):
         index = startFrom
+        count = 0
         while index < len(self.lines):
             line = self.lines[index]
-            if line.strip() == label:
-                return index
+            if line.strip() == "fi":
+                if count == 0:
+                    return index
+                else:
+                    count -= 1
+            elif line.strip().startswith("if "):
+                count += 1
             index += 1
-        print("Could not go to {0}".format(label))
+        print("Could not find matching fi")
         return -1
 
 class IF:
@@ -107,6 +115,18 @@ class IF:
     match = 1
     nomatch = 2
 
+class Dummy:
+    def closePopover(self):
+        pass
+
+    def runTextCommand(self, command):
+        print(command)
+
+    def displayMessage(self, command):
+        print(command)
+
+
 if __name__ == "__main__":
 
-    MacroParser(None)
+    parser = MacroParser(Dummy())
+    parser.parse("/home/oliver/dev/UniqueBible/macros/save/TestNestedIf.ubam")
