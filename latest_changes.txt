@@ -1,5 +1,5 @@
-Changes in 30.88:
-* Fixed sync study window button
+Changes in 30.88, 30.89:
+* Fixed two tool buttons
 
 Changes in 30.87:
 * Fixed macro defect

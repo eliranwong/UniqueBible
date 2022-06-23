@@ -3124,7 +3124,7 @@ class MainWindow(QMainWindow):
     def enableSubheadingButtonClicked2(self):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         icon = os.path.join("htmlResources", self.getAddSubheading())
-        qIcon = self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground)
+        qIcon = self.getMaskedQIcon(icon, config.maskMaterialIconColor, config.maskMaterialIconBackground, toolButton=True)
         self.enableSubheadingButton.setIcon(qIcon)
         self.enableSubheadingButton.setToolTip(self.enableSubheadingToolTip())
         self.newTabException = True
