@@ -1,6 +1,9 @@
+Changes in 30.88:
+* Fixed sync study window button
+
 Changes in 30.87:
-Fixed macro defect
-Fixed sync study window button
+* Fixed macro defect
+* Fixed sync study window button
 
 Changes in 30.86:
 * Fixed switching between main window and workspace on some Linux versions.

@@ -2874,8 +2874,8 @@ class MainWindow(QMainWindow):
     def enableSyncStudyWindowBibleButtonClicked(self):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
         enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
-        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.maskMaterialIconColor, config.maskMaterialIconBackground) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
-        self.enableSyncStudyWindowBibleButton.setIcon(QIcon(qIcon))
+        qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.maskMaterialIconColor, config.maskMaterialIconBackground, toolButton=True) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
+        self.enableSyncStudyWindowBibleButton.setIcon(qIcon)
         self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
         if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
             self.syncButtonChanging = True
