@@ -5,6 +5,7 @@ from datetime import datetime
 from distutils import util
 from functools import partial
 from pathlib import Path
+
 if config.qtLibrary == "pyside6":
     from PySide6.QtCore import QUrl, Qt, QEvent, QThread, QDir, QTimer
     from PySide6.QtGui import QIcon, QGuiApplication, QFont, QKeySequence, QColor, QPixmap, QCursor, QAction, QShortcut
@@ -2874,7 +2875,7 @@ class MainWindow(QMainWindow):
         config.syncStudyWindowBibleWithMainWindow = not config.syncStudyWindowBibleWithMainWindow
         enableSyncStudyWindowBibleButtonFile = os.path.join("htmlResources", self.getSyncStudyWindowBibleDisplay())
         qIcon = self.getMaskedQIcon(enableSyncStudyWindowBibleButtonFile, config.maskMaterialIconColor, config.maskMaterialIconBackground) if config.menuLayout == "material" else QIcon(enableSyncStudyWindowBibleButtonFile)
-        self.enableSyncStudyWindowBibleButton.setIcon(qIcon)
+        self.enableSyncStudyWindowBibleButton.setIcon(QIcon(qIcon))
         self.enableSyncStudyWindowBibleButton.setToolTip(self.getSyncStudyWindowBibleDisplayToolTip())
         if config.syncCommentaryWithMainWindow and not self.syncButtonChanging:
             self.syncButtonChanging = True

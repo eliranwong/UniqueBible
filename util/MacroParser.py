@@ -9,8 +9,8 @@ class MacroParser:
     def __init__(self, parent):
         self.lines = None
         self.parent = parent
-        self.ifStack = {}
-        self.ifDepth = -1
+        self.ifStack = {0: IF.na}
+        self.ifDepth = 0
         self.mapping = {}
 
     def parse(self, file):
