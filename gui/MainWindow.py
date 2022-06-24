@@ -936,6 +936,8 @@ class MainWindow(QMainWindow):
 
     # Open text on left and right view
     def openTextOnMainView(self, text, textCommand):
+        updateMainReferenceOnChaningTabs = config.updateMainReferenceOnChaningTabs
+        config.updateMainReferenceOnChaningTabs = False
         if config.bibleWindowContentTransformers:
             for transformer in config.bibleWindowContentTransformers:
                 text = transformer(text)
@@ -967,6 +969,7 @@ class MainWindow(QMainWindow):
             reference = "{0}-{1}".format(lastKeyword[0:4], reference2)
         self.mainView.setTabText(self.mainView.currentIndex(), reference)
         self.mainView.setTabToolTip(self.mainView.currentIndex(), textCommand)
+        config.updateMainReferenceOnChaningTabs = updateMainReferenceOnChaningTabs
 
     def setClipboardMonitoring(self, option):
         if not config.enableClipboardMonitoring == option:
