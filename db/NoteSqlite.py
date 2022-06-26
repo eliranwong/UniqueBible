@@ -1,4 +1,4 @@
-import os, re, sqlite3, config
+import os, re, apsw, config
 from util.BibleVerseParser import BibleVerseParser
 from util.DateUtil import DateUtil
 from util.TextUtil import TextUtil
@@ -9,7 +9,7 @@ class NoteSqlite:
     def __init__(self):
         # connect the note file specified in config.py > config.bibleNotes
         self.database = os.path.join(config.marvelData, config.bibleNotes)
-        self.connection = sqlite3.connect(self.database)
+        self.connection = apsw.Connection(self.database)
         self.cursor = self.connection.cursor()
         create = (
             "CREATE TABLE IF NOT EXISTS BookNote (Book INT, Note TEXT)",
@@ -27,7 +27,10 @@ class NoteSqlite:
         if not self.checkColumnExists("BookNote", "Updated"):
             self.addColumnToTable("BookNote", "Updated", "INT")
             self.addColumnToTable("BookNote", "GistId", "NVARCHAR(40)")
-        self.connection.commit()
+        try:
+            self.cursor.execute("COMMIT")
+        except:
+            pass
 
     def __del__(self):
         self.connection.close()
@@ -87,54 +90,54 @@ class NoteSqlite:
     def saveBookNote(self, b, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM BookNote WHERE Book=?"
         self.cursor.execute(delete, (b,))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO BookNote (Book, Note, Updated) VALUES (?, ?, ?)"
             self.cursor.execute(insert, (b, note, updated))
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
 
     def saveChapterNote(self, b, c, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM ChapterNote WHERE Book=? AND Chapter=?"
         self.cursor.execute(delete, (b, c))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO ChapterNote (Book, Chapter, Note, Updated) VALUES (?, ?, ?, ?)"
             self.cursor.execute(insert, (b, c, note, updated))
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
 
     def setBookNoteUpdate(self, b, c, updated):
         update = "UPDATE BookNote set Updated=? WHERE Book=?"
         self.cursor.execute(update, (updated, b))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def setChapterNoteUpdate(self, b, c, updated):
         update = "UPDATE ChapterNote set Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (updated, b, c))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def setChapterNoteContent(self, b, c, content, updated):
         update = "UPDATE ChapterNote set Note=?, Updated=? WHERE Book=? and Chapter=?"
         self.cursor.execute(update, (content, updated, b, c))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def saveVerseNote(self, b, c, v, note, updated=DateUtil.epoch()):
         delete = "DELETE FROM VerseNote WHERE Book=? AND Chapter=? AND Verse=?"
         self.cursor.execute(delete, (b, c, v))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
         if note and note != config.thisTranslation["empty"] and self.isNotEmptyNote(note):
             insert = "INSERT INTO VerseNote (Book, Chapter, Verse, Note, Updated) VALUES (?, ?, ?, ?, ?)"
             self.cursor.execute(insert, (b, c, v, note, updated))
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
 
     def setVerseNoteUpdate(self, b, c, v, updated):
         update = "UPDATE VerseNote set Updated = ? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (updated, b, c, v))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def setVerseNoteContent(self, b, c, v, content, updated):
         update = "UPDATE VerseNote set Note=?, Updated=? WHERE Book=? and Chapter=? and Verse=?"
         self.cursor.execute(update, (content, updated, b, c, v))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
     
     def getSearchedBookList(self, searchString):
         searchString = "%{0}%".format(searchString)
@@ -230,15 +233,15 @@ class NoteSqlite:
 
     def deleteBookNotes(self):
         self.cursor.execute("DELETE FROM BookNote")
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def deleteChapterNotes(self):
         self.cursor.execute("DELETE FROM ChapterNote")
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def deleteVerseNotes(self):
         self.cursor.execute("DELETE FROM VerseNote")
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def checkColumnExists(self, table, column):
         self.cursor.execute("SELECT * FROM pragma_table_info(?) WHERE name=?", (table, column))

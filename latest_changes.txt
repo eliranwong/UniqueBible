@@ -1,3 +1,6 @@
+Changes in 30.91:
+* Switching from sqlite3 to apsw to increase speed.
+
 Changes in 30.90:
 * Fixed enabling both config.updateMainReferenceOnChaningTabs and config.openBibleWindowContentOnNextTab.
 

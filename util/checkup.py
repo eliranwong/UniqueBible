@@ -395,6 +395,13 @@ def isPaddleocrInstalled():
     except:
         return False
 
+def isApswInstalled():
+    try:
+        import apsw
+        return True
+    except:
+        return False
+
 def isChineseEnglishLookupInstalled():
     try:
         from chinese_english_lookup import Dictionary
@@ -475,6 +482,8 @@ def setInstallConfig(module, isInstalled):
         config.isTextractInstalled = isInstalled
     elif module in ("tabulate", "-U tabulate", "--upgrade tabulate"):
         config.isTabulateInstalled = isInstalled
+    elif module in ("apsw", "-U apsw", "--upgrade apsw"):
+        config.isApswInstalled = isInstalled
 
 # Specify qtLibrary for particular os
 if config.docker and config.usePySide2onWebtop:
@@ -582,6 +591,7 @@ optional = [
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
+    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ] if config.noQt else [
     ("html-text", "Read html text", isHtmlTextInstalled),
     ("beautifulsoup4", "HTML / XML Parser", isBeautifulsoup4Installed),
@@ -611,6 +621,7 @@ optional = [
     ("chinese-english-lookup", "Chinese-to-English word definition", isChineseEnglishLookupInstalled),
     ("textract", "Extract text from document", isTextractInstalled),
     ("tabulate", "Pretty-print tabular data", isTabulateInstalled),
+    ("apsw", "Another Python SQLite Wrapper", isApswInstalled),
 ]
 if platform.system() == "Darwin":
     optional.append(("AudioConverter", "Convert Audio Files to MP3", isAudioConverterInstalled))

@@ -1,4 +1,4 @@
-import os, sqlite3
+import os, apsw
 import config
 
 
@@ -9,14 +9,17 @@ class LiveFilterSqlite:
 
     def __init__(self):
         self.filename = os.path.join(config.marvelData, "livefilter.sqlite")
-        self.connection = sqlite3.connect(self.filename)
+        self.connection = apsw.Connection(self.filename)
         self.cursor = self.connection.cursor()
         if not self.checkTableExists():
             self.createTable()
             self.insert("Jesus", "jesus|christ")
 
     def __del__(self):
-        self.connection.commit()
+        try:
+            self.cursor.execute("COMMIT")
+        except:
+            pass
         self.connection.close()
 
     def createTable(self):
@@ -33,17 +36,17 @@ class LiveFilterSqlite:
         if not self.checkFilterExists(filter):
             insert = "INSERT INTO {0} (Filter, Pattern) VALUES (?, ?)".format(self.TABLE_NAME)
             self.cursor.execute(insert, (filter, pattern))
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
 
     def delete(self, filter):
         delete = "DELETE FROM {0} WHERE Filter=?".format(self.TABLE_NAME)
         self.cursor.execute(delete, (filter,))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def deleteAll(self):
         delete = "DELETE FROM {0}".format(self.TABLE_NAME)
         self.cursor.execute(delete)
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def checkFilterExists(self, filter):
         query = "SELECT * FROM {0} WHERE Filter=?".format(self.TABLE_NAME)

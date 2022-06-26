@@ -1,4 +1,4 @@
-import os, sqlite3, re
+import os, apsw, re
 import config
 from util.BibleVerseParser import BibleVerseParser
 
@@ -14,13 +14,16 @@ class Highlight:
             code = "hl{0}".format(i + 1)
             self.codes[code] = code
         self.filename = os.path.join(config.marvelData, "highlights.bible")
-        self.connection = sqlite3.connect(self.filename)
+        self.connection = apsw.Connection(self.filename)
         self.cursor = self.connection.cursor()
         if not self.checkTableExists():
             self.createHighlightTable()
 
     def __del__(self):
-        self.connection.commit()
+        try:
+            self.cursor.execute("COMMIT")
+        except:
+            pass
         self.connection.close()
 
     def createHighlightTable(self):
@@ -45,7 +48,7 @@ class Highlight:
     def deleteAll(self):
         delete = "DELETE FROM Highlight"
         self.cursor.execute(delete)
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def getVerseDict(self, b, c):
         query = "SELECT Verse, Code FROM Highlight WHERE Book=? AND Chapter=? ORDER BY Verse"

@@ -2,7 +2,7 @@
 Reading data from bibles.sqlite
 """
 import glob
-import os, sqlite3, config, re, logging
+import os, apsw, config, re, logging
 from datetime import datetime
 from pathlib import Path
 from functools import partial
@@ -33,7 +33,7 @@ class BiblesSqlite:
         defaultDatabase = os.path.join(config.marvelData, "bibles.sqlite")
         langDatabase = os.path.join(config.marvelData, "bibles_{0}.sqlite".format(language))
         self.database = langDatabase if language and os.path.isfile(langDatabase) else defaultDatabase
-        self.connection = sqlite3.connect(self.database)
+        self.connection = apsw.Connection(self.database)
         self.cursor = self.connection.cursor()
         self.marvelBibles = ("MOB", "MIB", "MAB", "MPB", "MTB", "LXX1", "LXX1i", "LXX2", "LXX2i")
         self.logger = logging.getLogger('uba')
@@ -87,7 +87,7 @@ class BiblesSqlite:
                 # delete plain verses from bibles.sqlite
                 delete = "DROP TABLE {0}".format(bible)
                 self.cursor.execute(delete)
-                self.connection.commit()
+                self.cursor.execute("COMMIT")
             self.connection.execute("VACUUM")
 
     def installKJVversification(self):
@@ -130,10 +130,10 @@ class BiblesSqlite:
             else:
                 create = "CREATE TABLE {0} (Book INT, Chapter INT, Verse INT, Scripture TEXT)".format(abbreviation)
                 self.cursor.execute(create)
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
             insert = "INSERT INTO {0} (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)".format(abbreviation)
             self.cursor.executemany(insert, verses)
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
         else:
             Bible(abbreviation).importPlainFormat(verses, description)
 
@@ -747,12 +747,15 @@ class Bible:
         self.cursor = None
         self.database = os.path.join(config.marvelData, "bibles", text+".bible")
         if os.path.exists(self.database):
-            self.connection = sqlite3.connect(self.database)
+            self.connection = apsw.Connection(self.database)
             self.cursor = self.connection.cursor()
 
     def __del__(self):
         if not self.connection is None:
-            self.connection.commit()
+            try:
+                self.cursor.execute("COMMIT")
+            except:
+                pass
             self.connection.close()
 
     # Check if a verse is empty
@@ -1032,10 +1035,10 @@ class Bible:
         else:
             create = Bible.CREATE_VERSES_TABLE
             self.cursor.execute(create)
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
         insert = "INSERT INTO Verses (Book, Chapter, Verse, Scripture) VALUES (?, ?, ?, ?)"
         self.cursor.executemany(insert, verses)
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def readTextChapter(self, b, c):
         query = "SELECT Book, Chapter, Verse, Scripture FROM Verses WHERE Book=? AND Chapter=? ORDER BY Verse"
@@ -1196,7 +1199,7 @@ class Bible:
             self.cursor.execute(update)
             create = 'CREATE INDEX Verses_Index ON Verses (Ref ASC)'
             self.cursor.execute(create)
-            self.connection.commit()
+            self.cursor.execute("COMMIT")
 
     def checkTableExists(self, table):
         if self.cursor:
@@ -1245,12 +1248,12 @@ class Bible:
     def updateTitleAndFontInfo(self, bibleFullname, fontSize, fontName):
         sql = "UPDATE Details set Title = ?, FontSize = ?, FontName = ?"
         self.cursor.execute(sql, (bibleFullname, fontSize, fontName))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def updateLanguage(self, language):
         sql = "UPDATE Details set Language = ?"
         self.cursor.execute(sql, (language,))
-        self.connection.commit()
+        self.cursor.execute("COMMIT")
 
     def deleteOldBibleInfo(self):
         query = "DELETE FROM Verses WHERE Book=0 AND Chapter=0 AND Verse=0"
@@ -1273,7 +1276,7 @@ class Bible:
             self.insertDetailsTable(self.text, self.text)
 
     def renameGlossToRef(self):
-        description = self.bibleInfo()
+        #description = self.bibleInfo()
         self.addMissingColumns()
 
         query = "SELECT * from Details"
@@ -1311,7 +1314,7 @@ class Bible:
         formattedBible = os.path.join(config.marvelData, "bibles", "{0}.bible".format(abbreviation))
         if os.path.isfile(formattedBible):
             os.remove(formattedBible)
-        connection = sqlite3.connect(formattedBible)
+        connection = apsw.Connection(formattedBible)
         cursor = connection.cursor()
 
         cursor.execute(Bible.CREATE_VERSES_TABLE)
@@ -1326,7 +1329,7 @@ class Bible:
         insert = "INSERT INTO Details VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cursor.execute(insert, details)
 
-        connection.commit()
+        cursor.execute("COMMIT")
 
 
 class ClauseData:
@@ -1341,7 +1344,7 @@ class ClauseONTData:
         self.testament = testament
         # connect images.sqlite
         self.database = os.path.join(config.marvelData, "data", "clause{0}.data".format(self.testament))
-        self.connection = sqlite3.connect(self.database)
+        self.connection = apsw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
@@ -1362,7 +1365,7 @@ class MorphologySqlite:
     def __init__(self):
         # connect bibles.sqlite
         self.database = os.path.join(config.marvelData, "morphology.sqlite")
-        self.connection = sqlite3.connect(self.database)
+        self.connection = apsw.Connection(self.database)
         self.cursor = self.connection.cursor()
 
     def __del__(self):
