@@ -19,3 +19,4 @@ requests
 qrcode
 python-vlc
 yt-dlp
+apsw
