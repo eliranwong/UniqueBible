@@ -1,3 +1,6 @@
+Changes in 30.93:
+* Removed duplicated display of book range in search statement.
+
 Changes in 30.92:
 * Improved speed of searching bible with regular expression.
 * Added support of case sensitivity for searching resources other than bibles.

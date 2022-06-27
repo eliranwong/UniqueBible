@@ -471,8 +471,6 @@ input.addEventListener('keyup', function(event) {0}
             query += "({0})".format(searchString)
         elif mode == "REGEX":
             formatedText = "REGEXSEARCH:::<aa>{0}</aa>:::{1}".format(text, searchString)
-            if booksRange:
-                formatedText += ":::{0}".format(booksRange)
             t = (searchString,)
             query += "(Scripture REGEXP ?)"
         else:
