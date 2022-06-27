@@ -120,13 +120,15 @@ class CollectionsSqlite:
             return information
 
     def getChapterParallels(self, b, c):
-        query = "SELECT Tool, Number, Topic FROM PARALLEL WHERE Passages LIKE ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Tool, Number, Topic FROM PARALLEL WHERE Passages LIKE ?"
         searchString = '%<ref onclick="bcv({0},{1},%'.format(b, c)
         self.cursor.execute(query, (searchString,))
         return "<br>".join(['<ref onclick="harmony({0}, {1})">[Go to]</ref> {2}'.format(tool, number, topic) for tool, number, topic in self.cursor.fetchall()])
 
     def getChapterPromises(self, b, c):
-        query = "SELECT Tool, Number, Topic FROM PROMISES WHERE Passages LIKE ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Tool, Number, Topic FROM PROMISES WHERE Passages LIKE ?"
         searchString = '%<ref onclick="bcv({0},{1},%'.format(b, c)
         self.cursor.execute(query, (searchString,))
         return "<br>".join(['<ref onclick="promise({0}, {1})">[Go to]</ref> {2}'.format(tool, number, topic) for tool, number, topic in self.cursor.fetchall()])
@@ -317,7 +319,8 @@ class SearchSqlite:
             return content[0]
 
     def getSimilarContent(self, module, entry):
-        query = "SELECT link FROM {0} WHERE EntryID LIKE ? AND EntryID != ?".format(module)
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT link FROM {0} WHERE EntryID LIKE ? AND EntryID != ?".format(module)
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = [m[0] for m in self.cursor.fetchall()]
         if not contentList:
@@ -811,11 +814,13 @@ class Lexicon:
     def searchTopic(self, search):
         try:
             searchString = "%{0}%".format(search)
-            query = "SELECT DISTINCT Topic FROM Lexicon WHERE Topic like ? ORDER BY Topic"
+            query = TextUtil.getQueryPrefix()
+            query += "SELECT DISTINCT Topic FROM Lexicon WHERE Topic LIKE ? ORDER BY Topic"
             self.cursor.execute(query, (searchString,))
             topics = self.cursor.fetchall()
             contentText = """<h2>{0}</h2>""".format(self.module)
-            query = "SELECT DISTINCT Topic FROM Lexicon WHERE DEFINITION like ? and TOPIC NOT LIKE ? ORDER BY Topic LIMIT 0, 500"
+            query = TextUtil.getQueryPrefix()
+            query += "SELECT DISTINCT Topic FROM Lexicon WHERE DEFINITION LIKE ? and TOPIC NOT LIKE ? ORDER BY Topic LIMIT 0, 500"
             self.cursor.execute(query, (searchString, searchString))
             topics += self.cursor.fetchall()
             for topic in topics:
@@ -857,7 +862,8 @@ class Lexicon:
 
     def getReverseContent(self, entry):
         search = "%{0}%".format(entry)
-        query = "SELECT Topic, Definition FROM Lexicon WHERE Definition like ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic, Definition FROM Lexicon WHERE Definition LIKE ?"
         self.cursor.execute(query, (search,))
         records = self.cursor.fetchall()
         contentText = """<h2>{0}</h2>""".format(self.module)
@@ -980,12 +986,13 @@ class Book:
 
     def getSearchedTopicList(self, searchString, chapterOnly=False):
         try:
+            query = TextUtil.getQueryPrefix()
             searchString = "%{0}%".format(searchString)
             if chapterOnly:
-                query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? ORDER BY ROWID"
+                query += "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? ORDER BY ROWID"
                 self.cursor.execute(query, (searchString,))
             else:
-                query = "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? OR Content LIKE ? ORDER BY ROWID"
+                query += "SELECT DISTINCT Chapter FROM Reference WHERE Chapter LIKE ? OR Content LIKE ? ORDER BY ROWID"
                 self.cursor.execute(query, (searchString, searchString))
             return [topic[0] for topic in self.cursor.fetchall()]
         except:

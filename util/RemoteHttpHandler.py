@@ -319,10 +319,10 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
             "presentationmode": self.togglePresentationMode,
             "increasefontsize": self.increaseFontSize,
             "decreasefontsize": self.decreaseFontSize,
+            "caseSensitiveSearch": self.toggleCaseSensitiveSearch,
             "compareparallelmode": self.toggleCompareParallel,
             "subheadings": self.toggleSubheadings,
             "plainmode": self.togglePlainMode,
-            "regexcasesensitive": self.toggleRegexCaseSensitive,
             "setfavouritebible": self.setFavouriteBibleContent,
             "setfavouritebible2": lambda: self.setFavouriteBibleContent("favouriteBible2"),
             "setfavouritebible3": lambda: self.setFavouriteBibleContent("favouriteBible3"),
@@ -1298,13 +1298,13 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         config.addTitleToPlainChapter = not config.addTitleToPlainChapter
         return self.getBibleChapter()
 
-    def toggleRegexCaseSensitive(self):
-        if config.regexCaseSensitive:
-            config.regexCaseSensitive = False
-            return self.displayMessage("""<p>Option 'case sensitive' is turned off for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+    def toggleCaseSensitiveSearch(self):
+        if config.enableCaseSensitiveSearch:
+            config.enableCaseSensitiveSearch = False
+            return self.displayMessage("""<p>Case-sensitive search is disabled!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
         else:
-            config.regexCaseSensitive = True
-            return self.displayMessage("""<p>Option 'case sensitive' is turned on for searching bible with regular expression!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
+            config.enableCaseSensitiveSearch = True
+            return self.displayMessage("""<p>Case-sensitive search is enabled!</p><p><ref onclick="window.parent.submitCommand('.bible')">Open Bible</ref></p>""")
 
     def togglePresentationMode(self):
         if config.webPresentationMode:
@@ -1410,7 +1410,7 @@ class RemoteHttpHandler(SimpleHTTPRequestHandler):
         <ref onclick="window.parent.submitCommand('.wordaudiolinks')">.wordAudioLinks</ref> - Toggle 'Hebrew & Greek word audio links' for displaying bible chapters of marvel bibles.<br>
         <ref onclick="window.parent.submitCommand('.subheadings')">.subHeadings</ref> - Toggle 'sub-headings' for displaying bible chapters in plain mode.<br>
         <ref onclick="window.parent.submitCommand('.compareparallelmode')">.compareParallelMode</ref> - Toggle 'compare / parallel mode' for bible reading.<br>
-        <ref onclick="window.parent.submitCommand('.regexcasesensitive')">.regexCaseSensitive</ref> - Toggle 'case sensitive' for searching bible with regular expression.<br>
+        <ref onclick="window.parent.submitCommand('.caseSensitiveSearch')">.caseSensitiveSearch</ref> - Toggle case-sensitive search.<br>
         <ref onclick="window.parent.submitCommand('.presentationmode')">.presentationMode</ref> - Toggle 'presentation mode'.<br>
         <ref onclick="window.parent.submitCommand('.globalviewer')">.globalViewer</ref> - Toggle 'global viewer' for presentation mode.<br>
         <ref onclick="window.parent.submitCommand('.setfavouritebible')">.setFavouriteBible</ref> - Set configuration 'favouriteBible'.<br>

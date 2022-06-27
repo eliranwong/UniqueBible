@@ -85,13 +85,13 @@ class ConfigFlagsWindow(QDialog):
             ("convertChapterVerseDotSeparator", config.convertChapterVerseDotSeparator, self.convertChapterVerseDotSeparatorChanged, True, config.thisTranslation["convertChapterVerseDotSeparator"]),
             ("parseBookChapterWithoutSpace", config.parseBookChapterWithoutSpace, self.parseBookChapterWithoutSpaceChanged, True, config.thisTranslation["parseBookChapterWithoutSpace"]),
             ("parseBooklessReferences", config.parseBooklessReferences, self.parseBooklessReferencesChanged, True, config.thisTranslation["parseBooklessReferences"]),
+            ("enableCaseSensitiveSearch", config.enableCaseSensitiveSearch, self.enableCaseSensitiveSearchChanged, False, config.thisTranslation["enableCaseSensitiveSearch"]),
             ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound, self.searchBibleIfCommandNotFoundChanged, True, config.thisTranslation["searchBibleIfCommandNotFound"]),
             ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound, self.regexSearchBibleIfCommandNotFoundChanged, False, config.thisTranslation["regexSearchBibleIfCommandNotFound"]),
             ("preferHtmlMenu", config.preferHtmlMenu, self.preferHtmlMenuChanged, False, config.thisTranslation["preferHtmlMenu"]),
             ("showVerseNumbersInRange", config.showVerseNumbersInRange, self.showVerseNumbersInRangeChanged, True, config.thisTranslation["showVerseNumbersInRange"]),
             ("addFavouriteToMultiRef", config.addFavouriteToMultiRef, self.addFavouriteToMultiRefChanged, True, config.thisTranslation["addFavouriteToMultiRef"]),
             ("enableVerseHighlighting", config.enableVerseHighlighting, self.enableVerseHighlightingChanged, True, config.thisTranslation["enableVerseHighlighting"]),
-            ("regexCaseSensitive", config.regexCaseSensitive, self.regexCaseSensitiveChanged, False, config.thisTranslation["regexCaseSensitive"]),
             ("alwaysDisplayStaticMaps", config.alwaysDisplayStaticMaps, self.alwaysDisplayStaticMapsChanged, False, config.thisTranslation["alwaysDisplayStaticMaps"]),
             ("exportEmbeddedImages", config.exportEmbeddedImages, self.exportEmbeddedImagesChanged, True, config.thisTranslation["exportEmbeddedImages"]),
             ("clickToOpenImage", config.clickToOpenImage, self.clickToOpenImageChanged, True, config.thisTranslation["clickToOpenImage"]),
@@ -323,8 +323,8 @@ class ConfigFlagsWindow(QDialog):
         config.restrictControlPanelWidth = not config.restrictControlPanelWidth
         self.parent.reloadControlPanel(False)
 
-    def regexCaseSensitiveChanged(self):
-        config.regexCaseSensitive = not config.regexCaseSensitive
+    def enableCaseSensitiveSearchChanged(self):
+        config.enableCaseSensitiveSearch = not config.enableCaseSensitiveSearch
 
     def openStudyWindowContentOnNextTabChanged(self):
         config.openStudyWindowContentOnNextTab = not config.openStudyWindowContentOnNextTab

@@ -1121,11 +1121,15 @@ class ConfigUtil:
         # Default menu shortcuts"""
         if not hasattr(config, "menuShortcuts"):
             config.menuShortcuts = "micron"
-        config.help["regexCaseSensitive"] = """
-        # Option to use flags=re.IGNORECASE with regular expression for searching bible
-        # flags=re.IGNORECASE will be applied only if config.regexCaseSensitive is set to False"""
-        if not hasattr(config, "regexCaseSensitive"):
-            config.regexCaseSensitive = False
+        config.help["enableCaseSensitiveSearch"] = """
+        # Option to enable case-sensitive search."""
+        if not hasattr(config, "enableCaseSensitiveSearch"):
+            config.enableCaseSensitiveSearch = False
+#        config.help["regexCaseSensitive"] = """
+#        # Option to use flags=re.IGNORECASE with regular expression for searching bible
+#        # flags=re.IGNORECASE will be applied only if config.regexCaseSensitive is set to False"""
+#        if not hasattr(config, "regexCaseSensitive"):
+#            config.regexCaseSensitive = False
         config.help["displayLanguage"] = """
         # Specify translation language for user interface."""
         if not hasattr(config, "displayLanguage"):
@@ -1460,7 +1464,8 @@ class ConfigUtil:
             ("bibleSearchRange", config.bibleSearchRange),
             ("customBooksRangeSearch", config.customBooksRangeSearch),
             ("bibleSearchMode", config.bibleSearchMode),
-            ("regexCaseSensitive", config.regexCaseSensitive),
+            ("enableCaseSensitiveSearch", config.enableCaseSensitiveSearch),
+            #("regexCaseSensitive", config.regexCaseSensitive),
             ("searchBibleIfCommandNotFound", config.searchBibleIfCommandNotFound),
             ("regexSearchBibleIfCommandNotFound", config.regexSearchBibleIfCommandNotFound),
             ("workspaceDirectory", config.workspaceDirectory),

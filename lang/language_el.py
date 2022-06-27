@@ -974,4 +974,7 @@ translation = {
     "openInReader": "Άνοιγμα στο Reader",
     "openInEditor": "Άνοιγμα στο Editor",
     "githubBiblesIndex": "Δείκτης Bibles του GitHub",
+    "caseSensitiveSearch": "Αναζήτηση σε διάκριση πεζών",
+    "enableCaseSensitiveSearch": "Ενεργοποίηση δυνατότητας αναζήτησης πεζών",
+    "caseSensitive": "Υπόθεση-ευαίσθητη",
 }

@@ -974,4 +974,7 @@ translation = {
     "openInReader": "読者で開く",
     "openInEditor": "エディターで開く",
     "githubBiblesIndex": "GitHub ビーブル・インデックス",
+    "caseSensitiveSearch": "大文字小文字の区別",
+    "enableCaseSensitiveSearch": "大 / 小文字の区別を",
+    "caseSensitive": "大文字の区別",
 }

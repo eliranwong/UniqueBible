@@ -1,3 +1,16 @@
+Changes in 30.92:
+* Improved speed of searching bible with regular expression.
+* Added support of case sensitivity for searching resources other than bibles.
+* Added config.enableCaseSensitiveSearch to enable case-sensitive search when it is set to True.
+    config.enableCaseSensitiveSearch define case sensitivity for searching of all resources.
+* Added option "enableCaseSensitiveSearch" in Set Config Flags window.
+* Added a "Case-sensitive" checkbox in Master Search tab.
+    The checkbox is placed, right next to the search entry field.
+    The checkbox offers a quick way to toggle config.enableCaseSensitiveSearch.
+* Removed config.regexCaseSensitive, which is now replaced by config.enableCaseSensitiveSearch for a wider purpose.
+* Removed individual favourite bible buttons from Master Control search tab.
+    Users can use bible collections instead.
+
 Changes in 30.91:
 * Switching from sqlite3 to apsw to increase speed.
 

@@ -974,4 +974,7 @@ translation = {
     "openInReader": "在讀者中開啟",
     "openInEditor": "在編輯器中開啟",
     "githubBiblesIndex": "GitHub Bibles 索引",
+    "caseSensitiveSearch": "區分大小寫的搜尋",
+    "enableCaseSensitiveSearch": "啟用區分大小寫的搜尋",
+    "caseSensitive": "區分大小寫",
 }

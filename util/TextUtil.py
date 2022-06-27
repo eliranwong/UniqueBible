@@ -1,4 +1,4 @@
-import re, html, base64, os
+import re, html, base64, os, config
 
 try:
     import html_text
@@ -15,11 +15,31 @@ except:
 
 class TextUtil:
 
+    @staticmethod
     def formatConfigLabel(text):
         text = re.sub("([a-z])([A-Z])", r"\1 \2", text)
         words = text.split(" ")
         words[0] = words[0].capitalize()
         return " ".join(words)
+
+    @staticmethod
+    def getQueryPrefix():
+        return "PRAGMA case_sensitive_like = {0}; ".format("true" if config.enableCaseSensitiveSearch else "false")
+
+    @staticmethod
+    def regexp(expr, item):
+        reg = re.compile(expr, flags=0 if config.enableCaseSensitiveSearch else re.IGNORECASE)
+        #return reg.match(item) is not None
+        return reg.search(item) is not None
+
+    @staticmethod
+    def highlightSearchString(text, searchString):
+        if searchString == "z":
+            return text
+        if config.enableCaseSensitiveSearch:
+            return re.sub("({0})".format(searchString), r"<z>\1</z>", text, flags=0)
+        else:
+            return re.sub("({0})".format(searchString), r"<z>\1</z>", text, flags=re.IGNORECASE)
 
     @staticmethod
     def htmlToPlainText(content):

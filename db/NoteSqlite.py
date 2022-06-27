@@ -141,21 +141,24 @@ class NoteSqlite:
     
     def getSearchedBookList(self, searchString):
         searchString = "%{0}%".format(searchString)
-        query = "SELECT DISTINCT Book FROM BookNote WHERE Note LIKE ? ORDER BY Book"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT DISTINCT Book FROM BookNote WHERE Note LIKE ? ORDER BY Book"
         self.cursor.execute(query, (searchString,))
         standardAbbreviation = BibleVerseParser(config.parserStandarisation).standardAbbreviation
         return ["<ref onclick='document.title=\"_openbooknote:::{0}\"'>{1}</ref>".format(book[0], standardAbbreviation[str(book[0])]) for book in self.cursor.fetchall()]
 
     def getSearchedChapterList(self, searchString):
         searchString = "%{0}%".format(searchString)
-        query = "SELECT DISTINCT Book, Chapter FROM ChapterNote WHERE Note LIKE ? ORDER BY Book, Chapter"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT DISTINCT Book, Chapter FROM ChapterNote WHERE Note LIKE ? ORDER BY Book, Chapter"
         self.cursor.execute(query, (searchString,))
         parser = BibleVerseParser(config.parserStandarisation)
         return ["<ref onclick='document.title=\"_openchapternote:::{0}.{1}\"'>{2}</ref>".format(book, chapter, parser.bcvToVerseReference(book, chapter, 1)[:-2]) for book, chapter in self.cursor.fetchall()]
 
     def getSearchedVerseList(self, searchString):
         searchString = "%{0}%".format(searchString)
-        query = "SELECT DISTINCT Book, Chapter, Verse FROM VerseNote WHERE Note LIKE ? ORDER BY Book, Chapter, Verse"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT DISTINCT Book, Chapter, Verse FROM VerseNote WHERE Note LIKE ? ORDER BY Book, Chapter, Verse"
         self.cursor.execute(query, (searchString,))
         parser = BibleVerseParser(config.parserStandarisation)
         return ["<ref onclick='document.title=\"_openversenote:::{0}.{1}.{2}\"'>{3}</ref>".format(book, chapter, verse, parser.bcvToVerseReference(book, chapter, verse)) for book, chapter, verse in self.cursor.fetchall()]

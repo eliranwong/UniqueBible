@@ -974,4 +974,7 @@ translation = {
     "openInReader": "Ouvrir dans le lecteur",
     "openInEditor": "Ouvrir dans l'éditeur",
     "githubBiblesIndex": "Index des bibles GitHub",
+    "caseSensitiveSearch": "Recherche sensible à la casse",
+    "enableCaseSensitiveSearch": "Activer la recherche sensible à la casse",
+    "caseSensitive": "Sensible à la casse",
 }

@@ -974,4 +974,7 @@ translation = {
     "openInReader": "रीडर में खोलें",
     "openInEditor": "संपादक में खोलें",
     "githubBiblesIndex": "Githb Bitles Index",
+    "caseSensitiveSearch": "केस-संवेदनशील खोज",
+    "enableCaseSensitiveSearch": "केस-संवेदनशील खोज सक्षम करें",
+    "caseSensitive": "केस सेंसिटिव",
 }

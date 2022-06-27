@@ -974,4 +974,7 @@ translation = {
     "openInReader": "Открыть в программе чтения",
     "openInEditor": "Открыть в редакторе",
     "githubBiblesIndex": "Индекс библий GitHub",
+    "caseSensitiveSearch": "Поиск с учетом регистра",
+    "enableCaseSensitiveSearch": "Включить поиск с учетом регистра",
+    "caseSensitive": "С учетом регистра",
 }

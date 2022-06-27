@@ -26,7 +26,10 @@ class SearchLauncher(QWidget):
 
     def setupUI(self):
         mainLayout0 = QVBoxLayout()
-        mainLayout0.addWidget(self.searchFieldWidget())
+        mainLayout00 = QHBoxLayout()
+        mainLayout00.addWidget(self.searchFieldWidget())
+        mainLayout00.addWidget(self.caseSensitiveCheckBox())
+        mainLayout0.addLayout(mainLayout00)
         mainLayout = QHBoxLayout()
         mainLayout.addWidget(self.column1Widget())
         mainLayout.addWidget(self.column2Widget())
@@ -121,12 +124,11 @@ class SearchLauncher(QWidget):
         #subLayout.addStretch()
         widgetLayout0.addLayout(subLayout)
 
-        buttonRow1 = (
-            (config.favouriteBible, lambda: self.searchBible(config.favouriteBible)),
-            (config.favouriteBible2, lambda: self.searchBible(config.favouriteBible2)),
-            (config.favouriteBible3, lambda: self.searchBible(config.favouriteBible3)),
-        )
-
+#        buttonRow1 = (
+#            (config.favouriteBible, lambda: self.searchBible(config.favouriteBible)),
+#            (config.favouriteBible2, lambda: self.searchBible(config.favouriteBible2)),
+#            (config.favouriteBible3, lambda: self.searchBible(config.favouriteBible3)),
+#        )
         buttonRow2 = (
             ("menu5_names", lambda: self.runSearchCommand("SEARCHTOOL:::HBN")),
             ("menu5_characters", lambda: self.runSearchCommand("SEARCHTOOL:::EXLBP")),
@@ -140,7 +142,7 @@ class SearchLauncher(QWidget):
             ("pdfFiles", lambda: self.runSearchCommand("SEARCHPDF")),
             ("allBooksPDF", lambda: self.runSearchCommand("SEARCHALLBOOKSPDF")),
         )
-        widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1,), translation=False))
+        #widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow1,), translation=False))
         widgetLayout0.addWidget(self.parent.buttonsWidget((buttonRow2, buttonRow3), translation=True))
 
         widgetLayout0.addStretch()
@@ -236,6 +238,17 @@ class SearchLauncher(QWidget):
             combo.setItemData(i, item, Qt.ToolTipRole)
         combo.setCurrentIndex(initialIndex)
         return self.parent.comboFeatureLayout(feature, combo, action)
+
+    def caseSensitiveCheckBox(self):
+        checkbox = QCheckBox()
+        checkbox.setText(config.thisTranslation["caseSensitive"])
+        checkbox.setToolTip(config.thisTranslation["caseSensitiveSearch"])
+        checkbox.setChecked(config.enableCaseSensitiveSearch)
+        checkbox.stateChanged.connect(self.caseSensitiveCheckBoxChanged)
+        return checkbox
+
+    def caseSensitiveCheckBoxChanged(self):
+        config.enableCaseSensitiveSearch = not config.enableCaseSensitiveSearch
 
     def highlightNoteSearchResultCheckBox(self):
         self.searchNoteCheckbox = QCheckBox()

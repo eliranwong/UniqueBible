@@ -2233,7 +2233,8 @@ class ThirdPartyDictionary:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
     def getBibleBentoPlusDicSimilarWord(self, entry):
-        query = "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
         if not contentList:
@@ -2266,7 +2267,8 @@ class ThirdPartyDictionary:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
     def getESwordDicSimilarWord(self, entry):
-        query = "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Dictionary WHERE Topic LIKE ? AND Topic != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
         if not contentList:
@@ -2299,7 +2301,8 @@ class ThirdPartyDictionary:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
     def getESwordLexSimilarWord(self, entry):
-        query = "SELECT Topic FROM Lexicon WHERE Topic LIKE ? AND Topic != ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT Topic FROM Lexicon WHERE Topic LIKE ? AND Topic != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
         if not contentList:
@@ -2332,7 +2335,8 @@ class ThirdPartyDictionary:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
     def getMySwordSimilarWord(self, entry):
-        query = "SELECT word FROM dictionary WHERE word LIKE ? AND word != ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT word FROM dictionary WHERE word LIKE ? AND word != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
         if not contentList:
@@ -2367,7 +2371,8 @@ class ThirdPartyDictionary:
             return "<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, content[0])
 
     def getMyBibleSimilarWord(self, entry):
-        query = "SELECT topic FROM dictionary WHERE topic LIKE ? AND topic != ?"
+        query = TextUtil.getQueryPrefix()
+        query += "SELECT topic FROM dictionary WHERE topic LIKE ? AND topic != ?"
         self.cursor.execute(query, ("%{0}%".format(entry), entry))
         contentList = ["<ref onclick='openThirdDictionary(\"{0}\", \"{1}\")'>{1}</ref>".format(self.module, m[0]) for m in self.cursor.fetchall()]
         if not contentList:

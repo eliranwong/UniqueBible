@@ -974,4 +974,7 @@ translation = {
     "openInReader": "Aperto in Reader",
     "openInEditor": "Aperto in Editor",
     "githubBiblesIndex": "Indice di GitHub Bibles",
+    "caseSensitiveSearch": "Ricerca sensibile al caso",
+    "enableCaseSensitiveSearch": "Abilitare la ricerca sensibile al maiuscolo",
+    "caseSensitive": "Caso - sensibile",
 }
