@@ -2988,7 +2988,7 @@ class TextCommandParser:
             entriesSplit = entries.split("_")
             entryList = []
             for entry in entriesSplit:
-                if not reverse and not module.startswith("Concordance") and entry.startswith("E"):
+                if not reverse and not module.startswith("Concordance") and not module == "Morphology" and entry.startswith("E"):
                     entryList += morphologySqlite.etcbcLexemeNo2StrongNo(entry)
                 else:
                     entryList.append(entry)

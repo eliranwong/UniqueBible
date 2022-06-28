@@ -1,3 +1,6 @@
+Changes in 30.96:
+* Fixed analytical lexicon links for lookup of Hebrew word.
+
 Changes in 30.95:
 * Added config.fixLoadingContentDelayTime for developers to do testing.
 
