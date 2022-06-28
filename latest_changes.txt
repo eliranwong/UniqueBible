@@ -1,3 +1,6 @@
+Changes in 30.95:
+* Added config.fixLoadingContentDelayTime for developers to do testing.
+
 Changes in 30.94:
 * Fixed startup scrolling issue when config.populateTabsOnStartup is set to True.
 

@@ -3579,7 +3579,7 @@ class MainWindow(QMainWindow):
 
     def finishMainViewLoading(self, ok, index=None):
         if config.fixLoadingContent:
-            QTimer.singleShot(1, lambda: self.fixLoadingContent(studyView=False, index=index))
+            QTimer.singleShot(config.fixLoadingContentDelayTime, lambda: self.fixLoadingContent(studyView=False, index=index))
         else:
             # scroll to the main verse
             if index is not None:
@@ -3589,7 +3589,7 @@ class MainWindow(QMainWindow):
 
     def finishStudyViewLoading(self, ok, index=None, js=""):
         if config.fixLoadingContent:
-            QTimer.singleShot(1, lambda: self.fixLoadingContent(studyView=True, index=index))
+            QTimer.singleShot(config.fixLoadingContentDelayTime, lambda: self.fixLoadingContent(studyView=True, index=index))
         else:
             # scroll to the study verse
             if index is not None:
