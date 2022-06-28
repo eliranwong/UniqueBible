@@ -1,3 +1,6 @@
+Changes in 30.94:
+* Fixed startup scrolling issue when config.populateTabsOnStartup is set to True.
+
 Changes in 30.93:
 * Removed duplicated display of book range in search statement.
 

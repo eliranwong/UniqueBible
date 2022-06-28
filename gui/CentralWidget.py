@@ -8,6 +8,7 @@ else:
 from gui.TabWidget import TabWidget
 from gui.WebEngineView import WebEngineView
 
+
 class CentralWidget(QWidget):
 
     instantRatio = {
@@ -41,8 +42,10 @@ class CentralWidget(QWidget):
             tabView = WebEngineView(self, "main")
             self.mainView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabBible"]))
             tabView.titleChanged.connect(self.parent.mainTextCommandChanged)
-            tabView.loadFinished.connect(self.parent.finishMainViewLoading)
+            #tabView.loadFinished.connect(self.parent.finishMainViewLoading)
+            tabView.loadFinished.connect(lambda ok, index=i: self.parent.finishMainViewLoading(ok, index=index))
             #tabView.renderProcessTerminated.connect(self.parent.checkMainPageTermination)
+            tabView.page().pdfPrintingFinished.connect(self.parent.pdfPrintingFinishedAction)
 
         self.studyView = TabWidget(self, "study")
         self.parent.studyView = self.studyView
@@ -50,8 +53,10 @@ class CentralWidget(QWidget):
             tabView = WebEngineView(self, "study")
             self.studyView.addTab(tabView, "{1}{0}".format(i+1, config.thisTranslation["tabStudy"]))
             tabView.titleChanged.connect(self.parent.studyTextCommandChanged)
-            tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
+            #tabView.loadFinished.connect(self.parent.finishStudyViewLoading)
+            tabView.loadFinished.connect(lambda ok, index=i: self.parent.finishStudyViewLoading(ok, index=index))
             #tabView.renderProcessTerminated.connect(self.parent.checkStudyPageTermination)
+            tabView.page().pdfPrintingFinished.connect(self.parent.pdfPrintingFinishedAction)
 
         self.instantView = WebEngineView(self, "instant")
         self.instantView.setHtml("<link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/{1}.css?v=1.062'><link id='theme_stylesheet' rel='stylesheet' type='text/css' href='css/custom.css?v=1.062'><p style='font-family:{0};'><u><b>Bottom Window</b></u><br>Display instant information on this window by hovering over verse numbers, tagged words or bible reference links.</p>".format(config.font, config.theme), config.baseUrl)

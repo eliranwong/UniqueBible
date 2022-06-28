@@ -359,6 +359,7 @@ class ConfigFlagsWindow(QDialog):
 
     def populateTabsOnStartupChanged(self):
         config.populateTabsOnStartup = not config.populateTabsOnStartup
+        self.parent.handleRestart()
 
     def openBookInNewWindowChanged(self):
         config.openBookInNewWindow = not config.openBookInNewWindow

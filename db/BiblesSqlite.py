@@ -481,7 +481,7 @@ input.addEventListener('keyup', function(event) {0}
             query += " 1=1"
         if booksRange:
             query += " AND "
-            query += "book in ({0})".format(BibleVerseParser(config.parserStandarisation).extractBookListAsString(booksRange))
+            query += "Book in ({0})".format(BibleVerseParser(config.parserStandarisation).extractBookListAsString(booksRange))
             formatedText += ":::{0}".format(booksRange)
         query += " ORDER BY Book, Chapter, Verse"
         if text in plainBibleList:

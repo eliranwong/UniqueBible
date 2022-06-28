@@ -1,8 +1,10 @@
 import config
 if config.qtLibrary == "pyside6":
     from PySide6.QtWidgets import QTabWidget
+    from PySide6.QtWebEngineCore import QWebEnginePage
 else:
     from qtpy.QtWidgets import QTabWidget
+    from qtpy.QtWebEngineWidgets import QWebEnginePage
 
 
 class TabWidget(QTabWidget):
@@ -29,5 +31,7 @@ class TabWidget(QTabWidget):
     def tabSelected(self):
         if self.name == "main":
             self.parent.parent.setMainPage()
+            self.parent.parent.mainPage.triggerAction(QWebEnginePage.Reload)
         elif self.name == "study":
             self.parent.parent.setStudyPage()
+            self.parent.parent.studyPage.triggerAction(QWebEnginePage.Reload)

@@ -528,18 +528,67 @@ class MainWindow(QMainWindow):
 
     # manage main page
 
-    def checkToolTipCommand(self, tabToolTip):
+    def getTextFromToolTip(self, tabToolTip, studyView=False):
+        # Default text
+        text = config.studyText if studyView else config.mainText
         texts = re.search(":::([^:]+?):::", tabToolTip)
         if texts:
             textList = self.textCommandParser.getConfirmedTexts(texts[0], True)
-            text = textList[0] if textList else config.mainText
+            if textList:
+                text = textList[0]
         elif tabToolTip.lower().startswith("text:::"):
             *_, textForCheck = self.textCommandParser.splitCommand(tabToolTip)
             textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
-            text = textList[0] if textList else config.mainText
-        else:
-            text = config.mainText
+            if textList:
+                text = textList[0]
         return text
+
+    def getTabText(self, studyView=False, index=None):
+        # Settle index
+        if index is None:
+            index = self.studyView.currentIndex() if studyView else self.mainView.currentIndex()
+        # Define tabText & tabToolTip
+        tabText = self.studyView.tabText(index).strip() if studyView else self.mainView.tabText(index).strip()
+        tabToolTip = self.studyView.tabToolTip(index).strip() if studyView else self.mainView.tabToolTip(index).strip()
+        # Get text
+        if tabToolTip:
+            if "-" in tabText:
+                textForCheck = tabText.split("-", 1)[0]
+                textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
+                if textList:
+                    text = textList[0]
+                else:
+                    text = self.getTextFromToolTip(tabToolTip, studyView)
+            else:
+                text = self.getTextFromToolTip(tabToolTip, studyView)
+        else:
+            text = config.studyText if studyView else config.mainText
+        return text
+
+    def getTabBcv(self, studyView=False, index=None):
+        # Settle index
+        if index is None:
+            index = self.studyView.currentIndex() if studyView else self.mainView.currentIndex()
+        # Define tabText & tabToolTip
+        tabText = self.studyView.tabText(index).strip() if studyView else self.mainView.tabText(index).strip()
+        tabToolTip = self.studyView.tabToolTip(index).strip() if studyView else self.mainView.tabToolTip(index).strip()
+        # Default bcv tuple
+        bcvTuple = (config.studyB, config.studyC, config.studyV) if studyView else (config.mainB, config.mainC, config.mainV)
+        # Refine bcv tuple according to tabText & tabToolTip
+        if tabToolTip:
+            parser = BibleVerseParser(config.parserStandarisation)
+            # check reference
+            references = parser.extractAllReferences(tabText)
+            if references:
+                b, c, v, *_ = references[-1]
+                bcvTuple = (b, c, v)
+            else:
+                references = parser.extractAllReferences(tabToolTip) 
+                if references:
+                    b, c, v, *_ = references[-1]
+                    bcvTuple = (b, c, v)
+        return bcvTuple
+
 
     def setMainPage(self):
         # main page changes as tab is changed.
@@ -547,40 +596,18 @@ class MainWindow(QMainWindow):
         self.mainPage = self.mainView.currentWidget().page()
         if config.updateMainReferenceOnChaningTabs:
             # check command stored in each tab's tooltip
-            tabText = self.mainView.tabText(self.mainView.currentIndex()).strip()
             tabToolTip = self.mainView.tabToolTip(self.mainView.currentIndex()).strip()
             if tabToolTip:
-                # check reference
-                references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabText)
-                if references:
-                    b, c, v, *_ = references[-1]
-                    bcvTuple = (b, c, v)
-                else:
-                    references = BibleVerseParser(config.parserStandarisation).extractAllReferences(tabToolTip) 
-                    if references:
-                        b, c, v, *_ = references[-1]
-                        bcvTuple = (b, c, v)
-                    else:
-                        bcvTuple = (config.mainB, config.mainC, config.mainV)
-                # check text
-                if "-" in tabText:
-                    textForCheck = tabText.split("-", 1)[0]
-                    textList = self.textCommandParser.getConfirmedTexts(textForCheck, True)
-                    if textList:
-                        text = textList[0]
-                    else:
-                        text = self.checkToolTipCommand(tabToolTip)
-                else:
-                    text = self.checkToolTipCommand(tabToolTip)
                 # Update main reference button and text
                 #self.textCommandParser.setMainVerse(text, bcvTuple)
-                config.mainText = text
-                config.mainB, config.mainC, config.mainV, *_ = bcvTuple
+                config.mainText = self.getTabText()
+                config.mainB, config.mainC, config.mainV, *_ = self.getTabBcv()
                 config.setMainVerse = True
-                self.updateMainRefButton(True)
+                if not config.fixLoadingContent:
+                    self.updateMainRefButton(True)
         if config.theme in ("dark", "night"):
             self.mainPage.setBackgroundColor(Qt.transparent)
-        self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
+        #self.mainPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
         self.mainView.currentWidget().updateContextMenu()
         if config.openBibleInMainViewOnly:
             config.studyText = config.mainText
@@ -593,7 +620,7 @@ class MainWindow(QMainWindow):
         self.studyPage = self.studyView.currentWidget().page()
         if config.theme in ("dark", "night"):
             self.studyPage.setBackgroundColor(Qt.transparent)
-        self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
+        #self.studyPage.pdfPrintingFinished.connect(self.pdfPrintingFinishedAction)
         self.studyView.currentWidget().updateContextMenu()
 
     # Export File
@@ -1236,7 +1263,7 @@ class MainWindow(QMainWindow):
             text = self.addOpenImageAction(text)
         if anchor is not None:
             js = "jump('{0}');".format(anchor)
-            self.studyView.currentWidget().loadFinished.connect(lambda: self.studyViewFinishedLoading(js))
+            self.studyView.currentWidget().loadFinished.connect(lambda: self.finishStudyViewLoading(js=js))
         # check size of text content
         if config.forceGenerateHtml or sys.getsizeof(text) > 2097152:
             # save html in a separate file if text is larger than 2MB
@@ -3522,33 +3549,62 @@ class MainWindow(QMainWindow):
     def checkStudyPageTermination(terminationStatus, exitCode):
         print(terminationStatus, exitCode)
 
-    def finishMainViewLoading(self):
+    def getScrollActiveVerseJS(self, studyView=False, index=None):
+        if index is not None:
+            b, c, v, *_ = self.getTabBcv(studyView=studyView, index=index)
+        else:
+            if studyView:
+                b, c, v = config.studyB, config.studyC, config.studyV
+            else:
+                b, c, v = config.mainB, config.mainC, config.mainV
         activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
-        # scroll to the main verse
-        self.mainPage.runJavaScript(
-            "var activeVerse = document.getElementById('v" + str(config.mainB) + "." + str(config.mainC) + "." + str(
-                config.mainV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
-        if config.fixLoadingContent:
-            QTimer.singleShot(1, self.fixLoadingContent)
+        js = """
+            var activeVerse = document.getElementById('v{0}.{1}.{2}');
+            if (typeof(activeVerse) != 'undefined' && activeVerse != null) {3}
+                activeVerse.scrollIntoView(); activeVerse.style.color = '{5}';
+            {4} else if (document.getElementById('v0.0.0') != null) {3}
+                document.getElementById('v0.0.0').scrollIntoView();
+            {4}
+        """.format(
+            b,
+            c,
+            v,
+            "{",
+            "}",
+            activeVerseNoColour,
+        )
+        #print("studyView", studyView)
+        #print(js)
+        return js
 
-    def finishStudyViewLoading(self):
-        activeVerseNoColour = config.darkThemeActiveVerseColor if config.theme in ("dark", "night") else config.lightThemeActiveVerseColor
-        # scroll to the study verse
-        self.studyPage.runJavaScript(
-            "var activeVerse = document.getElementById('v" + str(config.studyB) + "." + str(config.studyC) + "." + str(
-                config.studyV) + "'); if (typeof(activeVerse) != 'undefined' && activeVerse != null) { activeVerse.scrollIntoView(); activeVerse.style.color = '"+activeVerseNoColour+"'; } else if (document.getElementById('v0.0.0') != null) { document.getElementById('v0.0.0').scrollIntoView(); }")
+    def finishMainViewLoading(self, ok, index=None):
         if config.fixLoadingContent:
-            QTimer.singleShot(1, self.fixLoadingContent)
+            QTimer.singleShot(1, lambda: self.fixLoadingContent(studyView=False, index=index))
+        else:
+            # scroll to the main verse
+            if index is not None:
+                self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
+            else:
+                self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
 
-    def studyViewFinishedLoading(self, js):
-        self.studyView.currentWidget().page().runJavaScript(js)
+    def finishStudyViewLoading(self, ok, index=None, js=""):
         if config.fixLoadingContent:
-            QTimer.singleShot(1, self.fixLoadingContent)
+            QTimer.singleShot(1, lambda: self.fixLoadingContent(studyView=True, index=index))
+        else:
+            # scroll to the study verse
+            if index is not None:
+                self.studyView.widget(index).page().runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
+            else:
+                self.studyPage.runJavaScript(js if js else self.getScrollActiveVerseJS(studyView=True, index=index))
 
-    def fixLoadingContent(self):
+    def fixLoadingContent(self, studyView=False, index=None):
         cmd = self.textCommandLineEdit.text()
         self.setupMenuLayout(config.menuLayout)
         self.textCommandLineEdit.setText(cmd)
+        if index is not None:
+            self.studyView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=True, index=index)) if studyView else self.mainView.widget(index).page().runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
+        else:
+            self.studyPage.runJavaScript(self.getScrollActiveVerseJS(studyView=True, index=index)) if studyView else self.mainPage.runJavaScript(self.getScrollActiveVerseJS(studyView=False, index=index))
 #            splitter = self.centralWidget.instantSplitter
 #            thisPos = config.iModeSplitterSizes[0]
 #            splitter.moveSplitter(1, 1)
