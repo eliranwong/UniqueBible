@@ -4103,8 +4103,8 @@ function hl1(id, cl, sn) {0}
     if (id != '') {0}
         var focalElement = document.getElementById('w'+id);
         if (focalElement != null) {0}
-            document.getElementById('w'+id).style.background='{2}';
-            document.getElementById('w'+id).style.color='{3}';
+            document.getElementById('w'+id).style.background='{5}';
+            document.getElementById('w'+id).style.color='{4}';
         {1}
     {1}
     if ((id != '') && (id.startsWith("l") != true)) {0}
@@ -4136,6 +4136,8 @@ function hl0(id, cl, sn) {0}
             "}",
             config.widgetBackgroundColorHover,
             config.widgetForegroundColorHover,
+            config.widgetBackgroundColorPressed, 
+            config.widgetForegroundColorPressed, 
         )
 
     def getMaterialCss(self):
