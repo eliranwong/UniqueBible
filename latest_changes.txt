@@ -1,3 +1,12 @@
+Changes in 30.98:
+* Added showing instant information when a mouse is hovered on a single string tagged with multiple Strong's numbers.
+* Added config.mutualHighlightMultipleStrongNumber:
+        # This value controls how UBA handles mutual highlighting of single string tagged with multiple Strong's numbers.
+        # This value applies when Strong's number bibles are opened with Lexical entries not being displayed.
+        # 0 - String is highlighted when one of the Strong's numbers tagged for the string is triggered.
+        # 1 - String is highlighted only when the first Strong's number tagged for the string is triggered.
+        # 2 - String is highlighted only when the last Strong's number tagged for the string is triggered.
+
 Changes in 30.97:
 * Added support of mutual highlights to Strong's number bible modules.
 

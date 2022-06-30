@@ -2492,8 +2492,13 @@ class TextCommandParser:
 
     # _lexicaldata:::
     def instantLexicalData(self, command, source):
-        info = LexicalData.getLexicalData(command, True)
-        return ("instant", info, {})
+        allInfo = []
+        for item in command.split("_"):
+            info = LexicalData.getLexicalData(item, True)
+            if info:
+                allInfo.append(info)
+        allInfo = "<hr>".join(allInfo)
+        return ("instant", allInfo, {})
 
     # _instantverse:::
     def instantVerse(self, command, source):

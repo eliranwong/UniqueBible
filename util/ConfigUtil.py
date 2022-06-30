@@ -1113,6 +1113,14 @@ class ConfigUtil:
         # Clear command entry line by default"""
         if not hasattr(config, "clearCommandEntry"):
             config.clearCommandEntry = False
+        config.help["mutualHighlightMultipleStrongNumber"] = """
+        # This value controls how UBA handles mutual highlighting of single string tagged with multiple Strong's numbers.
+        # This value applies when Strong's number bibles are opened with Lexical entries not being displayed.
+        # 0 - String is highlighted when one of the Strong's numbers tagged for the string is triggered.
+        # 1 - String is highlighted only when the first Strong's number tagged for the string is triggered
+        # 2 - String is highlighted only when the last Strong's number tagged for the string is triggered"""
+        if not hasattr(config, "mutualHighlightMultipleStrongNumber"):
+            config.mutualHighlightMultipleStrongNumber = 0
         # Highlight collections"""
         config.help["highlightCollections"] = """
         # Highlight collection names."""
@@ -1407,6 +1415,7 @@ class ConfigUtil:
             ("sidebarIconSizeFactor", config.sidebarIconSizeFactor),
             ("parallelMode", config.parallelMode),
             ("instantMode", config.instantMode),
+            ("mutualHighlightMultipleStrongNumber", config.mutualHighlightMultipleStrongNumber),
             ("enableInstantHighlight", config.enableInstantHighlight),
             ("enableSelectionMonitoring", config.enableSelectionMonitoring),
             ("instantInformationEnabled", config.instantInformationEnabled),
