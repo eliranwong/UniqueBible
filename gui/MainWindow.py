@@ -4066,6 +4066,7 @@ class MainWindow(QMainWindow):
                 <script src='w3.js?v=1.062'></script>
                 <script src='js/custom.js?v=1.062'></script>
                 {0}
+                {11}
                 <script>var versionList = []; var compareList = []; var parallelList = []; 
                 var diffList = []; var searchList = [];</script></head>
                 <body><span id='v0.0.0'></span>{1}</body></html>
@@ -4083,8 +4084,59 @@ class MainWindow(QMainWindow):
                          #config.widgetBackgroundColor,
                          #config.widgetForegroundColor,
                          self.getMaterialCss(),
+                         self.getMaterialMutualHighlightScript(),
                          )
         return html
+
+    def getMaterialMutualHighlightScript(self):
+        return """
+<script>
+function hl1(id, cl, sn) {0}
+    if (cl != '') {0}
+        w3.addStyle('.c'+cl,'background-color','{2}');
+        w3.addStyle('.c'+cl,'color','{3}');
+    {1}
+    if (sn != '') {0}
+        w3.addStyle('.G'+sn,'background-color','{2}');
+        w3.addStyle('.G'+sn,'color','{3}');
+    {1}
+    if (id != '') {0}
+        var focalElement = document.getElementById('w'+id);
+        if (focalElement != null) {0}
+            document.getElementById('w'+id).style.background='{2}';
+            document.getElementById('w'+id).style.color='{3}';
+        {1}
+    {1}
+    if ((id != '') && (id.startsWith("l") != true)) {0}
+        document.title = "_instantWord:::"+activeB+":::"+id;
+    {1}
+{1}
+
+function hl0(id, cl, sn) {0}
+    if (cl != '') {0}
+        w3.addStyle('.c'+cl,'background-color','');
+        w3.addStyle('.c'+cl,'color','');
+    {1}
+    if (sn != '') {0}
+        w3.addStyle('.G'+sn,'background-color','');
+        w3.addStyle('.G'+sn,'color','');
+    {1}
+    if (id != '') {0}
+        var focalElement = document.getElementById('w'+id);
+        if (focalElement != null) {0}
+            document.getElementById('w'+id).style.background='';
+            document.getElementById('w'+id).style.color='';
+        {1}
+    {1}
+{1}
+
+</script>
+        """.format(
+            "{",
+            "}",
+            config.widgetBackgroundColorHover,
+            config.widgetForegroundColorHover,
+        )
 
     def getMaterialCss(self):
         textColor = config.darkThemeTextColor if config.theme in ("dark", "night") else config.lightThemeTextColor
