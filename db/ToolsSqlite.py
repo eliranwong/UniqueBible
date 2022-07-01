@@ -538,7 +538,7 @@ class Commentary:
                 sql = ("INSERT INTO Details (Title, Abbreviation, Information, Version, OldTestament, NewTestament,"
                        "Apocrypha, Strongs) VALUES (?, ?, ?, 1, 1, 1, 0, 0)")
                 cursor.execute(sql, (commentary, commentary, commentary))
-            cursor.execute("COMMIT")
+#            cursor.execute("COMMIT")
             deleteData = []
             insertData = []
             for data in content:
@@ -549,7 +549,7 @@ class Commentary:
             cursor.executemany(delete, deleteData)
             insert = "INSERT INTO Commentary (Book, Chapter, Scripture) VALUES (?, ?, ?)"
             cursor.executemany(insert, insertData)
-            cursor.execute("COMMIT")
+#            cursor.execute("COMMIT")
 
     def reloadFileLookup(self):
             Commentary.fileLookup = {}
@@ -716,7 +716,7 @@ class Commentary:
             scripture = BibleVerseParser("no").replaceTextWithReference(scripture, False)
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
-            self.cursor.execute("COMMIT")
+#            self.cursor.execute("COMMIT")
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -729,7 +729,7 @@ class Commentary:
             scripture = re.sub(r"<grk>(.*?)</span>", r"<grk>\1</grk>", scripture)
             update = "Update Commentary SET Scripture = ? WHERE Book = ? AND Chapter = ?"
             self.cursor.execute(update, (scripture, record[0], record[1]))
-            self.cursor.execute("COMMIT")
+#            self.cursor.execute("COMMIT")
             if int(record[1]) >= 1:
                 self.logger.info("Fix commentary {0} - {1}:{2}".format(self.text, record[0], record[1]))
 
@@ -776,7 +776,7 @@ class Lexicon:
                 cursor.execute(Lexicon.CREATE_LEXICON_TABLE)
                 sql = ("INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)")
                 cursor.execute(sql, ('info', lexicon))
-            cursor.execute("COMMIT")
+#            cursor.execute("COMMIT")
             deleteData = []
             insertData = []
             for data in content:
@@ -787,7 +787,7 @@ class Lexicon:
             cursor.executemany(delete, deleteData)
             insert = "INSERT INTO Lexicon (Topic, Definition) VALUES (?, ?)"
             cursor.executemany(insert, insertData)
-            cursor.execute("COMMIT")
+#            cursor.execute("COMMIT")
 
     def getInfo(self):
         try:

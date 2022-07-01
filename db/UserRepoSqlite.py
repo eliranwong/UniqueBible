@@ -23,10 +23,7 @@ class UserRepoSqlite:
             self.createTable()
 
     def __del__(self):
-        try:
-            self.cursor.execute("COMMIT")
-        except:
-            pass
+#        #self.cursor.execute("COMMIT")
         self.connection.close()
 
     def createTable(self):
@@ -45,7 +42,7 @@ class UserRepoSqlite:
             (active, name, type, repo, directory) 
             VALUES (?, ?, ?, ?, ?)"""
         self.cursor.execute(insert, (active, name, type, repo, directory))
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def update(self, id, name, type, repo, directory="", active=True):
         repo = GitHubRepoInfo.fixRepoUrl(repo)
@@ -53,17 +50,17 @@ class UserRepoSqlite:
             active=?, name=?, type=?, repo=?, directory=?
             WHERE id=?"""
         self.cursor.execute(update, (active, name, type, repo, directory, id))
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def delete(self, id):
         delete = f"DELETE FROM {self.TABLE_NAME} WHERE id=?"
         self.cursor.execute(delete, (id,))
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def deleteAll(self):
         delete = f"DELETE FROM {self.TABLE_NAME}"
         self.cursor.execute(delete)
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def getAll(self):
         query = f"SELECT id, active, name, type, repo, directory FROM {self.TABLE_NAME} order by name"

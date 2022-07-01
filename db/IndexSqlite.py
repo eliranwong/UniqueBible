@@ -42,7 +42,7 @@ class IndexSqlite:
     def insertBibleData(self, content):
         insert = "INSERT INTO Index_Data (Word, Book, Chapter, Verse) VALUES (?, ?, ?, ?)"
         self.cursor.executemany(insert, content)
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def updateRef(self):
         if not self.checkColumnExists("Index_Data", "Ref"):
@@ -51,7 +51,7 @@ class IndexSqlite:
         self.cursor.execute(update)
         create = 'CREATE INDEX "Index_Word" ON "Index_Data" ("Word")'
         self.cursor.execute(create)
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def getVerses(self, word):
         sql = "SELECT Book, Chapter, Verse FROM Index_Data WHERE Word=? ORDER BY Book, Chapter, Verse"
@@ -68,12 +68,12 @@ class IndexSqlite:
     def deleteAll(self):
         delete = "DELETE FROM Index_Data"
         self.cursor.execute(delete)
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def deleteBook(self, book):
         delete = "DELETE FROM Index_Data WHERE Book=?"
         self.cursor.execute(delete, (book,))
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def checkTableExists(self):
         if self.type == "bible":

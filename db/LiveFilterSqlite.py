@@ -16,10 +16,7 @@ class LiveFilterSqlite:
             self.insert("Jesus", "jesus|christ")
 
     def __del__(self):
-        try:
-            self.cursor.execute("COMMIT")
-        except:
-            pass
+#        #self.cursor.execute("COMMIT")
         self.connection.close()
 
     def createTable(self):
@@ -36,17 +33,17 @@ class LiveFilterSqlite:
         if not self.checkFilterExists(filter):
             insert = "INSERT INTO {0} (Filter, Pattern) VALUES (?, ?)".format(self.TABLE_NAME)
             self.cursor.execute(insert, (filter, pattern))
-            self.cursor.execute("COMMIT")
+#            self.cursor.execute("COMMIT")
 
     def delete(self, filter):
         delete = "DELETE FROM {0} WHERE Filter=?".format(self.TABLE_NAME)
         self.cursor.execute(delete, (filter,))
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def deleteAll(self):
         delete = "DELETE FROM {0}".format(self.TABLE_NAME)
         self.cursor.execute(delete)
-        self.cursor.execute("COMMIT")
+#        self.cursor.execute("COMMIT")
 
     def checkFilterExists(self, filter):
         query = "SELECT * FROM {0} WHERE Filter=?".format(self.TABLE_NAME)

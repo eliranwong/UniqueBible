@@ -866,6 +866,8 @@ p, li {0} white-space: pre-wrap; {1}
                 self.openSaveAsDialog()
             else:
                 self.saveAsNote(self.noteFileName)
+        if not self.noteType == "file":
+            self.parent.reloadCurrentRecord(True)
 
     def openSaveAsDialog(self):
         if self.noteFileName:
