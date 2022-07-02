@@ -399,13 +399,14 @@ class BibleReadingPlan(QWidget):
         "Jewish Month: ", #19
         "Journal", #20
         "Refresh", #21
+        "Journal and Bible Reading Plan", #22
     )
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
         # set title
-        self.setWindowTitle(self.translation[0])
+        self.setWindowTitle(self.translation[22])
         self.setMinimumSize(830, 500)
         # set variables
         self.setupVariables()
@@ -687,7 +688,7 @@ class BibleReadingPlan(QWidget):
             checked, passages = value
             if not (self.hideCheckedItems and checked) and (filterEntry == "" or (filterEntry != "" and filterEntry.lower() in passages.lower())):
                 item = QStandardItem("{0}. {1}".format(key, passages))
-                item.setToolTip("{0}{1}{2}".format(self.translation[8], key, self.translation[9]))
+                item.setToolTip("{0}{1} - {2}".format(self.translation[8], key, passages))
                 if key == self.todayNo:
                     todayIndex = index
                 item.setCheckable(True)

@@ -1,3 +1,6 @@
+Changes in 31.03:
+* Added bible passages to tooltip in 365-day bible reading plan.
+
 Changes in 31.02:
 * Renamed menu plugin "Bible Reading Plan" to "Journal and Bible Reading Plan".
 * Added features to "Journal and Bible Reading Plan":
