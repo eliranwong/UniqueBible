@@ -9,17 +9,12 @@ from gui.NoteEditor import NoteEditorWindow
 
 class NoteEditor(QDockWidget):
 
-    def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None):
+    def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None, year=None, month=None, day=None):
         super().__init__()
         self.setWindowTitle(config.thisTranslation["note_editor"])
-        self.parent, self.noteType, self.noteFileName, self.b, self.c, self.v = parent, noteType, noteFileName, b, c, v
-        if not self.noteType == "file":
-            if v:
-                self.b, self.c, self.v = b, c, v
-            else:
-                self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
-
-        self.noteEditor = NoteEditorWindow(self, self.noteType, self.noteFileName, self.b, self.c, self.v)
+        self.parent, self.noteType, self.noteFileName, self.b, self.c, self.v, self.year, self.month, self.day = parent, noteType, noteFileName, b, c, v, year, month, day
+        self.noteEditor = NoteEditorWindow(self, self.noteType, self.noteFileName, self.b, self.c, self.v, self.year, self.month, self.day)
+        self.b, self.c, self.v = self.noteEditor.b, self.noteEditor.c, self.noteEditor.v
         self.setWidget(self.noteEditor)
         config.toggleDockWidget = self.toggleViewAction()
         self.parent.setupMenuLayout(config.menuLayout)

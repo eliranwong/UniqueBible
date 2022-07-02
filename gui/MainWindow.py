@@ -1362,14 +1362,14 @@ class MainWindow(QMainWindow):
                 self.noteEditor.noteEditor.newNoteFileAction()
                 self.noteEditor.noteEditor.editor.setHtml(html)
 
-    def openNoteEditor(self, noteType, b=None, c=None, v=None):
+    def openNoteEditor(self, noteType, b=None, c=None, v=None, year=None, month=None, day=None):
         if not hasattr(self, "noteEditor"):
-            self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v)
+            self.noteEditor = NoteEditor(self, noteType, b=b, c=c, v=v, year=year, month=month, day=day)
         else:
             self.showNoteEditor()
-            if not config.lastOpenedNote == (noteType, b, c, v) and (self.noteSaved or self.warningNotSaved()):
+            if not config.lastOpenedNote == (noteType, b, c, v, year, month, day) and (self.noteSaved or self.warningNotSaved()):
                 self.noteEditor.noteEditor.resetVariables()
-                self.noteEditor.noteEditor.displayInitialContent(noteType, b, c, v)
+                self.noteEditor.noteEditor.displayInitialContent(noteType, b, c, v, year, month, day)
         self.insertContextTextToNoteEditor()
 
     def editExternalFileHistoryRecord(self, record):
@@ -4229,6 +4229,11 @@ vid:hover, a:hover, a:active, ref:hover, entry:hover, ch:hover, text:hover, addo
     def setParallelSize(self, mode):
         config.parallelMode = int(mode)
         self.resizeCentral()
+
+    # Calendar
+    def showCalendar(self):
+        self.calendar = Calendar(self)
+        self.calendar.show()
 
     # Open Morphology Search Dialog by double clicking of Hebrew / Greek words on marvel bibles
     def openMorphDialog(self, items):

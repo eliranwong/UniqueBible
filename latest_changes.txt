@@ -1,3 +1,13 @@
+Upcoming:
+* will add ability to search journal.
+* will add display of Hebrew dates or holidays.
+
+Changes in 31.01:
+* Integrated a Calendar into menu plugin "Bible Reading Plan".
+* Integrated journal features into menu plugin "Bible Reading Plan".
+* Added support of editing journal with UBA note editor.
+* Fixed saving notes.
+
 Changes in 31.00:
 * Reload Bible Window and Study Window after bible notes are saved.
 * Fixed note saving errors, which were recently introduced after switching to apsw for handling sqlite database files.

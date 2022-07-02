@@ -11,26 +11,24 @@ else:
     from qtpy.QtWidgets import QMessageBox, QComboBox, QInputDialog, QLineEdit, QMainWindow, QPushButton, QToolBar, QDialog, QFileDialog, QTextEdit, QFontDialog, QColorDialog
 from util.NoteService import NoteService
 from util.Translator import Translator
+from db.JournalSqlite import JournalSqlite
 
 
 class NoteEditorWindow(QMainWindow):
 
-    def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None):
+    def __init__(self, parent, noteType, noteFileName="", b=None, c=None, v=None, year=None, month=None, day=None):
         super().__init__()
-        self.parent, self.noteType = parent, noteType
-        self.noteFileName = noteFileName
-        if not self.noteType == "file":
-            if v:
-                self.b, self.c, self.v = b, c, v
-            else:
-                self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
+        # Five noteType = "journal", "file", "book", "chapter", "verse"
+        self.parent, self.noteType, self.noteFileName, self.b, self.c, self.v, self.year, self.month, self.day = parent, noteType, noteFileName, b, c, v, year, month, day
+        if self.noteType in ("book", "chapter", "verse") and v is None:
+            self.b, self.c, self.v = config.studyB, config.studyC, config.studyV
 
         # default - "Rich" mode for editing
         self.html = True
         # default - text is not modified; no need for saving new content
         self.parent.parent.noteSaved = True
         #config.noteOpened = True
-        config.lastOpenedNote = (noteType, b, c, v)
+        config.lastOpenedNote = (noteType, b, c, v, year, month, day)
 
         # specify window size
         self.resizeWindow(2/3, 2/3)
@@ -57,7 +55,7 @@ class NoteEditorWindow(QMainWindow):
 
     def resetVariables(self):
         self.parent.parent.noteSaved = True
-        self.noteType, self.noteFileName, self.b, self.c, self.v = None, None, None, None, None
+        self.noteType, self.noteFileName, self.b, self.c, self.v, self.year, self.month, self.day = None, None, None, None, None, None, None, None
 
     # re-implementing close event, when users close this widget
     def closeEvent(self, event):
@@ -105,7 +103,9 @@ class NoteEditorWindow(QMainWindow):
         self.resize(int(availableGeometry.width() * widthFactor), int(availableGeometry.height() * heightFactor))
 
     def updateWindowTitle(self):
-        if self.noteType == "file":
+        if self.noteType == "journal":
+            title = "{0}-{1}-{2}".format(self.year, self.month, self.day)
+        elif self.noteType == "file":
             if self.noteFileName:
                 *_, title = os.path.split(self.noteFileName)
             else:
@@ -734,7 +734,7 @@ class NoteEditorWindow(QMainWindow):
             self.updateWindowTitle()
 
     # display content when first launched
-    def displayInitialContent(self, noteType=None, b=None, c=None, v=None):
+    def displayInitialContent(self, noteType=None, b=None, c=None, v=None, year=None, month=None, day=None):
         if self.parent.parent.noteSaved or self.parent.parent.warningNotSaved():
             if noteType is not None:
                 self.noteType = noteType
@@ -744,13 +744,23 @@ class NoteEditorWindow(QMainWindow):
                 self.c = c
             if v is not None:
                 self.v = v
-            if self.noteType == "file":
+            if year is not None:
+                self.year = year
+            if month is not None:
+                self.month = month
+            if day is not None:
+                self.day = day
+            if self.noteType == "journal":
+                self.openJournalNote()
+            elif self.noteType == "file":
                 if self.noteFileName:
                     self.openNoteFile(self.noteFileName)
                 else:
                     self.newNoteFile()
             else:
                 self.openBibleNote()
+
+            config.lastOpenedNote = (noteType, b, c, v, year, month, day)
 
             self.editor.selectAll()
             self.editor.setFontPointSize(config.noteEditorFontSize)
@@ -768,6 +778,18 @@ p, li {0} white-space: pre-wrap; {1}
 </style></head><body style="font-family:'{2}'; font-size:{3}pt; font-weight:400; font-style:normal;">
 <p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>"""\
             .format("{", "}", config.font, config.fontSize, strict)
+
+    def openJournalNote(self):
+        journalSqlite = JournalSqlite()
+        note = journalSqlite.getJournalNote(self.year, self.month, self.day)
+        if note == config.thisTranslation["empty"]:
+            note = self.getEmptyPage()
+        else:
+            note = self.fixNoteFont(note)
+        if self.html:
+            self.editor.setHtml(note)
+        else:
+            self.editor.setPlainText(note)
 
     # load chapter / verse notes from sqlite database
     def openBibleNote(self):
@@ -847,27 +869,26 @@ p, li {0} white-space: pre-wrap; {1}
             NoteService.saveBookNote(self.b, note)
             if config.openBibleNoteAfterSave:
                 self.parent.parent.openBookNote(self.b,)
-            self.parent.parent.noteSaved = True
-            self.updateWindowTitle()
         elif self.noteType == "chapter":
             NoteService.saveChapterNote(self.b, self.c, note)
             if config.openBibleNoteAfterSave:
                 self.parent.parent.openChapterNote(self.b, self.c)
-            self.parent.parent.noteSaved = True
-            self.updateWindowTitle()
         elif self.noteType == "verse":
             NoteService.saveVerseNote(self.b, self.c, self.v, note)
             if config.openBibleNoteAfterSave:
                 self.parent.parent.openVerseNote(self.b, self.c, self.v)
-            self.parent.parent.noteSaved = True
-            self.updateWindowTitle()
         elif self.noteType == "file":
             if self.noteFileName == "":
                 self.openSaveAsDialog()
             else:
                 self.saveAsNote(self.noteFileName)
+        elif self.noteType == "journal":
+            JournalSqlite().saveJournalNote(self.year, self.month, self.day, note)
+        # Refresh
         if not self.noteType == "file":
-            self.parent.reloadCurrentRecord(True)
+            self.parent.parent.noteSaved = True
+            self.updateWindowTitle()
+            self.parent.parent.reloadCurrentRecord(True)
 
     def openSaveAsDialog(self):
         if self.noteFileName:

@@ -1,7 +1,7 @@
 # coding=utf-8
 import glob
 import os, re, webbrowser, platform, multiprocessing, zipfile, subprocess, config
-
+from datetime import date
 from util.WebtopUtil import WebtopUtil
 from util.CatalogUtil import CatalogUtil
 from util.GitHubRepoInfo import GitHubRepoInfo
@@ -23,6 +23,7 @@ from util.Translator import Translator
 from db.Highlight import Highlight
 from util.TtsLanguages import TtsLanguages
 from db.BiblesSqlite import MorphologySqlite
+from db.JournalSqlite import JournalSqlite
 
 #from gui.Downloader import Downloader
 from install.module import *
@@ -594,6 +595,14 @@ class TextCommandParser:
             "searchversenote": (self.textSearchVerseNote, """
             # [KEYWORD] SEARCHVERSENOTE
             # e.g. SEARCHVERSENOTE:::faith"""),
+#            "openjournal": (self.openJournalNote, """
+#            # [KEYWORD] OPENJOURNAL
+#            # e.g. OPENJOURNAL:::
+#            # e.g. OPENJOURNAL:::2022.12.25"""),
+#            "editjournal": (self.editJournalNote, """
+#            # [KEYWORD] EDITJOURNAL
+#            # e.g. EDITJOURNAL:::
+#            # e.g. EDITJOURNAL:::2022.12.25"""),
             "download": (self.download, """
             # [KEYWORD] DOWNLOAD
             # Feature - Download marvel data, github files
@@ -2401,6 +2410,29 @@ class TextCommandParser:
             self.parent.openNoteEditor("verse", b=b, c=c, v=v)
         #else:
             #self.parent.noteEditor.raise_()
+        return ("", "", {})
+
+    # openjournal:::
+    def openJournalNote(self, command, source):
+        if command:
+            year, month, day, *_ = command.split(".")
+            year, month, day = int(year), int(month), int(day)
+        else:
+            today = date.today()
+            year, month, day = today.year, today.month, today.day
+        journalSqlite = JournalSqlite()
+        note = journalSqlite.getJournalNote(year, month, day)
+        return ("study", note, {})
+
+    # editjournal:::
+    def editJournalNote(self, command, source):
+        if command:
+            year, month, day, *_ = command.split(".")
+        else:
+            today = date.today()
+            year, month, day = today.year, today.month, today.day
+        if self.parent.noteSaved or self.parent.warningNotSaved():
+            self.parent.openNoteEditor("journal", year=year, month=month, day=day)
         return ("", "", {})
 
     # _open:::

@@ -389,6 +389,9 @@ class BibleReadingPlan(QWidget):
         "",
         "Your reading progress is saved in the following location:",
         "Failed to save your progress locally.  You may need to grant write permission to UBA.",
+        "Read Journal",
+        "Edit Journal",
+        "Search Journal", #14
     )
 
     def __init__(self, parent):
@@ -405,6 +408,7 @@ class BibleReadingPlan(QWidget):
     def setupVariables(self):
         import copy, os
         from datetime import date
+        from db.JournalSqlite import JournalSqlite
         self.today = date.today()
         self.todayNo = int(format(self.today, '%j'))
         if self.todayNo > 365:
@@ -417,15 +421,43 @@ class BibleReadingPlan(QWidget):
         else:
             self.plan = copy.deepcopy(self.template)
         self.hideCheckedItems = False
+        self.journalSqlite = JournalSqlite()
 
     def setupUI(self):
         if config.qtLibrary == "pyside6":
             from PySide6.QtGui import QStandardItemModel
-            from PySide6.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
+            from PySide6.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QCalendarWidget
         else:
             from qtpy.QtGui import QStandardItemModel
-            from qtpy.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit
+            from qtpy.QtWidgets import QPushButton, QLabel, QListView, QAbstractItemView, QHBoxLayout, QVBoxLayout, QLineEdit, QCalendarWidget
 
+        mainLayout0 = QHBoxLayout()
+
+        # Layout on the Left
+        mainLayoutLeft = QVBoxLayout()
+
+        self.calendar = QCalendarWidget()
+        self.calendar.setGridVisible(True)
+        self.calendar.selectionChanged.connect(self.selectionChangedAction)
+        mainLayoutLeft.addWidget(self.calendar)
+
+        buttonsLayout = QHBoxLayout()
+        readJournal = QPushButton(self.translation[12])
+        readJournal.clicked.connect(self.readJournal)
+        buttonsLayout.addWidget(readJournal)
+        editJournal = QPushButton(self.translation[13])
+        editJournal.clicked.connect(self.editJournal)
+        buttonsLayout.addWidget(editJournal)
+        mainLayoutLeft.addLayout(buttonsLayout)
+
+        #self.searchJournalEntry = QLineEdit()
+        #mainLayoutLeft.addWidget(self.searchJournalEntry)
+        #searchJournal = QPushButton(self.translation[14])
+        #mainLayoutLeft.addWidget(searchJournal)
+
+        mainLayout0.addLayout(mainLayoutLeft)
+
+        # Layout on the Right
         mainLayout = QVBoxLayout()
 
         readingListLayout = QVBoxLayout()
@@ -471,7 +503,32 @@ class BibleReadingPlan(QWidget):
         mainLayout.addLayout(readingListLayout)
         mainLayout.addLayout(buttonsLayout)
 
-        self.setLayout(mainLayout)
+        mainLayout0.addLayout(mainLayout)
+
+        self.setLayout(mainLayout0)
+
+    def selectionChangedAction(self):
+        date = self.calendar.selectedDate()
+        scrollIndex = date.dayOfYear() - 1
+        if scrollIndex < 0:
+            scrollIndex = 0
+        elif scrollIndex > 365:
+            scrollIndex = 365
+        self.readingList.setCurrentIndex(self.readingListModel.index(scrollIndex, 0))
+
+    def readJournal(self):
+        config.mainWindow.textCommandParser.lastKeyword = "journal"
+        date = self.calendar.selectedDate()
+        year, month, day = date.year(), date.month(), date.day()
+        note = self.journalSqlite.getJournalNote(year, month, day)
+        note = config.mainWindow.fixNoteFontDisplay(note)
+        note = config.mainWindow.htmlWrapper(note, True, "study", False)
+        config.mainWindow.openTextOnStudyView(note, tab_title="Jou:{0}-{1}-{2}".format(year, month, day), toolTip="Journal: {0}-{1}-{2}".format(month, year, day))
+
+    def editJournal(self):
+        date = self.calendar.selectedDate()
+        year, month, day = date.year(), date.month(), date.day()
+        config.mainWindow.openNoteEditor("journal", year=year, month=month, day=day)
 
     def itemChanged(self, standardItem):
         if config.qtLibrary == "pyside6":
