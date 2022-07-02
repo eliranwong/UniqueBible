@@ -1,3 +1,6 @@
+Changes in 31.04:
+* Fixed display of Hebrew and Greek word audio links.
+
 Changes in 31.03:
 * Added bible passages to tooltip in 365-day bible reading plan.
 

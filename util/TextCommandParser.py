@@ -1156,8 +1156,14 @@ class TextCommandParser:
                 return (view, content, {'tab_title': text})
 
     def toggleBibleText(self, text):
-        isMarvelBibles = True if re.search("_instantVerse:::(MOB|MIB|MPB|MTB|MAB|OHGB|OHGBi):::", text) else False
-        isMIB = ("_instantVerse:::MIB:::" in text)
+        # The following line does not work when config.displayChapterMenuTogetherWithBibleChapter is set to True.
+        #isMarvelBibles = True if re.search("_instantVerse:::(MOB|MIB|MPB|MTB|MAB|OHGB|OHGBi):::", text) else False
+        # use the following line instead
+        isMarvelBibles = True if re.search("_chapters:::(MOB|MIB|MPB|MTB|MAB|OHGB|OHGBi)_", text) else False
+        # The following line does not work when config.displayChapterMenuTogetherWithBibleChapter is set to True.
+        #isMIB = ("_instantVerse:::MIB:::" in text)
+        # use the following line instead
+        isMIB = ("_chapters:::MIB_" in text)
         if (config.showHebrewGreekWordAudioLinks and isMarvelBibles) or (config.showHebrewGreekWordAudioLinksInMIB and isMIB):
             text = re.sub("(<pm>|</pm>|<n>|</n>)", "", text)
             text = re.sub("""(<heb id="wh)([0-9]+?)("[^<>]*?onclick="luW\()([0-9]+?)(,[^<>]*?>[^<>]+?</heb>[ ]*)""", r"""\1\2\3\4\5 <ref onclick="wah(\4,\2)">{0}</ref>""".format(config.audioBibleIcon), text)
